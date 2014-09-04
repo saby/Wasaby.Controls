@@ -2,18 +2,18 @@
  * Created by iv.cheremushkin on 28.08.2014.
  */
 
-define('js!SBIS3.CORE.NumberTextBox', ['js!SBIS3.CORE.TextBox', 'html!SBIS3.CORE.NumberTextBox', 'css!SBIS3.CORE.NumberTextBox'], function (TextBox, dotTplFn) {
+define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SBIS3.CONTROLS.NumberTextBox', 'css!SBIS3.CONTROLS.NumberTextBox'], function (TextBox, dotTplFn) {
 
    'use strict';
    /**
     * Поле ввода, куда можно вводить только числовые значения
-    * @class SBIS3.CORE.NumberTextBox
-    * @extends SBIS3.CORE.TextBox
+    * @class SBIS3.CONTROLS.NumberTextBox
+    * @extends SBIS3.CONTROLS.TextBox
     * @control
     */
 
    var NumberTextBox;
-   NumberTextBox = TextBox.extend(/** @lends SBIS3.CORE.NumberTextBox.prototype */ {
+   NumberTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS.NumberTextBox.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _inputField: null,
@@ -35,11 +35,11 @@ define('js!SBIS3.CORE.NumberTextBox', ['js!SBIS3.CORE.TextBox', 'html!SBIS3.CORE
             }
          }
 
-         $('.js-core-NumberTextBox__arrowDown', this.getContainer().get(0)).click(function () {
+         $('.js-controls-NumberTextBox__arrowDown', this.getContainer().get(0)).click(function () {
             self._changeNumberByOne(-1);
          });
 
-         $('.js-core-NumberTextBox__arrowUp', this.getContainer().get(0)).click(function () {
+         $('.js-controls-NumberTextBox__arrowUp', this.getContainer().get(0)).click(function () {
             self._changeNumberByOne(1);
          });
       },

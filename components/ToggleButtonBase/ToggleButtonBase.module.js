@@ -35,11 +35,11 @@ define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase'], f
 
       setChecked: function(flag) {
          if (flag === true) {
-            this._container.addClass('core-ToggleButton__checked');
+            this._container.addClass('controls-ToggleButton__checked');
             this._checked = true;
          }
          else {
-            this._container.removeClass('core-ToggleButton__checked');
+            this._container.removeClass('controls-ToggleButton__checked');
             this._checked = false;
          }
       },

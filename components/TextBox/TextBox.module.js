@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       $constructor: function() {
          this._publish('onChangeText');
          var self = this;
-         this._inputField = $('.core-TextBox__field', this.getContainer().get(0));
+         this._inputField = $('.controls-TextBox__field', this.getContainer().get(0));
 
          this._container.bind('keydown',function(e){
             self._keyDownBind(e);
@@ -47,17 +47,17 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       setText: function(text){
          TextBox.superclass.setText.call(this, text);
-         $('.core-TextBox__field', this.getContainer().get(0)).attr('value', text || '');
+         $('.controls-TextBox__field', this.getContainer().get(0)).attr('value', text || '');
       },
 
       setMaxLength: function(num) {
          TextBox.superclass.setMaxLength.call(this, num);
-         $('.core-TextBox__field', this.getContainer().get(0)).attr('maxlength',num);
+         $('.controls-TextBox__field', this.getContainer().get(0)).attr('maxlength',num);
       },
 
       setPlaceholder: function(text){
          TextBox.superclass.setPlaceholder.call(this, text);
-         $('.core-TextBox__field', this.getContainer().get(0)).attr('placeholder', text);
+         $('.controls-TextBox__field', this.getContainer().get(0)).attr('placeholder', text);
       },
 
       _keyUpBind: function() {

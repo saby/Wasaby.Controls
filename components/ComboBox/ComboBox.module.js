@@ -64,10 +64,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          ComboBox.superclass.setText.call(this, item[this._displayField]);
 
          /*обрабочики кликов*/
-         $('.js-core-ComboBox__arrowDown', this._container.get(0)).click(function(){
-            $('.core-ComboBox__itemRow__hover').removeClass('core-ComboBox__itemRow__hover');
+         $('.js-controls-ComboBox__arrowDown', this._container.get(0)).click(function(){
+            $('.controls-ComboBox__itemRow__hover').removeClass('controls-ComboBox__itemRow__hover');
             var key = self.getSelectedItem();
-            $('.core-ComboBox__itemRow[data-key=\''+key+'\']').addClass('core-ComboBox__itemRow__hover');
+            $('.controls-ComboBox__itemRow[data-key=\''+key+'\']').addClass('controls-ComboBox__itemRow__hover');
             self.togglePicker();
          });
 
@@ -86,8 +86,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _drawSelectedItem : function(key) {
          var item = this._items.getItem(key);
          ComboBox.superclass.setText.call(this, item[this._displayField]);
-         $('.core-ComboBox__itemRow__hover').removeClass('core-ComboBox__itemRow__hover');
-         $('.core-ComboBox__itemRow[data-key=\''+key+'\']').addClass('core-ComboBox__itemRow__hover');
+         $('.controls-ComboBox__itemRow__hover').removeClass('controls-ComboBox__itemRow__hover');
+         $('.controls-ComboBox__itemRow[data-key=\''+key+'\']').addClass('controls-ComboBox__itemRow__hover');
       },
 
       _notifySelectedItem : function(key) {
@@ -102,13 +102,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             /*TODO просто в пикер пихаются дивы. Норм ли это понять после разработки ListView*/
             self._picker.getContainer().append(self._itemTpl({key: key, title: item[self._displayField]}));
          });
-         $('.js-core-ComboBox__itemRow', self._picker.getContainer().get(0)).click(function(){
+         $('.js-controls-ComboBox__itemRow', self._picker.getContainer().get(0)).click(function(){
             self.setValue($(this).attr('data-key'));
             self.hidePicker();
          });
-         $('.js-core-ComboBox__itemRow', self._picker.getContainer().get(0)).hover(function(){
-            $('.core-ComboBox__itemRow__hover').removeClass('core-ComboBox__itemRow__hover');
-            $(this).addClass('core-ComboBox__itemRow__hover');
+         $('.js-controls-ComboBox__itemRow', self._picker.getContainer().get(0)).hover(function(){
+            $('.controls-ComboBox__itemRow__hover').removeClass('controls-ComboBox__itemRow__hover');
+            $(this).addClass('controls-ComboBox__itemRow__hover');
          });
       },
 

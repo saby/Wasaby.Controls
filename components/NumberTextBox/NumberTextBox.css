@@ -1,18 +1,18 @@
-.core-NumberTextBox {
+.controls-NumberTextBox {
    text-align: right;
 }
 
-.core-NumberTextBox__fieldWrapper {
+.controls-NumberTextBox__fieldWrapper {
    margin-right: 14px;
 }
 
-.core-NumberTextBox__arrowsContainer {
+.controls-NumberTextBox__arrowsContainer {
    float: right;
    width: 14px;
    height: 100%;
 }
 
-.core-NumberTextBox__arrow {
+.controls-NumberTextBox__arrow {
    background-repeat: no-repeat;
    text-decoration: none;
    display: block;
@@ -21,11 +21,11 @@
    min-height: 9px;
 }
 
-.core-NumberTextBox__arrowUp {
+.controls-NumberTextBox__arrowUp {
    background: url('resources/arrowup.png') left bottom no-repeat;
 }
 
-.core-NumberTextBox__arrowDown {
+.controls-NumberTextBox__arrowDown {
    background: url('resources/arrowdown.png') left top no-repeat;
    margin-top: 2px;
 }
