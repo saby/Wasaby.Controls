@@ -13,8 +13,7 @@ define('js!SBIS3.CONTROLS.ColorPicker',
    'use strict';
 
    /**
-    * Поле выбора цвета
-    * @class SBIS3.CONTROLS.ColorPicker
+    * Контрол, позволяющий выбрать цвет. Можно задать как шестадцатеричный код в виде текста, так и выбрать из выпадающего блока    * @class SBIS3.CONTROLS.ColorPicker
     * @extends SBIS3.CONTROLS.TextBox
     * @mixes SBIS3.CONTROLS._PickerMixin
     * @control
