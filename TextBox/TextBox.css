@@ -1,0 +1,10 @@
+.core-TextBox {
+   border: 1px solid #CCCCCC;
+   display: inline-block;
+   background: #ffffff;
+}
+
+.core-TextBox__field {
+   border: none;
+   height: 100%;
+}

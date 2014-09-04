@@ -1,0 +1,12 @@
+.core-Combobox__arrowDown {
+   background-color: #ffffff;
+   text-decoration: none;
+}
+.core-ComboBox__itemRow {
+   padding: 4px;
+   cursor: pointer;
+}
+
+.core-ComboBox__itemRow:hover, .core-ComboBox__itemRow__hover {
+   background-color: #E7F0F9;
+}

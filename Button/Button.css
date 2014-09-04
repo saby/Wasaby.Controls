@@ -1,0 +1,19 @@
+.core-Button {
+   background-color: #ffffff;
+   cursor: pointer;
+   border: 0;
+   padding: 2px 10px;
+   text-align: center;
+   border-radius: 4px;
+   line-height: 1.42857143;
+}
+.core-Button:hover {
+   background-color: #e6e6e6;
+}
+.core-Button__primary {
+   background-color: #f0ad4e;
+   color: #ffffff;
+}
+.core-Button__primary:hover{
+   background-color: #ec971f;
+}

@@ -1,0 +1,18 @@
+.core-CheckBox {
+   cursor: pointer;
+   display: inline-block;
+}
+.core-CheckBox__icon {
+   width: 16px;
+   height: 16px;
+   background: url('resources/CheckBox.png') 0 1px;
+   margin: 1px 4px 0 0;
+   display: inline-block;
+}
+.core-CheckBox:hover .core-CheckBox__icon{
+   background-position: 0 17px;
+}
+
+.core-CheckBox.core-ToggleButton__checked .core-CheckBox__icon{
+   background-position: 0 49px;
+}
