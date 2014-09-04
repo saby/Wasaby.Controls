@@ -3,19 +3,19 @@
  *
  * @description
  */
-define('js!SBIS3.CORE.CheckBox', ['js!SBIS3.CORE.ToggleButtonBase', 'html!SBIS3.CORE.CheckBox', 'css!SBIS3.CORE.CheckBox'], function(ToggleButtonBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ToggleButtonBase', 'html!SBIS3.CONTROLS.CheckBox', 'css!SBIS3.CONTROLS.CheckBox'], function(ToggleButtonBase, dotTplFn) {
 
    'use strict';
 
    /**
     * Контрол, отображающий стандартный чекбокс.
-    * @class SBIS3.CORE.CheckBox
-    * @extends SBIS3.CORE.ToggleButtonBase
-    * @mixes SBIS3.CORE._FormWidgetMixin
+    * @class SBIS3.CONTROLS.CheckBox
+    * @extends SBIS3.CONTROLS.ToggleButtonBase
+    * @mixes SBIS3.CONTROLS._FormWidgetMixin
     * @control
     */
 
-   var CheckBox = ToggleButtonBase.extend( /** @lends SBIS3.CORE.CheckBox.prototype */ {
+   var CheckBox = ToggleButtonBase.extend( /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
       $protected: {
          _dotTplFn : dotTplFn,
          _options: {

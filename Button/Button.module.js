@@ -3,18 +3,18 @@
  *
  * @description
  */
-define('js!SBIS3.CORE.Button', ['js!SBIS3.CORE.ButtonBase', 'html!SBIS3.CORE.Button', 'css!SBIS3.CORE.Button'], function(ButtonBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.Button', 'css!SBIS3.CONTROLS.Button'], function(ButtonBase, dotTplFn) {
 
    'use strict';
 
    /**
     * Контрол, отображающий обычную кнопку
-    * @class SBIS3.CORE.Button
-    * @extends SBIS3.CORE.ButtonBase
+    * @class SBIS3.CONTROLS.Button
+    * @extends SBIS3.CONTROLS.ButtonBase
     * @control
     */
 
-   var Button = ButtonBase.extend( /** @lends SBIS3.CORE.Button.prototype */ {
+   var Button = ButtonBase.extend( /** @lends SBIS3.CONTROLS.Button.prototype */ {
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {

@@ -2,18 +2,18 @@
  * Created by iv.cheremushkin on 21.08.2014.
  */
 
-define('js!SBIS3.CORE.Control', [], function() {
+define('js!SBIS3.CONTROLS.Control', [], function() {
 
    'use strict';
 
    /**
     * базовый класс для всех контролов. Включает в себя объединенные старые классы Control и CompoundControl.
     * Объединение помогает однозначно понимать от какого класса должны наследоваться все остальные контролы.
-    * @class SBIS3.CORE.Control
+    * @class SBIS3.CONTROLS.Control
     * @extends $ws.core.extend
     */
 
-   var Control = $ws.core.extend({}, /** @lends SBIS3.CORE.Control.prototype */{
+   var Control = $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Control.prototype */{
       $protected: {
          _options: {
             /**
@@ -33,11 +33,11 @@ define('js!SBIS3.CORE.Control', [], function() {
              */
             name: '',
             /**
-             * @cfg {SBIS3.CORE.Control} Логический родитель контрола
+             * @cfg {SBIS3.CONTROLS.Control} Логический родитель контрола
              */
             owner: null,
             /**
-             * @cfg {SBIS3.CORE.Control} Физический родитель контрола
+             * @cfg {SBIS3.CONTROLS.Control} Физический родитель контрола
              */
             parent: null,
             /**

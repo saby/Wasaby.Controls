@@ -1,15 +1,15 @@
-define('js!SBIS3.CORE.ToggleButtonBase', ['js!SBIS3.CORE.ButtonBase'], function(ButtonBase) {
+define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase'], function(ButtonBase) {
 
    'use strict';
 
    /**
     * Поведенческий класс задающий поведение кнопки с залипанием.
     * Отличается от обычной кнопки тем, что сохраняется состояние checked (“Нажатая/Не нажатая”). При клике - checked меняется на противоположный
-    * @class SBIS3.CORE.ToggleButtonBase
-    * @extends SBIS3.CORE.ButtonBase
+    * @class SBIS3.CONTROLS.ToggleButtonBase
+    * @extends SBIS3.CONTROLS.ButtonBase
     */
 
-   var ToggleButtonBase = ButtonBase.extend(/** @lends SBIS3.CORE.ToggleButtonBase.prototype */{
+   var ToggleButtonBase = ButtonBase.extend(/** @lends SBIS3.CONTROLS.ToggleButtonBase.prototype */{
       $protected: {
          _checked : false,
          _options: {

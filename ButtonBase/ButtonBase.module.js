@@ -3,18 +3,18 @@
  *
  * @description
  */
-define('js!SBIS3.CORE.ButtonBase', ['js!SBIS3.CORE.Control'], function(Control) {
+define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control'], function(Control) {
 
    'use strict';
 
    /**
     * Поведенческий класс, задающий базовое поведение кнопки. Основное предназначение - обрабатывать клик.
     * Все контролы - кнопки должны наследоваться от этого класса. Отображение и верстка задаются именно в унаследованных классах.
-    * @class SBIS3.CORE.ButtonBase
+    * @class SBIS3.CONTROLS.ButtonBase
     * @extends SBIS3.CORE.Control
     */
 
-   var ButtonBase = Control.Control.extend( /** @lends SBIS3.CORE.ButtonBase.prototype*/ {
+   var ButtonBase = Control.Control.extend( /** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
       $protected: {
          _options: {
             /**
