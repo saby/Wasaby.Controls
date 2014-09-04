@@ -1,0 +1,11 @@
+<div class="core-ComboBox core-TextBox{{?it.className}} {{=it.className}}{{?}}">
+    <a class="js-core-ComboBox__arrowDown core-ComboBox__arrowDown icon-16 icon-ArrowDown icon-primary action-hover"
+       href="javascript: void(0)"
+    >&nbsp;</a><div class="core-ComboBox__inputWrapper">
+        <input class="core-TextBox__field js-core-TextBox__field core-ComboBox__field{{? it.manualInput === false }} core-ComboBox__field__manual-false js-core-ComboBox__arrowDown{{?}}" type="text"
+            {{? it.text }} value="{{=it.text}}"{{?}}
+            {{? it.placeholder }} placeholder="{{=it.placeholder}}"{{?}}
+            {{? it.maxLength }} maxlength="{{=it.maxLength}}"{{?}}
+            {{? it.manualInput === false }} readonly="readonly"{{?}}
+        /></div>
+</div>

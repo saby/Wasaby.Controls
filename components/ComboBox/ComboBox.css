@@ -1,0 +1,26 @@
+.core-ComboBox__arrowDown {
+   background-color: #ffffff;
+   text-decoration: none;
+   float: right
+}
+.core-ComboBox__itemRow {
+   padding: 4px;
+   cursor: pointer;
+}
+
+.core-ComboBox__itemRow__hover {
+   background-color: #E7F0F9;
+}
+
+.core-ComboBox__field__manual-false {
+   cursor: pointer;
+}
+
+.core-ComboBox__field {
+   width: 100%;
+}
+
+.core-ComboBox__inputWrapper {
+   margin-right: 16px;
+   height: 100%;
+}

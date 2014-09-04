@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection'], function(Collection) {
 
    /**
-    * Добавляет  любому контролу поведение работы с набором однотипных элементов
+    * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
     * @mixin SBIS3.CONTROLS._CollectionMixin
     */
 

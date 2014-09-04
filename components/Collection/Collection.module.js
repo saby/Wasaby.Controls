@@ -65,11 +65,8 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
 
       _getSibling : function(elKey, type) {
          var sibling = null;
-         if (typeof elKey === 'undefined') {
-            throw new Error ('key is undefined');
-         }
          //Если ключ не задан, то возвращаем первый элемент
-         if (elKey === null) {
+         if (!elKey) {
             sibling = this._items[0] || null;
          }
          else {

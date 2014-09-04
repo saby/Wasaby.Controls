@@ -1,0 +1,13 @@
+<div class="core-NumberTextBox core-TextBox{{?it.className}} {{=it.className}}{{?}}">
+    <div class="core-NumberTextBox__arrowsContainer">
+        <a class="js-core-NumberTextBox__arrowUp core-NumberTextBox__arrowUp core-NumberTextBox__arrow" href="javascript: void(0)"></a>
+        <a class="js-core-NumberTextBox__arrowDown core-NumberTextBox__arrowDown core-NumberTextBox__arrow" href="javascript: void(0)"></a>
+    </div>
+    <div class="core-NumberTextBox__fieldWrapper">
+        <input class="js-core-TextBox__field core-TextBox__field" type="text"
+    {{? it.text }} value="{{=it.text}}"{{?}}
+    {{? it.placeholder }} placeholder="{{=it.placeholder}}"{{?}}
+    {{? it.maxLength }} maxlength="{{=it.maxLength}}"{{?}}
+    /></div>
+
+</div>

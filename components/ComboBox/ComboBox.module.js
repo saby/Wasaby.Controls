@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 ], function(TextBox, _PickerMixin, _CollectionMixin, _SelectorMixin, dotTpl, itemTpl) {
    'use strict';
    /**
-    * Выпадающий список с выбором значений из списка
+    * Выпадающий список с выбором значений из набора. Есть настройка которая позволяет также  вручную вводить значения.
     * @class SBIS3.CONTROLS.ComboBox
     * @extends SBIS3.CONTROLS.TextBox
     * @control
@@ -25,6 +25,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          _itemTpl : '',
          _displayField : '',
          _options: {
+            /**
+             * @cfg {Boolean} Разрешить ручной ввод значений
+             */
+            manualInput : true,
             /**
              * @cfg {Boolean} Присутствует пустое значение или нет
              */
@@ -53,13 +57,24 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
 
          this._drawItems();
+         /*устанавливаем первое значение TODO по идее переписан метод setSelectedItem для того чтобы не срабатывало событие при первой установке*/
+         var
+            item = this._items.getNextItem();
+         this._selectedItem = this._items.getKey(item);
+         ComboBox.superclass.setText.call(this, item[this._displayField]);
 
-         $('.js-core-Combobox__arrowDown', this._container).click(function(){
+         /*обрабочики кликов*/
+         $('.js-core-ComboBox__arrowDown', this._container.get(0)).click(function(){
             $('.core-ComboBox__itemRow__hover').removeClass('core-ComboBox__itemRow__hover');
             var key = self.getSelectedItem();
-            $('.core-ComboBox__itemRow[data-key='+key+']').addClass('core-ComboBox__itemRow__hover');
+            $('.core-ComboBox__itemRow[data-key=\''+key+'\']').addClass('core-ComboBox__itemRow__hover');
             self.togglePicker();
          });
+
+         /*хренька на скролл*/
+         $ws.helpers.trackElement(this._container).subscribe('onMove', function() {
+            self._picker.recalcPosition();
+         }, this);
       },
 
       setText : function(text) {
@@ -72,7 +87,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var item = this._items.getItem(key);
          ComboBox.superclass.setText.call(this, item[this._displayField]);
          $('.core-ComboBox__itemRow__hover').removeClass('core-ComboBox__itemRow__hover');
-         $('.core-ComboBox__itemRow[data-key='+key+']').addClass('core-ComboBox__itemRow__hover');
+         $('.core-ComboBox__itemRow[data-key=\''+key+'\']').addClass('core-ComboBox__itemRow__hover');
+      },
+
+      _notifySelectedItem : function(key) {
+         var text = this.getText();
+         this._notify('onChangeSelectedItem', key, text);
       },
 
       _drawItems : function() {
@@ -86,9 +106,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             self.setValue($(this).attr('data-key'));
             self.hidePicker();
          });
+         $('.js-core-ComboBox__itemRow', self._picker.getContainer().get(0)).hover(function(){
+            $('.core-ComboBox__itemRow__hover').removeClass('core-ComboBox__itemRow__hover');
+            $(this).addClass('core-ComboBox__itemRow__hover');
+         });
       },
 
       _keyDownBind : function(e){
+         /*описываем здесь поведение стрелок вверх и вниз*/
          var self = this,
          current = self.getSelectedItem();
 			if (e.which == 40 || e.which == 38) {
@@ -110,12 +135,17 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
 
-      _keyUpBind: function() {
+      _keyUpBind: function(e) {
+         /*по изменению текста делаем то же что и в текстбоксе*/
          ComboBox.superclass._keyUpBind.call(this);
-         this._setKeyByText();
+         /*не делаем смену значения при нажатии на стрелки вверх вниз. Иначе событие смены ключа срабатывает два раза*/
+         if ((e.which != 40) && (e.which != 38)) {
+            this._setKeyByText();
+         }
       },
 
       _setKeyByText : function() {
+         /*устанавливаем ключ, когда текст изменен извне*/
          var
             selKey,
             self = this,
@@ -126,6 +156,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
          });
          this._selectedItem = selKey || null;
+         this._notifySelectedItem(this._selectedItem);
       },
 
       setValue: function(key){

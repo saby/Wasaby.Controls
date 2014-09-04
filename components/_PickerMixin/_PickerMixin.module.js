@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], function(FloatArea) {
    /**
-    * Отображение выпадающего вниз блока, с возможностью выбора
+    * Контрол умеющий отображать выдающий вниз блок, в котором можно что-то выбрать
+    * Задается контент (протектед методом каким-то) и методы которые позволяют открывать, закрывать блок.
     * @mixin SBIS3.CONTROLS._PickerMixin
     */
    var _FormWidgetMixin = /** @lends SBIS3.CONTROLS._PickerMixin.prototype */{
