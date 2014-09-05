@@ -25,6 +25,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       $constructor: function () {
+         var self = this;
          this._publish('onChangeText');
          $('.js-controls-NumberTextBox__arrowDown', this.getContainer().get(0)).click(function () {
             self._changeNumberByOne(-1);
