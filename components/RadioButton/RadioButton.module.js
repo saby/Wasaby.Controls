@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.RadioButton', ['js!SBIS3.CONTROLS.RadioButtonBase'], function(RadioButtonBase) {
+define('js!SBIS3.CONTROLS.RadioButton', ['js!SBIS3.CONTROLS.RadioButtonBase', 'html!SBIS3.CONTROLS.RadioButton', 'css!SBIS3.CONTROLS.RadioButton'], function(RadioButtonBase,dotTplFn) {
 
    'use strict';
 
@@ -15,14 +15,22 @@ define('js!SBIS3.CONTROLS.RadioButton', ['js!SBIS3.CONTROLS.RadioButtonBase'], f
     */
 
    var RadioButton = RadioButtonBase.extend( /** @lends SBIS3.CONTROLS.RadioButton.prototype */ {
+      _dotTplFn: dotTplFn,
       $protected: {
+         _radioButtonCaption: '',
          _options: {
 
          }
       },
 
       $constructor: function() {
+         var self = this;
+         this._radioButtonCaption = $('.controls-RadioButton__caption', self._container);
+      },
 
+      setCaption: function(captionTxt){
+         RadioButton.superclass.setCaption.call(this,captionTxt);
+         this._radioButtonCaption.html(captionTxt || '');
       }
 
    });
