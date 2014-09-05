@@ -35,6 +35,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          this._publish('onChangeText');
          var self = this;
          this._inputField = $('.controls-TextBox__field', this.getContainer().get(0));
+         this._container.bind('keypress',function(e){
+            self._keyPressBind(e);
+         });
          this._container.bind('keydown',function(e){
             self._keyDownBind(e);
          });
@@ -74,6 +77,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _keyDownBind: function() {
+      },
+
+      _keyPressBind: function() {
       },
 
       _trim: function(text){

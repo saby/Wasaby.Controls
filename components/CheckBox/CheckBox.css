@@ -16,3 +16,7 @@
 .controls-CheckBox.controls-ToggleButton__checked .controls-CheckBox__icon{
    background-position: 0 49px;
 }
+
+.controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon{
+   background-position: 0 34px;
+}

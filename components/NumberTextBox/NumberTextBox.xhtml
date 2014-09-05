@@ -5,7 +5,7 @@
     </div>
     <div class="controls-NumberTextBox__fieldWrapper">
         <input class="js-controls-TextBox__field controls-TextBox__field" type="text"
-    {{? it.text }} value="{{=it.text}}"{{?}}
+    {{? it.text }} value="{{? it.numberFractDigits && !it.onlyInteger}}{{=parseFloat(it.text).toFixed(it.numberFractDigits)}}{{??}}{{=it.text}}{{?}}"{{?}}
     {{? it.placeholder }} placeholder="{{=it.placeholder}}"{{?}}
     {{? it.maxLength }} maxlength="{{=it.maxLength}}"{{?}}
     /></div>
