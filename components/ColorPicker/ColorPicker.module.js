@@ -52,40 +52,37 @@ define('js!SBIS3.CONTROLS.ColorPicker',
 
       togglePicker: function() {
          var self = this;
-         if (!self._wasCreated){
-            self._createColpick();
-            self._wasCreated = true;
-         }
+         self._createColpick();
          ColorPicker.superclass.togglePicker.call(this);
       },
 
       _createColpick: function(){
          var self = this;
-         self._picker.getContainer().colpick({
-            flat:true,
-            layout:'hex',
-            color: '000000',
-            onSubmit:function(col,hex) {
-               self.hidePicker();
-               ColorPicker.superclass.setText.call(self,hex);
-               self._colorBox.css('background','#' + hex);
-            },
-            onChange:function(hsb,hex) {
-               self._colorBox.css('background','#' + hex);
-               if(!self._byKeyUp) {
-                  ColorPicker.superclass.setText.call(self,hex);
+         if (!self._wasCreated) {
+            self._picker.getContainer().colpick({
+               flat: true,
+               layout: 'hex',
+               color: '000000',
+               onSubmit: function (col, hex) {
+                  self.hidePicker();
+                  ColorPicker.superclass.setText.call(self, hex);
+                  self._colorBox.css('background', '#' + hex);
+               },
+               onChange: function (hsb, hex) {
+                  self._colorBox.css('background', '#' + hex);
+                  if (!self._byKeyUp) {
+                     ColorPicker.superclass.setText.call(self, hex);
+                  }
+                  self._byKeyUp = false;
                }
-               self._byKeyUp = false;
-            }
-         });
+            });
+            self._wasCreated = true;
+         }
       },
 
       _keyUpBind: function(){
          var self = this;
-         if (!self._wasCreated){
-            self._createColpick();
-            self._wasCreated = true;
-         }
+         self._createColpick();
          self._byKeyUp = true;
          ColorPicker.superclass._keyUpBind.call(self);
          self._picker.getContainer().colpickSetColor(self.getText());
