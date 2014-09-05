@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ToggleButtonBase', 'htm
 
       $constructor: function() {
          var self = this;
-         this._checkBoxCaption = $('.controls-CheckBox__caption', self._container);
+         this._checkBoxCaption = $('.js-controls-CheckBox__caption', self._container);
       },
 
       setCaption: function(captionTxt){

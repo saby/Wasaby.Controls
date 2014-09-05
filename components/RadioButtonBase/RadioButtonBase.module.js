@@ -23,6 +23,12 @@ define('js!SBIS3.CONTROLS.RadioButtonBase', ['js!SBIS3.CONTROLS.ToggleButtonBase
 
       $constructor: function() {
 
+      },
+
+      _clickHandler : function() {
+         if (!this._checked){
+            this.setChecked(true);
+         }
       }
 
    });
