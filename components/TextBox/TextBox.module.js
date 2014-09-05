@@ -35,7 +35,6 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          this._publish('onChangeText');
          var self = this;
          this._inputField = $('.controls-TextBox__field', this.getContainer().get(0));
-
          this._container.bind('keydown',function(e){
             self._keyDownBind(e);
          });
@@ -43,9 +42,18 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          this._container.bind('keyup',function(e){
             self._keyUpBind(e);
          });
+         // При потере фокуса делаем trim, если нужно
+         // TODO Переделать на платформенное событие потери фокуса
+         if (self._options.trim) {
+            self._inputField.bind('focusout', function () {
+               self.setText(self._trim(self.getText()));
+            });
+         }
       },
 
       setText: function(text){
+         //перед изменением делаем trim если нужно
+         text = this._trim(text);
          TextBox.superclass.setText.call(this, text);
          $('.controls-TextBox__field', this.getContainer().get(0)).attr('value', text || '');
       },
@@ -66,8 +74,14 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _keyDownBind: function() {
-      }
+      },
 
+      _trim: function(text){
+         if (this._options.trim){
+            text = String.trim(text);
+         }
+        return text;
+      }
    });
 
    return TextBox;
