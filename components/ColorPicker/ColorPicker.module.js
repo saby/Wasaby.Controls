@@ -13,7 +13,8 @@ define('js!SBIS3.CONTROLS.ColorPicker',
    'use strict';
 
    /**
-    * Контрол, позволяющий выбрать цвет. Можно задать как шестадцатеричный код в виде текста, так и выбрать из выпадающего блока    * @class SBIS3.CONTROLS.ColorPicker
+    * Контрол, позволяющий выбрать цвет. Можно задать как шестадцатеричный код в виде текста, так и выбрать из выпадающего блока
+    * @class SBIS3.CONTROLS.ColorPicker
     * @extends SBIS3.CONTROLS.TextBox
     * @mixes SBIS3.CONTROLS._PickerMixin
     * @control
@@ -33,11 +34,20 @@ define('js!SBIS3.CONTROLS.ColorPicker',
       $constructor: function() {
          var self = this;
          self._colorBox = $('.js-controls-ColorPicker__currentColor', this.getContainer().get(0));
-         self._colorBox.height(this.getContainer().height());
-         self._colorBox.width(self._colorBox.height());
          self._colorBox.bind('click',function(){
-            self._onClickBind();
+            self.togglePicker();
          });
+      },
+
+      setMaxLength: function(){
+
+      },
+
+      setText: function(text){
+         var self = this;
+         ColorPicker.superclass.setText.call(this,text);
+         self._colorBox.css('background','#' + text);
+         self._picker.getContainer().colpickSetColor(self.getText());
       },
 
       togglePicker: function() {
@@ -57,13 +67,13 @@ define('js!SBIS3.CONTROLS.ColorPicker',
             color: '000000',
             onSubmit:function(col,hex) {
                self.hidePicker();
-               self.setText(hex);
+               ColorPicker.superclass.setText.call(self,hex);
                self._colorBox.css('background','#' + hex);
             },
             onChange:function(hsb,hex) {
                self._colorBox.css('background','#' + hex);
                if(!self._byKeyUp) {
-                  self.setText(hex);
+                  ColorPicker.superclass.setText.call(self,hex);
                }
                self._byKeyUp = false;
             }
@@ -77,13 +87,8 @@ define('js!SBIS3.CONTROLS.ColorPicker',
             self._wasCreated = true;
          }
          self._byKeyUp = true;
-         ColorPicker.superclass._keyUpBind.call(this);
+         ColorPicker.superclass._keyUpBind.call(self);
          self._picker.getContainer().colpickSetColor(self.getText());
-      },
-
-      _onClickBind: function(){
-         var self = this;
-         self.togglePicker();
       }
 
    });
