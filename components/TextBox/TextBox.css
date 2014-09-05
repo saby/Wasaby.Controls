@@ -2,6 +2,7 @@
    border: 1px solid #CCCCCC;
    display: inline-block;
    background: #ffffff;
+   overflow: hidden;
 }
 
 .controls-TextBox__field {
@@ -11,10 +12,10 @@
    min-height: 17px;
 }
 
-.controls-TextBox__field-uppercase{
+.controls-TextBox__field-uppercase {
    text-transform: uppercase;
 }
 
-.controls-TextBox__field-lowercase{
+.controls-TextBox__field-lowercase {
    text-transform: lowercase;
 }
