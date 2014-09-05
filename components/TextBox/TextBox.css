@@ -7,4 +7,14 @@
 .controls-TextBox__field {
    border: none;
    height: 100%;
+   width: 100%;
+   min-height: 17px;
+}
+
+.controls-TextBox__field-uppercase{
+   text-transform: uppercase;
+}
+
+.controls-TextBox__field-lowercase{
+   text-transform: lowercase;
 }
