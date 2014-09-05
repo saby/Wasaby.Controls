@@ -41,6 +41,20 @@
 </head>
 <body class="view-main">
 
+<br/>
+<br/>
+
+<div>
+   Высота контролов:
+   <div id="NumberTextBoxHeight"></div>
+   <br/>
+   Ширина контролов:
+   <div id="NumberTextBoxWidth"></div>
+</div>
+
+<br/>
+<br/>
+
 <div id="TextBox" class="testBlock"></div>
 <div id="NumberTextBox" class="testBlock"></div>
 <div id="PasswordTextBox" class="testBlock"></div>
@@ -70,7 +84,7 @@
          require(["js!SBIS3.CONTROLS.PasswordTextBox"], function (r) {
             new r({
                element: "PasswordTextBox",
-               text: 'This is PasswordTextBox'
+               text: 'password'
             })
          });
 
@@ -96,6 +110,29 @@
                ]
             })
          });
+
+         require(["js!SBIS3.CONTROLS.NumberTextBox"], function (r) {
+            new r({
+               element: "NumberTextBoxHeight",
+               text: '19',
+               onlyInteger: true
+            })
+            $('#NumberTextBoxHeight').wsControl().subscribe('onChangeText', function (event, height) {
+               $('.testBlock').css({height: parseInt(height)});
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.NumberTextBox"], function (r) {
+            new r({
+               element: "NumberTextBoxWidth",
+               text: '150',
+               onlyInteger: true
+            })
+            $('#NumberTextBoxWidth').wsControl().subscribe('onChangeText', function (event, width) {
+               $('.testBlock').css({width: parseInt(width)});
+            })
+         });
+
 
       })
    });

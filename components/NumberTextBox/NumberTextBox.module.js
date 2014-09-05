@@ -80,7 +80,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          } else {
             self.setText(value.toString());
          }
-         this._notify('onChangeText', this._options.text);
       }
    });
 
