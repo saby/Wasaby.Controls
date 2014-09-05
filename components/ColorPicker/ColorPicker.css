@@ -1,0 +1,9 @@
+.controls-ColorPicker__currentColor {
+   float: right;
+   cursor: pointer;
+   background: #000000;
+   border-left: 1px solid #CCCCCC;
+   height: 100%;
+   min-height: 19px;
+   min-width: 19px;
+}
