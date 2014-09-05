@@ -40,24 +40,13 @@
    <link rel="stylesheet" type="text/css" href="sprites.css"/>
 </head>
 <body class="view-main">
-<div id="id1">
-
+<div style="padding: 20px">
+   <a href="/pages/textBoxCommonStyles.html">TextBox's</a>
 </div>
 <script type="text/javascript">
    $ws.core.withComponents('Source').addCallback(function () {
       $(document).ready(function () {
-         require(["js!SBIS3.CONTROLS.ComboBox"], function (r) {
-            new r({
-               element: "id1",
-               items : [{
-                  key : 1,
-                  title : 'Первый'
-               }, {
-                  key : 2,
-                  title : 'Второй'
-               }]
-            })
-         });
+
       })
    });
 </script>

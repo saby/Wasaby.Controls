@@ -4,6 +4,7 @@
 
 .controls-NumberTextBox__fieldWrapper {
    margin-right: 14px;
+   height: 100%;
 }
 
 .controls-NumberTextBox__arrowsContainer {
@@ -27,5 +28,5 @@
 
 .controls-NumberTextBox__arrowDown {
    background: url('resources/arrowdown.png') left top no-repeat;
-   margin-top: 2px;
+   margin-top: 1px;
 }

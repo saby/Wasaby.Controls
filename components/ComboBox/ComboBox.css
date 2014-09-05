@@ -1,8 +1,20 @@
+.controls-ComboBox__arrowsContainer {
+   position: relative;
+   height: 100%;
+   width: 16px;
+   float: right;
+   min-height: 17px;
+}
+
 .controls-ComboBox__arrowDown {
    background-color: #ffffff;
    text-decoration: none;
-   float: right
+   position: absolute;
+   right: 0;
+   top: 50%;
+   margin-top: -8px;
 }
+
 .controls-ComboBox__itemRow {
    padding: 4px;
    cursor: pointer;
@@ -16,11 +28,7 @@
    cursor: pointer;
 }
 
-.controls-ComboBox__field {
-   width: 100%;
-}
-
 .controls-ComboBox__inputWrapper {
-   margin-right: 16px;
+   margin-right: 18px;
    height: 100%;
 }
