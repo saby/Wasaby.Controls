@@ -7,10 +7,7 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', [], function() {
     */
    var _FormWidgetMixin = /** @lends SBIS3.CONTROLS._FormWidgetMixin.prototype */{
       $protected: {
-            /**
-             * @cfg {*} Значение
-             */
-            value: null
+
       },
 
       $constructor: function() {

@@ -26,15 +26,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
       $constructor: function () {
          this._publish('onChangeText');
-         var self = this;
-         if(self._inputField.val() !== '') {
-            if (this._options.numberFractDigits && !this._options.onlyInteger) {
-               this.setText(parseFloat(self._options.text).toFixed(self._options.numberFractDigits));
-            } else {
-               this.setText(self._options.text.toString());
-            }
-         }
-
          $('.js-controls-NumberTextBox__arrowDown', this.getContainer().get(0)).click(function () {
             self._changeNumberByOne(-1);
          });

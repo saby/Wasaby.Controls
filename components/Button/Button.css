@@ -1,7 +1,7 @@
 .controls-Button {
    background-color: #ffffff;
    cursor: pointer;
-   border: 0;
+   border: 1px solid #c7c7c7;
    padding: 2px 10px;
    text-align: center;
    border-radius: 4px;
@@ -11,9 +11,11 @@
    background-color: #e6e6e6;
 }
 .controls-Button__primary {
-   background-color: #f0ad4e;
+   background-color: #ffbf60;
+   border: 1px solid #ffbf60;
    color: #ffffff;
 }
 .controls-Button__primary:hover{
-   background-color: #ec971f;
+   background-color: #ffaf53;
+   border: 1px solid #ffaf53;
 }

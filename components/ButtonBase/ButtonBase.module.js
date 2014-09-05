@@ -50,15 +50,14 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control'], function(Contr
        */
 
       setCaption: function(captionTxt) {
-
+         this._options.caption = captionTxt || '';
       },
 
       /**
        * Возвращает текст на кнопке
        */
-
       getCaption: function() {
-
+         return this._options.caption;
       },
 
       /**

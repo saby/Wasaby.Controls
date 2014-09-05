@@ -11,12 +11,12 @@ define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase'], f
 
    var ToggleButtonBase = ButtonBase.extend(/** @lends SBIS3.CONTROLS.ToggleButtonBase.prototype */{
       $protected: {
-         _checked : false,
+         _checked : null,
          _options: {
             /**
              * @cfg {Boolean} Выбрана кнопка по умолчанию или нет
              */
-            checked: false,
+            checked: null,
             /**
              * @cfg {Boolean} Есть третье, неопределенное, значение или нет
              */
@@ -25,35 +25,56 @@ define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase'], f
       },
 
       $constructor: function() {
-         this._checked = !!(this._options.checked);
+         if (!this._options.threeState) {
+            this._checked = !!(this._options.checked);
+         } else {
+            this._checked = (this._options.checked === false || this._options.checked === true) ? this._options.checked : null;
+         }
       },
 
       /**
        * Устанавливает состояние кнопки
        * @param {Boolean} flag
        */
-
       setChecked: function(flag) {
          if (flag === true) {
             this._container.addClass('controls-ToggleButton__checked');
+            this._container.removeClass('controls-ToggleButton__null');
             this._checked = true;
-         }
-         else {
+         } else
+         if (flag === false) {
             this._container.removeClass('controls-ToggleButton__checked');
+            this._container.removeClass('controls-ToggleButton__null');
             this._checked = false;
+         } else {
+            if (this._options.threeState) {
+               this._container.removeClass('controls-ToggleButton__checked');
+               this._container.addClass('controls-ToggleButton__null');
+               this._checked = null;
+            }
          }
       },
 
       /**
        * Получить состояние кнопки
        */
-
       isChecked: function() {
          return this._checked;
       },
 
       _clickHandler : function() {
-         this.setChecked(!(this.isChecked()));
+         if (!this._options.threeState) {
+            this.setChecked(!(this.isChecked()));
+         } else {
+            if (this._checked === true){
+               this.setChecked(false);
+            } else
+            if (this._checked === false){
+               this.setChecked(null);
+            } else  {
+               this.setChecked(true);
+            }
+         }
       }
 
    });
