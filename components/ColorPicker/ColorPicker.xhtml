@@ -1,7 +1,10 @@
 <div class="controls-ColorPicker controls-TextBox{{?it.className}} {{=it.className}}{{?}}">
-    <div class="js-controls-ColorPicker__currentColor controls-ColorPicker__currentColor"></div>
+    <a class="js-controls-ColorPicker__currentColor controls-ColorPicker__currentColor"
+       href="javascript: void(0)">&nbsp;</a>
+    <div class="controls-ColorPicker__inputWrapper">
     <input class="js-controls-TextBox__field controls-TextBox__field" type="text" maxlength="6"
     {{? it.text }} value="{{=it.text}}"{{?}}
     {{? it.placeholder }} placeholder="{{=it.placeholder}}"{{?}}
     {{? it.disabled }} readonly="readonly"{{?}}/>
+    </div>
 </div>
