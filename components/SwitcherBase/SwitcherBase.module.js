@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control'], function(Con
              */
             state: 'off',
             /**
-             * @cfg {String} Текст при включенном состоянии
+             * @cfg {String} Текст+ при включенном состоянии
              */
             stateOn: '',
             /**
@@ -47,13 +47,17 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control'], function(Con
        * @param {String} state
        */
       setState: function(state) {
-
+         if (state == 'on' || state == 'off'){
+            this._options.state = state;
+         } else {
+            this._options.state = 'off';
+         }
       },
       /**
        * Получить состояние
        */
       getState: function() {
-
+         return this._options.state;
       }
 
    });

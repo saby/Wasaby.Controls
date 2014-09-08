@@ -1,0 +1,8 @@
+<span class="js-controls-SwitcherDoubleOnline controls-SwitcherDoubleOnline">
+    <span class="js-controls-SwitcherDoubleOnline__position controls-SwitcherDoubleOnline__toggle
+    {{?it.state == 'on'}}controls-SwitcherDoubleOnline__rightPosition{{?}}
+    {{?it.state == 'off'}}controls-SwitcherDoubleOnline__leftPosition{{?}}">
+        {{?it.state == 'off'}}{{=it.stateOff}}{{?}}
+        {{?it.state == 'on'}}{{=it.stateOn}}{{?}}
+    </span>
+</span>

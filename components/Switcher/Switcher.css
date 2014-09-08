@@ -1,0 +1,25 @@
+.controls-Switcher {
+   background-color: #868686;
+   display: inline-block;
+   border-radius: 10px;
+   min-width: 60px;
+   cursor: pointer;
+   padding: 1px 3px 1px 3px;
+}
+
+.controls-Switcher__toggle{
+   width: 70%;
+   min-height: 17px;
+   height: 100%;
+   background-color: #f8f8f8;
+   border-radius: 10px;
+   text-align: center;
+}
+
+.controls-Switcher__leftPosition{
+   float: left;
+}
+
+.controls-Switcher__rightPosition{
+   float: right;
+}
