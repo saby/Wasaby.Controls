@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control'], function(Con
              */
             state: 'off',
             /**
-             * @cfg {String} Текст+ при включенном состоянии
+             * @cfg {String} Текст при включенном состоянии
              */
             stateOn: '',
             /**

@@ -1,8 +1,10 @@
-<span class="js-controls-SwitcherDoubleOnline controls-SwitcherDoubleOnline">
-    <span class="js-controls-SwitcherDoubleOnline__position controls-SwitcherDoubleOnline__toggle
-    {{?it.state == 'on'}}controls-SwitcherDoubleOnline__rightPosition{{?}}
-    {{?it.state == 'off'}}controls-SwitcherDoubleOnline__leftPosition{{?}}">
-        {{?it.state == 'off'}}{{=it.stateOff}}{{?}}
-        {{?it.state == 'on'}}{{=it.stateOn}}{{?}}
+<span class="controls-SwitcherDoubleOnline">
+    <span class="controls-SwitcherDoubleOnline__stateOff">{{=it.stateOff}}</span>
+    <span class="js-controls-SwitcherDoubleOnline__toggle controls-SwitcherDoubleOnline_toggle">
+        <span class="js-controls-SwitcherDoubleOnline__position controls-SwitcherDoubleOnline__position
+        {{?it.state == 'on'}}controls-SwitcherDoubleOnline__rightPosition{{?}}
+        {{?it.state == 'off'}}controls-SwitcherDoubleOnline__leftPosition{{?}}">
+        </span>
     </span>
+    <span class="controls-SwitcherDoubleOnline__stateOn">{{=it.stateOn}}</span>
 </span>

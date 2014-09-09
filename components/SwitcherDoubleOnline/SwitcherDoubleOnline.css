@@ -1,17 +1,22 @@
-.controls-SwitcherDoubleOnline {
-   background-color: #868686;
+.controls-SwitcherDoubleOnline{
    display: inline-block;
+   vertical-align: middle;
+}
+
+.controls-SwitcherDoubleOnline_toggle {
+   background-color: #dddddd;
    border-radius: 10px;
-   min-width: 60px;
    cursor: pointer;
+   min-width: 40px;
+   display: inline-block;
    padding: 1px 3px 1px 3px;
 }
 
-.controls-SwitcherDoubleOnline__toggle{
-   width: 70%;
-   min-height: 17px;
+.controls-SwitcherDoubleOnline__position{
+   width: 15px;
+   min-height: 15px;
    height: 100%;
-   background-color: #f8f8f8;
+   background-color: #f78936;
    border-radius: 10px;
    text-align: center;
 }
@@ -22,4 +27,14 @@
 
 .controls-SwitcherDoubleOnline__rightPosition{
    float: right;
+}
+
+.controls-SwitcherDoubleOnline__stateOn{
+   float: right;
+   margin-left: 2px;
+}
+
+.controls-SwitcherDoubleOnline__stateOff{
+   float: left;
+   margin-right: 2px;
 }

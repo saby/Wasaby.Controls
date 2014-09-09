@@ -26,10 +26,9 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
       $constructor: function() {
          var self = this;
          this._position = $('.js-controls-SwitcherDoubleOnline__position',self._container.get(0));
-         this._switcher = this._container;
+         this._switcher = $('.js-controls-SwitcherDoubleOnline__toggle',self._container.get(0));
 
          this._switcher.bind('mouseup',function(e){
-            e.preventDefault();
             if (self._options.state == 'on') {
                self.setState('off');
             } else {
@@ -42,9 +41,9 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
          var self = this;
          SwitcherDoubleOnline.superclass.setState.call(this,state);
          if (state == 'on'){
-            self._position.addClass('controls-SwitcherDoubleOnline__rightPosition').removeClass('controls-SwitcherDoubleOnline__leftPosition').html(self._options.stateOn);
+            self._position.addClass('controls-SwitcherDoubleOnline__rightPosition').removeClass('controls-SwitcherDoubleOnline__leftPosition');
          } else {
-            self._position.addClass('controls-SwitcherDoubleOnline__leftPosition').removeClass('controls-SwitcherDoubleOnline__rightPosition').html(self._options.stateOff);
+            self._position.addClass('controls-SwitcherDoubleOnline__leftPosition').removeClass('controls-SwitcherDoubleOnline__rightPosition');
          }
       }
 
