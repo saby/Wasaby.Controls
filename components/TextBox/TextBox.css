@@ -2,14 +2,35 @@
    border: 1px solid #CCCCCC;
    display: inline-block;
    background: #ffffff;
-   overflow: hidden;
+   box-sizing: border-box;
+}
+
+.controls-TextBox__fieldWrapper {
+   height: 100%;
+   box-sizing: border-box;
+}
+
+.controls-TextBox__optionsContainer{
+   float: right;
+   width: 16px;
+   min-height: 19px;
+   height: 100%;
+}
+
+.controls-TextBox__optionsContainer + .controls-TextBox__fieldWrapper {
+   margin-right: 19px;
 }
 
 .controls-TextBox__field {
    border: none;
-   height: 100%;
+   min-height: 19px;
+   height: 99%;
    width: 100%;
-   min-height: 17px;
+   margin: 0;
+   box-sizing: border-box;
+   line-height: 100%;
+   outline: none;
+   background: transparent;
 }
 
 .controls-TextBox__field-uppercase {

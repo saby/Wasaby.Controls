@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 28.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.PasswordTextBox', ['js!SBIS3.CONTROLS.TextBox','html!SBIS3.CONTROLS.PasswordTextBox'], function(TextBox, dotTplFn) {
+define('js!SBIS3.CONTROLS.PasswordTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SBIS3.CONTROLS.PasswordTextBox', 'css!SBIS3.CONTROLS.PasswordTextBox'], function (TextBox, dotTplFn) {
 
    'use strict';
    /**
@@ -12,10 +12,14 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', ['js!SBIS3.CONTROLS.TextBox','html!S
     * @extends SBIS3.CORE.TextBox
     * @control
     */
-
    var PasswordTextBox;
    PasswordTextBox = TextBox.extend(/** @lends SBIS3.CORE.PasswordTextBox.prototype */ {
-      _dotTplFn: dotTplFn
+      _dotTplFn: dotTplFn,
+      $protected: {
+         _options: {
+            fixIEclass: ($ws._const.browser.isIE && ($ws._const.browser.isIE8 || $ws._const.browser.isIE9 || $ws._const.browser.isIE10 || $ws._const.browser.isModernIE))
+         }
+      }
    });
 
    return PasswordTextBox;
