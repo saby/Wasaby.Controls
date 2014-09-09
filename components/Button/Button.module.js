@@ -24,8 +24,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
       },
 
       $constructor: function() {
-         var self = this;
-         self._button = this._container;
+         this._button = this._container;
       },
 
       setCaption: function(captionTxt){
