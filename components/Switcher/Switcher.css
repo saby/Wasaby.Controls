@@ -4,10 +4,10 @@
    border-radius: 10px;
    min-width: 60px;
    cursor: pointer;
-   padding: 1px 3px 1px 3px;
+   padding: 2px;
 }
 
-.controls-Switcher__toggle{
+.controls-Switcher__position{
    width: 70%;
    min-height: 17px;
    height: 100%;

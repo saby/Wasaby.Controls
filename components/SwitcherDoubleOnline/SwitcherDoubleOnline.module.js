@@ -18,6 +18,8 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
       $protected: {
          _switcher : null,
          _position : null,
+         _textOff : null,
+         _textOn : null,
          _options: {
 
          }
@@ -27,6 +29,16 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
          var self = this;
          this._position = $('.js-controls-SwitcherDoubleOnline__position',self._container.get(0));
          this._switcher = $('.js-controls-SwitcherDoubleOnline__toggle',self._container.get(0));
+         this._textOff = $('.js-controls-SwitcherDoubleOnline__textOff',self._container.get(0));
+         this._textOn = $('.js-controls-SwitcherDoubleOnline__textOn',self._container.get(0));
+
+         this._textOff.bind('mouseup',function(){
+            self.setState('off');
+         });
+
+         this._textOn.bind('mouseup',function(){
+            self.setState('on');
+         });
 
          this._switcher.bind('mouseup',function(e){
             if (self._options.state == 'on') {
@@ -42,8 +54,12 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
          SwitcherDoubleOnline.superclass.setState.call(this,state);
          if (state == 'on'){
             self._position.addClass('controls-SwitcherDoubleOnline__rightPosition').removeClass('controls-SwitcherDoubleOnline__leftPosition');
+            self._textOff.addClass('controls-SwitcherDoubleOnline__unselected');
+            self._textOn.removeClass('controls-SwitcherDoubleOnline__unselected');
          } else {
             self._position.addClass('controls-SwitcherDoubleOnline__leftPosition').removeClass('controls-SwitcherDoubleOnline__rightPosition');
+            self._textOn.addClass('controls-SwitcherDoubleOnline__unselected');
+            self._textOff.removeClass('controls-SwitcherDoubleOnline__unselected');
          }
       }
 

@@ -1,24 +1,23 @@
 .controls-SwitcherDoubleOnline{
    display: inline-block;
-   vertical-align: middle;
 }
 
 .controls-SwitcherDoubleOnline_toggle {
    background-color: #dddddd;
    border-radius: 10px;
    cursor: pointer;
-   min-width: 40px;
+   min-width: 30px;
+   min-height: 10px;
    display: inline-block;
-   padding: 1px 3px 1px 3px;
+   padding: 2px;
 }
 
 .controls-SwitcherDoubleOnline__position{
-   width: 15px;
-   min-height: 15px;
+   min-width: 10px;
    height: 100%;
+   min-height: 10px;
    background-color: #f78936;
    border-radius: 10px;
-   text-align: center;
 }
 
 .controls-SwitcherDoubleOnline__leftPosition{
@@ -29,12 +28,22 @@
    float: right;
 }
 
-.controls-SwitcherDoubleOnline__stateOn{
+.controls-SwitcherDoubleOnline__textOn{
    float: right;
-   margin-left: 2px;
+   margin-left: 6px;
 }
 
-.controls-SwitcherDoubleOnline__stateOff{
+.controls-SwitcherDoubleOnline__textOff{
    float: left;
-   margin-right: 2px;
+   margin-right: 8px;
 }
+
+.controls-SwitcherDoubleOnline__unselected{
+   color: #999999;
+   cursor: pointer;
+}
+
+.controls-SwitcherDoubleOnline__unselected:hover{
+   text-decoration: underline;
+}
+

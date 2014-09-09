@@ -1,10 +1,7 @@
 <span class="controls-SwitcherDoubleOnline">
-    <span class="controls-SwitcherDoubleOnline__stateOff">{{=it.stateOff}}</span>
+    <span class="js-controls-SwitcherDoubleOnline__textOff controls-SwitcherDoubleOnline__textOff {{?it.state == 'on'}}controls-SwitcherDoubleOnline__unselected{{?}}">{{=it.stateOff}}</span>
     <span class="js-controls-SwitcherDoubleOnline__toggle controls-SwitcherDoubleOnline_toggle">
-        <span class="js-controls-SwitcherDoubleOnline__position controls-SwitcherDoubleOnline__position
-        {{?it.state == 'on'}}controls-SwitcherDoubleOnline__rightPosition{{?}}
-        {{?it.state == 'off'}}controls-SwitcherDoubleOnline__leftPosition{{?}}">
-        </span>
+        <span class="js-controls-SwitcherDoubleOnline__position controls-SwitcherDoubleOnline__position {{?it.state == 'on'}}controls-SwitcherDoubleOnline__rightPosition{{?}}{{?it.state == 'off'}}controls-SwitcherDoubleOnline__leftPosition{{?}}"> </span>
     </span>
-    <span class="controls-SwitcherDoubleOnline__stateOn">{{=it.stateOn}}</span>
+    <span class="js-controls-SwitcherDoubleOnline__textOn controls-SwitcherDoubleOnline__textOn {{?it.state == 'off'}}controls-SwitcherDoubleOnline__unselected{{?}}">{{=it.stateOn}}</span>
 </span>
