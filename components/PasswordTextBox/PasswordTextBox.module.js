@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!
       _dotTplFn: dotTplFn,
       $constructor: function() {
          //TODO: избавиться от фикса высоты поля ввода пароля в IE>8
-         this.getContainer().find('.controls-TextBox__field').addClass('fixIEclass');
+         this.getContainer().find('.controls-TextBox__field').addClass('controls-TextBox__field__fixIE');
       }
    });
 
