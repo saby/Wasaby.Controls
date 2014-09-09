@@ -15,10 +15,9 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!
    var PasswordTextBox;
    PasswordTextBox = TextBox.extend(/** @lends SBIS3.CORE.PasswordTextBox.prototype */ {
       _dotTplFn: dotTplFn,
-      $protected: {
-         _options: {
-            fixIEclass: ($ws._const.browser.isIE && ($ws._const.browser.isIE8 || $ws._const.browser.isIE9 || $ws._const.browser.isIE10 || $ws._const.browser.isModernIE))
-         }
+      $constructor: function() {
+         //TODO: избавиться от фикса высоты поля ввода пароля в IE>8
+         this.getContainer().find('.controls-TextBox__field').addClass('fixIEclass');
       }
    });
 
