@@ -15,8 +15,8 @@
       window.WSTheme = 'wi_scheme';
    </script>
    <script type="text/javascript" id="dev-style-enable">
-      (function(){
-         window.wsConfig.nostyle=false;
+      (function () {
+         window.wsConfig.nostyle = false;
       })();
    </script>
    <script type="text/javascript" data-pack-name="contents" src="/components/contents.js"></script>
@@ -28,22 +28,49 @@
    <script type="text/javascript" src="/sbis3-ws/ws/lib/Source.js"></script>
    <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/res/js/bootup.js"></script>
    <style>
-      .view-main{
+      .view-main {
          font-family: Arial, SANS-SERIF;
          font-size: 13px;
          padding: 0;
          margin: 0;
          height: 100%;
       }
+
+      #content {
+         padding: 20px;
+      }
+
+      #content ul li {
+         height: 27px;
+      }
+
+      #content a {
+         color: #000000;
+         font-size: 16px;
+         margin-bottom: 5px;
+         border-radius: 8px;
+         padding: 5px 10px;
+      }
+
+      #content a:hover {
+         background: #ececec;
+      }
+
    </style>
    <script type="text/javascript" id="ws-include-css"></script>
    <link rel="stylesheet" type="text/css" href="sprites.css"/>
 </head>
 <body class="view-main">
-<div style="padding: 20px">
-   <a href="/pages/textBoxCommonStyles.html">TextBox's</a>
-   <br/>
-   <a href="/pages/buttonCommonStyles.html">button's</a>
+<div id="content">
+   <h3>Просмотр контролов</h3>
+   <ul>
+      <li>
+         <a href="/pages/textBoxCommonStyles.html">TextBox's</a>
+      </li>
+      <li>
+         <a href="/pages/buttonCommonStyles.html">Button's</a>
+      </li>
+   </ul>
 </div>
 <script type="text/javascript">
    $ws.core.withComponents('Source').addCallback(function () {
