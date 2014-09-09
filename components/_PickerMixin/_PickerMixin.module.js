@@ -17,7 +17,8 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
             self = this,
             container = this._container,
             pickerContainer = $('<div></div>');
-         container.after(pickerContainer);
+         // чтобы не нарушать выравнивание по базовой линии
+         $('body').append(pickerContainer);
 
          this._picker = new FloatArea({
             element : pickerContainer,

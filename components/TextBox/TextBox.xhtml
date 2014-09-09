@@ -1,7 +1,9 @@
 <div class="controls-TextBox{{?it.className}} {{=it.className}}{{?}}">
-    <input class="controls-TextBox__field {{? it.textTransform == 'uppercase'}} controls-TextBox__field-uppercase {{?}}{{? it.textTransform == 'lowercase'}} controls-TextBox__field-lowercase {{?}}"
+    <div class="controls-TextBox__fieldWrapper">
+        <input class="controls-TextBox__field {{? it.textTransform == 'uppercase'}} controls-TextBox__field-uppercase {{?}}{{? it.textTransform == 'lowercase'}} controls-TextBox__field-lowercase {{?}}"
            type="text"
            {{? it.text }} value="{{=it.text}}"{{?}}
            {{? it.placeholder }} placeholder="{{=it.placeholder}}"{{?}}
            {{? it.maxLength }} maxlength="{{=it.maxLength}}"{{?}}/>
+    </div>
 </div>

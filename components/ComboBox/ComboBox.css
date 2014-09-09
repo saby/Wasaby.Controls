@@ -1,9 +1,5 @@
-.controls-ComboBox__arrowsContainer {
+.controls-TextBox__optionsContainer {
    position: relative;
-   height: 100%;
-   width: 16px;
-   float: right;
-   min-height: 17px;
 }
 
 .controls-ComboBox__arrowDown {
