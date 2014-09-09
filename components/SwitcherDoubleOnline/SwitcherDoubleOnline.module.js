@@ -39,11 +39,11 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.Switcher', 'h
          var self = this;
          Switcher.superclass.setState.call(this,state);
          if (state == 'on'){
-            self._position.addClass('js-controls-Switcher__rightPosition').removeClass('js-controls-Switcher__leftPosition');
+            self._position.addClass('controls-Switcher__rightPosition').removeClass('controls-Switcher__leftPosition');
             self._textOff.addClass('controls-SwitcherDoubleOnline__unselected');
             self._textOn.removeClass('controls-SwitcherDoubleOnline__unselected');
          } else {
-            self._position.addClass('js-controls-Switcher__leftPosition').removeClass('js-controls-Switcher__rightPosition');
+            self._position.addClass('controls-Switcher__leftPosition').removeClass('controls-Switcher__rightPosition');
             self._textOn.addClass('controls-SwitcherDoubleOnline__unselected');
             self._textOff.removeClass('controls-SwitcherDoubleOnline__unselected');
          }

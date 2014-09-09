@@ -47,9 +47,9 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SB
          var self = this;
          Switcher.superclass.setState.call(this,state);
          if (state == 'on'){
-            self._position.addClass('js-controls-Switcher__rightPosition').removeClass('js-controls-Switcher__leftPosition').html(self._options.stateOn);
+            self._position.addClass('controls-Switcher__rightPosition').removeClass('controls-Switcher__leftPosition').html(self._options.stateOn);
          } else {
-            self._position.addClass('js-controls-Switcher__leftPosition').removeClass('js-controls-Switcher__rightPosition').html(self._options.stateOff);
+            self._position.addClass('controls-Switcher__leftPosition').removeClass('controls-Switcher__rightPosition').html(self._options.stateOff);
          }
       }
 
