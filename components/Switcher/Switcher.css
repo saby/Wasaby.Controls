@@ -1,8 +1,12 @@
-.controls-Switcher {
-   background-color: #868686;
+.controls-Switcher{
    display: inline-block;
-   border-radius: 10px;
+}
+.controls-Switcher__toggle {
+   min-height: 17px;
    min-width: 60px;
+   background-color: #868686;
+   border-radius: 10px;
+   display: inline-block;
    cursor: pointer;
    padding: 2px;
 }
@@ -16,10 +20,10 @@
    text-align: center;
 }
 
-.controls-Switcher__leftPosition{
+.js-controls-Switcher__leftPosition{
    float: left;
 }
 
-.controls-Switcher__rightPosition{
+.js-controls-Switcher__rightPosition{
    float: right;
 }

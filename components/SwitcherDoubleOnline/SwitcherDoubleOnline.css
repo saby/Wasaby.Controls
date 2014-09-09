@@ -20,14 +20,6 @@
    border-radius: 10px;
 }
 
-.controls-SwitcherDoubleOnline__leftPosition{
-   float: left;
-}
-
-.controls-SwitcherDoubleOnline__rightPosition{
-   float: right;
-}
-
 .controls-SwitcherDoubleOnline__textOn{
    float: right;
    margin-left: 6px;
@@ -35,7 +27,7 @@
 
 .controls-SwitcherDoubleOnline__textOff{
    float: left;
-   margin-right: 8px;
+   margin-right: 6px;
 }
 
 .controls-SwitcherDoubleOnline__unselected{
