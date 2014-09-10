@@ -18,6 +18,8 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control'], function(Con
 
    var SwitcherBase = Control.Control.extend( /** @lends SBIS3.CONTROLS.SwitcherBase.prototype */ {
       $protected: {
+         _switcher : null,
+         _position : null,
          _options: {
             /**
              * @typedef {Object} StateEnum
@@ -40,7 +42,21 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control'], function(Con
       },
 
       $constructor: function() {
+         var self = this;
+         this._position = $('.js-controls-Switcher__position',self._container.get(0));
+         this._switcher = $('.js-controls-Switcher__toggle',self._container.get(0));
 
+         this._switcher.bind('mouseup',function(){
+            if (self._options.state == 'on') {
+               self.setState('off');
+            } else {
+               self.setState('on');
+            }
+         });
+         //Предотвращаем выделение
+         this._switcher.bind('mousedown',function() {
+            return false;
+         });
       },
       /**
        * Устанавливает состояние (on/off)

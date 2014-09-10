@@ -18,29 +18,13 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SB
    var Switcher = SwitcherBase.extend( /** @lends SBIS3.CONTROLS.Switcher.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
-         _switcher : null,
-         _position : null,
          _options: {
 
          }
       },
 
       $constructor: function() {
-         var self = this;
-         this._position = $('.js-controls-Switcher__position',self._container.get(0));
-         this._switcher = $('.js-controls-Switcher__toggle',self._container.get(0));
 
-         this._switcher.bind('mouseup',function(e){
-            if (self._options.state == 'on') {
-               self.setState('off');
-            } else {
-               self.setState('on');
-            }
-         });
-         //Предотвращаем выделение
-         this._switcher.bind('mousedown',function(e) {
-            return false;
-         });
       },
 
       setState: function(state) {

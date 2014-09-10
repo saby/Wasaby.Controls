@@ -2,8 +2,8 @@
    display: inline-block;
 }
 .controls-Switcher__toggle {
-   min-height: 17px;
-   min-width: 60px;
+   height: 17px;
+   width: 100px;
    background-color: #868686;
    border-radius: 10px;
    display: inline-block;
