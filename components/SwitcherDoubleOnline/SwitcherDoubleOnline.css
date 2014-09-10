@@ -1,0 +1,57 @@
+.controls-SwitcherDoubleOnline{
+   display: inline-block;
+}
+.controls-SwitcherDoubleOnline_toggle{
+   width: 30px;
+   height: 16px;
+   cursor: pointer;
+   margin: 0 8px;
+   background: transparent url('resources/images/sprite-double.png') no-repeat;
+   display: inline-block;
+}
+
+.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline_toggle{
+   width: 16px;
+   height: 32px;
+   cursor: pointer;
+   margin: 0 6px 0 0;
+   background: transparent url('resources/images/vertical-double.png') no-repeat;
+   display: inline-block;
+   vertical-align: top;
+}
+
+.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline-on-toggled {
+   background-position: 0 0;
+}
+.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline-off-toggled {
+   background-position: -16px 0;
+}
+
+.controls-SwitcherDoubleOnline-off-toggled {
+   background-position: 0 -4px;
+}
+.controls-SwitcherDoubleOnline-on-toggled {
+   background-position: 0 -28px;
+}
+
+.controls-SwitcherDoubleOnline__unselected{
+   color: #999999;
+   cursor: pointer;
+}
+
+.controls-SwitcherDoubleOnline__unselected:hover{
+   text-decoration: underline;
+}
+
+.controls-SwitcherDoubleOnline__text{
+   display: inline-block;
+}
+
+.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline__text{
+   display: block;
+}
+
+.controls-SwitcherDoubleOnline__text-block{
+   display: inline-block;
+   height: 100%;
+}
