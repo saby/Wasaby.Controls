@@ -20,6 +20,7 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control'], function(Con
       $protected: {
          _switcher : null,
          _position : null,
+         _state: '',
          _options: {
             /**
              * @typedef {Object} StateEnum
@@ -45,9 +46,9 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control'], function(Con
          var self = this;
          this._position = $('.js-controls-Switcher__position',self._container.get(0));
          this._switcher = $('.js-controls-Switcher__toggle',self._container.get(0));
-
+         this._state = this._options.state;
          this._switcher.bind('mouseup',function(){
-            if (self._options.state == 'on') {
+            if (self._state == 'on') {
                self.setState('off');
             } else {
                self.setState('on');
@@ -64,16 +65,14 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control'], function(Con
        */
       setState: function(state) {
          if (state == 'on' || state == 'off'){
-            this._options.state = state;
-         } else {
-            this._options.state = 'off';
+            this._state = state;
          }
       },
       /**
        * Получить состояние
        */
       getState: function() {
-         return this._options.state;
+         return this._state;
       }
 
    });

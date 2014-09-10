@@ -16,8 +16,7 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
    var SwitcherDoubleOnline = SwitcherBase.extend( /** @lends SBIS3.Engine.SwitcherDoubleOnline.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
-         _textOffContainer : null,
-         _textOnContainer : null,
+         _textContainer: {},
          _options: {
             disposition: 'horizontal'
          }
@@ -25,27 +24,23 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
 
       $constructor: function() {
          var self = this;
-         this._textOffContainer = $('.js-controls-SwitcherDoubleOnline__textOff',self._container.get(0));
-         this._textOnContainer = $('.js-controls-SwitcherDoubleOnline__textOn',self._container.get(0));
-         this._textOffContainer.bind('mouseup',function(){
+         this._textContainer['off'] = $('.js-controls-SwitcherDoubleOnline__textOff',self._container.get(0));
+         this._textContainer['on'] = $('.js-controls-SwitcherDoubleOnline__textOn',self._container.get(0));
+         this._textContainer['off'].bind('mouseup',function(){
             self.setState('off');
          });
-         this._textOnContainer.bind('mouseup',function(){
+         this._textContainer['on'].bind('mouseup',function(){
             self.setState('on');
          });
       },
 
       setState: function(state) {
-         var self = this;
+         var oppositeState = (state == 'on') ? 'off' : 'on';
          SwitcherDoubleOnline.superclass.setState.call(this,state);
-         if (state == 'on'){
-            self._switcher.addClass('controls-SwitcherDoubleOnline-on-toggled').removeClass('controls-SwitcherDoubleOnline-off-toggled');
-            self._textOffContainer.addClass('controls-SwitcherDoubleOnline__unselected');
-            self._textOnContainer.removeClass('controls-SwitcherDoubleOnline__unselected');
-         } else {
-            self._switcher.addClass('controls-SwitcherDoubleOnline-off-toggled').removeClass('controls-SwitcherDoubleOnline-on-toggled');
-            self._textOnContainer.addClass('controls-SwitcherDoubleOnline__unselected');
-            self._textOffContainer.removeClass('controls-SwitcherDoubleOnline__unselected');
+         if (state =='on' || state == 'off') {
+            this._switcher.addClass('controls-SwitcherDoubleOnline-' + state + '-toggled').removeClass('controls-SwitcherDoubleOnline-' + oppositeState + '-toggled');
+            this._textContainer[oppositeState].addClass('controls-SwitcherDoubleOnline__unselected');
+            this._textContainer[state].removeClass('controls-SwitcherDoubleOnline__unselected');
          }
       }
    });

@@ -28,15 +28,15 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SB
       },
 
       setState: function(state) {
-         var self = this;
          Switcher.superclass.setState.call(this,state);
          if (state == 'on'){
-            self._position.addClass('controls-Switcher__rightPosition').removeClass('controls-Switcher__leftPosition').html(self._options.stateOn);
+            this._position.addClass('controls-Switcher__onPosition').removeClass('controls-Switcher__offPosition').html(this._options.stateOn);
          } else {
-            self._position.addClass('controls-Switcher__leftPosition').removeClass('controls-Switcher__rightPosition').html(self._options.stateOff);
+            if (state == 'off') {
+               this._position.addClass('controls-Switcher__offPosition').removeClass('controls-Switcher__onPosition').html(this._options.stateOff);
+            }
          }
       }
-
    });
 
    return Switcher;
