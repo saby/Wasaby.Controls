@@ -1,20 +1,23 @@
 .controls-Switcher{
    display: inline-block;
+   height: 21px;
 }
 .controls-Switcher__toggle {
-   height: 17px;
-   width: 100px;
+   margin-bottom: -5px;
+   min-height: 21px;
+   min-width: 100px;
+   width: 100%;
    background-color: #868686;
    border-radius: 10px;
    display: inline-block;
    cursor: pointer;
    padding: 2px;
+   box-sizing: border-box;
 }
 
 .controls-Switcher__position{
-   width: 70%;
-   min-height: 17px;
-   height: 100%;
+   min-width: 70%;
+   padding: 1px 0;
    background-color: #f8f8f8;
    border-radius: 10px;
    text-align: center;
