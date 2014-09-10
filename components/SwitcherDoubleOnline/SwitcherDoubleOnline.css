@@ -20,17 +20,17 @@
    vertical-align: top;
 }
 
-.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline-top-toggled {
+.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline-on-toggled {
    background-position: 0 0;
 }
-.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline-bottom-toggled {
+.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline-off-toggled {
    background-position: -16px 0;
 }
 
-.controls-SwitcherDoubleOnline-left-toggled {
+.controls-SwitcherDoubleOnline-off-toggled {
    background-position: 0 -4px;
 }
-.controls-SwitcherDoubleOnline-right-toggled {
+.controls-SwitcherDoubleOnline-on-toggled {
    background-position: 0 -28px;
 }
 
