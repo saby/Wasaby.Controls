@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control'], function(Control) {
+define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTROLS._FormWidgetMixin'], function(Control, FormWidgetMixin) {
 
    'use strict';
 
@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control'], function(Con
     * @extends SBIS3.CORE.Control
     */
 
-   var SwitcherBase = Control.Control.extend( /** @lends SBIS3.CONTROLS.SwitcherBase.prototype */ {
+   var SwitcherBase = Control.Control.extend( [FormWidgetMixin], /** @lends SBIS3.CONTROLS.SwitcherBase.prototype */ {
       $protected: {
          _switcher : null,
          _position : null,
@@ -73,6 +73,14 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control'], function(Con
        */
       getState: function() {
          return this._state;
+      },
+
+      setValue: function(value){
+         this.setState(value);
+      },
+
+      getValue: function(){
+         return this.getState();
       }
 
    });
