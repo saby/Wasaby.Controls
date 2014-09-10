@@ -1,20 +1,24 @@
 .controls-SwitcherDoubleOnline{
    display: inline-block;
 }
+
 .controls-SwitcherDoubleOnline_toggle{
    width: 30px;
    height: 16px;
    cursor: pointer;
-   margin: 0 8px;
+   margin: 0 4px;
    background: transparent url('resources/images/sprite-double.png') no-repeat;
    display: inline-block;
 }
 
+.controls-SwitcherDoubleOnline-vertical {
+   vertical-align: top;
+}
 .controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline_toggle{
    width: 16px;
    height: 32px;
    cursor: pointer;
-   margin: 0 6px 0 0;
+   margin: 0 4px 0 0;
    background: transparent url('resources/images/vertical-double.png') no-repeat;
    display: inline-block;
    vertical-align: top;
