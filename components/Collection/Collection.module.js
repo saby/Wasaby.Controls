@@ -118,6 +118,10 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
       clear : function() {
          this._items = [];
          this._index = {};
+      },
+
+      getItemsCount : function() {
+         return this._items.length;
       }
    });
 });

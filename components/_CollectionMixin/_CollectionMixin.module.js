@@ -32,6 +32,9 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection'], f
          if (this._options.items) {
             this._initItems(this._options.items);
          }
+         else {
+            this._initItems([])
+         }
       },
 
       /**

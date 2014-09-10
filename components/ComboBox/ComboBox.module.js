@@ -56,12 +56,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._itemTpl = itemTpl;
          }
 
-         this._drawItems();
-         /*устанавливаем первое значение TODO по идее переписан метод setSelectedItem для того чтобы не срабатывало событие при первой установке*/
-         var
-            item = this._items.getNextItem();
-         this._selectedItem = this._items.getKey(item);
-         ComboBox.superclass.setText.call(this, item[this._displayField]);
+         if (this._items.getItemsCount()) {
+            this._drawItems();
+            /*устанавливаем первое значение TODO по идее переписан метод setSelectedItem для того чтобы не срабатывало событие при первой установке*/
+            var
+               item = this._items.getNextItem();
+            this._selectedItem = this._items.getKey(item);
+            ComboBox.superclass.setText.call(this, item[this._displayField]);
+         }
 
          /*обрабочики кликов*/
          $('.js-controls-ComboBox__arrowDown', this._container.get(0)).click(function(){
@@ -98,7 +100,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _drawItems : function() {
          var self = this;
          self._picker.getContainer().empty();
-         this._items.iterate(function(item, key){
+
+         this._items.iterate(function (item, key) {
             /*TODO просто в пикер пихаются дивы. Норм ли это понять после разработки ListView*/
             self._picker.getContainer().append(self._itemTpl({key: key, title: item[self._displayField]}));
          });

@@ -25,6 +25,8 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
             target : container
          });
 
+         /*TODO временный фикс z-index*/
+         pickerContainer.css('zIndex', 100500);
          /*TODO это как то получше надо переписать*/
          $('body *').mousedown(function(e){
             var inCombobox = self._container.find($(e.target));
