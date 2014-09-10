@@ -69,7 +69,16 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
        */
       setPlaceholder: function(text) {
          this._options.placeholder = text || '';
+      },
+
+      setValue: function(value){
+         this.setText(value);
+      },
+
+      getValue: function(){
+         return this.getText();
       }
+
    });
 
    return TextBoxBase;
