@@ -21,12 +21,8 @@
    background-color: #f8f8f8;
    border-radius: 10px;
    text-align: center;
+   display: inline-block;
 }
-
-.controls-Switcher__offPosition{
-   float: left;
-}
-
-.controls-Switcher__onPosition{
-   float: right;
+.controls-Switcher__toggle__position-on {
+   text-align: right;
 }
