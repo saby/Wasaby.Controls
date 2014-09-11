@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ws="ws-component">
+<head>
+   <title>Web-Genie</title>
+   <script type="text/javascript">
+      window.wsConfig = {
+         WSRootPath: '/sbis3-ws/ws/',
+         wsRoot: '/sbis3-ws/ws/',
+         WSTheme: 'wi_scheme',
+         resourceRoot: '/components',
+         nostyle: true,
+         globalConfigSupport: false
+      };
+      window.WSTheme = 'wi_scheme';
+   </script>
+   <script type="text/javascript" id="dev-style-enable">
+      (function () {
+         window.wsConfig.nostyle = false;
+      })();
+   </script>
+   <script type="text/javascript" data-pack-name="contents" src="/components/contents.js"></script>
+   <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-min.js"></script>
+   <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-cookie-min.js"></script>
+   <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/require.js"></script>
+   <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/config.js"></script>
+   <script type="text/javascript" src="/sbis3-ws/ws/lib/core.js"></script>
+   <script type="text/javascript" src="/sbis3-ws/ws/lib/Source.js"></script>
+   <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/res/js/bootup.js"></script>
+   <style>
+      .view-main {
+         font-family: Arial, SANS-SERIF;
+         font-size: 13px;
+         padding: 0;
+         margin: 0;
+         height: 100%;
+      }
+   </style>
+   <script type="text/javascript" id="ws-include-css"></script>
+   <link rel="stylesheet" type="text/css" href="../sprites.css"/>
+   <link rel="stylesheet" type="text/css" href="./css/online.sbis.css"/>
+</head>
+<body class="view-main">
+
+<div id="content">
+   <h3>Переключатели</h3>
+   Двухпозиционный горизонтальный:
+   <div id="Switcher1"></div>
+   <br/><br/>
+   Двухпозиционный вертикальный:
+   <div id="Switcher2"></div>
+   <br/><br/>
+   Двухпозиционный вертикальный:
+   <div id="Switcher3"></div>
+   <br/><br/>
+
+   <div id="RadioButton">4</div>
+
+   <br/><br/>
+
+   <h3>Флаги</h3>
+
+   <div id="CheckBox"></div>
+
+   <br/><br/>
+
+   <h3>Текстовое поле</h3>
+
+   <div id="TextBox"></div>
+
+   <br/><br/>
+
+   <div id="ComboBox"></div>
+
+   <br/><br/>
+
+   <h3>Кнопки</h3>
+
+   <div id="button1"></div>
+
+   <br/><br/>
+
+   <div id="button2"></div>
+
+   <br/><br/>
+
+   <div id="ToggleButton"></div>
+
+</div>
+
+<script type="text/javascript">
+   $ws.core.withComponents('Source').addCallback(function () {
+      $(document).ready(function () {
+
+         require(["js!SBIS3.Engine.SwitcherDoubleOnline"], function (r) {
+            new r({
+               element: "Switcher1",
+               caption: 'This is SwitcherDoubleOnline',
+               stateOn: 'По видам',
+               stateOff: 'По подразделениям'
+            })
+         });
+
+         require(["js!SBIS3.Engine.SwitcherDoubleOnline"], function (r) {
+            new r({
+               element: "Switcher2",
+               caption: 'This is SwitcherDoubleOnline',
+               stateOn: 'По видам',
+               stateOff: 'По подразделениям',
+               'disposition': 'vertical'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Switcher"], function (r) {
+            new r({
+               element: "Switcher3",
+               caption: 'This is Switcher',
+               stateOn: 'Включен',
+               stateOff: 'Выключен'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.RadioButton"], function (r) {
+            new r({
+               element: "RadioButton",
+               caption: 'Оперативный срез'
+            })
+         });
+
+
+         require(["js!SBIS3.CONTROLS.CheckBox"], function (r) {
+            new r({
+               element: "CheckBox",
+               caption: 'Флаг'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.TextBox"], function (r) {
+            new r({
+               element: "TextBox",
+               text: 'This is TextBox'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.ComboBox"], function (r) {
+            new r({
+               element: "ComboBox",
+               items: [
+                  {
+                     key: 1,
+                     title: 'Первый'
+                  },
+                  {
+                     key: 2,
+                     title: 'Второй'
+                  }
+               ]
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Button"], function (r) {
+            new r({
+               element: "button1",
+               caption: 'Сохранить',
+               primary: true
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Button"], function (r) {
+            new r({
+               element: "button2",
+               caption: 'Удалить'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.ToggleButton"], function (r) {
+            new r({
+               element: "ToggleButton",
+               caption: 'Переключаемая'
+            })
+         });
+
+      })
+   });
+</script>
+</body>
+</html>
