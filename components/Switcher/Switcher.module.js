@@ -31,11 +31,11 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SB
          Switcher.superclass.setState.call(this,state);
          if (state == 'on'){
             this._switcher.addClass('controls-Switcher__toggle__position-on');
-            this._position.addClass('controls-Switcher__onPosition').html(this._options.stateOn);
+            this._position.html(this._options.stateOn);
          } else {
             if (state == 'off') {
                this._switcher.removeClass('controls-Switcher__toggle__position-on');
-               this._position.addClass('controls-Switcher__offPosition').html(this._options.stateOff);
+               this._position.html(this._options.stateOff);
             }
          }
       }
