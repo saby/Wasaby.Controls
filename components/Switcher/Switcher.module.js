@@ -30,10 +30,12 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SB
       setState: function(state) {
          Switcher.superclass.setState.call(this,state);
          if (state == 'on'){
-            this._position.addClass('controls-Switcher__onPosition').removeClass('controls-Switcher__offPosition').html(this._options.stateOn);
+            this._switcher.addClass('controls-Switcher__toggle__position-on');
+            this._position.addClass('controls-Switcher__onPosition').html(this._options.stateOn);
          } else {
             if (state == 'off') {
-               this._position.addClass('controls-Switcher__offPosition').removeClass('controls-Switcher__onPosition').html(this._options.stateOff);
+               this._switcher.removeClass('controls-Switcher__toggle__position-on');
+               this._position.addClass('controls-Switcher__offPosition').html(this._options.stateOff);
             }
          }
       }
