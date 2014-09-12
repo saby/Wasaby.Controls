@@ -21,7 +21,7 @@ html, body {
    background: linear-gradient(to bottom, #f8f7f5 0%, #dbdbdb 0%, #f8f7f5 51%, #dcd7d0 100%);
    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f8f7f5', endColorstr='#dcd7d0', GradientType=0);
 
-
+   box-shadow: inset 0px -1px 1px rgb(150, 135, 118);
 }
 
 #content .controls-Switcher__toggle {
@@ -36,6 +36,7 @@ html, body {
    border-radius: 12px;
    padding-right: 16px;
    color: #999999;
+   box-shadow: inset 0px 1px 1px rgb(150, 135, 118);
 }
 
 #content .controls-SwitcherDoubleOnline {
@@ -77,10 +78,10 @@ html, body {
    display: inline-block;
    box-sizing: border-box;
    height: 24px;
+   line-height: normal;
    border: none;
    margin: 0 8px;
    padding: 3px 16px;
-   min-width: 90px;
    border-radius: 12px;
    background: #f7f7f4;
    background: -moz-linear-gradient(top, #e6e1dc 0%, #e5e0da 100%);
