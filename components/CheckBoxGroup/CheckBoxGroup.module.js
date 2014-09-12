@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'], function(CheckBoxGroupBase) {
+define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase', 'js!SBIS3.CONTROLS.CheckBox'], function(CheckBoxGroupBase, CheckBox) {
 
    'use strict';
 
@@ -23,6 +23,16 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
 
       $constructor: function() {
 
+      },
+
+      _createInstance : function(item, insContainer) {
+         insContainer.addClass('controls-ButtonGroup__item__pos-vertical');
+         return new CheckBox({
+            caption : item.title,
+            checked : false,
+            element : insContainer,
+            parent: this
+         });
       }
 
    });

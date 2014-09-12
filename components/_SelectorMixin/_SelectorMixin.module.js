@@ -13,12 +13,18 @@ define('js!SBIS3.CONTROLS._SelectorMixin', [], function() {
       $protected: {
          _selectedItem : null,
          _options: {
-
+            /**
+             * @cfg {String} Идентификатор выбранного элемента
+             */
+            selectedItem : null
          }
       },
 
       $constructor: function() {
          this._publish('onChangeSelectedItem');
+         if (this._options.selectedItem) {
+            this._selectedItem = this._options.selectedItem;
+         }
       },
 
       /**

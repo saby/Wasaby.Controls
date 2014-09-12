@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase'], function(RadioGroupBase) {
+define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!SBIS3.CONTROLS.TabButton'], function(RadioGroupBase, TabButton) {
 
    'use strict';
 
@@ -22,8 +22,15 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase'], fun
 
       $constructor: function() {
 
+      },
+      _createInstance : function(item, insContainer) {
+         return new TabButton({
+            caption : item.title,
+            checked : false,
+            element : insContainer,
+            parent: this
+         });
       }
-
    });
 
    return TabButtons;
