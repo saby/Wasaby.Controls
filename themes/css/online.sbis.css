@@ -21,7 +21,6 @@ html, body {
    background: linear-gradient(to bottom, #f8f7f5 0%, #dbdbdb 0%, #f8f7f5 51%, #dcd7d0 100%);
    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f8f7f5', endColorstr='#dcd7d0', GradientType=0);
 
-   box-shadow: inset 0px -1px 3px rgba(128, 128, 128, 0.49);
 
 }
 
@@ -34,7 +33,6 @@ html, body {
    background: -ms-linear-gradient(top, #FCFCFB 0%, #F7F6F5 100%);
    background: linear-gradient(to bottom, #FCFCFB 0%, #F7F6F5 100%);
    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FCFCFB', endColorstr='#F7F6F5', GradientType=0);
-   box-shadow: inset 0px 1px 3px rgba(128, 128, 128, 0.49);
    border-radius: 12px;
    padding-right: 16px;
    color: #999999;
@@ -78,24 +76,26 @@ html, body {
 #content .controls-Button {
    display: inline-block;
    box-sizing: border-box;
+   height: 24px;
    border: none;
    margin: 0 8px;
    padding: 3px 16px;
    min-width: 90px;
    border-radius: 12px;
-   box-shadow: inset 0px -3px 3px rgba(128, 128, 128, 0.49);
-   background: #ffffff;
-   background: -moz-linear-gradient(top, #ffffff 0%, #dbdbdb 0%, #f9f8f7 51%, #f1efee 100%);
-   background: -webkit-gradient(left top, left bottom, color-stop(0%, #ffffff), color-stop(0%, #dbdbdb), color-stop(51%, #f9f8f7), color-stop(100%, #f1efee));
-   background: -webkit-linear-gradient(top, #ffffff 0%, #dbdbdb 0%, #f9f8f7 51%, #f1efee 100%);
-   background: -o-linear-gradient(top, #ffffff 0%, #dbdbdb 0%, #f9f8f7 51%, #f1efee 100%);
-   background: -ms-linear-gradient(top, #ffffff 0%, #dbdbdb 0%, #f9f8f7 51%, #f1efee 100%);
-   background: linear-gradient(to bottom, #ffffff 0%, #dbdbdb 0%, #f9f8f7 51%, #f1efee 100%);
-   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f1efee', GradientType=0 );
+   background: #f7f7f4;
+   background: -moz-linear-gradient(top, #e6e1dc 0%, #e5e0da 100%);
+   background: -webkit-gradient(left top, left bottom, color-stop(0%, #dbdbdb), color-stop(100%, #e5e0da));
+   background: -webkit-linear-gradient(top, #e6e1dc 0%, #e5e0da 100%);
+   background: -o-linear-gradient(top, #e6e1dc 0%, #e5e0da  100%);
+   background: -ms-linear-gradient(top,  #e6e1dc 0%, #e5e0da  100%);
+   background: linear-gradient(to bottom,  #e6e1dc 0%, #e5e0da  100%);
+   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e1dc', endColorstr='#e5e0da', GradientType=0 );
+   box-shadow: inset 0px -1px 1px rgb(150, 135, 118);
+
 }
 
 #content .controls-Button:hover{
-   background: #ffffff;
+  /* background: #ffffff;
    background: -moz-linear-gradient(top, #ffffff 0%, #dbdbdb 0%, #ebe8e4 51%, #ebe7e3 100%);
    background: -webkit-gradient(left top, left bottom, color-stop(0%, #ffffff), color-stop(0%, #dbdbdb), color-stop(51%, #ebe8e4), color-stop(100%, #ebe7e3));
    background: -webkit-linear-gradient(top, #ffffff 0%, #dbdbdb 0%, #ebe8e4 51%, #ebe7e3 100%);
@@ -103,7 +103,8 @@ html, body {
    background: -ms-linear-gradient(top, #ffffff 0%, #dbdbdb 0%, #ebe8e4 51%, #ebe7e3 100%);
    background: linear-gradient(to bottom, #ffffff 0%, #dbdbdb 0%, #ebe8e4 51%, #ebe7e3 100%);
    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ebe7e3', GradientType=0 );
-   box-shadow:inset 0px -3px 3px rgba(128, 128, 128, 0.49), inset 0px -1px 3px #f0f0f0;
+*/
+   box-shadow: inset 0px -1px 1px rgb(150, 135, 118), inset 0 -3px 10px white;
 
 }
 
@@ -120,7 +121,6 @@ html, body {
 }
 
 #content .controls-Button__primary:hover {
-   /*box-shadow: inset 0px 1px 5px #f9ac52;*/
 
    background: #fbbd75;
    background: -moz-linear-gradient(top, #fbbd75 0%, #dbdbdb 0%, #f68352 51%, #d67322 100%);
@@ -130,5 +130,5 @@ html, body {
    background: -ms-linear-gradient(top, #fbbd75 0%, #dbdbdb 0%, #f68352 51%, #d67322 100%);
    background: linear-gradient(to bottom, #fbbd75 0%, #dbdbdb 0%, #f68352 51%, #d67322 100%);
    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fbbd75', endColorstr='#d67322', GradientType=0 );
-
+   box-shadow: inset 0px -1px 1px rgb(150, 135, 118), inset 0 1px 5px rgba(255, 255, 0, 0.40);
 }
