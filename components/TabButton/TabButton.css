@@ -1,0 +1,14 @@
+.controls-TabButton {
+   display: inline-block;
+   height: 20px;
+   background: #dddddd;
+   border: 1px solid #909090;
+   cursor: pointer;
+   padding: 2px 10px;
+   line-height: 20px;
+   border-radius: 4px 4px 0 0;
+}
+.controls-TabButton.controls-ToggleButton__checked{
+   background: #ffffff;
+   border-bottom: 1px solid #ffffff;
+}
