@@ -3,8 +3,8 @@ define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase'], f
    'use strict';
 
    /**
-    * Поведенческий класс задающий поведение кнопки с залипанием.
-    * Отличается от обычной кнопки тем, что сохраняется состояние checked (“Нажатая/Не нажатая”). При клике - checked меняется на противоположный
+    * Поведенческий класс, задающий поведение кнопки с залипанием.
+    * Отличается от обычной кнопки тем, что сохраняется состояние checked (“Нажата/Не нажата”). При клике - checked меняется на противоположный
     * @class SBIS3.CONTROLS.ToggleButtonBase
     * @extends SBIS3.CONTROLS.ButtonBase
     */
@@ -18,7 +18,12 @@ define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase'], f
              */
             checked: null,
             /**
-             * @cfg {Boolean} Есть третье, неопределенное, значение или нет
+             * @cfg {Boolean} Наличие неопределённого значения
+             * Возможные значения:
+             * <ul>
+             *    <li>true - есть неопределённое значение;</li>
+             *    <li>false - нет неопределённого значения.</li>
+             * </ul>
              */
             threeState: false
          }
@@ -33,7 +38,7 @@ define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase'], f
       },
 
       /**
-       * Устанавливает состояние кнопки
+       * Установить состояние кнопки
        * @param {Boolean} flag
        */
       setChecked: function(flag) {
