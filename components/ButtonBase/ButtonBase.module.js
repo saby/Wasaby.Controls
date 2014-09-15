@@ -19,15 +19,27 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control'], function(Contr
          _options: {
             /**
              * @cfg {String}  Текст на кнопке
-             * Данный текст должен отображать смысл действия клика по кнопке.
+             * Данный текст должен отображать смысл действия клика по кнопке или побуждать к действию.
+             * @see setCaption
+             * @see getCaption
              */
             caption: '',
             /**
-             * @cfg {String}  Строка, обозначающая иконку
+             * @cfg {String}  Путь до иконки
+             * Путь задаётся относительно корня сайта либо через sprite.
+             * @see setIcon
+             * @see getIcon
              */
             icon: '',
             /**
-             * @cfg {Boolean} Кнопка по умолчанию (срабатывает ли нажатие на кнопку при нажатии на Enter)
+             * @cfg {Boolean} Кнопка по умолчанию
+             * Кнопка будет срабатывать при нажатии клавиши Enter.
+             * На странице может быть только одна кнопка по умолчанию.
+             * Возможные значения:
+             * <ul>
+             *    <li>true - кнопка является кнопкой по умолчанию;</li>
+             *    <li>false - обычная кнопка.</li>
+             * </ul>
              */
             primary: false
          }
@@ -46,34 +58,65 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control'], function(Contr
       _clickHandler : function() {
       },
       /**
-       * Меняет текст на кнопке
-       * @param {String} captionTxt подпись на кнопке
+       * Установить текст на кнопке.
+       * Метод установки либо замены текста на кнопке, заданного опцией {@link caption}.
+       * @param {String} captionTxt Текст на кнопке.
+       * @example
+       * <pre>
+       *     var btn = this.getTopParent().getChildControlByName(("myButton");
+       *        btn.setCaption("Применить");
+       * </pre>
+       * @see caption
+       * @see getCaption
        */
-
       setCaption: function(captionTxt) {
          this._options.caption = captionTxt || '';
       },
-
       /**
-       * Возвращает текст на кнопке
+       * Получить текст на кнопке.
+       * Метод получения текста, заданного либо опцией {@link caption}, либо методом {@link setCaption}.
+       * @returns {String} Возвращает текст, указанный на кнопке.
+       * @example
+       * <pre>
+       *     var btn = this.getTopParent().getChildControlByName("myButton");
+       *        btn.getCaption();
+       * </pre>
+       * @see caption
+       * @see setCaption
        */
       getCaption: function() {
          return this._options.caption;
       },
 
       /**
-       * Установить изображение на кнопке
-       * @param {String} iconTxt путь к изображению
+       * Установить изображение на кнопке.
+       * Метод установки или замены изображения, заданного опцией {@link icon}.
+       * @param {String} iconTxt Путь к изображению.
+       * @example
+       * <pre>
+       *     var btn = this.getTopParent().getChildControlByName("myButton");
+       *        btn.setIcon("sprite:icon-16 icon-Successful icon-primary")
+       * </pre>
+       * @see icon
+       * @see getIcon
        */
-
       setIcon: function(iconTxt) {
 
       },
 
       /**
-       * Получить изображение на кнопке
+       * Получить изображение на кнопке.
+       * Метод получения изображения, заданного опцией {@link icon}, либо методом {@link setIcon}.
+       * @example
+       * <pre>
+       *     var btn = this.getTopParent().getChildControlByName("myButton");
+       *     if (/icon-Alert/g.test(btn.getIcon())){
+       *        btn.setIcon("sprite:icon16 icon-Alert icon-done");
+       *     }
+       * </pre>
+       * @see icon
+       * @see setIcon
        */
-
       getIcon: function() {
 
       }
