@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CORE.Control'], function(Control) {
+define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS._SelectorMixin'], function(ButtonGroupBase, _SelectorMixin) {
 
    'use strict';
 
@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CORE.Control'], function(C
     * @extends SBIS3.CORE.Control
     */
 
-   var RadioGroupBase = Control.Control.extend( /** @lends SBIS3.CONTROLS.RadioGroupBase.prototype */ {
+   var RadioGroupBase = ButtonGroupBase.extend([_SelectorMixin], /** @lends SBIS3.CONTROLS.RadioGroupBase.prototype */ {
       $protected: {
          _options: {
 
@@ -22,11 +22,32 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CORE.Control'], function(C
       },
 
       $constructor: function() {
+         if (this._selectedItem) {
+            this._drawSelectedItem(this._selectedItem);
+         }
+      },
 
+      _itemActivatedHandler : function(activatedControl) {
+         var key = activatedControl.getContainer().data('key');
+         this.setSelectedItem(key);
+      },
+
+      _drawSelectedItem : function(id) {
+         var controls = this.getChildControls();
+         for (var i = 0; i < controls.length; i++) {
+            if (!id) {
+               controls[i].setChecked(false);
+            }
+            else {
+               if (controls[i].getContainer().data('key') == id) {
+                  controls[i].setChecked(true);
+               }
+               else {
+                  controls[i].setChecked(false);
+               }
+            }
+         }
       }
-
    });
-
    return RadioGroupBase;
-
 });

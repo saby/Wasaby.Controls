@@ -80,6 +80,14 @@ define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase'], f
                this.setChecked(true);
             }
          }
+      },
+
+      setValue: function(value){
+         this.setChecked(value);
+      },
+
+      getValue: function(){
+         return this.isChecked();
       }
 
    });

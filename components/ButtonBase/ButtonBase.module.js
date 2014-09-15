@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control'], function(Control) {
+define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTROLS._FormWidgetMixin'], function(Control, FormWidgetMixin) {
 
    'use strict';
 
@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control'], function(Contr
     * @extends SBIS3.CORE.Control
     */
 
-   var ButtonBase = Control.Control.extend( /** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
+   var ButtonBase = Control.Control.extend([FormWidgetMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
       $protected: {
          _options: {
             /**
@@ -119,6 +119,14 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control'], function(Contr
        */
       getIcon: function() {
 
+      },
+
+      setValue: function(value){
+         this.setCaption(value);
+      },
+
+      getValue: function(){
+         return this.getCaption();
       }
    });
 

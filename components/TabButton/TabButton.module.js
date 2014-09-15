@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.TabButton', ['js!SBIS3.CONTROLS.RadioButtonBase'], function(RadioButtonBase) {
+define('js!SBIS3.CONTROLS.TabButton', ['js!SBIS3.CONTROLS.RadioButtonBase', 'html!SBIS3.CONTROLS.TabButton', 'css!SBIS3.CONTROLS.TabButton'], function(RadioButtonBase, dotTplFn) {
 
    'use strict';
    /**
@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.TabButton', ['js!SBIS3.CONTROLS.RadioButtonBase'], fun
     * @control
     */
    var TabButton = RadioButtonBase.extend( /** @lends SBIS3.CONTROLS.TabButton.prototype */ {
+      _dotTplFn : dotTplFn,
       $protected: {
          _options: {
 

@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase'], function(SwitcherBase) {
+define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SBIS3.CONTROLS.Switcher', 'css!SBIS3.CONTROLS.Switcher'], function(SwitcherBase, dotTplFn) {
 
    'use strict';
 
@@ -16,6 +16,7 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase'], functio
     */
 
    var Switcher = SwitcherBase.extend( /** @lends SBIS3.CONTROLS.Switcher.prototype */ {
+      _dotTplFn: dotTplFn,
       $protected: {
          _options: {
 
@@ -24,6 +25,19 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase'], functio
 
       $constructor: function() {
 
+      },
+
+      setState: function(state) {
+         Switcher.superclass.setState.call(this,state);
+         if (state == 'on'){
+            this._switcher.addClass('controls-Switcher__toggle__position-on');
+            this._position.addClass('controls-Switcher__onPosition').html(this._options.stateOn);
+         } else {
+            if (state == 'off') {
+               this._switcher.removeClass('controls-Switcher__toggle__position-on');
+               this._position.addClass('controls-Switcher__offPosition').html(this._options.stateOff);
+            }
+         }
       }
    });
 
