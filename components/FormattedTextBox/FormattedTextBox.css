@@ -1,0 +1,15 @@
+.controls-FormattedTextBox{
+   height: 20px;
+   border: 1px solid #7F9DB9;
+   display: inline-block;
+   min-width: 40px;
+}
+
+.controls-FormattedTextBox__field{
+   outline: none;
+   margin: 2px;
+}
+
+.controls-FormattedTextBox__field-cont{
+   font-style: normal;
+}
