@@ -6,6 +6,7 @@
    text-align: center;
    border-radius: 4px;
    line-height: 1.42857143;
+   min-height: 24px;
 }
 .controls-Button:hover {
    background-color: #e6e6e6;

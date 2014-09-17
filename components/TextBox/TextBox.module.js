@@ -47,11 +47,12 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          });
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
-         if (self._options.trim) {
-            self._inputField.bind('focusout', function () {
+         self._inputField.bind('focusout', function () {
+            if (self._options.trim) {
                self.setText(self._trim(self.getText()));
-            });
-         }
+            }
+         });
+
       },
 
       setText: function(text){
