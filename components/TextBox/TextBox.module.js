@@ -53,6 +53,12 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             }
          });
 
+         self._inputField.bind('mouseup',function(){
+            if (self._options.selectOnClick) {
+               self._inputField.select();
+            }
+         });
+
       },
 
       setText: function(text){
