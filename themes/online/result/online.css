@@ -1,0 +1,42 @@
+/* Button */
+
+.controls-Button {
+   cursor: pointer;
+   text-align: center;
+   display: inline-block;
+   box-sizing: border-box;
+   height: 24px;
+   line-height: normal;
+   border: none;
+   margin: 0 8px;
+   padding: 3px 16px;
+   border-radius: 12px;
+   background: url("../img/btn_W-sprite.png") 0 -37px repeat-x;
+   color: #000000;
+}
+
+.controls-Button:hover {
+   background-position: 0 -133px;
+}
+
+.controls-Button__primary {
+   background: url("../img/btn_O-sprite.png") 0 -37px repeat-x;
+   color: #ffffff;
+}
+
+.controls-Button__primary:hover {
+   background-position: 0 -133px;
+}
+
+.controls-Button.controls-ToggleButton__checked {
+   background-color: #e6e6e6;
+   color: red;
+}
+
+.controls-Button__primary.controls-ToggleButton__checked {
+   background-color: #ffaf53;
+   border: 1px solid #ffaf53;
+}
+
+/* ToggleButton */
+
