@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CORE.Control'], function(Control) {
+define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CORE.Control','js!SBIS3.CONTROLS._PickerMixin','js!SBIS3.CONTROLS._FormWidgetMixin'], function(Control,PickerMixin,FormWidgetMixin) {
 
    'use strict';
 
@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CORE.Control'], function(Contr
     * @control
     */
 
-   var DatePicker = Control.Control.extend(/** @lends SBIS3.CONTROLS.DatePicker.prototype */{
+   var DatePicker = Control.Control.extend( [PickerMixin, FormWidgetMixin],/** @lends SBIS3.CONTROLS.DatePicker.prototype */{
       $protected: {
          _options: {
 

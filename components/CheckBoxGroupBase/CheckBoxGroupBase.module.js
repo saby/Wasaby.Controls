@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
     * @class SBIS3.CONTROLS.CheckBoxGroupBase
     * @mixes SBIS3.CONTROLS._CollectionMixin
     * @mixes SBIS3.CONTROLS._MultiSelectorMixin
-    * @extends SBIS3.CORE.Control
+    * @extends SBIS3.CONTROLS.ButtonGroupBase
     */
 
    var CheckBoxGroupBase = ButtonGroupBase.extend([_MultiSelectorMixin], /** @lends SBIS3.CONTROLS.CheckBoxGroupBase.prototype */ {
