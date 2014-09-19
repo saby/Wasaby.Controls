@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 12.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS._PopupMixin', 'html!SBIS3.CONTROLS.FloatArea', 'css!SBIS3.CONTROLS.FloatArea'], function(Control, _PopupMixin, dotTpl) {
+define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CONTROLS.Control2', 'js!SBIS3.CONTROLS._PopupMixin', 'html!SBIS3.CONTROLS.FloatArea', 'css!SBIS3.CONTROLS.FloatArea'], function(Control2, _PopupMixin, dotTpl) {
 
    'use strict';
 
@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTRO
     * @control
     */
 
-   var FloatArea = Control.Control.extend([_PopupMixin], /** @lends SBIS3.CONTROLS.FloatArea.prototype*/ {
+   var FloatArea = Control2.extend([_PopupMixin], /** @lends SBIS3.CONTROLS.FloatArea.prototype*/ {
       _dotTplFn : dotTpl,
       $protected: {
          _options: {
@@ -36,17 +36,11 @@ define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTRO
       },
 
       show: function(){
-         this._container.addClass('controls-FloatArea__hidden');
+         //чтобы визуально представление не дергалось, сначала расчитаем размеры, а затем отобразим
+         this._container.addClass('ws-hidden');
          FloatArea.superclass.show.call(this);
          this.recalcPosition();
-         this._container.removeClass('controls-FloatArea__hidden');
-      },
-
-      toggle: function(){
-         this._container.addClass('controls-FloatArea__hidden');
-         FloatArea.superclass.toggle.call(this);
-         this.recalcPosition();
-         this._container.removeClass('controls-FloatArea__hidden');
+         this._container.removeClass('ws-hidden');
       }
 
    });
