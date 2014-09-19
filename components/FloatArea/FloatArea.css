@@ -1,3 +1,7 @@
 .controls-FloatArea {
    background: #ffffff;
 }
+
+.controls-FloatArea__hidden{
+   visibility: hidden;
+}
