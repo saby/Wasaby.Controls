@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function() {
             offset = this._options.target.offset();
             offset.top += this._options.target.outerHeight();
             //Проверям убираемся ли в экран
-            if ($(document).width() >= this._container.width() + this._container.offset().left){
+            if ($(document).width() <= this._container.width() + this._container.offset().left){
                offset.left += this._options.target.outerWidth() - this._container.outerWidth();
             }
          }

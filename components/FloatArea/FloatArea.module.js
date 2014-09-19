@@ -33,7 +33,22 @@ define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTRO
 
       $constructor: function() {
 
+      },
+
+      show: function(){
+         this._container.addClass('controls-FloatArea__hide');
+         FloatArea.superclass.show.call(this);
+         this.recalcPosition();
+         this._container.removeClass('controls-FloatArea__hide');
+      },
+
+      toggle: function(){
+         this._container.addClass('controls-FloatArea__hide');
+         FloatArea.superclass.toggle.call(this);
+         this.recalcPosition();
+         this._container.removeClass('controls-FloatArea__hide');
       }
+
    });
 
    return FloatArea;

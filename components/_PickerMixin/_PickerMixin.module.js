@@ -38,10 +38,7 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
        * Показывает выпадающий блок
        */
       showPicker: function() {
-         this._picker._container.css('visibility','hidden');
          this._picker.show();
-         this._picker.recalcPosition();
-         this._picker._container.css('visibility','visible');
       },
       /**
        * Скрывает выпадающий блок
@@ -51,10 +48,7 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
       },
 
       togglePicker: function() {
-         this._picker._container.css('visibility','hidden');
          this._picker.toggle();
-         this._picker.recalcPosition();
-         this._picker._container.css('visibility','visible');
       }
 
    };
