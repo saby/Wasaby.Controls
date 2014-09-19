@@ -36,17 +36,17 @@ define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTRO
       },
 
       show: function(){
-         this._container.addClass('controls-FloatArea__hide');
+         this._container.addClass('controls-FloatArea__hidden');
          FloatArea.superclass.show.call(this);
          this.recalcPosition();
-         this._container.removeClass('controls-FloatArea__hide');
+         this._container.removeClass('controls-FloatArea__hidden');
       },
 
       toggle: function(){
-         this._container.addClass('controls-FloatArea__hide');
+         this._container.addClass('controls-FloatArea__hidden');
          FloatArea.superclass.toggle.call(this);
          this.recalcPosition();
-         this._container.removeClass('controls-FloatArea__hide');
+         this._container.removeClass('controls-FloatArea__hidden');
       }
 
    });
