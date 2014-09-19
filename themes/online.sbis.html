@@ -35,6 +35,15 @@
          margin: 0;
          height: 100%;
       }
+
+      html, body {
+         font-family: Tahoma !important;
+      }
+
+      #content {
+         padding: 20px;
+      }
+
    </style>
    <script type="text/javascript" id="ws-include-css"></script>
    <link rel="stylesheet" type="text/css" href="../sprites.css"/>
@@ -70,22 +79,86 @@
 
    <br/><br/>
 
-   <div id="ComboBox"></div>
+   <div id="NumberTextBox"></div>
 
    <br/><br/>
 
    <h3>Кнопки</h3>
 
-   <div id="button1"></div>
 
-   <br/><br/>
+   <table>
+      <tr>
+         <td>
+            primary
+         </td>
+         <td>
+            <div id="button1"></div>
+         </td>
+         <td>
+            primary big
+         </td>
+         <td>
+            <div id="button1big" class="controls-Button__big"></div>
+         </td>
+      </tr>
+      <tr>
+         <td>
+            кнопка
+         </td>
+         <td>
+            <div id="button2"></div>
+         </td>
+         <td>
+            кнопка big
+         </td>
+         <td>
+            <div id="button2big" class="controls-Button__big"></div>
+         </td>
+      </tr>
+      <tr>
+         <td>
+            переключаемая
+         </td>
+         <td>
+            <div id="ToggleButton"></div>
+         </td>
+         <td>
+            переключаемая big
+         </td>
+         <td>
+            <div id="ToggleButtonbig" class="controls-Button__big"></div>
+         </td>
+      </tr>
+      <tr>
+         <td>
+            переключаемая primary
+         </td>
+         <td>
+            <div id="ToggleButton2"></div>
+         </td>
+         <td>
+            переключаемая primary big
+         </td>
+         <td>
+            <div id="ToggleButton2big" class="controls-Button__big"></div>
+         </td>
+      </tr>
+      <tr>
+         <td>
+            disable
+         </td>
+         <td>
+            <div id="button3"></div>
+         </td>
+         <td>
+            disable big
+         </td>
+         <td>
+            <div id="button3big" class="controls-Button__big"></div>
+         </td>
+      </tr>
+   </table>
 
-   <div id="button2"></div>
-
-   <br/><br/>
-
-   <div id="ToggleButton"></div>
-   <button>sdfgsdfgdg</button>
 
 </div>
 
@@ -143,19 +216,10 @@
             })
          });
 
-         require(["js!SBIS3.CONTROLS.ComboBox"], function (r) {
+         require(["js!SBIS3.CONTROLS.NumberTextBox"], function (r) {
             new r({
-               element: "ComboBox",
-               items: [
-                  {
-                     key: 1,
-                     title: 'Первый'
-                  },
-                  {
-                     key: 2,
-                     title: 'Второй'
-                  }
-               ]
+               element: "NumberTextBox",
+               text: '666'
             })
          });
 
@@ -178,6 +242,60 @@
             new r({
                element: "ToggleButton",
                caption: 'Переключаемая'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.ToggleButton"], function (r) {
+            new r({
+               element: "ToggleButton2",
+               caption: 'Переключаемая',
+               primary: true
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Button"], function (r) {
+            new r({
+               element: "button3",
+               caption: 'Сохранить',
+               disabled: true
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Button"], function (r) {
+            new r({
+               element: "button1big",
+               caption: 'Сохранить',
+               primary: true
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Button"], function (r) {
+            new r({
+               element: "button2big",
+               caption: 'Удалить'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.ToggleButton"], function (r) {
+            new r({
+               element: "ToggleButtonbig",
+               caption: 'Переключаемая'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.ToggleButton"], function (r) {
+            new r({
+               element: "ToggleButton2big",
+               caption: 'Переключаемая',
+               primary: true
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Button"], function (r) {
+            new r({
+               element: "button3big",
+               caption: 'Сохранить',
+               disabled: true
             })
          });
 

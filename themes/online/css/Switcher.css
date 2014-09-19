@@ -1,0 +1,34 @@
+.controls-Switcher {
+   display: inline-block;
+   height: 23px;
+}
+
+.controls-Switcher__toggle {
+   height: 23px;
+   min-width: 100px;
+   width: 100%;
+   background: url('../img/switcher.png') 0 0;
+   border-radius: 12px;
+   display: inline-block;
+   cursor: pointer;
+   padding: 2px;
+   box-sizing: border-box;
+   color: #999999;
+}
+
+.controls-Switcher__position {
+   min-width: 70%;
+   min-height: 16px;
+   background: url('../img/switcher.png') 0 -74px;
+   border-radius: 12px;
+   text-align: center;
+   display: inline-block;
+   padding: 2px 4px;
+}
+
+.controls-Switcher__toggle__position-on {
+   text-align: right;
+   color: #000000;
+   padding-right: 2px;
+   padding-left: 16px;
+}

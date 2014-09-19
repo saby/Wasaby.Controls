@@ -4,7 +4,7 @@ var path = require('path');
 var themesDir = path.join(__dirname, 'themes');
 
 // порядок сборки стилей контролов
-var order = ['Button', 'ToggleButton'];
+var order = ['Button', 'ToggleButton', 'SwitcherDoubleOnline', 'Switcher', 'TextBox', 'PasswordTextBox', 'NumberTextBox'];
 
 var dirWalker = function (dir) {
    var files = fs.readdirSync(dir);
@@ -14,7 +14,7 @@ var dirWalker = function (dir) {
       if (fs.statSync(folderPath).isDirectory()) {
          // папка стилей темы
          var cssPath = path.join(folderPath, 'css');
-         fs.writeFile(path.join(folderPath,'result', files[i] + '.css'), '');
+         fs.writeFile(path.join(folderPath, 'result', files[i] + '.css'), '');
          for (var j = 0; j < order.length; j++) {
             var controlCss = path.join(cssPath, order[j]) + '.css';
             var data = fs.readFileSync(controlCss);
