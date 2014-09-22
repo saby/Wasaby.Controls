@@ -2,7 +2,11 @@
  * Created by iv.cheremushkin on 14.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.ListView', ['js!SBIS3.CORE.Control'], function(Control) {
+define('js!SBIS3.CONTROLS.ListView',
+      ['js!SBIS3.CORE.Control',
+       'js!SBIS3.CONTROLS._CollectionMixin',
+       'js!SBIS3.CONTROLS._MultiSelectorMixin'],
+      function(Control, CollectionMixin, MultiSelectorMixin) {
 
    'use strict';
 
@@ -15,8 +19,10 @@ define('js!SBIS3.CONTROLS.ListView', ['js!SBIS3.CORE.Control'], function(Control
     * @control
     */
 
-   var ListView = Control.Control.extend( /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+   var ListView = Control.Control.extend( [CollectionMixin, MultiSelectorMixin],/** @lends SBIS3.CONTROLS.ListView.prototype */ {
       $protected: {
+         _dotItemTpl: null,
+         _$itemsContainer: null,
          _options: {
             /**
              * Элемент, внутри которого отображается набор
@@ -39,14 +45,21 @@ define('js!SBIS3.CONTROLS.ListView', ['js!SBIS3.CORE.Control'], function(Control
       },
 
       $constructor: function() {
-
+         var self = this;
+         this._dotItemTpl = doT.template(self._options.itemTemplate);
+         this._$itemsContainer = $(this._options.itemsContainer);
+         this._container.html(this._$itemsContainer).css('display','inline-block');
+         this.redraw();
       },
 
       /**
        * Заново отрисовать набор
        */
       redraw: function(){
-
+         var self = this;
+         this._items.iterate(function (item, key) {
+            self._$itemsContainer.append(self._dotItemTpl({key: key, title: item.title}));
+         });
       },
 
       /**
