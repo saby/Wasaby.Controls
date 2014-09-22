@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 12.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CONTROLS.Control2', 'js!SBIS3.CONTROLS._PopupMixin', 'html!SBIS3.CONTROLS.FloatArea', 'css!SBIS3.CONTROLS.FloatArea'], function(Control2, _PopupMixin, dotTpl) {
+define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS._PopupMixin', 'html!SBIS3.CONTROLS.FloatArea', 'css!SBIS3.CONTROLS.FloatArea'], function(Control, _PopupMixin, dotTpl) {
 
    'use strict';
 
@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CONTROLS.Control2', 'js!SBIS3.C
     * @control
     */
 
-   var FloatArea = Control2.extend([_PopupMixin], /** @lends SBIS3.CONTROLS.FloatArea.prototype*/ {
+   var FloatArea = Control.Control.extend([_PopupMixin], /** @lends SBIS3.CONTROLS.FloatArea.prototype*/ {
       _dotTplFn : dotTpl,
       $protected: {
          _options: {
@@ -41,6 +41,15 @@ define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CONTROLS.Control2', 'js!SBIS3.C
          FloatArea.superclass.show.call(this);
          this.recalcPosition();
          this._container.removeClass('ws-hidden');
+      },
+
+      //TODO должен быть нормально переписан в новом Control
+      toggle: function(){
+         if (this.isVisible()){
+            this.hide();
+         }else {
+            this.show();
+         }
       }
 
    });
