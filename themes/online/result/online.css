@@ -18,6 +18,7 @@
 .controls-Button__big {
    padding: 15px 32px;
    font-size: 18px;
+   line-height: 18px;
    height: 48px;
    border-radius: 24px;
    font-family: 'Cambria Italic', 'Cambria';
@@ -51,6 +52,8 @@
    background-position: 0 -265px;
 }
 
+/* RadioButton */
+
 /* ToggleButton */
 
 .controls-Button.controls-ToggleButton__checked {
@@ -61,6 +64,26 @@
 .controls-Button__big.controls-ToggleButton__checked {
    background-position: 0 -458px !important;
 }
+
+.controls-RadioButton {
+   cursor: pointer;
+   display: inline-block;
+}
+.controls-RadioButton__icon {
+   width: 24px;
+   height: 17px;
+   background: url('../img/RadioButton-sprite.png') 0 -4px;
+   display: inline-block;
+}
+.controls-RadioButton:hover .controls-RadioButton__icon{
+   background-position: 0 -100px;
+}
+
+.controls-RadioButton.controls-ToggleButton__checked .controls-RadioButton__icon{
+   background-position: 0 -52px;
+}
+
+/* SwitcherDoubleOnline */
 
 .controls-SwitcherDoubleOnline {
    display: inline-block;
@@ -128,7 +151,7 @@
    height: 100%;
 }
 
-/* SwitcherDoubleOnline */
+/* Switcher */
 
 .controls-Switcher {
    display: inline-block;
@@ -140,7 +163,7 @@
    min-width: 100px;
    width: 100%;
    background: url('../img/switcher.png') 0 0;
-   border-radius: 12px;
+   border-radius: 14px;
    display: inline-block;
    cursor: pointer;
    padding: 2px;
@@ -152,7 +175,7 @@
    min-width: 70%;
    min-height: 16px;
    background: url('../img/switcher.png') 0 -74px;
-   border-radius: 12px;
+   border-radius: 14px;
    text-align: center;
    display: inline-block;
    padding: 2px 4px;
@@ -164,6 +187,8 @@
    padding-right: 2px;
    padding-left: 16px;
 }
+
+/* TextBox */
 
 .controls-TextBox {
    display: inline-block;
@@ -217,7 +242,13 @@
    text-transform: lowercase;
 }
 
-/* Switcher */
+/* PasswordTextBox */
+
+.controls-TextBox__field__fixIE {
+   font-size: 12px;
+}
+
+/* NumberTextBox */
 
 .controls-NumberTextBox {
    text-align: right;
@@ -251,14 +282,4 @@
    background: url('../img/NumberTextBox-arrowdown.png') left top no-repeat;
    margin-top: 1px;
 }
-
-/* TextBox */
-
-.controls-TextBox__field__fixIE {
-   font-size: 12px;
-}
-
-/* PasswordTextBox */
-
-/* NumberTextBox */
 

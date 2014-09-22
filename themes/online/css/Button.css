@@ -16,6 +16,7 @@
 .controls-Button__big {
    padding: 15px 32px;
    font-size: 18px;
+   line-height: 18px;
    height: 48px;
    border-radius: 24px;
    font-family: 'Cambria Italic', 'Cambria';

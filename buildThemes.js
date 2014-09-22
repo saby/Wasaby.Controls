@@ -4,7 +4,7 @@ var path = require('path');
 var themesDir = path.join(__dirname, 'themes');
 
 // порядок сборки стилей контролов
-var order = ['Button', 'ToggleButton', 'SwitcherDoubleOnline', 'Switcher', 'TextBox', 'PasswordTextBox', 'NumberTextBox'];
+var order = ['Button', 'ToggleButton', 'RadioButton', 'SwitcherDoubleOnline', 'Switcher', 'TextBox', 'PasswordTextBox', 'NumberTextBox'];
 
 var dirWalker = function (dir) {
    var files = fs.readdirSync(dir);
