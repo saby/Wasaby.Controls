@@ -5,7 +5,8 @@
 define('js!SBIS3.CONTROLS.ListView',
       ['js!SBIS3.CORE.Control',
        'js!SBIS3.CONTROLS._CollectionMixin',
-       'js!SBIS3.CONTROLS._MultiSelectorMixin'],
+       'js!SBIS3.CONTROLS._MultiSelectorMixin'
+         ],
       function(Control, CollectionMixin, MultiSelectorMixin) {
 
    'use strict';
@@ -48,7 +49,7 @@ define('js!SBIS3.CONTROLS.ListView',
          var self = this;
          this._dotItemTpl = doT.template(self._options.itemTemplate);
          this._$itemsContainer = $(this._options.itemsContainer);
-         this._container.html(this._$itemsContainer).css('display','inline-block');
+         this._container.html(this._$itemsContainer);
          this.redraw();
       },
 
@@ -57,8 +58,8 @@ define('js!SBIS3.CONTROLS.ListView',
        */
       redraw: function(){
          var self = this;
-         this._items.iterate(function (item, key) {
-            self._$itemsContainer.append(self._dotItemTpl({key: key, title: item.title}));
+         this._items.iterate(function (item) {
+            self._$itemsContainer.append(self._dotItemTpl(item));
          });
       },
 
