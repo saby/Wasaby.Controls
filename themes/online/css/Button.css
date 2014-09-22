@@ -49,3 +49,11 @@
 .controls-Button__primary.controls-Button__big:hover {
    background-position: 0 -265px;
 }
+
+.controls-Button.controls-Button__active {
+   background-position: 0 -229px !important;
+}
+
+.controls-Button__big.controls-Button__active {
+   background-position: 0 -458px !important;
+}

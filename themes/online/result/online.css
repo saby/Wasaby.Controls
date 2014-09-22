@@ -52,18 +52,15 @@
    background-position: 0 -265px;
 }
 
-/* RadioButton */
-
-/* ToggleButton */
-
-.controls-Button.controls-ToggleButton__checked {
-   color: red;
+.controls-Button.controls-Button__active {
    background-position: 0 -229px !important;
 }
 
-.controls-Button__big.controls-ToggleButton__checked {
+.controls-Button__big.controls-Button__active {
    background-position: 0 -458px !important;
 }
+
+/* ToggleButton */
 
 .controls-RadioButton {
    cursor: pointer;
@@ -82,6 +79,17 @@
 .controls-RadioButton.controls-ToggleButton__checked .controls-RadioButton__icon{
    background-position: 0 -52px;
 }
+
+.controls-Button.controls-ToggleButton__checked {
+   color: red;
+   background-position: 0 -229px !important;
+}
+
+.controls-Button__big.controls-ToggleButton__checked {
+   background-position: 0 -458px !important;
+}
+
+/* RadioButton */
 
 /* SwitcherDoubleOnline */
 
@@ -188,8 +196,6 @@
    padding-left: 16px;
 }
 
-/* TextBox */
-
 .controls-TextBox {
    display: inline-block;
    background: #ffffff;
@@ -241,6 +247,8 @@
 .controls-TextBox__field-lowercase {
    text-transform: lowercase;
 }
+
+/* TextBox */
 
 /* PasswordTextBox */
 
