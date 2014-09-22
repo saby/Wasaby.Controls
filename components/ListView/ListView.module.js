@@ -5,9 +5,10 @@
 define('js!SBIS3.CONTROLS.ListView',
       ['js!SBIS3.CORE.Control',
        'js!SBIS3.CONTROLS._CollectionMixin',
-       'js!SBIS3.CONTROLS._MultiSelectorMixin'
-         ],
-      function(Control, CollectionMixin, MultiSelectorMixin) {
+       'js!SBIS3.CONTROLS._MultiSelectorMixin',
+       'html!SBIS3.CONTROLS.ListView'
+      ],
+      function(Control, CollectionMixin, MultiSelectorMixin, dotTplFn) {
 
    'use strict';
 
@@ -22,8 +23,9 @@ define('js!SBIS3.CONTROLS.ListView',
 
    var ListView = Control.Control.extend( [CollectionMixin, MultiSelectorMixin],/** @lends SBIS3.CONTROLS.ListView.prototype */ {
       $protected: {
+         _dotTplFn: dotTplFn,
          _dotItemTpl: null,
-         _$itemsContainer: null,
+         _itemsContainer: null,
          _options: {
             /**
              * Элемент, внутри которого отображается набор
@@ -47,9 +49,12 @@ define('js!SBIS3.CONTROLS.ListView',
 
       $constructor: function() {
          var self = this;
+         if (this._options.itemsContainer){
+            this._itemsContainer = this._options.itemsContainer;
+         } else {
+            this._itemsContainer = this._container;
+         }
          this._dotItemTpl = doT.template(self._options.itemTemplate);
-         this._$itemsContainer = $(this._options.itemsContainer);
-         this._container.html(this._$itemsContainer);
          this.redraw();
       },
 
@@ -58,8 +63,9 @@ define('js!SBIS3.CONTROLS.ListView',
        */
       redraw: function(){
          var self = this;
+         this._itemsContainer.empty();
          this._items.iterate(function (item) {
-            self._$itemsContainer.append(self._dotItemTpl(item));
+            self._itemsContainer.append(self._dotItemTpl(item));
          });
       },
 
