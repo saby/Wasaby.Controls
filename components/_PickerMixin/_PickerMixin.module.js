@@ -49,6 +49,12 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
 
       togglePicker: function() {
          this._picker.toggle();
+      },
+
+      after : {
+         destroy : function(){
+            this._picker.destroy();
+         }
       }
 
    };
