@@ -67,6 +67,22 @@ define('js!SBIS3.CONTROLS.ListView',
          this._items.iterate(function (item) {
             self._itemsContainer.append(self._buildMarkup(self._dotItemTpl, item));
          });
+         this._loadChildControls();
+      },
+
+      _loadControls: function(pdResult){
+         return pdResult.done([]);
+      },
+
+      _loadChildControls: function(){
+         var def = new $ws.proto.Deferred();
+            var self = this;
+            self._loadControlsBySelector(new $ws.proto.ParallelDeferred(), undefined, '[data-component]')
+               .getResult().addCallback(function(){
+                  def.callback();
+               });
+         console.log(def);
+         return def;
       },
 
       /**
