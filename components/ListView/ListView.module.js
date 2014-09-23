@@ -3,12 +3,12 @@
  */
 
 define('js!SBIS3.CONTROLS.ListView',
-      ['js!SBIS3.CORE.Control',
+      ['js!SBIS3.CORE.CompoundControl',
        'js!SBIS3.CONTROLS._CollectionMixin',
        'js!SBIS3.CONTROLS._MultiSelectorMixin',
        'html!SBIS3.CONTROLS.ListView'
       ],
-      function(Control, CollectionMixin, MultiSelectorMixin, dotTplFn) {
+      function(CompoundControl, CollectionMixin, MultiSelectorMixin, dotTplFn) {
 
    'use strict';
 
@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.ListView',
     * @control
     */
 
-   var ListView = Control.Control.extend( [CollectionMixin, MultiSelectorMixin],/** @lends SBIS3.CONTROLS.ListView.prototype */ {
+   var ListView = CompoundControl.extend( [CollectionMixin, MultiSelectorMixin],/** @lends SBIS3.CONTROLS.ListView.prototype */ {
       $protected: {
          _dotTplFn: dotTplFn,
          _dotItemTpl: null,
@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.ListView',
          var self = this;
          this._itemsContainer.empty();
          this._items.iterate(function (item) {
-            self._itemsContainer.append(self._dotItemTpl(item));
+            self._itemsContainer.append(self._buildMarkup(self._dotItemTpl, item));
          });
       },
 
