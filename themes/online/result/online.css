@@ -1,5 +1,7 @@
 /* Button */
 
+/* ToggleButton */
+
 .controls-Button {
    cursor: pointer;
    text-align: center;
@@ -61,8 +63,6 @@
 }
 
 /* RadioButton */
-
-/* ToggleButton */
 
 .controls-Button.controls-ToggleButton__checked {
    color: red;
@@ -280,15 +280,9 @@
    text-transform: lowercase;
 }
 
-/* PasswordTextBox */
-
 .controls-TextBox__field__fixIE {
    font-size: 12px;
 }
-
-/* TextBox */
-
-/* NumberTextBox */
 
 .controls-NumberTextBox {
    text-align: right;
@@ -322,4 +316,10 @@
    background: url('../img/NumberTextBox-arrowdown.png') left top no-repeat;
    margin-top: 1px;
 }
+
+/* PasswordTextBox */
+
+/* TextBox */
+
+/* NumberTextBox */
 
