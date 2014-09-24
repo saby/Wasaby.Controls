@@ -7,7 +7,8 @@ var themesDir = path.join(__dirname, 'themes');
 var order = {
    demo: ['Button', 'ToggleButton', 'RadioButton', 'SwitcherDoubleOnline', 'Switcher', 'TextBox', 'PasswordTextBox', 'NumberTextBox', 'TabButton', 'CheckBox', 'ColorPicker', 'ComboBox'],
    presto: ['Button', 'TextBox'],
-   online: ['Button', 'ToggleButton', 'RadioButton', 'SwitcherDoubleOnline', 'Switcher', 'TextBox', 'PasswordTextBox', 'NumberTextBox', 'CheckBox']
+   online: ['Button', 'ToggleButton', 'RadioButton', 'SwitcherDoubleOnline', 'Switcher', 'TextBox', 'PasswordTextBox', 'NumberTextBox', 'CheckBox'],
+   genie: ['Button', 'RadioButton', 'TextBox', 'CheckBox', 'ComboBox']
 };
 
 var dirWalker = function (dir) {

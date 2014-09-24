@@ -1,0 +1,180 @@
+/* Button */
+
+.controls-Button {
+   cursor: pointer;
+   text-align: center;
+   display: inline-block;
+   box-sizing: border-box;
+   height: 30px;
+   line-height: normal;
+   border: 1px solid #d1d1d4;
+   border-radius: 2px;
+   background-color: transparent;
+   color: #919197;
+}
+
+.controls-Button.ws-has-focus {
+   color: #00d7d7;
+   border-color: #00d7d7;
+}
+
+.controls-Button:hover, .controls-Button.ws-has-focus:hover {
+   color: #ffffff;
+   border-color: #00d7d7;
+   background-color: #00d7d7;
+}
+
+/* RadioButton */
+
+/* TextBox */
+
+.controls-RadioButton {
+   cursor: pointer;
+   display: inline-block;
+}
+.controls-RadioButton__icon {
+   margin-right: 8px;
+   width: 17px;
+   height: 17px;
+   background: url('./img/RadioButton-sprite.png') 0 -4px;
+   display: inline-block;
+}
+
+.controls-RadioButton:hover .controls-RadioButton__caption {
+   color: #00d7d7;
+}
+
+.controls-RadioButton:hover .controls-RadioButton__icon{
+   background-position: 0 -54px;
+}
+
+.controls-RadioButton.controls-ToggleButton__checked .controls-RadioButton__icon{
+   background-position: 0 -29px;
+}
+
+/* CheckBox */
+
+.controls-TextBox {
+   display: inline-block;
+   background: #ffffff;
+   box-sizing: border-box;
+   padding: 0 7px;
+   border: 1px solid #d1d1d4;
+   height: 22px;
+   border-radius: 2px;
+}
+
+.controls-TextBox:hover {
+   border-color: #00d7d7;
+}
+
+.controls-TextBox__fieldWrapper {
+   height: 100%;
+   box-sizing: border-box;
+}
+
+.controls-TextBox__optionsContainer {
+   float: right;
+   width: 16px;
+   min-height: 19px;
+   height: 100%;
+}
+
+.controls-TextBox__optionsContainer + .controls-TextBox__fieldWrapper {
+   margin-right: 19px;
+   margin-left: 2px;
+}
+
+.controls-TextBox__field {
+   border: none;
+   min-height: 19px;
+   height: 99%;
+   width: 100%;
+   margin: 0;
+   box-sizing: border-box;
+   line-height: 100%;
+   outline: none;
+   background: transparent;
+}
+
+.controls-TextBox__field-uppercase {
+   text-transform: uppercase;
+}
+
+.controls-TextBox__field-lowercase {
+   text-transform: lowercase;
+}
+
+.controls-CheckBox {
+   cursor: pointer;
+   display: inline-block;
+}
+
+.controls-CheckBox:hover .controls-CheckBox__caption {
+   color: #00d7d7;
+}
+
+.controls-CheckBox__icon {
+   margin-right: 8px;
+   width: 17px;
+   height: 17px;
+   background: url('./img/CheckBox-sprite.png') 0 -4px;
+   display: inline-block;
+}
+.controls-CheckBox:hover .controls-CheckBox__icon{
+   background-position: 0 -54px;
+}
+
+.controls-CheckBox.controls-ToggleButton__checked .controls-CheckBox__icon{
+   background-position: 0 -29px;
+}
+
+.controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon{
+   background-position: 0 -78px;
+}
+
+/* ComboBox */
+
+.controls-ComboBox {
+   padding-right: 4px;
+}
+.controls-TextBox__optionsContainer {
+   position: relative;
+}
+
+.controls-ComboBox__arrowDown {
+   background-image: url('./img/ComboBox.png');
+   background-color: #ffffff;
+   text-decoration: none;
+   position: absolute;
+   right: 0;
+   top: 50%;
+   margin-top: -8px;
+   display: inline-block;
+   width: 16px;
+   height: 16px;
+}
+
+.controls-ComboBox__arrowDown:hover, .controls-ComboBox__field__manual-false:hover .controls-ComboBox__arrowDown{
+   text-decoration: none;
+   background-position: 0 -16px;
+}
+
+.controls-ComboBox__itemRow {
+   padding: 4px;
+   cursor: pointer;
+}
+
+.controls-ComboBox__itemRow__hover {
+   background-color: #E7F0F9;
+}
+
+.controls-ComboBox__field__manual-false {
+   cursor: pointer;
+}
+
+.controls-ComboBox__inputWrapper {
+   margin-right: 18px;
+   height: 100%;
+}
+

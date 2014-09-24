@@ -1,0 +1,27 @@
+.controls-CheckBox {
+   cursor: pointer;
+   display: inline-block;
+}
+
+.controls-CheckBox:hover .controls-CheckBox__caption {
+   color: #00d7d7;
+}
+
+.controls-CheckBox__icon {
+   margin-right: 8px;
+   width: 17px;
+   height: 17px;
+   background: url('./img/CheckBox-sprite.png') 0 -4px;
+   display: inline-block;
+}
+.controls-CheckBox:hover .controls-CheckBox__icon{
+   background-position: 0 -54px;
+}
+
+.controls-CheckBox.controls-ToggleButton__checked .controls-CheckBox__icon{
+   background-position: 0 -29px;
+}
+
+.controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon{
+   background-position: 0 -78px;
+}

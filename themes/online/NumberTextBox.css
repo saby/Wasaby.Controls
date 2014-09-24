@@ -7,12 +7,6 @@
    height: 100%;
 }
 
-.controls-NumberTextBox__arrowsContainer {
-   float: right;
-   width: 14px;
-   height: 100%;
-}
-
 .controls-NumberTextBox__arrow {
    background-repeat: no-repeat;
    text-decoration: none;
