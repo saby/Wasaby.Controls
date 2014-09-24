@@ -9,7 +9,7 @@
    margin: 0 8px;
    padding: 3px 16px;
    border-radius: 12px;
-   background: url("../img/btn_W-sprite.png") 0 -37px repeat-x;
+   background: url("./img/btn_W-sprite.png") 0 -37px repeat-x;
    color: #000000;
 }
 
@@ -22,7 +22,7 @@
    font-family: 'Cambria Italic', 'Cambria';
    font-weight: 400;
    font-style: italic;
-   background: url("../img/btn_big_W-sprite.png") 0 -73px repeat-x;
+   background: url("./img/btn_big_W-sprite.png") 0 -73px repeat-x;
 }
 
 .controls-Button:hover {
@@ -34,12 +34,12 @@
 }
 
 .controls-Button__primary {
-   background: url("../img/btn_O-sprite.png") 0 -37px repeat-x;
+   background: url("./img/btn_O-sprite.png") 0 -37px repeat-x;
    color: #ffffff;
 }
 
 .controls-Button__big.controls-Button__primary {
-   background: url("../img/btn_big_O-sprite.png") 0 -73px repeat-x;
+   background: url("./img/btn_big_O-sprite.png") 0 -73px repeat-x;
 }
 
 .controls-Button__primary:hover {
