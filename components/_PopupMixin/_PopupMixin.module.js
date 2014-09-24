@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function() {
          if (zIndex == this._cur) {
             this._cur--;
          }
-         return this._cur
+         return this._cur;
       },
       getNext : function() {
          this._cur++;
@@ -91,13 +91,19 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function() {
          };
          if (this._options.target) {
             offset = this._options.target.offset();
-            offset.top += this._options.target.outerHeight()
+            offset.top += this._options.target.outerHeight();
+            //Проверям убираемся ли в экран
+            if ($(document).width() <= this._container.width() + this._container.offset().left){
+               offset.left += this._options.target.outerWidth() - this._container.outerWidth();
+            }
          }
          this._container.css({
             'left' : offset.left + this._options.left,
             'top' : offset.top + this._options.top
          });
       },
+
+
 
       before : {
          destroy : function() {

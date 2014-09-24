@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
     * Задается контент (протектед методом каким-то) и методы которые позволяют открывать, закрывать блок.
     * @mixin SBIS3.CONTROLS._PickerMixin
     */
-   var _FormWidgetMixin = /** @lends SBIS3.CONTROLS._PickerMixin.prototype */{
+   var _PickerMixin = /** @lends SBIS3.CONTROLS._PickerMixin.prototype */{
       $protected: {
          _picker : null,
          _options: {
@@ -38,7 +38,6 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
        * Показывает выпадающий блок
        */
       showPicker: function() {
-         this._picker.recalcPosition();
          this._picker.show();
       },
       /**
@@ -49,12 +48,17 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
       },
 
       togglePicker: function() {
-         this._picker.recalcPosition();
          this._picker.toggle();
+      },
+
+      after : {
+         destroy : function(){
+            this._picker.destroy();
+         }
       }
 
    };
 
-   return _FormWidgetMixin;
+   return _PickerMixin;
 
 });
