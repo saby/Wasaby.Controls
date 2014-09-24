@@ -147,7 +147,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
          this.setCaption(value);
       },
       /**
-       * Возвращает текущее значение текста на кнопке
+       * Возвращает текущее значение текста на кнопке.
        * @returns {String}
        * @example
        * <pre>
