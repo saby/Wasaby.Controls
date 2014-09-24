@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SBIS3.CONTROLS.Switcher', 'css!SBIS3.CONTROLS.Switcher'], function(SwitcherBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SBIS3.CONTROLS.Switcher'], function(SwitcherBase, dotTplFn) {
 
    'use strict';
 
@@ -31,11 +31,11 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SB
          Switcher.superclass.setState.call(this,state);
          if (state == 'on'){
             this._switcher.addClass('controls-Switcher__toggle__position-on');
-            this._position.addClass('controls-Switcher__onPosition').html(this._options.stateOn || '&nbsp;');
+            this._position.html(this._options.stateOn || '&nbsp;');
          } else {
             if (state == 'off') {
                this._switcher.removeClass('controls-Switcher__toggle__position-on');
-               this._position.addClass('controls-Switcher__offPosition').html(this._options.stateOff || '&nbsp');
+               this._position.html(this._options.stateOff || '&nbsp');
             }
          }
       },

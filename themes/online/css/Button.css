@@ -1,0 +1,59 @@
+.controls-Button {
+   cursor: pointer;
+   text-align: center;
+   display: inline-block;
+   box-sizing: border-box;
+   height: 24px;
+   line-height: normal;
+   border: none;
+   margin: 0 8px;
+   padding: 3px 16px;
+   border-radius: 12px;
+   background: url("../img/btn_W-sprite.png") 0 -37px repeat-x;
+   color: #000000;
+}
+
+.controls-Button__big {
+   padding: 15px 32px;
+   font-size: 18px;
+   line-height: 18px;
+   height: 48px;
+   border-radius: 24px;
+   font-family: 'Cambria Italic', 'Cambria';
+   font-weight: 400;
+   font-style: italic;
+   background: url("../img/btn_big_W-sprite.png") 0 -73px repeat-x;
+}
+
+.controls-Button:hover {
+   background-position: 0 -133px;
+}
+
+.controls-Button__big:hover {
+   background-position: 0 -649px;
+}
+
+.controls-Button__primary {
+   background: url("../img/btn_O-sprite.png") 0 -37px repeat-x;
+   color: #ffffff;
+}
+
+.controls-Button__big.controls-Button__primary {
+   background: url("../img/btn_big_O-sprite.png") 0 -73px repeat-x;
+}
+
+.controls-Button__primary:hover {
+   background-position: 0 -133px;
+}
+
+.controls-Button__primary.controls-Button__big:hover {
+   background-position: 0 -265px;
+}
+
+.controls-Button.controls-Button__active {
+   background-position: 0 -229px !important;
+}
+
+.controls-Button__big.controls-Button__active {
+   background-position: 0 -458px !important;
+}

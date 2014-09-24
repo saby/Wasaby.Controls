@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3.CONTROLS.TextBox','css!SBIS3.CONTROLS.TextBox'], function(TextBoxBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3.CONTROLS.TextBox'], function(TextBoxBase, dotTplFn) {
 
    'use strict';
 

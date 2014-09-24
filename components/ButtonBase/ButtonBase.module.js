@@ -47,6 +47,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
       },
 
       _clickHandler : function() {
+
       },
       /**
        * Меняет текст на кнопке

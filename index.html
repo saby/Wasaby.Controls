@@ -40,6 +40,15 @@
          padding: 20px;
       }
 
+      #content table {
+         width: 100%;
+      }
+
+      #content table td {
+         width: 50%;
+         vertical-align: top;
+      }
+
       #content ul li {
          height: 27px;
       }
@@ -62,21 +71,39 @@
 </head>
 <body class="view-main">
 <div id="content">
-   <h3>Просмотр контролов</h3>
-   <ul>
-      <li>
-         <a href="/pages/textBoxCommonStyles.html">TextBox's</a>
-      </li>
-      <li>
-         <a href="/pages/buttonCommonStyles.html">Button's</a>
-      </li>
-      <li>
-         <a href="/pages/switcherCommonStyles.html">Switcher's</a>
-      </li>
-      <li>
-         <a href="/pages/ButtonGroups.html">Button groups</a>
-      </li>
-   </ul>
+   <table>
+      <tr>
+         <td>
+            <h3>Просмотр контролов</h3>
+            <ul>
+               <li>
+                  <a href="/pages/textBoxCommonStyles.html">TextBox's</a>
+               </li>
+               <li>
+                  <a href="/pages/buttonCommonStyles.html">Button's</a>
+               </li>
+               <li>
+                  <a href="/pages/switcherCommonStyles.html">Switcher's</a>
+               </li>
+               <li>
+                  <a href="/pages/ButtonGroups.html">Button groups</a>
+               </li>
+            </ul>
+         </td>
+         <td>
+            <h3>Темы</h3>
+            <ul>
+               <li>
+                  <a href="/themes/online.sbis.html">online.sbis.ru</a>
+               </li>
+               <li>
+                  <a href="/themes/demo.html">demo</a>
+               </li>
+            </ul>
+         </td>
+      </tr>
+   </table>
+
 </div>
 <script type="text/javascript">
    $ws.core.withComponents('Source').addCallback(function () {

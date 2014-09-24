@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 28.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.PasswordTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SBIS3.CONTROLS.PasswordTextBox', 'css!SBIS3.CONTROLS.PasswordTextBox'], function (TextBox, dotTplFn) {
+define('js!SBIS3.CONTROLS.PasswordTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SBIS3.CONTROLS.PasswordTextBox'], function (TextBox, dotTplFn) {
 
    'use strict';
    /**
