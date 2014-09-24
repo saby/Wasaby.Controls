@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
             caption: '',
             /**
              * @cfg {String}  Строка, обозначающая иконку
+             * @noShow
              */
             icon: '',
             /**
@@ -39,6 +40,9 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
          this._container.mouseup(function(){
             self._clickHandler();
             self._notify('onActivated');
+         });
+         this._container.mousedown(function(){
+            return false;
          });
       },
 
@@ -83,6 +87,10 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
 
       getValue: function(){
          return this.getCaption();
+      },
+
+      setPrimary: function(flag){
+         this._options.primary = !!flag;
       }
    });
 

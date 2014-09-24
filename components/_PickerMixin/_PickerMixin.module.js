@@ -38,6 +38,7 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
        * Показывает выпадающий блок
        */
       showPicker: function() {
+         this._picker.recalcPosition();
          this._picker.show();
       },
       /**
@@ -48,6 +49,7 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
       },
 
       togglePicker: function() {
+         this._picker.recalcPosition();
          this._picker.toggle();
       }
 
