@@ -1,16 +1,16 @@
-.controls-FieldFormatTextBox{
+.controls-FieldFormatDate{
    height: 20px;
    border: 1px solid #7F9DB9;
    display: inline-block;
    min-width: 40px;
 }
 
-.controls-FieldFormatTextBox__field{
+.controls-FieldFormatDate__field{
    outline: none;
    margin: 2px;
 }
 
-.controls-FieldFormatTextBox__field em{
+.controls-FieldFormatDate__field em{
    font-style: normal;
    font-family: 'Courier New', Monospace;
 }

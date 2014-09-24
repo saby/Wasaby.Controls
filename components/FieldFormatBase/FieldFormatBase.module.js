@@ -36,13 +36,26 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
           */
          _inputField: null,
          /**
-          * Допустимые управляющие символы в маске
-          */
-         _controlCharacters: 'dLlx',
-         /**
           * Символ-заполнитель, на который замещаются все управляющие символы в маске для последующего отображения на странице
           */
-         _placeholder: '_',
+         _placeholder: '',
+         /**
+          * Допустимые управляющие символы в маске. Задаются отдельно в каждом контролле в зависимости от контекста.
+          * Пример: для контролла FieldFormatDate это: Y(год), M(месяц), D(день), H(час), I(минута), S(секунда), U(доля секунды).
+          *
+          * Используются при создании контролла в опции mask
+          */
+         _controlCharacters: '',
+         /**
+          * Основные управляющие символы в маске. Каждому допустимому символу ставится в соответствие основной
+          * управляющий символ, в зависимости от которого определяется, какой тип символа может вводиться
+          * Условные обозначения:
+          *     1. d - Цифра
+          *     2. L - Заглавная буква
+          *     3. l - Строчная буква
+          *     4. x - Буква или цифра
+          */
+         _generalControlCharacters: 'dLlx',
          /**
           * Опции создаваемого контролла
           */
@@ -51,7 +64,7 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
              * @cfg {RegExp} Маска, на базе которой будет создана html-разметка и в соответствии с которой
              * будет определён весь функционал
              */
-            mask: 'd(ddd)ddd-dd-dd'
+            mask: ''
          },
 
          _KEYS: {
@@ -62,75 +75,6 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
       },
 
       $constructor: function () {
-         var self = this;
-
-         this._primalMask = this._options.mask;
-         this._clearMask = this._getClearMask();
-         this._isSeparatorContainerFirst = this._getTypeOfFirstContainer();
-         this._htmlMask = this._getHtmlMask();
-
-         this._inputField = $('.controls-FieldFormatBase__field', this.getContainer().get(0));
-         this._inputField.html(this._htmlMask);
-
-         //var rng = document.createRange();
-         //rng.selectNode(document.getElementsByClassName('controls-FieldFormatBase__field')[0]);
-
-         //console.log('typeof window.getSelection().focusNode -> ', window.getSelection().focusNode );
-
-         //this._inputField.unbind('keypress');
-         //this._inputField.unbind('focus');
-
-         this._inputField.focus(function(){
-            self._focusHandler(self._inputField.get(0));
-         });
-         //this._inputField.keypress(function(event){
-         //   event.preventDefault();
-         //   var key = event.which;
-         //   self._keyPressHandler(key, 'character');
-         //});
-         this._inputField.keypress(function(event){ event.preventDefault();});
-         this._inputField.keyup(function(event){ event.preventDefault();});
-
-         this._inputField.keydown(function(event){
-            event.preventDefault();
-            var
-               key = event.which,
-               type = '';
-
-            if (!event.ctrlKey && key != self._KEYS.DELETE && key != self._KEYS.BACKSPACE){
-               type = event.shiftKey ? 'shift_character' : 'character';
-               self._keyPressHandler(key, type);
-            }
-            else if (key == self._KEYS.DELETE) {
-               self._keyPressHandler(key, 'delete');
-            }
-            else if (key == self._KEYS.BACKSPACE){
-               self._keyPressHandler(key, 'backspace');
-            }
-
-            //switch (key){
-            //   case self._KEYS.DELETE:
-            //      self._keyPressHandler(key, 'delete');
-            //      break;
-            //   case self._KEYS.BACKSPACE:
-            //      self._keyPressHandler(key, 'backspace');
-            //      break;
-            //   default:
-            //      type = event.shiftKey ? 'UpperCaseCharacter' : 'character';
-            //      if ( key > 41 && event.shiftKey ) { alert(event.shiftKey);}
-            //      self._keyPressHandler(key, type);
-            //}
-         });
-
-         // DEBUGGING
-         this._inputField.mouseup(function(){
-            console.log(self._getCursor(true));
-         });
-
-         // DEBUGGING
-         //this._getHtmlMask2();
-         //var firstNeeded = this._isSeparatorContainerFirst ? 1 : 0;
-         //this._moveCursor(this._getContainerByIndex(firstNeeded), 0);
 
       },
 
@@ -142,27 +86,6 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
        */
       _getContainerByIndex: function(idx) {
          return this._inputField.get(0).childNodes[parseInt(idx, 10)].childNodes[0];
-      },
-
-      /**
-       * возвращает RegExp для сравнения с символом нажатой клавиши
-       * @param {Number} container порядковый номер блока, в котором находится символ
-       * @param {Number} position порядковый номер символа в контейнере
-       * @return
-       */
-      _keyExp : function(container, position){
-         if (this._isSeparatorContainerFirst) {
-            container--;
-         }
-         container = container ? container / 2 : container;
-
-         var
-            array = this._primalMask.match(/[dLlx]+/g),
-            character = array[container].charAt(position),
-            transform = { 'L': 'toUpperCase', 'l': 'toLowerCase' };
-
-         //return this._charToRegExp(character);
-         return [ this._charToRegExp(character), transform[character] || false ];
       },
 
       /**
@@ -258,6 +181,51 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
          }
 
          this._moveCursor(container, position);
+      },
+
+      /**
+       * возвращает RegExp для сравнения с символом нажатой клавиши
+       * @param {Number} container порядковый номер блока, в котором находится символ
+       * @param {Number} position порядковый номер символа в контейнере
+       * @return
+       */
+      _keyExp : function(container, position){
+         if (this._isSeparatorContainerFirst) {
+            container--;
+         }
+         container = container ? container / 2 : container;
+
+         var
+            regexp = new RegExp('['+this._controlCharacters+']+', 'g'),
+            array = this._primalMask.match(regexp),
+            character = array[container].charAt(position),
+            transform = { 'L': 'toUpperCase', 'l': 'toLowerCase' };
+
+         return [ this._charToRegExp(character), transform[character] || false ];
+      },
+
+      /**
+       * Конвертирует символ маски в regExp
+       * @param {String} c символ маски
+       * @return {RegExp}
+       * @private
+       */
+      _charToRegExp : function(c){
+         var regexp;
+         switch(c) {
+            case 'd':
+               regexp = /\d/; // RegExp /\d/ is equal to /[0-9]/
+               break;
+            case 'L':
+            case 'l':
+               regexp = /[А-ЯA-Zа-яa-zёЁ]/;
+               break;
+            case 'x':
+            default :
+               regexp = /[А-ЯA-Zа-яa-z0-9ёЁ]/;
+               break;
+         }
+         return regexp;
       },
 
       /**
@@ -357,30 +325,6 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
       },
 
       /**
-       * Конвертирует символ маски в regExp
-       * @param {String} c символ маски
-       * @return {RegExp}
-       * @private
-       */
-      _charToRegExp : function(c){
-         var regexp;
-         switch(c) {
-            case 'd':
-               regexp = /\d/;
-               break;
-            case 'L':
-            case 'l':
-               regexp = /[А-ЯA-Zа-яa-zёЁ]/;
-               break;
-            case 'x':
-            default:
-               regexp = /[А-ЯA-Zа-яa-z0-9ёЁ]/;
-               break;
-         }
-         return regexp;
-      },
-
-      /**
        * Возвращает html-разметку для заданной маски
        * @returns {string} html-разметка
        * @private
@@ -442,8 +386,7 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
        * @private
        */
       _getClearMask: function(){
-         //return this._primalMask.replace(/[dLlx]/g,this._getPlaceholder());
-         return this._primalMask.replace(new RegExp('['+this._controlCharacters+']', 'g'),this._getPlaceholder());
+         return this._primalMask.replace(new RegExp('['+this._controlCharacters+']', 'g'), this._getPlaceholder());
       },
 
       /**

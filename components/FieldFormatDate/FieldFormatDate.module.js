@@ -1,33 +1,34 @@
-define('js!SBIS3.CONTROLS.FieldFormatTextBox', ['js!SBIS3.CONTROLS.FieldFormatBase', '!html!SBIS3.CONTROLS.FieldFormatTextBox', 'css!SBIS3.CONTROLS.FieldFormatTextBox'], function (FieldFormatBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.FieldFormatDate', ['js!SBIS3.CONTROLS.FieldFormatBase', '!html!SBIS3.CONTROLS.FieldFormatDate', 'css!SBIS3.CONTROLS.FieldFormatDate'], function (FieldFormatBase, dotTplFn) {
 
    'use strict';
 
    /**
     * Можно вводить только значения особого формата (например телефон).
     * В поле ввода уже заранее будут введены символы из формата (например скобки и тире для телефона) и останется ввести только недостающие символы
-    * @class SBIS3.CONTROLS.FormattedTextBox
+    * @class SBIS3.CONTROLS.FieldFormatDate
     * @extends SBIS3.CORE.Control
     * @control
     */
 
-   var FieldFormatTextBox = FieldFormatBase.extend(/** @lends SBIS3.CONTROLS.FieldFormatTextBox.prototype */{
+   var FieldFormatDate = FieldFormatBase.extend(/** @lends SBIS3.CONTROLS.FieldFormatDate.prototype */{
       $protected: {
          _dotTplFn: dotTplFn,
          /**
-          * Допустимые управляющие символы в маске
+          * Допустимые управляющие символы в маске.
           * Условные обозначения:
-          *     1. d - Цифра
-          *     2. L - Заглавная буква
-          *     3. l - Строчная буква
-          *     4. x - Буква или цифра
+          *     1. D(day) -  Календарный день
+          *     2. M(month) - Месяц
+          *     3. Y(year) - Год
+          *     4. H(hour) - Час
+          *     5. I - Минута
+          *     6. S(second) - Секунда
+          *     7. U - Доля секунды
           */
-         _controlCharacters: 'dLlx',
+         _controlCharacters: 'DMYHISU',
          /**
-          * Символ-заполнитель, на который замещаются все управляющие символы в маске для последующего отображения на странице.
-          * В маске изначально не должны присутствовать символы-заполнители.
-          * Нельзя ставить знак вопроса.
+          * Символ, на который замещаются все управляющие символы в маске для последующего отображения на странице
           */
-         _placeholder: '.',
+         _placeholder: '_',
          /**
           * Опции создаваемого контролла
           */
@@ -36,7 +37,7 @@ define('js!SBIS3.CONTROLS.FieldFormatTextBox', ['js!SBIS3.CONTROLS.FieldFormatBa
              * @cfg {RegExp} Маска, на базе которой будет создана html-разметка и в соответствии с которой
              * будет определён весь функционал
              */
-            mask: 'd(ddd)ddd-dd-dd'
+            mask: 'DD:MM:YY'
          },
 
          _KEYS: {
@@ -118,7 +119,7 @@ define('js!SBIS3.CONTROLS.FieldFormatTextBox', ['js!SBIS3.CONTROLS.FieldFormatBa
          //this._moveCursor(this._getContainerByIndex(firstNeeded), 0);
 
       }
-});
+   });
 
-   return FieldFormatTextBox;
+   return FieldFormatDate;
 });
