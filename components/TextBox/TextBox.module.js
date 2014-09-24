@@ -79,6 +79,26 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          $('.controls-TextBox__field', this.getContainer().get(0)).attr('placeholder', text);
       },
 
+      /**
+       * Установить форматирование текста
+       * @param {TextTransformEnum} textTransform
+       */
+      setTextTransform: function(textTransform){
+         switch (textTransform) {
+            case 'uppercase':
+               this._inputField.removeClass('controls-TextBox__field-lowercase');
+               this._inputField.addClass('controls-TextBox__field-uppercase');
+               break;
+            case 'lowercase':
+               this._inputField.removeClass('controls-TextBox__field-uppercase');
+               this._inputField.addClass('controls-TextBox__field-lowercase');
+               break;
+            default:
+               this._inputField.removeClass('controls-TextBox__field-uppercase');
+               this._inputField.removeClass('controls-TextBox__field-lowercase');
+         }
+      },
+
       _keyUpBind: function() {
          this._options.text = this._inputField.val();
          this._notify('onChangeText', this._options.text);
