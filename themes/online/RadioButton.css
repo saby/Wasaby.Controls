@@ -5,7 +5,7 @@
 .controls-RadioButton__icon {
    width: 24px;
    height: 17px;
-   background: url('../img/RadioButton-sprite.png') 0 -4px;
+   background: url('./img/RadioButton-sprite.png') 0 -4px;
    display: inline-block;
 }
 .controls-RadioButton:hover .controls-RadioButton__icon{

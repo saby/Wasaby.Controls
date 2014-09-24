@@ -11,7 +11,7 @@
    margin: 0 8px;
    padding: 3px 16px;
    border-radius: 12px;
-   background: url("../img/btn_W-sprite.png") 0 -37px repeat-x;
+   background: url("./img/btn_W-sprite.png") 0 -37px repeat-x;
    color: #000000;
 }
 
@@ -24,7 +24,7 @@
    font-family: 'Cambria Italic', 'Cambria';
    font-weight: 400;
    font-style: italic;
-   background: url("../img/btn_big_W-sprite.png") 0 -73px repeat-x;
+   background: url("./img/btn_big_W-sprite.png") 0 -73px repeat-x;
 }
 
 .controls-Button:hover {
@@ -36,12 +36,12 @@
 }
 
 .controls-Button__primary {
-   background: url("../img/btn_O-sprite.png") 0 -37px repeat-x;
+   background: url("./img/btn_O-sprite.png") 0 -37px repeat-x;
    color: #ffffff;
 }
 
 .controls-Button__big.controls-Button__primary {
-   background: url("../img/btn_big_O-sprite.png") 0 -73px repeat-x;
+   background: url("./img/btn_big_O-sprite.png") 0 -73px repeat-x;
 }
 
 .controls-Button__primary:hover {
@@ -60,8 +60,6 @@
    background-position: 0 -458px !important;
 }
 
-/* ToggleButton */
-
 .controls-Button.controls-ToggleButton__checked {
    color: red;
    background-position: 0 -229px !important;
@@ -70,6 +68,8 @@
 .controls-Button__big.controls-ToggleButton__checked {
    background-position: 0 -458px !important;
 }
+
+/* ToggleButton */
 
 /* RadioButton */
 
@@ -80,7 +80,7 @@
 .controls-RadioButton__icon {
    width: 24px;
    height: 17px;
-   background: url('../img/RadioButton-sprite.png') 0 -4px;
+   background: url('./img/RadioButton-sprite.png') 0 -4px;
    display: inline-block;
 }
 .controls-RadioButton:hover .controls-RadioButton__icon{
@@ -103,7 +103,7 @@
    height: 16px;
    cursor: pointer;
    margin: 0 4px;
-   background: transparent url('../img/SwitcherDoubleOnline-sprite.png') no-repeat;
+   background: transparent url('./img/SwitcherDoubleOnline-sprite.png') no-repeat;
    display: inline-block;
 }
 
@@ -116,7 +116,7 @@
    height: 32px;
    cursor: pointer;
    margin: 0 2px 0 0;
-   background: transparent url('../img/SwitcherDoubleOnline-sprite-double.png') no-repeat;
+   background: transparent url('./img/SwitcherDoubleOnline-sprite-double.png') no-repeat;
    display: inline-block;
    vertical-align: top;
 }
@@ -180,7 +180,7 @@
 .controls-Switcher__position {
    min-width: 70%;
    height: 21px;
-   background: url('../img/switcher.png') 0 -96px;
+   background: url('./img/switcher.png') 0 -96px;
    text-align: center;
    display: inline-block;
    padding: 2px 0;
@@ -202,7 +202,7 @@
    display: block;
    top:0;
    left: -16px;
-   background: url('../img/switcher.png') 0 0;
+   background: url('./img/switcher.png') 0 0;
 }
 
 .controls-Switcher__toggle__position-on .controls-Switcher__position:before{
@@ -219,7 +219,7 @@
    display: block;
    top:0;
    right: -32px;
-   background: url('../img/switcher.png') 0 -24px;
+   background: url('./img/switcher.png') 0 -24px;
 }
 
 .controls-Switcher__toggle__position-on .controls-Switcher__position:after{
@@ -315,11 +315,11 @@
 }
 
 .controls-NumberTextBox__arrowUp {
-   background: url('../img/NumberTextBox-arrowup.png') left bottom no-repeat;
+   background: url('./img/NumberTextBox-arrowup.png') left bottom no-repeat;
 }
 
 .controls-NumberTextBox__arrowDown {
-   background: url('../img/NumberTextBox-arrowdown.png') left top no-repeat;
+   background: url('./img/NumberTextBox-arrowdown.png') left top no-repeat;
    margin-top: 1px;
 }
 
@@ -333,7 +333,7 @@
    width: 16px;
    height: 16px;
    line-height: 19px;
-   background: url('../img/CheckBox.png') 0 1px;
+   background: url('./img/CheckBox.png') 0 1px;
    margin-right: 4px;
    display: inline-block;
 }
