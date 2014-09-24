@@ -1,7 +1,5 @@
 /* Button */
 
-/* ToggleButton */
-
 .controls-Button {
    cursor: pointer;
    text-align: center;
@@ -62,7 +60,7 @@
    background-position: 0 -458px !important;
 }
 
-/* RadioButton */
+/* ToggleButton */
 
 .controls-Button.controls-ToggleButton__checked {
    color: red;
@@ -72,6 +70,8 @@
 .controls-Button__big.controls-ToggleButton__checked {
    background-position: 0 -458px !important;
 }
+
+/* RadioButton */
 
 .controls-RadioButton {
    cursor: pointer;
@@ -228,6 +228,8 @@
    background-position: 0 -312px;
 }
 
+/* TextBox */
+
 .controls-TextBox {
    display: inline-block;
    background: #ffffff;
@@ -280,9 +282,13 @@
    text-transform: lowercase;
 }
 
+/* PasswordTextBox */
+
 .controls-TextBox__field__fixIE {
    font-size: 12px;
 }
+
+/* NumberTextBox */
 
 .controls-NumberTextBox {
    text-align: right;
@@ -317,9 +323,30 @@
    margin-top: 1px;
 }
 
-/* PasswordTextBox */
+/* CheckBox */
 
-/* TextBox */
+.controls-CheckBox {
+   cursor: pointer;
+   display: inline-block;
+}
+.controls-CheckBox__icon {
+   width: 16px;
+   height: 16px;
+   line-height: 19px;
+   background: url('../img/CheckBox.png') 0 1px;
+   margin-right: 4px;
+   display: inline-block;
+}
+.controls-CheckBox:hover .controls-CheckBox__icon{
+   background-position: 0 17px;
+}
 
-/* NumberTextBox */
+.controls-CheckBox.controls-ToggleButton__checked .controls-CheckBox__icon{
+   background-position: 0 49px;
+}
+
+.controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon{
+   background-position: 0 33px;
+}
+
 

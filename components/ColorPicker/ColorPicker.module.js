@@ -5,7 +5,6 @@ define('js!SBIS3.CONTROLS.ColorPicker',
    ['js!SBIS3.CONTROLS.TextBox',
     'js!SBIS3.CONTROLS._PickerMixin',
     'html!SBIS3.CONTROLS.ColorPicker',
-    'css!SBIS3.CONTROLS.ColorPicker',
     'js!SBIS3.CONTROLS.ColorPicker/resources/colpick',
     'css!SBIS3.CONTROLS.ColorPicker/resources/colpick'
    ], function(TextBox, _PickerMixin, dotTpl) {
