@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
        * @param {String} captionTxt Текст на кнопке.
        * @example
        * <pre>
-       *     var btn = this.getTopParent().getChildControlByName(("myButton");
+       *     var btn = this.getChildControlByName(("myButton");
        *        btn.setCaption("Применить");
        * </pre>
        * @see caption
@@ -78,7 +78,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
        * @returns {String} Возвращает текст, указанный на кнопке.
        * @example
        * <pre>
-       *     var btn = this.getTopParent().getChildControlByName("myButton");
+       *     var btn = this.getChildControlByName("myButton");
        *        btn.getCaption();
        * </pre>
        * @see caption
@@ -94,7 +94,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
        * @param {String} iconTxt Путь к изображению.
        * @example
        * <pre>
-       *     var btn = this.getTopParent().getChildControlByName("myButton");
+       *     var btn = this.getChildControlByName("myButton");
        *        btn.setIcon("sprite:icon-16 icon-Successful icon-primary")
        * </pre>
        * @see icon
@@ -109,7 +109,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
        * Метод получения изображения, заданного опцией {@link icon}, либо методом {@link setIcon}.
        * @example
        * <pre>
-       *     var btn = this.getTopParent().getChildControlByName("myButton");
+       *     var btn = this.getChildControlByName("myButton");
        *     if (/icon-Alert/g.test(btn.getIcon())){
        *        btn.setIcon("sprite:icon16 icon-Alert icon-done");
        *     }
