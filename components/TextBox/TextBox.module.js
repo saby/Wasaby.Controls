@@ -37,6 +37,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              *    <li>true - крестик есть;</li>
              *    <li>false - нет крестика.</li>
              * </ul>
+             * @noShow
              */
             resetCross: false
          }
@@ -87,6 +88,26 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       setPlaceholder: function(text){
          TextBox.superclass.setPlaceholder.call(this, text);
          $('.controls-TextBox__field', this.getContainer().get(0)).attr('placeholder', text);
+      },
+
+      /**
+       * Установить форматирование текста
+       * @param {TextTransformEnum} textTransform
+       */
+      setTextTransform: function(textTransform){
+         switch (textTransform) {
+            case 'uppercase':
+               this._inputField.removeClass('controls-TextBox__field-lowercase');
+               this._inputField.addClass('controls-TextBox__field-uppercase');
+               break;
+            case 'lowercase':
+               this._inputField.removeClass('controls-TextBox__field-uppercase');
+               this._inputField.addClass('controls-TextBox__field-lowercase');
+               break;
+            default:
+               this._inputField.removeClass('controls-TextBox__field-uppercase');
+               this._inputField.removeClass('controls-TextBox__field-lowercase');
+         }
       },
 
       _keyUpBind: function() {
