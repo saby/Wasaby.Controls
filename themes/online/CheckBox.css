@@ -6,7 +6,7 @@
    width: 16px;
    height: 16px;
    line-height: 19px;
-   background: url('resources/CheckBox.png') 0 1px;
+   background: url('./img/CheckBox.png') 0 1px;
    margin-right: 4px;
    display: inline-block;
 }

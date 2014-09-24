@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
     * @class SBIS3.CONTROLS.ButtonGroupBase
     * @mixes SBIS3.CONTROLS._CollectionMixin
     * @mixes SBIS3.CONTROLS._SelectorMixin
-    * @extends SBIS3.CORE.Control
+    * @extends SBIS3.CORE.CompoundControl
     */
 
    var ButtonGroupBase = CompoundControl.extend([_CollectionMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBase.prototype */ {

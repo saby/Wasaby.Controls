@@ -5,7 +5,6 @@ define('js!SBIS3.CONTROLS.ColorPicker',
    ['js!SBIS3.CONTROLS.TextBox',
     'js!SBIS3.CONTROLS._PickerMixin',
     'html!SBIS3.CONTROLS.ColorPicker',
-    'css!SBIS3.CONTROLS.ColorPicker',
     'js!SBIS3.CONTROLS.ColorPicker/resources/colpick',
     'css!SBIS3.CONTROLS.ColorPicker/resources/colpick'
    ], function(TextBox, _PickerMixin, dotTpl) {
@@ -18,6 +17,7 @@ define('js!SBIS3.CONTROLS.ColorPicker',
     * @extends SBIS3.CONTROLS.TextBox
     * @mixes SBIS3.CONTROLS._PickerMixin
     * @control
+    * @ignoreOptions textTransform trim maxLength
     */
 
    var ColorPicker = TextBox.extend( [_PickerMixin],/** @lends SBIS3.CONTROLS.ColorPicker.prototype */{
@@ -34,8 +34,13 @@ define('js!SBIS3.CONTROLS.ColorPicker',
       $constructor: function() {
          var self = this;
          self._colorBox = $('.js-controls-ColorPicker__currentColor', this.getContainer().get(0));
+         self._colorBox.css('background', '#' + self._options.text || '000000');
          self._colorBox.bind('click',function(){
-            self.togglePicker();
+            if (self._options.text) {
+               self.togglePicker(self._options.text);
+            } else {
+               self.togglePicker('000000');
+            }
          });
       },
 
@@ -46,23 +51,23 @@ define('js!SBIS3.CONTROLS.ColorPicker',
       setText: function(text){
          var self = this;
          ColorPicker.superclass.setText.call(this,text);
-         self._colorBox.css('background','#' + text);
+         self._colorBox.css('background','#' + text || '000000');
          self._picker.getContainer().colpickSetColor(self.getText());
       },
 
-      togglePicker: function() {
+      togglePicker: function(color) {
          var self = this;
-         self._createColpick();
+         self._createColpick(color);
          ColorPicker.superclass.togglePicker.call(this);
       },
 
-      _createColpick: function(){
+      _createColpick: function(color){
          var self = this;
          if (!self._wasCreated) {
             self._picker.getContainer().colpick({
                flat: true,
                layout: 'hex',
-               color: '000000',
+               color: color,
                onSubmit: function (col, hex) {
                   self.hidePicker();
                   ColorPicker.superclass.setText.call(self, hex);

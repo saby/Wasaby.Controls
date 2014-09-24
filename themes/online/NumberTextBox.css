@@ -23,10 +23,10 @@
 }
 
 .controls-NumberTextBox__arrowUp {
-   background: url('resources/arrowup.png') left bottom no-repeat;
+   background: url('./img/NumberTextBox-arrowup.png') left bottom no-repeat;
 }
 
 .controls-NumberTextBox__arrowDown {
-   background: url('resources/arrowdown.png') left top no-repeat;
+   background: url('./img/NumberTextBox-arrowdown.png') left top no-repeat;
    margin-top: 1px;
 }
