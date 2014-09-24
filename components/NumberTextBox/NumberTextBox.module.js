@@ -10,7 +10,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     * @class SBIS3.CONTROLS.NumberTextBox
     * @extends SBIS3.CONTROLS.TextBox
     * @control
-    * @ignoreOptions textTransform trim
     */
 
    var NumberTextBox;

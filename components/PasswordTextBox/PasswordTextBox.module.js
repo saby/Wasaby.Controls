@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!
     * @class SBIS3.CONTROLS.PasswordTextBox
     * @extends SBIS3.CONTROLS.TextBox
     * @control
-    * @ignoreOptions textTransform trim
     */
    var PasswordTextBox;
    PasswordTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS.PasswordTextBox.prototype */ {

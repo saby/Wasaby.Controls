@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
             caption: '',
             /**
              * @cfg {String}  Строка, обозначающая иконку
-             * @noShow
+             * @editor ImageEditor
              */
             icon: '',
             /**
@@ -67,11 +67,19 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
 
       /**
        * Установить изображение на кнопке
-       * @param {String} iconTxt путь к изображению
+       * @param {String} iconPath путь к изображению
        */
-      setIcon: function(iconTxt) {
-
+      setIcon: function(iconPath) {
+         this._options.icon = iconPath;
       },
+
+      /**
+       * Получить изображение на кнопке
+       */
+      getIcon: function() {
+         return this._options.icon;
+      },
+
       /**
        * Установить значение primary
        * @param {Boolean} flag значение primary
@@ -87,13 +95,6 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
 
       isPrimary: function(){
          return this._options.primary;
-      },
-
-      /**
-       * Получить изображение на кнопке
-       */
-      getIcon: function() {
-
       },
 
       setValue: function(value){
