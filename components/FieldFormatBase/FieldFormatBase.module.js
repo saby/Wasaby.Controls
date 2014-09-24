@@ -3,8 +3,9 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
    'use strict';
 
    /**
-    * Можно вводить только значения особого формата (например телефон).
-    * В поле ввода уже заранее будут введены символы из формата (например скобки и тире для телефона) и останется ввести только недостающие символы
+    * Абстрактный класс для контроллов, в которых необходим ввод особого формата (телефон, год, время, etc).
+    * В конечный контролл передается маска с помощью опции mask, управляющие символы в маске, определяющие,
+    * какие символы могут вводиться, определяются предназначением контролла.
     * @class SBIS3.CONTROLS.FieldFormatBase
     * @extends SBIS3.CORE.Control
     * @control
@@ -16,6 +17,10 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
           * Изначальная маска (либо задается в опциях при создании, либо берется по умолчанию)
           */
          _primalMask: '',
+         ///**
+         // * Маска из основных управляющих символов. Определяет, какой символ может вводится.
+         // */
+         //_generalMask: '',
          /**
           * Изначально отображаемый текст в созданном контролле, то есть, по сути, маска, где каждый
           * управляющий символ заменён на символ-заполнитель
@@ -36,19 +41,38 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
           */
          _inputField: null,
          /**
-          * Символ-заполнитель, на который замещаются все управляющие символы в маске для последующего отображения на странице
+          * Символ-заполнитель, на который замещаются все управляющие символы в маске для последующего отображения на странице.
+          * В маске изначально не должны присутствовать символы-заполнители. По умолчанию -- знак нижнего подчёркивания.
+          * Нельзя ставить знак вопроса.
           */
-         _placeholder: '',
+         _placeholder: '_',
          /**
           * Допустимые управляющие символы в маске. Задаются отдельно в каждом контролле в зависимости от контекста.
-          * Пример: для контролла FieldFormatDate это: Y(год), M(месяц), D(день), H(час), I(минута), S(секунда), U(доля секунды).
-          *
-          * Используются при создании контролла в опции mask
+          * Пример:
+          *       Для контролла FieldFormatDate это: Y(год), M(месяц), D(день), H(час), I(минута), S(секунда), U(доля секунды).
+          * Каждому допустимому символу ставится в соответствие основной
+          * управляющий символ, в зависимости от которого определяется, какой тип символа может вводиться.
+          * Если допустимые управляющие символы не заданы, используются основные управляющие символы.
+          * Сами управляющие символы используются для задании маски при создании контролла в опции mask.
+          * Набор указывается строго символ к символу. Пример:
+          *       Для контролла FieldFormatDate
+          *             _controlCharactersSet: {
+          *                   'Y' : 'd',
+          *                   'M' : 'd',
+          *                   'D' : 'd',
+          *                   'H' : 'd',
+          *                   'I' : 'd',
+          *                   'H' : 'd',
+          *                   'U' : 'd'
+          *             }
+          */
+         _controlCharactersSet: {},
+         /**
+          * Строка всех допустимых управляющих символов, используется в регулярных выражениях
           */
          _controlCharacters: '',
          /**
-          * Основные управляющие символы в маске. Каждому допустимому символу ставится в соответствие основной
-          * управляющий символ, в зависимости от которого определяется, какой тип символа может вводиться
+          * Основные управляющие символы в маске.
           * Условные обозначения:
           *     1. d - Цифра
           *     2. L - Заглавная буква
@@ -78,14 +102,27 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
 
       },
 
+      _initializeComponents: function(){
+         this._primalMask = this._options.mask;
+         this._controlCharacters = this._getControlCharactersSet();
+         this._clearMask = this._getClearMask();
+         this._isSeparatorContainerFirst = this._getTypeOfFirstContainer();
+         this._htmlMask = this._getHtmlMask();
+      },
+
       /**
-       * Получить блок по порядковому номеру
-       * @param idx
-       * @returns {*}
+       * Обработка события фокусировки на элементе
+       * @param elem
        * @private
        */
-      _getContainerByIndex: function(idx) {
-         return this._inputField.get(0).childNodes[parseInt(idx, 10)].childNodes[0];
+      _focusHandler: function(elem){
+         if ($(elem).text() == $(this._htmlMask).text()){
+            var
+               child = this._isSeparatorContainerFirst ? 1 : 0,
+               contNext = elem.childNodes[child].childNodes[0],
+               startPos = 0;
+            this._moveCursor(contNext, startPos);
+         }
       },
 
       /**
@@ -109,7 +146,6 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
          character = type == 'shift_character' ? character.toUpperCase() : character.toLowerCase();
 
          if (type == 'character' || type == 'shift_character') {
-            //character = regexp[1] && regexp[1] == 'toUpperCase' ? character.toUpperCase() : character.toLowerCase();
             character = regexp[1] ? ( regexp[1] == 'toUpperCase' ? character.toUpperCase() : character.toLowerCase() ) : character;
 
 
@@ -121,13 +157,6 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
 
                      this._moveCursor(container, position);
                      this._keyPressHandler(character, 'character');
-                     //regexp = this._keyExp($(container.parentNode).index(), position);
-                     //character = regexp[1] == 'toUpperCase' ? character.toUpperCase() : character.toLowerCase();
-                     //
-                     //if ( regexp[0].test(character) ) {
-                     //   this._replaceCharacter(container, position, character);
-                     //   position++;
-                     //}
                   }
                   else {
                      nChild = this._isSeparatorContainerFirst ? 1 : 0;
@@ -147,7 +176,7 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
                   container = nextSibling.nextSibling.childNodes[0];
                   position = 0;
 
-                  this._replaceCharacter(container, position, this._getPlaceholder());
+                  this._replaceCharacter(container, position, this._placeholder);
                   position++;
                   //this._moveCursor(container, position);
                   //this._keyPressHandler(character, 'delete');
@@ -159,7 +188,7 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
                }
             }
             else {
-               this._replaceCharacter(container, position, this._getPlaceholder());
+               this._replaceCharacter(container, position, this._placeholder);
                position++;
             }
          }
@@ -171,12 +200,12 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
                   container = prevSibling.previousSibling.childNodes[0];
                   position = container.nodeValue.length - 1;
 
-                  this._replaceCharacter(container, position, this._getPlaceholder());
+                  this._replaceCharacter(container, position, this._placeholder);
                }
             }
             else {
                position--;
-               this._replaceCharacter(container, position, this._getPlaceholder());
+               this._replaceCharacter(container, position, this._placeholder);
             }
          }
 
@@ -198,10 +227,11 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
          var
             regexp = new RegExp('['+this._controlCharacters+']+', 'g'),
             array = this._primalMask.match(regexp),
-            character = array[container].charAt(position),
+            primalCharacter = array[container].charAt(position),
+            controlCharacter = this._controlCharacters[primalCharacter],
             transform = { 'L': 'toUpperCase', 'l': 'toLowerCase' };
 
-         return [ this._charToRegExp(character), transform[character] || false ];
+         return [ this._charToRegExp(controlCharacter), transform[controlCharacter] || false ];
       },
 
       /**
@@ -214,7 +244,7 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
          var regexp;
          switch(c) {
             case 'd':
-               regexp = /\d/; // RegExp /\d/ is equal to /[0-9]/
+               regexp = /\d/; // Regular expression /\d/ is equal to /[0-9]/
                break;
             case 'L':
             case 'l':
@@ -242,18 +272,13 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
       },
 
       /**
-       * Обработка события фокусировки на элементе
-       * @param elem
+       * Получить контейнер по порядковому номеру
+       * @param idx
+       * @returns {*}
        * @private
        */
-      _focusHandler: function(elem){
-         if ($(elem).text() == $(this._htmlMask).text()){
-            var
-               child = this._isSeparatorContainerFirst ? 1 : 0,
-               contNext = elem.childNodes[child].childNodes[0],
-               startPos = 0;
-            this._moveCursor(contNext, startPos);
-         }
+      _getContainerByIndex: function(idx) {
+         return this._inputField.get(0).childNodes[parseInt(idx, 10)].childNodes[0];
       },
 
       /**
@@ -325,6 +350,15 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
       },
 
       /**
+       * Получить логическое, определяющее, является ли первый контейнер разделителем или вводимым блоком
+       * @returns {boolean} true: первый контейнер - разделитель, false: вводимый блок
+       * @private
+       */
+      _getTypeOfFirstContainer: function() {
+         return this._clearMask[0] != this._placeholder;
+      },
+
+      /**
        * Возвращает html-разметку для заданной маски
        * @returns {string} html-разметка
        * @private
@@ -332,7 +366,7 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
       _getHtmlMask: function(){
          var
             htmlMask = '',
-            placeholder = this._getPlaceholder(),
+            placeholder = this._placeholder,
             placeholderContainers = this._clearMask.match(new RegExp('('+placeholder+'+)', 'g')),
             separatorContainers = this._clearMask.match(new RegExp('([^'+placeholder+']+)', 'g'));
 
@@ -386,25 +420,31 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
        * @private
        */
       _getClearMask: function(){
-         return this._primalMask.replace(new RegExp('['+this._controlCharacters+']', 'g'), this._getPlaceholder());
+         return this._primalMask.replace(new RegExp('['+this._controlCharacters+']', 'g'), this._placeholder);
       },
 
       /**
-       * Возвращает символ-разделитель
-       * @returns {string} Символ-разделитель
+       * Возвращает строку всех допустимых управляющих символов. Если набор допустимых символов не задан, то задается
+       * набор основных управляющих символов (используется в _charToRegExp), а так же возвращается строка из них
+       * @returns {string} Строку всех допустимых управляющих символов (без пробелов)
        * @private
        */
-      _getPlaceholder: function(){
-         return this._placeholder;
-      },
+      _getControlCharactersSet: function() {
+         var initialSet = Object.keys(this._controlCharactersSet);
 
-      /**
-       * Получить логическое, определяющее, является ли первый контейнер разделителем или вводимым блоком
-       * @returns {boolean} true: первый контейнер - разделитель, false: вводимый блок
-       * @private
-       */
-      _getTypeOfFirstContainer: function() {
-         return this._clearMask[0] != this._getPlaceholder();
+         if (initialSet.length !== 0){
+            return initialSet.toString().replace(/,/g, '');
+         }
+         else {
+            this._controlCharactersSet = {
+               'd' : 'd',
+               'L' : 'L',
+               'l' : 'l',
+               'x' : 'x'
+            };
+
+            return this._generalControlCharacters;
+         }
       }
 });
 

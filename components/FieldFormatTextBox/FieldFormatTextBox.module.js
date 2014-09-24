@@ -14,21 +14,6 @@ define('js!SBIS3.CONTROLS.FieldFormatTextBox', ['js!SBIS3.CONTROLS.FieldFormatBa
       $protected: {
          _dotTplFn: dotTplFn,
          /**
-          * Допустимые управляющие символы в маске
-          * Условные обозначения:
-          *     1. d - Цифра
-          *     2. L - Заглавная буква
-          *     3. l - Строчная буква
-          *     4. x - Буква или цифра
-          */
-         _controlCharacters: 'dLlx',
-         /**
-          * Символ-заполнитель, на который замещаются все управляющие символы в маске для последующего отображения на странице.
-          * В маске изначально не должны присутствовать символы-заполнители.
-          * Нельзя ставить знак вопроса.
-          */
-         _placeholder: '.',
-         /**
           * Опции создаваемого контролла
           */
          _options: {
@@ -49,10 +34,7 @@ define('js!SBIS3.CONTROLS.FieldFormatTextBox', ['js!SBIS3.CONTROLS.FieldFormatBa
       $constructor: function () {
          var self = this;
 
-         this._primalMask = this._options.mask;
-         this._clearMask = this._getClearMask();
-         this._isSeparatorContainerFirst = this._getTypeOfFirstContainer();
-         this._htmlMask = this._getHtmlMask();
+         this._initializeComponents();
 
          this._inputField = $('.controls-FieldFormatTextBox__field', this.getContainer().get(0));
          this._inputField.html(this._htmlMask);
@@ -92,19 +74,6 @@ define('js!SBIS3.CONTROLS.FieldFormatTextBox', ['js!SBIS3.CONTROLS.FieldFormatBa
             else if (key == self._KEYS.BACKSPACE){
                self._keyPressHandler(key, 'backspace');
             }
-
-            //switch (key){
-            //   case self._KEYS.DELETE:
-            //      self._keyPressHandler(key, 'delete');
-            //      break;
-            //   case self._KEYS.BACKSPACE:
-            //      self._keyPressHandler(key, 'backspace');
-            //      break;
-            //   default:
-            //      type = event.shiftKey ? 'UpperCaseCharacter' : 'character';
-            //      if ( key > 41 && event.shiftKey ) { alert(event.shiftKey);}
-            //      self._keyPressHandler(key, type);
-            //}
          });
 
          // DEBUGGING
