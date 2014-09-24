@@ -18,8 +18,6 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
       _dotTplFn : dotTplFn,
       $protected: {
          _button: null,
-         _iconContainer: null,
-         _captionContainer: null,
          _options: {
 
          }
@@ -28,37 +26,16 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
       $constructor: function() {
          var self = this;
          this._button = this._container;
-         this._iconContainer = $('.js-controls-Button__icon', this._container);
-         this._captionContainer = $('.js-controls-Button__caption', this._container);
          this._container.mouseup(function () {
             self._container.removeClass('controls-Button__active');
          }).mousedown(function () {
                self._container.addClass('controls-Button__active');
             });
-
-         if (this._options.icon){
-            if (this._options.icon.indexOf('sprite:') > -1) {
-               this._iconContainer.addClass(this._options.icon.split('sprite:')[1]);
-               this._button.addClass('controls-Button__hasImage');
-            }
-         }
-      },
-
-      setIcon: function(iconPath){
-         if (iconPath.indexOf('sprite:') > -1) {
-            iconPath = iconPath.split('sprite:')[1];
-            this._iconContainer.removeClass(this._options.icon);
-            Button.superclass.setIcon.call(this,iconPath);
-            this._iconContainer.addClass(iconPath);
-            if (!this._button.hasClass('controls-Button__hasImage')){
-               this._button.addClass('controls-Button__hasImage');
-            }
-         }
       },
 
       setCaption: function(captionTxt){
          Button.superclass.setCaption.call(this, captionTxt);
-         this._captionContainer.html(captionTxt || '');
+         this._button.html(captionTxt || '');
       },
 
       setPrimary: function(flag){

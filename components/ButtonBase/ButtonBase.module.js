@@ -111,7 +111,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
        *        btn.setIcon("sprite:icon-16 icon-Successful icon-primary")
        * </pre>
        * @see icon
-       * @see iconPath
+       * @see getIcon
        */
       setIcon: function(iconPath) {
          this._options.icon = iconPath;
@@ -164,9 +164,9 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
        * @see getCaption
        * @see getValue
        */
-      setValue: function(value){
-         this.setCaption(value);
-      },
+     setValue: function(value){
+        this.setCaption(value);
+     },
       
       /**
        * Возвращает текущее значение текста на кнопке.

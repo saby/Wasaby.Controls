@@ -60,20 +60,6 @@
    background-position: 0 -458px !important;
 }
 
-.controls-Button__icon{
-   display: inline-block;
-   position: absolute;
-   left: 8px;
-}
-
-.controls-Button__caption{
-   display: inline-block;
-}
-
-.controls-Button__hasImage .controls-Button__caption{
-   margin-left: 15px;
-}
-
 /* ToggleButton */
 
 .controls-Button.controls-ToggleButton__checked {
