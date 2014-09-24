@@ -29,6 +29,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             onlyInteger: false,
             /**
              * @cfg {Number} Количество знаков после запятой
+             * @noShow
              */
             numberFractDigits: null
          }

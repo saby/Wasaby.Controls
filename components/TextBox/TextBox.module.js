@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             textTransform: 'none',
             /**
              * @cfg {Boolean} Отображение крестика для сброса текста
+             * @noShow
              */
             resetCross: false
          }

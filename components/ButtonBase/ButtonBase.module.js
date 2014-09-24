@@ -49,11 +49,11 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
       _clickHandler : function() {
 
       },
+
       /**
        * Меняет текст на кнопке
        * @param {String} captionTxt подпись на кнопке
        */
-
       setCaption: function(captionTxt) {
          this._options.caption = captionTxt || '';
       },
@@ -69,15 +69,29 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
        * Установить изображение на кнопке
        * @param {String} iconTxt путь к изображению
        */
-
       setIcon: function(iconTxt) {
 
+      },
+      /**
+       * Установить значение primary
+       * @param {Boolean} flag значение primary
+       */
+      setPrimary: function(flag){
+         this._options.primary = !!flag;
+      },
+
+      /**
+       * Является ли кнопка primary
+       * @returns {boolean}
+       */
+
+      isPrimary: function(){
+         return this._options.primary;
       },
 
       /**
        * Получить изображение на кнопке
        */
-
       getIcon: function() {
 
       },
@@ -88,10 +102,6 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
 
       getValue: function(){
          return this.getCaption();
-      },
-
-      setPrimary: function(flag){
-         this._options.primary = !!flag;
       }
    });
 
