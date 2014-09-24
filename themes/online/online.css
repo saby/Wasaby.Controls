@@ -60,6 +60,8 @@
    background-position: 0 -458px !important;
 }
 
+/* ToggleButton */
+
 .controls-Button.controls-ToggleButton__checked {
    color: red;
    background-position: 0 -229px !important;
@@ -68,8 +70,6 @@
 .controls-Button__big.controls-ToggleButton__checked {
    background-position: 0 -458px !important;
 }
-
-/* ToggleButton */
 
 /* RadioButton */
 
@@ -296,12 +296,6 @@
 
 .controls-NumberTextBox__fieldWrapper {
    margin-right: 14px;
-   height: 100%;
-}
-
-.controls-NumberTextBox__arrowsContainer {
-   float: right;
-   width: 14px;
    height: 100%;
 }
 
