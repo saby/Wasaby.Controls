@@ -60,7 +60,7 @@ define('js!SBIS3.CONTROLS.Control', [], function() {
              */
             parent: null,
             /**
-             * @cfg {String} Текст всплывающая подсказка
+             * @cfg {String} Текст всплывающей подсказки
              * Текст простой всплывающей подсказки при наведении курсора мыши.
              */
             tooltip: '',
