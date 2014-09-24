@@ -21,11 +21,22 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              * @variant none оставить как есть
              */
             /**
-             * @cfg {TextTransformEnum} Применить форматирование к тексту
+             * @cfg {TextTransformEnum} Форматирование текста
+             * Возможные значения:
+             * <ul>
+             *    <li>uppercase - все символы верхним регистром;</li>
+             *    <li>lowercase - все символы нижним регистром;</li>
+             *    <li>none - без изменений.</li>
+             * </ul>
              */
             textTransform: 'none',
             /**
-             * @cfg {Boolean} Отображение крестика для сброса текста
+             * @cfg {Boolean} Наличие крестика для сброса текста
+             * Возможные значения:
+             * <ul>
+             *    <li>true - крестик есть;</li>
+             *    <li>false - нет крестика.</li>
+             * </ul>
              */
             resetCross: false
          }
