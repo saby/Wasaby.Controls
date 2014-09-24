@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3.CONTROLS.TextBox','css!SBIS3.CONTROLS.TextBox'], function(TextBoxBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3.CONTROLS.TextBox'], function(TextBoxBase, dotTplFn) {
 
    'use strict';
 
@@ -47,11 +47,18 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          });
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
-         if (self._options.trim) {
-            self._inputField.bind('focusout', function () {
+         self._inputField.bind('focusout', function () {
+            if (self._options.trim) {
                self.setText(self._trim(self.getText()));
-            });
-         }
+            }
+         });
+
+         self._inputField.bind('mouseup',function(){
+            if (self._options.selectOnClick) {
+               self._inputField.select();
+            }
+         });
+
       },
 
       setText: function(text){

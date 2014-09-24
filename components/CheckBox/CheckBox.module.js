@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ToggleButtonBase', 'html!SBIS3.CONTROLS.CheckBox', 'css!SBIS3.CONTROLS.CheckBox'], function(ToggleButtonBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ToggleButtonBase', 'html!SBIS3.CONTROLS.CheckBox'], function(ToggleButtonBase, dotTplFn) {
 
    'use strict';
 

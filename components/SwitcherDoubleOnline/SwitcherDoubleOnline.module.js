@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SBIS3.Engine.SwitcherDoubleOnline', 'css!SBIS3.Engine.SwitcherDoubleOnline'], function(SwitcherBase, dotTplFn) {
+define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SBIS3.Engine.SwitcherDoubleOnline'], function(SwitcherBase, dotTplFn) {
 
    'use strict';
    /**
@@ -42,6 +42,16 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
             this._textContainer[oppositeState].addClass('controls-SwitcherDoubleOnline__unselected');
             this._textContainer[state].removeClass('controls-SwitcherDoubleOnline__unselected');
          }
+      },
+
+      setStateOff: function(text){
+         SwitcherDoubleOnline.superclass.setStateOff.call(this,text);
+         this._textContainer['off'].html(text);
+      },
+
+      setStateOn: function(text){
+         SwitcherDoubleOnline.superclass.setStateOn.call(this,text);
+         this._textContainer['on'].html(text);
       }
    });
 

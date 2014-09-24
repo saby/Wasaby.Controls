@@ -81,6 +81,20 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONT
 
       getValue: function(){
          return this.getState();
+      },
+	  /**
+       * Установить текст на выключенном состоянии
+       * @param text
+       */
+      setStateOff: function(text){
+         this._options.stateOff = text;
+      },
+	  /**
+       * Установить текст на включенном состоянии
+       * @param text
+       */
+      setStateOn: function(text){
+         this._options.stateOn = text;
       }
 
    });

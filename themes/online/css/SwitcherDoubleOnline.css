@@ -1,25 +1,27 @@
-.controls-SwitcherDoubleOnline{
+.controls-SwitcherDoubleOnline {
    display: inline-block;
+   margin-left: 8px;
 }
 
-.controls-SwitcherDoubleOnline_toggle{
+.controls-SwitcherDoubleOnline_toggle {
    width: 30px;
    height: 16px;
    cursor: pointer;
    margin: 0 4px;
-   background: transparent url('resources/images/sprite-double.png') no-repeat;
+   background: transparent url('../img/SwitcherDoubleOnline-sprite.png') no-repeat;
    display: inline-block;
 }
 
 .controls-SwitcherDoubleOnline-vertical {
    vertical-align: top;
 }
-.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline_toggle{
+
+.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline_toggle {
    width: 16px;
    height: 32px;
    cursor: pointer;
-   margin: 0 4px 0 0;
-   background: transparent url('resources/images/vertical-double.png') no-repeat;
+   margin: 0 2px 0 0;
+   background: transparent url('../img/SwitcherDoubleOnline-sprite-double.png') no-repeat;
    display: inline-block;
    vertical-align: top;
 }
@@ -27,6 +29,7 @@
 .controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline-on-toggled {
    background-position: 0 0;
 }
+
 .controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline-off-toggled {
    background-position: -16px 0;
 }
@@ -34,28 +37,29 @@
 .controls-SwitcherDoubleOnline-off-toggled {
    background-position: 0 -4px;
 }
+
 .controls-SwitcherDoubleOnline-on-toggled {
    background-position: 0 -28px;
 }
 
-.controls-SwitcherDoubleOnline__unselected{
+.controls-SwitcherDoubleOnline__unselected {
    color: #999999;
    cursor: pointer;
 }
 
-.controls-SwitcherDoubleOnline__unselected:hover{
+.controls-SwitcherDoubleOnline__unselected:hover {
    text-decoration: underline;
 }
 
-.controls-SwitcherDoubleOnline__text{
+.controls-SwitcherDoubleOnline__text {
    display: inline-block;
 }
 
-.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline__text{
+.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline__text {
    display: block;
 }
 
-.controls-SwitcherDoubleOnline__text-block{
+.controls-SwitcherDoubleOnline__text-block {
    display: inline-block;
    height: 100%;
 }
