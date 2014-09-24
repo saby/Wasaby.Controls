@@ -34,83 +34,79 @@
          padding: 0;
          margin: 0;
          height: 100%;
+         background: #4E5762;
       }
 
       #content {
          padding: 20px;
       }
 
-      #content table {
-         width: 100%;
-      }
-
-      #content table td {
-         width: 50%;
-         vertical-align: top;
-      }
-
-      #content ul li {
-         height: 27px;
-      }
-
-      #content a {
-         color: #000000;
-         font-size: 16px;
-         margin-bottom: 5px;
-         border-radius: 8px;
-         padding: 5px 10px;
-      }
-
-      #content a:hover {
-         background: #ececec;
+      h3{
+         color: white;
       }
 
    </style>
    <script type="text/javascript" id="ws-include-css"></script>
-   <link rel="stylesheet" type="text/css" href="sprites.css"/>
+   <link rel="stylesheet" type="text/css" href="../sprites.css"/>
+   <link rel="stylesheet" type="text/css" href="./presto/presto.css"/>
 </head>
 <body class="view-main">
+
 <div id="content">
-   <table>
-      <tr>
-         <td>
-            <h3>Просмотр контролов</h3>
-            <ul>
-               <li>
-                  <a href="/pages/textBoxCommonStyles.html">TextBox's</a>
-               </li>
-               <li>
-                  <a href="/pages/buttonCommonStyles.html">Button's</a>
-               </li>
-               <li>
-                  <a href="/pages/switcherCommonStyles.html">Switcher's</a>
-               </li>
-               <li>
-                  <a href="/pages/ButtonGroups.html">Button groups</a>
-               </li>
-            </ul>
-         </td>
-         <td>
-            <h3>Темы</h3>
-            <ul>
-               <li>
-                  <a href="/themes/online.sbis.html">online.sbis.ru</a>
-               </li>
-               <li>
-                  <a href="/themes/demo.html">demo</a>
-               </li>
-               <li>
-                  <a href="/themes/presto.html">presto</a>
-               </li>
-            </ul>
-         </td>
-      </tr>
-   </table>
+
+   <h3>Кнопки</h3>
+
+   <div>
+
+      <div id="button" class="controls-Button__big"></div>
+      <div id="button2" class="controls-Button__big"></div>
+      <br/><br/>
+
+      <div id="button3">Настройка драйвера ККМ</div>
+
+   </div>
+   <h3>Поле ввода</h3>
+   <br/>
+
+   <div>
+      <div id="TextBox"></div>
+   </div>
+
 
 </div>
+
 <script type="text/javascript">
    $ws.core.withComponents('Source').addCallback(function () {
       $(document).ready(function () {
+
+         require(["js!SBIS3.CONTROLS.Button"], function (r) {
+            new r({
+               element: "button",
+               caption: 'Сохранить',
+               primary: true
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Button"], function (r) {
+            new r({
+               element: "button2",
+               caption: 'Отмена'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Button"], function (r) {
+            new r({
+               element: "button3",
+               caption: 'Настройка драйвера ККМ'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.TextBox"], function (r) {
+            new r({
+               element: "TextBox",
+               text: 'ККМ0003852645'
+            })
+         });
 
       })
    });
