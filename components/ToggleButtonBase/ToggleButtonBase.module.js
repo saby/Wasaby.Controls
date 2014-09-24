@@ -11,12 +11,18 @@ define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase'], f
 
    var ToggleButtonBase = ButtonBase.extend(/** @lends SBIS3.CONTROLS.ToggleButtonBase.prototype */{
       $protected: {
-         _checked : null,
+         _checked : false,
          _options: {
             /**
-             * @cfg {Boolean} Выбрана кнопка по умолчанию или нет
+             * @cfg {Boolean} Признак активности кнопки в начальном состоянии
+             * Возмозможные значения:
+             * <ul>
+             *    <li>true - кнопка нажата/ чекбокс с галочкой/ радиокнопка выбрана;</li>
+             *    <li>false - кнопка не нажата/ чекбокс пустой/ радиокнопка пустая.</li>
+             * </ul>
+             * @see setChecked
              */
-            checked: null,
+            checked: false,
             /**
              * @cfg {Boolean} Наличие неопределённого значения
              * Возможные значения:
@@ -38,8 +44,16 @@ define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase'], f
       },
 
       /**
-       * Установить состояние кнопки
-       * @param {Boolean} flag
+       * Устанавливает состояние кнопки.
+       * @param {Boolean} flag Признак состояния кнопки true/false.
+       * @example
+       * <pre>
+       *     var btn = this.getChildControlByName(("myButton");
+       *        btn.setChecked(true);
+       * </pre>
+       * @see checked
+       * @see isChecked
+       * @see setValue
        */
       setChecked: function(flag) {
          if (flag === true) {
@@ -61,7 +75,15 @@ define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase'], f
       },
 
       /**
-       * Получить состояние кнопки
+       * Признак текущего состояния кнопки.
+       * Возможные значения:
+       * <ul>
+       *    <li>true - кнопка нажата/ чекбокс с галочкой/ радиокнопка выбрана;</li>
+       *    <li>false - кнопка не нажата/ чекбокс пустой/ радиокнопка пустая.</li>
+       * </ul>
+       * @see checked
+       * @see setChecked
+       * @see getValue
        */
       isChecked: function() {
          return this._checked;
@@ -81,11 +103,34 @@ define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase'], f
             }
          }
       },
-
+     /**
+      * Изменить текущее состояние кнопки.
+      * @param {Boolean} value Новое состояние.
+      * @example
+      * <pre>
+      *     var btn = this.getChildControlByName("myButton");
+      *        btn.setValue(true)
+      * </pre>
+      * @see setChecked
+      * @see getValue
+      * @see isChecked
+      */
       setValue: function(value){
          this.setChecked(value);
       },
-
+     /**
+      * Возвращает текущее состояние кнопки.
+      * @returns {Boolean}
+      * @example
+      * <pre>
+      *     var btn = this.getChildControlByName("myButton");
+      *        btn.getValue();
+      * </pre>
+      * @see isChecked
+      * @see checked
+      * @see setChecked
+      * @see setValue
+      */
       getValue: function(){
          return this.isChecked();
       }
