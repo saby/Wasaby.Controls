@@ -1,0 +1,8 @@
+.controls-Button.controls-ToggleButton__checked {
+   color: red;
+   background-position: 0 -229px !important;
+}
+
+.controls-Button__big.controls-ToggleButton__checked {
+   background-position: 0 -458px !important;
+}
