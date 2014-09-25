@@ -105,7 +105,7 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
       _initializeComponents: function(){
          var self = this;
 
-         this._inputField = $('.controls-'+this.getContainer().selector.slice(1)+'__field', this.getContainer().get(0));
+         this._inputField = $('.'+this.getContainer().get(0).classList[0]+'__field', this.getContainer().get(0));
 
          this._primalMask = this._options.mask;
          this._controlCharacters = this._getControlCharactersSet();
@@ -156,6 +156,9 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
          console.log('_controlCharactersSet -> ', this._controlCharactersSet);
          console.log('_controlCharacters -> ', this._controlCharacters);
          console.log('_generalControlCharacters -> ', this._generalControlCharacters);
+         console.log('+++++++');
+         console.log(this.getContainer());
+         console.log(this.getContainer().get(0).classList[0]);
          console.log('+++++++');
       },
 
@@ -462,8 +465,8 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
        * @private
        */
       _getHtmlContainer: function(container, type){
-         var inputClass = this.getContainer().selector.slice(1);
-         if (type == 'placeholder'){return '<em class="controls-'+inputClass+'__field-placeholder">' + container + '</em>';}
+         var inputClass = this.getContainer().get(0).classList[0];
+         if (type == 'placeholder'){return '<em class="'+inputClass+'__field-placeholder">' + container + '</em>';}
          else if (type == 'separator') {return '<em>' + container + '</em>'}
       },
       
