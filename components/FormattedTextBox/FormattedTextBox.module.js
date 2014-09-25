@@ -418,9 +418,9 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CORE.Control', '!html!SB
          }
 
          // DEBUGGING
-         console.log(placeholderContainers);
-         console.log(separatorContainers);
-         console.log(htmlMask);
+         //console.log(placeholderContainers);
+         //console.log(separatorContainers);
+         //console.log(htmlMask);
 
          return htmlMask;
       },

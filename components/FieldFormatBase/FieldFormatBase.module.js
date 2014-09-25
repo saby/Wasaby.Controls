@@ -81,6 +81,12 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
           */
          _generalControlCharacters: 'dLlx',
          /**
+          * Допустимые при создании контролла маски. Если массив пуст (по умолчанию) -- любая маска.
+          * Если массив допустимых масок задан, и вводится маска, не содержащаяся в массиве, то создание
+          * контролла прерывается с ошибкой.
+          */
+         _possibleMasks: [],
+         /**
           * Опции создаваемого контролла
           */
          _options: {
@@ -103,63 +109,75 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
       },
 
       _initializeComponents: function(){
-         var self = this;
+         try {
+            var self = this;
 
-         this._inputField = $('.'+this.getContainer().get(0).classList[0]+'__field', this.getContainer().get(0));
+            this._checkPossibleMask();
 
-         this._primalMask = this._options.mask;
-         this._controlCharacters = this._getControlCharactersSet();
-         this._clearMask = this._getClearMask();
-         this._isSeparatorContainerFirst = this._getTypeOfFirstContainer();
-         this._htmlMask = this._getHtmlMask();
-         this._inputField.html(this._htmlMask);
+            this._inputField = $('.' + this.getContainer().get(0).classList[0] + '__field', this.getContainer().get(0));
 
-         //this._inputField.unbind('keypress');
-         //this._inputField.unbind('focus');
+            this._primalMask = this._options.mask;
+            this._controlCharacters = this._getControlCharactersSet();
+            this._clearMask = this._getClearMask();
+            this._isSeparatorContainerFirst = this._getTypeOfFirstContainer();
+            this._htmlMask = this._getHtmlMask();
+            this._inputField.html(this._htmlMask);
 
-         this._inputField.focus(function(){
-            self._focusHandler(self._inputField.get(0));
-         });
-         this._inputField.keypress(function(event){ event.preventDefault();});
-         this._inputField.keyup(function(event){ event.preventDefault();});
+            //this._inputField.unbind('keypress');
+            //this._inputField.unbind('focus');
 
-         this._inputField.keydown(function(event){
-            event.preventDefault();
-            var
-               key = event.which,
-               type = '';
+            this._inputField.focus(function () {
+               self._focusHandler(self._inputField.get(0));
+            });
+            this._inputField.keypress(function (event) {
+               event.preventDefault();
+            });
+            this._inputField.keyup(function (event) {
+               event.preventDefault();
+            });
 
-            if (!event.ctrlKey && key != self._KEYS.DELETE && key != self._KEYS.BACKSPACE){
-               type = event.shiftKey ? 'shift_character' : 'character';
-               self._keyPressHandler(key, type);
-            }
-            else if (key == self._KEYS.DELETE) {
-               self._keyPressHandler(key, 'delete');
-            }
-            else if (key == self._KEYS.BACKSPACE){
-               self._keyPressHandler(key, 'backspace');
-            }
-         });
+            this._inputField.keydown(function (event) {
+               event.preventDefault();
+               var
+                  key = event.which,
+                  type = '';
 
-         // DEBUGGING
-         //this._inputField.mouseup(function(){
-         //   console.log(self._getCursor(true));
-         //});
+               if (!event.ctrlKey && key != self._KEYS.DELETE && key != self._KEYS.BACKSPACE) {
+                  type = event.shiftKey ? 'shift_character' : 'character';
+                  self._keyPressHandler(key, type);
+               }
+               else if (key == self._KEYS.DELETE) {
+                  self._keyPressHandler(key, 'delete');
+               }
+               else if (key == self._KEYS.BACKSPACE) {
+                  self._keyPressHandler(key, 'backspace');
+               }
+            });
 
-         // DEBUGGING
-         console.log('=================================');
-         console.log(this.getContainer().selector.slice(1));
-         console.log('+++++++');
-         console.log('_primalMask -> ', this._primalMask);
-         console.log('_clearMask -> ', this._clearMask);
-         console.log('_htmlMask -> ', this._htmlMask);
-         console.log('_controlCharactersSet -> ', this._controlCharactersSet);
-         console.log('_controlCharacters -> ', this._controlCharacters);
-         console.log('_generalControlCharacters -> ', this._generalControlCharacters);
-         console.log('+++++++');
-         console.log(this.getContainer());
-         console.log(this.getContainer().get(0).classList[0]);
-         console.log('+++++++');
+            // DEBUGGING
+            //this._inputField.mouseup(function(){
+            //   console.log(self._getCursor(true));
+            //});
+
+            // DEBUGGING
+            //console.log('=================================');
+            //console.log(this.getContainer().selector.slice(1));
+            //console.log('+++++++');
+            //console.log('_primalMask -> ', this._primalMask);
+            //console.log('_clearMask -> ', this._clearMask);
+            //console.log('_htmlMask -> ', this._htmlMask);
+            //console.log('_controlCharactersSet -> ', this._controlCharactersSet);
+            //console.log('_controlCharacters -> ', this._controlCharacters);
+            //console.log('_generalControlCharacters -> ', this._generalControlCharacters);
+            //console.log('+++++++');
+            //console.log(this.getContainer());
+            //console.log(this.getContainer().get(0).classList[0]);
+            //console.log('+++++++');
+         }
+         catch(error){
+            console.error('Error: Ошибка при создании контролла:\nId: %s\nMessage: %s\nДопустимые маски данного контролла:',
+               this.getContainer().get(0).id, error.message, this._possibleMasks);
+         }
       },
 
       /**
@@ -500,6 +518,14 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
             };
 
             return this._generalControlCharacters;
+         }
+      },
+
+      _checkPossibleMask: function(){
+         if (this._possibleMasks.length !== 0){
+            if (this._possibleMasks.indexOf(this._options.mask) == -1){
+               throw new Error('Маска не удовлетворяет ни одной допустимой маске данного контролла');
+            }
          }
       }
 });

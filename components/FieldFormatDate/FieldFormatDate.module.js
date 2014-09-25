@@ -34,6 +34,22 @@ define('js!SBIS3.CONTROLS.FieldFormatDate', ['js!SBIS3.CONTROLS.FieldFormatBase'
             'U' : 'd'
          },
          /**
+          * Допустимые при создании контролла маски.
+          * I. Маски для отображения даты:
+          *     1. DD.MM.YYYY
+          *     2. DD.MM
+          *     3. DD.MM.YY
+          *     4. YY-MM-DD
+          *     5. YYYY-MM-DD
+          */
+         _possibleMasks: [
+            'DD.MM.YYYY',
+            'DD.MM',
+            'DD.MM.YY',
+            'YY-MM-DD',
+            'YYYY-MM-DD'
+         ],
+         /**
           * Опции создаваемого контролла
           */
          _options: {
@@ -41,7 +57,7 @@ define('js!SBIS3.CONTROLS.FieldFormatDate', ['js!SBIS3.CONTROLS.FieldFormatBase'
              * @cfg {RegExp} Маска, на базе которой будет создана html-разметка и в соответствии с которой
              * будет определён весь функционал
              */
-            mask: 'DD:MM:YY'
+            mask: 'DD.MM.YY'
          }
       },
 
