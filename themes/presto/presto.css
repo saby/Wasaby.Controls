@@ -25,6 +25,8 @@
    font-size: 18px;
 }
 
+/* TextBox */
+
 .controls-TextBox {
    display: inline-block;
    box-sizing: border-box;
@@ -75,6 +77,4 @@
 .controls-TextBox__field-lowercase {
    text-transform: lowercase;
 }
-
-/* TextBox */
 
