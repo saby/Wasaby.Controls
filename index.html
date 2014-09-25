@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ws="ws-component">
+<head>
+   <title>Web-Genie</title>
+   <script type="text/javascript">
+      window.wsConfig = {
+         WSRootPath: '/sbis3-ws/ws/',
+         wsRoot: '/sbis3-ws/ws/',
+         WSTheme: 'wi_scheme',
+         resourceRoot: '/components',
+         nostyle: true,
+         globalConfigSupport: false
+      };
+      window.WSTheme = 'wi_scheme';
+   </script>
+   <script type="text/javascript" id="dev-style-enable">
+      (function () {
+         window.wsConfig.nostyle = false;
+      })();
+   </script>
+   <script type="text/javascript" data-pack-name="contents" src="/components/contents.js"></script>
+   <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-min.js"></script>
+   <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-cookie-min.js"></script>
+   <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/require.js"></script>
+   <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/config.js"></script>
+   <script type="text/javascript" src="/sbis3-ws/ws/lib/core.js"></script>
+   <script type="text/javascript" src="/sbis3-ws/ws/lib/Source.js"></script>
+   <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/res/js/bootup.js"></script>
+   <style>
+      .view-main {
+         font-family: Arial, SANS-SERIF;
+         font-size: 13px;
+         padding: 0;
+         margin: 0;
+         height: 100%;
+      }
+
+      #content {
+         padding: 20px;
+      }
+
+      #content table {
+         width: 100%;
+      }
+
+      #content table td {
+         width: 50%;
+         vertical-align: top;
+      }
+
+      #content ul li {
+         height: 27px;
+      }
+
+      #content a {
+         color: #000000;
+         font-size: 16px;
+         margin-bottom: 5px;
+         border-radius: 8px;
+         padding: 5px 10px;
+      }
+
+      #content a:hover {
+         background: #ececec;
+      }
+
+   </style>
+   <script type="text/javascript" id="ws-include-css"></script>
+   <link rel="stylesheet" type="text/css" href="sprites.css"/>
+</head>
+<body class="view-main">
+<div id="content">
+   <table>
+      <tr>
+         <td>
+            <h3>Просмотр контролов</h3>
+            <ul>
+               <li>
+                  <a href="/pages/textBoxCommonStyles.html">TextBox's</a>
+               </li>
+               <li>
+                  <a href="/pages/buttonCommonStyles.html">Button's</a>
+               </li>
+               <li>
+                  <a href="/pages/switcherCommonStyles.html">Switcher's</a>
+               </li>
+               <li>
+                  <a href="/pages/ButtonGroups.html">Button groups</a>
+               </li>
+            </ul>
+         </td>
+         <td>
+            <h3>Темы</h3>
+            <ul>
+               <li>
+                  <a href="/themes/online.sbis.html">online.sbis.ru</a>
+               </li>
+               <li>
+                  <a href="/themes/demo.html">demo</a>
+               </li>
+               <li>
+                  <a href="/themes/presto.html">presto</a>
+               </li>
+               <li>
+                  <a href="/themes/genie.html">genie</a>
+               </li>
+            </ul>
+         </td>
+      </tr>
+   </table>
+
+</div>
+<script type="text/javascript">
+   $ws.core.withComponents('Source').addCallback(function () {
+      $(document).ready(function () {
+
+      })
+   });
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+.controls-TextBox {
+   display: inline-block;
+   background: #ffffff;
+   box-sizing: border-box;
+   padding: 0 4px;
+   border: 1px solid transparent;
+   border-bottom: 1px solid #EAEAEA;
+   height: 24px;
+}
+
+.controls-TextBox:hover {
+   border: 1px solid #EAEAEA;
+   border-bottom: 1px solid #CCCCCC;
+}
+
+.controls-TextBox__fieldWrapper {
+   height: 100%;
+   box-sizing: border-box;
+}
+
+.controls-TextBox__optionsContainer {
+   float: right;
+   width: 16px;
+   min-height: 19px;
+   height: 100%;
+}
+
+.controls-TextBox__optionsContainer + .controls-TextBox__fieldWrapper {
+   margin-right: 19px;
+   margin-left: 2px;
+}
+
+.controls-TextBox__field {
+   border: none;
+   min-height: 19px;
+   height: 99%;
+   width: 100%;
+   margin: 0;
+   box-sizing: border-box;
+   line-height: 100%;
+   outline: none;
+   background: transparent;
+}
+
+.controls-TextBox__field-uppercase {
+   text-transform: uppercase;
+}
+
+.controls-TextBox__field-lowercase {
+   text-transform: lowercase;
+}

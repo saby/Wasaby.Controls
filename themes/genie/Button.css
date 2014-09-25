@@ -1,0 +1,18 @@
+.controls-Button {
+   cursor: pointer;
+   text-align: center;
+   display: inline-block;
+   box-sizing: border-box;
+   height: 30px;
+   line-height: normal;
+   border: 1px solid #d1d1d4;
+   border-radius: 2px;
+   background-color: transparent;
+   color: #919197;
+}
+
+.controls-Button:hover {
+   color: #ffffff;
+   border-color: #00d7d7;
+   background-color: #00d7d7;
+}
