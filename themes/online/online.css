@@ -164,65 +164,75 @@
 .controls-Switcher {
    display: inline-block;
    height: 23px;
+   min-width: 90px;
+   box-sizing: border-box;
+   padding-right: 16px;
 }
 
 .controls-Switcher__toggle {
    height: 23px;
-   min-width: 100px;
    width: 100%;
    display: inline-block;
    cursor: pointer;
-   padding: 2px 32px 2px 16px;
+   padding: 2px 0;
    box-sizing: border-box;
    color: #999999;
+   padding-right: 32px;
 }
 
 .controls-Switcher__position {
-   min-width: 70%;
    height: 21px;
    background: url('./img/switcher.png') 0 -96px;
    text-align: center;
    display: inline-block;
    padding: 2px 0;
    position: relative;
+   margin-left: 16px;
+   box-sizing: content-box;
+   width: 100%;
 }
-
 
 .controls-Switcher__toggle__position-on {
    text-align: right;
    color: #000000;
-   padding: 2px 16px 2px 32px;
+   padding-right: 0;
+   padding-left: 32px;
 }
 
-.controls-Switcher__position:before{
+.controls-Switcher__toggle__position-on .controls-Switcher__position {
+   margin-right: 16px;
+   margin-left: auto;
+}
+
+.controls-Switcher__position:before {
    content: '';
    position: absolute;
    height: 23px;
    width: 16px;
    display: block;
-   top:0;
+   top: 0;
    left: -16px;
    background: url('./img/switcher.png') 0 0;
 }
 
-.controls-Switcher__toggle__position-on .controls-Switcher__position:before{
+.controls-Switcher__toggle__position-on .controls-Switcher__position:before {
    width: 32px;
    left: -32px;
    background-position: 0 -48px;
 }
 
-.controls-Switcher__position:after{
+.controls-Switcher__position:after {
    content: '';
    position: absolute;
    height: 23px;
    width: 32px;
    display: block;
-   top:0;
+   top: 0;
    right: -32px;
    background: url('./img/switcher.png') 0 -24px;
 }
 
-.controls-Switcher__toggle__position-on .controls-Switcher__position:after{
+.controls-Switcher__toggle__position-on .controls-Switcher__position:after {
    width: 16px;
    right: -16px;
    background-position: 0 -312px;
