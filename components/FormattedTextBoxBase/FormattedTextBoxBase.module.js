@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function (Control) {
+define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], function (Control) {
 
    'use strict';
 
@@ -6,12 +6,12 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
     * Абстрактный класс для контроллов, в которых необходим ввод особого формата (телефон, год, время, etc).
     * В конечный контролл передается маска с помощью опции mask, управляющие символы в маске, определяющие,
     * какие символы могут вводиться, определяются предназначением контролла.
-    * @class SBIS3.CONTROLS.FieldFormatBase
+    * @class SBIS3.CONTROLS.FormattedTextBoxBase
     * @extends SBIS3.CORE.Control
     * @control
     */
 
-   var FieldFormatBase = Control.Control.extend(/** @lends SBIS3.CONTROLS.FieldFormatBase.prototype */{
+   var FormattedTextBoxBase = Control.Control.extend(/** @lends SBIS3.CONTROLS.FormattedTextBoxBase.prototype */{
       $protected: {
          /**
           * Изначальная маска (либо задается в опциях при создании, либо берется по умолчанию)
@@ -123,9 +123,6 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
             this._htmlMask = this._getHtmlMask();
             this._inputField.html(this._htmlMask);
 
-            //this._inputField.unbind('keypress');
-            //this._inputField.unbind('focus');
-
             this._inputField.focus(function () {
                self._focusHandler(self._inputField.get(0));
             });
@@ -153,26 +150,6 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
                   self._keyPressHandler(key, 'backspace');
                }
             });
-
-            // DEBUGGING
-            //this._inputField.mouseup(function(){
-            //   console.log(self._getCursor(true));
-            //});
-
-            // DEBUGGING
-            //console.log('=================================');
-            //console.log(this.getContainer().selector.slice(1));
-            //console.log('+++++++');
-            //console.log('_primalMask -> ', this._primalMask);
-            //console.log('_clearMask -> ', this._clearMask);
-            //console.log('_htmlMask -> ', this._htmlMask);
-            //console.log('_controlCharactersSet -> ', this._controlCharactersSet);
-            //console.log('_controlCharacters -> ', this._controlCharacters);
-            //console.log('_generalControlCharacters -> ', this._generalControlCharacters);
-            //console.log('+++++++');
-            //console.log(this.getContainer());
-            //console.log(this.getContainer().get(0).classList[0]);
-            //console.log('+++++++');
          }
          catch(error){
             console.error('Error: Ошибка при создании контролла:\nId: %s\nMessage: %s\n',
@@ -251,8 +228,6 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
 
                   this._replaceCharacter(container, position, this._placeholder);
                   position++;
-                  //this._moveCursor(container, position);
-                  //this._keyPressHandler(character, 'delete');
                }
                else {
                   nChild = this._isSeparatorContainerFirst ? 1 : 0;
@@ -467,11 +442,6 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
             }
          }
 
-         // DEBUGGING
-         //console.log(placeholderContainers);
-         //console.log(separatorContainers);
-         //console.log(htmlMask);
-
          return htmlMask;
       },
 
@@ -530,5 +500,5 @@ define('js!SBIS3.CONTROLS.FieldFormatBase', ['js!SBIS3.CORE.Control'], function 
       }
 });
 
-   return FieldFormatBase;
+   return FormattedTextBoxBase;
 });

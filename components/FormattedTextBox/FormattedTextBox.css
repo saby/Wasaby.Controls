@@ -10,7 +10,7 @@
    margin: 2px;
 }
 
-.controls-FormattedTextBox__field-placeholder{
+.controls-FormattedTextBox__field em{
    font-style: normal;
    font-family: 'Courier New', Monospace;
 }
