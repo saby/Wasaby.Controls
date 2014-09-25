@@ -26,8 +26,6 @@
 
 /* RadioButton */
 
-/* TextBox */
-
 .controls-RadioButton {
    cursor: pointer;
    display: inline-block;
@@ -52,7 +50,7 @@
    background-position: 0 -29px;
 }
 
-/* CheckBox */
+/* TextBox */
 
 .controls-TextBox {
    display: inline-block;
@@ -104,6 +102,8 @@
 .controls-TextBox__field-lowercase {
    text-transform: lowercase;
 }
+
+/* CheckBox */
 
 .controls-CheckBox {
    cursor: pointer;
