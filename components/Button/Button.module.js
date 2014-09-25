@@ -36,6 +36,15 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
       setCaption: function(captionTxt){
          Button.superclass.setCaption.call(this, captionTxt);
          this._button.html(captionTxt || '');
+      },
+
+      setPrimary: function(flag){
+         Button.superclass.setPrimary.call(this,flag);
+         if (this.isPrimary()){
+            this._button.addClass('controls-Button__primary');
+         } else {
+            this._button.removeClass('controls-Button__primary');
+         }
       }
 
    });

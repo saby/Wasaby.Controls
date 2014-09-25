@@ -31,6 +31,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
              * Путь задаётся относительно корня сайта либо через sprite.
              * @see setIcon
              * @see getIcon
+             * @editor ImageEditor
              */
             icon: '',
             /**
@@ -63,6 +64,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
       _clickHandler : function() {
 
       },
+
       /**
        * Установить текст на кнопке.
        * Метод установки либо замены текста на кнопке, заданного опцией {@link caption}.
@@ -80,6 +82,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
       setCaption: function(captionTxt) {
          this._options.caption = captionTxt || '';
       },
+
       /**
        * Получить текст на кнопке.
        * Метод получения текста, заданного либо опцией {@link caption}, либо методом {@link setCaption}.
@@ -110,8 +113,8 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
        * @see icon
        * @see getIcon
        */
-      setIcon: function(iconTxt) {
-
+      setIcon: function(iconPath) {
+         this._options.icon = iconPath;
       },
 
       /**
@@ -128,9 +131,27 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
        * @see setIcon
        */
       getIcon: function() {
-
+         return this._options.icon;
       },
+
       /**
+       * Установить значение primary
+       * @param {Boolean} flag значение primary
+       */
+      setPrimary: function(flag){
+         this._options.primary = !!flag;
+      },
+
+      /**
+       * Является ли кнопка primary
+       * @returns {boolean}
+       */
+
+      isPrimary: function(){
+         return this._options.primary;
+      },
+      
+     /**
        * Изменить текущее значение текста на кнопке.
        * @param {String} value Вставляемое значение.
        * @example
@@ -143,9 +164,10 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
        * @see getCaption
        * @see getValue
        */
-      setValue: function(value){
-         this.setCaption(value);
-      },
+     setValue: function(value){
+        this.setCaption(value);
+     },
+      
       /**
        * Возвращает текущее значение текста на кнопке.
        * @returns {String}
