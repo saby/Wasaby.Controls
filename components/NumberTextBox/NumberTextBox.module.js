@@ -38,12 +38,20 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          var self = this;
          this._publish('onChangeText');
          $('.js-controls-NumberTextBox__arrowDown', this.getContainer().get(0)).click(function () {
-            self._changeNumberByOne(-1);
+            self._arrowUpClick();
          });
 
          $('.js-controls-NumberTextBox__arrowUp', this.getContainer().get(0)).click(function () {
-            self._changeNumberByOne(1);
+            self._arrowDownClick();
          });
+      },
+
+      _arrowUpClick: function(){
+         this._changeNumberByOne(-1);
+      },
+
+      _arrowDownClick: function(){
+         this._changeNumberByOne(1);
       },
 
       _keyPressBind: function (e) {
