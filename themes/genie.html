@@ -83,7 +83,8 @@
 
    <h3>Кнопки</h3>
    <div id="button1"></div>
-
+   <br/><br/>
+   <div id="button2"></div>
 
 
 </div>
@@ -167,8 +168,14 @@
          require(["js!SBIS3.CONTROLS.Button"], function (r) {
             new r({
                element: "button1",
-               caption: 'Сохранить',
-               primary: true
+               caption: 'Сохранить'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.ToggleButton"], function (r) {
+            new r({
+               element: "button2",
+               caption: 'Календарь'
             })
          });
       })

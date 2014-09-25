@@ -13,15 +13,21 @@
    color: #919197;
 }
 
-.controls-Button.ws-has-focus {
-   color: #00d7d7;
-   border-color: #00d7d7;
-}
-
-.controls-Button:hover, .controls-Button.ws-has-focus:hover {
+.controls-Button:hover {
    color: #ffffff;
    border-color: #00d7d7;
    background-color: #00d7d7;
+}
+
+/* ToggleButton */
+
+.controls-Button.controls-ToggleButton__checked {
+   background-color: #d1d1d4;
+   color: #ffffff;
+   border-color: #d1d1d4;
+}
+.controls-Button.controls-ToggleButton__checked:hover {
+   border-color: #d1d1d4;
 }
 
 /* RadioButton */
@@ -199,5 +205,4 @@
 .controls-ComboBox__picker.controls-Picker__owner__hover {
    border-top-color: #00d7d7;
 }
-
 
