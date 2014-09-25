@@ -25,6 +25,14 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
             target : container
          });
 
+         this._picker.getContainer().width(container.outerWidth() - 2/*ширина бордеров*/);
+
+         container.hover(function(){
+            self._picker.getContainer().addClass('controls-Picker__owner__hover');
+         }, function(){
+            self._picker.getContainer().removeClass('controls-Picker__owner__hover');
+         });
+
          /*TODO это как то получше надо переписать*/
          $('body *').mousedown(function(e){
             var inCombobox = self._container.find($(e.target));
@@ -38,16 +46,20 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
        * Показывает выпадающий блок
        */
       showPicker: function() {
+         this._container.addClass('controls-Picker__show');
+         this._picker.getContainer().width(container.outerWidth() - 2/*ширина бордеров*/);
          this._picker.show();
       },
       /**
        * Скрывает выпадающий блок
        */
       hidePicker: function() {
+         this._container.removeClass('controls-Picker__show');
          this._picker.hide();
       },
 
       togglePicker: function() {
+         this._container.toggleClass('controls-Picker__show');
          this._picker.toggle();
       },
 
