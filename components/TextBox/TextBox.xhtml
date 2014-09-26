@@ -1,9 +1,6 @@
 <div class="controls-TextBox{{?it.className}} {{=it.className}}{{?}}{{? it.manualInput === false }} controls-ComboBox__manual-false{{?}}">
     {{? it.beforeFieldWrapper}}<div class="controls-TextBox__beforeFieldWrapper">{{=it.beforeFieldWrapper()}}</div>{{?}}
-    {{? it.afterFieldWrapper}}<div class="controls-TextBox__afterFieldWrapper">
-{{=it.afterFieldWrapper()}}
-    </div>
-    {{?}}
+    {{? it.afterFieldWrapper}}<div class="controls-TextBox__afterFieldWrapper">{{=it.afterFieldWrapper()}}</div>{{?}}
     <div class="controls-TextBox__fieldWrapper">
         <input class="controls-TextBox__field {{? it.textTransform == 'uppercase'}} controls-TextBox__field-uppercase {{?}}{{? it.textTransform == 'lowercase'}} controls-TextBox__field-lowercase {{?}}"
            type="text"
