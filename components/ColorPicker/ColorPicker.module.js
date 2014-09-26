@@ -16,7 +16,6 @@ define('js!SBIS3.CONTROLS.ColorPicker',
     * @class SBIS3.CONTROLS.ColorPicker
     * @extends SBIS3.CONTROLS.TextBox
     * @mixes SBIS3.CONTROLS._PickerMixin
-    * @control
     */
 
    var ColorPicker = TextBox.extend( [_PickerMixin],/** @lends SBIS3.CONTROLS.ColorPicker.prototype */{

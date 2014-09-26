@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.MenuBar', ['js!SBIS3.CORE.Control'], function( Control
     * @class SBIS3.CONTROLS.MenuBar
     * @extends SBIS3.CORE.Control
     * @mixes SBIS3.CONTROLS._CollectionMixin
-    * @control
     */
 
    var MenuBar = Control.Control.extend( /** @lends SBIS3.CONTROLS.MenuBar.prototype */ {
