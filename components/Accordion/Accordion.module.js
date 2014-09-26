@@ -12,8 +12,6 @@ define('js!SBIS3.CONTROLS.Accordion', ['js!SBIS3.CONTROLS.SwitchableArea'], func
 
     * @class SBIS3.CONTROLS.Accordion
     * @extends SBIS3.CONTROLS.SwitchableArea
-    * @control
-    * @category Containers
     */
 
    var Accordion = SwitchableArea.extend( /** @lends SBIS3.CONTROLS.Accordion.prototype */ {

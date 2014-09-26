@@ -11,8 +11,6 @@ define('js!SBIS3.CONTROLS.TabControl', ['js!SBIS3.CONTROLS.SwitchableArea'], fun
     * В каждый момент времени отображается только одна область. Отображаемая область может переключаться при клике на корешки закладок.
     * @class SBIS3.CONTROLS.TabControl
     * @extends SBIS3.CONTROLS.SwitchableArea
-    * @control
-    * @category Containers
     */
 
    var TabControl = SwitchableArea.extend( /** @lends SBIS3.CONTROLS.TabControl.prototype */ {

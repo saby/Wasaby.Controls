@@ -8,8 +8,6 @@ define('js!SBIS3.CONTROLS.MonthPicker', ['js!SBIS3.CORE.Control'], function(Cont
     * @extends SBIS3.CORE.Control
     * @mixes SBIS3.CONTROLS._PickerMixin
     * @mixes SBIS3.CONTROLS._FormWidgetMixin
-    * @control
-    * @category Date\Time
     */
 
    var MonthPicker = Control.Control.extend(/** @lends SBIS3.CONTROLS.MonthPicker.prototype */{

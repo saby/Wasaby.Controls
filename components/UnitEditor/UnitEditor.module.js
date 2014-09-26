@@ -9,8 +9,6 @@ define('js!SBIS3.CONTROLS.UnitEditor', ['js!SBIS3.CONTROLS.NumberTextBox', 'html
     * Поле ввода, куда можно вводить только числовые значения
     * @class SBIS3.CONTROLS.UnitEditor
     * @extends SBIS3.CONTROLS.NumberTextBox
-    * @control
-    * @category Inputs
     */
 
    var UnitEditor;

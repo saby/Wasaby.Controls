@@ -10,8 +10,6 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!
     * Сделан отдельным компонентом для того, чтобы не наследовать опцию текстового поля во все дочерние компоненты
     * @class SBIS3.CONTROLS.PasswordTextBox
     * @extends SBIS3.CONTROLS.TextBox
-    * @control
-    * @category Inputs
     */
    var PasswordTextBox;
    PasswordTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS.PasswordTextBox.prototype */ {

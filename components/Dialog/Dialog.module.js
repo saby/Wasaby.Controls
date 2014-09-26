@@ -12,8 +12,6 @@ define('js!SBIS3.CONTROLS.Dialog', ['js!SBIS3.CORE.Control'], function(Control) 
     * @class SBIS3.CONTROLS.Dialog
     * @extends SBIS3.CORE.Control
     * @mixes SBIS3.CONTROLS._PopupMixin
-    * @control
-    * @category Containers
     */
 
    var Dialog = Control.Control.extend( /** @lends SBIS3.CONTROLS.Dialog.prototype*/ {

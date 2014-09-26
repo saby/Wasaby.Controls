@@ -6,8 +6,6 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase'], function
     * Класс, определяющий многострочное поле ввода с возможностью задать количество строк, столбцов, включить авторесайз
     * @class SBIS3.CONTROLS.TextArea
     * @extends SBIS3.CONTROLS.TextBoxBase
-    * @control
-    * @category Inputs
     */
 
    var TextArea = TextBoxBase.extend( /** @lends SBIS3.CONTROLS.TextArea.prototype */ {
