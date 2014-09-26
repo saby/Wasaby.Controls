@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
     * @mixes SBIS3.CONTROLS._FormWidgetMixin
     * @mixes SBIS3.CONTROLS._PickerMixin
     * @control
+    * @category Date\Time
     */
 
    var DatePicker = Control.Control.extend( [PickerMixin, FormWidgetMixin],/** @lends SBIS3.CONTROLS.DatePicker.prototype */{

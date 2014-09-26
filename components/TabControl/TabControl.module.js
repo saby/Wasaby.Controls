@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.TabControl', ['js!SBIS3.CONTROLS.SwitchableArea'], fun
     * @class SBIS3.CONTROLS.TabControl
     * @extends SBIS3.CONTROLS.SwitchableArea
     * @control
+    * @category Containers
     */
 
    var TabControl = SwitchableArea.extend( /** @lends SBIS3.CONTROLS.TabControl.prototype */ {

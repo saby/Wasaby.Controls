@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.LoadingIndicator', ['js!SBIS3.CORE.Control'], function
     * @extends SBIS3.CORE.Control
     * @mixes SBIS3.CONTROLS._PopupMixin
     * @control
+    * @category Decorate
     */
 
    var LoadingIndicator = Control.Control.extend( /** @lends SBIS3.CONTROLS.LoadingIndicator.prototype*/ {

@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.SearchString', ['js!SBIS3.CORE.Control'], function (Co
     * @class SBIS3.CONTROLS.SearchString
     * @extends SBIS3.CORE.Control
     * @control
+    * @category Inputs
     */
 
    var SearchString = Control.Control.extend(/** @lends SBIS3.CONTROLS.SearchString.prototype */{

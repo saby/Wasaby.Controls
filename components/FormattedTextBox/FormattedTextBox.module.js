@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CORE.Control', '!html!SB
     * @class SBIS3.CONTROLS.FormattedTextBox
     * @extends SBIS3.CORE.Control
     * @control
+    * @category Inputs
     */
 
    var FormattedTextBox = Control.Control.extend(/** @lends SBIS3.CONTROLS.FormattedTextBox.prototype */{

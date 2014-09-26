@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.DialogTemplate', ['js!SBIS3.CORE.Control'], function(C
     * @class SBIS3.CONTROLS.DialogTemplate
     * @extends SBIS3.CORE.Control
     * @control
+    * @category Containers
     */
 
    var DialogTemplate = Control.Control.extend( /** @lends SBIS3.CONTROLS.DialogTemplate.prototype*/ {

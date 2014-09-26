@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTRO
     * @extends SBIS3.CORE.Control
     * @mixes SBIS3.CONTROLS._PopupMixin
     * @control
+    * @category Containers
     */
 
    var FloatArea = Control.Control.extend([_PopupMixin], /** @lends SBIS3.CONTROLS.FloatArea.prototype*/ {

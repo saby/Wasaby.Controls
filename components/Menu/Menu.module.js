@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CORE.Control'], function( Control ) 
     * @extends SBIS3.CORE.Control
     * @mixes SBIS3.CONTROLS._PopupMixin
     * @control
+    * @category Navigation
     */
 
    var Menu = Control.Control.extend( /** @lends SBIS3.CONTROLS.Menu.prototype */ {

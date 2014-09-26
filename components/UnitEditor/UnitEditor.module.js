@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.UnitEditor', ['js!SBIS3.CONTROLS.NumberTextBox', 'html
     * @class SBIS3.CONTROLS.UnitEditor
     * @extends SBIS3.CONTROLS.NumberTextBox
     * @control
+    * @category Inputs
     */
 
    var UnitEditor;

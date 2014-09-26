@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.RadioButton', ['js!SBIS3.CONTROLS.RadioButtonBase', 'h
     * @class SBIS3.CONTROLS.RadioButton
     * @extends SBIS3.CONTROLS.RadioButtonBase
     * @control
+    * @category Select
     */
 
    var RadioButton = RadioButtonBase.extend( /** @lends SBIS3.CONTROLS.RadioButton.prototype */ {
