@@ -1,5 +1,6 @@
-<div class="controls-TextBox{{?it.className}} {{=it.className}}{{?}}">
-    {{? it.afterFieldWrapper}}<div class="controls-TextBox__optionsContainer">
+<div class="controls-TextBox{{?it.className}} {{=it.className}}{{?}}{{? it.manualInput === false }} controls-ComboBox__manual-false{{?}}">
+    {{? it.beforeFieldWrapper}}<div class="controls-TextBox__beforeFieldWrapper">{{=it.beforeFieldWrapper()}}</div>{{?}}
+    {{? it.afterFieldWrapper}}<div class="controls-TextBox__afterFieldWrapper">
 {{=it.afterFieldWrapper()}}
     </div>
     {{?}}

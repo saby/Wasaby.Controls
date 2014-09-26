@@ -25,6 +25,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          _displayField : '',
          _options: {
             afterFieldWrapper: arrowDownTplFn,
+            beforeFieldWrapper: arrowDownTplFn,
             /**
              * @cfg {Boolean} Разрешить ручной ввод значений
              */
