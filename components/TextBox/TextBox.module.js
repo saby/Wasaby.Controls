@@ -14,6 +14,8 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       $protected: {
          _inputField : null,
          _options: {
+            beforeFieldWrapper: null,
+            afterFieldWrapper: null,
             /**
              * @typedef {Object} TextTransformEnum
              * @variant uppercase перевести в верхний регистр
