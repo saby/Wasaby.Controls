@@ -3,8 +3,8 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], func
    'use strict';
 
    /**
-    * Абстрактный класс для контроллов, в которых необходим ввод особого формата (телефон, год, время, etc).
-    * В конечный контролл передается маска с помощью опции mask, управляющие символы в маске, определяющие,
+    * Абстрактный класс для контроллов, в которых необходим ввод особого формата (телефон, дата, время, etc).
+    * В конечный контролл передается маска с помощью опции mask. Управляющие символы в маске, определяющие,
     * какие символы могут вводиться, определяются предназначением контролла.
     * @class SBIS3.CONTROLS.FormattedTextBoxBase
     * @extends SBIS3.CORE.Control
@@ -454,8 +454,8 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], func
        */
       _getHtmlContainer: function(container, type){
          var inputClass = this.getContainer().get(0).classList[0];
-         if (type == 'placeholder'){return '<em class="'+inputClass+'__field-placeholder">' + container + '</em>';}
-         else if (type == 'separator') {return '<em>' + container + '</em>'}
+         if (type == 'placeholder'){return '<span class="'+inputClass+'__field-placeholder">' + container + '</span>';}
+         else if (type == 'separator') {return '<span class="'+inputClass+'__field-separator">' + container + '</span>'}
       },
       
       /**

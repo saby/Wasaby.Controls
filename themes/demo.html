@@ -117,7 +117,9 @@
       <div id="ColorPicker" class="testBlock">4</div>
       с текстом
       <div id="ComboBox" class="testBlock">5</div>
-      который не сбивается!
+      который
+		<div id="FormattedTextBox" class="testBlock">6</div>
+		не сбивается!
    </div>
 
 </div>
@@ -287,7 +289,12 @@
             })
          });
 
-
+			require(["js!SBIS3.CONTROLS.FormattedTextBox"], function (r) {
+            new r({
+               element: "FormattedTextBox",
+               mask: "xxxxxxxxxxxxxx-dddddddddddddddddd"
+            })
+         });
       })
    });
 </script>

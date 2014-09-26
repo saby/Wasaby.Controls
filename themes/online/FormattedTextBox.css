@@ -1,0 +1,5 @@
+.controls-FormattedTextBox__field-placeholder, .controls-FormattedTextBox__field-separator{
+   display: inline-block;
+   vertical-align: middle;
+   background: transparent;
+}
