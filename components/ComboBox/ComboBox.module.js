@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CONTROLS._SelectorMixin',
    'html!SBIS3.CONTROLS.ComboBox',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxItemTpl'
-], function(TextBox, _PickerMixin, _CollectionMixin, _SelectorMixin, arrowDownTplFn, itemTpl) {
+], function(TextBox, _PickerMixin, _CollectionMixin, _SelectorMixin, arrowTplFn, itemTpl) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора. Есть настройка которая позволяет также  вручную вводить значения.
@@ -24,8 +24,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          _itemTpl : '',
          _displayField : '',
          _options: {
-            afterFieldWrapper: arrowDownTplFn,
-            beforeFieldWrapper: arrowDownTplFn,
+            afterFieldWrapper: arrowTplFn,
+            beforeFieldWrapper: arrowTplFn,
             /**
              * @cfg {Boolean} Разрешить ручной ввод значений
              */

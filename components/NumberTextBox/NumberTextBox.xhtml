@@ -1,12 +1,2 @@
-<div class="controls-NumberTextBox controls-TextBox{{?it.className}} {{=it.className}}{{?}}">
-    <div class="controls-TextBox__optionsContainer">
-        <a class="js-controls-NumberTextBox__arrowUp controls-NumberTextBox__arrowUp controls-NumberTextBox__arrow" href="javascript: void(0)"></a>
-        <a class="js-controls-NumberTextBox__arrowDown controls-NumberTextBox__arrowDown controls-NumberTextBox__arrow" href="javascript: void(0)"></a>
-    </div>
-    <div class="controls-TextBox__fieldWrapper">
-        <input class="js-controls-TextBox__field controls-TextBox__field" type="text"
-    {{? it.text }} value="{{? it.numberFractDigits && !it.onlyInteger}}{{=parseFloat(it.text).toFixed(it.numberFractDigits)}}{{??}}{{=it.text}}{{?}}"{{?}}
-    {{? it.placeholder }} placeholder="{{=it.placeholder}}"{{?}}
-    {{? it.maxLength }} maxlength="{{=it.maxLength}}"{{?}}
-    /></div>
-</div>
+<a class="js-controls-NumberTextBox__arrowUp controls-NumberTextBox__arrowUp controls-NumberTextBox__arrow" href="javascript: void(0)"></a>
+<a class="js-controls-NumberTextBox__arrowDown controls-NumberTextBox__arrowDown controls-NumberTextBox__arrow" href="javascript: void(0)"></a>

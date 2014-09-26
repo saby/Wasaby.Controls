@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 28.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SBIS3.CONTROLS.NumberTextBox'], function (TextBox, dotTplFn) {
+define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SBIS3.CONTROLS.NumberTextBox'], function (TextBox, arrowTplFn) {
 
    'use strict';
    /**
@@ -14,10 +14,10 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
    var NumberTextBox;
    NumberTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS.NumberTextBox.prototype */ {
-      _dotTplFn: dotTplFn,
       $protected: {
          _inputField: null,
          _options: {
+            afterFieldWrapper: arrowTplFn,
             /**
              * @cfg {Boolean} Можно вводить только положительыне
              */
