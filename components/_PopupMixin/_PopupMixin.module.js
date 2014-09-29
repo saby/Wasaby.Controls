@@ -99,12 +99,11 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function() {
             if ($(document).width() <= this._container.outerWidth() + offset.left){
                offset.left += this._options.target.outerWidth() - this._container.outerWidth();
             }
-
-            this._container.css({
-               'left' : offset.left + this._options.left,
-               'top' : offset.top + this._options.top
-            });
          }
+         this._container.css({
+            'left' : offset.left + this._options.left,
+            'top' : offset.top + this._options.top
+         });
       },
 
       before : {
