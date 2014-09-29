@@ -5,7 +5,7 @@ var themesDir = path.join(__dirname, 'themes');
 
 // порядок сборки стилей контролов
 var order = {
-   demo: ['Button', 'ToggleButton', 'RadioButton', 'SwitcherDoubleOnline', 'Switcher', 'TextBox', 'PasswordTextBox', 'NumberTextBox', 'TabButton', 'CheckBox', 'ColorPicker', 'ComboBox'],
+   demo: ['Button', 'ToggleButton', 'RadioButton', 'SwitcherDoubleOnline', 'Switcher', 'TextBox', 'PasswordTextBox', 'NumberTextBox', 'TabButton', 'CheckBox', 'ColorPicker', 'ComboBox', 'FormattedTextBox'],
    presto: ['Button', 'TextBox'],
    online: ['Button', 'ToggleButton', 'RadioButton', 'SwitcherDoubleOnline', 'Switcher', 'TextBox', 'PasswordTextBox', 'NumberTextBox', 'CheckBox']
 };
