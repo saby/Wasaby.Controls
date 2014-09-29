@@ -9,8 +9,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     * Поле ввода, куда можно вводить только числовые значения
     * @class SBIS3.CONTROLS.NumberTextBox
     * @extends SBIS3.CONTROLS.TextBox
-    * @control
-    * @ignoreOptions textTransform trim
     */
 
    var NumberTextBox;
@@ -29,6 +27,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             onlyInteger: false,
             /**
              * @cfg {Number} Количество знаков после запятой
+             * @noShow
              */
             numberFractDigits: null
          }
@@ -38,12 +37,20 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          var self = this;
          this._publish('onChangeText');
          $('.js-controls-NumberTextBox__arrowDown', this.getContainer().get(0)).click(function () {
-            self._changeNumberByOne(-1);
+            self._arrowUpClick();
          });
 
          $('.js-controls-NumberTextBox__arrowUp', this.getContainer().get(0)).click(function () {
-            self._changeNumberByOne(1);
+            self._arrowDownClick();
          });
+      },
+
+      _arrowUpClick: function(){
+         this._changeNumberByOne(-1);
+      },
+
+      _arrowDownClick: function(){
+         this._changeNumberByOne(1);
       },
 
       _keyPressBind: function (e) {

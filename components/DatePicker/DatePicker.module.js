@@ -6,7 +6,6 @@ define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CONTROLS.FormattedTextBoxBase'
     * Можно вводить только значения особого формата даты.
     * @class SBIS3.CONTROLS.DatePicker
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
-    * @control
     */
 
    var DatePicker = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS.DatePicker.prototype */{

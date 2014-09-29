@@ -1,0 +1,8 @@
+.controls-Button.controls-ToggleButton__checked {
+   background-color: #d1d1d4;
+   color: #ffffff;
+   border-color: #d1d1d4;
+}
+.controls-Button.controls-ToggleButton__checked:hover {
+   border-color: #d1d1d4;
+}

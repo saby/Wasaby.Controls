@@ -18,7 +18,6 @@ define('js!SBIS3.CONTROLS.ListView',
     * @extends SBIS3.CORE.Control
     * @mixes SBIS3.CONTROLS._CollectionMixin
     * @mixes SBIS3.CONTROLS._MultiSelectorMixin
-    * @control
     */
 
    var ListView = CompoundControl.extend( [CollectionMixin, MultiSelectorMixin],/** @lends SBIS3.CONTROLS.ListView.prototype */ {
