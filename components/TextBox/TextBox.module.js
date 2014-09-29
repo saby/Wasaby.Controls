@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3.CONTROLS.TextBox','css!SBIS3.CONTROLS.TextBox'], function(TextBoxBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3.CONTROLS.TextBox'], function(TextBoxBase, dotTplFn) {
 
    'use strict';
 
@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
     * @class SBIS3.CONTROLS.TextBox
     * @extends SBIS3.CONTROLS.TextBoxBase
     * @control
+    * @category Inputs
     */
 
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.TextBox.prototype */ {
@@ -21,11 +22,23 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              * @variant none оставить как есть
              */
             /**
-             * @cfg {TextTransformEnum} Применить форматирование к тексту
+             * @cfg {TextTransformEnum} Форматирование текста
+             * Возможные значения:
+             * <ul>
+             *    <li>uppercase - все символы верхним регистром;</li>
+             *    <li>lowercase - все символы нижним регистром;</li>
+             *    <li>none - без изменений.</li>
+             * </ul>
              */
             textTransform: 'none',
             /**
-             * @cfg {Boolean} Отображение крестика для сброса текста
+             * @cfg {Boolean} Наличие крестика для сброса текста
+             * Возможные значения:
+             * <ul>
+             *    <li>true - крестик есть;</li>
+             *    <li>false - нет крестика.</li>
+             * </ul>
+             * @noShow
              */
             resetCross: false
          }
@@ -47,11 +60,18 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          });
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
-         if (self._options.trim) {
-            self._inputField.bind('focusout', function () {
+         self._inputField.bind('focusout', function () {
+            if (self._options.trim) {
                self.setText(self._trim(self.getText()));
-            });
-         }
+            }
+         });
+
+         self._inputField.bind('mouseup',function(){
+            if (self._options.selectOnClick) {
+               self._inputField.select();
+            }
+         });
+
       },
 
       setText: function(text){
@@ -69,6 +89,26 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       setPlaceholder: function(text){
          TextBox.superclass.setPlaceholder.call(this, text);
          $('.controls-TextBox__field', this.getContainer().get(0)).attr('placeholder', text);
+      },
+
+      /**
+       * Установить форматирование текста
+       * @param {TextTransformEnum} textTransform
+       */
+      setTextTransform: function(textTransform){
+         switch (textTransform) {
+            case 'uppercase':
+               this._inputField.removeClass('controls-TextBox__field-lowercase');
+               this._inputField.addClass('controls-TextBox__field-uppercase');
+               break;
+            case 'lowercase':
+               this._inputField.removeClass('controls-TextBox__field-uppercase');
+               this._inputField.addClass('controls-TextBox__field-lowercase');
+               break;
+            default:
+               this._inputField.removeClass('controls-TextBox__field-uppercase');
+               this._inputField.removeClass('controls-TextBox__field-lowercase');
+         }
       },
 
       _keyUpBind: function() {

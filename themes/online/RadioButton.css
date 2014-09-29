@@ -3,16 +3,15 @@
    display: inline-block;
 }
 .controls-RadioButton__icon {
-   width: 16px;
-   height: 15px;
-   background: url('resources/RadioButton.png') 0 0;
-   margin-right: 4px;
+   width: 24px;
+   height: 17px;
+   background: url('./img/RadioButton-sprite.png') 0 -4px;
    display: inline-block;
 }
 .controls-RadioButton:hover .controls-RadioButton__icon{
-   background-position: 0 13px;
+   background-position: 0 -100px;
 }
 
 .controls-RadioButton.controls-ToggleButton__checked .controls-RadioButton__icon{
-   background-position: 0 27px;
+   background-position: 0 -52px;
 }

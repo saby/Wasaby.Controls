@@ -2,18 +2,17 @@
  * Created by iv.cheremushkin on 28.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.PasswordTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SBIS3.CONTROLS.PasswordTextBox', 'css!SBIS3.CONTROLS.PasswordTextBox'], function (TextBox, dotTplFn) {
+define('js!SBIS3.CONTROLS.PasswordTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SBIS3.CONTROLS.PasswordTextBox'], function (TextBox, dotTplFn) {
 
    'use strict';
    /**
     * Ввод пароля.
     * Сделан отдельным компонентом для того, чтобы не наследовать опцию текстового поля во все дочерние компоненты
-    * @class SBIS3.CORE.PasswordTextBox
-    * @extends SBIS3.CORE.TextBox
-    * @control
+    * @class SBIS3.CONTROLS.PasswordTextBox
+    * @extends SBIS3.CONTROLS.TextBox
     */
    var PasswordTextBox;
-   PasswordTextBox = TextBox.extend(/** @lends SBIS3.CORE.PasswordTextBox.prototype */ {
+   PasswordTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS.PasswordTextBox.prototype */ {
       _dotTplFn: dotTplFn,
       $constructor: function() {
          //TODO: избавиться от фикса высоты поля ввода пароля в IE>8

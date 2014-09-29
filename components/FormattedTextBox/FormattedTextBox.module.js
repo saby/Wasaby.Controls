@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CORE.Control'], function(Control) {
+define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBoxBase', '!html!SBIS3.CONTROLS.FormattedTextBox', 'css!SBIS3.CONTROLS.FormattedTextBox'], function (FormattedTextBoxBase, dotTplFn) {
 
    'use strict';
 
@@ -6,26 +6,28 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CORE.Control'], function
     * Можно вводить только значения особого формата (например телефон).
     * В поле ввода уже заранее будут введены символы из формата (например скобки и тире для телефона) и останется ввести только недостающие символы
     * @class SBIS3.CONTROLS.FormattedTextBox
-    * @extends SBIS3.CORE.Control
-    * @control
+    * @extends SBIS3.CONTROLS.FormattedTextBoxBase
     */
 
-   var FormattedTextBox = Control.Control.extend(/** @lends SBIS3.CONTROLS.FormattedTextBox.prototype */{
+   var FormattedTextBox = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS.FormattedTextBox.prototype */{
       $protected: {
+         _dotTplFn: dotTplFn,
+         /**
+          * Опции создаваемого контролла
+          */
          _options: {
             /**
-             * @cfg {RegExp} формат ввода, всё что не подходит нельзя ввести
+             * @cfg {RegExp} Маска, на базе которой будет создана html-разметка и в соответствии с которой
+             * будет определён весь функционал
              */
-            pattern: ''
+            mask: 'd(ddd)ddd-dd-dd'
          }
       },
 
-      $constructor: function() {
-
+      $constructor: function () {
+         this._initializeComponents();
       }
-
-   });
+});
 
    return FormattedTextBox;
-
 });

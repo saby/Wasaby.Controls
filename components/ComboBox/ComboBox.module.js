@@ -4,8 +4,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CONTROLS._CollectionMixin',
    'js!SBIS3.CONTROLS._SelectorMixin',
    'html!SBIS3.CONTROLS.ComboBox',
-   'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxItemTpl',
-   'css!SBIS3.CONTROLS.ComboBox'
+   'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxItemTpl'
 ], function(TextBox, _PickerMixin, _CollectionMixin, _SelectorMixin, dotTpl, itemTpl) {
    'use strict';
    /**
@@ -13,6 +12,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @class SBIS3.CONTROLS.ComboBox
     * @extends SBIS3.CONTROLS.TextBox
     * @control
+    * @category Inputs
     * @mixes SBIS3.CONTROLS._PickerMixin
     * @mixes SBIS3.CONTROLS._FormWidgetMixin
     * @mixes SBIS3.CONTROLS._CollectionMixin
@@ -67,9 +67,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
          /*обрабочики кликов*/
          $('.js-controls-ComboBox__arrowDown', this._container.get(0)).click(function(){
-            $('.controls-ComboBox__itemRow__hover').removeClass('controls-ComboBox__itemRow__hover');
+            $('.controls-ComboBox__itemRow__selected').removeClass('controls-ComboBox__itemRow__selected');
             var key = self.getSelectedItem();
-            $('.controls-ComboBox__itemRow[data-key=\''+key+'\']').addClass('controls-ComboBox__itemRow__hover');
+            $('.controls-ComboBox__itemRow[data-key=\''+key+'\']').addClass('controls-ComboBox__itemRow__selected');
             self.togglePicker();
          });
 
@@ -77,6 +77,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          $ws.helpers.trackElement(this._container).subscribe('onMove', function() {
             self._picker.recalcPosition();
          }, this);
+
+         self._picker.getContainer().addClass('controls-ComboBox__picker');
       },
 
       setText : function(text) {
@@ -88,8 +90,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _drawSelectedItem : function(key) {
          var item = this._items.getItem(key);
          ComboBox.superclass.setText.call(this, item[this._displayField]);
-         $('.controls-ComboBox__itemRow__hover').removeClass('controls-ComboBox__itemRow__hover');
-         $('.controls-ComboBox__itemRow[data-key=\''+key+'\']').addClass('controls-ComboBox__itemRow__hover');
+         $('.controls-ComboBox__itemRow__selected').removeClass('controls-ComboBox__itemRow__selected');
+         $('.controls-ComboBox__itemRow[data-key=\''+key+'\']').addClass('controls-ComboBox__itemRow__selected');
       },
 
       _notifySelectedItem : function(key) {
@@ -108,10 +110,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          $('.js-controls-ComboBox__itemRow', self._picker.getContainer().get(0)).click(function(){
             self.setValue($(this).attr('data-key'));
             self.hidePicker();
-         });
-         $('.js-controls-ComboBox__itemRow', self._picker.getContainer().get(0)).hover(function(){
-            $('.controls-ComboBox__itemRow__hover').removeClass('controls-ComboBox__itemRow__hover');
-            $(this).addClass('controls-ComboBox__itemRow__hover');
          });
       },
 

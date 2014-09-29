@@ -2,14 +2,13 @@
  * Created by iv.cheremushkin on 28.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SBIS3.CONTROLS.NumberTextBox', 'css!SBIS3.CONTROLS.NumberTextBox'], function (TextBox, dotTplFn) {
+define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SBIS3.CONTROLS.NumberTextBox'], function (TextBox, dotTplFn) {
 
    'use strict';
    /**
     * Поле ввода, куда можно вводить только числовые значения
     * @class SBIS3.CONTROLS.NumberTextBox
     * @extends SBIS3.CONTROLS.TextBox
-    * @control
     */
 
    var NumberTextBox;
@@ -18,8 +17,28 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       $protected: {
          _inputField: null,
          _options: {
+            /**
+             * @cfg {Boolean} Признак ввода только положительных чисел
+             * Возможные значения:
+             * <ul>
+             *    <li>true - ввод только положительных чисел;</li>
+             *    <li>false - нет ограничения на знак вводимых чисел.</li>
+             * </ul>
+             */
             onlyPositive: false,
+            /**
+             * @cfg {Boolean} Признак ввода только целых чисел
+             * Возможные значения:
+             * <ul>
+             *    <li>true - ввод только целых чисел;</li>
+             *    <li>false - возможен ввод дробных чисел.</li>
+             * </ul>
+             */
             onlyInteger: false,
+            /**
+             * @cfg {Number} Количество знаков после запятой
+             * @noShow
+             */
             numberFractDigits: null
          }
       },
@@ -28,12 +47,20 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          var self = this;
          this._publish('onChangeText');
          $('.js-controls-NumberTextBox__arrowDown', this.getContainer().get(0)).click(function () {
-            self._changeNumberByOne(-1);
+            self._arrowUpClick();
          });
 
          $('.js-controls-NumberTextBox__arrowUp', this.getContainer().get(0)).click(function () {
-            self._changeNumberByOne(1);
+            self._arrowDownClick();
          });
+      },
+
+      _arrowUpClick: function(){
+         this._changeNumberByOne(-1);
+      },
+
+      _arrowDownClick: function(){
+         this._changeNumberByOne(1);
       },
 
       _keyPressBind: function (e) {

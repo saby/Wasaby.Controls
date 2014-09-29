@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.ToggleButton', ['js!SBIS3.CONTROLS.ToggleButtonBase', 'html!SBIS3.CONTROLS.ToggleButton', 'css!SBIS3.CONTROLS.Button', 'css!SBIS3.CONTROLS.ToggleButton'], function(ToggleButtonBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.ToggleButton', ['js!SBIS3.CONTROLS.ToggleButtonBase', 'html!SBIS3.CONTROLS.ToggleButton'], function(ToggleButtonBase, dotTplFn) {
 
    'use strict';
 
@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.ToggleButton', ['js!SBIS3.CONTROLS.ToggleButtonBase', 
     * @class SBIS3.CONTROLS.ToggleButton
     * @extends SBIS3.CONTROLS.ToggleButtonBase
     * @control
+    * @category Buttons
     */
 
    var ToggleButton = ToggleButtonBase.extend( /** @lends SBIS3.CONTROLS.ToggleButton.prototype */ {
@@ -26,6 +27,12 @@ define('js!SBIS3.CONTROLS.ToggleButton', ['js!SBIS3.CONTROLS.ToggleButtonBase', 
       $constructor: function() {
          var self = this;
          this._button = this._container;
+         this._container.mouseup(function () {
+            self._container.removeClass('controls-Button__active');
+         }).mousedown(function () {
+               self._container.addClass('controls-Button__active');
+            });
+
       },
 
       setCaption: function(captionTxt){
