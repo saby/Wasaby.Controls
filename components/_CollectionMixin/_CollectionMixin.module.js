@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection'], f
    var _CollectionMixin = /**@lends SBIS3.CONTROLS._CollectionMixin.prototype  */{
       $protected: {
          _items : null,
+         _dotItemTpl: null,
          _keyField : '',
          _options: {
             /**
@@ -33,7 +34,12 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection'], f
             this._initItems(this._options.items);
          }
          else {
-            this._initItems([])
+            this._initItems([]);
+         }
+         if (!this._options.itemTemplate){
+            this._dotItemTpl = doT.template('<div data-key="{{=it.key}}">{{=it.title}}</div>');
+         } else {
+            this._dotItemTpl = doT.template(this._options.itemTemplate);
          }
       },
 
@@ -63,8 +69,32 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection'], f
          this._drawItems();
       },
 
-      _drawItems: function() {
-         /*Method must be implemented*/
+      _drawItems: function(){
+         var self = this,
+            container = this._getItemsContainer();
+         container.empty();
+         this._items.iterate(function (item) {
+            container.append(self._buildMarkup(self._dotItemTpl, item));
+         });
+         this._loadChildControls();
+      },
+
+      _loadControls: function(pdResult){
+         return pdResult.done([]);
+      },
+
+      _loadChildControls: function() {
+         var def = new $ws.proto.Deferred();
+         var self = this;
+         self._loadControlsBySelector(new $ws.proto.ParallelDeferred(), undefined, '[data-component]')
+            .getResult().addCallback(function () {
+               def.callback();
+            });
+         return def;
+      },
+
+      _getItemsContainer: function(){
+         return this._container;
       }
    };
 
