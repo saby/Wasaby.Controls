@@ -28,11 +28,6 @@ define('js!SBIS3.CONTROLS.ListView',
             _itemsContainer: null,
             _options: {
                /**
-                * Элемент, внутри которого отображается набор
-                * @cfg {String|jQuery|HTMLElement}
-                */
-               itemsContainer: null,
-               /**
                 * @cfg {Array} Набор действий, над элементами, отображающийся в виде иконок. Можно использовать для массовых операций.
                 */
                itemsActions: null,
@@ -48,12 +43,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          $constructor: function () {
-            var self = this;
-            if (this._options.itemsContainer) {
-               this._itemsContainer = this._options.itemsContainer;
-            } else {
-               this._itemsContainer = this._container;
-            }
             this._drawItems();
          },
 
