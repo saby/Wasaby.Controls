@@ -3,12 +3,12 @@
  */
 
 define('js!SBIS3.CONTROLS.ListView',
-      ['js!SBIS3.CORE.CompoundControl',
-       'js!SBIS3.CONTROLS._CollectionMixin',
-       'js!SBIS3.CONTROLS._MultiSelectorMixin',
-       'html!SBIS3.CONTROLS.ListView'
-      ],
-      function(CompoundControl, CollectionMixin, MultiSelectorMixin, dotTplFn) {
+   ['js!SBIS3.CORE.CompoundControl',
+      'js!SBIS3.CONTROLS._CollectionMixin',
+      'js!SBIS3.CONTROLS._MultiSelectorMixin',
+      'html!SBIS3.CONTROLS.ListView'
+   ],
+   function (CompoundControl, CollectionMixin, MultiSelectorMixin, dotTplFn) {
 
       'use strict';
 
@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @control
        */
 
-      var ListView = CompoundControl.extend( [CollectionMixin, MultiSelectorMixin],/** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      var ListView = CompoundControl.extend([CollectionMixin, MultiSelectorMixin], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          $protected: {
             _dotTplFn: dotTplFn,
             _dotItemTpl: null,
@@ -47,9 +47,9 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         $constructor: function() {
+         $constructor: function () {
             var self = this;
-            if (this._options.itemsContainer){
+            if (this._options.itemsContainer) {
                this._itemsContainer = this._options.itemsContainer;
             } else {
                this._itemsContainer = this._container;
@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * Установить, что отображается когда нет записей
           * @param html содержимое блока
           */
-         setEmptyHTML: function(html){
+         setEmptyHTML: function (html) {
 
          }
 
