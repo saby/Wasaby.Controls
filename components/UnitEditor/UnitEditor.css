@@ -1,0 +1,33 @@
+.controls-UnitEditor__fieldWrapper{
+   margin-right: 34px;
+}
+
+.controls-UnitEditor__unitSelector{
+   min-width: 18px;
+   min-height: 18px;
+   height: 100%;
+   float: right;
+   padding-top: 1px;
+   margin-right: 18px;
+   cursor: pointer;
+   text-align: center;
+}
+
+.controls-UnitEditor__unitSelector:hover {
+   background: #CCCCCC;
+}
+
+.controls-UnitEditor__unit{
+   text-align: right;
+   padding: 4px;
+}
+
+.controls-UnitEditor__unit:hover{
+   background: #E7F0F9;
+   cursor: pointer;
+}
+
+.controls-UnitEditor__units{
+   margin-top: -1px;
+   border: 1px solid #CCCCCC;
+}

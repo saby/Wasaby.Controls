@@ -14,20 +14,13 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
 
       $constructor: function() {
          var
-            self = this,
-            container = this._container,
-            pickerContainer = $('<div></div>');
-         // чтобы не нарушать выравнивание по базовой линии
-         $('body').append(pickerContainer);
+            self = this;
 
-         this._picker = new FloatArea({
-            element : pickerContainer,
-            target : container
-         });
+         this._createPicker();
 
-         this._picker.getContainer().width(container.outerWidth() - 2/*ширина бордеров*/);
+         this._picker.getContainer().width(this._container.outerWidth() - 2/*ширина бордеров*/);
 
-         container.hover(function(){
+         this._container.hover(function(){
             self._picker.getContainer().addClass('controls-Picker__owner__hover');
          }, function(){
             self._picker.getContainer().removeClass('controls-Picker__owner__hover');
@@ -42,6 +35,18 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
             }
          });
       },
+
+      _createPicker: function(){
+         var pickerContainer = $('<div></div>'),
+            self = this;
+         // чтобы не нарушать выравнивание по базовой линии
+         $('body').append(pickerContainer);
+         this._picker = new FloatArea({
+            element : pickerContainer,
+            target : self._container
+         });
+      },
+
       /**
        * Показывает выпадающий блок
        */
