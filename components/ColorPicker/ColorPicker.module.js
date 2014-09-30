@@ -4,10 +4,10 @@
 define('js!SBIS3.CONTROLS.ColorPicker',
    ['js!SBIS3.CONTROLS.TextBox',
     'js!SBIS3.CONTROLS._PickerMixin',
-    'html!SBIS3.CONTROLS.ColorPicker',
+    'html!SBIS3.CONTROLS.ColorPicker/resources/ColorSquare',
     'js!SBIS3.CONTROLS.ColorPicker/resources/colpick',
     'css!SBIS3.CONTROLS.ColorPicker/resources/colpick'
-   ], function(TextBox, _PickerMixin, arrowTplFn) {
+   ], function(TextBox, _PickerMixin, ColorSquareTpl) {
 
    'use strict';
 
@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.ColorPicker',
          _byKeyUp: true,
          _wasCreated: false,
          _options: {
-            afterFieldWrapper: arrowTplFn
+            afterFieldWrapper: ColorSquareTpl
          }
       },
 

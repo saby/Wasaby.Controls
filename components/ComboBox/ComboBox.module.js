@@ -3,9 +3,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CONTROLS._PickerMixin',
    'js!SBIS3.CONTROLS._CollectionMixin',
    'js!SBIS3.CONTROLS._SelectorMixin',
-   'html!SBIS3.CONTROLS.ComboBox',
+   'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxItemTpl'
-], function(TextBox, _PickerMixin, _CollectionMixin, _SelectorMixin, arrowTplFn, itemTpl) {
+], function(TextBox, _PickerMixin, _CollectionMixin, _SelectorMixin, arrowTpl, itemTpl) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора. Есть настройка которая позволяет также  вручную вводить значения.
@@ -21,11 +21,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    var ComboBox = TextBox.extend([_PickerMixin, _CollectionMixin, _SelectorMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       /*_dotTplFn : dotTpl,*/
       $protected: {
-         _itemTpl : '',
+         _itemTpl : itemTpl,
          _displayField : '',
          _options: {
-            afterFieldWrapper: arrowTplFn,
-            beforeFieldWrapper: arrowTplFn,
+            afterFieldWrapper: arrowTpl,
             /**
              * @cfg {Boolean} Разрешить ручной ввод значений
              */
@@ -52,9 +51,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
          if (this._options.itemTemplate) {
             this._itemTpl = this._options.itemTemplate;
-         }
-         else {
-            this._itemTpl = itemTpl;
          }
 
          if (this._items.getItemsCount()) {
