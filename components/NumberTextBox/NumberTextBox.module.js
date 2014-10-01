@@ -56,11 +56,11 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _arrowUpClick: function(){
-         this.setText(this._changeNumberByOne(-1));
+         this.setText(this._getSibling(this.getText(),-1));
       },
 
       _arrowDownClick: function(){
-         this.setText(this._changeNumberByOne(1));
+         this.setText(this._getSibling(this.getText(),1));
       },
 
       _keyPressBind: function (e) {
@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          e.preventDefault();
       },
 
-      _changeNumberByOne: function (a, val) {
+      _getSibling: function ( val, a) {
          var self = this,
              value = val || this.getText();
          if (value === '') {

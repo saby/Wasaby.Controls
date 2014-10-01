@@ -75,11 +75,11 @@ define('js!SBIS3.Genie.UnitEditor',
          },
 
          _arrowUpClick: function(){
-            this.setText(this._changeNumberByOne(-1, parseFloat(this.getText())) + this._currentUnit);
+            this.setText(this._getSibling(parseFloat(this.getText())) + this._currentUnit, -1);
          },
 
          _arrowDownClick: function(){
-            this.setText(this._changeNumberByOne(1, parseFloat(this.getText())) + this._currentUnit);
+            this.setText(this._getSibling(parseFloat(this.getText())) + this._currentUnit, 1);
          },
 
          //Разделяем текст на число и единицу измерения
