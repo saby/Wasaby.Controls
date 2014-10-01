@@ -20,7 +20,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     */
 
    var ComboBox = TextBox.extend([_PickerMixin, _CollectionMixin, _SelectorMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
-      /*_dotTplFn : dotTpl,*/
       $protected: {
          _itemTpl : itemTpl,
          _displayField : '',
