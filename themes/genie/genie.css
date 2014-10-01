@@ -77,17 +77,19 @@
    box-sizing: border-box;
 }
 
-.controls-TextBox__optionsContainer {
+.controls-TextBox__afterFieldWrapper{
    float: right;
    width: 16px;
    min-height: 19px;
    height: 100%;
+   position: relative;
 }
 
-.controls-TextBox__optionsContainer + .controls-TextBox__fieldWrapper {
+.controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
    margin-right: 19px;
    margin-left: 2px;
 }
+
 
 .controls-TextBox__field {
    border: none;
@@ -144,6 +146,7 @@
 .controls-ComboBox {
    padding-right: 4px;
 }
+
 .controls-TextBox__optionsContainer {
    position: relative;
 }
@@ -161,7 +164,7 @@
    height: 16px;
 }
 
-.controls-ComboBox__arrowDown:hover, .controls-ComboBox__manual-false:hover .controls-ComboBox__arrowDown{
+.controls-ComboBox__arrowDown:hover, .controls-ComboBox__manual-false:hover .controls-ComboBox__arrowDown {
    text-decoration: none;
    background-position: 0 -16px;
 }
@@ -175,15 +178,17 @@
    color: #ffffff;
    background-color: #00d7d7;
 }
+
 .controls-ComboBox__itemRow__selected {
    color: #999999;
 }
 
-.controls-ComboBox__field__manual-false {
+.controls-ComboBox__field__isEditable-false,
+.controls-ComboBox__field__isEditable-false .controls-TextBox__field {
    cursor: pointer;
 }
 
-.controls-ComboBox__manual-false.controls-Picker__show .controls-ComboBox__field{
+.controls-ComboBox__manual-false.controls-Picker__show .controls-ComboBox__field {
    color: #D1D1D4;
 }
 
@@ -246,3 +251,4 @@
 .controls-NumberTextBox__arrowUp:hover {
    background-position: center -24px;
 }
+

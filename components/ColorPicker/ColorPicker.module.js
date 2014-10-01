@@ -4,10 +4,10 @@
 define('js!SBIS3.CONTROLS.ColorPicker',
    ['js!SBIS3.CONTROLS.TextBox',
     'js!SBIS3.CONTROLS._PickerMixin',
-    'html!SBIS3.CONTROLS.ColorPicker',
+    'html!SBIS3.CONTROLS.ColorPicker/resources/ColorSquare',
     'js!SBIS3.CONTROLS.ColorPicker/resources/colpick',
     'css!SBIS3.CONTROLS.ColorPicker/resources/colpick'
-   ], function(TextBox, _PickerMixin, dotTpl) {
+   ], function(TextBox, _PickerMixin, ColorSquareTpl) {
 
    'use strict';
 
@@ -19,18 +19,20 @@ define('js!SBIS3.CONTROLS.ColorPicker',
     */
 
    var ColorPicker = TextBox.extend( [_PickerMixin],/** @lends SBIS3.CONTROLS.ColorPicker.prototype */{
-      _dotTplFn : dotTpl,
       $protected: {
          _colorBox: null,
          _byKeyUp: true,
          _wasCreated: false,
          _options: {
-
+            afterFieldWrapper: ColorSquareTpl,
+            textTransform: 'uppercase',
+            maxLength: 6
          }
       },
 
       $constructor: function() {
          var self = this;
+         self.getContainer().addClass('controls-ColorPicker');
          self._colorBox = $('.js-controls-ColorPicker__currentColor', this.getContainer().get(0));
          self._colorBox.css('background', '#' + self._options.text || '000000');
          self._colorBox.bind('click',function(){

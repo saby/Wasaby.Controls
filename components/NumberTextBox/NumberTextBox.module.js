@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 28.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SBIS3.CONTROLS.NumberTextBox'], function (TextBox, dotTplFn) {
+define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows'], function (TextBox, arrowTpl) {
 
    'use strict';
    /**
@@ -13,10 +13,10 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
    var NumberTextBox;
    NumberTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS.NumberTextBox.prototype */ {
-      _dotTplFn: dotTplFn,
       $protected: {
          _inputField: null,
          _options: {
+            afterFieldWrapper: arrowTpl,
             /**
              * @cfg {Boolean} Признак ввода только положительных чисел
              * Возможные значения:
@@ -46,6 +46,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       $constructor: function () {
          var self = this;
          this._publish('onChangeText');
+         this.getContainer().addClass('controls-NumberTextBox');
          $('.js-controls-NumberTextBox__arrowDown', this.getContainer().get(0)).click(function () {
             self._arrowUpClick();
          });
@@ -53,6 +54,14 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          $('.js-controls-NumberTextBox__arrowUp', this.getContainer().get(0)).click(function () {
             self._arrowDownClick();
          });
+      },
+
+      setText: function (text) {
+         var self = this;
+         if (self._options.numberFractDigits && !self._options.onlyInteger) {
+            text = parseFloat(text).toFixed(self._options.numberFractDigits);
+         }
+         NumberTextBox.superclass.setText.call(self, text);
       },
 
       _arrowUpClick: function(){
@@ -94,7 +103,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          if (a == -1 && !(self._options.onlyPositive && parseFloat(value) < 1 )) {
             value = parseFloat(value) - 1;
          }
-
          if (self._options.numberFractDigits && !self._options.onlyInteger) {
             return(parseFloat(value).toFixed(self._options.numberFractDigits));
          } else {
