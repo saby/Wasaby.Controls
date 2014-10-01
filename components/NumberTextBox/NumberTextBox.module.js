@@ -84,7 +84,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
       _getSibling: function ( val, a) {
          var self = this,
-             value = val || this.getText();
+             value = val;
          if (value === '') {
             value = '0';
          }

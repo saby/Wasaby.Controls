@@ -70,16 +70,23 @@ define('js!SBIS3.Genie.UnitEditor',
 
          setText: function (text) {
             var p = this._parseUnit(text);
-            UnitEditor.superclass.setText.call(this,p[0]);
+            if (p[1] == '-'){
+               UnitEditor.superclass.setText.call(this,'auto');
+               this._inputField.attr('readonly','readonly');
+               this._options.text = 100;
+            } else {
+               this._inputField.removeAttr('readonly');
+               UnitEditor.superclass.setText.call(this,p[0]);
+            }
             this._setUnit(p[1]);
          },
 
          _arrowUpClick: function(){
-            this.setText(this._getSibling(parseFloat(this.getText())) + this._currentUnit, -1);
+            this.setText(this._getSibling(parseFloat(this.getText()),-1)+ this._currentUnit);
          },
 
          _arrowDownClick: function(){
-            this.setText(this._getSibling(parseFloat(this.getText())) + this._currentUnit, 1);
+            this.setText(this._getSibling(parseFloat(this.getText()),1)+ this._currentUnit);
          },
 
          //Разделяем текст на число и единицу измерения
@@ -98,13 +105,6 @@ define('js!SBIS3.Genie.UnitEditor',
          _setUnit: function(unit){
             this._unitSelector.html(unit);
             this._currentUnit = unit;
-            if (unit == '-'){
-               UnitEditor.superclass.setText.call(this,'auto');
-               this._inputField.attr('readonly','readonly');
-               this._options.text = 100;
-            } else {
-               this._inputField.removeAttr('readonly');
-            }
          },
 
          _drawUnits: function () {
