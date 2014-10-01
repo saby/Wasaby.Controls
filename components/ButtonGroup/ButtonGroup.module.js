@@ -10,7 +10,6 @@ define('js!SBIS3.CONTROLS.ButtonGroup', ['js!SBIS3.CONTROLS.ToolbarBase'], funct
     * Контрол, отображающий несколько кнопок рядом.
     * @class SBIS3.CONTROLS.ButtonGroup
     * @extends SBIS3.CONTROLS.ToolbarBase
-    * @control
     */
 
    var ButtonGroup = ToolbarBase.extend( /** @lends SBIS3.CONTROLS.ButtonGroup.prototype */ {

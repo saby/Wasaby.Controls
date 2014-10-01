@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.ToggleButton', ['js!SBIS3.CONTROLS.ToggleButtonBase', 
     * @class SBIS3.CONTROLS.ToggleButton
     * @extends SBIS3.CONTROLS.ToggleButtonBase
     * @control
+    * @category Buttons
     */
 
    var ToggleButton = ToggleButtonBase.extend( /** @lends SBIS3.CONTROLS.ToggleButton.prototype */ {

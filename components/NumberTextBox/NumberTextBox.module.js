@@ -9,7 +9,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     * Поле ввода, куда можно вводить только числовые значения
     * @class SBIS3.CONTROLS.NumberTextBox
     * @extends SBIS3.CONTROLS.TextBox
-    * @control
     */
 
    var NumberTextBox;
@@ -19,11 +18,21 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          _options: {
             afterFieldWrapper: arrowTpl,
             /**
-             * @cfg {Boolean} Можно вводить только положительыне
+             * @cfg {Boolean} Признак ввода только положительных чисел
+             * Возможные значения:
+             * <ul>
+             *    <li>true - ввод только положительных чисел;</li>
+             *    <li>false - нет ограничения на знак вводимых чисел.</li>
+             * </ul>
              */
             onlyPositive: false,
             /**
-             * @cfg {Boolean} Можно вводить только целые
+             * @cfg {Boolean} Признак ввода только целых чисел
+             * Возможные значения:
+             * <ul>
+             *    <li>true - ввод только целых чисел;</li>
+             *    <li>false - возможен ввод дробных чисел.</li>
+             * </ul>
              */
             onlyInteger: false,
             /**

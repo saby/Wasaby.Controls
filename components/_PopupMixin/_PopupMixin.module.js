@@ -93,7 +93,10 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function() {
             offset = this._options.target.offset();
             offset.top += this._options.target.outerHeight();
             //Проверям убираемся ли в экран
-            if ($(document).width() <= this._container.width() + this._container.offset().left){
+            if ($(document).height() <= this._container.outerHeight() + offset.top){
+               offset.top -= ( this._options.target.height() + this._container.outerHeight());
+            }
+            if ($(document).width() <= this._container.outerWidth() + offset.left){
                offset.left += this._options.target.outerWidth() - this._container.outerWidth();
             }
          }
@@ -102,8 +105,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function() {
             'top' : offset.top + this._options.top
          });
       },
-
-
 
       before : {
          destroy : function() {
