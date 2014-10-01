@@ -26,6 +26,7 @@ define('js!SBIS3.Genie.UnitEditor',
             _currentUnit: null,
             _units: ['px','%','-'],
             _unitSelector: null,
+            _unitText: null,
             _options: {}
          },
 
@@ -33,8 +34,9 @@ define('js!SBIS3.Genie.UnitEditor',
             var self = this;
 
             this._unitSelector = $('.js-controls-UnitEditor__unitSelector', this._container);
+            this._unitText = $('.js-controls-UnitEditor__unitText', this._container);
             this._currentUnit = this._units[0];
-            this._unitSelector.html(this._currentUnit);
+            this._unitText.html(this._currentUnit);
             this._drawUnits();
 
             //Устанавливаем нормальное значение если текст передан в опции
@@ -50,12 +52,19 @@ define('js!SBIS3.Genie.UnitEditor',
             }
 
             this._unitSelector.click(function () {
+               self._unitSelector.toggleClass('controls-UnitEditor__unitSelector__toggled controls-UnitEditor__unitSelector__untoggled');
                self.togglePicker();
+
+            });
+
+            this._unitSelector.bind('mousedown',function () {
+               return false;
             });
 
             $('.controls-UnitEditor__unit', this._picker._container).click(function (e) {
                self.setText(self._options.text + $(e.target).html());
                self.hidePicker();
+               self._unitSelector.toggleClass('controls-UnitEditor__unitSelector__toggled controls-UnitEditor__unitSelector__untoggled');
             });
          },
 
@@ -103,15 +112,17 @@ define('js!SBIS3.Genie.UnitEditor',
          },
 
          _setUnit: function(unit){
-            this._unitSelector.html(unit);
+            this._unitText.html(unit);
             this._currentUnit = unit;
          },
 
          _drawUnits: function () {
+            var container = $('<div></div>');
             for (var i = 0; i < 3; i++) {
-               this._picker.getContainer().append('<div class="controls-UnitEditor__unit">' + this._units[i] + '</div>');
-               this._picker.getContainer().addClass('controls-UnitEditor__units');
+               container.append('<div class="controls-UnitEditor__unit">' + this._units[i] + '</div>');
             }
+            this._picker.getContainer().append(container);
+            container.addClass('controls-UnitEditor__units');
          }
 
       });
