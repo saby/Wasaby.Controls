@@ -26,6 +26,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          _options: {
             afterFieldWrapper: arrowTpl,
             /**
+             * @cfg {Boolean} Возможен ли ручной ввод текста
+             */
+            isEditable: true,
+            /**
              * @cfg {Boolean} Присутствует пустое значение или нет
              */
             emptyValue: false,
@@ -48,6 +52,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
          if (this._options.itemTemplate) {
             this._itemTpl = this._options.itemTemplate;
+         }
+
+         // запрещен ручной ввод значений
+         if(!this._options.isEditable){
+            self.getContainer().addClass('controls-ComboBox__field__isEditable-false').find('.js-controls-TextBox__field').attr('readonly', 'readonly');
          }
 
          if (this._items.getItemsCount()) {

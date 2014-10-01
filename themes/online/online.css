@@ -299,6 +299,8 @@
    font-size: 12px;
 }
 
+/* NumberTextBox */
+
 .controls-NumberTextBox {
    text-align: right;
 }
@@ -352,6 +354,4 @@
    background-position: 0 33px;
 }
 
-
-/* NumberTextBox */
 
