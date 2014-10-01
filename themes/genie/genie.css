@@ -64,7 +64,7 @@
    box-sizing: border-box;
    padding: 0 7px;
    border: 1px solid #d1d1d4;
-   height: 22px;
+   height: 25px;
    border-radius: 2px;
 }
 
@@ -205,4 +205,44 @@
 .controls-ComboBox__picker.controls-Picker__owner__hover {
    border-top-color: #00d7d7;
 }
+/*NumberTextBox*/
+.controls-TextBox.controls-NumberTextBox {
+   text-align: right;
+   padding-right: 0;
+}
 
+.controls-NumberTextBox__fieldWrapper {
+   margin-right: 14px;
+   height: 100%;
+}
+
+.controls-NumberTextBox__arrow {
+   background-repeat: no-repeat;
+   text-decoration: none;
+   display: block;
+   width: 100%;
+   min-height: 11px;
+   border-left: 1px solid #d1d1d4;
+   background-image: url('img/NumberTextBox-arrow.png')
+}
+.controls-NumberTextBox__arrow:hover {
+   background-color: #00d7d7;
+}
+
+
+.controls-NumberTextBox__arrowDown {
+   border-top: 1px solid #d1d1d4;
+   background-position: center -12px;
+}
+
+.controls-NumberTextBox__arrowUp {
+   background-position: center 0;
+}
+
+.controls-NumberTextBox__arrowDown:hover {
+   background-position: center -36px;
+}
+
+.controls-NumberTextBox__arrowUp:hover {
+   background-position: center -24px;
+}
