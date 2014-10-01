@@ -77,17 +77,19 @@
    box-sizing: border-box;
 }
 
-.controls-TextBox__optionsContainer {
+.controls-TextBox__afterFieldWrapper{
    float: right;
    width: 16px;
    min-height: 19px;
    height: 100%;
+   position: relative;
 }
 
-.controls-TextBox__optionsContainer + .controls-TextBox__fieldWrapper {
+.controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
    margin-right: 19px;
    margin-left: 2px;
 }
+
 
 .controls-TextBox__field {
    border: none;
