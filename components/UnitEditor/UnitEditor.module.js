@@ -39,8 +39,8 @@ define('js!SBIS3.Genie.UnitEditor',
 
             //Устанавливаем нормальное значение если текст передан в опции
             if (this._options.text){
-               this._options.text = this._parseUnit(this._options.text)[0];
                this._currentUnit = this._parseUnit(this._options.text)[1];
+               this._options.text = this._parseUnit(this._options.text)[0];
                if (this._options.text == 'auto'){
                   $('.controls-TextBox__field', this.getContainer().get(0)).attr('value', 'auto');
                } else {
@@ -61,8 +61,8 @@ define('js!SBIS3.Genie.UnitEditor',
 
          getText: function () {
             var text = UnitEditor.superclass.getText.call(this);
-            if (text == 'auto') {
-               return text;
+            if (this._currentUnit == '-') {
+               return 'auto';
             } else {
                return text + this._currentUnit;
             }
@@ -74,12 +74,20 @@ define('js!SBIS3.Genie.UnitEditor',
             this._setUnit(p[1]);
          },
 
+         _arrowUpClick: function(){
+            this.setText(this._changeNumberByOne(-1, parseFloat(this.getText())) + this._currentUnit);
+         },
+
+         _arrowDownClick: function(){
+            this.setText(this._changeNumberByOne(1, parseFloat(this.getText())) + this._currentUnit);
+         },
+
          //Разделяем текст на число и единицу измерения
          _parseUnit: function(text){
             var value = parseFloat(text),
                unit = text.split(value)[1];
             if (unit === '') {
-               unit = this._currentUnit;
+               unit = '-';
             }
             if (isNaN(value)){
                unit = '-';

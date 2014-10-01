@@ -56,11 +56,11 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _arrowUpClick: function(){
-         this._changeNumberByOne(-1);
+         this.setText(this._changeNumberByOne(-1));
       },
 
       _arrowDownClick: function(){
-         this._changeNumberByOne(1);
+         this.setText(this._changeNumberByOne(1));
       },
 
       _keyPressBind: function (e) {
@@ -82,9 +82,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          e.preventDefault();
       },
 
-      _changeNumberByOne: function (a) {
+      _changeNumberByOne: function (a, val) {
          var self = this,
-             value = this.getText();
+             value = val || this.getText();
          if (value === '') {
             value = '0';
          }
@@ -94,10 +94,11 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          if (a == -1 && !(self._options.onlyPositive && parseFloat(value) < 1 )) {
             value = parseFloat(value) - 1;
          }
+
          if (self._options.numberFractDigits && !self._options.onlyInteger) {
-            self.setText(parseFloat(value).toFixed(self._options.numberFractDigits));
+            return(parseFloat(value).toFixed(self._options.numberFractDigits));
          } else {
-            self.setText(value.toString());
+            return(value.toString());
          }
       }
    });
