@@ -37,6 +37,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       $constructor: function () {
          var self = this;
          this._publish('onChangeText');
+         this.getContainer().addClass('controls-NumberTextBox');
          $('.js-controls-NumberTextBox__arrowDown', this.getContainer().get(0)).click(function () {
             self._arrowUpClick();
          });
@@ -44,6 +45,14 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          $('.js-controls-NumberTextBox__arrowUp', this.getContainer().get(0)).click(function () {
             self._arrowDownClick();
          });
+      },
+
+      setText: function (text) {
+         var self = this;
+         if (self._options.numberFractDigits && !self._options.onlyInteger) {
+            text = parseFloat(text).toFixed(self._options.numberFractDigits);
+         }
+         NumberTextBox.superclass.setText.call(self, text);
       },
 
       _arrowUpClick: function(){
@@ -85,11 +94,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          if (a == -1 && !(self._options.onlyPositive && parseFloat(value) < 1 )) {
             value = parseFloat(value) - 1;
          }
-         if (self._options.numberFractDigits && !self._options.onlyInteger) {
-            self.setText(parseFloat(value).toFixed(self._options.numberFractDigits));
-         } else {
-            self.setText(value.toString());
-         }
+
+         self.setText(value);
       }
    });
 

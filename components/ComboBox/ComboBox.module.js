@@ -26,10 +26,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          _options: {
             afterFieldWrapper: arrowTpl,
             /**
-             * @cfg {Boolean} Разрешить ручной ввод значений
-             */
-            manualInput : true,
-            /**
              * @cfg {Boolean} Присутствует пустое значение или нет
              */
             emptyValue: false,
@@ -42,6 +38,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       $constructor: function() {
          var self = this;
+         self.getContainer().addClass('controls-ComboBox');
          if (this._options.displayField) {
             this._displayField = this._options.displayField;
          }

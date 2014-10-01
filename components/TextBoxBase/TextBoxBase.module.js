@@ -39,6 +39,10 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
              */
             placeholder: '',
             /**
+             * @cfg {Boolean} Запретить изменять поле пользователем
+             */
+            readOnly : false,
+            /**
              * @cfg {Boolean} Выделять или нет текст в поле при получении фокуса
              * Возможные значения при получении полем фокуса:
              * <ul>
