@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ToggleButtonBase', 'htm
     * @extends SBIS3.CONTROLS.ToggleButtonBase
     * @mixes SBIS3.CONTROLS._FormWidgetMixin
     * @control
+    * @public
     * @category Inputs
     */
 
