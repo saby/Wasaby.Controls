@@ -1,80 +1,64 @@
-/* Button */
-
 .controls-Button {
-   background-color: #F2F2F2;
-   cursor: pointer;
-   border: none;
-   padding: 0 16px;
-   height: 40px;
-   box-sizing: border-box;
-   font-size: 14px;
-   text-align: center;
-   color: #333333;
+  background-color: #F2F2F2;
+  cursor: pointer;
+  border: none;
+  padding: 0 16px;
+  height: 40px;
+  box-sizing: border-box;
+  font-size: 14px;
+  text-align: center;
+  color: #333333;
 }
-
 .controls-Button__primary {
-   background-color: #FFCC99;
+  background-color: #FFCC99;
 }
-
 .controls-Button:hover {
-   background-color: white;
+  background-color: white;
 }
-
-.controls-Button__big{
-   height: 58px;
-   font-size: 18px;
+.controls-Button__big {
+  height: 58px;
+  font-size: 18px;
 }
-
-/* TextBox */
-
 .controls-TextBox {
-   display: inline-block;
-   box-sizing: border-box;
-   padding: 0 5px;
-   border: 1px solid transparent;
-   border-bottom: 1px solid #666666;
-   height: 40px;
+  display: inline-block;
+  box-sizing: border-box;
+  padding: 0 5px;
+  border: 1px solid transparent;
+  border-bottom: 1px solid #666666;
+  height: 40px;
 }
-
 .controls-TextBox:hover {
-   border: 1px solid #666666;
+  border: 1px solid #666666;
 }
-
-.controls-TextBox:focus{
-   background: #444E57;
+.controls-TextBox:focus {
+  background: #444E57;
 }
-
 .controls-TextBox__fieldWrapper {
-   height: 100%;
-   box-sizing: border-box;
+  height: 100%;
+  box-sizing: border-box;
 }
-
 .controls-TextBox__optionsContainer {
-   float: right;
-   width: 16px;
-   min-height: 19px;
-   height: 100%;
+  float: right;
+  width: 16px;
+  min-height: 19px;
+  height: 100%;
 }
-
 .controls-TextBox__field {
-   border: none;
-   min-height: 19px;
-   height: 99%;
-   width: 100%;
-   margin: 0;
-   box-sizing: border-box;
-   line-height: 100%;
-   font-size: 14px;
-   outline: none;
-   background: none;
-   color: #ffffff;
+  border: none;
+  min-height: 19px;
+  height: 99%;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  line-height: 100%;
+  font-size: 14px;
+  outline: none;
+  background: none;
+  color: #ffffff;
 }
-
 .controls-TextBox__field-uppercase {
-   text-transform: uppercase;
+  text-transform: uppercase;
 }
-
 .controls-TextBox__field-lowercase {
-   text-transform: lowercase;
+  text-transform: lowercase;
 }
-
