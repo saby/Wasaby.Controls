@@ -4,13 +4,13 @@ define('js!SBIS3.CONTROLS.AdapterJSON', ['js!SBIS3.CONTROLS.AdapterBase'], funct
       $constructor : function() {
 
       },
-      iterate : function(data, hdlFunction, hierIterate) {
-         /*if (hierIterate) {
-            this._hierIterate(data, hdlFunction);
+      iterate : function(data, hdlFunction, keyField, hierField) {
+         if (hierField) {
+            this._hierIterate(data, hdlFunction, keyField, hierField);
          }
-         else {*/
+         else {
             this._simpleIterate(data, hdlFunction);
-         /*}*/
+         }
 
       },
 
@@ -19,6 +19,29 @@ define('js!SBIS3.CONTROLS.AdapterJSON', ['js!SBIS3.CONTROLS.AdapterBase'], funct
             hdlFunction(data[i], i);
          }
       },
+
+      _hierIterate : function(data, hdlFunction, keyField, hierField) {
+         var
+            self = this,
+            parItem = null,
+            lvl = -1;
+         function recursiveWalk(idParent) {
+            lvl++;
+            self._simpleIterate(data, function(item, i){
+               var key = self.getValue(item, keyField);
+               //корневой элемент
+               if (self.getValue(item, hierField) == idParent) {
+                  hdlFunction(data[i], i, parItem, lvl);
+                  parItem = data[i];
+                  recursiveWalk(key);
+               }
+            });
+            parItem = null;
+            lvl--;
+         }
+         recursiveWalk(null);
+      },
+
       getValue : function(item, field) {
          return item[field];
       },
@@ -51,23 +74,5 @@ define('js!SBIS3.CONTROLS.AdapterJSON', ['js!SBIS3.CONTROLS.AdapterBase'], funct
       getIndexOf: function(data, item){
          return data.indexOf(item);
       }
-
-      /*_hierIterate : function(data, hdlFunction) {
-         var
-            hierField = this._options.hierField,
-            lvl = -1;
-         function recursiveWalk(idParent) {
-            lvl++;
-            for (var i = 0; i < data.length; i++) {
-               //корневой элемент
-               if (data[i][hierField] == idParent) {
-                  hdlFunction(data[i], i, lvl);
-                  recursiveWalk.call(this, key);
-               }
-            }
-            lvl--;
-         }
-         recursiveWalk.call(this, null);
-      }*/
    });
 });

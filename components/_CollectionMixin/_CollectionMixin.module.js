@@ -43,11 +43,7 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
          else {
             this._initItems([]);
          }
-         if (!this._options.itemTemplate){
-            this._dotItemTpl = doT.template('<div data-key="{{=it.key}}">{{=it.title}}</div>');
-         } else {
-            this._dotItemTpl = doT.template(this._options.itemTemplate);
-         }
+
       },
 
       /**
@@ -83,8 +79,10 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
          var self = this,
             container = this._getItemsContainer();
          container.empty();
-         this._items.iterate(function (item, key, i, lvl) {
-            container.append($(self._buildMarkup(self._dotItemTpl, item)).css('margin-left', lvl*20));
+         this._items.iterate(function (item, key, i, parItem, lvl) {
+            var itemContainer = $("<div data-id='"+ key +"'></div>");
+            container.append(itemContainer.css('margin-left', lvl * 10));
+            self._drawItem(itemContainer, item);
          }, !!(this._options.hierField));
          this._loadChildControls();
       },
@@ -105,6 +103,24 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
 
       _getItemsContainer: function(){
          return this._container;
+      },
+
+      _drawItem : function(itemContainer, item) {
+         var
+            def = new $ws.proto.Deferred(),
+            itemTpl = this._options.itemTemplate;
+         if (typeof itemTpl == 'string') {
+            this._drawTpl(itemContainer, item)
+         }
+         else if (typeof itemTpl == 'function') {
+            var fncTpl = itemTpl.call(item);
+         }
+         return def;
+      },
+
+      _drawTpl : function(itemContainer, item) {
+         var id = itemContainer.attr('data-id');
+         itemContainer.append(doT.template(this._options.itemTemplate)(item));
       }
    };
 

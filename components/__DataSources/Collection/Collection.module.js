@@ -3,6 +3,7 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
       $protected : {
          _data : [],
          _index : {},
+         _indexChild : {},
          _keyField : null,
          _hierField : null,
          _hierIterateFlags : {},
@@ -37,11 +38,6 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
 
       },
 
-      deleteItem : function() {
-
-      },
-
-
       /**
        * Получить элемент коллекции по идентификатору
        * @param {String} key идентификатор
@@ -64,7 +60,8 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
        * @param {String} key идентификатор
        */
       getPreviousItem: function(key){
-         return this._adapter.getSibling(this._data, key, 'prev');
+         var item = this.getItem(key);
+         return this._adapter.getSibling(this._data, item, 'prev');
       },
 
       getKey : function(item) {
@@ -77,29 +74,31 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
       },
 
       /*TODO проброс метода в Adapter*/
-      iterate : function(hdlFunction, hierIterate) {
+      iterate : function(hdlFunction, hierField) {
          var self = this;
-         this._adapter.iterate(this._data, function(item, i){
+         this._adapter.iterate(this._data, function(item, i, parItem, lvl){
             var key;
             if (self._keyField) {
                key = self.getValue(item, self._keyField);
             }
-            hdlFunction(item, key, i);
-         }, hierIterate)
+            hdlFunction(item, key, i, parItem, lvl);
+         }, self._keyField, self._hierField)
       },
 
       getValue : function(item, field) {
          return this._adapter.getValue(item, field);
       },
 
+
+
       _reindex : function() {
          this._index = {};
          var self = this;
 
 
-         this.iterate(function(item, key, i){
+         this.iterate(function(item, key, i, parItem, lvl){
             self._addToIndex(item, key, i);
-         }, this._hierField);
+         });
       },
 
       _addToIndex : function(item, key, number) {
