@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], func
 
             this._checkPossibleMask();
 
-            this._inputField = $('.' + this.getContainer().get(0).classList[0] + '__field', this.getContainer().get(0));
+            this._inputField = $('.controls-FormattedTextBox__field', this.getContainer().get(0));
 
             this._primalMask = this._options.mask;
             this._controlCharacters = this._getControlCharactersSet();
@@ -453,9 +453,8 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], func
        * @private
        */
       _getHtmlContainer: function(container, type){
-         var inputClass = this.getContainer().get(0).classList[0];
-         if (type == 'placeholder'){return '<span class="'+inputClass+'__field-placeholder">' + container + '</span>';}
-         else if (type == 'separator') {return '<span class="'+inputClass+'__field-separator">' + container + '</span>'}
+         if (type == 'placeholder'){return '<span class="controls-FormattedTextBox__field-placeholder">' + container + '</span>';}
+         else if (type == 'separator') {return '<span class="controls-FormattedTextBox__field-separator">' + container + '</span>'}
       },
       
       /**
