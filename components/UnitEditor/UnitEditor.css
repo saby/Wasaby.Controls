@@ -46,8 +46,8 @@
 }
 
 .controls-UnitEditor__units{
-   margin-right: 14px;
    margin-top: -2px;
+   width: 70px!important;
    border: 1px solid #CCCCCC;
    border-top-left-radius: 5px;
    border-bottom-left-radius: 5px;

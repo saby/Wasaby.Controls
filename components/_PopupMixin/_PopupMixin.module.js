@@ -144,7 +144,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function() {
          offset.left += buf.left;
          offset.top += buf.top;
          offset = this._displaySizeCorrection(offset);
-         //console.log(offset);
          return offset;
       },
 
@@ -153,7 +152,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function() {
          var offset = {
             'top': 0,
             'left': 0
-         };
+            };
 
          if (vert == 'bottom'){
             offset.top -= this._container.height();
@@ -170,8 +169,9 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function() {
       // Вычисляем сдвиг в зависимости от угла
       _getOffsetByCorner: function(corner){
          var offset = this._options.target.offset(),
+             border = this._options.target.outerWidth() - this._options.target.innerWidth(),
              height = this._options.target.outerHeight(),
-             width = this._options.target.width();
+             width = this._options.target.outerWidth() - border;
          switch (corner){
             case 'tr': offset.left += width;
                return offset;
@@ -180,7 +180,8 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function() {
             case 'br': offset.top += height;
                offset.left+= width;
                return offset;
-            default : return offset; //tl
+            case 'tl' : return offset; //tl
+            default: throw new Error('Параметр corner является обязательным');
          }
       },
 
