@@ -1,3 +1,9 @@
+.mixin_gray_border {
+  border: 1px solid #d1d1d4;
+}
+.mixin_gray_border:hover {
+  border-color: #00d7d7;
+}
 .controls-Button {
   cursor: pointer;
   text-align: center;
@@ -11,8 +17,10 @@
   color: #919197;
 }
 .controls-Button:hover {
-  color: #ffffff;
   border-color: #00d7d7;
+}
+.controls-Button:hover {
+  color: #ffffff;
   background-color: #00d7d7;
 }
 .controls-Button.controls-ToggleButton__checked {
@@ -179,7 +187,7 @@
   cursor: pointer;
 }
 .controls-ComboBox__manual-false.controls-Picker__show .controls-ComboBox__field {
-  color: #d1d1d4;
+  color: #919197;
 }
 .controls-ComboBox__manual-false:hover .controls-ComboBox__field {
   color: #00d7d7;
@@ -189,7 +197,7 @@
   height: 100%;
 }
 .controls-ComboBox__picker {
-  border: 1px solid #d1d1d4;
+  border: 1px solid #919197;
   margin-top: -2px;
   border-radius: 0 0 2px 2px;
 }
