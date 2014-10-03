@@ -154,6 +154,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          /*устанавливаем ключ, когда текст изменен извне*/
          var
             selKey,
+            oldKey = this._selectedItem,
             self = this,
             text = this._options.text;
          this._items.iterate(function(item, key){
@@ -162,6 +163,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
          });
          this._selectedItem = selKey || null;
+         if (oldKey !== this._selectedItem) { // при повторном индексе null не стреляет событием
+            this._notifySelectedItem(this._selectedItem);
+         }
       },
 
       setValue: function(key){
