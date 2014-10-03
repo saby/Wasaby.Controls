@@ -1,3 +1,5 @@
+@border-color: #d1d1d4;
+
 .controls-TextBox.controls-NumberTextBox {
    text-align: right;
    padding-right: 0;
@@ -14,7 +16,7 @@
    display: block;
    width: 100%;
    min-height: 11px;
-   border-left: 1px solid #d1d1d4;
+   border-left: 1px solid @border-color;
    background-image: url('img/NumberTextBox-arrow.png')
 }
 .controls-NumberTextBox__arrow:hover {
@@ -23,7 +25,7 @@
 
 
 .controls-NumberTextBox__arrowDown {
-   border-top: 1px solid #d1d1d4;
+   border-top: 1px solid @border-color;
    background-position: center -12px;
 }
 

@@ -1,9 +1,8 @@
+@base-color: #D1D1D4;
+@base-color-hover:  #00d7d7;
+
 .controls-ComboBox {
    padding-right: 4px;
-}
-
-.controls-TextBox__optionsContainer {
-   position: relative;
 }
 
 .controls-ComboBox__arrowDown {
@@ -31,7 +30,7 @@
 
 .controls-ComboBox__itemRow:hover {
    color: #ffffff;
-   background-color: #00d7d7;
+   background-color: @base-color-hover;
 }
 
 .controls-ComboBox__itemRow__selected {
@@ -44,11 +43,11 @@
 }
 
 .controls-ComboBox__manual-false.controls-Picker__show .controls-ComboBox__field {
-   color: #D1D1D4;
+   color: @base-color;
 }
 
 .controls-ComboBox__manual-false:hover .controls-ComboBox__field {
-   color: #00d7d7;
+   color: @base-color-hover;
 }
 
 .controls-ComboBox__inputWrapper {
@@ -57,11 +56,11 @@
 }
 
 .controls-ComboBox__picker {
-   border: 1px solid #d1d1d4;
+   border: 1px solid @base-color;
    margin-top: -2px;
    border-radius: 0 0 2px 2px;
 }
 
 .controls-ComboBox__picker.controls-Picker__owner__hover {
-   border-top-color: #00d7d7;
+   border-top-color: @base-color-hover;
 }
