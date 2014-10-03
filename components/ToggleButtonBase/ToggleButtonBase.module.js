@@ -36,6 +36,7 @@ define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase'], f
       },
 
       $constructor: function() {
+         this._publish('onChange');
          if (!this._options.threeState) {
             this._checked = !!(this._options.checked);
          } else {
@@ -72,6 +73,7 @@ define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase'], f
                this._checked = null;
             }
          }
+         this._notify('onChange', this._checked);
       },
 
       /**

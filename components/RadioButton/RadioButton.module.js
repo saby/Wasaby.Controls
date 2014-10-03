@@ -23,8 +23,7 @@ define('js!SBIS3.CONTROLS.RadioButton', ['js!SBIS3.CONTROLS.RadioButtonBase', 'h
       },
 
       $constructor: function() {
-         var self = this;
-         this._radioButtonCaption = $('.js-controls-RadioButton__caption', self._container);
+         this._radioButtonCaption = $('.js-controls-RadioButton__caption', this._container);
       },
 
       setCaption: function(captionTxt){
