@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection'], function(Collection) {
+define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*TODO для совместимости*/'js!SBIS3.CONTROLS.AdapterJSON'], function(Collection, AdapterJSON) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -22,7 +22,8 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection'], f
             /**
              * @cfg {} Шаблон отображения каждого элемента коллекции
              */
-            itemTemplate: ''
+            itemTemplate: '',
+            hierField : null
          }
       },
 
@@ -31,7 +32,13 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection'], f
             this._keyField = this._options.keyField;
          }
          if (this._options.items) {
-            this._initItems(this._options.items);
+            if (this._options.items instanceof Collection) {
+               this._items = this._options.items;
+            }
+            else {
+               /*TODO Костыли для совместимости*/
+               this._initItems(this._options.items);
+            }
          }
          else {
             this._initItems([]);
@@ -51,6 +58,7 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection'], f
       },
 
       _initItems : function(items) {
+         /*TODO Костыли для совместимости*/
          if (!this._keyField) {
             //пробуем взять первое поле из коллекции
             var item = items[0];
@@ -59,8 +67,10 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection'], f
             }
          }
          this._items = new Collection({
-            items: items,
-            keyField: this._keyField
+            data: items,
+            keyField: this._keyField,
+            hierField: this._options.hierField,
+            adapter : new AdapterJSON()
          });
       },
 
@@ -73,9 +83,9 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection'], f
          var self = this,
             container = this._getItemsContainer();
          container.empty();
-         this._items.iterate(function (item) {
-            container.append(self._buildMarkup(self._dotItemTpl, item));
-         });
+         this._items.iterate(function (item, key, i, lvl) {
+            container.append($(self._buildMarkup(self._dotItemTpl, item)).css('margin-left', lvl*20));
+         }, !!(this._options.hierField));
          this._loadChildControls();
       },
 

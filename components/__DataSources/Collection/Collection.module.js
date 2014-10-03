@@ -1,26 +1,38 @@
 define ('js!SBIS3.CONTROLS.Collection', [], function(){
    return $ws.proto.Abstract.extend({
       $protected : {
-         _items : [],
+         _data : [],
          _index : {},
          _keyField : null,
-         options : {
-            items : [],
-            keyField : ''
+         _hierField : null,
+         _hierIterateFlags : {},
+         _adapter : null,
+         _options : {
+            adapter : null,
+            data : [],
+            keyField : '',
+            hierField : null
          }
       },
       $constructor : function() {
-         if (this._options.items) {
-            this._items = this._options.items;
-            if (this._options.keyField) {
-               this._keyField = this._options.keyField;
-            }
+         if (this._options.data) {
+            this._data = this._options.data;
+
+         }
+         if (this._options.keyField) {
+            this._keyField = this._options.keyField;
+         }
+         if (this._options.hierField) {
+            this._hierField = this._options.hierField;
+         }
+         if (this._options.adapter) {
+            this._adapter = this._options.adapter;
          }
          this._reindex();
       },
 
       addItem : function(newItem) {
-         this._items.push(newItem);
+         this._adapter.addItem(this._data, newItem);
          this._reindex();
 
       },
@@ -43,7 +55,8 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
        * @param {String} key идентификатор
        */
       getNextItem: function(key){
-         return this._getSibling(key, 'next');
+         var item = this.getItem(key);
+         return this._adapter.getSibling(this._data, item, 'next');
       },
 
       /**
@@ -51,7 +64,7 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
        * @param {String} key идентификатор
        */
       getPreviousItem: function(key){
-         return this._getSibling(key, 'prev');
+         return this._adapter.getSibling(this._data, key, 'prev');
       },
 
       getKey : function(item) {
@@ -63,44 +76,30 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
          }
       },
 
-      _getSibling : function(elKey, type) {
-         var sibling = null;
-         //Если ключ не задан, то возвращаем первый элемент
-         if (!elKey) {
-            sibling = this._items[0] || null;
-         }
-         else {
-            var
-               direction = (type == 'next') ? 1 : -1,
-               item = this.getItem(elKey);
-            if (item) {
-               var index = this._getIndexOf(item) + direction;
-               if ((index >= 0) && (index <= this._items.length - 1)) {
-                  sibling = this._items[index];
-               }
+      /*TODO проброс метода в Adapter*/
+      iterate : function(hdlFunction, hierIterate) {
+         var self = this;
+         this._adapter.iterate(this._data, function(item, i){
+            var key;
+            if (self._keyField) {
+               key = self.getValue(item, self._keyField);
             }
-         }
-         return sibling;
+            hdlFunction(item, key, i);
+         }, hierIterate)
       },
 
-
-      _getIndexOf: function(item){
-         return this._items.indexOf(item);
-      },
-
-      iterate : function(hdlFunction) {
-         for (var i = 0; i < this._items.length; i++) {
-            var key = this._keyField ? this._items[i][this._keyField] : i;
-            hdlFunction(this._items[i], key, i);
-         }
+      getValue : function(item, field) {
+         return this._adapter.getValue(item, field);
       },
 
       _reindex : function() {
          this._index = {};
          var self = this;
+
+
          this.iterate(function(item, key, i){
             self._addToIndex(item, key, i);
-         });
+         }, this._hierField);
       },
 
       _addToIndex : function(item, key, number) {
@@ -115,13 +114,17 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
          this._index[key] = item;
       },
 
+      _getChildItems : function(parentId) {
+
+      },
+
       clear : function() {
-         this._items = [];
+         this._data = [];
          this._index = {};
       },
 
       getItemsCount : function() {
-         return this._items.length;
+         return this._adapter.getItemsCount(this._data);
       }
    });
 });
