@@ -113,7 +113,12 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
             this._drawTpl(itemContainer, item)
          }
          else if (typeof itemTpl == 'function') {
-            var fncTpl = itemTpl.call(item);
+            var tplConfig = itemTpl.call(this, item);
+            require([tplConfig.componentType], function(ctor){
+               var config = tplConfig.config;
+               config.element = itemContainer;
+               new ctor(config)
+            })
          }
          return def;
       },
