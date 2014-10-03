@@ -162,7 +162,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
          });
          this._selectedItem = selKey || null;
-         this._notifySelectedItem(this._selectedItem);
       },
 
       setValue: function(key){
