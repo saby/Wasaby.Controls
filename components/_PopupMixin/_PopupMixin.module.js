@@ -152,13 +152,15 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function() {
          var offset = {
             'top': 0,
             'left': 0
-            };
+            },
+            border = this._container.outerWidth() - this._container.innerWidth();
 
-         if (vert == 'bottom'){
-            offset.top -= this._container.height();
+
+            if (vert == 'bottom'){
+            offset.top -= this._container.outerHeight() - border/2;
          }
          if (horiz == 'right'){
-            offset.left -= this._container.width();
+            offset.left -= this._container.outerWidth() - border/2;
          }
 
          offset.left += this._options.horizontalAlign.offset;
@@ -171,14 +173,14 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function() {
          var offset = this._options.target.offset(),
              border = this._options.target.outerWidth() - this._options.target.innerWidth(),
              height = this._options.target.outerHeight(),
-             width = this._options.target.outerWidth() - border;
+             width = this._options.target.outerWidth();
          switch (corner){
-            case 'tr': offset.left += width;
+            case 'tr': offset.left += width - border/2;
                return offset;
             case 'bl': offset.top += height;
                return offset;
             case 'br': offset.top += height;
-               offset.left+= width;
+               offset.left+= width - border/2;
                return offset;
             case 'tl' : return offset; //tl
             default: throw new Error('Параметр corner является обязательным');

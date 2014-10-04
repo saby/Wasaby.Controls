@@ -122,6 +122,7 @@ define('js!SBIS3.Genie.UnitEditor',
             for (var i = 0; i < 3; i++) {
                this._picker.getContainer().append('<div class="controls-UnitEditor__unit">' + this._units[i] + '</div>');
             }
+            this._picker.getContainer().append($('<div class="controls-UnitEditor__whiteBorder"></div>'));
             this._picker.getContainer().addClass('controls-UnitEditor__units');
          },
 
@@ -135,7 +136,7 @@ define('js!SBIS3.Genie.UnitEditor',
                },
                horizontalAlign: {
                   side: 'right',
-                  offset: -23
+                  offset: -16
                }
             });
             return picker;
