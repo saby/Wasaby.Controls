@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CONTROLS.FormattedTextBoxBase', '!html!SBIS3.CONTROLS.DatePicker', 'css!SBIS3.CONTROLS.DatePicker'], function (FormattedTextBoxBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CONTROLS.FormattedTextBoxBase', '!html!SBIS3.CONTROLS.DatePicker'], function (FormattedTextBoxBase, dotTplFn) {
 
    'use strict';
 

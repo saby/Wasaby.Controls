@@ -1,0 +1,106 @@
+/* main control */
+.controls-MonthPicker {
+   display: inline-block;
+   margin: 0;
+   padding: 0;
+   height: 16px;
+}
+.controls-MonthPicker__wrapper {
+}
+
+.controls-MonthPicker__field-box {
+   text-align: center;
+   margin: 0 16px;
+   width: 120px;
+   height: 16px;
+   line-height: 16px;
+}
+
+.controls-MonthPicker__field {
+   color: #05b;
+   cursor: pointer;
+}
+.controls-MonthPicker__field:hover {
+   text-decoration: underline;
+}
+
+.controls-MonthPicker__arrow {
+   width: 16px;
+   height: 16px;
+   background: transparent url('resources/arrows.png') no-repeat;
+   cursor: pointer;
+}
+
+.controls-MonthPicker__arrow-left {
+   float: left;
+}
+
+.controls-MonthPicker__arrow-right {
+   position: relative;
+   top: -16px;
+   float: right;
+   background-position: -16px 0;
+}
+
+.controls-MonthPicker__arrow-left:hover {
+   background-position: 0 -16px;
+}
+.controls-MonthPicker__arrow-right:hover {
+   background-position: -16px -16px;
+}
+
+/* dropdown */
+.controls-MonthPicker__dropdown-wrapper {
+   box-shadow: 0 0 8px rgba(11, 11, 11, 0.3);
+   border: 1px solid #ececec;
+   padding: 8px;
+   width: 130px;
+   position: absolute;
+   left: 11px;
+   top: 5px;
+   box-sizing: border-box;
+   background: #fff;
+}
+.controls-MonthPicker__dropdown-titleBlock {
+   padding: 4px 8px;
+}
+
+.controls-MonthPicker__dropdown-title {
+   margin: 0 16px;
+   text-align: center;
+   height: 16px;
+   line-height: 16px;
+   margin-bottom: 8px;
+}
+
+.controls-MonthPicker__dropdown-arrow-left {
+   float: left;
+   background-position: 0 -48px;
+}
+
+.controls-MonthPicker__dropdown-arrow-left:hover {
+   background-position: 0 -64px;
+}
+
+.controls-MonthPicker__dropdown-arrow-right {
+   position: relative;
+   top: -24px;
+   float: right;
+   background-position: -16px -48px;
+}
+
+.controls-MonthPicker__dropdown-arrow-right:hover {
+   background-position: -16px -64px;
+}
+
+.controls-MonthPicker__dropdown-element {
+   height: 22px;
+   line-height: 22px;
+   padding: 0 8px;
+   cursor: pointer;
+   color: #333;
+}
+
+.controls-MonthPicker__dropdown-element:hover {
+   background: #f3f3f3;
+}
