@@ -66,10 +66,10 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
 
       getKey : function(item) {
          if (this._keyField) {
-            return item[this._keyField];
+            return this._adapter.getValue(item, this._keyField)
          }
          else {
-            return this._getIndexOf(item);
+            return this._adapter._getIndexOf(item);
          }
       },
 
