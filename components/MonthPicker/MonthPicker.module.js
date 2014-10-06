@@ -7,8 +7,7 @@ define(
    [
       'js!SBIS3.CORE.Control',
       'js!SBIS3.CONTROLS._PickerMixin',
-      'html!SBIS3.CONTROLS.MonthPicker',
-      'css!SBIS3.CONTROLS.MonthPicker'
+      'html!SBIS3.CONTROLS.MonthPicker'
    ],
    function(Control, _PickerMixin, dotTplFn){
 
