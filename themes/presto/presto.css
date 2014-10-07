@@ -37,11 +37,17 @@
   height: 100%;
   box-sizing: border-box;
 }
-.controls-TextBox__optionsContainer {
+.controls-TextBox__afterFieldWrapper {
   float: right;
   width: 16px;
   min-height: 19px;
   height: 100%;
+  position: relative;
+  padding: 0 5px;
+}
+.controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
+  margin-right: 26px;
+  margin-left: 2px;
 }
 .controls-TextBox__field {
   border: none;
@@ -61,4 +67,76 @@
 }
 .controls-TextBox__field-lowercase {
   text-transform: lowercase;
+}
+.controls-Picker__show {
+  border: 1px solid #666666;
+}
+.controls-ComboBox__arrowDown {
+  text-decoration: none;
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  margin-top: -8px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-position: -32px -224px;
+  background-repeat: no-repeat;
+  background-image: url('../../icons16.png');
+}
+.controls-Picker__show .controls-ComboBox__arrowDown {
+  background-position: -32px -256px;
+}
+.controls-ComboBox__arrowDown:hover {
+  background-position: -128px -224px;
+}
+.controls-Picker__show .controls-ComboBox__arrowDown:hover {
+  background-position: -128px -256px;
+}
+.controls-ComboBox__itemRow {
+  padding: 0 4px;
+  cursor: pointer;
+  background: #444E57;
+  color: white;
+  height: 40px;
+  line-height: 40px;
+}
+.controls-ComboBox__itemRow:hover {
+  background-color: #E2EFFB;
+  color: #000000;
+}
+.controls-ComboBox__itemRow__selected {
+  font-weight: bold;
+}
+.controls-ComboBox__field__isEditable-false,
+.controls-ComboBox__field__isEditable-false .controls-TextBox__field {
+  cursor: pointer;
+}
+.controls-ComboBox__inputWrapper {
+  margin-right: 18px;
+  height: 100%;
+}
+.controls-ComboBox__picker {
+  border: 1px solid #666666;
+  margin-top: -1px;
+}
+.controls-CheckBox {
+  cursor: pointer;
+  display: inline-block;
+  color: white;
+  font-size: 14px;
+  line-height: 18px;
+}
+.controls-CheckBox__icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 5px;
+  display: inline-block;
+  border: 1px solid #333333;
+  background: none;
+}
+.controls-CheckBox.controls-ToggleButton__checked .controls-CheckBox__icon {
+  background-position: -3px -4964px;
+  background-repeat: no-repeat;
+  background-image: url('../../icons24.png');
 }
