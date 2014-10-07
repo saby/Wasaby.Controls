@@ -72,6 +72,21 @@
       <div id="TextBox"></div>
    </div>
 
+   <h3>Выпадающее меню</h3>
+   <br/>
+
+   <div>
+      <div id="ComboBox"></div>
+   </div>
+
+   <h3>Чекбокс</h3>
+   <br/>
+
+   <div>
+      <div id="CheckBox"></div>
+   </div>
+
+
 
 </div>
 
@@ -105,6 +120,33 @@
             new r({
                element: "TextBox",
                text: 'ККМ0003852645'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.CheckBox"], function (r) {
+            new r({
+               element: "CheckBox",
+               caption: 'Печатать фискальную часть'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.ComboBox"], function (r) {
+            new r({
+               element: "ComboBox",
+               items: [
+                  {
+                     key: 1,
+                     title: 'Холодный цех'
+                  },
+                  {
+                     key: 2,
+                     title: 'Горячий цех'
+                  },
+                  {
+                     key: 3,
+                     title: 'Барная стойка'
+                  }
+               ]
             })
          });
 
