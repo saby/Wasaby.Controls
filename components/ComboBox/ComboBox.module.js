@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          //TODO: в идеале надо сделать, чтобы атрибут проставлялся в шаблоне, и не плодить его на все контролы-наследники TextBox'а
          // запрещен ручной ввод значений
          if(!this._options.isEditable){
-            self.getContainer().addClass('controls-ComboBox__field__isEditable-false').find('.js-controls-TextBox__field').attr('readonly', 'readonly');
+            self.getContainer().addClass('controls-ComboBox__isEditable-false').find('.js-controls-TextBox__field').attr('readonly', 'readonly').addClass('js-controls-ComboBox__arrowDown');
          }
 
          if (this._items.getItemsCount()) {
