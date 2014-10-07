@@ -54,7 +54,6 @@
   margin: 0;
   box-sizing: border-box;
   line-height: 100%;
-  font-size: 14px;
   outline: none;
   background: none;
   color: #ffffff;
@@ -65,7 +64,7 @@
 .controls-TextBox__field-lowercase {
   text-transform: lowercase;
 }
-.controls-Picker__show {
+.controls-ComboBox.controls-Picker__show {
   border: 1px solid #666666;
   background: #444E57;
 }
@@ -82,7 +81,7 @@
   background-repeat: no-repeat;
   background-image: url('./img/combobox.png');
 }
-.controls-Picker__show .controls-ComboBox__arrowDown {
+.controls-ComboBox.controls-Picker__show .controls-ComboBox__arrowDown {
   background-position: 0 -32px;
 }
 .controls-ComboBox__arrowDown:hover {
@@ -92,7 +91,7 @@
   background-position: 0 -48px;
 }
 .controls-ComboBox__itemRow {
-  padding: 0 4px;
+  padding: 0 4px 0 7px;
   cursor: pointer;
   background: #444E57;
   color: white;
