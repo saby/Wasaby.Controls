@@ -223,7 +223,7 @@
   background-image: url('./img/Tree_expand.png');
   visibility: hidden;
 }
-.controls-TreeView__hasChild .controls-TreeView__expand {
+.controls-TreeView__hasChild > .controls-TreeView__expand {
   visibility: visible;
 }
 .controls-TreeView__expand__open {
