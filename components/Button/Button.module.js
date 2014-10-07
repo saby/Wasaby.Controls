@@ -29,9 +29,13 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
          var self = this;
          this._button = this._container;
          this._container.mouseup(function () {
-            self._container.removeClass('controls-Button__active');
+            if (self.isEnabled()) {
+               self._container.removeClass('controls-Button__active');
+            }
          }).mousedown(function () {
-               self._container.addClass('controls-Button__active');
+               if (self.isEnabled()) {
+                  self._container.addClass('controls-Button__active');
+               }
             });
       },
 

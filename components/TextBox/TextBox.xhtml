@@ -6,5 +6,6 @@
            {{? it.text }} value="{{? it.numberFractDigits && !it.onlyInteger}}{{=parseFloat(it.text).toFixed(it.numberFractDigits)}}{{??}}{{=it.text}}{{?}}"{{?}}
            {{? it.placeholder }} placeholder="{{=it.placeholder}}"{{?}}
            {{? it.maxLength }} maxlength="{{=it.maxLength}}"{{?}}
+           {{? !it.enabled }} readonly="readonly"{{?}}
     /></div>
 </div>

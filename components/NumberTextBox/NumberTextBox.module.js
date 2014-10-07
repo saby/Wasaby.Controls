@@ -48,11 +48,15 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          this._publish('onChangeText');
          this.getContainer().addClass('controls-NumberTextBox');
          $('.js-controls-NumberTextBox__arrowDown', this.getContainer().get(0)).click(function () {
-            self._arrowUpClick();
+            if (self.isEnabled()) {
+               self._arrowUpClick();
+            }
          });
 
          $('.js-controls-NumberTextBox__arrowUp', this.getContainer().get(0)).click(function () {
-            self._arrowDownClick();
+            if (self.isEnabled()) {
+               self._arrowDownClick();
+            }
          });
       },
 

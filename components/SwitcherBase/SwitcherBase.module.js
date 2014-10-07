@@ -47,11 +47,13 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONT
          this._position = $('.js-controls-Switcher__position',self._container.get(0));
          this._switcher = $('.js-controls-Switcher__toggle',self._container.get(0));
          this._state = this._options.state;
-         this._switcher.bind('mouseup',function(){
-            if (self._state == 'on') {
-               self.setState('off');
-            } else {
-               self.setState('on');
+         this._switcher.bind('mouseup', function () {
+            if (self.isEnabled()) {
+               if (self._state == 'on') {
+                  self.setState('off');
+               } else {
+                  self.setState('on');
+               }
             }
          });
          //Предотвращаем выделение

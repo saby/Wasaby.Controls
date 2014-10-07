@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._itemTpl = this._options.itemTemplate;
          }
 
-         //TODO: в идеале надо сделать, чтобы атрибут проставлялся в шаблоне, и не плодить его на все контролы-наследники TextBox'а
+         //TODO: в идеале надо сделать, чтобы атрибут проставлялся в шаблоне, и не плодить его на все контролы-наследники TextBox'а, плюс очень похоже на enabled
          // запрещен ручной ввод значений
          if(!this._options.isEditable){
             self.getContainer().addClass('controls-ComboBox__isEditable-false').find('.js-controls-TextBox__field').attr('readonly', 'readonly').addClass('js-controls-ComboBox__arrowDown');
@@ -71,11 +71,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
 
          /*обрабочики кликов*/
-         $('.js-controls-ComboBox__arrowDown', this._container.get(0)).click(function(){
-            $('.controls-ComboBox__itemRow__selected').removeClass('controls-ComboBox__itemRow__selected');
-            var key = self.getSelectedItem();
-            $('.controls-ComboBox__itemRow[data-key=\''+key+'\']').addClass('controls-ComboBox__itemRow__selected');
-            self.togglePicker();
+         $('.js-controls-ComboBox__arrowDown', this._container.get(0)).click(function () {
+            if (self.isEnabled()) {
+               $('.controls-ComboBox__itemRow__selected').removeClass('controls-ComboBox__itemRow__selected');
+               var key = self.getSelectedItem();
+               $('.controls-ComboBox__itemRow[data-key=\'' + key + '\']').addClass('controls-ComboBox__itemRow__selected');
+               self.togglePicker();
+            }
          });
 
          /*хренька на скролл*/

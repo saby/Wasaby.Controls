@@ -43,10 +43,18 @@
   background-position: 0 -265px;
 }
 .controls-Button.controls-Button__active {
-  background-position: 0 -229px !important;
+  background-position: 0 -229px;
 }
-.controls-Button__big.controls-Button__active {
-  background-position: 0 -458px !important;
+.controls-Button__big.controls-Button__active,
+.controls-Button__big.controls-Button__primary.controls-Button__active {
+  background-position: 0 -458px;
+}
+.controls-Button.ws-disabled {
+  color: #cccccc;
+  background-position: 0 -325px;
+}
+.controls-Button__big.ws-disabled {
+  background-position: 0 -649px;
 }
 .controls-Button.controls-ToggleButton__checked {
   color: red;
@@ -58,6 +66,15 @@
 .controls-RadioButton {
   cursor: pointer;
   display: inline-block;
+  color: #999999;
+}
+.controls-ToggleButton__checked,
+.controls-RadioButton:hover {
+  color: #000000;
+}
+.controls-RadioButton.ws-disabled {
+  cursor: default;
+  color: #cccccc;
 }
 .controls-RadioButton__icon {
   width: 24px;
@@ -71,6 +88,9 @@
 .controls-RadioButton.controls-ToggleButton__checked .controls-RadioButton__icon {
   background-position: 0 -52px;
 }
+.controls-RadioButton.ws-disabled .controls-RadioButton__icon {
+  background-position: 0 -4px;
+}
 .controls-SwitcherDoubleOnline {
   display: inline-block;
   margin-left: 8px;
@@ -82,6 +102,15 @@
   margin: 0 4px;
   background: transparent url('./img/SwitcherDoubleOnline-sprite.png') no-repeat;
   display: inline-block;
+}
+.controls-SwitcherDoubleOnline.ws-disabled {
+  color: #999999;
+}
+.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline_toggle {
+  cursor: default;
+}
+.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline_toggle {
+  background-position: 0 -52px;
 }
 .controls-SwitcherDoubleOnline-vertical {
   vertical-align: top;
@@ -101,11 +130,20 @@
 .controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline-off-toggled {
   background-position: -16px 0;
 }
+.controls-SwitcherDoubleOnline-vertical.ws-disabled .controls-SwitcherDoubleOnline-off-toggled {
+  background-position: -48px 0px;
+}
 .controls-SwitcherDoubleOnline-off-toggled {
   background-position: 0 -4px;
 }
 .controls-SwitcherDoubleOnline-on-toggled {
   background-position: 0 -28px;
+}
+.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline-on-toggled {
+  background-position: 0 -76px;
+}
+.controls-SwitcherDoubleOnline-vertical.ws-disabled .controls-SwitcherDoubleOnline-on-toggled {
+  background-position: -32px 0px;
 }
 .controls-SwitcherDoubleOnline__unselected {
   color: #999999;
@@ -113,6 +151,11 @@
 }
 .controls-SwitcherDoubleOnline__unselected:hover {
   text-decoration: underline;
+}
+.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline__text {
+  text-decoration: none;
+  cursor: default;
+  color: #CCCCCC;
 }
 .controls-SwitcherDoubleOnline__text {
   display: inline-block;
@@ -130,6 +173,10 @@
   min-width: 90px;
   box-sizing: border-box;
   padding-right: 16px;
+}
+.controls-Switcher.ws-disabled {
+  background: none !important;
+  color: #999999 !important;
 }
 .controls-Switcher__toggle {
   height: 23px;
@@ -158,6 +205,10 @@
   padding-right: 0;
   padding-left: 32px;
 }
+.controls-Switcher.ws-disabled .controls-Switcher__position {
+  background: none;
+  color: #CCCCCC;
+}
 .controls-Switcher__toggle__position-on .controls-Switcher__position {
   margin-right: 16px;
   margin-left: auto;
@@ -177,6 +228,9 @@
   left: -32px;
   background-position: 0 -48px;
 }
+.controls-Switcher.ws-disabled .controls-Switcher__position:before {
+  background: none;
+}
 .controls-Switcher__position:after {
   content: '';
   position: absolute;
@@ -192,6 +246,9 @@
   right: -16px;
   background-position: 0 -312px;
 }
+.controls-Switcher.ws-disabled .controls-Switcher__position:after {
+  background: none;
+}
 .controls-TextBox {
   display: inline-block;
   background: #ffffff;
@@ -204,6 +261,10 @@
 .controls-TextBox:hover {
   border: 1px solid #EAEAEA;
   border-bottom: 1px solid #CCCCCC;
+}
+.controls-TextBox.ws-disabled {
+  border: 1px solid transparent;
+  border-bottom: 1px solid #EAEAEA;
 }
 .controls-TextBox__fieldWrapper {
   height: 100%;
@@ -230,6 +291,9 @@
   line-height: 100%;
   outline: none;
   background: transparent;
+}
+.controls-TextBox.ws-disabled .controls-TextBox__field {
+  color: #cccccc;
 }
 .controls-TextBox__field-uppercase {
   text-transform: uppercase;
@@ -266,6 +330,9 @@
   cursor: pointer;
   display: inline-block;
 }
+.controls-CheckBox.ws-disabled {
+  color: #999999;
+}
 .controls-CheckBox__icon {
   width: 16px;
   height: 16px;
@@ -277,9 +344,18 @@
 .controls-CheckBox:hover .controls-CheckBox__icon {
   background-position: 0 17px;
 }
+.controls-CheckBox.ws-disabled .controls-CheckBox__icon {
+  background-position: 16px 1px;
+}
 .controls-CheckBox.controls-ToggleButton__checked .controls-CheckBox__icon {
   background-position: 0 49px;
 }
+.controls-CheckBox.controls-ToggleButton__checked.ws-disabled .controls-CheckBox__icon {
+  background-position: 16px 49px;
+}
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
   background-position: 0 33px;
+}
+.controls-CheckBox.ws-disabled.controls-ToggleButton__null .controls-CheckBox__icon {
+  background-position: 16px 33px;
 }
