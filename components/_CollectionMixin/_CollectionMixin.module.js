@@ -22,8 +22,7 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
             /**
              * @cfg {} Шаблон отображения каждого элемента коллекции
              */
-            itemTemplate: '',
-            hierField : null
+            itemTemplate: ''
          }
       },
 
@@ -79,11 +78,11 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
          var self = this,
             container = this._getItemsContainer();
          container.empty();
-         this._items.iterate(function (item, key, i, parItem, lvl) {
+         this._items.iterate(function (item, key, i, parItem) {
             var itemContainer = $("<div data-id='"+ key +"'></div>");
-            container.append(itemContainer.css('margin-left', lvl * 10));
             self._drawItem(itemContainer, item);
-         }, !!(this._options.hierField));
+            itemContainer.appendTo(container);
+         });
          this._loadChildControls();
       },
 

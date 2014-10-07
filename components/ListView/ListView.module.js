@@ -43,9 +43,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          $constructor: function () {
-            this._drawItems();
+            this._items.setHierField(null);
          },
 
+         init : function() {
+            this._drawItems();
+         },
 
          /**
           * Установить, что отображается когда нет записей

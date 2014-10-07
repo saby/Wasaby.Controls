@@ -74,7 +74,7 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
       },
 
       /*TODO проброс метода в Adapter*/
-      iterate : function(hdlFunction, hierField) {
+      iterate : function(hdlFunction) {
          var self = this;
          this._adapter.iterate(this._data, function(item, i, parItem, lvl){
             var key;
@@ -124,6 +124,10 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
 
       getItemsCount : function() {
          return this._adapter.getItemsCount(this._data);
+      },
+
+      setHierField : function(hierField) {
+         this._hierField = hierField;
       }
    });
 });

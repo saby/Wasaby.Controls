@@ -31,6 +31,9 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
             hierField : null
          }
       },
+      $constructor : function() {
+         this._items.setHierField(this._options.hierField);
+      },
       /**
        * Установить корень выборки
        * @param {String} root Идентификатор корня
