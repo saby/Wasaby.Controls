@@ -108,7 +108,7 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
 
             curList.append(itemContainer);
             self._drawItem(itemContainer, item);
-         }, !!(this._options.hierField));
+         });
          this._loadChildControls();
          this._drawOpenedPath();
       },

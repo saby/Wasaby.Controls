@@ -35,7 +35,8 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
                this._items = this._options.items;
             }
             else {
-               /*TODO Костыли для совместимости*/
+               /*TODO Костыли для совместимости
+               * позволяет передать в опции коллекцию в неявном виде*/
                this._initItems(this._options.items);
             }
          }
@@ -86,10 +87,12 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
          this._loadChildControls();
       },
 
+      /*TODO переопределяем метод compoundControl - костыль*/
       _loadControls: function(pdResult){
          return pdResult.done([]);
       },
 
+      /*TODO свой механиз загрузки дочерних контролов - костыль*/
       _loadChildControls: function() {
          var def = new $ws.proto.Deferred();
          var self = this;
