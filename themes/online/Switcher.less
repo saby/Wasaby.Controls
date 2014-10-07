@@ -6,6 +6,11 @@
    padding-right: 16px;
 }
 
+.controls-Switcher.ws-disabled{
+  background: none !important;
+  color: #999999 !important;
+}
+
 .controls-Switcher__toggle {
    height: 23px;
    width: 100%;
@@ -36,6 +41,11 @@
    padding-left: 32px;
 }
 
+.controls-Switcher.ws-disabled .controls-Switcher__position {
+  background: none;
+  color: #CCCCCC;
+}
+
 .controls-Switcher__toggle__position-on .controls-Switcher__position {
    margin-right: 16px;
    margin-left: auto;
@@ -58,6 +68,10 @@
    background-position: 0 -48px;
 }
 
+.controls-Switcher.ws-disabled .controls-Switcher__position:before{
+  background: none;
+}
+
 .controls-Switcher__position:after {
    content: '';
    position: absolute;
@@ -73,4 +87,8 @@
    width: 16px;
    right: -16px;
    background-position: 0 -312px;
+}
+
+.controls-Switcher.ws-disabled .controls-Switcher__position:after{
+  background: none;
 }

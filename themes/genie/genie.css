@@ -55,7 +55,7 @@
   display: inline-block;
   background: #ffffff;
   box-sizing: border-box;
-  padding: 0 7px;
+  padding: 0 4px;
   border: 1px solid #d1d1d4;
   height: 25px;
   border-radius: 2px;
@@ -66,6 +66,7 @@
 .controls-TextBox__fieldWrapper {
   height: 100%;
   box-sizing: border-box;
+  margin-left: 5px;
 }
 .controls-TextBox__afterFieldWrapper {
   float: right;
@@ -76,7 +77,6 @@
 }
 .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
   margin-right: 19px;
-  margin-left: 2px;
 }
 .controls-TextBox__field {
   border: none;
@@ -151,9 +151,6 @@
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
   background-position: 0 -78px;
 }
-.controls-ComboBox {
-  padding-right: 4px;
-}
 .controls-ComboBox__arrowDown {
   background-image: url('./img/ComboBox.png');
   background-color: #ffffff;
@@ -198,7 +195,6 @@
 }
 .controls-ComboBox__picker {
   border: 1px solid #d1d1d4;
-  box-sizing: border-box;
   margin-top: -2px;
   border-radius: 0 0 2px 2px;
 }

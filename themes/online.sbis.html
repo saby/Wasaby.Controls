@@ -56,14 +56,26 @@
    Двухпозиционный горизонтальный:
    <div id="Switcher1"></div>
    <br/><br/>
+   Двухпозиционный горизонтальный enabled:
+   <div id="Switcher12"></div>
+   <br/><br/>
    Двухпозиционный вертикальный:
    <div id="Switcher2"></div>
+   <br/><br/>
+   Двухпозиционный вертикальный enabled:
+   <div id="Switcher22"></div>
    <br/><br/>
    On-Off:
    <div id="Switcher3"></div>
    <br/><br/>
+   On-Off enabled:
+   <div id="Switcher32"></div>
+   <br/><br/>
 
    <div id="RadioButton">4</div>
+   <br/><br/>
+
+   <div id="RadioButton2">4</div>
 
    <br/><br/>
 
@@ -73,9 +85,14 @@
 
    <br/><br/>
 
+   <div id="CheckBox2"></div>
+
+   <br/><br/>
+
    <h3>Текстовое поле</h3>
 
    <div id="TextBox"></div>
+   <div id="TextBox2"></div>
 
    <br/><br/>
 
@@ -177,11 +194,32 @@
 
          require(["js!SBIS3.Engine.SwitcherDoubleOnline"], function (r) {
             new r({
+               element: "Switcher12",
+               caption: 'This is SwitcherDoubleOnline',
+               stateOn: 'По видам',
+               stateOff: 'По подразделениям',
+               enabled: false
+            })
+         });
+
+         require(["js!SBIS3.Engine.SwitcherDoubleOnline"], function (r) {
+            new r({
                element: "Switcher2",
                caption: 'This is SwitcherDoubleOnline',
                stateOn: 'По видам',
                stateOff: 'По подразделениям',
                'disposition': 'vertical'
+            })
+         });
+
+         require(["js!SBIS3.Engine.SwitcherDoubleOnline"], function (r) {
+            new r({
+               element: "Switcher22",
+               caption: 'This is SwitcherDoubleOnline',
+               stateOn: 'По видам',
+               stateOff: 'По подразделениям',
+               'disposition': 'vertical',
+               enabled: false
             })
          });
 
@@ -194,10 +232,27 @@
             })
          });
 
+         require(["js!SBIS3.CONTROLS.Switcher"], function (r) {
+            new r({
+               element: "Switcher32",
+               caption: 'This is Switcher',
+               stateOn: 'On',
+               stateOff: 'Off',
+               enabled: false
+            })
+         });
+
          require(["js!SBIS3.CONTROLS.RadioButton"], function (r) {
             new r({
                element: "RadioButton",
                caption: 'Оперативный срез'
+            })
+         });
+         require(["js!SBIS3.CONTROLS.RadioButton"], function (r) {
+            new r({
+               element: "RadioButton2",
+               caption: 'Оперативный срез enabled',
+               enabled: false
             })
          });
 
@@ -209,10 +264,26 @@
             })
          });
 
+         require(["js!SBIS3.CONTROLS.CheckBox"], function (r) {
+            new r({
+               element: "CheckBox2",
+               caption: 'Флаг enabled',
+               enabled: false
+            })
+         });
+
          require(["js!SBIS3.CONTROLS.TextBox"], function (r) {
             new r({
                element: "TextBox",
                text: 'This is TextBox'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.TextBox"], function (r) {
+            new r({
+               element: "TextBox2",
+               text: 'This is TextBox enabled',
+               enabled: false
             })
          });
 
@@ -257,9 +328,10 @@
             new r({
                element: "button3",
                caption: 'Сохранить',
-               disabled: true
+               enabled: false
             })
          });
+
 
          require(["js!SBIS3.CONTROLS.Button"], function (r) {
             new r({
@@ -295,7 +367,7 @@
             new r({
                element: "button3big",
                caption: 'Сохранить',
-               disabled: true
+               enabled: false
             })
          });
 
