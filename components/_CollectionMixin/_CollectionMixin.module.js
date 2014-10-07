@@ -76,7 +76,8 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
       },
 
       _drawItems: function(){
-         var self = this,
+         var
+            self = this,
             container = this._getItemsContainer();
          container.empty();
          this._items.iterate(function (item, key, i, parItem) {

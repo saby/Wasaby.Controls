@@ -86,7 +86,6 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
          var self = this,
             container = this._getItemsContainer();
          container.empty();
-         var parList = $('<ul></ul>').appendTo(container).addClass(this._ulClass).show();
 
          this._items.iterate(function (item, key, i, parItem, lvl) {
             var
@@ -96,16 +95,17 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
                var
                   parKey = self._items.getKey(parItem),
                   curItem =  $("li[data-id='"+parKey+"']", self.getContainer().get(0));
-               curList = $("ul", curItem.get(0)).first();
-               if (!curList.length) {
-                  curList = $("<ul></ul>").appendTo(curItem).addClass(self._ulClass);
-               }
-               curItem.addClass('controls-TreeView__hasChild')
+
             }
             else {
-               curList = parList;
+               curItem = container;
             }
 
+            curList = $("ul", curItem.get(0)).first();
+            if (!curList.length) {
+               curList = $("<ul></ul>").appendTo(curItem).addClass(self._ulClass);
+            }
+            curItem.addClass('controls-TreeView__hasChild');
             curList.append(itemContainer);
             self._drawItem(itemContainer, item);
          });
@@ -139,9 +139,9 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
       },
 
       _drawOpenedPath : function() {
-         if (this._options.openedPath) {
+         /*if (this._options.openedPath) {
             this._openedPath = this._options.openedPath;
-         }
+         }*/
          for (var i = 0; i < this._openedPath.length; i++) {
             this.openNode(this._openedPath[i]);
          }

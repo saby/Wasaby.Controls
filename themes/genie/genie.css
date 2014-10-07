@@ -205,6 +205,9 @@
 .controls-ComboBox__picker.controls-Picker__owner__hover {
   border-top-color: #00d7d7;
 }
+.controls-ListView > .controls-TreeView__list {
+  display: block;
+}
 .controls-TreeView__list {
   list-style: none;
   padding-left: 10px;
