@@ -80,18 +80,18 @@
   display: inline-block;
   width: 16px;
   height: 16px;
-  background-position: -32px -224px;
+  background-position: 0 0;
   background-repeat: no-repeat;
-  background-image: url('./img/icons16.png');
+  background-image: url('./img/combobox.png');
 }
 .controls-Picker__show .controls-ComboBox__arrowDown {
-  background-position: -32px -256px;
+  background-position: 0 -32px;
 }
 .controls-ComboBox__arrowDown:hover {
-  background-position: -128px -224px;
+  background-position: 0 -16px;
 }
 .controls-Picker__show .controls-ComboBox__arrowDown:hover {
-  background-position: -128px -256px;
+  background-position: 0 -48px;
 }
 .controls-ComboBox__itemRow {
   padding: 0 4px;
@@ -136,7 +136,7 @@
   background: none;
 }
 .controls-CheckBox.controls-ToggleButton__checked .controls-CheckBox__icon {
-  background-position: -3px -4964px;
   background-repeat: no-repeat;
-  background-image: url('./img/icons24.png');
+  background-image: url('./img/checkbox.png');
+  background-position: -2px -5px;
 }
