@@ -82,7 +82,7 @@
   height: 16px;
   background-position: -32px -224px;
   background-repeat: no-repeat;
-  background-image: url('../../icons16.png');
+  background-image: url('./img/icons16.png');
 }
 .controls-Picker__show .controls-ComboBox__arrowDown {
   background-position: -32px -256px;
@@ -138,5 +138,5 @@
 .controls-CheckBox.controls-ToggleButton__checked .controls-CheckBox__icon {
   background-position: -3px -4964px;
   background-repeat: no-repeat;
-  background-image: url('../../icons24.png');
+  background-image: url('./img/icons24.png');
 }
