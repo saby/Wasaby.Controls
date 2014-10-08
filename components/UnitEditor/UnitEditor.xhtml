@@ -1,13 +1,3 @@
-<div class="controls-UnitEditor controls-TextBox controls-NumberTextBox{{?it.className}} {{=it.className}}{{?}}">
-    <div class="controls-TextBox__afterFieldWrapper">
-        <span class="js-controls-UnitEditor__unitSelector controls-UnitEditor__unitSelector controls-UnitEditor__unitSelector__untoggled"><span class="js-controls-UnitEditor__unitText controls-UnitEditor__unitText"></span></span>
-        <a class="js-controls-NumberTextBox__arrowUp controls-NumberTextBox__arrowUp controls-NumberTextBox__arrow" href="javascript: void(0)"></a>
-        <a class="js-controls-NumberTextBox__arrowDown controls-NumberTextBox__arrowDown controls-NumberTextBox__arrow" href="javascript: void(0)"></a>
-    </div>
-    <div class="controls-TextBox__fieldWrapper controls-UnitEditor__fieldWrapper">
-        <input class="js-controls-TextBox__field controls-TextBox__field" type="text"
-        {{? it.text }} value="{{? it.numberFractDigits && !it.onlyInteger}}{{=parseFloat(it.text).toFixed(it.numberFractDigits)}}{{??}}{{=it.text}}{{?}}"{{?}}
-        {{? it.placeholder }} placeholder="{{=it.placeholder}}"{{?}}
-        {{? it.maxLength }} maxlength="{{=it.maxLength}}"{{?}}
-        /></div>
-</div>
+<span class="js-controls-UnitEditor__unitSelector controls-UnitEditor__unitSelector controls-UnitEditor__unitSelector__untoggled"><span class="js-controls-UnitEditor__unitText controls-UnitEditor__unitText"></span></span>
+<a class="js-controls-NumberTextBox__arrowUp controls-NumberTextBox__arrowUp controls-NumberTextBox__arrow" href="javascript: void(0)"></a>
+<a class="js-controls-NumberTextBox__arrowDown controls-NumberTextBox__arrowDown controls-NumberTextBox__arrow" href="javascript: void(0)"></a>
