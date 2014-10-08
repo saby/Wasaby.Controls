@@ -41,7 +41,14 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
       _createPicker: function(pickerContainer){
          var picker = new FloatArea({
             element : pickerContainer,
-            target : this._container
+            target : this._container,
+            corner: 'bl',
+            verticalAlign: {
+               side: 'top'
+            },
+            horizontalAlign: {
+               side: 'left'
+            }
          });
          return picker;
       },
@@ -51,7 +58,7 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
        */
       showPicker: function() {
          this._container.addClass('controls-Picker__show');
-         this._picker.getContainer().width(container.outerWidth() - 2/*ширина бордеров*/);
+         this._picker.getContainer().width(this._container.outerWidth() - 2/*ширина бордеров*/);
          this._picker.show();
       },
       /**
