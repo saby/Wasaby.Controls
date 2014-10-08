@@ -8,7 +8,6 @@
   cursor: pointer;
   text-align: center;
   display: inline-block;
-  box-sizing: border-box;
   height: 30px;
   line-height: normal;
   border: 1px solid #d1d1d4;
@@ -54,10 +53,9 @@
 .controls-TextBox {
   display: inline-block;
   background: #ffffff;
-  box-sizing: border-box;
   padding: 0 4px;
   border: 1px solid #d1d1d4;
-  height: 25px;
+  height: 23px;
   border-radius: 2px;
 }
 .controls-TextBox:hover {
@@ -65,7 +63,6 @@
 }
 .controls-TextBox__fieldWrapper {
   height: 100%;
-  box-sizing: border-box;
   margin-left: 5px;
 }
 .controls-TextBox__afterFieldWrapper {
@@ -200,9 +197,4 @@
 }
 .controls-ComboBox__picker.controls-Picker__owner__hover {
   border-top-color: #00d7d7;
-}
-
-.controls-UnitEditor .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
-   margin-right: 39px;
-   margin-left: 2px;
 }

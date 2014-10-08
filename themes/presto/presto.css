@@ -4,7 +4,6 @@
   border: none;
   padding: 0 16px;
   height: 40px;
-  box-sizing: border-box;
   font-size: 14px;
   text-align: center;
   color: #333333;
@@ -21,18 +20,16 @@
 }
 .controls-TextBox {
   display: inline-block;
-  box-sizing: border-box;
   padding: 0 5px;
   border: 1px solid transparent;
   border-bottom: 1px solid #666666;
-  height: 40px;
+  height: 38px;
 }
 .controls-TextBox:hover {
   border: 1px solid #666666;
 }
 .controls-TextBox__fieldWrapper {
   height: 100%;
-  box-sizing: border-box;
 }
 .controls-TextBox__afterFieldWrapper {
   float: right;
@@ -52,7 +49,6 @@
   height: 99%;
   width: 100%;
   margin: 0;
-  box-sizing: border-box;
   line-height: 100%;
   outline: none;
   background: none;
