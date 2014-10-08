@@ -26,15 +26,10 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function() {
     */
    var _PopupMixin = /** @lends SBIS3.CONTROLS._PopupMixin.prototype */{
       $protected: {
+         _offset: null, // Хранит оффсет полученный из опций (align, offset, corner)
+         _targetSizes: null,
+         _containerSizes: null,
          _options: {
-            /**
-             * @cfg {Object} Отступы
-             */
-            offset: {
-               top: null,
-               left: null
-            },
-
             /**
              * @typedef {Object} CornerEnum
              * @variant tl верхний левый
@@ -89,13 +84,128 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function() {
       },
 
       $constructor: function() {
+         var self = this;
          var container = this._container;
+         var trg = $ws.helpers.trackElement(this._options.target, true);
          this.hide();
          container.css('position', 'absolute');
          container.appendTo('body');
          var zIndex = zIndexManager.getNext();
          container.css('zIndex', zIndex);
+         this._initSizes();
          this.recalcPosition();
+
+         $(window).bind('resize', function(){
+            self._correctionByDisplaySize();
+         });
+
+         trg.subscribe('onMove', function() {
+            self.recalcPosition();
+         });
+
+      },
+
+      _initSizes: function(){
+         this._targetSizes = {
+            width : this._options.target.outerWidth(),
+            height : this._options.target.outerHeight()
+         };
+
+         this._containerSizes = {
+            width : this._container.outerWidth(),
+            height : this._container.outerHeight()
+         };
+         console.log(this._targetSizes);
+         console.log(this._containerSizes);
+      },
+
+      recalcPosition : function() {
+         console.time('recalc');
+         if (this._options.target) {
+           this._setOffset();
+         }
+         console.timeEnd('recalc');
+      },
+
+      _setOffset: function(){
+         this._offset = this._options.target.offset();
+         this._offset = this._getOffsetByCorner(this._options.corner);
+         this._offset = this._getAlignOffset(this._options.verticalAlign.side,this._options.horizontalAlign.side);
+         this._correctionByDisplaySize();
+      },
+
+      // Вычисляем сдвиг в зависимости от выравнивания
+      _getAlignOffset: function(vert, horiz){
+         var offset = this._offset,
+             border = this._container.outerWidth() - this._container.innerWidth();
+
+         if (vert == 'bottom'){
+            offset.top -= this._container.outerHeight() - border/2;
+         }
+         if (horiz == 'right'){
+            offset.left -= this._container.outerWidth() - border/2;
+         }
+
+         offset.left += this._options.horizontalAlign.offset;
+         offset.top += this._options.verticalAlign.offset;
+         return offset;
+      },
+
+      // Вычисляем сдвиг в зависимости от угла
+      _getOffsetByCorner: function(corner){
+         var border = (this._options.target.outerWidth() - this._options.target.innerWidth())/2,
+             height = this._options.target.outerHeight(),
+             width = this._options.target.outerWidth(),
+             offset = this._offset;
+
+         switch (corner){
+            case 'tr': this._offset.left += width - border;
+               offset.top -= border;
+               break;
+            case 'bl': offset.top += height;
+               break;
+            case 'br': this._offset.top += height;
+               offset.left+= width - border;
+               break;
+            case 'tl': offset.top -= border;
+               break; //tl
+            default: throw new Error('Параметр corner является обязательным');
+         }
+         return offset;
+      },
+
+      //Проверям убираемся ли в экран
+      _correctionByDisplaySize: function(){
+         var offset = {
+            top: this._offset.top,
+            left: this._offset.left
+            },
+            corner = this._options.corner;
+
+         if ($(window).height() <= this._container.outerHeight() + offset.top){
+            if ((corner == 'bl' || corner == 'br')){
+               offset.top -= (this._options.target.outerHeight() + this._container.outerHeight());
+            } else {
+               offset.top -= this._container.outerHeight();
+            }
+         }
+         if ($(window).width() <= this._container.outerWidth() + offset.left){
+            if (corner == 'tl' || corner == 'bl'){
+               offset.left += (this._options.target.outerWidth() - this._container.outerWidth());
+            } else {
+               offset.left -= this._container.outerWidth();
+            }
+         }
+
+         if (offset.left < 0) {
+            offset.left = 0;
+         }
+
+         if (offset.top < 0) {
+            offset.top = 0;
+         }
+
+         this._container.offset(offset);
       },
 
       /**
@@ -114,97 +224,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function() {
        */
       moveToCenter: function() {
 
-      },
-
-      recalcPosition : function() {
-         var offset = {
-            'left' : 0,
-            'top' : 0
-         };
-         if (this._options.target) {
-            offset = this._getGeneralOffset();
-         }
-         this._container.css({
-            'left' : offset.left + this._options.offset.left,
-            'top' : offset.top + this._options.offset.top
-         });
-      },
-
-      _getGeneralOffset: function(){
-         var offset = {
-            'left' : 0,
-            'top' : 0
-            },
-            buf;
-
-         buf = this._getOffsetByCorner(this._options.corner);
-         offset.left = buf.left;
-         offset.top = buf.top;
-         buf = this._getAlignOffset(this._options.verticalAlign.side,this._options.horizontalAlign.side);
-         offset.left += buf.left;
-         offset.top += buf.top;
-         offset = this._displaySizeCorrection(offset);
-         return offset;
-      },
-
-      // Вычисляем сдвиг в зависимости от выравнивания
-      _getAlignOffset: function(vert, horiz){
-         var offset = {
-            'top': 0,
-            'left': 0
-            },
-            border = this._container.outerWidth() - this._container.innerWidth();
-
-
-            if (vert == 'bottom'){
-            offset.top -= this._container.outerHeight() - border/2;
-         }
-         if (horiz == 'right'){
-            offset.left -= this._container.outerWidth() - border/2;
-         }
-
-         offset.left += this._options.horizontalAlign.offset;
-         offset.top += this._options.verticalAlign.offset;
-         return offset;
-      },
-
-      // Вычисляем сдвиг в зависимости от угла
-      _getOffsetByCorner: function(corner){
-         var offset = this._options.target.offset(),
-             border = this._options.target.outerWidth() - this._options.target.innerWidth(),
-             height = this._options.target.outerHeight(),
-             width = this._options.target.outerWidth();
-         switch (corner){
-            case 'tr': offset.left += width - border/2;
-               return offset;
-            case 'bl': offset.top += height;
-               return offset;
-            case 'br': offset.top += height;
-               offset.left+= width - border/2;
-               return offset;
-            case 'tl' : return offset; //tl
-            default: throw new Error('Параметр corner является обязательным');
-         }
-      },
-
-      //Проверям убираемся ли в экран
-      _displaySizeCorrection: function(offset){
-         var buf = {
-            'top': 0,
-            'left': 0
-            };
-
-         if ($(document).height() <= this._container.outerHeight() + offset.top){
-            //offset.top -= ( this._options.target.height() + this._container.outerHeight());
-            buf = this._getAlignOffset('bottom',this._options.horizontalAlign.side);
-            offset.top += ( buf.top - this._options.target.height());
-         }
-         if ($(document).width() <= this._container.outerWidth() + offset.left){
-            //offset.left += this._options.target.outerWidth() - this._container.outerWidth();
-            buf = this._getAlignOffset(this._options.verticalAlign.side,'right');
-            offset.left += ( buf.left + this._options.target.width());
-         }
-         return offset;
       },
 
       before : {
