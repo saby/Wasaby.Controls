@@ -2,7 +2,6 @@
   cursor: pointer;
   text-align: center;
   display: inline-block;
-  box-sizing: border-box;
   height: 24px;
   line-height: normal;
   border: none;
@@ -171,7 +170,6 @@
   display: inline-block;
   height: 23px;
   min-width: 90px;
-  box-sizing: border-box;
   padding-right: 16px;
 }
 .controls-Switcher.ws-disabled {
@@ -252,11 +250,10 @@
 .controls-TextBox {
   display: inline-block;
   background: #ffffff;
-  box-sizing: border-box;
   padding: 0 4px;
   border: 1px solid transparent;
   border-bottom: 1px solid #EAEAEA;
-  height: 24px;
+  height: 22px;
 }
 .controls-TextBox:hover {
   border: 1px solid #EAEAEA;
@@ -268,7 +265,6 @@
 }
 .controls-TextBox__fieldWrapper {
   height: 100%;
-  box-sizing: border-box;
 }
 .controls-TextBox__afterFieldWrapper {
   float: right;
