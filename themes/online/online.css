@@ -66,6 +66,7 @@
 .controls-Button__icon {
   margin-bottom: -3px;
   margin-right: 5px;
+  margin-left: -5px;
 }
 .controls-Button.controls-ToggleButton__checked {
   color: red;
