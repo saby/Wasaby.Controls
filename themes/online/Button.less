@@ -1,68 +1,84 @@
 .controls-Button {
-   cursor: pointer;
-   text-align: center;
-   display: inline-block;
-   height: 24px;
-   line-height: normal;
-   border: none;
-   margin: 0 8px;
-   padding: 3px 16px;
-   border-radius: 12px;
-   background: url("./img/btn_W-sprite.png") 0 -37px repeat-x;
-   color: #000000;
+  cursor: pointer;
+  text-align: center;
+  display: inline-block;
+  height: 24px;
+  line-height: normal;
+  border: none;
+  margin: 0 8px;
+  padding: 3px 16px;
+  border-radius: 12px;
+  background: url("./img/btn_W-sprite.png") 0 -37px repeat-x;
+  color: #000000;
 }
 
 .controls-Button__big {
-   padding: 15px 32px;
-   font-size: 18px;
-   line-height: 18px;
-   height: 48px;
-   border-radius: 24px;
-   font-family: 'Cambria Italic', 'Cambria';
-   font-weight: 400;
-   font-style: italic;
-   background: url("./img/btn_big_W-sprite.png") 0 -73px repeat-x;
+  padding: 15px 32px;
+  font-size: 18px;
+  line-height: 18px;
+  height: 48px;
+  border-radius: 24px;
+  font-family: 'Cambria Italic', 'Cambria';
+  font-weight: 400;
+  font-style: italic;
+  background: url("./img/btn_big_W-sprite.png") 0 -73px repeat-x;
 }
 
 .controls-Button:hover {
-   background-position: 0 -133px;
+  background-position: 0 -133px;
 }
 
 .controls-Button__big:hover {
-   background-position: 0 -649px;
+  background-position: 0 -649px;
 }
 
 .controls-Button__primary {
-   background: url("./img/btn_O-sprite.png") 0 -37px repeat-x;
-   color: #ffffff;
+  background: url("./img/btn_O-sprite.png") 0 -37px repeat-x;
+  color: #ffffff;
 }
 
 .controls-Button__big.controls-Button__primary {
-   background: url("./img/btn_big_O-sprite.png") 0 -73px repeat-x;
+  background: url("./img/btn_big_O-sprite.png") 0 -73px repeat-x;
 }
 
 .controls-Button__primary:hover {
-   background-position: 0 -133px;
+  background-position: 0 -133px;
 }
 
 .controls-Button__primary.controls-Button__big:hover {
-   background-position: 0 -265px;
+  background-position: 0 -265px;
 }
 
 .controls-Button.controls-Button__active {
-   background-position: 0 -229px;
+  background-position: 0 -229px;
 }
 
 .controls-Button__big.controls-Button__active,
 .controls-Button__big.controls-Button__primary.controls-Button__active {
-   background-position: 0 -458px;
+  background-position: 0 -458px;
 }
 
-.controls-Button.ws-disabled{
+.controls-Button.ws-disabled {
   color: #cccccc;
   background-position: 0 -325px;
 }
 
-.controls-Button__big.ws-disabled{
+.controls-Button__big.ws-disabled {
   background-position: 0 -649px;
+}
+
+.controls-Button__light {
+  background-image: none;
+  border: 1px solid #587AB0;
+  color: #000000;
+}
+
+.controls-Button__light.controls-Button__primary {
+  border-color: #FFA67F;
+}
+
+.controls-Button__icon{
+  margin-bottom: -3px;
+  margin-right: 5px;
+  margin-left: -5px;
 }
