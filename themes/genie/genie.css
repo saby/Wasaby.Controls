@@ -201,6 +201,9 @@
 .controls-ComboBox__picker.controls-Picker__owner__hover {
   border-top-color: #00d7d7;
 }
+.Controls-ListView__item {
+  overflow: hidden;
+}
 .controls-ListView > .controls-TreeView__list {
   display: block;
 }
@@ -208,11 +211,6 @@
   list-style: none;
   padding-left: 10px;
   display: none;
-}
-.controls-TreeView__item {
-  list-style: none;
-  margin-left: 14px;
-  overflow: hidden;
 }
 .controls-TreeView__expand {
   float: left;

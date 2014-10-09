@@ -81,9 +81,9 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
             container = this._getItemsContainer();
          container.empty();
          this._items.iterate(function (item, key, i, parItem) {
-            var itemContainer = $("<div data-id='"+ key +"'></div>");
-            self._drawItem(itemContainer, item);
-            itemContainer.appendTo(container);
+            var itemDiv = $("<div data-id='"+ key +"'></div>").addClass('Controls-ListView__item');
+            self._drawItem(itemDiv, item);
+            itemDiv.appendTo(container);
          });
          this._loadChildControls();
       },

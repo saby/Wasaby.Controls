@@ -7,7 +7,6 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
       $protected: {
          _openedPath : [],
          _ulClass : 'controls-TreeView__list',
-         _liClass : 'controls-TreeView__item',
          _options: {
             /**
              * @cfg {Boolean} Отображать сначала узлы, потом листья
@@ -33,6 +32,9 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
       },
       $constructor : function() {
          this._items.setHierField(this._options.hierField);
+         if (this._options.openedPath) {
+            this._openedPath = this._options.openedPath;
+         }
       },
       /**
        * Установить корень выборки
@@ -88,26 +90,26 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
          container.empty();
 
          this._items.iterate(function (item, key, i, parItem, lvl) {
-            var
-               itemContainer = $("<li data-id='"+ key +"'></li>").addClass(self._liClass),
-               curList;
+            var itemDiv = $("<div data-id='"+ key +"'></div>").addClass('Controls-ListView__item');
+
             if (parItem) {
                var
+                  curList,
                   parKey = self._items.getKey(parItem),
-                  curItem =  $("li[data-id='"+parKey+"']", self.getContainer().get(0));
-
+                  curItem =  $(".Controls-ListView__item[data-id='"+parKey+"']", self.getContainer().get(0));
+               curList = $(".controls-TreeView__childContainer", curItem.get(0)).first();
+               if (!curList.length) {
+                  curList = $("<div></div>").appendTo(curItem).addClass('controls-TreeView__childContainer');
+               }
+               curItem.addClass('controls-TreeView__hasChild');
             }
             else {
-               curItem = container;
+               curList = container;
             }
 
-            curList = $("ul", curItem.get(0)).first();
-            if (!curList.length) {
-               curList = $("<ul></ul>").appendTo(curItem).addClass(self._ulClass);
-            }
-            curItem.addClass('controls-TreeView__hasChild');
-            curList.append(itemContainer);
-            self._drawItem(itemContainer, item);
+            self._drawItem(itemDiv, item);
+            itemDiv.appendTo(curList);
+
          });
          this._loadChildControls();
          this._drawOpenedPath();
@@ -139,9 +141,6 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
       },
 
       _drawOpenedPath : function() {
-         /*if (this._options.openedPath) {
-            this._openedPath = this._options.openedPath;
-         }*/
          for (var i = 0; i < this._openedPath.length; i++) {
             this.openNode(this._openedPath[i]);
          }
