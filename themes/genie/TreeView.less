@@ -1,7 +1,7 @@
-.controls-ListView > .controls-TreeView__list {
+.controls-ListView > .controls-TreeView__childContainer {
    display: block;
 }
-.controls-TreeView__list {
+.controls-TreeView__childContainer {
    list-style: none;
    padding-left: 10px;
    display: none;
@@ -13,6 +13,10 @@
    cursor: pointer;
    background-image: url('./img/Tree_expand.png');
    visibility: hidden;
+}
+
+.controls-TreeView__itemContent {
+   min-height: 16px;
 }
 
 .controls-TreeView__hasChild > .controls-TreeView__expand {

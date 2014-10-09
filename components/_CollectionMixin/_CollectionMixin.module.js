@@ -78,14 +78,29 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
       _drawItems: function(){
          var
             self = this,
-            container = this._getItemsContainer();
-         container.empty();
-         this._items.iterate(function (item, key, i, parItem) {
-            var itemDiv = $("<div data-id='"+ key +"'></div>").addClass('Controls-ListView__item');
-            self._drawItem(itemDiv, item);
-            itemDiv.appendTo(container);
+            itemsContainer = this._getItemsContainer();
+         itemsContainer.empty();
+
+         this._items.iterate(function (item, key, i, parItem, lvl) {
+            var
+               oneItemContainer = self._getOneItemContainer(item, key, parItem, lvl),
+               targetContainer = self._getTargetContainer(item, key, parItem, lvl);
+            oneItemContainer.attr('data-id', key).addClass('controls-ListView__item');
+            targetContainer.append(oneItemContainer);
+
+            self._drawItem(oneItemContainer, item);
+
          });
          this._loadChildControls();
+      },
+
+      _getOneItemContainer : function(item, key) {
+         return $('<div class="js-controls-ListView__itemContent"></div>');
+      },
+
+      _getTargetContainer : function() {
+         //по стандарту все строки рисуются в itemsContainer
+         return this._getItemsContainer();
       },
 
       /*TODO переопределяем метод compoundControl - костыль*/
@@ -109,26 +124,27 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
       },
 
       _drawItem : function(itemContainer, item) {
+         var resContainer = itemContainer.hasClass('js-controls-ListView__itemContent') ? itemContainer : $('.js-controls-ListView__itemContent', itemContainer);
          var
             def = new $ws.proto.Deferred(),
             itemTpl = this._options.itemTemplate;
          if (typeof itemTpl == 'string') {
-            this._drawTpl(itemContainer, item)
+            this._drawTpl(resContainer, item)
          }
          else if (typeof itemTpl == 'function') {
             var tplConfig = itemTpl.call(this, item);
             require([tplConfig.componentType], function(ctor){
                var config = tplConfig.config;
-               config.element = itemContainer;
+               config.element = resContainer;
                new ctor(config)
             })
          }
          return def;
       },
 
-      _drawTpl : function(itemContainer, item) {
-         var id = itemContainer.attr('data-id');
-         itemContainer.append(doT.template(this._options.itemTemplate)(item));
+      _drawTpl : function(resContainer, item) {
+         var id = resContainer.attr('data-id');
+         resContainer.append(doT.template(this._options.itemTemplate)(item));
       }
    };
 
