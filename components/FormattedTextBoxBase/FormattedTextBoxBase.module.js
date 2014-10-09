@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], function (Control) {
+define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase'], function (TextBoxBase) {
 
    'use strict';
 
@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], func
     * @control
     */
 
-   var FormattedTextBoxBase = Control.Control.extend(/** @lends SBIS3.CONTROLS.FormattedTextBoxBase.prototype */{
+   var FormattedTextBoxBase = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.FormattedTextBoxBase.prototype */{
       $protected: {
          /**
           * Изначальная маска (либо задается в опциях при создании, либо берется по умолчанию)
@@ -90,11 +90,6 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], func
           * Опции создаваемого контролла
           */
          _options: {
-            /**
-             * @cfg {RegExp} Маска, на базе которой будет создана html-разметка и в соответствии с которой
-             * будет определён весь функционал
-             */
-            mask: ''
          },
 
          _KEYS: {
@@ -105,18 +100,20 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], func
       },
 
       $constructor: function () {
+         this._initializeComponents();
+      },
 
+      _getMask:function(){
+         return this._options.mask;
       },
 
       _initializeComponents: function(){
          try {
             var self = this;
 
-            this._checkPossibleMask();
-
             this._inputField = $('.controls-FormattedTextBox__field', this.getContainer().get(0));
 
-            this._primalMask = this._options.mask;
+            this._primalMask = this._getMask();
             this._controlCharacters = this._getControlCharactersSet();
             this._clearMask = this._getClearMask();
             this._isSeparatorContainerFirst = this._getTypeOfFirstContainer();
@@ -488,15 +485,8 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], func
 
             return this._generalControlCharacters;
          }
-      },
-
-      _checkPossibleMask: function(){
-         if (this._possibleMasks.length !== 0){
-            if (this._possibleMasks.indexOf(this._options.mask) == -1){
-               throw new Error('Маска не удовлетворяет ни одной допустимой маске данного контролла');
-            }
-         }
       }
+
 });
 
    return FormattedTextBoxBase;

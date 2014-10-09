@@ -25,7 +25,6 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
       },
 
       $constructor: function () {
-         this._initializeComponents();
       }
 });
 

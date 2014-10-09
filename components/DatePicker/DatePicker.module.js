@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CONTROLS.FormattedTextBoxBase', '!html!SBIS3.CONTROLS.DatePicker', 'css!SBIS3.CONTROLS.DatePicker'], function (FormattedTextBoxBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CONTROLS.FormattedTextBoxBase', '!html!SBIS3.CONTROLS.DatePicker'], function (FormattedTextBoxBase, dotTplFn) {
 
    'use strict';
 
@@ -60,8 +60,18 @@ define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CONTROLS.FormattedTextBoxBase'
       },
 
       $constructor: function () {
-         this._initializeComponents();
+         // TODO: пока положил тут
+         this._checkPossibleMask();
+      },
+
+      _checkPossibleMask: function(){
+         if (this._possibleMasks.length !== 0){
+            if (this._possibleMasks.indexOf(this._options.mask) == -1){
+               throw new Error('Маска не удовлетворяет ни одной допустимой маске данного контролла');
+            }
+         }
       }
+
    });
 
    return DatePicker;
