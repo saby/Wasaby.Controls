@@ -55,6 +55,18 @@
 .controls-Button__big.ws-disabled {
   background-position: 0 -649px;
 }
+.controls-Button__light {
+  background-image: none;
+  border: 1px solid #587AB0;
+  color: #000000;
+}
+.controls-Button__light.controls-Button__primary {
+  border-color: #FFA67F;
+}
+.controls-Button__icon {
+  margin-bottom: -3px;
+  margin-right: 5px;
+}
 .controls-Button.controls-ToggleButton__checked {
   color: red;
   background-position: 0 -229px !important;
