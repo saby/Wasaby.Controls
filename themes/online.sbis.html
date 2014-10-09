@@ -174,6 +174,20 @@
             <div id="button3big" class="controls-Button__big"></div>
          </td>
       </tr>
+      <tr>
+         <td>
+            light
+         </td>
+         <td>
+            <div id="buttonlight" class="controls-Button__light"></div>
+         </td>
+         <td>
+            disable big
+         </td>
+         <td>
+            <div id="buttonlight2" class="controls-Button__light"></div>
+         </td>
+      </tr>
    </table>
 
 
@@ -368,6 +382,23 @@
                element: "button3big",
                caption: 'Сохранить',
                enabled: false
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Button"], function (r) {
+            new r({
+               element: "buttonlight",
+               caption: 'Утвердить',
+               primary:true,
+               icon: "icon-16 icon-Successful icon-done"
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Button"], function (r) {
+            new r({
+               element: "buttonlight2",
+               caption: 'Отклонить',
+               icon:'icon-16 icon-Unsuccess icon-error'
             })
          });
 
