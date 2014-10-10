@@ -18,11 +18,7 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
             /**
              * @cfg {Array} Набор исходных данных по которому строится отображение
              */
-            items: undefined,
-            /**
-             * @cfg {} Шаблон отображения каждого элемента коллекции
-             */
-            itemTemplate: ''
+            items: undefined
          }
       },
 
@@ -82,9 +78,11 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
          itemsContainer.empty();
 
          this._items.iterate(function (item, key, i, parItem, lvl) {
+
             var
                oneItemContainer = self._getOneItemContainer(item, key, parItem, lvl),
                targetContainer = self._getTargetContainer(item, key, parItem, lvl);
+
             oneItemContainer.attr('data-id', key).addClass('controls-ListView__item');
             targetContainer.append(oneItemContainer);
 
@@ -127,24 +125,32 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
          var resContainer = itemContainer.hasClass('js-controls-ListView__itemContent') ? itemContainer : $('.js-controls-ListView__itemContent', itemContainer);
          var
             def = new $ws.proto.Deferred(),
-            itemTpl = this._options.itemTemplate;
+            itemTpl = this._getItemTemplate();
+
          if (typeof itemTpl == 'string') {
-            this._drawTpl(resContainer, item)
+            resContainer.append(doT.template(itemTpl)(item));
+            def.callback(resContainer);
          }
          else if (typeof itemTpl == 'function') {
             var tplConfig = itemTpl.call(this, item);
-            require([tplConfig.componentType], function(ctor){
-               var config = tplConfig.config;
-               config.element = resContainer;
-               new ctor(config)
-            })
+            if (tplConfig.componentType.indexOf('js!') == 0) {
+               require([tplConfig.componentType], function (ctor) {
+                  var config = tplConfig.config;
+                  config.element = resContainer;
+                  new ctor(config);
+                  def.callback(resContainer);
+               })
+            }
+            else {
+               resContainer.append(doT.template(tplConfig.componentType)(tplConfig.config));
+               def.callback(resContainer);
+            }
          }
          return def;
       },
 
-      _drawTpl : function(resContainer, item) {
-         var id = resContainer.attr('data-id');
-         resContainer.append(doT.template(this._options.itemTemplate)(item));
+      _getItemTemplate : function() {
+         return '<div>template</div>'
       }
    };
 

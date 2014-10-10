@@ -28,6 +28,10 @@ define('js!SBIS3.CONTROLS.ListView',
             _itemsContainer: null,
             _options: {
                /**
+                * @cfg {} Шаблон отображения каждого элемента коллекции
+                */
+               itemTemplate: '',
+               /**
                 * @cfg {Array} Набор действий, над элементами, отображающийся в виде иконок. Можно использовать для массовых операций.
                 */
                itemsActions: null,
@@ -56,8 +60,11 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setEmptyHTML: function (html) {
 
-         }
+         },
 
+         _getItemTemplate : function() {
+            return this._options.itemTemplate;
+         }
       });
 
       return ListView;

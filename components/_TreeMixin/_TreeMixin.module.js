@@ -89,19 +89,33 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
          }
       },
 
+      around : {
+         _drawItem : function(parentFnc, itemContainer, item) {
+            var self = this;
+            parentFnc.call(this, itemContainer, item);
+            var resContainer = itemContainer.hasClass('js-controls-ListView__itemContent') ? itemContainer : $('.js-controls-ListView__itemContent', itemContainer);
+
+            if (!($('.js-controls-TreeView__expand', resContainer).length)) {
+               resContainer.before('<div class="controls-TreeView__expand js-controls-TreeView__expand"></div>');
+            }
+
+            if (this)
+
+            $(".js-controls-TreeView__expand", itemContainer).click(function(){
+               var id = $(this).closest('.controls-ListView__item').attr('data-id');
+               self.toggleNode(id)
+            });
+
+         }
+      },
+
       _getOneItemContainer : function(item, key) {
-         var oneItemContainer = $('<div>\
-            <div class="controls-TreeView__expand js-controls-TreeView__expand"></div>\
-            <div class="controls-TreeView__itemContent js-controls-ListView__itemContent"></div>\
+         return $('<div>\
+            <div class="controls-TreeView__item">\
+               \
+               <div class="controls-TreeView__itemContent js-controls-ListView__itemContent"></div>\
+            </div>\
          </div>');
-
-         var self = this;
-         $(".controls-TreeView__expand", oneItemContainer).click(function(){
-            var id = $(this).closest('.controls-ListView__item').attr('data-id');
-            self.toggleNode(id)
-         });
-
-         return oneItemContainer;
       },
 
       _getTargetContainer : function(item, key, parItem, lvl) {
@@ -114,7 +128,7 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
             if (!curList.length) {
                curList = $("<div></div>").appendTo(curItem).addClass('controls-TreeView__childContainer');
             }
-            curItem.addClass('controls-TreeView__hasChild');
+            $('.controls-TreeView__item', curItem).addClass('controls-TreeView__hasChild');
          }
          else {
             curList = this._getItemsContainer();
