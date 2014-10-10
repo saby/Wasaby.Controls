@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase'], function (TextBoxBase) {
+define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase','is!msIe?js!SBIS3.CONTROLS.FormattedTextBoxBase/resources/ext/ierange-m2-min'], function (TextBoxBase) {
 
    'use strict';
 
@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
       },
 
       _getMask:function(){
-         return this._options.mask;
+         /*Method must be implemented*/
       },
 
       _initializeComponents: function(){
@@ -333,8 +333,16 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
        * @private
        */
       _moveCursor : function(container, position){
-         var selection = window.getSelection();
-         selection.collapse(container, position);
+         if ($ws._const.browser.isIE){
+            var rng = document.body.createTextRange();
+            rng.moveToElementText(container.parentNode);
+            rng.move('character', position);
+            rng.select();
+         }
+         else {
+            var selection = window.getSelection();
+            selection.collapse(container, position);
+         }
       },
 
       /**

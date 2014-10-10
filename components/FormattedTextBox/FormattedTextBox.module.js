@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
           */
          _options: {
             /**
-             * @cfg {RegExp} Маска, на базе которой будет создана html-разметка и в соответствии с которой
+             * @cfg {String} Маска, на базе которой будет создана html-разметка и в соответствии с которой
              * будет определён весь функционал
              */
             mask: 'd(ddd)ddd-dd-dd'
@@ -25,6 +25,14 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
       },
 
       $constructor: function () {
+      },
+
+      _getMask: function () {
+         if (this._options.mask) {
+            return this._options.mask;
+         } else {
+            return '';
+         }
       }
 });
 
