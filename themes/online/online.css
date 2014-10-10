@@ -60,8 +60,24 @@
   border: 1px solid #587AB0;
   color: #000000;
 }
+.controls-Button__light:hover {
+  background-color: #E4E9F1;
+}
+.controls-Button__light.controls-Button__active {
+  background-color: #CBD5E5;
+}
 .controls-Button__light.controls-Button__primary {
-  border-color: #FFA67F;
+  border-color: #FF7033;
+}
+.controls-Button__light.controls-Button__primary:hover {
+  background-color: #FDECD9;
+}
+.controls-Button__light.controls-Button__primary.controls-Button__active {
+  background-color: #FDD2C0;
+}
+.controls-Button__light.ws-disabled {
+  border-color: #CCCCCC;
+  background-color: #FFFFFF !important;
 }
 .controls-Button__icon {
   margin-bottom: -3px;
