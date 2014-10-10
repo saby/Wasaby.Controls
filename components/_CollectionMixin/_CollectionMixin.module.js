@@ -26,20 +26,7 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
          if (this._options.keyField) {
             this._keyField = this._options.keyField;
          }
-         if (this._options.items) {
-            if (this._options.items instanceof Collection) {
-               this._items = this._options.items;
-            }
-            else {
-               /*TODO Костыли для совместимости
-               * позволяет передать в опции коллекцию в неявном виде*/
-               this._initItems(this._options.items);
-            }
-         }
-         else {
-            this._initItems([]);
-         }
-
+         this._initItems(this._options.items || []);
       },
 
       /**
@@ -51,23 +38,35 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
 
       _initItems : function(items) {
          /*TODO Костыли для совместимости*/
-         if (!this._keyField) {
-            //пробуем взять первое поле из коллекции
-            var item = items[0];
-            if (item && Object.prototype.toString.call(item) === '[object Object]') {
-               this._keyField = Object.keys(item)[0];
-            }
+         if (items instanceof Collection) {
+            this._items = items;
          }
-         this._items = new Collection({
-            data: items,
-            keyField: this._keyField,
-            hierField: this._options.hierField,
-            adapter : new AdapterJSON()
-         });
+         else {
+            if (!this._keyField) {
+               //пробуем взять первое поле из коллекции
+               var item = items[0];
+               if (item && Object.prototype.toString.call(item) === '[object Object]') {
+                  this._keyField = Object.keys(item)[0];
+               }
+            }
+            this._items = new Collection({
+               data: items,
+               keyField: this._keyField,
+               hierField: this._options.hierField,
+               adapter: new AdapterJSON()
+            });
+         }
       },
 
       setItems : function(items) {
-         this._initItems(items);
+         if (items instanceof Collection) {
+            this._items = items;
+         }
+         else {
+            /*TODO Костыли для совместимости
+             * позволяет передать в опции коллекцию в неявном виде*/
+            this._initItems(items);
+         }
          this._drawItems();
       },
 

@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
             if (!curList.length) {
                curList = $("<div></div>").appendTo(curItem).addClass('controls-TreeView__childContainer');
             }
-            $('.controls-TreeView__item', curItem).addClass('controls-TreeView__hasChild');
+            $('.controls-TreeView__item', curItem).first().addClass('controls-TreeView__hasChild');
          }
          else {
             curList = this._getItemsContainer();
