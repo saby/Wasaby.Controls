@@ -83,6 +83,12 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
          }
       },
 
+      after : {
+         _drawItems : function() {
+            this._drawOpenedPath();
+         }
+      },
+
       _getOneItemContainer : function(item, key) {
          var oneItemContainer = $('<div>\
             <div class="controls-TreeView__expand js-controls-TreeView__expand"></div>\

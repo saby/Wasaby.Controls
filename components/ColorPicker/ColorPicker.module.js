@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.ColorPicker',
          self._colorBox = $('.js-controls-ColorPicker__currentColor', this.getContainer().get(0));
          self._colorBox.css('background', '#' + self._options.text || '000000');
          self._colorBox.bind('click', function () {
-            if (this.isEnabled()) {
+            if (self.isEnabled()) {
                if (self._options.text) {
                   self.togglePicker(self._options.text);
                } else {
