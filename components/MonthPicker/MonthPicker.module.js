@@ -1,6 +1,8 @@
 /**
  * @author io.frolenko
  * Created on 03.10.2014.
+ * TODO компонент пока что тестировался только в Chrome и IE9
+ * TODO при быстром многократном нажатии на стрелочку, срабатывает выделение. Оно здесь не нужно -- запретить
  */
 
 define(
@@ -83,11 +85,12 @@ define(
          var self = this;
 
          this.setMode(this._options.mode);
+         if ( this._options.defaultValue ) { this.setDate(this._options.defaultValue); }
 
-         $('.js-controls-MonthPicker__arrow-right', this.getContainer().get(0)).click(function(){
+         $('.js-controls-MonthPicker__arrowRight', this.getContainer().get(0)).click(function(){
             self.setNext();
          });
-         $('.js-controls-MonthPicker__arrow-left', this.getContainer().get(0)).click(function(){
+         $('.js-controls-MonthPicker__arrowLeft', this.getContainer().get(0)).click(function(){
             self.setPrev();
          });
          $('.js-controls-MonthPicker__field', this.getContainer().get(0)).click(function(){
@@ -101,27 +104,29 @@ define(
       },
 
       /**
-       * Установить режим ввода (Месяц/Месяц и Год)
+       * Установить режим ввода (месяц / месяц,год)
        * @param {String} mode
        */
       setMode: function(mode) {
+         this._options.mode = mode;
+
          var self = this;
 
          this._picker.getContainer().empty();
 
          if( mode == 'month' ){
-            $('.js-controls-MonthPicker__field-box', this.getContainer().get(0))
-               .removeClass('controls-MonthPicker__field-box-year')
-               .addClass('controls-MonthPicker__field-box-month');
+            $('.js-controls-MonthPicker__fieldBox', this.getContainer().get(0))
+               .removeClass('controls-MonthPicker__fieldBoxYear')
+               .addClass('controls-MonthPicker__fieldBoxMonth');
 
             this._picker.getContainer().append(self._dropdownMonthTpl);
 
-            var titleContainer = $('.js-controls-MonthPicker__dropdown-title', this._picker.getContainer());
+            var titleContainer = $('.js-controls-MonthPicker__dropdownTitle', this._picker.getContainer());
 
-            $('.js-controls-MonthPicker__dropdown-arrow-left', this._picker.getContainer()).click(function(){
+            $('.js-controls-MonthPicker__dropdownArrowLeft', this._picker.getContainer()).click(function(){
                titleContainer.text(parseInt(titleContainer.text(), 10) - 1);
             });
-            $('.js-controls-MonthPicker__dropdown-arrow-right', this._picker.getContainer()).click(function(){
+            $('.js-controls-MonthPicker__dropdownArrowRight', this._picker.getContainer()).click(function(){
                titleContainer.text(parseInt(titleContainer.text(), 10) + 1);
             });
 
@@ -130,27 +135,27 @@ define(
                else if( event.which == self._KEYS.ARROW_LEFT ){ titleContainer.text(parseInt(titleContainer.text(), 10) - 1); }
             });
 
-            $('.js-controls-MonthPicker__dropdown-element', this._picker.getContainer()).click(function(){
-               self._setDate(new Date(parseInt(titleContainer.text(), 10), $(this).attr('data-key'), 15));
+            $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).click(function(){
+               self._setDate(new Date(parseInt(titleContainer.text(), 10), $(this).attr('data-key'), 1, 20, 0, 0));
                self.hidePicker();
                self.getContainer().focus();
             });
          }
          else if( mode == 'year' ){
-            $('.js-controls-MonthPicker__field-box', this.getContainer().get(0))
-               .removeClass('controls-MonthPicker__field-box-month')
-               .addClass('controls-MonthPicker__field-box-year');
+            $('.js-controls-MonthPicker__fieldBox', this.getContainer().get(0))
+               .removeClass('controls-MonthPicker__fieldBoxMonth')
+               .addClass('controls-MonthPicker__fieldBoxYear');
 
             this._picker.getContainer().append(self._dropdownYearTpl);
 
-            $('.js-controls-MonthPicker__dropdown-element', this._picker.getContainer()).click(function(){
-               self._setDate(new Date(parseInt($(this).text(), 10), 0, 15));
+            $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).click(function(){
+               self._setDate(new Date(parseInt($(this).text(), 10), 0, 1, 20, 0, 0));
                self.hidePicker();
                self.getContainer().focus();
             });
          }
 
-         this._setDefaultValue();
+         this.setToday();
       },
 
       /**
@@ -161,22 +166,30 @@ define(
       },
 
       /**
-       * Установить дату по полученному объекту Date()
-       * @param date Дата, по которой устанавливается новое значение
-       * @private
+       * Установить дату по полученному значению. Публичный метод. Может принимает либо строку
+       * формата 'число.число' или 'число', либо объект типа Date
+       * @param value Строка или дата
        */
-      _setDate: function(date){
-         var
-            month = parseInt(date.getMonth(), 10),
-            year = parseInt(date.getFullYear(), 10);
-         // Явно устанавливаем день примерно в середине месяца(главное, не первый, по умолчанию считается единицей) т.к. в некоторых
-         // случаях при нулевом дне нам отдается предыдущий месяц, например, при new Date(2020, 0, 1), то есть если мы хотим
-         // задать 2020 год 1 января, нам вернёт как ни странно Tue Dec 31 2019 23:00:00 GMT+0300 (RTZ 2 (зима))
-         this._currentValue = new Date(year, month, 15);
-         var fieldContainer = $('.js-controls-MonthPicker__field', this.getContainer().get(0));
-         if( this._options.mode == 'month' ){ fieldContainer.text(this._months[month] + ', ' + year); }
-         else if( this._options.mode == 'year' ){ fieldContainer.text(year); }
+      setDate: function(value) {
+         if( value instanceof Date ){ this._setDate(value); }
+         else if( typeof value == 'string' ){
+            if ( this._checkValue(value) ){
+               var
+                  dotExpResult = /\./.exec(value),
+                  date;
+               if ( dotExpResult ){
+                  date = new Date(parseInt(value.slice(dotExpResult.index + 1), 10),
+                     parseInt(value.slice(0, dotExpResult.index), 10) - 1, 1, 20, 0, 0);
+               }
+               else {
+                  date = new Date(parseInt(value, 10), 0, 1, 20, 0, 0);
+               }
+               this._setDate(date);
+            }
+            else { throw new Error('Неверный формат даты'); }
+         }
       },
+
 
       /**
        * Установить следующий месяц/год
@@ -208,6 +221,45 @@ define(
       },
 
       /**
+       * Возвращает текущее значение даты.
+       * В случае года, возвращает дату 1-ого дня 1-ого месяца данного года.
+       * В случае месяца и года, возвращает дату 1-ого дня данного месяца данного года
+       * @returns {Date|*} Текущая дата
+       */
+      getDate: function(){
+         return ( this._options.mode == 'month' ) ? this._currentValue : new Date(this._currentValue.setMonth(0));
+      },
+
+      // TODO доопределить
+      getTextDate: function(){
+
+      },
+
+      // TODO доопределить
+      getInterval: function(){
+
+      },
+
+      /**
+       * Установить дату по объекту типа Date. Приватный метод, работает только с типом Date
+       * @param date Дата, по которой устанавливается новое значение
+       * @private
+       */
+      _setDate: function(date){
+         var
+            month = parseInt(date.getMonth(), 10),
+            year = parseInt(date.getFullYear(), 10);
+         // Явно устанавливаем ненулевое время, т.к. в некоторых случаях при значениях по умолчанию
+         // нам отдается предыдущий месяц, например, при new Date(2020, 0, 1), то есть если мы хотим
+         // задать 2020 год 1 января, нам вернёт как ни странно Tue Dec 31 2019 23:00:00 GMT+0300 (RTZ 2 (зима))
+         this._currentValue = new Date(year, month, 1, 20, 0, 0);
+         var fieldContainer = $('.js-controls-MonthPicker__field', this.getContainer().get(0));
+         if( this._options.mode == 'month' ){ fieldContainer.text(this._months[month] + ', ' + year); }
+         else if( this._options.mode == 'year' ){ fieldContainer.text(year); }
+      },
+
+
+      /**
        * Обновить выпадающий список в соответствии с типом mode
        * @private
        */
@@ -216,67 +268,36 @@ define(
             self = this,
             temporary;
          if( self._options.mode == 'month' ) {
-            $('.js-controls-MonthPicker__dropdown-title', this._picker.getContainer().get(0)).text(this._currentValue.getFullYear());
-            $('.js-controls-MonthPicker__dropdown-element', this._picker.getContainer().get(0)).each(function () {
-               $(this).removeClass('controls-MonthPicker__dropdown-element-active');
+            $('.js-controls-MonthPicker__dropdownTitle', this._picker.getContainer().get(0)).text(this._currentValue.getFullYear());
+            $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer().get(0)).each(function () {
+               $(this).removeClass('controls-MonthPicker__dropdownElementActive');
                if ( $(this).attr('data-key') == self._currentValue.getMonth() ){
-                  $(this).addClass('controls-MonthPicker__dropdown-element-active');
+                  $(this).addClass('controls-MonthPicker__dropdownElementActive');
                }
             });
          }
          else if( self._options.mode == 'year' ) {
-            $('.js-controls-MonthPicker__dropdown-element', this._picker.getContainer().get(0)).each(function () {
-               $(this).removeClass('controls-MonthPicker__dropdown-element-active');
+            $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer().get(0)).each(function () {
+               $(this).removeClass('controls-MonthPicker__dropdownElementActive');
                temporary = parseInt(self._currentValue.getFullYear(), 10) + $(this).index() - 3;
                $(this).text(temporary);
                if ( temporary == parseInt(self._currentValue.getFullYear(), 10) ){
-                  $(this).addClass('controls-MonthPicker__dropdown-element-active');
+                  $(this).addClass('controls-MonthPicker__dropdownElementActive');
                }
             });
          }
       },
 
       /**
-       * Установить начальное значение. Если передано опцией, то проверить, удовлетворяет ли, затем установить,
-       * иначе установить текущую дату
-       * @private
-       */
-      _setDefaultValue: function(){
-         if( this._options.defaultValue ){
-            var value = this._options.defaultValue;
-
-            if( value instanceof Date ){ this._setDate(value); }
-            else if( typeof value == 'string' ){
-               if ( this._checkDefaultValue(value) ){
-                  if ( this._options.mode == 'month' ){
-                     this._setDate(new Date(parseInt(value.slice(3), 10), parseInt(value.slice(0, 2), 10), 15));
-                  }
-                  else if ( this._options.mode == 'year' ){
-                     this._setDate(new Date(parseInt(value, 10), 0, 15));
-                  }
-               }
-               else { this.setToday(); }
-            }
-         }
-         else {
-            this.setToday();
-         }
-      },
-
-      /**
-       * Проверить, удовлетворяет ли значение по умолчанию значению типа DD.YYYY в случае mode: 'month'
-       * или же YYYY в случае mode: 'year'
+       * Проверить, удовлетворяет ли строка значению типа 'число.число' (где первое от одного до двух символов,
+       * а второе от одного до четырех символов) или типа 'число' (от одного до четырёх символов)
+       * Иными словами, проверяет, является ли значение корректной датой 'месяц.год' или 'год'
        * @param value
        * @returns {boolean}
        * @private
        */
-      _checkDefaultValue: function(value){
-         if ( this._options.mode == 'month' ){
-            return value.length == 7 && /[\d]{2}\.[\d]{4}/.test(value);
-         }
-         else if ( this._options.mode == 'year' ){
-            return value.length == 4 && /[\d]{4}/.test(value);
-         }
+      _checkValue: function(value){
+         return /^(?:\d{1,2}\.)?\d{1,4}$/.test(value);
       }
    });
 
