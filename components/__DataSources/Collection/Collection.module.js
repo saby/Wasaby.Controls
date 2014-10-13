@@ -3,16 +3,13 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
       $protected : {
          _data : [],
          _index : {},
-         _indexChild : {},
          _keyField : null,
          _hierField : null,
-         _hierIterateFlags : {},
          _adapter : null,
          _options : {
             adapter : null,
             data : [],
-            keyField : '',
-            hierField : null
+            keyField : ''
          }
       },
       $constructor : function() {
@@ -22,9 +19,6 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
          }
          if (this._options.keyField) {
             this._keyField = this._options.keyField;
-         }
-         if (this._options.hierField) {
-            this._hierField = this._options.hierField;
          }
          if (this._options.adapter) {
             this._adapter = this._options.adapter;
