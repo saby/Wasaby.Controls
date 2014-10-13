@@ -27,7 +27,8 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
             /**
              * @cfg {String} Поле иерархии
              */
-            hierField : null
+            hierField : null,
+            openType : 'nothing'
          }
       },
       $constructor : function() {
@@ -99,8 +100,6 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
                resContainer.before('<div class="controls-TreeView__expand js-controls-TreeView__expand"></div>');
             }
 
-            if (this)
-
             $(".js-controls-TreeView__expand", itemContainer).click(function(){
                var id = $(this).closest('.controls-ListView__item').attr('data-id');
                self.toggleNode(id)
@@ -112,7 +111,6 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
       _getOneItemContainer : function(item, key) {
          return $('<div>\
             <div class="controls-TreeView__item">\
-               \
                <div class="controls-TreeView__itemContent js-controls-ListView__itemContent"></div>\
             </div>\
          </div>');
@@ -137,8 +135,16 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
       },
 
       _drawOpenedPath : function() {
-         for (var i = 0; i < this._openedPath.length; i++) {
-            this.openNode(this._openedPath[i]);
+         var self = this;
+         if (this._options.openType == 'all') {
+            this._items.iterate(function(item, key){
+               self.openNode(key);
+            });
+         }
+         else {
+            for (var i = 0; i < this._openedPath.length; i++) {
+               this.openNode(this._openedPath[i]);
+            }
          }
       }
    };
