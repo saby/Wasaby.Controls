@@ -352,6 +352,11 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
          var buffer = container.nodeValue.split('');
          buffer[position] = character;
          container.nodeValue = buffer.join('');
+         var text = '';
+         $('.controls-FormattedTextBox__field-placeholder', this.getContainer()).each(function () {
+            text += $(this).text();
+         });
+         this._options.text = text;
       },
 
       /**
