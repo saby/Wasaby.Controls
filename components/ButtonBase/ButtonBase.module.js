@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
              * @see setValue
              * @see getValue
              */
-            caption: 'Заголовок',
+            caption: '',
             /**
              * @cfg {String}  Путь до иконки
              * Путь задаётся относительно корня сайта либо через sprite.
