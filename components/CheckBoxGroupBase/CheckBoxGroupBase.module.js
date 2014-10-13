@@ -41,8 +41,11 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
 
       _getAddOptions : function(item) {
          var
-            resObj = {},
-            key = this._items.getKey(item);
+            key = this._items.getKey(item),
+            caption = this._items.getValue(item, 'title'),
+            resObj = {
+               caption : caption
+            };
 
          var success = false;
          for (var i = 0; i < this._selectedItems.length; i++) {

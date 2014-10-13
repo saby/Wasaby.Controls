@@ -29,8 +29,11 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
 
       _getAddOptions : function(item) {
          var
-            resObj = {},
-            key = this._items.getKey(item);
+            key = this._items.getKey(item),
+            caption = this._items.getValue(item, 'title'),
+            resObj = {
+               caption : caption
+            };
 
 
          if (key == this._selectedItem) {
