@@ -22,14 +22,39 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
       },
 
       $constructor: function() {
+         if (this._items.getItemsCount()) {
+            this._drawItems();
+         }
+      },
+
+      _itemActivatedHandler : function(activatedControl) {
+         var key = activatedControl.getContainer().data('id');
+         this.toggleItemsSelection([key]);
+      },
+
+      _drawItems : function() {
+         CheckBoxGroupBase.superclass._drawItems.call(this);
          if (this._selectedItems && this._selectedItems.length) {
             this._drawSelectedItems(this._selectedItems);
          }
       },
 
-      _itemActivatedHandler : function(activatedControl) {
-         var key = activatedControl.getContainer().data('key');
-         this.toggleItemsSelection([key]);
+      _getAddOptions : function(item) {
+         var
+            resObj = {},
+            key = this._items.getKey(item);
+
+         var success = false;
+         for (var i = 0; i < this._selectedItems.length; i++) {
+            if (key == this._selectedItems[i]) {
+               success = true;
+               break;
+            }
+         }
+         if (success) {
+            resObj.checked = true
+         }
+         return resObj;
       },
 
       _drawSelectedItems : function(idArray) {
@@ -42,7 +67,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
                controls[i].setChecked(false);
             }
             else {
-               var key = controls[i].getContainer().data('key');
+               var key = controls[i].getContainer().data('id');
                if (idArray.indexOf(key) >= 0) {
                   controls[i].setChecked(true);
                }

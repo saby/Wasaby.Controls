@@ -124,18 +124,20 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
          var resContainer = itemContainer.hasClass('js-controls-ListView__itemContent') ? itemContainer : $('.js-controls-ListView__itemContent', itemContainer);
          var
             def = new $ws.proto.Deferred(),
-            itemTpl = this._getItemTemplate();
+            itemTpl = this._getItemTemplate(item);
 
          if (typeof itemTpl == 'string') {
             resContainer.append(doT.template(itemTpl)(item));
             def.callback(resContainer);
          }
          else if (typeof itemTpl == 'function') {
+            var self = this;
             var tplConfig = itemTpl.call(this, item);
             if (tplConfig.componentType.indexOf('js!') == 0) {
                require([tplConfig.componentType], function (ctor) {
                   var config = tplConfig.config;
                   config.element = resContainer;
+                  config.parent = self;
                   new ctor(config);
                   def.callback(resContainer);
                })
