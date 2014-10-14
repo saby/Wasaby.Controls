@@ -2,7 +2,6 @@
  * @author io.frolenko
  * Created on 03.10.2014.
  * TODO компонент пока что тестировался только в Chrome и IE9
- * TODO при быстром многократном нажатии на стрелочку, срабатывает выделение. Оно здесь не нужно -- запретить
  */
 
 define(
@@ -56,6 +55,7 @@ define(
             defaultValue: '',
             /**
              * @cfg {String} формат визуального отображения месяца
+             * TODO на данный момент нигде не используется
              */
             monthFormat: ''
          },
@@ -87,6 +87,14 @@ define(
          this.setMode(this._options.mode);
          if ( this._options.defaultValue ) { this.setDate(this._options.defaultValue); }
 
+         // При слишком частом клике на стрелочку срабатывает событие двойного клика,
+         // поведение по умолчанию которого -- выделить текст. Этого не нужно -- снимаем выделение.
+         $(this.getContainer().get(0)).dblclick(function(){
+               try { window.getSelection().removeAllRanges(); }
+               catch(e) { document.selection.empty(); } // IE<9
+            }
+         );
+
          $('.js-controls-MonthPicker__arrowRight', this.getContainer().get(0)).click(function(){
             self.setNext();
          });
@@ -100,6 +108,12 @@ define(
          $(this.getContainer().get(0)).keydown(function(event){
             if( event.which == self._KEYS.ARROW_RIGHT ){ self.setNext(); }
             else if( event.which == self._KEYS.ARROW_LEFT ){ self.setPrev(); }
+            else if( event.which == self._KEYS.ARROW_UP ){
+               self.setDate(new Date(self._currentValue.setFullYear(self._currentValue.getFullYear() + 1)));
+            }
+            else if( event.which == self._KEYS.ARROW_DOWN ){
+               self.setDate(new Date(self._currentValue.setFullYear(self._currentValue.getFullYear() - 1)));
+            }
          });
       },
 
@@ -188,6 +202,7 @@ define(
             }
             else { throw new Error('Неверный формат даты'); }
          }
+         this.hidePicker();
       },
 
 
@@ -227,17 +242,36 @@ define(
        * @returns {Date|*} Текущая дата
        */
       getDate: function(){
-         return ( this._options.mode == 'month' ) ? this._currentValue : new Date(this._currentValue.setMonth(0));
+         return this._currentValue;
       },
 
-      // TODO доопределить
+      /**
+       * Взовращает дату в виде строки формата 'YYYY-MM-DD'
+       * @returns {string}
+       */
       getTextDate: function(){
-
+         return this._currentValue.toISOString().slice(0, 10);
       },
 
-      // TODO доопределить
+      /**
+       * Взвращает интервал даты (массив из двух дат), где, в случае 'месац, год':
+       * начало интервала - первый день данного месяца данного года, конец - последний день данного месяца данного года
+       * а в случае режима 'год':
+       * начало интервала - первый день данного года, конец - последний день данного года
+       * @returns {*[]}
+       */
       getInterval: function(){
+         var
+            startInterval = this._currentValue,
+            endInterval;
+         if ( this._options.mode == 'month' ){
+            endInterval = new Date(startInterval.getFullYear(), startInterval.getMonth() + 1, 0, 20, 0, 0);
+         }
+         else if ( this._options.mode == 'year' ){
+            endInterval = new Date(startInterval.getFullYear(), 11, 31, 20, 0, 0);
+         }
 
+         return [startInterval, endInterval];
       },
 
       /**
@@ -247,11 +281,11 @@ define(
        */
       _setDate: function(date){
          var
-            month = parseInt(date.getMonth(), 10),
-            year = parseInt(date.getFullYear(), 10);
+            month = ( this._options.mode == 'month' ) ? date.getMonth() : 0,
+            year = date.getFullYear();
          // Явно устанавливаем ненулевое время, т.к. в некоторых случаях при значениях по умолчанию
          // нам отдается предыдущий месяц, например, при new Date(2020, 0, 1), то есть если мы хотим
-         // задать 2020 год 1 января, нам вернёт как ни странно Tue Dec 31 2019 23:00:00 GMT+0300 (RTZ 2 (зима))
+         // задать 2020 год 1 января, нам вернётся, как ни странно, Tue Dec 31 2019 23:00:00 GMT+0300 (RTZ 2 (зима))
          this._currentValue = new Date(year, month, 1, 20, 0, 0);
          var fieldContainer = $('.js-controls-MonthPicker__field', this.getContainer().get(0));
          if( this._options.mode == 'month' ){ fieldContainer.text(this._months[month] + ', ' + year); }
