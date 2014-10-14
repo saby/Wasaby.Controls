@@ -8,7 +8,6 @@
   cursor: pointer;
   text-align: center;
   display: inline-block;
-  box-sizing: border-box;
   height: 30px;
   line-height: normal;
   border: 1px solid #d1d1d4;
@@ -54,10 +53,9 @@
 .controls-TextBox {
   display: inline-block;
   background: #ffffff;
-  box-sizing: border-box;
-  padding: 0 7px;
+  padding: 0 4px;
   border: 1px solid #d1d1d4;
-  height: 25px;
+  height: 23px;
   border-radius: 2px;
 }
 .controls-TextBox:hover {
@@ -65,7 +63,7 @@
 }
 .controls-TextBox__fieldWrapper {
   height: 100%;
-  box-sizing: border-box;
+  margin-left: 5px;
 }
 .controls-TextBox__afterFieldWrapper {
   float: right;
@@ -76,7 +74,6 @@
 }
 .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
   margin-right: 19px;
-  margin-left: 2px;
 }
 .controls-TextBox__field {
   border: none;
@@ -151,9 +148,6 @@
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
   background-position: 0 -78px;
 }
-.controls-ComboBox {
-  padding-right: 4px;
-}
 .controls-ComboBox__arrowDown {
   background-image: url('./img/ComboBox.png');
   background-color: #ffffff;
@@ -167,7 +161,7 @@
   height: 16px;
 }
 .controls-ComboBox__arrowDown:hover,
-.controls-ComboBox__manual-false:hover .controls-ComboBox__arrowDown {
+.controls-ComboBox__isEditable-false:hover .controls-ComboBox__arrowDown {
   text-decoration: none;
   background-position: 0 -16px;
 }
@@ -182,14 +176,14 @@
 .controls-ComboBox__itemRow__selected {
   color: #999999;
 }
-.controls-ComboBox__field__isEditable-false,
-.controls-ComboBox__field__isEditable-false .controls-TextBox__field {
+.controls-ComboBox__isEditable-false,
+.controls-ComboBox__isEditable-false .controls-TextBox__field {
   cursor: pointer;
 }
-.controls-ComboBox__manual-false.controls-Picker__show .controls-ComboBox__field {
+.controls-ComboBox__isEditable-false.controls-Picker__show .controls-ComboBox__field {
   color: #919197;
 }
-.controls-ComboBox__manual-false:hover .controls-ComboBox__field {
+.controls-ComboBox__isEditable-false:hover .controls-ComboBox__field {
   color: #00d7d7;
 }
 .controls-ComboBox__inputWrapper {
@@ -197,7 +191,7 @@
   height: 100%;
 }
 .controls-ComboBox__picker {
-  border: 1px solid #919197;
+  border: 1px solid #d1d1d4;
   margin-top: -2px;
   border-radius: 0 0 2px 2px;
 }

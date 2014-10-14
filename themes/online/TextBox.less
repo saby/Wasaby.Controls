@@ -1,11 +1,10 @@
 .controls-TextBox {
    display: inline-block;
    background: #ffffff;
-   box-sizing: border-box;
    padding: 0 4px;
    border: 1px solid transparent;
    border-bottom: 1px solid #EAEAEA;
-   height: 24px;
+   height: 22px;
 }
 
 .controls-TextBox:hover {
@@ -13,9 +12,13 @@
    border-bottom: 1px solid #CCCCCC;
 }
 
+.controls-TextBox.ws-disabled{
+  border: 1px solid transparent;
+  border-bottom: 1px solid #EAEAEA;
+}
+
 .controls-TextBox__fieldWrapper {
    height: 100%;
-   box-sizing: border-box;
 }
 
 .controls-TextBox__afterFieldWrapper{
@@ -41,6 +44,10 @@
    line-height: 100%;
    outline: none;
    background: transparent;
+}
+
+.controls-TextBox.ws-disabled .controls-TextBox__field {
+  color: #cccccc;
 }
 
 .controls-TextBox__field-uppercase {

@@ -1,7 +1,3 @@
-.controls-ComboBox {
-   padding-right: 4px;
-}
-
 .controls-ComboBox__arrowDown {
    background-image: url('./img/ComboBox.png');
    background-color: #ffffff;
@@ -15,7 +11,7 @@
    height: 16px;
 }
 
-.controls-ComboBox__arrowDown:hover, .controls-ComboBox__manual-false:hover .controls-ComboBox__arrowDown {
+.controls-ComboBox__arrowDown:hover, .controls-ComboBox__isEditable-false:hover .controls-ComboBox__arrowDown {
    text-decoration: none;
    background-position: 0 -16px;
 }
@@ -34,16 +30,16 @@
    color: #999999;
 }
 
-.controls-ComboBox__field__isEditable-false,
-.controls-ComboBox__field__isEditable-false .controls-TextBox__field {
+.controls-ComboBox__isEditable-false,
+.controls-ComboBox__isEditable-false .controls-TextBox__field {
    cursor: pointer;
 }
 
-.controls-ComboBox__manual-false.controls-Picker__show .controls-ComboBox__field {
+.controls-ComboBox__isEditable-false.controls-Picker__show .controls-ComboBox__field {
    color: @color_base-gray;
 }
 
-.controls-ComboBox__manual-false:hover .controls-ComboBox__field {
+.controls-ComboBox__isEditable-false:hover .controls-ComboBox__field {
    color: @color_base-blue;
 }
 
@@ -53,7 +49,7 @@
 }
 
 .controls-ComboBox__picker {
-   border: 1px solid @color_base-gray;
+   border: 1px solid @color_base-gray_light;
    margin-top: -2px;
    border-radius: 0 0 2px 2px;
 }

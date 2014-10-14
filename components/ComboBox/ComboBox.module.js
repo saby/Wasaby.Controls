@@ -55,10 +55,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._itemTpl = this._options.itemTemplate;
          }
 
-         //TODO: в идеале надо сделать, чтобы атрибут проставлялся в шаблоне, и не плодить его на все контролы-наследники TextBox'а
+         //TODO: в идеале надо сделать, чтобы атрибут проставлялся в шаблоне, и не плодить его на все контролы-наследники TextBox'а, плюс очень похоже на enabled
          // запрещен ручной ввод значений
          if(!this._options.isEditable){
-            self.getContainer().addClass('controls-ComboBox__field__isEditable-false').find('.js-controls-TextBox__field').attr('readonly', 'readonly');
+            self.getContainer().addClass('controls-ComboBox__isEditable-false').find('.js-controls-TextBox__field').attr('readonly', 'readonly').addClass('js-controls-ComboBox__arrowDown');
          }
 
          if (this._items.getItemsCount()) {
@@ -71,11 +71,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
 
          /*обрабочики кликов*/
-         $('.js-controls-ComboBox__arrowDown', this._container.get(0)).click(function(){
-            $('.controls-ComboBox__itemRow__selected').removeClass('controls-ComboBox__itemRow__selected');
-            var key = self.getSelectedItem();
-            $('.controls-ComboBox__itemRow[data-key=\''+key+'\']').addClass('controls-ComboBox__itemRow__selected');
-            self.togglePicker();
+         $('.js-controls-ComboBox__arrowDown', this._container.get(0)).click(function () {
+            if (self.isEnabled()) {
+               $('.controls-ComboBox__itemRow__selected').removeClass('controls-ComboBox__itemRow__selected');
+               var key = self.getSelectedItem();
+               $('.controls-ComboBox__itemRow[data-key=\'' + key + '\']').addClass('controls-ComboBox__itemRow__selected');
+               self.togglePicker();
+            }
          });
 
          /*хренька на скролл*/
@@ -154,6 +156,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          /*устанавливаем ключ, когда текст изменен извне*/
          var
             selKey,
+            oldKey = this._selectedItem,
             self = this,
             text = this._options.text;
          this._items.iterate(function(item, key){
@@ -162,7 +165,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
          });
          this._selectedItem = selKey || null;
-         this._notifySelectedItem(this._selectedItem);
+         if (oldKey !== this._selectedItem) { // при повторном индексе null не стреляет событием
+            this._notifySelectedItem(this._selectedItem);
+         }
       },
 
       setValue: function(key){

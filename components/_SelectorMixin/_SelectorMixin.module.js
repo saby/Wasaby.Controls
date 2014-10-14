@@ -49,6 +49,7 @@ define('js!SBIS3.CONTROLS._SelectorMixin', [], function() {
       },
 
       _notifySelectedItem : function(id) {
+         //TODO: может тут указать, что метод надо переопредить чтобы текст передавать и пр.?
          this._notify('onChangeSelectedItem', id);
       }
    };

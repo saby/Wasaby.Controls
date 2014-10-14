@@ -115,8 +115,11 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _keyUpBind: function() {
+         var oldText = this._options.text;
          this._options.text = this._inputField.val();
-         this._notify('onChangeText', this._options.text);
+         if (oldText !== this._options.text) {
+            this._notify('onChangeText', this._options.text);
+         }
       },
 
       _keyDownBind: function() {
