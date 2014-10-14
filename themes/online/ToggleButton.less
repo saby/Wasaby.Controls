@@ -1,8 +1,18 @@
 .controls-Button.controls-ToggleButton__checked {
-   color: red;
-   background-position: 0 -229px !important;
+  color: red;
+  box-shadow: inset 0px 1px 1px #939292;
+  background-image: url(@classicActiveBackground);
 }
 
 .controls-Button__big.controls-ToggleButton__checked {
-   background-position: 0 -458px !important;
+  background-image: url(@bigActiveBackground);
+}
+
+.controls-Button__primary.controls-ToggleButton__checked {
+  box-shadow: inset 0px 1px 1px #8E5F42;
+  background-image: url(@defaultActiveBackground);
+}
+
+.controls-Button__big.controls-Button__primary.controls-ToggleButton__checked {
+  background-image: url(@bigDefaultActiveBackground);
 }
