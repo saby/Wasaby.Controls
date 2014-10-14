@@ -82,6 +82,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          text = this._trim(text);
          TextBox.superclass.setText.call(this, text);
          $('.controls-TextBox__field', this.getContainer().get(0)).attr('value', text || '');
+         this.getLinkedContext().setValue('')
       },
 
       setMaxLength: function(num) {
