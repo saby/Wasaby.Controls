@@ -80,7 +80,12 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             /**
              * @cfg {String|jQuery|HTMLElement} элемент, относительно которого позиционируется всплывающее окно
              */
-            target: undefined
+            target: undefined,
+
+            /**
+             * @cfg {Boolean} закрывать или нет при клике мимо
+             */
+            closeByClick: false
          }
       },
 
@@ -107,11 +112,25 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             });
          });
 
+         if (this._options.closeByClick) {
+            /*TODO это как то получше надо переписать*/
+            $('html').mousedown(function (e) {
+               var inPopup = self._container.find($(e.target)),inTarget=[];
+               if (self._options.target) {
+                  inTarget = self._options.target.find($(e.target));
+               }
+               if (!inPopup.length && !inTarget.length) {
+                  self._container.hide();
+               }
+            });
+         }
+
          trg.subscribe('onMove', function () {
             self.recalcPosition();
          });
       },
 
+      //Кэшируем размеры
       _initSizes: function () {
          var target = this._options.target,
             container = this._container;
@@ -147,6 +166,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          }
       },
 
+      //Позиционируем если не задан таргет
       _bodyPositioning: function(){
          var
             width = this._containerSizes.width,
