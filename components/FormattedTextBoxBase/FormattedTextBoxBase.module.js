@@ -103,44 +103,6 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
          this._initializeComponents();
       },
 
-      setText: function(text){
-         var self = this,
-            newText = '';
-
-         var
-            regexp = new RegExp('[' + self._controlCharacters + ']+', 'g'),
-            availCharsArray = self._primalMask.match(regexp);
-
-         var regExpForMask = '';
-
-         for (var i = 0; i < availCharsArray.length; i++) {
-            regExpForMask += availCharsArray[i];
-         }
-
-         var maskLength = regExpForMask.length;
-         var textLength = text.length;
-
-         var min = (maskLength <= textLength) ? maskLength : textLength;
-
-         for (var j = 0; j < min; j++) {
-            var character = text.charAt(j);
-            var maskChar = regExpForMask[j];
-            var controlCharacter = self._controlCharactersSet[maskChar];
-            if (self._charToRegExp(controlCharacter).test(character)) {
-               if (controlCharacter == 'L') {
-                  character = character.toUpperCase();
-               } else if (controlCharacter == 'l') {
-                  character = character.toLowerCase();
-               }
-               newText += character;
-            } else {
-               throw new Error('Устанавливаемое значение не удовлетворяет допустимой маске данного контролла');
-            }
-         }
-
-         FormattedTextBoxBase.superclass.setText.call(self, newText);
-      },
-
       _getMask:function(){
          /*Method must be implemented*/
       },
@@ -157,6 +119,10 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
             this._isSeparatorContainerFirst = this._getTypeOfFirstContainer();
             this._htmlMask = this._getHtmlMask();
             this._inputField.html(this._htmlMask);
+
+            if(this._options.text){
+               this.setText(this._options.text);
+            }
 
             this._inputField.focus(function () {
                self._focusHandler(self._inputField.get(0));
@@ -352,11 +318,10 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
          var buffer = container.nodeValue.split('');
          buffer[position] = character;
          container.nodeValue = buffer.join('');
-         var text = '';
-         $('.controls-FormattedTextBox__field-placeholder', this.getContainer()).each(function () {
-            text += $(this).text();
-         });
-         this._options.text = text;
+         this._updateText();
+      },
+      _updateText:function(){
+         /*Method must be implemented*/
       },
 
       /**
@@ -459,12 +424,23 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
        * @returns {string} html-разметка
        * @private
        */
-      _getHtmlMask: function(){
+      _getHtmlMask: function(text){
          var
             htmlMask = '',
             placeholder = this._placeholder,
             placeholderContainers = this._clearMask.match(new RegExp('('+placeholder+'+)', 'g')),
             separatorContainers = this._clearMask.match(new RegExp('([^'+placeholder+']+)', 'g'));
+
+         var textExist=false;
+         var placeholderContainersValues=[];
+
+         if (text) {
+            textExist = true;
+            for (var j = 0; j < placeholderContainers.length; j++) {
+               placeholderContainersValues[j] = text.substr(0, placeholderContainers[j].length);
+               text = text.substr(placeholderContainers[j].length);
+            }
+         }
 
          var
             isPlaceholdersGreaterThanSeparators = placeholderContainers.length > separatorContainers.length,
@@ -473,17 +449,17 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
          for ( var j = 0; j < minLength; j++ ) {
             if (this._isSeparatorContainerFirst) {
                htmlMask += this._getHtmlContainer(separatorContainers[j], 'separator');
-               htmlMask += this._getHtmlContainer(placeholderContainers[j], 'placeholder');
+               htmlMask += this._getHtmlContainer((textExist)?placeholderContainersValues[j]:placeholderContainers[j], 'placeholder');
             }
             else {
-               htmlMask += this._getHtmlContainer(placeholderContainers[j], 'placeholder');
+               htmlMask += this._getHtmlContainer((textExist)?placeholderContainersValues[j]:placeholderContainers[j], 'placeholder');
                htmlMask += this._getHtmlContainer(separatorContainers[j], 'separator');
             }
          }
 
          if (placeholderContainers.length != separatorContainers.length){
             if (placeholderContainers.length > separatorContainers.length){
-               htmlMask += this._getHtmlContainer(placeholderContainers[minLength], 'placeholder');
+               htmlMask += this._getHtmlContainer((textExist)?placeholderContainersValues[minLength]:placeholderContainers[minLength], 'placeholder');
             }
             else {
                htmlMask += this._getHtmlContainer(separatorContainers[minLength], 'separator');

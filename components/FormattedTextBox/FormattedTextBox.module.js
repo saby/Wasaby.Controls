@@ -33,6 +33,58 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
          } else {
             return '';
          }
+      },
+
+      setText: function(text){
+         var self = this,
+            newText = '';
+
+         var
+            regexp = new RegExp('[' + self._controlCharacters + ']+', 'g'),
+            availCharsArray = self._primalMask.match(regexp);
+
+         var regExpForMask = '';
+
+         for (var i = 0; i < availCharsArray.length; i++) {
+            regExpForMask += availCharsArray[i];
+         }
+
+         var maskLength = regExpForMask.length;
+         var textLength = text.length;
+
+         var min = (maskLength <= textLength) ? maskLength : textLength;
+
+         for (var j = 0; j < min; j++) {
+            var character = text.charAt(j);
+            var maskChar = regExpForMask[j];
+            var controlCharacter = self._controlCharactersSet[maskChar];
+            if (self._charToRegExp(controlCharacter).test(character)) {
+               if (controlCharacter == 'L') {
+                  character = character.toUpperCase();
+               } else if (controlCharacter == 'l') {
+                  character = character.toLowerCase();
+               }
+               newText += character;
+            } else {
+               throw new Error('Устанавливаемое значение не удовлетворяет допустимой маске данного контролла');
+            }
+         }
+         this._inputField.html(this._getHtmlMask(newText));
+         FormattedTextBoxBase.superclass.setText.call(self, newText);
+      },
+
+      _updateText:function(){
+         var text = '';
+         $('.controls-FormattedTextBox__field-placeholder', this.getContainer()).each(function () {
+            text += $(this).text();
+         });
+         var expr = new RegExp('('+this._placeholder+')', 'ig');
+         // если есть плейсхолдеры, то значит опция text=null
+         if(expr.test(text)){
+            this._options.text = null;
+         }else{
+            this._options.text = text;
+         }
       }
 });
 
