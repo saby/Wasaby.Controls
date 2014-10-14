@@ -132,7 +132,8 @@ define('js!SBIS3.Genie.UnitEditor',
                target : this._container,
                corner: 'br',
                verticalAlign: {
-                  side: 'top'
+                  side: 'top',
+                  offset: -2
                },
                horizontalAlign: {
                   side: 'right',
