@@ -100,6 +100,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _setPickerContent: function () {
+         this._drawItems();
+      },
+
+      _drawItems: function () {
          var self = this;
          self._picker.getContainer().empty();
          this._items.iterate(function (item, key) {
