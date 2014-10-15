@@ -98,9 +98,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          container.appendTo('body');
          var zIndex = zIndexManager.getNext();
          container.css('zIndex', zIndex);
-
          this._initSizes();
-
          this._corner = this._options.corner;
          this._vSide = this._options.verticalAlign.side;
          this._hSide = this._options.horizontalAlign.side;
@@ -120,7 +118,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
                   inTarget = self._options.target.find($(e.target));
                }
                if (!inPopup.length && !inTarget.length) {
-                  self._container.hide();
+                  self.hide();
                }
             });
          }
@@ -150,29 +148,30 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
 
       recalcPosition: function () {
          this._initSizes();
+         //Если есть таргет - позиционируемся относительно его
          if (this._options.target) {
             this._containerSizes.originOffset = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner);
             this._containerSizes.offset = {
                top:  this._containerSizes.originOffset.top,
                left: this._containerSizes.originOffset.left
             };
-
             this._container.offset({
                top: this._correctionByDisplaySize('vertical').top,
                left: this._correctionByDisplaySize('horizontal').left
             });
-         } else {
+         } else { //Если таргета нет - относительно body
             this._container.offset(this._bodyPositioning());
          }
       },
 
-      //Позиционируем если не задан таргет
+      //Позиционируем относительно body
       _bodyPositioning: function(){
          var
             width = this._containerSizes.width,
             height = this._containerSizes.height,
-            bodyHeight = $('body').outerHeight(true),
-            bodyWidth = $('body').outerWidth(true),
+            $body = $('body'),
+            bodyHeight = $body.outerHeight(true),
+            bodyWidth = $body.outerWidth(true),
             vAlign = this._options.verticalAlign.side,
             hAlign = this._options.horizontalAlign.side,
             offset = {
@@ -188,7 +187,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          return offset;
       },
 
-      //Вычисляем сдвиг в зависимости от выравнивания
+      //Вычисляем сдвиг в зависимости от выравнивания (по углу и вертикальному/горизонтальному выравниванию)
       _getGeneralOffset: function (vert, horiz, corner) {
          var offset = this._getOffsetByCorner(corner);
          this._vSide = vert;
@@ -236,16 +235,17 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          return offset;
       },
 
-      //Если есть таргет считаем влезаем ли в экран и меняем размеры
+      //Если есть таргет считаем влезаем ли в экран и меняем размеры и положение
       _correctionByDisplaySize: function(direction){
          var s =[],
             offset = {
                top : this._containerSizes.offset.top,
                left : this._containerSizes.offset.left
             },
-            spaces = this._calculateSpaces(),
+            spaces = this._getSpaces(),
             over, isMoved, winSize;
 
+         // Заполняем массив для горизонтального/вертикального рассчетов
          if (direction == 'horizontal'){
             s[0] = 'left';
             s[1] = 'right';
@@ -256,8 +256,8 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             s[6] = 0;
             s[7] = 'originWidth';
             s[8] = 'overflow-x';
-            over = ($(window).width() - 3 < this._containerSizes.originWidth + offset.left);
-            isMoved = this._isMovedH;
+            over = ($(window).width() - 3 < this._containerSizes.originWidth + offset.left); // Влезаем ли в экран
+            isMoved = this._isMovedH; // Был произведен горизонтальный сдвиг или нет
             winSize = $(window).width();
          } else
          if (direction == 'vertical'){
@@ -270,29 +270,34 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             s[6] = - this._targetSizes.border;
             s[7] = 'originHeight';
             s[8] = 'overflow-y';
-            over = ($(window).height() - 3 < this._containerSizes.originHeight + offset.top);
-            isMoved = this._isMovedV;
+            over = ($(window).height() - 3 < this._containerSizes.originHeight + offset.top); // Влезаем ли в экран
+            isMoved = this._isMovedV; // Был произведен вертикальный сдвиг или нет
             winSize = $(window).height();
          }
 
+         //Если не влезаем в экран, но еще не перемещались то перемещаемся в противоположный угол
          if (over && !isMoved) {
             offset = this._getOppositeOffset(s[0]);
             isMoved = true;
          }
 
+         //Если перемещались и освободилось место, то возвращаемся обратно
          if (winSize > this._containerSizes[s[2]] + this._containerSizes.originOffset[s[0]] && isMoved){
             offset[s[0]] = this._getOppositeOffset(s[0])[s[0]];
             isMoved = false;
          }
 
+         //Запоминаем какое перемещение было сделано по горизонтали или по вертикали
          (direction == 'horizontal') ? this._isMovedH = isMoved : this._isMovedV = isMoved;
 
+         //Запоминаем текущий сдвиг
          this._containerSizes.offset[s[0]] = offset[s[0]];
 
+         //Если сдвинулись за экран, расчитываем новые размеры и положение
          if (offset[s[0]] <= 0){
             this._calculateOverflow(offset,s);
          }
-
+         
          this._container.css((direction == 'horizontal') ? 'overflow-x' : 'overflow-y', 'auto');
 
          if (this._containerSizes[s[7]] < spaces[s[1]]) {
@@ -302,8 +307,9 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          return offset;
       },
 
-      //Рассчитать расстояний от таргета до границ экрана с учетом собственного положения попапа
-      _calculateSpaces: function(){
+      //Рассчитать расстояния от таргета до границ экрана с учетом собственного положения попапа
+      //Нужно для расчета размеров если не влезаем в экран
+      _getSpaces: function(){
          var corner = this._options.corner,
             offset = this._targetSizes.offset,
             width = this._targetSizes.width,
@@ -348,9 +354,9 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          return spaces;
       },
 
+      //Установить размер и положение если не влезли в экран
       _calculateOverflow: function(offset,s){
-         var spaces = this._calculateSpaces();
-
+         var spaces = this._getSpaces();
          if (spaces[s[1]] > spaces[s[0]]){
             offset[s[0]] = (s[4]) ? this._targetSizes.offset[s[0]] + this._targetSizes[s[2]] + s[5]  : this._targetSizes.offset[s[0]] + s[6];
             offset[s[0]] += this._options[s[3]].offset;
@@ -362,6 +368,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          this._container[s[2]](s[9]);
       },
 
+      //Получаем противоположный угол относительно текущего в направлении orientation
       _getOppositeOffset: function (orientation){  // Получить offset при сдвиге в противоположный угол относительно this._corner по горизонтали или верткали 'top'/'left'
          var side = (orientation == 'left') ? this._hSide : this._vSide,
             isVertical = (side == 'top' || side == 'bottom'),
@@ -414,25 +421,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          this._corner = position.corner;
          offset = this._getGeneralOffset(this._vSide,this._hSide, position.corner);
          return offset;
-      },
-
-
-      /**
-       * Передвинуть всплывающее окно по координатам
-       * @param top
-       * @param right
-       * @param bottom
-       * @param left
-       */
-      moveTo: function (top, right, bottom, left) {
-
-      },
-
-      /**
-       * Передвинуть всплывающее окно в центр
-       */
-      moveToCenter: function () {
-
       },
 
       after: {
