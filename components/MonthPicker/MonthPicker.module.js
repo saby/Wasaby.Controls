@@ -103,6 +103,7 @@ define(
          });
          $('.js-controls-MonthPicker__field', this.getContainer().get(0)).click(function(){
             self._refreshDropdown();
+            self._picker.getContainer().width(self.getContainer().outerWidth());
             self.togglePicker();
          });
          $(this.getContainer().get(0)).keydown(function(event){
@@ -134,6 +135,7 @@ define(
                .addClass('controls-MonthPicker__fieldBoxMonth');
 
             this._picker.getContainer().append(self._dropdownMonthTpl);
+            this._picker.getContainer().css('margin-top', -this.getContainer().height());
 
             var titleContainer = $('.js-controls-MonthPicker__dropdownTitle', this._picker.getContainer());
 
@@ -205,7 +207,6 @@ define(
          this.hidePicker();
       },
 
-
       /**
        * Установить следующий месяц/год
        */
@@ -220,6 +221,7 @@ define(
          this._setDate(newDate);
          this.hidePicker();
       },
+
       /**
        * Установить предыдущий месяц/год
        */
@@ -320,6 +322,10 @@ define(
                }
             });
          }
+
+         // picker's width
+         //$('.js-controls-MonthPicker__dropdownWrapper', this._picker.getContainer().get(0))
+         //   .width( $(this.getContainer().get(0)).width() );
       },
 
       /**
