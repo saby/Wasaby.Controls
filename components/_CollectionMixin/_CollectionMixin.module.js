@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection'], function(Collection) {
+define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*TODO для совместимости*/'js!SBIS3.CONTROLS.AdapterJSON'], function(Collection, AdapterJSON) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -18,11 +18,7 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection'], f
             /**
              * @cfg {Array} Набор исходных данных по которому строится отображение
              */
-            items: undefined,
-            /**
-             * @cfg {} Шаблон отображения каждого элемента коллекции
-             */
-            itemTemplate: ''
+            items: undefined
          }
       },
 
@@ -30,17 +26,7 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection'], f
          if (this._options.keyField) {
             this._keyField = this._options.keyField;
          }
-         if (this._options.items) {
-            this._initItems(this._options.items);
-         }
-         else {
-            this._initItems([]);
-         }
-         if (!this._options.itemTemplate){
-            this._dotItemTpl = doT.template('<div data-key="{{=it.key}}">{{=it.title}}</div>');
-         } else {
-            this._dotItemTpl = doT.template(this._options.itemTemplate);
-         }
+         this._initItems(this._options.items || []);
       },
 
       /**
@@ -51,38 +37,75 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection'], f
       },
 
       _initItems : function(items) {
-         if (!this._keyField) {
-            //пробуем взять первое поле из коллекции
-            var item = items[0];
-            if (item && Object.prototype.toString.call(item) === '[object Object]') {
-               this._keyField = Object.keys(item)[0];
-            }
+         /*TODO Костыли для совместимости*/
+         if (items instanceof Collection) {
+            this._items = items;
          }
-         this._items = new Collection({
-            items: items,
-            keyField: this._keyField
-         });
+         else {
+            if (!this._keyField) {
+               //пробуем взять первое поле из коллекции
+               var item = items[0];
+               if (item && Object.prototype.toString.call(item) === '[object Object]') {
+                  this._keyField = Object.keys(item)[0];
+               }
+            }
+            this._items = new Collection({
+               data: items,
+               keyField: this._keyField,
+               hierField: this._options.hierField,
+               adapter: new AdapterJSON()
+            });
+         }
       },
 
       setItems : function(items) {
-         this._initItems(items);
+         if (items instanceof Collection) {
+            this._items = items;
+         }
+         else {
+            /*TODO Костыли для совместимости
+             * позволяет передать в опции коллекцию в неявном виде*/
+            this._initItems(items);
+         }
          this._drawItems();
       },
 
       _drawItems: function(){
-         var self = this,
-            container = this._getItemsContainer();
-         container.empty();
-         this._items.iterate(function (item) {
-            container.append(self._buildMarkup(self._dotItemTpl, item));
+         var
+            self = this,
+            itemsContainer = this._getItemsContainer();
+         itemsContainer.empty();
+
+         this._items.iterate(function (item, key, i, parItem, lvl) {
+
+            var
+               oneItemContainer = self._getOneItemContainer(item, key, parItem, lvl),
+               targetContainer = self._getTargetContainer(item, key, parItem, lvl);
+
+            oneItemContainer.attr('data-id', key).addClass('controls-ListView__item');
+            targetContainer.append(oneItemContainer);
+
+            self._drawItem(oneItemContainer, item);
+
          });
          this._loadChildControls();
       },
 
+      _getOneItemContainer : function(item, key) {
+         return $('<div class="js-controls-ListView__itemContent"></div>');
+      },
+
+      _getTargetContainer : function() {
+         //по стандарту все строки рисуются в itemsContainer
+         return this._getItemsContainer();
+      },
+
+      /*TODO переопределяем метод compoundControl - костыль*/
       _loadControls: function(pdResult){
          return pdResult.done([]);
       },
 
+      /*TODO свой механиз загрузки дочерних контролов - костыль*/
       _loadChildControls: function() {
          var def = new $ws.proto.Deferred();
          var self = this;
@@ -95,6 +118,40 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection'], f
 
       _getItemsContainer: function(){
          return this._container;
+      },
+
+      _drawItem : function(itemContainer, item) {
+         var resContainer = itemContainer.hasClass('js-controls-ListView__itemContent') ? itemContainer : $('.js-controls-ListView__itemContent', itemContainer);
+         var
+            def = new $ws.proto.Deferred(),
+            itemTpl = this._getItemTemplate(item);
+
+         if (typeof itemTpl == 'string') {
+            resContainer.append(doT.template(itemTpl)(item));
+            def.callback(resContainer);
+         }
+         else if (typeof itemTpl == 'function') {
+            var self = this;
+            var tplConfig = itemTpl.call(this, item);
+            if (tplConfig.componentType.indexOf('js!') == 0) {
+               require([tplConfig.componentType], function (ctor) {
+                  var config = tplConfig.config;
+                  config.element = resContainer;
+                  config.parent = self;
+                  new ctor(config);
+                  def.callback(resContainer);
+               })
+            }
+            else {
+               resContainer.append(doT.template(tplConfig.componentType)(tplConfig.config));
+               def.callback(resContainer);
+            }
+         }
+         return def;
+      },
+
+      _getItemTemplate : function() {
+         return '<div>template</div>'
       }
    };
 
