@@ -120,12 +120,12 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
                }
                if (!inPopup.length && !inTarget.length) {
                   diff = self._notify('onExternalClick');
-                  if (diff !== false){
-                     self.hide();
-                  } else if (diff instanceof $ws.proto.Deferred) {
+                  if (diff instanceof $ws.proto.Deferred){
                      diff.addCallback(function(){
                         self.hide();
                      });
+                  } else if (diff != false) {
+                     self.hide();
                   }
                }
 
@@ -303,7 +303,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          this._containerSizes.offset[s[0]] = offset[s[0]];
 
          //Если сдвинулись за экран, расчитываем новые размеры и положение
-         if (offset[s[0]] <= 0){
+         if (offset[s[0]] < 0){
             this._calculateOverflow(offset,s);
          }
          
