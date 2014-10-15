@@ -28,14 +28,7 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
             self._picker.getContainer().removeClass('controls-Picker__owner__hover');
          });
 
-         /*TODO это как то получше надо переписать*/
-         $('body *').mousedown(function(e){
-            var inCombobox = self._container.find($(e.target));
-            var inPicker = self._picker.getContainer().find($(e.target));
-            if (!inCombobox.length && !inPicker.length) {
-               self.hidePicker();
-            }
-         });
+
       },
 
       _createPicker: function(pickerContainer){

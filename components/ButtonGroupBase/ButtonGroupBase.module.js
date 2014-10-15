@@ -22,12 +22,10 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
       },
 
       $constructor: function() {
-         if (this._items.getItemsCount()) {
-            this._drawItems();
-         }
+
       },
 
-      _drawItems : function() {
+      /*_drawItems : function() {
          this._container.empty();
          var self = this;
 
@@ -41,15 +39,37 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
                });
             }
          });
-      },
+      },*/
 
-      _createInstance : function() {
+      _getItemClass : function() {
          /*метод должен быть перегружен*/
          return false;
       },
 
       _itemActivatedHandler : function() {
          /*метод должен быть перегружен*/
+      },
+
+      _getAddOptions : function() {
+         return {};
+      },
+
+      _getItemTemplate : function(item) {
+         var
+            self = this,
+            config = this._getAddOptions(item);
+
+         config.handlers = config.handlers || {};
+         config.handlers.onActivated = function() {
+            self._itemActivatedHandler(this);
+         };
+
+         return function() {
+            return {
+               componentType : self._getItemClass(),
+               config : config
+            };
+         }
       }
    });
 
