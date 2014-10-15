@@ -85,11 +85,12 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             /**
              * @cfg {Boolean} закрывать или нет при клике мимо
              */
-            closeByClick: false
+            closeByExternalClick: false
          }
       },
 
       $constructor: function () {
+         this._publish('onExternalClick');
          var self = this;
          var container = this._container;
          var trg = $ws.helpers.trackElement(this._options.target, true);
@@ -110,16 +111,24 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             });
          });
 
-         if (this._options.closeByClick) {
+         if (this._options.closeByExternalClick) {
             /*TODO это как то получше надо переписать*/
             $('html').mousedown(function (e) {
-               var inPopup = self._container.find($(e.target)),inTarget=[];
+               var inPopup = self._container.find($(e.target)),inTarget=[],diff;
                if (self._options.target) {
                   inTarget = self._options.target.find($(e.target));
                }
                if (!inPopup.length && !inTarget.length) {
-                  self.hide();
+                  diff = self._notify('onExternalClick');
+                  if (diff !== false){
+                     self.hide();
+                  } else if (diff instanceof $ws.proto.Deferred) {
+                     diff.addCallback(function(){
+                        self.hide();
+                     });
+                  }
                }
+
             });
          }
 
