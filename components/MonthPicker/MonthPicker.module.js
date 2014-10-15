@@ -1,7 +1,7 @@
 /**
  * @author io.frolenko
  * Created on 03.10.2014.
- * TODO компонент пока что тестировался только в Chrome
+ * TODO этот компонент пока что тестировался только в Chrome и IE9
  */
 
 define(
@@ -131,7 +131,6 @@ define(
 
          if( mode == 'month' ){
             this._picker.getContainer().append(self._dropdownMonthTpl);
-            this._picker.getContainer().css('margin-top', -this.getContainer().height());
 
             var titleContainer = $('.js-controls-MonthPicker__dropdownTitle', this._picker.getContainer());
 
@@ -149,6 +148,14 @@ define(
 
             $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).click(function(){
                self._setDate(new Date(parseInt(titleContainer.text(), 10), $(this).attr('data-key'), 1, 20, 0, 0));
+               self.hidePicker();
+               self.getContainer().focus();
+            });
+
+            titleContainer.click(function(){
+               self._setDate(new Date(parseInt(titleContainer.text(), 10),
+                  $('.controls-MonthPicker__dropdownElementActive', self._picker.getContainer()).attr('data-key'), 1,
+                  20, 0, 0));
                self.hidePicker();
                self.getContainer().focus();
             });
