@@ -133,7 +133,6 @@
   color: #00d7d7;
 }
 .controls-CheckBox__icon {
-  margin-right: 8px;
   width: 17px;
   height: 17px;
   background: url('./img/CheckBox-sprite.png') 0 -4px;
@@ -147,6 +146,9 @@
 }
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
   background-position: 0 -78px;
+}
+.controls-CheckBox__caption {
+  margin-left: 8px;
 }
 .controls-ComboBox__arrowDown {
   background-image: url('./img/ComboBox.png');

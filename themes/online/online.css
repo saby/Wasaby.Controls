@@ -363,7 +363,6 @@
   height: 16px;
   line-height: 19px;
   background: url('./img/CheckBox.png') 0 1px;
-  margin-right: 4px;
   display: inline-block;
 }
 .controls-CheckBox:hover .controls-CheckBox__icon {
@@ -383,4 +382,7 @@
 }
 .controls-CheckBox.ws-disabled.controls-ToggleButton__null .controls-CheckBox__icon {
   background-position: 16px 33px;
+}
+.controls-CheckBox__caption {
+  margin-left: 4px;
 }
