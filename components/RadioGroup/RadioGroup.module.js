@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.RadioGroup', ['js!SBIS3.CONTROLS.RadioGroupBase','html!SBIS3.CONTROLS.RadioGroup', 'css!SBIS3.CONTROLS.RadioGroup', 'js!SBIS3.CONTROLS.RadioButton'],
+define('js!SBIS3.CONTROLS.RadioGroup', ['js!SBIS3.CONTROLS.RadioGroupBase','html!SBIS3.CONTROLS.RadioGroup', 'js!SBIS3.CONTROLS.RadioButton'],
 function(RadioGroupBase, dotTpl) {
 
    'use strict';
