@@ -440,12 +440,12 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             if (this._container.attr('overflow-x') == 'auto') {
                this._containerSizes.originWidth = this._container.scrollWidth;
             } else {
-               this._containerSizes.originWidth = this._container.outerWidth();
+               this._containerSizes.originWidth = this._container.innerWidth();
             }
             if (this._container.attr('overflow-y') == 'auto') {
                this._containerSizes.originHeight = this._container.scrollHeight;
             } else {
-               this._containerSizes.originHeight = this._container.outerHeight();
+               this._containerSizes.originHeight = this._container.innerHeight();
             }
             this.recalcPosition();
          }
