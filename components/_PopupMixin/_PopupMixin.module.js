@@ -310,9 +310,13 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          this._container.css((direction == 'horizontal') ? 'overflow-x' : 'overflow-y', 'auto');
 
          if (this._containerSizes[s[7]] < spaces[s[1]]) {
-            this._container[s[2]](this._containerSizes[s[7]]);
+            var newSize = this._containerSizes[s[7]] - this._containerSizes.border * 2;
+            if ( this._container[s[2]] != newSize) {
+               this._container[s[2]](newSize);
+            }
             this._container.css((direction == 'horizontal') ? 'overflow-x' : 'overflow-y', 'visible');
          }
+
          return offset;
       },
 
