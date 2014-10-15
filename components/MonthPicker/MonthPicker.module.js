@@ -1,7 +1,7 @@
 /**
  * @author io.frolenko
  * Created on 03.10.2014.
- * TODO компонент пока что тестировался только в Chrome и IE9
+ * TODO компонент пока что тестировался только в Chrome
  */
 
 define(
@@ -130,10 +130,6 @@ define(
          this._picker.getContainer().empty();
 
          if( mode == 'month' ){
-            $('.js-controls-MonthPicker__fieldBox', this.getContainer().get(0))
-               .removeClass('controls-MonthPicker__fieldBoxYear')
-               .addClass('controls-MonthPicker__fieldBoxMonth');
-
             this._picker.getContainer().append(self._dropdownMonthTpl);
             this._picker.getContainer().css('margin-top', -this.getContainer().height());
 
@@ -158,10 +154,6 @@ define(
             });
          }
          else if( mode == 'year' ){
-            $('.js-controls-MonthPicker__fieldBox', this.getContainer().get(0))
-               .removeClass('controls-MonthPicker__fieldBoxMonth')
-               .addClass('controls-MonthPicker__fieldBoxYear');
-
             this._picker.getContainer().append(self._dropdownYearTpl);
 
             $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).click(function(){
@@ -322,10 +314,6 @@ define(
                }
             });
          }
-
-         // picker's width
-         //$('.js-controls-MonthPicker__dropdownWrapper', this._picker.getContainer().get(0))
-         //   .width( $(this.getContainer().get(0)).width() );
       },
 
       /**
