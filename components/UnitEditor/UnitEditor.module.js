@@ -39,7 +39,6 @@ define('js!SBIS3.Genie.UnitEditor',
             this._unitText = $('.js-controls-UnitEditor__unitText', this._container);
             this._currentUnit = this._units[0];
             this._unitText.html(this._currentUnit);
-            this._drawUnits();
             this._container.addClass('controls-UnitEditor');
             //Устанавливаем нормальное значение если текст передан в опции
             if (this._options.text){
@@ -63,11 +62,6 @@ define('js!SBIS3.Genie.UnitEditor',
                return false;
             });
 
-            $('.controls-UnitEditor__unit', this._picker._container).click(function (e) {
-               self.setText(self._options.text + $(e.target).html());
-               self.hidePicker();
-               self._unitSelector.toggleClass('controls-UnitEditor__unitSelector__toggled controls-UnitEditor__unitSelector__untoggled');
-            });
          },
 
          getText: function () {
@@ -118,12 +112,19 @@ define('js!SBIS3.Genie.UnitEditor',
             this._currentUnit = unit;
          },
 
-         _drawUnits: function () {
+         _setPickerContent: function () {
+            var self = this;
             for (var i = 0; i < 3; i++) {
                this._picker.getContainer().append('<div class="controls-UnitEditor__unit">' + this._units[i] + '</div>');
             }
             this._picker.getContainer().append($('<div class="controls-UnitEditor__whiteBorder"></div>'));
             this._picker.getContainer().addClass('controls-UnitEditor__units');
+
+            $('.controls-UnitEditor__unit', this._picker._container).click(function (e) {
+               self.setText(self._options.text + $(e.target).html());
+               self.hidePicker();
+               self._unitSelector.toggleClass('controls-UnitEditor__unitSelector__toggled controls-UnitEditor__unitSelector__untoggled');
+            });
          },
 
          _createPicker: function(pickerContainer){
