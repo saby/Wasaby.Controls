@@ -159,7 +159,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          this._containerSizes.height = this._containerSizes.originHeight;
          this._containerSizes.originOffset = container.offset();
          this._containerSizes.border = (this._containerSizes.originWidth - container.innerWidth()) / 2;
-
       },
 
       recalcPosition: function () {
@@ -448,12 +447,12 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
 
       after: {
          show: function () {
-            if (this._container.attr('overflow-x') == 'auto') {
+            if (this._container.css('overflow-x') == 'auto') {
                this._containerSizes.originWidth = this._container.scrollWidth;
             } else {
                this._containerSizes.originWidth = this._container.outerWidth();
             }
-            if (this._container.attr('overflow-y') == 'auto') {
+            if (this._container.css('overflow-y') == 'auto') {
                this._containerSizes.originHeight = this._container.scrollHeight;
             } else {
                this._containerSizes.originHeight = this._container.outerHeight();

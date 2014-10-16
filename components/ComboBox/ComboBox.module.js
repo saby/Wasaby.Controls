@@ -80,11 +80,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
          });
 
-         /*хренька на скролл*/
-         $ws.helpers.trackElement(this._container).subscribe('onMove', function() {
-            self._picker.recalcPosition();
-         }, this);
-
          self._picker.getContainer().addClass('controls-ComboBox__picker');
       },
 
