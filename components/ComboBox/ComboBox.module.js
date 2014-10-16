@@ -100,10 +100,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _setPickerContent: function () {
-         this._drawItems();
-      },
-
-      _drawItems: function () {
          var self = this;
          self._picker.getContainer().empty();
          this._items.iterate(function (item, key) {
@@ -116,6 +112,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          });
          //TODO: кажется неочевидное место, возможно как то автоматизировать
          self._picker.getContainer().addClass('controls-ComboBox__picker');
+      },
+
+      _drawItems: function () {
+         //TODO: зачем отрисовывать содержимое пикера при загрузке контрола в вебджине?
       },
 
       _keyDownBind : function(e){
