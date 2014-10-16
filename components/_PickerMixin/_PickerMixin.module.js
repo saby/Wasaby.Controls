@@ -21,7 +21,10 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
          // чтобы не нарушать выравнивание по базовой линии
          $('body').append(pickerContainer);
          this._picker = this._createPicker(pickerContainer);
-         this._picker.getContainer().width(container.outerWidth() - 2);
+         this._picker.getContainer().css({
+            'width': 'auto',
+            'min-width': self._container.outerWidth() - 2/*ширина бордеров*/
+         });
          container.hover(function(){
             self._picker.getContainer().addClass('controls-Picker__owner__hover');
          }, function(){
@@ -41,8 +44,7 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
             },
             horizontalAlign: {
                side: 'left'
-            },
-            closeByExternalClick: true
+            }
          });
          return picker;
       },
@@ -51,8 +53,12 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
        * Показывает выпадающий блок
        */
       showPicker: function() {
+         var self = this;
          this._container.addClass('controls-Picker__show');
-         this._picker.getContainer().width(this._container.outerWidth() - 2/*ширина бордеров*/);
+         this._picker.getContainer().css({
+            'width': 'auto',
+            'min-width': self._container.outerWidth() - 2/*ширина бордеров*/
+         });
          this._picker.show();
       },
       /**
