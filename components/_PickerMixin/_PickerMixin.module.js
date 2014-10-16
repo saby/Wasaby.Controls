@@ -90,7 +90,9 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
 
       after : {
          destroy : function(){
-            this._picker.destroy();
+            if (this._picker) {
+               this._picker.destroy();
+            }
          }
       }
 
