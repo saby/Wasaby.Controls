@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.ListView',
       /**
        * Контрол, отображающий внутри себя набор однотипных сущностей, умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать
        * @class SBIS3.CONTROLS.ListView
-       * @extends SBIS3.CORE.Control
+       * @extends $ws.proto.Control
        * @mixes SBIS3.CONTROLS._CollectionMixin
        * @mixes SBIS3.CONTROLS._MultiSelectorMixin
        * @control

@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
     * В конечный контролл передается маска с помощью опции mask. Управляющие символы в маске, определяющие,
     * какие символы могут вводиться, определяются предназначением контролла.
     * @class SBIS3.CONTROLS.FormattedTextBoxBase
-    * @extends SBIS3.CORE.Control
+    * @extends $ws.proto.Control
     * @control
     */
 

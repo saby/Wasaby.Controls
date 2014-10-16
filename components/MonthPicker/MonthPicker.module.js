@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.MonthPicker', ['js!SBIS3.CORE.Control'], function(Cont
     * Контрол выбор месяца и года с выпадающей вниз панелью.
     * Не наследуется от поля ввода, потому что там в принципе не требуется текстовый ввод
     * @class SBIS3.CONTROLS.MonthPicker
-    * @extends SBIS3.CORE.Control
+    * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS._PickerMixin
     * @mixes SBIS3.CONTROLS._FormWidgetMixin
     */

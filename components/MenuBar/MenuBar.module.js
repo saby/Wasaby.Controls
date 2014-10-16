@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.MenuBar', ['js!SBIS3.CORE.Control'], function( Control
    /**
     * Контрол, отображающий горизонтальное меню
     * @class SBIS3.CONTROLS.MenuBar
-    * @extends SBIS3.CORE.Control
+    * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS._CollectionMixin
     */
 

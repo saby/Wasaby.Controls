@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONT
     * Во-вторых это не группа радиобаттонов, т.к. в группе динамический набор сущностей, количеством и содержимым которых можно управлять, а в переключателе всегда две, строго определенных.
     * Данный класс поведенческий.
     * @class SBIS3.CONTROLS.SwitcherBase
-    * @extends SBIS3.CORE.Control
+    * @extends $ws.proto.Control
     */
 
    var SwitcherBase = Control.Control.extend( [FormWidgetMixin], /** @lends SBIS3.CONTROLS.SwitcherBase.prototype */ {

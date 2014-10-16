@@ -9,7 +9,7 @@ define('js!SBIS3.Engine.NavigationAccOnline', ['js!SBIS3.CORE.Control'], functio
    /**
     * Контрол, отображающий навигационнаю панель в виде “левого аккордеона”
     * @class SBIS3.Engine.NavigationAccOnline
-    * @extends SBIS3.CORE.Control
+    * @extends $ws.proto.Control
     * @control
     */
 
