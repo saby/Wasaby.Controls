@@ -41,7 +41,8 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
             },
             horizontalAlign: {
                side: 'left'
-            }
+            },
+            closeByExternalClick: true
          });
          return picker;
       },
