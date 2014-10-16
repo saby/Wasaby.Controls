@@ -5,8 +5,9 @@
 define('js!SBIS3.Genie.UnitEditor',
      ['js!SBIS3.CONTROLS.NumberTextBox',
       'js!SBIS3.CONTROLS._PickerMixin',
+      'js!SBIS3.CONTROLS.FloatArea',
       'html!SBIS3.Genie.UnitEditor',
-      'css!SBIS3.Genie.UnitEditor'], function (NumberTextBox, PickerMixin, dotTplFn) {
+      'css!SBIS3.Genie.UnitEditor'], function (NumberTextBox, PickerMixin, FloatArea, dotTplFn) {
 
       'use strict';
 
@@ -21,13 +22,14 @@ define('js!SBIS3.Genie.UnitEditor',
 
       var UnitEditor;
       UnitEditor = NumberTextBox.extend([PickerMixin], /** @lends SBIS3.Genie.UnitEditor.prototype */ {
-         _dotTplFn: dotTplFn,
          $protected: {
             _currentUnit: null,
             _units: ['px','%','-'],
             _unitSelector: null,
             _unitText: null,
-            _options: {}
+            _options: {
+               afterFieldWrapper: dotTplFn
+            }
          },
 
          $constructor: function () {
@@ -37,16 +39,15 @@ define('js!SBIS3.Genie.UnitEditor',
             this._unitText = $('.js-controls-UnitEditor__unitText', this._container);
             this._currentUnit = this._units[0];
             this._unitText.html(this._currentUnit);
-            this._drawUnits();
-
+            this._container.addClass('controls-UnitEditor');
             //Устанавливаем нормальное значение если текст передан в опции
             if (this._options.text){
                this._currentUnit = this._parseUnit(this._options.text)[1];
                this._options.text = this._parseUnit(this._options.text)[0];
                if (this._options.text == 'auto'){
-                  $('.controls-TextBox__field', this.getContainer().get(0)).attr('value', 'auto');
+                  this._inputField.attr('value', 'auto');
                } else {
-                  $('.controls-TextBox__field', this.getContainer().get(0)).attr('value', this._options.text);
+                  this._inputField.attr('value', this._options.text);
                }
                this._setUnit(this._currentUnit);
             }
@@ -61,11 +62,6 @@ define('js!SBIS3.Genie.UnitEditor',
                return false;
             });
 
-            $('.controls-UnitEditor__unit', this._picker._container).click(function (e) {
-               self.setText(self._options.text + $(e.target).html());
-               self.hidePicker();
-               self._unitSelector.toggleClass('controls-UnitEditor__unitSelector__toggled controls-UnitEditor__unitSelector__untoggled');
-            });
          },
 
          getText: function () {
@@ -116,13 +112,36 @@ define('js!SBIS3.Genie.UnitEditor',
             this._currentUnit = unit;
          },
 
-         _drawUnits: function () {
-            var container = $('<div></div>');
+         _setPickerContent: function () {
+            var self = this;
             for (var i = 0; i < 3; i++) {
-               container.append('<div class="controls-UnitEditor__unit">' + this._units[i] + '</div>');
+               this._picker.getContainer().append('<div class="controls-UnitEditor__unit">' + this._units[i] + '</div>');
             }
-            this._picker.getContainer().append(container);
-            container.addClass('controls-UnitEditor__units');
+            this._picker.getContainer().append($('<div class="controls-UnitEditor__whiteBorder"></div>'));
+            this._picker.getContainer().addClass('controls-UnitEditor__units');
+
+            $('.controls-UnitEditor__unit', this._picker._container).click(function (e) {
+               self.setText(self._options.text + $(e.target).html());
+               self.hidePicker();
+               self._unitSelector.toggleClass('controls-UnitEditor__unitSelector__toggled controls-UnitEditor__unitSelector__untoggled');
+            });
+         },
+
+         _createPicker: function(pickerContainer){
+            var picker = new FloatArea({
+               element : pickerContainer,
+               target : this._container,
+               corner: 'br',
+               verticalAlign: {
+                  side: 'top',
+                  offset: -2
+               },
+               horizontalAlign: {
+                  side: 'right',
+                  offset: -16
+               }
+            });
+            return picker;
          }
 
       });

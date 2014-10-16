@@ -46,11 +46,20 @@
 }
 
 .controls-UnitEditor__units{
-   margin-right: 14px;
    margin-top: -2px;
+   width: 70px!important;
    border: 1px solid #CCCCCC;
    border-top-left-radius: 5px;
    border-bottom-left-radius: 5px;
    border-bottom-right-radius: 5px;
    background: #FFFFFF;
+}
+
+.controls-UnitEditor__whiteBorder{
+   position: absolute;
+   top: -1px;
+   width: 22px;
+   right: 0;
+   height: 1px;
+   background: white;
 }

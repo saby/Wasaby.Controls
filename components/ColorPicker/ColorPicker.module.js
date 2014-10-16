@@ -35,11 +35,13 @@ define('js!SBIS3.CONTROLS.ColorPicker',
          self.getContainer().addClass('controls-ColorPicker');
          self._colorBox = $('.js-controls-ColorPicker__currentColor', this.getContainer().get(0));
          self._colorBox.css('background', '#' + self._options.text || '000000');
-         self._colorBox.bind('click',function(){
-            if (self._options.text) {
-               self.togglePicker(self._options.text);
-            } else {
-               self.togglePicker('000000');
+         self._colorBox.bind('click', function () {
+            if (self.isEnabled()) {
+               if (self._options.text) {
+                  self.togglePicker(self._options.text);
+               } else {
+                  self.togglePicker('000000');
+               }
             }
          });
       },
@@ -55,14 +57,9 @@ define('js!SBIS3.CONTROLS.ColorPicker',
          self._picker.getContainer().colpickSetColor(self.getText());
       },
 
-      togglePicker: function(color) {
+      _initializePicker: function(color){
          var self = this;
-         self._createColpick(color);
-         ColorPicker.superclass.togglePicker.call(this);
-      },
-
-      _createColpick: function(color){
-         var self = this;
+         ColorPicker.superclass._initializePicker.call(self);
          if (!self._wasCreated) {
             self._picker.getContainer().colpick({
                flat: true,
@@ -87,9 +84,12 @@ define('js!SBIS3.CONTROLS.ColorPicker',
 
       _keyUpBind: function(){
          var self = this;
-         self._createColpick();
          self._byKeyUp = true;
          ColorPicker.superclass._keyUpBind.call(self);
+         if(!self._picker){
+            self._initializePicker(self.getText());
+            return;
+         }
          self._picker.getContainer().colpickSetColor(self.getText());
       }
 

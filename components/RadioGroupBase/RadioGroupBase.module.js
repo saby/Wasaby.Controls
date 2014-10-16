@@ -22,13 +22,28 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
       },
 
       $constructor: function() {
-         if (this._selectedItem) {
-            this._drawSelectedItem(this._selectedItem);
+         if (this._items.getItemsCount()) {
+            this._drawItems();
          }
       },
 
+      _getAddOptions : function(item) {
+         var
+            key = this._items.getKey(item),
+            caption = this._items.getValue(item, 'title'),
+            resObj = {
+               caption : caption
+            };
+
+
+         if (key == this._selectedItem) {
+            resObj.checked = true
+         }
+         return resObj;
+      },
+
       _itemActivatedHandler : function(activatedControl) {
-         var key = activatedControl.getContainer().data('key');
+         var key = activatedControl.getContainer().data('id');
          this.setSelectedItem(key);
       },
 
@@ -39,7 +54,7 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
                controls[i].setChecked(false);
             }
             else {
-               if (controls[i].getContainer().data('key') == id) {
+               if (controls[i].getContainer().data('id') == id) {
                   controls[i].setChecked(true);
                }
                else {

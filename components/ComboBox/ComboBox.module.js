@@ -55,14 +55,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._itemTpl = this._options.itemTemplate;
          }
 
-         //TODO: в идеале надо сделать, чтобы атрибут проставлялся в шаблоне, и не плодить его на все контролы-наследники TextBox'а
+         //TODO: в идеале надо сделать, чтобы атрибут проставлялся в шаблоне, и не плодить его на все контролы-наследники TextBox'а, плюс очень похоже на enabled
          // запрещен ручной ввод значений
          if(!this._options.isEditable){
-            self.getContainer().addClass('controls-ComboBox__field__isEditable-false').find('.js-controls-TextBox__field').attr('readonly', 'readonly');
+            self.getContainer().addClass('controls-ComboBox__isEditable-false').find('.js-controls-TextBox__field').attr('readonly', 'readonly').addClass('js-controls-ComboBox__arrowDown');
          }
 
          if (this._items.getItemsCount()) {
-            this._drawItems();
             /*устанавливаем первое значение TODO по идее переписан метод setSelectedItem для того чтобы не срабатывало событие при первой установке*/
             var
                item = this._items.getNextItem();
@@ -71,19 +70,15 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
 
          /*обрабочики кликов*/
-         $('.js-controls-ComboBox__arrowDown', this._container.get(0)).click(function(){
-            $('.controls-ComboBox__itemRow__selected').removeClass('controls-ComboBox__itemRow__selected');
-            var key = self.getSelectedItem();
-            $('.controls-ComboBox__itemRow[data-key=\''+key+'\']').addClass('controls-ComboBox__itemRow__selected');
-            self.togglePicker();
+         $('.js-controls-ComboBox__arrowDown', this._container.get(0)).click(function () {
+            if (self.isEnabled()) {
+               $('.controls-ComboBox__itemRow__selected').removeClass('controls-ComboBox__itemRow__selected');
+               var key = self.getSelectedItem();
+               $('.controls-ComboBox__itemRow[data-key=\'' + key + '\']').addClass('controls-ComboBox__itemRow__selected');
+               self.togglePicker();
+            }
          });
 
-         /*хренька на скролл*/
-         $ws.helpers.trackElement(this._container).subscribe('onMove', function() {
-            self._picker.recalcPosition();
-         }, this);
-
-         self._picker.getContainer().addClass('controls-ComboBox__picker');
       },
 
       setText : function(text) {
@@ -104,18 +99,23 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._notify('onChangeSelectedItem', key, text);
       },
 
-      _drawItems : function() {
+      _setPickerContent: function () {
          var self = this;
          self._picker.getContainer().empty();
-
          this._items.iterate(function (item, key) {
             /*TODO просто в пикер пихаются дивы. Норм ли это понять после разработки ListView*/
             self._picker.getContainer().append(self._itemTpl({key: key, title: item[self._displayField]}));
          });
-         $('.js-controls-ComboBox__itemRow', self._picker.getContainer().get(0)).click(function(){
+         $('.js-controls-ComboBox__itemRow', self._picker.getContainer().get(0)).click(function () {
             self.setValue($(this).attr('data-key'));
             self.hidePicker();
          });
+         //TODO: кажется неочевидное место, возможно как то автоматизировать
+         self._picker.getContainer().addClass('controls-ComboBox__picker');
+      },
+
+      _drawItems: function () {
+         //TODO: зачем отрисовывать содержимое пикера при загрузке контрола в вебджине?
       },
 
       _keyDownBind : function(e){
