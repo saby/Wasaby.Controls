@@ -15,6 +15,17 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
     */
 
    var ButtonBase = Control.Control.extend([FormWidgetMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
+      /**
+       * @event onActivated Происходит при активации кнопки (клик мышкой, кнопки клавиатуры)
+       * @param {$ws.proto.EventObject} eventObject дескриптор события
+       * @param {Boolean} pressed Нажата ли кнопки (при использовании опции press)
+       * <pre>
+       *    onButtonClick: function(event){
+       *       var list = $ws.single.ControlStorage.getByName('listOfPersons');
+       *       list.sendCommand('newItem');
+       *    }
+       * </pre>
+       */
       $protected: {
          _options: {
             /**
