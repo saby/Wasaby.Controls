@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
 
       $constructor: function() {
          var self = this;
-         this._button = this._container;
+         this._buttonText = $('.js-controls-Button__text', this._container.get(0));
          this._container.mouseup(function () {
             if (self.isEnabled()) {
                self._container.removeClass('controls-Button__active');
@@ -45,15 +45,15 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
 
       setCaption: function(captionTxt){
          Button.superclass.setCaption.call(this, captionTxt);
-         this._button.html(captionTxt || '');
+         this._buttonText.text(captionTxt || '');
       },
 
       setPrimary: function(flag){
          Button.superclass.setPrimary.call(this,flag);
          if (this.isPrimary()){
-            this._button.addClass('controls-Button__primary');
+            this._container.addClass('controls-Button__primary');
          } else {
-            this._button.removeClass('controls-Button__primary');
+            this._container.removeClass('controls-Button__primary');
          }
       }
 

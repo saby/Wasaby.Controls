@@ -14,9 +14,13 @@
   border-radius: 2px;
   background-color: transparent;
   color: #919197;
+  padding: 0;
 }
 .controls-Button:hover {
   border-color: #00d7d7;
+}
+.controls-Button__content {
+  margin: 0 8px;
 }
 .controls-Button:hover {
   color: #ffffff;
