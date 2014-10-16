@@ -1,7 +1,6 @@
 .controls-TextBox {
   display: inline-block;
   background: #ffffff;
-  padding: 0 4px;
   .mixin_gray_border();
   height: 23px;
   border-radius: 2px;
@@ -9,7 +8,6 @@
 
 .controls-TextBox__fieldWrapper {
   height: 100%;
-  margin-left: 5px;
 }
 
 .controls-TextBox__afterFieldWrapper {
@@ -18,10 +16,11 @@
   min-height: 19px;
   height: 100%;
   position: relative;
+  margin-right: 4px;
 }
 
 .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
-  margin-right: 19px;
+  margin-right: 21px;
 }
 
 .controls-TextBox__field {
@@ -30,6 +29,7 @@
   height: 99%;
   width: 100%;
   margin: 0;
+  padding: 0 4px;
   box-sizing: border-box;
   line-height: 100%;
   outline: none;
