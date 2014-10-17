@@ -78,12 +78,13 @@ define(
             ARROW_UP: 38,
             ARROW_RIGHT: 39,
             ARROW_DOWN: 40
-         },
-         closeByExternalClick: true
+         }
       },
 
       $constructor: function() {
-         var self = this;
+         var
+            self = this,
+            fieldContainer = $('.js-controls-MonthPicker__field', this.getContainer().get(0));
 
          if ( this._options.defaultValue ) { this.setDate(this._options.defaultValue); }
          else { this.setToday(); }
@@ -96,28 +97,47 @@ define(
             }
          );
 
+         // Клик по стрелочкам
          $('.js-controls-MonthPicker__arrowRight', this.getContainer().get(0)).click(function(){
-            self.setNext();
+            if ( self._picker && self._picker.isVisible() && self._options.mode == 'month' ){
+               fieldContainer.text(parseInt(/\d+/.exec(fieldContainer.text()), 10) + 1);
+            }
+            else { self.setNext(); }
          });
          $('.js-controls-MonthPicker__arrowLeft', this.getContainer().get(0)).click(function(){
-            self.setPrev();
+            if ( self._picker && self._picker.isVisible() && self._options.mode == 'month' ){
+               fieldContainer.text(parseInt(/\d+/.exec(fieldContainer.text()), 10) - 1);
+            }
+            else { self.setPrev(); }
          });
+
+         // Клик по полю с датой
          $('.js-controls-MonthPicker__field', this.getContainer().get(0)).click(function(){
+            self._container.width(self._container.width());
             self.getContainer().focus();
             if (!self._picker) { self._initializePicker(); }
             self._refreshDropdown();
-            self._picker.getContainer().width(self.getContainer().outerWidth());
             self.togglePicker();
-            if ( self._container.hasClass('controls-Picker__show') ){ self._picker.getContainer().focus(); }
-         });
-         $(this.getContainer().get(0)).keydown(function(event){
-            if( event.which == self._KEYS.ARROW_RIGHT ){ self.setNext(); }
-            else if( event.which == self._KEYS.ARROW_LEFT ){ self.setPrev(); }
-            else if( event.which == self._KEYS.ARROW_UP ){
-               self.setDate(new Date(self._currentValue.setFullYear(self._currentValue.getFullYear() + 1)));
+            if ( self._picker.isVisible() ){
+               $(this).text(parseInt(/\d+/.exec($(this).text()), 10));
+               self._picker.getContainer().css({
+                  'width': self._container.outerWidth()
+               });
             }
-            else if( event.which == self._KEYS.ARROW_DOWN ){
-               self.setDate(new Date(self._currentValue.setFullYear(self._currentValue.getFullYear() - 1)));
+            else{
+               self._setDate(new Date(parseInt(/\d+/.exec($('.js-controls-MonthPicker__field', self.getContainer().get(0)).text()), 10),
+                  $('.controls-MonthPicker__dropdownElementActive', self._picker.getContainer()).attr('data-key') || 0, 1, 20, 0, 0));
+               self._container.width('');
+            }
+         });
+
+         // Обработка нажатий клавиш
+         $(this.getContainer().get(0)).keydown(function(event){
+            if( event.which == self._KEYS.ARROW_RIGHT ){
+               $('.js-controls-MonthPicker__arrowRight', self.getContainer().get(0)).trigger('click');
+            }
+            else if( event.which == self._KEYS.ARROW_LEFT ){
+               $('.js-controls-MonthPicker__arrowLeft', self.getContainer().get(0)).trigger('click');
             }
          });
       },
@@ -129,39 +149,13 @@ define(
 
          if( this._options.mode == 'month' ){
             this._picker.getContainer().append(self._dropdownMonthTpl);
-            //this._picker.getContainer().append(self._dropdownMonthTpl({
-            //   beforeFieldWrapper: this._options.beforeFieldWrapper,
-            //   afterFieldWrapper: this._options.afterFieldWrapper
-            //}));
-
-            var titleContainer = $('.js-controls-MonthPicker__dropdownTitle', this._picker.getContainer());
-
-            $('.js-controls-MonthPicker__arrowLeft', this._picker.getContainer()).click(function(){
-            //$('.js-controls-MonthPicker__dropdownArrowLeft', this._picker.getContainer()).click(function(){
-               titleContainer.text(parseInt(titleContainer.text(), 10) - 1);
-            });
-            $('.js-controls-MonthPicker__arrowRight', this._picker.getContainer()).click(function(){
-            //$('.js-controls-MonthPicker__dropdownArrowRight', this._picker.getContainer()).click(function(){
-               titleContainer.text(parseInt(titleContainer.text(), 10) + 1);
-            });
-
-            this._picker.getContainer().keydown(function(event){
-               if( event.which == self._KEYS.ARROW_RIGHT ){ titleContainer.text(parseInt(titleContainer.text(), 10) + 1); }
-               else if( event.which == self._KEYS.ARROW_LEFT ){ titleContainer.text(parseInt(titleContainer.text(), 10) - 1); }
-            });
 
             $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).click(function(){
-               self._setDate(new Date(parseInt(titleContainer.text(), 10), $(this).attr('data-key'), 1, 20, 0, 0));
+               self._setDate(new Date(parseInt(/\d+/.exec($('.js-controls-MonthPicker__field', self.getContainer().get(0)).text()), 10),
+                  $(this).attr('data-key'), 1, 20, 0, 0));
                self.hidePicker();
                self.getContainer().focus();
-            });
-
-            titleContainer.click(function(){
-               self._setDate(new Date(parseInt(titleContainer.text(), 10),
-                  $('.controls-MonthPicker__dropdownElementActive', self._picker.getContainer()).attr('data-key'), 1,
-                  20, 0, 0));
-               self.hidePicker();
-               self.getContainer().focus();
+               self._container.width('');
             });
          }
          else if( this._options.mode == 'year' ){
@@ -173,6 +167,14 @@ define(
                self.getContainer().focus();
             });
          }
+
+         this._picker.subscribe('onExternalClick', function(){
+            console.log('onExternalClick');
+
+            self._setDate(new Date(parseInt(/\d+/.exec($('.js-controls-MonthPicker__field', self.getContainer().get(0)).text()), 10),
+               $('.controls-MonthPicker__dropdownElementActive', self._picker.getContainer()).attr('data-key') || 0, 1, 20, 0, 0));
+            self.getContainer().focus();
+         });
       },
 
       /**

@@ -82,7 +82,8 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
             this._initializePicker();
          }
          this._container.toggleClass('controls-Picker__show');
-         this._picker.toggle();
+         //this._picker.toggle();
+         this._picker.isVisible() ? this.hidePicker() : this.showPicker();
       },
 
       _setWidth: function(){
