@@ -59,7 +59,15 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
 
       setIcon: function(icon) {
          Button.superclass.setIcon.call(this);
+         if (!icon) {
+            $('.js-controls-Button__icon', this._container.get(0)).remove();
+         }
          if (icon.indexOf('sprite:') >= 0) {
+            var iconCont = $('.js-controls-Button__icon', this._container.get(0));
+            if (!(iconCont.length)) {
+               iconCont = $('<i></i>').addClass('js-controls-Button__icon');
+               $('.js-controls-Button__text', this._container.get(0)).before(iconCont);
+            }
             $('.js-controls-Button__icon', this._container.get(0)).get(0).className = 'controls-Button__icon js-controls-Button__icon ' + icon.substr(7);
          }
       }
