@@ -8,16 +8,12 @@ define(
    'js!SBIS3.CONTROLS.MonthPicker',
    [
       'js!SBIS3.CORE.Control',
-      //'js!SBIS3.CONTROLS.TextBox', // delete
       'js!SBIS3.CONTROLS._PickerMixin',
       'html!SBIS3.CONTROLS.MonthPicker/resources/MonthPickerDropdownMonth',
       'html!SBIS3.CONTROLS.MonthPicker/resources/MonthPickerDropdownYear',
-      'html!SBIS3.CONTROLS.MonthPicker/resources/MonthPickerArrowLeft',
-      'html!SBIS3.CONTROLS.MonthPicker/resources/MonthPickerArrowRight',
       'html!SBIS3.CONTROLS.MonthPicker'
    ],
-   //function(TextBox, _PickerMixin, DropdownMonthTpl, DropdownYearTpl, arrowTpl, dotTplFn){
-   function(Control, _PickerMixin, DropdownMonthTpl, DropdownYearTpl, arrowLeftTpl, arrowRightTpl,dotTplFn){
+   function(Control, _PickerMixin, DropdownMonthTpl, DropdownYearTpl, dotTplFn){
 
    'use strict';
 
@@ -29,7 +25,6 @@ define(
     * @mixes SBIS3.CONTROLS._PickerMixin
     */
 
-   //var MonthPicker = TextBox.extend( [_PickerMixin], /** @lends SBIS3.CONTROLS.MonthPicker.prototype */{
    var MonthPicker = Control.Control.extend( [_PickerMixin], /** @lends SBIS3.CONTROLS.MonthPicker.prototype */{
       _dotTplFn: dotTplFn,
       _dropdownMonthTpl: DropdownMonthTpl,
@@ -37,8 +32,6 @@ define(
 
       $protected: {
          _options: {
-            beforeFieldWrapper: arrowLeftTpl,
-            afterFieldWrapper: arrowRightTpl,
             /**
              * @typedef {Object} ModeEnum
              * @variant month только месяц
@@ -85,12 +78,13 @@ define(
             ARROW_UP: 38,
             ARROW_RIGHT: 39,
             ARROW_DOWN: 40
-         }
+         },
+         closeByExternalClick: true
       },
 
       $constructor: function() {
          var self = this;
-console.log(this._options.beforeFieldWrapper)
+
          if ( this._options.defaultValue ) { this.setDate(this._options.defaultValue); }
          else { this.setToday(); }
 
@@ -114,6 +108,7 @@ console.log(this._options.beforeFieldWrapper)
             self._refreshDropdown();
             self._picker.getContainer().width(self.getContainer().outerWidth());
             self.togglePicker();
+            if ( self._container.hasClass('controls-Picker__show') ){ self._picker.getContainer().focus(); }
          });
          $(this.getContainer().get(0)).keydown(function(event){
             if( event.which == self._KEYS.ARROW_RIGHT ){ self.setNext(); }
@@ -134,6 +129,10 @@ console.log(this._options.beforeFieldWrapper)
 
          if( this._options.mode == 'month' ){
             this._picker.getContainer().append(self._dropdownMonthTpl);
+            //this._picker.getContainer().append(self._dropdownMonthTpl({
+            //   beforeFieldWrapper: this._options.beforeFieldWrapper,
+            //   afterFieldWrapper: this._options.afterFieldWrapper
+            //}));
 
             var titleContainer = $('.js-controls-MonthPicker__dropdownTitle', this._picker.getContainer());
 
@@ -187,7 +186,7 @@ console.log(this._options.beforeFieldWrapper)
             else { this._setPickerContent(); }
             if ( this._options.defaultValue ) { this.setDate(this._options.defaultValue); }
             else { this.setToday(); }
-            this.hidePicker();
+            this.hidePicker();  // TODO are we need hidePicker method here?
          }
       },
 
@@ -235,7 +234,6 @@ console.log(this._options.beforeFieldWrapper)
          else if ( this._options.mode == 'year' ){ newDate = new Date(currentDate.setYear(currentDate.getFullYear() + 1)); }
 
          this._setDate(newDate);
-         this.hidePicker();
       },
 
       /**
@@ -250,7 +248,6 @@ console.log(this._options.beforeFieldWrapper)
          else if ( this._options.mode == 'year' ){ newDate = new Date(currentDate.setYear(currentDate.getFullYear() - 1)); }
 
          this._setDate(newDate);
-         this.hidePicker();
       },
 
       /**
