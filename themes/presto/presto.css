@@ -1,12 +1,15 @@
 .controls-Button {
+  padding: 0;
   background-color: #F2F2F2;
   cursor: pointer;
   border: none;
-  padding: 0 16px;
   height: 40px;
   font-size: 14px;
   text-align: center;
   color: #333333;
+}
+.controls-Button__content {
+  margin: 0 16px;
 }
 .controls-Button__primary {
   background-color: #FFCC99;
@@ -123,7 +126,6 @@
 .controls-CheckBox__icon {
   width: 18px;
   height: 18px;
-  margin-right: 5px;
   display: inline-block;
   border: 1px solid #333333;
   background: none;
@@ -132,4 +134,7 @@
   background-repeat: no-repeat;
   background-image: url('./img/checkbox.png');
   background-position: -2px -5px;
+}
+.controls-CheckBox__caption {
+  margin-left: 5px;
 }

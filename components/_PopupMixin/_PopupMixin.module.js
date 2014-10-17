@@ -123,12 +123,12 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
                }
                if (!inPopup.length && !inTarget.length) {
                   diff = self._notify('onExternalClick');
-                  if (diff !== false){
-                     self.hide();
-                  } else if (diff instanceof $ws.proto.Deferred) {
+                  if (diff instanceof $ws.proto.Deferred){
                      diff.addCallback(function(){
                         self.hide();
                      });
+                  } else if (diff != false) {
+                     self.hide();
                   }
                }
 

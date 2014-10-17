@@ -1,24 +1,28 @@
 .controls-Button {
+  padding: 0;
   cursor: pointer;
   text-align: center;
   display: inline-block;
   height: 24px;
   line-height: normal;
   border: none;
-  margin: 0 8px;
-  padding: 3px 16px;
   color: #000000;
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXB2xKCIABAwfP/X+ekhWAYiXhjYGAwtTd3+V8/zqNw7Jm9JEqO5BRI0RPDSvALfpvYFsc6W2Y3MFnDOPRYo/l+OoxW9O8WrQSdfKJEjXw9EE11A2vvQIELisuiAAAAAElFTkSuQmCC');
   border-radius: 16px;
   box-shadow: inset 0px -1px 1px #afacab;
 }
+.controls-Button__content {
+  margin: 0 8px;
+}
 .controls-Button__big {
-  padding: 15px 24px;
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAjklEQVQYVx3DVxKDIABAwXf/26WoKDasKCh2zV9Mdmb5XDvXuXEeK8e+/O/bzLZObItjvS/zyDINzM4yOYMb70PPaDsGqxmMxvYtpm8wXU2va7q2Qrcluilo64KmUvecusyoirtKKVVCkceoTKJSSZ5GZElIFgtSKUhkQBL5xKGHFB6ReBMFL0L/ifj1Hl+0S4EyIQKdsQAAAABJRU5ErkJggg==');
   font: italic normal 18px 'Cambria', Georgia, serif;
   line-height: 18px;
   height: 48px;
   border-radius: 24px;
+}
+.controls-Button__big .controls-Button__content {
+  padding: 0 24px;
 }
 .controls-Button:hover {
   box-shadow: inset 0px -1px 1px #919090;
@@ -94,8 +98,6 @@
 }
 .controls-Button__icon {
   margin-bottom: -3px;
-  margin-right: 5px;
-  margin-left: -5px;
 }
 .controls-Button.controls-ToggleButton__checked {
   color: red;
@@ -300,7 +302,6 @@
 .controls-TextBox {
   display: inline-block;
   background: #ffffff;
-  padding: 0 4px;
   border: 1px solid transparent;
   border-bottom: 1px solid #EAEAEA;
   height: 22px;
@@ -315,6 +316,7 @@
 }
 .controls-TextBox__fieldWrapper {
   height: 100%;
+  padding: 0 4px;
 }
 .controls-TextBox__afterFieldWrapper {
   float: right;
@@ -325,7 +327,6 @@
 }
 .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
   margin-right: 19px;
-  margin-left: 2px;
 }
 .controls-TextBox__field {
   border: none;
@@ -384,7 +385,6 @@
   height: 16px;
   line-height: 19px;
   background: url('./img/CheckBox.png') 0 1px;
-  margin-right: 4px;
   display: inline-block;
 }
 .controls-CheckBox:hover .controls-CheckBox__icon {
@@ -404,4 +404,7 @@
 }
 .controls-CheckBox.ws-disabled.controls-ToggleButton__null .controls-CheckBox__icon {
   background-position: 16px 33px;
+}
+.controls-CheckBox__caption {
+  margin-left: 4px;
 }

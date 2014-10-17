@@ -80,7 +80,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
          });
 
-         self._picker.getContainer().addClass('controls-ComboBox__picker');
       },
 
       setText : function(text) {
@@ -101,18 +100,26 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._notify('onChangeSelectedItem', key, text);
       },
 
-      _drawItems : function() {
-         var self = this;
-         self._picker.getContainer().empty();
+      _setPickerContent: function () {
+         this._drawItems();
+         //TODO: кажется неочевидное место, возможно как то автоматизировать
+         this._picker.getContainer().addClass('controls-ComboBox__picker');
+      },
 
-         this._items.iterate(function (item, key) {
-            /*TODO просто в пикер пихаются дивы. Норм ли это понять после разработки ListView*/
-            self._picker.getContainer().append(self._itemTpl({key: key, title: item[self._displayField]}));
-         });
-         $('.js-controls-ComboBox__itemRow', self._picker.getContainer().get(0)).click(function(){
-            self.setValue($(this).attr('data-key'));
-            self.hidePicker();
-         });
+      _drawItems: function () {
+         var self = this;
+         if (self._picker) {
+            self._picker.getContainer().empty();
+            this._items.iterate(function (item, key) {
+               /*TODO просто в пикер пихаются дивы. Норм ли это понять после разработки ListView*/
+               self._picker.getContainer().append(self._itemTpl({key: key, title: item[self._displayField]}));
+            });
+            $('.js-controls-ComboBox__itemRow', self._picker.getContainer().get(0)).click(function () {
+               self.setValue($(this).attr('data-key'));
+               self.hidePicker();
+            });
+
+         }
       },
 
       _keyDownBind : function(e){

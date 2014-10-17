@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.ListView',
       /**
        * Контрол, отображающий внутри себя набор однотипных сущностей, умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать
        * @class SBIS3.CONTROLS.ListView
-       * @extends SBIS3.CORE.Control
+       * @extends $ws.proto.Control
        * @mixes SBIS3.CONTROLS._CollectionMixin
        * @mixes SBIS3.CONTROLS._MultiSelectorMixin
        * @control
@@ -27,6 +27,10 @@ define('js!SBIS3.CONTROLS.ListView',
             _dotItemTpl: null,
             _itemsContainer: null,
             _options: {
+               /**
+                * @cfg {} Шаблон отображения каждого элемента коллекции
+                */
+               itemTemplate: '',
                /**
                 * @cfg {Array} Набор действий, над элементами, отображающийся в виде иконок. Можно использовать для массовых операций.
                 */
@@ -43,9 +47,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          $constructor: function () {
-            this._drawItems();
+            this._items.setHierField(null);
          },
 
+         init : function() {
+            this._drawItems();
+         },
 
          /**
           * Установить, что отображается когда нет записей
@@ -53,8 +60,11 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setEmptyHTML: function (html) {
 
-         }
+         },
 
+         _getItemTemplate : function() {
+            return this._options.itemTemplate;
+         }
       });
 
       return ListView;

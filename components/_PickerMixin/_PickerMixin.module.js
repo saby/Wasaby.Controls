@@ -13,22 +13,30 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
       },
 
       $constructor: function() {
+      },
+
+      _initializePicker: function () {
          var
             self = this,
             pickerContainer = $('<div></div>'),
-            container = this._container;
+            container = self._container;
 
          // чтобы не нарушать выравнивание по базовой линии
          $('body').append(pickerContainer);
-         this._picker = this._createPicker(pickerContainer);
-         this._setWidth();
+         self._picker = this._createPicker(pickerContainer);
+         self._setWidth();
          container.hover(function(){
             self._picker.getContainer().addClass('controls-Picker__owner__hover');
-         }, function(){
+         }, function () {
             self._picker.getContainer().removeClass('controls-Picker__owner__hover');
          });
 
+         self._setPickerContent();
 
+         /*хренька на скролл*/
+         $ws.helpers.trackElement(self._container).subscribe('onMove', function () {
+            self._picker.recalcPosition();
+         }, self);
       },
 
       _createPicker: function(pickerContainer){
@@ -41,7 +49,8 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
             },
             horizontalAlign: {
                side: 'left'
-            }
+            },
+            closeByExternalClick: true
          });
          return picker;
       },
@@ -50,6 +59,9 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
        * Показывает выпадающий блок
        */
       showPicker: function() {
+         if (!this._picker) {
+            this._initializePicker();
+         }
          this._container.addClass('controls-Picker__show');
          this._setWidth();
          this._picker.show();
@@ -58,11 +70,17 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
        * Скрывает выпадающий блок
        */
       hidePicker: function() {
+         if (!this._picker) {
+            this._initializePicker();
+         }
          this._container.removeClass('controls-Picker__show');
          this._picker.hide();
       },
 
       togglePicker: function() {
+         if (!this._picker) {
+            this._initializePicker();
+         }
          this._container.toggleClass('controls-Picker__show');
          this._picker.toggle();
       },
@@ -74,9 +92,15 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
          });
       },
 
+      _setPickerContent: function () {
+         /*Method must be implemented*/
+      },
+
       after : {
          destroy : function(){
-            this._picker.destroy();
+            if (this._picker) {
+               this._picker.destroy();
+            }
          }
       }
 

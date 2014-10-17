@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CORE.Control'], function( Control ) 
    /**
     * Контрол, отображающий меню всплывающее в определенном месте страницы
     * @class SBIS3.CONTROLS.Menu
-    * @extends SBIS3.CORE.Control
+    * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS._PopupMixin
     */
 

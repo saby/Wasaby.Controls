@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.ToolbarBase', ['js!SBIS3.CORE.Control'], function(Cont
     * Например несколько кнопок, управляющих одним реестром
     * @class SBIS3.CONTROLS.ToolbarBase
     * @mixes SBIS3.CONTROLS._CollectionMixin
-    * @extends SBIS3.CORE.Control
+    * @extends $ws.proto.Control
     */
 
    var ToolbarBase = Control.Control.extend( /** @lends SBIS3.CONTROLS.ToolbarBase.prototype */ {
