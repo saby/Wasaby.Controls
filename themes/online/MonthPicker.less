@@ -3,27 +3,45 @@
   display: inline-block;
 }
 .controls-MonthPicker__field {
-//  vertical-align: middle;
-  display: inline-block;
   color: #0055BB;
+  white-space: nowrap;
   cursor: pointer;
   font-size: 14px;
   font-weight: 700;
   font-family: 'Tahoma Полужирный', 'Tahoma';
   height: 16px;
   line-height: 16px;
+  margin: 0 16px;
 }
 .controls-MonthPicker__field:hover {
   text-decoration: underline;
   color: #FF7033;
 }
-.controls-MonthPicker__arrow {
-//  vertical-align: middle;
+.controls-MonthPicker__arrowWrapper {
+  width: 16px;
+  min-height: 16px;
+  height: 100%;
+  position: relative;
   display: inline-block;
-  background: url("img/MonthPicker-arrows.png") transparent;
+}
+.controls-MonthPicker__arrowLeftWrapper {
+  float: left;
+  display: inline-block;
+}
+.controls-MonthPicker__arrowRightWrapper {
+  float: right;
+}
+.controls-MonthPicker__arrow {
+  position: absolute;
+  display: inline-block;
+  background: #FFFFFF;
+  background: url("img/MonthPicker-arrows.png");
   width: 16px;
   height: 16px;
   cursor: pointer;
+  top: 0;
+  right: 0;
+  text-decoration: none;
 }
 .controls-MonthPicker__arrowLeft {
   background-position: 32px 0px;
@@ -41,13 +59,6 @@
   box-sizing: border-box;
   background: #FFFFFF;
 }
-.controls-MonthPicker__dropdownWrapperMonth {
-  margin-top: -16px;
-}
-.controls-MonthPicker__dropdownTitleBlock {
-  margin-bottom: 8px;
-  text-align: center;
-}
 .controls-MonthPicker__dropdownElement {
   padding: 2px;
   height: 22px;
@@ -62,14 +73,8 @@
   background: #F2F2F2;
 }
 .controls-MonthPicker__dropdownElementMonth {
-  padding-left: 30px;
+  padding-left: 24px;
 }
 .controls-MonthPicker__dropdownElementYear {
   text-align: center;
-}
-.controls-MonthPicker__dropdownArrowLeft{
-  float: left;
-}
-.controls-MonthPicker__dropdownArrowRight{
-  float:right;
 }

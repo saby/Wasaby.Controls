@@ -169,11 +169,10 @@ define(
          }
 
          this._picker.subscribe('onExternalClick', function(){
-            console.log('onExternalClick');
-
             self._setDate(new Date(parseInt(/\d+/.exec($('.js-controls-MonthPicker__field', self.getContainer().get(0)).text()), 10),
                $('.controls-MonthPicker__dropdownElementActive', self._picker.getContainer()).attr('data-key') || 0, 1, 20, 0, 0));
             self.getContainer().focus();
+            self._container.width('');
          });
       },
 
@@ -184,11 +183,12 @@ define(
       setMode: function(mode){
          if( mode == 'year' || mode == 'month' ){
             this._options.mode = mode;
-            if (!this._picker) { this._initializePicker(); }
+            if ( !this._picker ) { this._initializePicker(); }
             else { this._setPickerContent(); }
             if ( this._options.defaultValue ) { this.setDate(this._options.defaultValue); }
             else { this.setToday(); }
-            this.hidePicker();  // TODO are we need hidePicker method here?
+            this._container.width('');
+            if ( this._picker.isVisible() ){ this.hidePicker(); }
          }
       },
 
