@@ -97,7 +97,7 @@
   background-color: #FFFFFF !important;
 }
 .controls-Button__icon {
-  margin-bottom: -3px;
+  margin: 0 4px -3px 0;
 }
 .controls-Button.controls-ToggleButton__checked {
   color: red;
