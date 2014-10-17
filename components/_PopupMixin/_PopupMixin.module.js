@@ -3,6 +3,13 @@
  */
 
 define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
+
+   var eventsChannel = $ws.single.EventBus.channel('DocumentClickChannel');
+
+   $(document).mousedown(function (e) {
+      eventsChannel.notify('onDocumentClick', e.target);
+   });
+
    var zIndexManager = {
       _cur: 100500,
 
@@ -115,33 +122,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          });
 
          if (this._options.closeByExternalClick) {
-            /*TODO это как то получше надо переписать*/
-            $(document).mousedown(function (e) {
-
-               var inPopup = !!self._container.find(e.target).length,
-                   popup = $(self._container).get(0) == e.target,
-                   inTarget=[],diff;
-
-               console.log(inPopup || popup);
-
-               if (self._options.target) {
-                  inTarget = self._options.target.find($(e.target));
-               }
-
-               if (!(inPopup || popup) && !inTarget.length) {
-                  if (self.isVisible()) {
-                     diff = self._notify('onExternalClick');
-                     if (diff instanceof $ws.proto.Deferred) {
-                        diff.addCallback(function () {
-                           self.hide();
-                        });
-                     } else if (diff !== false) {
-                        self.hide();
-                     }
-                  }
-               }
-
-            });
+            $ws.single.EventBus.channel('DocumentClickChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
 
          trg.subscribe('onMove', function () {
@@ -151,6 +132,30 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
                self._firstMove = false;
             }
          });
+      },
+
+      _clickHandler: function(eventObject, target) {
+         var self = this,
+             inPopup = !!self._container.find(target).length,
+             popup = $(self._container).get(0) == target,
+             inTarget=[],diff;
+
+         if (self._options.target) {
+            inTarget = !!self._options.target.find($(target)).length;
+         }
+
+         if (!(inPopup || popup) && !inTarget) {
+            if (self.isVisible()) {
+               diff = self._notify('onExternalClick');
+               if (diff instanceof $ws.proto.Deferred) {
+                  diff.addCallback(function () {
+                     self.hide();
+                  });
+               } else if (diff !== false) {
+                  self.hide();
+               }
+            }
+         }
       },
 
       //Кэшируем размеры
@@ -474,6 +479,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          destroy: function () {
             var zIndex = this._container.css('zIndex');
             zIndexManager.setFree(zIndex);
+            $ws.single.EventBus.channel('DocumentClickChannel').unsubscribe('onDocumentClick',this._clickHandler);
          }
       }
    };
