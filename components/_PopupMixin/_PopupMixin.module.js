@@ -116,19 +116,28 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
 
          if (this._options.closeByExternalClick) {
             /*TODO это как то получше надо переписать*/
-            $('html').mousedown(function (e) {
-               var inPopup = self._container.find($(e.target)),inTarget=[],diff;
+            $(document).mousedown(function (e) {
+
+               var inPopup = !!self._container.find(e.target).length,
+                   popup = $(self._container).get(0) == e.target,
+                   inTarget=[],diff;
+
+               console.log(inPopup || popup);
+
                if (self._options.target) {
                   inTarget = self._options.target.find($(e.target));
                }
-               if (!inPopup.length && !inTarget.length) {
-                  diff = self._notify('onExternalClick');
-                  if (diff instanceof $ws.proto.Deferred){
-                     diff.addCallback(function(){
+
+               if (!(inPopup || popup) && !inTarget.length) {
+                  if (self.isVisible()) {
+                     diff = self._notify('onExternalClick');
+                     if (diff instanceof $ws.proto.Deferred) {
+                        diff.addCallback(function () {
+                           self.hide();
+                        });
+                     } else if (diff !== false) {
                         self.hide();
-                     });
-                  } else if (diff != false) {
-                     self.hide();
+                     }
                   }
                }
 
