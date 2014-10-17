@@ -295,7 +295,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             offset[s[0]] = this._getOppositeOffset(s[0])[s[0]];
             isMoved = true;
          } else {
-            if (init == 'recalc' && over) { offset[s[0]] = this._getOppositeOffset(s[0])[s[0]]; }
+            if (init == 'recalc' && over) {offset[s[0]] = this._getOppositeOffset(s[0])[s[0]]; }
          }
          //Если перемещались и освободилось место, то возвращаемся обратно
          if (winSize > this._containerSizes[s[2]] + this._containerSizes.originOffset[s[0]] && isMoved){
@@ -448,12 +448,12 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
       after: {
          show: function () {
             if (this._container.css('overflow-x') == 'auto') {
-               this._containerSizes.originWidth = this._container.scrollWidth;
+               this._containerSizes.originWidth = this._container[0].scrollWidth;
             } else {
                this._containerSizes.originWidth = this._container.outerWidth();
             }
             if (this._container.css('overflow-y') == 'auto') {
-               this._containerSizes.originHeight = this._container.scrollHeight;
+               this._containerSizes.originHeight = this._container[0].scrollHeight;
             } else {
                this._containerSizes.originHeight = this._container.outerHeight();
             }
