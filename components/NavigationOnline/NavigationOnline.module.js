@@ -9,7 +9,7 @@ define('js!SBIS3.Engine.NavigationOnline', ['js!SBIS3.CORE.Control'], function(C
    /**
     * Контрол, отображающий навигационнаю панель в виде “правого аккордеона”
     * @class SBIS3.Engine.NavigationOnline
-    * @extends SBIS3.CORE.Control
+    * @extends $ws.proto.Control
     * @control
     */
 

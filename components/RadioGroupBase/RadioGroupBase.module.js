@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
     * @class SBIS3.CONTROLS.RadioGroupBase
     * @mixes SBIS3.CONTROLS._CollectionMixin
     * @mixes SBIS3.CONTROLS._SelectorMixin
-    * @extends SBIS3.CORE.Control
+    * @extends $ws.proto.Control
     */
 
    var RadioGroupBase = ButtonGroupBase.extend([_SelectorMixin], /** @lends SBIS3.CONTROLS.RadioGroupBase.prototype */ {

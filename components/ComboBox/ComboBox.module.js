@@ -101,22 +101,25 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _setPickerContent: function () {
-         var self = this;
-         self._picker.getContainer().empty();
-         this._items.iterate(function (item, key) {
-            /*TODO просто в пикер пихаются дивы. Норм ли это понять после разработки ListView*/
-            self._picker.getContainer().append(self._itemTpl({key: key, title: item[self._displayField]}));
-         });
-         $('.js-controls-ComboBox__itemRow', self._picker.getContainer().get(0)).click(function () {
-            self.setValue($(this).attr('data-key'));
-            self.hidePicker();
-         });
+         this._drawItems();
          //TODO: кажется неочевидное место, возможно как то автоматизировать
-         self._picker.getContainer().addClass('controls-ComboBox__picker');
+         this._picker.getContainer().addClass('controls-ComboBox__picker');
       },
 
       _drawItems: function () {
-         //TODO: зачем отрисовывать содержимое пикера при загрузке контрола в вебджине?
+         var self = this;
+         if (self._picker) {
+            self._picker.getContainer().empty();
+            this._items.iterate(function (item, key) {
+               /*TODO просто в пикер пихаются дивы. Норм ли это понять после разработки ListView*/
+               self._picker.getContainer().append(self._itemTpl({key: key, title: item[self._displayField]}));
+            });
+            $('.js-controls-ComboBox__itemRow', self._picker.getContainer().get(0)).click(function () {
+               self.setValue($(this).attr('data-key'));
+               self.hidePicker();
+            });
+
+         }
       },
 
       _keyDownBind : function(e){
