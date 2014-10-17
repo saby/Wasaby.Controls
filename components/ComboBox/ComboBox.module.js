@@ -26,7 +26,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          _displayField : '',
          _options: {
             afterFieldWrapper: arrowTpl,
-            beforeFieldWrapper: arrowTpl,
             /**
              * @cfg {Boolean} Возможен ли ручной ввод текста
              */
