@@ -30,13 +30,7 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
          }, function () {
             self._picker.getContainer().removeClass('controls-Picker__owner__hover');
          });
-
          self._setPickerContent();
-
-         /*хренька на скролл*/
-         $ws.helpers.trackElement(self._container).subscribe('onMove', function () {
-            self._picker.recalcPosition();
-         }, self);
       },
 
       _createPicker: function(pickerContainer){
@@ -82,7 +76,11 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
             this._initializePicker();
          }
          this._container.toggleClass('controls-Picker__show');
-         this._picker.toggle();
+         if (this._picker.isVisible()){
+            this.hidePicker();
+         }else {
+            this.showPicker();
+         }
       },
 
       _setWidth: function(){
