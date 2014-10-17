@@ -1,19 +1,23 @@
 /**
  * @author io.frolenko
  * Created on 03.10.2014.
- * TODO этот компонент пока что тестировался только в Chrome и IE9
+ * TODO этот компонент пока что тестировался только в Chrome
  */
 
 define(
    'js!SBIS3.CONTROLS.MonthPicker',
    [
       'js!SBIS3.CORE.Control',
+      //'js!SBIS3.CONTROLS.TextBox', // delete
       'js!SBIS3.CONTROLS._PickerMixin',
       'html!SBIS3.CONTROLS.MonthPicker/resources/MonthPickerDropdownMonth',
       'html!SBIS3.CONTROLS.MonthPicker/resources/MonthPickerDropdownYear',
+      'html!SBIS3.CONTROLS.MonthPicker/resources/MonthPickerArrowLeft',
+      'html!SBIS3.CONTROLS.MonthPicker/resources/MonthPickerArrowRight',
       'html!SBIS3.CONTROLS.MonthPicker'
    ],
-   function(Control, _PickerMixin, DropdownMonthTpl, DropdownYearTpl, dotTplFn){
+   //function(TextBox, _PickerMixin, DropdownMonthTpl, DropdownYearTpl, arrowTpl, dotTplFn){
+   function(Control, _PickerMixin, DropdownMonthTpl, DropdownYearTpl, arrowLeftTpl, arrowRightTpl,dotTplFn){
 
    'use strict';
 
@@ -25,6 +29,7 @@ define(
     * @mixes SBIS3.CONTROLS._PickerMixin
     */
 
+   //var MonthPicker = TextBox.extend( [_PickerMixin], /** @lends SBIS3.CONTROLS.MonthPicker.prototype */{
    var MonthPicker = Control.Control.extend( [_PickerMixin], /** @lends SBIS3.CONTROLS.MonthPicker.prototype */{
       _dotTplFn: dotTplFn,
       _dropdownMonthTpl: DropdownMonthTpl,
@@ -32,6 +37,8 @@ define(
 
       $protected: {
          _options: {
+            beforeFieldWrapper: arrowLeftTpl,
+            afterFieldWrapper: arrowRightTpl,
             /**
              * @typedef {Object} ModeEnum
              * @variant month только месяц
@@ -83,9 +90,9 @@ define(
 
       $constructor: function() {
          var self = this;
-
-         this.setMode(this._options.mode);
+console.log(this._options.beforeFieldWrapper)
          if ( this._options.defaultValue ) { this.setDate(this._options.defaultValue); }
+         else { this.setToday(); }
 
          // При слишком частом клике на стрелочку срабатывает событие двойного клика,
          // поведение по умолчанию которого -- выделить текст. Этого не нужно -- снимаем выделение.
@@ -102,6 +109,8 @@ define(
             self.setPrev();
          });
          $('.js-controls-MonthPicker__field', this.getContainer().get(0)).click(function(){
+            self.getContainer().focus();
+            if (!self._picker) { self._initializePicker(); }
             self._refreshDropdown();
             self._picker.getContainer().width(self.getContainer().outerWidth());
             self.togglePicker();
@@ -118,26 +127,22 @@ define(
          });
       },
 
-      /**
-       * Установить режим ввода (месяц / месяц,год)
-       * @param {String} mode
-       */
-      setMode: function(mode) {
-         this._options.mode = mode;
-
+      _setPickerContent: function() {
          var self = this;
 
          this._picker.getContainer().empty();
 
-         if( mode == 'month' ){
+         if( this._options.mode == 'month' ){
             this._picker.getContainer().append(self._dropdownMonthTpl);
 
             var titleContainer = $('.js-controls-MonthPicker__dropdownTitle', this._picker.getContainer());
 
-            $('.js-controls-MonthPicker__dropdownArrowLeft', this._picker.getContainer()).click(function(){
+            $('.js-controls-MonthPicker__arrowLeft', this._picker.getContainer()).click(function(){
+            //$('.js-controls-MonthPicker__dropdownArrowLeft', this._picker.getContainer()).click(function(){
                titleContainer.text(parseInt(titleContainer.text(), 10) - 1);
             });
-            $('.js-controls-MonthPicker__dropdownArrowRight', this._picker.getContainer()).click(function(){
+            $('.js-controls-MonthPicker__arrowRight', this._picker.getContainer()).click(function(){
+            //$('.js-controls-MonthPicker__dropdownArrowRight', this._picker.getContainer()).click(function(){
                titleContainer.text(parseInt(titleContainer.text(), 10) + 1);
             });
 
@@ -160,7 +165,7 @@ define(
                self.getContainer().focus();
             });
          }
-         else if( mode == 'year' ){
+         else if( this._options.mode == 'year' ){
             this._picker.getContainer().append(self._dropdownYearTpl);
 
             $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).click(function(){
@@ -169,15 +174,28 @@ define(
                self.getContainer().focus();
             });
          }
+      },
 
-         this.setToday();
+      /**
+       * Установить режим ввода (месяц / месяц,год)
+       * @param {String} mode
+       */
+      setMode: function(mode){
+         if( mode == 'year' || mode == 'month' ){
+            this._options.mode = mode;
+            if (!this._picker) { this._initializePicker(); }
+            else { this._setPickerContent(); }
+            if ( this._options.defaultValue ) { this.setDate(this._options.defaultValue); }
+            else { this.setToday(); }
+            this.hidePicker();
+         }
       },
 
       /**
        * Установить текущий месяц/год
        */
       setToday: function() {
-         this._setDate(new Date());
+         this.setDate(new Date());
       },
 
       /**
@@ -203,7 +221,6 @@ define(
             }
             else { throw new Error('Неверный формат даты'); }
          }
-         this.hidePicker();
       },
 
       /**
@@ -292,7 +309,6 @@ define(
          if( this._options.mode == 'month' ){ fieldContainer.text(this._months[month] + ', ' + year); }
          else if( this._options.mode == 'year' ){ fieldContainer.text(year); }
       },
-
 
       /**
        * Обновить выпадающий список в соответствии с типом mode

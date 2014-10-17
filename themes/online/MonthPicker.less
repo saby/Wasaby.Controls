@@ -1,105 +1,75 @@
 .controls-MonthPicker {
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-  height: 16px;
-}
-.controls-MonthPicker__field-box {
   text-align: center;
-  margin: 0 16px;
-  height: 16px;
-  line-height: 16px;
-}
-.controls-MonthPicker__field-box-month {
-  width: 120px;
-}
-.controls-MonthPicker__field-box-year {
-  width: 50px;
+  display: inline-block;
 }
 .controls-MonthPicker__field {
+//  vertical-align: middle;
+  display: inline-block;
   color: #0055BB;
   cursor: pointer;
   font-size: 14px;
   font-weight: 700;
   font-family: 'Tahoma Полужирный', 'Tahoma';
+  height: 16px;
+  line-height: 16px;
 }
 .controls-MonthPicker__field:hover {
   text-decoration: underline;
   color: #FF7033;
 }
-.controls-MonthPicker__arrow-wrapper {
+.controls-MonthPicker__arrow {
+//  vertical-align: middle;
+  display: inline-block;
+  background: url("img/MonthPicker-arrows.png") transparent;
   width: 16px;
   height: 16px;
-}
-.controls-MonthPicker__arrow-left-wrapper {
-  float: left;
-}
-.controls-MonthPicker__arrow-right-wrapper {
-  float: right;
-  position: relative;
-  top: -16px;
-}
-.controls-MonthPicker__arrow-left-wrapper:before,
-.controls-MonthPicker__arrow-right-wrapper:after {
-  content: '';
-  display: inline-block;
-  height: 100%;
-  vertical-align: middle;
-}
-.controls-MonthPicker__arrow {
-  border: 6px solid transparent;
-  width: 0;
-  height: 0;
   cursor: pointer;
-  display: inline-block;
-  vertical-align: middle;
 }
-.controls-MonthPicker__arrow-left {
-  border-right-color: #587AB0;
+.controls-MonthPicker__arrowLeft {
+  background-position: 32px 0px;
 }
-.controls-MonthPicker__arrow-left:hover {
-  border-right-color: #FF7033;
+.controls-MonthPicker__arrowLeft:hover {
+  background-position: 0px 0px;
 }
-.controls-MonthPicker__arrow-right {
-  border-left-color: #587AB0;
+.controls-MonthPicker__arrowRight {
+  background-position: -32px -32px;
 }
-.controls-MonthPicker__arrow-right:hover {
-  border-left-color: #FF7033;
+.controls-MonthPicker__arrowRight:hover {
+  background-position: 0px -32px;
 }
-.controls-MonthPicker__dropdown-wrapper {
-  position: absolute;
+.controls-MonthPicker__dropdownWrapper {
   box-sizing: border-box;
-  background: #ffffff;
+  background: #FFFFFF;
 }
-.controls-MonthPicker__dropdown-titleBlock {
-  margin-bottom: 4px;
+.controls-MonthPicker__dropdownWrapperMonth {
+  margin-top: -16px;
 }
-.controls-MonthPicker__dropdown-title {
-  font-size: 14px;
+.controls-MonthPicker__dropdownTitleBlock {
+  margin-bottom: 8px;
+  text-align: center;
 }
-.controls-MonthPicker__dropdown-wrapper-month {
-  width: 152px;
-  top: -16px;
-}
-.controls-MonthPicker__dropdown-wrapper-year {
-  width: 82px;
-}
-.controls-MonthPicker__dropdown-element {
+.controls-MonthPicker__dropdownElement {
   padding: 2px;
   height: 22px;
   line-height: 22px;
   cursor: pointer;
   color: #333;
 }
-.controls-MonthPicker__dropdown-element-month {
-  padding-left: 30px;
-}
-.controls-MonthPicker__dropdown-element-year {
-  text-align: center;
-}
-.controls-MonthPicker__dropdown-element:hover {
+.controls-MonthPicker__dropdownElement:hover {
   background: #E5ECF4;
 }
-.controls-MonthPicker__dropdown-element-active {
+.controls-MonthPicker__dropdownElementActive {
   background: #F2F2F2;
+}
+.controls-MonthPicker__dropdownElementMonth {
+  padding-left: 30px;
+}
+.controls-MonthPicker__dropdownElementYear {
+  text-align: center;
+}
+.controls-MonthPicker__dropdownArrowLeft{
+  float: left;
+}
+.controls-MonthPicker__dropdownArrowRight{
+  float:right;
 }
