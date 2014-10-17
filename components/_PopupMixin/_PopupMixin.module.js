@@ -10,7 +10,15 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
       eventsChannel.notify('onDocumentClick', e.target);
    });
 
-   var zIndexManager = {
+   $(window).bind('scroll', function(){
+      eventsChannel.notify('onWindowScroll');
+   });
+
+   $(window).bind('resize', function() {
+      eventsChannel.notify('onWindowResize');
+   });
+
+      var zIndexManager = {
       _cur: 100500,
 
       setFree: function (zIndex) {
@@ -116,26 +124,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          this._vSide = this._options.verticalAlign.side;
          this._hSide = this._options.horizontalAlign.side;
 
-         //При ресайзе расчитываем размеры
-         $(window).bind('resize', function() {
-            if (self._containerSizes.offset !== undefined) {
-               self._container.offset({
-                  top: self._correctionByDisplaySize('vertical', 'resize').top,
-                  left: self._correctionByDisplaySize('horizontal', 'resize').left
-               });
-            }
-            self._checkPosition();// следим за тем не пропал ли таргет
-         });
-
-         //Скрываем попап если при скролле таргет скрылся
-         $(window).bind('scroll', function(){
-            self._checkPosition();
-         });
-
-         if (this._options.closeByExternalClick) {
-            $ws.single.EventBus.channel('DocumentClickChannel').subscribe('onDocumentClick', this._clickHandler, this);
-         }
-
          trg.subscribe('onMove', function () {
             if (!self._firstMove) {
                self.recalcPosition();
@@ -143,17 +131,41 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
                self._firstMove = false;
             }
             self.recalcPosition();
-            self._checkPosition();
+            self._checkTargetPosition();
          });
+
+         //При ресайзе расчитываем размеры
+         $ws.single.EventBus.channel('DocumentClickChannel').subscribe('onWindowResize', this._resizeHandler, this);
+
+         //Скрываем попап если при скролле таргет скрылся
+         $ws.single.EventBus.channel('DocumentClickChannel').subscribe('onWindowScroll', this._scrollHandler, this);
+
+         if (this._options.closeByExternalClick) {
+            $ws.single.EventBus.channel('DocumentClickChannel').subscribe('onDocumentClick', this._clickHandler, this);
+         }
       },
 
-      _checkPosition: function(){
+      _checkTargetPosition: function(){
          if (this._options.target) {
             var winHeight = $(window).height() , top = this._options.target.offset().top - $(window).scrollTop() - winHeight;
             if (top > 0 || -top > winHeight) {
                this.hide();
             }
          }
+      },
+
+      _scrollHandler: function(){
+         this._checkTargetPosition();
+      },
+
+      _resizeHandler: function(){
+         if (this._containerSizes.offset !== undefined) {
+            this._container.offset({
+               top: this._correctionByDisplaySize('vertical', 'resize').top,
+               left: this._correctionByDisplaySize('horizontal', 'resize').left
+            });
+         }
+         this._checkTargetPosition();// следим за тем не пропал ли таргет
       },
 
       _clickHandler: function(eventObject, target) {
@@ -500,6 +512,8 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          destroy: function () {
             var zIndex = this._container.css('zIndex');
             zIndexManager.setFree(zIndex);
+            $ws.single.EventBus.channel('DocumentClickChannel').unsubscribe('onWindowResize', this._resizeHandler);
+            $ws.single.EventBus.channel('DocumentClickChannel').unsubscribe('onWindowScroll', this._scrollHandler);
             $ws.single.EventBus.channel('DocumentClickChannel').unsubscribe('onDocumentClick',this._clickHandler);
          }
       }
