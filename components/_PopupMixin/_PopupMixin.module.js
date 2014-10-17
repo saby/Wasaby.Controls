@@ -103,7 +103,11 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          var container = this._container;
          var trg = $ws.helpers.trackElement(this._options.target, true);
          this.hide();
-         container.css('position', 'absolute');
+         container.css({
+            'position':'absolute',
+            'top': '-1000px',
+            'left': '-1000px'
+         });
          container.appendTo('body');
          var zIndex = zIndexManager.getNext();
          container.css('zIndex', zIndex);
@@ -112,13 +116,20 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          this._vSide = this._options.verticalAlign.side;
          this._hSide = this._options.horizontalAlign.side;
 
-         $(window).bind('resize', function () {
+         //При ресайзе расчитываем размеры
+         $(window).bind('resize', function() {
             if (self._containerSizes.offset !== undefined) {
                self._container.offset({
                   top: self._correctionByDisplaySize('vertical', 'resize').top,
                   left: self._correctionByDisplaySize('horizontal', 'resize').left
                });
             }
+            self._checkPosition();// следим за тем не пропал ли таргет
+         });
+
+         //Скрываем попап если при скролле таргет скрылся
+         $(window).bind('scroll', function(){
+            self._checkPosition();
          });
 
          if (this._options.closeByExternalClick) {
@@ -131,7 +142,18 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             } else {
                self._firstMove = false;
             }
+            self.recalcPosition();
+            self._checkPosition();
          });
+      },
+
+      _checkPosition: function(){
+         if (this._options.target) {
+            var winHeight = $(window).height() , top = this._options.target.offset().top - $(window).scrollTop() - winHeight;
+            if (top > 0 || -top > winHeight) {
+               this.hide();
+            }
+         }
       },
 
       _clickHandler: function(eventObject, target) {
@@ -303,7 +325,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             isMoved = this._isMovedV; // Был произведен вертикальный сдвиг или нет
             winSize = $(window).height();
          }
-
          //Если не влезаем в экран, но еще не перемещались то перемещаемся в противоположный угол
          if (over && !isMoved) {
             offset[s[0]] = this._getOppositeOffset(s[0])[s[0]];
