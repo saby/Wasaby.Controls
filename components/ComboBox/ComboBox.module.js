@@ -62,7 +62,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
 
          if (this._items.getItemsCount()) {
-            this._drawItems();
             /*устанавливаем первое значение TODO по идее переписан метод setSelectedItem для того чтобы не срабатывало событие при первой установке*/
             var
                item = this._items.getNextItem();
