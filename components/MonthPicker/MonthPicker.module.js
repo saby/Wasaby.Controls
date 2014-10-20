@@ -26,9 +26,9 @@ define(
     */
 
    var MonthPicker = Control.Control.extend( [_PickerMixin], /** @lends SBIS3.CONTROLS.MonthPicker.prototype */{
-      _dotTplFn: dotTplFn,
       _dropdownMonthTpl: DropdownMonthTpl,
       _dropdownYearTpl: DropdownYearTpl,
+      _dotTplFn: dotTplFn,
 
       $protected: {
          _options: {
@@ -42,29 +42,17 @@ define(
              */
             mode: 'month',
             /**
-             * @cfg {String|Date} Значение для установки по умолчанию
-             * <wiTag group="Данные">
-             * Можно задать:
-             * <ol>
-             *    <li>строку формата "ГГГГ, ММ, ДД", т.е. значения отделяются запятой, строго в таком порядке и только
-             * полный год в 4 цифры;</li>
-             *    <li>значение типа Date.</li>
-             * </ol>
-             * В зависимости от режима работы, установленного во {@link viewType}, возьмутся месяц и год, либо только год.
+             * @cfg {String|Date} Значение для установки по умолчанию (в последствии в нем хранится текущее значение)
+             * Строка должна быть формата [MM.]YYYY (месяц -- одна или две цифры, год -- от 1-ой до 4-х цифр)
+             * В зависимости от режима работы, установленного в mode, возьмутся месяц и год, либо только год.
              */
-            defaultValue: '',
+            date: '',
             /**
              * @cfg {String} формат визуального отображения месяца
              * TODO на данный момент нигде не используется
              */
             monthFormat: ''
          },
-
-         /**
-          * Текущее значение даты в поле
-          */
-         _currentValue: undefined,
-
          /**
           * Массив месяцев
           */
@@ -72,22 +60,25 @@ define(
             'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
             'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
          ],
-
+         /**
+          * Управляющие клавиши
+          */
          _KEYS: {
             ARROW_LEFT: 37,
-            ARROW_UP: 38,
-            ARROW_RIGHT: 39,
-            ARROW_DOWN: 40
+            ARROW_RIGHT: 39
          }
       },
 
       $constructor: function() {
          var
-            self = this,
-            fieldContainer = $('.js-controls-MonthPicker__field', this.getContainer().get(0));
+            self = this;
 
-         if ( this._options.defaultValue ) { this.setDate(this._options.defaultValue); }
-         else { this.setToday(); }
+         if ( this._options.date ) {
+            this.setDate(this._options.date);
+         }
+         else {
+            this.setToday();
+         }
 
          // При слишком частом клике на стрелочку срабатывает событие двойного клика,
          // поведение по умолчанию которого -- выделить текст. Этого не нужно -- снимаем выделение.
@@ -99,47 +90,28 @@ define(
 
          // Клик по стрелочкам
          $('.js-controls-MonthPicker__arrowRight', this.getContainer().get(0)).click(function(){
-            if ( self._picker && self._picker.isVisible() && self._options.mode == 'month' ){
-               fieldContainer.text(parseInt(/\d+/.exec(fieldContainer.text()), 10) + 1);
-            }
-            else { self.setNext(); }
+            self.setNext();
          });
          $('.js-controls-MonthPicker__arrowLeft', this.getContainer().get(0)).click(function(){
-            if ( self._picker && self._picker.isVisible() && self._options.mode == 'month' ){
-               fieldContainer.text(parseInt(/\d+/.exec(fieldContainer.text()), 10) - 1);
-            }
-            else { self.setPrev(); }
+            self.setPrev();
          });
 
          // Клик по полю с датой
          $('.js-controls-MonthPicker__field', this.getContainer().get(0)).click(function(){
-            self._container.width(self._container.width());
-            self.getContainer().focus();
-            if (!self._picker) { self._initializePicker(); }
-            self._refreshDropdown();
             self.togglePicker();
-            if ( self._picker.isVisible() ){
-               $(this).text(parseInt(/\d+/.exec($(this).text()), 10));
-               self._picker.getContainer().css({
-                  'width': self._container.outerWidth()
-               });
-            }
-            else{
-               self._setDate(new Date(parseInt(/\d+/.exec($('.js-controls-MonthPicker__field', self.getContainer().get(0)).text()), 10),
-                  $('.controls-MonthPicker__dropdownElementActive', self._picker.getContainer()).attr('data-key') || 0, 1, 20, 0, 0));
-               self._container.width('');
-            }
+            self._setText();
+            self.getContainer().focus(); // Устанавливаем фокусировку для изменения значения стрелочками
+            // обновляем выпадающий блок только если пикер данным кликом открыт
+            if ( self._picker && self._picker.isVisible() ){ self._refreshDropdown(); }
          });
 
          // Обработка нажатий клавиш
          $(this.getContainer().get(0)).keydown(function(event){
-            if( event.which == self._KEYS.ARROW_RIGHT ){
-               $('.js-controls-MonthPicker__arrowRight', self.getContainer().get(0)).trigger('click');
-            }
-            else if( event.which == self._KEYS.ARROW_LEFT ){
-               $('.js-controls-MonthPicker__arrowLeft', self.getContainer().get(0)).trigger('click');
-            }
+            if( event.which == self._KEYS.ARROW_RIGHT ){ self.setNext(); }
+            else if( event.which == self._KEYS.ARROW_LEFT ){ self.setPrev(); }
          });
+
+
       },
 
       _setPickerContent: function() {
@@ -147,32 +119,29 @@ define(
 
          this._picker.getContainer().empty();
 
-         if( this._options.mode == 'month' ){
-            this._picker.getContainer().append(self._dropdownMonthTpl);
+         if( this._options.mode == 'month' ){ this._picker.getContainer().append(self._dropdownMonthTpl); }
+         else if( this._options.mode == 'year' ){ this._picker.getContainer().append(self._dropdownYearTpl); }
 
-            $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).click(function(){
-               self._setDate(new Date(parseInt(/\d+/.exec($('.js-controls-MonthPicker__field', self.getContainer().get(0)).text()), 10),
-                  $(this).attr('data-key'), 1, 20, 0, 0));
-               self.hidePicker();
-               self.getContainer().focus();
-               self._container.width('');
-            });
-         }
-         else if( this._options.mode == 'year' ){
-            this._picker.getContainer().append(self._dropdownYearTpl);
+         $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).click(function(){
+            self.hidePicker();
 
-            $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).click(function(){
-               self._setDate(new Date(parseInt($(this).text(), 10), 0, 1, 20, 0, 0));
-               self.hidePicker();
-               self.getContainer().focus();
-            });
-         }
+            if( self._options.mode == 'month' ){
+               self._setDate(new Date(self._options.date.getFullYear(), $(this).attr('data-key'), 1, 20, 0, 0));
+            }
+            else if( self._options.mode == 'year' ){
+               self._setDate(new Date($(this).attr('data-key'), 0, 1, 20, 0, 0));
+            }
 
+            self.getContainer().focus(); // Устанавливаем фокусировку для изменения значения стрелочками
+         });
+
+         // При закрытии пикера посредством клика по какому-либо месту окна, необходимо обновить текстовое поле значения даты
          this._picker.subscribe('onExternalClick', function(){
-            self._setDate(new Date(parseInt(/\d+/.exec($('.js-controls-MonthPicker__field', self.getContainer().get(0)).text()), 10),
-               $('.controls-MonthPicker__dropdownElementActive', self._picker.getContainer()).attr('data-key') || 0, 1, 20, 0, 0));
-            self.getContainer().focus();
-            self._container.width('');
+            // Если просто вызвать метод _setText(), то изменение текста не произойдет, так как пикер на момент
+            // выстреливания события еще открыт. Нам же нужно, чтобы пикер был закрыт -- устанавливаем задержу
+            setTimeout(function(){
+               self._setText();
+            }, 0);
          });
       },
 
@@ -183,12 +152,19 @@ define(
       setMode: function(mode){
          if( mode == 'year' || mode == 'month' ){
             this._options.mode = mode;
-            if ( !this._picker ) { this._initializePicker(); }
-            else { this._setPickerContent(); }
-            if ( this._options.defaultValue ) { this.setDate(this._options.defaultValue); }
-            else { this.setToday(); }
-            this._container.width('');
-            if ( this._picker.isVisible() ){ this.hidePicker(); }
+            if ( this._picker ) {
+               this._setPickerContent();
+
+               if ( this._picker.isVisible() ){
+                  this.hidePicker();
+               }
+            }
+            if ( this._options.date ) {
+               this.setDate(this._options.date);
+            }
+            else {
+               this.setToday();
+            }
          }
       },
 
@@ -196,7 +172,7 @@ define(
        * Установить текущий месяц/год
        */
       setToday: function() {
-         this.setDate(new Date());
+         this._setDate(new Date());
       },
 
       /**
@@ -207,20 +183,14 @@ define(
       setDate: function(value) {
          if( value instanceof Date ){ this._setDate(value); }
          else if( typeof value == 'string' ){
-            if ( this._checkValue(value) ){
-               var
-                  dotExpResult = /\./.exec(value),
-                  date;
-               if ( dotExpResult ){
-                  date = new Date(parseInt(value.slice(dotExpResult.index + 1), 10),
-                     parseInt(value.slice(0, dotExpResult.index), 10) - 1, 1, 20, 0, 0);
-               }
-               else {
-                  date = new Date(parseInt(value, 10), 0, 1, 20, 0, 0);
-               }
-               this._setDate(date);
+            var checkResult = /^(?:(\d{1,2})\.)?(\d{1,4})$/.exec(value);
+
+            if ( checkResult ){
+               this._setDate(new Date(parseInt(checkResult[2], 10), parseInt(checkResult[1], 10) || 0, 1, 20, 0, 0));
             }
-            else { throw new Error('Неверный формат даты'); }
+            else {
+               throw new Error('Неверный формат даты');
+            }
          }
       },
 
@@ -228,26 +198,27 @@ define(
        * Установить следующий месяц/год
        */
       setNext: function() {
-         var
-            currentDate = this._currentValue || new Date(),
-            newDate;
-
-         if ( this._options.mode == 'month' ){ newDate = new Date(currentDate.setMonth(currentDate.getMonth() + 1)); }
-         else if ( this._options.mode == 'year' ){ newDate = new Date(currentDate.setYear(currentDate.getFullYear() + 1)); }
-
-         this._setDate(newDate);
+         this._changeDate(1);
       },
 
       /**
        * Установить предыдущий месяц/год
        */
       setPrev: function() {
+         this._changeDate(-1);
+      },
+
+      _changeDate: function(value){
          var
-            currentDate = this._currentValue || new Date(),
+            currentDate = this._options.date || new Date(),
             newDate;
 
-         if ( this._options.mode == 'month' ){ newDate = new Date(currentDate.setMonth(currentDate.getMonth() - 1)); }
-         else if ( this._options.mode == 'year' ){ newDate = new Date(currentDate.setYear(currentDate.getFullYear() - 1)); }
+         if ( this._options.mode == 'month' ){
+            // Если пикер открыт, тогда в режиме месяца в текстовом поле отображается год, т.е. нужно менять год
+            if (this._picker && this._picker.isVisible()){ newDate = new Date(currentDate.setYear(currentDate.getFullYear() + value)); }
+            else { newDate = new Date(currentDate.setMonth(currentDate.getMonth() + value)); }
+         }
+         else if ( this._options.mode == 'year' ){ newDate = new Date(currentDate.setYear(currentDate.getFullYear() + value)); }
 
          this._setDate(newDate);
       },
@@ -259,7 +230,7 @@ define(
        * @returns {Date|*} Текущая дата
        */
       getDate: function(){
-         return this._currentValue;
+         return this._options.date;
       },
 
       /**
@@ -267,11 +238,11 @@ define(
        * @returns {string}
        */
       getTextDate: function(){
-         return this._currentValue.toISOString().slice(0, 10);
+         return this._options.date.toSQL();
       },
 
       /**
-       * Взвращает интервал даты (массив из двух дат), где, в случае 'месац, год':
+       * Возвращает интервал даты (массив из двух дат), где, в случае 'месац, год':
        * начало интервала - первый день данного месяца данного года, конец - последний день данного месяца данного года
        * а в случае режима 'год':
        * начало интервала - первый день данного года, конец - последний день данного года
@@ -279,7 +250,7 @@ define(
        */
       getInterval: function(){
          var
-            startInterval = this._currentValue,
+            startInterval = this._options.date,
             endInterval;
          if ( this._options.mode == 'month' ){
             endInterval = new Date(startInterval.getFullYear(), startInterval.getMonth() + 1, 0, 20, 0, 0);
@@ -303,10 +274,26 @@ define(
          // Явно устанавливаем ненулевое время, т.к. в некоторых случаях при значениях по умолчанию
          // нам отдается предыдущий месяц, например, при new Date(2020, 0, 1), то есть если мы хотим
          // задать 2020 год 1 января, нам вернётся, как ни странно, Tue Dec 31 2019 23:00:00 GMT+0300 (RTZ 2 (зима))
-         this._currentValue = new Date(year, month, 1, 20, 0, 0);
-         var fieldContainer = $('.js-controls-MonthPicker__field', this.getContainer().get(0));
-         if( this._options.mode == 'month' ){ fieldContainer.text(this._months[month] + ', ' + year); }
-         else if( this._options.mode == 'year' ){ fieldContainer.text(year); }
+         this._options.date = new Date(year, month, 1, 20, 0, 0);
+
+         this._setText();
+      },
+
+      /**
+       * Установить значение в поле в соответствии с текущим значением даты
+       * @private
+       */
+      _setText: function(){
+         var
+            date = this._options.date,
+            fieldContainer = $('.js-controls-MonthPicker__field', this.getContainer().get(0));
+
+         if( this._options.mode == 'month' ){
+            // Если пикер открыт, то в режиме месяца показан только год
+            if (this._picker && this._picker.isVisible()){ fieldContainer.text(date.getFullYear()); }
+            else { fieldContainer.text(this._months[date.getMonth()] + ', ' + date.getFullYear()); }
+         }
+         else if( this._options.mode == 'year' ){ fieldContainer.text(date.getFullYear()); }
       },
 
       /**
@@ -317,37 +304,28 @@ define(
          var
             self = this,
             temporary;
+
+         // Обновляем активный месяц
          if( self._options.mode == 'month' ) {
-            $('.js-controls-MonthPicker__dropdownTitle', this._picker.getContainer().get(0)).text(this._currentValue.getFullYear());
             $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer().get(0)).each(function () {
                $(this).removeClass('controls-MonthPicker__dropdownElementActive');
-               if ( $(this).attr('data-key') == self._currentValue.getMonth() ){
+               if ( $(this).attr('data-key') == self._options.date.getMonth() ){
                   $(this).addClass('controls-MonthPicker__dropdownElementActive');
                }
             });
          }
+         // обновляем года и атрибуты data-key, а так же активный год
          else if( self._options.mode == 'year' ) {
             $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer().get(0)).each(function () {
                $(this).removeClass('controls-MonthPicker__dropdownElementActive');
-               temporary = parseInt(self._currentValue.getFullYear(), 10) + $(this).index() - 3;
+               temporary = self._options.date.getFullYear() + $(this).index() - 3;
                $(this).text(temporary);
-               if ( temporary == parseInt(self._currentValue.getFullYear(), 10) ){
+               $(this).attr('data-key', temporary);
+               if ( temporary == parseInt(self._options.date.getFullYear(), 10) ){
                   $(this).addClass('controls-MonthPicker__dropdownElementActive');
                }
             });
          }
-      },
-
-      /**
-       * Проверить, удовлетворяет ли строка значению типа 'число.число' (где первое от одного до двух символов,
-       * а второе от одного до четырех символов) или типа 'число' (от одного до четырёх символов)
-       * Иными словами, проверяет, является ли значение корректной датой 'месяц.год' или 'год'
-       * @param value
-       * @returns {boolean}
-       * @private
-       */
-      _checkValue: function(value){
-         return /^(?:\d{1,2}\.)?\d{1,4}$/.test(value);
       }
    });
 
