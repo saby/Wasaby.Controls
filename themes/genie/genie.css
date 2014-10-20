@@ -14,9 +14,13 @@
   border-radius: 2px;
   background-color: transparent;
   color: #919197;
+  padding: 0;
 }
 .controls-Button:hover {
   border-color: #00d7d7;
+}
+.controls-Button__content {
+  margin: 0 8px;
 }
 .controls-Button:hover {
   color: #ffffff;
@@ -53,7 +57,6 @@
 .controls-TextBox {
   display: inline-block;
   background: #ffffff;
-  padding: 0 4px;
   border: 1px solid #d1d1d4;
   height: 23px;
   border-radius: 2px;
@@ -63,7 +66,6 @@
 }
 .controls-TextBox__fieldWrapper {
   height: 100%;
-  margin-left: 5px;
 }
 .controls-TextBox__afterFieldWrapper {
   float: right;
@@ -71,9 +73,10 @@
   min-height: 19px;
   height: 100%;
   position: relative;
+  margin-right: 4px;
 }
 .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
-  margin-right: 19px;
+  margin-right: 21px;
 }
 .controls-TextBox__field {
   border: none;
@@ -81,6 +84,7 @@
   height: 99%;
   width: 100%;
   margin: 0;
+  padding: 0 4px;
   box-sizing: border-box;
   line-height: 100%;
   outline: none;
@@ -94,7 +98,9 @@
 }
 .controls-TextBox.controls-NumberTextBox {
   text-align: right;
-  padding-right: 0;
+}
+.controls-TextBox.controls-NumberTextBox .controls-TextBox__afterFieldWrapper {
+  margin-right: 0;
 }
 .controls-NumberTextBox__fieldWrapper {
   margin-right: 14px;
@@ -133,7 +139,6 @@
   color: #00d7d7;
 }
 .controls-CheckBox__icon {
-  margin-right: 8px;
   width: 17px;
   height: 17px;
   background: url('./img/CheckBox-sprite.png') 0 -4px;
@@ -147,6 +152,9 @@
 }
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
   background-position: 0 -78px;
+}
+.controls-CheckBox__caption {
+  margin-left: 8px;
 }
 .controls-ComboBox__arrowDown {
   background-image: url('./img/ComboBox.png');
@@ -197,4 +205,32 @@
 }
 .controls-ComboBox__picker.controls-Picker__owner__hover {
   border-top-color: #00d7d7;
+}
+.controls-ListView__item {
+  overflow: hidden;
+}
+.controls-ListView > .controls-TreeView__childContainer {
+  display: block;
+}
+.controls-TreeView__childContainer {
+  list-style: none;
+  padding-left: 10px;
+  display: none;
+}
+.controls-TreeView__expand {
+  float: left;
+  height: 16px;
+  width: 16px;
+  cursor: pointer;
+  background-image: url('./img/Tree_expand.png');
+  visibility: hidden;
+}
+.controls-TreeView__hasChild > .controls-TreeView__expand {
+  visibility: visible;
+}
+.controls-TreeView__expand__open {
+  background-position: 0 -16px;
+}
+.controls-TreeView__item {
+  overflow: hidden;
 }

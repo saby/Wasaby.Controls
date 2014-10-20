@@ -62,7 +62,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
 
          if (this._items.getItemsCount()) {
-            this._drawItems();
             /*устанавливаем первое значение TODO по идее переписан метод setSelectedItem для того чтобы не срабатывало событие при первой установке*/
             var
                item = this._items.getNextItem();
@@ -80,12 +79,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
          });
 
-         /*хренька на скролл*/
-         $ws.helpers.trackElement(this._container).subscribe('onMove', function() {
-            self._picker.recalcPosition();
-         }, this);
-
-         self._picker.getContainer().addClass('controls-ComboBox__picker');
       },
 
       setText : function(text) {
@@ -101,23 +94,32 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          $('.controls-ComboBox__itemRow[data-key=\''+key+'\']').addClass('controls-ComboBox__itemRow__selected');
       },
 
+      //TODO от этого надо избавиться. Пользуется Саня Кузьмин
       _notifySelectedItem : function(key) {
          var text = this.getText();
          this._notify('onChangeSelectedItem', key, text);
       },
 
-      _drawItems : function() {
-         var self = this;
-         self._picker.getContainer().empty();
+      _setPickerContent: function () {
+         this._drawItems();
+         //TODO: кажется неочевидное место, возможно как то автоматизировать
+         this._picker.getContainer().addClass('controls-ComboBox__picker');
+      },
 
-         this._items.iterate(function (item, key) {
-            /*TODO просто в пикер пихаются дивы. Норм ли это понять после разработки ListView*/
-            self._picker.getContainer().append(self._itemTpl({key: key, title: item[self._displayField]}));
-         });
-         $('.js-controls-ComboBox__itemRow', self._picker.getContainer().get(0)).click(function(){
-            self.setValue($(this).attr('data-key'));
-            self.hidePicker();
-         });
+      _drawItems: function () {
+         var self = this;
+         if (self._picker) {
+            self._picker.getContainer().empty();
+            this._items.iterate(function (item, key) {
+               /*TODO просто в пикер пихаются дивы. Норм ли это понять после разработки ListView*/
+               self._picker.getContainer().append(self._itemTpl({key: key, title: item[self._displayField]}));
+            });
+            $('.js-controls-ComboBox__itemRow', self._picker.getContainer().get(0)).click(function () {
+               self.setValue($(this).attr('data-key'));
+               self.hidePicker();
+            });
+
+         }
       },
 
       _keyDownBind : function(e){

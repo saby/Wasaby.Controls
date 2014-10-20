@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], function (Control) {
+define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase','is!msIe?js!SBIS3.CONTROLS.FormattedTextBoxBase/resources/ext/ierange-m2-min'], function (TextBoxBase) {
 
    'use strict';
 
@@ -7,11 +7,11 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], func
     * В конечный контролл передается маска с помощью опции mask. Управляющие символы в маске, определяющие,
     * какие символы могут вводиться, определяются предназначением контролла.
     * @class SBIS3.CONTROLS.FormattedTextBoxBase
-    * @extends SBIS3.CORE.Control
+    * @extends $ws.proto.Control
     * @control
     */
 
-   var FormattedTextBoxBase = Control.Control.extend(/** @lends SBIS3.CONTROLS.FormattedTextBoxBase.prototype */{
+   var FormattedTextBoxBase = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.FormattedTextBoxBase.prototype */{
       $protected: {
          /**
           * Изначальная маска (либо задается в опциях при создании, либо берется по умолчанию)
@@ -90,11 +90,6 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], func
           * Опции создаваемого контролла
           */
          _options: {
-            /**
-             * @cfg {RegExp} Маска, на базе которой будет создана html-разметка и в соответствии с которой
-             * будет определён весь функционал
-             */
-            mask: ''
          },
 
          _KEYS: {
@@ -105,23 +100,29 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], func
       },
 
       $constructor: function () {
+         this._initializeComponents();
+      },
 
+      _getMask:function(){
+         /*Method must be implemented*/
       },
 
       _initializeComponents: function(){
          try {
             var self = this;
 
-            this._checkPossibleMask();
-
             this._inputField = $('.controls-FormattedTextBox__field', this.getContainer().get(0));
 
-            this._primalMask = this._options.mask;
+            this._primalMask = this._getMask();
             this._controlCharacters = this._getControlCharactersSet();
             this._clearMask = this._getClearMask();
             this._isSeparatorContainerFirst = this._getTypeOfFirstContainer();
             this._htmlMask = this._getHtmlMask();
             this._inputField.html(this._htmlMask);
+
+            if(this._options.text){
+               this.setText(this._options.text);
+            }
 
             this._inputField.focus(function () {
                self._focusHandler(self._inputField.get(0));
@@ -317,6 +318,10 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], func
          var buffer = container.nodeValue.split('');
          buffer[position] = character;
          container.nodeValue = buffer.join('');
+         this._updateText();
+      },
+      _updateText:function(){
+         /*Method must be implemented*/
       },
 
       /**
@@ -336,8 +341,16 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], func
        * @private
        */
       _moveCursor : function(container, position){
-         var selection = window.getSelection();
-         selection.collapse(container, position);
+         if ($ws._const.browser.isIE){
+            var rng = document.body.createTextRange();
+            rng.moveToElementText(container.parentNode);
+            rng.move('character', position);
+            rng.select();
+         }
+         else {
+            var selection = window.getSelection();
+            selection.collapse(container, position);
+         }
       },
 
       /**
@@ -411,12 +424,23 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], func
        * @returns {string} html-разметка
        * @private
        */
-      _getHtmlMask: function(){
+      _getHtmlMask: function(text){
          var
             htmlMask = '',
             placeholder = this._placeholder,
             placeholderContainers = this._clearMask.match(new RegExp('('+placeholder+'+)', 'g')),
             separatorContainers = this._clearMask.match(new RegExp('([^'+placeholder+']+)', 'g'));
+
+         var textExist=false;
+         var placeholderContainersValues=[];
+
+         if (text) {
+            textExist = true;
+            for (var j = 0; j < placeholderContainers.length; j++) {
+               placeholderContainersValues[j] = text.substr(0, placeholderContainers[j].length);
+               text = text.substr(placeholderContainers[j].length);
+            }
+         }
 
          var
             isPlaceholdersGreaterThanSeparators = placeholderContainers.length > separatorContainers.length,
@@ -425,17 +449,17 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], func
          for ( var j = 0; j < minLength; j++ ) {
             if (this._isSeparatorContainerFirst) {
                htmlMask += this._getHtmlContainer(separatorContainers[j], 'separator');
-               htmlMask += this._getHtmlContainer(placeholderContainers[j], 'placeholder');
+               htmlMask += this._getHtmlContainer((textExist)?placeholderContainersValues[j]:placeholderContainers[j], 'placeholder');
             }
             else {
-               htmlMask += this._getHtmlContainer(placeholderContainers[j], 'placeholder');
+               htmlMask += this._getHtmlContainer((textExist)?placeholderContainersValues[j]:placeholderContainers[j], 'placeholder');
                htmlMask += this._getHtmlContainer(separatorContainers[j], 'separator');
             }
          }
 
          if (placeholderContainers.length != separatorContainers.length){
             if (placeholderContainers.length > separatorContainers.length){
-               htmlMask += this._getHtmlContainer(placeholderContainers[minLength], 'placeholder');
+               htmlMask += this._getHtmlContainer((textExist)?placeholderContainersValues[minLength]:placeholderContainers[minLength], 'placeholder');
             }
             else {
                htmlMask += this._getHtmlContainer(separatorContainers[minLength], 'separator');
@@ -488,15 +512,8 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CORE.Control'], func
 
             return this._generalControlCharacters;
          }
-      },
-
-      _checkPossibleMask: function(){
-         if (this._possibleMasks.length !== 0){
-            if (this._possibleMasks.indexOf(this._options.mask) == -1){
-               throw new Error('Маска не удовлетворяет ни одной допустимой маске данного контролла');
-            }
-         }
       }
+
 });
 
    return FormattedTextBoxBase;

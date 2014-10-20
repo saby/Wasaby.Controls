@@ -1,34 +1,36 @@
 define ('js!SBIS3.CONTROLS.Collection', [], function(){
    return $ws.proto.Abstract.extend({
       $protected : {
-         _items : [],
+         _data : [],
          _index : {},
          _keyField : null,
-         options : {
-            items : [],
+         _hierField : null,
+         _adapter : null,
+         _options : {
+            adapter : null,
+            data : [],
             keyField : ''
          }
       },
       $constructor : function() {
-         if (this._options.items) {
-            this._items = this._options.items;
-            if (this._options.keyField) {
-               this._keyField = this._options.keyField;
-            }
+         if (this._options.data) {
+            this._data = this._options.data;
+
+         }
+         if (this._options.keyField) {
+            this._keyField = this._options.keyField;
+         }
+         if (this._options.adapter) {
+            this._adapter = this._options.adapter;
          }
          this._reindex();
       },
 
       addItem : function(newItem) {
-         this._items.push(newItem);
+         this._adapter.addItem(this._data, newItem);
          this._reindex();
 
       },
-
-      deleteItem : function() {
-
-      },
-
 
       /**
        * Получить элемент коллекции по идентификатору
@@ -43,7 +45,8 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
        * @param {String} key идентификатор
        */
       getNextItem: function(key){
-         return this._getSibling(key, 'next');
+         var item = this.getItem(key);
+         return this._adapter.getSibling(this._data, item, 'next');
       },
 
       /**
@@ -51,54 +54,43 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
        * @param {String} key идентификатор
        */
       getPreviousItem: function(key){
-         return this._getSibling(key, 'prev');
+         var item = this.getItem(key);
+         return this._adapter.getSibling(this._data, item, 'prev');
       },
 
       getKey : function(item) {
          if (this._keyField) {
-            return item[this._keyField];
+            return this._adapter.getValue(item, this._keyField)
          }
          else {
-            return this._getIndexOf(item);
+            return this._adapter._getIndexOf(item);
          }
       },
 
-      _getSibling : function(elKey, type) {
-         var sibling = null;
-         //Если ключ не задан, то возвращаем первый элемент
-         if (!elKey) {
-            sibling = this._items[0] || null;
-         }
-         else {
-            var
-               direction = (type == 'next') ? 1 : -1,
-               item = this.getItem(elKey);
-            if (item) {
-               var index = this._getIndexOf(item) + direction;
-               if ((index >= 0) && (index <= this._items.length - 1)) {
-                  sibling = this._items[index];
-               }
-            }
-         }
-         return sibling;
-      },
-
-
-      _getIndexOf: function(item){
-         return this._items.indexOf(item);
-      },
-
+      /*TODO проброс метода в Adapter*/
       iterate : function(hdlFunction) {
-         for (var i = 0; i < this._items.length; i++) {
-            var key = this._keyField ? this._items[i][this._keyField] : i;
-            hdlFunction(this._items[i], key, i);
-         }
+         var self = this;
+         this._adapter.iterate(this._data, function(item, i, parItem, lvl){
+            var key;
+            if (self._keyField) {
+               key = self.getValue(item, self._keyField);
+            }
+            hdlFunction(item, key, i, parItem, lvl);
+         }, self._keyField, self._hierField)
       },
+
+      getValue : function(item, field) {
+         return this._adapter.getValue(item, field);
+      },
+
+
 
       _reindex : function() {
          this._index = {};
          var self = this;
-         this.iterate(function(item, key, i){
+
+
+         this.iterate(function(item, key, i, parItem, lvl){
             self._addToIndex(item, key, i);
          });
       },
@@ -115,13 +107,21 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
          this._index[key] = item;
       },
 
+      _getChildItems : function(parentId) {
+
+      },
+
       clear : function() {
-         this._items = [];
+         this._data = [];
          this._index = {};
       },
 
       getItemsCount : function() {
-         return this._items.length;
+         return this._adapter.getItemsCount(this._data);
+      },
+
+      setHierField : function(hierField) {
+         this._hierField = hierField;
       }
    });
 });
