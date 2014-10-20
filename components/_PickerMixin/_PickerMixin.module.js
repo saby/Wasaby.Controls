@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
          }, function () {
             self._picker.getContainer().removeClass('controls-Picker__owner__hover');
          });
-         self._border = self._container.outerWidth() - self._container.innerWidth()
+         self._border = self._container.outerWidth() - self._container.innerWidth();
          self._setPickerContent();
       },
 
