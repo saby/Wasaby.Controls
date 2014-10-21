@@ -102,7 +102,10 @@ define(
             self._setText();
             self.getContainer().focus(); // Устанавливаем фокусировку для изменения значения стрелочками
             // обновляем выпадающий блок только если пикер данным кликом открыт
-            if ( self._picker && self._picker.isVisible() ){ self._refreshDropdown(); }
+            if ( self._picker && self._picker.isVisible() ){
+               self._refreshDropdown();
+               //self._picker.recalcPosition();
+            }
          });
 
          // Обработка нажатий клавиш
@@ -208,6 +211,11 @@ define(
          this._changeDate(-1);
       },
 
+      /**
+       * Изменить дату на value единиц (единица = месяц в режиме месяца и = год в режиме года)
+       * @param value
+       * @private
+       */
       _changeDate: function(value){
          var
             currentDate = this._options.date || new Date(),
