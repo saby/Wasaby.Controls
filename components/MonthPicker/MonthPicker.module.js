@@ -72,11 +72,11 @@ define(
       },
 
       $constructor: function() {
-         var
-            self = this;
+         var self = this;
 
+         // Установка первоначального значения
          if ( this._options.date ) {
-            this.setDate(this._options.date);
+            this._setDate(this._options.date);
          }
          else {
             this.setToday();
@@ -155,12 +155,7 @@ define(
                   this.hidePicker();
                }
             }
-            if ( this._options.date ) {
-               this.setDate(this._options.date);
-            }
-            else {
-               this.setToday();
-            }
+            this._setDate(this._options.date);
          }
       },
 
@@ -173,21 +168,78 @@ define(
 
       /**
        * Установить дату по полученному значению. Публичный метод. Может принимает либо строку
-       * формата 'число.число' или 'число', либо объект типа Date
+       * формата 'число.число' или 'число', либо объект типа Date.
        * @param value Строка или дата
        */
       setDate: function(value) {
-         if( value instanceof Date ){ this._setDate(value); }
-         else if( typeof value == 'string' ){
-            var checkResult = /^(?:(\d{1,2})\.)?(\d{1,4})$/.exec(value);
+         // TODO В будущем будет отличаться от приватного метода _setDate тем, что будет генерировать событие
 
-            if ( checkResult ){
-               this._setDate(new Date(parseInt(checkResult[2], 10), parseInt(checkResult[1], 10) || 0, 1, 20, 0, 0));
-            }
-            else {
-               throw new Error('Неверный формат даты');
-            }
+         this._setDate(value);
+      },
+
+      /**
+       * Установить дату по полученному значению. Приватный метод. Может принимает либо строку
+       * формата 'число.число' или 'число', либо объект типа Date.
+       * @param value Строка или дата
+       * @private
+       */
+      _setDate: function(value){
+         if( value instanceof Date ){
+            this._setDateByDateObject(value);
          }
+         else if( typeof value == 'string' ){
+            this._setDateByString(value);
+         }
+      },
+
+      /**
+       * Установить дату по переданной строке. Проверить ее на корректность [MM.]YYYY и установить, иначе породить исключение
+       * @param value
+       * @private
+       */
+      _setDateByString: function(value){
+         var checkResult = /^(?:(\d{1,2})\.)?(\d{1,4})$/.exec(value);
+
+         if ( checkResult ){
+            this._setDateByDateObject(new Date(parseInt(checkResult[2], 10), parseInt(checkResult[1], 10) || 0, 1, 20, 0, 0));
+         }
+         else {
+            throw new Error('Неверный формат даты');
+         }
+      },
+
+      /**
+       * Установить дату по объекту типа Date.
+       * @param date Дата, по которой устанавливается новое значение
+       * @private
+       */
+      _setDateByDateObject: function(date){
+         var
+            month = ( this._options.mode == 'month' ) ? date.getMonth() : 0,
+            year = date.getFullYear();
+         // Явно устанавливаем ненулевое время, т.к. в некоторых случаях при значениях по умолчанию
+         // нам отдается предыдущий месяц, например, при new Date(2020, 0, 1), то есть если мы хотим
+         // задать 2020 год 1 января, нам вернётся, как ни странно, Tue Dec 31 2019 23:00:00 GMT+0300 (RTZ 2 (зима))
+         this._options.date = new Date(year, month, 1, 20, 0, 0);
+
+         this._setText();
+      },
+
+      /**
+       * Установить значение в поле в соответствии с текущим значением даты
+       * @private
+       */
+      _setText: function(){
+         var
+            date = this._options.date,
+            fieldContainer = $('.js-controls-MonthPicker__field', this.getContainer().get(0));
+
+         if( this._options.mode == 'month' ){
+            // Если пикер открыт, то в режиме месяца показан только год
+            if (this._picker && this._picker.isVisible()){ fieldContainer.text(date.getFullYear()); }
+            else { fieldContainer.text(this._months[date.getMonth()] + ', ' + date.getFullYear()); }
+         }
+         else if( this._options.mode == 'year' ){ fieldContainer.text(date.getFullYear()); }
       },
 
       /**
@@ -264,40 +316,6 @@ define(
       },
 
       /**
-       * Установить дату по объекту типа Date. Приватный метод, работает только с типом Date
-       * @param date Дата, по которой устанавливается новое значение
-       * @private
-       */
-      _setDate: function(date){
-         var
-            month = ( this._options.mode == 'month' ) ? date.getMonth() : 0,
-            year = date.getFullYear();
-         // Явно устанавливаем ненулевое время, т.к. в некоторых случаях при значениях по умолчанию
-         // нам отдается предыдущий месяц, например, при new Date(2020, 0, 1), то есть если мы хотим
-         // задать 2020 год 1 января, нам вернётся, как ни странно, Tue Dec 31 2019 23:00:00 GMT+0300 (RTZ 2 (зима))
-         this._options.date = new Date(year, month, 1, 20, 0, 0);
-
-         this._setText();
-      },
-
-      /**
-       * Установить значение в поле в соответствии с текущим значением даты
-       * @private
-       */
-      _setText: function(){
-         var
-            date = this._options.date,
-            fieldContainer = $('.js-controls-MonthPicker__field', this.getContainer().get(0));
-
-         if( this._options.mode == 'month' ){
-            // Если пикер открыт, то в режиме месяца показан только год
-            if (this._picker && this._picker.isVisible()){ fieldContainer.text(date.getFullYear()); }
-            else { fieldContainer.text(this._months[date.getMonth()] + ', ' + date.getFullYear()); }
-         }
-         else if( this._options.mode == 'year' ){ fieldContainer.text(date.getFullYear()); }
-      },
-
-      /**
        * Обновить выпадающий список в соответствии с типом mode, а так же обновить активный элемент
        * @private
        */
@@ -320,7 +338,7 @@ define(
          // Обновляем активный месяц/год
          $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer().get(0))
             .removeClass('controls-MonthPicker__dropdownElementActive');
-         temporary = self._options.mode == 'month' ? temporary = self._options.date.getMonth() : temporary = self._options.date.getFullYear();
+         temporary = self._options.mode == 'month' ? self._options.date.getMonth() : self._options.date.getFullYear();
          $('.js-controls-MonthPicker__dropdownElement[data-key=' + temporary + ']', this._picker.getContainer().get(0))
             .addClass('controls-MonthPicker__dropdownElementActive');
       }
