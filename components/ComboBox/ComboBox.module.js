@@ -88,10 +88,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawSelectedItem : function(key) {
-         var item = this._items.getItem(key);
-         ComboBox.superclass.setText.call(this, item[this._displayField]);
-         $('.controls-ComboBox__itemRow__selected').removeClass('controls-ComboBox__itemRow__selected');
-         $('.controls-ComboBox__itemRow[data-key=\''+key+'\']').addClass('controls-ComboBox__itemRow__selected');
+         if (this._picker) {
+            var item = this._items.getItem(key);
+            ComboBox.superclass.setText.call(this, item[this._displayField]);
+            $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
+            $('.controls-ComboBox__itemRow[data-key=\'' + key + '\']', this._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
+         }
       },
 
       //TODO от этого надо избавиться. Пользуется Саня Кузьмин
@@ -102,24 +104,26 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _setPickerContent: function () {
          this._drawItems();
+         var self = this;
+         $('.js-controls-ComboBox__itemRow', this._picker.getContainer().get(0)).click(function () {
+            self.setValue($(this).attr('data-key'));
+            self.hidePicker();
+         });
          //TODO: кажется неочевидное место, возможно как то автоматизировать
          this._picker.getContainer().addClass('controls-ComboBox__picker');
       },
 
-      _drawItems: function () {
-         var self = this;
-         if (self._picker) {
-            self._picker.getContainer().empty();
-            this._items.iterate(function (item, key) {
-               /*TODO просто в пикер пихаются дивы. Норм ли это понять после разработки ListView*/
-               self._picker.getContainer().append(self._itemTpl({key: key, title: item[self._displayField]}));
-            });
-            $('.js-controls-ComboBox__itemRow', self._picker.getContainer().get(0)).click(function () {
-               self.setValue($(this).attr('data-key'));
-               self.hidePicker();
-            });
 
-         }
+      _getItemsContainer : function() {
+         return this._picker.getContainer();
+      },
+
+      _getItemTemplate : function(item) {
+         var
+            key = this._items.getKey(item),
+            title = this._items.getValue(item, this._displayField),
+            selected = (this._selectedItem == key);
+         return this._itemTpl({key: key, title: title, selected: selected})
       },
 
       _keyDownBind : function(e){
@@ -178,6 +182,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       getValue: function() {
          return this.getSelectedItem();
+      },
+
+      _loadChildControls : function() {
+         /*TODO временная заглушка, пока есть различия между Control и CompoundControl*/
       }
    });
 
