@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
    var _PickerMixin = /** @lends SBIS3.CONTROLS._PickerMixin.prototype */{
       $protected: {
          _picker : null,
+         _border : 0,
          _options: {
 
          }
@@ -30,6 +31,7 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
          }, function () {
             self._picker.getContainer().removeClass('controls-Picker__owner__hover');
          });
+         self._border = self._container.outerWidth() - self._container.innerWidth();
          self._setPickerContent();
       },
 
@@ -86,7 +88,7 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
       _setWidth: function(){
          var self = this;
          this._picker.getContainer().css({
-            'min-width': self._container.outerWidth() - 2/*ширина бордеров*/
+            'min-width': self._container.outerWidth() - this._border/*ширина бордеров*/
          });
       },
 

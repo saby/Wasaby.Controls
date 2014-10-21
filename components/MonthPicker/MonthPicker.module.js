@@ -100,12 +100,10 @@ define(
          $('.js-controls-MonthPicker__field', this.getContainer().get(0)).click(function(){
             self.togglePicker();
             self._setText();
-            self.getContainer().focus(); // Устанавливаем фокусировку для изменения значения стрелочками
+            // Устанавливаем фокусировку для изменения значения стрелочками
+            self.getContainer().focus();
             // обновляем выпадающий блок только если пикер данным кликом открыт
-            if ( self._picker && self._picker.isVisible() ){
-               self._refreshDropdown();
-               //self._picker.recalcPosition();
-            }
+            if ( self._picker && self._picker.isVisible() ){ self._refreshDropdown(); }
          });
 
          // Обработка нажатий клавиш

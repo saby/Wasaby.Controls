@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
          this._items.iterate(function (item, key, i, parItem, lvl) {
 
             var
-               oneItemContainer = self._getOneItemContainer(item, key, parItem, lvl),
+               oneItemContainer = self._drawOneItemContainer(item, key, parItem, lvl),
                targetContainer = self._getTargetContainer(item, key, parItem, lvl);
 
             oneItemContainer.attr('data-id', key).addClass('controls-ListView__item');
@@ -91,31 +91,18 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
          this._loadChildControls();
       },
 
-      _getOneItemContainer : function(item, key) {
+      //метод рисующий контейнер для одного элемента
+      _drawOneItemContainer : function(item, key) {
          return $('<div class="js-controls-ListView__itemContent"></div>');
       },
 
-      _getTargetContainer : function() {
+      //метод определяющий в какой контейнер разместить определенный элемент
+      _getTargetContainer : function(item, key, parItem, lvl) {
          //по стандарту все строки рисуются в itemsContainer
          return this._getItemsContainer();
       },
 
-      /*TODO переопределяем метод compoundControl - костыль*/
-      _loadControls: function(pdResult){
-         return pdResult.done([]);
-      },
-
-      /*TODO свой механиз загрузки дочерних контролов - костыль*/
-      _loadChildControls: function() {
-         var def = new $ws.proto.Deferred();
-         var self = this;
-         self._loadControlsBySelector(new $ws.proto.ParallelDeferred(), undefined, '[data-component]')
-            .getResult().addCallback(function () {
-               def.callback();
-            });
-         return def;
-      },
-
+      //метод отдающий контейнер в котором надо отрисовывать элементы
       _getItemsContainer: function(){
          return this._container;
       },
@@ -152,6 +139,22 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
 
       _getItemTemplate : function() {
          return '<div>template</div>'
+      },
+
+      /*TODO переопределяем метод compoundControl - костыль*/
+      _loadControls: function(pdResult){
+         return pdResult.done([]);
+      },
+
+      /*TODO свой механиз загрузки дочерних контролов - костыль*/
+      _loadChildControls: function() {
+         var def = new $ws.proto.Deferred();
+         var self = this;
+         self._loadControlsBySelector(new $ws.proto.ParallelDeferred(), undefined, '[data-component]')
+            .getResult().addCallback(function () {
+               def.callback();
+            });
+         return def;
       }
    };
 

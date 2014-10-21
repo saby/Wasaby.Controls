@@ -94,6 +94,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          $('.controls-ComboBox__itemRow[data-key=\''+key+'\']').addClass('controls-ComboBox__itemRow__selected');
       },
 
+      //TODO от этого надо избавиться. Пользуется Саня Кузьмин
       _notifySelectedItem : function(key) {
          var text = this.getText();
          this._notify('onChangeSelectedItem', key, text);

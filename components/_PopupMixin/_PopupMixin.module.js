@@ -4,13 +4,21 @@
 
 define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
 
-   var eventsChannel = $ws.single.EventBus.channel('DocumentClickChannel');
+   var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
 
-   $(document).mousedown(function (e) {
+   $(document).bind('mousedown',function (e) {
       eventsChannel.notify('onDocumentClick', e.target);
    });
 
-   var zIndexManager = {
+   $(window).bind('scroll', function(){
+      eventsChannel.notify('onWindowScroll');
+   });
+
+   $(window).bind('resize', function() {
+      eventsChannel.notify('onWindowResize');
+   });
+
+      var zIndexManager = {
       _cur: 100500,
 
       setFree: function (zIndex) {
@@ -35,6 +43,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
       $protected: {
          _targetSizes: {},
          _containerSizes: {},
+         _windowSizes: {},
          _isMovedH: false,
          _isMovedV: false,
          _corner: '',
@@ -103,7 +112,23 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          var container = this._container;
          var trg = $ws.helpers.trackElement(this._options.target, true);
          this.hide();
-         container.css('position', 'absolute');
+         container.css({
+            'position':'absolute',
+            'top': '-1000px',
+            'left': '-1000px'
+         });
+
+
+         //При ресайзе расчитываем размеры
+         $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._resizeHandler, this);
+
+         //Скрываем попап если при скролле таргет скрылся
+         $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowScroll', this._scrollHandler, this);
+
+         if (this._options.closeByExternalClick) {
+            $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
+         }
+
          container.appendTo('body');
          var zIndex = zIndexManager.getNext();
          container.css('zIndex', zIndex);
@@ -112,26 +137,44 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          this._vSide = this._options.verticalAlign.side;
          this._hSide = this._options.horizontalAlign.side;
 
-         $(window).bind('resize', function () {
-            if (self._containerSizes.offset !== undefined) {
-               self._container.offset({
-                  top: self._correctionByDisplaySize('vertical', 'resize').top,
-                  left: self._correctionByDisplaySize('horizontal', 'resize').left
-               });
-            }
-         });
-
-         if (this._options.closeByExternalClick) {
-            $ws.single.EventBus.channel('DocumentClickChannel').subscribe('onDocumentClick', this._clickHandler, this);
-         }
-
          trg.subscribe('onMove', function () {
             if (!self._firstMove) {
-               self.recalcPosition();
+               if (self.isVisible()) {
+                  self.recalcPosition();
+                  self._checkTargetPosition();
+               } else {
+                  self._initSizes();
+               }
             } else {
                self._firstMove = false;
             }
          });
+
+      },
+
+      _checkTargetPosition: function(){
+         var self = this;
+         if (this._options.target) {
+            var winHeight = this._windowSizes.height, top = this._options.target.offset().top - $(window).scrollTop() - winHeight;
+            if (top > 0 || -top > winHeight) {
+               self.hide();
+            }
+         }
+      },
+
+      _scrollHandler: function(){
+         this._checkTargetPosition();
+      },
+
+      _resizeHandler: function(){
+         this._initWindowSizes();
+         if (this._containerSizes.offset !== undefined) {
+            this._container.offset({
+               top: this._correctionByDisplaySize('vertical', 'resize').top,
+               left: this._correctionByDisplaySize('horizontal', 'resize').left
+            });
+         }
+         this._checkTargetPosition();// следим за тем не пропал ли таргет
       },
 
       _clickHandler: function(eventObject, target) {
@@ -173,6 +216,12 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          this._containerSizes.height = this._containerSizes.originHeight;
          this._containerSizes.originOffset = container.offset();
          this._containerSizes.border = (this._containerSizes.originWidth - container.innerWidth()) / 2;
+         this._initWindowSizes();
+      },
+
+      _initWindowSizes: function(){
+         this._windowSizes.height = $(window).height();
+         this._windowSizes.width = $(window).width();
       },
 
       recalcPosition: function () {
@@ -285,9 +334,9 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             s[6] = 0;
             s[7] = 'originWidth';
             s[8] = 'overflow-x';
-            over = ($(window).width() - 3 < this._containerSizes.originWidth + this._containerSizes.originOffset.left); // Влезаем ли в экран
+            over = (this._windowSizes.width - 3 < this._containerSizes.originWidth + this._containerSizes.originOffset.left); // Влезаем ли в экран
             isMoved = this._isMovedH; // Был произведен горизонтальный сдвиг или нет
-            winSize = $(window).width();
+            winSize = this._windowSizes.width;
          } else
          if (direction == 'vertical'){
             s[0] = 'top';
@@ -299,11 +348,10 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             s[6] = - this._targetSizes.border;
             s[7] = 'originHeight';
             s[8] = 'overflow-y';
-            over = ($(window).height() - 3 < this._containerSizes.originHeight + this._containerSizes.originOffset.top); // Влезаем ли в экран
+            over = (this._windowSizes.height - 3 < this._containerSizes.originHeight + this._containerSizes.originOffset.top); // Влезаем ли в экран
             isMoved = this._isMovedV; // Был произведен вертикальный сдвиг или нет
-            winSize = $(window).height();
+            winSize = this._windowSizes.height;
          }
-
          //Если не влезаем в экран, но еще не перемещались то перемещаемся в противоположный угол
          if (over && !isMoved) {
             offset[s[0]] = this._getOppositeOffset(s[0])[s[0]];
@@ -330,7 +378,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          if (offset[s[0]] < 0){
             this._calculateOverflow(offset,s);
          }
-         
+
          this._container.css((direction == 'horizontal') ? 'overflow-x' : 'overflow-y', 'auto');
 
          if (this._containerSizes[s[7]] < spaces[s[1]]) {
@@ -350,8 +398,8 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             offset = this._targetSizes.offset,
             width = this._targetSizes.width,
             height = this._targetSizes.height,
-            windowHeight = $(window).height(),
-            windowWidth = $(window).width(),
+            windowHeight = this._windowSizes.height,
+            windowWidth = this._windowSizes.width,
             spaces = {
                top: 0,
                left: 0,
@@ -479,7 +527,15 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          destroy: function () {
             var zIndex = this._container.css('zIndex');
             zIndexManager.setFree(zIndex);
-            $ws.single.EventBus.channel('DocumentClickChannel').unsubscribe('onDocumentClick',this._clickHandler);
+            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._resizeHandler);
+            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._scrollHandler);
+            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentClick',this._clickHandler);
+         },
+         show: function(){
+            this._container.css({
+               left: '-1000px',
+               top: '-1000px'
+            });
          }
       }
    };

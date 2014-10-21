@@ -6,6 +6,9 @@
 define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.Button'], function(ButtonBase, dotTplFn) {
 
    'use strict';
+   $(document).mouseup(function(){
+      $('.controls-Button__active').removeClass('controls-Button__active');
+   });
 
    /**
     * Контрол, отображающий обычную кнопку

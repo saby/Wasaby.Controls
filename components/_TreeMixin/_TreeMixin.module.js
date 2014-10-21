@@ -108,7 +108,7 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
          }
       },
 
-      _getOneItemContainer : function(item, key) {
+      _drawOneItemContainer : function(item, key) {
          return $('<div>\
             <div class="controls-TreeView__item">\
                <div class="controls-TreeView__itemContent js-controls-ListView__itemContent"></div>\
