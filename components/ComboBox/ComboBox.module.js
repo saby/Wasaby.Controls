@@ -88,9 +88,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawSelectedItem : function(key) {
+         var item = this._items.getItem(key);
+         ComboBox.superclass.setText.call(this, item[this._displayField]);
          if (this._picker) {
-            var item = this._items.getItem(key);
-            ComboBox.superclass.setText.call(this, item[this._displayField]);
             $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
             $('.controls-ComboBox__itemRow[data-key=\'' + key + '\']', this._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
          }
