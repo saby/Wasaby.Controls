@@ -48,7 +48,6 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       $constructor: function() {
-         this._publish('onChangeText');
          var self = this;
          this._inputField = $('.controls-TextBox__field', this.getContainer().get(0));
          this._container.bind('keypress',function(e){
@@ -80,14 +79,8 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       setText: function(text){
          //перед изменением делаем trim если нужно
          text = this._trim(text);
-         var oldText = this._options.text;
-         this._options.text = text;
-         if (oldText !== this._options.text) {
-            this._notify('onChangeText', this._options.text);
-            this._inputField.attr('value', text || '');
-         }
          TextBox.superclass.setText.call(this, text);
-         this.getLinkedContext().setValue('lalala', text, false, this);
+         this._inputField.attr('value', text || '');
       },
 
       setMaxLength: function(num) {

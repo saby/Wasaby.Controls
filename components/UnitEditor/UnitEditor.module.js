@@ -142,7 +142,7 @@ define('js!SBIS3.Genie.UnitEditor',
                },
                closeByExternalClick: true
             });
-            picker.subscribe('onExternalClick',function(){
+            picker.subscribe('onClose',function(){
                self._unitSelector.toggleClass('controls-UnitEditor__unitSelector__toggled controls-UnitEditor__unitSelector__untoggled');
             });
             return picker;

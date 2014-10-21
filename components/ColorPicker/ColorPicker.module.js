@@ -51,10 +51,11 @@ define('js!SBIS3.CONTROLS.ColorPicker',
       },
 
       setText: function(text){
-         var self = this;
-         ColorPicker.superclass.setText.call(this,text);
-         self._colorBox.css('background','#' + text || '000000');
-         self._picker.getContainer().colpickSetColor(self.getText());
+         ColorPicker.superclass.setText.call(this, text);
+         this._colorBox.css('background','#' + text || '000000');
+         if (this._picke) {
+            this._picker.getContainer().colpickSetColor(this.getText());
+         }
       },
 
       _initializePicker: function(color){
