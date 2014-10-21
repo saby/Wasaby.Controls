@@ -500,9 +500,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          return offset;
       },
 
-      _notifyOnHide: function(){
-      },
-
       after: {
          show: function () {
             if (this._container.css('overflow-x') == 'auto') {
