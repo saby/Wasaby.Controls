@@ -29,9 +29,11 @@
   background-image: url(@classicPrimaryBackground);
   border-radius: 16px;
   box-shadow: inset 0px -1px 1px #AFACAB;
+  font: 13px Tahoma,Geneva,sans-serif;
 }
 .controls-Button__content {
    margin: 0 8px;
+   position: relative;
 }
 .controls-Button__big {
   background-image: url(@bigPrimaryBackground);
@@ -137,5 +139,10 @@
 }
 
 .controls-Button__icon {
-  margin: 0 4px -3px 0;
+  position: absolute;
+  left: -2px;
+}
+
+.controls-Button__icon + .js-controls-Button__text{
+  margin-left: 20px;
 }
