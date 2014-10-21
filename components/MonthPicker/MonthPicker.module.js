@@ -84,7 +84,7 @@ define(
          // поведение по умолчанию которого -- выделить текст. Этого не нужно -- снимаем выделение.
          $(this.getContainer().get(0)).dblclick(function(){
                try { window.getSelection().removeAllRanges(); }
-               catch(e) { document.selection.empty(); } // IE<9
+               catch(e) { document.selection.empty(); } // IE < 9
             }
          );
 
@@ -120,8 +120,12 @@ define(
 
          this._picker.getContainer().empty();
 
-         if( this._options.mode == 'month' ){ this._picker.getContainer().append(self._dropdownMonthTpl); }
-         else if( this._options.mode == 'year' ){ this._picker.getContainer().append(self._dropdownYearTpl); }
+         if( this._options.mode == 'month' ){
+            this._picker.getContainer().append(self._dropdownMonthTpl);
+         }
+         else if( this._options.mode == 'year' ){
+            this._picker.getContainer().append(self._dropdownYearTpl);
+         }
 
          $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).click(function(){
             self.hidePicker();
@@ -136,10 +140,9 @@ define(
             self.getContainer().focus(); // Устанавливаем фокусировку для изменения значения стрелочками
          });
 
-         // При закрытии пикера посредством клика по какому-либо месту окна, необходимо обновить текстовое поле значения даты
-         this._picker.subscribe('onExternalClick', function(){
-            // Если просто вызвать метод _setText(), то изменение текста не произойдет, так как пикер на момент
-            // выстреливания события еще открыт. Нам же нужно, чтобы пикер был закрыт -- устанавливаем задержу
+         this._picker.subscribe('onClose', function(){
+            // Если просто вызвать метод _setText(), то изменение текста не произойдет, так как пикер на момент выстреливания
+            // события еще открыт. Нам же нужно, чтобы пикер был закрыт для корректной устнавки текста -- устанавливаем задержу
             setTimeout(function(){
                self._setText();
             }, 0);
