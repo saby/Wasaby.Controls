@@ -80,9 +80,14 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       setText: function(text){
          //перед изменением делаем trim если нужно
          text = this._trim(text);
+         var oldText = this._options.text;
+         this._options.text = text;
+         if (oldText !== this._options.text) {
+            this._notify('onChangeText', this._options.text);
+            this._inputField.attr('value', text || '');
+         }
          TextBox.superclass.setText.call(this, text);
-         $('.controls-TextBox__field', this.getContainer().get(0)).attr('value', text || '');
-         this.getLinkedContext().setValue('')
+         this.getLinkedContext().setValue('lalala', text, false, this);
       },
 
       setMaxLength: function(num) {
@@ -116,11 +121,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _keyUpBind: function() {
-         var oldText = this._options.text;
-         this._options.text = this._inputField.val();
-         if (oldText !== this._options.text) {
-            this._notify('onChangeText', this._options.text);
-         }
+         this.setText(this._inputField.val());
       },
 
       _keyDownBind: function() {

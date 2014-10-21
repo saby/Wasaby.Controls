@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS._FormWidgetMixin', 'js!SBIS3.CONTROLS._DataBindMixin'], function(Control, FormWidgetMixin, DataBindMixin) {
+define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS._FormWidgetMixin'], function(Control, FormWidgetMixin) {
 
    'use strict';
 
@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
     * @mixes SBIS3.CONTROLS._FormWidgetMixin
     */
 
-   var TextBoxBase = Control.Control.extend([FormWidgetMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.TextBoxBase.prototype*/ {
+   var TextBoxBase = Control.Control.extend([FormWidgetMixin], /** @lends SBIS3.CONTROLS.TextBoxBase.prototype*/ {
       $protected: {
          _options: {
             /**

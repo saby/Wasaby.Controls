@@ -88,10 +88,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawSelectedItem : function(key) {
-         var item = this._items.getItem(key);
-         ComboBox.superclass.setText.call(this, item[this._displayField]);
-         $('.controls-ComboBox__itemRow__selected').removeClass('controls-ComboBox__itemRow__selected');
-         $('.controls-ComboBox__itemRow[data-key=\''+key+'\']').addClass('controls-ComboBox__itemRow__selected');
+         if (key) {
+            var item = this._items.getItem(key);
+            ComboBox.superclass.setText.call(this, item[this._displayField]);
+            $('.controls-ComboBox__itemRow__selected').removeClass('controls-ComboBox__itemRow__selected');
+            $('.controls-ComboBox__itemRow[data-key=\'' + key + '\']').addClass('controls-ComboBox__itemRow__selected');
+         }
       },
 
       //TODO от этого надо избавиться. Пользуется Саня Кузьмин
