@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
       },
 
       $constructor: function () {
-         this._publish('onExternalClick');
+         this._publish('onClose');
          var self = this;
          var container = this._container;
          var trg = $ws.helpers.trackElement(this._options.target, true);
@@ -181,7 +181,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          var self = this,
              inPopup = !!self._container.find(target).length,
              popup = $(self._container).get(0) == target,
-             inTarget=[],diff;
+             inTarget=[];
 
          if (self._options.target) {
             inTarget = !!self._options.target.find($(target)).length;
@@ -189,14 +189,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
 
          if (!(inPopup || popup) && !inTarget) {
             if (self.isVisible()) {
-               diff = self._notify('onExternalClick');
-               if (diff instanceof $ws.proto.Deferred) {
-                  diff.addCallback(function () {
-                     self.hide();
-                  });
-               } else if (diff !== false) {
-                  self.hide();
-               }
+              self.hide();
             }
          }
       },
@@ -536,6 +529,19 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
                left: '-1000px',
                top: '-1000px'
             });
+         }
+      },
+
+      around: {
+         hide: function(parentHide){
+            var result = this._notify('onClose');
+            if (result instanceof $ws.proto.Deferred) {
+               result.addCallback(function () {
+                  parentHide.call(this);
+               });
+            } else if (result !== false) {
+               parentHide.call(this);
+            }
          }
       }
    };
