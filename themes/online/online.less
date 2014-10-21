@@ -1,3 +1,12 @@
+// FireFox дорисовывает свои паддинги
+button::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner,
+input[type="reset"]::-moz-focus-inner {
+  padding: 0 !important;
+  border: 0 none !important;
+}
+
 @import "Button";
 @import "ToggleButton";
 @import "RadioButton";
