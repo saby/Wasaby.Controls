@@ -18,10 +18,10 @@ input[type="reset"]::-moz-focus-inner {
   border-radius: 16px;
   box-shadow: inset 0px -1px 1px #afacab;
   font: 13px Tahoma, Geneva, sans-serif;
-  position: relative;
 }
 .controls-Button__content {
   margin: 0 8px;
+  position: relative;
 }
 .controls-Button__big {
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAjklEQVQYVx3DVxKDIABAwXf/26WoKDasKCh2zV9Mdmb5XDvXuXEeK8e+/O/bzLZObItjvS/zyDINzM4yOYMb70PPaDsGqxmMxvYtpm8wXU2va7q2Qrcluilo64KmUvecusyoirtKKVVCkceoTKJSSZ5GZElIFgtSKUhkQBL5xKGHFB6ReBMFL0L/ifj1Hl+0S4EyIQKdsQAAAABJRU5ErkJggg==');
@@ -109,10 +109,10 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button__icon {
   position: absolute;
-  left: 6px;
+  left: -2px;
 }
-.controls-Button__icon + .controls-Button__content {
-  margin-left: 28px;
+.controls-Button__icon + .js-controls-Button__text {
+  margin-left: 20px;
 }
 .controls-Button.controls-ToggleButton__checked {
   color: red;
