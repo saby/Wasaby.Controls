@@ -1,4 +1,15 @@
-define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CONTROLS.FormattedTextBoxBase', '!html!SBIS3.CONTROLS.DatePicker'], function (FormattedTextBoxBase, dotTplFn) {
+
+define(
+   'js!SBIS3.CONTROLS.DatePicker',
+   [
+      'js!SBIS3.CONTROLS.FormattedTextBoxBase',
+      'js!SBIS3.CONTROLS._PickerMixin',
+      '!html!SBIS3.CONTROLS.DatePicker/resources/DatePickerDropdown',
+      '!html!SBIS3.CONTROLS.DatePicker',
+      '!css!SBIS3.CONTROLS.DatePicker',
+      'js!SBIS3.CONTROLS.MonthPicker'
+   ],
+   function (FormattedTextBoxBase, _PickerMixin, dropdownTpl, dotTplFn) {
 
    'use strict';
 
@@ -8,8 +19,9 @@ define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CONTROLS.FormattedTextBoxBase'
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
     */
 
-   var DatePicker = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS.DatePicker.prototype */{
+   var DatePicker = FormattedTextBoxBase.extend( [_PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
       $protected: {
+         _dropdownTpl : dropdownTpl,
          _dotTplFn: dotTplFn,
          /**
           * Допустимые управляющие символы в маске.
@@ -50,7 +62,7 @@ define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CONTROLS.FormattedTextBoxBase'
          /**
           * Дата
           */
-         _date:null,
+         _date: null,
          /**
           * Опции создаваемого контролла
           */
@@ -70,7 +82,19 @@ define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CONTROLS.FormattedTextBoxBase'
       },
 
       $constructor: function () {
+         var self = this;
+
+         // Клик по календарику
+         $('.js-controls-DatePicker__calendar', this.getContainer().get(0)).click(function(){
+            self.togglePicker();
+         });
       },
+
+      _setPickerContent: function() {
+         this._picker.getContainer().empty();
+         this._picker.getContainer().append(this._dropdownTpl);
+      },
+
 
       _getMask: function () {
          this._checkPossibleMask();

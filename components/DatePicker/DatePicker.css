@@ -1,0 +1,22 @@
+.controls-DatePicker__field {
+   margin-right: 16px;
+}
+.controls-DatePicker__calendarWrapper {
+   width: 16px;
+   min-height: 15px;
+   height: 100%;
+   position: relative;
+   display: inline-block;
+   float: right;
+}
+.controls-DatePicker__calendar {
+   position: absolute;
+   display: inline-block;
+   background: gray;
+   width: 16px;
+   height: 15px;
+   cursor: pointer;
+   top: 0;
+   right: 0;
+   text-decoration: none;
+}
