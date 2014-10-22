@@ -3,9 +3,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CONTROLS._PickerMixin',
    'js!SBIS3.CONTROLS._CollectionMixin',
    'js!SBIS3.CONTROLS._SelectorMixin',
+   'js!SBIS3.CONTROLS._DataBindMixin',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxItemTpl'
-], function(TextBox, _PickerMixin, _CollectionMixin, _SelectorMixin, arrowTpl, itemTpl) {
+], function(TextBox, _PickerMixin, _CollectionMixin, _SelectorMixin, _DataBindMixin, arrowTpl, itemTpl) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора. Есть настройка которая позволяет также  вручную вводить значения.
@@ -20,7 +21,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @mixes SBIS3.CONTROLS._SelectorMixin
     */
 
-   var ComboBox = TextBox.extend([_PickerMixin, _CollectionMixin, _SelectorMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
+   var ComboBox = TextBox.extend([_PickerMixin, _CollectionMixin, _SelectorMixin, _DataBindMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       $protected: {
          _itemTpl : itemTpl,
          _displayField : '',
@@ -88,8 +89,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawSelectedItem : function(key) {
-         var item = this._items.getItem(key);
-         ComboBox.superclass.setText.call(this, item[this._displayField]);
+         if (key) {
+            var item = this._items.getItem(key);
+            ComboBox.superclass.setText.call(this, item[this._displayField]);
+         }
          if (this._picker) {
             $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
             $('.controls-ComboBox__itemRow[data-key=\'' + key + '\']', this._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
