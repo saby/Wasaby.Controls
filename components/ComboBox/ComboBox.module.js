@@ -24,7 +24,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    var ComboBox = TextBox.extend([_PickerMixin, _CollectionMixin, _SelectorMixin, _DataBindMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       $protected: {
          _itemTpl : itemTpl,
-         _displayField : '',
          _options: {
             afterFieldWrapper: arrowTpl,
             /**
@@ -38,19 +37,20 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             /**
              * @cfg {String} Форматирование значений в списке
              */
-            valueFormat: ''
+            valueFormat: '',
+            /**
+             * @cfg {String} название поля для отображения
+             */
+            displayField: ''
          }
       },
 
       $constructor: function() {
          var self = this;
          self.getContainer().addClass('controls-ComboBox');
-         if (this._options.displayField) {
-            this._displayField = this._options.displayField;
-         }
-         else {
+         if (!this._options.displayField) {
             //TODO по умолчанию поле title???
-            this._displayField = 'title';
+            this._options.displayField = 'title';
          }
          if (this._options.itemTemplate) {
             this._itemTpl = this._options.itemTemplate;
@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             var
                item = this._items.getNextItem();
             this._selectedItem = this._items.getKey(item);
-            ComboBox.superclass.setText.call(this, item[this._displayField]);
+            ComboBox.superclass.setText.call(this, item[this._options.displayField]);
          }
 
          /*обрабочики кликов*/
@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _drawSelectedItem : function(key) {
          if (key) {
             var item = this._items.getItem(key);
-            ComboBox.superclass.setText.call(this, item[this._displayField]);
+            ComboBox.superclass.setText.call(this, item[this._options.displayField]);
          }
          if (this._picker) {
             $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
@@ -124,9 +124,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _getItemTemplate : function(item) {
          var
             key = this._items.getKey(item),
-            title = this._items.getValue(item, this._displayField),
+            title = this._items.getValue(item, this._options.displayField),
             selected = (this._selectedItem == key);
-         return this._itemTpl({key: key, title: title, selected: selected})
+         return this._itemTpl({key: key, title: title, selected: selected});
       },
 
       _keyDownBind : function(e){
@@ -169,7 +169,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             self = this,
             text = this._options.text;
          this._items.iterate(function(item, key){
-            if (item[self._displayField] == text) {
+            if (item[self._options.displayField] == text) {
                selKey = key;
             }
          });

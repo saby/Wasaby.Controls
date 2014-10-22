@@ -19,7 +19,6 @@ define('js!SBIS3.CONTROLS.ToggleButton', ['js!SBIS3.CONTROLS.ToggleButtonBase', 
    var ToggleButton = ToggleButtonBase.extend( /** @lends SBIS3.CONTROLS.ToggleButton.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
-         _button: null,
          _options: {
 
          }

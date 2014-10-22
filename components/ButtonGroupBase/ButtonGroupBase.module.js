@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS._CollectionMixin', 'css!SBIS3.CONTROLS.ButtonGroupBase'], function(CompoundControl, _CollectionMixin) {
+define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS._CollectionMixin',   'js!SBIS3.CONTROLS._DataBindMixin', 'css!SBIS3.CONTROLS.ButtonGroupBase'], function(CompoundControl, _CollectionMixin, _DataBindMixin) {
 
    'use strict';
 
@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
     * @extends SBIS3.CORE.CompoundControl
     */
 
-   var ButtonGroupBase = CompoundControl.extend([_CollectionMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBase.prototype */ {
+   var ButtonGroupBase = CompoundControl.extend([_CollectionMixin, _DataBindMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBase.prototype */ {
       $protected: {
          _options: {
 

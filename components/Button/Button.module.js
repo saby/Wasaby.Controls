@@ -26,7 +26,6 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
    var Button = ButtonBase.extend( /** @lends SBIS3.CONTROLS.Button.prototype */ {
       _dotTplFn : dotTplFn,
       $protected: {
-         _button: null,
          _options: {
 
          }
