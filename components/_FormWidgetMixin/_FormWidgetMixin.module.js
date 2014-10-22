@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox','i18n!SBIS
                res = false;
 
             try {
-               res = currValidator.validator.apply(this, currValidator.params || []);
+               res = currValidator.validator.apply(this, [this._options[currValidator.option]]);
             } catch (e) {
                $ws.single.ioc.resolve('ILogger').log('FieldAbstract', 'Exception while validating ' + e.message);
             }
