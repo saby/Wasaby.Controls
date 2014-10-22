@@ -128,6 +128,16 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             text = String.trim(text);
          }
         return text;
+      },
+
+      _setEnabled : function(enabled) {
+         TextBox.superclass._setEnabled.call(this, enabled);
+         if (enabled == false) {
+            this._inputField.attr('readonly', 'readonly')
+         }
+         else {
+            this._inputField.removeAttr('readonly');
+         }
       }
    });
 
