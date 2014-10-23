@@ -433,7 +433,6 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   font-size: 14px;
   font-weight: 700;
-  font-family: 'Tahoma Полужирный', 'Tahoma';
   height: 16px;
   line-height: 16px;
   margin: 0 16px;
@@ -481,7 +480,7 @@ input[type="reset"]::-moz-focus-inner {
   background-position: 0px -32px;
 }
 .controls-MonthPicker__dropdownWrapper {
-  box-sizing: border-box;
+  border: 1px solid #FFFFFF;
   background: #FFFFFF;
 }
 .controls-MonthPicker__dropdownElement {
@@ -502,4 +501,45 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MonthPicker__dropdownElementYear {
   text-align: center;
+}
+.controls-ComboBox__arrowDown {
+  background-image: url('./img/ComboBox.png');
+  background-position: -3px -4px;
+  background-color: #ffffff;
+  text-decoration: none;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  margin-top: -8px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+}
+.controls-ComboBox__arrowDown:hover,
+.controls-ComboBox__isEditable-false:hover .controls-ComboBox__arrowDown {
+  text-decoration: none;
+  background-position: -3px -28px;
+}
+.controls-ComboBox__isEditable-false,
+.controls-ComboBox__isEditable-false .controls-TextBox__field {
+  cursor: pointer;
+}
+.controls-ComboBox__itemRow {
+  padding: 4px;
+  cursor: pointer;
+}
+.controls-ComboBox__itemRow:hover {
+  background-color: #E7F0F9;
+}
+.controls-ComboBox__field__isEditable-false,
+.controls-ComboBox__field__isEditable-false .controls-TextBox__field {
+  cursor: pointer;
+}
+.controls-ComboBox__inputWrapper {
+  margin-right: 18px;
+  height: 100%;
+}
+.controls-ComboBox__picker {
+  border: 1px solid #CCCCCC;
+  margin-top: -1px;
 }

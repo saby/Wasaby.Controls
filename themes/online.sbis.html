@@ -94,6 +94,7 @@
 
    <div id="TextBox"></div>
    <div id="TextBox2"></div>
+   <div id="ComboBox"></div>
 
    <br/><br/>
 
@@ -299,6 +300,27 @@
                element: "TextBox2",
                text: 'This is TextBox enabled',
                enabled: false
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.ComboBox"], function (r) {
+            new r({
+               element: "ComboBox",
+               isEditable : false,
+               items : [
+                  {
+                     key : 1,
+                     title : 'Первый'
+                  },
+                  {
+                     key : 2,
+                     title : 'Второй'
+                  },
+                  {
+                     key : 3,
+                     title : 'Третий'
+                  }
+               ]
             })
          });
 
