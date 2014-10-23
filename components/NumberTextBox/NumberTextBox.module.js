@@ -58,6 +58,11 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
                self._arrowDownClick();
             }
          });
+
+         // Сразу отрезаем лишнее
+         if (this._options.numberFractDigits){
+            this._options.text = parseFloat(this._options.text).toFixed(self._options.numberFractDigits);
+         }
       },
 
       setText: function (text) {
