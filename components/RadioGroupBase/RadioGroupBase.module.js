@@ -36,8 +36,8 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
             };
 
 
-         if (key == this._selectedItem) {
-            resObj.checked = true
+         if (key == this._options.selectedItem) {
+            resObj.checked = true;
          }
          return resObj;
       },
