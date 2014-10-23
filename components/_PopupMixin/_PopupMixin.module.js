@@ -46,9 +46,9 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          _windowSizes: {},
          _isMovedH: false,
          _isMovedV: false,
-         _corner: '',
-         _horizontalAlignSide: '',
-         _verticalAlignSide: '',
+         _defaultCorner: '',
+         _defaultHorizontalAlignSide: '',
+         _defaultVerticalAlignSide: '',
          _firstMove: true,
          _options: {
             /**
@@ -133,9 +133,9 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          var zIndex = zIndexManager.getNext();
          container.css('zIndex', zIndex);
          this._initSizes();
-         this._corner = this._options.corner;
-         this._verticalAlignSide = this._options.verticalAlign.side;
-         this._horizontalAlignSide = this._options.horizontalAlign.side;
+         this._defaultCorner = this._options.corner;
+         this._defaultVerticalAlignSide = this._options.verticalAlign.side;
+         this._defaultHorizontalAlignSide = this._options.horizontalAlign.side;
 
          trg.subscribe('onMove', function () {
             if (!self._firstMove) {
@@ -221,7 +221,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          this._initSizes();
          //Если есть таргет - позиционируемся относительно его
          if (this._options.target) {
-            this._containerSizes.originOffset = this._getGeneralOffset(this._verticalAlignSide, this._horizontalAlignSide, this._corner);
+            this._containerSizes.originOffset = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner);
             this._containerSizes.offset = {
                top:  this._containerSizes.originOffset.top,
                left: this._containerSizes.originOffset.left
@@ -243,8 +243,8 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             $body = $('body'),
             bodyHeight = $body.outerHeight(true),
             bodyWidth = $body.outerWidth(true),
-            vAlign = this._verticalAlignSide,
-            hAlign = this._horizontalAlignSide,
+            vAlign = this._defaultVerticalAlignSide,
+            hAlign = this._defaultHorizontalAlignSide,
             offset = {
               top:  this._options.verticalAlign.offset,
               left : this._options.horizontalAlign.offset
@@ -322,7 +322,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             s[1] = 'right';
             s[2] = 'width';
             s[3] = 'horizontalAlign';
-            s[4] = (this._corner == 'br' || this._corner == 'tr');
+            s[4] = (this._defaultCorner == 'br' || this._defaultCorner == 'tr');
             s[5] = - this._targetSizes.border;
             s[6] = 0;
             s[7] = 'originWidth';
@@ -336,7 +336,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             s[1] = 'bottom';
             s[2] = 'height';
             s[3] = 'verticalAlign';
-            s[4] = (this._corner == 'br' || this._corner == 'bl');
+            s[4] = (this._defaultCorner == 'br' || this._defaultCorner == 'bl');
             s[5] = 0;
             s[6] = - this._targetSizes.border;
             s[7] = 'originHeight';
@@ -387,7 +387,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
       //Рассчитать расстояния от таргета до границ экрана с учетом собственного положения попапа
       //Нужно для расчета размеров если не влезаем в экран
       _getSpaces: function(){
-         var corner = this._corner,
+         var corner = this._defaultCorner,
             offset = this._targetSizes.offset,
             width = this._targetSizes.width,
             height = this._targetSizes.height,
@@ -446,7 +446,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
       },
 
       //Получаем противоположный угол относительно текущего в направлении orientation
-      _getOppositeOffset: function (orientation){  // Получить offset при сдвиге в противоположный угол относительно this._corner по горизонтали или верткали 'top'/'left'
+      _getOppositeOffset: function (orientation){  // Получить offset при сдвиге в противоположный угол относительно this._defaultCorner по горизонтали или верткали 'top'/'left'
          var side = (orientation == 'left') ? this._options.horizontalAlign.side : this._options.verticalAlign.side,
             isVertical = (side == 'top' || side == 'bottom'),
             offset,
