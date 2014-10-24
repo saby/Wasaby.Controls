@@ -34,8 +34,8 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
 
       _drawItems : function() {
          CheckBoxGroupBase.superclass._drawItems.call(this);
-         if (this._selectedItems && this._selectedItems.length) {
-            this._drawSelectedItems(this._selectedItems);
+         if (this._options.selectedItems && this._options.selectedItems.length) {
+            this._drawSelectedItems(this._options.selectedItems);
          }
       },
 
@@ -48,14 +48,14 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
             };
 
          var success = false;
-         for (var i = 0; i < this._selectedItems.length; i++) {
-            if (key == this._selectedItems[i]) {
+         for (var i = 0; i < this._options.selectedItems.length; i++) {
+            if (key == this._options.selectedItems[i]) {
                success = true;
                break;
             }
          }
          if (success) {
-            resObj.checked = true
+            resObj.checked = true;
          }
          return resObj;
       },
