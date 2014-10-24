@@ -15,23 +15,26 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox','i18n!SBIS
             /**
              * @cfg {String} Сообщение об ошибке валидации
              * Свойство errorMessage определяет текст, который будет использован в качестве текущего сообщения об ошибке
+             * @group Validation
              */
             errorMessage: '',
             /**
              * @cfg {Array|String} Заголовок сообщений об ошибках валидации
              * Это текст, отображаемый перед сообщениями об ошибках валидации. Визуально выделен ярко-красным цветом. Можно задать либо массив из двух элементов, где первый - заголовок для одной ошибки,
              * второй - заголовок для нескольких ошибок, либо строка - заголовок будет одинаковый для любого количества ошибок
+             * @group Validation
              */
             titleErrorMessage: ['Ошибка', 'Ошибки'],
             /**
              * @cfg {String} Текст сообщения об ошибке заполнения
              * Текст сообщения об ошибке заполнения используется в том случае, если метод {@link markControl} вызывается без аргументов.
+             * @group Validation
              */
             errorMessageFilling: rk('Введите значение'),
             /**
              * @typedef {Object} Validator
              * @property {String} validator
-             * @property {Array} [params=[]] params
+             * @property {String} option
              * @property {String} errorMessage
              * @translatable errorMessage
              * @property {Boolean} noFailOnError
@@ -41,13 +44,13 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox','i18n!SBIS
              * Массив объектов, описывающих функции валидации. В каждом объекте возможны следующие свойства:
              * <ol>
              *    <li>{Function} validator - функция валидации.</li>
-             *    <li>{Array} params - массив параметров. Каждый параметр передаётся в функцию валидации в качестве её аргумента.
-             *    Первый элемент массива параметров является первым аргументов функции валидации, второй элемент - вторым аргументом, и т.д.</li>
+             *    <li>{String} option - валидируемая опция. Передаётся в функцию валидации в качестве её аргумента.</li>
              *    <li>{String} errorMessage - текст сообщения об ошибке валидации.
              *    Если свойство не определено, то в качестве текста будет использовано значение, возвращаемое функцией валидации.</li>
              *    <li>{Boolean} noFailOnError - нежёсткая валидация.
              *    Если noFailOnError установлено в true, то при непрохождении валидации контрол маркируется и возвращается true.</li>
              * </ol>
+             * @group Validation
              */
             validators : []
          }
