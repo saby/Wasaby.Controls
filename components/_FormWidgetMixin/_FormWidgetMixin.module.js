@@ -12,9 +12,29 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox','i18n!SBIS
          _prevValidationResult: true,
          _vResultErrors: [],
          _options : {
+            /**
+             * @cfg {String} Сообщение об ошибке валидации
+             */
             errorMessage: '',
+            /**
+             * @cfg {Array|String} Заголовок сообщений об ошибках валидации
+             */
             titleErrorMessage: ['Ошибка', 'Ошибки'],
+            /**
+             * @cfg {String} Текст сообщения об ошибке заполнения
+             */
             errorMessageFilling: rk('Введите значение'),
+            /**
+             * @typedef {Object} Validator
+             * @property {String} validator
+             * @property {Array} [params=[]] params
+             * @property {String} errorMessage
+             * @translatable errorMessage
+             * @property {Boolean} noFailOnError
+             */
+            /**
+             * @cfg {Validator[]} Валидаторы контрола
+             */
             validators : []
          }
       },
