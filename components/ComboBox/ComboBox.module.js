@@ -189,6 +189,18 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _loadChildControls : function() {
          /*TODO временная заглушка, пока есть различия между Control и CompoundControl*/
+      },
+
+      _setEnabled : function(enabled) {
+         TextBox.superclass._setEnabled.call(this, enabled);
+         if (enabled == false) {
+            this._inputField.attr('readonly', 'readonly')
+         }
+         else {
+            if (this._options.isEditable) {
+               this._inputField.removeAttr('readonly');
+            }
+         }
       }
    });
 
