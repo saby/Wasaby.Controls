@@ -181,7 +181,7 @@
             light
          </td>
          <td>
-            <div id="buttonlight" class="controls-Button__light"></div>
+            <div id="buttonlight" class="controls-Button__light" style="width: 100px"></div>
          </td>
          <td>
             disable big
@@ -413,15 +413,17 @@
                element: "buttonlight",
                caption: 'Утвердить',
                primary:true,
-               icon: "sprite:icon-16 icon-Successful icon-done"
+               icon: "sprite:icon-16 icon-Successful icon-done",
+               enabled : false
             })
          });
 
          require(["js!SBIS3.CONTROLS.Button"], function (r) {
             new r({
                element: "buttonlight2",
-               caption: 'Отклонить',
-               icon:'sprite:icon-16 icon-Unsuccess icon-error'
+               caption: 'Отклонить какую то весчь',
+               icon:'sprite:icon-16 icon-Unsuccess icon-error',
+               enabled : false
             })
          });
 
