@@ -6,7 +6,6 @@ input[type="reset"]::-moz-focus-inner {
   border: 0 none !important;
 }
 .controls-Button {
-  padding: 0;
   cursor: pointer;
   text-align: center;
   display: inline-block;
@@ -18,9 +17,10 @@ input[type="reset"]::-moz-focus-inner {
   border-radius: 16px;
   box-shadow: inset 0px -1px 1px #afacab;
   font: 13px Tahoma, Geneva, sans-serif;
+  padding: 0 8px;
+  box-sizing: border-box;
 }
 .controls-Button__content {
-  margin: 0 8px;
   position: relative;
 }
 .controls-Button__big {
