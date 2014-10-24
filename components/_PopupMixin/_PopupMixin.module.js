@@ -4,21 +4,22 @@
 
 define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
 
-   var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
+   if (typeof window !== 'undefined') {
+      var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
 
-   $(document).bind('mousedown',function (e) {
-      eventsChannel.notify('onDocumentClick', e.target);
-   });
+      $(document).bind('mousedown', function (e) {
+         eventsChannel.notify('onDocumentClick', e.target);
+      });
 
-   $(window).bind('scroll', function(){
-      eventsChannel.notify('onWindowScroll');
-   });
+      $(window).bind('scroll', function () {
+         eventsChannel.notify('onWindowScroll');
+      });
 
-   $(window).bind('resize', function() {
-      eventsChannel.notify('onWindowResize');
-   });
-
-      var zIndexManager = {
+      $(window).bind('resize', function () {
+         eventsChannel.notify('onWindowResize');
+      });
+   }
+   var zIndexManager = {
       _cur: 100500,
 
       setFree: function (zIndex) {
