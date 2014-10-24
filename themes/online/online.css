@@ -80,7 +80,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button__light {
   border: 1px solid #587AB0;
-  background: none;
+  background: #ffffff;
   box-shadow: none;
   color: #000000;
 }
