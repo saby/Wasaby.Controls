@@ -117,7 +117,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                self.setValue($(this).attr('data-key'));
                self.hidePicker();
             });
-
+            //TODO Постараться избавиться от этого
+            self._picker.recalcPosition();
          }
       },
 

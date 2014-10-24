@@ -68,7 +68,6 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
             this._initItems(items);
          }
          this._drawItems();
-         this._picker.recalcPosition();
       },
 
       _drawItems: function(){

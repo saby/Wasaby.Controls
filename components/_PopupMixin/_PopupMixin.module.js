@@ -208,25 +208,14 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             this._targetSizes.offset = target.offset();
             this._targetSizes.border = (target.outerWidth() - target.innerWidth()) / 2;
          }
-
+         this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
+         if (initOrigins){
+            this._containerSizes.originWidth = this._container[0].scrollWidth + this._containerSizes.border * 2;
+            this._containerSizes.originHeight = this._container[0].scrollHeight + this._containerSizes.border * 2;
+         }
          this._containerSizes.width = this._containerSizes.originWidth;
          this._containerSizes.height = this._containerSizes.originHeight;
          this._containerSizes.originOffset = container.offset();
-         this._containerSizes.border = (this._containerSizes.originWidth - container.innerWidth()) / 2;
-
-         if (initOrigins){
-            if (this._container.css('overflow-x') == 'auto') {
-               this._containerSizes.originWidth = this._container[0].scrollWidth;
-            } else {
-               this._containerSizes.originWidth = this._container.outerWidth();
-            }
-            if (this._container.css('overflow-y') == 'auto') {
-               this._containerSizes.originHeight = this._container[0].scrollHeight;
-            } else {
-               this._containerSizes.originHeight = this._container.outerHeight();
-            }
-         }
-
          this._initWindowSizes();
       },
 
@@ -399,7 +388,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             if ( this._container[s[2]] != newSize) {
                this._container[s[2]](newSize);
             }*/
-            console.log((s[2], s[9]));
             this._container.css(s[2],s[9]);
             this._container.css((direction == 'horizontal') ? 'overflow-x' : 'overflow-y', 'visible');
          }
@@ -461,7 +449,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             offset[s[0]] += this._options[s[3]].offset;
             s[10] = spaces[s[1]] - 2;
          } else {
-            s[10] = spaces[s[0]];
+            s[10] = spaces[s[0]] - this._containerSizes.border * 2;
             offset[s[0]] = 0;
          }
          this._container[s[2]](s[10]);
