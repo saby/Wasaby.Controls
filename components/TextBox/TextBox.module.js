@@ -116,7 +116,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       _keyUpBind: function() {
          var newText = this._inputField.val();
          if (newText != this._options.text) {
-            this.setText(newText);
+            TextBox.superclass.setText.call(this, newText);
          }
       },
 
