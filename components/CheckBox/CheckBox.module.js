@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ToggleButtonBase', 'html!SBIS3.CONTROLS.CheckBox'], function(ToggleButtonBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS._CheckedMixin', 'html!SBIS3.CONTROLS.CheckBox'], function(ButtonBase, _CheckedMixin, dotTplFn) {
 
    'use strict';
 
@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ToggleButtonBase', 'htm
     * @category Inputs
     */
 
-   var CheckBox = ToggleButtonBase.extend( /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
+   var CheckBox = ButtonBase.extend([_CheckedMixin], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
       $protected: {
          _dotTplFn : dotTplFn,
          _checkBoxCaption: null,

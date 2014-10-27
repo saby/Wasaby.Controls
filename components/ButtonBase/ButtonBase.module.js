@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTROLS._FormWidgetMixin'], function(Control, FormWidgetMixin) {
+define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTROLS._FormWidgetMixin', 'js!SBIS3.CONTROLS._DataBindMixin'], function(Control, FormWidgetMixin, _DataBindMixin) {
 
    'use strict';
 
@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
     * @extends $ws.proto.Control
     */
 
-   var ButtonBase = Control.Control.extend([FormWidgetMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
+   var ButtonBase = Control.Control.extend([FormWidgetMixin, _DataBindMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
       /**
        * @event onActivated Происходит при активации кнопки (клик мышкой, кнопки клавиатуры)
        * @param {$ws.proto.EventObject} eventObject дескриптор события

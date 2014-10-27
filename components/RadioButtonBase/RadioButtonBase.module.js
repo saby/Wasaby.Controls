@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.RadioButtonBase', ['js!SBIS3.CONTROLS.ToggleButtonBase'], function(ToggleButtonBase) {
+define('js!SBIS3.CONTROLS.RadioButtonBase', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS._CheckedMixin'], function(ToggleButtonBase, _CheckedMixin) {
 
    'use strict';
 
@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.RadioButtonBase', ['js!SBIS3.CONTROLS.ToggleButtonBase
     * @extends SBIS3.CONTROLS.ToggleButtonBase
     */
 
-   var RadioButtonBase = ToggleButtonBase.extend( /** @lends SBIS3.CONTROLS.RadioButtonBase.prototype */ {
+   var RadioButtonBase = ToggleButtonBase.extend([_CheckedMixin], /** @lends SBIS3.CONTROLS.RadioButtonBase.prototype */ {
       $protected: {
          _options: {
 
