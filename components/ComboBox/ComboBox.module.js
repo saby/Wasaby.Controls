@@ -179,6 +179,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
+      _drawItems: function(){
+         ComboBox.superclass._drawItems.call(this);
+         this._picker.recalcPosition();
+      },
+
       setValue: function(key){
          this.setSelectedItem(key);
       },
@@ -193,8 +198,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _setEnabled : function(enabled) {
          TextBox.superclass._setEnabled.call(this, enabled);
-         if (enabled == false) {
-            this._inputField.attr('readonly', 'readonly')
+         if (enabled === false) {
+            this._inputField.attr('readonly', 'readonly');
          }
          else {
             if (this._options.isEditable) {
