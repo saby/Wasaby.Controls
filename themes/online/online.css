@@ -513,6 +513,9 @@ input[type="reset"]::-moz-focus-inner {
   background: #FFFFFF;
   text-align: center;
 }
+.controls-Calendar__monthPicker {
+  width: 148px;
+}
 .controls-Calendar__dayTable {
   vertical-align: middle;
   width: 100%;
@@ -536,8 +539,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Calendar__tableBodyElement:hover {
   background: #E5ECF4;
 }
-.controls-Calendar__tableBodyElement__active {
-  background: #ffc37e !important;
+.controls-Calendar__tableBodyElement__active,
+.controls-Calendar__tableBodyElement__active:hover {
+  background: #ffc37e;
 }
 .controls-Calendar__tableElementFog {
   color: #999999;
@@ -546,7 +550,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DatePicker__field {
   margin-right: 16px;
 }
-.controls-DatePicker__calendarWrapper {
+.controls-DatePicker__calendarIconWrapper {
   width: 16px;
   min-height: 15px;
   height: 100%;
@@ -554,7 +558,7 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   float: right;
 }
-.controls-DatePicker__calendar {
+.controls-DatePicker__calendarIcon {
   position: absolute;
   display: inline-block;
   background: url("img/DatePicker-calendar.png") -32px 0;
@@ -565,12 +569,11 @@ input[type="reset"]::-moz-focus-inner {
   right: -1px;
   text-decoration: none;
 }
-.controls-DatePicker__calendar:hover {
+.controls-DatePicker__calendarIcon:hover {
   background-position: 0 0;
 }
-.controls-FloatArea > .controls-Calendar {
-  top: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+.controls-DatePicker__calendar {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 .controls-ComboBox__arrowDown {
   background-image: url('./img/ComboBox.png');

@@ -84,7 +84,7 @@ define(
          var self = this;
 
          // Клик по иконке календарика
-         $('.js-controls-DatePicker__calendar', this.getContainer().get(0)).click(function(){
+         $('.js-controls-DatePicker__calendarIcon', this.getContainer().get(0)).click(function(){
             self.togglePicker();
 
             // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
@@ -93,7 +93,7 @@ define(
             }
          });
 
-         // Потери фокуса. Работает так же при клике по иконке календарика
+         // Потеря фокуса. Работает так же при клике по иконке календарика.
          // Если пользователь ввел слишком большие данные ( напр., 45.23.7234 ), то значение установится корректно,
          // ввиду особенностей работы setMonth(), setDate() и т.д., но нужно обновить поле
          $('.controls-DatePicker__field', this.getContainer().get(0)).blur(function(){
@@ -109,7 +109,7 @@ define(
          this._picker.getContainer().empty();
 
          // Создаем пустой контейнер и добавляем его в пикер
-         var element = $('<div></div>').attr('name', 'Calendar');
+         var element = $('<div></div>').attr('name', 'Calendar').addClass('controls-DatePicker__calendar');
          this._picker.getContainer().append(element);
 
          // Преобразуем контейнер в контролл Calendar

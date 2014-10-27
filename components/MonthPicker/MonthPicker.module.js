@@ -131,7 +131,7 @@ define(
          this._picker.getContainer().empty();
          this._picker.getContainer().append(this._dropdownTpl({mode: this._options.mode, elements: elements}));
 
-         $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).click(function(){
+         $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).click(function(e){
             self.hidePicker();
 
             if( self._options.mode == 'month' ){
@@ -140,6 +140,13 @@ define(
             else if( self._options.mode == 'year' ){
                self.setDate(new Date($(this).attr('data-key'), 0, 1, 20, 0, 0));
             }
+         });
+
+         // Если контролл MonthPicker находится в другом контролле (допустим, в Calendar'е), который в свою очередь
+         // находится в пикере третьего контролла, то клик в пикере MonthPicker'a закроет пикер с Calendar'ём.
+         // Необходимо предотвратить данное поведение
+         $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).mousedown(function(e){
+            e.stopPropagation();
          });
       },
 
