@@ -44,7 +44,12 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ToggleButtonBase', 'htm
       */
       setCaption: function(captionTxt){
          CheckBox.superclass.setCaption.call(this,captionTxt);
-         this._checkBoxCaption.html(captionTxt || '');
+         if (captionTxt) {
+            this._checkBoxCaption.html(captionTxt).removeClass('ws-hidden');
+         }
+         else {
+            this._checkBoxCaption.empty().addClass('ws-hidden');
+         }
       }
 
    });

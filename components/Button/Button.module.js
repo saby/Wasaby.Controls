@@ -6,9 +6,12 @@
 define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.Button'], function(ButtonBase, dotTplFn) {
 
    'use strict';
-   $(document).mouseup(function(){
-      $('.controls-Button__active').removeClass('controls-Button__active');
-   });
+
+   if (typeof window !== 'undefined') {
+      $(document).mouseup(function () {
+         $('.controls-Button__active').removeClass('controls-Button__active');
+      });
+   }
 
    /**
     * Контрол, отображающий обычную кнопку
@@ -26,7 +29,6 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
    var Button = ButtonBase.extend( /** @lends SBIS3.CONTROLS.Button.prototype */ {
       _dotTplFn : dotTplFn,
       $protected: {
-         _button: null,
          _options: {
 
          }
@@ -35,12 +37,12 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
       $constructor: function() {
          var self = this;
          this._buttonText = $('.js-controls-Button__text', this._container.get(0));
-         this._container.mouseup(function () {
-            if (self.isEnabled()) {
+         this._container.mouseup(function (e) {
+            if (e.which == 1 && self.isEnabled()) {
                self._container.removeClass('controls-Button__active');
             }
-         }).mousedown(function () {
-               if (self.isEnabled()) {
+         }).mousedown(function (e) {
+               if (e.which == 1 && self.isEnabled()) {
                   self._container.addClass('controls-Button__active');
                }
             });

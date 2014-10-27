@@ -6,9 +6,8 @@ input[type="reset"]::-moz-focus-inner {
   border: 0 none !important;
 }
 .controls-Button {
-  padding: 0;
   cursor: pointer;
-  text-align: center;
+  text-align: left;
   display: inline-block;
   height: 24px;
   line-height: normal;
@@ -18,9 +17,10 @@ input[type="reset"]::-moz-focus-inner {
   border-radius: 16px;
   box-shadow: inset 0px -1px 1px #afacab;
   font: 13px Tahoma, Geneva, sans-serif;
+  padding: 0 8px;
+  box-sizing: border-box;
 }
 .controls-Button__content {
-  margin: 0 8px;
   position: relative;
 }
 .controls-Button__big {
@@ -80,7 +80,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button__light {
   border: 1px solid #587AB0;
-  background: none;
+  background: #ffffff;
   box-shadow: none;
   color: #000000;
 }
@@ -105,11 +105,16 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button__light.ws-disabled {
   border-color: #CCCCCC;
-  background-color: #FFFFFF !important;
+  background: #FFFFFF !important;
+  box-shadow: none;
 }
 .controls-Button__icon {
   position: absolute;
   left: -2px;
+  top: 1px;
+}
+.js-controls-Button__text {
+  white-space: nowrap;
 }
 .controls-Button__icon + .js-controls-Button__text {
   margin-left: 20px;
@@ -501,4 +506,45 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MonthPicker__dropdownElementYear {
   text-align: center;
+}
+.controls-ComboBox__arrowDown {
+  background-image: url('./img/ComboBox.png');
+  background-position: -3px -4px;
+  background-color: #ffffff;
+  text-decoration: none;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  margin-top: -8px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+}
+.controls-ComboBox__arrowDown:hover,
+.controls-ComboBox__isEditable-false:hover .controls-ComboBox__arrowDown {
+  text-decoration: none;
+  background-position: -3px -28px;
+}
+.controls-ComboBox__isEditable-false,
+.controls-ComboBox__isEditable-false .controls-TextBox__field {
+  cursor: pointer;
+}
+.controls-ComboBox__itemRow {
+  padding: 4px;
+  cursor: pointer;
+}
+.controls-ComboBox__itemRow:hover {
+  background-color: #E7F0F9;
+}
+.controls-ComboBox__field__isEditable-false,
+.controls-ComboBox__field__isEditable-false .controls-TextBox__field {
+  cursor: pointer;
+}
+.controls-ComboBox__inputWrapper {
+  margin-right: 18px;
+  height: 100%;
+}
+.controls-ComboBox__picker {
+  border: 1px solid #CCCCCC;
+  margin-top: -1px;
 }

@@ -3,9 +3,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CONTROLS._PickerMixin',
    'js!SBIS3.CONTROLS._CollectionMixin',
    'js!SBIS3.CONTROLS._SelectorMixin',
+   'js!SBIS3.CONTROLS._DataBindMixin',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxItemTpl'
-], function(TextBox, _PickerMixin, _CollectionMixin, _SelectorMixin, arrowTpl, itemTpl) {
+], function(TextBox, _PickerMixin, _CollectionMixin, _SelectorMixin, _DataBindMixin, arrowTpl, itemTpl) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора. Есть настройка которая позволяет также  вручную вводить значения.
@@ -20,10 +21,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @mixes SBIS3.CONTROLS._SelectorMixin
     */
 
-   var ComboBox = TextBox.extend([_PickerMixin, _CollectionMixin, _SelectorMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
+   var ComboBox = TextBox.extend([_PickerMixin, _CollectionMixin, _SelectorMixin, _DataBindMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       $protected: {
          _itemTpl : itemTpl,
-         _displayField : '',
          _options: {
             afterFieldWrapper: arrowTpl,
             /**
@@ -37,19 +37,20 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             /**
              * @cfg {String} Форматирование значений в списке
              */
-            valueFormat: ''
+            valueFormat: '',
+            /**
+             * @cfg {String} название поля для отображения
+             */
+            displayField: ''
          }
       },
 
       $constructor: function() {
          var self = this;
          self.getContainer().addClass('controls-ComboBox');
-         if (this._options.displayField) {
-            this._displayField = this._options.displayField;
-         }
-         else {
+         if (!this._options.displayField) {
             //TODO по умолчанию поле title???
-            this._displayField = 'title';
+            this._options.displayField = 'title';
          }
          if (this._options.itemTemplate) {
             this._itemTpl = this._options.itemTemplate;
@@ -66,7 +67,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             var
                item = this._items.getNextItem();
             this._selectedItem = this._items.getKey(item);
-            ComboBox.superclass.setText.call(this, item[this._displayField]);
+            ComboBox.superclass.setText.call(this, item[this._options.displayField]);
          }
 
          /*обрабочики кликов*/
@@ -88,8 +89,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawSelectedItem : function(key) {
-         var item = this._items.getItem(key);
-         ComboBox.superclass.setText.call(this, item[this._displayField]);
+         if (key) {
+            var item = this._items.getItem(key);
+            ComboBox.superclass.setText.call(this, item[this._options.displayField]);
+         }
          if (this._picker) {
             $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
             $('.controls-ComboBox__itemRow[data-key=\'' + key + '\']', this._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
@@ -121,9 +124,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _getItemTemplate : function(item) {
          var
             key = this._items.getKey(item),
-            title = this._items.getValue(item, this._displayField),
+            title = this._items.getValue(item, this._options.displayField),
             selected = (this._selectedItem == key);
-         return this._itemTpl({key: key, title: title, selected: selected})
+         return this._itemTpl({key: key, title: title, selected: selected});
       },
 
       _keyDownBind : function(e){
@@ -166,7 +169,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             self = this,
             text = this._options.text;
          this._items.iterate(function(item, key){
-            if (item[self._displayField] == text) {
+            if (item[self._options.displayField] == text) {
                selKey = key;
             }
          });
@@ -186,6 +189,18 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _loadChildControls : function() {
          /*TODO временная заглушка, пока есть различия между Control и CompoundControl*/
+      },
+
+      _setEnabled : function(enabled) {
+         TextBox.superclass._setEnabled.call(this, enabled);
+         if (enabled == false) {
+            this._inputField.attr('readonly', 'readonly')
+         }
+         else {
+            if (this._options.isEditable) {
+               this._inputField.removeAttr('readonly');
+            }
+         }
       }
    });
 
