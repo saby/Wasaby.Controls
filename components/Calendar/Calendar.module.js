@@ -60,7 +60,6 @@ define(
 
          /**
           * Обновить таблицу календарных дней в соответствии с текущим значением дочернего MonthPicker'a
-          * @param date
           * @private
           */
          _refreshCalendarTable: function(){
