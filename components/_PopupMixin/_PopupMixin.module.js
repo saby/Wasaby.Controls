@@ -119,6 +119,8 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             'left': '-1000px'
          });
 
+         this._cssHeight = (this._container.css('height') == '0px') ? 'auto' : this._container.css('height');
+         this._cssWidth = (this._container.css('width') == '0px') ? 'auto' : this._container.css('width');
 
          //При ресайзе расчитываем размеры
          $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._resizeHandler, this);
@@ -133,7 +135,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          container.appendTo('body');
          var zIndex = zIndexManager.getNext();
          container.css('zIndex', zIndex);
-         this._initSizes();
+         this._initSizes(true);
          this._defaultCorner = this._options.corner;
          this._defaultVerticalAlignSide = this._options.verticalAlign.side;
          this._defaultHorizontalAlignSide = this._options.horizontalAlign.side;
@@ -144,7 +146,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
                   self.recalcPosition();
                   self._checkTargetPosition();
                } else {
-                  self._initSizes();
+                  self._initSizes(false);
                }
             } else {
                self._firstMove = false;
@@ -196,7 +198,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
       },
 
       //Кэшируем размеры
-      _initSizes: function () {
+      _initSizes: function (initOrigins) {
          var target = this._options.target,
             container = this._container;
          if (target) {
@@ -205,11 +207,16 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             this._targetSizes.offset = target.offset();
             this._targetSizes.border = (target.outerWidth() - target.innerWidth()) / 2;
          }
+         this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
+
+         if (initOrigins){
+            this._containerSizes.originWidth = this._container[0].scrollWidth + this._containerSizes.border * 2;
+            this._containerSizes.originHeight = this._container[0].scrollHeight + this._containerSizes.border * 2;
+         }
 
          this._containerSizes.width = this._containerSizes.originWidth;
          this._containerSizes.height = this._containerSizes.originHeight;
          this._containerSizes.originOffset = container.offset();
-         this._containerSizes.border = (this._containerSizes.originWidth - container.innerWidth()) / 2;
          this._initWindowSizes();
       },
 
@@ -219,7 +226,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
       },
 
       recalcPosition: function () {
-         this._initSizes();
+         this._initSizes(true);
          //Если есть таргет - позиционируемся относительно его
          if (this._options.target) {
             this._containerSizes.originOffset = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner);
@@ -328,6 +335,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             s[6] = 0;
             s[7] = 'originWidth';
             s[8] = 'overflow-x';
+            s[9] = this._cssWidth;
             over = (this._windowSizes.width - 3 < this._containerSizes.originWidth + this._containerSizes.originOffset.left); // Влезаем ли в экран
             isMoved = this._isMovedH; // Был произведен горизонтальный сдвиг или нет
             winSize = this._windowSizes.width;
@@ -342,6 +350,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             s[6] = - this._targetSizes.border;
             s[7] = 'originHeight';
             s[8] = 'overflow-y';
+            s[9] = this._cssHeight;
             over = (this._windowSizes.height - 3 < this._containerSizes.originHeight + this._containerSizes.originOffset.top); // Влезаем ли в экран
             isMoved = this._isMovedV; // Был произведен вертикальный сдвиг или нет
             winSize = this._windowSizes.height;
@@ -376,10 +385,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          this._container.css((direction == 'horizontal') ? 'overflow-x' : 'overflow-y', 'auto');
 
          if (this._containerSizes[s[7]] < spaces[s[1]]) {
-            var newSize = this._containerSizes[s[7]] - this._containerSizes.border * 2;
-            if ( this._container[s[2]] != newSize) {
-               this._container[s[2]](newSize);
-            }
+            this._container.css(s[2],s[9]);
             this._container.css((direction == 'horizontal') ? 'overflow-x' : 'overflow-y', 'visible');
          }
          return offset;
@@ -438,12 +444,12 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          if (spaces[s[1]] > spaces[s[0]]){
             offset[s[0]] = (s[4]) ? this._targetSizes.offset[s[0]] + this._targetSizes[s[2]] + s[5]  : this._targetSizes.offset[s[0]] + s[6];
             offset[s[0]] += this._options[s[3]].offset;
-            s[9] = spaces[s[1]] - 2;
+            s[10] = spaces[s[1]] - 2;
          } else {
-            s[9] = spaces[s[0]];
+            s[10] = spaces[s[0]] - this._containerSizes.border * 2;
             offset[s[0]] = 0;
          }
-         this._container[s[2]](s[9]);
+         this._container[s[2]](s[10]);
       },
 
       //Получаем противоположный угол относительно текущего в направлении orientation
@@ -503,16 +509,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
 
       after: {
          show: function () {
-            if (this._container.css('overflow-x') == 'auto') {
-               this._containerSizes.originWidth = this._container[0].scrollWidth;
-            } else {
-               this._containerSizes.originWidth = this._container.outerWidth();
-            }
-            if (this._container.css('overflow-y') == 'auto') {
-               this._containerSizes.originHeight = this._container[0].scrollHeight;
-            } else {
-               this._containerSizes.originHeight = this._container.outerHeight();
-            }
+            this._initSizes(true);
             this.recalcPosition();
          }
       },
