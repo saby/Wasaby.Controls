@@ -120,54 +120,48 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
       },
 
       _initializeComponents: function(){
-         //try {
-            var self = this;
+        var self = this;
 
-            this._inputField = $('.controls-FormattedTextBox__field', this.getContainer().get(0));
+        this._inputField = $('.controls-FormattedTextBox__field', this.getContainer().get(0));
 
-            this._primalMask = this._getMask();
-            this._controlCharacters = this._getControlCharactersSet();
-            this._clearMask = this._getClearMask();
-            this._isSeparatorContainerFirst = this._getTypeOfFirstContainer();
-            this._htmlMask = this._getHtmlMask();
-            this._inputField.html(this._htmlMask);
+        this._primalMask = this._getMask();
+        this._controlCharacters = this._getControlCharactersSet();
+        this._clearMask = this._getClearMask();
+        this._isSeparatorContainerFirst = this._getTypeOfFirstContainer();
+        this._htmlMask = this._getHtmlMask();
+        this._inputField.html(this._htmlMask);
 
-            if(this._options.text){
-               this.setText(this._options.text);
-            }
+        if(this._options.text){
+           this.setText(this._options.text);
+        }
 
-            this._inputField.focus(function () {
-               self._focusHandler(self._inputField.get(0));
-            });
-            this._inputField.keypress(function (event) {
-               event.preventDefault();
-            });
-            this._inputField.keyup(function (event) {
-               event.preventDefault();
-            });
+        this._inputField.focus(function () {
+           self._focusHandler(self._inputField.get(0));
+        });
+        this._inputField.keypress(function (event) {
+           event.preventDefault();
+        });
+        this._inputField.keyup(function (event) {
+           event.preventDefault();
+        });
 
-            this._inputField.keydown(function (event) {
-               event.preventDefault();
-               var
-                  key = event.which,
-                  type = '';
+        this._inputField.keydown(function (event) {
+           event.preventDefault();
+           var
+              key = event.which,
+              type = '';
 
-               if (!event.ctrlKey && key != self._KEYS.DELETE && key != self._KEYS.BACKSPACE) {
-                  type = event.shiftKey ? 'shift_character' : 'character';
-                  self._keyPressHandler(key, type);
-               }
-               else if (key == self._KEYS.DELETE) {
-                  self._keyPressHandler(key, 'delete');
-               }
-               else if (key == self._KEYS.BACKSPACE) {
-                  self._keyPressHandler(key, 'backspace');
-               }
-            });
-         //}
-         //catch(error){
-         //   console.error('Error: Ошибка при создании контролла:\nId: %s\nMessage: %s\n',
-         //      this.getContainer().get(0).id, error.message);
-         //}
+           if (!event.ctrlKey && key != self._KEYS.DELETE && key != self._KEYS.BACKSPACE) {
+              type = event.shiftKey ? 'shift_character' : 'character';
+              self._keyPressHandler(key, type);
+           }
+           else if (key == self._KEYS.DELETE) {
+              self._keyPressHandler(key, 'delete');
+           }
+           else if (key == self._KEYS.BACKSPACE) {
+              self._keyPressHandler(key, 'backspace');
+           }
+        });
       },
 
       /**
