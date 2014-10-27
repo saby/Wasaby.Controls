@@ -1,3 +1,6 @@
+/**
+ * TODO Компонент пока тестировался только в Chrome
+ */
 define(
    'js!SBIS3.CONTROLS.Calendar',
    [
@@ -37,6 +40,9 @@ define(
             var
                self = this,
                monthControl = this.getChildControlByName('MonthPicker');
+
+            // Устанавливаем статическую ширину контролла MonthPicker
+            monthControl.getContainer().addClass('controls-Calendar__monthPicker');
 
             // Первоначальная установка даты
             if ( this._options.date && this._options.date instanceof Date ){
@@ -117,6 +123,13 @@ define(
                workingDate = new Date(new Date(date).setDate($(this).attr('data-day')));
                self.setDate(workingDate);
                self._notify('onDatePick', workingDate);
+            });
+
+            // Если контролл Calendar находится в пикере другого контролла, который в свою очередь
+            // находится в пикере третьего контролла, то клик в пикере с Calendar'ём закроет внешний пикер.
+            // Необходимо предотвратить данное поведение
+            $('.controls-Calendar__tableBodyElement', this.getContainer().get(0)).mousedown(function(e){
+               e.stopPropagation();
             });
          },
 
