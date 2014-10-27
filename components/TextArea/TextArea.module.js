@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase'], function(TextBoxBase) {
+define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBIS3.CONTROLS.TextArea', 'is!browser?js!SBIS3.CORE.FieldText/resources/Autosize-plugin'], function(TextBoxBase, dotTplFn) {
 
    'use strict';
 
@@ -10,11 +10,9 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase'], function
 
    var TextArea = TextBoxBase.extend( /** @lends SBIS3.CONTROLS.TextArea.prototype */ {
       $protected: {
+         _dotTplFn: dotTplFn,
+         _inputField: null,
          _options: {
-            /**
-             * @cfg {Number} Количество столбцов
-             */
-            cols: null,
             /**
              * @cfg {Number} Количество строк
              */
@@ -27,7 +25,10 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase'], function
       },
 
       $constructor: function() {
-
+         this._inputField = $('.controls-TextArea__inputField', this._container);
+         if (this._options.autoResize) {
+            this._inputField.autosize();
+         }
       }
 
    });
