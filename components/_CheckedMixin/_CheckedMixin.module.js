@@ -9,15 +9,6 @@ define('js!SBIS3.CONTROLS._CheckedMixin', [], function() {
       $protected: {
          _options: {
             /**
-             * @cfg {Boolean} Наличие неопределённого значения
-             * Возможные значения:
-             * <ul>
-             *    <li>true - есть неопределённое значение;</li>
-             *    <li>false - нет неопределённого значения.</li>
-             * </ul>
-             */
-            threeState: false,
-            /**
              * @cfg {Boolean} Признак активности кнопки в начальном состоянии
              * Возмозможные значения:
              * <ul>
@@ -32,11 +23,6 @@ define('js!SBIS3.CONTROLS._CheckedMixin', [], function() {
 
       $constructor: function() {
          this._publish('onChange');
-         if (!this._options.threeState) {
-            this._options.checked = !!(this._options.checked);
-         } else {
-            this._options.checked = (this._options.checked === false || this._options.checked === true) ? this._options.checked : null;
-         }
       },
 
       /**
@@ -52,24 +38,10 @@ define('js!SBIS3.CONTROLS._CheckedMixin', [], function() {
        * @see setValue
        */
       setChecked: function(flag) {
-         if (flag === true) {
-            this._container.addClass('controls-ToggleButton__checked');
-            this._container.removeClass('controls-ToggleButton__null');
-            this._options.checked = true;
-         } else
-         if (flag === false) {
-            this._container.removeClass('controls-ToggleButton__checked');
-            this._container.removeClass('controls-ToggleButton__null');
-            this._options.checked = false;
-         } else {
-            if (this._options.threeState) {
-               this._container.removeClass('controls-ToggleButton__checked');
-               this._container.addClass('controls-ToggleButton__null');
-               this._options.checked = null;
-            }
-         }
-         this.saveToContext('Checked', this._checked);
-         this._notify('onChange', this._checked);
+         this._options.checked = !!flag;
+         this._container.toggleClass('controls-ToggleButton__checked', this._options.checked);
+         this.saveToContext('Checked', this._options.checked);
+         this._notify('onChange', this._options.checked);
       },
 
       /**
@@ -121,18 +93,7 @@ define('js!SBIS3.CONTROLS._CheckedMixin', [], function() {
       },
 
       _clickHandler : function() {
-         if (!this._options.threeState) {
-            this.setChecked(!(this.isChecked()));
-         } else {
-            if (this._options.checked === true){
-               this.setChecked(false);
-            } else
-            if (this._options.checked === false){
-               this.setChecked(null);
-            } else  {
-               this.setChecked(true);
-            }
-         }
+         this.setChecked(!(this.isChecked()));
       }
    };
 
