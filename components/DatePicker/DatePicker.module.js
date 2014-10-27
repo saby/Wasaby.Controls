@@ -1,4 +1,6 @@
-
+/**
+ * TODO Компонент пока тестировался только в Chrome
+ */
 define(
    'js!SBIS3.CONTROLS.DatePicker',
    [
@@ -85,16 +87,14 @@ define(
          $('.js-controls-DatePicker__calendar', this.getContainer().get(0)).click(function(){
             self.togglePicker();
 
+            // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
             if ( self._picker.isVisible() && self._date ){
-               // Если пользователь ввел слишком большие данные ( напр., 45.23.7234 ), то значение возьмётся корректно,
-               // ввиду особенностей работы setMonth(), setDate() и т.д., но нужно обновить поле
-               self._drawDate();
-               // Обновляем календарь в соответствии с хранимым значением даты
                $(self._picker.getContainer().get(0)).children().wsControl().setDate(self._date);
             }
          });
 
-         // Если пользователь ввел слишком большие данные ( напр., 45.23.7234 ), то значение возьмётся корректно,
+         // Потери фокуса. Работает так же при клике по иконке календарика
+         // Если пользователь ввел слишком большие данные ( напр., 45.23.7234 ), то значение установится корректно,
          // ввиду особенностей работы setMonth(), setDate() и т.д., но нужно обновить поле
          $('.controls-DatePicker__field', this.getContainer().get(0)).blur(function(){
             if ( self._date ){ self._drawDate(); }
@@ -127,7 +127,7 @@ define(
          // Нажатие на календарный день в пикере устанавливает дату
          calendarControl.subscribe('onDatePick', function(eventObject, date){
             self.setDate(date);
-            //self.hidePicker();
+            self.hidePicker();
          });
       },
 
