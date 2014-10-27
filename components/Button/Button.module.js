@@ -7,6 +7,12 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
 
    'use strict';
 
+   if (typeof window !== 'undefined') {
+      $(document).mouseup(function () {
+         $('.controls-Button__active').removeClass('controls-Button__active');
+      });
+   }
+
    /**
     * Контрол, отображающий обычную кнопку
     * @class SBIS3.CONTROLS.Button
@@ -23,7 +29,6 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
    var Button = ButtonBase.extend( /** @lends SBIS3.CONTROLS.Button.prototype */ {
       _dotTplFn : dotTplFn,
       $protected: {
-         _button: null,
          _options: {
 
          }

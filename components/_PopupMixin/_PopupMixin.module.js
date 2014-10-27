@@ -4,21 +4,22 @@
 
 define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
 
-   var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
+   if (typeof window !== 'undefined') {
+      var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
 
-   $(document).bind('mousedown',function (e) {
-      eventsChannel.notify('onDocumentClick', e.target);
-   });
+      $(document).bind('mousedown', function (e) {
+         eventsChannel.notify('onDocumentClick', e.target);
+      });
 
-   $(window).bind('scroll', function(){
-      eventsChannel.notify('onWindowScroll');
-   });
+      $(window).bind('scroll', function () {
+         eventsChannel.notify('onWindowScroll');
+      });
 
-   $(window).bind('resize', function() {
-      eventsChannel.notify('onWindowResize');
-   });
-
-      var zIndexManager = {
+      $(window).bind('resize', function () {
+         eventsChannel.notify('onWindowResize');
+      });
+   }
+   var zIndexManager = {
       _cur: 100500,
 
       setFree: function (zIndex) {
@@ -49,7 +50,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          _defaultCorner: '',
          _defaultHorizontalAlignSide: '',
          _defaultVerticalAlignSide: '',
-         _cssHeight: '',
          _firstMove: true,
          _options: {
             /**
@@ -122,7 +122,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          this._cssHeight = (this._container.css('height') == '0px') ? 'auto' : this._container.css('height');
          this._cssWidth = (this._container.css('width') == '0px') ? 'auto' : this._container.css('width');
 
-
          //При ресайзе расчитываем размеры
          $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._resizeHandler, this);
 
@@ -136,7 +135,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          container.appendTo('body');
          var zIndex = zIndexManager.getNext();
          container.css('zIndex', zIndex);
-         this._initSizes(false);
+         this._initSizes(true);
          this._defaultCorner = this._options.corner;
          this._defaultVerticalAlignSide = this._options.verticalAlign.side;
          this._defaultHorizontalAlignSide = this._options.horizontalAlign.side;
@@ -209,10 +208,12 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             this._targetSizes.border = (target.outerWidth() - target.innerWidth()) / 2;
          }
          this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
+
          if (initOrigins){
             this._containerSizes.originWidth = this._container[0].scrollWidth + this._containerSizes.border * 2;
             this._containerSizes.originHeight = this._container[0].scrollHeight + this._containerSizes.border * 2;
          }
+
          this._containerSizes.width = this._containerSizes.originWidth;
          this._containerSizes.height = this._containerSizes.originHeight;
          this._containerSizes.originOffset = container.offset();
@@ -384,10 +385,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          this._container.css((direction == 'horizontal') ? 'overflow-x' : 'overflow-y', 'auto');
 
          if (this._containerSizes[s[7]] < spaces[s[1]]) {
-           /* var newSize = this._containerSizes[s[7]] - this._containerSizes.border * 2;
-            if ( this._container[s[2]] != newSize) {
-               this._container[s[2]](newSize);
-            }*/
             this._container.css(s[2],s[9]);
             this._container.css((direction == 'horizontal') ? 'overflow-x' : 'overflow-y', 'visible');
          }
@@ -505,7 +502,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          } else {
             this._options.horizontalAlign.side = position.side;
          }
-
          this._options.corner = position.corner;
          offset = this._getGeneralOffset(this._options.verticalAlign.side,this._options.horizontalAlign.side, position.corner);
          return offset;

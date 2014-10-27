@@ -55,7 +55,6 @@ define('js!SBIS3.Genie.UnitEditor',
             this._unitSelector.click(function () {
                self._unitSelector.toggleClass('controls-UnitEditor__unitSelector__toggled controls-UnitEditor__unitSelector__untoggled');
                self.togglePicker();
-
             });
 
             this._unitSelector.bind('mousedown',function () {
@@ -128,6 +127,7 @@ define('js!SBIS3.Genie.UnitEditor',
          },
 
          _createPicker: function(pickerContainer){
+            var self = this;
             var picker = new FloatArea({
                element : pickerContainer,
                target : this._container,
@@ -139,7 +139,11 @@ define('js!SBIS3.Genie.UnitEditor',
                horizontalAlign: {
                   side: 'right',
                   offset: -16
-               }
+               },
+               closeByExternalClick: true
+            });
+            picker.subscribe('onClose',function(){
+               self._unitSelector.toggleClass('controls-UnitEditor__unitSelector__toggled controls-UnitEditor__unitSelector__untoggled');
             });
             return picker;
          }

@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS._SelectorMixin', [], function() {
 
    var _SelectorMixin = /**@lends SBIS3.CONTROLS._SelectorMixin.prototype  */{
       $protected: {
-         _selectedItem : null,
          _options: {
             /**
              * @cfg {String} Идентификатор выбранного элемента
@@ -22,9 +21,6 @@ define('js!SBIS3.CONTROLS._SelectorMixin', [], function() {
 
       $constructor: function() {
          this._publish('onChangeSelectedItem');
-         if (this._options.selectedItem) {
-            this._selectedItem = this._options.selectedItem;
-         }
       },
 
       /**
@@ -32,7 +28,8 @@ define('js!SBIS3.CONTROLS._SelectorMixin', [], function() {
        * @param id
        */
       setSelectedItem : function(id) {
-         this._selectedItem = id;
+         this.saveToContext('SelectedItem', id); //TODO: Перенести отсюда
+         this._options.selectedItem = id;
          this._drawSelectedItem(id);
          this._notifySelectedItem(id);
       },
@@ -41,7 +38,7 @@ define('js!SBIS3.CONTROLS._SelectorMixin', [], function() {
        * Получить выбранные элементы
        */
       getSelectedItem : function() {
-         return this._selectedItem;
+         return this._options.selectedItem;
       },
 
       _drawSelectedItem : function() {

@@ -44,55 +44,99 @@
          padding: 20px;
       }
 
+      .zButton {
+         width: 100%;
+         text-align: left;
+      }
+
+
    </style>
    <script type="text/javascript" id="ws-include-css"></script>
-   <link rel="stylesheet" type="text/css" href="../sprites.css"/>
+   <link rel="stylesheet" type="text/css" href="../fonts/index.css"/>
+   <link rel="stylesheet" type="text/css" href="../icons/index.css"/>
    <link rel="stylesheet" type="text/css" href="./online/online.css"/>
 </head>
 <body class="view-main">
 
 <div id="content">
    <h3>Переключатели</h3>
-   Двухпозиционный горизонтальный:
-   <div id="Switcher1"></div>
+   <table>
+   <tr>
+      <td>
+         Двухпозиционный горизонтальный:
+      </td>
+      <td>
+         <div id="Switcher1" style="margin-right: 48px;"></div>
+      </td>
+      <td>
+         Двухпозиционный горизонтальный enabled:
+      </td>
+      <td>
+         <div id="Switcher12"></div>
+      </td>
+   </tr>
+      <tr>
+         <td>
+            Двухпозиционный вертикальный:
+         </td>
+         <td>
+            <div id="Switcher2" style="margin-right: 48px;"></div>
+         </td>
+         <td>
+            Двухпозиционный вертикальный enabled:
+         </td>
+         <td>
+            <div id="Switcher22"></div>
+         </td>
+      </tr>
+   </table>
    <br/><br/>
-   Двухпозиционный горизонтальный enabled:
-   <div id="Switcher12"></div>
-   <br/><br/>
-   Двухпозиционный вертикальный:
-   <div id="Switcher2"></div>
-   <br/><br/>
-   Двухпозиционный вертикальный enabled:
-   <div id="Switcher22"></div>
-   <br/><br/>
-   On-Off:
-   <div id="Switcher3"></div>
-   <br/><br/>
-   On-Off enabled:
-   <div id="Switcher32"></div>
-   <br/><br/>
+   <table>
+      <tr>
+         <td>
+            On-Off:
+         </td>
+         <td>
+            <div id="Switcher3" style="margin-right: 48px;"></div>
+         </td>
+         <td>
+            On-Off enabled:
+         </td>
+         <td>
+            <div id="Switcher32"></div>
+         </td>
 
-   <div id="RadioButton">4</div>
+      </tr>
+   </table>
    <br/><br/>
-
-   <div id="RadioButton2">4</div>
-
-   <br/><br/>
-
-   <h3>Флаги</h3>
-
-   <div id="CheckBox"></div>
-
-   <br/><br/>
-
-   <div id="CheckBox2"></div>
-
-   <br/><br/>
+   <table>
+      <tr>
+         <td>
+            <div id="RadioButton">4</div>
+         </td>
+         <td>
+            <div id="RadioButton2">4</div>
+         </td>
+      </tr>
+   </table>
+   <br/>   <br/>
+   <table>
+      <tr>
+         <td>
+            <div id="CheckBox"></div>
+         </td>
+         <td>
+            <div id="CheckBox2"></div>
+         </td>
+      </tr>
+   </table>
+   <br/>   <br/>
 
    <h3>Текстовое поле</h3>
 
    <div id="TextBox"></div>
    <div id="TextBox2"></div>
+   <div id="ComboBox"></div>
 
    <br/><br/>
 
@@ -179,7 +223,7 @@
             light
          </td>
          <td>
-            <div id="buttonlight" class="controls-Button__light"></div>
+            <div id="buttonlight" class="controls-Button__light" style="width: 100px"></div>
          </td>
          <td>
             disable big
@@ -189,7 +233,32 @@
          </td>
       </tr>
    </table>
-
+   <br/><br/>
+   Зуев смотрим чтоб не сломалось (в первой колонке должны быть три кнопки одинаковой ширины = ширине самой большой кнопки, ширина колонки должна соотвествовать, ничего не должно наезжать)
+   <table>
+      <colgroup>
+         <col width="25"/>
+         <col/>
+      </colgroup>
+      <tr>
+         <td>
+            <div id="zButton1" class="zButton controls-Button__light"></div>
+         </td>
+         <td>Текст 1</td>
+      </tr>
+      <tr>
+         <td>
+            <div id="zButton2" class="zButton controls-Button__light"></div>
+         </td>
+         <td>Текст 2</td>
+      </tr>
+      <tr>
+         <td>
+            <div id="zButton3" class="zButton controls-Button__light"></div>
+         </td>
+         <td>Текст 3</td>
+      </tr>
+   </table>
 
 </div>
 
@@ -203,30 +272,24 @@
                caption: 'This is SwitcherDoubleOnline',
                stateOn: 'По видам',
                stateOff: 'По подразделениям'
-            })
-         });
+            });
 
-         require(["js!SBIS3.Engine.SwitcherDoubleOnline"], function (r) {
             new r({
                element: "Switcher12",
                caption: 'This is SwitcherDoubleOnline',
                stateOn: 'По видам',
                stateOff: 'По подразделениям',
                enabled: false
-            })
-         });
+            });
 
-         require(["js!SBIS3.Engine.SwitcherDoubleOnline"], function (r) {
             new r({
                element: "Switcher2",
                caption: 'This is SwitcherDoubleOnline',
                stateOn: 'По видам',
                stateOff: 'По подразделениям',
                'disposition': 'vertical'
-            })
-         });
+            });
 
-         require(["js!SBIS3.Engine.SwitcherDoubleOnline"], function (r) {
             new r({
                element: "Switcher22",
                caption: 'This is SwitcherDoubleOnline',
@@ -243,10 +306,7 @@
                caption: 'This is Switcher',
                stateOn: 'On',
                stateOff: 'Off'
-            })
-         });
-
-         require(["js!SBIS3.CONTROLS.Switcher"], function (r) {
+            });
             new r({
                element: "Switcher32",
                caption: 'This is Switcher',
@@ -256,13 +316,12 @@
             })
          });
 
+
          require(["js!SBIS3.CONTROLS.RadioButton"], function (r) {
             new r({
                element: "RadioButton",
                caption: 'Оперативный срез'
-            })
-         });
-         require(["js!SBIS3.CONTROLS.RadioButton"], function (r) {
+            });
             new r({
                element: "RadioButton2",
                caption: 'Оперативный срез enabled',
@@ -270,15 +329,12 @@
             })
          });
 
-
          require(["js!SBIS3.CONTROLS.CheckBox"], function (r) {
             new r({
                element: "CheckBox",
                caption: 'Флаг'
-            })
-         });
+            });
 
-         require(["js!SBIS3.CONTROLS.CheckBox"], function (r) {
             new r({
                element: "CheckBox2",
                caption: 'Флаг enabled',
@@ -286,18 +342,38 @@
             })
          });
 
+
          require(["js!SBIS3.CONTROLS.TextBox"], function (r) {
             new r({
                element: "TextBox",
                text: 'This is TextBox'
-            })
-         });
+            });
 
-         require(["js!SBIS3.CONTROLS.TextBox"], function (r) {
             new r({
                element: "TextBox2",
                text: 'This is TextBox enabled',
                enabled: false
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.ComboBox"], function (r) {
+            new r({
+               element: "ComboBox",
+               isEditable : false,
+               items : [
+                  {
+                     key : 1,
+                     title : 'Первый'
+                  },
+                  {
+                     key : 2,
+                     title : 'Второй'
+                  },
+                  {
+                     key : 3,
+                     title : 'Третий'
+                  }
+               ]
             })
          });
 
@@ -313,95 +389,92 @@
                element: "button1",
                caption: 'Сохранить',
                primary: true
-            })
-         });
+            });
 
-         require(["js!SBIS3.CONTROLS.Button"], function (r) {
             new r({
                element: "button2",
                caption: 'Удалить'
-            })
+            });
+
+            new r({
+               element: "button3",
+               caption: 'Сохранить',
+               enabled: false
+            });
+
+            new r({
+               element: "button1big",
+               caption: 'Сохранить',
+               primary: true
+            });
+
+            new r({
+               element: "button2big",
+               caption: 'Удалить'
+            });
+
+            new r({
+               element: "button3big",
+               caption: 'Сохранить',
+               enabled: false
+            });
+
+            new r({
+               element: "buttonlight",
+               caption: 'Утвердить',
+               primary:true,
+               icon: "sprite:icon-16 icon-Successful icon-done"
+            });
+
+            new r({
+               element: "buttonlight2",//zButton1
+               caption: 'Отклонить',
+               icon:'sprite:icon-16 icon-Unsuccess icon-error'
+            });
+
+            //Зуев
+            new r({
+               element: "zButton1",
+               caption: '123',
+               icon:'sprite:icon-16 icon-Unsuccess icon-error'
+            });
+            new r({
+               element: "zButton2",
+               caption: 'Отклонить какую то весчь',
+               icon:'sprite:icon-16 icon-Unsuccess icon-error'
+            });
+            new r({
+               element: "zButton3",
+               caption: '*',
+               icon:'sprite:icon-16 icon-Unsuccess icon-error'
+            });
+
+
          });
 
          require(["js!SBIS3.CONTROLS.ToggleButton"], function (r) {
             new r({
                element: "ToggleButton",
                caption: 'Переключаемая'
-            })
-         });
+            });
 
-         require(["js!SBIS3.CONTROLS.ToggleButton"], function (r) {
             new r({
                element: "ToggleButton2",
                caption: 'Переключаемая',
                primary: true
-            })
-         });
+            });
 
-         require(["js!SBIS3.CONTROLS.Button"], function (r) {
-            new r({
-               element: "button3",
-               caption: 'Сохранить',
-               enabled: false
-            })
-         });
-
-
-         require(["js!SBIS3.CONTROLS.Button"], function (r) {
-            new r({
-               element: "button1big",
-               caption: 'Сохранить',
-               primary: true
-            })
-         });
-
-         require(["js!SBIS3.CONTROLS.Button"], function (r) {
-            new r({
-               element: "button2big",
-               caption: 'Удалить'
-            })
-         });
-
-         require(["js!SBIS3.CONTROLS.ToggleButton"], function (r) {
             new r({
                element: "ToggleButtonbig",
                caption: 'Переключаемая'
-            })
-         });
+            });
 
-         require(["js!SBIS3.CONTROLS.ToggleButton"], function (r) {
             new r({
                element: "ToggleButton2big",
                caption: 'Переключаемая',
                primary: true
             })
          });
-
-         require(["js!SBIS3.CONTROLS.Button"], function (r) {
-            new r({
-               element: "button3big",
-               caption: 'Сохранить',
-               enabled: false
-            })
-         });
-
-         require(["js!SBIS3.CONTROLS.Button"], function (r) {
-            new r({
-               element: "buttonlight",
-               caption: 'Утвердить',
-               primary:true,
-               icon: "sprite:icon-16 icon-Successful icon-done"
-            })
-         });
-
-         require(["js!SBIS3.CONTROLS.Button"], function (r) {
-            new r({
-               element: "buttonlight2",
-               caption: 'Отклонить',
-               icon:'sprite:icon-16 icon-Unsuccess icon-error'
-            })
-         });
-
       })
    });
 </script>

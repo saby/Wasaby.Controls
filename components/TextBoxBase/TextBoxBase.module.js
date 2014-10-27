@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS._FormWidgetMixin'], function(Control, FormWidgetMixin) {
+define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS._FormWidgetMixin','js!SBIS3.CONTROLS._DataBindMixin'], function(Control, FormWidgetMixin, DataBindMixin) {
 
    'use strict';
 
@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
     * @mixes SBIS3.CONTROLS._FormWidgetMixin
     */
 
-   var TextBoxBase = Control.Control.extend([FormWidgetMixin], /** @lends SBIS3.CONTROLS.TextBoxBase.prototype*/ {
+   var TextBoxBase = Control.Control.extend([FormWidgetMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.TextBoxBase.prototype*/ {
       $protected: {
          _options: {
             /**
@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
       },
 
       $constructor: function() {
-
+         this._publish('onChangeText');
       },
 
       /**
@@ -66,8 +66,12 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
        * @see getValue
        */
       setText:function(text){
+         var oldText = this._options.text;
          this._options.text = text || '';
-         this._notify('onChangeText', this._options.text);
+         if (oldText !== this._options.text) {
+            this.saveToContext('Text', text);
+            this._notify('onChangeText', this._options.text);
+         }
       },
 
       /**
