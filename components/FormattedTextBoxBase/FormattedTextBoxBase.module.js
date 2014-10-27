@@ -103,12 +103,24 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
          this._initializeComponents();
       },
 
+      /**
+       * Получить текущую используемую маску
+       * @private
+       */
       _getMask:function(){
          /*Method must be implemented*/
       },
 
+      /**
+       * Обновить значение в поле в соотвествии с хранимым значением
+       * @private
+       */
+      _updateText:function(){
+         /*Method must be implemented*/
+      },
+
       _initializeComponents: function(){
-         try {
+         //try {
             var self = this;
 
             this._inputField = $('.controls-FormattedTextBox__field', this.getContainer().get(0));
@@ -151,11 +163,11 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
                   self._keyPressHandler(key, 'backspace');
                }
             });
-         }
-         catch(error){
-            console.error('Error: Ошибка при создании контролла:\nId: %s\nMessage: %s\n',
-               this.getContainer().get(0).id, error.message);
-         }
+         //}
+         //catch(error){
+         //   console.error('Error: Ошибка при создании контролла:\nId: %s\nMessage: %s\n',
+         //      this.getContainer().get(0).id, error.message);
+         //}
       },
 
       /**
@@ -319,9 +331,6 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
          buffer[position] = character;
          container.nodeValue = buffer.join('');
          this._updateText();
-      },
-      _updateText:function(){
-         /*Method must be implemented*/
       },
 
       /**
