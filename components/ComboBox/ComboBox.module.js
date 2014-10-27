@@ -180,8 +180,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawItems: function(){
-         ComboBox.superclass._drawItems.call(this);
-         this._picker.recalcPosition();
+         if (this._picker) {
+            ComboBox.superclass._drawItems.call(this);
+            this._picker.recalcPosition();
+         }
       },
 
       setValue: function(key){
