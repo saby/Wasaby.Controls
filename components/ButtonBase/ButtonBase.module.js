@@ -63,8 +63,8 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
          this._publish('onActivated');
          var self = this;
          /*TODO пока подписываемся на mouseup, потому что CONTROL херит событие клика*/
-         this._container.mouseup(function () {
-            if (self.isEnabled()) {
+         this._container.mouseup(function (e) {
+            if (e.which == 1 && self.isEnabled()) {
                self._clickHandler();
                self._notify('onActivated');
             }
