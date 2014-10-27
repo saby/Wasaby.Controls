@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS._DataBindMixin', ['js!SBIS3.CORE.AttributeCfgParser'],
       saveToContext: function(field, value){
          if (this._dataBind[field]) {
             this.getLinkedContext().setValue(this._dataBind[field], value, false, this);
+            this.validate();
          }
       },
 
@@ -47,20 +48,13 @@ define('js!SBIS3.CONTROLS._DataBindMixin', ['js!SBIS3.CORE.AttributeCfgParser'],
                      //Проставляем значение из контекста
                      this[setter](context.getValue(dataBind[i]));
 
-                     //Переопределяем setter
-                     this[setter] = (function(method, property, ctxField){
-                        //При изменении нужного поля контекста вызываем исходный сеттер
-                        context.subscribe('onFieldChange', function(e, f, v, o){
-                           if (f == ctxField && self._options[property] !== v && o !== self){
-                              method.apply(self, [v]);
-                           }
-                        });
+                     context.subscribe('onFieldChange', function(e, f, v, o){
+                        if (f == dataBind[i] && self._options[i] !== v && o !== self){
+                           self[setter].apply(self, [v]);
+                           console.log('мне изменили значение');
+                        }
+                     });
 
-                        return function(){
-                           method.apply(self, arguments);
-                           context.setValue(ctxField, self._options[property]);
-                        };
-                     })(this[setter], i, dataBind[i]);
                   }
                }
             }

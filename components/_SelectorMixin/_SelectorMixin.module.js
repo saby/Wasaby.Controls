@@ -28,8 +28,8 @@ define('js!SBIS3.CONTROLS._SelectorMixin', [], function() {
        * @param id
        */
       setSelectedItem : function(id) {
-         this.saveToContext('SelectedItem', id); //TODO: Перенести отсюда
          this._options.selectedItem = id;
+         this.saveToContext('SelectedItem', id); //TODO: Перенести отсюда
          this._drawSelectedItem(id);
          this._notifySelectedItem(id);
       },
