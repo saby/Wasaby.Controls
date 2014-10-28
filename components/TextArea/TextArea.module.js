@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          _inputField: null,
          _options: {
             /**
-             * @cfg {Number} Минимальное количество строк
+             * @cfg {Number} Количество строк
              */
             minLinesCount: 0,
             /**
@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          // TODO Переделать на платформенное событие потери фокуса
          this._inputField.bind('focusout', function () {
             if (self._options.trim) {
-               self.setText(self._trim(self.getText()));
+               self.setText(String.trim(self.getText()));
             }
          });
 
@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
 
       setText: function(text){
          if (this._options.trim) {
-            text = this._trim(text);
+            text = String.trim(text);
          }
          TextArea.superclass.setText.call(this, text);
          this._inputField.val(text || '');
