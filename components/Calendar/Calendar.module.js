@@ -48,9 +48,6 @@ define(
             // Получаем контролл MonthPicker
             this.monthControl = this.getChildControlByName('MonthPicker');
 
-            // Устанавливаем статическую ширину контролла MonthPicker
-            monthControl.getContainer().addClass('controls-Calendar__monthPicker');
-
             // Первоначальная установка даты
             if ( this._options.date && this._options.date instanceof Date ){
                this._setDate(this._options.date);
@@ -125,7 +122,7 @@ define(
                tBody.append(row);
             }
 
-            // Вставляем созданную таблицу в вёрстку
+            // Вставляем созданное тело таблицы в вёрстку
             table.append(tBody);
 
             // Обработка клика по календарному дню
