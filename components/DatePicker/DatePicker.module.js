@@ -65,7 +65,7 @@ define(
          /**
           * Контролл Calendar в пикере
           */
-         calendarControl: undefined,
+         _calendarControl: undefined,
          /**
           * Опции создаваемого контролла
           */
@@ -93,7 +93,7 @@ define(
 
             // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
             if ( self._picker.isVisible() && self._date ){
-               self.calendarControl.setDate(self._date);
+               self._calendarControl.setDate(self._date);
             }
          });
 
@@ -119,7 +119,7 @@ define(
 
          // Преобразуем контейнер в контролл Calendar и запоминаем
          require(["js!SBIS3.CONTROLS.Calendar"], function (r) {
-            self.calendarControl = new r({
+            self._calendarControl = new r({
                element : element
             })
          });
@@ -128,7 +128,7 @@ define(
          this._picker.getContainer().append(element);
 
          // Нажатие на календарный день в пикере устанавливает дату
-         this.calendarControl.subscribe('onSelect', function(eventObject, date){
+         this._calendarControl.subscribe('onSelect', function(eventObject, date){
             self.setDate(date);
             self.hidePicker();
          });
