@@ -94,7 +94,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawSelectedItem : function(key) {
-         if (key) {
+         if (typeof(key) != 'undefined') {
             var item = this._items.getItem(key);
             ComboBox.superclass.setText.call(this, item[this._options.displayField]);
          }
@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._drawItems();
          var self = this;
          $('.js-controls-ComboBox__itemRow', this._picker.getContainer().get(0)).click(function () {
-            self.setValue($(this).attr('data-key'));
+            self.setSelectedItem($(this).attr('data-key'));
             self.hidePicker();
          });
          //TODO: кажется неочевидное место, возможно как то автоматизировать
