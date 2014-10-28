@@ -234,3 +234,15 @@
 .controls-TreeView__item {
   overflow: hidden;
 }
+
+.controls-TextArea__inputField {
+  resize: none;
+  border: none;
+  display: block;
+}
+
+.controls-TextArea {
+  display: inline-block;
+  border: 1px solid #CCCCCC;
+  vertical-align: top;
+}
