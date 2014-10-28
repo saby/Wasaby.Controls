@@ -78,10 +78,10 @@ define(
 
          // Установка первоначального значения
          if ( this._options.date ) {
-            this.setDate(this._options.date);
+            this._setDate(this._options.date);
          }
          else {
-            this.setToday();
+            this._setDate(new Date());
          }
 
          // Клик по стрелочкам

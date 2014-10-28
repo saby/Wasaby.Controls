@@ -63,6 +63,10 @@ define(
           */
          _date: undefined,
          /**
+          * Контролл Calendar в пикере
+          */
+         calendarControl: undefined,
+         /**
           * Опции создаваемого контролла
           */
          _options: {
@@ -89,7 +93,7 @@ define(
 
             // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
             if ( self._picker.isVisible() && self._date ){
-               $(self._picker.getContainer().get(0)).children().wsControl().setDate(self._date);
+               self.calendarControl.setDate(self._date);
             }
          });
 
@@ -106,26 +110,25 @@ define(
        * @private
        */
       _setPickerContent: function() {
+         var self = this;
+
          this._picker.getContainer().empty();
 
-         // Создаем пустой контейнер и добавляем его в пикер
-         var element = $('<div></div>').attr('name', 'Calendar').addClass('controls-DatePicker__calendar');
-         this._picker.getContainer().append(element);
+         // Создаем пустой контейнер
+         var element = $('<div name= "Calendar" class="controls-DatePicker__calendar"></div>');
 
-         // Преобразуем контейнер в контролл Calendar
+         // Преобразуем контейнер в контролл Calendar и запоминаем
          require(["js!SBIS3.CONTROLS.Calendar"], function (r) {
-            new r({
+            self.calendarControl = new r({
                element : element
             })
          });
 
-         var
-            self = this,
-            // Получаем контролл Calendar с помощью wsControl()
-            calendarControl = element.wsControl();
+         // Добавляем в пикер
+         this._picker.getContainer().append(element);
 
          // Нажатие на календарный день в пикере устанавливает дату
-         calendarControl.subscribe('onDatePick', function(eventObject, date){
+         this.calendarControl.subscribe('onSelect', function(eventObject, date){
             self.setDate(date);
             self.hidePicker();
          });

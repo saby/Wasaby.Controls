@@ -21,7 +21,13 @@ define(
       var Calendar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Calendar.prototype */{
          $protected: {
             _dotTplFn: dotTplFn,
-
+            /**
+             * Контролл MonthPicker
+             */
+            monthControl: undefined,
+            /**
+             * Опции создаваемого контролла
+             */
             _options: {
                /**
                 * Значение даты в формате Date Object
@@ -31,30 +37,28 @@ define(
          },
 
          $constructor: function () {
-            this._publish('onDatePick');
+            this._publish('onSelect');
          },
 
          init: function(){
             Calendar.superclass.init.call(this);
 
-            var
-               self = this,
-               monthControl = this.getChildControlByName('MonthPicker');
+            var self = this;
 
-            // Устанавливаем статическую ширину контролла MonthPicker
-            monthControl.getContainer().addClass('controls-Calendar__monthPicker');
+            // Получаем контролл MonthPicker
+            this.monthControl = this.getChildControlByName('MonthPicker');
 
             // Первоначальная установка даты
             if ( this._options.date && this._options.date instanceof Date ){
-               this.setDate(this._options.date);
+               this._setDate(this._options.date);
             }
             else {
-               this.setDate(new Date());
+               this._setDate(new Date());
             }
 
             // Изменение даты с помощью дочернего контролла MonthPicker
-            monthControl.subscribe('onDateChange', function(eventObject, date){
-               self.setDate(date);
+            this.monthControl.subscribe('onDateChange', function(eventObject, date){
+               self._setDate(date);
             });
          },
 
@@ -64,15 +68,17 @@ define(
           */
          _refreshCalendarTable: function(){
             var
-               date = this.getChildControlByName('MonthPicker').getDate(),
-               table = $('.controls-Calendar__tableBody', this.getContainer().get(0)),
+               date = this.monthControl.getDate(),
+               table = $('.controls-Calendar__dayTable', this.getContainer().get(0)),
+               tBody = $('.controls-Calendar__tableBody', this.getContainer().get(0)),
                dayOfWeek = date.getDay() != 0 ? date.getDay() : 7,
                days,
                row, element,
                workingDate = new Date(date);
 
-            // Очищаем устаревшую таблицу
-            table.empty();
+            // Удаляем устаревшую таблицу
+            tBody.remove();
+            tBody = $('<tbody class="controls-Calendar__tableBody"></tbody>');
 
             // Заполняем нулевые дни вначале таблицы
             row = $('<tr></tr>').addClass('controls-Calendar__tableBodyRow');
@@ -96,7 +102,7 @@ define(
                row.append(element);
 
                if( workingDate.getDay() == 0 ){
-                  table.append(row);
+                  tBody.append(row);
                   row = $('<tr></tr>').addClass('controls-Calendar__tableBodyRow');
                }
             }
@@ -113,15 +119,18 @@ define(
                   row.append(element);
                   dayOfWeek++;
                }
-               table.append(row);
+               tBody.append(row);
             }
+
+            // Вставляем созданную таблицу в вёрстку
+            table.append(tBody);
 
             // Обработка клика по календарному дню
             var self = this;
             $('.controls-Calendar__tableBodyElement', this.getContainer().get(0)).click(function(){
                workingDate = new Date(new Date(date).setDate($(this).attr('data-day')));
-               self.setDate(workingDate);
-               self._notify('onDatePick', workingDate);
+               self._setDate(workingDate);
+               self._notify('onSelect', workingDate);
             });
 
             // Если контролл Calendar находится в пикере другого контролла, который в свою очередь
@@ -144,16 +153,24 @@ define(
          },
 
          /**
-          * Установить дату по переданному объекту Date
+          * Установить дату по переданному объекту Date. Публичный метод
+          * TODO в будущем, возможно, будет отличатся тем, что будет генерировать событие
+          */
+         setDate: function(date){
+            this._setDate(date);
+         },
+
+         /**
+          * Установить дату по переданному объекту Date. Приватный метод
           * @param date
           * @private
           */
-         setDate: function(date){
+         _setDate: function(date){
             if( date instanceof Date ){
                // Обновляем значение даты
                this._options.date = date;
                // Устанавливаем дату в дочерний контролл MonthPicker
-               this.getChildControlByName('MonthPicker')._setDate(date);
+               this.monthControl._setDate(date);
                // Обновляем таблицу календарных дней
                this._refreshCalendarTable();
                // Обновляем активный день
