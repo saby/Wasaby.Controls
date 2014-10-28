@@ -234,20 +234,17 @@
 .controls-TreeView__item {
   overflow: hidden;
 }
-
 .controls-TextArea__inputField {
   resize: none;
   border: none;
   display: block;
   font-family: inherit;
 }
-
 .controls-TextArea {
   display: inline-block;
   border: 1px solid #CCCCCC;
   vertical-align: top;
 }
-
-.controls-TextArea:hover{
+.controls-TextArea:hover {
   border-color: #00d7d7;
 }
