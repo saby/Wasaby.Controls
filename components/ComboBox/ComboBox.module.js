@@ -64,9 +64,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
          if (this._items.getItemsCount()) {
             /*устанавливаем первое значение TODO по идее переписан метод setSelectedItem для того чтобы не срабатывало событие при первой установке*/
-            var
+            var item;
+            if (!this._options.selectedItem) {
                item = this._items.getNextItem();
-            this._options.selectedItem = this._items.getKey(item);
+               this._options.selectedItem = this._items.getKey(item);
+            }
+            else {
+               item = this._items.getItem(this._options.selectedItem);
+            }
             ComboBox.superclass.setText.call(this, item[this._options.displayField]);
          }
 
