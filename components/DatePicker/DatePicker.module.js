@@ -6,10 +6,10 @@ define(
    [
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'js!SBIS3.CONTROLS._PickerMixin',
-      'html!SBIS3.CONTROLS.DatePicker',
-      'js!SBIS3.CONTROLS.Calendar'
+      'js!SBIS3.CONTROLS.Calendar',
+      'html!SBIS3.CONTROLS.DatePicker'
    ],
-   function (FormattedTextBoxBase, _PickerMixin, dotTplFn) {
+   function (FormattedTextBoxBase, _PickerMixin, Calendar, dotTplFn) {
 
    'use strict';
 
@@ -118,10 +118,8 @@ define(
          var element = $('<div name= "Calendar" class="controls-DatePicker__calendar"></div>');
 
          // Преобразуем контейнер в контролл Calendar и запоминаем
-         require(["js!SBIS3.CONTROLS.Calendar"], function (r) {
-            self._calendarControl = new r({
-               element : element
-            })
+         self._calendarControl = new Calendar({
+            element : element
          });
 
          // Добавляем в пикер
