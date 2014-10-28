@@ -242,7 +242,7 @@
 }
 .controls-TextArea {
   display: inline-block;
-  border: 1px solid #CCCCCC;
+  border: 1px solid #d1d1d4;
   vertical-align: top;
 }
 .controls-TextArea:hover {
