@@ -237,6 +237,7 @@
   border: none;
   display: block;
   font-family: inherit;
+  width: 100%;
 }
 .controls-TextArea {
   display: inline-block;
