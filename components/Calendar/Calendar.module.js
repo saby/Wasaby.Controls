@@ -48,6 +48,9 @@ define(
             // Получаем контролл MonthPicker
             this.monthControl = this.getChildControlByName('MonthPicker');
 
+            // Устанавливаем статическую ширину контролла MonthPicker
+            monthControl.getContainer().addClass('controls-Calendar__monthPicker');
+
             // Первоначальная установка даты
             if ( this._options.date && this._options.date instanceof Date ){
                this._setDate(this._options.date);
@@ -131,6 +134,13 @@ define(
                workingDate = new Date(new Date(date).setDate($(this).attr('data-day')));
                self._setDate(workingDate);
                self._notify('onSelect', workingDate);
+            });
+
+            // Если контролл Calendar находится в пикере другого контролла, который в свою очередь
+            // находится в пикере третьего контролла, то клик в пикере с Calendar'ём закроет внешний пикер.
+            // Необходимо предотвратить данное поведение
+            $('.controls-Calendar__tableBodyElement', this.getContainer().get(0)).mousedown(function(e){
+               e.stopPropagation();
             });
 
             // Если контролл Calendar находится в пикере другого контролла, который в свою очередь
