@@ -63,43 +63,38 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
              * @cfg {Object} От какого угла идет отсчет координат
              */
             corner: null,
-
-            verticalAlign: {
-               /**
-                * @typedef {Object} VerticalAlignEnum
-                * @variant top
-                * @variant bottom
-                */
-               /**
-                * @cfg {VerticalAlignEnum} Вертикальное выравнивание контрола
-                */
-               side: null,
-               /**
-                * @cfg {Number} отступ
-                */
-               offset: 0
-            },
-
-            horizontalAlign: {
-               /**
-                * @typedef {Object} HorizontalAlignEnum
-                * @variant right
-                * @variant left
-                */
-               /**
-                * @cfg {HorizontalAlignEnum}
-                */
-               side: null,
-               /**
-                * @cfg {Number} отступ
-                */
-               offset: 0
-            },
+            /**
+             * @typedef {Object} VerticalAlignEnum
+             * @variant top
+             * @variant bottom
+             */
+            /**
+             * @typedef {Object} verticalAlign
+             * @property {VerticalAlignEnum} side Вертикальное выравнивание контрола
+             * @property {Number} offset отступ в пикселях
+             */
+            /**
+             * @cfg {verticalAlign} авторесайз по высоте, если текст не помещается
+             */
+            verticalAlign: {},
+            /**
+             * @typedef {Object} HorizontalAlignEnum
+             * @variant right
+             * @variant left
+             */
+            /**
+             * @typedef {Object} HorizontalAlign
+             * @property {HorizontalAlignEnum} side Вертикальное выравнивание контрола
+             * @property {Number} offset отступ в пикселях
+             */
+            /**
+             * @cfg {HorizontalAlign} авторесайз по высоте, если текст не помещается
+             */
+            horizontalAlign: {},
             /**
              * @cfg {String|jQuery|HTMLElement} элемент, относительно которого позиционируется всплывающее окно
              */
             target: undefined,
-
             /**
              * @cfg {Boolean} закрывать или нет при клике мимо
              */
@@ -254,8 +249,8 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             vAlign = this._defaultVerticalAlignSide,
             hAlign = this._defaultHorizontalAlignSide,
             offset = {
-              top:  this._options.verticalAlign.offset,
-              left : this._options.horizontalAlign.offset
+              top:  this._options.verticalAlign.offset || 0,
+              left : this._options.horizontalAlign.offset || 0
             };
          if (vAlign == 'bottom'){
             offset.top = bodyHeight - offset.top - height;
@@ -277,8 +272,8 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          if (horiz == 'right') {
             offset.left -= this._containerSizes.originWidth - this._targetSizes.border;
          }
-         offset.left += this._options.horizontalAlign.offset;
-         offset.top += this._options.verticalAlign.offset;
+         offset.left += this._options.horizontalAlign.offset || 0;
+         offset.top += this._options.verticalAlign.offset || 0;
          return offset;
       },
 

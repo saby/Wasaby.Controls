@@ -35,15 +35,14 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              */
             textTransform: 'none',
             /**
-             * @cfg {Boolean} Наличие крестика для сброса текста
-             * Возможные значения:
+             * @cfg {Boolean} Выделять или нет текст в поле при получении фокуса
+             * Возможные значения при получении полем фокуса:
              * <ul>
-             *    <li>true - крестик есть;</li>
-             *    <li>false - нет крестика.</li>
+             *    <li>true - выделять текст;</li>
+             *    <li>false - не выделять.</li>
              * </ul>
-             * @noShow
              */
-            resetCross: false
+            selectOnClick: false
          }
       },
 
@@ -78,19 +77,21 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       setText: function(text){
          //перед изменением делаем trim если нужно
-         text = this._trim(text);
+         if (this._options.trim) {
+            text = this._trim(text);
+         }
          TextBox.superclass.setText.call(this, text);
          this._inputField.attr('value', text || '');
       },
 
       setMaxLength: function(num) {
          TextBox.superclass.setMaxLength.call(this, num);
-         $('.controls-TextBox__field', this.getContainer().get(0)).attr('maxlength',num);
+         this._inputField.attr('maxlength',num);
       },
 
       setPlaceholder: function(text){
          TextBox.superclass.setPlaceholder.call(this, text);
-         $('.controls-TextBox__field', this.getContainer().get(0)).attr('placeholder', text);
+         this._inputField.attr('placeholder', text);
       },
 
       /**
@@ -124,13 +125,6 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _keyPressBind: function() {
-      },
-
-      _trim: function(text){
-         if (this._options.trim){
-            text = String.trim(text);
-         }
-        return text;
       },
 
       _setEnabled : function(enabled) {

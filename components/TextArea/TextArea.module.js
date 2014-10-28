@@ -14,23 +14,78 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          _inputField: null,
          _options: {
             /**
-             * @cfg {Number} Количество строк
+             * @cfg {Number} Минимальное количество строк
              */
-            rows: null,
+            minLinesCount: 0,
             /**
-             * @cfg {Boolean} авторесайз по высоте, если текст не помещается
+             * @typedef {Object} autoResize
+             * @property {Boolean} state включен/выключен
+             * @property {Number} maxLinesCount максимальное количество строк
              */
-            autoResize: false
+            /**
+             * @cfg {autoResize} авторесайз по высоте, если текст не помещается
+             */
+            autoResize: {}
          }
       },
 
       $constructor: function() {
+         var self = this;
          this._inputField = $('.controls-TextArea__inputField', this._container);
-         if (this._options.autoResize) {
-            this._inputField.autosize();
-         }
-      }
 
+         if (this._options.autoResize.state) {
+            this._options.minLinesCount = parseInt(this._options.minLinesCount, 10);
+            if (!this._options.autoResize.maxLinesCount) {
+               this._options.autoResize.maxLinesCount = 100500;
+            }
+            this._options.autoResize.maxLinesCount = parseInt(this._options.autoResize.maxLinesCount, 10);
+            if (this._options.minLinesCount > this._options.autoResize.maxLinesCount) {
+               this._options.autoResize.maxLinesCount = this._options.minLinesCount;
+            }
+            this._inputField.data('minLinesCount', this._options.minLinesCount);
+            this._inputField.data('maxLinesCount', this._options.autoResize.maxLinesCount);
+            this._inputField.autosize();
+         } else {
+            if (this._options.minLinesCount){
+               this._inputField.attr('rows',parseInt(this._options.minLinesCount, 10));
+            }
+         }
+
+         // При потере фокуса делаем trim, если нужно
+         // TODO Переделать на платформенное событие потери фокуса
+         this._inputField.bind('focusout', function () {
+            if (self._options.trim) {
+               self.setText(self._trim(self.getText()));
+            }
+         });
+
+         this._container.bind('keyup',function(e){
+            self._keyUpBind(e);
+         });
+      },
+
+      _keyUpBind: function() {
+         var newText = this._inputField.val();
+         if (newText != this._options.text) {
+            TextArea.superclass.setText.call(this, newText);
+         }
+      },
+
+      setText: function(text){
+         if (this._options.trim) {
+            text = this._trim(text);
+         }
+         TextArea.superclass.setText.call(this, text);
+         this._inputField.val(text || '');
+         if (this._options.autoResize.state) {
+            this._inputField.trigger('autosize.resize');
+         }
+      },
+
+      setPlaceholder: function(text){
+         TextArea.superclass.setPlaceholder.call(this, text);
+         this._inputField.attr('placeholder', text);
+      }
    });
 
    return TextArea;
