@@ -466,14 +466,15 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
 
       //Установить размер и положение если не влезли в экран
       _calculateOverflow: function (offset, s) {
-         var spaces = this._getSpaces();
+         var spaces = this._getSpaces(),
+            isVertical = (s[1] == 'bottom');
          if (spaces[s[1]] > spaces[s[0]]) {
             offset[s[0]] = (s[4]) ? this._targetSizes.offset[s[0]] + this._targetSizes[s[2]] + s[5] : this._targetSizes.offset[s[0]] + s[6];
-            offset[s[0]] += this._options[s[3]].offset;
+            offset[s[0]] += (this._options[s[3]].offset || 0) + (isVertical) ? (this._margins.top - this._margins.bottom) : (this._margins.left - this._margins.right);
             s[10] = spaces[s[1]] - 2;
          } else {
             s[10] = spaces[s[0]] - this._containerSizes.border * 2;
-            offset[s[0]] = 0;
+            offset[s[0]] = 0 + (isVertical) ? ( -this._margins.top + this._margins.bottom) : ( -this._margins.left + this._margins.right);
          }
          this._container[s[2]](s[10]);
       },
