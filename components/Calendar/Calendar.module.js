@@ -5,10 +5,11 @@ define(
    'js!SBIS3.CONTROLS.Calendar',
    [
       'js!SBIS3.CORE.CompoundControl',
+      'html!SBIS3.CONTROLS.Calendar/resources/CalendarTableBody',
       'html!SBIS3.CONTROLS.Calendar',
       'js!SBIS3.CONTROLS.MonthPicker'
    ],
-   function (CompoundControl, dotTplFn) {
+   function (CompoundControl, CalendarTableBodyTpl, dotTplFn) {
 
       'use strict';
 
@@ -21,6 +22,7 @@ define(
       var Calendar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Calendar.prototype */{
          $protected: {
             _dotTplFn: dotTplFn,
+            _CalendarTableBodyTpl: CalendarTableBodyTpl,
             /**
              * Контролл MonthPicker
              */
@@ -71,23 +73,22 @@ define(
                date = this.monthControl.getDate(),
                table = $('.controls-Calendar__dayTable', this.getContainer().get(0)),
                tBody = $('.controls-Calendar__tableBody', this.getContainer().get(0)),
-               dayOfWeek = date.getDay() != 0 ? date.getDay() : 7,
+               dayOfWeek,
                days,
-               row, element,
-               workingDate = new Date(date);
+               workingDate = new Date(date),
+               // Формируем массив объектов вида {деньКалендаря(number), этоДеньЭтогоМесяца(bool)},
+               // который в последствии передадим в шаблон для постройки тела календаря. Всегда кратен семи (все недели полные)
+               daysInCalendar = [];
 
-            // Удаляем устаревшую таблицу
+            // Удаляем устаревшую таблицу (при первом создании ничего не происходит, так как tbody просто еще не существует)
             tBody.remove();
-            tBody = $('<tbody class="controls-Calendar__tableBody"></tbody>');
 
             // Заполняем нулевые дни вначале таблицы
-            row = $('<tr></tr>').addClass('controls-Calendar__tableBodyRow');
+            dayOfWeek = date.getDay() != 0 ? date.getDay() : 7;
             days = this._daysInMonth(new Date(workingDate.setMonth(workingDate.getMonth() - 1)));
             while( dayOfWeek - 1 > 0 ){
-               element = $('<td></td>').text(days - dayOfWeek + 2)
-                  .addClass('controls-Calendar__tableElement')
-                  .addClass('controls-Calendar__tableElementFog');
-               row.append(element);
+               this._pushDayIntoArray(daysInCalendar, days - dayOfWeek + 2, false);
+
                dayOfWeek--
             }
             workingDate = new Date(date);
@@ -95,35 +96,23 @@ define(
             // Заполняем календарные дни
             days = this._daysInMonth(date);
             for ( var i = 1; i <= days; i++ ){
-               workingDate.setDate(i);
-               element = $('<td></td>').attr('data-day', i).text(i)
-                  .addClass('controls-Calendar__tableElement')
-                  .addClass('controls-Calendar__tableBodyElement');
-               row.append(element);
-
-               if( workingDate.getDay() == 0 ){
-                  tBody.append(row);
-                  row = $('<tr></tr>').addClass('controls-Calendar__tableBodyRow');
-               }
+               this._pushDayIntoArray(daysInCalendar, i, true);
             }
+            workingDate.setDate(days);
 
-            // Добиваем календарь пустыми ячейками, если нужно (то есть если последний день был не воскресеньем)
+            // Добиваем календарь пустыми ячейками, если нужно (то есть, если последний день был не воскресеньем)
             if( workingDate.getDay() != 0 ){
-               //var i = 1;
                dayOfWeek = workingDate.getDay();
 
                while( dayOfWeek != 7 ){
-                  element = $('<td></td>').text( dayOfWeek - workingDate.getDay() + 1)
-                     .addClass('controls-Calendar__tableElement')
-                     .addClass('controls-Calendar__tableElementFog');
-                  row.append(element);
+                  this._pushDayIntoArray(daysInCalendar, dayOfWeek - workingDate.getDay() + 1, false);
+
                   dayOfWeek++;
                }
-               tBody.append(row);
             }
 
-            // Вставляем созданное тело таблицы в вёрстку
-            table.append(tBody);
+            // Вставляем тело таблицы в вёрстку
+            table.append(this._CalendarTableBodyTpl({dayArray: daysInCalendar}));
 
             // Обработка клика по календарному дню
             var self = this;
@@ -131,13 +120,6 @@ define(
                workingDate = new Date(new Date(date).setDate($(this).attr('data-day')));
                self._setDate(workingDate);
                self._notify('onSelect', workingDate);
-            });
-
-            // Если контролл Calendar находится в пикере другого контролла, который в свою очередь
-            // находится в пикере третьего контролла, то клик в пикере с Calendar'ём закроет внешний пикер.
-            // Необходимо предотвратить данное поведение
-            $('.controls-Calendar__tableBodyElement', this.getContainer().get(0)).mousedown(function(e){
-               e.stopPropagation();
             });
 
             // Если контролл Calendar находится в пикере другого контролла, который в свою очередь
@@ -207,6 +189,21 @@ define(
             // В високосном году декабрь считается некорректно, явно ставим 31
             days  = days != 1 ? days : 31;
             return days;
+         },
+
+         /**
+          * Вспомогательная фунция. Используется в _refreshCalendarTable при создании массива дней
+          * @param array
+          * @param day
+          * @param isCalendar
+          * @private
+          */
+         _pushDayIntoArray: function (array, day, isCalendar) {
+            var obj = {};
+            obj.day = day;
+            obj.isCalendar = isCalendar;
+
+            array.push(obj);
          }
       });
 
