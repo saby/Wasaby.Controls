@@ -113,11 +113,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _setPickerContent: function () {
          this._drawItems();
          var self = this;
-         $('.js-controls-ComboBox__itemRow', this._picker.getContainer().get(0)).click(function (e) {
+         //TODO придумать что то нормальное и выпилить
+         $('.js-controls-ComboBox__itemRow', this._picker.getContainer().get(0)).mousedown(function(e){
+            e.stopPropagation();
+         });
+
+         $('.js-controls-ComboBox__itemRow', this._picker.getContainer().get(0)).click(function () {
             self.setSelectedItem($(this).attr('data-key'));
             self.hidePicker();
-            //TODO придумать что то нормальное и выпилить
-            e.stopPropagation();
          });
          //TODO: кажется неочевидное место, возможно как то автоматизировать
          this._picker.getContainer().addClass('controls-ComboBox__picker');
