@@ -74,12 +74,14 @@ define(
       $constructor: function() {
          var self = this;
 
+         this._publish('onDateChange');
+
          // Установка первоначального значения
          if ( this._options.date ) {
             this._setDate(this._options.date);
          }
          else {
-            this.setToday();
+            this._setDate(new Date());
          }
 
          // Клик по стрелочкам
@@ -129,15 +131,22 @@ define(
          this._picker.getContainer().empty();
          this._picker.getContainer().append(this._dropdownTpl({mode: this._options.mode, elements: elements}));
 
-         $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).click(function(){
+         $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).click(function(e){
             self.hidePicker();
 
             if( self._options.mode == 'month' ){
-               self._setDate(new Date(self._options.date.getFullYear(), $(this).attr('data-key'), 1, 20, 0, 0));
+               self.setDate(new Date(self._options.date.getFullYear(), $(this).attr('data-key'), 1, 20, 0, 0));
             }
             else if( self._options.mode == 'year' ){
-               self._setDate(new Date($(this).attr('data-key'), 0, 1, 20, 0, 0));
+               self.setDate(new Date($(this).attr('data-key'), 0, 1, 20, 0, 0));
             }
+         });
+
+         // Если контролл MonthPicker находится в другом контролле (допустим, в Calendar'е), который в свою очередь
+         // находится в пикере третьего контролла, то клик в пикере MonthPicker'a закроет пикер с Calendar'ём.
+         // Необходимо предотвратить данное поведение
+         $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).mousedown(function(e){
+            e.stopPropagation();
          });
       },
 
@@ -155,7 +164,7 @@ define(
                   this.hidePicker();
                }
             }
-            this._setDate(this._options.date);
+            this.setDate(this._options.date);
          }
       },
 
@@ -163,18 +172,19 @@ define(
        * Установить текущий месяц/год
        */
       setToday: function() {
-         this._setDate(new Date());
+         this.setDate(new Date());
       },
 
       /**
-       * Установить дату по полученному значению. Публичный метод. Может принимает либо строку
-       * формата 'число.число' или 'число', либо объект типа Date.
+       * Установить дату по полученному значению. Публичный метод.
+       * Отличается от приватного метода _setDate тем, что генерирует событие
+       * Может принимает либо строку формата 'число.число' или 'число', либо объект типа Date.
        * @param value Строка или дата
        */
       setDate: function(value) {
-         // TODO В будущем будет отличаться от приватного метода _setDate тем, что будет генерировать событие
-
          this._setDate(value);
+
+         this._notify('onDateChange', this._options.date);
       },
 
       /**
@@ -193,7 +203,8 @@ define(
       },
 
       /**
-       * Установить дату по переданной строке. Проверить ее на корректность [MM.]YYYY и установить, иначе породить исключение
+       * Установить дату по переданной строке. Проверить ее на корректность [MM.]YYYY и установить, иначе породить исключение.
+       * Нумерация месяцев начинается с единицы
        * @param value
        * @private
        */
@@ -201,7 +212,7 @@ define(
          var checkResult = /^(?:(\d{1,2})\.)?(\d{1,4})$/.exec(value);
 
          if ( checkResult ){
-            this._setDateByDateObject(new Date(parseInt(checkResult[2], 10), parseInt(checkResult[1], 10) || 0, 1, 20, 0, 0));
+            this._setDateByDateObject(new Date(parseInt(checkResult[2], 10), parseInt(checkResult[1], 10) - 1 || 0, 1, 20, 0, 0));
          }
          else {
             throw new Error('Неверный формат даты');
@@ -273,7 +284,7 @@ define(
          }
          else if ( this._options.mode == 'year' ){ newDate = new Date(currentDate.setYear(currentDate.getFullYear() + value)); }
 
-         this._setDate(newDate);
+         this.setDate(newDate);
       },
 
       /**
