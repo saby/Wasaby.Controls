@@ -203,6 +203,7 @@
 }
 .controls-ComboBox__picker.controls-Picker__owner__hover {
   border-top-color: #00d7d7;
+  margin-top: -2px;
 }
 .controls-ListView__item {
   overflow: hidden;
