@@ -108,7 +108,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          var self = this;
          var container = this._container;
          var trg = $ws.helpers.trackElement(this._options.target, true);
-         this.hide();
          container.css({
             'position': 'absolute',
             'top': '-1000px',
