@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
     * При подмешивании этого миксина в контрол, он вырезается из своего местоположения и вставляется в Body.
     * @mixin SBIS3.CONTROLS._PopupMixin
     */
-   var _PopupMixin = /** @lends SBIS3.CONTROLS._PopupMixin.prototype */{
+   var _PopupMixin = /** @lends SBIS3.CONTROLS._PopupMixin.prototype */ {
       $protected: {
          _targetSizes: {},
          _containerSizes: {},
@@ -51,6 +51,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          _defaultHorizontalAlignSide: '',
          _defaultVerticalAlignSide: '',
          _firstMove: true,
+         _margins: {},
          _options: {
             /**
              * @typedef {Object} CornerEnum
@@ -63,43 +64,38 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
              * @cfg {Object} От какого угла идет отсчет координат
              */
             corner: null,
-
-            verticalAlign: {
-               /**
-                * @typedef {Object} VerticalAlignEnum
-                * @variant top
-                * @variant bottom
-                */
-               /**
-                * @cfg {VerticalAlignEnum} Вертикальное выравнивание контрола
-                */
-               side: null,
-               /**
-                * @cfg {Number} отступ
-                */
-               offset: 0
-            },
-
-            horizontalAlign: {
-               /**
-                * @typedef {Object} HorizontalAlignEnum
-                * @variant right
-                * @variant left
-                */
-               /**
-                * @cfg {HorizontalAlignEnum}
-                */
-               side: null,
-               /**
-                * @cfg {Number} отступ
-                */
-               offset: 0
-            },
+            /**
+             * @typedef {Object} VerticalAlignEnum
+             * @variant top
+             * @variant bottom
+             */
+            /**
+             * @typedef {Object} verticalAlign
+             * @property {VerticalAlignEnum} side Вертикальное выравнивание контрола
+             * @property {Number} offset отступ в пикселях
+             */
+            /**
+             * @cfg {verticalAlign} авторесайз по высоте, если текст не помещается
+             */
+            verticalAlign: {},
+            /**
+             * @typedef {Object} HorizontalAlignEnum
+             * @variant right
+             * @variant left
+             */
+            /**
+             * @typedef {Object} HorizontalAlign
+             * @property {HorizontalAlignEnum} side Вертикальное выравнивание контрола
+             * @property {Number} offset отступ в пикселях
+             */
+            /**
+             * @cfg {HorizontalAlign} авторесайз по высоте, если текст не помещается
+             */
+            horizontalAlign: {},
             /**
              * @cfg {String|jQuery|HTMLElement} элемент, относительно которого позиционируется всплывающее окно
              */
             target: undefined,
-
             /**
              * @cfg {Boolean} закрывать или нет при клике мимо
              */
@@ -112,13 +108,11 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          var self = this;
          var container = this._container;
          var trg = $ws.helpers.trackElement(this._options.target, true);
-         this.hide();
          container.css({
-            'position':'absolute',
+            'position': 'absolute',
             'top': '-1000px',
             'left': '-1000px'
          });
-
          this._cssHeight = (this._container.css('height') == '0px') ? 'auto' : this._container.css('height');
          this._cssWidth = (this._container.css('width') == '0px') ? 'auto' : this._container.css('width');
 
@@ -155,21 +149,22 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
 
       },
 
-      _checkTargetPosition: function(){
+      _checkTargetPosition: function () {
          var self = this;
          if (this._options.target) {
-            var winHeight = this._windowSizes.height, top = this._options.target.offset().top - $(window).scrollTop() - winHeight;
+            var winHeight = this._windowSizes.height,
+               top = this._options.target.offset().top - $(window).scrollTop() - winHeight;
             if (top > 0 || -top > winHeight) {
                self.hide();
             }
          }
       },
 
-      _scrollHandler: function(){
+      _scrollHandler: function () {
          this._checkTargetPosition();
       },
 
-      _resizeHandler: function(){
+      _resizeHandler: function () {
          this._initWindowSizes();
          if (this._containerSizes.offset !== undefined) {
             this._container.offset({
@@ -177,14 +172,14 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
                left: this._correctionByDisplaySize('horizontal', 'resize').left
             });
          }
-         this._checkTargetPosition();// следим за тем не пропал ли таргет
+         this._checkTargetPosition(); // следим за тем не пропал ли таргет
       },
 
-      _clickHandler: function(eventObject, target) {
+      _clickHandler: function (eventObject, target) {
          var self = this,
-             inPopup = !!self._container.find(target).length,
-             popup = $(self._container).get(0) == target,
-             inTarget=[];
+            inPopup = !!self._container.find(target).length,
+            popup = $(self._container).get(0) == target,
+            inTarget = [];
 
          if (self._options.target) {
             inTarget = !!self._options.target.find($(target)).length;
@@ -192,7 +187,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
 
          if (!(inPopup || popup) && !inTarget) {
             if (self.isVisible()) {
-              self.hide();
+               self.hide();
             }
          }
       },
@@ -209,7 +204,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          }
          this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
 
-         if (initOrigins){
+         if (initOrigins) {
             this._containerSizes.originWidth = this._container[0].scrollWidth + this._containerSizes.border * 2;
             this._containerSizes.originHeight = this._container[0].scrollHeight + this._containerSizes.border * 2;
          }
@@ -220,18 +215,29 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          this._initWindowSizes();
       },
 
-      _initWindowSizes: function(){
+      _initWindowSizes: function () {
          this._windowSizes.height = $(window).height();
          this._windowSizes.width = $(window).width();
       },
 
+      _initMargins: function () {
+         var container = this._container;
+         this._margins = {
+            top: parseInt(container.css('margin-top'), 10),
+            left: parseInt(container.css('margin-left'), 10),
+            bottom: parseInt(container.css('margin-bottom'), 10),
+            right: parseInt(container.css('margin-right'), 10)
+         };
+      },
+
       recalcPosition: function () {
          this._initSizes(true);
+         this._initMargins();
          //Если есть таргет - позиционируемся относительно его
          if (this._options.target) {
             this._containerSizes.originOffset = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner);
             this._containerSizes.offset = {
-               top:  this._containerSizes.originOffset.top,
+               top: this._containerSizes.originOffset.top,
                left: this._containerSizes.originOffset.left
             };
             this._container.offset({
@@ -244,7 +250,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
       },
 
       //Позиционируем относительно body
-      _bodyPositioning: function(){
+      _bodyPositioning: function () {
          var
             width = this._containerSizes.width,
             height = this._containerSizes.height,
@@ -254,13 +260,13 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             vAlign = this._defaultVerticalAlignSide,
             hAlign = this._defaultHorizontalAlignSide,
             offset = {
-              top:  this._options.verticalAlign.offset,
-              left : this._options.horizontalAlign.offset
+               top: this._options.verticalAlign.offset || 0,
+               left: this._options.horizontalAlign.offset || 0
             };
-         if (vAlign == 'bottom'){
+         if (vAlign == 'bottom') {
             offset.top = bodyHeight - offset.top - height;
          }
-         if (hAlign == 'right'){
+         if (hAlign == 'right') {
             offset.left = bodyWidth - offset.left - width;
          }
          return offset;
@@ -277,8 +283,8 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          if (horiz == 'right') {
             offset.left -= this._containerSizes.originWidth - this._targetSizes.border;
          }
-         offset.left += this._options.horizontalAlign.offset;
-         offset.top += this._options.verticalAlign.offset;
+         offset.left = offset.left + this._margins.left - this._margins.right + (this._options.horizontalAlign.offset || 0);
+         offset.top = offset.top + this._margins.top - this._margins.bottom + (this._options.verticalAlign.offset || 0);
          return offset;
       },
 
@@ -293,45 +299,57 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             };
 
          switch (corner) {
-            case 'tr':
-               offset.left += width - border;
-               offset.top -= border;
-               break;
-            case 'bl':
-               offset.top += height;
-               break;
-            case 'br':
-               offset.top += height;
-               offset.left += width - border;
-               break;
-            case 'tl':
-               offset.top -= border;
-               break; //tl
-            default:
-               throw new Error('Параметр corner является обязательным');
+         case 'tr':
+            offset.left += width - border;
+            offset.top -= border;
+            break;
+         case 'bl':
+            offset.top += height;
+            break;
+         case 'br':
+            offset.top += height;
+            offset.left += width - border;
+            break;
+         case 'tl':
+            offset.top -= border;
+            break; //tl
+         default:
+            throw new Error('Параметр corner является обязательным');
          }
-         this._options.corner  = corner;
+         this._options.corner = corner;
          return offset;
       },
 
       //Если есть таргет считаем влезаем ли в экран и меняем размеры и положение
-      _correctionByDisplaySize: function(direction, init){
-         var s =[],
+      _correctionByDisplaySize: function (direction, init) {
+         var s = [],
+            self = this,
             offset = {
-               top : this._containerSizes.offset.top,
-               left : this._containerSizes.offset.left
+               top: this._containerSizes.offset.top,
+               left: this._containerSizes.offset.left
             },
             spaces = this._getSpaces(),
-            over, isMoved, winSize;
+            over, isMoved, winSize,
+            isHorizontal = (direction == 'horizontal'),
+            isVertical = (direction == 'vertical'),
+            _addMargins = function () {
+               if (!isHorizontal) {
+                  offset[s[0]] -= self._margins.top * 2;
+                  offset[s[0]] += self._margins.bottom * 2;
+               } else {
+                  offset[s[0]] -= self._margins.left * 2;
+                  offset[s[0]] += self._margins.right * 2;
+               }
+            };
 
          // Заполняем массив для горизонтального/вертикального рассчетов
-         if (direction == 'horizontal'){
+         if (isHorizontal) {
             s[0] = 'left';
             s[1] = 'right';
             s[2] = 'width';
             s[3] = 'horizontalAlign';
             s[4] = (this._defaultCorner == 'br' || this._defaultCorner == 'tr');
-            s[5] = - this._targetSizes.border;
+            s[5] = -this._targetSizes.border;
             s[6] = 0;
             s[7] = 'originWidth';
             s[8] = 'overflow-x';
@@ -339,15 +357,14 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             over = (this._windowSizes.width - 3 < this._containerSizes.originWidth + this._containerSizes.originOffset.left); // Влезаем ли в экран
             isMoved = this._isMovedH; // Был произведен горизонтальный сдвиг или нет
             winSize = this._windowSizes.width;
-         } else
-         if (direction == 'vertical'){
+         } else if (isVertical) {
             s[0] = 'top';
             s[1] = 'bottom';
             s[2] = 'height';
             s[3] = 'verticalAlign';
             s[4] = (this._defaultCorner == 'br' || this._defaultCorner == 'bl');
             s[5] = 0;
-            s[6] = - this._targetSizes.border;
+            s[6] = -this._targetSizes.border;
             s[7] = 'originHeight';
             s[8] = 'overflow-y';
             s[9] = this._cssHeight;
@@ -358,19 +375,23 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          //Если не влезаем в экран, но еще не перемещались то перемещаемся в противоположный угол
          if (over && !isMoved) {
             offset[s[0]] = this._getOppositeOffset(s[0])[s[0]];
+            _addMargins();
             isMoved = true;
          } else {
-            if (init == 'recalc' && over) {offset[s[0]] = this._getOppositeOffset(s[0])[s[0]]; }
+            if (init == 'recalc' && over) {
+               offset[s[0]] = this._getOppositeOffset(s[0])[s[0]];
+               _addMargins();
+            }
          }
          //Если перемещались и освободилось место, то возвращаемся обратно
-         if (winSize > this._containerSizes[s[2]] + this._containerSizes.originOffset[s[0]] && isMoved){
+         if (winSize > this._containerSizes[s[2]] + this._containerSizes.originOffset[s[0]] && isMoved) {
             offset[s[0]] = this._getOppositeOffset(s[0])[s[0]];
             isMoved = false;
          }
          //Запоминаем какое перемещение было сделано по горизонтали или по вертикали
-         if (direction == 'horizontal') {
+         if (isHorizontal) {
             this._isMovedH = isMoved;
-         } else  {
+         } else {
             this._isMovedV = isMoved;
          }
 
@@ -378,22 +399,22 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          this._containerSizes.offset[s[0]] = offset[s[0]];
 
          //Если сдвинулись за экран, расчитываем новые размеры и положение
-         if (offset[s[0]] < 0){
-            this._calculateOverflow(offset,s);
+         if (offset[s[0]] < 0) {
+            this._calculateOverflow(offset, s);
          }
 
-         this._container.css((direction == 'horizontal') ? 'overflow-x' : 'overflow-y', 'auto');
+         this._container.css((isHorizontal) ? 'overflow-x' : 'overflow-y', 'auto');
 
          if (this._containerSizes[s[7]] < spaces[s[1]]) {
-            this._container.css(s[2],s[9]);
-            this._container.css((direction == 'horizontal') ? 'overflow-x' : 'overflow-y', 'visible');
+            this._container.css(s[2], s[9]);
+            this._container.css((isHorizontal) ? 'overflow-x' : 'overflow-y', 'visible');
          }
          return offset;
       },
 
       //Рассчитать расстояния от таргета до границ экрана с учетом собственного положения попапа
       //Нужно для расчета размеров если не влезаем в экран
-      _getSpaces: function(){
+      _getSpaces: function () {
          var corner = this._defaultCorner,
             offset = this._targetSizes.offset,
             width = this._targetSizes.width,
@@ -407,29 +428,34 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
                right: 0
             };
 
-         switch (corner){
-            case 'br': spaces.left = offset.left + width;
-               spaces.top = offset.top;
-               break;
-            case 'tr': spaces.left = offset.left + width;
-               spaces.top = offset.top;
-               break;
-            case 'tl': spaces.left = offset.left;
-               spaces.top = offset.top;
-               break;
-            case 'bl': spaces.left = offset.left;
-               spaces.top = offset.top;
-               break;
-            default: return spaces;
+         switch (corner) {
+         case 'br':
+            spaces.left = offset.left + width;
+            spaces.top = offset.top;
+            break;
+         case 'tr':
+            spaces.left = offset.left + width;
+            spaces.top = offset.top;
+            break;
+         case 'tl':
+            spaces.left = offset.left;
+            spaces.top = offset.top;
+            break;
+         case 'bl':
+            spaces.left = offset.left;
+            spaces.top = offset.top;
+            break;
+         default:
+            return spaces;
          }
 
-         if (corner == 'tl' || corner =='tr') {
+         if (corner == 'tl' || corner == 'tr') {
             spaces.bottom = windowHeight - spaces.top;
          } else {
             spaces.bottom = windowHeight - spaces.top - height;
          }
 
-         if (corner == 'tr' || corner =='br') {
+         if (corner == 'tr' || corner == 'br') {
             spaces.right = windowWidth - spaces.left;
          } else {
             spaces.right = windowWidth - spaces.left;
@@ -439,10 +465,10 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
       },
 
       //Установить размер и положение если не влезли в экран
-      _calculateOverflow: function(offset,s){
+      _calculateOverflow: function (offset, s) {
          var spaces = this._getSpaces();
-         if (spaces[s[1]] > spaces[s[0]]){
-            offset[s[0]] = (s[4]) ? this._targetSizes.offset[s[0]] + this._targetSizes[s[2]] + s[5]  : this._targetSizes.offset[s[0]] + s[6];
+         if (spaces[s[1]] > spaces[s[0]]) {
+            offset[s[0]] = (s[4]) ? this._targetSizes.offset[s[0]] + this._targetSizes[s[2]] + s[5] : this._targetSizes.offset[s[0]] + s[6];
             offset[s[0]] += this._options[s[3]].offset;
             s[10] = spaces[s[1]] - 2;
          } else {
@@ -453,48 +479,65 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
       },
 
       //Получаем противоположный угол относительно текущего в направлении orientation
-      _getOppositeOffset: function (orientation){  // Получить offset при сдвиге в противоположный угол относительно this._defaultCorner по горизонтали или верткали 'top'/'left'
+      _getOppositeOffset: function (orientation) { // Получить offset при сдвиге в противоположный угол относительно this._defaultCorner по горизонтали или верткали 'top'/'left'
          var side = (orientation == 'left') ? this._options.horizontalAlign.side : this._options.verticalAlign.side,
             isVertical = (side == 'top' || side == 'bottom'),
             offset,
             position = {
                corner: this._options.corner,
                side: ''
-            }, opoSide;
+            },
+            opoSide;
 
-         if (isVertical) {opoSide = (side == 'top') ? 'bottom' : 'top';} else {opoSide = (side == 'left') ? 'right' : 'left';}
+         if (isVertical) {
+            opoSide = (side == 'top') ? 'bottom' : 'top';
+         } else {
+            opoSide = (side == 'left') ? 'right' : 'left';
+         }
 
-         switch (this._options.corner){
-            case 'br': if (isVertical) {
-               if (this._options.horizontalAlign.side == 'right') {position.corner = 'tr'}
+         switch (this._options.corner) {
+         case 'br':
+            if (isVertical) {
+               if (this._options.horizontalAlign.side == 'right') {
+                  position.corner = 'tr';
+               }
             } else {
                position.corner = 'bl';
             }
-               position.side = opoSide;
-               break;
+            position.side = opoSide;
+            break;
 
-            case 'tr': if (isVertical) {
-               if (this._options.horizontalAlign.side == 'right') {position.corner = 'br'}
+         case 'tr':
+            if (isVertical) {
+               if (this._options.horizontalAlign.side == 'right') {
+                  position.corner = 'br';
+               }
             } else {
                position.corner = 'tl';
             }
-               position.side = opoSide;
-               break;
+            position.side = opoSide;
+            break;
 
-            case 'bl': if (isVertical){
-               if (this._options.horizontalAlign.side == 'left') {position.corner = 'tl'}
+         case 'bl':
+            if (isVertical) {
+               if (this._options.horizontalAlign.side == 'left') {
+                  position.corner = 'tl';
+               }
             } else {
                position.corner = 'br';
             }
-               position.side = opoSide;
-               break;
+            position.side = opoSide;
+            break;
 
-            case 'tl': if (isVertical){
-               if (this._options.horizontalAlign.side == 'left') {position.corner = 'bl'}
+         case 'tl':
+            if (isVertical) {
+               if (this._options.horizontalAlign.side == 'left') {
+                  position.corner = 'bl';
+               }
             } else {
                position.corner = 'tr';
             }
-               position.side = opoSide;
+            position.side = opoSide;
          }
 
          if (isVertical) {
@@ -503,7 +546,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             this._options.horizontalAlign.side = position.side;
          }
          this._options.corner = position.corner;
-         offset = this._getGeneralOffset(this._options.verticalAlign.side,this._options.horizontalAlign.side, position.corner);
+         offset = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, position.corner);
          return offset;
       },
 
@@ -520,9 +563,9 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             zIndexManager.setFree(zIndex);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._resizeHandler);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._scrollHandler);
-            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentClick',this._clickHandler);
+            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentClick', this._clickHandler);
          },
-         show: function(){
+         show: function () {
             this._container.css({
                left: '-1000px',
                top: '-1000px'
@@ -531,7 +574,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
       },
 
       around: {
-         hide: function(parentHide){
+         hide: function (parentHide) {
             var result = this._notify('onClose');
             if (result instanceof $ws.proto.Deferred) {
                result.addCallback(function () {

@@ -14,13 +14,11 @@
   border-radius: 2px;
   background-color: transparent;
   color: #919197;
-  padding: 0;
+  padding: 0 8px;
+  box-sizing: border-box;
 }
 .controls-Button:hover {
   border-color: #00d7d7;
-}
-.controls-Button__content {
-  margin: 0 8px;
 }
 .controls-Button:hover {
   color: #ffffff;
@@ -84,7 +82,7 @@
   height: 99%;
   width: 100%;
   margin: 0;
-  padding: 0 4px;
+  padding: 0 7px;
   box-sizing: border-box;
   line-height: 100%;
   outline: none;
@@ -174,7 +172,7 @@
   background-position: 0 -16px;
 }
 .controls-ComboBox__itemRow {
-  padding: 4px 4px 4px 9px;
+  padding: 4px 4px 4px 7px;
   cursor: pointer;
 }
 .controls-ComboBox__itemRow:hover {
@@ -205,6 +203,7 @@
 }
 .controls-ComboBox__picker.controls-Picker__owner__hover {
   border-top-color: #00d7d7;
+  margin-top: -2px;
 }
 .controls-ListView__item {
   overflow: hidden;
@@ -233,4 +232,25 @@
 }
 .controls-TreeView__item {
   overflow: hidden;
+}
+.controls-TextArea__inputField {
+  resize: none;
+  border: none;
+  display: block;
+  font-family: inherit;
+  width: 100%;
+  height: 100%;
+  padding: 6px 7px;
+  box-sizing: border-box;
+}
+.controls-TextArea__autoheight {
+  height: auto !important;
+}
+.controls-TextArea {
+  display: inline-block;
+  border: 1px solid #d1d1d4;
+  vertical-align: top;
+}
+.controls-TextArea:hover {
+  border-color: #00d7d7;
 }
