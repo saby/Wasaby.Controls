@@ -233,3 +233,24 @@
 .controls-TreeView__item {
   overflow: hidden;
 }
+.controls-TextArea__inputField {
+  resize: none;
+  border: none;
+  display: block;
+  font-family: inherit;
+  width: 100%;
+  height: 100%;
+  padding: 6px 7px;
+  box-sizing: border-box;
+}
+.controls-TextArea__autoheight {
+  height: auto !important;
+}
+.controls-TextArea {
+  display: inline-block;
+  border: 1px solid #d1d1d4;
+  vertical-align: top;
+}
+.controls-TextArea:hover {
+  border-color: #00d7d7;
+}

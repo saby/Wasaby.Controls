@@ -87,6 +87,9 @@
    <div id="button2"></div>
 
 
+   <br/><br/>
+   <div id="TextArea"></div>
+   <div id="TextArea2"></div>
 </div>
 
 <script type="text/javascript">
@@ -177,6 +180,24 @@
             new r({
                element: "button2",
                caption: 'Календарь'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.TextArea"], function (r) {
+            new r({
+               element: "TextArea",
+               text: 'Календарь',
+               minLinesCount : 3,
+               autoResize: {
+                  state: true,
+                  maxLinesCount: 5
+               }
+            });
+
+            new r({
+               element: "TextArea2",
+               text: 'Календарь',
+               minLinesCount : 3
             })
          });
       })
