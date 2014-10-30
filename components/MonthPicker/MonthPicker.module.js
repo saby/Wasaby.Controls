@@ -99,8 +99,10 @@ define(
          // Клик по полю с датой
          $('.js-controls-MonthPicker__field', this.getContainer().get(0)).click(function(){
             self.togglePicker();
-            self._isMonthShown = !self._picker.isVisible();
-            self._setText(self._composeText());
+            if ( self._options.mode == 'month' ) {
+               self._isMonthShown = !self._picker.isVisible();
+               self._setText(self._composeText());
+            }
             // обновляем выпадающий блок только если пикер данным кликом открыт
             if ( self._picker && self._picker.isVisible() ){ self._drawElements(); }
          });
@@ -129,9 +131,11 @@ define(
        * @private
        */
       _onCloseHandler: function () {
-         this._isMonthShown = true;
-         var text = this._composeText();
-         this._setText(text);
+         if ( this._options.mode == 'month' ) {
+            this._isMonthShown = true;
+            var text = this._composeText();
+            this._setText(text);
+         }
       },
 
       _setPickerContent: function() {
