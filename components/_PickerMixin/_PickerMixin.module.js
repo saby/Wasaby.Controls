@@ -37,7 +37,6 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
 
       _createPicker: function(pickerContainer){
          var picker = new FloatArea({
-            visible: false,
             element : pickerContainer,
             target : this._container,
             corner: 'bl',
