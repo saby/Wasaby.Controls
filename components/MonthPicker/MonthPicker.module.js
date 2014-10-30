@@ -100,7 +100,7 @@ define(
          $('.js-controls-MonthPicker__field', this.getContainer().get(0)).click(function(){
             self.togglePicker();
             self._isMonthShown = !self._picker.isVisible();
-            self._setText();
+            self._setText(self._composeText());
             // обновляем выпадающий блок только если пикер данным кликом открыт
             if ( self._picker && self._picker.isVisible() ){ self._drawElements(); }
          });
@@ -130,7 +130,8 @@ define(
        */
       _onCloseHandler: function () {
          this._isMonthShown = true;
-         this._setText();
+         var text = this._composeText();
+         this._setText(text);
       },
 
       _setPickerContent: function() {
@@ -244,23 +245,34 @@ define(
          // задать 2020 год 1 января, нам вернётся, как ни странно, Tue Dec 31 2019 23:00:00 GMT+0300 (RTZ 2 (зима))
          this._options.date = new Date(year, month, 1, 20, 0, 0);
 
-         this._setText();
+         var text = this._composeText();
+         this._setText(text);
       },
 
       /**
-       * Установить значение в поле в соответствии с текущим значением даты
+       * Формирует отображаемый текст в зависимости от режима mode и от состояния пикера (открыт/закрыт)
+       * @returns {string}
        * @private
        */
-      _setText: function(){
+      _composeText: function () {
          var
-            date = this._options.date,
-            fieldContainer = $('.js-controls-MonthPicker__field', this.getContainer().get(0));
+            text = '',
+            date = this._options.date;
 
          if( this._options.mode == 'month' ){
-            if ( this._isMonthShown ){ fieldContainer.text(this._months[date.getMonth()] + ', ' + date.getFullYear()); }
-            else { fieldContainer.text(date.getFullYear()); }
+            text = this._isMonthShown ? this._months[date.getMonth()] + ', ' + date.getFullYear() : date.getFullYear().toString();
          }
-         else if( this._options.mode == 'year' ){ fieldContainer.text(date.getFullYear()); }
+         else if( this._options.mode == 'year' ){ text = date.getFullYear().toString(); }
+
+         return text;
+      },
+
+      /**
+       * Установить значение в поле
+       * @private
+       */
+      _setText: function(text){
+         $('.js-controls-MonthPicker__field', this.getContainer().get(0)).text(text);
       },
 
       /**
