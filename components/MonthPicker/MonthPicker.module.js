@@ -52,6 +52,10 @@ define(
             monthFormat: ''
          },
          /**
+          * Определяет, показан "месяц, год", или только "год" в режиме 'month'
+          */
+         _isMonthShown: true,
+         /**
           * Массив месяцев
           */
          _months: [
@@ -95,6 +99,7 @@ define(
          // Клик по полю с датой
          $('.js-controls-MonthPicker__field', this.getContainer().get(0)).click(function(){
             self.togglePicker();
+            self._isMonthShown = !self._picker.isVisible();
             self._setText();
             // обновляем выпадающий блок только если пикер данным кликом открыт
             if ( self._picker && self._picker.isVisible() ){ self._drawElements(); }
@@ -115,12 +120,17 @@ define(
          var self = this;
 
          this._picker.subscribe('onClose', function(){
-            // Если просто вызвать метод _setText(), то изменение текста не произойдет, так как пикер на момент выстреливания
-            // события еще открыт. Нам же нужно, чтобы пикер был закрыт для корректной устнавки текста -- устанавливаем задержу
-            setTimeout(function(){
-               self._setText();
-            }, 0);
+            self._onCloseHandler();
          });
+      },
+
+      /**
+       * Функция-обработчик закрытия пикера внешним кликом
+       * @private
+       */
+      _onCloseHandler: function () {
+         this._isMonthShown = true;
+         this._setText();
       },
 
       _setPickerContent: function() {
@@ -133,6 +143,7 @@ define(
 
          $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).click(function(e){
             self.hidePicker();
+            self._isMonthShown = true;
 
             if( self._options.mode == 'month' ){
                self.setDate(new Date(self._options.date.getFullYear(), $(this).attr('data-key'), 1, 20, 0, 0));
@@ -246,9 +257,8 @@ define(
             fieldContainer = $('.js-controls-MonthPicker__field', this.getContainer().get(0));
 
          if( this._options.mode == 'month' ){
-            // Если пикер открыт, то в режиме месяца показан только год
-            if (this._picker && this._picker.isVisible()){ fieldContainer.text(date.getFullYear()); }
-            else { fieldContainer.text(this._months[date.getMonth()] + ', ' + date.getFullYear()); }
+            if ( this._isMonthShown ){ fieldContainer.text(this._months[date.getMonth()] + ', ' + date.getFullYear()); }
+            else { fieldContainer.text(date.getFullYear()); }
          }
          else if( this._options.mode == 'year' ){ fieldContainer.text(date.getFullYear()); }
       },
