@@ -547,33 +547,41 @@ input[type="reset"]::-moz-focus-inner {
   color: #999999;
   cursor: default;
 }
+.controls-DatePicker {
+  display: inline-block;
+  vertical-align: top;
+}
 .controls-DatePicker__field {
   margin-right: 16px;
+  min-height: 22px;
 }
 .controls-DatePicker__calendarIconWrapper {
   width: 16px;
-  min-height: 15px;
+  min-height: 22px;
   height: 100%;
+  box-sizing: border-box;
   position: relative;
-  display: inline-block;
   float: right;
+  margin-left: 2px;
 }
 .controls-DatePicker__calendarIcon {
-  position: absolute;
+  background: url("img/DatePicker-calendar.png") no-repeat center center;
   display: inline-block;
-  background: url("img/DatePicker-calendar.png") -32px 0;
+  height: 100%;
+  min-height: 22px;
   width: 16px;
-  height: 15px;
   cursor: pointer;
-  top: 0;
-  right: -1px;
   text-decoration: none;
 }
 .controls-DatePicker__calendarIcon:hover {
-  background-position: 0 0;
+  background: url("img/DatePicker-calendar-hover.png") no-repeat center center;
 }
 .controls-DatePicker__calendar {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+.controls-DatePicker .controls-FormattedTextBox {
+  height: 100%;
+  box-sizing: border-box;
 }
 .controls-ComboBox__arrowDown {
   background-image: url('./img/ComboBox.png');
@@ -615,4 +623,18 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ComboBox__picker {
   border: 1px solid #CCCCCC;
   margin-top: -1px;
+}
+.controls-FormattedTextBox {
+  vertical-align: top;
+  min-height: 22px;
+}
+.controls-FormattedTextBox__field {
+  display: table;
+  height: 100%;
+  margin: 0 4px;
+}
+.controls-FormattedTextBox__field em {
+  display: table-cell;
+  vertical-align: middle;
+  font-style: normal;
 }
