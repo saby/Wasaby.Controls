@@ -48,6 +48,12 @@
          width: 100%;
          text-align: left;
       }
+      @-moz-document url-prefix() {
+         .zButton {
+            width: auto;
+            min-width: 100%;
+         }
+      }
 
 
    </style>
@@ -141,6 +147,7 @@
    <br/><br/>
 
    <div id="NumberTextBox"></div>
+   <div id="FormattedTextBox"></div>
 
    <br/><br/>
 
@@ -314,6 +321,12 @@
                stateOff: 'Off',
                enabled: false
             })
+         });
+
+         require(["js!SBIS3.CONTROLS.DatePicker"], function (r) {
+            new r({
+               element: "FormattedTextBox"
+            });
          });
 
 

@@ -121,14 +121,14 @@ define('js!SBIS3.Genie.UnitEditor',
 
             $('.controls-UnitEditor__unit', this._picker._container).click(function (e) {
                self.setText(self._options.text + $(e.target).html());
-               self.hidePicker();
-               self._unitSelector.toggleClass('controls-UnitEditor__unitSelector__toggled controls-UnitEditor__unitSelector__untoggled');
+               self.hidePicker();   
             });
          },
 
          _createPicker: function(pickerContainer){
             var self = this;
             var picker = new FloatArea({
+               visible: false,
                element : pickerContainer,
                target : this._container,
                corner: 'br',
@@ -143,7 +143,9 @@ define('js!SBIS3.Genie.UnitEditor',
                closeByExternalClick: true
             });
             picker.subscribe('onClose',function(){
-               self._unitSelector.toggleClass('controls-UnitEditor__unitSelector__toggled controls-UnitEditor__unitSelector__untoggled');
+               if (self._unitSelector.hasClass('controls-UnitEditor__unitSelector__toggled')){
+                  self._unitSelector.toggleClass('controls-UnitEditor__unitSelector__toggled controls-UnitEditor__unitSelector__untoggled');
+               }
             });
             return picker;
          }

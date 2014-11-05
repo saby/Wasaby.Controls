@@ -64,9 +64,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
          if (this._items.getItemsCount()) {
             /*устанавливаем первое значение TODO по идее переписан метод setSelectedItem для того чтобы не срабатывало событие при первой установке*/
-            var
+            var item;
+            if (!this._options.selectedItem) {
                item = this._items.getNextItem();
-            this._options.selectedItem = this._items.getKey(item);
+               this._options.selectedItem = this._items.getKey(item);
+            }
+            else {
+               item = this._items.getItem(this._options.selectedItem);
+            }
             ComboBox.superclass.setText.call(this, item[this._options.displayField]);
          }
 
@@ -89,7 +94,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawSelectedItem : function(key) {
-         if (key) {
+         if (typeof(key) != 'undefined') {
             var item = this._items.getItem(key);
             ComboBox.superclass.setText.call(this, item[this._options.displayField]);
          }
@@ -108,8 +113,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _setPickerContent: function () {
          this._drawItems();
          var self = this;
+         //TODO придумать что то нормальное и выпилить
+         $('.js-controls-ComboBox__itemRow', this._picker.getContainer().get(0)).mousedown(function(e){
+            e.stopPropagation();
+         });
+
          $('.js-controls-ComboBox__itemRow', this._picker.getContainer().get(0)).click(function () {
-            self.setValue($(this).attr('data-key'));
+            self.setSelectedItem($(this).attr('data-key'));
             self.hidePicker();
          });
          //TODO: кажется неочевидное место, возможно как то автоматизировать
@@ -173,10 +183,17 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                selKey = key;
             }
          });
-         //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
          this._options.selectedItem = selKey || null;
+         //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
          if (oldKey !== this._options.selectedItem) { // при повторном индексе null не стреляет событием
             this._notifySelectedItem(this._options.selectedItem);
+         }
+      },
+
+      _drawItems: function(){
+         if (this._picker) {
+            ComboBox.superclass._drawItems.call(this);
+            this._picker.recalcPosition();
          }
       },
 
@@ -194,8 +211,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _setEnabled : function(enabled) {
          TextBox.superclass._setEnabled.call(this, enabled);
-         if (enabled == false) {
-            this._inputField.attr('readonly', 'readonly')
+         if (enabled === false) {
+            this._inputField.attr('readonly', 'readonly');
          }
          else {
             if (this._options.isEditable) {

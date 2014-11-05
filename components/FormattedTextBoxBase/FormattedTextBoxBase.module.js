@@ -103,59 +103,65 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
          this._initializeComponents();
       },
 
+      /**
+       * Получить текущую используемую маску
+       * @private
+       */
       _getMask:function(){
          /*Method must be implemented*/
       },
 
+      /**
+       * Обновить значение в поле в соотвествии с хранимым значением
+       * @private
+       */
+      _updateText:function(){
+         /*Method must be implemented*/
+      },
+
       _initializeComponents: function(){
-         try {
-            var self = this;
+         var self = this;
 
-            this._inputField = $('.controls-FormattedTextBox__field', this.getContainer().get(0));
+         this._inputField = $('.controls-FormattedTextBox__field', this.getContainer().get(0));
 
-            this._primalMask = this._getMask();
-            this._controlCharacters = this._getControlCharactersSet();
-            this._clearMask = this._getClearMask();
-            this._isSeparatorContainerFirst = this._getTypeOfFirstContainer();
-            this._htmlMask = this._getHtmlMask();
-            this._inputField.html(this._htmlMask);
+         this._primalMask = this._getMask();
+         this._controlCharacters = this._getControlCharactersSet();
+         this._clearMask = this._getClearMask();
+         this._isSeparatorContainerFirst = this._getTypeOfFirstContainer();
+         this._htmlMask = this._getHtmlMask();
+         this._inputField.html(this._htmlMask);
 
-            if(this._options.text){
-               this.setText(this._options.text);
+         if(this._options.text){
+            this.setText(this._options.text);
+         }
+
+         this._inputField.focus(function () {
+            self._focusHandler(self._inputField.get(0));
+         });
+         this._inputField.keypress(function (event) {
+            event.preventDefault();
+         });
+         this._inputField.keyup(function (event) {
+            event.preventDefault();
+         });
+
+         this._inputField.keydown(function (event) {
+            event.preventDefault();
+            var
+               key = event.which,
+               type = '';
+
+            if (!event.ctrlKey && key != self._KEYS.DELETE && key != self._KEYS.BACKSPACE) {
+               type = event.shiftKey ? 'shift_character' : 'character';
+               self._keyPressHandler(key, type);
             }
-
-            this._inputField.focus(function () {
-               self._focusHandler(self._inputField.get(0));
-            });
-            this._inputField.keypress(function (event) {
-               event.preventDefault();
-            });
-            this._inputField.keyup(function (event) {
-               event.preventDefault();
-            });
-
-            this._inputField.keydown(function (event) {
-               event.preventDefault();
-               var
-                  key = event.which,
-                  type = '';
-
-               if (!event.ctrlKey && key != self._KEYS.DELETE && key != self._KEYS.BACKSPACE) {
-                  type = event.shiftKey ? 'shift_character' : 'character';
-                  self._keyPressHandler(key, type);
-               }
-               else if (key == self._KEYS.DELETE) {
-                  self._keyPressHandler(key, 'delete');
-               }
-               else if (key == self._KEYS.BACKSPACE) {
-                  self._keyPressHandler(key, 'backspace');
-               }
-            });
-         }
-         catch(error){
-            console.error('Error: Ошибка при создании контролла:\nId: %s\nMessage: %s\n',
-               this.getContainer().get(0).id, error.message);
-         }
+            else if (key == self._KEYS.DELETE) {
+               self._keyPressHandler(key, 'delete');
+            }
+            else if (key == self._KEYS.BACKSPACE) {
+               self._keyPressHandler(key, 'backspace');
+            }
+         });
       },
 
       /**
@@ -320,9 +326,6 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
          container.nodeValue = buffer.join('');
          this._updateText();
       },
-      _updateText:function(){
-         /*Method must be implemented*/
-      },
 
       /**
        * Получить контейнер по порядковому номеру
@@ -477,8 +480,8 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
        * @private
        */
       _getHtmlContainer: function(container, type){
-         if (type == 'placeholder'){return '<span class="controls-FormattedTextBox__field-placeholder">' + container + '</span>';}
-         else if (type == 'separator') {return '<span class="controls-FormattedTextBox__field-separator">' + container + '</span>'}
+         if (type == 'placeholder'){return '<em class="controls-FormattedTextBox__field-placeholder controls-FormattedTextBox__field-symbol">' + container + '</em>';}
+         else if (type == 'separator') {return '<em class="controls-FormattedTextBox__field-symbol">' + container + '</em>'}
       },
       
       /**

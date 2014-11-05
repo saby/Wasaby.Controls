@@ -40,16 +40,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
              * Данный текст отображается внутри поля до момента получения фокуса.
              * @see setPlaceholder
              */
-            placeholder: '',
-            /**
-             * @cfg {Boolean} Выделять или нет текст в поле при получении фокуса
-             * Возможные значения при получении полем фокуса:
-             * <ul>
-             *    <li>true - выделять текст;</li>
-             *    <li>false - не выделять.</li>
-             * </ul>
-             */
-            selectOnClick: false
+            placeholder: ''
          }
       },
 
@@ -126,7 +117,6 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
       getValue: function(){
          return this.getText();
       }
-
    });
 
    return TextBoxBase;
