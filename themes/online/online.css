@@ -648,7 +648,7 @@ input[type="reset"]::-moz-focus-inner {
   padding: 0 2px;
   min-height: 22px;
 }
-.controls-FormattedTextBox__field em {
+.controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
   display: table-cell;
   vertical-align: middle;
   font-style: normal;
