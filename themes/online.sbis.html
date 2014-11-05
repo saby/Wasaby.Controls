@@ -147,6 +147,7 @@
    <br/><br/>
 
    <div id="NumberTextBox"></div>
+   <div id="FormattedTextBox"></div>
 
    <br/><br/>
 
@@ -320,6 +321,12 @@
                stateOff: 'Off',
                enabled: false
             })
+         });
+
+         require(["js!SBIS3.CONTROLS.DatePicker"], function (r) {
+            new r({
+               element: "FormattedTextBox"
+            });
          });
 
 

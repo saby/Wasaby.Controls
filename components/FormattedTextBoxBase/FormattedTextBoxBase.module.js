@@ -480,8 +480,8 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
        * @private
        */
       _getHtmlContainer: function(container, type){
-         if (type == 'placeholder'){return '<span class="controls-FormattedTextBox__field-placeholder">' + container + '</span>';}
-         else if (type == 'separator') {return '<span class="controls-FormattedTextBox__field-separator">' + container + '</span>'}
+         if (type == 'placeholder'){return '<em class="controls-FormattedTextBox__field-placeholder controls-FormattedTextBox__field-symbol">' + container + '</em>';}
+         else if (type == 'separator') {return '<em class="controls-FormattedTextBox__field-symbol">' + container + '</em>'}
       },
       
       /**
