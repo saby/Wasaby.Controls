@@ -148,10 +148,40 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox', 'i18n!SBI
       _notFormatedVal: function () {
       },
 
+      /**
+       * Установить заголовок сообщения об ошибках валидации, который определяется свойством {@link titleErrorMessage}.
+       * <wiTag group="Данные">
+       * @param {Array|String} titleErrorMessage Текст заголовка сообщения об ошибке валидации - массив (первое значение - заголовок для одной ошибки, второе - заголовок в случае нескольких ошибок) или строка (заголовок будет одинаковым для любого количества ошибок)
+       * @example
+       * Если не соблюдены условия, то вывести информацию о требуемых действиях.
+       * <pre>
+       *    var message1,
+       *        message2;
+       *    //condition - флаг соблюдения условий
+       *    if (!condition) {
+       *       control.setTitleErrorMessage('Обязательные условия');
+       *       control.markControl([message1, message2]);
+       *    }
+       * </pre>
+       * @see titleErrorMessage
+       * @see errorMessage
+       * @see validate
+       * @see validators
+       * @see markControl
+       * @see setErrorMessage
+       * @see getErrorMessage
+       */
       setTitleErrorMessage: function (titleErrorMessage) {
          this._options.titleErrorMessage = titleErrorMessage instanceof Array ? titleErrorMessage : [titleErrorMessage, titleErrorMessage];
       },
-
+      /**
+       * Данный метод определяет, может ли быть проведена валидация данного элемента управления
+       * т.е. имеет ли смысл вообще пробовать запустить ее.
+       * Дефолтная реализация проверяет наличие валидаторов. Потомки класса могу реализовать собственную логику проверки
+       *
+       * @return {Boolean}
+       * @protected
+       */
       _canValidate: function () {
          return this._options.validators.length;
       },
@@ -185,7 +215,26 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox', 'i18n!SBI
 
          return retval;
       },
-
+      /**
+       * <wiTag group="Данные">
+       * Функция валидации контрола.
+       * Проверит все валидаторы, как встроенные, так и пользовательские.
+       * В случае неудачи отметит контрол сообщением об ошибке валидации.
+       * В случае успеха снимет отметку ошибки, если такая была.
+       * @returns {Boolean} Признак: валидация пройдена успешно (true) или с ошибками (false).
+       * @example
+       * Проверить все валидаторы диалога редактирования записи (dialogRecord). В случае успеха обновить запись.
+       * <pre>
+       *    if (dialogRecord.validate()) {
+       *       dialogRecord.updateRecord();
+       *    }
+       * </pre>
+       * @see validators
+       * @see getValidators
+       * @see setValidators
+       * @see markControl
+       * @see clearMark
+       */
       validate: function () {
          var
             vResult,
@@ -289,10 +338,39 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox', 'i18n!SBI
          this._validationErrorCount = message instanceof Array ? message.length : 1;
       },
 
+      /**
+       * Запомнить результат предыдущей валидации
+       * @protected
+       */
       _calcPrevValidationResult: function () {
          this._prevValidationResult = !this.isMarked();
       },
-
+      /**
+       * <wiTag group="Отображение">
+       * Метод маркирует контрол как непрошедший валидацию.
+       * Не проводит валидацию, просто подсвечивает контрол.
+       * @param {Array|String} s Сообщение об ошибке.
+       * @param {Boolean} showInfoBox Показывать инфобокс сразу(true) или по ховеру(false)
+       * @example
+       * Уведомить регистрируещегося пользователя, если введённый логин уже используется.
+       * <pre>
+       *    fieldString.subscribe('onChange', function(eventObject, value) {
+       *       //создаём объект бизнес-логики
+       *       var bl = new $ws.proto.BLObject('Пользователи'),
+       *           self = this;
+       *       //вызываем метод бизнес-логики с нужными нам параметрами
+       *       bl.call('ПолучитьСписокПользователей', {'Логин': value}, $ws.proto.BLObject.RETURN_TYPE_RECORDSET).addCallback(function(recordSet) {
+       *          //проверяем число принятых записей
+       *          if (recordSet.getRecordCount() > 0) {
+       *             self.markControl('Пользователь с таким логином уже существует!');
+       *          }
+       *       });
+       *    });
+       * </pre>
+       * @see clearMark
+       * @see isMarked
+       * @see validate
+       */
       markControl: function (s, showInfoBox) {
          var
             message = (s && (typeof s == 'string' || s instanceof Array && s.length)) ? s : this._options.errorMessageFilling;
@@ -303,7 +381,35 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox', 'i18n!SBI
          }
          this._container.addClass('ws-validation-error');
       },
-
+      /**
+       * <wiTag group="Отображение">
+       * Снять отметку об ошибке валидации.
+       * @example
+       * Для поля ввода (fieldString) определено необязательное условие: первый символ должен быть заглавной буквой.
+       * Когда поле не соответствует этому условию, оно маркируется как непрошедшее валидацию.
+       * Если пользователь не желает изменять регистр первой буквы, то при клике на кнопку (button) снимется маркировка с поля ввода.
+       * <pre>
+       *    //является ли первая буква строки заглавной
+       *    var upperCase = true;
+       *    fieldString.subscribe('onValidate', function(eventObject, value) {
+       *       if (value) {
+       *          //проверка первого символа строки
+       *          upperCase = /^[А-Я].*$/.test(this.getValue());
+       *       }
+       *       if (!upperCase) {
+       *          this.markControl('Рекомендуется изменить регистр первого символа!');
+       *          button.show();
+       *       }
+       *    });
+       *    button.subscribe('onClick', function() {
+       *       fieldString.clearMark();
+       *       this.hide();
+       *    });
+       * </pre>
+       * @see markControl
+       * @see isMarked
+       * @see validate
+       */
       clearMark: function () {
          if (this._validationErrorCount) {
             this._validationErrorCount = 0;
@@ -321,7 +427,21 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox', 'i18n!SBI
             }
          }
       },
-
+      /**
+       * <wiTag group="Отображение">
+       * Отмечен ли контрол ошибкой валидации.
+       * @return {Boolean} Признак: отмечен (true) или нет (false).
+       * @example
+       * Если поле ввода (fieldString) отмечено ошибкой валидации, то кнопка (btn) не доступна для клика.
+       * <pre>
+       *    btn.subscribe('onReady', function() {
+       *       this.setEnabled(!fieldString.isMarked());
+       *    });
+       * </pre>
+       * @see markControl
+       * @see clearMark
+       * @see validate
+       */
       isMarked: function () {
          return !!this._validationErrorCount;
       },
@@ -333,29 +453,162 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox', 'i18n!SBI
        */
       _onContextValueReceived: function (ctxVal) {
       },
-
+      /**
+       * <wiTag group="Управление">
+       * Получить валидаторы контрола, определяемые свойством {@link validators}.
+       * @return {Array} Массив объектов, описывающих функции валидации.
+       * @example
+       * Проверить наличие валидаторов у строки ввода. Если их нет, то задать.
+       * <pre>
+       *    fieldString.subscribe('onReady', function() {
+       *       if (Object.isEmpty(this.getValidators()) {
+       *          var validators = [{
+       *             validator: function() {
+       *                var value = this.getValue();
+       *                return value !== null && value !== '';
+       *             },
+       *             errorMessage: 'Поле не может быть пустым. Введите значение!'
+       *          }];
+       *          this.setValidators(validators);
+       *       }
+       *    });
+       * </pre>
+       * @see errorMessage
+       * @see getErrorMessage
+       * @see setErrorMessage
+       * @see validators
+       * @see setValidators
+       * @see validate
+       */
       getValidators: function () {
          return this._options.validators;
       },
-
+      /**
+       * <wiTag group="Управление">
+       * Установить валидаторы контрола, определяемые свойством {@link validators}.
+       * @param {Array} validators Массив объектов, описывающих функции валидации.
+       * @param {Object} [validators.object] Объект с конфигурацией валидатора.
+       * @param {Function} [validators.object.validator] Функция валидации.
+       * @param {Array} [validators.object.params] Параметры валидатора. Каждый параметр передаётся в функцию валидации в качестве её аргумента.
+       * Первый элемент массива параметров является первым аргументов функции валидации, второй элемент - вторым аргументом, и т.д.
+       * @param {String} [validators.object.errorMessage] Текст сообщения об ошибке валидации.
+       * Если свойство не определено, то в качестве текста будет использовано значение, возвращаемое функцией валидации.
+       * @param {Boolean} [validators.object.noFailOnError] Нежесткая валидация.
+       * Если noFailOnError установлено в true, то при непрохождении валидации контрол маркируется и возвращается true.
+       * @example
+       * При готовности поля ввода (fieldString) установить валидаторы, если их не существует.
+       * <pre>
+       *    //описываем два валидатора
+       *    var validators = [{
+        *       validator: function() {
+        *          var value = this.getValue();
+        *          return value !== null && value !== '';
+        *       },
+        *       errorMessage: 'Поле не может быть пустым. Введите значение!'
+        *    },{
+        *       //otherFieldName - имя любого другого поля ввода, с которым производим сравнение
+        *       validator: function(otherFieldName) {
+        *          //controlParent - родительский контрол для двух полей
+        *          return this.getValue() !== controlParent.getChildControlByName(otherFieldName).getValue();
+        *       },
+        *       params: [otherFieldName],
+        *       errorMessage: 'Значения полей не могут совпадать!',
+        *       noFailOnError: true
+        *    }];
+       *    fieldString.subscribe('onReady', function() {
+        *       if (this.getValidators().length == 0)
+        *          this.setValidators(validators);
+        *    });
+       * </pre>
+       * @see validators
+       * @see getValidators
+       * @see errorMessage
+       * @see setErrorMessage
+       * @see getErrorMessage
+       * @see validate
+       */
       setValidators: function (validators) {
          if (validators && Object.prototype.toString.apply(validators) == '[object Array]') {
             this._options.validators = validators;
          }
       },
-
+      /**
+       * <wiTag group="Отображение">
+       * Получить текст сообщения об ошибке валидации, определяемый свойством {@link errorMessage}.
+       * @return {String}
+       * @example
+       * Задать контролу сообщение об ошибке валидации, если оно не задано.
+       * <pre>
+       *    var message = this.getErrorMessage();
+       *    if (!message) {
+       *       this.setErrorMessage('Сообщение об ошибке');
+       *    }
+       * </pre>
+       * @see errorMessage
+       * @see setErrorMessage
+       * @see validate
+       * @see titleErrorMessage
+       */
       getErrorMessage: function () {
          return this._options.errorMessage;
       },
-
+      /**
+       * <wiTag group="Отображение">
+       * Установить текст сообщения об ошибке валидации, определяемый свойством {@link errorMessage}.
+       * @param {String} errorMessage
+       * @example
+       * Если поле используется для ввода логина, то изменить сообщение об ошибке валидации.
+       * <pre>
+       *    fieldString.subscribe('onReady', function() {
+       *       var name = this.getName();
+       *       if (name === 'Логин') {
+       *          this.setErrorMessage('Пароль должен быть не короче 8 символов!');
+       *       }
+       *    });
+       * </pre>
+       * @see errorMessage
+       * @see getErrorMessage
+       * @see validate
+       * @see titleErrorMessage
+       */
       setErrorMessage: function (errorMessage) {
          this._options.errorMessage = errorMessage;
       },
-
+      /**
+       * <wiTag group="Отображение">
+       * Получить текст сообщения об ошибке заполнения, который задан в свойстве {@link errorMessageFilling}.
+       * @return {String}
+       * @example
+       * При готовности контрола переопределить сообщение об ошибке заполнения.
+       * <pre>
+       *    control.subscribe('onReady', function() {
+       *       if (this.getErrorMessageFilling() == 'Введите значение') {
+       *          this.setErrorMessageFilling('Неверный формат данных');
+       *       }
+       *    });
+       * </pre>
+       * @see errorMessageFilling
+       * @see setErrorMessageFilling
+       */
       getErrorMessageFilling: function () {
          return this._options.errorMessageFilling;
       },
-
+      /**
+       * <wiTag group="Отображение">
+       * Установить текст сообщения об ошибке заполнения, который задан в свойстве {@link errorMessageFilling}.
+       * @param {String} errorMessageFilling
+       * @example
+       * При готовности контрола переопределить сообщение об ошибке заполнения.
+       * <pre>
+       *    control.subscribe('onReady', function() {
+       *       if (this.getErrorMessageFilling() == 'Введите значение') {
+       *          this.setErrorMessageFilling('Неверный формат данных');
+       *       }
+       *    });
+       * </pre>
+       * @see errorMessageFilling
+       * @see getErrorMessageFilling
+       */
       setErrorMessageFilling: function (errorMessageFilling) {
          this._options.errorMessageFilling = errorMessageFilling;
       },

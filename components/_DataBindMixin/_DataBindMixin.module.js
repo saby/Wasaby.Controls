@@ -51,7 +51,6 @@ define('js!SBIS3.CONTROLS._DataBindMixin', ['js!SBIS3.CORE.AttributeCfgParser'],
                      context.subscribe('onFieldChange', function(e, f, v, o){
                         if (f == dataBind[i] && self._options[i] !== v && o !== self){
                            self[setter].apply(self, [v]);
-                           console.log('мне изменили значение');
                         }
                      });
 
