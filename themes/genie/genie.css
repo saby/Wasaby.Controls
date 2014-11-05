@@ -258,6 +258,20 @@
 .controls-TextArea:hover {
   border-color: #00d7d7;
 }
+.controls-TabButton {
+  cursor: pointer;
+  display: inline-block;
+  box-sizing: border-box;
+  padding: 0 16px;
+  border-bottom: 3px solid transparent;
+  height: 24px;
+}
+.controls-TabButton:hover {
+  color: #00d7d7;
+}
+.controls-TabButton.controls-ToggleButton__checked {
+  border-bottom-color: #00d7d7;
+}
 .controls-FormattedTextBox {
   vertical-align: top;
   min-height: 19px;
