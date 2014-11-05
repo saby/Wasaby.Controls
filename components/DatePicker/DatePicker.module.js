@@ -1,4 +1,15 @@
-define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CONTROLS.FormattedTextBoxBase', '!html!SBIS3.CONTROLS.DatePicker'], function (FormattedTextBoxBase, dotTplFn) {
+/**
+ * TODO Компонент пока тестировался только в Chrome
+ */
+define(
+   'js!SBIS3.CONTROLS.DatePicker',
+   [
+      'js!SBIS3.CONTROLS.FormattedTextBoxBase',
+      'js!SBIS3.CONTROLS._PickerMixin',
+      'js!SBIS3.CONTROLS.Calendar',
+      'html!SBIS3.CONTROLS.DatePicker'
+   ],
+   function (FormattedTextBoxBase, _PickerMixin, Calendar, dotTplFn) {
 
    'use strict';
 
@@ -8,7 +19,7 @@ define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CONTROLS.FormattedTextBoxBase'
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
     */
 
-   var DatePicker = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS.DatePicker.prototype */{
+   var DatePicker = FormattedTextBoxBase.extend( [_PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
       $protected: {
          _dotTplFn: dotTplFn,
          /**
@@ -50,7 +61,11 @@ define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CONTROLS.FormattedTextBoxBase'
          /**
           * Дата
           */
-         _date:null,
+         _date: undefined,
+         /**
+          * Контролл Calendar в пикере
+          */
+         _calendarControl: undefined,
          /**
           * Опции создаваемого контролла
           */
@@ -70,39 +85,107 @@ define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CONTROLS.FormattedTextBoxBase'
       },
 
       $constructor: function () {
+         var self = this;
+
+         // Клик по иконке календарика
+         $('.js-controls-DatePicker__calendarIcon', this.getContainer().get(0)).click(function(){
+            self.togglePicker();
+
+            // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
+            if ( self._picker.isVisible() && self._date ){
+               self._calendarControl.setDate(self._date);
+            }
+         });
+
+         // Потеря фокуса. Работает так же при клике по иконке календарика.
+         // Если пользователь ввел слишком большие данные ( напр., 45.23.7234 ), то значение установится корректно,
+         // ввиду особенностей работы setMonth(), setDate() и т.д., но нужно обновить поле
+         $('.controls-DatePicker__field', this.getContainer().get(0)).blur(function(){
+            if ( self._date ){ self._drawDate(); }
+         });
       },
 
+      /**
+       * Определение контента пикера. Переопределённый метод
+       * @private
+       */
+      _setPickerContent: function() {
+         var self = this;
+
+         this._picker.getContainer().empty();
+
+         // Создаем пустой контейнер
+         var element = $('<div name= "Calendar" class="controls-DatePicker__calendar"></div>');
+
+         // Преобразуем контейнер в контролл Calendar и запоминаем
+         self._calendarControl = new Calendar({
+            element : element
+         });
+
+         // Добавляем в пикер
+         this._picker.getContainer().append(element);
+
+         // Нажатие на календарный день в пикере устанавливает дату
+         this._calendarControl.subscribe('onSelect', function(eventObject, date){
+            self.setDate(date);
+            self.hidePicker();
+         });
+      },
+
+      /**
+       * Получить маску. Переопределённый метод
+       */
       _getMask: function () {
-         this._checkPossibleMask();
          return this._options.mask;
       },
 
+      /**
+       * Проверить, является ли маска допустимой ( по массиву допустимы маск this._possibleMasks )
+       * @private
+       */
       _checkPossibleMask: function(){
-         if (this._possibleMasks.length !== 0){
-            if (Array.indexOf(this._possibleMasks, this._options.mask) == -1){
+         if ( this._possibleMasks.length !== 0 ){
+            if ( Array.indexOf(this._possibleMasks, this._options.mask) == -1 ){
                throw new Error('Маска не удовлетворяет ни одной допустимой маске данного контролла');
             }
          }
       },
 
+      /**
+       * Переопределяем метод из TextBoxBase
+       * @param text дата в формате SQL ( например, 01-01-2015 )
+       */
       setText: function (text) {
+         // fromSQL() разбирает дату формата SQL в объект Date
          this._date = Date.fromSQL(text);
          this._drawDate();
          FormattedTextBoxBase.superclass.setText.call(this, text);
       },
 
+      /**
+       * Установить дату
+       * @param date новое значение даты, объект типа Date
+       */
       setDate: function (date) {
-         if (date instanceof Date) {
+         if ( date instanceof Date ) {
             this._date = date;
             this._options.text = date.toSQL();
             this._drawDate();
          }
       },
 
-      getDate:function(){
+      /**
+       * Получить дату
+       * @returns {Date|*|SBIS3.CONTROLS.DatePicker._date}
+       */
+      getDate: function(){
         return this._date;
       },
 
+      /**
+       * Обновить поле даты по текущему значению даты в this._date
+       * @private
+       */
       _drawDate:function(){
          var self = this,
             newText = '';
@@ -110,27 +193,34 @@ define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CONTROLS.FormattedTextBoxBase'
             regexp = new RegExp('[' + self._controlCharacters + ']+', 'g'),
             availCharsArray = self._primalMask.match(regexp);
 
-         for(var i=0;i<availCharsArray.length;i++){
-            switch (availCharsArray[i]){
-               case 'YY' :newText+=(''+this._date.getFullYear()).slice(-2);break;
-               case 'YYYY' :newText+=this._date.getFullYear();break;
-               case 'MM' :newText+=('0'+(this._date.getMonth() + 1)).slice(-2);break;
-               case 'DD' :newText+=('0' + this._date.getDate()).slice(-2);break;
+         for ( var i = 0; i < availCharsArray.length; i++ ){
+            switch ( availCharsArray[i] ){
+               case 'YY'   : newText += ( ''+this._date.getFullYear() ).slice(-2);    break;
+               case 'YYYY' : newText += this._date.getFullYear();                     break;
+               case 'MM'   : newText += ( '0'+(this._date.getMonth()+1) ).slice(-2);  break;
+               case 'DD'   : newText += ( '0'+this._date.getDate() ).slice(-2);       break;
             }
          }
-         this._inputField.html(this._getHtmlMask(newText));
+         this._inputField.html( this._getHtmlMask(newText) );
       },
 
+      /**
+       * Обновляяет значения this._options.text и this._date (вызывается в _replaceCharacter из FormattedTextBoxBase). Переопределённый метод.
+       * Если есть хотя бы одно незаполненное место ( плэйсхолдер ), то text = null и _date остается той же
+       * @private
+       */
       _updateText:function(){
          var text = '';
          $('.controls-FormattedTextBox__field-placeholder', this.getContainer()).each(function () {
             text += $(this).text();
          });
+
          var expr = new RegExp('(' + this._placeholder + ')', 'ig');
-         // если есть плейсхолдеры, то значит опция text=null
-         if (expr.test(text)) {
+         // если есть плейсхолдеры (т.е. незаполненные места), то значит опция text = null
+         if ( expr.test(text) ) {
             this._options.text = null;
-         } else {
+         }
+         else {
             var date = new Date();
             var
                regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
@@ -156,11 +246,11 @@ define('js!SBIS3.CONTROLS.DatePicker', ['js!SBIS3.CONTROLS.FormattedTextBoxBase'
                      break;
                }
             }
+
             this._date = date;
             this._options.text = date.toSQL();
          }
       }
-
    });
 
    return DatePicker;

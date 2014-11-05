@@ -27,14 +27,20 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
       $constructor: function () {
       },
 
+      /**
+       * Получить маску. Переопределённый метод
+       * @returns {*}
+       * @private
+       */
       _getMask: function () {
-         if (this._options.mask) {
-            return this._options.mask;
-         } else {
-            return '';
-         }
+         return this._options.mask ? this._options.mask : '';
       },
 
+      /**
+       * Установить значение в поле. Значение вводится без разделяющих символов
+       * Пример. Если маска 'd(ddd)ddd-dd-dd', то setText('81118881188')
+       * @param text Строка нового значения
+       */
       setText: function(text){
          var self = this,
             newText = '';
@@ -73,16 +79,26 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
          FormattedTextBoxBase.superclass.setText.call(self, newText);
       },
 
+      /**
+       * Обновляяет значение this._options.text (вызывается в _replaceCharacter из FormattedTextBoxBase). Переопределённый метод.
+       * null если есть хотя бы одно незаполненное место ( плэйсхолдер )
+       * ВАЖНО: Значение хранится без разделяющих символов
+       * Пример. Если маска 'd(ddd)ddd-dd-dd' (телефон), и поле полностью заполнено 8(111)888-11-88,
+       * то в this._options.text хранится 81118881188
+       * @private
+       */
       _updateText:function(){
          var text = '';
-         $('.controls-FormattedTextBox__field-placeholder', this.getContainer()).each(function () {
+         $('.controls-FormattedTextBox__field-placeholder', this.getContainer()).each(function(){
             text += $(this).text();
          });
-         var expr = new RegExp('('+this._placeholder+')', 'ig');
-         // если есть плейсхолдеры, то значит опция text=null
-         if(expr.test(text)){
+
+         var expr = new RegExp( '(' + this._placeholder + ')', 'ig' );
+         // если есть плейсхолдеры (т.е. незаполненные места), то опция text = null
+         if ( expr.test(text) ){
             this._options.text = null;
-         }else{
+         }
+         else {
             this._options.text = text;
          }
       }

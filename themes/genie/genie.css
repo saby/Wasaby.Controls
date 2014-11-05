@@ -12,7 +12,7 @@
   line-height: normal;
   border: 1px solid #d1d1d4;
   border-radius: 2px;
-  background-color: transparent;
+  background-color: #f1f1f2;
   color: #919197;
   padding: 0 8px;
   box-sizing: border-box;
@@ -56,7 +56,7 @@
   display: inline-block;
   background: #ffffff;
   border: 1px solid #d1d1d4;
-  height: 23px;
+  height: 22px;
   border-radius: 2px;
 }
 .controls-TextBox:hover {
@@ -99,10 +99,10 @@
 }
 .controls-TextBox.controls-NumberTextBox .controls-TextBox__afterFieldWrapper {
   margin-right: 0;
+  width: 23px;
 }
-.controls-NumberTextBox__fieldWrapper {
-  margin-right: 14px;
-  height: 100%;
+.controls-TextBox.controls-NumberTextBox .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
+  margin-right: 23px;
 }
 .controls-NumberTextBox__arrow {
   background-repeat: no-repeat;
@@ -111,13 +111,15 @@
   width: 100%;
   min-height: 11px;
   border-left: 1px solid #d1d1d4;
+  box-sizing: border-box;
   background-image: url('img/NumberTextBox-arrow.png');
+  background-color: #f1f1f2;
 }
 .controls-NumberTextBox__arrow:hover {
   background-color: #00d7d7;
+  border-left-color: #00d7d7;
 }
 .controls-NumberTextBox__arrowDown {
-  border-top: 1px solid #d1d1d4;
   background-position: center -12px;
 }
 .controls-NumberTextBox__arrowUp {
@@ -179,8 +181,10 @@
   color: #ffffff;
   background-color: #00d7d7;
 }
-.controls-ComboBox__itemRow__selected {
+.controls-ComboBox__itemRow__selected,
+.controls-ComboBox__itemRow__selected:hover {
   color: #999999;
+  background-color: #ffffff;
 }
 .controls-ComboBox__isEditable-false,
 .controls-ComboBox__isEditable-false .controls-TextBox__field {
@@ -253,4 +257,18 @@
 }
 .controls-TextArea:hover {
   border-color: #00d7d7;
+}
+.controls-TabButton {
+  cursor: pointer;
+  display: inline-block;
+  box-sizing: border-box;
+  padding: 0 16px;
+  border-bottom: 3px solid transparent;
+  height: 24px;
+}
+.controls-TabButton:hover {
+  color: #00d7d7;
+}
+.controls-TabButton.controls-ToggleButton__checked {
+  border-bottom-color: #00d7d7;
 }

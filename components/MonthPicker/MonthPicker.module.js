@@ -52,6 +52,10 @@ define(
             monthFormat: ''
          },
          /**
+          * Определяет, показан "месяц, год", или только "год" в режиме 'month'
+          */
+         _isMonthShown: true,
+         /**
           * Массив месяцев
           */
          _months: [
@@ -74,12 +78,14 @@ define(
       $constructor: function() {
          var self = this;
 
+         this._publish('onDateChange');
+
          // Установка первоначального значения
          if ( this._options.date ) {
             this._setDate(this._options.date);
          }
          else {
-            this.setToday();
+            this._setDate(new Date());
          }
 
          // Клик по стрелочкам
@@ -93,7 +99,10 @@ define(
          // Клик по полю с датой
          $('.js-controls-MonthPicker__field', this.getContainer().get(0)).click(function(){
             self.togglePicker();
-            self._setText();
+            if ( self._options.mode == 'month' ) {
+               self._isMonthShown = !self._picker.isVisible();
+               self._setText(self._composeText());
+            }
             // обновляем выпадающий блок только если пикер данным кликом открыт
             if ( self._picker && self._picker.isVisible() ){ self._drawElements(); }
          });
@@ -113,12 +122,20 @@ define(
          var self = this;
 
          this._picker.subscribe('onClose', function(){
-            // Если просто вызвать метод _setText(), то изменение текста не произойдет, так как пикер на момент выстреливания
-            // события еще открыт. Нам же нужно, чтобы пикер был закрыт для корректной устнавки текста -- устанавливаем задержу
-            setTimeout(function(){
-               self._setText();
-            }, 0);
+            self._onCloseHandler();
          });
+      },
+
+      /**
+       * Функция-обработчик закрытия пикера внешним кликом
+       * @private
+       */
+      _onCloseHandler: function () {
+         if ( this._options.mode == 'month' ) {
+            this._isMonthShown = true;
+            var text = this._composeText();
+            this._setText(text);
+         }
       },
 
       _setPickerContent: function() {
@@ -129,15 +146,23 @@ define(
          this._picker.getContainer().empty();
          this._picker.getContainer().append(this._dropdownTpl({mode: this._options.mode, elements: elements}));
 
-         $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).click(function(){
+         $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).click(function(e){
             self.hidePicker();
+            self._isMonthShown = true;
 
             if( self._options.mode == 'month' ){
-               self._setDate(new Date(self._options.date.getFullYear(), $(this).attr('data-key'), 1, 20, 0, 0));
+               self.setDate(new Date(self._options.date.getFullYear(), $(this).attr('data-key'), 1, 20, 0, 0));
             }
             else if( self._options.mode == 'year' ){
-               self._setDate(new Date($(this).attr('data-key'), 0, 1, 20, 0, 0));
+               self.setDate(new Date($(this).attr('data-key'), 0, 1, 20, 0, 0));
             }
+         });
+
+         // Если контролл MonthPicker находится в другом контролле (допустим, в Calendar'е), который в свою очередь
+         // находится в пикере третьего контролла, то клик в пикере MonthPicker'a закроет пикер с Calendar'ём.
+         // Необходимо предотвратить данное поведение
+         $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).mousedown(function(e){
+            e.stopPropagation();
          });
       },
 
@@ -155,7 +180,7 @@ define(
                   this.hidePicker();
                }
             }
-            this._setDate(this._options.date);
+            this.setDate(this._options.date);
          }
       },
 
@@ -163,18 +188,19 @@ define(
        * Установить текущий месяц/год
        */
       setToday: function() {
-         this._setDate(new Date());
+         this.setDate(new Date());
       },
 
       /**
-       * Установить дату по полученному значению. Публичный метод. Может принимает либо строку
-       * формата 'число.число' или 'число', либо объект типа Date.
+       * Установить дату по полученному значению. Публичный метод.
+       * Отличается от приватного метода _setDate тем, что генерирует событие
+       * Может принимает либо строку формата 'число.число' или 'число', либо объект типа Date.
        * @param value Строка или дата
        */
       setDate: function(value) {
-         // TODO В будущем будет отличаться от приватного метода _setDate тем, что будет генерировать событие
-
          this._setDate(value);
+
+         this._notify('onDateChange', this._options.date);
       },
 
       /**
@@ -193,7 +219,8 @@ define(
       },
 
       /**
-       * Установить дату по переданной строке. Проверить ее на корректность [MM.]YYYY и установить, иначе породить исключение
+       * Установить дату по переданной строке. Проверить ее на корректность [MM.]YYYY и установить, иначе породить исключение.
+       * Нумерация месяцев начинается с единицы
        * @param value
        * @private
        */
@@ -201,7 +228,7 @@ define(
          var checkResult = /^(?:(\d{1,2})\.)?(\d{1,4})$/.exec(value);
 
          if ( checkResult ){
-            this._setDateByDateObject(new Date(parseInt(checkResult[2], 10), parseInt(checkResult[1], 10) || 0, 1, 20, 0, 0));
+            this._setDateByDateObject(new Date(parseInt(checkResult[2], 10), parseInt(checkResult[1], 10) - 1 || 0, 1, 20, 0, 0));
          }
          else {
             throw new Error('Неверный формат даты');
@@ -222,24 +249,34 @@ define(
          // задать 2020 год 1 января, нам вернётся, как ни странно, Tue Dec 31 2019 23:00:00 GMT+0300 (RTZ 2 (зима))
          this._options.date = new Date(year, month, 1, 20, 0, 0);
 
-         this._setText();
+         var text = this._composeText();
+         this._setText(text);
       },
 
       /**
-       * Установить значение в поле в соответствии с текущим значением даты
+       * Формирует отображаемый текст в зависимости от режима mode и от состояния пикера (открыт/закрыт)
+       * @returns {string}
        * @private
        */
-      _setText: function(){
+      _composeText: function () {
          var
-            date = this._options.date,
-            fieldContainer = $('.js-controls-MonthPicker__field', this.getContainer().get(0));
+            text = '',
+            date = this._options.date;
 
          if( this._options.mode == 'month' ){
-            // Если пикер открыт, то в режиме месяца показан только год
-            if (this._picker && this._picker.isVisible()){ fieldContainer.text(date.getFullYear()); }
-            else { fieldContainer.text(this._months[date.getMonth()] + ', ' + date.getFullYear()); }
+            text = this._isMonthShown ? this._months[date.getMonth()] + ', ' + date.getFullYear() : date.getFullYear().toString();
          }
-         else if( this._options.mode == 'year' ){ fieldContainer.text(date.getFullYear()); }
+         else if( this._options.mode == 'year' ){ text = date.getFullYear().toString(); }
+
+         return text;
+      },
+
+      /**
+       * Установить значение в поле
+       * @private
+       */
+      _setText: function(text){
+         $('.js-controls-MonthPicker__field', this.getContainer().get(0)).text(text);
       },
 
       /**
@@ -273,7 +310,7 @@ define(
          }
          else if ( this._options.mode == 'year' ){ newDate = new Date(currentDate.setYear(currentDate.getFullYear() + value)); }
 
-         this._setDate(newDate);
+         this.setDate(newDate);
       },
 
       /**

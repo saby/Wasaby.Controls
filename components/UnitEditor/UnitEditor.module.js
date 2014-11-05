@@ -128,6 +128,7 @@ define('js!SBIS3.Genie.UnitEditor',
          _createPicker: function(pickerContainer){
             var self = this;
             var picker = new FloatArea({
+               visible: false,
                element : pickerContainer,
                target : this._container,
                corner: 'br',
