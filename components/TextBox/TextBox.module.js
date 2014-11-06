@@ -76,12 +76,13 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       setText: function(text){
+         text = text || ''; // так как есть датабиндинг может прийти undefined
          //перед изменением делаем trim если нужно
          if (this._options.trim) {
             text = String.trim(text);
          }
          TextBox.superclass.setText.call(this, text);
-         this._inputField.attr('value', text || '');
+         this._inputField.attr('value', text);
       },
 
       setMaxLength: function(num) {
