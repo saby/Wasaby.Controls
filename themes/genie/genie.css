@@ -56,7 +56,7 @@
   display: inline-block;
   background: #ffffff;
   border: 1px solid #d1d1d4;
-  height: 22px;
+  min-height: 22px;
   border-radius: 2px;
 }
 .controls-TextBox:hover {
@@ -260,13 +260,13 @@
 }
 .controls-FormattedTextBox {
   vertical-align: top;
-  min-height: 22px;
   height: 22px;
 }
 .controls-FormattedTextBox__field {
   display: table;
   height: 100%;
   margin: 0 7px;
+  min-height: 22px;
 }
 .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
   display: table-cell;
@@ -410,6 +410,7 @@
   display: inline-block;
   vertical-align: top;
   border: none;
+  height: 24px;
 }
 .controls-DatePicker__field {
   margin-right: 16px;
