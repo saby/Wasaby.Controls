@@ -86,7 +86,7 @@ define(
 
       $constructor: function () {
          var self = this;
-
+         this._publish('onChange');
          // Клик по иконке календарика
          $('.js-controls-DatePicker__calendarIcon', this.getContainer().get(0)).click(function(){
             self.togglePicker();
@@ -128,6 +128,7 @@ define(
          // Нажатие на календарный день в пикере устанавливает дату
          this._calendarControl.subscribe('onSelect', function(eventObject, date){
             self.setDate(date);
+            self._notify('onChange',date);
             self.hidePicker();
          });
       },
