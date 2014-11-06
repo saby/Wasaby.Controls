@@ -12,26 +12,9 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox', 'i18n!SBI
          _defaultValue: undefined,
          _prevValidationResult: true,
          _vResultErrors: [],
+         _errorMessage: '',
          _options: {
-            /**
-             * @cfg {String} Сообщение об ошибке валидации
-             * Свойство errorMessage определяет текст, который будет использован в качестве текущего сообщения об ошибке
-             * @group Validation
-             */
-            errorMessage: '',
-            /**
-             * @cfg {Array|String} Заголовок сообщений об ошибках валидации
-             * Это текст, отображаемый перед сообщениями об ошибках валидации. Визуально выделен ярко-красным цветом. Можно задать либо массив из двух элементов, где первый - заголовок для одной ошибки,
-             * второй - заголовок для нескольких ошибок, либо строка - заголовок будет одинаковый для любого количества ошибок
-             * @group Validation
-             */
-            titleErrorMessage: ['Ошибка', 'Ошибки'],
-            /**
-             * @cfg {String} Текст сообщения об ошибке заполнения
-             * Текст сообщения об ошибке заполнения используется в том случае, если метод {@link markControl} вызывается без аргументов.
-             * @group Validation
-             */
-            errorMessageFilling: rk('Введите значение'),
+
             /**
              * @typedef {Object} Validator
              * @property {String} validator
@@ -59,8 +42,6 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox', 'i18n!SBI
 
       $constructor: function () {
          this._publishEvents();
-
-         this.setTitleErrorMessage(this._options.titleErrorMessage);
       },
 
       around: {
@@ -78,102 +59,25 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox', 'i18n!SBI
          _alterTooltipText: function (message) {
             if (this.isMarked()) {
                var
-                  msg = this._options.errorMessage instanceof jQuery ? this._options.errorMessage[0].outerHTML : this._options.errorMessage,
-                  errorTitle = this._validationErrorCount > 1 ? this._options.titleErrorMessage[1] : this._options.titleErrorMessage[0];
-               return (typeof message == 'string' && message.length ? ('<p>' + message + '</p>') : '') + '<p><span class="ws-validation-error-message">' + errorTitle + ':</span> ' + msg + '</p>';
+                  msg = this._errorMessage instanceof jQuery ? this._errorMessage[0].outerHTML : this._errorMessage;
+               return (typeof message == 'string' && message.length ? ('<p>' + message + '</p>') : '') + '<p>' + msg + '</p>';
             } else {
                return message;
             }
          }
       },
       before: {
-         init: function () {
-            // После полной инициализации класса получим текущее значение из контекста
-            this._initDefaultValue();
-
-            // Если не забрали - проставим дефолтное
-            if (this.getValue() === undefined) {
-               this._defaultValueHandler();
-            }
-            // Значение до сих пор не определено, поставим пустое значение
-            if (this.getValue() === undefined) {
-               this._curval = this._curValue();
-               this._updateSelfContextValue(this._notFormatedVal());
-            }
-            this._markInitialValueSetted();
-         },
-         destroy: function () {
-            this._batchUpdateData = undefined;
+          destroy: function () {
             if (Infobox.hasTarget() && Infobox.isCurrentTarget(this._getExtendedTooltipTarget())) {
                Infobox.hide();
             }
          }
       },
 
-      _markInitialValueSetted: function () {
-         this._initialValueSetted = true;
-      },
-
       _publishEvents: function () {
-         this._publish('onValidate', 'onValueChange');
+         this._publish('onValidate');
       },
 
-      _updateSelfContextValue: function (val) {
-         this.getLinkedContext().setValue(this._options.name, val, undefined, this);
-      },
-
-      _initDefaultValue: function () {
-         this._defaultValue = this._getDefaultValue();
-      },
-
-      _defaultValueHandler: function () {
-         var value = this.getDefaultValue();
-         if (value !== undefined && this.setValue) {
-            // FIXME использование 2 и 3 параметра в setValue
-            this.setValue(value, true, true);
-         }
-      },
-
-      _getDefaultValue: function () {
-         return undefined;
-      },
-
-      getDefaultValue: function () {
-         return this._defaultValue;
-      },
-
-      _curValue: function () {
-      },
-
-      _notFormatedVal: function () {
-      },
-
-      /**
-       * Установить заголовок сообщения об ошибках валидации, который определяется свойством {@link titleErrorMessage}.
-       * <wiTag group="Данные">
-       * @param {Array|String} titleErrorMessage Текст заголовка сообщения об ошибке валидации - массив (первое значение - заголовок для одной ошибки, второе - заголовок в случае нескольких ошибок) или строка (заголовок будет одинаковым для любого количества ошибок)
-       * @example
-       * Если не соблюдены условия, то вывести информацию о требуемых действиях.
-       * <pre>
-       *    var message1,
-       *        message2;
-       *    //condition - флаг соблюдения условий
-       *    if (!condition) {
-       *       control.setTitleErrorMessage('Обязательные условия');
-       *       control.markControl([message1, message2]);
-       *    }
-       * </pre>
-       * @see titleErrorMessage
-       * @see errorMessage
-       * @see validate
-       * @see validators
-       * @see markControl
-       * @see setErrorMessage
-       * @see getErrorMessage
-       */
-      setTitleErrorMessage: function (titleErrorMessage) {
-         this._options.titleErrorMessage = titleErrorMessage instanceof Array ? titleErrorMessage : [titleErrorMessage, titleErrorMessage];
-      },
       /**
        * Данный метод определяет, может ли быть проведена валидация данного элемента управления
        * т.е. имеет ли смысл вообще пробовать запустить ее.
@@ -331,7 +235,7 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox', 'i18n!SBI
          } else {
             res = message;
          }
-         this._options.errorMessage = res;
+         this._errorMessage = res;
       },
 
       _calcValidationErrorCount: function (message) {
@@ -373,7 +277,7 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox', 'i18n!SBI
        */
       markControl: function (s, showInfoBox) {
          var
-            message = (s && (typeof s == 'string' || s instanceof Array && s.length)) ? s : this._options.errorMessageFilling;
+            message = (s && (typeof s == 'string' || s instanceof Array && s.length)) ? s : 'Введите значение';
          this._calcValidationErrorCount(message);
          this._createErrorMessage(message);
          if (showInfoBox === true) {
@@ -413,9 +317,8 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox', 'i18n!SBI
       clearMark: function () {
          if (this._validationErrorCount) {
             this._validationErrorCount = 0;
-            this._options.errorMessage = '';
             this._container.removeClass('ws-validation-error');
-
+            this._errorMessage = '';
             // Если на нас сейчас висит подсказка
             if (Infobox.hasTarget() && Infobox.isCurrentTarget(this._getExtendedTooltipTarget())) {
                // надо или поменять текст (убрать ошибки валидации), или убрать совсем (если текста помощи нет)
@@ -446,43 +349,6 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox', 'i18n!SBI
          return !!this._validationErrorCount;
       },
 
-      /**
-       * Этот метод надо переопределить в дочерних классах
-       * Тут должна находиться логика обработки значения из контекста
-       * @param ctxVal
-       */
-      _onContextValueReceived: function (ctxVal) {
-      },
-      /**
-       * <wiTag group="Управление">
-       * Получить валидаторы контрола, определяемые свойством {@link validators}.
-       * @return {Array} Массив объектов, описывающих функции валидации.
-       * @example
-       * Проверить наличие валидаторов у строки ввода. Если их нет, то задать.
-       * <pre>
-       *    fieldString.subscribe('onReady', function() {
-       *       if (Object.isEmpty(this.getValidators()) {
-       *          var validators = [{
-       *             validator: function() {
-       *                var value = this.getValue();
-       *                return value !== null && value !== '';
-       *             },
-       *             errorMessage: 'Поле не может быть пустым. Введите значение!'
-       *          }];
-       *          this.setValidators(validators);
-       *       }
-       *    });
-       * </pre>
-       * @see errorMessage
-       * @see getErrorMessage
-       * @see setErrorMessage
-       * @see validators
-       * @see setValidators
-       * @see validate
-       */
-      getValidators: function () {
-         return this._options.validators;
-      },
       /**
        * <wiTag group="Управление">
        * Установить валидаторы контрола, определяемые свойством {@link validators}.
@@ -522,9 +388,6 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox', 'i18n!SBI
        * </pre>
        * @see validators
        * @see getValidators
-       * @see errorMessage
-       * @see setErrorMessage
-       * @see getErrorMessage
        * @see validate
        */
       setValidators: function (validators) {
@@ -533,85 +396,6 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox', 'i18n!SBI
          }
       },
       /**
-       * <wiTag group="Отображение">
-       * Получить текст сообщения об ошибке валидации, определяемый свойством {@link errorMessage}.
-       * @return {String}
-       * @example
-       * Задать контролу сообщение об ошибке валидации, если оно не задано.
-       * <pre>
-       *    var message = this.getErrorMessage();
-       *    if (!message) {
-       *       this.setErrorMessage('Сообщение об ошибке');
-       *    }
-       * </pre>
-       * @see errorMessage
-       * @see setErrorMessage
-       * @see validate
-       * @see titleErrorMessage
-       */
-      getErrorMessage: function () {
-         return this._options.errorMessage;
-      },
-      /**
-       * <wiTag group="Отображение">
-       * Установить текст сообщения об ошибке валидации, определяемый свойством {@link errorMessage}.
-       * @param {String} errorMessage
-       * @example
-       * Если поле используется для ввода логина, то изменить сообщение об ошибке валидации.
-       * <pre>
-       *    fieldString.subscribe('onReady', function() {
-       *       var name = this.getName();
-       *       if (name === 'Логин') {
-       *          this.setErrorMessage('Пароль должен быть не короче 8 символов!');
-       *       }
-       *    });
-       * </pre>
-       * @see errorMessage
-       * @see getErrorMessage
-       * @see validate
-       * @see titleErrorMessage
-       */
-      setErrorMessage: function (errorMessage) {
-         this._options.errorMessage = errorMessage;
-      },
-      /**
-       * <wiTag group="Отображение">
-       * Получить текст сообщения об ошибке заполнения, который задан в свойстве {@link errorMessageFilling}.
-       * @return {String}
-       * @example
-       * При готовности контрола переопределить сообщение об ошибке заполнения.
-       * <pre>
-       *    control.subscribe('onReady', function() {
-       *       if (this.getErrorMessageFilling() == 'Введите значение') {
-       *          this.setErrorMessageFilling('Неверный формат данных');
-       *       }
-       *    });
-       * </pre>
-       * @see errorMessageFilling
-       * @see setErrorMessageFilling
-       */
-      getErrorMessageFilling: function () {
-         return this._options.errorMessageFilling;
-      },
-      /**
-       * <wiTag group="Отображение">
-       * Установить текст сообщения об ошибке заполнения, который задан в свойстве {@link errorMessageFilling}.
-       * @param {String} errorMessageFilling
-       * @example
-       * При готовности контрола переопределить сообщение об ошибке заполнения.
-       * <pre>
-       *    control.subscribe('onReady', function() {
-       *       if (this.getErrorMessageFilling() == 'Введите значение') {
-       *          this.setErrorMessageFilling('Неверный формат данных');
-       *       }
-       *    });
-       * </pre>
-       * @see errorMessageFilling
-       * @see getErrorMessageFilling
-       */
-      setErrorMessageFilling: function (errorMessageFilling) {
-         this._options.errorMessageFilling = errorMessageFilling;
-      },
 
       /**
        * Установить значение
