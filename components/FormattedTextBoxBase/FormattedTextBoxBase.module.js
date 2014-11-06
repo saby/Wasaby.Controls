@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
       },
 
       /**
-       * Обновить значение в поле в соотвествии с хранимым значением
+       * Обновить хранимое значение в поле this._options.text (т.к. мы наследуем от TextBoxBase) в соотвествии с введённым значением
        * @private
        */
       _updateText:function(){
@@ -196,107 +196,95 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
        */
       _keyPressHandler: function(key, type){
          var
-            inputField = this._inputField.get(0),
-            array = this._getCursor(true),
-            containerIndex = array[0],
-            position = array[1],
-            container = this._getContainerByIndex(containerIndex),
-            regexp = this._keyExp(containerIndex, position),
+            positionIndexes = this._getCursor(true),
+            positionObject = {
+               container: this._getContainerByIndex(positionIndexes[0]),
+               position: positionIndexes[1]
+            },
+            regexp = this._keyExp(positionIndexes[0], positionIndexes[1]),
             character = String.fromCharCode(key),
-            nextSibling = container.parentNode.nextSibling,
-            nChild;
-
-         character = type == 'shift_character' ? character.toUpperCase() : character.toLowerCase();
+            nextSibling = positionObject.container.parentNode.nextSibling;
 
          if ( type == 'character' || type == 'shift_character' ) {
+            // Обработка зажатой кнопки shift ( -> в букву верхнего регистра)
+            character = type == 'shift_character' ? character.toUpperCase() : character.toLowerCase();
+            // Проверка по действительной маске
             character = regexp[1] ? ( regexp[1] == 'toUpperCase' ? character.toUpperCase() : character.toLowerCase() ) : character;
 
             if ( regexp[0].test(character) ) {
-               if ( position == container.nodeValue.length ){
+               if ( positionObject.position == positionObject.container.nodeValue.length ){
                   if ( nextSibling && nextSibling.nextSibling ){
-                     container = nextSibling.nextSibling.childNodes[0];
-                     position = 0;
+                     positionObject.container = nextSibling.nextSibling.childNodes[0];
+                     positionObject.position = 0;
 
-                     regexp = this._keyExp($(container.parentNode).index(), position);
+                     regexp = this._keyExp($(positionObject.container.parentNode).index(), positionObject.position);
                      if ( regexp[0].test(character) ) {
-                        this._replaceCharacter(container, position, character);
-                        position++;
+                        this._replaceCharacter(positionObject.container, positionObject.position, character);
+                        positionObject.position++;
                      }
-                  }
-                  else {
-                     nChild = this._isSeparatorContainerFirst ? 1 : 0;
-                     container = this._getContainerByIndex(nChild);
-                     position = 0;
                   }
                }
                else {
-                  this._replaceCharacter(container, position, character);
-                  position++;
+                  this._replaceCharacter(positionObject.container, positionObject.position, character);
+                  positionObject.position++;
                }
             }
          }
          else if ( type == 'delete' ){
-            if ( position == container.nodeValue.length ){
+            if ( positionObject.position == positionObject.container.nodeValue.length ){
                if ( nextSibling && nextSibling.nextSibling ){
-                  container = nextSibling.nextSibling.childNodes[0];
-                  position = 0;
+                  positionObject.container = nextSibling.nextSibling.childNodes[0];
+                  positionObject.position = 0;
 
-                  this._replaceCharacter(container, position, this._placeholder);
-                  position++;
-               }
-               else {
-                  nChild = this._isSeparatorContainerFirst ? 1 : 0;
-                  container = this._getContainerByIndex(nChild);
-                  position = 0;
+                  this._replaceCharacter(positionObject.container, positionObject.position, this._placeholder);
+                  positionObject.position++;
                }
             }
             else {
-               this._replaceCharacter(container, position, this._placeholder);
-               position++;
+               this._replaceCharacter(positionObject.container, positionObject.position, this._placeholder);
+               positionObject.position++;
             }
          }
          else if ( type == 'backspace' ){
-            if ( position === 0 ){
-               var prevSibling = container.parentNode.previousSibling;
-
-               if ( prevSibling && prevSibling.previousSibling ){
-                  container = prevSibling.previousSibling.childNodes[0];
-                  position = container.nodeValue.length - 1;
-
-                  this._replaceCharacter(container, position, this._placeholder);
-               }
-            }
-            else {
-               position--;
-               this._replaceCharacter(container, position, this._placeholder);
-            }
+            this._getPreviousPosition(positionObject);
+            this._replaceCharacter(positionObject.container, positionObject.position, this._placeholder);
          }
          else if ( type == 'arrow_left' ){
-            if ( position === 0 ){
-               var prevSibling = container.parentNode.previousSibling;
-
-               if ( prevSibling && prevSibling.previousSibling ){
-                  container = prevSibling.previousSibling.childNodes[0];
-                  position = container.nodeValue.length - 1;
-               }
-            }
-            else {
-               position--;
-            }
+            this._getPreviousPosition(positionObject);
          }
          else if ( type == 'arrow_right' ){
-            if ( position == container.nodeValue.length ){
-               if ( nextSibling && nextSibling.nextSibling ){
-                  container = nextSibling.nextSibling.childNodes[0];
-                  position = 0;
-               }
-            }
-            else {
-               position++;
-            }
+            this._getNextPosition(positionObject);
          }
 
-         this._moveCursor(container, position);
+         this._moveCursor(positionObject.container, positionObject.position);
+      },
+
+      _getPreviousPosition: function (positionObject) {
+         var prevSibling = positionObject.container.parentNode.previousSibling;
+
+         if ( positionObject.position === 0 ){
+            if ( prevSibling && prevSibling.previousSibling ){
+               positionObject.container = prevSibling.previousSibling.childNodes[0];
+               positionObject.position = positionObject.container.nodeValue.length - 1;
+            }
+         }
+         else {
+            positionObject.position--;
+         }
+      },
+
+      _getNextPosition: function (positionObject) {
+         var nextSibling = positionObject.container.parentNode.nextSibling;
+
+         if ( positionObject.position == positionObject.container.nodeValue.length ){
+            if ( nextSibling && nextSibling.nextSibling ){
+               positionObject.container = nextSibling.nextSibling.childNodes[0];
+               positionObject.position = 0;
+            }
+         }
+         else {
+            positionObject.position++;
+         }
       },
 
       /**
