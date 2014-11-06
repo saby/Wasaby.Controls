@@ -184,6 +184,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
          });
          this._options.selectedItem = selKey || null;
+         //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
          if (oldKey !== this._options.selectedItem) { // при повторном индексе null не стреляет событием
             this._notifySelectedItem(this._options.selectedItem);
          }
