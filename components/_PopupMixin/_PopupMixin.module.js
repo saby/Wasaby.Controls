@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 12.08.2014.
  */
 
-define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.PopupController'], function (PopupController) {
+define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManager'], function (ControlHierarchyManager) {
 
    if (typeof window !== 'undefined') {
       var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
@@ -99,7 +99,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.PopupController'], f
             'left': '-1000px'
          });
 
-         /********************************/
+         //TODO: Придрот
          container.addClass('ws-hidden');
          this._isVisible = false;
          /********************************/
@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.PopupController'], f
          }
 
          container.appendTo('body');
-         var zIndex = PopupController.zIndexManager.getNext();
+         var zIndex = ControlHierarchyManager.zIndexManager.getNext();
          container.css('zIndex', zIndex);
          this._initSizes(true);
          this._defaultCorner = this._options.corner;
@@ -166,18 +166,14 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.PopupController'], f
       },
 
       _clickHandler: function (eventObject, target) {
-         if (this.isVisible) {
+         if (this.isVisible()) {
             var self = this,
-               inPopup = !!self._container.find(target).length,
-               popup = $(self._container).get(0) == target,
                inTarget = [];
             if (self._options.target) {
                inTarget = !!self._options.target.find($(target)).length;
             }
-            if (!(inPopup || popup) && !inTarget) {
-               if (self.isVisible()) {
-                  self.hide();
-               }
+            if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target)) {
+               self.hide();
             }
          }
       },
@@ -546,17 +542,17 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.PopupController'], f
          show: function () {
             this._initSizes(true);
             this.recalcPosition();
-            PopupController.closeManager.addToIndex(this);
          },
-         hide: function () {
-            PopupController.closeManager.removeFromIndex();
+         init: function(){
+            ControlHierarchyManager.addNode(this);
          }
       },
 
       before: {
          destroy: function () {
             var zIndex = this._container.css('zIndex');
-            PopupController.zIndexManager.setFree(zIndex);
+            ControlHierarchyManager.zIndexManager.setFree(zIndex);
+            ControlHierarchyManager.removeNode(this);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._resizeHandler);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._scrollHandler);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentClick', this._clickHandler);

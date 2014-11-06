@@ -5,11 +5,12 @@ define(
    'js!SBIS3.CONTROLS.Calendar',
    [
       'js!SBIS3.CORE.CompoundControl',
+      'js!SBIS3.CONTROLS.ControlHierarchyManager',
       'html!SBIS3.CONTROLS.Calendar/resources/CalendarTableBody',
       'html!SBIS3.CONTROLS.Calendar',
       'js!SBIS3.CONTROLS.MonthPicker'
    ],
-   function (CompoundControl, CalendarTableBodyTpl, dotTplFn) {
+   function (CompoundControl, ControlHierarchyManager, CalendarTableBodyTpl, dotTplFn) {
 
       'use strict';
 
@@ -62,6 +63,8 @@ define(
             this.monthControl.subscribe('onDateChange', function(eventObject, date){
                self._setDate(date);
             });
+
+            ControlHierarchyManager.addNode(this);
          },
 
          /**
