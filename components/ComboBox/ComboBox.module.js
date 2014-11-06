@@ -114,13 +114,18 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._drawItems();
          var self = this;
          //TODO придумать что то нормальное и выпилить
-         $('.js-controls-ComboBox__itemRow', this._picker.getContainer().get(0)).mousedown(function(e){
+         this._picker.getContainer().mousedown(function(e){
             e.stopPropagation();
          });
 
-         $('.js-controls-ComboBox__itemRow', this._picker.getContainer().get(0)).click(function () {
-            self.setSelectedItem($(this).attr('data-key'));
-            self.hidePicker();
+         //Подписка на клик по элементу комбобокса
+         //TODO mouseup из за того что контрол херит событие клик
+         this._picker.getContainer().mouseup(function(e){
+            var row = $(e.target).closest('.js-controls-ComboBox__itemRow');
+            if (row.length) {
+               self.setSelectedItem($(row).attr('data-key'));
+               self.hidePicker();
+            }
          });
          //TODO: кажется неочевидное место, возможно как то автоматизировать
          this._picker.getContainer().addClass('controls-ComboBox__picker');
