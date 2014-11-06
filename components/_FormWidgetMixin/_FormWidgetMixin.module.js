@@ -9,12 +9,10 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox', 'i18n!SBI
       $protected: {
          _validationErrorCount: 0,
          _validating: false,
-         _defaultValue: undefined,
          _prevValidationResult: true,
          _vResultErrors: [],
          _errorMessage: '',
          _options: {
-
             /**
              * @typedef {Object} Validator
              * @property {String} validator
