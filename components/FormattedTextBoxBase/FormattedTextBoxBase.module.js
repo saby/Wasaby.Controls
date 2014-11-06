@@ -95,7 +95,9 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
          _KEYS: {
             DELETE: 46,
             TAB: 9,
-            BACKSPACE: 8
+            BACKSPACE: 8,
+            ARROW_LEFT: 37,
+            ARROW_RIGHT: 39
          }
       },
 
@@ -151,7 +153,8 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
                key = event.which,
                type = '';
 
-            if (!event.ctrlKey && key != self._KEYS.DELETE && key != self._KEYS.BACKSPACE) {
+            if (!event.ctrlKey && key != self._KEYS.DELETE && key != self._KEYS.BACKSPACE
+                  && key != self._KEYS.ARROW_LEFT && key != self._KEYS.ARROW_RIGHT) {
                type = event.shiftKey ? 'shift_character' : 'character';
                self._keyPressHandler(key, type);
             }
@@ -160,6 +163,12 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
             }
             else if (key == self._KEYS.BACKSPACE) {
                self._keyPressHandler(key, 'backspace');
+            }
+            else if (key == self._KEYS.ARROW_LEFT) {
+               self._keyPressHandler(key, 'arrow_left');
+            }
+            else if (key == self._KEYS.ARROW_RIGHT) {
+               self._keyPressHandler(key, 'arrow_right');
             }
          });
       },
@@ -199,13 +208,12 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
 
          character = type == 'shift_character' ? character.toUpperCase() : character.toLowerCase();
 
-         if (type == 'character' || type == 'shift_character') {
+         if ( type == 'character' || type == 'shift_character' ) {
             character = regexp[1] ? ( regexp[1] == 'toUpperCase' ? character.toUpperCase() : character.toLowerCase() ) : character;
-
 
             if ( regexp[0].test(character) ) {
                if ( position == container.nodeValue.length ){
-                  if (nextSibling && nextSibling.nextSibling){
+                  if ( nextSibling && nextSibling.nextSibling ){
                      container = nextSibling.nextSibling.childNodes[0];
                      position = 0;
 
@@ -227,9 +235,9 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
                }
             }
          }
-         else if (type == 'delete'){
+         else if ( type == 'delete' ){
             if ( position == container.nodeValue.length ){
-               if (nextSibling && nextSibling.nextSibling){
+               if ( nextSibling && nextSibling.nextSibling ){
                   container = nextSibling.nextSibling.childNodes[0];
                   position = 0;
 
@@ -247,11 +255,11 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
                position++;
             }
          }
-         else if (type == 'backspace'){
+         else if ( type == 'backspace' ){
             if ( position === 0 ){
                var prevSibling = container.parentNode.previousSibling;
 
-               if (prevSibling && prevSibling.previousSibling){
+               if ( prevSibling && prevSibling.previousSibling ){
                   container = prevSibling.previousSibling.childNodes[0];
                   position = container.nodeValue.length - 1;
 
@@ -261,6 +269,30 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
             else {
                position--;
                this._replaceCharacter(container, position, this._placeholder);
+            }
+         }
+         else if ( type == 'arrow_left' ){
+            if ( position === 0 ){
+               var prevSibling = container.parentNode.previousSibling;
+
+               if ( prevSibling && prevSibling.previousSibling ){
+                  container = prevSibling.previousSibling.childNodes[0];
+                  position = container.nodeValue.length - 1;
+               }
+            }
+            else {
+               position--;
+            }
+         }
+         else if ( type == 'arrow_right' ){
+            if ( position == container.nodeValue.length ){
+               if ( nextSibling && nextSibling.nextSibling ){
+                  container = nextSibling.nextSibling.childNodes[0];
+                  position = 0;
+               }
+            }
+            else {
+               position++;
             }
          }
 
