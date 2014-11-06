@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox', 'i18n!SBIS3.CONTROLS._FormWidgetMixin'], function (Infobox, rk) {
+define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function (Infobox) {
    /**
     * Добавляет к любому контролу методы для получения и установки “значения”.
     * Необходим для однообразной работы с набором контролов на диалоге, когда речь идет о сохранении набора данных в БЛ,
