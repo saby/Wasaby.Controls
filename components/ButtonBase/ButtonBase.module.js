@@ -11,10 +11,21 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
     * Поведенческий класс, задающий базовое поведение кнопки. Основное предназначение - обрабатывать клик.
     * Все контролы-кнопки должны наследоваться от этого класса. Отображение и вёрстка задаются именно в унаследованных классах.
     * @class SBIS3.CONTROLS.ButtonBase
-    * @extends SBIS3.CORE.Control
+    * @extends $ws.proto.Control
     */
 
    var ButtonBase = Control.Control.extend([FormWidgetMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
+      /**
+       * @event onActivated Происходит при активации кнопки (клик мышкой, кнопки клавиатуры)
+       * @param {$ws.proto.EventObject} eventObject дескриптор события
+       * @param {Boolean} pressed Нажата ли кнопки (при использовании опции press)
+       * <pre>
+       *    onButtonClick: function(event){
+       *       var list = $ws.single.ControlStorage.getByName('listOfPersons');
+       *       list.sendCommand('newItem');
+       *    }
+       * </pre>
+       */
       $protected: {
          _options: {
             /**
@@ -52,11 +63,13 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
          this._publish('onActivated');
          var self = this;
          /*TODO пока подписываемся на mouseup, потому что CONTROL херит событие клика*/
-         this._container.mouseup(function(){
-            self._clickHandler();
-            self._notify('onActivated');
+         this._container.mouseup(function (e) {
+            if (e.which == 1 && self.isEnabled()) {
+               self._clickHandler();
+               self._notify('onActivated');
+            }
          });
-         this._container.mousedown(function(){
+         this._container.mousedown(function () {
             return false;
          });
       },

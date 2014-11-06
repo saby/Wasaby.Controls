@@ -2,28 +2,37 @@
  * Created by iv.cheremushkin on 28.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SBIS3.CONTROLS.NumberTextBox'], function (TextBox, dotTplFn) {
+define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows'], function (TextBox, arrowTpl) {
 
    'use strict';
    /**
     * Поле ввода, куда можно вводить только числовые значения
     * @class SBIS3.CONTROLS.NumberTextBox
     * @extends SBIS3.CONTROLS.TextBox
-    * @control
     */
 
    var NumberTextBox;
    NumberTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS.NumberTextBox.prototype */ {
-      _dotTplFn: dotTplFn,
       $protected: {
          _inputField: null,
          _options: {
+            afterFieldWrapper: arrowTpl,
             /**
-             * @cfg {Boolean} Можно вводить только положительыне
+             * @cfg {Boolean} Признак ввода только положительных чисел
+             * Возможные значения:
+             * <ul>
+             *    <li>true - ввод только положительных чисел;</li>
+             *    <li>false - нет ограничения на знак вводимых чисел.</li>
+             * </ul>
              */
             onlyPositive: false,
             /**
-             * @cfg {Boolean} Можно вводить только целые
+             * @cfg {Boolean} Признак ввода только целых чисел
+             * Возможные значения:
+             * <ul>
+             *    <li>true - ввод только целых чисел;</li>
+             *    <li>false - возможен ввод дробных чисел.</li>
+             * </ul>
              */
             onlyInteger: false,
             /**
@@ -37,13 +46,39 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       $constructor: function () {
          var self = this;
          this._publish('onChangeText');
+         this.getContainer().addClass('controls-NumberTextBox');
          $('.js-controls-NumberTextBox__arrowDown', this.getContainer().get(0)).click(function () {
-            self._changeNumberByOne(-1);
+            if (self.isEnabled()) {
+               self._arrowUpClick();
+            }
          });
 
          $('.js-controls-NumberTextBox__arrowUp', this.getContainer().get(0)).click(function () {
-            self._changeNumberByOne(1);
+            if (self.isEnabled()) {
+               self._arrowDownClick();
+            }
          });
+
+         // Сразу отрезаем лишнее
+         if (this._options.numberFractDigits){
+            this._options.text = parseFloat(this._options.text).toFixed(self._options.numberFractDigits);
+         }
+      },
+
+      setText: function (text) {
+         var self = this;
+         if (self._options.numberFractDigits && !self._options.onlyInteger) {
+            text = parseFloat(text).toFixed(self._options.numberFractDigits);
+         }
+         NumberTextBox.superclass.setText.call(self, text);
+      },
+
+      _arrowUpClick: function(){
+         this.setText(this._getSibling(this.getText(),-1));
+      },
+
+      _arrowDownClick: function(){
+         this.setText(this._getSibling(this.getText(),1));
       },
 
       _keyPressBind: function (e) {
@@ -65,9 +100,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          e.preventDefault();
       },
 
-      _changeNumberByOne: function (a) {
+      _getSibling: function ( val, a) {
          var self = this,
-             value = this.getText();
+             value = val;
          if (value === '') {
             value = '0';
          }
@@ -78,9 +113,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             value = parseFloat(value) - 1;
          }
          if (self._options.numberFractDigits && !self._options.onlyInteger) {
-            self.setText(parseFloat(value).toFixed(self._options.numberFractDigits));
+            return(parseFloat(value).toFixed(self._options.numberFractDigits));
          } else {
-            self.setText(value.toString());
+            return(value.toString());
          }
       }
    });

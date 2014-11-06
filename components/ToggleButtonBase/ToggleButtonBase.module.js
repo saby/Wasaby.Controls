@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase'], function(ButtonBase) {
+define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS._DataBindMixin'], function(ButtonBase, DataBindMixin) {
 
    'use strict';
 
@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase'], f
     * @extends SBIS3.CONTROLS.ButtonBase
     */
 
-   var ToggleButtonBase = ButtonBase.extend(/** @lends SBIS3.CONTROLS.ToggleButtonBase.prototype */{
+   var ToggleButtonBase = ButtonBase.extend( [DataBindMixin],/** @lends SBIS3.CONTROLS.ToggleButtonBase.prototype */{
       $protected: {
          _checked : false,
          _options: {
@@ -36,6 +36,7 @@ define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase'], f
       },
 
       $constructor: function() {
+         this._publish('onChange');
          if (!this._options.threeState) {
             this._checked = !!(this._options.checked);
          } else {
@@ -72,6 +73,8 @@ define('js!SBIS3.CONTROLS.ToggleButtonBase', ['js!SBIS3.CONTROLS.ButtonBase'], f
                this._checked = null;
             }
          }
+         this.saveToContext('Checked', this._checked);
+         this._notify('onChange', this._checked);
       },
 
       /**

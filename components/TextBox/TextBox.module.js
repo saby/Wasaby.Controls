@@ -7,6 +7,8 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
     * @class SBIS3.CONTROLS.TextBox
     * @extends SBIS3.CONTROLS.TextBoxBase
     * @control
+    * @public
+    * @category Inputs
     */
 
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.TextBox.prototype */ {
@@ -14,6 +16,8 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       $protected: {
          _inputField : null,
          _options: {
+            beforeFieldWrapper: null,
+            afterFieldWrapper: null,
             /**
              * @typedef {Object} TextTransformEnum
              * @variant uppercase перевести в верхний регистр
@@ -44,7 +48,6 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       $constructor: function() {
-         this._publish('onChangeText');
          var self = this;
          this._inputField = $('.controls-TextBox__field', this.getContainer().get(0));
          this._container.bind('keypress',function(e){
@@ -77,7 +80,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          //перед изменением делаем trim если нужно
          text = this._trim(text);
          TextBox.superclass.setText.call(this, text);
-         $('.controls-TextBox__field', this.getContainer().get(0)).attr('value', text || '');
+         this._inputField.attr('value', text || '');
       },
 
       setMaxLength: function(num) {
@@ -111,8 +114,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _keyUpBind: function() {
-         this._options.text = this._inputField.val();
-         this._notify('onChangeText', this._options.text);
+         var newText = this._inputField.val();
+         if (newText != this._options.text) {
+            TextBox.superclass.setText.call(this, newText);
+         }
       },
 
       _keyDownBind: function() {
@@ -126,6 +131,16 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             text = String.trim(text);
          }
         return text;
+      },
+
+      _setEnabled : function(enabled) {
+         TextBox.superclass._setEnabled.call(this, enabled);
+         if (enabled == false) {
+            this._inputField.attr('readonly', 'readonly')
+         }
+         else {
+            this._inputField.removeAttr('readonly');
+         }
       }
    });
 

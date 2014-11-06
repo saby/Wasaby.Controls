@@ -1,0 +1,44 @@
+.controls-CheckBox {
+   cursor: pointer;
+   display: inline-block;
+}
+
+.controls-CheckBox.ws-disabled{
+  color: #999999;
+}
+
+.controls-CheckBox__icon {
+   width: 16px;
+   height: 16px;
+   line-height: 19px;
+   background: url('./img/CheckBox.png') 0 1px;
+   display: inline-block;
+}
+
+.controls-CheckBox:hover .controls-CheckBox__icon{
+   background-position: 0 17px;
+}
+
+.controls-CheckBox.ws-disabled .controls-CheckBox__icon{
+  background-position: 16px 1px;
+}
+
+.controls-CheckBox.controls-ToggleButton__checked .controls-CheckBox__icon{
+   background-position: 0 49px;
+}
+
+.controls-CheckBox.controls-ToggleButton__checked.ws-disabled .controls-CheckBox__icon{
+  background-position: 16px 49px;
+}
+
+.controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon{
+   background-position: 0 33px;
+}
+
+.controls-CheckBox.ws-disabled.controls-ToggleButton__null .controls-CheckBox__icon{
+  background-position: 16px 33px;
+}
+
+.controls-CheckBox__caption {
+   margin-left: 4px;
+}

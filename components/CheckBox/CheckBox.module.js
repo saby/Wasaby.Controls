@@ -13,6 +13,8 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ToggleButtonBase', 'htm
     * @extends SBIS3.CONTROLS.ToggleButtonBase
     * @mixes SBIS3.CONTROLS._FormWidgetMixin
     * @control
+    * @public
+    * @category Inputs
     */
 
    var CheckBox = ToggleButtonBase.extend( /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
@@ -25,8 +27,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ToggleButtonBase', 'htm
       },
 
       $constructor: function() {
-         var self = this;
-         this._checkBoxCaption = $('.js-controls-CheckBox__caption', self._container);
+         this._checkBoxCaption = $('.js-controls-CheckBox__caption', this._container);
       },
      /**
       * Установить текст подписи флага.
@@ -43,7 +44,12 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ToggleButtonBase', 'htm
       */
       setCaption: function(captionTxt){
          CheckBox.superclass.setCaption.call(this,captionTxt);
-         this._checkBoxCaption.html(captionTxt || '');
+         if (captionTxt) {
+            this._checkBoxCaption.html(captionTxt).removeClass('ws-hidden');
+         }
+         else {
+            this._checkBoxCaption.empty().addClass('ws-hidden');
+         }
       }
 
    });

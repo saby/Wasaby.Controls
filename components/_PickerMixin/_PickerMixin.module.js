@@ -7,65 +7,100 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
    var _PickerMixin = /** @lends SBIS3.CONTROLS._PickerMixin.prototype */{
       $protected: {
          _picker : null,
+         _border : 0,
          _options: {
 
          }
       },
 
       $constructor: function() {
+      },
+
+      _initializePicker: function () {
          var
             self = this,
-            container = this._container,
-            pickerContainer = $('<div></div>');
+            pickerContainer = $('<div></div>'),
+            container = self._container;
+
          // чтобы не нарушать выравнивание по базовой линии
          $('body').append(pickerContainer);
-
-         this._picker = new FloatArea({
-            element : pickerContainer,
-            target : container
-         });
-
-         this._picker.getContainer().width(container.outerWidth() - 2/*ширина бордеров*/);
-
+         self._picker = this._createPicker(pickerContainer);
+         self._setWidth();
          container.hover(function(){
             self._picker.getContainer().addClass('controls-Picker__owner__hover');
-         }, function(){
+         }, function () {
             self._picker.getContainer().removeClass('controls-Picker__owner__hover');
          });
-
-         /*TODO это как то получше надо переписать*/
-         $('body *').mousedown(function(e){
-            var inCombobox = self._container.find($(e.target));
-            var inPicker = self._picker.getContainer().find($(e.target));
-            if (!inCombobox.length && !inPicker.length) {
-               self.hidePicker();
-            }
-         });
+         self._border = self._container.outerWidth() - self._container.innerWidth();
+         self._setPickerContent();
       },
+
+      _createPicker: function(pickerContainer){
+         var picker = new FloatArea({
+            element : pickerContainer,
+            target : this._container,
+            corner: 'bl',
+            verticalAlign: {
+               side: 'top'
+            },
+            horizontalAlign: {
+               side: 'left'
+            },
+            closeByExternalClick: true
+         });
+         return picker;
+      },
+
       /**
        * Показывает выпадающий блок
        */
       showPicker: function() {
+         if (!this._picker) {
+            this._initializePicker();
+         }
          this._container.addClass('controls-Picker__show');
-         this._picker.getContainer().width(container.outerWidth() - 2/*ширина бордеров*/);
+         this._setWidth();
          this._picker.show();
       },
       /**
        * Скрывает выпадающий блок
        */
       hidePicker: function() {
+         if (!this._picker) {
+            this._initializePicker();
+         }
          this._container.removeClass('controls-Picker__show');
          this._picker.hide();
       },
 
       togglePicker: function() {
+         if (!this._picker) {
+            this._initializePicker();
+         }
          this._container.toggleClass('controls-Picker__show');
-         this._picker.toggle();
+         if (this._picker.isVisible()){
+            this.hidePicker();
+         }else {
+            this.showPicker();
+         }
+      },
+
+      _setWidth: function(){
+         var self = this;
+         this._picker.getContainer().css({
+            'min-width': self._container.outerWidth() - this._border/*ширина бордеров*/
+         });
+      },
+
+      _setPickerContent: function () {
+         /*Method must be implemented*/
       },
 
       after : {
          destroy : function(){
-            this._picker.destroy();
+            if (this._picker) {
+               this._picker.destroy();
+            }
          }
       }
 

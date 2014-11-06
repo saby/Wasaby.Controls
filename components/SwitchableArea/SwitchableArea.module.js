@@ -9,10 +9,9 @@ define('js!SBIS3.CONTROLS.SwitchableArea', ['js!SBIS3.CORE.Control'], function(C
    /**
     * Контрол, содержащий несколько областей содержащих контент. В каждый момент времени отображается только одна область. Отображаемая область может переключаться при помощи команд.
     * @class SBIS3.CONTROLS.SwitchableArea
-    * @extends SBIS3.CORE.Control
+    * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS._CollectionMixin
     * @mixes SBIS3.CONTROLS._SelectorMixin
-    * @control
     */
 
    var SwitchableArea = Control.Control.extend( /** @lends SBIS3.CONTROLS.SwitchableArea.prototype */ {

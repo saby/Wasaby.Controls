@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CORE.Control', '!html!SBIS3.CONTROLS.FormattedTextBox', 'css!SBIS3.CONTROLS.FormattedTextBox'], function (Control, dotTplFn) {
+define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBoxBase', '!html!SBIS3.CONTROLS.FormattedTextBox'], function (FormattedTextBoxBase, dotTplFn) {
 
    'use strict';
 
@@ -6,125 +6,87 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CORE.Control', '!html!SB
     * Можно вводить только значения особого формата (например телефон).
     * В поле ввода уже заранее будут введены символы из формата (например скобки и тире для телефона) и останется ввести только недостающие символы
     * @class SBIS3.CONTROLS.FormattedTextBox
-    * @extends SBIS3.CORE.Control
-    * @control
+    * @extends SBIS3.CONTROLS.FormattedTextBoxBase
     */
 
-   var FormattedTextBox = Control.Control.extend(/** @lends SBIS3.CONTROLS.FormattedTextBox.prototype */{
+   var FormattedTextBox = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS.FormattedTextBox.prototype */{
       $protected: {
          _dotTplFn: dotTplFn,
-         _inputField: null,
-         _mask: '',
+         /**
+          * Опции создаваемого контролла
+          */
          _options: {
             /**
-             * @cfg {RegExp} формат ввода, всё что не подходит нельзя ввести
+             * @cfg {String} Маска, на базе которой будет создана html-разметка и в соответствии с которой
+             * будет определён весь функционал
              */
-            pattern: ''
+            mask: 'd(ddd)ddd-dd-dd'
          }
       },
 
       $constructor: function () {
-         var self = this;
-         this._mask = this._options.pattern;
-         this._inputField = $('.controls-FormattedTextBox__field', this.getContainer().get(0));
-         this._inputField.html(this._getHtmlMask());
-         this._inputField.keypress(function(e){
-            self._keyPressHandler(e);
-            //self._setCaretPosition(window.getSelection().focusNode.parentElement,0);
-         });
-         this._inputField.keyup(function() {
-
-         });
       },
 
-      _keyPressHandler: function(e){
-         var key = e.which,
-             self = this,
-             currentNode = window.getSelection().focusNode.parentElement;
-      },
-
-      // Получить положение каретки в элементе el
-      _getCaret: function (el) {
-         var element = el;
-         element.focus();
-         if (document.selection) {
-            var sel = document.selection.createRange();
-            var clone = sel.duplicate();
-            sel.collapse(true);
-            clone.moveToElementText(element);
-            clone.setEndPoint('EndToEnd', sel);
-            return clone.text.length;
+      _getMask: function () {
+         if (this._options.mask) {
+            return this._options.mask;
          } else {
-            return window.getSelection().getRangeAt(0).startOffset;
+            return '';
          }
       },
 
-      _getAbsoluteCaret: function(){
+      setText: function(text){
+         var self = this,
+            newText = '';
 
-      },
+         var
+            regexp = new RegExp('[' + self._controlCharacters + ']+', 'g'),
+            availCharsArray = self._primalMask.match(regexp);
 
-      // Установить каретку в положение pos элемента el
-      _setCaretPosition : function(el, pos){
-         var element = el;
-         var range = document.createRange();
-         var sel = window.getSelection();
-         range.setStart(element, pos);
-         range.collapse(true);
-         sel.removeAllRanges();
-         sel.addRange(range);
-         el.focus();
-      },
+         var regExpForMask = '';
 
-      /**
-       * Конвертирует символ маски в regExp
-       * @param {String} c символ маски
-       * @return {RegExp}
-       * @private
-       */
-      _charToRegExp : function(c){
-         var regexp;
-         switch(c) {
-            case 'd':
-               regexp = /\d/;
-               break;
-            case 'L':
-            case 'l':
-               regexp = /[А-ЯA-Zа-яa-zёЁ]/;
-               break;
-            case 'x':
-            default:
-               regexp = /[А-ЯA-Zа-яa-z0-9ёЁ]/;
-               break;
+         for (var i = 0; i < availCharsArray.length; i++) {
+            regExpForMask += availCharsArray[i];
          }
-         return regexp;
-      },
 
-      _getHtmlMask: function(){
-         var len = this._options.pattern.length,
-             part= '', i = 0,
-             mask = this._mask.replace(/d/g,'_'),
-             htmlMask='';
+         var maskLength = regExpForMask.length;
+         var textLength = text.length;
 
-         while (i<len){
-            while (mask[i] != '_'){
-               part += mask[i];
-               i++;
+         var min = (maskLength <= textLength) ? maskLength : textLength;
+
+         for (var j = 0; j < min; j++) {
+            var character = text.charAt(j);
+            var maskChar = regExpForMask[j];
+            var controlCharacter = self._controlCharactersSet[maskChar];
+            if (self._charToRegExp(controlCharacter).test(character)) {
+               if (controlCharacter == 'L') {
+                  character = character.toUpperCase();
+               } else if (controlCharacter == 'l') {
+                  character = character.toLowerCase();
+               }
+               newText += character;
+            } else {
+               throw new Error('Устанавливаемое значение не удовлетворяет допустимой маске данного контролла');
             }
-            htmlMask += (part != 0) ?'<em>'+ part +'</em>' : '';
-            part = '';
-
-            while (mask[i] == '_'){
-               part += mask[i];
-               i++;
-            }
-            htmlMask += (part != 0) ? '<em class="controls-FormattedTextBox__field-cont">'+ part +'</em>' : '';
-            part = '';
          }
-         return htmlMask;
+         this._inputField.html(this._getHtmlMask(newText));
+         FormattedTextBoxBase.superclass.setText.call(self, newText);
+      },
+
+      _updateText:function(){
+         var text = '';
+         $('.controls-FormattedTextBox__field-placeholder', this.getContainer()).each(function () {
+            text += $(this).text();
+         });
+         var expr = new RegExp('('+this._placeholder+')', 'ig');
+         // если есть плейсхолдеры, то значит опция text=null
+         if(expr.test(text)){
+            this._options.text = null;
+         }else{
+            this._options.text = text;
+         }
       }
-
 });
 
    return FormattedTextBox;
-
 });

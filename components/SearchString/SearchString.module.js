@@ -5,8 +5,7 @@ define('js!SBIS3.CONTROLS.SearchString', ['js!SBIS3.CORE.Control'], function (Co
    /**
     * Cтрока поиска, поле ввода + кнопка поиска
     * @class SBIS3.CONTROLS.SearchString
-    * @extends SBIS3.CORE.Control
-    * @control
+    * @extends $ws.proto.Control
     */
 
    var SearchString = Control.Control.extend(/** @lends SBIS3.CONTROLS.SearchString.prototype */{

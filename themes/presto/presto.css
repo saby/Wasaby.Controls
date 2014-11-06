@@ -1,80 +1,140 @@
-/* Button */
-
 .controls-Button {
-   background-color: #F2F2F2;
-   cursor: pointer;
-   border: none;
-   padding: 0 16px;
-   height: 40px;
-   box-sizing: border-box;
-   font-size: 14px;
-   text-align: center;
-   color: #333333;
+  padding: 0;
+  background-color: #F2F2F2;
+  cursor: pointer;
+  border: none;
+  height: 40px;
+  font-size: 14px;
+  text-align: center;
+  color: #333333;
 }
-
+.controls-Button__content {
+  margin: 0 16px;
+}
 .controls-Button__primary {
-   background-color: #FFCC99;
+  background-color: #FFCC99;
 }
-
 .controls-Button:hover {
-   background-color: white;
+  background-color: white;
 }
-
-.controls-Button__big{
-   height: 58px;
-   font-size: 18px;
+.controls-Button__big {
+  height: 58px;
+  font-size: 18px;
 }
-
-/* TextBox */
-
 .controls-TextBox {
-   display: inline-block;
-   box-sizing: border-box;
-   padding: 0 5px;
-   border: 1px solid transparent;
-   border-bottom: 1px solid #666666;
-   height: 40px;
+  display: inline-block;
+  padding: 0 5px;
+  border: 1px solid transparent;
+  border-bottom: 1px solid #666666;
+  height: 38px;
 }
-
 .controls-TextBox:hover {
-   border: 1px solid #666666;
+  border: 1px solid #666666;
 }
-
-.controls-TextBox:focus{
-   background: #444E57;
-}
-
 .controls-TextBox__fieldWrapper {
-   height: 100%;
-   box-sizing: border-box;
+  height: 100%;
 }
-
-.controls-TextBox__optionsContainer {
-   float: right;
-   width: 16px;
-   min-height: 19px;
-   height: 100%;
+.controls-TextBox__afterFieldWrapper {
+  float: right;
+  width: 16px;
+  min-height: 19px;
+  height: 100%;
+  position: relative;
+  padding: 0 5px;
 }
-
+.controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
+  margin-right: 26px;
+  margin-left: 2px;
+}
 .controls-TextBox__field {
-   border: none;
-   min-height: 19px;
-   height: 99%;
-   width: 100%;
-   margin: 0;
-   box-sizing: border-box;
-   line-height: 100%;
-   font-size: 14px;
-   outline: none;
-   background: none;
-   color: #ffffff;
+  border: none;
+  min-height: 19px;
+  height: 99%;
+  width: 100%;
+  margin: 0;
+  line-height: 100%;
+  outline: none;
+  background: none;
+  color: #ffffff;
 }
-
 .controls-TextBox__field-uppercase {
-   text-transform: uppercase;
+  text-transform: uppercase;
 }
-
 .controls-TextBox__field-lowercase {
-   text-transform: lowercase;
+  text-transform: lowercase;
 }
-
+.controls-ComboBox.controls-Picker__show {
+  border: 1px solid #666666;
+  background: #444E57;
+}
+.controls-ComboBox__arrowDown {
+  text-decoration: none;
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  margin-top: -8px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  background-image: url('./img/combobox.png');
+}
+.controls-ComboBox.controls-Picker__show .controls-ComboBox__arrowDown {
+  background-position: 0 -32px;
+}
+.controls-ComboBox__arrowDown:hover {
+  background-position: 0 -16px;
+}
+.controls-Picker__show .controls-ComboBox__arrowDown:hover {
+  background-position: 0 -48px;
+}
+.controls-ComboBox__itemRow {
+  padding: 0 5px 0 7px;
+  cursor: pointer;
+  background: #444E57;
+  color: white;
+  height: 40px;
+  line-height: 40px;
+}
+.controls-ComboBox__itemRow:hover {
+  background-color: #E2EFFB;
+  color: #000000;
+}
+.controls-ComboBox__itemRow__selected {
+  font-weight: bold;
+}
+.controls-ComboBox__field__isEditable-false,
+.controls-ComboBox__field__isEditable-false .controls-TextBox__field {
+  cursor: pointer;
+}
+.controls-ComboBox__inputWrapper {
+  margin-right: 18px;
+  height: 100%;
+}
+.controls-ComboBox__picker {
+  border: 1px solid #666666;
+  margin-top: -1px;
+}
+.controls-CheckBox {
+  cursor: pointer;
+  display: inline-block;
+  color: white;
+  font-size: 14px;
+  line-height: 18px;
+}
+.controls-CheckBox__icon {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  border: 1px solid #333333;
+  background: none;
+}
+.controls-CheckBox.controls-ToggleButton__checked .controls-CheckBox__icon {
+  background-repeat: no-repeat;
+  background-image: url('./img/checkbox.png');
+  background-position: -2px -5px;
+}
+.controls-CheckBox__caption {
+  margin-left: 5px;
+}

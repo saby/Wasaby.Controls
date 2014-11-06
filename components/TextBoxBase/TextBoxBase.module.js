@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS._FormWidgetMixin'], function(Control, FormWidgetMixin) {
+define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS._FormWidgetMixin','js!SBIS3.CONTROLS._DataBindMixin'], function(Control, FormWidgetMixin, DataBindMixin) {
 
    'use strict';
 
@@ -9,12 +9,15 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
     * @mixes SBIS3.CONTROLS._FormWidgetMixin
     */
 
-   var TextBoxBase = Control.Control.extend([FormWidgetMixin], /** @lends SBIS3.CONTROLS.TextBoxBase.prototype*/ {
+   var TextBoxBase = Control.Control.extend([FormWidgetMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.TextBoxBase.prototype*/ {
       $protected: {
          _options: {
             /**
-             * @cfg {String} Текст в поле
+             * @cfg {String} Текст в поле ввода
              * @see setText
+             * @see getText
+             * @see setValue
+             * @see getValue
              */
             text: '',
             /**
@@ -51,24 +54,33 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
       },
 
       $constructor: function() {
-
+         this._publish('onChangeText');
       },
 
       /**
        * Установить текст внутри поля.
-       * @param {String} text текст
+       * @param {String} text Текст для установки в поле ввода.
        * @see text
        * @see getText
+       * @see setValue
+       * @see getValue
        */
       setText:function(text){
+         var oldText = this._options.text;
          this._options.text = text || '';
-         this._notify('onChangeText', this._options.text);
+         if (oldText !== this._options.text) {
+            this.saveToContext('Text', text);
+            this._notify('onChangeText', this._options.text);
+         }
       },
 
       /**
        * Получить текст внутри поля.
+       * @returns {String} Текст - значение поля ввода.
        * @see text
        * @see setText
+       * @see setValue
+       * @see getValue
        */
       getText:function(){
          return this._options.text;
@@ -85,6 +97,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
 
       /**
        * Установить подсказку, отображаемую внутри поля.
+       * Метод установки или замены текста подсказки, заданного опцией {@link placeholder}.
        * @param {String} text Текст подсказки.
        * @see placeholder
        */
@@ -93,16 +106,22 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
       },
       /**
        * Изменяет текст в поле ввода.
-       * @param value
+       * @param value Текст для установки в поле ввода.
        * @see setText
+       * @see getText
+       * @see getValue
+       * @see text
        */
       setValue: function(value){
          this.setText(value);
       },
       /**
        * Возвращает текущий текст поля ввода.
-       * @returns {*}
+       * @returns {String} Текст - значение поля ввода.
        * @see getText
+       * @see setText
+       * @see setValue
+       * @see text
        */
       getValue: function(){
          return this.getText();

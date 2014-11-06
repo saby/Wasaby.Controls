@@ -10,7 +10,6 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
     * Контрол, отображающий корешки закладок
     * @class SBIS3.CONTROLS.TabButtons
     * @extends SBIS3.CONTROLS.RadioGroupBase
-    * @control
     */
 
    var TabButtons = RadioGroupBase.extend( /** @lends SBIS3.CONTROLS.TabButtons.prototype */ {
@@ -23,13 +22,9 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
       $constructor: function() {
 
       },
-      _createInstance : function(item, insContainer) {
-         return new TabButton({
-            caption : item.title,
-            checked : false,
-            element : insContainer,
-            parent: this
-         });
+
+      _getItemClass : function() {
+         return 'js!SBIS3.CONTROLS.TabButton';
       }
    });
 

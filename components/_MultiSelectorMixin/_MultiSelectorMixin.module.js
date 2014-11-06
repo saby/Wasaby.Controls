@@ -7,7 +7,6 @@ define('js!SBIS3.CONTROLS._MultiSelectorMixin', [], function() {
 
    var _MultiSelectorMixin = /**@lends SBIS3.CONTROLS._MultiSelectorMixin.prototype  */{
       $protected: {
-         _selectedItems : [],
          _options: {
             /**
              * @cfg {Boolean} Разрешить множественный выбор
@@ -23,16 +22,13 @@ define('js!SBIS3.CONTROLS._MultiSelectorMixin', [], function() {
       $constructor: function() {
          this._publish('onChangeSelectedItems');
          if (this._options.selectedItems) {
-            if (Object.prototype.toString.call(this._options.selectedItems) == "[object Array]" ) {
-               if (this._options.multiselect) {
-                  this._selectedItems = this._options.selectedItems;
-               }
-               else {
-                  this._selectedItems = this._options.selectedItems.slice(0, 1);
+            if (Object.prototype.toString.call(this._options.selectedItems) == '[object Array]' ) {
+               if (!this._options.multiselect) {
+                  this._options.selectedItems = this._options.selectedItems.slice(0, 1);
                }
             }
             else {
-               throw new Error('Argument must be instacnce of Array');
+               throw new Error('Argument must be instance of Array');
             }
          }
       },
@@ -42,23 +38,23 @@ define('js!SBIS3.CONTROLS._MultiSelectorMixin', [], function() {
        * @param idArray
        */
       setSelectedItems : function(idArray) {
-         if (Object.prototype.toString.call(idArray) == "[object Array]" ) {
+         if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
             if (idArray.length) {
                if (this._options.multiselect) {
-                  this._selectedItems = idArray
+                  this._options.selectedItems = idArray;
                }
                else {
-                  this._selectedItems = idArray.slice(0, 1);
+                  this._options.selectedItems = idArray.slice(0, 1);
                }
             }
             else {
-               this._selectedItems = [];
+               this._options.selectedItems = [];
             }
-            this._drawSelectedItems(this._selectedItems);
-            this._notifySelectedItem(this._selectedItems);
+            this._drawSelectedItems(this._options.selectedItems);
+            this._notifySelectedItem(this._options.selectedItems);
          }
          else {
-            throw new Error('Argument must be instacnce of Array');
+            throw new Error('Argument must be instance of Array');
          }
       },
 
@@ -66,7 +62,7 @@ define('js!SBIS3.CONTROLS._MultiSelectorMixin', [], function() {
        * Получить выбранные элементы
        */
       getSelectedItems : function() {
-         return this._selectedItems;
+         return this._options.selectedItems;
       },
 
       /**
@@ -74,24 +70,24 @@ define('js!SBIS3.CONTROLS._MultiSelectorMixin', [], function() {
        * @param idArray
        */
       addItemsSelection : function(idArray) {
-         if (Object.prototype.toString.call(idArray) == "[object Array]" ) {
+         if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
             if (idArray.length) {
                if (this._options.multiselect) {
                   for (var i = 0; i < idArray.length; i++) {
-                     if (this._selectedItems.indexOf(idArray[i]) < 0) {
-                        this._selectedItems.push(idArray[i]);
+                     if (this._options.selectedItems.indexOf(idArray[i]) < 0) {
+                        this._options.selectedItems.push(idArray[i]);
                      }
                   }
                }
                else {
-                  this._selectedItems = idArray.slice(0, 1);
+                  this._options.selectedItems = idArray.slice(0, 1);
                }
             }
-            this._drawSelectedItems(this._selectedItems);
-            this._notifySelectedItem(this._selectedItems);
+            this._drawSelectedItems(this._options.selectedItems);
+            this._notifySelectedItem(this._options.selectedItems);
          }
          else {
-            throw new Error('Argument must be instacnce of Array');
+            throw new Error('Argument must be instance of Array');
          }
 
       },
@@ -101,18 +97,18 @@ define('js!SBIS3.CONTROLS._MultiSelectorMixin', [], function() {
        * @param idArray
        */
       removeItemsSelection : function(idArray) {
-         if (Object.prototype.toString.call(idArray) == "[object Array]" ) {
+         if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
             for (var i = 0; i < idArray.length; i++) {
-               var index = this._selectedItems.indexOf(idArray[i]);
+               var index = this._options.selectedItems.indexOf(idArray[i]);
                if (index >= 0) {
-                  Array.remove(this._selectedItems, index);
+                  Array.remove(this._options.selectedItems, index);
                }
             }
-            this._drawSelectedItems(this._selectedItems);
-            this._notifySelectedItem(this._selectedItems);
+            this._drawSelectedItems(this._options.selectedItems);
+            this._notifySelectedItem(this._options.selectedItems);
          }
          else {
-            throw new Error('Argument must be instacnce of Array');
+            throw new Error('Argument must be instance of Array');
          }
       },
 
@@ -121,32 +117,32 @@ define('js!SBIS3.CONTROLS._MultiSelectorMixin', [], function() {
        * @param idArray
        */
       toggleItemsSelection : function(idArray) {
-         if (Object.prototype.toString.call(idArray) == "[object Array]" ) {
+         if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
             if (idArray.length) {
                if (this._options.multiselect) {
                   for (var i = 0; i < idArray.length; i++) {
-                     if (this._selectedItems.indexOf(idArray[i]) < 0) {
-                        this.addItemsSelection([idArray[i]])
+                     if (this._options.selectedItems.indexOf(idArray[i]) < 0) {
+                        this.addItemsSelection([idArray[i]]);
                      }
                      else {
-                        this.removeItemsSelection([idArray[i]])
+                        this.removeItemsSelection([idArray[i]]);
                      }
                   }
                }
                else {
-                  if (this._selectedItems.indexOf(idArray[0]) >= 0) {
-                     this._selectedItems = [];
+                  if (this._options.selectedItems.indexOf(idArray[0]) >= 0) {
+                     this._options.selectedItems = [];
                   }
                   else {
-                     this._selectedItems = idArray.slice(0, 1);
+                     this._options.selectedItems = idArray.slice(0, 1);
                   }
                }
             }
-            this._drawSelectedItems(this._selectedItems);
-            this._notifySelectedItem(this._selectedItems);
+            this._drawSelectedItems(this._options.selectedItems);
+            this._notifySelectedItem(this._options.selectedItems);
          }
          else {
-            throw new Error('Argument must be instacnce of Array');
+            throw new Error('Argument must be instance of Array');
          }
       },
 
