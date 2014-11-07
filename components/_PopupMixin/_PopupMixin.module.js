@@ -166,7 +166,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
 
       _resizeHandler: function () {
          this._initWindowSizes();
-         if (this._containerSizes.offset !== undefined) {
+         if (this._containerSizes.offset !== undefined && this._isVisible()) {
             this._container.offset({
                top: this._correctionByDisplaySize('vertical', 'resize').top,
                left: this._correctionByDisplaySize('horizontal', 'resize').left
