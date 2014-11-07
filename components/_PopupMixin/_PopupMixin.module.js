@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 12.08.2014.
  */
 
-define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
+define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManager'], function (ControlHierarchyManager) {
 
    if (typeof window !== 'undefined') {
       var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
@@ -19,22 +19,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          eventsChannel.notify('onWindowResize');
       });
    }
-   var zIndexManager = {
-      _cur: 100500,
 
-      setFree: function (zIndex) {
-         zIndex = parseInt(zIndex, 10);
-         if (zIndex == this._cur) {
-            this._cur--;
-         }
-         return this._cur;
-      },
-      getNext: function () {
-         this._cur++;
-         return this._cur;
-      }
-
-   };
    /**
     * Миксин определяющий поведение контролов, которые отображаются с абсолютным позиционированием поверх всех остальных компонентов (диалоговые окна, плавающие панели, подсказки).
     * При подмешивании этого миксина в контрол, он вырезается из своего местоположения и вставляется в Body.
@@ -113,6 +98,12 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
             'top': '-1000px',
             'left': '-1000px'
          });
+
+         //TODO: Придрот
+         container.addClass('ws-hidden');
+         this._isVisible = false;
+         /********************************/
+
          this._cssHeight = (this._container.css('height') == '0px') ? 'auto' : this._container.css('height');
          this._cssWidth = (this._container.css('width') == '0px') ? 'auto' : this._container.css('width');
 
@@ -127,7 +118,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          }
 
          container.appendTo('body');
-         var zIndex = zIndexManager.getNext();
+         var zIndex = ControlHierarchyManager.zIndexManager.getNext();
          container.css('zIndex', zIndex);
          this._initSizes(true);
          this._defaultCorner = this._options.corner;
@@ -135,15 +126,11 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          this._defaultHorizontalAlignSide = this._options.horizontalAlign.side;
 
          trg.subscribe('onMove', function () {
-            if (!self._firstMove) {
-               if (self.isVisible()) {
-                  self.recalcPosition();
-                  self._checkTargetPosition();
-               } else {
-                  self._initSizes(false);
-               }
+            if (self.isVisible()) {
+               self.recalcPosition();
+               self._checkTargetPosition();
             } else {
-               self._firstMove = false;
+               self._initSizes(false);
             }
          });
 
@@ -165,28 +152,26 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
       },
 
       _resizeHandler: function () {
-         this._initWindowSizes();
-         if (this._containerSizes.offset !== undefined) {
-            this._container.offset({
-               top: this._correctionByDisplaySize('vertical', 'resize').top,
-               left: this._correctionByDisplaySize('horizontal', 'resize').left
-            });
+         if (this.isVisible()) {
+            this._initWindowSizes();
+            if (this._containerSizes.offset !== undefined) {
+               this._container.offset({
+                  top: this._correctionByDisplaySize('vertical', 'resize').top,
+                  left: this._correctionByDisplaySize('horizontal', 'resize').left
+               });
+            }
+            this._checkTargetPosition(); // следим за тем не пропал ли таргет
          }
-         this._checkTargetPosition(); // следим за тем не пропал ли таргет
       },
 
       _clickHandler: function (eventObject, target) {
-         var self = this,
-            inPopup = !!self._container.find(target).length,
-            popup = $(self._container).get(0) == target,
-            inTarget = [];
-
-         if (self._options.target) {
-            inTarget = !!self._options.target.find($(target)).length;
-         }
-
-         if (!(inPopup || popup) && !inTarget) {
-            if (self.isVisible()) {
+         if (this.isVisible()) {
+            var self = this,
+               inTarget = [];
+            if (self._options.target) {
+               inTarget = !!self._options.target.find($(target)).length;
+            }
+            if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target)) {
                self.hide();
             }
          }
@@ -555,13 +540,17 @@ define('js!SBIS3.CONTROLS._PopupMixin', [], function () {
          show: function () {
             this._initSizes(true);
             this.recalcPosition();
+         },
+         init: function(){
+            ControlHierarchyManager.addNode(this);
          }
       },
 
       before: {
          destroy: function () {
             var zIndex = this._container.css('zIndex');
-            zIndexManager.setFree(zIndex);
+            ControlHierarchyManager.zIndexManager.setFree(zIndex);
+            ControlHierarchyManager.removeNode(this);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._resizeHandler);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._scrollHandler);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentClick', this._clickHandler);
