@@ -72,21 +72,6 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
           */
          _controlCharacters: '',
          /**
-          * Основные управляющие символы в маске.
-          * Условные обозначения:
-          *     1. d - Цифра
-          *     2. L - Заглавная буква
-          *     3. l - Строчная буква
-          *     4. x - Буква или цифра
-          */
-         _generalControlCharacters: 'dLlx',
-         /**
-          * Допустимые при создании контролла маски. Если массив пуст (по умолчанию) -- любая маска.
-          * Если массив допустимых масок задан, и вводится маска, не содержащаяся в массиве, то создание
-          * контролла прерывается с ошибкой.
-          */
-         _possibleMasks: [],
-         /**
           * Опции создаваемого контролла
           */
          _options: {
@@ -520,21 +505,15 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
        * @private
        */
       _getControlCharactersSet: function() {
-         var initialSet = Object.keys(this._controlCharactersSet);
-
-         if (initialSet.length !== 0){
-            return initialSet.toString().replace(/,/g, '');
-         }
-         else {
+         if (Object.isEmpty(this._controlCharactersSet)) {
             this._controlCharactersSet = {
-               'd' : 'd',
-               'L' : 'L',
-               'l' : 'l',
-               'x' : 'x'
-            };
-
-            return this._generalControlCharacters;
+               'd': 'd',
+               'L': 'L',
+               'l': 'l',
+               'x': 'x'
+            }
          }
+         return Object.keys(this._controlCharactersSet).join('');
       }
 
 });
