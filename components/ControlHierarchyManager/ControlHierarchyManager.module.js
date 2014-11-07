@@ -102,7 +102,7 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
          var len = node.children.length;
          for (var i = 0; i < len; i++) {
             var self = node.children[i].self;
-            if (self._container.find($(target)).length) {
+            if (self._container.find($(target)).length || $(self._container).get(0) == target) {
                //если нашли сразу сообщаем
                return true;
             }
