@@ -1,0 +1,49 @@
+.controls-DatePicker {
+   display: inline-block;
+   vertical-align: top;
+   border: none;
+   height: 24px;
+}
+
+.controls-DatePicker__field {
+   margin-right: 16px;
+   padding: 0 7px;
+   .mixin_gray_border;
+   border-radius: 2px;
+}
+.controls-DatePicker .controls-FormattedTextBox__field {
+   margin: 0;
+}
+.controls-DatePicker__calendarIconWrapper {
+   width: 16px;
+   min-height: 22px;
+   height: 100%;
+   box-sizing: border-box;
+   position: relative;
+   float: right;
+   margin-left: 2px;
+}
+.controls-DatePicker__calendarIcon {
+   background: url("img/DatePicker-calendar.png") no-repeat 0 0;
+   display: inline-block;
+   position: absolute;
+   min-height: 16px;
+   top: 50%;
+   margin-left: 1px;
+   margin-top: -7px;
+   width: 16px;
+   cursor: pointer;
+   text-decoration: none;
+}
+.controls-DatePicker__calendarIcon:hover {
+   background-position: -17px 0;
+}
+.controls-DatePicker__calendar {
+   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.controls-DatePicker .controls-FormattedTextBox{
+   height: 100%;
+   box-sizing: border-box;
+   padding: 0;
+}
