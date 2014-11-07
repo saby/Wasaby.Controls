@@ -113,12 +113,11 @@ define(
          var self = this;
 
          this._picker.getContainer().empty();
-
          // Создаем пустой контейнер
          var element = $('<div name= "Calendar" class="controls-DatePicker__calendar"></div>');
-
          // Преобразуем контейнер в контролл Calendar и запоминаем
          self._calendarControl = new Calendar({
+            parent: self._picker,
             element : element
          });
 
