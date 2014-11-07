@@ -16,7 +16,6 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
          }
       },
 
-
       _index: [],
       _tree: [],
 
@@ -56,21 +55,35 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
                });
             }
          }
-         console.log(this._tree);
       },
 
-      //TODO: не работает, доделать
       removeNode: function(component){
          var node = this._getNodeById(component.getId()),
             id = node.self.getId();
          for (var i = 0; i < this._index.length; i++) {
             if (this._index[i].id == id) {
+               var parentNode = node.parent;
+               while (parentNode) {
+                  this._removeChildren(id, parentNode);
+                  parentNode = parentNode.parent;
+               }
                this._index.splice(i,1);
             }
          }
       },
 
-      //Получись ноду по id
+      //удалить ребенка c id childrenId из ноды node
+      _removeChildren: function(childrenId, node){
+         var len = node.children.length;
+         for (var i = 0; i < len; i++){
+            if (node.children[i].self.getId() == childrenId){
+               node.children.splice(i,1);
+               return;
+            }
+         }
+      },
+
+      //Получить ноду по id
       _getNodeById: function(id){
          var node;
          for (var i = 0; i < this._index.length; i++) {
