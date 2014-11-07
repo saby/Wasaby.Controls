@@ -64,7 +64,7 @@ define(
                self._setDate(date);
             });
 
-            ControlHierarchyManager.addNode(this);
+            ControlHierarchyManager.addNode(this, this.getParent());
          },
 
          /**
