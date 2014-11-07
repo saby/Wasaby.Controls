@@ -155,7 +155,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
       _resizeHandler: function () {
          if (this.isVisible()) {
             this._initWindowSizes();
-            if (this._containerSizes.offset !== undefined) {
+            if (this._containerSizes.offset !== undefined && this.isVisible()) {
                this._container.offset({
                   top: this._correctionByDisplaySize('vertical', 'resize').top,
                   left: this._correctionByDisplaySize('horizontal', 'resize').left
