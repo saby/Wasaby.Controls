@@ -132,7 +132,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
             } else {
                self._initSizes(false);
             }
-
          });
 
       },
@@ -155,7 +154,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
       _resizeHandler: function () {
          if (this.isVisible()) {
             this._initWindowSizes();
-            if (this._containerSizes.offset !== undefined && this.isVisible()) {
+            if (this._containerSizes.offset !== undefined) {
                this._container.offset({
                   top: this._correctionByDisplaySize('vertical', 'resize').top,
                   left: this._correctionByDisplaySize('horizontal', 'resize').left
@@ -219,7 +218,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
       recalcPosition: function () {
          this._initSizes(true);
          this._initMargins();
-
          //Если есть таргет - позиционируемся относительно его
          if (this._options.target) {
             this._containerSizes.originOffset = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner);
