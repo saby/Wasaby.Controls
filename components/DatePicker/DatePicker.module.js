@@ -247,20 +247,27 @@ define(
 
       _getTextByDate : function(date) {
          var
-            textArr = [],
+            textObj = {},
             regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
             availCharsArray = this._primalMask.match(regexp);
 
          for ( var i = 0; i < availCharsArray.length; i++ ){
             switch ( availCharsArray[i] ){
-               case 'YY'   : textArr.push(( ''+date.getFullYear() ).slice(-2));    break;
-               case 'YYYY' : textArr.push(date.getFullYear());                     break;
-               case 'MM'   : textArr.push(( '0'+(date.getMonth()+1)).slice(-2));  break;
-               case 'DD'   : textArr.push(( '0'+date.getDate()).slice(-2));       break;
+               case 'YY'   : textObj.YY = ( ''+date.getFullYear() ).slice(-2);    break;
+               case 'YYYY' : textObj.YYYY = date.getFullYear();                     break;
+               case 'MM'   : textObj.MM = ( '0'+(date.getMonth()+1)).slice(-2);  break;
+               case 'DD'   : textObj.DD = ( '0'+date.getDate()).slice(-2);       break;
+            }
+         }
+         var text = this._primalMask;
+
+         for (var i in textObj) {
+            if (textObj.hasOwnProperty(i)) {
+               text = text.replace(i, textObj[i])
             }
          }
 
-         return textArr.join('.');
+         return text;
       }
    });
 
