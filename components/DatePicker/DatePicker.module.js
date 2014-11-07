@@ -157,8 +157,10 @@ define(
        * @param text дата в формате SQL ( например, 01-01-2015 )
        */
       setText: function (text) {
-         // fromSQL() разбирает дату формата SQL в объект Date
-         this._date = Date.fromSQL(text);
+         //получаем текст без разделителей
+         var formText = text.replace(/[^0-9]/g, '');
+
+         this._date = this._getDateByText(formText);
          this._drawDate();
          FormattedTextBoxBase.superclass.setText.call(this, text);
       },
@@ -170,7 +172,7 @@ define(
       setDate: function (date) {
          if ( date instanceof Date ) {
             this._date = date;
-            this._options.text = date.toSQL();
+            this._options.text = this._getTextByDate(this._date);
             this._drawDate();
          }
       },
@@ -188,20 +190,7 @@ define(
        * @private
        */
       _drawDate:function(){
-         var self = this,
-            newText = '';
-         var
-            regexp = new RegExp('[' + self._controlCharacters + ']+', 'g'),
-            availCharsArray = self._primalMask.match(regexp);
-
-         for ( var i = 0; i < availCharsArray.length; i++ ){
-            switch ( availCharsArray[i] ){
-               case 'YY'   : newText += ( ''+this._date.getFullYear() ).slice(-2);    break;
-               case 'YYYY' : newText += this._date.getFullYear();                     break;
-               case 'MM'   : newText += ( '0'+(this._date.getMonth()+1) ).slice(-2);  break;
-               case 'DD'   : newText += ( '0'+this._date.getDate() ).slice(-2);       break;
-            }
-         }
+         var newText = this._getTextByDate(this._date).replace(/[^0-9]/g, '');
          this._inputField.html( this._getHtmlMask(newText) );
       },
 
@@ -222,35 +211,57 @@ define(
             this._options.text = null;
          }
          else {
-            var date = new Date();
-            var
-               regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
-               availCharsArray = this._primalMask.match(regexp);
-
-            for (var i = 0; i < availCharsArray.length; i++) {
-               switch (availCharsArray[i]) {
-                  case 'YY' :
-                     date.setYear('20' + text.substr(0, 2));
-                     text = text.substr(2);
-                     break;
-                  case 'YYYY' :
-                     date.setYear(text.substr(0, 4));
-                     text = text.substr(4);
-                     break;
-                  case 'MM' :
-                     date.setMonth(text.substr(0, 2)-1);
-                     text = text.substr(2);
-                     break;
-                  case 'DD' :
-                     date.setDate(text.substr(0, 2));
-                     text = text.substr(2);
-                     break;
-               }
-            }
-
-            this._date = date;
-            this._options.text = date.toSQL();
+            this._date = this._getDateByText(text);
+            this._options.text = this._getTextByDate(this._date);
          }
+      },
+
+      //text - без разделителей
+      _getDateByText : function(text) {
+         var date = new Date();
+         var
+            regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
+            availCharsArray = this._primalMask.match(regexp);
+
+         for (var i = 0; i < availCharsArray.length; i++) {
+            switch (availCharsArray[i]) {
+               case 'YY' :
+                  date.setYear('20' + text.substr(0, 2));
+                  text = text.substr(2);
+                  break;
+               case 'YYYY' :
+                  date.setYear(text.substr(0, 4));
+                  text = text.substr(4);
+                  break;
+               case 'MM' :
+                  date.setMonth(text.substr(0, 2) - 1);
+                  text = text.substr(2);
+                  break;
+               case 'DD' :
+                  date.setDate(text.substr(0, 2));
+                  text = text.substr(2);
+                  break;
+            }
+         }
+         return date;
+      },
+
+      _getTextByDate : function(date) {
+         var
+            textArr = [],
+            regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
+            availCharsArray = this._primalMask.match(regexp);
+
+         for ( var i = 0; i < availCharsArray.length; i++ ){
+            switch ( availCharsArray[i] ){
+               case 'YY'   : textArr.push(( ''+date.getFullYear() ).slice(-2));    break;
+               case 'YYYY' : textArr.push(date.getFullYear());                     break;
+               case 'MM'   : textArr.push(( '0'+(date.getMonth()+1)).slice(-2));  break;
+               case 'DD'   : textArr.push(( '0'+date.getDate()).slice(-2));       break;
+            }
+         }
+
+         return textArr.join('.');
       }
    });
 
