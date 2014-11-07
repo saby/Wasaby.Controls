@@ -542,7 +542,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
             this.recalcPosition();
          },
          init: function(){
-            ControlHierarchyManager.addNode(this);
+            ControlHierarchyManager.addNode(this, this.getParent());
          }
       },
 
