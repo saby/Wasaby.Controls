@@ -166,8 +166,12 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
 
       _clickHandler: function (eventObject, target) {
          if (this.isVisible()) {
-            var self = this;
-            if (!ControlHierarchyManager.checkInclusion(self, target)) {
+            var self = this,
+               inTarget = [];
+            if (self._options.target) {
+               inTarget = !!self._options.target.find($(target)).length;
+            }
+            if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target)) {
                self.hide();
             }
          }
