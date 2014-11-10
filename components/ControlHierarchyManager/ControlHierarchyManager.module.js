@@ -59,11 +59,13 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
       checkInclusion: function (component, target) {
          var node, flag = false;
          node = this._index[component.getId()];
-         var len = node.children.length;
-         if (len) {
-            for (var i = 0; i < len; i++) {
-               var self = node.children[i].self;
-               flag = this.checkInclusion(self, target);
+         if (node) {
+            var len = node.children.length;
+            if (len) {
+               for (var i = 0; i < len; i++) {
+                  var self = node.children[i].self;
+                  flag = this.checkInclusion(self, target);
+               }
             }
          }
          if (component._container.find($(target)).length || $(component._container).get(0) == target) {

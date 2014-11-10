@@ -166,12 +166,8 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
 
       _clickHandler: function (eventObject, target) {
          if (this.isVisible()) {
-            var self = this,
-               inTarget = [];
-            if (self._options.target) {
-               inTarget = !!self._options.target.find($(target)).length;
-            }
-            if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target)) {
+            var self = this;
+            if (!ControlHierarchyManager.checkInclusion(self, target)) {
                self.hide();
             }
          }
@@ -551,9 +547,9 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
             var zIndex = this._container.css('zIndex');
             ControlHierarchyManager.zIndexManager.setFree(zIndex);
             ControlHierarchyManager.removeNode(this);
-            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._resizeHandler);
-            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._scrollHandler);
-            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentClick', this._clickHandler);
+            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._resizeHandler, this);
+            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._scrollHandler, this);
+            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentClick', this._clickHandler, this);
          },
          show: function () {
             this._container.css({
