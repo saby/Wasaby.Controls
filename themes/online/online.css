@@ -670,3 +670,6 @@ input[type="reset"]::-moz-focus-inner {
   vertical-align: middle;
   font-style: normal;
 }
+.controls-RadioGroup__vertical .controls-ListView__item {
+  display: block;
+}

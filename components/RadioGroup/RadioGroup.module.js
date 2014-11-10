@@ -18,7 +18,7 @@ function(RadioGroupBase, dotTpl) {
       _dotTplFn : dotTpl,
       $protected: {
          _options: {
-            disposition: 'vertical'
+
          }
       },
 
