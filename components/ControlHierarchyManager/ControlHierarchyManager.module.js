@@ -21,19 +21,26 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
 
       addNode: function (component) {
          var parent = component.getParent(),
-            id = component.getId();
+            id = component.getId(), node;
          //если есть парент
          if (parent) {
             //то ищем узел этого парента по id
             if (this._index[parent.getId()]) {
-               var node = this._componentToNode(component, this._index[parent.getId()]);
+               node = this._componentToNode(component, this._index[parent.getId()]);
+               node.parent.children.push(node);
+               //и индексируем новый узел
+               this._index[id] = node;
+            } else { //Если не нашли узел парента
+               //TODO: выпилить, кода это будет реализовано в контроле
+               this.addNode(parent);
+               node = this._componentToNode(component, this._index[parent.getId()]);
                node.parent.children.push(node);
                //и индексируем новый узел
                this._index[id] = node;
             }
          } else {
             //если парента нет
-            var node = this._componentToNode(component, null);
+            node = this._componentToNode(component, null);
             //создаем новый узел и проверяем нет ли его уже
             if (!this._wasAdded(node)) {
                //добавляем в дерево
