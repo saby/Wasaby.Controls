@@ -86,7 +86,12 @@ define(
 
       $constructor: function () {
          var self = this;
+
          this._publish('onChange');
+
+         // Проверяем, является ли маска, с которой создается контролл, допустимой
+         this._checkPossibleMask();
+
          // Клик по иконке календарика
          $('.js-controls-DatePicker__calendarIcon', this.getContainer().get(0)).click(function(){
             self.togglePicker();
@@ -133,14 +138,7 @@ define(
       },
 
       /**
-       * Получить маску. Переопределённый метод
-       */
-      _getMask: function () {
-         return this._options.mask;
-      },
-
-      /**
-       * Проверить, является ли маска допустимой ( по массиву допустимы маск this._possibleMasks )
+       * Проверить, является ли маска допустимой ( по массиву допустимых маск this._possibleMasks )
        * @private
        */
       _checkPossibleMask: function(){
@@ -152,16 +150,14 @@ define(
       },
 
       /**
-       * Переопределяем метод из TextBoxBase
-       * @param text дата в формате SQL ( например, 01-01-2015 )
-       */
-      setText: function (text) {
+      * Переопределяем метод из TextBoxBase
+      * @param text дата в формате строки, соотвествующая маске. Пример: если маска 'DD.MM.YYYY', то строка '25.10.2014'
+      */
+      setText: function ( text ) {
          //получаем текст без разделителей
-         var formText = text.replace(/[^0-9]/g, '');
-
-         this._date = this._getDateByText(formText);
-         this._drawDate();
-         FormattedTextBoxBase.superclass.setText.call(this, text);
+         var formattedText = text.replace(/[^0-9]/g, '');
+         this._date = this._getDateByText( formattedText );
+         DatePicker.superclass.setText.call(this, this._getTextByDate(this._date));
       },
 
       /**
@@ -185,11 +181,11 @@ define(
       },
 
       /**
-       * Обновить поле даты по текущему значению даты в this._date
-       * @private
-       */
+      * Обновить поле даты по текущему значению даты в this._date
+      * @private
+      */
       _drawDate:function(){
-         var newText = this._getTextByDate(this._date).replace(/[^0-9]/g, '');
+         var newText = this._getTextByDate( this._date );
          this._inputField.html( this._getHtmlMask(newText) );
       },
 
@@ -215,7 +211,12 @@ define(
          }
       },
 
-      //text - без разделителей
+      /**
+       * Получить дату в формате Date по строке
+       * @param text - дата без разделителей
+       * @returns {Date} Дата в формата Date
+       * @private
+       */
       _getDateByText : function(text) {
          var date = new Date();
          var
@@ -245,6 +246,13 @@ define(
          return date;
       },
 
+      /**
+       * Получить дату в формате строки по объекту Date. Строка соответсвует изначальной маске.
+       * Пример: если дата Wed Oct 25 2102 00:00:00 GMT+0400 и изначальная маска DD.MM.YYYY, то строка будет 25.10.2102
+       * @param date Дата
+       * @returns {string} Строка
+       * @private
+       */
       _getTextByDate : function(date) {
          var
             textObj = {},
