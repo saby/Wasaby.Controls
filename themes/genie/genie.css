@@ -451,7 +451,7 @@
 .controls-DatePicker__calendar {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
-.controls-RadioGroup__vertical .controls-ListView__item {
+.controls-ButtonGroup__vertical .controls-ListView__item {
   display: block;
   margin-right: 0;
   margin-bottom: 8px;
