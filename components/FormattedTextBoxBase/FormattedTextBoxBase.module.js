@@ -117,10 +117,11 @@ define(
       },
 
       /**
-       * Получить маску
+       * Получить текущую используемую маску
+       * @private
        */
-      _getMask: function () {
-         return this._options.mask;
+      _getMask:function(){
+         /*Method must be implemented*/
       },
 
       _initializeComponents: function(){

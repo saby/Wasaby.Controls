@@ -29,6 +29,15 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
       },
 
       /**
+       * Получить маску. Переопределённый метод
+       * @returns {*}
+       * @private
+       */
+      _getMask: function () {
+         return this._options.mask;
+      },
+
+      /**
        * Обновляяет значение this._options.text (вызывается в _replaceCharacter из FormattedTextBoxBase). Переопределённый метод.
        * null если есть хотя бы одно незаполненное место ( плэйсхолдер )
        * @private
