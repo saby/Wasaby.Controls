@@ -154,9 +154,7 @@ define(
       * @param text дата в формате строки, соотвествующая маске. Пример: если маска 'DD.MM.YYYY', то строка '25.10.2014'
       */
       setText: function ( text ) {
-         //получаем текст без разделителей
-         var formattedText = text.replace(/[^0-9]/g, '');
-         this._date = this._getDateByText( formattedText );
+         this._date = this._getDateByText( text );
          DatePicker.superclass.setText.call(this, this._getTextByDate(this._date));
       },
 
@@ -184,7 +182,7 @@ define(
       * Обновить поле даты по текущему значению даты в this._date
       * @private
       */
-      _drawDate:function(){
+      _drawDate: function(){
          var newText = this._getTextByDate( this._date );
          this._inputField.html( this._getHtmlMask(newText) );
       },
@@ -194,11 +192,8 @@ define(
        * Если есть хотя бы одно незаполненное место ( плэйсхолдер ), то text = null и _date остается той же
        * @private
        */
-      _updateText:function(){
-         var text = '';
-         $('.controls-FormattedTextBox__field-placeholder', this.getContainer()).each(function () {
-            text += $(this).text();
-         });
+      _updateText: function(){
+         var text = $(this._inputField.get(0)).text();
 
          var expr = new RegExp('(' + this._placeholder + ')', 'ig');
          // если есть плейсхолдеры (т.е. незаполненные места), то значит опция text = null
@@ -213,11 +208,11 @@ define(
 
       /**
        * Получить дату в формате Date по строке
-       * @param text - дата без разделителей
+       * @param text - дата в соответствии с маской
        * @returns {Date} Дата в формата Date
        * @private
        */
-      _getDateByText : function(text) {
+      _getDateByText: function(text) {
          var date = new Date();
          var
             regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
@@ -227,19 +222,19 @@ define(
             switch (availCharsArray[i]) {
                case 'YY' :
                   date.setYear('20' + text.substr(0, 2));
-                  text = text.substr(2);
+                  text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'YYYY' :
                   date.setYear(text.substr(0, 4));
-                  text = text.substr(4);
+                  text = text.substr(5);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'MM' :
                   date.setMonth(text.substr(0, 2) - 1);
-                  text = text.substr(2);
+                  text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'DD' :
                   date.setDate(text.substr(0, 2));
-                  text = text.substr(2);
+                  text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
             }
          }
@@ -253,7 +248,7 @@ define(
        * @returns {string} Строка
        * @private
        */
-      _getTextByDate : function(date) {
+      _getTextByDate: function(date) {
          var
             textObj = {},
             regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),

@@ -34,10 +34,7 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
        * @private
        */
       _updateText:function(){
-         var text = '';
-         $('.controls-FormattedTextBox__field-placeholder', this.getContainer()).each(function(){
-            text += $(this).text();
-         });
+         var text = $(this._inputField.get(0)).text();
 
          var expr = new RegExp( '(' + this._placeholder + ')', 'ig' );
          // если есть плейсхолдеры (т.е. незаполненные места), то опция text = null
