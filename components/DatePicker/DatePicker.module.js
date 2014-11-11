@@ -150,11 +150,12 @@ define(
       },
 
       /**
-       * В добавление к проверкам и обновлению опции text, необходимо обновить поле _date
-       * @param text
-       * @private
-       */
-      _setTextHelper: function ( text ) {
+      * В добавление к проверкам и обновлению опции text, необходимо обновить поле _date
+      * @param text
+      * @private
+      */
+      setText: function ( text ) {
+         DatePicker.superclass.setText.call( this, text );
          this._date = this._getDateByText( text );
       },
 
