@@ -512,13 +512,18 @@ define(
        * @param text Строка нового значения
        */
       setText: function( text ){
-         if ( this._checkTextByMask( text ) ) {
-            text = this._correctRegister( text );
-            this._inputField.html( this._getHtmlMask(text) );
-            FormattedTextBoxBase.superclass.setText.call( this, text );
+         if ( typeof text == 'string' ) {
+            if ( this._checkTextByMask( text ) ) {
+               text = this._correctRegister( text );
+               this._inputField.html( this._getHtmlMask(text) );
+               FormattedTextBoxBase.superclass.setText.call( this, text );
+            }
+            else {
+               throw new Error('Устанавливаемое значение не удовлетворяет маске данного контролла');
+            }
          }
          else {
-            throw new Error('Устанавливаемое значение не удовлетворяет допустимой маске данного контролла');
+            throw new Error('Аргументом должна являться строка');
          }
       },
 

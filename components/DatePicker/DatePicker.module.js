@@ -154,8 +154,18 @@ define(
       * @param text дата в формате строки, соотвествующая маске. Пример: если маска 'DD.MM.YYYY', то строка '25.10.2014'
       */
       setText: function ( text ) {
-         this._date = this._getDateByText( text );
-         DatePicker.superclass.setText.call(this, this._getTextByDate(this._date));
+         if ( typeof text == 'string' ) {
+            if ( this._checkTextByMask( text ) ) {
+               this._date = this._getDateByText( text );
+               DatePicker.superclass.setText.call(this, this._getTextByDate(this._date));
+            }
+            else {
+               throw new Error('Устанавливаемое значение не удовлетворяет маске данного контролла');
+            }
+         }
+         else {
+            throw new Error('Аргументом должна являться строка');
+         }
       },
 
       /**
