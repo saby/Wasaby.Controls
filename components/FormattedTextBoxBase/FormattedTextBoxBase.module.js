@@ -517,6 +517,8 @@ define(
                text = this._correctRegister( text );
                this._inputField.html( this._getHtmlMask(text) );
                FormattedTextBoxBase.superclass.setText.call( this, text );
+
+               this._setTextHelper( text );
             }
             else {
                throw new Error('Устанавливаемое значение не удовлетворяет маске данного контролла');
@@ -525,6 +527,17 @@ define(
          else {
             throw new Error('Аргументом должна являться строка');
          }
+      },
+
+      /**
+       * Некоторые дополнительные действия во избежание дублирования кода.
+       * Например, в обычном FormattedTextBox больше ничего делать не нужно,
+       * но в DatePicker необходимо обновление поля _date по данной переданной строке даты
+       * @param text
+       * @private
+       */
+      _setTextHelper: function ( text ) {
+         /* Method must be implemented */
       },
 
       /**
