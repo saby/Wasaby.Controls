@@ -86,7 +86,12 @@ define(
 
       $constructor: function () {
          var self = this;
+
          this._publish('onChange');
+
+         // Проверяем, является ли маска, с которой создается контролл, допустимой
+         this._checkPossibleMask();
+
          // Клик по иконке календарика
          $('.js-controls-DatePicker__calendarIcon', this.getContainer().get(0)).click(function(){
             self.togglePicker();
@@ -103,6 +108,13 @@ define(
          $('.controls-DatePicker__field', this.getContainer().get(0)).blur(function(){
             if ( self._date ){ self._drawDate(); }
          });
+      },
+
+      /**
+       * Получить маску. Переопределённый метод
+       */
+      _getMask: function () {
+         return this._options.mask;
       },
 
       /**
@@ -133,14 +145,7 @@ define(
       },
 
       /**
-       * Получить маску. Переопределённый метод
-       */
-      _getMask: function () {
-         return this._options.mask;
-      },
-
-      /**
-       * Проверить, является ли маска допустимой ( по массиву допустимы маск this._possibleMasks )
+       * Проверить, является ли маска допустимой ( по массиву допустимых маск this._possibleMasks )
        * @private
        */
       _checkPossibleMask: function(){
@@ -152,16 +157,13 @@ define(
       },
 
       /**
-       * Переопределяем метод из TextBoxBase
-       * @param text дата в формате SQL ( например, 01-01-2015 )
-       */
-      setText: function (text) {
-         //получаем текст без разделителей
-         var formText = text.replace(/[^0-9]/g, '');
-
-         this._date = this._getDateByText(formText);
-         this._drawDate();
-         FormattedTextBoxBase.superclass.setText.call(this, text);
+      * В добавление к проверкам и обновлению опции text, необходимо обновить поле _date
+      * @param text
+      * @private
+      */
+      setText: function ( text ) {
+         DatePicker.superclass.setText.call( this, text );
+         this._date = this._getDateByText( text );
       },
 
       /**
@@ -185,11 +187,11 @@ define(
       },
 
       /**
-       * Обновить поле даты по текущему значению даты в this._date
-       * @private
-       */
-      _drawDate:function(){
-         var newText = this._getTextByDate(this._date).replace(/[^0-9]/g, '');
+      * Обновить поле даты по текущему значению даты в this._date
+      * @private
+      */
+      _drawDate: function(){
+         var newText = this._getTextByDate( this._date );
          this._inputField.html( this._getHtmlMask(newText) );
       },
 
@@ -198,11 +200,8 @@ define(
        * Если есть хотя бы одно незаполненное место ( плэйсхолдер ), то text = null и _date остается той же
        * @private
        */
-      _updateText:function(){
-         var text = '';
-         $('.controls-FormattedTextBox__field-placeholder', this.getContainer()).each(function () {
-            text += $(this).text();
-         });
+      _updateText: function(){
+         var text = $(this._inputField.get(0)).text();
 
          var expr = new RegExp('(' + this._placeholder + ')', 'ig');
          // если есть плейсхолдеры (т.е. незаполненные места), то значит опция text = null
@@ -215,8 +214,13 @@ define(
          }
       },
 
-      //text - без разделителей
-      _getDateByText : function(text) {
+      /**
+       * Получить дату в формате Date по строке
+       * @param text - дата в соответствии с маской
+       * @returns {Date} Дата в формата Date
+       * @private
+       */
+      _getDateByText: function(text) {
          var date = new Date();
          var
             regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
@@ -226,26 +230,33 @@ define(
             switch (availCharsArray[i]) {
                case 'YY' :
                   date.setYear('20' + text.substr(0, 2));
-                  text = text.substr(2);
+                  text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'YYYY' :
                   date.setYear(text.substr(0, 4));
-                  text = text.substr(4);
+                  text = text.substr(5);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'MM' :
                   date.setMonth(text.substr(0, 2) - 1);
-                  text = text.substr(2);
+                  text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'DD' :
                   date.setDate(text.substr(0, 2));
-                  text = text.substr(2);
+                  text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
             }
          }
          return date;
       },
 
-      _getTextByDate : function(date) {
+      /**
+       * Получить дату в формате строки по объекту Date. Строка соответсвует изначальной маске.
+       * Пример: если дата Wed Oct 25 2102 00:00:00 GMT+0400 и изначальная маска DD.MM.YYYY, то строка будет 25.10.2102
+       * @param date Дата
+       * @returns {string} Строка
+       * @private
+       */
+      _getTextByDate: function(date) {
          var
             textObj = {},
             regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
