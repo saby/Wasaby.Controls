@@ -92,6 +92,11 @@ define(
          // Проверяем, является ли маска, с которой создается контролл, допустимой
          this._checkPossibleMask();
 
+         // Первоначальная установка даты, если передана опция
+         if ( this._options.date ) {
+            this.setDate( this._options.date );
+         }
+
          // Клик по иконке календарика
          $('.js-controls-DatePicker__calendarIcon', this.getContainer().get(0)).click(function(){
             self.togglePicker();
