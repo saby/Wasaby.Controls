@@ -208,7 +208,7 @@ define(
 
       /**
        * Обновляяет значения this._options.text и this._options.date (вызывается в _replaceCharacter из FormattedTextBoxBase). Переопределённый метод.
-       * Если есть хотя бы одно незаполненное место ( плэйсхолдер ), то text = null и _date остается той же
+       * Если есть хотя бы одно незаполненное место ( плэйсхолдер ), то text = '' (пустая строка) и _date = null
        * @private
        */
       _updateText: function(){
@@ -217,7 +217,8 @@ define(
          var expr = new RegExp('(' + this._placeholder + ')', 'ig');
          // если есть плейсхолдеры (т.е. незаполненные места), то значит опция text = null
          if ( expr.test(text) ) {
-            this._options.text = null;
+            this._options.text = '';
+            this._options.date = null;
          }
          else {
             this._options.date = this._getDateByText(text);
