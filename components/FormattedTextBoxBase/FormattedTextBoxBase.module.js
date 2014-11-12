@@ -625,10 +625,6 @@ define(
             }
          }
          return Object.keys(this._controlCharactersSet).join('');
-      },
-
-      clear: function () {
-
       }
 });
 
