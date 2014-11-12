@@ -61,7 +61,7 @@ define(
          /**
           * Дата
           */
-         _date: undefined,
+         _date: null,
          /**
           * Контролл Calendar в пикере
           */
@@ -162,8 +162,9 @@ define(
       * @private
       */
       setText: function ( text ) {
+         text = text ? text: '';
          DatePicker.superclass.setText.call( this, text );
-         this._date = this._getDateByText( text );
+         this._date = text == '' ? null : this._getDateByText( text );
       },
 
       /**

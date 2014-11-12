@@ -513,9 +513,11 @@ define(
        * @param text Строка нового значения
        */
       setText: function( text ){
+         text = text ? text: '';
+
          if ( typeof text == 'string' ) {
-            if ( this._checkTextByMask( text ) ) {
-               text = this._correctRegister( text );
+            if ( text == '' || this._checkTextByMask( text ) ) {
+               text = text == '' ? '' : this._correctRegister( text );
                this._inputField.html( this._getHtmlMask(text) );
                FormattedTextBoxBase.superclass.setText.call( this, text );
             }
@@ -623,8 +625,11 @@ define(
             }
          }
          return Object.keys(this._controlCharactersSet).join('');
-      }
+      },
 
+      clear: function () {
+
+      }
 });
 
    return FormattedTextBoxBase;
