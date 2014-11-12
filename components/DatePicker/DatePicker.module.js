@@ -94,7 +94,7 @@ define(
 
          // Первоначальная установка даты, если передана опция
          if ( this._options.date ) {
-            this.setDate( this._options.date );
+            this._setDate( this._options.date );
          }
 
          // Клик по иконке календарика
@@ -173,10 +173,19 @@ define(
       },
 
       /**
-       * Установить дату
-       * @param date новое значение даты, объект типа Date
+       * Установить дату. Публичный метод.
+       * TODO в будущем будет отличаться тем, что будет генерировать событие
+       * @param date
        */
       setDate: function ( date ) {
+         this._setDate( date );
+      },
+
+      /**
+       * Установить дату. Приватный метод
+       * @param date новое значение даты, объект типа Date
+       */
+      _setDate: function ( date ) {
          if ( date instanceof Date ) {
             this._options.date = date;
             this._options.text = this._getTextByDate( date );
