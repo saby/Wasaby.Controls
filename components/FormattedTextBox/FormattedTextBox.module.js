@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
          var expr = new RegExp( '(' + this._placeholder + ')', 'ig' );
          // если есть плейсхолдеры (т.е. незаполненные места), то опция text = null
          if ( expr.test(text) ){
-            this._options.text = null;
+            this._options.text = '';
          }
          else {
             this._options.text = text;

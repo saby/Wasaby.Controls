@@ -52,10 +52,6 @@ define(
             monthFormat: ''
          },
          /**
-          * Определяет, показан "месяц, год", или только "год" в режиме 'month'
-          */
-         _isMonthShown: true,
-         /**
           * Массив месяцев
           */
          _months: [
@@ -99,12 +95,15 @@ define(
          // Клик по полю с датой
          $('.js-controls-MonthPicker__field', this.getContainer().get(0)).click(function(){
             self.togglePicker();
+
             if ( self._options.mode == 'month' ) {
-               self._isMonthShown = !self._picker.isVisible();
-               self._setText(self._composeText());
+               self._setText( self._composeText( self._options.date ) );
             }
+
             // обновляем выпадающий блок только если пикер данным кликом открыт
-            if ( self._picker && self._picker.isVisible() ){ self._drawElements(); }
+            if ( self._picker && self._picker.isVisible() ){
+               self._drawElements();
+            }
          });
 
          // Обработка нажатий клавиш
@@ -132,8 +131,7 @@ define(
        */
       _onCloseHandler: function () {
          if ( this._options.mode == 'month' ) {
-            this._isMonthShown = true;
-            var text = this._composeText();
+            var text = this._composeText( this._options.date, true );
             this._setText(text);
          }
       },
@@ -148,7 +146,6 @@ define(
 
          $('.js-controls-MonthPicker__dropdownElement', this._picker.getContainer()).click(function(e){
             self.hidePicker();
-            self._isMonthShown = true;
 
             if( self._options.mode == 'month' ){
                self.setDate(new Date(self._options.date.getFullYear(), $(this).attr('data-key'), 1, 20, 0, 0));
@@ -242,26 +239,36 @@ define(
          // задать 2020 год 1 января, нам вернётся, как ни странно, Tue Dec 31 2019 23:00:00 GMT+0300 (RTZ 2 (зима))
          this._options.date = new Date(year, month, 1, 20, 0, 0);
 
-         var text = this._composeText();
+         var text = this._composeText(this._options.date);
          this._setText(text);
       },
 
       /**
-       * Формирует отображаемый текст в зависимости от режима mode и от состояния пикера (открыт/закрыт)
+       * Формирует отображаемый текст по дате в зависимости от режима mode и от состояния пикера (открыт/закрыт)
+       * @param date
+       * @param fromOnClose необязательный параметр, показывающий, вызван ли метод из обработчика события onClose
        * @returns {string}
        * @private
        */
-      _composeText: function () {
-         var
-            text = '',
-            date = this._options.date;
+      _composeText: function (date, fromOnClose) {
+         var text = date.getFullYear().toString();
+         text = this._options.mode == 'month' ? this._months[date.getMonth()] + ', ' + text : text;
 
-         if( this._options.mode == 'month' ){
-            text = this._isMonthShown ? this._months[date.getMonth()] + ', ' + date.getFullYear() : date.getFullYear().toString();
-         }
-         else if( this._options.mode == 'year' ){ text = date.getFullYear().toString(); }
+         // Если метод вызван не из обработчика onClose, тогда скорректировать текст перед возвращением
+         return !fromOnClose ? this._correctText(text) : text;
+      },
 
-         return text;
+      /**
+       * Корректирует текст (оставлаяет только год) в зависимости от трех условий:
+       *    1. Если мы в режиме месяца (иначе текст и так хранит только год)
+       *    2. Если пикер существует
+       *    3. Если пикер открыт
+       * @param text
+       * @returns {string}
+       * @private
+       */
+      _correctText: function (text) {
+         return this._options.mode == 'month' && this._picker && this._picker.isVisible() ? /\d+/.exec(text)[0] : text;
       },
 
       /**

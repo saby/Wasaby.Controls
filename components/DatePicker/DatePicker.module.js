@@ -59,10 +59,6 @@ define(
             'YYYY-MM-DD'
          ],
          /**
-          * Дата
-          */
-         _date: undefined,
-         /**
           * Контролл Calendar в пикере
           */
          _calendarControl: undefined,
@@ -80,7 +76,11 @@ define(
              * @variant 'YY-MM-DD'
              * @variant 'YYYY-MM-DD'
              */
-            mask: 'DD.MM.YY'
+            mask: 'DD.MM.YY',
+            /**
+             * Дата
+             */
+            date: null
          }
       },
 
@@ -92,13 +92,18 @@ define(
          // Проверяем, является ли маска, с которой создается контролл, допустимой
          this._checkPossibleMask();
 
+         // Первоначальная установка даты, если передана опция
+         if ( this._options.date ) {
+            this._setDate( this._options.date );
+         }
+
          // Клик по иконке календарика
          $('.js-controls-DatePicker__calendarIcon', this.getContainer().get(0)).click(function(){
             self.togglePicker();
 
             // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
-            if ( self._picker.isVisible() && self._date ){
-               self._calendarControl.setDate(self._date);
+            if ( self._picker.isVisible() && self._options.date ){
+               self._calendarControl.setDate(self._options.date);
             }
          });
 
@@ -106,7 +111,7 @@ define(
          // Если пользователь ввел слишком большие данные ( напр., 45.23.7234 ), то значение установится корректно,
          // ввиду особенностей работы setMonth(), setDate() и т.д., но нужно обновить поле
          $('.controls-DatePicker__field', this.getContainer().get(0)).blur(function(){
-            if ( self._date ){ self._drawDate(); }
+            if ( self._options.date ){ self._drawDate(); }
          });
       },
 
@@ -162,42 +167,57 @@ define(
       * @private
       */
       setText: function ( text ) {
+         text = text ? text: '';
          DatePicker.superclass.setText.call( this, text );
-         this._date = this._getDateByText( text );
+         this._options.date = text == '' ? null : this._getDateByText( text );
       },
 
       /**
-       * Установить дату
+       * Установить дату. Публичный метод.
+       * TODO в будущем будет отличаться тем, что будет генерировать событие
+       * @param date
+       */
+      setDate: function ( date ) {
+         this._setDate( date );
+      },
+
+      /**
+       * Установить дату. Приватный метод
        * @param date новое значение даты, объект типа Date
        */
-      setDate: function (date) {
+      _setDate: function ( date ) {
          if ( date instanceof Date ) {
-            this._date = date;
-            this._options.text = this._getTextByDate(this._date);
-            this._drawDate();
+            this._options.date = date;
+            this._options.text = this._getTextByDate( date );
          }
+         else {
+            this._options.date = null;
+            this._options.text = '';
+         }
+
+         this._drawDate();
       },
 
       /**
        * Получить дату
-       * @returns {Date|*|SBIS3.CONTROLS.DatePicker._date}
+       * @returns {Date|*|SBIS3.CONTROLS.DatePicker._options.date}
        */
       getDate: function(){
-        return this._date;
+        return this._options.date;
       },
 
       /**
-      * Обновить поле даты по текущему значению даты в this._date
+      * Обновить поле даты по текущему значению даты в this._options.date
       * @private
       */
       _drawDate: function(){
-         var newText = this._getTextByDate( this._date );
+         var newText = this._options.date == null ? '' : this._getTextByDate( this._options.date );
          this._inputField.html( this._getHtmlMask(newText) );
       },
 
       /**
-       * Обновляяет значения this._options.text и this._date (вызывается в _replaceCharacter из FormattedTextBoxBase). Переопределённый метод.
-       * Если есть хотя бы одно незаполненное место ( плэйсхолдер ), то text = null и _date остается той же
+       * Обновляяет значения this._options.text и this._options.date (вызывается в _replaceCharacter из FormattedTextBoxBase). Переопределённый метод.
+       * Если есть хотя бы одно незаполненное место ( плэйсхолдер ), то text = '' (пустая строка) и _date = null
        * @private
        */
       _updateText: function(){
@@ -206,11 +226,12 @@ define(
          var expr = new RegExp('(' + this._placeholder + ')', 'ig');
          // если есть плейсхолдеры (т.е. незаполненные места), то значит опция text = null
          if ( expr.test(text) ) {
-            this._options.text = null;
+            this._options.text = '';
+            this._options.date = null;
          }
          else {
-            this._date = this._getDateByText(text);
-            this._options.text = this._getTextByDate(this._date);
+            this._options.date = this._getDateByText(text);
+            this._options.text = this._getTextByDate(this._options.date);
          }
       },
 
@@ -256,7 +277,7 @@ define(
        * @returns {string} Строка
        * @private
        */
-      _getTextByDate: function(date) {
+      _getTextByDate: function( date ) {
          var
             textObj = {},
             regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
