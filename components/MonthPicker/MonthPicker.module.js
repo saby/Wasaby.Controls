@@ -148,10 +148,10 @@ define(
             self.hidePicker();
 
             if( self._options.mode == 'month' ){
-               self.setDate(new Date(self._options.date.getFullYear(), $(this).attr('data-key'), 1, 20, 0, 0));
+               self.setDate(new Date(self._options.date.getFullYear(), $(this).attr('data-key'), 1, 0, 0, 0, 0));
             }
             else if( self._options.mode == 'year' ){
-               self.setDate(new Date($(this).attr('data-key'), 0, 1, 20, 0, 0));
+               self.setDate(new Date($(this).attr('data-key'), 0, 1, 0, 0, 0, 0));
             }
          });
       },
@@ -188,6 +188,8 @@ define(
        * @param value Строка или дата
        */
       setDate: function(value) {
+         value = value ? value : new Date();
+
          this._setDate(value);
 
          this._notify('onDateChange', this._options.date);
@@ -218,7 +220,7 @@ define(
          var checkResult = /^(?:(\d{1,2})\.)?(\d{1,4})$/.exec(value);
 
          if ( checkResult ){
-            this._setDateByDateObject(new Date(parseInt(checkResult[2], 10), parseInt(checkResult[1], 10) - 1 || 0, 1, 20, 0, 0));
+            this._setDateByDateObject(new Date(parseInt(checkResult[2], 10), parseInt(checkResult[1], 10) - 1 || 0, 1, 0, 0, 0, 0));
          }
          else {
             throw new Error('Неверный формат даты');
@@ -234,10 +236,8 @@ define(
          var
             month = ( this._options.mode == 'month' ) ? date.getMonth() : 0,
             year = date.getFullYear();
-         // Явно устанавливаем ненулевое время, т.к. в некоторых случаях при значениях по умолчанию
-         // нам отдается предыдущий месяц, например, при new Date(2020, 0, 1), то есть если мы хотим
-         // задать 2020 год 1 января, нам вернётся, как ни странно, Tue Dec 31 2019 23:00:00 GMT+0300 (RTZ 2 (зима))
-         this._options.date = new Date(year, month, 1, 20, 0, 0);
+
+         this._options.date = new Date(year, month, 1, 0, 0, 0, 0);
 
          var text = this._composeText(this._options.date);
          this._setText(text);
@@ -343,10 +343,10 @@ define(
             startInterval = this._options.date,
             endInterval;
          if ( this._options.mode == 'month' ){
-            endInterval = new Date(startInterval.getFullYear(), startInterval.getMonth() + 1, 0, 20, 0, 0);
+            endInterval = new Date(startInterval.getFullYear(), startInterval.getMonth() + 1, 0, 23, 59, 59, 999);
          }
          else if ( this._options.mode == 'year' ){
-            endInterval = new Date(startInterval.getFullYear(), 11, 31, 20, 0, 0);
+            endInterval = new Date(startInterval.getFullYear(), 11, 31, 23, 59, 59, 999);
          }
 
          return [startInterval, endInterval];
