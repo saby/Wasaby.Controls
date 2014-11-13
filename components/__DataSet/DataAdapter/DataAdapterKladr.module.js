@@ -7,6 +7,13 @@ define('js!SBIS3.CONTROLS.DataAdapterKladr', ['js!SBIS3.CONTROLS.IDataAdapter'],
       $protected: {
       },
       $constructor: function () {
+      },
+      prepareData: function (raw) {
+         var data = [];
+         $ws.helpers.forEach(raw, function (value) {
+            data.push(value);
+         });
+         return data;
       }
    });
 });

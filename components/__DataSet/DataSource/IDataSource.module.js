@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
    'use strict';
    return $ws.core.extend({}, {
       $protected: {
-         _adapter: null
+         _adapter: ''// имя класса адаптера
       },
       $constructor: function () {
       },

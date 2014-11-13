@@ -3,9 +3,8 @@
  */
 define('js!SBIS3.CONTROLS.DataSourceXHRKladr', [
    'js!SBIS3.CONTROLS.DataSourceXHR',
-   'js!SBIS3.CONTROLS.DataSet',
-   'js!SBIS3.CONTROLS.Record'
-], function (DataSourceXHR, DataSet, Record) {
+   'js!SBIS3.CONTROLS.DataSet'
+], function (DataSourceXHR, DataSet) {
    'use strict';
    return DataSourceXHR.extend({
       $protected: {
@@ -14,25 +13,22 @@ define('js!SBIS3.CONTROLS.DataSourceXHRKladr', [
          }
       },
       $constructor: function (cfg) {
-         var self = this;
-         var adapter = (cfg.adapter) ? cfg.adapter : 'js!SBIS3.CONTROLS.DataAdapterKladr';
-         require([adapter], function (Adapter) {
-            self._adapter = new Adapter({});
-         });
+         this._adapter = (cfg.adapter) ? cfg.adapter : 'js!SBIS3.CONTROLS.DataAdapterKladr';
       },
 
       query: function (data) {
-         var def = new $ws.proto.Deferred();
+         var
+            self = this,
+            def = new $ws.proto.Deferred();
          this._execute(data).addCallback(function (result) {
-            // тут надо намутить адаптер и возврат датасета
             var
                res,
-               ds = new DataSet({});
+               ds = new DataSet({
+               });
             try {
                res = JSON.parse(result);
-               $ws.helpers.forEach(res, function (value) {
-                  ds.addRecord(new Record({row: value}));
-               });
+               ds.setRawData(res);
+               ds.setAdapter(self._adapter);
             }
             catch (e) {
                throw new TypeError('Responce parse error');
