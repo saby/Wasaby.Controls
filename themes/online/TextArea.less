@@ -1,3 +1,18 @@
+.controls-TextArea {
+   display: inline-block;
+   vertical-align: top;
+   border: 1px solid transparent;
+   border-bottom-color: #EAEAEA;
+   font-family: inherit;
+}
+.controls-TextArea:hover, .controls-TextArea.ws-has-focus {
+   border: 1px solid #EAEAEA;
+   border-bottom-color: #CCCCCC;
+}
+.controls-TextArea.ws-disabled{
+   border: 1px solid transparent;
+   border-bottom-color: #EAEAEA;
+}
 .controls-TextArea__inputField {
    resize: none;
    border: none;
@@ -11,10 +26,4 @@
 
 .controls-TextArea__autoheight {
    height: auto !important;
-}
-
-.controls-TextArea {
-   display: inline-block;
-   border: 1px solid #CCCCCC;
-   vertical-align: top;
 }

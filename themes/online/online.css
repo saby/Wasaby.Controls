@@ -325,7 +325,8 @@ input[type="reset"]::-moz-focus-inner {
   border-bottom: 1px solid #EAEAEA;
   height: 22px;
 }
-.controls-TextBox:hover {
+.controls-TextBox:hover,
+.controls-TextBox.ws-has-focus {
   border: 1px solid #EAEAEA;
   border-bottom: 1px solid #CCCCCC;
 }
@@ -367,6 +368,22 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextBox__field-lowercase {
   text-transform: lowercase;
 }
+.controls-TextArea {
+  display: inline-block;
+  vertical-align: top;
+  border: 1px solid transparent;
+  border-bottom-color: #EAEAEA;
+  font-family: inherit;
+}
+.controls-TextArea:hover,
+.controls-TextArea.ws-has-focus {
+  border: 1px solid #EAEAEA;
+  border-bottom-color: #CCCCCC;
+}
+.controls-TextArea.ws-disabled {
+  border: 1px solid transparent;
+  border-bottom-color: #EAEAEA;
+}
 .controls-TextArea__inputField {
   resize: none;
   border: none;
@@ -379,11 +396,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextArea__autoheight {
   height: auto !important;
-}
-.controls-TextArea {
-  display: inline-block;
-  border: 1px solid #CCCCCC;
-  vertical-align: top;
 }
 .controls-TextBox__field__fixIE {
   font-size: 12px;
