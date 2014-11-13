@@ -325,13 +325,13 @@ input[type="reset"]::-moz-focus-inner {
   border-bottom: 1px solid #EAEAEA;
   height: 22px;
 }
-.controls-TextBox:hover {
+.controls-TextBox:hover,
+.controls-TextBox.ws-has-focus {
   border: 1px solid #EAEAEA;
   border-bottom: 1px solid #CCCCCC;
 }
 .controls-TextBox.ws-disabled {
   border: 1px solid transparent;
-  border-bottom: 1px solid #EAEAEA;
 }
 .controls-TextBox__fieldWrapper {
   height: 100%;
@@ -358,14 +358,24 @@ input[type="reset"]::-moz-focus-inner {
   outline: none;
   background: transparent;
 }
-.controls-TextBox.ws-disabled .controls-TextBox__field {
-  color: #cccccc;
-}
 .controls-TextBox__field-uppercase {
   text-transform: uppercase;
 }
 .controls-TextBox__field-lowercase {
   text-transform: lowercase;
+}
+.controls-TextArea {
+  display: inline-block;
+  vertical-align: top;
+  border: 1px solid #EAEAEA;
+  font-family: inherit;
+}
+.controls-TextArea:hover,
+.controls-TextArea.ws-has-focus {
+  border-bottom-color: #CCCCCC;
+}
+.controls-TextArea.ws-disabled {
+  border: 1px solid transparent;
 }
 .controls-TextArea__inputField {
   resize: none;
@@ -374,16 +384,15 @@ input[type="reset"]::-moz-focus-inner {
   font-family: inherit;
   width: 100%;
   height: 100%;
-  padding: 0;
   border-radius: 2px;
+  padding: 4px;
+  box-sizing: border-box;
+}
+.controls-TextArea.ws-disabled .controls-TextArea__inputField {
+  overflow-y: hidden;
 }
 .controls-TextArea__autoheight {
   height: auto !important;
-}
-.controls-TextArea {
-  display: inline-block;
-  border: 1px solid #CCCCCC;
-  vertical-align: top;
 }
 .controls-TextBox__field__fixIE {
   font-size: 12px;
