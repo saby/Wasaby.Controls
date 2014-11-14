@@ -9,5 +9,5 @@ for /r "%themespath%" /d %%i in (*) do (
    )
 )
 
-xcopy /E components "SBIS3.CONTROLS\components"
-xcopy /E themes "SBIS3.CONTROLS\themes"
+xcopy "components" "SBIS3.CONTROLS\components\" /S /E 
+xcopy "themes" "SBIS3.CONTROLS\themes\" /S /E 
