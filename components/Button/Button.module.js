@@ -45,6 +45,10 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
                   self._container.addClass('controls-Button__active');
                }
             });
+
+         if (this._options.primary == true) {
+            this._registerDefaultButton();
+         }
       },
 
       setCaption: function(captionTxt){
@@ -81,8 +85,32 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
             }
             $('.js-controls-Button__icon', this._container.get(0)).get(0).className = 'controls-Button__icon js-controls-Button__icon ' + icon.substr(7);
          }
-      }
+      },
 
+      /*TODO методы для поддержки defaultButton*/
+      isDefaultButton: function(){
+         return !!this._options.primary;
+      },
+      _unregisterDefaultButton: function() {
+         var parent = this.getParent();
+         if(parent && parent.unregisterDefaultButton)
+            parent.unregisterDefaultButton(this);
+      },
+      _registerDefaultButton: function() {
+         var parent = this.getParent();
+         if(parent && parent.registerDefaultButton)
+            parent.registerDefaultButton(this);
+      },
+      setDefaultButton: function(isDefault){
+         if(isDefault === undefined)
+            isDefault = true;
+         this.setPrimary(isDefault);
+
+
+         if(isDefault) this._registerDefaultButton();
+         else this._unregisterDefaultButton();
+      }
+      /*TODO конец*/
    });
 
    return Button;
