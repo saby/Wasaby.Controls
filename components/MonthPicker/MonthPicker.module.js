@@ -43,6 +43,8 @@ define(
              * @cfg {String|Date} Значение для установки по умолчанию (в последствии в нем хранится текущее значение)
              * Строка должна быть формата [MM.]YYYY (месяц -- одна или две цифры, год -- от 1-ой до 4-х цифр)
              * В зависимости от режима работы, установленного в mode, возьмутся месяц и год, либо только год.
+             * В дальнейшем используется для хранения текущего значения. Значение всегда хранится с нулевым временем 00:00:00,
+             * и, в случае режима года, хранится первый день первого месяца, а в режиме месяца -- первый день данного месяца
              */
             date: '',
             /**
@@ -148,10 +150,10 @@ define(
             self.hidePicker();
 
             if( self._options.mode == 'month' ){
-               self.setDate(new Date(self._options.date.getFullYear(), $(this).attr('data-key'), 1, 20, 0, 0));
+               self.setDate( self._getFirstDay( self._options.date.getFullYear(), $(this).attr('data-key') ) );
             }
             else if( self._options.mode == 'year' ){
-               self.setDate(new Date($(this).attr('data-key'), 0, 1, 20, 0, 0));
+               self.setDate( self._getFirstDay( $(this).attr('data-key'), 0 ) );
             }
          });
       },
@@ -188,6 +190,8 @@ define(
        * @param value Строка или дата
        */
       setDate: function(value) {
+         value = value ? value : new Date();
+
          this._setDate(value);
 
          this._notify('onDateChange', this._options.date);
@@ -218,7 +222,7 @@ define(
          var checkResult = /^(?:(\d{1,2})\.)?(\d{1,4})$/.exec(value);
 
          if ( checkResult ){
-            this._setDateByDateObject(new Date(parseInt(checkResult[2], 10), parseInt(checkResult[1], 10) - 1 || 0, 1, 20, 0, 0));
+            this._setDateByDateObject(this._getFirstDay( parseInt(checkResult[2], 10), parseInt(checkResult[1], 10) - 1 || 0 ));
          }
          else {
             throw new Error('Неверный формат даты');
@@ -234,12 +238,10 @@ define(
          var
             month = ( this._options.mode == 'month' ) ? date.getMonth() : 0,
             year = date.getFullYear();
-         // Явно устанавливаем ненулевое время, т.к. в некоторых случаях при значениях по умолчанию
-         // нам отдается предыдущий месяц, например, при new Date(2020, 0, 1), то есть если мы хотим
-         // задать 2020 год 1 января, нам вернётся, как ни странно, Tue Dec 31 2019 23:00:00 GMT+0300 (RTZ 2 (зима))
-         this._options.date = new Date(year, month, 1, 20, 0, 0);
 
-         var text = this._composeText(this._options.date);
+         this._options.date = this._getFirstDay( year, month );
+
+         var text = this._composeText( this._options.date );
          this._setText(text);
       },
 
@@ -333,23 +335,64 @@ define(
 
       /**
        * Возвращает интервал даты (массив из двух дат), где, в случае 'месац, год':
-       * начало интервала - первый день данного месяца данного года, конец - последний день данного месяца данного года
+       * начало интервала - первый день данного месяца данного года, конец - последний день данного месяца данного года с временем 23:59:59
        * а в случае режима 'год':
-       * начало интервала - первый день данного года, конец - последний день данного года
+       * начало интервала - первый день данного года, конец - последний день данного года с временем 23:59:59
        * @returns {*[]}
        */
       getInterval: function(){
          var
             startInterval = this._options.date,
-            endInterval;
-         if ( this._options.mode == 'month' ){
-            endInterval = new Date(startInterval.getFullYear(), startInterval.getMonth() + 1, 0, 20, 0, 0);
-         }
-         else if ( this._options.mode == 'year' ){
-            endInterval = new Date(startInterval.getFullYear(), 11, 31, 20, 0, 0);
-         }
+            startYear = startInterval.getFullYear(),
+            startMonth = startInterval.getMonth(),
+            endInterval = this._getLastDay( startYear, startMonth );
 
          return [startInterval, endInterval];
+      },
+
+      /**
+       * Получить первый день:
+       *    а. года, если передан только параметр year
+       *    б. месяца, если переданы оба параметра year и month
+       * с временем 00:00:00.000 (полночь, то есть абсолютное начало данного дня)
+       *
+       * БАГ:
+       *    Если требуется получить первый день в январе, и если первое января в этом году выпадает на среду, тогда время в дате
+       *    возвратится некорректно из-за бага с переходом на летнее/зимнее время
+       *    Примеры:
+       *       new Date( 2003, 0, 1, 0, 0, 0, 0 ) возвращает Wed Jan 01 2003 01:00:00 GMT+0400 (RTZ 2 (лето)), хотя время должно быть 00:00:00
+       *       new Date( 2014, 0, 1, 0, 0, 0, 0 ) возвращает Wed Jan 01 2003 01:00:00 GMT+0400 (RTZ 2 (лето)), хотя время должно быть 00:00:00
+       *       new Date( 2020, 0, 1, 0, 0, 0, 0 ) возвращает Wed Jan 01 2003 01:00:00 GMT+0400 (RTZ 2 (лето)), хотя время должно быть 00:00:00
+       *       new Date( 2025, 0, 1, 0, 0, 0, 0 ) возвращает Wed Jan 01 2003 01:00:00 GMT+0400 (RTZ 2 (лето)), хотя время должно быть 00:00:00
+       *    На данный момент невозможно получить время для данной даты в промежутке 00:00:00 - 01:00:00
+       *    Если же первое января выпадает не на среду, то дата возвращается верная (все остальные месяцы и дни в январе работают правильно):
+       *    Примеры:
+       *       new Date( 2017, 0, 1, 0, 0, 0, 0 ) возвращает Sun Jan 01 2017 00:00:00 GMT+0300 (RTZ 2 (зима))
+       *       new Date( 2003, 0, 2, 0, 0, 0, 0 ) возвращает Thu Jan 02 2003 00:00:00 GMT+0400 (RTZ 2 (лето))
+       *       new Date( 2003, 2, 1, 0, 0, 0, 0 ) возвращает Sat Mar 01 2003 00:00:00 GMT+0400 (RTZ 2 (лето))
+       *       new Date( 2014, 7, 1, 0, 0, 0, 0 ) возвращает Fri Aug 01 2014 00:00:00 GMT+0400 (RTZ 2 (лето))
+       *
+       * @param {number} year полный год ( т.е., например, для '2014' именно '2014', а не '14' )
+       * @param {number} month месяц, нумерация с нуля: 0 - январь, 1 - февраль, ...
+       * @returns {Date}
+       * @private
+       */
+      _getFirstDay: function ( year, month ) {
+         return new Date( year, month || 0, 1, 0, 0, 0, 0 );
+      },
+
+      /**
+       * Получить последний день:
+       *    а. года, если передан только параметр year
+       *    б. месяца, если переданы оба параметра year и month
+       * с временем 23:59:59.999 (за миллисекунду до полночи следущего дня, то есть абсолютный конец данного дня)
+       * @param {number} year полный год ( т.е., например, для '2014' именно '2014', а не '14' )
+       * @param {number} month месяц, нумерация с нуля: 0 - январь, 1 - февраль, ...
+       * @returns {Date}
+       * @private
+       */
+      _getLastDay: function ( year, month ) {
+         return new Date( year, month + 1 || 12, 0, 23, 59, 59, 999 );
       },
 
       /**

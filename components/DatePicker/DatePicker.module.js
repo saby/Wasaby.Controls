@@ -44,19 +44,37 @@ define(
          },
          /**
           * Допустимые при создании контролла маски.
-          * I. Маски для отображения даты:
-          *     1. DD.MM.YYYY
-          *     2. DD.MM
-          *     3. DD.MM.YY
-          *     4. YY-MM-DD
-          *     5. YYYY-MM-DD
           */
          _possibleMasks: [
-            'DD.MM.YY',
+            // I. Маски для отображения даты:
             'DD.MM.YYYY',
+            'DD.MM.YY',
             'DD.MM',
+            'YYYY-MM-DD',
             'YY-MM-DD',
-            'YYYY-MM-DD'
+            // II. Маски для отображения времени:
+            'HH:II:SS.UUU',
+            'HH:II:SS',
+            'HH:II',
+            // III. Маски для комбинированного отображения даты и времени:
+            'DD.MM.YYYY HH:II:SS.UUU',
+            'DD.MM.YYYY HH:II:SS',
+            'DD.MM.YYYY HH:II',
+            'DD.MM.YY HH:II:SS.UUU',
+            'DD.MM.YY HH:II:SS',
+            'DD.MM.YY HH:II',
+            'DD.MM HH:II:SS.UUU',
+            'DD.MM HH:II:SS',
+            'DD.MM HH:II',
+            'YYYY-MM-DD HH:II:SS.UUU',
+            'YYYY-MM-DD HH:II:SS',
+            'YYYY-MM-DD HH:II',
+            'YY-MM-DD HH:II:SS.UUU',
+            'YY-MM-DD HH:II:SS',
+            'YY-MM-DD HH:II',
+            // IV. Маски для месяца и года:
+            'YYYY',
+            'MM/YYYY'
          ],
          /**
           * Контролл Calendar в пикере
@@ -68,19 +86,44 @@ define(
          _options: {
             /**
              * @cfg {String} Формат отображения даты, на базе которой будет создана html-разметка и в соответствии с которой
-             * будет определён весь функционал
+             * будет определён весь функционал. Должна представлять собой одну из масок в массиве допустимых маск.
              * <wiTag group="Отображение" page=1>
-             * @variant 'DD.MM.YY'
-             * @variant 'DD.MM.YYYY'
-             * @variant 'DD.MM'
-             * @variant 'YY-MM-DD'
-             * @variant 'YYYY-MM-DD'
+             * @variant 'DD.MM.YYYY',
+             * @variant 'DD.MM.YY',
+             * @variant 'DD.MM',
+             * @variant 'YYYY-MM-DD',
+             * @variant 'YY-MM-DD',
+             * @variant 'HH:II:SS.UUU',
+             * @variant 'HH:II:SS',
+             * @variant 'HH:II',
+             * @variant 'DD.MM.YYYY HH:II:SS.UUU',
+             * @variant 'DD.MM.YYYY HH:II:SS',
+             * @variant 'DD.MM.YYYY HH:II',
+             * @variant 'DD.MM.YY HH:II:SS.UUU',
+             * @variant 'DD.MM.YY HH:II:SS',
+             * @variant 'DD.MM.YY HH:II',
+             * @variant 'DD.MM HH:II:SS.UUU',
+             * @variant 'DD.MM HH:II:SS',
+             * @variant 'DD.MM HH:II',
+             * @variant 'YYYY-MM-DD HH:II:SS.UUU',
+             * @variant 'YYYY-MM-DD HH:II:SS',
+             * @variant 'YYYY-MM-DD HH:II',
+             * @variant 'YY-MM-DD HH:II:SS.UUU',
+             * @variant 'YY-MM-DD HH:II:SS',
+             * @variant 'YY-MM-DD HH:II',
+             * @variant 'YYYY',
+             * @variant 'MM/YYYY'
              */
             mask: 'DD.MM.YY',
             /**
              * Дата
              */
-            date: null
+            date: null,
+            /**
+             * Показана ли иконка календарика. По умолчанию -- true. Если маска представляет собой только время,
+             * то автоматически (точнее в методе _checkTypeOfMask ) становится false.
+             */
+            isCalendarIconShown: true
          }
       },
 
@@ -91,21 +134,28 @@ define(
 
          // Проверяем, является ли маска, с которой создается контролл, допустимой
          this._checkPossibleMask();
+         // Проверить тип маски -- дата, время или и дата, и время. В случае времени -- сделать isCalendarIconShown = false
+         this._checkTypeOfMask();
 
          // Первоначальная установка даты, если передана опция
          if ( this._options.date ) {
             this._setDate( this._options.date );
          }
 
-         // Клик по иконке календарика
-         $('.js-controls-DatePicker__calendarIcon', this.getContainer().get(0)).click(function(){
-            self.togglePicker();
+         if ( self._options.isCalendarIconShown ) {
+            // Клик по иконке календарика
+            $('.js-controls-DatePicker__calendarIcon', this.getContainer().get(0)).click(function(){
+               self.togglePicker();
 
-            // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
-            if ( self._picker.isVisible() && self._options.date ){
-               self._calendarControl.setDate(self._options.date);
-            }
-         });
+               // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
+               if ( self._picker.isVisible() && self._options.date ){
+                  self._calendarControl.setDate(self._options.date);
+               }
+            });
+         }
+         else {
+            $('.js-controls-DatePicker__calendarIcon', this.getContainer().get(0)).parent().addClass('ws-hidden');
+         }
 
          // Потеря фокуса. Работает так же при клике по иконке календарика.
          // Если пользователь ввел слишком большие данные ( напр., 45.23.7234 ), то значение установится корректно,
@@ -154,10 +204,21 @@ define(
        * @private
        */
       _checkPossibleMask: function(){
-         if ( this._possibleMasks.length !== 0 ){
-            if ( Array.indexOf(this._possibleMasks, this._options.mask) == -1 ){
-               throw new Error('Маска не удовлетворяет ни одной допустимой маске данного контролла');
-            }
+         if ( Array.indexOf(this._possibleMasks, this._options.mask) == -1 ){
+            throw new Error('Маска не удовлетворяет ни одной допустимой маске данного контролла');
+         }
+      },
+
+      /**
+       * Проверить тип даты. Скрыть иконку календаря, если
+       *    1. Отсутствуют день, месяц и год (т.е. присутствует только время)
+       *    2. Присутствует день и месяц, но отсутствует год
+       * @private
+       */
+      _checkTypeOfMask: function () {
+         if ( !/[DMY]/.test(this._options.mask) || ( /[DMY]/.test(this._options.mask) && !/Y/.test(this._options.mask) )
+               || ( /[DMY]/.test(this._options.mask) && !/D/.test(this._options.mask) ) ){
+            this._options.isCalendarIconShown = false;
          }
       },
 
@@ -248,7 +309,7 @@ define(
             availCharsArray = this._primalMask.match(regexp);
 
          for (var i = 0; i < availCharsArray.length; i++) {
-            switch (availCharsArray[i]) {
+            switch ( availCharsArray[i] ) {
                case 'YY' :
                   date.setYear('20' + text.substr(0, 2));
                   text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
@@ -264,6 +325,22 @@ define(
                case 'DD' :
                   date.setDate(text.substr(0, 2));
                   text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
+                  break;
+               case 'HH' :
+                  date.setHours(text.substr(0, 2));
+                  text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
+                  break;
+               case 'II' :
+                  date.setMinutes(text.substr(0, 2));
+                  text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
+                  break;
+               case 'SS' :
+                  date.setSeconds(text.substr(0, 2));
+                  text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
+                  break;
+               case 'UUU' :
+                  date.setMilliseconds(text.substr(0, 3));
+                  text = text.substr(4);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
             }
          }
@@ -285,10 +362,14 @@ define(
 
          for ( var i = 0; i < availCharsArray.length; i++ ){
             switch ( availCharsArray[i] ){
-               case 'YY'   : textObj.YY = ( ''+date.getFullYear() ).slice(-2);    break;
-               case 'YYYY' : textObj.YYYY = date.getFullYear();                     break;
-               case 'MM'   : textObj.MM = ( '0'+(date.getMonth()+1)).slice(-2);  break;
-               case 'DD'   : textObj.DD = ( '0'+date.getDate()).slice(-2);       break;
+               case 'YY'   : textObj.YY   = ( '000' + date.getFullYear() ).slice(-2);     break;
+               case 'YYYY' : textObj.YYYY = ( '000' + date.getFullYear() ).slice(-4);     break;
+               case 'MM'   : textObj.MM   = ( '0' + (date.getMonth() + 1) ).slice(-2);    break;
+               case 'DD'   : textObj.DD   = ( '0' + date.getDate()).slice(-2);            break;
+               case 'HH'   : textObj.HH   = ( '0' + date.getHours()).slice(-2);           break;
+               case 'II'   : textObj.II   = ( '0' + date.getMinutes()).slice(-2);         break;
+               case 'SS'   : textObj.SS   = ( '0' + date.getSeconds()).slice(-2);         break;
+               case 'UUU'  : textObj.UUU  = ( '00' + date.getMilliseconds()).slice(-3);   break;
             }
          }
          var text = this._primalMask;

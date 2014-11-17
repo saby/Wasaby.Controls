@@ -120,7 +120,7 @@ define(
             // Обработка клика по календарному дню
             var self = this;
             $('.controls-Calendar__tableBodyElement', this.getContainer().get(0)).click(function(){
-               workingDate = new Date(new Date(date).setDate($(this).attr('data-day')));
+               workingDate = new Date( date.getFullYear(), date.getMonth(), $(this).attr('data-day'), 0, 0, 0, 0 );
                self._setDate(workingDate);
                self._notify('onSelect', workingDate);
             });
@@ -149,6 +149,8 @@ define(
           * TODO в будущем, возможно, будет отличатся тем, что будет генерировать событие
           */
          setDate: function(date){
+            date = date ? date : new Date();
+
             this._setDate(date);
          },
 
@@ -159,6 +161,8 @@ define(
           */
          _setDate: function(date){
             if( date instanceof Date ){
+               // Зануляем время
+               date.setHours(0, 0, 0, 0);
                // Обновляем значение даты
                this._options.date = date;
                // Устанавливаем дату в дочерний контролл MonthPicker
