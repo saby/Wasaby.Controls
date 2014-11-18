@@ -40,7 +40,7 @@ define(
          },
 
          $constructor: function () {
-            this._publish('onSelect');
+            this._publish('onChange');
          },
 
          init: function(){
@@ -60,7 +60,7 @@ define(
             }
 
             // Изменение даты с помощью дочернего контролла MonthPicker
-            this.monthControl.subscribe('onDateChange', function(eventObject, date){
+            this.monthControl.subscribe('onChange', function(eventObject, date){
                self._setDate(date);
             });
 
@@ -121,8 +121,7 @@ define(
             var self = this;
             $('.controls-Calendar__tableBodyElement', this.getContainer().get(0)).click(function(){
                workingDate = new Date( date.getFullYear(), date.getMonth(), $(this).attr('data-day'), 0, 0, 0, 0 );
-               self._setDate(workingDate);
-               self._notify('onSelect', workingDate);
+               self.setDate(workingDate);
             });
 
             // Если контролл Calendar находится в пикере другого контролла, который в свою очередь
@@ -146,12 +145,11 @@ define(
 
          /**
           * Установить дату по переданному объекту Date. Публичный метод
-          * TODO в будущем, возможно, будет отличатся тем, что будет генерировать событие
           */
          setDate: function(date){
             date = date ? date : new Date();
-
             this._setDate(date);
+            this._notify('onChange', date);
          },
 
          /**
