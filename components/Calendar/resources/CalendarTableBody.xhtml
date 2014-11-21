@@ -1,16 +1,13 @@
 <tbody class="controls-Calendar__tableBody">
-    {{~it.dayArray :value:index}}
-        {{?index%7==0}}
+    {{~it.weeksArray :week:index}}
         <tr class="controls-Calendar__tableBodyRow">
-        {{?}}
-        {{?value.isCalendar}}
-        <td data-day="{{=value.day}}" class="controls-Calendar__tableElement controls-Calendar__tableBodyElement">{{=value.day}}</td>
-        {{?}}
-        {{?!value.isCalendar}}
-        <td class="controls-Calendar__tableElement controls-Calendar__tableElementFog">{{=value.day}}</td>
-        {{?}}
-        {{?index%7==6}}
+            {{~week :value:indexOfDay}}
+                {{?value.isCalendar}}
+                <td data-day="{{=value.day}}" class="controls-Calendar__tableElement controls-Calendar__tableBodyElement">{{=value.day}}</td>
+                {{??}}
+                <td class="controls-Calendar__tableElement controls-Calendar__tableElementFog">{{=value.day}}</td>
+                {{?}}
+            {{~}}
         </tr>
-        {{?}}
     {{~}}
 </tbody>
