@@ -149,7 +149,7 @@ define(
 
                // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
                if ( self._picker.isVisible() && self._options.date ){
-                  self._calendarControl.setDate(self._options.date);
+                  self._calendarControl._setDate(self._options.date);
                }
             });
          }
@@ -192,9 +192,8 @@ define(
          this._picker.getContainer().append(element);
 
          // Нажатие на календарный день в пикере устанавливает дату
-         this._calendarControl.subscribe('onSelect', function(eventObject, date){
+         this._calendarControl.subscribe('onChange', function(eventObject, date){
             self.setDate(date);
-            self._notify('onChange',date);
             self.hidePicker();
          });
       },
@@ -231,15 +230,16 @@ define(
          text = text ? text: '';
          DatePicker.superclass.setText.call( this, text );
          this._options.date = text == '' ? null : this._getDateByText( text );
+         this._notify('onChange', this._options.date);
       },
 
       /**
-       * Установить дату. Публичный метод.
-       * TODO в будущем будет отличаться тем, что будет генерировать событие
+       * Установить дату. Публичный метод. Отличается от приватного метода тем, что генерирует событие.
        * @param date
        */
       setDate: function ( date ) {
          this._setDate( date );
+         this._notify('onChange', this._options.date);
       },
 
       /**
