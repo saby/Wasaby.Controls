@@ -673,6 +673,7 @@ input[type="reset"]::-moz-focus-inner {
   display: table-cell;
   vertical-align: middle;
   font-style: normal;
+  white-space: pre;
 }
 .controls-ButtonGroup__vertical .controls-ListView__item {
   display: block;
