@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ToggleButtonBase', 'html!SBIS3.CONTROLS.CheckBox'], function(ToggleButtonBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS._CheckedMixin', 'html!SBIS3.CONTROLS.CheckBox'], function(ButtonBase, _CheckedMixin, dotTplFn) {
 
    'use strict';
 
@@ -17,17 +17,30 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ToggleButtonBase', 'htm
     * @category Inputs
     */
 
-   var CheckBox = ToggleButtonBase.extend( /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
+   var CheckBox = ButtonBase.extend([_CheckedMixin], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
       $protected: {
          _dotTplFn : dotTplFn,
          _checkBoxCaption: null,
          _options: {
-
+            /**
+             * @cfg {Boolean} Наличие неопределённого значения
+             * Возможные значения:
+             * <ul>
+             *    <li>true - есть неопределённое значение;</li>
+             *    <li>false - нет неопределённого значения.</li>
+             * </ul>
+             */
+            threeState: false
          }
       },
 
       $constructor: function() {
          this._checkBoxCaption = $('.js-controls-CheckBox__caption', this._container);
+         if (!this._options.threeState) {
+            this._options.checked = !!(this._options.checked);
+         } else {
+            this._options.checked = (this._options.checked === false || this._options.checked === true) ? this._options.checked : null;
+         }
       },
      /**
       * Установить текст подписи флага.
@@ -49,6 +62,54 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ToggleButtonBase', 'htm
          }
          else {
             this._checkBoxCaption.empty().addClass('ws-hidden');
+         }
+      },
+
+      /**
+       * Устанавливает состояние кнопки.
+       * @param {Boolean} flag Признак состояния кнопки true/false.
+       * @example
+       * <pre>
+       *     var btn = this.getChildControlByName(("myButton");
+       *        btn.setChecked(true);
+       * </pre>
+       * @see checked
+       * @see isChecked
+       * @see setValue
+       */
+      setChecked: function(flag) {
+         if (flag === true) {
+            this._container.addClass('controls-ToggleButton__checked');
+            this._container.removeClass('controls-ToggleButton__null');
+            this._options.checked = true;
+         } else
+         if (flag === false) {
+            this._container.removeClass('controls-ToggleButton__checked');
+            this._container.removeClass('controls-ToggleButton__null');
+            this._options.checked = false;
+         } else {
+            if (this._options.threeState) {
+               this._container.removeClass('controls-ToggleButton__checked');
+               this._container.addClass('controls-ToggleButton__null');
+               this._options.checked = null;
+            }
+         }
+         this.saveToContext('Checked', this._options.checked);
+         this._notify('onChange', this._options.checked);
+      },
+
+      _clickHandler: function() {
+         if (!this._options.threeState) {
+            this.setChecked(!(this.isChecked()));
+         } else {
+            if (this._options.checked === true){
+               this.setChecked(false);
+            } else
+            if (this._options.checked === false){
+               this.setChecked(null);
+            } else  {
+               this.setChecked(true);
+            }
          }
       }
 

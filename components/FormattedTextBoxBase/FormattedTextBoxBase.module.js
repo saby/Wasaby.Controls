@@ -1,4 +1,10 @@
-define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase','is!msIe?js!SBIS3.CONTROLS.FormattedTextBoxBase/resources/ext/ierange-m2-min'], function (TextBoxBase) {
+define(
+   'js!SBIS3.CONTROLS.FormattedTextBoxBase',
+   [
+      'js!SBIS3.CONTROLS.TextBoxBase',
+      'is!msIe?js!SBIS3.CONTROLS.FormattedTextBoxBase/resources/ext/ierange-m2-min'
+   ],
+   function ( TextBoxBase ) {
 
    'use strict';
 
@@ -11,7 +17,7 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
     * @control
     */
 
-   var FormattedTextBoxBase = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.FormattedTextBoxBase.prototype */{
+   var FormattedTextBoxBase = TextBoxBase.extend( /** @lends SBIS3.CONTROLS.FormattedTextBoxBase.prototype */ {
       $protected: {
          /**
           * Изначальная маска (либо задается в опциях при создании, либо берется по умолчанию)
@@ -20,14 +26,21 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
          /**
           * Изначально отображаемый текст в созданном контролле, то есть, по сути, маска, где каждый
           * управляющий символ заменён на символ-заполнитель
-          * Пример: если маска контролла FieldFormatDate имеет вид 'DD:MM:YYYY', то чистая маска будет иметь вид '__:__:____',
+          * Пример: если маска контролла DatePicker имеет вид 'DD:MM:YYYY', то чистая маска будет иметь вид '__:__:____',
           * если символом-заполнителем является знак нижней черты.
           */
          _clearMask: '',
          /**
-          * Html-разметка, соответствующая изначальной маске
+          * Регулярное выражение, соответствующее изначальной маске.
+          * Сначала допустимым управляющим символам ставятся в соотвествие основные управляющие символы,
+          * затем на основании основных управляющих символов строится само регулярное выражение.
+          * Пример:
+          *       Для контролла DatePicker
+          *          Если маска 'DD:MM:YY', то регулярное выражение: /[0-9][0-9]:[0-9][0-9]:[0-9][0-9]/
+          *          т.к. допустимым управляющим символам 'D', 'M', 'Y' соответствует основной управляющий символ 'd',
+          *          который представляет собой целое число ( т.е. для которого регулярное выражение /[0-9]/ ).
           */
-         _htmlMask: '',
+         _maskRegExp: undefined,
          /**
           * Логическое, определяющее, является ли первый контейнер контейнером-разделителем
           */
@@ -45,14 +58,19 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
          /**
           * Набор допустимых управляющих символов в маске. Задаются отдельно в каждом контролле в зависимости от контекста.
           * Пример:
-          *       Для контролла FieldFormatDate это: Y(год), M(месяц), D(день), H(час), I(минута), S(секунда), U(доля секунды).
+          *       Для контролла DatePicker это: Y(год), M(месяц), D(день), H(час), I(минута), S(секунда), U(доля секунды).
           * Каждому допустимому символу ставится в соответствие основной
           * управляющий символ, в зависимости от которого определяется, какой тип символа может вводиться.
+          * Условные обозначения основных управляющих символов:
+          *     1. d - Цифра
+          *     2. L - Заглавная буква
+          *     3. l - Строчная буква
+          *     4. x - Буква или цифра
           * Если допустимые управляющие символы не заданы, используются основные управляющие символы.
           * Сами управляющие символы используются для задании маски при создании контролла в опции mask.
           * Любой символ, не являющийся управляющим трактуется как разделитель.
           * Набор указывается строго символ к символу. Пример:
-          *       Для контролла FieldFormatDate
+          *       Для контролла DatePicker
           *             _controlCharactersSet: {
           *                   'Y' : 'd',
           *                   'M' : 'd',
@@ -67,25 +85,10 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
          /**
           * Строка всех допустимых управляющих символов, создается автоматически из набора _controlCharactersSet,
           * используется в регулярных выражениях.
-          * Пример: для FieldFormatDate будет:
+          * Пример: для DatePicker будет:
           *       _controlCharacters: 'DMYHISU'
           */
          _controlCharacters: '',
-         /**
-          * Основные управляющие символы в маске.
-          * Условные обозначения:
-          *     1. d - Цифра
-          *     2. L - Заглавная буква
-          *     3. l - Строчная буква
-          *     4. x - Буква или цифра
-          */
-         _generalControlCharacters: 'dLlx',
-         /**
-          * Допустимые при создании контролла маски. Если массив пуст (по умолчанию) -- любая маска.
-          * Если массив допустимых масок задан, и вводится маска, не содержащаяся в массиве, то создание
-          * контролла прерывается с ошибкой.
-          */
-         _possibleMasks: [],
          /**
           * Опции создаваемого контролла
           */
@@ -95,7 +98,9 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
          _KEYS: {
             DELETE: 46,
             TAB: 9,
-            BACKSPACE: 8
+            BACKSPACE: 8,
+            ARROW_LEFT: 37,
+            ARROW_RIGHT: 39
          }
       },
 
@@ -103,73 +108,88 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
          this._initializeComponents();
       },
 
+      /**
+       * Обновить хранимое значение в поле this._options.text (т.к. мы наследуем от TextBoxBase) в соотвествии с введённым значением
+       * @private
+       */
+      _updateText:function(){
+         /*Method must be implemented*/
+      },
+
+      /**
+       * Получить текущую используемую маску
+       * @private
+       */
       _getMask:function(){
          /*Method must be implemented*/
       },
 
       _initializeComponents: function(){
-         try {
-            var self = this;
+         var self = this;
 
-            this._inputField = $('.controls-FormattedTextBox__field', this.getContainer().get(0));
+         this._inputField = $('.controls-FormattedTextBox__field', this.getContainer().get(0));
 
-            this._primalMask = this._getMask();
-            this._controlCharacters = this._getControlCharactersSet();
-            this._clearMask = this._getClearMask();
-            this._isSeparatorContainerFirst = this._getTypeOfFirstContainer();
-            this._htmlMask = this._getHtmlMask();
-            this._inputField.html(this._htmlMask);
+         this._primalMask = this._getMask();
+         this._controlCharacters = this._getControlCharactersSet();
+         this._clearMask = this._getClearMask();
+         this._maskRegExp = this._getRegExpByMask(this._primalMask);
+         this._isSeparatorContainerFirst = this._getTypeOfFirstContainer();
+         this._inputField.html( this._getHtmlMask() );
 
-            if(this._options.text){
-               this.setText(this._options.text);
+         if(this._options.text){
+            this.setText(this._options.text);
+         }
+
+         this._inputField.focus(function () {
+            self._focusHandler();
+         });
+         this._inputField.keypress(function (event) {
+            event.preventDefault();
+         });
+         this._inputField.keyup(function (event) {
+            event.preventDefault();
+         });
+
+         this._inputField.keydown(function (event) {
+            event.preventDefault();
+            var
+               key = event.which,
+               type = '';
+
+            if (!event.ctrlKey && key != self._KEYS.DELETE && key != self._KEYS.BACKSPACE
+                  && key != self._KEYS.ARROW_LEFT && key != self._KEYS.ARROW_RIGHT) {
+               type = event.shiftKey ? 'shift_character' : 'character';
+               self._keyPressHandler(key, type);
             }
-
-            this._inputField.focus(function () {
-               self._focusHandler(self._inputField.get(0));
-            });
-            this._inputField.keypress(function (event) {
-               event.preventDefault();
-            });
-            this._inputField.keyup(function (event) {
-               event.preventDefault();
-            });
-
-            this._inputField.keydown(function (event) {
-               event.preventDefault();
-               var
-                  key = event.which,
-                  type = '';
-
-               if (!event.ctrlKey && key != self._KEYS.DELETE && key != self._KEYS.BACKSPACE) {
-                  type = event.shiftKey ? 'shift_character' : 'character';
-                  self._keyPressHandler(key, type);
-               }
-               else if (key == self._KEYS.DELETE) {
-                  self._keyPressHandler(key, 'delete');
-               }
-               else if (key == self._KEYS.BACKSPACE) {
-                  self._keyPressHandler(key, 'backspace');
-               }
-            });
-         }
-         catch(error){
-            console.error('Error: Ошибка при создании контролла:\nId: %s\nMessage: %s\n',
-               this.getContainer().get(0).id, error.message);
-         }
+            else if (key == self._KEYS.DELETE) {
+               self._keyPressHandler(key, 'delete');
+            }
+            else if (key == self._KEYS.BACKSPACE) {
+               self._keyPressHandler(key, 'backspace');
+            }
+            else if (key == self._KEYS.ARROW_LEFT) {
+               self._keyPressHandler(key, 'arrow_left');
+            }
+            else if (key == self._KEYS.ARROW_RIGHT) {
+               self._keyPressHandler(key, 'arrow_right');
+            }
+         });
       },
 
       /**
        * Обработка события фокусировки на элементе
-       * @param elem
+       * // TODO пока работает некорректно (точнее просто почему-то ничего не делает)
        * @private
        */
-      _focusHandler: function(elem){
-         if ($(elem).text() == $(this._htmlMask).text()){
+      _focusHandler: function(){
+         // Если в поле еще не введено ни единого символа -- установить курсор в начало поля
+         if ( $(this._inputField.get(0)).text() == this._clearMask ){
             var
                child = this._isSeparatorContainerFirst ? 1 : 0,
-               contNext = elem.childNodes[child].childNodes[0],
-               startPos = 0;
-            this._moveCursor(contNext, startPos);
+               startContainer = this._inputField.get(0).childNodes[child].childNodes[0],
+               startPosition = 0;
+
+            this._moveCursor(startContainer, startPosition);
          }
       },
 
@@ -181,84 +201,98 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
        */
       _keyPressHandler: function(key, type){
          var
-            inputField = this._inputField.get(0),
-            array = this._getCursor(true),
-            containerIndex = array[0],
-            position = array[1],
-            container = this._getContainerByIndex(containerIndex),
-            regexp = this._keyExp(containerIndex, position),
+            positionIndexes = this._getCursor(true),
+            positionObject = {
+               container: this._getContainerByIndex(positionIndexes[0]),
+               position: positionIndexes[1]
+            },
+            regexp = this._keyExp(positionIndexes[0], positionIndexes[1]),
             character = String.fromCharCode(key),
-            nextSibling = container.parentNode.nextSibling,
-            nChild;
+            nextSibling = positionObject.container.parentNode.nextSibling;
 
-         character = type == 'shift_character' ? character.toUpperCase() : character.toLowerCase();
-
-         if (type == 'character' || type == 'shift_character') {
+         if ( type == 'character' || type == 'shift_character' ) {
+            // Обработка зажатой кнопки shift ( -> в букву верхнего регистра)
+            character = type == 'shift_character' ? character.toUpperCase() : character.toLowerCase();
+            // Проверка по действительной маске
             character = regexp[1] ? ( regexp[1] == 'toUpperCase' ? character.toUpperCase() : character.toLowerCase() ) : character;
 
-
             if ( regexp[0].test(character) ) {
-               if ( position == container.nodeValue.length ){
-                  if (nextSibling && nextSibling.nextSibling){
-                     container = nextSibling.nextSibling.childNodes[0];
-                     position = 0;
+               if ( positionObject.position == positionObject.container.nodeValue.length ){
+                  if ( nextSibling && nextSibling.nextSibling ){
+                     positionObject.container = nextSibling.nextSibling.childNodes[0];
+                     positionObject.position = 0;
 
-                     regexp = this._keyExp($(container.parentNode).index(), position);
+                     // Перешли в новое место -- нужно обновить проверку и посмотреть снова
+                     regexp = this._keyExp($(positionObject.container.parentNode).index(), positionObject.position);
                      if ( regexp[0].test(character) ) {
-                        this._replaceCharacter(container, position, character);
-                        position++;
+                        // Проверка по действительной маске
+                        character = regexp[1] ? ( regexp[1] == 'toUpperCase' ? character.toUpperCase() : character.toLowerCase() ) : character;
+                        this._replaceCharacter(positionObject.container, positionObject.position, character);
+                        positionObject.position++;
                      }
                   }
-                  else {
-                     nChild = this._isSeparatorContainerFirst ? 1 : 0;
-                     container = this._getContainerByIndex(nChild);
-                     position = 0;
-                  }
                }
                else {
-                  this._replaceCharacter(container, position, character);
-                  position++;
+                  this._replaceCharacter(positionObject.container, positionObject.position, character);
+                  positionObject.position++;
                }
             }
          }
-         else if (type == 'delete'){
-            if ( position == container.nodeValue.length ){
-               if (nextSibling && nextSibling.nextSibling){
-                  container = nextSibling.nextSibling.childNodes[0];
-                  position = 0;
+         else if ( type == 'delete' ){
+            if ( positionObject.position == positionObject.container.nodeValue.length ){
+               if ( nextSibling && nextSibling.nextSibling ){
+                  positionObject.container = nextSibling.nextSibling.childNodes[0];
+                  positionObject.position = 0;
 
-                  this._replaceCharacter(container, position, this._placeholder);
-                  position++;
-               }
-               else {
-                  nChild = this._isSeparatorContainerFirst ? 1 : 0;
-                  container = this._getContainerByIndex(nChild);
-                  position = 0;
+                  this._replaceCharacter(positionObject.container, positionObject.position, this._placeholder);
+                  positionObject.position++;
                }
             }
             else {
-               this._replaceCharacter(container, position, this._placeholder);
-               position++;
+               this._replaceCharacter(positionObject.container, positionObject.position, this._placeholder);
+               positionObject.position++;
             }
          }
-         else if (type == 'backspace'){
-            if ( position === 0 ){
-               var prevSibling = container.parentNode.previousSibling;
-
-               if (prevSibling && prevSibling.previousSibling){
-                  container = prevSibling.previousSibling.childNodes[0];
-                  position = container.nodeValue.length - 1;
-
-                  this._replaceCharacter(container, position, this._placeholder);
-               }
-            }
-            else {
-               position--;
-               this._replaceCharacter(container, position, this._placeholder);
-            }
+         else if ( type == 'backspace' ){
+            this._getPreviousPosition(positionObject);
+            this._replaceCharacter(positionObject.container, positionObject.position, this._placeholder);
+         }
+         else if ( type == 'arrow_left' ){
+            this._getPreviousPosition(positionObject);
+         }
+         else if ( type == 'arrow_right' ){
+            this._getNextPosition(positionObject);
          }
 
-         this._moveCursor(container, position);
+         this._moveCursor(positionObject.container, positionObject.position);
+      },
+
+      _getPreviousPosition: function (positionObject) {
+         var prevSibling = positionObject.container.parentNode.previousSibling;
+
+         if ( positionObject.position === 0 ){
+            if ( prevSibling && prevSibling.previousSibling ){
+               positionObject.container = prevSibling.previousSibling.childNodes[0];
+               positionObject.position = positionObject.container.nodeValue.length - 1;
+            }
+         }
+         else {
+            positionObject.position--;
+         }
+      },
+
+      _getNextPosition: function (positionObject) {
+         var nextSibling = positionObject.container.parentNode.nextSibling;
+
+         if ( positionObject.position == positionObject.container.nodeValue.length ){
+            if ( nextSibling && nextSibling.nextSibling ){
+               positionObject.container = nextSibling.nextSibling.childNodes[0];
+               positionObject.position = 0;
+            }
+         }
+         else {
+            positionObject.position++;
+         }
       },
 
       /**
@@ -280,31 +314,32 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
             controlCharacter = this._controlCharactersSet[primalCharacter],
             transform = { 'L': 'toUpperCase', 'l': 'toLowerCase' };
 
-         return [ this._charToRegExp(controlCharacter), transform[controlCharacter] || false ];
+         return [ this._charToRegExp(controlCharacter, true), transform[controlCharacter] || false ];
       },
 
       /**
-       * Конвертирует символ маски в regExp
+       * Конвертирует символ маски в регулярное выражение для данного символа
        * @param {String} c символ маски
+       * @param {Boolean} isRegExp преобразовать ли сразу в регулярное выражение, или отдать строкой
        * @return {RegExp}
        * @private
        */
-      _charToRegExp : function(c){
+      _charToRegExp : function(c, isRegExp){
          var regexp;
          switch(c) {
             case 'd':
-               regexp = /\d/; // Regular expression /\d/ is equal to /[0-9]/
+               regexp = '[0-9]';
                break;
             case 'L':
             case 'l':
-               regexp = /[А-ЯA-Zа-яa-zёЁ]/;
+               regexp = '[А-ЯA-Zа-яa-zёЁ]';
                break;
             case 'x':
             default :
-               regexp = /[А-ЯA-Zа-яa-z0-9ёЁ]/;
+               regexp = '[А-ЯA-Zа-яa-z0-9ёЁ]';
                break;
          }
-         return regexp;
+         return isRegExp ? new RegExp(regexp) : regexp;
       },
 
       /**
@@ -319,9 +354,6 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
          buffer[position] = character;
          container.nodeValue = buffer.join('');
          this._updateText();
-      },
-      _updateText:function(){
-         /*Method must be implemented*/
       },
 
       /**
@@ -421,24 +453,30 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
 
       /**
        * Возвращает html-разметку для заданной маски
+       * @param {string} text необязательный параметр, текст для установки (должен удовлетворять маске "символ в символ")
        * @returns {string} html-разметка
        * @private
        */
-      _getHtmlMask: function(text){
+      _getHtmlMask: function( text ){
          var
             htmlMask = '',
             placeholder = this._placeholder,
             placeholderContainers = this._clearMask.match(new RegExp('('+placeholder+'+)', 'g')),
             separatorContainers = this._clearMask.match(new RegExp('([^'+placeholder+']+)', 'g'));
 
-         var textExist=false;
-         var placeholderContainersValues=[];
+         var
+            textExist = false,
+            placeholderContainersValues = [];
 
-         if (text) {
+         if ( text ) {
             textExist = true;
-            for (var j = 0; j < placeholderContainers.length; j++) {
+            if ( this._isSeparatorContainerFirst ) {
+               text = text.substr(separatorContainers[0].length);
+            }
+            for ( var j = 0; j < placeholderContainers.length; j++ ) {
                placeholderContainersValues[j] = text.substr(0, placeholderContainers[j].length);
-               text = text.substr(placeholderContainers[j].length);
+               text = placeholderContainers[j] ? text.substr(placeholderContainers[j].length) : text;
+               text = separatorContainers[j] ? text.substr(separatorContainers[j].length) : text;
             }
          }
 
@@ -470,6 +508,87 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
       },
 
       /**
+       * Установить значение в поле. Значение вводится в точности с маской, включая разделяющие символы
+       * Пример. Если маска 'd(ddd)ddd-dd-dd', то setText('8(111)888-11-88')
+       * @param text Строка нового значения
+       */
+      setText: function( text ){
+         text = text ? text: '';
+
+         if ( typeof text == 'string' ) {
+            if ( text == '' || this._checkTextByMask( text ) ) {
+               text = text == '' ? '' : this._correctRegister( text );
+               this._inputField.html( this._getHtmlMask(text) );
+               FormattedTextBoxBase.superclass.setText.call( this, text );
+            }
+            else {
+               throw new Error('Устанавливаемое значение не удовлетворяет маске данного контролла');
+            }
+         }
+         else {
+            throw new Error('Аргументом должна являться строка');
+         }
+      },
+
+      /**
+       * Проверить значение на соответствие данной маске
+       * @private
+       */
+      _checkTextByMask: function ( text ) {
+         return new RegExp( this._maskRegExp ).test( text );
+      },
+
+      /**
+       * Получить регулярное выражение, соответсвующие маске. В основном, используется this._primalMask, но можно
+       * использовать для формирования регулярного выражения любой маски, записанной допустимыми управляющими символами
+       * @param mask
+       * @returns {RegExp}
+       * @private
+       */
+      _getRegExpByMask: function ( mask ) {
+         var
+            controlCharactersRegExp = new RegExp('['+this._controlCharacters+']'),
+            specialCharactersRegExp = /^[\\\/\[\])(}{}+?*^|.$]$/;
+
+         mask = mask.split('');
+
+         for ( var c in mask ) {
+            if ( controlCharactersRegExp.test( mask[c] ) ) {
+               mask[c] = this._charToRegExp( this._controlCharactersSet[mask[c]], false );
+            }
+            else if ( specialCharactersRegExp.test( mask[c] ) ) {
+               mask[c] = '\\' + mask[c];
+            }
+         }
+
+         return new RegExp('^' + mask.join('') + '$');
+      },
+
+      /**
+       * Скорректировать регистр строки в соответствии с маской. Строка должна точно соответствовать маске по длине
+       * и местоположению разделяющих и управляющих символов (поэтому данный метод используется только после проверки
+       * на соответствие строки маске)
+       * @param text
+       * @returns {string}
+       * @private
+       */
+      _correctRegister: function ( text ) {
+         text = text.split('');
+
+         var ctrlChar;
+
+         for ( var c in text ) {
+            ctrlChar = this._controlCharactersSet[this._primalMask[c]];
+
+            if ( ctrlChar == 'l' || ctrlChar == 'L' ) {
+               text[c] = ctrlChar == 'L' ? text[c].toUpperCase() : text[c].toLowerCase();
+            }
+         }
+
+         return text.join('');
+      },
+
+      /**
        * Возвращает html-разметку для разделяющего или вводимого контейнера
        * @param {string} container контейнер
        * @param {string} type тип контейнера
@@ -477,8 +596,8 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
        * @private
        */
       _getHtmlContainer: function(container, type){
-         if (type == 'placeholder'){return '<span class="controls-FormattedTextBox__field-placeholder">' + container + '</span>';}
-         else if (type == 'separator') {return '<span class="controls-FormattedTextBox__field-separator">' + container + '</span>'}
+         if (type == 'placeholder'){return '<em class="controls-FormattedTextBox__field-placeholder controls-FormattedTextBox__field-symbol">' + container + '</em>';}
+         else if (type == 'separator') {return '<em class="controls-FormattedTextBox__field-symbol">' + container + '</em>'}
       },
       
       /**
@@ -497,23 +616,16 @@ define('js!SBIS3.CONTROLS.FormattedTextBoxBase', ['js!SBIS3.CONTROLS.TextBoxBase
        * @private
        */
       _getControlCharactersSet: function() {
-         var initialSet = Object.keys(this._controlCharactersSet);
-
-         if (initialSet.length !== 0){
-            return initialSet.toString().replace(/,/g, '');
-         }
-         else {
+         if (Object.isEmpty(this._controlCharactersSet)) {
             this._controlCharactersSet = {
-               'd' : 'd',
-               'L' : 'L',
-               'l' : 'l',
-               'x' : 'x'
-            };
-
-            return this._generalControlCharacters;
+               'd': 'd',
+               'L': 'L',
+               'l': 'l',
+               'x': 'x'
+            }
          }
+         return Object.keys(this._controlCharactersSet).join('');
       }
-
 });
 
    return FormattedTextBoxBase;

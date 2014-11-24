@@ -3,12 +3,13 @@
 }
 
 .controls-TextBox.controls-NumberTextBox  .controls-TextBox__afterFieldWrapper{
-  margin-right: 0;
+   margin-right: 0;
+   width: 23px;
+
 }
 
-.controls-NumberTextBox__fieldWrapper {
-   margin-right: 14px;
-   height: 100%;
+.controls-TextBox.controls-NumberTextBox .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
+   margin-right: 23px;
 }
 
 .controls-NumberTextBox__arrow {
@@ -18,15 +19,17 @@
    width: 100%;
    min-height: 11px;
    border-left: 1px solid @color_base-gray_light;
-   background-image: url('img/NumberTextBox-arrow.png')
+   box-sizing: border-box;
+   background-image: url('img/NumberTextBox-arrow.png');
+   background-color: @color_base-bg;
 }
 .controls-NumberTextBox__arrow:hover {
    background-color: @color_base-blue;
+   border-left-color: @color_base-blue;
 }
 
 
 .controls-NumberTextBox__arrowDown {
-   border-top: 1px solid @color_base-gray_light;
    background-position: center -12px;
 }
 

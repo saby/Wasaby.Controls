@@ -81,12 +81,17 @@
 
    <br/><br/>
 
+   <div id="FormattedTextBox"></div>
+
    <h3>Кнопки</h3>
    <div id="button1"></div>
    <br/><br/>
    <div id="button2"></div>
 
 
+   <br/><br/>
+   <div id="TextArea"></div>
+   <div id="TextArea2"></div>
 </div>
 
 <script type="text/javascript">
@@ -137,10 +142,11 @@
                      title : 'Второй'
                   },
                   {
-                     key : 3,
+                     key : '',
                      title : 'Третий'
                   }
-               ]
+               ],
+               selectedItem : 2
             })
          });
 
@@ -176,6 +182,31 @@
             new r({
                element: "button2",
                caption: 'Календарь'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.DatePicker"], function (r) {
+            new r({
+               element: "FormattedTextBox",
+               mask: 'DD.MM.YYYY'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.TextArea"], function (r) {
+            new r({
+               element: "TextArea",
+               text: 'Календарь',
+               minLinesCount : 3,
+               autoResize: {
+                  state: true,
+                  maxLinesCount: 5
+               }
+            });
+
+            new r({
+               element: "TextArea2",
+               text: 'Календарь',
+               minLinesCount : 3
             })
          });
       })

@@ -17,7 +17,7 @@
 }
 
 .controls-ComboBox__itemRow {
-   padding: 4px 4px 4px 9px;
+   padding: 4px 4px 4px 7px;
    cursor: pointer;
 }
 
@@ -26,8 +26,9 @@
    background-color: @color_base-blue;
 }
 
-.controls-ComboBox__itemRow__selected {
+.controls-ComboBox__itemRow__selected, .controls-ComboBox__itemRow__selected:hover {
    color: #999999;
+   background-color: #ffffff;
 }
 
 .controls-ComboBox__isEditable-false,
@@ -56,4 +57,5 @@
 
 .controls-ComboBox__picker.controls-Picker__owner__hover {
    border-top-color: @color_base-blue;
+   margin-top: -2px;
 }

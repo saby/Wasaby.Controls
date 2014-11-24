@@ -142,11 +142,15 @@
 
    <div id="TextBox"></div>
    <div id="TextBox2"></div>
+   <br/><br/>
+   <div id="TextArea"></div>
+   <br/><br/>
    <div id="ComboBox"></div>
 
    <br/><br/>
 
    <div id="NumberTextBox"></div>
+   <div id="FormattedTextBox"></div>
 
    <br/><br/>
 
@@ -322,6 +326,12 @@
             })
          });
 
+         require(["js!SBIS3.CONTROLS.DatePicker"], function (r) {
+            new r({
+               element: "FormattedTextBox"
+            });
+         });
+
 
          require(["js!SBIS3.CONTROLS.RadioButton"], function (r) {
             new r({
@@ -360,6 +370,14 @@
                text: 'This is TextBox enabled',
                enabled: false
             })
+         });
+
+         require(["js!SBIS3.CONTROLS.TextArea"], function (r) {
+            new r({
+               element: "TextArea",
+               text: 'This is TextBox',
+               minLinesCount : 5
+            });
          });
 
          require(["js!SBIS3.CONTROLS.ComboBox"], function (r) {

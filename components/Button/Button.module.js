@@ -36,7 +36,6 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
 
       $constructor: function() {
          var self = this;
-         this._buttonText = $('.js-controls-Button__text', this._container.get(0));
          this._container.mouseup(function (e) {
             if (e.which == 1 && self.isEnabled()) {
                self._container.removeClass('controls-Button__active');
@@ -46,11 +45,22 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
                   self._container.addClass('controls-Button__active');
                }
             });
+
+         if (this._options.primary == true) {
+            this._registerDefaultButton();
+         }
       },
 
       setCaption: function(captionTxt){
          Button.superclass.setCaption.call(this, captionTxt);
-         this._buttonText.text(captionTxt || '');
+         var btnText;
+         if (this._options.icon) {
+            btnText = $('.js-controls-Button__text', this._container.get(0));
+         }
+         else {
+            btnText = this._container;
+         }
+         btnText.text(captionTxt || '');
       },
 
       setPrimary: function(flag){
@@ -75,8 +85,32 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
             }
             $('.js-controls-Button__icon', this._container.get(0)).get(0).className = 'controls-Button__icon js-controls-Button__icon ' + icon.substr(7);
          }
-      }
+      },
 
+      /*TODO методы для поддержки defaultButton*/
+      isDefaultButton: function(){
+         return !!this._options.primary;
+      },
+      _unregisterDefaultButton: function() {
+         var parent = this.getParent();
+         if(parent && parent.unregisterDefaultButton)
+            parent.unregisterDefaultButton(this);
+      },
+      _registerDefaultButton: function() {
+         var parent = this.getParent();
+         if(parent && parent.registerDefaultButton)
+            parent.registerDefaultButton(this);
+      },
+      setDefaultButton: function(isDefault){
+         if(isDefault === undefined)
+            isDefault = true;
+         this.setPrimary(isDefault);
+
+
+         if(isDefault) this._registerDefaultButton();
+         else this._unregisterDefaultButton();
+      }
+      /*TODO конец*/
    });
 
    return Button;
