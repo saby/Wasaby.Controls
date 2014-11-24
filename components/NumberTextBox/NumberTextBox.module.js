@@ -99,6 +99,11 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             return true;
          }
 
+         //для клавиш типа backspace, delete, стрелок
+         if(e.which === 0 || e.which == 8) {
+            return true;
+         }
+
          e.preventDefault();
       },
 
