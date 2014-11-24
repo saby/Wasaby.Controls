@@ -600,8 +600,6 @@ define(
             return '<em class="controls-FormattedTextBox__field-placeholder controls-FormattedTextBox__field-symbol">' + container + '</em>';
          }
          else if (type == 'separator') {
-            // Преобразовываем пробелы в html-пробелы, т.е. в &nbsp; (иначе просто пропадают, т.к. контейнеры имеют стиль в display: table-cell)
-            container = /\x20+/.test(container) ? /\x20+/.exec(container).input.replace(new RegExp('\x20', 'g'), '&nbsp;') : container;
             return '<em class="controls-FormattedTextBox__field-symbol">' + container + '</em>'
          }
       },
