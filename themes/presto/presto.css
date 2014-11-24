@@ -12,9 +12,6 @@
 .controls-Button__primary {
   background-color: #FFCC99;
 }
-.controls-Button:hover {
-  background-color: white;
-}
 .controls-Button__big {
   height: 58px;
   font-size: 18px;
