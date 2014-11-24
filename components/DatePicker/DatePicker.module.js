@@ -284,6 +284,9 @@ define(
       _updateText: function(){
          var text = $(this._inputField.get(0)).text();
 
+         // Запоминаем старую дату для последующего сравнения и генерации события
+         var oldDate = this._options.date;
+
          var expr = new RegExp('(' + this._placeholder + ')', 'ig');
          // если есть плейсхолдеры (т.е. незаполненные места), то значит опция text = null
          if ( expr.test(text) ) {
@@ -293,6 +296,12 @@ define(
          else {
             this._options.date = this._getDateByText(text);
             this._options.text = this._getTextByDate(this._options.date);
+         }
+
+         // Если дата изменилась -- генерировать событие.
+         // Если использовать просто setDate, то событие будет генерироваться даже если дата введена с клавиатуры не полностью, что неверно
+         if ( oldDate !== this._options.date ) {
+            this._notify('onChange', this._options.date);
          }
       },
 
