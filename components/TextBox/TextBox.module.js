@@ -102,16 +102,16 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       setTextTransform: function(textTransform){
          switch (textTransform) {
             case 'uppercase':
-               this._inputField.removeClass('controls-TextBox__field-lowercase');
-               this._inputField.addClass('controls-TextBox__field-uppercase');
+               this._inputField.removeClass('controls-TextBox__field-lowercase')
+                  .addClass('controls-TextBox__field-uppercase');
                break;
             case 'lowercase':
-               this._inputField.removeClass('controls-TextBox__field-uppercase');
-               this._inputField.addClass('controls-TextBox__field-lowercase');
+               this._inputField.removeClass('controls-TextBox__field-uppercase')
+                  .addClass('controls-TextBox__field-lowercase');
                break;
             default:
-               this._inputField.removeClass('controls-TextBox__field-uppercase');
-               this._inputField.removeClass('controls-TextBox__field-lowercase');
+               this._inputField.removeClass('controls-TextBox__field-uppercase')
+                  .removeClass('controls-TextBox__field-lowercase');
          }
       },
 
@@ -126,6 +126,14 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _keyPressBind: function() {
+      },
+
+      setActive: function(active){
+         var firstSelect = this._isControlActive != active;
+         if (firstSelect) {
+            this._inputField.focus();
+         }
+         TextBox.superclass.setActive.call(this, arguments[0], arguments[1], true, arguments[3]);
       },
 
       _setEnabled : function(enabled) {
