@@ -133,13 +133,6 @@ define(
                workingDate = new Date( date.getFullYear(), date.getMonth(), $(this).attr('data-day'), 0, 0, 0, 0 );
                self.setDate(workingDate);
             });
-
-            // Если контролл Calendar находится в пикере другого контролла, который в свою очередь
-            // находится в пикере третьего контролла, то клик в пикере с Calendar'ём закроет внешний пикер.
-            // Необходимо предотвратить данное поведение
-            $('.controls-Calendar__tableBodyElement', this.getContainer().get(0)).mousedown(function(e){
-               e.stopPropagation();
-            });
          },
 
          /**
