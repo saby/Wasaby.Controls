@@ -264,6 +264,8 @@ define(
        * @param value
        */
       setValue: function ( value ) {
+         value = value ? value : '';
+
          if ( value instanceof Date ) {
             this.setDate(value);
          }
