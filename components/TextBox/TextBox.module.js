@@ -130,10 +130,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       setActive: function(active){
          var firstSelect = this._isControlActive != active;
-         if (firstSelect) {
-            this._inputField.focus();
+         TextBox.superclass.setActive.apply(this, arguments);
+         if (active && firstSelect) {
+            this._inputField.get(0).focus();
          }
-         TextBox.superclass.setActive.call(this, arguments[0], arguments[1], true, arguments[3]);
       },
 
       _setEnabled : function(enabled) {
