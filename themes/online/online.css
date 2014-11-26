@@ -342,6 +342,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextBox__fieldWrapper {
   height: 100%;
   padding: 0 4px;
+  position: relative;
 }
 .controls-TextBox__afterFieldWrapper {
   float: right;
@@ -380,6 +381,21 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox__field:-ms-input-placeholder {
   color: #cccccc !important;
+}
+.controls-TextBox__placeholder {
+  position: absolute;
+  top: 0;
+  color: #cccccc !important;
+  font: inherit;
+  text-align: inherit;
+  padding-top: 3px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -ms-text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.controls-TextBox__field::-ms-clear {
+  display: none;
 }
 .controls-TextArea {
   display: inline-block;

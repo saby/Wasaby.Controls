@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       _dotTplFn: dotTplFn,
       $protected: {
          _inputField : null,
+         _compatPlaceholder: null,
          _options: {
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
@@ -73,6 +74,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             }
          });
 
+         if (this._options.placeholder && !$ws._const.compatibility.placeholder) {
+            this._createCompatPlaceholder();
+         }
       },
 
       setText: function(text){
@@ -92,7 +96,17 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       setPlaceholder: function(text){
          TextBox.superclass.setPlaceholder.call(this, text);
-         this._inputField.attr('placeholder', text);
+         if ($ws._const.compatibility.placeholder) {
+            if (this._compatPlaceholder) {
+               this._compatPlaceholder.text(text || '');
+            }
+            else {
+               this._createCompatPlaceholder();
+            }
+         }
+         else {
+            this._inputField.attr('placeholder', text || '');
+         }
       },
 
       /**
@@ -120,12 +134,15 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          if (newText != this._options.text) {
             TextBox.superclass.setText.call(this, newText);
          }
+         this._compatPlaceholder.toggle(!newText);
       },
 
       _keyDownBind: function() {
+
       },
 
       _keyPressBind: function() {
+
       },
 
       setActive: function(active){
@@ -144,6 +161,18 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          else {
             this._inputField.removeAttr('readonly');
          }
+      },
+
+      _createCompatPlaceholder : function() {
+         var self = this;
+         this._compatPlaceholder = $('<div class="controls-TextBox__placeholder">' + this._options.placeholder + '</div>');
+         this._inputField.after(this._compatPlaceholder);
+         this._compatPlaceholder.css('left', this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10));
+         this._compatPlaceholder.click(function(){
+            if (self.isEnabled()) {
+               self._inputField.focus();
+            }
+         });
       }
    });
 
