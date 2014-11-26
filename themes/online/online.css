@@ -18,6 +18,7 @@ input[type="reset"]::-moz-focus-inner {
   font: 13px Tahoma, Geneva, sans-serif;
   padding: 0 8px;
   box-sizing: border-box;
+  background-size: contain;
 }
 .controls-Button__content {
   position: relative;
@@ -322,8 +323,9 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   background: #ffffff;
   border: 1px solid transparent;
-  border-bottom: 1px solid #EAEAEA;
-  height: 22px;
+  border-bottom-color: #EAEAEA;
+  height: 24px;
+  box-sizing: border-box;
 }
 .controls-TextBox.ws-validation-error {
   background: #fadadd !important;
@@ -332,7 +334,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextBox:hover,
 .controls-TextBox.ws-has-focus {
   border: 1px solid #EAEAEA;
-  border-bottom: 1px solid #CCCCCC;
+  border-bottom-color: #CCCCCC;
 }
 .controls-TextBox.ws-disabled {
   border: 1px solid transparent;
@@ -358,7 +360,6 @@ input[type="reset"]::-moz-focus-inner {
   width: 100%;
   margin: 0;
   box-sizing: border-box;
-  line-height: 100%;
   outline: none;
   background: transparent;
 }
@@ -367,6 +368,18 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox__field-lowercase {
   text-transform: lowercase;
+}
+.controls-TextBox__field::-webkit-input-placeholder {
+  color: #cccccc !important;
+}
+.controls-TextBox__field::-moz-placeholder {
+  color: #a1a1a1 !important;
+}
+.controls-TextBox__field:-moz-placeholder {
+  color: #a1a1a1 !important;
+}
+.controls-TextBox__field:-ms-input-placeholder {
+  color: #cccccc !important;
 }
 .controls-TextArea {
   display: inline-block;
