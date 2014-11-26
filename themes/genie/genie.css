@@ -94,6 +94,9 @@
 .controls-TextBox__field-lowercase {
   text-transform: lowercase;
 }
+.controls-TextBox__placeholder {
+  display: none;
+}
 .controls-TextBox.controls-NumberTextBox {
   text-align: right;
 }

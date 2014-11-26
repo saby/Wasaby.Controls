@@ -68,6 +68,9 @@
 .controls-TextBox__field-lowercase {
   text-transform: lowercase;
 }
+.controls-TextBox__placeholder {
+  display: none;
+}
 .controls-ComboBox.controls-Picker__show {
   border: 1px solid #666666;
   background: #444E57;
