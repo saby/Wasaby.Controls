@@ -26,17 +26,22 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
          var self = this;
          this._textContainer['off'] = $('.js-controls-SwitcherDoubleOnline__textOff',self._container.get(0));
          this._textContainer['on'] = $('.js-controls-SwitcherDoubleOnline__textOn',self._container.get(0));
-         this._textContainer['off'].bind('mouseup', function () {
-            if (self.isEnabled()) {
-               self.setState('off');
-            }
-         });
-         this._textContainer['on'].bind('mouseup', function () {
-            if (self.isEnabled()) {
-               self.setState('on');
-            }
-         });
+      },
 
+      _clickHandler : function(e) {
+         if (e.target == this._textContainer['off'].get(0)) {
+            if (this.isEnabled()) {
+               this.setState('off');
+            }
+         }
+         else if (e.target == this._textContainer['on'].get(0)) {
+            if (this.isEnabled()) {
+               this.setState('on');
+            }
+         }
+         else {
+            SwitcherDoubleOnline.superclass._clickHandler.call(this);
+         }
       },
 
       setState: function(state) {

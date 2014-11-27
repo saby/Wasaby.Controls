@@ -7,12 +7,6 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
 
    'use strict';
 
-   if (typeof window !== 'undefined') {
-      $(document).mouseup(function () {
-         $('.controls-Button__active').removeClass('controls-Button__active');
-      });
-   }
-
    /**
     * Контрол, отображающий обычную кнопку
     * @class SBIS3.CONTROLS.Button
@@ -30,22 +24,21 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {
-
+            /**
+             * @cfg {Boolean} Кнопка по умолчанию
+             * Кнопка будет срабатывать при нажатии клавиши Enter.
+             * На странице может быть только одна кнопка по умолчанию.
+             * Возможные значения:
+             * <ul>
+             *    <li>true - кнопка является кнопкой по умолчанию;</li>
+             *    <li>false - обычная кнопка.</li>
+             * </ul>
+             */
+            primary: false
          }
       },
 
       $constructor: function() {
-         var self = this;
-         this._container.mouseup(function (e) {
-            if (e.which == 1 && self.isEnabled()) {
-               self._container.removeClass('controls-Button__active');
-            }
-         }).mousedown(function (e) {
-               if (e.which == 1 && self.isEnabled()) {
-                  self._container.addClass('controls-Button__active');
-               }
-            });
-
          if (this._options.primary == true) {
             this._registerDefaultButton();
          }
