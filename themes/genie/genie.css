@@ -24,6 +24,10 @@
   color: #ffffff;
   background-color: #00d7d7;
 }
+.controls-Button.controls-Button__addButton {
+  height: 24px;
+  padding: 0;
+}
 .controls-Button.controls-Checked__checked {
   background-color: #d1d1d4;
   color: #ffffff;
