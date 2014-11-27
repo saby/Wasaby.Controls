@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.DataSet', [], function () {
          this._data.push(record);
       },
       setAdapter: function (adapter) {
-         var self=this;
+         var self = this;
          require([adapter], function (Adapter) {
             self._adapter = new Adapter({});
          });

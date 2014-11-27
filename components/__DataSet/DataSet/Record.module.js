@@ -11,6 +11,9 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
          if (cfg) {
             this._row = cfg.row;
          }
+      },
+      set: function (value) {
+         this._row = value;
       }
    });
 });

@@ -5,9 +5,13 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
    'use strict';
    return $ws.core.extend({}, {
       $protected: {
-         _adapter: ''// имя класса адаптера
+         _rawData: undefined, // данные которые пришли после запроса
+         _strategy: ''// имя класса стратегии для работы с сырыми данными
       },
       $constructor: function () {
+      },
+      _getRawData: function () {
+         return this._rawData;
       },
       read: function () {
          /*Method must be implemented*/

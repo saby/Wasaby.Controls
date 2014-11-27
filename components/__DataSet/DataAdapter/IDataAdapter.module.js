@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.IDataAdapter', [], function () {
       },
       $constructor: function () {
       },
-      prepareData:function(){
+      prepareData: function () {
 
       }
    });

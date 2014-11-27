@@ -1,62 +1,49 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource'], function (IDataSource) {
+define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR'], function (DataSourceXHR) {
    'use strict';
-   return IDataSource.extend({
+   return DataSourceXHR.extend({
       $protected: {
-         _name: '',
-         _serviceUrl: ''
+         _options: {
+            url: $ws._const.defaultServiceUrl,
+            method: 'POST',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8'
+         },
+         _object: ''
       },
       $constructor: function (cfg) {
-         this._name = cfg.name;
+         this._object = cfg.object;
       },
       read: function () {
 
       },
-      query: function (method, filter, paging, sorting) {
-         /*
-          if(!method || typeof(method) != 'string')
-          throw new TypeError("Method name must be specified");
-          if(paging) {
-          if(typeof paging != 'object') {
-          throw new TypeError("Paging parameter must be an object");
-          } else {
-          if(paging.type) {
-          paging.page = +paging.page;
-          paging.pageSize = +paging.pageSize;
-          if(isNaN(paging.page))
-          throw new TypeError("Page must be a number (paging.page)");
-          if(isNaN(paging.pageSize))
-          throw new TypeError("Page size must be a number (paging.pageSize)");
-          }
-          }
-          }
-          if(sorting && !(sorting instanceof Array))
-          throw new TypeError("Sorting parameter must be an array");
-          return $ws.helpers.newRecordSet(this._name, method, filter, undefined, !(sorting || paging), this._serviceUrl, undefined).addCallback(function(rs){
-          if(sorting || paging) {
-          var loadRes = new $ws.proto.Deferred();
-          if(sorting)
-          rs.setSorting(sorting, undefined, undefined, true);
-          if(paging && paging.type) {
-          rs.setUsePages(paging.type);
-          rs.setPageSize(paging.pageSize, true);
-          rs.setPage(paging.page, true);
-          }
-          rs.once('onAfterLoad', function(event, recordSet, isSuccess, error){
-          if(isSuccess)
-          loadRes.callback(recordSet);
-          else
-          loadRes.errback(error);
+      query: function (data) {
+         var def = new $ws.proto.Deferred();
+         var self = this;
+         var req = $ws.helpers.jsonRpcPreparePacket(this._object + '.' + data.method, {"ДопПоля": [], "Фильтр": {"d": [], "s": []}, "Сортировка": null, "Навигация": null})
+         this._execute(req.reqBody, req.reqHeaders).addCallback(function (result) {
+            var model = new $ws.proto.RecordSet({dataSource: self, readerParams: { adapterType: 'TransportAdapterStatic', adapterParams: { data: result.result } } });
+            var recursionFunction = function (rec) {
+               if (rec instanceof $ws.proto.Record) {
+                  var columns = rec.getColumns();
+                  for (var i = 0, l = columns.length; i < l; i++) {
+                     recursionFunction(rec.get(columns[i]));
+                  }
+               }
+               else if (rec instanceof $ws.proto.RecordSet) {
+                  for (var j = 0, c = rec.getRecordCount(); j < c; j++) {
+                     recursionFunction(rec.at(0));
+                  }
+               }
+            };
 
-          });
-          rs.reload();
-          return loadRes;
-          } else
-          return rs;
-          });
-          */
+            recursionFunction(model);
+
+            def.callback(model);
+         });
+         return def;
       },
       create: function () {
       },
