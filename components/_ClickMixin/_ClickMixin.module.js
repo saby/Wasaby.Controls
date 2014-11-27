@@ -21,14 +21,7 @@ define('js!SBIS3.CONTROLS._ClickMixin', [], function() {
       $constructor: function() {
          this._publish('onActivated');
          var self = this;
-         /*TODO пока подписываемся на mouseup, потому что CONTROL херит событие клика*/
-         this._container.mouseup(function (e) {
-            if (e.which == 1 && self.isEnabled()) {
-               self._container.removeClass('controls-Click__active');
-               self._clickHandler(e);
-               self._notifyOnActivated();
-            }
-         });
+
          this._container.mousedown(function (e) {
             if (e.which == 1 && self.isEnabled()) {
                self._container.addClass('controls-Click__active');
@@ -39,8 +32,21 @@ define('js!SBIS3.CONTROLS._ClickMixin', [], function() {
       _clickHandler : function() {
 
       },
+
       _notifyOnActivated : function() {
          this._notify('onActivated');
+      },
+
+      around : {
+         //TODO сделано через onClickHandler WS в базовом контроле
+         _onClickHandler: function(parentFnc, e) {
+            if (this.isEnabled) {
+               parentFnc.call(this, e);
+               this._container.removeClass('controls-Click__active');
+               this._clickHandler(e);
+               this._notifyOnActivated();
+            }
+         }
       }
    };
 

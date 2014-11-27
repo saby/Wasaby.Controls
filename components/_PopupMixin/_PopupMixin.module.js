@@ -565,10 +565,12 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
 
       around: {
          hide: function (parentHide) {
-            var result = this._notify('onClose');
+            var
+               self = this,
+               result = this._notify('onClose');
             if (result instanceof $ws.proto.Deferred) {
                result.addCallback(function () {
-                  parentHide.call(this);
+                  parentHide.call(self);
                });
             } else if (result !== false) {
                parentHide.call(this);
