@@ -2,23 +2,29 @@
    display: inline-block;
    background: #ffffff;
    border: 1px solid transparent;
-   border-bottom: 1px solid #EAEAEA;
-   height: 22px;
+   border-bottom-color: #EAEAEA;
+   height: 24px;
+   box-sizing: border-box;
+
+  &.ws-validation-error{
+    background: #fadadd !important;
+    border-color: #ff302b !important;
+  }
 }
 
-.controls-TextBox:hover {
+.controls-TextBox:hover, .controls-TextBox.ws-has-focus {
    border: 1px solid #EAEAEA;
-   border-bottom: 1px solid #CCCCCC;
+   border-bottom-color: #CCCCCC;
 }
 
 .controls-TextBox.ws-disabled{
   border: 1px solid transparent;
-  border-bottom: 1px solid #EAEAEA;
 }
 
 .controls-TextBox__fieldWrapper {
    height: 100%;
    padding: 0 4px;
+   position: relative;
 }
 
 .controls-TextBox__afterFieldWrapper{
@@ -40,14 +46,11 @@
    width: 100%;
    margin: 0;
    box-sizing: border-box;
-   line-height: 100%;
    outline: none;
    background: transparent;
+   line-height: 22px;
 }
 
-.controls-TextBox.ws-disabled .controls-TextBox__field {
-  color: #cccccc;
-}
 
 .controls-TextBox__field-uppercase {
    text-transform: uppercase;
@@ -55,4 +58,33 @@
 
 .controls-TextBox__field-lowercase {
    text-transform: lowercase;
+}
+
+.controls-TextBox__field::-webkit-input-placeholder{
+   color: #cccccc !important;
+}
+.controls-TextBox__field::-moz-placeholder{
+   color: #a1a1a1 !important;
+}
+.controls-TextBox__field:-moz-placeholder{
+   color: #a1a1a1 !important;
+}
+.controls-TextBox__field:-ms-input-placeholder{
+   color: #cccccc !important;
+}
+.controls-TextBox__placeholder {
+   position: absolute;
+   top: 0;
+   color: #cccccc !important;
+   font: inherit;
+   text-align: inherit;
+   padding-top: 3px;
+   text-overflow: ellipsis;
+   overflow: hidden;
+   -ms-text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.controls-TextBox__field::-ms-clear {
+   display: none;
 }

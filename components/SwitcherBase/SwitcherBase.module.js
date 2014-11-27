@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTROLS._FormWidgetMixin'], function(Control, FormWidgetMixin) {
+define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS._ClickMixin', 'js!SBIS3.CONTROLS._FormWidgetMixin'], function(Control, _ClickMixin, FormWidgetMixin) {
 
    'use strict';
 
@@ -16,11 +16,10 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONT
     * @extends $ws.proto.Control
     */
 
-   var SwitcherBase = Control.Control.extend( [FormWidgetMixin], /** @lends SBIS3.CONTROLS.SwitcherBase.prototype */ {
+   var SwitcherBase = Control.Control.extend( [_ClickMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.SwitcherBase.prototype */ {
       $protected: {
          _switcher : null,
          _position : null,
-         _state: '',
          _options: {
             /**
              * @typedef {Object} StateEnum
@@ -46,20 +45,18 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONT
          var self = this;
          this._position = $('.js-controls-Switcher__position',self._container.get(0));
          this._switcher = $('.js-controls-Switcher__toggle',self._container.get(0));
-         this._state = this._options.state;
-         this._switcher.bind('mouseup', function () {
-            if (self.isEnabled()) {
-               if (self._state == 'on') {
-                  self.setState('off');
-               } else {
-                  self.setState('on');
-               }
+      },
+      _clickHandler : function() {
+         if (this.isEnabled()) {
+            if (this._options.state == 'on') {
+               this.setState('off');
+            } else {
+               this.setState('on');
             }
-         });
-         //Предотвращаем выделение
-         this._switcher.bind('mousedown',function() {
-            return false;
-         });
+         }
+      },
+      _notifyOnActivated : function() {
+         this._notify('onActivated', this._options.state);
       },
       /**
        * Устанавливает состояние (on/off)
@@ -67,14 +64,14 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONT
        */
       setState: function(state) {
          if (state == 'on' || state == 'off'){
-            this._state = state;
+            this._options.state = state;
          }
       },
       /**
        * Получить состояние
        */
       getState: function() {
-         return this._state;
+         return this._options.state;
       },
 
       setValue: function(value){

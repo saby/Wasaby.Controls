@@ -2,7 +2,8 @@
   background-color: #F2F2F2;
   cursor: pointer;
   border: none;
-  height: 40px;
+  height: 58px;
+  font-family: Exo2;
   font-size: 14px;
   text-align: center;
   color: #333333;
@@ -12,22 +13,28 @@
 .controls-Button__primary {
   background-color: #FFCC99;
 }
-.controls-Button:hover {
-  background-color: white;
-}
 .controls-Button__big {
-  height: 58px;
   font-size: 18px;
 }
 .controls-TextBox {
   display: inline-block;
+  box-sizing: border-box;
   padding: 0 5px;
   border: 1px solid transparent;
-  border-bottom: 1px solid #666666;
-  height: 38px;
+  border-bottom-color: #666666;
+  font-family: Exo2;
+  font-size: 14px;
+  height: 40px;
 }
 .controls-TextBox:hover {
   border: 1px solid #666666;
+}
+.controls-TextBox__big {
+  font-size: 36px;
+  height: 50px;
+}
+.controls-TextBox.ws-has-focus {
+  background-color: #444E57;
 }
 .controls-TextBox__fieldWrapper {
   height: 100%;
@@ -60,6 +67,9 @@
 }
 .controls-TextBox__field-lowercase {
   text-transform: lowercase;
+}
+.controls-TextBox__placeholder {
+  display: none;
 }
 .controls-ComboBox.controls-Picker__show {
   border: 1px solid #666666;
@@ -128,7 +138,7 @@
   border: 1px solid #333333;
   background: none;
 }
-.controls-CheckBox.controls-ToggleButton__checked .controls-CheckBox__icon {
+.controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon {
   background-repeat: no-repeat;
   background-image: url('./img/checkbox.png');
   background-position: -2px -5px;

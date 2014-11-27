@@ -9,6 +9,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     * Поле ввода, куда можно вводить только числовые значения
     * @class SBIS3.CONTROLS.NumberTextBox
     * @extends SBIS3.CONTROLS.TextBox
+    * @control
+    * @public
     */
 
    var NumberTextBox;
@@ -94,6 +96,11 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          }
 
          if(/[-]/.test(symbol) && !self._options.onlyPositive){
+            return true;
+         }
+
+         //для клавиш типа backspace, delete, стрелок
+         if(e.which === 0 || e.which == 8) {
             return true;
          }
 

@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTROLS._FormWidgetMixin', 'js!SBIS3.CONTROLS._DataBindMixin'], function(Control, FormWidgetMixin, _DataBindMixin) {
+define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS._ClickMixin', 'js!SBIS3.CONTROLS._FormWidgetMixin', 'js!SBIS3.CONTROLS._DataBindMixin'], function(Control, ClickMixin, FormWidgetMixin, _DataBindMixin) {
 
    'use strict';
 
@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
     * @extends $ws.proto.Control
     */
 
-   var ButtonBase = Control.Control.extend([FormWidgetMixin, _DataBindMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
+   var ButtonBase = Control.Control.extend([ClickMixin, FormWidgetMixin, _DataBindMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
       /**
        * @event onActivated Происходит при активации кнопки (клик мышкой, кнопки клавиатуры)
        * @param {$ws.proto.EventObject} eventObject дескриптор события
@@ -44,37 +44,11 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control','js!SBIS3.CONTRO
              * @see getIcon
              * @editor ImageEditor
              */
-            icon: '',
-            /**
-             * @cfg {Boolean} Кнопка по умолчанию
-             * Кнопка будет срабатывать при нажатии клавиши Enter.
-             * На странице может быть только одна кнопка по умолчанию.
-             * Возможные значения:
-             * <ul>
-             *    <li>true - кнопка является кнопкой по умолчанию;</li>
-             *    <li>false - обычная кнопка.</li>
-             * </ul>
-             */
-            primary: false
+            icon: ''
          }
       },
 
       $constructor: function() {
-         this._publish('onActivated');
-         var self = this;
-         /*TODO пока подписываемся на mouseup, потому что CONTROL херит событие клика*/
-         this._container.mouseup(function (e) {
-            if (e.which == 1 && self.isEnabled()) {
-               self._clickHandler();
-               self._notify('onActivated');
-            }
-         });
-         this._container.mousedown(function () {
-            return false;
-         });
-      },
-
-      _clickHandler : function() {
 
       },
 

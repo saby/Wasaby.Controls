@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
       },
 
       $constructor: function() {
+         this._publish('onDrawItems');
          if (this._options.keyField) {
             this._keyField = this._options.keyField;
          }
@@ -72,6 +73,7 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
 
       _drawItems: function(){
          var
+            itemsReadyDef = new $ws.proto.ParallelDeferred(),
             self = this,
             itemsContainer = this._getItemsContainer();
          itemsContainer.empty();
@@ -85,8 +87,11 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
             oneItemContainer.attr('data-id', key).addClass('controls-ListView__item');
             targetContainer.append(oneItemContainer);
 
-            self._drawItem(oneItemContainer, item);
+            itemsReadyDef.push(self._drawItem(oneItemContainer, item));
 
+         });
+         itemsReadyDef.done().getResult().addCallback(function(){
+            self._notify('onDrawItems');
          });
          this._loadChildControls();
       },

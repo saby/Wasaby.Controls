@@ -54,7 +54,9 @@
             min-width: 100%;
          }
       }
-
+      #TextBox2 {
+         width: 100px;
+      }
 
    </style>
    <script type="text/javascript" id="ws-include-css"></script>
@@ -142,6 +144,9 @@
 
    <div id="TextBox"></div>
    <div id="TextBox2"></div>
+   <br/><br/>
+   <div id="TextArea"></div>
+   <br/><br/>
    <div id="ComboBox"></div>
 
    <br/><br/>
@@ -359,14 +364,22 @@
          require(["js!SBIS3.CONTROLS.TextBox"], function (r) {
             new r({
                element: "TextBox",
-               text: 'This is TextBox'
+               placeholder: 'This is TextBox'
             });
 
             new r({
                element: "TextBox2",
-               text: 'This is TextBox enabled',
+               placeholder: 'This is TextBox enabled',
                enabled: false
             })
+         });
+
+         require(["js!SBIS3.CONTROLS.TextArea"], function (r) {
+            new r({
+               element: "TextArea",
+               text: 'This is TextBox',
+               minLinesCount : 5
+            });
          });
 
          require(["js!SBIS3.CONTROLS.ComboBox"], function (r) {
