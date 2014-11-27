@@ -176,6 +176,20 @@
       </tr>
       <tr>
          <td>
+            primary
+         </td>
+         <td>
+            <div id="buttonIcon"></div>
+         </td>
+         <td>
+            primary big
+         </td>
+         <td>
+            <div id="buttonIcon2" class="controls-Button"></div>
+         </td>
+      </tr>
+      <tr>
+         <td>
             кнопка
          </td>
          <td>
@@ -325,6 +339,17 @@
                stateOn: 'On',
                stateOff: 'Off',
                enabled: false
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.IconButton"], function (r) {
+            new r({
+               element: "buttonIcon",
+               icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
+            });
+            new r({
+               element: "buttonIcon2",
+               icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
             })
          });
 

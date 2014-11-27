@@ -708,3 +708,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ButtonGroup__vertical .controls-ListView__item {
   display: block;
 }
+.controls-IconButton {
+  cursor: pointer;
+}
+.controls-IconButton.controls-Button {
+  padding: 0;
+  cursor: pointer;
+}
