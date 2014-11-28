@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
 
    return {
       zIndexManager: {
-         _cur: 100499,
+         _cur: 899,
          setFree: function (zIndex) {
             zIndex = parseInt(zIndex, 10);
             if (zIndex == this._cur) {
