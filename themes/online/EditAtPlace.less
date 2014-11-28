@@ -1,14 +1,15 @@
-.controls-EditAtPlace__textField {
-  padding-top: 4px;
-}
-
 .controls-EditAtPlace {
-  border-bottom: dashed 1px #868686;
-}
-
-.controls-EditAtPlace:hover{
   border: 1px solid transparent;
   border-bottom: dashed 1px #868686;
+}
+
+.controls-EditAtPlace:hover, .controls-EditAtPlace.ws-has-focus{
+  border: 1px solid transparent;
+  border-bottom: dashed 1px #868686;
+}
+
+.controls-EditAtPlace__textField{
+  padding-top: 1px;
 }
 
 .controls-EditAtPlace__controlPanel{
@@ -26,6 +27,12 @@
   background-position: 0 -32px;
   cursor: pointer;
   vertical-align: middle;
+}
+
+.controls-EditAtPlace__okButton.controls-IconButton.controls-Button {
+  width: 24px;
+  padding-top: 2px;
+  padding-left: 4px;
 }
 
 .controls-EditAtPlace__cancel:hover{
@@ -49,7 +56,7 @@
 }
 
 .controls-EditAtPlaceGroup__controlPanel{
-  margin: 4px;
+  margin: 0 4px 4px 0;
   float: right;
   display: inline-block;
 }

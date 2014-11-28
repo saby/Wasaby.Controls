@@ -10,7 +10,6 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
          _items : null,
          _dotItemTpl: null,
          _keyField : '',
-         _itemsReadyDef : null,
          _options: {
             /**
              * @cfg {String} Поле элемента коллекции, которое является ключом
@@ -29,7 +28,6 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
             this._keyField = this._options.keyField;
          }
          this._initItems(this._options.items || []);
-         this._itemsReadyDef = new $ws.proto.ParallelDeferred();
       },
 
       /**
@@ -75,6 +73,7 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
 
       _drawItems: function(){
          var
+            itemsReadyDef = new $ws.proto.ParallelDeferred(),
             self = this,
             itemsContainer = this._getItemsContainer();
          itemsContainer.empty();
@@ -88,10 +87,10 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
             oneItemContainer.attr('data-id', key).addClass('controls-ListView__item');
             targetContainer.append(oneItemContainer);
 
-            self._itemsReadyDef.push(self._drawItem(oneItemContainer, item));
+            itemsReadyDef.push(self._drawItem(oneItemContainer, item));
 
          });
-         this._itemsReadyDef.done().getResult().addCallback(function(){
+         itemsReadyDef.done().getResult().addCallback(function(){
             self._notify('onDrawItems');
          });
          this._loadChildControls();

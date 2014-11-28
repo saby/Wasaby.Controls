@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS._CheckedMixin', [], function() {
        */
       setChecked: function(flag) {
          this._options.checked = !!flag;
-         this._container.toggleClass('controls-ToggleButton__checked', this._options.checked);
+         this._container.toggleClass('controls-Checked__checked', this._options.checked);
          this.saveToContext('Checked', this._options.checked);
          this._notify('onChange', this._options.checked);
       },

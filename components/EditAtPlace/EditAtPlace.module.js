@@ -4,11 +4,11 @@
 define('js!SBIS3.CONTROLS.EditAtPlace', [
    'js!SBIS3.CONTROLS.TextBoxBase',
    'js!SBIS3.CONTROLS.TextBox',
-   'js!SBIS3.CONTROLS.Button',
+   'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS._PickerMixin',
    'html!SBIS3.CONTROLS.EditAtPlace',
    'html!SBIS3.CONTROLS.EditAtPlace/resources/EditorTpl'
-], function(TextBoxBase, TextBox, Button, _PickerMixin, dotTplFn, editorTpl) {
+], function(TextBoxBase, TextBox, IconButton, _PickerMixin, dotTplFn, editorTpl) {
    'use strict';
    /**
     * @class SBIS3.CONTROLS.EditAtPlace
@@ -71,20 +71,20 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
          this._editor = this._picker._getChildControls()[0];
          this._editor._container.width(this._container.width() + 20);
          this._addControlPanel();
-         this._container.css('width', this._container.width());
+         this._container.css('width', this._container.width() + 2);
       },
 
       _addControlPanel: function(){
          var self = this,
-            $ok = $('<div class="controls-EditAtPlace__ok"></div>'),
+            $ok = $('<div class="controls-Button controls-EditAtPlace__okButton"></div>'),
             $cancel = $('<div class="controls-EditAtPlace__cancel"></div>'),
             $btnsContainer = $('<div class="controls-EditAtPlace__controlPanel"></div>').append($ok).append($cancel);
 
          // Добавляем кнопки
-         this._okButton = new Button({
+         this._okButton = new IconButton({
             parent: self._picker,
             element : $ok,
-            caption: 'ok'
+            icon: 'sprite:icon-16 icon-Successful icon-done'
          });
 
          this._picker.getContainer().append($btnsContainer);
@@ -109,7 +109,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
             corner: 'tl',
             verticalAlign: {
                side: 'top',
-               offset: -4
+               offset: -3
             },
             horizontalAlign: {
                side: 'left',

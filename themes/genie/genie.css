@@ -24,12 +24,17 @@
   color: #ffffff;
   background-color: #00d7d7;
 }
-.controls-Button.controls-ToggleButton__checked {
+.controls-Button.controls-Button__addButton {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+}
+.controls-Button.controls-Checked__checked {
   background-color: #d1d1d4;
   color: #ffffff;
   border-color: #d1d1d4;
 }
-.controls-Button.controls-ToggleButton__checked:hover {
+.controls-Button.controls-Checked__checked:hover {
   border-color: #d1d1d4;
 }
 .controls-RadioButton {
@@ -49,7 +54,7 @@
 .controls-RadioButton:hover .controls-RadioButton__icon {
   background-position: 0 -54px;
 }
-.controls-RadioButton.controls-ToggleButton__checked .controls-RadioButton__icon {
+.controls-RadioButton.controls-Checked__checked .controls-RadioButton__icon {
   background-position: 0 -29px;
 }
 .controls-TextBox {
@@ -93,6 +98,9 @@
 }
 .controls-TextBox__field-lowercase {
   text-transform: lowercase;
+}
+.controls-TextBox__placeholder {
+  display: none;
 }
 .controls-TextBox.controls-NumberTextBox {
   text-align: right;
@@ -147,7 +155,7 @@
 .controls-CheckBox:hover .controls-CheckBox__icon {
   background-position: 0 -54px;
 }
-.controls-CheckBox.controls-ToggleButton__checked .controls-CheckBox__icon {
+.controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon {
   background-position: 0 -29px;
 }
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
@@ -272,6 +280,7 @@
   display: table-cell;
   vertical-align: middle;
   font-style: normal;
+  white-space: pre;
 }
 .controls-TabButton {
   cursor: pointer;
@@ -284,7 +293,7 @@
 .controls-TabButton:hover {
   color: #00d7d7;
 }
-.controls-TabButton.controls-ToggleButton__checked {
+.controls-TabButton.controls-Checked__checked {
   border-bottom-color: #00d7d7;
 }
 .controls-Calendar {
@@ -458,4 +467,13 @@
 }
 .controls-RadioGroup .controls-ListView__item {
   margin-right: 16px;
+}
+.controls-IconButton {
+  cursor: pointer;
+}
+.controls-IconButton.controls-Button {
+  padding: 0;
+  cursor: pointer;
+  height: auto;
+  box-sizing: content-box;
 }

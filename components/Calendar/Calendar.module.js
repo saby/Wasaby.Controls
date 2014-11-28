@@ -40,7 +40,7 @@ define(
          },
 
          $constructor: function () {
-            this._publish('onSelect');
+            this._publish('onChange');
          },
 
          init: function(){
@@ -60,7 +60,7 @@ define(
             }
 
             // Изменение даты с помощью дочернего контролла MonthPicker
-            this.monthControl.subscribe('onDateChange', function(eventObject, date){
+            this.monthControl.subscribe('onChange', function(eventObject, date){
                self._setDate(date);
             });
 
@@ -79,9 +79,11 @@ define(
                dayOfWeek,
                days,
                workingDate = new Date(date),
-               // Формируем массив объектов вида {(number)деньКалендаря, (bool)этоДеньЭтогоМесяца},
-               // который в последствии передадим в шаблон для постройки тела календаря. Всегда кратен семи (все недели полные)
-               daysInCalendar = [];
+               // Формируем массив массивов, где каждый внутренний массив представляет собой неделю (ровно семь объектов), в котором
+               // каждый день представляет собой объект { (number)деньКалендаря, (bool)этоДеньЭтогоМесяца }.
+               // Данный массив недель в последствии передадим в шаблон для постройки тела календаря.
+               weeksArray = [],
+               week = [];
 
             // Удаляем устаревшую таблицу (при первом создании ничего не происходит, так как tbody просто еще не существует)
             tBody.remove();
@@ -90,7 +92,7 @@ define(
             dayOfWeek = date.getDay() != 0 ? date.getDay() : 7;
             days = this._daysInMonth(new Date(workingDate.setMonth(workingDate.getMonth() - 1)));
             while( dayOfWeek - 1 > 0 ){
-               this._pushDayIntoArray(daysInCalendar, days - dayOfWeek + 2, false);
+               this._pushDayIntoArray(week, days - dayOfWeek + 2, false);
 
                dayOfWeek--
             }
@@ -99,7 +101,13 @@ define(
             // Заполняем календарные дни
             days = this._daysInMonth(date);
             for ( var i = 1; i <= days; i++ ){
-               this._pushDayIntoArray(daysInCalendar, i, true);
+               this._pushDayIntoArray(week, i, true);
+
+               if ( week.length == 7 ) {
+                  weeksArray.push(week);
+                  week = [];
+               }
+
             }
             workingDate.setDate(days);
 
@@ -108,28 +116,22 @@ define(
                dayOfWeek = workingDate.getDay();
 
                while( dayOfWeek != 7 ){
-                  this._pushDayIntoArray(daysInCalendar, dayOfWeek - workingDate.getDay() + 1, false);
+                  this._pushDayIntoArray(week, dayOfWeek - workingDate.getDay() + 1, false);
 
                   dayOfWeek++;
                }
+
+               weeksArray.push(week);
             }
 
-            // Вставляем тело таблицы в вёрстку
-            table.append(this._CalendarTableBodyTpl({dayArray: daysInCalendar}));
+            // Вставляем тело таблицы в вёрстку;
+            table.append(this._CalendarTableBodyTpl({weeksArray: weeksArray}));
 
             // Обработка клика по календарному дню
             var self = this;
             $('.controls-Calendar__tableBodyElement', this.getContainer().get(0)).click(function(){
-               workingDate = new Date(new Date(date).setDate($(this).attr('data-day')));
-               self._setDate(workingDate);
-               self._notify('onSelect', workingDate);
-            });
-
-            // Если контролл Calendar находится в пикере другого контролла, который в свою очередь
-            // находится в пикере третьего контролла, то клик в пикере с Calendar'ём закроет внешний пикер.
-            // Необходимо предотвратить данное поведение
-            $('.controls-Calendar__tableBodyElement', this.getContainer().get(0)).mousedown(function(e){
-               e.stopPropagation();
+               workingDate = new Date( date.getFullYear(), date.getMonth(), $(this).attr('data-day'), 0, 0, 0, 0 );
+               self.setDate(workingDate);
             });
          },
 
@@ -140,16 +142,20 @@ define(
          _refreshActiveDay: function(){
             $('.controls-Calendar__tableBodyElement__active', this.getContainer().get(0))
                .removeClass('controls-Calendar__tableBodyElement__active');
+            // ВАЖНО: в вёрстке только дни текущего месяца имеют свойство data-day, поэтому на дни до/после месяца
+            // добавлять данное свойство нельзя, иначе активный элемент установится некорректно в некоторых случаях!
             $('.controls-Calendar__tableBodyElement[data-day=' + this._options.date.getDate() + ']', this.getContainer().get(0))
                .addClass('controls-Calendar__tableBodyElement__active');
          },
 
          /**
-          * Установить дату по переданному объекту Date. Публичный метод
-          * TODO в будущем, возможно, будет отличатся тем, что будет генерировать событие
+          * Установить дату по переданному объекту Date. Публичный метод.
+          * Отличается от приватного метода тем, что генерирует событие.
           */
          setDate: function(date){
+            date = date ? date : new Date();
             this._setDate(date);
+            this._notify('onChange', date);
          },
 
          /**
@@ -159,6 +165,8 @@ define(
           */
          _setDate: function(date){
             if( date instanceof Date ){
+               // Зануляем время
+               date.setHours(0, 0, 0, 0);
                // Обновляем значение даты
                this._options.date = date;
                // Устанавливаем дату в дочерний контролл MonthPicker

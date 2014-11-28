@@ -54,7 +54,9 @@
             min-width: 100%;
          }
       }
-
+      #TextBox2 {
+         width: 100px;
+      }
 
    </style>
    <script type="text/javascript" id="ws-include-css"></script>
@@ -142,6 +144,9 @@
 
    <div id="TextBox"></div>
    <div id="TextBox2"></div>
+   <br/><br/>
+   <div id="TextArea"></div>
+   <br/><br/>
    <div id="ComboBox"></div>
 
    <br/><br/>
@@ -167,6 +172,20 @@
          </td>
          <td>
             <div id="button1big" class="controls-Button__big"></div>
+         </td>
+      </tr>
+      <tr>
+         <td>
+            primary
+         </td>
+         <td>
+            <div id="buttonIcon"></div>
+         </td>
+         <td>
+            primary big
+         </td>
+         <td>
+            <div id="buttonIcon2" class="controls-Button"></div>
          </td>
       </tr>
       <tr>
@@ -323,6 +342,17 @@
             })
          });
 
+         require(["js!SBIS3.CONTROLS.IconButton"], function (r) {
+            new r({
+               element: "buttonIcon",
+               icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
+            });
+            new r({
+               element: "buttonIcon2",
+               icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
+            })
+         });
+
          require(["js!SBIS3.CONTROLS.DatePicker"], function (r) {
             new r({
                element: "FormattedTextBox"
@@ -359,14 +389,22 @@
          require(["js!SBIS3.CONTROLS.TextBox"], function (r) {
             new r({
                element: "TextBox",
-               text: 'This is TextBox'
+               placeholder: 'This is TextBox'
             });
 
             new r({
                element: "TextBox2",
-               text: 'This is TextBox enabled',
+               placeholder: 'This is TextBox enabled',
                enabled: false
             })
+         });
+
+         require(["js!SBIS3.CONTROLS.TextArea"], function (r) {
+            new r({
+               element: "TextArea",
+               text: 'This is TextBox',
+               minLinesCount : 5
+            });
          });
 
          require(["js!SBIS3.CONTROLS.ComboBox"], function (r) {

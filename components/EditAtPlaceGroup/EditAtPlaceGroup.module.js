@@ -3,10 +3,10 @@
  */
 define('js!SBIS3.CONTROLS.EditAtPlaceGroup', [
    'js!SBIS3.CORE.CompoundControl',
-   'js!SBIS3.CONTROLS.Button',
+   'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS._PickerMixin',
    'js!SBIS3.CONTROLS.EditAtPlace'
-], function (CompoundControl, Button, _PickerMixin, EditAtPlace, dotTplFn) {
+], function (CompoundControl, IconButton, _PickerMixin, EditAtPlace, dotTplFn) {
    'use strict';
    /**
     * @class SBIS3.CONTROLS.EditAtPlaceGroup
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup', [
             $('[id = "' + this._childEditsArray[i].getId() + '"]', this._editorTpl.get(0))
                .replaceWith($(this._childEditsArray[i]._options.editorTpl())
                   .attr('data-bind', this._childEditsArray[i]._container.attr('data-bind'))
-                  .width(this._childEditsArray[i]._container.width() + 20)); // TODO: 20???
+                  .width(this._childEditsArray[i]._container.width() + 24)); // TODO: 20???
             this._childEditsArray[i]._container.css('width', this._childEditsArray[i]._container.width());
          }
          this._picker._container.addClass('controls-EditAtPlace__editorOverlay controls-EditAtPlaceGroup__editorOverlay').append(this._editorTpl);
@@ -71,15 +71,15 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup', [
       // Добавляем кнопки
       _addControlPanel: function(){
          var self = this,
-            $ok = $('<div class="controls-EditAtPlace__ok"></div>'),
+            $ok = $('<div class="controls-Button controls-EditAtPlace__okButton"></div>'),
             $cancel = $('<div class="controls-EditAtPlace__cancel"></div>'),
             $btnsContainer = $('<div class="controls-EditAtPlaceGroup__controlPanel"></div>').append($ok).append($cancel);
 
          // Добавляем кнопки
-         this._okButton = new Button({
+         this._okButton = new IconButton({
             parent: self._picker,
             element : $ok,
-            caption: 'ok'
+            icon: 'sprite:icon-16 icon-Successful icon-done'
          });
 
          this._picker.getContainer().append($btnsContainer);
