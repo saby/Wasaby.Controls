@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 12.08.2014.
  */
 
-define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManager'], function (ControlHierarchyManager) {
+define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManager','js!SBIS3.CORE.ModalOverlay'], function (ControlHierarchyManager, ModalOverlay) {
 
    if (typeof window !== 'undefined') {
       var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
@@ -84,12 +84,17 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
             /**
              * @cfg {Boolean} закрывать или нет при клике мимо
              */
-            closeByExternalClick: false
+            closeByExternalClick: false,
+            /**
+             * @cfg {Boolean} закрывать или нет при клике мимо
+             */
+            isModal: false
+
          }
       },
 
       $constructor: function () {
-         this._publish('onClose');
+         this._publish('onClose','onOpen');
          var self = this;
          var container = this._container;
          var trg = $ws.helpers.trackElement(this._options.target, true);
@@ -116,10 +121,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          if (this._options.closeByExternalClick) {
             $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
-
          container.appendTo('body');
-         var zIndex = ControlHierarchyManager.zIndexManager.getNext();
-         container.css('zIndex', zIndex);
          this._initSizes(true);
          this._defaultCorner = this._options.corner;
          this._defaultVerticalAlignSide = this._options.verticalAlign.side;
@@ -543,13 +545,23 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          },
          init: function(){
             ControlHierarchyManager.addNode(this, this.getParent());
+         },
+         hide: function(){
+            var zIndex = this._container.css('zIndex');
+            ControlHierarchyManager.zIndexManager.setFree(zIndex);
+            // Убираем оверлей
+            if (this._options.isModal) {
+               var pos = Array.indexOf($ws.single.WindowManager._modalIndexes, zIndex);
+               $ws.single.WindowManager._modalIndexes.splice(pos, 1);
+               pos = Array.indexOf($ws.single.WindowManager._visibleIndexes, zIndex);
+               $ws.single.WindowManager._visibleIndexes.splice(pos, 1);
+               ModalOverlay.adjust();
+            }
          }
       },
 
       before: {
          destroy: function () {
-            var zIndex = this._container.css('zIndex');
-            ControlHierarchyManager.zIndexManager.setFree(zIndex);
             ControlHierarchyManager.removeNode(this);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._resizeHandler, this);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._scrollHandler, this);
@@ -560,6 +572,14 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
                left: '-1000px',
                top: '-1000px'
             });
+            var zIndex = ControlHierarchyManager.zIndexManager.getNext();
+            this._container.css('zIndex', zIndex);
+            //Показываем оверлей
+            if (this._options.isModal) {
+               $ws.single.WindowManager._modalIndexes.push(zIndex);
+               $ws.single.WindowManager._visibleIndexes.push(zIndex);
+               ModalOverlay.adjust();
+            }
          }
       },
 
@@ -572,6 +592,16 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
                });
             } else if (result !== false) {
                parentHide.call(this);
+            }
+         },
+         show: function (parentShow) {
+            var result = this._notify('onOpen');
+            if (result instanceof $ws.proto.Deferred) {
+               result.addCallback(function () {
+                  parentShow.call(this);
+               });
+            } else if (result !== false) {
+               parentShow.call(this);
             }
          }
       }
