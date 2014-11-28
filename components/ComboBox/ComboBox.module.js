@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       //TODO от этого надо избавиться. Пользуется Саня Кузьмин
       _notifySelectedItem : function(key) {
          var text = this.getText();
-         this._notify('onChangeSelectedItem', key, text);
+         this._notify('onSelectedItemChange', key, text);
       },
 
       _setPickerContent: function () {
