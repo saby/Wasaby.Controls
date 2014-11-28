@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
       },
 
       $constructor: function() {
-         this._publish('onChangeText');
+         this._publish('onTextChange');
       },
 
       /**
@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
          this._options.text = text || '';
          if (oldText !== this._options.text) {
             this.saveToContext('Text', text);
-            this._notify('onChangeText', this._options.text);
+            this._notify('onTextChange', this._options.text);
          }
       },
 

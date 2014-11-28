@@ -130,7 +130,7 @@ define(
       $constructor: function () {
          var self = this;
 
-         this._publish('onChange');
+         this._publish('onDateChange');
 
          // Проверяем, является ли маска, с которой создается контролл, допустимой
          this._checkPossibleMask();
@@ -192,7 +192,7 @@ define(
          this._picker.getContainer().append(element);
 
          // Нажатие на календарный день в пикере устанавливает дату
-         this._calendarControl.subscribe('onChange', function(eventObject, date){
+         this._calendarControl.subscribe('onDateChange', function(eventObject, date){
             self.setDate(date);
             self.hidePicker();
          });
@@ -230,7 +230,7 @@ define(
          text = text ? text: '';
          DatePicker.superclass.setText.call( this, text );
          this._options.date = text == '' ? null : this._getDateByText( text );
-         this._notify('onChange', this._options.date);
+         this._notify('onDateChange', this._options.date);
       },
 
       /**
@@ -239,7 +239,7 @@ define(
        */
       setDate: function ( date ) {
          this._setDate( date );
-         this._notify('onChange', this._options.date);
+         this._notify('onDateChange', this._options.date);
       },
 
       /**
@@ -319,7 +319,7 @@ define(
          // Если дата изменилась -- генерировать событие.
          // Если использовать просто setDate, то событие будет генерироваться даже если дата введена с клавиатуры не полностью, что неверно
          if ( oldDate !== this._options.date ) {
-            this._notify('onChange', this._options.date);
+            this._notify('onDateChange', this._options.date);
          }
       },
 

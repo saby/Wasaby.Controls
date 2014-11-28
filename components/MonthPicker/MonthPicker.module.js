@@ -76,7 +76,7 @@ define(
       $constructor: function() {
          var self = this;
 
-         this._publish('onChange');
+         this._publish('onDateChange');
 
          // Установка первоначального значения
          if ( this._options.date ) {
@@ -192,7 +192,7 @@ define(
       setDate: function(value) {
          value = value ? value : new Date();
          this._setDate(value);
-         this._notify('onChange', this._options.date);
+         this._notify('onDateChange', this._options.date);
       },
 
       /**
