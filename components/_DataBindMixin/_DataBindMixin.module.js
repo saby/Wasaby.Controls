@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS._DataBindMixin', ['js!SBIS3.CORE.AttributeCfgParser'],
 
       saveToContext: function(field, value){
          if (this._dataBind[field]) {
-            this.getLinkedContext().setValue(this._dataBind[field], value, false, this);
+            this.getParent().getContext().setValue(this._dataBind[field], value, false, this);
             this.validate();
          }
       },
@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS._DataBindMixin', ['js!SBIS3.CORE.AttributeCfgParser'],
       _propertyDataBinding : function(){
          var
             self = this,
-            context = this.getLinkedContext(),
+            context = this.getParent().getContext(),
             attr = this.getContainer().attr('data-bind'),
             dataBind,
             setter;

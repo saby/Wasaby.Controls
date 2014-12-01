@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 21.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.Control', ['js!SBIS3.CORE.Control'], function(Control) {
+define('js!SBIS3.CONTROLS.CompoundControl', ['js!SBIS3.CORE.CompoundControl'], function(Control) {
 
    'use strict';
 
@@ -13,8 +13,10 @@ define('js!SBIS3.CONTROLS.Control', ['js!SBIS3.CORE.Control'], function(Control)
     * @extends SBIS3.CORE.Control
     */
 
-   return Control.Control.extend( /** @lends SBIS3.CONTROLS.Control.prototype */{
-
+   return Control.extend( /** @lends SBIS3.CONTROLS.Control.prototype */{
+      $constructor : function(){
+         this._container.removeClass('ws-area');
+      }
    });
 
 });
