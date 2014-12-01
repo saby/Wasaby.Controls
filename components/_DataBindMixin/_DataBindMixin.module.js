@@ -12,9 +12,20 @@ define('js!SBIS3.CONTROLS._DataBindMixin', ['js!SBIS3.CORE.AttributeCfgParser'],
          }
       },
 
+      _getBindingContext : function() {
+         var ctx;
+         if (this.getParent()) {
+            ctx = this.getParent().getContext()
+         }
+         else {
+            ctx = this.getLinkedContext();
+         }
+         return ctx;
+      },
+
       saveToContext: function(field, value){
          if (this._dataBind[field]) {
-            this.getParent().getContext().setValue(this._dataBind[field], value, false, this);
+            this._getBindingContext.setValue(this._dataBind[field], value, false, this);
             this.validate();
          }
       },
@@ -26,7 +37,7 @@ define('js!SBIS3.CONTROLS._DataBindMixin', ['js!SBIS3.CORE.AttributeCfgParser'],
       _propertyDataBinding : function(){
          var
             self = this,
-            context = this.getParent().getContext(),
+            context = this._getBindingContext(),
             attr = this.getContainer().attr('data-bind'),
             dataBind,
             setter;

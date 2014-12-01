@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
 
       _drawSelectedItems : function(idArray) {
          var
-            controls = this.getChildControls(),
+            controls = this._childControls,
             arrLen = idArray.length;
 
          for (var i = 0; i < controls.length; i++) {
