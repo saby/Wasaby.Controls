@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CONTROLS.CompoundControl', 'js
     * Поведенческий класс, задающий базовое поведение кнопки. Основное предназначение - обрабатывать клик.
     * Все контролы-кнопки должны наследоваться от этого класса. Отображение и вёрстка задаются именно в унаследованных классах.
     * @class SBIS3.CONTROLS.ButtonBase
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CONTROLS.CompoundControl
     */
 
    var ButtonBase = Control.extend([ClickMixin, FormWidgetMixin, _DataBindMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
