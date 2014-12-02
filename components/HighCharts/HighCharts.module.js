@@ -130,6 +130,10 @@ function(BaseControl, dotTpl){
              * @cfg {wsAxis[]} Набор осей координат
              */
             wsAxis : [],
+            /**
+             * @cfg {Object} тут описание
+             * @group
+             */
             sourceData : {
                /**
                 * @typedef {Object} dataGet
@@ -146,8 +150,8 @@ function(BaseControl, dotTpl){
                 */
                methodBL : '',
                /**
-               * @cfg {Boolean} Запрашивать данные при инициализации
-               */
+                * @cfg {Boolean} Запрашивать данные при инициализации
+                */
                firstRequest : true,
                /**
                 * @cfg {function} Метод для пользовательского получения данных
@@ -195,6 +199,10 @@ function(BaseControl, dotTpl){
              * @cfg {Object} Опции для highChart
              */
             highChartOptions : {
+               /**
+                * @cfg {Object} тут описание
+                * @group
+                */
                chart : {
                   /**
                    * @typedef {Object} typeDiagr
@@ -234,9 +242,17 @@ function(BaseControl, dotTpl){
                 * @cfg {string[]} Набор цветов
                 */
                colors: ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1'],
+               /**
+                * @cfg {Object} тут описание
+                * @editor PropertyEditorStandardPopupObject
+                */
                credits : {
                   enabled : false
                },
+               /**
+                * @cfg {Object} тут описание
+                * @group
+                */
                legend : {
                   /**
                    * @cfg {Boolean} Легенда отображается
@@ -312,8 +328,19 @@ function(BaseControl, dotTpl){
                    */
                   itemStyle : {"color": "#333333", "cursor": "pointer", "fontSize": "12px", "fontWeight": "bold"}
                },
+               /**
+                * @cfg {Object} тут описание
+                */
                plotOptions : {
+                  /**
+                   * @cfg {Object} тут описание
+                   * @group plotOptions.column
+                   */
                   column : {
+                     /**
+                      * @cfg {Object} тут описание
+                      * @editor PropertyEditorStandardPopupObject
+                      */
                      dataLabels : {
                         /**
                          * @cfg {Boolean} Подписи значений отображаются
@@ -332,7 +359,16 @@ function(BaseControl, dotTpl){
                          */
                         formatter : undefined
                      },
+                     /**
+                      * @cfg {Object} тут описание
+                      * @editor PropertyEditorStandardPopupObject
+                      */
                      point : {
+                        /**
+                         * @cfg {Object} тут описание
+                         * @editor PropertyEditorStandardPopupObject
+                         */
+
                         events : {
                            /**
                             * @cfg {Function} При клике на столбец графика
@@ -354,7 +390,15 @@ function(BaseControl, dotTpl){
                       */
                      borderWidth : 0
                   },
+                  /**
+                   * @cfg {Object} тут описание
+                   * @group plotOptions.line
+                   */
                   line : {
+                     /**
+                      * @cfg {Object} тут описание
+                      * @editor PropertyEditorStandardPopupObject
+                      */
                      dataLabels : {
                         /**
                          * @cfg {Boolean} Подписи значений отображаются
@@ -373,6 +417,10 @@ function(BaseControl, dotTpl){
                          */
                         formatter : undefined
                      },
+                     /**
+                      * @cfg {Object} тут описание
+                      * @editor PropertyEditorStandardPopupObject
+                      */
                      marker: {
                         /**
                          * @cfg {Boolean} Выделения точек отображаются
@@ -383,7 +431,15 @@ function(BaseControl, dotTpl){
                          */
                         radius : 4
                      },
+                     /**
+                      * @cfg {Object} тут описание
+                      * @editor PropertyEditorStandardPopupObject
+                      */
                      point : {
+                        /**
+                         * @cfg {Object} тут описание
+                         * @editor PropertyEditorStandardPopupObject
+                         */
                         events : {
                            /**
                             * @cfg {Function} При клике на точку графика
@@ -404,11 +460,19 @@ function(BaseControl, dotTpl){
                       */
                      connectNulls : false
                   },
+                  /**
+                   * @cfg {Object} тут описание
+                   * @group plotOptions.pie
+                   */
                   pie : {
                      /**
                       * @cfg {Boolean} Выделение сектора по клику
                       */
                      allowPointSelect : false,
+                     /**
+                      * @cfg {Object} тут описание
+                      * @editor PropertyEditorStandardPopupObject
+                      */
                      dataLabels : {
                         /**
                          * @cfg {Number} Расстояние от диаграммы до подписей
@@ -436,6 +500,10 @@ function(BaseControl, dotTpl){
                       */
                      showInLegend : false
                   },
+                  /**
+                   * @cfg {Object} тут описание
+                   * @group plotOptions.series
+                   */
                   series : {
                      /**
                       * @cfg {Boolean} Анимированный график
@@ -445,6 +513,10 @@ function(BaseControl, dotTpl){
                       * @cfg {String} Курсор
                       */
                      cursor : 'default',
+                     /**
+                      * @cfg {Object} тут описание
+                      * @editor PropertyEditorStandardPopupObject
+                      */
                      dataLabels : {
                         /**
                          * @cfg {Boolean} Подписи значений отображаются
@@ -463,6 +535,10 @@ function(BaseControl, dotTpl){
                          */
                         formatter : undefined
                      },
+                     /**
+                      * @cfg {Object} тут описание
+                      * @editor PropertyEditorStandardPopupObject
+                      */
                      point : {
                         events : {
                            /**
@@ -473,6 +549,10 @@ function(BaseControl, dotTpl){
                      }
                   }
                },
+               /**
+                * @cfg {Object} тут описание
+                * @group
+                */
                title : {
                   /**
                    * @cfg {align} Горизонтальное расположение
@@ -499,16 +579,23 @@ function(BaseControl, dotTpl){
                tooltip : {
                   /**
                    * @cfg {Boolean} Всплывающие подсказки отображаются
+                   * @group tooltip
                    */
                   enabled : true,
                   /**
                    * @cfg {Boolean} Общий тултип. (Все точки с одним значением X выделяются вместе)
+                   * @group tooltip
                    */
                   shared : false,
                   /**
                    * @cfg {function} Функция рендеринга
+                   * @group tooltip
                    */
                   formatter : undefined,
+                  /**
+                   * @cfg {Boolean} Использовать HTML
+                   * @group tooltip
+                   */
                   useHTML : true
                }
             }
