@@ -37,6 +37,10 @@ function(BaseControl, dotTpl){
              * @cfg {Object} Опции для highChart
              */
             highChartOptions : {
+               /**
+                * @cfg {Object} тут описание
+                * @group
+                */
                chart : {
                   /**
                    * @typedef {Object} typeDiagr
@@ -79,6 +83,10 @@ function(BaseControl, dotTpl){
                credits : {
                   enabled : false
                },
+               /**
+                * @cfg {Object} тут описание
+                * @group
+                */
                legend : {
                   /**
                    * @cfg {Boolean} Легенда отображается
@@ -155,6 +163,10 @@ function(BaseControl, dotTpl){
                   itemStyle : {"color": "#333333", "cursor": "pointer", "fontSize": "12px", "fontWeight": "bold"}
                },
                plotOptions : {
+                  /**
+                   * @cfg {Object} тут описание
+                   * @group plotOptions.column
+                   */
                   column : {
                      dataLabels : {
                         /**
@@ -196,6 +208,10 @@ function(BaseControl, dotTpl){
                       */
                      borderWidth : 0
                   },
+                  /**
+                   * @cfg {Object} тут описание
+                   * @group plotOptions.line
+                   */
                   line : {
                      dataLabels : {
                         /**
@@ -246,6 +262,10 @@ function(BaseControl, dotTpl){
                       */
                      connectNulls : false
                   },
+                  /**
+                   * @cfg {Object} тут описание
+                   * @group plotOptions.pie
+                   */
                   pie : {
                      /**
                       * @cfg {Boolean} Выделение сектора по клику
@@ -278,6 +298,10 @@ function(BaseControl, dotTpl){
                       */
                      showInLegend : false
                   },
+                  /**
+                   * @cfg {Object} тут описание
+                   * @group plotOptions.series
+                   */
                   series : {
                      /**
                       * @cfg {Boolean} Анимированный график
@@ -316,6 +340,10 @@ function(BaseControl, dotTpl){
 
                   }
                },
+               /**
+                * @cfg {Object} тут описание
+                * @group
+                */
                title : {
                   /**
                    * @cfg {align} Горизонтальное расположение
@@ -342,17 +370,24 @@ function(BaseControl, dotTpl){
                tooltip : {
                   /**
                    * @cfg {Boolean} Всплывающие подсказки отображаются
+                   * @group tooltip
                    */
                   enabled : true,
                   /**
                    * @cfg {Boolean} Общий тултип. (Все точки с одним значением X выделяются вместе)
+                   * @group tooltip
                    */
                   shared : false,
                   /**
                    * @cfg {function} Функция рендеринга
+                   * @group tooltip
                    */
                   formatter : undefined
                },
+               /**
+                * @cfg {Object} тут описание
+                * @group
+                */
                xAxis : {
                   /**
                    * @cfg {Boolean} Выводить дробные значения
@@ -370,7 +405,7 @@ function(BaseControl, dotTpl){
                      /**
                       * @cfg {Number} Количество строк при выводе меток к оси X
                       */
-                     staggerLines : 1,
+                     staggerLines : 0,
                      /**
                       * @cfg {Number} Шаг подписи меток оси X
                       */
@@ -392,6 +427,10 @@ function(BaseControl, dotTpl){
                    */
                   max : null
                },
+               /**
+                * @cfg {Object} тут описание
+                * @group
+                */
                yAxis : {
                   /**
                    * @cfg {Boolean} Выводить дробные значения

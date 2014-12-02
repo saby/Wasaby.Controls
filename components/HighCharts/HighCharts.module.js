@@ -117,7 +117,7 @@ function(BaseControl, dotTpl){
              * @property {String} title Заголовок
              * @property {Number} [gridLineWidth=0] Толщина линий сетки
              * @property {function} labelsFormatter Функция рендеринга меток
-             * @property {Number} [staggerLines=1] Количество строк при выводе меток
+             * @property {Number} [staggerLines=0] Количество строк при выводе меток
              * @property {Number} [step=0] Шаг подписи меток
              * @property {Number} [lineWidth=1] Толщина оси
              * @property {Boolean} [allowDecimals=true] Разрешить дробные значения
@@ -828,15 +828,15 @@ function(BaseControl, dotTpl){
                axisArr[i].gridLineWidth = axisOpts[i].gridLineWidth;
             }
             if (axisOpts[i].labelsFormatter !== undefined) {
-               axisArr[i].labels = axisOpts[i].labels || {};
+               axisArr[i].labels = axisArr[i].labels || {};
                axisArr[i].labels.formatter = axisOpts[i].labelsFormatter;
             }
             if (axisOpts[i].staggerLines !== undefined) {
-               axisArr[i].labels = axisOpts[i].labels || {};
+               axisArr[i].labels = axisArr[i].labels || {};
                axisArr[i].labels.staggerLines = parseInt(axisOpts[i].staggerLines, 10);
             }
             if (axisOpts[i].step !== undefined) {
-               axisArr[i].labels = axisOpts[i].labels || {};
+               axisArr[i].labels = axisArr[i].labels || {};
                axisArr[i].labels.step = parseInt(axisOpts[i].step, 10);
             }
             if (axisOpts[i].lineWidth !== undefined) {
