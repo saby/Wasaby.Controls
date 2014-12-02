@@ -37,7 +37,7 @@ function(BaseControl, dotTpl){
              * @cfg {Object} Опции для highChart
              */
             highChartOptions : {
-               HighChartsLight : {
+               chart : {
                   /**
                    * @typedef {Object} typeDiagr
                    * @variant line Линейная
@@ -441,7 +441,7 @@ function(BaseControl, dotTpl){
          }
       },
       $constructor : function() {
-         HighChartsLight.setOptions({
+         Highcharts.setOptions({
             lang: {
                numericSymbols: ['', '', '', '', '', ''],
                months : [ 'Январь' , 'Февраль' , 'Март' , 'Апрель' , 'Май' , 'Июнь' , 'Июль' , 'Август' , 'Сентябрь' , 'Октябрь' , 'Ноябрь' , 'Декабрь'],
@@ -519,8 +519,8 @@ function(BaseControl, dotTpl){
 
 
       _drawHighChart : function() {
-         this.getContainer().HighChartsLight(this._options.highChartOptions);
-         this._chartObj = this.getContainer().HighChartsLight();
+         this.getContainer().highcharts(this._options.highChartOptions);
+         this._chartObj = this.getContainer().highcharts();
          this.staggerDataLabels(this._chartObj.series);
       },
 
