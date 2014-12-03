@@ -210,10 +210,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          return this.getSelectedItem();
       },
 
-      _loadChildControls : function() {
-         /*TODO временная заглушка, пока есть различия между Control и CompoundControl*/
-      },
-
       _setEnabled : function(enabled) {
          TextBox.superclass._setEnabled.call(this, enabled);
          if (enabled === false) {
