@@ -564,6 +564,8 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
 
       before: {
          destroy: function () {
+            var zIndex = this._container.css('zIndex');
+            ControlHierarchyManager.zIndexManager.setFree(zIndex);
             ControlHierarchyManager.removeNode(this);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._resizeHandler, this);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._scrollHandler, this);
