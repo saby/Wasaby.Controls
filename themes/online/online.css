@@ -611,12 +611,8 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   vertical-align: top;
   border: none;
-}
-.controls-DatePicker:hover {
-  border: none;
-}
-.controls-DatePicker__field {
-  margin-right: 16px;
+  height: 24px;
+  box-sizing: border-box;
 }
 .controls-DatePicker__calendarIcon {
   background: url("img/DatePicker-calendar.png") no-repeat 0 0;
@@ -636,17 +632,17 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DatePicker__calendar {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
-.controls-DatePicker .controls-FormattedTextBox {
-  height: 100%;
-  box-sizing: border-box;
-}
 .controls-DatePicker .controls-FormattedTextBox__field {
   border: 1px solid transparent;
   border-bottom: 1px solid #EAEAEA;
 }
-.controls-DatePicker .controls-FormattedTextBox__field:hover {
+.controls-DatePicker .controls-FormattedTextBox__field:hover,
+.controls-DatePicker.ws-has-focus .controls-FormattedTextBox__field {
   border: 1px solid #EAEAEA;
   border-bottom: 1px solid #CCCCCC;
+}
+.controls-TextBox__afterFieldWrapper + .controls-DatePicker__field {
+  margin-right: 19px;
 }
 .controls-ComboBox__arrowDown {
   background-image: url('./img/ComboBox.png');
@@ -701,6 +697,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
   display: table-cell;
+  resize: none;
   vertical-align: middle;
   font-style: normal;
   white-space: pre;

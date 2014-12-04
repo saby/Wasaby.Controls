@@ -2,12 +2,8 @@
    display: inline-block;
    vertical-align: top;
    border: none;
-}
-.controls-DatePicker:hover{
-   border: none;
-}
-.controls-DatePicker__field {
-   margin-right: 16px;
+   height: 24px;
+   box-sizing: border-box;
 }
 .controls-DatePicker__calendarIcon {
    background: url("img/DatePicker-calendar.png") no-repeat 0 0;
@@ -28,17 +24,17 @@
    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
-.controls-DatePicker .controls-FormattedTextBox{
-   height: 100%;
-   box-sizing: border-box;
-}
-
 .controls-DatePicker  .controls-FormattedTextBox__field {
    border: 1px solid transparent;
    border-bottom: 1px solid #EAEAEA;
 }
-
-.controls-DatePicker  .controls-FormattedTextBox__field:hover {
+.controls-DatePicker  .controls-FormattedTextBox__field:hover,
+.controls-DatePicker.ws-has-focus  .controls-FormattedTextBox__field
+{
    border: 1px solid #EAEAEA;
    border-bottom: 1px solid #CCCCCC;
+}
+
+.controls-TextBox__afterFieldWrapper + .controls-DatePicker__field {
+   margin-right: 19px;
 }
