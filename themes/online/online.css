@@ -363,7 +363,7 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
   outline: none;
   background: transparent;
-  line-height: 20px;
+  line-height: 20px !important;
   font: inherit;
 }
 .controls-TextBox__field-uppercase {
