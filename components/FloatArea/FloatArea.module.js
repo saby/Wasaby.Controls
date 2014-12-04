@@ -26,7 +26,8 @@ define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS
             /**
              * @cfg {AnimationEnum} Вид анимации появления
              */
-            animation : 'no'
+            animation : 'no',
+            template: null
          }
       },
 

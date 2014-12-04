@@ -5,7 +5,8 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup', [
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS._PickerMixin',
-   'js!SBIS3.CONTROLS.EditAtPlace'
+   'js!SBIS3.CONTROLS.EditAtPlace',
+   'html!SBIS3.CONTROLS.EditAtPlaceGroup'
 ], function (CompoundControl, IconButton, _PickerMixin, EditAtPlace, dotTplFn) {
    'use strict';
    /**
@@ -32,11 +33,8 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup', [
 
       $constructor: function () {
          var self = this;
-         this._container.append(this._options.template);
          this._loadChildControls();
-
-         this._editorTpl = $(this._container).clone(); //сохраняем шаблон для слоя редактора
-         var children = this._getChildControls(this._container);
+         var children = this._getChildControls(this._editorTpl);
          // всем EditAtPlace задаем свой обработчик клика
          for (var i = 0; i < children.length; i++) {
             if (children[i] instanceof EditAtPlace) {
@@ -47,20 +45,14 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup', [
                children.splice(i, 1);
             }
          }
+         //_childEditsArray - массив имеющихся EditAtPlace
          this._childEditsArray = children;
+         this._createEditorTemplate();
       },
 
       _setPickerContent: function () {
          var self = this;
-         for (var i = 0; i < this._childEditsArray.length; i++) {
-            // В шаблоне редактора заменяем все EditAtPlace на соответствующие им редакторы
-            $('[id = "' + this._childEditsArray[i].getId() + '"]', this._editorTpl.get(0))
-               .replaceWith($(this._childEditsArray[i]._options.editorTpl())
-                  .attr('data-bind', this._childEditsArray[i]._container.attr('data-bind'))
-                  .width(this._childEditsArray[i]._container.width() + 24)); // TODO: 20???
-            this._childEditsArray[i]._container.css('width', this._childEditsArray[i]._container.width());
-         }
-         this._picker._container.addClass('controls-EditAtPlace__editorOverlay controls-EditAtPlaceGroup__editorOverlay').append(this._editorTpl);
+         this._picker._container.addClass('controls-EditAtPlace__editorOverlay controls-EditAtPlaceGroup__editorOverlay');
          this._picker._container.bind('keypress', function(e){
             self._keyPressHandler(e);
          });
@@ -68,12 +60,32 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup', [
          this._addControlPanel();
       },
 
+      _createEditorTemplate: function () {
+         var template = $(this._options.template);
+         $('[data-component="SBIS3.CONTROLS.EditAtPlace"]', template).each(function () {
+            var editor = $('[name="editorTpl"]', this),
+               dataBind = $(this).attr('data-bind');
+            if (editor.length) {
+               editor = $(editor.get(0).innerHTML);
+            } else {
+               editor = $('<component data-component="SBIS3.CONTROLS.TextBox"></component>').attr('data-bind', dataBind);
+            }
+            $.each($(this).prop('attributes'), function () {
+               if (this.name != 'data-component' && this.name != 'name' && this.name != 'id') {
+                  editor.attr(this.name, this.value);
+               }
+            });
+            $(this).replaceWith(editor);
+         });
+         this._editorTpl = template.get(0).outerHTML;
+      },
+
       // Добавляем кнопки
       _addControlPanel: function(){
          var self = this,
             $ok = $('<div class="controls-Button controls-EditAtPlace__okButton"></div>'),
             $cancel = $('<div class="controls-EditAtPlace__cancel"></div>'),
-            $btnsContainer = $('<div class="controls-EditAtPlaceGroup__controlPanel"></div>').append($ok).append($cancel);
+            $cntrlPanel = $('<div class="controls-EditAtPlaceGroup__controlPanel"></div>').append($ok).append($cancel);
 
          // Добавляем кнопки
          this._okButton = new IconButton({
@@ -81,14 +93,11 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup', [
             element : $ok,
             icon: 'sprite:icon-16 icon-Successful icon-done'
          });
-
-         this._picker.getContainer().append($btnsContainer);
-
+         this._picker.getContainer().append($cntrlPanel);
          // Подписываемся на клики кнопок
          this._okButton.subscribe('onActivated', function(){
             self.hidePicker();
          });
-
          $cancel.bind('click',function(){
             self.hidePicker();
             $ws.single.EventBus.channel('EditAtPlaceChannel').notify('onCancel');
@@ -105,7 +114,8 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup', [
                side: 'left'
             },
             closeByExternalClick: true,
-            isModal: true
+            isModal: true,
+            template: this._editorTpl
          };
       },
 
@@ -115,7 +125,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup', [
 
       _keyPressHandler: function(e) {
          if (e.which == 13){
-            this.hidePicker();
+            //this.hidePicker();
          }
       },
 
@@ -127,7 +137,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup', [
          });
       },
 
-      /*TODO переопределяем метод compoundControl - костыль*/
+     //*TODO переопределяем метод compoundControl - костыль*//*
       _loadControls: function (pdResult) {
          return pdResult.done([]);
       },

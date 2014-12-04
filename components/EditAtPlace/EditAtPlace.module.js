@@ -5,10 +5,10 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
    'js!SBIS3.CONTROLS.TextBoxBase',
    'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.IconButton',
+   'js!SBIS3.CONTROLS.TextArea',
    'js!SBIS3.CONTROLS._PickerMixin',
    'html!SBIS3.CONTROLS.EditAtPlace',
-   'html!SBIS3.CONTROLS.EditAtPlace/resources/EditorTpl'
-], function(TextBoxBase, TextBox, IconButton, _PickerMixin, dotTplFn, editorTpl) {
+], function(TextBoxBase, TextBox, IconButton, TextArea, _PickerMixin, dotTplFn) {
    'use strict';
    /**
     * @class SBIS3.CONTROLS.EditAtPlace
@@ -28,8 +28,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
          _okButton: null,
          _oldText: '',
          _options: {
-            editorTpl: editorTpl,
-            context: null
+            editorTpl: '<component data-component="SBIS3.CONTROLS.TextBox"> </component>',
+            isMultiline: false,
+            displayAsEditor: false
          }
       },
 
@@ -39,6 +40,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
          this._textField.bind('click', function(){
             self._clickHandler();
          });
+         if (this._options.isMultiline){
+            this._textField.addClass('controls-EditAtPlace__multiline');
+         }
          $ws.single.EventBus.channel('EditAtPlaceChannel').subscribe('onCancel', this._cancelHandler, this);
          $ws.single.EventBus.channel('EditAtPlaceChannel').subscribe('onOpen', this._openHandler, this);
       },
@@ -66,12 +70,11 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
 
       _setPickerContent: function () {
          this._picker.getContainer().addClass('controls-EditAtPlace__editorOverlay');
-         this._picker._container.append($(this._options.editorTpl()).attr('data-bind', this._container.attr('data-bind')));
+         this._picker._container.append($(this._options.editorTpl).attr('data-bind', this._container.attr('data-bind')));
          this._picker._loadChildControls();
          this._editor = this._picker._getChildControls()[0];
          this._editor._container.width(this._container.width() + 20);
          this._addControlPanel();
-         this._container.css('width', this._container.width() + 2);
       },
 
       _addControlPanel: function(){
@@ -95,25 +98,19 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
          });
 
          $cancel.bind('click',function(){
-            self.hidePicker();
             self.setText(self._oldText);
+            self.hidePicker();
          });
-      },
-
-      setEditorTemplate: function(template){
-         this._options.editorTpl = doT.template(template);
       },
 
       _setPickerConfig: function(){
          return {
             corner: 'tl',
             verticalAlign: {
-               side: 'top',
-               offset: -3
+               side: 'top'
             },
             horizontalAlign: {
-               side: 'left',
-               offset: -4
+               side: 'left'
             },
             closeByExternalClick: true,
             isModal: true

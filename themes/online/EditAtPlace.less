@@ -1,15 +1,41 @@
 .controls-EditAtPlace {
   border: 1px solid transparent;
-  border-bottom: dashed 1px #868686;
+  border-bottom: none;
+  vertical-align: top;
 }
 
 .controls-EditAtPlace:hover, .controls-EditAtPlace.ws-has-focus{
   border: 1px solid transparent;
-  border-bottom: dashed 1px #868686;
+  border-bottom: none;
 }
 
 .controls-EditAtPlace__textField{
   padding-top: 1px;
+  cursor: pointer;
+  border-bottom: dashed 1px #868686;
+  font-family: Arial, monospace;
+}
+
+.controls-EditAtPlace__editorOverlay .controls-TextArea__inputField{
+  line-height: 22px;
+  padding: 1px 4px;
+  font-size: inherit;
+}
+
+.controls-EditAtPlace__textAreaField {
+  margin: 0;
+}
+
+.controls-EditAtPlace__multiline {
+  white-space: pre-wrap; /* css-3 */
+  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
+  display: inline;
+  text-indent: 0;
+}
+
+.controls-EditAtPlace__autoHeight{
+  height: auto;
 }
 
 .controls-EditAtPlace__controlPanel{
@@ -31,7 +57,7 @@
 
 .controls-EditAtPlace__okButton.controls-IconButton.controls-Button {
   width: 24px;
-  padding-top: 2px;
+  padding-top: 3px;
   padding-left: 4px;
 }
 
@@ -40,7 +66,6 @@
 }
 
 .controls-EditAtPlace__fieldWrapper{
-  cursor: pointer;
   font: -webkit-small-control;
 }
 
@@ -49,10 +74,13 @@
   background: #f8f3f1!important;
   box-shadow: 0 0 3px #b2b2b2;
   border-radius: 3px;
+  margin-top: -4px;
+  margin-left: -4px;
 }
 
 .controls-EditAtPlaceGroup__editorOverlay {
   padding: 0 0 4px 0;
+  margin: 0;
 }
 
 .controls-EditAtPlaceGroup__controlPanel{
