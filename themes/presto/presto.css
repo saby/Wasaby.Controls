@@ -61,6 +61,7 @@
   outline: none;
   background: none;
   color: #ffffff;
+  font: inherit;
 }
 .controls-TextBox__field-uppercase {
   text-transform: uppercase;
