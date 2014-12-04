@@ -29,19 +29,30 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             /**
              * @cfg {Boolean} Возможен ли ручной ввод текста
              */
-            isEditable: true,
+            editable: true,
             /**
              * @cfg {Boolean} Присутствует пустое значение или нет
+             * @noShow
              */
             emptyValue: false,
             /**
              * @cfg {String} Форматирование значений в списке
+             * @noShow
              */
             valueFormat: '',
             /**
              * @cfg {String} название поля для отображения
              */
-            displayField: ''
+            displayField: '',
+            /**
+             * @typedef {Object} ComboboxItem
+             * @property {string} key ключ элемента
+             * @property {string} title текст элемента
+             */
+            /**
+             * @cfg {ComboboxItem[]} Набор исходных данных по которому строится отображение
+             */
+            items : []
          }
       },
 
@@ -56,32 +67,38 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._itemTpl = this._options.itemTemplate;
          }
 
-         //TODO: в идеале надо сделать, чтобы атрибут проставлялся в шаблоне, и не плодить его на все контролы-наследники TextBox'а, плюс очень похоже на enabled
          // запрещен ручной ввод значений
-         if(!this._options.isEditable){
-            self.getContainer().addClass('controls-ComboBox__isEditable-false').find('.js-controls-TextBox__field').attr('readonly', 'readonly').addClass('js-controls-ComboBox__arrowDown');
+         if(!this._options.editable){
+            self._drawEditable(false)
          }
 
          if (this._items.getItemsCount()) {
             /*устанавливаем первое значение TODO по идее переписан метод setSelectedItem для того чтобы не срабатывало событие при первой установке*/
             var item;
+
             if (!this._options.selectedItem) {
-               item = this._items.getNextItem();
-               this._options.selectedItem = this._items.getKey(item);
+               if (!this._options.text) {
+                  item = this._items.getNextItem();
+                  this._options.selectedItem = this._items.getKey(item);
+               }
             }
             else {
                item = this._items.getItem(this._options.selectedItem);
             }
-            ComboBox.superclass.setText.call(this, item[this._options.displayField]);
+            if (item) {
+               ComboBox.superclass.setText.call(this, item[this._options.displayField]);
+            }
          }
 
-         /*обрабочики кликов*/
-         $('.js-controls-ComboBox__arrowDown', this._container.get(0)).click(function () {
-            if (self.isEnabled()) {
-               $('.controls-ComboBox__itemRow__selected').removeClass('controls-ComboBox__itemRow__selected');
-               var key = self.getSelectedItem();
-               $('.controls-ComboBox__itemRow[data-key=\'' + key + '\']').addClass('controls-ComboBox__itemRow__selected');
-               self.togglePicker();
+         /*обрабочики кликов TODO mouseup!!*/
+         this._container.mouseup(function(e){
+            if ($(e.target).hasClass('js-controls-ComboBox__arrowDown')) {
+               if (self.isEnabled()) {
+                  $('.controls-ComboBox__itemRow__selected').removeClass('controls-ComboBox__itemRow__selected');
+                  var key = self.getSelectedItem();
+                  $('.controls-ComboBox__itemRow[data-key=\'' + key + '\']').addClass('controls-ComboBox__itemRow__selected');
+                  self.togglePicker();
+               }
             }
          });
 
@@ -202,6 +219,24 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
+      setEditable : function(editable) {
+         this._options.editable = editable;
+         this._drawEditable(editable);
+      },
+
+      isEditable : function() {
+         return this._options.editable;
+      },
+
+      _drawEditable : function(editable) {
+         if (editable === false) {
+            this.getContainer().addClass('controls-ComboBox__editable-false').find('.js-controls-TextBox__field').attr('readonly', 'readonly').addClass('js-controls-ComboBox__arrowDown');
+         }
+         else {
+            this.getContainer().removeClass('controls-ComboBox__editable-false').find('.js-controls-TextBox__field').removeAttr('readonly').removeClass('js-controls-ComboBox__arrowDown');
+         }
+      },
+
       setValue: function(key){
          this.setSelectedItem(key);
       },
@@ -216,7 +251,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._inputField.attr('readonly', 'readonly');
          }
          else {
-            if (this._options.isEditable) {
+            if (this._options.editable) {
                this._inputField.removeAttr('readonly');
             }
          }
