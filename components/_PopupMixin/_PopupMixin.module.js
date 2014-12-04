@@ -212,10 +212,10 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
       _initMargins: function () {
          var container = this._container;
          this._margins = {
-            top: parseInt(container.css('margin-top'), 10),
-            left: parseInt(container.css('margin-left'), 10),
-            bottom: parseInt(container.css('margin-bottom'), 10),
-            right: parseInt(container.css('margin-right'), 10)
+            top: parseInt(container.css('margin-top'), 10) || 0,
+            left: parseInt(container.css('margin-left'), 10) || 0,
+            bottom: parseInt(container.css('margin-bottom'), 10) || 0,
+            right: parseInt(container.css('margin-right'), 10) || 0
          };
       },
 
@@ -593,8 +593,10 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
                self = this,
                result = this._notify('onClose');
             if (result instanceof $ws.proto.Deferred) {
-               result.addCallback(function () {
-                  parentHide.call(self);
+               result.addCallback(function (res) {
+                  if (res !== false) {
+                     parentHide.call(self);
+                  }
                });
             } else if (result !== false) {
                parentHide.call(this);
