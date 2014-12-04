@@ -57,6 +57,15 @@
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__icon {
   background-position: 0 -29px;
 }
+.controls-RadioButton.ws-disabled {
+  cursor: default;
+}
+.controls-RadioButton.ws-disabled .controls-RadioButton__caption {
+  color: #d1d1d4;
+}
+.controls-RadioButton.ws-disabled .controls-RadioButton__icon {
+  background-position: 0 -4px;
+}
 .controls-TextBox {
   display: inline-block;
   background: #ffffff;
@@ -163,6 +172,15 @@
 }
 .controls-CheckBox__caption {
   margin-left: 8px;
+}
+.controls-CheckBox.ws-disabled {
+  cursor: default;
+}
+.controls-CheckBox.ws-disabled .controls-CheckBox__caption {
+  color: #d1d1d4;
+}
+.controls-CheckBox.ws-disabled .controls-CheckBox__icon {
+  background-position: 0 -4px;
 }
 .controls-ComboBox__arrowDown {
   background-image: url('./img/ComboBox.png');

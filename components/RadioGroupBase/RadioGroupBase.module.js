@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
       },
 
       _drawSelectedItem : function(id) {
-         var controls = this.getChildControls();
+         var controls = this._childControls;
          for (var i = 0; i < controls.length; i++) {
             if (!id) {
                controls[i].setChecked(false);

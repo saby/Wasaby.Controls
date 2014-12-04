@@ -40,7 +40,7 @@ define(
          },
 
          $constructor: function () {
-            this._publish('onChange');
+            this._publish('onDateChange');
          },
 
          init: function(){
@@ -60,7 +60,7 @@ define(
             }
 
             // Изменение даты с помощью дочернего контролла MonthPicker
-            this.monthControl.subscribe('onChange', function(eventObject, date){
+            this.monthControl.subscribe('onDateChange', function(eventObject, date){
                self._setDate(date);
             });
 
@@ -155,7 +155,7 @@ define(
          setDate: function(date){
             date = date ? date : new Date();
             this._setDate(date);
-            this._notify('onChange', date);
+            this._notify('onDateChange', date);
          },
 
          /**
