@@ -18,7 +18,7 @@
 }
 
 .controls-ComboBox__editable-false,
-.controls-ComboBox__editable-false .controls-TextBox__field {
+ {
    cursor: pointer;
 }
 
@@ -31,10 +31,6 @@
    background-color: #E7F0F9;
 }
 
-.controls-ComboBox__field__editable-false,
-.controls-ComboBox__field__editable-false .controls-TextBox__field {
-   cursor: pointer;
-}
 
 .controls-ComboBox__inputWrapper {
    margin-right: 18px;
@@ -44,4 +40,16 @@
 .controls-ComboBox__picker {
    border: 1px solid #CCCCCC;
    margin-top: -1px;
+}
+
+.controls-ComboBox__fieldNotEditable {
+   display: none;
+}
+
+.controls-ComboBox__editable-false .controls-ComboBox__fieldNotEditable{
+   display: inline-block;
+}
+
+.controls-ComboBox__editable-false .controls-ComboBox__field {
+   display: none;
 }
