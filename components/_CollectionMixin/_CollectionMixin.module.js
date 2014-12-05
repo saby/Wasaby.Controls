@@ -93,7 +93,6 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
          itemsReadyDef.done().getResult().addCallback(function(){
             self._notify('onDrawItems');
          });
-         this._loadChildControls();
       },
 
       //метод рисующий контейнер для одного элемента
@@ -144,22 +143,6 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
 
       _getItemTemplate : function() {
          return '<div>template</div>'
-      },
-
-      /*TODO переопределяем метод compoundControl - костыль*/
-      _loadControls: function(pdResult){
-         return pdResult.done([]);
-      },
-
-      /*TODO свой механиз загрузки дочерних контролов - костыль*/
-      _loadChildControls: function() {
-         var def = new $ws.proto.Deferred();
-         var self = this;
-         self._loadControlsBySelector(new $ws.proto.ParallelDeferred(), undefined, '[data-component]')
-            .getResult().addCallback(function () {
-               def.callback();
-            });
-         return def;
       }
    };
 

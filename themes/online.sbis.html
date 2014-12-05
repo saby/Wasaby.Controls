@@ -28,16 +28,9 @@
    <script type="text/javascript" src="/sbis3-ws/ws/lib/Source.js"></script>
    <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/res/js/bootup.js"></script>
    <style>
-      .view-main {
-         font-family: Arial, SANS-SERIF;
-         font-size: 13px;
-         padding: 0;
-         margin: 0;
-         height: 100%;
-      }
-
       html, body {
          font-family: Tahoma !important;
+         font-size: 13px;
       }
 
       #content {
@@ -64,7 +57,7 @@
    <link rel="stylesheet" type="text/css" href="../icons/index.css"/>
    <link rel="stylesheet" type="text/css" href="./online/online.css"/>
 </head>
-<body class="view-main">
+<body>
 
 <div id="content">
    <h3>Переключатели</h3>
@@ -410,7 +403,7 @@
          require(["js!SBIS3.CONTROLS.ComboBox"], function (r) {
             new r({
                element: "ComboBox",
-               isEditable : false,
+               editable : false,
                items : [
                   {
                      key : 1,

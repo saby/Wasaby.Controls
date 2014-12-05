@@ -101,6 +101,7 @@
   line-height: 100%;
   outline: none;
   background: transparent;
+  font: inherit;
 }
 .controls-TextBox__field-uppercase {
   text-transform: uppercase;
@@ -195,7 +196,7 @@
   height: 16px;
 }
 .controls-ComboBox__arrowDown:hover,
-.controls-ComboBox__isEditable-false:hover .controls-ComboBox__arrowDown {
+.controls-ComboBox__editable-false:hover .controls-ComboBox__arrowDown {
   text-decoration: none;
   background-position: 0 -16px;
 }
@@ -212,14 +213,14 @@
   color: #999999;
   background-color: #ffffff;
 }
-.controls-ComboBox__isEditable-false,
-.controls-ComboBox__isEditable-false .controls-TextBox__field {
+.controls-ComboBox__editable-false,
+.controls-ComboBox__editable-false .controls-TextBox__field {
   cursor: pointer;
 }
-.controls-ComboBox__isEditable-false.controls-Picker__show .controls-ComboBox__field {
+.controls-ComboBox__editable-false.controls-Picker__show .controls-ComboBox__field {
   color: #919197;
 }
-.controls-ComboBox__isEditable-false:hover .controls-ComboBox__field {
+.controls-ComboBox__editable-false:hover .controls-ComboBox__field {
   color: #00d7d7;
 }
 .controls-ComboBox__inputWrapper {
@@ -267,7 +268,7 @@
   resize: none;
   border: none;
   display: block;
-  font-family: inherit;
+  font: inherit;
   width: 100%;
   height: 100%;
   padding: 6px 7px;

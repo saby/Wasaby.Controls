@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 12.08.2014.
  */
 
-define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManager'], function (ControlHierarchyManager) {
+define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManager', 'js!SBIS3.CORE.ModalOverlay'], function (ControlHierarchyManager, ModalOverlay) {
 
    if (typeof window !== 'undefined') {
       var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
@@ -84,7 +84,11 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
             /**
              * @cfg {Boolean} закрывать или нет при клике мимо
              */
-            closeByExternalClick: false
+            closeByExternalClick: false,
+            /**
+             * @cfg {Boolean} Является модальным или нет
+             */
+            isModal: false
          }
       },
 
@@ -208,10 +212,10 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
       _initMargins: function () {
          var container = this._container;
          this._margins = {
-            top: parseInt(container.css('margin-top'), 10),
-            left: parseInt(container.css('margin-left'), 10),
-            bottom: parseInt(container.css('margin-bottom'), 10),
-            right: parseInt(container.css('margin-right'), 10)
+            top: parseInt(container.css('margin-top'), 10) || 0,
+            left: parseInt(container.css('margin-left'), 10) || 0,
+            bottom: parseInt(container.css('margin-bottom'), 10) || 0,
+            right: parseInt(container.css('margin-right'), 10) || 0
          };
       },
 
@@ -543,6 +547,18 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          },
          init: function(){
             ControlHierarchyManager.addNode(this, this.getParent());
+         },
+         hide: function(){
+            var zIndex = this._container.css('zIndex');
+            ControlHierarchyManager.zIndexManager.setFree(zIndex);
+            // Убираем оверлей
+            if (this._options.isModal) {
+               var pos = Array.indexOf($ws.single.WindowManager._modalIndexes, zIndex);
+               $ws.single.WindowManager._modalIndexes.splice(pos, 1);
+               pos = Array.indexOf($ws.single.WindowManager._visibleIndexes, zIndex);
+               $ws.single.WindowManager._visibleIndexes.splice(pos, 1);
+               ModalOverlay.adjust();
+            }
          }
       },
 
@@ -560,6 +576,14 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
                left: '-1000px',
                top: '-1000px'
             });
+            var zIndex = ControlHierarchyManager.zIndexManager.getNext();
+            this._container.css('zIndex', zIndex);
+            //Показываем оверлей
+            if (this._options.isModal) {
+               $ws.single.WindowManager._modalIndexes.push(zIndex);
+               $ws.single.WindowManager._visibleIndexes.push(zIndex);
+               ModalOverlay.adjust();
+            }
          }
       },
 
@@ -569,8 +593,10 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
                self = this,
                result = this._notify('onClose');
             if (result instanceof $ws.proto.Deferred) {
-               result.addCallback(function () {
-                  parentHide.call(self);
+               result.addCallback(function (res) {
+                  if (res !== false) {
+                     parentHide.call(self);
+                  }
                });
             } else if (result !== false) {
                parentHide.call(this);

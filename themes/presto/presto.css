@@ -61,6 +61,7 @@
   outline: none;
   background: none;
   color: #ffffff;
+  font: inherit;
 }
 .controls-TextBox__field-uppercase {
   text-transform: uppercase;
@@ -112,8 +113,8 @@
 .controls-ComboBox__itemRow__selected {
   font-weight: bold;
 }
-.controls-ComboBox__field__isEditable-false,
-.controls-ComboBox__field__isEditable-false .controls-TextBox__field {
+.controls-ComboBox__field__editable-false,
+.controls-ComboBox__field__editable-false .controls-TextBox__field {
   cursor: pointer;
 }
 .controls-ComboBox__inputWrapper {
