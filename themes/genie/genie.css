@@ -68,7 +68,7 @@
   color: #d1d1d4;
 }
 .controls-RadioButton.ws-disabled .controls-RadioButton__icon {
-  background-position: 0 -4px;
+  background-position: 0 0px;
 }
 .controls-TextBox {
   display: inline-block;
@@ -185,7 +185,7 @@
   color: #d1d1d4;
 }
 .controls-CheckBox.ws-disabled .controls-CheckBox__icon {
-  background-position: 0 -4px;
+  background-position: 0 0px;
 }
 .controls-ComboBox__arrowDown {
   background-image: url('./img/ComboBox.png');

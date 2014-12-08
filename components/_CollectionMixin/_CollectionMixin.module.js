@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
    var _CollectionMixin = /**@lends SBIS3.CONTROLS._CollectionMixin.prototype  */{
       $protected: {
          _items : null,
+         _itemsInstances : {},
          _dotItemTpl: null,
          _keyField : '',
          _options: {
@@ -72,6 +73,7 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
       },
 
       _drawItems: function(){
+         this._itemsInstances = {};
          var
             itemsReadyDef = new $ws.proto.ParallelDeferred(),
             self = this,
@@ -150,6 +152,7 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
                   config.element = ctrlWrapper;
                   config.parent = self;
                   var ctrl = new ctor(config);
+                  self._itemsInstances[self._items.getKey(item)] = ctrl;
                   def.callback(ctrl.getContainer());
                })
             }
@@ -159,9 +162,14 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
             }
          }
          return def;
+      },
+
+      getItemsInstances : function() {
+         return this._itemsInstances;
+      },
+      getItemInstance : function(id) {
+         return this._itemsInstances[id];
       }
-
-
    };
 
    return _CollectionMixin;
