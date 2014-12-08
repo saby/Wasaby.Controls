@@ -2,7 +2,7 @@
   border: 1px solid #d1d1d4;
 }
 .mixin_gray_border:hover {
-  border-color: #00d7d7;
+  border-color: #00c795;
 }
 .controls-Button {
   cursor: pointer;
@@ -18,11 +18,15 @@
   box-sizing: border-box;
 }
 .controls-Button:hover {
-  border-color: #00d7d7;
+  border-color: #00c795;
+}
+.controls-Button.controls-Button__primary {
+  border: 1px solid #00c795;
+  color: #00c795;
 }
 .controls-Button:hover {
   color: #ffffff;
-  background-color: #00d7d7;
+  background-color: #00c795;
 }
 .controls-Button.controls-Button__addButton {
   width: 24px;
@@ -43,19 +47,19 @@
 }
 .controls-RadioButton__icon {
   margin-right: 8px;
-  width: 17px;
-  height: 17px;
-  background: url('./img/RadioButton-sprite.png') 0 -4px;
+  width: 16px;
+  height: 16px;
+  background: url('./img/RadioButton-sprite.png') 0 0px;
   display: inline-block;
 }
 .controls-RadioButton:hover .controls-RadioButton__caption {
-  color: #00d7d7;
+  color: #00c795;
 }
 .controls-RadioButton:hover .controls-RadioButton__icon {
-  background-position: 0 -54px;
+  background-position: 0 -32px;
 }
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__icon {
-  background-position: 0 -29px;
+  background-position: 0 -16px;
 }
 .controls-RadioButton.ws-disabled {
   cursor: default;
@@ -64,7 +68,7 @@
   color: #d1d1d4;
 }
 .controls-RadioButton.ws-disabled .controls-RadioButton__icon {
-  background-position: 0 -4px;
+  background-position: 0 0px;
 }
 .controls-TextBox {
   display: inline-block;
@@ -74,7 +78,7 @@
   border-radius: 2px;
 }
 .controls-TextBox:hover {
-  border-color: #00d7d7;
+  border-color: #00c795;
 }
 .controls-TextBox__fieldWrapper {
   height: 100%;
@@ -101,6 +105,7 @@
   line-height: 100%;
   outline: none;
   background: transparent;
+  font: inherit;
 }
 .controls-TextBox__field-uppercase {
   text-transform: uppercase;
@@ -133,8 +138,8 @@
   background-color: #f1f1f2;
 }
 .controls-NumberTextBox__arrow:hover {
-  background-color: #00d7d7;
-  border-left-color: #00d7d7;
+  background-color: #00c795;
+  border-left-color: #00c795;
 }
 .controls-NumberTextBox__arrowDown {
   background-position: center -12px;
@@ -153,22 +158,22 @@
   display: inline-block;
 }
 .controls-CheckBox:hover .controls-CheckBox__caption {
-  color: #00d7d7;
+  color: #00c795;
 }
 .controls-CheckBox__icon {
-  width: 17px;
-  height: 17px;
-  background: url('./img/CheckBox-sprite.png') 0 -4px;
+  width: 16px;
+  height: 16px;
+  background: url('./img/CheckBox-sprite.png') 0 0px;
   display: inline-block;
 }
 .controls-CheckBox:hover .controls-CheckBox__icon {
-  background-position: 0 -54px;
+  background-position: 0 -16px;
 }
 .controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon {
-  background-position: 0 -29px;
+  background-position: 0 -32px;
 }
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
-  background-position: 0 -78px;
+  background-position: 0 -48px;
 }
 .controls-CheckBox__caption {
   margin-left: 8px;
@@ -180,7 +185,7 @@
   color: #d1d1d4;
 }
 .controls-CheckBox.ws-disabled .controls-CheckBox__icon {
-  background-position: 0 -4px;
+  background-position: 0 0px;
 }
 .controls-ComboBox__arrowDown {
   background-image: url('./img/ComboBox.png');
@@ -195,7 +200,7 @@
   height: 16px;
 }
 .controls-ComboBox__arrowDown:hover,
-.controls-ComboBox__isEditable-false:hover .controls-ComboBox__arrowDown {
+.controls-ComboBox__editable-false:hover .controls-ComboBox__arrowDown {
   text-decoration: none;
   background-position: 0 -16px;
 }
@@ -205,22 +210,22 @@
 }
 .controls-ComboBox__itemRow:hover {
   color: #ffffff;
-  background-color: #00d7d7;
+  background-color: #00c795;
 }
 .controls-ComboBox__itemRow__selected,
 .controls-ComboBox__itemRow__selected:hover {
   color: #999999;
   background-color: #ffffff;
 }
-.controls-ComboBox__isEditable-false,
-.controls-ComboBox__isEditable-false .controls-TextBox__field {
+.controls-ComboBox__editable-false,
+.controls-ComboBox__editable-false .controls-TextBox__field {
   cursor: pointer;
 }
-.controls-ComboBox__isEditable-false.controls-Picker__show .controls-ComboBox__field {
+.controls-ComboBox__editable-false.controls-Picker__show .controls-ComboBox__field {
   color: #919197;
 }
-.controls-ComboBox__isEditable-false:hover .controls-ComboBox__field {
-  color: #00d7d7;
+.controls-ComboBox__editable-false:hover .controls-ComboBox__field {
+  color: #00c795;
 }
 .controls-ComboBox__inputWrapper {
   margin-right: 18px;
@@ -232,8 +237,19 @@
   border-radius: 0 0 2px 2px;
 }
 .controls-ComboBox__picker.controls-Picker__owner__hover {
-  border-top-color: #00d7d7;
+  border-top-color: #00c795;
   margin-top: -2px;
+}
+.controls-ComboBox__fieldNotEditable {
+  display: none;
+  line-height: 22px;
+}
+.controls-ComboBox__editable-false .controls-ComboBox__fieldNotEditable {
+  display: inline-block;
+}
+.controls-ComboBox__editable-false .controls-ComboBox__field {
+  visibility: hidden;
+  position: absolute;
 }
 .controls-ListView__item {
   overflow: hidden;
@@ -282,7 +298,7 @@
   vertical-align: top;
 }
 .controls-TextArea:hover {
-  border-color: #00d7d7;
+  border-color: #00c795;
 }
 .controls-FormattedTextBox {
   vertical-align: top;
@@ -309,10 +325,10 @@
   height: 24px;
 }
 .controls-TabButton:hover {
-  color: #00d7d7;
+  color: #00c795;
 }
 .controls-TabButton.controls-Checked__checked {
-  border-bottom-color: #00d7d7;
+  border-bottom-color: #00c795;
 }
 .controls-Calendar {
   padding-top: 8px;
@@ -446,7 +462,7 @@
   border-radius: 2px;
 }
 .controls-DatePicker__field:hover {
-  border-color: #00d7d7;
+  border-color: #00c795;
 }
 .controls-DatePicker .controls-FormattedTextBox__field {
   margin: 0;
@@ -486,6 +502,9 @@
 .controls-RadioGroup .controls-ListView__item {
   margin-right: 16px;
 }
+.controls-CheckBoxGroup .controls-ListView__item {
+  margin-right: 16px;
+}
 .controls-IconButton {
   cursor: pointer;
 }
@@ -494,4 +513,23 @@
   cursor: pointer;
   height: auto;
   box-sizing: content-box;
+}
+.controls-DataGrid__table {
+  width: 100%;
+}
+.controls-DataGrid__tr:hover .controls-DataGrid__td {
+  background-color: #00c795;
+  color: #ffffff;
+}
+.controls-DataGrid__th,
+.controls-DataGrid__td {
+  text-align: left;
+  height: 32px;
+  padding: 0 10px;
+}
+.controls-DataGrid__td {
+  border-top: 1px solid #d1d1d4;
+}
+.controls-DataGrid__th {
+  color: #919197;
 }

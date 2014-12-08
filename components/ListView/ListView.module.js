@@ -42,12 +42,27 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {String|jQuery|HTMLElement} Что отображается когда нет записей
                 */
-               emptyHTML: null
+               emptyHTML: null,
+               /**
+                * @cfg {Function} Обработчик клика на элемент
+                */
+               elemClickHander : null
             }
          },
 
          $constructor: function () {
             this._items.setHierField(null);
+            var self = this;
+            this._container.mouseup(function(e){
+               if (e.which == 1) {
+                  var targ = $(e.target).hasClass('controls-ListView__item') ? e.target : $(e.target).closest('.controls-ListView__item');
+                  if (targ.length) {
+                     var id = targ.attr('data-id');
+                     self._elemClickHandler(id, self._items.getItem(id));
+                  }
+               }
+            });
+
          },
 
          init : function() {
@@ -64,6 +79,12 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _getItemTemplate : function() {
             return this._options.itemTemplate;
+         },
+
+         _elemClickHandler : function(id, data) {
+            if (this._options.elemClickHander) {
+               this._options.elemClickHander(id, data);
+            }
          }
       });
 
