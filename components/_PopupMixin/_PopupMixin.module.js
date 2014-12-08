@@ -3,7 +3,7 @@
  */
 
 define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManager', 'js!SBIS3.CORE.ModalOverlay'], function (ControlHierarchyManager, ModalOverlay) {
-
+   'use strict';
    if (typeof window !== 'undefined') {
       var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
 
@@ -35,8 +35,9 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          _defaultCorner: '',
          _defaultHorizontalAlignSide: '',
          _defaultVerticalAlignSide: '',
-         _firstMove: true,
-         _margins: {},
+         _margins: null,
+         _initOrigins: true,
+         _marginsInited: false,
          _options: {
             /**
              * @typedef {Object} CornerEnum
@@ -99,8 +100,8 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          var trg = $ws.helpers.trackElement(this._options.target, true);
          container.css({
             'position': 'absolute',
-            'top': '-1000px',
-            'left': '-1000px'
+            'top': '-10000px',
+            'left': '-10000px'
          });
 
          //TODO: Придрот
@@ -108,14 +109,12 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          this._isVisible = false;
          /********************************/
 
-         this._cssHeight = (this._container.css('height') == '0px') ? 'auto' : this._container.css('height');
-         this._cssWidth = (this._container.css('width') == '0px') ? 'auto' : this._container.css('width');
-
+         this._initOppositeCorners();
          //При ресайзе расчитываем размеры
          $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._resizeHandler, this);
 
          //Скрываем попап если при скролле таргет скрылся
-         $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowScroll', this._scrollHandler, this);
+         $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowScroll', this._resizeHandler, this);
 
          if (this._options.closeByExternalClick) {
             $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
@@ -124,117 +123,51 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          container.appendTo('body');
          var zIndex = ControlHierarchyManager.zIndexManager.getNext();
          container.css('zIndex', zIndex);
-         this._initSizes(true);
          this._defaultCorner = this._options.corner;
          this._defaultVerticalAlignSide = this._options.verticalAlign.side;
          this._defaultHorizontalAlignSide = this._options.horizontalAlign.side;
-
          trg.subscribe('onMove', function () {
             if (self.isVisible()) {
                self.recalcPosition();
                self._checkTargetPosition();
             } else {
-               self._initSizes(false);
+               self._initSizes();
             }
          });
-
-      },
-
-      _checkTargetPosition: function () {
-         var self = this;
-         if (this._options.target) {
-            var winHeight = this._windowSizes.height,
-               top = this._options.target.offset().top - $(window).scrollTop() - winHeight;
-            if (top > 0 || -top > winHeight) {
-               self.hide();
-            }
-         }
-      },
-
-      _scrollHandler: function () {
-         this._checkTargetPosition();
-      },
-
-      _resizeHandler: function () {
-         if (this.isVisible()) {
-            this._initWindowSizes();
-            if (this._containerSizes.offset !== undefined) {
-               this._container.offset({
-                  top: this._correctionByDisplaySize('vertical', 'resize').top,
-                  left: this._correctionByDisplaySize('horizontal', 'resize').left
-               });
-            }
-            this._checkTargetPosition(); // следим за тем не пропал ли таргет
-         }
-      },
-
-      _clickHandler: function (eventObject, target) {
-         if (this.isVisible()) {
-            var self = this,
-               inTarget = [];
-            if (self._options.target) {
-               inTarget = !!self._options.target.find($(target)).length;
-            }
-            if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target)) {
-               self.hide();
-            }
-         }
-      },
-
-      //Кэшируем размеры
-      _initSizes: function (initOrigins) {
-         var target = this._options.target,
-            container = this._container;
-         if (target) {
-            this._targetSizes.width = target.outerWidth();
-            this._targetSizes.height = target.outerHeight();
-            this._targetSizes.offset = target.offset();
-            this._targetSizes.border = (target.outerWidth() - target.innerWidth()) / 2;
-         }
-         this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
-
-         if (initOrigins) {
-            this._containerSizes.originWidth = this._container[0].scrollWidth + this._containerSizes.border * 2;
-            this._containerSizes.originHeight = this._container[0].scrollHeight + this._containerSizes.border * 2;
-         }
-
-         this._containerSizes.width = this._containerSizes.originWidth;
-         this._containerSizes.height = this._containerSizes.originHeight;
-         this._containerSizes.originOffset = container.offset();
-         this._initWindowSizes();
-      },
-
-      _initWindowSizes: function () {
-         this._windowSizes.height = $(window).height();
-         this._windowSizes.width = $(window).width();
-      },
-
-      _initMargins: function () {
-         var container = this._container;
-         this._margins = {
-            top: parseInt(container.css('margin-top'), 10) || 0,
-            left: parseInt(container.css('margin-left'), 10) || 0,
-            bottom: parseInt(container.css('margin-bottom'), 10) || 0,
-            right: parseInt(container.css('margin-right'), 10) || 0
-         };
       },
 
       recalcPosition: function () {
-         this._initSizes(true);
-         this._initMargins();
-         //Если есть таргет - позиционируемся относительно его
-         if (this._options.target) {
-            this._containerSizes.originOffset = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner);
-            this._containerSizes.offset = {
-               top: this._containerSizes.originOffset.top,
-               left: this._containerSizes.originOffset.left
-            };
-            this._container.offset({
-               top: this._correctionByDisplaySize('vertical', 'recalc').top,
-               left: this._correctionByDisplaySize('horizontal', 'recalc').left
+         if (this._isVisible) {
+            this._initSizes();
+            var offset = {
+                  top: this._targetSizes.offset.top,
+                  left: this._targetSizes.offset.left
+               },
+               buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner);
+
+            offset = this._addOffset(offset, buff);
+            offset = this._getOffsetByWindowSize(offset);
+
+
+            if (!this._isMovedV) {
+               offset.top += this._margins.top - this._margins.bottom + (this._options.verticalAlign.offset || 0);
+            } else {
+               offset.top += -this._margins.top + this._margins.bottom - (this._options.verticalAlign.offset || 0);
+            }
+            if (!this._isMovedH){
+               offset.left += this._margins.left - this._margins.right + (this._options.horizontalAlign.offset || 0) ;
+            } else {
+               offset.left += -this._margins.left + this._margins.right - (this._options.horizontalAlign.offset || 0) ;
+            }
+
+            offset.top = this._calculateOverflow(offset, 'vertical');
+            offset.left = this._calculateOverflow(offset, 'horizontal');
+
+
+            this._container.css({
+               'top': offset.top + 'px',
+               'left': offset.left + 'px'
             });
-         } else { //Если таргета нет - относительно body
-            this._container.offset(this._bodyPositioning());
          }
       },
 
@@ -261,155 +194,311 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          return offset;
       },
 
-      //Вычисляем сдвиг в зависимости от выравнивания (по углу и вертикальному/горизонтальному выравниванию)
-      _getGeneralOffset: function (vert, horiz, corner) {
-         var offset = this._getOffsetByCorner(corner);
-         this._options.verticalAlign.side = vert;
-         this._options.horizontalAlign.side = horiz;
+      _clickHandler: function (eventObject, target) {
+         if (this.isVisible()) {
+            var self = this,
+               inTarget = [];
+            if (self._options.target) {
+               inTarget = !!self._options.target.find($(target)).length;
+            }
+            if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target)) {
+               self.hide();
+            }
+         }
+      },
+
+      _resizeHandler: function () {
+         if (this.isVisible()) {
+            this.recalcPosition();
+         } else {
+            this._initSizes();
+         }
+         this._checkTargetPosition();
+      },
+
+      _checkTargetPosition: function () {
+         var self = this;
+         if (this._options.target) {
+            var winHeight = $(window).height(),
+               top = this._options.target.offset().top - $(window).scrollTop() - winHeight - 3;
+            if (top > 0 || -top > winHeight) {
+               self.hide();
+            }
+         }
+      },
+
+      //Кэшируем размеры
+      _initSizes: function () {
+         var target = this._options.target,
+            container = this._container;
+         if (target) {
+            this._targetSizes = {
+               width: target.outerWidth(),
+               height: target.outerHeight(),
+               offset: target.offset(),
+               border: (target.outerWidth() - target.innerWidth()) / 2,
+               boundingClientRect: target.get(0).getBoundingClientRect()
+            };
+         }
+         this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
+         var buff = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner, true);
+         if (this._initOrigins) {
+            this._containerSizes.originWidth = this._container.get(0).scrollWidth + this._containerSizes.border * 2;
+            this._containerSizes.originHeight = this._container.get(0).scrollHeight + this._containerSizes.border * 2;
+         }
+         //Запоминаем координаты правого нижнего угла контейнера необходимые для отображения контейнера целиком и там где нужно.
+         this._containerSizes.requredOffset = {
+            top: buff.top + this._targetSizes.offset.top + this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0),
+            left: buff.left + this._targetSizes.offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0)
+         };
+         this._containerSizes.width = this._containerSizes.originWidth;
+         this._containerSizes.height = this._containerSizes.originHeight;
+         this._containerSizes.boundingClientRect = container.get(0).getBoundingClientRect();
+         this._initWindowSizes();
+      },
+
+      _initWindowSizes: function () {
+         this._windowSizes = {
+            height: this._container.offset().top - this._containerSizes.boundingClientRect.top + $(window).height(),
+            width: this._container.offset().left - this._containerSizes.boundingClientRect.left + $(window).width()
+         };
+      },
+
+      _initMargins: function () {
+         var container = this._container;
+         this._margins = {
+            top: parseInt(container.css('margin-top'), 10) || 0,
+            left: parseInt(container.css('margin-left'), 10) || 0,
+            bottom: parseInt(container.css('margin-bottom'), 10) || 0,
+            right: parseInt(container.css('margin-right'), 10) || 0
+         };
+
+      },
+
+      //Вычисляем сдвиг в зависимости от угла
+      _getOffsetByCorner: function (corner, notSave) {
+         var border = this._targetSizes.border,
+            height = this._targetSizes.height,
+            width = this._targetSizes.width,
+            offset = {
+               top: 0,
+               left: 0
+            };
+
+         switch (corner) {
+            case 'tr':
+               offset.left += width - border;
+               offset.top -= border;
+               break;
+            case 'bl':
+               offset.top += height;
+               break;
+            case 'br':
+               offset.top += height;
+               offset.left += width - border;
+               break;
+            case 'tl':
+               offset.top -= border;
+               break;
+            default:
+               throw new Error('PopupMixin: Параметр corner является обязательным');
+         }
+         if (!notSave) {
+            this._options.corner = corner;
+         }
+         return offset;
+      },
+
+      _getOffsetBySide: function (vert, horiz, notSave) {
+         var offset = {
+            top: 0,
+            left: 0
+         };
          if (vert == 'bottom') {
             offset.top -= this._containerSizes.originHeight - this._targetSizes.border;
          }
          if (horiz == 'right') {
             offset.left -= this._containerSizes.originWidth - this._targetSizes.border;
          }
-         offset.left = offset.left + this._margins.left - this._margins.right + (this._options.horizontalAlign.offset || 0);
-         offset.top = offset.top + this._margins.top - this._margins.bottom + (this._options.verticalAlign.offset || 0);
-         return offset;
-      },
-
-      //Вычисляем сдвиг в зависимости от угла
-      _getOffsetByCorner: function (corner) {
-         var border = this._targetSizes.border,
-            height = this._targetSizes.height,
-            width = this._targetSizes.width,
-            offset = {
-               top: this._targetSizes.offset.top,
-               left: this._targetSizes.offset.left
-            };
-
-         switch (corner) {
-         case 'tr':
-            offset.left += width - border;
-            offset.top -= border;
-            break;
-         case 'bl':
-            offset.top += height;
-            break;
-         case 'br':
-            offset.top += height;
-            offset.left += width - border;
-            break;
-         case 'tl':
-            offset.top -= border;
-            break; //tl
-         default:
-            throw new Error('Параметр corner является обязательным');
+         if (!notSave) {
+            this._options.horizontalAlign.side = horiz;
+            this._options.verticalAlign.side = vert;
          }
-         this._options.corner = corner;
          return offset;
       },
 
-      //Если есть таргет считаем влезаем ли в экран и меняем размеры и положение
-      _correctionByDisplaySize: function (direction, init) {
-         var s = [],
-            self = this,
-            offset = {
-               top: this._containerSizes.offset.top,
-               left: this._containerSizes.offset.left
-            },
-            spaces = this._getSpaces(),
-            over, isMoved, winSize,
-            isHorizontal = (direction == 'horizontal'),
-            isVertical = (direction == 'vertical'),
-            _addMargins = function () {
-               if (!isHorizontal) {
-                  offset[s[0]] -= self._margins.top * 2;
-                  offset[s[0]] += self._margins.bottom * 2;
-               } else {
-                  offset[s[0]] -= self._margins.left * 2;
-                  offset[s[0]] += self._margins.right * 2;
+      _getGeneralOffset: function (vert, horiz, corner, notSave) {
+         var offset = this._getOffsetByCorner(corner, notSave),
+            buff = this._getOffsetBySide(vert, horiz, notSave);
+         offset = this._addOffset(offset, buff);
+         return offset;
+      },
+
+      _getOppositeOffset: function (corner, orientation) { // Получить offset при сдвиге в противоположный угол относительно corner по горизонтали или верткали 'horizontal'/'vertical'
+         var side = (orientation == 'vertical') ? this._options.horizontalAlign.side : this._options.verticalAlign.side,
+            offset,
+            oppositeSide, oppositeCorner;
+
+         oppositeCorner = this._getOppositeCorner(corner, side, orientation);
+         if (orientation == 'vertical') {
+            oppositeSide = (this._options.verticalAlign.side == 'top') ? 'bottom' : 'top';
+            offset = this._getGeneralOffset(oppositeSide, this._options.horizontalAlign.side, oppositeCorner);
+         } else {
+            oppositeSide = (this._options.horizontalAlign.side == 'left') ? 'right' : 'left';
+            offset = this._getGeneralOffset(this._options.verticalAlign.side, oppositeSide, oppositeCorner);
+         }
+         offset.top += (this._options.verticalAlign.offset || 0);
+         offset.left += (this._options.horizontalAlign.offset || 0);
+         return offset;
+      },
+
+      _initOppositeCorners: function () {
+         this._oppositeCorners = {
+            br: {
+               horizontal: {
+                  top: 'bl',
+                  bottom: 'br'
+               },
+               vertical: {
+                  left: 'br',
+                  right: 'tr'
                }
-            };
-
-         // Заполняем массив для горизонтального/вертикального рассчетов
-         if (isHorizontal) {
-            s[0] = 'left';
-            s[1] = 'right';
-            s[2] = 'width';
-            s[3] = 'horizontalAlign';
-            s[4] = (this._defaultCorner == 'br' || this._defaultCorner == 'tr');
-            s[5] = -this._targetSizes.border;
-            s[6] = 0;
-            s[7] = 'originWidth';
-            s[8] = 'overflow-x';
-            s[9] = this._cssWidth;
-            over = (this._windowSizes.width - 3 < this._containerSizes.originWidth + this._containerSizes.originOffset.left); // Влезаем ли в экран
-            isMoved = this._isMovedH; // Был произведен горизонтальный сдвиг или нет
-            winSize = this._windowSizes.width;
-         } else if (isVertical) {
-            s[0] = 'top';
-            s[1] = 'bottom';
-            s[2] = 'height';
-            s[3] = 'verticalAlign';
-            s[4] = (this._defaultCorner == 'br' || this._defaultCorner == 'bl');
-            s[5] = 0;
-            s[6] = -this._targetSizes.border;
-            s[7] = 'originHeight';
-            s[8] = 'overflow-y';
-            s[9] = this._cssHeight;
-            over = (this._windowSizes.height - 3 < this._containerSizes.originHeight + this._containerSizes.originOffset.top); // Влезаем ли в экран
-            isMoved = this._isMovedV; // Был произведен вертикальный сдвиг или нет
-            winSize = this._windowSizes.height;
-         }
-         //Если не влезаем в экран, но еще не перемещались то перемещаемся в противоположный угол
-         if (over && !isMoved) {
-            offset[s[0]] = this._getOppositeOffset(s[0])[s[0]];
-            _addMargins();
-            isMoved = true;
-         } else {
-            if (init == 'recalc' && over) {
-               offset[s[0]] = this._getOppositeOffset(s[0])[s[0]];
-               _addMargins();
+            },
+            tr: {
+               horizontal: {
+                  top: 'tr',
+                  bottom: 'tl'
+               },
+               vertical: {
+                  left: 'tr',
+                  right: 'br'
+               }
+            },
+            bl: {
+               horizontal: {
+                  top: 'bl',
+                  bottom: 'br'
+               },
+               vertical: {
+                  left: 'tl',
+                  right: 'bl'
+               }
+            },
+            tl: {
+               horizontal: {
+                  top: 'tl',
+                  bottom: 'tr'
+               },
+               vertical: {
+                  left: 'bl',
+                  right: 'tr'
+               }
             }
-         }
-         //Если перемещались и освободилось место, то возвращаемся обратно
-         if (winSize > this._containerSizes[s[2]] + this._containerSizes.originOffset[s[0]] && isMoved) {
-            offset[s[0]] = this._getOppositeOffset(s[0])[s[0]];
-            isMoved = false;
-         }
-         //Запоминаем какое перемещение было сделано по горизонтали или по вертикали
-         if (isHorizontal) {
-            this._isMovedH = isMoved;
-         } else {
-            this._isMovedV = isMoved;
-         }
+         };
+      },
 
-         //Запоминаем текущий сдвиг
-         this._containerSizes.offset[s[0]] = offset[s[0]];
+      _getOppositeCorner: function (corner, side, orientation) {
+         this._options.corner = this._oppositeCorners[corner][orientation][side];
+         return this._options.corner;
+      },
 
-         //Если сдвинулись за экран, расчитываем новые размеры и положение
-         if (offset[s[0]] < 0) {
-            this._calculateOverflow(offset, s);
+      _getOffsetByWindowSize: function (offset) {
+         var buf = this._targetSizes.offset;
+         //Проверяем убираемся ли в экран снизу
+         if (offset.top + this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) >= this._windowSizes.height - 3 && !this._isMovedV) {
+            this._isMovedV = true;
+            offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
+            offset.top = this._addOffset(offset, buf).top;
          }
 
-         this._container.css((isHorizontal) ? 'overflow-x' : 'overflow-y', 'auto');
+         //Возможно уже меняли положение и теперь хватает места что бы вернуться на нужную позицию по вертикали
+         if (this._containerSizes.requredOffset.top < this._windowSizes.height - 3 && this._isMovedV) {
+            this._isMovedV = false;
+            offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
+            offset.top = this._addOffset(offset, buf).top;
+         }
 
-         if (this._containerSizes[s[7]] < spaces[s[1]]) {
-            this._container.css(s[2], s[9]);
-            this._container.css((isHorizontal) ? 'overflow-x' : 'overflow-y', 'visible');
+         //TODO Избавиться от дублирования
+         //Проверяем убираемся ли в экран справа
+         if (offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) >= this._windowSizes.width - 3 && !this._isMovedH) {
+            this._isMovedH = true;
+            offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
+            offset.left = this._addOffset(offset, buf).left;
+         }
+
+         //Возможно уже меняли положение и теперь хватает места что бы вернуться на нужную позицию по горизонтали
+         if (this._containerSizes.requredOffset.left < this._windowSizes.width - 3 && this._isMovedH) {
+            this._isMovedH = false;
+            offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
+            offset.left = this._addOffset(offset, buf).left;
          }
          return offset;
+      },
+
+      _calculateOverflow: function (offset, orientation) {
+         var spaces, oppositeOffset;
+         spaces = this._getSpaces(this._options.corner);
+         if (orientation == 'vertical') {
+            if (offset.top < 0) {
+               this._container.css('overflow-y', 'auto');
+               oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
+               if (spaces.top < spaces.bottom) {
+                  spaces = this._getSpaces(this._options.corner);
+                  this._container.css('height', spaces.bottom - (this._options.verticalAlign.offset || 0) - 3);
+                  offset = {
+                     top: this._targetSizes.offset.top + oppositeOffset.top
+                  };
+                  this._isMovedV = !this._isMovedV;
+               } else {
+                  offset.top = 0;
+                  this._container.css('height', spaces.top - (this._options.verticalAlign.offset || 0));
+                  this._isMovedV = !this._isMovedV;
+               }
+            }
+            if (this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) < spaces.bottom) {
+               this._container.css('overflow-y', 'visible');
+               this._container.height(this._containerSizes.originHeight - this._containerSizes.border*2);
+            }
+            return offset.top;
+         }
+
+         else
+
+         {
+            if (offset.left < 0) {
+               this._container.css('overflow-x', 'auto');
+               spaces = this._getSpaces(this._options.corner);
+               oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
+               if (spaces.left < spaces.right) {
+                  spaces = this._getSpaces(this._options.corner);
+                  this._container.css('width', spaces.right - (this._options.horizontalAlign.offset || 0) - 3);
+                  offset = {
+                     left: this._targetSizes.offset.left + oppositeOffset.left
+                  };
+                  this._isMovedH = !this._isMovedH;
+               } else {
+                  offset.left = 0;
+                  this._container.css('width', spaces.left - (this._options.horizontalAlign.offset || 0));
+                  this._isMovedH = !this._isMovedH;
+               }
+            }
+            if (this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) < spaces.right) {
+               this._container.css('overflow-x', 'visible');
+               this._container.width(this._containerSizes.originWidth - this._containerSizes.border*2);
+            }
+            return offset.left;
+         }
       },
 
       //Рассчитать расстояния от таргета до границ экрана с учетом собственного положения попапа
       //Нужно для расчета размеров если не влезаем в экран
-      _getSpaces: function () {
-         var corner = this._defaultCorner,
-            offset = this._targetSizes.offset,
+      //TODO: Можно придумать алгоритм получше
+      _getSpaces: function (corner) {
+         var offset = this._targetSizes.offset,
             width = this._targetSizes.width,
             height = this._targetSizes.height,
-            windowHeight = this._windowSizes.height,
-            windowWidth = this._windowSizes.width,
+            windowHeight = $(window).height(),
+            windowWidth = $(window).width(),
             spaces = {
                top: 0,
                left: 0,
@@ -418,24 +507,24 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
             };
 
          switch (corner) {
-         case 'br':
-            spaces.left = offset.left + width;
-            spaces.top = offset.top;
-            break;
-         case 'tr':
-            spaces.left = offset.left + width;
-            spaces.top = offset.top;
-            break;
-         case 'tl':
-            spaces.left = offset.left;
-            spaces.top = offset.top;
-            break;
-         case 'bl':
-            spaces.left = offset.left;
-            spaces.top = offset.top;
-            break;
-         default:
-            return spaces;
+            case 'br':
+               spaces.left = offset.left + width;
+               spaces.top = offset.top;
+               break;
+            case 'tr':
+               spaces.left = offset.left + width;
+               spaces.top = offset.top;
+               break;
+            case 'tl':
+               spaces.left = offset.left;
+               spaces.top = offset.top;
+               break;
+            case 'bl':
+               spaces.left = offset.left;
+               spaces.top = offset.top;
+               break;
+            default:
+               return spaces;
          }
 
          if (corner == 'tl' || corner == 'tr') {
@@ -453,101 +542,38 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          return spaces;
       },
 
-      //Установить размер и положение если не влезли в экран
-      _calculateOverflow: function (offset, s) {
-         var spaces = this._getSpaces(),
-            isVertical = (s[1] == 'bottom');
-         if (spaces[s[1]] > spaces[s[0]]) {
-            offset[s[0]] = (s[4]) ? this._targetSizes.offset[s[0]] + this._targetSizes[s[2]] + s[5] : this._targetSizes.offset[s[0]] + s[6];
-            offset[s[0]] += (this._options[s[3]].offset || 0) + (isVertical) ? (this._margins.top - this._margins.bottom) : (this._margins.left - this._margins.right);
-            s[10] = spaces[s[1]] - 2;
-         } else {
-            s[10] = spaces[s[0]] - this._containerSizes.border * 2;
-            offset[s[0]] = 0 + (isVertical) ? ( -this._margins.top + this._margins.bottom) : ( -this._margins.left + this._margins.right);
-         }
-         this._container[s[2]](s[10]);
-      },
-
-      //Получаем противоположный угол относительно текущего в направлении orientation
-      _getOppositeOffset: function (orientation) { // Получить offset при сдвиге в противоположный угол относительно this._defaultCorner по горизонтали или верткали 'top'/'left'
-         var side = (orientation == 'left') ? this._options.horizontalAlign.side : this._options.verticalAlign.side,
-            isVertical = (side == 'top' || side == 'bottom'),
-            offset,
-            position = {
-               corner: this._options.corner,
-               side: ''
-            },
-            opoSide;
-
-         if (isVertical) {
-            opoSide = (side == 'top') ? 'bottom' : 'top';
-         } else {
-            opoSide = (side == 'left') ? 'right' : 'left';
-         }
-
-         switch (this._options.corner) {
-         case 'br':
-            if (isVertical) {
-               if (this._options.horizontalAlign.side == 'right') {
-                  position.corner = 'tr';
-               }
-            } else {
-               position.corner = 'bl';
-            }
-            position.side = opoSide;
-            break;
-
-         case 'tr':
-            if (isVertical) {
-               if (this._options.horizontalAlign.side == 'right') {
-                  position.corner = 'br';
-               }
-            } else {
-               position.corner = 'tl';
-            }
-            position.side = opoSide;
-            break;
-
-         case 'bl':
-            if (isVertical) {
-               if (this._options.horizontalAlign.side == 'left') {
-                  position.corner = 'tl';
-               }
-            } else {
-               position.corner = 'br';
-            }
-            position.side = opoSide;
-            break;
-
-         case 'tl':
-            if (isVertical) {
-               if (this._options.horizontalAlign.side == 'left') {
-                  position.corner = 'bl';
-               }
-            } else {
-               position.corner = 'tr';
-            }
-            position.side = opoSide;
-         }
-
-         if (isVertical) {
-            this._options.verticalAlign.side = position.side;
-         } else {
-            this._options.horizontalAlign.side = position.side;
-         }
-         this._options.corner = position.corner;
-         offset = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, position.corner);
+      _addOffset: function (offset1, offset2) {
+         var offset = {
+            top: 0,
+            left: 0
+         };
+         offset.top = offset1.top + offset2.top;
+         offset.left = offset1.left + offset2.left;
          return offset;
       },
 
       after: {
-         show: function () {
-            this._initSizes(true);
-            this.recalcPosition();
-         },
          init: function(){
             ControlHierarchyManager.addNode(this, this.getParent());
          },
+
+         show: function () {
+            if (!this._marginsInited) {
+               this._initMargins();
+               this._container.css('margin', 0);
+               this._marginsInited = true;
+            }
+            this._initSizes();
+            if (this._initOrigins) {
+               this._containerSizes.originWidth = this._container.get(0).scrollWidth + this._containerSizes.border * 2;
+               this._containerSizes.originHeight = this._container.get(0).scrollHeight + this._containerSizes.border * 2;
+               this._cssHeight = (this._container.css('height') == '0px') ? 'auto' : this._container.css('height');
+               this._cssWidth = (this._container.css('width') == '0px') ? 'auto' : this._container.css('width');
+               this._initOrigins = false;
+            }
+            this.recalcPosition();
+         },
+
          hide: function(){
             var zIndex = this._container.css('zIndex');
             ControlHierarchyManager.zIndexManager.setFree(zIndex);
@@ -563,18 +589,10 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
       },
 
       before: {
-         destroy: function () {
-            var zIndex = this._container.css('zIndex');
-            ControlHierarchyManager.zIndexManager.setFree(zIndex);
-            ControlHierarchyManager.removeNode(this);
-            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._resizeHandler, this);
-            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._scrollHandler, this);
-            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentClick', this._clickHandler, this);
-         },
          show: function () {
             this._container.css({
-               left: '-1000px',
-               top: '-1000px'
+               left: '-10000px',
+               top: '-10000px'
             });
             var zIndex = ControlHierarchyManager.zIndexManager.getNext();
             this._container.css('zIndex', zIndex);
@@ -584,6 +602,15 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
                $ws.single.WindowManager._visibleIndexes.push(zIndex);
                ModalOverlay.adjust();
             }
+         },
+         destroy: function(){
+            this.hide();
+            var zIndex = this._container.css('zIndex');
+            ControlHierarchyManager.zIndexManager.setFree(zIndex);
+            ControlHierarchyManager.removeNode(this);
+            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._resizeHandler, this);
+            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._scrollHandler, this);
+            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentClick', this._clickHandler, this);
          }
       },
 
@@ -603,6 +630,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
             }
          }
       }
+
    };
 
    return _PopupMixin;
