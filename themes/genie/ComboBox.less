@@ -11,7 +11,7 @@
    height: 16px;
 }
 
-.controls-ComboBox__arrowDown:hover, .controls-ComboBox__isEditable-false:hover .controls-ComboBox__arrowDown {
+.controls-ComboBox__arrowDown:hover, .controls-ComboBox__editable-false:hover .controls-ComboBox__arrowDown {
    text-decoration: none;
    background-position: 0 -16px;
 }
@@ -31,16 +31,16 @@
    background-color: #ffffff;
 }
 
-.controls-ComboBox__isEditable-false,
-.controls-ComboBox__isEditable-false .controls-TextBox__field {
+.controls-ComboBox__editable-false,
+.controls-ComboBox__editable-false .controls-TextBox__field {
    cursor: pointer;
 }
 
-.controls-ComboBox__isEditable-false.controls-Picker__show .controls-ComboBox__field {
+.controls-ComboBox__editable-false.controls-Picker__show .controls-ComboBox__field {
    color: @color_base-gray;
 }
 
-.controls-ComboBox__isEditable-false:hover .controls-ComboBox__field {
+.controls-ComboBox__editable-false:hover .controls-ComboBox__field {
    color: @color_base-blue;
 }
 
@@ -58,4 +58,18 @@
 .controls-ComboBox__picker.controls-Picker__owner__hover {
    border-top-color: @color_base-blue;
    margin-top: -2px;
+}
+
+.controls-ComboBox__fieldNotEditable {
+   display: none;
+   line-height: 22px;
+}
+
+.controls-ComboBox__editable-false .controls-ComboBox__fieldNotEditable{
+   display: inline-block;
+}
+
+.controls-ComboBox__editable-false .controls-ComboBox__field {
+   visibility: hidden;
+   position: absolute;
 }
