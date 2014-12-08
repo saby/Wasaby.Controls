@@ -507,3 +507,22 @@
   height: auto;
   box-sizing: content-box;
 }
+.controls-DataGrid__table {
+  width: 100%;
+}
+.controls-DataGrid__tr:hover .controls-DataGrid__td {
+  background-color: #00d7d7;
+  color: #ffffff;
+}
+.controls-DataGrid__th,
+.controls-DataGrid__td {
+  text-align: left;
+  height: 32px;
+  padding: 0 10px;
+}
+.controls-DataGrid__td {
+  border-top: 1px solid #d1d1d4;
+}
+.controls-DataGrid__th {
+  color: #919197;
+}

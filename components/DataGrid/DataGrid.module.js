@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListView', 'html!SBIS3.CONTROLS.DataGrid', 'html!SBIS3.CONTROLS.DataGrid/resources/rowTpl'], function(ListView, dotTplFn, rowTpl) {
+define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListView', 'html!SBIS3.CONTROLS.DataGrid', 'html!SBIS3.CONTROLS.DataGrid/resources/rowTpl'], function(ListView, dotTplFn, rowTpl, colGroup) {
    'use strict';
    /**
     * Контрол отображающий набор данных в виде в таблицы с несколькими колонками.
@@ -17,7 +17,6 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListView', 'html!SBIS3.
              * @property {String} field
              * @property {String} width
              * @property {String} className
-             * @property {Boolean} fixedSize
              * @property {String} captionTemplate Шаблон отображения шапки колонки
              * @property {String} cellTemplate Шаблон отображения ячейки
              */
@@ -43,7 +42,6 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListView', 'html!SBIS3.
       },
 
       $constructor: function() {
-
       },
       /**
        * Установить страницу
@@ -69,8 +67,8 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListView', 'html!SBIS3.
 
             var rowData = {columns : []};
             rowData.columns = $ws.core.clone(this._options.columns);
-            for (var i = 0; i < rowData.length; i++) {
-               rowData.columns[i].value = this._items.getValue(item, rowData[i].field);
+            for (var i = 0; i < rowData.columns.length; i++) {
+               rowData.columns[i].value = this._items.getValue(item, rowData.columns[i].field);
             }
             return rowTpl(rowData)
          }

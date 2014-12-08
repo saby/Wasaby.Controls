@@ -1,5 +1,17 @@
 <div class="controls-DataGrid">
-   <table>
+   <table class="controls-DataGrid__table">
+      <colgroup>
+         {{~it.columns :column:index}}
+         <col{{?column.width}} width="{{=column.width}}" {{?}}/>
+         {{~}}
+      </colgroup>
+      <thead class="controls-DataGrid__thead{{?it.showHead === false}} ws-hidden{{?}}">
+         <tr>
+         {{~it.columns :column:index}}
+            <th class="controls-DataGrid__th">{{=column.title}}</th>
+         {{~}}
+         </tr>
+      </thead>
       <tbody class="controls-DataGrid__tbody"></tbody>
    </table>
 </div>

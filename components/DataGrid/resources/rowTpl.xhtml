@@ -1,5 +1,5 @@
-<tr>
+<tr class="controls-DataGrid__tr">
    {{~it.columns :column:index}}
-      <td{{?column.className}}{{=column.className}}{{?}}></td>
+      <td class="controls-DataGrid__td"{{?column.className}}{{=column.className}}{{?}}>{{=column.value || ''}}</td>
    {{~}}
 </tr>
