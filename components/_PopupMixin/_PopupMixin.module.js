@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
              */
             closeByExternalClick: false,
             /**
-             * @cfg {Boolean} Является модальным или нет
+             * @cfg {Boolean} модальный или нет
              */
             isModal: false
          }
@@ -162,7 +162,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
 
             offset.top = this._calculateOverflow(offset, 'vertical');
             offset.left = this._calculateOverflow(offset, 'horizontal');
-
 
             this._container.css({
                'top': offset.top + 'px',
@@ -376,7 +375,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
             },
             bl: {
                horizontal: {
-                  top: 'bl',
+                  top: 'br',
                   bottom: 'br'
                },
                vertical: {
@@ -445,15 +444,12 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
                if (spaces.top < spaces.bottom) {
                   spaces = this._getSpaces(this._options.corner);
                   this._container.css('height', spaces.bottom - (this._options.verticalAlign.offset || 0) - 3);
-                  offset = {
-                     top: this._targetSizes.offset.top + oppositeOffset.top
-                  };
-                  this._isMovedV = !this._isMovedV;
+                  offset.top = this._targetSizes.offset.top + oppositeOffset.top;
                } else {
                   offset.top = 0;
                   this._container.css('height', spaces.top - (this._options.verticalAlign.offset || 0));
-                  this._isMovedV = !this._isMovedV;
                }
+               this._isMovedV = !this._isMovedV;
             }
             if (this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) < spaces.bottom) {
                this._container.css('overflow-y', 'visible');
@@ -472,15 +468,12 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
                if (spaces.left < spaces.right) {
                   spaces = this._getSpaces(this._options.corner);
                   this._container.css('width', spaces.right - (this._options.horizontalAlign.offset || 0) - 3);
-                  offset = {
-                     left: this._targetSizes.offset.left + oppositeOffset.left
-                  };
-                  this._isMovedH = !this._isMovedH;
+                  offset.left = this._targetSizes.offset.left + oppositeOffset.left;
                } else {
                   offset.left = 0;
                   this._container.css('width', spaces.left - (this._options.horizontalAlign.offset || 0));
-                  this._isMovedH = !this._isMovedH;
                }
+               this._isMovedH = !this._isMovedH;
             }
             if (this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) < spaces.right) {
                this._container.css('overflow-x', 'visible');
