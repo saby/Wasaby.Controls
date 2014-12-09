@@ -136,7 +136,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          });
       },
 
-      _windowChangeHandler: function () {
+      recalcPosition: function () {
          if (this._isVisible) {
             if (this._options.target) {
                this._initSizes();
@@ -211,7 +211,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          }
       },
 
-      _resizeHandler: function () {
+      _windowChangeHandler: function () {
          if (this.isVisible()) {
             this.recalcPosition();
          } else {
