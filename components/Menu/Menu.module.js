@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CORE.Control'], function( Control ) {
+define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS._PopupMixin'], function(ButtonGroupBase, _PopupMixin) {
 
    'use strict';
 
@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CORE.Control'], function( Control ) 
     * @mixes SBIS3.CONTROLS._PopupMixin
     */
 
-   var Menu = Control.Control.extend( /** @lends SBIS3.CONTROLS.Menu.prototype */ {
+   var Menu = ButtonGroupBase.extend([_PopupMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
       $protected: {
          _options: {
             /**
@@ -28,7 +28,19 @@ define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CORE.Control'], function( Control ) 
       },
 
       $constructor: function() {
+         if (this._items.getItemsCount()) {
+            this._drawItems();
+         }
+      },
 
+      _getItemClass : function() {
+         return 'js!SBIS3.CONTROLS.MenuItem';
+      },
+
+      _getAddOptions : function(item) {
+         return {
+            caption : item.title
+         }
       }
 
    });

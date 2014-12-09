@@ -533,3 +533,14 @@
 .controls-DataGrid__th {
   color: #919197;
 }
+.controls-MenuItem {
+  display: block;
+  height: 24px;
+  box-sizing: border-box;
+  padding: 0 8px;
+  line-height: 24px;
+  cursor: pointer;
+}
+.controls-MenuItem:hover {
+  background-color: #e7f0f9;
+}

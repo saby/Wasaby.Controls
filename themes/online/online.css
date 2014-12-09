@@ -722,3 +722,14 @@ input[type="reset"]::-moz-focus-inner {
   padding: 0;
   cursor: pointer;
 }
+.controls-MenuItem {
+  display: inline-block;
+  height: 24px;
+  box-sizing: border-box;
+  padding: 0 8px;
+  line-height: 24px;
+  cursor: pointer;
+}
+.controls-MenuItem:hover {
+  background-color: #e7f0f9;
+}

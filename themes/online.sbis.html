@@ -129,6 +129,9 @@
          <td>
             <div id="CheckBox2"></div>
          </td>
+         <td>
+            <div id="MenuItem"></div>
+         </td>
       </tr>
    </table>
    <br/>   <br/>
@@ -380,6 +383,14 @@
                caption: 'Флаг enabled',
                enabled: false
             })
+         });
+
+         require(["js!SBIS3.CONTROLS.MenuItem"], function (r) {
+            new r({
+               element: "MenuItem",
+               caption: 'Меню'
+            });
+
          });
 
 
