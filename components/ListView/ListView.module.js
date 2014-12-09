@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _dotTplFn: dotTplFn,
             _dotItemTpl: null,
             _itemsContainer: null,
+            _actsContainer : null,
             _options: {
                /**
                 * @cfg {} Шаблон отображения каждого элемента коллекции
@@ -34,7 +35,7 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {Array} Набор действий, над элементами, отображающийся в виде иконок. Можно использовать для массовых операций.
                 */
-               itemsActions: null,
+               itemsActions: [],
                /**
                 * @cfg {Boolean} Разрешено или нет перемещение элементов Drag-and-Drop
                 */
@@ -62,7 +63,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                }
             });
-
+            this._createItemsActions();
          },
 
          init : function() {
@@ -85,6 +86,49 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options.elemClickHander) {
                this._options.elemClickHander(id, data);
             }
+         },
+
+         _getItemActionsContainer : function(id) {
+            return $(".controls-ListView__item[data-id='" + id + "']", this._container.get(0));
+         },
+
+         _createItemsActions : function() {
+            var self = this;
+            this._container.mousemove(function(e){
+               var targ = $(e.target).hasClass('controls-ListView__item') ? e.target : $(e.target).closest('.controls-ListView__item');
+               if (targ.length) {
+                  var id = targ.attr('data-id');
+               }
+               if (self._actsContainer) {
+                  self._getItemActionsContainer(id).append(self._actsContainer.show());
+               }
+            });
+            if (this._options.itemsActions.length) {
+               this._actsContainer = $('<div class="controls-ListView__itemActions"></div>').hide().appendTo(this._container);
+               var acts = this._options.itemsActions;
+               for (var i = 0; i < acts.length; i++) {
+                  var action = $("<span></span>").addClass('controls-ListView__action');
+                  if (acts[i].icon && acts[i].icon.indexOf('sprite:') == 0) {
+                     action.addClass(acts[i].icon.substring(7));
+                  }
+                  if (acts[i].handler) {
+                     var handler = acts[i].handler;
+                     action.mouseup(function(e){
+                        e.stopPropagation();
+                        var
+                           id = $(this).closest('.controls-ListView__item').attr('data-id'),
+                           item = self._items.getItem(id);
+                        handler(id, item);
+                     })
+                  }
+                  this._actsContainer.append(action);
+
+               }
+            }
+
+            this._container.mouseout(function(){
+               self._actsContainer.hide();
+            });
          }
       });
 
