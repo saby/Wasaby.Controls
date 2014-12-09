@@ -1,0 +1,26 @@
+.controls-DataGrid__table {
+   width: 100%
+}
+.controls-DataGrid__tr:hover .controls-DataGrid__td{
+   background-color: @color_base-blue;
+   color: #ffffff;
+}
+.controls-DataGrid__th, .controls-DataGrid__td {
+   text-align: left;
+   height: 32px;
+   padding: 0 10px;
+
+}
+.controls-DataGrid__td {
+   border-top: 1px solid @color_base-gray_light;
+   position: relative;
+}
+
+.controls-DataGrid__th {
+   color : @color_base-gray;
+}
+.controls-DataGrid__itemSelect .controls-ListView__item__selected .controls-DataGrid__td:first-child{
+   background-image: url('img/rowSelect.png');
+   background-position: left top;
+   background-repeat: repeat-y;
+}

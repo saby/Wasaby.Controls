@@ -25,22 +25,6 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
 
       },
 
-      /*_drawItems : function() {
-         this._container.empty();
-         var self = this;
-
-         this._items.iterate(function (item, key) {
-            var
-               insContainer = $('<div></div>').attr('data-key', key).appendTo(self._container),
-               ins = self._createInstance(item, insContainer);
-            if (ins) {
-               ins.subscribe('onActivated', function(){
-                  self._itemActivatedHandler(this);
-               });
-            }
-         });
-      },*/
-
       _getItemClass : function() {
          /*метод должен быть перегружен*/
          return false;

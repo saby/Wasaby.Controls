@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       $constructor: function() {
          var self = this;
-         this._inputField = $('.controls-TextBox__field', this.getContainer().get(0));
+         this._inputField = $('.js-controls-TextBox__field', this.getContainer().get(0));
          this._container.bind('keypress',function(e){
             self._keyPressBind(e);
          });
