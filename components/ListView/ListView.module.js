@@ -47,7 +47,9 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {Function} Обработчик клика на элемент
                 */
-               elemClickHander : null
+               elemClickHander : null,
+               multiselect : false,
+               itemSelect : false
             }
          },
 
@@ -83,6 +85,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _elemClickHandler : function(id, data) {
+            this.setSelectedItems([id]);
             if (this._options.elemClickHander) {
                this._options.elemClickHander(id, data);
             }
@@ -127,8 +130,13 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             this._container.mouseout(function(){
-               self._actsContainer.hide();
+               if (self._actsContainer) self._actsContainer.hide();
             });
+         },
+
+         _drawSelectedItems : function(idArray) {
+            $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
+            $(".controls-ListView__item[data-id='" + idArray[0] + "']", this._container).addClass('controls-ListView__item__selected');
          }
       });
 
