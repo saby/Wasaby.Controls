@@ -137,7 +137,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
       },
 
       recalcPosition: function () {
-         //if (this._isVisible) {
+         if (this._isVisible) {
             this._initSizes();
             var offset = {
                   top: this._targetSizes.offset.top,
@@ -167,7 +167,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
                'top': offset.top + 'px',
                'left': offset.left + 'px'
             });
-         //}
+         }
       },
 
       //Позиционируем относительно body

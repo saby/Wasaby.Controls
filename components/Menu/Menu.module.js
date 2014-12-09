@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS._PopupMixin'], function(ButtonGroupBase, _PopupMixin) {
+define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS._PopupMixin', 'html!SBIS3.CONTROLS.Menu'], function(ButtonGroupBase, _PopupMixin, dot) {
 
    'use strict';
 
@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3
     */
 
    var Menu = ButtonGroupBase.extend([_PopupMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
+      _dotTplFn : dot,
       $protected: {
          _options: {
             /**
