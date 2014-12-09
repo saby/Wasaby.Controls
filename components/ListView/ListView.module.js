@@ -127,7 +127,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             this._container.mouseout(function(){
-               self._actsContainer.hide();
+               if (self._actsContainer) self._actsContainer.hide();
             });
          }
       });
