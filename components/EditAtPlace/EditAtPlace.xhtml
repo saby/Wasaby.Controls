@@ -1,9 +1,9 @@
-{{?!it.displayAsEditor}}
 <div class="controls-EditAtPlace controls-TextBox  {{?it.isMultiline}}controls-EditAtPlace__autoHeight{{?}}" data-bind="{Text : {{=it.context}}}">
-    <div class="controls-EditAtPlace__fieldWrapper controls-TextBox__fieldWrapper">
-            <div class="controls-EditAtPlace__textField controls-TextBox__field {{?it.isMultiline}}controls-EditAtPlace__multiline{{?}}">{{?it.text}}{{=it.text}}{{?}}</div>
-    </div>
+    {{?!it.displayAsEditor}}
+        <div class="controls-EditAtPlace__fieldWrapper controls-TextBox__fieldWrapper">
+                <div class="controls-EditAtPlace__textField controls-TextBox__field {{?it.isMultiline}}controls-EditAtPlace__multiline{{?}}">{{?it.text}}{{=it.text}}{{?}}</div>
+        </div>
+    {{??}}
+        {{=it.editorTpl}}
+    {{?}}
 </div>
-{{??}}
-{{=it.editorTpl}}
-{{?}}

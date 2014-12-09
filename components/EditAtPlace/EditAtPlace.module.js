@@ -2,13 +2,12 @@
  * Created by iv.cheremushkin on 11.11.2014.
  */
 define('js!SBIS3.CONTROLS.EditAtPlace', [
-   'js!SBIS3.CONTROLS.TextBoxBase',
+   'js!SBIS3.CONTROLS.CompoundControl',
    'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.IconButton',
-   'js!SBIS3.CONTROLS.TextArea',
    'js!SBIS3.CONTROLS._PickerMixin',
-   'html!SBIS3.CONTROLS.EditAtPlace',
-], function(TextBoxBase, TextBox, IconButton, TextArea, _PickerMixin, dotTplFn) {
+   'html!SBIS3.CONTROLS.EditAtPlace'
+], function(CompoundControl, TextBox, IconButton, _PickerMixin, dotTplFn) {
    'use strict';
    /**
     * @class SBIS3.CONTROLS.EditAtPlace
@@ -19,7 +18,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
     * @mixes SBIS3.CONTROLS._PickerMixin
     */
 
-   var EditAtPlace = TextBoxBase.extend([_PickerMixin], /** @lends SBIS3.CONTROLS.EditAtPlace.prototype */{
+   var EditAtPlace = CompoundControl.extend([_PickerMixin], /** @lends SBIS3.CONTROLS.EditAtPlace.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _textField: null,
@@ -28,6 +27,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
          _okButton: null,
          _oldText: '',
          _options: {
+            text: '',
             editorTpl: '<component data-component="SBIS3.CONTROLS.TextBox"> </component>',
             isMultiline: false,
             displayAsEditor: false
@@ -40,15 +40,18 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
          this._textField.bind('click', function(){
             self._clickHandler();
          });
-         if (this._options.isMultiline){
-            this._textField.addClass('controls-EditAtPlace__multiline');
-         }
          $ws.single.EventBus.channel('EditAtPlaceChannel').subscribe('onCancel', this._cancelHandler, this);
          $ws.single.EventBus.channel('EditAtPlaceChannel').subscribe('onOpen', this._openHandler, this);
+         this._loadControlsBySelector(new $ws.proto.ParallelDeferred(), undefined, '[data-component]');
+         if (this.getChildControls()[0]) {
+            this.getChildControls()[0]._container.attr('data-bind', this._container.attr('data-bind'));
+         }
       },
 
       _cancelHandler: function(){
-         this.setText(this._oldText);
+         if (this._popup.isVisible()) {
+            this.setText(this._oldText);
+         }
       },
 
       _openHandler: function(){
@@ -118,8 +121,16 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
       },
 
       setText: function(text){
+         var oldText = this._options.text;
+         this._options.text = text || '';
+         if (oldText !== this._options.text) {
+            this._notify('onTextChange', this._options.text);
+         }
          this._textField.html(text);
-         EditAtPlace.superclass.setText.call(this, text);
+      },
+
+      getText: function(){
+         return this._options.text;
       }
 
    });

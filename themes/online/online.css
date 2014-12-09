@@ -712,7 +712,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-EditAtPlace {
   border: 1px solid transparent;
   border-bottom: none;
-  vertical-align: top;
 }
 .controls-EditAtPlace:hover,
 .controls-EditAtPlace.ws-has-focus {
