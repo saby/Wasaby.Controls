@@ -253,6 +253,20 @@
 }
 .controls-ListView__item {
   overflow: hidden;
+  position: relative;
+}
+.controls-ListView__itemActions {
+  position: absolute;
+  height: 16px;
+  right: 0;
+  top: 50%;
+  margin-top: -8px;
+  z-index: 10;
+  display: none;
+  background: #00c795;
+}
+.controls-ListView__action {
+  margin-right: 16px;
 }
 .controls-ListView > .controls-TreeView__childContainer {
   display: block;
@@ -529,11 +543,16 @@
 }
 .controls-DataGrid__td {
   border-top: 1px solid #d1d1d4;
+  position: relative;
 }
 .controls-DataGrid__th {
   color: #919197;
 }
-.controls-MenuItem {
+.controls-DataGrid__itemSelect .controls-ListView__item__selected .controls-DataGrid__td:first-child {
+  background-image: url('img/rowSelect.png');
+  background-position: left top;
+  background-repeat: repeat-y;
+}.controls-MenuItem {
   display: block;
   height: 24px;
   box-sizing: border-box;

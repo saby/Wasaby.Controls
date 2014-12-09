@@ -76,6 +76,10 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListView', 'html!SBIS3.
             return this._options.itemTemplate(item)
          }
 
+      },
+
+      _getItemActionsContainer : function(id) {
+         return $(".controls-ListView__item[data-id='" + id + "']", this._container.get(0)).find('.controls-DataGrid__td').last();
       }
 
    });
