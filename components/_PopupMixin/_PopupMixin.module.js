@@ -610,7 +610,9 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
                $ws.single.WindowManager._visibleIndexes.push(zIndex);
                ModalOverlay.adjust();
                ModalOverlay._overlay.bind('mousedown', function(e){
-                  ControlHierarchyManager.getTopWindow().hide();
+                  if (ControlHierarchyManager.getTopWindow()._options.closeByExternalClick) {
+                     ControlHierarchyManager.getTopWindow().hide();
+                  }
                   e.stopPropagation();
                })
             }
