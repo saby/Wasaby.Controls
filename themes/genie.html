@@ -82,12 +82,11 @@
 
    <br/><br/>
 
-   <div id="ComboBox"></div>
+   <div id="ComboBox" style="width: 200px"></div>
 
    <br/><br/>
 
-   <div id="ComboBox2"></div>
-
+   <div id="ComboBox2" style="width: 200px"></div>
    <br/><br/>
 
    <div id="FormattedTextBox"></div>
@@ -96,6 +95,8 @@
    <div id="button1"></div>
    <br/><br/>
    <div id="button2"></div>
+   <br/><br/>
+   <div id="button3"></div>
 
 
    <br/><br/>
@@ -172,7 +173,7 @@
          require(["js!SBIS3.CONTROLS.ComboBox"], function (r) {
             new r({
                element: "ComboBox2",
-               isEditable: false,
+               editable: false,
                items : [
                   {
                      key : 1,
@@ -194,6 +195,12 @@
             new r({
                element: "button1",
                caption: 'Сохранить'
+            });
+
+            new r({
+               element: "button3",
+               caption: 'Сохранить',
+               primary : true
             })
          });
 

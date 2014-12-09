@@ -91,16 +91,21 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
       },
 
       around : {
-         _drawItem : function(parentFnc, itemContainer, item) {
-            var self = this;
-            parentFnc.call(this, itemContainer, item);
-            var resContainer = itemContainer.hasClass('js-controls-ListView__itemContent') ? itemContainer : $('.js-controls-ListView__itemContent', itemContainer);
+         _drawItem : function(parentFnc, item, targetContainer) {
+            var
+               self = this,
+               itemWrapper = this._drawItemWrapper(item).appendTo(targetContainer);
+
+            this._addItemClasses(itemWrapper, this._items.getKey(item));
+
+            var resContainer = itemWrapper.hasClass('js-controls-ListView__itemContent') ? itemWrapper : $('.js-controls-ListView__itemContent', itemWrapper);
+            this._createItemInstance(item, resContainer);
 
             if (!($('.js-controls-TreeView__expand', resContainer).length)) {
                resContainer.before('<div class="controls-TreeView__expand js-controls-TreeView__expand"></div>');
             }
 
-            $(".js-controls-TreeView__expand", itemContainer).click(function(){
+            $(".js-controls-TreeView__expand", itemWrapper).click(function(){
                var id = $(this).closest('.controls-ListView__item').attr('data-id');
                self.toggleNode(id)
             });
@@ -108,7 +113,7 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
          }
       },
 
-      _drawOneItemContainer : function(item, key) {
+      _drawItemWrapper : function(item) {
          return $('<div>\
             <div class="controls-TreeView__item">\
                <div class="controls-TreeView__itemContent js-controls-ListView__itemContent"></div>\
