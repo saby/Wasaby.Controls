@@ -1,7 +1,6 @@
 .controls-EditAtPlace {
   border: 1px solid transparent;
   border-bottom: none;
-  vertical-align: top;
 }
 
 .controls-EditAtPlace:hover, .controls-EditAtPlace.ws-has-focus{
@@ -17,7 +16,13 @@
 }
 
 .controls-EditAtPlace__editorOverlay .controls-TextArea__inputField{
-  line-height: 22px;
+  line-height: 20px;
+  padding: 1px 4px;
+  font-size: inherit;
+}
+
+.controls-EditAtPlaceGroup__editorOverlay .controls-TextArea__inputField{
+  line-height: 20px;
   padding: 1px 4px;
   font-size: inherit;
 }
@@ -47,18 +52,12 @@
   width: 16px;
   height: 16px;
   margin-left: 4px;
-  margin-top: -4px;
+  margin-top: -13px;
   display: inline-block;
   background: url("img/cancelIcon-sprite.png") top left no-repeat;;
   background-position: 0 -32px;
   cursor: pointer;
   vertical-align: middle;
-}
-
-.controls-EditAtPlace__okButton.controls-IconButton.controls-Button {
-  width: 24px;
-  padding-top: 3px;
-  padding-left: 4px;
 }
 
 .controls-EditAtPlace__cancel:hover{
@@ -79,12 +78,13 @@
 }
 
 .controls-EditAtPlaceGroup__editorOverlay {
-  padding: 0 0 4px 0;
-  margin: 0;
+  background: #f8f3f1!important;
+  box-shadow: 0 0 3px #b2b2b2;
+  border-radius: 3px;
 }
 
 .controls-EditAtPlaceGroup__controlPanel{
-  margin: 0 4px 4px 0;
+  margin: 4px;
   float: right;
   display: inline-block;
 }

@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup', [
       $constructor: function () {
          var self = this;
          this._loadChildControls();
-         var children = this._getChildControls(this._editorTpl);
+         var children = this.getChildControls();
          // всем EditAtPlace задаем свой обработчик клика
          for (var i = 0; i < children.length; i++) {
             if (children[i] instanceof EditAtPlace) {
@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup', [
 
       _setPickerContent: function () {
          var self = this;
-         this._picker._container.addClass('controls-EditAtPlace__editorOverlay controls-EditAtPlaceGroup__editorOverlay');
+         this._picker._container.addClass('controls-EditAtPlaceGroup__editorOverlay');
          this._picker._container.bind('keypress', function(e){
             self._keyPressHandler(e);
          });
@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup', [
             if (editor.length) {
                editor = $(editor.get(0).innerHTML);
             } else {
-               editor = $('<component data-component="SBIS3.CONTROLS.TextBox"></component>').attr('data-bind', dataBind);
+               editor = $('<component data-component="SBIS3.CONTROLS.TextBox"></component>');
             }
             $.each($(this).prop('attributes'), function () {
                if (this.name != 'data-component' && this.name != 'name' && this.name != 'id') {
@@ -83,15 +83,15 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup', [
       // Добавляем кнопки
       _addControlPanel: function(){
          var self = this,
-            $ok = $('<div class="controls-Button controls-EditAtPlace__okButton"></div>'),
+            $ok = $('<div class="controls-EditAtPlace__okButton"></div>'),
             $cancel = $('<div class="controls-EditAtPlace__cancel"></div>'),
-            $cntrlPanel = $('<div class="controls-EditAtPlaceGroup__controlPanel"></div>').append($ok).append($cancel);
+            $cntrlPanel = $('<span class="controls-EditAtPlaceGroup__controlPanel"></span>').append($ok).append($cancel);
 
          // Добавляем кнопки
          this._okButton = new IconButton({
             parent: self._picker,
-            element : $ok,
-            icon: 'sprite:icon-16 icon-Successful icon-done'
+            element: $ok,
+            icon: 'sprite:icon-24 icon-Successful icon-done'
          });
          this._picker.getContainer().append($cntrlPanel);
          // Подписываемся на клики кнопок
@@ -151,26 +151,6 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup', [
                def.callback();
             });
          return def;
-      },
-
-      /*TODO Метод скопирован из areaAbstract - костыль*/
-      _getChildControls: function (excludeContainers) {
-         var children = [];
-         for (var i = 0, l = this._childControls.length; i < l; i++) {
-            if (i in this._childControls) {
-               var c = this._childControls[i];
-               if (c) {
-                  if (c instanceof $ws.proto.AreaAbstract) {
-                     Array.prototype.push.apply(children, c.getChildControls(excludeContainers));
-                     if (excludeContainers) {
-                        continue;
-                     }
-                  }
-                  children.push(c);
-               }
-            }
-         }
-         return children;
       }
    });
 

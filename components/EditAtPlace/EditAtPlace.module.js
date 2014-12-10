@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
          _oldText: '',
          _options: {
             text: '',
-            editorTpl: '<component data-component="SBIS3.CONTROLS.TextBox"> </component>',
+            editorTpl: '<component data-component="SBIS3.CONTROLS.TextBox"></component>',
             isMultiline: false,
             displayAsEditor: false
          }
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
          });
          $ws.single.EventBus.channel('EditAtPlaceChannel').subscribe('onCancel', this._cancelHandler, this);
          $ws.single.EventBus.channel('EditAtPlaceChannel').subscribe('onOpen', this._openHandler, this);
-         this._loadControlsBySelector(new $ws.proto.ParallelDeferred(), undefined, '[data-component]');
+         this._loadChildControls();
          if (this.getChildControls()[0]) {
             this.getChildControls()[0]._container.attr('data-bind', this._container.attr('data-bind'));
          }
@@ -73,16 +73,15 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
 
       _setPickerContent: function () {
          this._picker.getContainer().addClass('controls-EditAtPlace__editorOverlay');
-         this._picker._container.append($(this._options.editorTpl).attr('data-bind', this._container.attr('data-bind')));
          this._picker._loadChildControls();
          this._editor = this._picker._getChildControls()[0];
-         this._editor._container.width(this._container.width() + 20);
+         this._editor._container.attr('data-bind', this._container.attr('data-bind')).width(this._container.width() + 20);
          this._addControlPanel();
       },
 
       _addControlPanel: function(){
          var self = this,
-            $ok = $('<div class="controls-Button controls-EditAtPlace__okButton"></div>'),
+            $ok = $('<div class="ontrols-EditAtPlace__okButton"></div>'),
             $cancel = $('<div class="controls-EditAtPlace__cancel"></div>'),
             $btnsContainer = $('<div class="controls-EditAtPlace__controlPanel"></div>').append($ok).append($cancel);
 
@@ -90,7 +89,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
          this._okButton = new IconButton({
             parent: self._picker,
             element : $ok,
-            icon: 'sprite:icon-16 icon-Successful icon-done'
+            icon: 'sprite:icon-24 icon-Successful icon-done'
          });
 
          this._picker.getContainer().append($btnsContainer);
@@ -115,6 +114,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
             horizontalAlign: {
                side: 'left'
             },
+            template: this._options.editorTpl,
             closeByExternalClick: true,
             isModal: true
          };
