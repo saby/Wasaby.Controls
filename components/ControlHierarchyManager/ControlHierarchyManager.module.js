@@ -18,6 +18,7 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
 
       _index: {},
       _tree: [],
+      _topWindow: null,
 
       addNode: function (component) {
          var parent = component.getParent(),
@@ -90,6 +91,14 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
             'self': component,
             'children': []
          };
+      },
+
+      setTopWindow: function(window){
+         this.topWindow = window;
+      },
+
+      getTopWindow: function(){
+         return this.topWindow;
       }
    };
 

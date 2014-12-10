@@ -111,10 +111,10 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
 
          this._initOppositeCorners();
          //При ресайзе расчитываем размеры
-         $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._resizeHandler, this);
+         $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._windowChangeHandler, this);
 
          //Скрываем попап если при скролле таргет скрылся
-         $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowScroll', this._resizeHandler, this);
+         $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowScroll', this._windowChangeHandler, this);
 
          if (this._options.closeByExternalClick) {
             $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
@@ -138,36 +138,41 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
 
       recalcPosition: function () {
          if (this._isVisible) {
-            this._initSizes();
-            var offset = {
-                  top: this._targetSizes.offset.top,
-                  left: this._targetSizes.offset.left
-               },
-               buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner);
+            if (this._options.target) {
+               this._initSizes();
+               var offset = {
+                     top: this._targetSizes.offset.top,
+                     left: this._targetSizes.offset.left
+                  },
+                  buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner);
 
-            offset = this._addOffset(offset, buff);
-            offset = this._getOffsetByWindowSize(offset);
+               offset = this._addOffset(offset, buff);
+               offset = this._getOffsetByWindowSize(offset);
 
 
-            if (!this._isMovedV) {
-               offset.top += this._margins.top - this._margins.bottom + (this._options.verticalAlign.offset || 0);
+               if (!this._isMovedV) {
+                  offset.top += this._margins.top - this._margins.bottom + (this._options.verticalAlign.offset || 0);
+               } else {
+                  offset.top += -this._margins.top + this._margins.bottom - (this._options.verticalAlign.offset || 0);
+               }
+               if (!this._isMovedH) {
+                  offset.left += this._margins.left - this._margins.right + (this._options.horizontalAlign.offset || 0);
+               } else {
+                  offset.left += -this._margins.left + this._margins.right - (this._options.horizontalAlign.offset || 0);
+               }
+
+               offset.top = this._calculateOverflow(offset, 'vertical');
+               offset.left = this._calculateOverflow(offset, 'horizontal');
+
+               this._container.css({
+                  'top': offset.top + 'px',
+                  'left': offset.left + 'px'
+               });
             } else {
-               offset.top += -this._margins.top + this._margins.bottom - (this._options.verticalAlign.offset || 0);
+               this._container.offset(this._bodyPositioning());
             }
-            if (!this._isMovedH){
-               offset.left += this._margins.left - this._margins.right + (this._options.horizontalAlign.offset || 0) ;
-            } else {
-               offset.left += -this._margins.left + this._margins.right - (this._options.horizontalAlign.offset || 0) ;
-            }
-
-            offset.top = this._calculateOverflow(offset, 'vertical');
-            offset.left = this._calculateOverflow(offset, 'horizontal');
-
-            this._container.css({
-               'top': offset.top + 'px',
-               'left': offset.left + 'px'
-            });
          }
+
       },
 
       //Позиционируем относительно body
@@ -206,7 +211,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          }
       },
 
-      _resizeHandler: function () {
+      _windowChangeHandler: function () {
          if (this.isVisible()) {
             this.recalcPosition();
          } else {
@@ -245,13 +250,24 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
             this._containerSizes.originWidth = this._container.get(0).scrollWidth + this._containerSizes.border * 2;
             this._containerSizes.originHeight = this._container.get(0).scrollHeight + this._containerSizes.border * 2;
          }
+         this._containerSizes.clientWidth = this._containerSizes.originWidth;
+         this._containerSizes.clientHeight = this._containerSizes.originHeight;
+
+         if (this._container.get(0).clientWidth < this._container.get(0).scrollWidth) {
+            this._containerSizes.clientHeight += 17;
+         }
+         if (this._container.get(0).clientHeight < this._container.get(0).scrollHeight) {
+            this._containerSizes.clientWidth += 17;
+         }
          //Запоминаем координаты правого нижнего угла контейнера необходимые для отображения контейнера целиком и там где нужно.
-         this._containerSizes.requredOffset = {
-            top: buff.top + this._targetSizes.offset.top + this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0),
-            left: buff.left + this._targetSizes.offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0)
-         };
-         this._containerSizes.width = this._containerSizes.originWidth;
-         this._containerSizes.height = this._containerSizes.originHeight;
+         if (target) {
+            this._containerSizes.requredOffset = {
+               top: buff.top + this._targetSizes.offset.top + this._containerSizes.clientHeight + (this._options.verticalAlign.offset || 0),
+               left: buff.left + this._targetSizes.offset.left + this._containerSizes.clientWidth + (this._options.horizontalAlign.offset || 0)
+            };
+         }
+         this._containerSizes.width = this._containerSizes.clientWidth;
+         this._containerSizes.height = this._containerSizes.clientHeight;
          this._containerSizes.boundingClientRect = container.get(0).getBoundingClientRect();
          this._initWindowSizes();
       },
@@ -314,10 +330,10 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
             left: 0
          };
          if (vert == 'bottom') {
-            offset.top -= this._containerSizes.originHeight - this._targetSizes.border;
+            offset.top -= this._containerSizes.clientHeight - this._targetSizes.border;
          }
          if (horiz == 'right') {
-            offset.left -= this._containerSizes.originWidth - this._targetSizes.border;
+            offset.left -= this._containerSizes.clientWidth - this._targetSizes.border;
          }
          if (!notSave) {
             this._options.horizontalAlign.side = horiz;
@@ -404,7 +420,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
       _getOffsetByWindowSize: function (offset) {
          var buf = this._targetSizes.offset;
          //Проверяем убираемся ли в экран снизу
-         if (offset.top + this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) >= this._windowSizes.height - 3 && !this._isMovedV) {
+         if (offset.top + this._containerSizes.clientHeight + (this._options.verticalAlign.offset || 0) >= this._windowSizes.height - 3 && !this._isMovedV) {
             this._isMovedV = true;
             offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
             offset.top = this._addOffset(offset, buf).top;
@@ -419,7 +435,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
 
          //TODO Избавиться от дублирования
          //Проверяем убираемся ли в экран справа
-         if (offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) >= this._windowSizes.width - 3 && !this._isMovedH) {
+         if (offset.left + this._containerSizes.clientWidth + (this._options.horizontalAlign.offset || 0) >= this._windowSizes.width - 3 && !this._isMovedH) {
             this._isMovedH = true;
             offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
             offset.left = this._addOffset(offset, buf).left;
@@ -451,16 +467,14 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
                }
                this._isMovedV = !this._isMovedV;
             }
-            if (this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) < spaces.bottom) {
+            if (this._containerSizes.clientHeight + (this._options.verticalAlign.offset || 0) < spaces.bottom) {
                this._container.css('overflow-y', 'visible');
-               this._container.height(this._containerSizes.originHeight - this._containerSizes.border*2);
+               this._container.css('height', '');
             }
             return offset.top;
          }
 
-         else
-
-         {
+         else {
             if (offset.left < 0) {
                this._container.css('overflow-x', 'auto');
                spaces = this._getSpaces(this._options.corner);
@@ -475,9 +489,9 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
                }
                this._isMovedH = !this._isMovedH;
             }
-            if (this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) < spaces.right) {
+            if (this._containerSizes.clientWidth + (this._options.horizontalAlign.offset || 0) < spaces.right) {
                this._container.css('overflow-x', 'visible');
-               this._container.width(this._containerSizes.originWidth - this._containerSizes.border*2);
+               this._container.css('width', '');
             }
             return offset.left;
          }
@@ -546,7 +560,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
       },
 
       after: {
-         init: function(){
+         init: function () {
             ControlHierarchyManager.addNode(this, this.getParent());
          },
 
@@ -567,7 +581,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
             this.recalcPosition();
          },
 
-         hide: function(){
+         hide: function () {
             var zIndex = this._container.css('zIndex');
             ControlHierarchyManager.zIndexManager.setFree(zIndex);
             // Убираем оверлей
@@ -589,20 +603,24 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
             });
             var zIndex = ControlHierarchyManager.zIndexManager.getNext();
             this._container.css('zIndex', zIndex);
+            ControlHierarchyManager.setTopWindow(this);
             //Показываем оверлей
             if (this._options.isModal) {
                $ws.single.WindowManager._modalIndexes.push(zIndex);
                $ws.single.WindowManager._visibleIndexes.push(zIndex);
                ModalOverlay.adjust();
+               ModalOverlay._overlay.bind('mousedown', function(e){
+                  ControlHierarchyManager.getTopWindow().hide();
+                  e.stopPropagation();
+               })
             }
          },
          destroy: function(){
-            this.hide();
             var zIndex = this._container.css('zIndex');
             ControlHierarchyManager.zIndexManager.setFree(zIndex);
             ControlHierarchyManager.removeNode(this);
-            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._resizeHandler, this);
-            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._scrollHandler, this);
+            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._windowChangeHandler, this);
+            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._windowChangeHandler, this);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentClick', this._clickHandler, this);
          }
       },
