@@ -286,18 +286,20 @@
   border-color: #00d7d7;
 }
 .controls-FormattedTextBox {
+  display: inline-block;
   vertical-align: top;
+  background-color: white;
   height: 22px;
   min-height: 22px;
 }
-.controls-FormattedTextBox__field {
-  display: table;
+.controls-FormattedTextBox__fieldWrapper {
   height: 100%;
   margin: 0 7px;
 }
-.controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
-  display: table-cell;
-  vertical-align: middle;
+.controls-FormattedTextBox__field {
+  padding-top: 3px;
+}
+.controls-FormattedTextBox__field-symbol {
   font-style: normal;
   white-space: pre;
 }
@@ -435,21 +437,21 @@
   text-align: center;
 }
 .controls-DatePicker {
-  display: inline-block;
-  vertical-align: top;
   border: none;
-  height: 24px;
+  box-sizing: border-box;
+  background-color: transparent;
 }
-.controls-DatePicker__field {
+.controls-DatePicker__fieldWrapper {
   margin-right: 16px;
+  background-color: white;
   padding: 0 7px;
   border: 1px solid #d1d1d4;
   border-radius: 2px;
 }
-.controls-DatePicker__field:hover {
+.controls-DatePicker__fieldWrapper:hover {
   border-color: #00d7d7;
 }
-.controls-DatePicker .controls-FormattedTextBox__field {
+.controls-DatePicker .controls-FormattedTextBox__fieldWrapper {
   margin: 0;
 }
 .controls-DatePicker__calendarIconWrapper {
@@ -478,6 +480,9 @@
 }
 .controls-DatePicker__calendar {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+.controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
+  margin-right: 23px;
 }
 .controls-ButtonGroup__vertical .controls-ListView__item {
   display: block;
