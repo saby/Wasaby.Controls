@@ -691,9 +691,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-FormattedTextBox__fieldWrapper {
   height: 100%;
-  margin-right: 2px;
-  padding: 0 2px;
+  padding: 0 4px;
   min-height: 22px;
+  background-color: white;
 }
 .controls-FormattedTextBox__field {
   padding-top: 3px;
