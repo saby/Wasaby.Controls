@@ -160,7 +160,7 @@ define(
          // Потеря фокуса. Работает так же при клике по иконке календарика.
          // Если пользователь ввел слишком большие данные ( напр., 45.23.7234 ), то значение установится корректно,
          // ввиду особенностей работы setMonth(), setDate() и т.д., но нужно обновить поле
-         $('.controls-DatePicker__field', this.getContainer().get(0)).blur(function(){
+         $('.js-controls-FormattedTextBox__field', this.getContainer().get(0)).blur(function(){
             if ( self._options.date ){ self._drawDate(); }
          });
       },
