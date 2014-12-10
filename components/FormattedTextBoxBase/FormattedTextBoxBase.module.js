@@ -127,7 +127,7 @@ define(
       _initializeComponents: function(){
          var self = this;
 
-         this._inputField = $('.controls-FormattedTextBox__field', this.getContainer().get(0));
+         this._inputField = $('.js-controls-FormattedTextBox__field', this.getContainer().get(0));
 
          this._primalMask = this._getMask();
          this._controlCharacters = this._getControlCharactersSet();
@@ -178,7 +178,7 @@ define(
 
       /**
        * Обработка события фокусировки на элементе
-       * // TODO пока работает некорректно (точнее просто почему-то ничего не делает)
+       * TODO пока работает только в IE8+ и FireFox
        * @private
        */
       _focusHandler: function(){

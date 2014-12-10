@@ -611,45 +611,38 @@ input[type="reset"]::-moz-focus-inner {
   cursor: default;
 }
 .controls-DatePicker {
-  display: inline-block;
-  vertical-align: top;
   border: none;
-}
-.controls-DatePicker:hover {
-  border: none;
-}
-.controls-DatePicker__field {
-  margin-right: 16px;
+  box-sizing: border-box;
 }
 .controls-DatePicker__calendarIcon {
-  background: url("img/DatePicker-calendar.png") no-repeat 0 0;
+  background: url("img/DatePicker-calendar.png") no-repeat -1px 0;
   display: inline-block;
   position: absolute;
   min-height: 22px;
   top: 50%;
   margin-left: 1px;
-  margin-top: -7px;
+  margin-top: -5px;
   width: 16px;
   cursor: pointer;
   text-decoration: none;
 }
 .controls-DatePicker__calendarIcon:hover {
-  background-position: -17px 0;
+  background-position: -18px 0;
 }
 .controls-DatePicker__calendar {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
-.controls-DatePicker .controls-FormattedTextBox {
-  height: 100%;
-  box-sizing: border-box;
-}
-.controls-DatePicker .controls-FormattedTextBox__field {
+.controls-DatePicker .controls-FormattedTextBox__fieldWrapper {
   border: 1px solid transparent;
   border-bottom: 1px solid #EAEAEA;
 }
-.controls-DatePicker .controls-FormattedTextBox__field:hover {
+.controls-DatePicker .controls-FormattedTextBox__fieldWrapper:hover,
+.controls-DatePicker.ws-has-focus .controls-FormattedTextBox__fieldWrapper {
   border: 1px solid #EAEAEA;
   border-bottom: 1px solid #CCCCCC;
+}
+.controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
+  margin-right: 19px;
 }
 .controls-ComboBox__arrowDown {
   background-image: url('./img/ComboBox.png');
@@ -697,18 +690,20 @@ input[type="reset"]::-moz-focus-inner {
   display: none;
 }
 .controls-FormattedTextBox {
+  display: inline-block;
   vertical-align: top;
+  background-color: transparent;
+}
+.controls-FormattedTextBox__fieldWrapper {
+  height: 100%;
+  padding: 0 4px;
+  min-height: 22px;
+  background-color: white;
 }
 .controls-FormattedTextBox__field {
-  display: table;
-  height: 100%;
-  margin-right: 2px;
-  padding: 0 2px;
-  min-height: 22px;
+  padding-top: 3px;
 }
-.controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
-  display: table-cell;
-  vertical-align: middle;
+.controls-FormattedTextBox__field-symbol {
   font-style: normal;
   white-space: pre;
 }
