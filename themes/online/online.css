@@ -762,6 +762,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-EditAtPlace__controlPanel {
   margin-left: 8px;
+  vertical-align: middle;
   display: inline-block;
 }
 .controls-EditAtPlace__cancel {

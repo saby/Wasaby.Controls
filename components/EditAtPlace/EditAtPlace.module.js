@@ -6,8 +6,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
    'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS._PickerMixin',
+   'js!SBIS3.CONTROLS._DataBindMixin',
    'html!SBIS3.CONTROLS.EditAtPlace'
-], function(CompoundControl, TextBox, IconButton, _PickerMixin, dotTplFn) {
+], function(CompoundControl, TextBox, IconButton, _PickerMixin, _DataBindMixin, dotTplFn) {
    'use strict';
    /**
     * @class SBIS3.CONTROLS.EditAtPlace
@@ -18,11 +19,10 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
     * @mixes SBIS3.CONTROLS._PickerMixin
     */
 
-   var EditAtPlace = CompoundControl.extend([_PickerMixin], /** @lends SBIS3.CONTROLS.EditAtPlace.prototype */{
+   var EditAtPlace = CompoundControl.extend([_PickerMixin, _DataBindMixin], /** @lends SBIS3.CONTROLS.EditAtPlace.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _textField: null,
-         _editor: null,
          _cancelButton: null,
          _okButton: null,
          _oldText: '',
@@ -42,9 +42,11 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
          });
          $ws.single.EventBus.channel('EditAtPlaceChannel').subscribe('onCancel', this._cancelHandler, this);
          $ws.single.EventBus.channel('EditAtPlaceChannel').subscribe('onOpen', this._openHandler, this);
-         this._loadChildControls();
-         if (this.getChildControls()[0]) {
-            this.getChildControls()[0]._container.attr('data-bind', this._container.attr('data-bind'));
+         if (this._options.displayAsEditor) {
+            this._loadChildControls();
+            if (this.getChildControls()[0]) {
+               this.getChildControls()[0]._container.attr('data-bind', this._container.attr('data-bind'));
+            }
          }
       },
 
@@ -73,16 +75,15 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
 
       _setPickerContent: function () {
          this._picker.getContainer().addClass('controls-EditAtPlace__editorOverlay');
+         $('[data-component]', this._picker.getContainer()).attr('data-bind', this._container.attr('data-bind'));
          this._picker._loadChildControls();
-         this._editor = this._picker._getChildControls()[0];
-         this._editor._container.attr('data-bind', this._container.attr('data-bind')).width(this._container.width() + 20);
          this._addControlPanel();
       },
 
       _addControlPanel: function(){
          var self = this,
-            $ok = $('<div class="ontrols-EditAtPlace__okButton"></div>'),
-            $cancel = $('<div class="controls-EditAtPlace__cancel"></div>'),
+            $ok = $('<span class="ontrols-EditAtPlace__okButton"></span>'),
+            $cancel = $('<span class="controls-EditAtPlace__cancel"></span>'),
             $btnsContainer = $('<div class="controls-EditAtPlace__controlPanel"></div>').append($ok).append($cancel);
 
          // Добавляем кнопки
@@ -124,6 +125,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
          var oldText = this._options.text;
          this._options.text = text || '';
          if (oldText !== this._options.text) {
+            this.saveToContext('Text', text);
             this._notify('onTextChange', this._options.text);
          }
          this._textField.html(text);
@@ -131,6 +133,22 @@ define('js!SBIS3.CONTROLS.EditAtPlace', [
 
       getText: function(){
          return this._options.text;
+      },
+
+      //*TODO переопределяем метод compoundControl - костыль*//*
+      _loadControls: function (pdResult) {
+         return pdResult.done([]);
+      },
+
+      /*TODO свой механизм загрузки дочерних контролов - костыль*/
+      _loadChildControls: function () {
+         var def = new $ws.proto.Deferred();
+         var self = this;
+         self._loadControlsBySelector(new $ws.proto.ParallelDeferred(), undefined, '[data-component]')
+            .getResult().addCallback(function () {
+               def.callback();
+            });
+         return def;
       }
 
    });

@@ -65,6 +65,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup', [
          $('[data-component="SBIS3.CONTROLS.EditAtPlace"]', template).each(function () {
             var editor = $('[name="editorTpl"]', this),
                dataBind = $(this).attr('data-bind');
+            console.log(editor);
             if (editor.length) {
                editor = $(editor.get(0).innerHTML);
             } else {
@@ -131,7 +132,6 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup', [
 
       _initializePicker: function(){
          EditAtPlaceGroup.superclass._initializePicker.call(this);
-
          this._picker.subscribe('onOpen', function(){
             $ws.single.EventBus.channel('EditAtPlaceChannel').notify('onOpen');
          });
