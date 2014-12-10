@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
    var _CollectionMixin = /**@lends SBIS3.CONTROLS._CollectionMixin.prototype  */{
       $protected: {
          _items : null,
+         _itemsInstances : {},
          _dotItemTpl: null,
          _keyField : '',
          _options: {
@@ -72,6 +73,7 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
       },
 
       _drawItems: function(){
+         this._itemsInstances = {};
          var
             itemsReadyDef = new $ws.proto.ParallelDeferred(),
             self = this,
@@ -81,13 +83,9 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
          this._items.iterate(function (item, key, i, parItem, lvl) {
 
             var
-               oneItemContainer = self._drawOneItemContainer(item, key, parItem, lvl),
                targetContainer = self._getTargetContainer(item, key, parItem, lvl);
 
-            oneItemContainer.attr('data-id', key).addClass('controls-ListView__item');
-            targetContainer.append(oneItemContainer);
-
-            itemsReadyDef.push(self._drawItem(oneItemContainer, item));
+            itemsReadyDef.push(self._drawItem(item, targetContainer, key, i, parItem, lvl));
 
          });
          itemsReadyDef.done().getResult().addCallback(function(){
@@ -95,13 +93,8 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
          });
       },
 
-      //метод рисующий контейнер для одного элемента
-      _drawOneItemContainer : function(item, key) {
-         return $('<div class="js-controls-ListView__itemContent"></div>');
-      },
-
       //метод определяющий в какой контейнер разместить определенный элемент
-      _getTargetContainer : function(item, key, parItem, lvl) {
+      _getTargetContainer : function() {
          //по стандарту все строки рисуются в itemsContainer
          return this._getItemsContainer();
       },
@@ -111,38 +104,71 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
          return this._container;
       },
 
-      _drawItem : function(itemContainer, item) {
-         var resContainer = itemContainer.hasClass('js-controls-ListView__itemContent') ? itemContainer : $('.js-controls-ListView__itemContent', itemContainer);
+      _drawItem : function(item, targetContainer) {
          var
-            def = new $ws.proto.Deferred(),
-            itemTpl = this._getItemTemplate(item);
+            key = this._items.getKey(item),
+            self = this;
+         return this._createItemInstance(item, targetContainer).addCallback(function(container){
+            self._addItemClasses(container, key);
+         });
+      },
+
+      _getItemTemplate : function() {
+         return '<div>template</div>'
+      },
+
+      _addItemClasses : function (container, key){
+         container.attr('data-id', key).addClass('controls-ListView__item');
+      },
+
+      _createItemInstance : function(item, resContainer) {
+         var
+            itemTpl = this._getItemTemplate(item),
+            def = new $ws.proto.Deferred();
+
+         function drawItemFromTpl(tplConfig, resContainer) {
+            var container = $(tplConfig);
+            resContainer.append(container);
+            def.callback(container);
+         }
 
          if (typeof itemTpl == 'string') {
-            resContainer.append(doT.template(itemTpl)(item));
-            def.callback(resContainer);
+            drawItemFromTpl.call(this, doT.template(itemTpl)(item), resContainer);
          }
          else if (typeof itemTpl == 'function') {
             var self = this;
             var tplConfig = itemTpl.call(this, item);
-            if (tplConfig.componentType.indexOf('js!') == 0) {
+            //Может быть DotTepmlate
+            if (typeof tplConfig == 'string') {
+               drawItemFromTpl.call(this, tplConfig, resContainer);
+            }
+            //иначе функция выбиратор
+            else if (tplConfig.componentType && tplConfig.componentType.indexOf('js!') == 0) {
+               //если передали имя класса то реквайрим его и создаем
                require([tplConfig.componentType], function (ctor) {
-                  var config = tplConfig.config;
-                  config.element = resContainer;
+                  var
+                     ctrlWrapper = $("<div></div>").appendTo(resContainer),
+                     config = tplConfig.config;
+                  config.element = ctrlWrapper;
                   config.parent = self;
-                  new ctor(config);
-                  def.callback(resContainer);
+                  var ctrl = new ctor(config);
+                  self._itemsInstances[self._items.getKey(item)] = ctrl;
+                  def.callback(ctrl.getContainer());
                })
             }
             else {
-               resContainer.append(doT.template(tplConfig.componentType)(tplConfig.config));
-               def.callback(resContainer);
+               //и также можно передать dot шаблон
+               drawItemFromTpl.call(this, doT.template(tplConfig.componentType)(tplConfig.config), resContainer);
             }
          }
          return def;
       },
 
-      _getItemTemplate : function() {
-         return '<div>template</div>'
+      getItemsInstances : function() {
+         return this._itemsInstances;
+      },
+      getItemInstance : function(id) {
+         return this._itemsInstances[id];
       }
    };
 

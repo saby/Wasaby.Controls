@@ -1,12 +1,13 @@
 define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CONTROLS.TextBox',
+   'html!SBIS3.CONTROLS.ComboBox',
    'js!SBIS3.CONTROLS._PickerMixin',
    'js!SBIS3.CONTROLS._CollectionMixin',
    'js!SBIS3.CONTROLS._SelectorMixin',
    'js!SBIS3.CONTROLS._DataBindMixin',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxItemTpl'
-], function(TextBox, _PickerMixin, _CollectionMixin, _SelectorMixin, _DataBindMixin, arrowTpl, itemTpl) {
+], function(TextBox, dotTplFn, _PickerMixin, _CollectionMixin, _SelectorMixin, _DataBindMixin, arrowTpl, itemTpl) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора. Есть настройка которая позволяет также  вручную вводить значения.
@@ -14,6 +15,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @extends SBIS3.CONTROLS.TextBox
     * @control
     * @public
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.ComboBox' style='width: 100px'>    *
+    * </component>
     * @category Inputs
     * @mixes SBIS3.CONTROLS._PickerMixin
     * @mixes SBIS3.CONTROLS._FormWidgetMixin
@@ -23,8 +27,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
    var ComboBox = TextBox.extend([_PickerMixin, _CollectionMixin, _SelectorMixin, _DataBindMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       $protected: {
+         _dotTplFn : dotTplFn,
          _itemTpl : itemTpl,
          _options: {
+
             afterFieldWrapper: arrowTpl,
             /**
              * @cfg {Boolean} Возможен ли ручной ввод текста
@@ -67,11 +73,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._itemTpl = this._options.itemTemplate;
          }
 
-         // запрещен ручной ввод значений
-         if(!this._options.editable){
-            self._drawEditable(false)
-         }
-
          if (this._items.getItemsCount()) {
             /*устанавливаем первое значение TODO по идее переписан метод setSelectedItem для того чтобы не срабатывало событие при первой установке*/
             var item;
@@ -87,6 +88,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
             if (item) {
                ComboBox.superclass.setText.call(this, item[this._options.displayField]);
+               $(".js-controls-ComboBox__fieldNotEditable", this._container.get(0)).text(item[this._options.displayField]);
             }
          }
 
@@ -106,6 +108,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       setText : function(text) {
          ComboBox.superclass.setText.call(this, text);
+         $(".js-controls-ComboBox__fieldNotEditable", this._container.get(0)).text(text);
          this._setKeyByText();
          this.hidePicker();
       },
@@ -114,6 +117,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          if (typeof(key) != 'undefined') {
             var item = this._items.getItem(key);
             ComboBox.superclass.setText.call(this, item[this._options.displayField]);
+            $(".js-controls-ComboBox__fieldNotEditable", this._container.get(0)).text(item[this._options.displayField]);
          }
          if (this._picker) {
             $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
@@ -221,20 +225,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       setEditable : function(editable) {
          this._options.editable = editable;
-         this._drawEditable(editable);
+         this._container.toggleClass('controls-ComboBox__editable-false', editable === false);
       },
 
       isEditable : function() {
          return this._options.editable;
-      },
-
-      _drawEditable : function(editable) {
-         if (editable === false) {
-            this.getContainer().addClass('controls-ComboBox__editable-false').find('.js-controls-TextBox__field').attr('readonly', 'readonly').addClass('js-controls-ComboBox__arrowDown');
-         }
-         else {
-            this.getContainer().removeClass('controls-ComboBox__editable-false').find('.js-controls-TextBox__field').removeAttr('readonly').removeClass('js-controls-ComboBox__arrowDown');
-         }
       },
 
       setValue: function(key){

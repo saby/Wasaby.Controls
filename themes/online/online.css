@@ -366,6 +366,7 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 20px !important;
   font: inherit;
   color: inherit;
+  padding: 1px 0;
 }
 .controls-TextBox__field-uppercase {
   text-transform: uppercase;
@@ -661,8 +662,7 @@ input[type="reset"]::-moz-focus-inner {
   text-decoration: none;
   background-position: -3px -28px;
 }
-.controls-ComboBox__editable-false,
-.controls-ComboBox__editable-false .controls-TextBox__field {
+.controls-ComboBox__editable-false {
   cursor: pointer;
 }
 .controls-ComboBox__itemRow {
@@ -672,10 +672,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ComboBox__itemRow:hover {
   background-color: #E7F0F9;
 }
-.controls-ComboBox__field__editable-false,
-.controls-ComboBox__field__editable-false .controls-TextBox__field {
-  cursor: pointer;
-}
 .controls-ComboBox__inputWrapper {
   margin-right: 18px;
   height: 100%;
@@ -683,6 +679,15 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ComboBox__picker {
   border: 1px solid #CCCCCC;
   margin-top: -1px;
+}
+.controls-ComboBox__fieldNotEditable {
+  display: none;
+}
+.controls-ComboBox__editable-false .controls-ComboBox__fieldNotEditable {
+  display: inline-block;
+}
+.controls-ComboBox__editable-false .controls-ComboBox__field {
+  display: none;
 }
 .controls-FormattedTextBox {
   display: inline-block;

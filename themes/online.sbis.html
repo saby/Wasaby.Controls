@@ -140,7 +140,11 @@
    <br/><br/>
    <div id="TextArea"></div>
    <br/><br/>
-   <div id="ComboBox"></div>
+   <div id="ComboBox" style="width: 200px"></div>
+
+   <br/><br/>
+
+   <div id="ComboBox2" style="width: 200px"></div>
 
    <br/><br/>
 
@@ -404,6 +408,25 @@
             new r({
                element: "ComboBox",
                editable : false,
+               items : [
+                  {
+                     key : 1,
+                     title : 'Первый'
+                  },
+                  {
+                     key : 2,
+                     title : 'Второй'
+                  },
+                  {
+                     key : 3,
+                     title : 'Третий'
+                  }
+               ]
+            });
+
+            new r({
+               element: "ComboBox2",
+               editable : true,
                items : [
                   {
                      key : 1,
