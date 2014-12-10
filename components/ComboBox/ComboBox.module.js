@@ -77,18 +77,15 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             /*устанавливаем первое значение TODO по идее переписан метод setSelectedItem для того чтобы не срабатывало событие при первой установке*/
             var item;
 
-            if (!this._options.selectedItem) {
-               if (!this._options.text) {
-                  item = this._items.getNextItem();
-                  this._options.selectedItem = this._items.getKey(item);
-               }
-            }
-            else {
+            if (this._options.selectedItem) {
                item = this._items.getItem(this._options.selectedItem);
-            }
-            if (item) {
                ComboBox.superclass.setText.call(this, item[this._options.displayField]);
                $(".js-controls-ComboBox__fieldNotEditable", this._container.get(0)).text(item[this._options.displayField]);
+            }
+            else {
+               if (this._options.text) {
+                  this._setKeyByText();
+               }
             }
          }
 
@@ -116,8 +113,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _drawSelectedItem : function(key) {
          if (typeof(key) != 'undefined') {
             var item = this._items.getItem(key);
-            ComboBox.superclass.setText.call(this, item[this._options.displayField]);
-            $(".js-controls-ComboBox__fieldNotEditable", this._container.get(0)).text(item[this._options.displayField]);
+            if(item) {
+               ComboBox.superclass.setText.call(this, item[this._options.displayField]);
+               $(".js-controls-ComboBox__fieldNotEditable", this._container.get(0)).text(item[this._options.displayField]);
+            }
+            else {
+               ComboBox.superclass.setText.call(this, '');
+               $(".js-controls-ComboBox__fieldNotEditable", this._container.get(0)).text('');
+            }
          }
          if (this._picker) {
             $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
