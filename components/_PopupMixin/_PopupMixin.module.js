@@ -608,6 +608,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
             if (this._options.isModal) {
                $ws.single.WindowManager._modalIndexes.push(zIndex);
                $ws.single.WindowManager._visibleIndexes.push(zIndex);
+               ModalOverlay.adjust();
                var self = this;
                ModalOverlay._overlay.bind('mousedown', function(e){
                   if (self._options.closeByExternalClick) {
