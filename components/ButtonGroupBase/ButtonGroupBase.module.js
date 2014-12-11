@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
       },
 
       $constructor: function() {
-
+         this._container.removeClass('ws-area');
       },
 
       _getItemClass : function() {
