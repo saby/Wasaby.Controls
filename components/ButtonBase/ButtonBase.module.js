@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CONTROLS.CompoundControl', 'js!SBIS3.CONTROLS._ClickMixin', 'js!SBIS3.CONTROLS._FormWidgetMixin', 'js!SBIS3.CONTROLS._DataBindMixin'], function(Control, ClickMixin, FormWidgetMixin, _DataBindMixin) {
+define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS._ClickMixin', 'js!SBIS3.CONTROLS._FormWidgetMixin', 'js!SBIS3.CONTROLS._DataBindMixin'], function(Control, ClickMixin, FormWidgetMixin, _DataBindMixin) {
 
    'use strict';
 
