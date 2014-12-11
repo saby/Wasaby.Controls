@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
       },
 
       $constructor: function() {
-
+         this._container.removeClass('ws-area');
       },
 
       init : function() {
