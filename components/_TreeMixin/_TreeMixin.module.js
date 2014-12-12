@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
       openNode: function(key) {
          var itemCont = $(".controls-ListView__item[data-id='"+key+"']", this.getContainer().get(0));
          $(".js-controls-TreeView__expand", itemCont).first().addClass('controls-TreeView__expand__open');
-         $(".controls-TreeView__childContainer", itemCont).first().show();
+         $(".controls-TreeView__childContainer", itemCont).first().css('display', 'block');
       },
       /**
        * Закрыть определенный узел
@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
       closeNode: function(key) {
          var itemCont = $(".controls-ListView__item[data-id='"+key+"']", this.getContainer().get(0));
          $(".js-controls-TreeView__expand", itemCont).removeClass('controls-TreeView__expand__open');
-         $(".controls-TreeView__childContainer", itemCont).hide();
+         $(".controls-TreeView__childContainer", itemCont).css('display', 'none');
       },
 
       /**
@@ -130,6 +130,9 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
             curList = $(".controls-TreeView__childContainer", curItem.get(0)).first();
             if (!curList.length) {
                curList = $("<div></div>").appendTo(curItem).addClass('controls-TreeView__childContainer');
+               if (this._options.openType == 'all') {
+                  curList.css('display', 'block');
+               }
             }
             $('.controls-TreeView__item', curItem).first().addClass('controls-TreeView__hasChild');
          }
@@ -141,16 +144,12 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
 
       _drawOpenedPath : function() {
          var self = this;
-         if (this._options.openType == 'all') {
-            this._items.iterate(function(item, key){
-               self.openNode(key);
-            });
+
+
+         for (var i = 0; i < this._openedPath.length; i++) {
+            this.openNode(this._openedPath[i]);
          }
-         else {
-            for (var i = 0; i < this._openedPath.length; i++) {
-               this.openNode(this._openedPath[i]);
-            }
-         }
+
       }
    };
 
