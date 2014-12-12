@@ -1,17 +1,17 @@
 .controls-DatePicker {
-   display: inline-block;
-   vertical-align: top;
    border: none;
-   height: 24px;
+   box-sizing: border-box;
+   background-color: transparent;
 }
 
-.controls-DatePicker__field {
+.controls-DatePicker__fieldWrapper {
    margin-right: 16px;
+   background-color: white;
    padding: 0 7px;
    .mixin_gray_border;
    border-radius: 2px;
 }
-.controls-DatePicker .controls-FormattedTextBox__field {
+.controls-DatePicker .controls-FormattedTextBox__fieldWrapper {
    margin: 0;
 }
 .controls-DatePicker__calendarIconWrapper {
@@ -40,4 +40,7 @@
 }
 .controls-DatePicker__calendar {
    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+.controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
+   margin-right: 23px;
 }
