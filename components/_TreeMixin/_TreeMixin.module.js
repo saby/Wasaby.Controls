@@ -130,9 +130,6 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
             curList = $(".controls-TreeView__childContainer", curItem.get(0)).first();
             if (!curList.length) {
                curList = $("<div></div>").appendTo(curItem).addClass('controls-TreeView__childContainer');
-               if (this._options.openType == 'all') {
-                  curList.css('display', 'block');
-               }
             }
             $('.controls-TreeView__item', curItem).first().addClass('controls-TreeView__hasChild');
          }
@@ -144,12 +141,16 @@ define('js!SBIS3.CONTROLS._TreeMixin', [], function() {
 
       _drawOpenedPath : function() {
          var self = this;
-
-
-         for (var i = 0; i < this._openedPath.length; i++) {
-            this.openNode(this._openedPath[i]);
+         if (this._options.openType == 'all') {
+            this._items.iterate(function(item, key){
+               self.openNode(key);
+            });
          }
-
+         else {
+            for (var i = 0; i < this._openedPath.length; i++) {
+               this.openNode(this._openedPath[i]);
+            }
+         }
       }
    };
 
