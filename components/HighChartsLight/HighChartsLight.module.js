@@ -60,21 +60,38 @@ function(BaseControl, dotTpl){
                    */
                   type : 'line',
                   /**
-                   * @cfg {Number} Верхний отступ
+                   * @cfg {Number} Верхний внутренний отступ
                    */
                   marginTop : null,
                   /**
-                   * @cfg {Number} Правый отступ
+                   * @cfg {Number} Правый внутренний отступ
                    */
                   marginRight : null,
                   /**
-                   * @cfg {Number} Нижний отступ
+                   * @cfg {Number} Нижний внутренний отступ
                    */
                   marginBottom : null,
                   /**
-                   * @cfg {Number} Левый отступ
+                   * @cfg {Number} Левый внутренний отступ
                    */
-                  marginLeft : null
+                  marginLeft : null,
+                  /**
+                   * @cfg {Number} Верхний внешний отступ
+                   */
+                  spacingTop : null,
+                  /**
+                   * @cfg {Number} Правый внешний отступ
+                   */
+                  spacingRight : null,
+                  /**
+                   * @cfg {Number} Нижний внешний отступ
+                   */
+                  spacingBottom : null,
+                  /**
+                   * @cfg {Number} Левый внешний отступ
+                   */
+                  spacingLeft : null
+
                },
                /**
                 * @cfg {string[]} Набор цветов
