@@ -6,7 +6,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CONTROLS._SelectorMixin',
    'js!SBIS3.CONTROLS._DataBindMixin',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown',
-   'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxItemTpl'
+   'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxItemTpl',
+   'css!SBIS3.CONTROLS.ComboBox'
+
 ], function(TextBox, dotTplFn, _PickerMixin, _CollectionMixin, _SelectorMixin, _DataBindMixin, arrowTpl, itemTpl) {
    'use strict';
    /**

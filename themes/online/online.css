@@ -113,10 +113,10 @@ input[type="reset"]::-moz-focus-inner {
   left: -2px;
   top: 1px;
 }
-.js-controls-Button__text {
+.controls-Button__text {
   white-space: nowrap;
 }
-.controls-Button__icon + .js-controls-Button__text {
+.controls-Button__icon + .controls-Button__text {
   margin-left: 20px;
 }
 .controls-Button.controls-Checked__checked {
@@ -679,15 +679,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ComboBox__picker {
   border: 1px solid #CCCCCC;
   margin-top: -1px;
-}
-.controls-ComboBox__fieldNotEditable {
-  display: none;
-}
-.controls-ComboBox__editable-false .controls-ComboBox__fieldNotEditable {
-  display: inline-block;
-}
-.controls-ComboBox__editable-false .controls-ComboBox__field {
-  display: none;
 }
 .controls-FormattedTextBox {
   display: inline-block;
