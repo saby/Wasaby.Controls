@@ -154,29 +154,13 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR'], fu
          }
 
          this.callMethod(this._name + '.' + method,
-            // как то заполнить надо
+            //TODO: как то заполнить надо
             {'ДопПоля': [], 'Фильтр': {'d': [], 's': []}, 'Сортировка': null, 'Навигация': null}
          ).addCallback(function (result) {
 
                console.log(result);
 
                var model = new $ws.proto.RecordSet({dataSource: self, readerParams: { adapterType: 'TransportAdapterStatic', adapterParams: { data: result } } });
-
-               var recursionFunction = function (rec) {
-                  if (rec instanceof $ws.proto.Record) {
-                     var columns = rec.getColumns();
-                     for (var i = 0, l = columns.length; i < l; i++) {
-                        recursionFunction(rec.get(columns[i]));
-                     }
-                  }
-                  else if (rec instanceof $ws.proto.RecordSet) {
-                     for (var j = 0, c = rec.getRecordCount(); j < c; j++) {
-                        recursionFunction(rec.at(0));
-                     }
-                  }
-               };
-
-               recursionFunction(model);
 
                def.callback(model);
             });
@@ -187,7 +171,33 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR'], fu
       },
       destroy: function () {
       },
-      update: function () {
+      updateRecord: function (record, options) {
+         console.log(record);
+         console.log(options);
+         console.log('DS update record. измененные колонки');
+         console.log(record.getChangedColumns());
+         console.log(record.getKey());
+         console.log('isChanged '+record.isChanged());
+
+         //_makeArgsForUpdate
+         var retval = {
+            "Запись": $ws.single.SerializatorSBIS.serialize(record, options)
+         };
+         // TODO Выпилить в 3.7 (?) поддержку передачи boolean
+         if(options && (typeof options == 'boolean' || options.consistencyCheck)) {
+            retval["Проверка"] = true;
+         }
+
+         var self = this,
+            def = new $ws.proto.Deferred();
+
+         this.callMethod(this._name + '.Записать',
+               retval
+         ).addCallback(function (result) {
+               // вернется номер записи
+               console.log(result);
+            });
+         return def;
       }
    });
 });
