@@ -101,6 +101,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   self.togglePicker();
                }
             }
+         }).mousedown(function(e){
+            e.stopPropagation();
          });
 
       },

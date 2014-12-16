@@ -25,21 +25,22 @@ define('js!SBIS3.CONTROLS.AdapterJSON', ['js!SBIS3.CONTROLS.AdapterBase'], funct
             self = this,
             parItem = null,
             lvl = -1;
-         function recursiveWalk(idParent) {
+         function recursiveWalk(numParent) {
+            parItem = data[numParent] ? data[numParent] : null;
             lvl++;
             self._simpleIterate(data, function(item, i){
-               var key = self.getValue(item, keyField);
                //корневой элемент
-               if (self.getValue(item, hierField) == idParent) {
+               var parId = parItem ? self.getValue(parItem, keyField) : null;
+               if (self.getValue(item, hierField) == parId) {
                   hdlFunction(data[i], i, parItem, lvl);
                   parItem = data[i];
-                  recursiveWalk(key);
+                  recursiveWalk(i);
                }
             });
             parItem = null;
             lvl--;
          }
-         recursiveWalk(null);
+         recursiveWalk();
       },
 
       getValue : function(item, field) {

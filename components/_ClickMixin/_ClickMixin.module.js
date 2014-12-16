@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS._ClickMixin', [], function() {
             if (e.which == 1 && self.isEnabled()) {
                self._container.addClass('controls-Click__active');
             }
-            return false;
+            //return false;
          });
       },
       _clickHandler : function() {
