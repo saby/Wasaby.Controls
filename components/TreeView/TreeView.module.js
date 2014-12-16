@@ -22,15 +22,16 @@ define('js!SBIS3.CONTROLS.TreeView', ['js!SBIS3.CONTROLS.ListView', 'js!SBIS3.CO
          this._addItemClasses(itemWrapper, this._items.getKey(item));
 
          var resContainer = itemWrapper.hasClass('js-controls-ListView__itemContent') ? itemWrapper : $('.js-controls-ListView__itemContent', itemWrapper);
-         this._createItemInstance(item, resContainer);
 
-         if (!($('.js-controls-TreeView__expand', resContainer).length)) {
-            resContainer.before('<div class="controls-TreeView__expand js-controls-TreeView__expand"></div>');
-         }
+         return this._createItemInstance(item, resContainer).addCallback(function(container){
+            if (!($('.js-controls-TreeView__expand', resContainer).length)) {
+               resContainer.before('<div class="controls-TreeView__expand js-controls-TreeView__expand"></div>');
+            }
 
-         $(".js-controls-TreeView__expand", itemWrapper).click(function(){
-            var id = $(this).closest('.controls-ListView__item').attr('data-id');
-            self.toggleNode(id)
+            $(".js-controls-TreeView__expand", itemWrapper).click(function(){
+               var id = $(this).closest('.controls-ListView__item').attr('data-id');
+               self.toggleNode(id)
+            });
          });
 
       },
