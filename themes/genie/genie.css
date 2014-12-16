@@ -555,13 +555,26 @@
   display: block;
   height: 24px;
   box-sizing: border-box;
-  padding: 0 8px;
+  padding: 0 16px;
   line-height: 24px;
   cursor: pointer;
   background-color: #ffffff;
+  font-size: 11px;
 }
 .controls-MenuItem:hover {
-  background-color: #e7f0f9;
+  background-color: #00c795;
+  color: #ffffff;
+}
+.controls-MenuItem__content {
+  position: relative;
+}
+.controls-MenuItem__icon {
+  position: absolute;
+  left: -2px;
+  top: -2px;
+}
+.controls-MenuItem__text {
+  margin-left: 22px;
 }
 .controls-Menu {
   border: 1px solid #919197;

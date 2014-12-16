@@ -40,10 +40,17 @@ define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3
 
       _getAddOptions : function(item) {
          return {
-            caption : item.title
+            caption : item.title,
+            icon : item.icon,
+            handlers : {
+               onActivated : item.handler || function(){}
+            }
          }
-      }
+      },
 
+      _itemActivatedHandler : function() {
+         this.hide();
+      }
    });
 
    return Menu;

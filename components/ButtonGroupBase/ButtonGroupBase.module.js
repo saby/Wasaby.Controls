@@ -44,9 +44,18 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
             config = this._getAddOptions(item);
 
          config.handlers = config.handlers || {};
-         config.handlers.onActivated = function() {
-            self._itemActivatedHandler(this);
-         };
+
+         if (config.handlers.onActivated) {
+            config.handlers.onActivated = [config.handlers.onActivated];
+            Array.insert(config.handlers.onActivated, 0, function() {
+               self._itemActivatedHandler(this);
+            })
+         }
+         else {
+            config.handlers.onActivated = function () {
+               self._itemActivatedHandler(this);
+            };
+         }
 
          return function() {
             return {
