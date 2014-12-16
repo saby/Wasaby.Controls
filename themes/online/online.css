@@ -684,6 +684,7 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   vertical-align: top;
   background-color: transparent;
+  line-height: normal;
 }
 .controls-FormattedTextBox__fieldWrapper {
   height: 100%;
