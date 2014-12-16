@@ -134,8 +134,11 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          });
       },
 
-      recalcPosition: function () {
+      recalcPosition: function (recalcFlag) {
          if (this._isVisible) {
+            if (recalcFlag) {
+               this._initOrigins = true;
+            }
             if (this._options.target) {
                this._initSizes();
                var offset = {
@@ -169,6 +172,8 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
             } else {
                this._container.offset(this._bodyPositioning());
             }
+
+            this._initOrigins = false;
          }
 
       },
