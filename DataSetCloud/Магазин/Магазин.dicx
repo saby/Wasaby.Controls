@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="WINDOWS-1251" ?>
+<dictionary dicx_version="1.21">
+
+  <table last_changed="Мануйлов А.С." name="Производитель" personal_data="0" responsible="Мануйлов А.С." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>4</max_size>
+      </format>
+    </column>
+    <column name="Название">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <column name="Сайт">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <trigger_list/>
+  </table>
+
+</dictionary>

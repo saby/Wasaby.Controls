@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<roles_repository version="1.2">
+
+  <role identifier_role="Пользователь системы" is_service="1" last_changed="Щукин А.В." name="Пользователь системы" responsible="Щукин А.В.">
+    <privilegy access_mode="3" action="Пользовательские настройки"/>
+  </role>
+
+</roles_repository>

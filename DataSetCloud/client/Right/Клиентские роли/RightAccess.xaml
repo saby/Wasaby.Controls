@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<Window Height="Auto" Icon="muzzle.dll;#-177" MainGridIsNew="False" MaxWidth="Infinity" MinHeight="0" MinWidth="0" Name="Что разрешено" ResizeMode="CanResize" Responsible="Щукин" Title="" Topmost="False" Visibility="Visible" Width="849" WindowState="Normal" WindowStyle="SingleBorderWindow" highlightFirstError="False" independentContext="False" isEnabled="False" last_changed="Курдамосов С.А." x:Class="SbisDotNet.Window" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:sbis="clr-namespace:SbisDotNet" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Window.Tag>
+    <Properties ConvertMode="Application" Height="516" HtmlCreate="False" JamlVersion="1.1" SkinName="СкинСотрудникиWI" TotalChildrenCount="19" WindowHeader="False">
+      <WebPage HTMLTemplate="" OutFileName="" Template="">
+        <CSSFiles>
+          <CSS File="\Right\Role\RoleAccess\RoleAccess.css"/>
+        </CSSFiles>
+      </WebPage>
+    </Properties>
+  </Window.Tag>
+  <Grid CssClass="" Height="Auto" HorizontalAlignment="Stretch" MinHeight="0" MinWidth="0" Name="Зоны" ResizeMode="CanResize" TabIndex="1" VerticalAlignment="Stretch" Visibility="Visible" Width="Auto" allowChangeEnable="True" convertToNew="False" drawLines="No">
+    <Grid.Tag>
+      <Properties Height="516" Width="849"/>
+      <GridCell Col="1" DefaultBkColor="True" Row="1" background-image="" background-position-x="Left" background-position-y="Top" background-repeat-x="False" background-repeat-y="False"/>
+      <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+    </Grid.Tag>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="1.000000*" MinHeight="0">
+        <RowDefinition.Tag Height="516"/>
+      </RowDefinition>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition MinWidth="0" Width="1.000000*">
+        <ColumnDefinition.Tag Width="849"/>
+      </ColumnDefinition>
+    </Grid.ColumnDefinitions>
+    <TextBlock CssClass="titleSize" Height="31" HorizontalAlignment="Left" Margin="16,8,0,0" Name="Текст 1" Text="Что разрешено" TextAlignment="Left" TextVerticalAlignment="Top" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="244"/>
+    <DataGrid CssClass="browserZones ws-browser-no-pointer" Height="Auto" IsReadOnly="True" ItemsSource="РолиПользователя.ЧтоМожно" ItemsSourceApplication="" ItemsSourceService="" Margin="16,28,16,0" MinHeight="50" Name="zones" TabIndex="1" VerticalAlignment="Top" allowChangeEnable="False">
+      <DataGrid.Columns>
+        <DataGridTextColumn Binding="Название" CellStyle="js!SBIS3.ROLE.RoleFunction/RenderZoneCaptionLite" IsReadOnly="True" Width="330" filterName="Название"/>
+        <DataGridTextColumn Binding="Доступ" CellStyle="js!SBIS3.ROLE.RoleFunction/RenderZonesAccessLite" Header="Уровень доступа" IsReadOnly="True" Width="200" filterName="Доступ" fixedSize="True"/>
+        <DataGridTextColumn CellStyle="js!SBIS3.ROLE.RoleFunction/RenderZonesScopeLite" Header="Ограничения" IsReadOnly="True" Width="200" fixedSize="True"/>
+      </DataGrid.Columns>
+      <DataGrid.ControlEvents>
+        <ControlEvent Name="onReady">
+          <Event Value="js!SBIS3.ROLE.RoleFunction/onFirstLoadRoleAccess"/>
+          <Event Value="js!SBIS3.ROLE.RoleFunction/onAccessDelegateTabe"/>
+        </ControlEvent>
+      </DataGrid.ControlEvents>
+      <DataGrid.Tag>
+        <Properties Height="476" Type="TreeBrowserXAML" Width="817" partiallyLoad="False" reload="False" showPathSelector="False" showRecordsCount="False">
+          <RowOptions/>
+          <Color/>
+          <SuperBrowser Type="TREE" allowAdd="False" allowDelete="False" firstRequest="False" multiSelect="False" newCutLongRows="False" setCursorOnLoad="False" showRecSelection="False" useHoverRowAsActive="True" useSorting="False">
+            <Content>
+              <Run Text="Нет данных"/>
+            </Content>
+          </SuperBrowser>
+          <MarkedRowOptions/>
+          <UserRowOptions/>
+          <TreeBrowser altTreeNameFld="Название" hierColumn="Раздел"/>
+          <Browser>
+            <MethodParameters>
+              <Parameter Flags="1" Name="Пользователь" Value="Пользователь"/>
+              <Parameter Flags="1" Name="Роли" Value="Роли"/>
+            </MethodParameters>
+          </Browser>
+          <DataView>
+            <Options/>
+            <AdditionalFields>
+              <RecFormat>
+                <Fields/>
+              </RecFormat>
+            </AdditionalFields>
+          </DataView>
+          <Reports/>
+          <ReportsForList/>
+          <Ladder/>
+        </Properties>
+        <AccessArray/>
+      </DataGrid.Tag>
+    </DataGrid>
+  </Grid>
+</Window>

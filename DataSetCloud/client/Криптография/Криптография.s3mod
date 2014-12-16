@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui_module id="8d57d7e3-2d88-44c6-9f95-8d2a72e89cbe" name="Криптография" package="Платформа" version="1.00">
+
+  <description/>
+
+  <depends/>
+
+  <load_after/>
+
+  <parameters/>
+
+  <resources/>
+
+</ui_module>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="WINDOWS-1251" ?>
+<repository orx_version="1.71">
+
+  <object insert_on_create="0" last_changed="Мануйлов А.С." name="Производитель" read_only="0" responsible="Мануйлов А.С.">
+    <source name="Производитель"/>
+    <generate_method name="Производитель.Записать"/>
+    <generate_method name="Производитель.История"/>
+    <generate_method name="Производитель.Копировать"/>
+    <generate_method name="Производитель.Объединить"/>
+    <generate_method name="Производитель.Прочитать"/>
+    <generate_method name="Производитель.Создать"/>
+    <declarative allfields="true" key="@Производитель" last_changed="Мануйлов А.С." name="Производитель.Список" responsible="Мануйлов А.С." type="0">
+      <source name="Производитель"/>
+    </declarative>
+    <generate_method name="Производитель.Удалить"/>
+  </object>
+
+</repository>

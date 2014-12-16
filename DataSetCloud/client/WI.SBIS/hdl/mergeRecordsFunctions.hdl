@@ -1,0 +1,67 @@
+hdl = {
+/*
+   setMainRow: function(){
+      var recordSet = $ws.single.ControlStorage.getByName('ws-browser-merge').getRecordSet();
+      if(recordSet.getPageNumber() === 0){
+         this.getContainer().find('tbody tr:first').css({'font-weight': 'bold', 'background-color': '#C0C0C0'});
+      }
+   },
+*/
+   folderRowRender: function(record, tr){
+      var parentRecordSet = record.getRecordSet(),
+          hierColumn = parentRecordSet.getHierarchyField(),
+          hierName = parentRecordSet.getQuery()["ЗаголовокИерархии"],
+          folderImage,
+          i = 0;
+      if(hierColumn !== "" && record.get(hierColumn + "@")){
+         folderImage = $('<span class="ws-browser-expander-container"><span class="ws-browser-icon close" /></span>');
+         tr.find('td').each(function(){
+            if(i !== 0)
+               $(this).remove();
+            i++;
+         });
+         tr.find('td:first')
+               .attr('colspan', i)
+               .addClass('ws-browser-bold')
+               .find('.ws-browser-cell-container')
+               .html(folderImage)
+               .append(record.get(hierName));
+      }
+      return tr;
+   },
+   merge: function(){
+      var dMergeResult = new $ws.proto.ParallelDeferred(),
+          self = this,
+          errors = [];
+      $ws.core.attachInstance('SBIS3.CORE.LoadingIndicator',{
+         showInWindow : true,
+         message : "Объединение записей...",
+         name: 'ws-browser-merge-indicator'
+      }).addCallback(function(instance){
+         var recordSet = $ws.single.ControlStorage.getByName('ws-browser-merge').getRecordSet(),
+             mergeRecordSet = $ws.single.ControlStorage.getByName('ws-browser-merge-mainRow').getRecordSet(),
+             mergeRecord, mergeKey, record, recordKeys = [];
+         mergeRecordSet.rewind();
+         mergeRecord = mergeRecordSet.next();
+         mergeKey = mergeRecord.getKey();
+         mergeRecordSet = mergeRecord.getRecordSet();
+         recordSet.rewind();
+         while ((record = recordSet.next()) !== false){
+            recordKeys.push(record.getKey());
+         }
+         dMergeResult.push( mergeRecordSet.mergeRecords(mergeKey, recordKeys).addErrback(function(error){
+            errors.push(error.message);
+         }) );
+         dMergeResult.done();
+         dMergeResult.getResult().addBoth(function(){
+            instance.hide();
+            instance.destroy();
+            self.setActive(true);
+            $ws.single.CommandDispatcher.sendCommand(self, 'close');
+            if(errors.length !== 0)
+               $ws.core.alert("В процессе объединения записей возникли ошибки: \n " + errors.join(" ;\n "));
+         });
+      });
+   }
+};
+//@ sourceURL="mergeRecordsFunctions.hdl"

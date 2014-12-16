@@ -1,0 +1,31 @@
+.cpHelpLink {
+   height: 59px;
+   width: 92px;
+   position: absolute;
+   margin-left: 45px;
+   margin-top: 5px;
+}
+
+.cpPtic {
+   color: #808285;
+   font-family: "Times New Roman";
+   font-size: 12px;
+   font-style: italic;
+   height: 100px;
+   padding-left: 15px;
+   right: 29px;
+   text-indent: -15px;
+   top: 0px;
+}
+
+.cpPluginPic {
+   background: url("../images/scp.jpg") no-repeat;
+   height: 48px;
+   width: 48px;
+}
+
+.cpExtText{
+   font-size: 12px;
+   color: #C0C0C0;
+
+}

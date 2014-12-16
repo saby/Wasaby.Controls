@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application global_parameters="0" id="56cb203d-883c-40d2-898b-ce4c801ff1d5" name="ws-res-xaml" responsible="Тюрин В.С." user_parameters="0">
+
+  <description/>
+
+  <items>
+    <ui_module id="552bce95-a330-4a0a-82b7-110647eb6266" name="ws-res-xaml" url="./ws-lib-xaml.s3mod"/>
+  </items>
+
+  <directoryes/>
+
+  <templates>
+    <template id="c70d6235-6c93-4a67-b992-976037b6aafe" name="ws-res-xaml" resources_root="/ws/res/xml" ws_root="/ws/">
+      <properties>
+        <property key="force_delete" value="0"/>
+        <property key="own_version" value="0"/>
+        <property key="pack_resources" value="0"/>
+        <property key="versionize_resources" value="0"/>
+      </properties>
+      <resources/>
+    </template>
+  </templates>
+
+</application>

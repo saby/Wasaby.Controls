@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui_module id="6dfb7cdb-e902-4288-b0ad-8dc1e66b7be7" name="Antibot" package="Платформа" responsible="Щукин А.В." version="1.00">
+
+  <description/>
+
+  <depends/>
+
+  <load_after/>
+
+  <parameters/>
+
+  <resources/>
+
+</ui_module>

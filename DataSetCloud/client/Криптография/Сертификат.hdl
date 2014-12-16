@@ -1,0 +1,109 @@
+hdl = 
+{
+   // Отправляет бланк сертификата на печать
+   print: function( record, deferred ){
+      // Обработка ошибки
+      var onError = function( error ) {
+         $ws.core.setCursor( true );
+         $ws.core.alert( error.message );
+         
+         if( deferred )
+            deferred.errback();
+      };
+      // Метод printRecord отпавляет на печать Record или RecordSet
+      var printRecord = function( record, transform ) {
+         var reportPrinter = new $ws.proto.ReportPrinter({ columns: null, titleColumn: null});
+         reportPrinter.prepareReport( record, transform ).addCallback(function(reportText){
+            if( deferred ) {
+               deferred.callback( reportText );
+            }
+            else {
+               $ws.core.attachInstance( 'Control/Area:Dialog', {
+                  template: 'printDialog',
+                  resizeable: true,
+                  handlers: { 'onAfterLoad': function() {
+                     $ws.single.ControlStorage.get('ws-dataview-print-report').subscribe('onContentSet', function(){
+                        $ws.core.setCursor(true);
+                     });
+                     $ws.single.ControlStorage.get('ws-dataview-print-report').setHTML(reportText);
+                  }}
+               });
+            }
+         }).addErrback( onError );
+      };
+      // ----------------------------------------------------------
+      var transform = $ws._const.resourceRoot + "/Kriptografiya/Sertifikat.xsl",
+         certificate = new $ws.proto.BLObject( 'Сертификат' ),
+         codeRecord = new $ws.proto.Record();
+         
+      codeRecord.addColumn( "Тип", $ws.proto.Record.FIELD_TYPE_STRING );
+      codeRecord.addColumn( "Строка", $ws.proto.Record.FIELD_TYPE_STRING );
+      codeRecord.set( "Тип", "QR" );
+      codeRecord.set( "Строка", record.get( 'Отпечаток' ) );
+      
+      var prepareRecord = function( record ) {
+         var clone = record.cloneRecord( false ),
+            obj = new $ws.proto.BLObject("ШтрихКод"),
+            def = obj.call("Нарисовать", {
+               "ПараметрыШтрихкода": codeRecord
+               },
+               $ws.proto.BLObject.RETURN_TYPE_ASIS
+            ).addCallback(function(image) {
+               clone.addColumn( 'Image', $ws.proto.Record.FIELD_TYPE_STRING );
+               clone.set( 'Image', "data:image/png;base64," + image["Данные"] );
+            });
+         
+         // удаляем данную запись тк она содержит дублирующие поля, в результате мы получали двойной ОГРН
+         // не стали перенастраивать Сертификат.xsl тк для преобразования нет разницы между записью и выборкой.
+         // в выборках у нас хранятся улучшенные ключи
+         clone.removeColumn("ЗаписьОрганизации");
+         
+         //Отображать время нам необходимо по UTC
+         var convertDateToUTC = function( date ){
+            return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+         };
+         clone.set( "ДействителенПо", convertDateToUTC( clone.get( "ДействителенПо" ) ) );
+         clone.set( "ДействителенС", convertDateToUTC( clone.get( "ДействителенС" ) ) );
+         
+         return [clone, def];
+      };
+      
+      var prepareRecordResult = prepareRecord( record );
+      
+      prepareRecordResult[1].addCallback(function() {
+         printRecord( prepareRecordResult[0], transform );
+      });
+   },
+   
+   // Инициализация окна просмотра сертификата (окно: 'Сертификат')
+   onInitWindow: function() {
+      var self = this.getChildControlByName( 'Элемент для отображения данных сертификата' );
+      var record = this.getLinkedContext().getRecord();
+      
+      self.setHTML( '' );
+      if( record.hasColumn( 'ТекстОшибки' ) && record.get( 'ТекстОшибки' ) ) {
+         $ws.core.alert( record.get( 'ТекстОшибки' ) );
+         self.sendCommand( 'ok' );
+      }
+      else {
+         var deferred = new $ws.proto.Deferred();
+         
+         deferred.addCallback( function( text ) {
+            self.getTopParent().getLinkedContext().setValue("html", text);
+            self.setHTML( text );
+         });
+         
+         hdl.print( record, deferred );
+      }
+      
+      $ws.single.CommandDispatcher.declareCommand( self, 'print', self.print );
+   },
+   
+   saveToPDF: function() {
+      $ws.helpers.saveToFile( "PDF", "Сохранить", {
+            "html": this.getLinkedContext().getValue("html"),
+            "Название": "Certificate_" + this.getLinkedContext().getValue("Отпечаток"),
+            "fileDownloadToken": 1
+         });
+   }
+}

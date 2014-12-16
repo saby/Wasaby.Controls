@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<Window Height="Auto" Icon="muzzle.dll;#-177" MainGridIsNew="False" MaxWidth="Infinity" MinHeight="0" MinWidth="0" Name="" ResizeMode="CanResize" Responsible="Адилов А.А." Title="" Topmost="False" Visibility="Visible" Width="Auto" WindowState="Normal" WindowStyle="SingleBorderWindow" highlightFirstError="False" independentContext="False" isEnabled="False" last_changed="Адилов А.А." x:Class="SbisDotNet.Window" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:sbis="clr-namespace:SbisDotNet" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Window.Tag>
+    <Properties ConvertMode="Application" Height="349" HtmlCreate="False" JamlVersion="1.1" SkinName="СкинСотрудникиWI" TotalChildrenCount="35" Width="332" WindowHeader="False">
+      <WebPage HTMLTemplate="" OutFileName="" Template=""/>
+    </Properties>
+  </Window.Tag>
+  <Grid CssClass="ws-FilterButton__historyGrid" Height="Auto" HorizontalAlignment="Stretch" MinHeight="0" MinWidth="0" Name="" ResizeMode="CanResize" TabIndex="1" VerticalAlignment="Stretch" Visibility="Visible" Width="Auto" convertToNew="False" drawLines="No">
+    <Grid.Tag>
+      <Properties Height="349" Width="332"/>
+      <GridCell Col="1" DefaultBkColor="True" Row="1" background-image="" background-position-x="Left" background-position-y="Top" background-repeat-x="False" background-repeat-y="False"/>
+      <GridCell Col="1" DefaultBkColor="True" Row="2" background-image="" background-position-x="Left" background-position-y="Top" background-repeat-x="False" background-repeat-y="False"/>
+      <GridCell Col="1" DefaultBkColor="True" Row="3" background-image="" background-position-x="Left" background-position-y="Top" background-repeat-x="False" background-repeat-y="False"/>
+      <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+    </Grid.Tag>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="16.000000" MinHeight="0"/>
+      <RowDefinition Height="Auto" MinHeight="0">
+        <RowDefinition.Tag Height="317"/>
+      </RowDefinition>
+      <RowDefinition Height="Auto" MinHeight="0">
+        <RowDefinition.Tag Height="16"/>
+      </RowDefinition>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition MinWidth="0" Width="1.000000*">
+        <ColumnDefinition.Tag Width="332"/>
+      </ColumnDefinition>
+    </Grid.ColumnDefinitions>
+    <Rectangle CssClass="" Fill="#e8e3df" Height="1" HorizontalAlignment="Stretch" Margin="116,8,0,0" Name="historyLine" VerticalAlignment="Top" Visibility="Visible">
+      <Rectangle.Tag>
+        <Properties DefaultBrush="False" NoFrame="Yes" TransparentBrush="False" Width="216"/>
+      </Rectangle.Tag>
+    </Rectangle>
+    <ListViewNew CssClass="ws-FilterButton__historyContainer" Grid.Row="1" Height="Auto" HorizontalAlignment="Stretch" IsReadOnly="False" MinHeight="0" MinWidth="0" Name="requestsView" TabIndex="2" VerticalAlignment="Top" Visibility="Visible" Width="Auto">
+      <ListViewNew.Tag>
+        <Properties BranchDlg="" ExternalDataSource="requests" FilterDlg="" Height="317" Hierarchical="False" LeafDlg="" RenderFunc="requestsHistory/rowRender" ShowHistory="False" UseExternalDataSource="True" Width="332" altTreeNameFld="" editMode="newDialog" enabled="True" firstRequest="True" hierColumn="" mode="oneClickMode" pageItemCount="20" pagesLeftRight="3" pagesShowType="Disable" partiallyLoad="True" reload="True" showItemsCount="False" showTimings="False" showToolbar="False" useCopyRecords="False" useMergeRecords="False" useSelection="True" viewColumnName="">
+          <MethodParameters FormatMethod=""/>
+          <Reports/>
+          <ReportsForList/>
+          <Content>
+            <Run Text="Нет данных"/>
+          </Content>
+        </Properties>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+      </ListViewNew.Tag>
+    </ListViewNew>
+    <StaticData Grid.Row="1" Height="24" HorizontalAlignment="Left" Margin="308,8,0,0" Name="requests" VerticalAlignment="Top" Width="24">
+      <StaticData.Tag>
+        <Properties Content="&lt;?xml version=&quot;1.0&quot; encoding=&quot;WINDOWS-1251&quot;?&gt;&#xa;&lt;package type=&quot;0&quot; synchronization=&quot;0&quot; name=&quot;historyRequests&quot; responsible=&quot;Адилов А.А.&quot; last_changed=&quot;Адилов А.А.&quot; id=&quot;e37e1809-7885-4692-af88-b8326282c2b8&quot;&gt;&#xd;&#xa;    &lt;description&gt;&lt;/description&gt;&#xa;    &lt;metadata&gt;&#xd;&#xa;        &lt;item name=&quot;hierarchy_column&quot; type=&quot;1&quot; value=&quot;&quot;/&gt;&#xd;&#xa;        &lt;item name=&quot;hierarchy_title_column&quot; type=&quot;1&quot; value=&quot;&quot;/&gt;&#xd;&#xa;    &lt;/metadata&gt;&#xd;&#xa;    &lt;format&gt;&#xd;&#xa;        &lt;column name=&quot;key&quot; type=&quot;11&quot; table=&quot;&quot; table_column=&quot;&quot;&gt;&#xd;&#xa;        &lt;/column&gt;&#xd;&#xa;        &lt;column name=&quot;request&quot; type=&quot;11&quot; table=&quot;&quot; table_column=&quot;&quot;&gt;&#xd;&#xa;        &lt;/column&gt;&#xd;&#xa;        &lt;column name=&quot;isRemembered&quot; type=&quot;1&quot; table=&quot;&quot; table_column=&quot;&quot;&gt;&#xd;&#xa;        &lt;/column&gt;&#xd;&#xa;    &lt;/format&gt;&#xd;&#xa;    &lt;key_columns&gt;&#xd;&#xa;    &lt;/key_columns&gt;&#xd;&#xa;    &lt;unsynced_columns&gt;&#xd;&#xa;    &lt;/unsynced_columns&gt;&#xd;&#xa;    &lt;data&gt;&#xd;&#xa;    &lt;/data&gt;&#xd;&#xa;&lt;/package&gt;&#xd;&#xa;" altTreeNameFld="" hierColumn=""/>
+      </StaticData.Tag>
+    </StaticData>
+    <TextBlock CssClass="" FontFamily="Tahoma" FontSize="8 pt" FontStyle="Normal" FontWeight="Normal" Foreground="#999999" Height="16" HorizontalAlignment="Left" Margin="16,0,0,0" Name="historyText" Text="Ранее отбирались" TextAlignment="Left" TextVerticalAlignment="Center" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="100"/>
+    <Button Content="" CssClass="ws-FilterButton__minimizeIcon" DisableProperties="False" Grid.Row="2" Height="16" HorizontalAlignment="Right" IsDefault="False" IsEnabled="True" Name="minimizeIcon" TabIndex="1" TextAlignment="Center" ToolTip="" VerticalAlignment="Top" Visibility="Hidden" Width="16" allowChangeEnable="True">
+      <Button.Tag>
+        <Properties Icon="sprite:icon-16 icon-Curtail icon-primary" IconPlacement="Left" Owner="" Press="False" renderStyle="asLink"/>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+      </Button.Tag>
+    </Button>
+  </Grid>
+</Window>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<roles_repository version="1.2">
+
+  <role identifier_role="Администратор облака" is_service="0" last_changed="Протасов В.М." name="Администратор облака" responsible="av.korostil">
+    <privilegy access_mode="3" action="Администрирование БД"/>
+    <privilegy access_mode="3" action="Снятие зависших запросов"/>
+    <user_class type="cloud_admin"/>
+    <user_class type="service_clients"/>
+  </role>
+
+</roles_repository>

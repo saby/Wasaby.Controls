@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<Window Height="915" Icon="muzzle.dll;#-177" MainGridIsNew="True" MaxWidth="Infinity" MinHeight="0" MinWidth="0" Name="Start" ResizeMode="CanResize" Responsible="Шилов Д.А" Title="Работа с OLAP" Visibility="Visible" Width="1557" WindowStyle="SingleBorderWindow" highlightFirstError="False" independentContext="False" isEnabled="False" last_changed="pan-PC/an.parygin" saveLastState="True" x:Class="SbisDotNet.Window" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:sbis="clr-namespace:SbisDotNet" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Window.Tag>
+    <Properties ConvertMode="Page" HtmlCreate="True" JamlVersion="1.1" SkinName="СкинСотрудникиWI" TotalChildrenCount="44" WindowHeader="False">
+      <WebPage HTMLTemplate="" OutFileName="" Template=""/>
+    </Properties>
+  </Window.Tag>
+  <Grid CssClass="" Height="Auto" HorizontalAlignment="Stretch" MinHeight="0" MinWidth="0" Name="" ResizeMode="CanResize" TabIndex="1" VerticalAlignment="Top" Visibility="Visible" Width="Auto" convertToNew="True" drawLines="No">
+    <Grid.Tag>
+      <Properties Height="915" Width="1557"/>
+      <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+    </Grid.Tag>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="1.000000*" MinHeight="915" UserChange="False">
+        <RowDefinition.Tag Height="915"/>
+      </RowDefinition>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition MinWidth="1557" UserChange="False" Width="1.000000*">
+        <ColumnDefinition.Tag Width="1557"/>
+      </ColumnDefinition>
+    </Grid.ColumnDefinitions>
+    <TextBlock CssClass="" FontFamily="Tahoma" FontSize="16 pt" FontStyle="Normal" FontWeight="Normal" Height="35" HorizontalAlignment="Center" Margin="0,20,0,0" Name="Заголовок" Text="Демонстрация работы с OLAP" TextAlignment="Left" TextVerticalAlignment="Top" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="292"/>
+    <Border BorderThickness="1" CssClass="" DefaultFrameColor="True" Height="Stretch" HorizontalAlignment="Stretch" Margin="932,55,8,8" Name="РамкаДляЗапроса" Text="Запрос" VerticalAlignment="Stretch" Visibility="Visible" Width="Stretch" convertToNew="True">
+      <Border.Tag>
+        <Properties Height="852" Width="617"/>
+      </Border.Tag>
+      <Grid Margin="0" TabIndex="14" VerticalAlignment="Top" convertToNew="True">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="1.000000*" MinHeight="852">
+            <RowDefinition.Tag Height="852"/>
+          </RowDefinition>
+        </Grid.RowDefinitions>
+        <Button Content="Запуск!!" CssClass="" DisableProperties="False" Height="27" HorizontalAlignment="Left" IsDefault="False" IsEnabled="True" Margin="8,0,0,15" Name="myButton" TabIndex="17" TextAlignment="Center" ToolTip="" VerticalAlignment="Bottom" Visibility="Visible" Width="148" allowChangeEnable="True">
+          <Button.ControlEvents>
+            <ControlEvent Name="onActivated" Type="handler" Value="events/onStartButton"/>
+          </Button.ControlEvents>
+          <Button.Tag>
+            <Properties Icon="" IconPlacement="Left" Owner="" Press="False" renderStyle="classic"/>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          </Button.Tag>
+        </Button>
+        <FieldText CharacterCasing="Normal" CssClass="" Height="121" HorizontalAlignment="Stretch" IsEnabled="True" Margin="8,0,10,50" Name="myString" TabIndex="16" TextWrapping="Wrap" ToolTip="" VerticalAlignment="Bottom" Visibility="Visible" Width="Stretch" allowChangeEnable="True" trim="False" useExtendedTooltip="False">
+          <FieldText.Tag>
+            <Properties BackToolTip="False" FieldType="ftSTRING" InitValue="" InputFilter="" Type="InputLine" Width="597" maxlength="0">
+              <FieldView>
+                <FldFormat Name="myString" Type="ftSTRING"/>
+              </FieldView>
+              <InputLine DigitLeftAlign="True" EditStylesMask="True" LimitText="255" Multiline="True" RegionalMoneyFormat="False"/>
+            </Properties>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          </FieldText.Tag>
+        </FieldText>
+        <Label Content="Результат" CssClass="" Height="20" HorizontalAlignment="Left" Margin="8,15,0,0" Name="МеткаРезультат" VerticalAlignment="Top" Width="100">
+          <Label.Tag>
+            <Properties LinkedObject="" Multiline="False" TextAlignment="Left" Type="Label" TypeBinding="None"/>
+          </Label.Tag>
+        </Label>
+        <DataGrid Height="Stretch" ItemsSource="OLAPClient.ProcessQueryPy" ItemsSourceApplication="" ItemsSourceService="" Margin="7,51,-1,187" MinHeight="50" Name="myTable" TabIndex="15" Width="Stretch">
+          <DataGrid.Columns>
+            <DataGridTextColumn Binding="value" Header="value" IsReadOnly="True" Width="406"/>
+            <DataGridTextColumn Binding="name" Header="result" IsReadOnly="True" Width="406"/>
+          </DataGrid.Columns>
+          <DataGrid.Tag>
+            <Properties Height="612" Type="TreeBrowserXAML" Width="609">
+              <RowOptions Edit="True"/>
+              <Color/>
+              <SuperBrowser SampleRootTitle="Корень" Type="TREE" firstRequest="False" useSorting="False">
+                <Content>
+                  <Run Text="Нет данных"/>
+                </Content>
+              </SuperBrowser>
+              <MarkedRowOptions/>
+              <UserRowOptions/>
+              <TreeBrowser altTreeNameFld="name" createMethodName="" destroyMethodName="" hierColumn="idParent" readMethodName="" updateMethodName=""/>
+              <Browser>
+                <MethodParameters FormatMethod="OLAPClient.ProcessQueryPy">
+                  <Parameter Flags="1" Name="query" Value="query"/>
+                </MethodParameters>
+              </Browser>
+              <DataView>
+                <Options/>
+                <AdditionalFields>
+                  <RecFormat>
+                    <Fields/>
+                  </RecFormat>
+                </AdditionalFields>
+              </DataView>
+              <Reports/>
+              <ReportsForList/>
+              <Ladder/>
+            </Properties>
+            <AccessArray/>
+          </DataGrid.Tag>
+        </DataGrid>
+        <DataGrid Height="Stretch" IsReadOnly="True" ItemsSource="OLAPClient.ProcessQueryPy" ItemsSourceApplication="" ItemsSourceService="" Margin="522,687,7,15" MinHeight="50" Name="myTableOld" TabIndex="14" Visibility="Hidden" Width="Stretch">
+          <DataGrid.Columns>
+            <DataGridTextColumn Binding="result" Header="result" IsReadOnly="True" Width="252" captionAlign="Right" filterName="result" textAlign="Right"/>
+          </DataGrid.Columns>
+          <DataGrid.ControlEvents>
+            <ControlEvent Name="onBeforeRender" Value="events/onMyRender"/>
+          </DataGrid.ControlEvents>
+          <DataGrid.Tag>
+            <Properties Height="148" Type="LiteBrowser" Width="86">
+              <RowOptions/>
+              <Color/>
+              <SuperBrowser allowAdd="False" allowDelete="False" allowEdit="False" firstRequest="False" useSorting="False">
+                <Content>
+                  <Run Text="Нет данных"/>
+                </Content>
+              </SuperBrowser>
+              <MarkedRowOptions/>
+              <UserRowOptions/>
+              <TreeBrowser createMethodName="" destroyMethodName="" readMethodName="" updateMethodName=""/>
+              <Browser>
+                <MethodParameters>
+                  <Parameter Flags="1" Name="query" Value="query"/>
+                </MethodParameters>
+              </Browser>
+              <DataView>
+                <Options/>
+                <AdditionalFields>
+                  <RecFormat>
+                    <Fields/>
+                  </RecFormat>
+                </AdditionalFields>
+              </DataView>
+              <Reports/>
+              <ReportsForList/>
+              <Ladder/>
+            </Properties>
+            <AccessArray/>
+          </DataGrid.Tag>
+        </DataGrid>
+      </Grid>
+    </Border>
+    <Border BorderThickness="1" CssClass="" DefaultFrameColor="True" Height="Stretch" HorizontalAlignment="Left" Margin="10,55,0,8" Name="РамкаДляСтруктуры" Text="Содержимое кубов" VerticalAlignment="Stretch" Visibility="Visible" Width="914" convertToNew="True">
+      <Border.Tag>
+        <Properties Height="852"/>
+      </Border.Tag>
+      <Grid Margin="0" TabIndex="1" VerticalAlignment="Top" convertToNew="True">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="1.000000*" MinHeight="852">
+            <RowDefinition.Tag Height="852"/>
+          </RowDefinition>
+        </Grid.RowDefinitions>
+        <DataGrid Height="208" HorizontalAlignment="Left" IsReadOnly="True" ItemsSource="OLAPClient.CubeMeasuresPy" ItemsSourceApplication="" ItemsSourceService="" Margin="7,635,0,0" MinHeight="50" Name="МерыКуба" TabIndex="13" VerticalAlignment="Top" Width="295">
+          <DataGrid.Columns>
+            <DataGridTextColumn Binding="Measures" Header="Меры" IsReadOnly="True" Width="628"/>
+          </DataGrid.Columns>
+          <DataGrid.Tag>
+            <Properties Type="LiteBrowser" showRecordsCount="False">
+              <RowOptions/>
+              <Color/>
+              <SuperBrowser firstRequest="False" useSorting="False">
+                <Content>
+                  <Run Text="Нет данных"/>
+                </Content>
+              </SuperBrowser>
+              <MarkedRowOptions/>
+              <UserRowOptions/>
+              <TreeBrowser createMethodName="" destroyMethodName="" readMethodName="" updateMethodName=""/>
+              <Browser>
+                <MethodParameters FormatMethod="OLAPClient.CubeMeasuresPy">
+                  <Parameter Flags="1" Name="CubeName" Value="CubeName"/>
+                </MethodParameters>
+              </Browser>
+              <DataView>
+                <Options/>
+                <AdditionalFields>
+                  <RecFormat>
+                    <Fields/>
+                  </RecFormat>
+                </AdditionalFields>
+              </DataView>
+              <Reports/>
+              <ReportsForList/>
+              <Ladder/>
+            </Properties>
+            <AccessArray/>
+          </DataGrid.Tag>
+        </DataGrid>
+        <ComboBox CssClass="" Height="24" HorizontalAlignment="Center" IsEnabled="True" Margin="0,13,0,0" Name="Кубы" SelectedIndex="0" TabIndex="12" TextAlignment="Left" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="207" allowChangeEnable="True" renderStyle="standard" required="False" showSelectedInList="True" useExtendedTooltip="False">
+          <ComboBox.ControlEvents>
+            <ControlEvent Name="onValueChange" Type="handler" Value="events/onChange"/>
+          </ComboBox.ControlEvents>
+          <ComboBox.Tag>
+            <Properties AvailableEmptyValue="True" DisplayHandler="" DisplayedColumn="Cube name" ItemValueColumn="Cube name" ItemsSource="OLAPClient.ListCubesNamePy" ItemsSourceApplication="" ItemsSourceService="" TextForEmptyValue="" TypeDataSource="DataSourceORX" firstRequest="True" titleRender="" wordWrap="False"/>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          </ComboBox.Tag>
+        </ComboBox>
+        <Label Content="Кубы" CssClass="" Height="14" HorizontalAlignment="Right" Margin="0,18,567,0" Name="Метка куб" VerticalAlignment="Top" Width="28">
+          <Label.Tag>
+            <Properties LinkedObject="Кубы" Multiline="False" TextAlignment="Right" Type="Label" TypeBinding="Left"/>
+          </Label.Tag>
+        </Label>
+        <DataGrid Height="576" HorizontalAlignment="Left" IsReadOnly="True" ItemsSource="OLAPClient.CubeDimensionsPy" ItemsSourceApplication="" ItemsSourceService="" Margin="7,51,0,0" MinHeight="50" Name="ИзмеренияКуба" TabIndex="11" VerticalAlignment="Top" Width="295">
+          <DataGrid.Columns>
+            <DataGridTextColumn Binding="Dimensions" Header="Оси" IsReadOnly="True" Width="547"/>
+          </DataGrid.Columns>
+          <DataGrid.ControlEvents>
+            <ControlEvent Name="onRowDoubleClick" Value="events/onGetDimensionvalue"/>
+          </DataGrid.ControlEvents>
+          <DataGrid.Tag>
+            <Properties Type="TreeBrowserXAML" partiallyLoad="False" showRecordsCount="False">
+              <RowOptions/>
+              <Color/>
+              <SuperBrowser SampleRootTitle="Корень" Type="TREE" allowAdd="False" allowDelete="False" allowEdit="False" firstRequest="False" showRecordCountForEmptyData="False" useSorting="False">
+                <Content>
+                  <Run Text="Нет данных"/>
+                </Content>
+              </SuperBrowser>
+              <MarkedRowOptions/>
+              <UserRowOptions/>
+              <TreeBrowser altTreeNameFld="Dimensions" createMethodName="" destroyMethodName="" hierColumn="idParent" readMethodName="" updateMethodName=""/>
+              <Browser>
+                <MethodParameters FormatMethod="OLAPClient.CubeDimensionsPy">
+                  <Parameter Flags="1" Name="CubeName" Value="CubeName"/>
+                </MethodParameters>
+              </Browser>
+              <DataView>
+                <Options/>
+                <AdditionalFields>
+                  <RecFormat>
+                    <Fields/>
+                  </RecFormat>
+                </AdditionalFields>
+              </DataView>
+              <Reports/>
+              <ReportsForList/>
+              <Ladder/>
+            </Properties>
+            <AccessArray/>
+          </DataGrid.Tag>
+        </DataGrid>
+        <ComboBox CssClass="" Height="24" HorizontalAlignment="Right" IsEnabled="True" Margin="0,0,192,71" Name="TopCount" SelectedIndex="0" TabIndex="10" TextAlignment="Left" ToolTip="" VerticalAlignment="Bottom" Visibility="Visible" Width="160" allowChangeEnable="True" renderStyle="standard" required="False" showSelectedInList="True" useExtendedTooltip="False">
+          <ComboBox.Tag>
+            <Properties DisplayHandler="" TypeDataSource="List" titleRender="" wordWrap="False"/>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          </ComboBox.Tag>
+          <ComboBoxItem Name="" Value="Нет"/>
+          <ComboBoxItem Name="10" Value="10"/>
+          <ComboBoxItem Name="20" Value="20"/>
+          <ComboBoxItem Name="50" Value="50"/>
+        </ComboBox>
+        <TextBlock CssClass="" Height="24" HorizontalAlignment="Right" Margin="0,0,366,68" Name="Текст 1" Text="Топ значений" TextAlignment="Right" TextVerticalAlignment="Top" ToolTip="" VerticalAlignment="Bottom" Visibility="Visible" Width="116"/>
+        <CheckBox Content="Использовать диапозон дат" CssClass="" FlowDirection="LeftToRight" Height="20" HorizontalAlignment="Right" IsChecked="False" IsEnabled="True" IsThreeState="False" Margin="0,0,366,115" Name="UseDateRange" TabIndex="9" ToolTip="" VerticalAlignment="Bottom" Visibility="Visible" Width="193" allowChangeEnable="True" useExtendedTooltip="False">
+          <CheckBox.Tag>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+            <Properties/>
+          </CheckBox.Tag>
+        </CheckBox>
+        <DateInputPeriod CssClass="" Height="24" HorizontalAlignment="Right" IsEnabled="True" Margin="0,0,180,111" Name="DateRange" TabIndex="7" VerticalAlignment="Bottom" Visibility="Visible" Width="172" allowChangeEnable="True">
+          <DateInputPeriod.Tag>
+            <Properties Type="DateInputPeriod">
+              <DateInputPeriod TextView="False" dateFromHandler="events/onSetDataRangeFrom" dateFromName="DateRangeFrom" dateToHandler="events/onSetDataRangeTo" dateToName="DateRangeTo" useExtendedTooltip="False"/>
+            </Properties>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          </DateInputPeriod.Tag>
+        </DateInputPeriod>
+        <CheckBox Content="Выборка непустых значений" CssClass="" FlowDirection="LeftToRight" Height="20" HorizontalAlignment="Right" IsChecked="True" IsEnabled="True" IsThreeState="False" Margin="0,0,358,145" Name="UseNonEmpty" TabIndex="6" ToolTip="" VerticalAlignment="Bottom" Visibility="Visible" Width="201" allowChangeEnable="True" useExtendedTooltip="False">
+          <CheckBox.Tag>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+            <Properties/>
+          </CheckBox.Tag>
+        </CheckBox>
+        <Button Content="Сформировать запрос" CssClass="" DisableProperties="False" Height="27" HorizontalAlignment="Left" IsDefault="False" IsEnabled="True" Margin="745,0,0,15" Name="СформироватьЗапрос" TabIndex="5" TextAlignment="Center" ToolTip="" VerticalAlignment="Bottom" Visibility="Visible" Width="160" allowChangeEnable="True">
+          <Button.ControlEvents>
+            <ControlEvent Name="onActivated" Type="handler" Value="events/onQueryButton"/>
+          </Button.ControlEvents>
+          <Button.Tag>
+            <Properties Icon="" IconPlacement="Left" Owner="" Press="False" renderStyle="classic"/>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          </Button.Tag>
+        </Button>
+        <CheckBox Content="Использовать слайсы" CssClass="" FlowDirection="LeftToRight" Height="20" HorizontalAlignment="Left" IsChecked="True" IsEnabled="True" IsThreeState="False" Margin="353,0,0,175" Name="UseWhere" TabIndex="4" ToolTip="" VerticalAlignment="Bottom" Visibility="Visible" Width="196" allowChangeEnable="True" useExtendedTooltip="False">
+          <CheckBox.Tag>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+            <Properties/>
+          </CheckBox.Tag>
+        </CheckBox>
+        <DataGrid Height="576" HorizontalAlignment="Left" IsReadOnly="True" ItemsSource="OLAPClient.CubeDimensionsPy" ItemsSourceApplication="" ItemsSourceService="" Margin="308,51,0,0" MinHeight="50" Name="Where" TabIndex="3" VerticalAlignment="Top" Width="295">
+          <DataGrid.Columns>
+            <DataGridTextColumn Binding="Dimensions" Header="Слайсы" IsReadOnly="True" Width="547"/>
+          </DataGrid.Columns>
+          <DataGrid.ControlEvents>
+            <ControlEvent Name="onSetCursor">
+              <Event Value="events/onGetWhereValue"/>
+              <Event Value="events/onDimensionActivate"/>
+            </ControlEvent>
+          </DataGrid.ControlEvents>
+          <DataGrid.Tag>
+            <Properties Type="TreeBrowserXAML" partiallyLoad="False" showRecordsCount="False">
+              <RowOptions/>
+              <Color/>
+              <SuperBrowser SampleRootTitle="Корень" Type="TREE" allowAdd="False" allowDelete="False" allowEdit="False" firstRequest="False" showRecordCountForEmptyData="False" useSorting="False">
+                <Content>
+                  <Run Text="Нет данных"/>
+                </Content>
+              </SuperBrowser>
+              <MarkedRowOptions/>
+              <UserRowOptions/>
+              <TreeBrowser altTreeNameFld="Dimensions" createMethodName="" destroyMethodName="" hierColumn="idParent" readMethodName="" updateMethodName=""/>
+              <Browser>
+                <MethodParameters FormatMethod="OLAPClient.CubeDimensionsPy">
+                  <Parameter Flags="1" Name="CubeName" Value="CubeName"/>
+                </MethodParameters>
+              </Browser>
+              <DataView>
+                <Options/>
+                <AdditionalFields>
+                  <RecFormat>
+                    <Fields/>
+                  </RecFormat>
+                </AdditionalFields>
+              </DataView>
+              <Reports/>
+              <ReportsForList/>
+              <Ladder/>
+            </Properties>
+            <AccessArray/>
+          </DataGrid.Tag>
+        </DataGrid>
+        <Button Content="Кнопка 1" CssClass="" DisableProperties="False" Height="24" HorizontalAlignment="Left" IsDefault="False" IsEnabled="True" Margin="809,736,0,0" Name="Кнопка 1" TabIndex="2" TextAlignment="Center" ToolTip="" VerticalAlignment="Top" Visibility="Hidden" Width="80" allowChangeEnable="True">
+          <Button.ControlEvents>
+            <ControlEvent Name="onActivated" Type="dialog" Value="window"/>
+          </Button.ControlEvents>
+          <Button.Tag>
+            <Properties Icon="" IconPlacement="Left" Owner="" Press="False" renderStyle="classic"/>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          </Button.Tag>
+        </Button>
+        <DataGrid Height="576" HorizontalAlignment="Right" IsReadOnly="True" ItemsSource="OLAPClient.CubeDimensionValuePy" ItemsSourceApplication="" ItemsSourceService="" Margin="0,51,7,0" MinHeight="50" Name="WhereValueTableTree" TabIndex="1" VerticalAlignment="Top" Width="295">
+          <DataGrid.Columns>
+            <DataGridTextColumn Binding="DimensionValue" Header="Значения" IsReadOnly="True" Width="547"/>
+          </DataGrid.Columns>
+          <DataGrid.Tag>
+            <Properties Type="TreeBrowserXAML" partiallyLoad="False" showRecordsCount="False">
+              <RowOptions/>
+              <Color/>
+              <SuperBrowser SampleRootTitle="Корень" Type="TREE" allowAdd="False" allowDelete="False" allowEdit="False" firstRequest="False" showRecordCountForEmptyData="False" useSorting="False">
+                <Content>
+                  <Run Text="Нет данных"/>
+                </Content>
+              </SuperBrowser>
+              <MarkedRowOptions/>
+              <UserRowOptions/>
+              <TreeBrowser altTreeNameFld="DimensionValue" createMethodName="" destroyMethodName="" hierColumn="idParent" readMethodName="" updateMethodName=""/>
+              <Browser>
+                <MethodParameters FormatMethod="MDXCubes.CubeDimensionValuePy">
+                  <Parameter Flags="1" Name="CubeDimension" Value="CubeDimension"/>
+                  <Parameter Flags="1" Name="CubeMeasure" Value="CubeMeasure"/>
+                  <Parameter Flags="1" Name="CubeName" Value="CubeName"/>
+                </MethodParameters>
+              </Browser>
+              <DataView>
+                <Options/>
+                <AdditionalFields>
+                  <RecFormat>
+                    <Fields/>
+                  </RecFormat>
+                </AdditionalFields>
+              </DataView>
+              <Reports/>
+              <ReportsForList/>
+              <Ladder/>
+            </Properties>
+            <AccessArray/>
+          </DataGrid.Tag>
+        </DataGrid>
+      </Grid>
+    </Border>
+  </Grid>
+</Window>

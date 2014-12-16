@@ -1,0 +1,17 @@
+hdl = {
+   refreshResults: function(event, record, fieldName, columnName, fieldValue, oldFieldValue){
+      var results = this.getRecordSet().getResults();
+      if(results.hasColumn(fieldName)){
+         var newResultValue = results.get(fieldName),
+             resultTR = this.getContainer().find('.ws-browser-results'),
+             resultTD = resultTR.find('td[title="' + columnName + '"]'),
+             columnNumber = resultTD[0].cellIndex;
+         newResultValue += (fieldValue - oldFieldValue);
+         resultTD = resultTD.find('.ws-browser-cell-container');
+         if(!columnNumber)
+            resultTD = resultTD.find('div');
+         resultTD.html(newResultValue);
+      }
+   }
+};
+//@ sourceURL="commonHandlers.hdl"

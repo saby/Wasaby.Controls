@@ -1,0 +1,66 @@
+<div>
+    <div class="Role_RoleRegistry_FieldDropDown" style="margin-left: 80px; margin-top: 0px; position: absolute;">
+        <component class="setService" data-component="SBIS3.CORE.FieldDropdown">
+            <option name="name" value="setServiceDropdown"></option>
+            <option name="enabled" type="boolean" value="true"></option>
+            <option name="tabindex" value="1"></option>
+            <option name="tooltip" value="Выбор сервиса"></option>
+            <option name="width" value="80px"></option>
+            <option name="height" value="400px"></option>
+            <option name="value" value="1"></option>
+            <option name="visible" type="boolean" value="false"></option>
+            <options name="data" type="array">
+                <options name="keys" type="array">
+                    <option value="/admin"></option>
+                </options>
+                <options name="values" type="array">
+                    <option value="/admin"></option>
+                </options>
+            </options>
+            <options name="handlers">
+                <option name="onChange" value="js!SBIS3.ROLE.RoleFunction:onChangeFieldDropdownTableView" type="function"></option>
+                <option name="onReady" value="js!SBIS3.ROLE.RoleFunction:switchServiceSetVisible" type="function"></option>
+            </options>
+        </component>
+    </div>
+    <component class="Role_RoleRegistry_TableView" data-component="SBIS3.CORE.TableView" style=" height: 95%; left: 0px;  margin-top: 10px;">
+        <option name="name">roleViewTable</option>
+        <option name="tabindex">1</option>
+        <option name="useSelection" value="false" type="boolean"></option>
+        <option name="autoHeight" type="boolean" value="{{=it.autoHeight}}"></option>
+        <option name="verticalAlignment" value="Top"></option>
+        <options name="dataSource" type="Object">
+            <option name="readerType" value="ReaderUnifiedSBIS"></option>
+            <options name="readerParams">
+                <option name="queryName" value="МаксимальныеРолиПользователяСГруппами"></option>
+                <option name="linkedObject" value="Авторизация"></option>
+            </options>
+            <options name="filterParams">
+                <options name="Пользователь">
+                    <option name="fieldName" value="@Пользователь"></option>
+                </options>
+                <option name="ТолькоНазначенные" value="true" type="boolean"></option>
+                <option name='АдресСервиса' value='js!SBIS3.ROLE.RoleFunction:getAddresService' type='function'></option>
+            </options>
+        </options>
+        <options name="display">
+            <option name="showActiveRowInFocus" value="false" type="boolean"></option>
+            <option name="showRecordsCount" value="false" type="boolean"></option>
+            <option name="emptyHtml" value="Сотруднику не назначены права, он может только вести переписку с другими сотрудниками и просматривать свои задания." type="String"></option>
+            <option name="rowRender" value="js!SBIS3.ROLE.RoleFunction:RenderRowClientRoleBrows" type="function"></option>
+            <option name="hasZebra"  value="false" type="boolean"></option>
+            <options name="columns" type="Array">
+                <options type="Object">
+                    <option name="title"></option>
+                    <option name="field">Название</option>
+                    <option name="width">399</option>
+                    <option name="fixedSize">true</option>
+                </options>
+            </options>
+        </options>
+        <options name="handlers">
+            <option name="onReady" value="js!SBIS3.ROLE.RoleFunction:setDefaultSetting" type="function"></option>
+            <option name="onAfterLoad" value="js!SBIS3.ROLE.RoleFunction:onAfterLoadTableView" type="function"></option>
+        </options>
+    </component>
+</div>

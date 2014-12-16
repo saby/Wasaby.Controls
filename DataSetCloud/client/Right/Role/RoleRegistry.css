@@ -1,0 +1,202 @@
+.Role_RoleRegistry_Button_AddRole {
+    width: 80px;
+    height: 24px;
+}
+
+.browserZones .ws-browser-cell-container {
+    position: relative;
+}
+
+.nameInput {
+    font-size: 18px !important;
+}
+
+.reg_rec_btn a
+{
+    padding-left: 11px !important;
+}
+
+.list_shadow {
+    background: url("../Administrirovanie_klienta/Statika/list_shadow.png") no-repeat scroll 0 0 transparent;
+    width: 9px;
+}
+
+.hide_button{
+    display: none;
+}
+
+.row_gray_render .ws-browser-cell-container.ws-browser-text-no-render{
+    color: #c0c0c0 !important;
+    font-weight: bold;
+}
+
+.row_gray_render .ws-browser-cell-container.ws-browser-text-no-render : hover{
+    text-decoration: none;
+}
+
+.browser_without_checkbox .ws-browser-checkbox{
+    display: none !important;
+}
+
+.parentClass{
+    color: gray;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.parentClass{
+    text-decoration: underline;
+}
+
+.parentBrowser .ws-browser-empty{
+    top: 5px;
+}
+
+.grayText{
+    color: gray !important;
+    cursor: default !important;
+}
+
+.accessControl{
+    line-height: 24px;
+    margin-top: -3px;
+    border: 1px solid transparent;
+}
+
+.ws-browser-table-row:hover .accessControl, .accessControl:hover{
+    border: 1px solid #E2E2E2;
+}
+
+.pressed, .pressed:hover{
+    border: 1px solid #E2E2E2;
+    border-color: #E2E2E2 #C3C3C3 #C3C3C3 #E2E2E2;
+}
+
+.botom-shadow img{
+    position: absolute;
+}
+.accessControl:after{
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+    top: 13px;
+    right: 5%;
+}
+
+.ws-browser-table-row:hover .accessControl:after{
+    border-color: #E2E2E2 transparent transparent;
+}
+
+.accessControl:hover:after, .pressed:after, .pressed:hover:after{
+    border-color: #C3C3C3 transparent transparent !important;
+}
+
+.role_filter_input .ws-field {
+    border: medium none;
+    background: transparent;
+}
+
+.role_filter_input{
+    background-color: #F2F2F2;
+}
+
+.role_filter_input .ws-field > input {
+    background: transparent;
+}
+
+.noBorder .ws-field{
+    border: medium none;
+}
+
+.accessButton .ws-field-button-link{
+    line-height: 1.6em;
+}
+
+.browserZones .ws-browser-header-cell{
+    padding: 6px 0 6px 13px;
+    text-align: left;
+}
+
+.browserChilds .ws-browser-header-cell{
+    padding: 6px 0 6px 10px;
+    text-align: left;
+}
+
+
+div[sbisname="orgs"] .ws-browser-checkbox,
+div[sbisname="department"] .ws-browser-checkbox {
+    visibility: visible;
+}
+
+div[sbisname="ZonesScope"].part .true{
+    background: url("../../ws/img/themes/wi_scheme/check-sprite.png") no-repeat scroll -1px -29px transparent !important;
+}
+
+.noBlueLine .ws-browser-row-selection {
+    background: none;
+}
+
+.btn_add_role div.ws-field-button-text-container-classic {
+    padding-top: 3px !important;
+}
+
+.ZoneAccess .ws-browser td div.ws-browser-cell-container {
+    padding: 3px 6px;
+}
+
+.ZoneAccess .ws-browser-hover tr.ws-browser-table-row:hover {
+    background-color: #FAF0C0 !important;
+}
+
+.FieldLinkDepartment .ws-fieldLink-link a{
+    text-decoration: none !important;
+    color: #0055BB !important;
+}
+
+.FieldLinkDepartment .ws-fieldLink-link a:hover{
+    text-decoration: underline !important;
+    cursor: pointer;
+}
+
+.small-ws-label {
+    font-size: 11px;
+}
+
+div[sbisname="reestrRoles"] tr:hover.dir,
+div[sbisname="reestrRoles"] tr.dir td {
+    background: none !important;
+    cursor: default;
+}
+
+.dirSeparator {
+    border-bottom: 1px dashed gray;
+    background-color: #ffffff !important;
+}
+
+.dirSeparator:hover {
+    background-color: #ffffff !important;
+    cursor: default;
+}
+
+ws-browser-cell-container.ws-browser-text-no-render:hover.dir {
+    background: none !important;
+    cursor: default;
+}
+
+div[sbisname="roles"] tr:hover.dir,
+div[sbisname="roles"] tr.dir td,
+div[sbisname="roles"] tr.dir.ws-browser-item-over.ws-browser-table-row {
+    background: none !important;
+    cursor: default;
+
+    font-size: 16px;
+    font-style: italic;
+    font-family: georgia;
+    color: #999999;
+}
+
+div[sbisname="roles"] tr.dir{
+    border-bottom: 1px dashed gray;
+}

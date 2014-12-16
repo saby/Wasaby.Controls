@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<dictionary dicx_version="1.21">
+
+  <table name="$Черновик" personal_data="1" table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="НазваниеОбъекта">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <column index_in_pk="0" is_pk_part="1" name="ИдТаблицы">
+      <format>
+        <type>INT64</type>
+      </format>
+    </column>
+    <column index_in_pk="1" is_pk_part="1" name="ИдОбъекта">
+      <format>
+        <type>INT64</type>
+      </format>
+    </column>
+    <column name="ДатаСоздания">
+      <format>
+        <type>DATETIME</type>
+        <use_current>1</use_current>
+      </format>
+    </column>
+    <index method="btree" name="ДатаСоздания" null_keys="1" service="0" unique="0">
+      <column is_expressions="0" name="ДатаСоздания" nulls_place="LAST" sorting="ASC"/>
+    </index>
+    <trigger_list/>
+  </table>
+
+</dictionary>

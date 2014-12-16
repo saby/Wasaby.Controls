@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<Window Height="Auto" Icon="muzzle.dll;#-177" MainGridIsNew="True" MaxWidth="Infinity" MinHeight="0" MinWidth="0" Name="Итоги обработки" ResizeMode="CanResize" Responsible="Мишкорез В.Н." Title="Итоги операции" Topmost="False" Visibility="Visible" Width="456" WindowState="Normal" WindowStyle="None" highlightFirstError="False" independentContext="False" isEnabled="False" last_changed="Чистякова А.Д." x:Class="SbisDotNet.Window" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:sbis="clr-namespace:SbisDotNet" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Window.Tag>
+    <Properties ButtonMaximized="False" ConvertMode="Application" Height="152" HtmlCreate="False" JamlVersion="1.1" SkinName="СкинСотрудникиWI" TotalChildrenCount="31" WindowHeader="True">
+      <WebPage HTMLTemplate="" OutFileName="" Template=""/>
+    </Properties>
+  </Window.Tag>
+  <Grid CssClass="" Height="Auto" HorizontalAlignment="Stretch" MinHeight="0" MinWidth="0" Name="" ResizeMode="CanResize" TabIndex="2" VerticalAlignment="Top" Visibility="Visible" Width="Auto" allowChangeEnable="True" convertToNew="True" drawLines="No">
+    <Grid.Tag>
+      <Properties Height="152" Width="456"/>
+      <GridCell Col="1" DefaultBkColor="True" Row="1" background-image="" background-position-x="Left" background-position-y="Top" background-repeat-x="False" background-repeat-y="False"/>
+      <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+    </Grid.Tag>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" MinHeight="136" UserChange="False">
+        <RowDefinition.Tag Height="136"/>
+      </RowDefinition>
+      <RowDefinition Height="Auto" MinHeight="16" UserChange="False">
+        <RowDefinition.Tag Height="16"/>
+      </RowDefinition>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition MinWidth="456" UserChange="False" Width="Auto">
+        <ColumnDefinition.Tag Width="456"/>
+      </ColumnDefinition>
+    </Grid.ColumnDefinitions>
+    <TextBlock CssClass="" Foreground="#ef463a" Height="18" HorizontalAlignment="Right" Margin="0,108,342,0" Name="заголовокОшибок" Text="С ошибками" TextAlignment="Right" TextVerticalAlignment="Top" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="90"/>
+    <TextBlock CssClass="" Height="18" HorizontalAlignment="Right" Margin="0,78,342,0" Name="Текст 3" Text="Успешно" TextAlignment="Right" TextVerticalAlignment="Top" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="90"/>
+    <TextBox CharacterCasing="Normal" CssClass="" FontFamily="Tahoma" FontSize="10 pt" FontStyle="Normal" FontWeight="Bold" Height="24" HorizontalAlignment="Left" IsEnabled="False" Margin="122,42,0,0" Name="Отмечено" TabIndex="3" TextWrapping="NoWrap" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="50" allowChangeEnable="True" trim="False" useExtendedTooltip="False">
+      <TextBox.Tag>
+        <Properties BackToolTip="False" FieldType="ftSTRING" InitValue="" InputFilter="" Type="InputLine" maxlength="255">
+          <FieldView>
+            <FldFormat Name="Отмечено" Type="ftSTRING"/>
+          </FieldView>
+          <InputLine DigitLeftAlign="True" LimitText="255" RegionalMoneyFormat="False"/>
+        </Properties>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+      </TextBox.Tag>
+    </TextBox>
+    <TextBlock CssClass="" Height="18" HorizontalAlignment="Right" Margin="0,47,342,0" Name="Текст 2" Text="Обработано" TextAlignment="Right" TextVerticalAlignment="Top" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="90"/>
+    <TextBox CharacterCasing="Normal" CssClass="" FontFamily="Tahoma" FontSize="10 pt" FontStyle="Normal" FontWeight="Bold" Height="24" HorizontalAlignment="Left" IsEnabled="False" Margin="122,74,0,0" Name="Обработано" TabIndex="2" TextWrapping="NoWrap" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="50" allowChangeEnable="True" trim="False" useExtendedTooltip="False">
+      <TextBox.Tag>
+        <Properties BackToolTip="False" FieldType="ftSTRING" InitValue="" InputFilter="" Type="InputLine" maxlength="255">
+          <FieldView>
+            <FldFormat Name="Обработано" Type="ftSTRING"/>
+          </FieldView>
+          <InputLine DigitLeftAlign="True" LimitText="255" RegionalMoneyFormat="False"/>
+        </Properties>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+      </TextBox.Tag>
+    </TextBox>
+    <Rectangle CssClass="" Height="Auto" HorizontalAlignment="Left" Margin="170,107,0,0" MinHeight="0" MinWidth="0" Name="ТекстОшибки" VerticalAlignment="Top" Visibility="Visible" Width="269">
+      <Rectangle.Tag>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+        <Properties Height="22" Source="Text" Type="HTMLContainer">
+          <Content>
+            <Run Text=""/>
+          </Content>
+        </Properties>
+      </Rectangle.Tag>
+    </Rectangle>
+    <TextBlock CssClass="" DisableProperties="False" FontFamily="Tahoma" FontSize="10 pt" FontStyle="Normal" FontWeight="Bold" Foreground="#ff0000" Height="20" HorizontalAlignment="Left" Margin="127,107,0,0" Name="НеВыполнено" TextAlignment="Left" TextVerticalAlignment="Top" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="33" multiline="False">
+      <TextBlock.Tag>
+        <Properties InitIsHandler="False" InitValue="" Type="FieldLabelXAML" useExtendedFormatting="False" useExtendedTooltip="False"/>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+      </TextBlock.Tag>
+    </TextBlock>
+    <TitleBorder BorderBrush="#c0c0c0" BorderThickness="0" CssClass="" DefaultFrameColor="False" Height="40" HorizontalAlignment="Stretch" Name="windowTitleContainer" Text="" VerticalAlignment="Top" Visibility="Visible" Width="Stretch" allowChangeEnable="True" convertToNew="True">
+      <TitleBorder.Tag>
+        <Properties Width="456"/>
+      </TitleBorder.Tag>
+      <Grid Margin="0" TabIndex="1" VerticalAlignment="Top" allowChangeEnable="True" convertToNew="True">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="1.000000*" MinHeight="40">
+            <RowDefinition.Tag Height="40"/>
+          </RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock CssClass="" DisableProperties="True" FontFamily="Tahoma" FontSize="14 pt" FontStyle="Normal" FontWeight="Normal" Height="23" HorizontalAlignment="Left" Margin="20,0,0,0" Name="windowTitle" Text="Итоги операции" TextAlignment="Left" TextVerticalAlignment="Top" ToolTip="" VerticalAlignment="Center" Visibility="Visible" Width="146"/>
+        <Button Content="" CssClass="" DisableProperties="True" FontFamily="Tahoma" FontSize="8 pt" FontStyle="Normal" FontWeight="Normal" Height="24" HorizontalAlignment="Right" IsDefault="False" IsEnabled="True" Margin="0,8,8,0" Name="windowTitleClose" TabIndex="1" TextAlignment="Center" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="24" allowChangeEnable="True">
+          <Button.ControlEvents>
+            <ControlEvent Name="onActivated" Type="command" Value="close"/>
+          </Button.ControlEvents>
+          <Button.Tag>
+            <Properties Icon="ws:/titlebar-close.png" IconPlacement="Left" Owner="" Press="False" renderStyle="classic"/>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          </Button.Tag>
+        </Button>
+      </Grid>
+    </TitleBorder>
+  </Grid>
+</Window>

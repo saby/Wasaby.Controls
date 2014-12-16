@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<bl_module id="dd8a6d7a-73de-40cb-9971-9cf089f584c3" name="Магазин" package="Платформа" responsible="Мануйлов А.С." version="1.00">
+
+  <description/>
+
+  <depends/>
+
+  <load_after/>
+
+  <parameters/>
+
+  <resources/>
+
+</bl_module>

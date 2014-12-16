@@ -1,0 +1,34 @@
+hdl = {
+   save: function(){
+      var parent = this.getParent();
+      try {
+         parent.updateRecord().addCallbacks(function(result) {
+            parent.ok();
+         }, function(e) {
+            alert(e.message);
+         });
+      } catch(e) {
+         alert(e.message);
+      }
+   },
+   close: function(){
+      try {
+         this.getParent().ok();
+      } catch(e) {
+         alert(e.message);
+      }
+   },
+   del: function(){
+      try{
+         var parent = this.getParent();
+         parent.delRecord().addCallbacks(function(result){
+            parent.ok();
+         }, function(e){
+            alert(e.message);
+         });
+      } catch(e){
+         alert(e.message);
+      }
+   }
+};
+//@ sourceURL="CommonRecordDialog.hdl"

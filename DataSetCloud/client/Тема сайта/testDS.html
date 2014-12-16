@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+   <meta name="ws-access" content=""/>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <title>C:/projects/sbis3-controls/DataSetCloud/client/Тема сайта/test.xaml</title>
+   <link rel="stylesheet" href="/ws/css/core.css" type="text/css" />
+   <link rel="stylesheet" href="/ws/css/themes/wi_scheme.css" type="text/css" />
+   
+   <script type="text/javascript">
+      // new config support
+      window.wsConfig = {
+         wsRoot: '/ws/',
+         appRoot: '/',
+         resourceRoot: '/resources/',
+         defaultServiceUrl: '/service/sbis-rpc-service300.dll',
+         theme: 'wi_scheme',
+         userConfigSupport: false,
+         globalConfigSupport: true,
+         saveLastState: true
+      };
+      window.WSRootPath = '/ws/';
+      window.ResourcePath = '/resources/';
+      window.ServicesPath = '/service/sbis-rpc-service300.dll';
+      window.WSTheme = 'wi_scheme';
+   </script>
+
+   <script type="text/javascript" src="//cdn.sbis.ru/requirejs/2.1.6/require-min.js"></script>
+   <script type="text/javascript" data-pack-name="require" src="/ws/ext/requirejs/config.js"></script>
+
+   <script type="text/javascript" src="//cdn.sbis.ru/jquery/1.6.4/jquery-full.js"></script>
+   <script type="text/javascript" src="//cdn.sbis.ru/jquery-cookie/04-04-2014/jquery-cookie-full.js"></script>
+
+   <script type="text/javascript" src="/resources/contents.js"></script>
+
+   <script type="text/javascript" data-pack-name="ws" src="/ws/lib/core.js"></script>
+
+   <script type="text/javascript" id="ws-include-components"></script>
+   
+   <script type="text/javascript">
+      $ws.core.ready.addCallback(function(){
+         require([ 'bootup' ], function() {
+            $ws.core.bootup();
+         });
+      });
+   </script>
+</head>
+<body>
+      <p>ListView</p>
+   <div id="ListViewDS" class="testBlock listView"></div>
+   <script type="text/javascript">
+   $ws.core.withComponents('Source').addCallback(function () {
+      $(document).ready(function () {
+         require([
+            'js!SBIS3.CONTROLS.ListViewDS',
+			'js!SBIS3.CONTROLS.DataSourceBL'
+            ], function ( ListViewDS,DataSourceBL) {
+
+			var ds = new DataSourceBL('Производитель');
+		
+             var itemTpl1 = '<div class="listViewItem">\
+                     <div style="color:#999999; font-size:15px">{{=it.get("Название")}}</div>\
+                     <div style="color:{{?it.flag}}#008000{{??}}#800000{{?}};">{{=it.get("Сайт")}}</div>\
+					 <hr>\
+               </div>';
+
+            new ListViewDS({
+               element: "ListViewDS",
+			   dataSource: ds,
+               itemTemplate: itemTpl1
+            });
+
+
+
+
+         });
+      })
+   });
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+<FilesMatch \.(xsl|xslt)$>
+   <IfModule mod_mime.c>
+      AddType text/xml .xsl .xslt
+      AddCharset UTF-8 .xsl .xslt
+   </IfModule>
+</FilesMatch>

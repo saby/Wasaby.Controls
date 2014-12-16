@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<repository orx_version="1.71">
+
+  <object name="ОбслуживаниеБД">
+    <select access_mode="0" is_service="1" last_changed="Коростиль А.В." name="ОбслуживаниеБД.ВосстановитьПоследовательностиТаблиц" responsible="Коростиль А.В." returns="NONE" type="SQL">
+      <comment>Востановление SEQ в БД (протокол в таблице log_seq_norm)</comment>
+      <definition>
+        <language>PLPGSQL</language>
+        <body>-- Восстановление значения sequence на основе MAX значения ключевого поля в таблице
+-- Приближения: имя последовательности состоит из имени таблицы и имени ключевого поля соединеных символом '_@':YYYYYY_@YYYYYY
+-- Протокол изменений пишется в таблицу log_seq_norm: имя_объекта, старое_значение, новое_значение, дата_изменения
+-- 
+DO $$
+DECLARE
+NAM_OBJ RECORD;
+NAM_SCHEM RECORD;
+MAXX INTEGER;
+SEQ_COUNT INTEGER;
+TB TEXT;
+BEGIN
+FOR NAM_SCHEM IN SELECT SCH.nspname AS NSCH FROM pg_namespace SCH WHERE SCH.nspname != 'londiste' LOOP
+   FOR NAM_OBJ IN SELECT n.nspname||'."'||c.relname||'"' as sq_name, 
+    n.nspname||'."'||substr(c.relname,1,strpos(c.relname,'_@')-1)||'"' as tab_nam, 
+   '@'||substr(c.relname,1,strpos(c.relname,'_@')-1) AS col_nam FROM pg_class c
+   LEFT JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind = 'S'::"char" and n.nspname != 'londiste' AND c.relname not like '%log.%'
+   AND c.relname LIKE '%_@%' AND n.nspname||'."'||substr(c.relname,1,strpos(c.relname,'_@')-1)||'"' not like '%$%'
+   AND n.nspname||'."'||substr(c.relname,1,strpos(c.relname,'_@')-1)||'"' not in (SELECT 'public.'||replace(table_name,'public.','"')||'"' FROM londiste.subscriber_table)
+   and  n.nspname = NAM_SCHEM.NSCH
+   LOOP
+-- поиск максимального значения ключевого поля   
+   EXECUTE 'SELECT MAX("'||NAM_OBJ.col_nam||'") FROM '||NAM_OBJ.tab_nam INTO MAXX;
+-- выбор последнего значения последовательности
+   EXECUTE 'SELECT last_value FROM '||NAM_OBJ.sq_name INTO SEQ_COUNT;
+   IF SEQ_COUNT IS NULL THEN SEQ_COUNT :=0; END IF;
+-- если максимальное значение ключевого поля больше номера последовательности то меняем последовательность
+   IF ((MAXX IS NOT NULL) AND (MAXX &gt;= SEQ_COUNT)) THEN 
+      EXECUTE 'ALTER SEQUENCE '||NAM_OBJ.sq_name||' RESTART WITH '|| MAXX+1 ||' ';
+   END IF;  
+  END LOOP;
+END LOOP;
+END
+$$;</body>
+      </definition>
+    </select>
+    <select access_mode="0" is_service="0" last_changed="Коростиль А.В." name="ОбслуживаниеБД.ВостановитьПоследовательностиТаблиц" responsible="Коростиль А.В." returns="NONE" type="SQL">
+      <comment>Востановление SEQ в схеме БД (протокол в таблице log_seq_norm)</comment>
+      <parameter name="ИспользуемаяСхема">
+        <format>
+          <type>STRING</type>
+          <max_size>128</max_size>
+        </format>
+      </parameter>
+      <definition>
+        <language>PLPGSQL</language>
+        <body>-- Восстановление значения sequence на основе MAX значения ключевого поля в таблице
+-- Приближения: имя последовательности состоит из имени таблицы и имени ключевого поля соединеных символом '_@':YYYYYY_@YYYYYY
+-- Протокол изменений пишется в таблицу log_seq_norm: имя_объекта, старое_значение, новое_значение, дата_изменения
+-- 
+DO $$
+DECLARE
+NAM_OBJ RECORD;
+NAM_SCHEM TEXT;
+MAXX INTEGER;
+SEQ_COUNT INTEGER;
+TB TEXT;
+FLAG INTEGER;
+BEGIN
+FLAG:=0;
+IF ("ИспользуемаяСхема" is NULL OR trim(both ' ' FROM "ИспользуемаяСхема") = '') THEN
+     NAM_SCHEM := current_schema();
+ELSE
+     NAM_SCHEM := "ИспользуемаяСхема";
+END IF;
+  EXECUTE 'SELECT COUNT(nspname) FROM pg_namespace WHERE nspname = ''' || NAM_SCHEM || ''''  INTO FLAG;
+IF FLAG = 0 THEN
+  RAISE EXCEPTION 'Schema not exist = %', NAM_SCHEM;
+END IF;
+   FOR NAM_OBJ IN SELECT n.nspname||'."'||c.relname||'"' as sq_name, 
+    n.nspname||'."'||substr(c.relname,1,strpos(c.relname,'_@')-1)||'"' as tab_nam, 
+   '@'||substr(c.relname,1,strpos(c.relname,'_@')-1) AS col_nam FROM pg_class c
+   LEFT JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind = 'S'::"char" and n.nspname != 'londiste' AND c.relname not like '%log.%'
+   AND c.relname LIKE '%_@%' AND n.nspname||'."'||substr(c.relname,1,strpos(c.relname,'_@')-1)||'"' not like '%$%'
+   AND  n.nspname = NAM_SCHEM
+   LOOP
+-- поиск максимального значения ключевого поля   
+   EXECUTE 'SELECT MAX("'||NAM_OBJ.col_nam||'") FROM '||NAM_OBJ.tab_nam INTO MAXX;
+-- выбор последнего значения последовательности
+   EXECUTE 'SELECT last_value FROM '||NAM_OBJ.sq_name INTO SEQ_COUNT;
+   IF SEQ_COUNT IS NULL THEN SEQ_COUNT :=0; END IF;
+-- если максимальное значение ключевого поля больше номера последовательности то меняем последовательность
+   IF ((MAXX IS NOT NULL) AND (MAXX &gt;= SEQ_COUNT)) THEN 
+      EXECUTE 'ALTER SEQUENCE '||NAM_OBJ.sq_name||' RESTART WITH '|| MAXX+1 ||' ';
+   END IF;  
+  END LOOP;
+END
+$$;</body>
+      </definition>
+    </select>
+    <select access_mode="0" is_service="0" last_changed="Коновалов A.В." name="ОбслуживаниеБД.ВостановитьПоследовательностиТаблиц" responsible="Коростиль А.В." returns="NONE" type="SQL">
+      <comment>Востановление SEQ в таблице схемы БД (протокол в таблице log_seq_norm)</comment>
+      <parameter name="ИспользуемаяСхема">
+        <format>
+          <type>STRING</type>
+          <max_size>64</max_size>
+        </format>
+      </parameter>
+      <parameter name="ИспользумаяТаблица">
+        <format>
+          <type>STRING</type>
+          <max_size>64</max_size>
+        </format>
+      </parameter>
+      <definition>
+        <language>PLPGSQL</language>
+        <body>-- Восстановление значения sequence на основе MAX значения ключевого поля в таблице
+-- Приближения: имя последовательности состоит из имени таблицы и имени ключевого поля соединеных символом '_@':YYYYYY_@YYYYYY
+DO $$
+DECLARE
+NAM_OBJ RECORD;
+NAM_R RECORD;
+NAM_SCHEM TEXT;
+NAM_TAB TEXT;
+MAXX INTEGER;
+SEQ_COUNT INTEGER;
+TB TEXT;
+FLAG INTEGER;
+used_schema text := :ИспользуемаяСхема;
+used_table text := :ИспользумаяТаблица;
+BEGIN
+FLAG:=0;
+IF (used_schema is NULL OR trim(both ' ' FROM used_schema) = '') THEN
+     NAM_SCHEM := current_schema();
+ELSE
+     NAM_SCHEM := used_schema;
+END IF;
+  EXECUTE 'SELECT COUNT(nspname) FROM pg_namespace WHERE nspname = ''' || NAM_SCHEM || ''''  INTO FLAG;
+IF FLAG = 0 THEN
+  RAISE EXCEPTION 'Schema not exist = %', NAM_SCHEM;
+END IF;
+IF (used_table is NULL OR used_table = '') THEN
+  RAISE EXCEPTION 'Table not exist = ';
+ELSE
+     NAM_TAB := used_table;
+END IF;
+FLAG:=0;
+EXECUTE 'SELECT COUNT(oid) FROM pg_class Y WHERE Y.relname  = ''' || NAM_TAB || ''''  INTO FLAG;
+IF FLAG = 0 THEN
+  RAISE EXCEPTION 'Table not exist = %', NAM_TAB;
+END IF;
+FOR NAM_OBJ IN  SELECT X.attname AS COL FROM  pg_attribute X  WHERE X.attrelid = (
+            SELECT Y.oid FROM pg_class Y WHERE Y.relname  = NAM_TAB AND Y.relkind = 'r' AND Y.relnamespace = 
+           (SELECT Z.oid FROM pg_namespace Z WHERE Z.nspname = NAM_SCHEM)) AND X.attname LIKE '@%' 
+           LOOP
+		FOR NAM_R IN SELECT pg_get_serial_sequence(NAM_SCHEM||'."'||NAM_TAB||'"', NAM_OBJ.COL) AS NAM_SEQ LOOP
+-- поиск максимального значения ключевого поля   
+		EXECUTE 'SELECT MAX("'||NAM_OBJ.COL||'") FROM '||NAM_SCHEM||'."'||NAM_TAB||'"' INTO MAXX;
+-- выбор последнего значения последовательности
+		EXECUTE 'SELECT last_value FROM '||NAM_R.NAM_SEQ INTO SEQ_COUNT;
+		IF SEQ_COUNT IS NULL THEN SEQ_COUNT :=0; END IF;
+-- если максимальное значение ключевого поля больше номера последовательности то меняем последовательность
+		IF ((MAXX IS NOT NULL) AND (MAXX &gt;= SEQ_COUNT)) THEN 
+		EXECUTE 'ALTER SEQUENCE '||NAM_R.NAM_SEQ||' RESTART WITH '|| MAXX+1 ||' ';
+		RAISE NOTICE 'Исправлена последовательность = %, Новое = %, Старое = %', NAM_R.NAM_SEQ, MAXX, SEQ_COUNT;
+		END IF;	
+		END LOOP;
+ END LOOP;
+END
+$$;</body>
+      </definition>
+    </select>
+    <select access_mode="0" is_service="1" last_changed="Коростиль А.В." name="ОбслуживаниеБД.КорректировкаСсылокПоследовательности" responsible="Коростиль А.В." returns="NONE" type="SQL">
+      <comment>Корректировка не верно оформленных ссылок из схем пользователей</comment>
+      <definition>
+        <language>PLPGSQL</language>
+        <body>DO $$
+DECLARE
+NAM_OBJ RECORD;
+-- коррекция неверно оформленных ссылок из схем пользователей на последовательности в общей схеме
+-- например, в схеме _000000A ключ таблицы YYY ссылается на SEQ: nextval ('YYY_@YYY')  (схема public)
+-- необходима коррекция - ссылка должна быть nextval (_000000A.'YYY_@YYY')
+BEGIN
+FOR NAM_OBJ IN SELECT columns.table_schema as sch, columns.table_name as tb_nam, columns.column_name as col_nam, 
+  columns.column_default as col_def,
+  'nextval('''||columns.table_schema||'.'|| substr(columns.column_default, strpos(columns.column_default,'al(')+4, length(columns.column_default)) as def_n 
+  FROM information_schema.columns WHERE columns.column_default LIKE '%nex%' 
+  AND table_schema != 'public' AND table_schema != 'londiste' and column_default not like '%pg_get_serial%'
+  and column_default not like '%'||columns.table_schema||'%' ORDER BY columns.table_name LOOP
+  EXECUTE 'ALTER TABLE '|| NAM_OBJ.sch ||'."'|| NAM_OBJ.tb_nam ||'" ALTER COLUMN "' || NAM_OBJ.col_nam || '" SET DEFAULT  '|| NAM_OBJ.def_n || '';
+  END LOOP;
+END
+$$;</body>
+      </definition>
+    </select>
+    <select access_mode="0" is_service="1" last_changed="Бойцов Е.А." name="ОбслуживаниеБД.ПересоздатьТриггерыLondiste" responsible="Бойцов Е.А." returns="NONE" type="SQL">
+      <definition>
+        <language>PLPGSQL</language>
+        <body>do $$
+declare 
+   qname text;
+   tblname text;
+   tgname text;
+begin
+
+for qname, tblname, tgname in select queue_name, table_name, trigger_name from londiste.provider_table loop
+   begin
+      execute 'drop trigger ' || quote_ident( tgname ) || ' on ' || londiste.quote_fqname( tblname );
+   exception
+      when undefined_table then
+         raise notice 'table % does not exist', tblname;
+      when undefined_object THEN
+         raise notice 'trigger % does not exist on table %', tgname, tblname;
+   end;
+
+   begin
+      perform londiste.provider_create_trigger( qname, tblname, londiste.find_column_types( tblname ) ); 
+   exception
+      when others then
+         raise notice 'Cannot create trigger % on %', tgname, tblname;
+   end;
+end loop;
+
+end;
+$$ language 'plpgsql'</body>
+      </definition>
+    </select>
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="av.korostil" name="ОбслуживаниеБД.СнятьЗависшиеЗапросы" responsible="av.korostil" returns="TABLE" type="NATIVE">
+      <return name="ДатаВремя">
+        <format>
+          <type>DATETIME</type>
+        </format>
+      </return>
+      <return name="Запрос">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="Длительность">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+      <return name="НазваниеБЛ">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="НазваниеБД">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="PID">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+    </select>
+    <select access_mode="0" is_service="1" last_changed="Коростиль А.В." name="ОбслуживаниеБД.СнятьЗависшиеЗапросы" responsible="av.korostil" returns="TABLE" type="SQL">
+      <comment>Снятие запросов, которые выполняются дольше указанного временного интервала</comment>
+      <parameter name="ИнтервалСекунд">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <parameter name="ПрефиксПриложения">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="ДатаВремя">
+        <format>
+          <type>DATETIME</type>
+        </format>
+      </return>
+      <return name="Запрос">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="Длительность">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+      <return name="НазваниеБЛ">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="НазваниеБД">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="PID">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+      <definition>
+        <language>PLPGSQL</language>
+        <body>SELECT * FROM (SELECT
+	now()::timestamp without time zone cur_datetime
+	, current_query cur_query
+	, extract(epoch from (now() - xact_start))::integer cur_length
+	, application_name cur_appname
+	, pg_terminate_backend(procpid) term_result
+	, datname::text cur_db
+	, procpid cur_pid
+FROM
+	pg_stat_activity
+WHERE
+	datname = current_database() AND
+	application_name ILIKE :ПрефиксПриложения || '%' AND
+	now() - xact_start &gt; (:ИнтервалСекунд::text || ' SECOND')::interval
+	) AS term_list
+WHERE term_result IS TRUE</body>
+      </definition>
+    </select>
+    <select access_mode="0" is_service="0" last_changed="Протасов В.М." name="ОбслуживаниеБД.УдалитьБлобыБезСсылокИзБД" responsible="Протасов В.М." returns="SCALAR" type="PYTHON">
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>query_delete = r"""
+DELETE
+FROM {table_name}
+WHERE "GUID" IS NOT NULL
+   AND "ДатаВремя" &lt; now() - interval '30 minutes'
+RETURNING 1
+;
+"""
+# получаем соединение с БД
+database = GetConnectedDatabase()
+stm = database.CreateStatement()
+
+# Получаем список таблиц
+table_list = stm.Exec(r"""
+SELECT 
+   quote_ident(nspname) || '.' || quote_ident(C2.relname) AS "КвалифицированноеИмя"
+FROM pg_namespace
+   JOIN pg_class C1 ON C1.relnamespace = pg_namespace.oid
+   JOIN pg_class C2 ON C2.relnamespace = pg_namespace.oid
+WHERE C1.relkind = 'r' AND C2.relkind = 'r'
+   AND C1.relname SIMILAR TO 'lob.%' 
+   AND (nspname SIMILAR TO E'\\_[1234567890abcdef]{8}' OR nspname = 'public') 
+   AND ('lob.' || C2.relname):: name = C1.relname
+   AND has_schema_privilege(nspname, 'USAGE') 
+;""").get()
+
+total_count = 0  # Итоговое количество удаленных блобов
+
+# Проходимся по списку таблиц с блобами
+while table_list.Next():
+   table = table_list.Data()
+   # Удаляем из каждой блобы с ненулевым GUID'ом старше 30 минут
+   table_name = table["КвалифицированноеИмя"]
+   stm = database.CreateStatement()
+   res = stm.Exec(query_delete.format(table_name=table_name))
+   # Считаем сколько блобов удалили
+   count = 0
+   while res.Next():
+      count += 1
+   total_count += count
+   if count &gt; 0:
+      LogMsg("Удалено {count} блобов, не связанных с объектами из таблицы {table_name}".format(
+         table_name=table_name, count=count))
+   #else:  # Можно писать что очистка не требуется
+
+# Готово, возвращаем "итого"
+LogMsg("Итого удалено {count} блобов, не связанных с объектами".format(count=total_count))
+return total_count</body>
+      </definition>
+    </select>
+  </object>
+
+  <select access_mode="1" is_proxy="0" is_service="0" name="БазовыйОбъект.Корень" returns="SCALAR" type="NATIVE">
+    <comment>Функция возвращает адрес корневой записи для метода с названием ИмяМетода, выше которой подняться нельзя. Реализация по умолчанию всегда возвращает null.</comment>
+    <parameter name="ИмяМетода">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </parameter>
+    <return name="___SBIS_SCALAR_RETURN___">
+      <format>
+        <type>INT64</type>
+      </format>
+    </return>
+  </select>
+
+  <select access_mode="1" is_proxy="0" is_service="0" name="БазовыйОбъект.Корень" returns="SCALAR" type="NATIVE">
+    <comment>Вторая версия функции "Корень", предназначенной для организации отображения иерархических выборок от определенного раздела. Данная перегрузка дополнительно получает на вход параметры фильтрации, переданные при вызове. Реализация по-умолчанию возвращает NULL.</comment>
+    <parameter name="ИмяМетода">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </parameter>
+    <parameter name="Фильтр">
+      <format>
+        <type>RECREFERENCE</type>
+        <free>1</free>
+      </format>
+    </parameter>
+    <return name="___SBIS_SCALAR_RETURN___">
+      <format>
+        <type>INT64</type>
+      </format>
+    </return>
+  </select>
+
+  <select access_mode="1" is_proxy="0" is_service="0" name="БазовыйОбъект.ПолныйСписокПолей" returns="TABLE" type="NATIVE">
+    <comment>Данная функция позволяет получить полный список полей, которые может вернуть 
+метод объекта бизнес-логики. Для обычного метода данный список будет просто содержать 
+имена всех возвращаемых полей, а для выборок - полный список полей, до которых можно "добраться"
+по всем активированным связям выборки.</comment>
+    <parameter name="ИмяМетодаСВыборкой">
+      <format>
+        <type>STRING</type>
+        <max_size>0</max_size>
+      </format>
+    </parameter>
+    <return name="ИмяПоля">
+      <format>
+        <type>STRING</type>
+        <max_size>0</max_size>
+      </format>
+    </return>
+  </select>
+
+  <select access_mode="1" is_proxy="0" is_service="0" name="БазовыйОбъект.СтруктураОбъекта" returns="TABLE" type="NATIVE">
+    <parameter name="ИмяОбъекта">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </parameter>
+    <return name="ИмяТаблицы">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </return>
+  </select>
+
+</repository>

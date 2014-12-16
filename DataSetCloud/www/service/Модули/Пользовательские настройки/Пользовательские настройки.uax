@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<action_repository version="1.2">
+
+  <action identifier_action="Пользовательские настройки" is_service="1" last_changed="Щукин А.В." name="Пользовательские настройки" responsible="Щукин А.В.">
+    <privilegy access="2" object="Параметры"/>
+  </action>
+
+</action_repository>

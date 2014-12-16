@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui_module id="d5053f94-136b-4191-aa7f-072195ae138d" name="Работа с OLAP" package="Платформа" responsible="up.doump" version="1.00">
+
+  <description/>
+
+  <depends/>
+
+  <load_after/>
+
+  <parameters/>
+
+  <resources/>
+
+</ui_module>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<action_repository version="1.2">
+
+  <action identifier_action="Администрирование БД" is_service="0" last_changed="Протасов В.М." name="Администрирование БД" responsible="Протасов В.М.">
+    <privilegy access="2" object="ОбслуживаниеБД.УдалитьБлобыБезСсылокИзБД"/>
+  </action>
+
+  <action identifier_action="Снятие зависших запросов" is_service="0" last_changed="av.korostil" name="Снятие зависших запросов" responsible="av.korostil">
+    <privilegy access="2" object="ОбслуживаниеБД.СнятьЗависшиеЗапросы"/>
+  </action>
+
+</action_repository>

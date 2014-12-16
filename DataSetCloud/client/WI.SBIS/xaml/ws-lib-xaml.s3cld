@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cloud id="bc819bb1-7ff8-48f0-99b8-696410c067a4" name="ws-res-xaml" platform="По умолчанию" responsible="Тюрин В.С.">
+
+  <description/>
+
+  <items>
+    <application id="56cb203d-883c-40d2-898b-ce4c801ff1d5" name="ws-res-xaml" url="./ws-lib-xaml.s3app"/>
+  </items>
+
+</cloud>

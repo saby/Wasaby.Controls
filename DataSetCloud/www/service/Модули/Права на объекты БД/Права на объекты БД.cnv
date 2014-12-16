@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<converter_library version="1.00">
+
+  <converter abstract="0" name="ПраваНаОбъектыБД">
+    <comment>Базовые действия по назначению прав на местер и слейв базе.</comment>
+    <rule name=".*" schema=".*" stage="1" type="3"/>
+    <rule name=".*" schema=".*" stage="0" type="2"/>
+    <callback event="1">
+      <body>DECLARE
+   NBD TEXT; 
+BEGIN
+   IF context-&gt;'schema' = 'public' AND NOT EXISTS( SELECT * FROM pg_authid WHERE rolname = 'service_user' ) THEN
+   	CREATE ROLE service_user LOGIN PASSWORD 'service_user' NOSUPERUSER INHERIT CREATEDB NOCREATEROLE;
+      SELECT current_database() INTO NBD; 
+      EXECUTE 'GRANT CONNECT, CREATE ON DATABASE "'|| NBD ||'" TO service_user'; 
+   END IF;
+   
+   IF context-&gt;'schema' = 'public' AND NOT EXISTS( SELECT * FROM pg_authid WHERE rolname = 'londiste' ) THEN
+   	CREATE ROLE londiste LOGIN PASSWORD 'londiste' NOSUPERUSER INHERIT CREATEDB NOCREATEROLE;
+      SELECT current_database() INTO NBD; 
+      EXECUTE 'GRANT CONNECT, CREATE ON DATABASE "'|| NBD ||'" TO service_user';    
+   END IF;
+      
+   --Даем права на схему
+   EXECUTE 'ALTER SCHEMA ' || quote_ident( context-&gt;'schema' ) || ' OWNER TO service_user;';
+   EXECUTE 'GRANT USAGE ON SCHEMA ' || quote_ident( context-&gt;'schema' ) || ' TO service_user';
+END;</body>
+      <comment>Создаем роль service_user в случае таковой необходимости и даем ему права на схему.</comment>
+    </callback>
+    <callback event="2">
+      <body>BEGIN
+   IF context-&gt;'stage' = 'after' and context-&gt;'schema' &lt;&gt; 'public'THEN
+      EXECUTE 'ALTER TABLE '|| quote_ident( context-&gt;'schema' ) || '.' || quote_ident( context-&gt;'table' ) || ' OWNER TO service_user;';
+   END IF;
+END;</body>
+      <comment>Даем права на созданную таблицу пользователю service_user.</comment>
+    </callback>
+    <callback event="7">
+      <body>BEGIN
+   IF context-&gt;'stage' = 'before' and context-&gt;'schema' &lt;&gt; 'public' THEN
+   
+      EXECUTE 'CREATE SEQUENCE ' || quote_ident( context-&gt;'schema' ) || '.' || quote_ident( context-&gt;'sequence' ) || ';';  
+      EXECUTE 'ALTER SEQUENCE ' || quote_ident( context-&gt;'schema' ) || '.' || quote_ident( context-&gt;'sequence' ) || ' OWNER TO service_user;';
+      EXECUTE 'ALTER SEQUENCE ' || quote_ident( context-&gt;'schema' ) || '.' || quote_ident( context-&gt;'sequence' ) || ' OWNED BY '
+         || quote_ident( context-&gt;'schema' ) || '.' || quote_ident( context-&gt;'table' ) || '.' || quote_ident( context-&gt;'column' ) || ';';
+      result := true;
+      
+   END IF;
+END;</body>
+      <comment>Самостоятельно создаем последовательность и даем права на нее service_user-у.</comment>
+    </callback>
+    <callback event="27">
+      <body>BEGIN
+IF context-&gt;'stage' = 'after' THEN
+	EXECUTE 'ALTER FUNCTION '|| quote_ident( context-&gt;'schema' ) || '.' || quote_ident( context-&gt;'function' ) 
+		|| '(' || ( context-&gt;'arguments' ) || ') OWNER TO service_user;';
+	EXECUTE 'GRANT ALL PRIVILEGES ON FUNCTION ' ||  quote_ident( context-&gt;'schema' ) || '.' || quote_ident( context-&gt;'function' ) 
+		|| '(' || ( context-&gt;'arguments' ) || ') TO service_user;';
+END IF;
+END;</body>
+      <comment>Даем права на созданную хранимку service_user-у</comment>
+    </callback>
+    <callback event="26">
+      <body>DECLARE
+   replicated_table text;
+   sch_lond boolean;
+   sch_pgq boolean;
+BEGIN
+IF context-&gt;'schema' = 'public' THEN
+      sch_lond = EXISTS( SELECT * FROM pg_namespace WHERE nspname = 'londiste' );
+      sch_pgq = EXISTS( SELECT * FROM pg_namespace WHERE nspname = 'pgq' );  
+END IF;  
+--///////////////////////////////////////////////////////////////////////////////////
+IF sch_lond AND sch_pgq THEN
+--MDB   
+   --назначить права londiste на схемы: londiste, pgq, public
+   IF context-&gt;'schema' = 'public' THEN  
+         --londiste полностью владеет своей схемой
+    		GRANT USAGE ON SCHEMA londiste TO londiste; 	
+   		GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA londiste TO londiste;
+   		GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA londiste TO londiste;
+   		GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA londiste TO londiste; 
+         --londiste полностью владеет схемой pgq       
+   		GRANT USAGE ON SCHEMA pgq TO londiste; 	
+   		GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA pgq TO londiste;
+   		GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA pgq TO londiste;
+   		GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA pgq TO londiste;         
+         --оперделив список репл. табл., назначить londiste некоторые права эти таблицы
+         FOR replicated_table IN SELECT 'public.' || quote_ident( replace( table_name, 'public.', '' ) ) FROM londiste.provider_table LOOP	    
+         if EXISTS( SELECT relname FROM pg_class WHERE relnamespace = 2200 and 
+         relname = replace( replace( replicated_table, 'public."', '' ), '"', '') ) 
+             then
+               EXECUTE 'GRANT SELECT, TRIGGER ON TABLE ' || replicated_table || ' TO londiste';
+             end if;
+   	   END LOOP;   
+   END IF;
+   --назначить права service_user на ВСЕ схемы MDB
+END IF;
+--///////////////////////////////////////////////////////////////////////////////////
+IF sch_lond AND sch_pgq = false THEN
+--SDB
+      
+   IF context-&gt;'schema' = 'public' THEN
+      --londiste полностью владеет своей схемой
+      GRANT USAGE ON SCHEMA londiste TO londiste; 	
+      GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA londiste TO londiste;
+      GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA londiste TO londiste;
+      GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA londiste TO londiste;  
+      
+     -- Дать права londiste на реплицируемые таблицы
+     FOR replicated_table IN SELECT 'public.'||replace(table_name,'public.','"')||'"' FROM londiste.subscriber_table LOOP
+      if EXISTS( SELECT relname FROM pg_class WHERE relnamespace = 2200 and 
+      relname = replace( replace( replicated_table, 'public."', '' ), '"', '') ) 
+       then     
+         EXECUTE 'GRANT SELECT, INSERT, UPDATE, DELETE, TRUNCATE, TRIGGER ON TABLE ' || replicated_table || ' TO londiste';
+       end if;
+     END LOOP;
+    -- Забрать права service_user с реплицируемых таблиц
+     FOR replicated_table IN SELECT 'public.'||replace(table_name,'public.','"')||'"' FROM londiste.subscriber_table LOOP
+      if EXISTS( SELECT relname FROM pg_class WHERE relnamespace = 2200 and 
+      relname = replace( replace( replicated_table, 'public."', '' ), '"', '') ) 
+       then     
+         EXECUTE 'REVOKE INSERT, UPDATE, DELETE, TRUNCATE, TRIGGER ON TABLE ' || replicated_table || ' FROM service_user';
+       end if;
+     END LOOP;  
+   END IF;
+END IF;
+--///////////////////////////////////////////////////////////////////////////////////
+END;</body>
+      <comment>Раздать стандартные права системным пользователям БД на мастере и слейве</comment>
+    </callback>
+  </converter>
+
+</converter_library>

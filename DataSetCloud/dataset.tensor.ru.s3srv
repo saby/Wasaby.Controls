@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<service id="d2181eda-9c89-4493-b4b0-d9b980b3b089" name="dataset.tensor.ru">
+
+  <description/>
+
+  <items>
+    <bl_module id="d124c52b-d73e-4d90-b989-a60a5c2e2ae1" name="Права на объекты БД" url="./www/service/Модули/Права на объекты БД/Права на объекты БД.s3mod"/>
+    <bl_module id="16779777-d6ee-4d93-bd86-83dbd7ce03b4" name="Python" url="./www/service/Модули/Python/Python.s3mod"/>
+    <bl_module id="6f8333a3-aa5f-404e-ae9f-6fa42dcdc349" name="Бизнес-логика" url="./www/service/Модули/Бизнес-логика/Бизнес-логика.s3mod"/>
+    <bl_module id="dd8a6d7a-73de-40cb-9971-9cf089f584c3" name="Магазин" url="./Магазин/Магазин.s3mod"/>
+    <bl_module id="f6b3f42a-b1ad-4ac3-8b4f-8a0978b599c0" name="Пользовательские настройки" url="./www/service/Модули/Пользовательские настройки/Пользовательские настройки.s3mod"/>
+    <bl_module id="6fc02564-c885-4b66-b8e8-727bff7a8436" name="Работа с БД" url="./www/service/Модули/Работа с БД/Работа с БД.s3mod"/>
+  </items>
+
+  <resources/>
+
+  <parameters_packages/>
+
+</service>

@@ -1,0 +1,235 @@
+<docstrings>
+   <sbis_methods>
+      <SqlQuery>SqlQuery( (str)query[, (IField)arg1, (IField)arg2, ...]) -> RecordSetSPtr :
+          Возвращает  результат запроса (выборку) к БЛ с передачей формата возвращенных полей и параметров в любом порядке.
+
+          C++ signature:
+           SqlQuery( (str)query, (ConstIRecFormatSPtr)format[, (IField)arg1, (IField)arg2, ...]) -> RecordSetSPtr
+           SqlQuery( (str)query, (Record)params[, (IField)arg1, (IField)arg2, ...]) -> RecordSetSPtr
+           SqlQuery( (str)query, (Record)params, (ConstIRecFormatSPtr)format[, (IField)arg1, (IField)arg2, ...]) -> RecordSetSPtr
+           SqlQuery( (str)query, (ConstIRecFormatSPtr)format, (Record)params[, (IField)arg1, (IField)arg2, ...]) -> RecordSetSPtr
+      </SqlQuery>
+      <SqlQueryRecord>SqlQueryRecord( (str)query[, (IField)arg1, (IField)arg2, ...]) -> Record
+          Возвращает результат запроса (выборку) к БЛ с передачей формата возвращенных полей и параметров в любом порядке.
+
+          C++ signature:
+           SqlQueryRecord( (str)query[, (IField)arg1, (IField)arg2, ...]) -> Record
+           SqlQueryRecord( (str)query, (ConstIRecFormatSPtr)format[, (IField)arg1, (IField)arg2, ...]) -> Record
+           SqlQueryRecord( (str)query, (Record)params[, (IField)arg1, (IField)arg2, ...]) -> Record
+           SqlQueryRecord( (str)query, (Record)params, (ConstIRecFormatSPtr)format[, (IField)arg1, (IField)arg2, ...]) -> Record
+           SqlQueryRecord( (str)query, (ConstIRecFormatSPtr)format, (Record)params[, (IField)arg1, (IField)arg2, ...]) -> Record
+      </SqlQueryRecord>
+      <SqlQueryScalar>SqlQueryScalar( (str)query[, (IField)arg1, (IField)arg2, ...]) -> object
+          Возвращает результат запроса (выборку) к БЛ с передачей формата возвращенных полей и параметров в любом порядке.
+
+          C++ signature:
+           SqlQueryScalar( (str)query[, (IField)arg1, (IField)arg2, ...]) -> object
+           SqlQueryScalar( (str)query, (ConstIRecFormatSPtr)format[, (IField)arg1, (IField)arg2, ...]) -> object
+           SqlQueryScalar( (str)query, (Record)params[, (IField)arg1, (IField)arg2, ...]) -> object
+           SqlQueryScalar( (str)query, (Record)params, (ConstIRecFormatSPtr)format[, (IField)arg1, (IField)arg2, ...]) -> object
+           SqlQueryScalar( (str)query, (ConstIRecFormatSPtr)format, (Record)params[, (IField)arg1, (IField)arg2, ...]) -> object
+      </SqlQueryScalar>      
+      </sbis_methods>
+<sbis_classes>
+  <ActiveRecord></ActiveRecord>
+  <BField></BField>
+  <BadGatewayException></BadGatewayException>
+  <BoolField></BoolField>
+  <BranchType>
+    <HIDDEN>Скрыт.</HIDDEN>
+    <LEAF>Лист.</LEAF>
+    <NODE>Узел.</NODE>
+  </BranchType>
+  <DateField></DateField>
+  <DateTimeField></DateTimeField>
+  <Error></Error>
+  <FieldType>
+    <ftARRAY_BOOLEAN>формат логического массива</ftARRAY_BOOLEAN>
+    <ftARRAY_DATE>формат массива дат</ftARRAY_DATE>
+    <ftARRAY_DATETIME>формат массива дата-время</ftARRAY_DATETIME>
+    <ftARRAY_DOUBLE>формат массива double</ftARRAY_DOUBLE>
+    <ftARRAY_FLOAT>формат массива float</ftARRAY_FLOAT>
+    <ftARRAY_INT16>формат целочисленного массива, 2 байта</ftARRAY_INT16>
+    <ftARRAY_INT32>формат целочисленного массива, 4 байта</ftARRAY_INT32>
+    <ftARRAY_INT64>формат целочисленного массива, 8 байт</ftARRAY_INT64>
+    <ftARRAY_MONEY>формат массива денег</ftARRAY_MONEY>
+    <ftARRAY_TEXT>формат целочисленного массива, 8 байт</ftARRAY_TEXT>
+    <ftARRAY_TIME>формат массива времени</ftARRAY_TIME>
+    <ftARRAY_UUID>формат массива uuid</ftARRAY_UUID>
+    <ftBINARY>Поле для хранения двоичных данных</ftBINARY>
+    <ftBLOB>Поле для хранения больших двоичных данных</ftBLOB>
+    <ftBOOLEAN>Логическое поле</ftBOOLEAN>
+    <ftDATE>Поле для хранения даты</ftDATE>
+    <ftDATETIME>Поле для хранения даты и времени</ftDATETIME>
+    <ftDBIDENTIFIER>Служебный первичный ключ</ftDBIDENTIFIER>
+    <ftDOUBLE>Формат с плавающей точкой, аналог double</ftDOUBLE>
+    <ftEND>Конец перечисляемых значений</ftEND>
+    <ftENUM>Перечисляемое поле, транслируемое по словарю</ftENUM>
+    <ftFIELD_FROM_TABLE_REF>Ссылка на поле из таблицы</ftFIELD_FROM_TABLE_REF>
+    <ftFLAGS>Поле, содержащее флаги с тремя значениями</ftFLAGS>
+    <ftFLAGSMASK>Поле, содержащее маску флагов с тремя значениями</ftFLAGSMASK>
+    <ftFLOAT>Формат с плавающей точкой, аналог float</ftFLOAT>
+    <ftIDENTIFIER>Первичный ключ, идентификатор объекта</ftIDENTIFIER>
+    <ftINT16>Целочисленные формат, 2 байта</ftINT16>
+    <ftINT32>Целочисленные формат, 4 байта</ftINT32>
+    <ftINT64>Целочисленные формат, 8 байт</ftINT64>
+    <ftINT8>Целочисленные формат, 1 байт</ftINT8>
+    <ftLINK_1_TO_1_MASTER>Связь "один-к-одному" со стороны главной таблицы, на структуру таблиц не отображается</ftLINK_1_TO_1_MASTER>
+    <ftLINK_1_TO_1_SLAVE>Связь "один-к-одному" со стороны дочерней таблицы</ftLINK_1_TO_1_SLAVE>
+    <ftLINK_1_to_N>Связь "один-ко-многим" со стороны одного, на структуру таблиц не отображается</ftLINK_1_to_N>
+    <ftLINK_BY_VALUE>Связь "по значению"</ftLINK_BY_VALUE>
+    <ftLINK_BY_VALUE_MASTER>Связь "по значению" со стороны главной таблицы, на структуру не отображается</ftLINK_BY_VALUE_MASTER>
+    <ftLINK_COND_MASTER>Связь "условное расширение" со стороны главной таблицы</ftLINK_COND_MASTER>
+    <ftLINK_COND_SLAVE>Связь "условное расширение" со стороны подчиненной таблицы</ftLINK_COND_SLAVE>
+    <ftLINK_HIER>Иерархия</ftLINK_HIER>
+    <ftLINK_N_to_1>Связь "один-ко-многим" со стороны многих</ftLINK_N_to_1>
+    <ftLINK_ON_DEMAND_MASTER>Расширение по требованию со стороны базовой таблицы</ftLINK_ON_DEMAND_MASTER>
+    <ftLINK_ON_DEMAND_SLAVE>Расширение по требованию</ftLINK_ON_DEMAND_SLAVE>
+    <ftLINK_UNCOND_MASTER>Связь "безусловное расширение" со стороны главной таблицы, на структуру таблиц не отображается</ftLINK_UNCOND_MASTER>
+    <ftLINK_UNCOND_SLAVE>Связь "безусловное расширение" со стороны подчиненной таблицы</ftLINK_UNCOND_SLAVE>
+    <ftMONEY>Поле для хранения денег</ftMONEY>
+    <ftNAVIGATION>Навигация для аргументов в RecInvoke</ftNAVIGATION>
+    <ftRECORD>Поле для хранения записи.</ftRECORD>
+    <ftRECORDSET>Поле для хранения набора записей.</ftRECORDSET>
+    <ftRPC_FILE>RPC-файл для аргументов в RecInvoke</ftRPC_FILE>
+    <ftSORTING>Сортировка для аргументов в RecInvoke</ftSORTING>
+    <ftSTRING>Строка ограниченной длины</ftSTRING>
+    <ftTEXT>Текст неограниченной длины</ftTEXT>
+    <ftTIME>Поле для хранения времени</ftTIME>
+    <ftUNDEFINED>Неопределенный формат поля</ftUNDEFINED>
+    <ftUUID>Поле типа UUID</ftUUID>
+    <ftXML>Поле типа XML</ftXML>
+  </FieldType>
+  <FlagValue>
+    <FALSE>Ложь</FALSE>
+    <NULL>Неопределенноет значение</NULL>
+    <TRUE>Истина</TRUE>
+  </FlagValue>
+  <FloatField></FloatField>
+  <FormatOptions>
+    <foANY_TO_WRITE>записываем в поле данные любого формата</foANY_TO_WRITE>
+    <foCREATE_UNDEFINED>значение данного формата создаётся как UNDEFINED_VALUE</foCREATE_UNDEFINED>
+    <foCURRENT_DATETIME>значение по умолчанию берётся из текущей даты/времени</foCURRENT_DATETIME>
+    <foDEFAULT>опции формата по умолчанию</foDEFAULT>
+    <foDISCERN_LEAFS>различать листья в поле иерархии (устарело, теперь по умолчанию они различаются)</foDISCERN_LEAFS>
+    <foGENERATED_UUID></foGENERATED_UUID>
+    <foIDENTIFIER>значением по умолчанию является сгенерированный Uuid</foIDENTIFIER>
+    <foLEAFS_ONLY>не различать узлы и листья в поле иерархии</foLEAFS_ONLY>
+    <foREAD_ONLY>значение данного формата защищено от записи</foREAD_ONLY>
+    <foUNSAFE_TEXT>текст может содержать скрипты внутри тэгов HTML</foUNSAFE_TEXT>
+    <foVALUE_ONLY>значение данного формата не может принимать NULL</foVALUE_ONLY>
+  </FormatOptions>
+  <HierarchyBranch>
+    <hbsBRANCH>Узел</hbsBRANCH>
+    <hbsHIDDEN_BRANCH>Скрытый узел</hbsHIDDEN_BRANCH>
+    <hbsLEAF>Лист</hbsLEAF>
+  </HierarchyBranch>
+  <IntField></IntField>
+  <ModuleType>
+    <ACCESS_SPECIFIC>Обслуживание доступа</ACCESS_SPECIFIC>
+    <DATABASE_SPECIFIC>Обслуживание БД</DATABASE_SPECIFIC>
+    <NOT_SPECIFIED>Не указан</NOT_SPECIFIED>
+  </ModuleType>
+  <NavigationResultType>
+    <nrIS_NEXT>Следующий</nrIS_NEXT>
+    <nrNONE>Нет</nrNONE>
+    <nrREC_COUNT>Количество записей</nrREC_COUNT>
+  </NavigationResultType>
+  <NullSortPolicy>
+    <nspNULLS_FIRST>помещать NULL-значения в начало</nspNULLS_FIRST>
+    <nspNULLS_LAST>помещать NULL-значения в конец</nspNULLS_LAST>
+  </NullSortPolicy>
+  <ProcedureType>
+    <ptAUTO_GENERATEDPROXY>автогенерируемый proxy-метод</ptAUTO_GENERATEDPROXY>
+    <ptNATIVE>встроенная функция библиотеки</ptNATIVE>
+    <ptPYTHON>метод на Python</ptPYTHON>
+    <ptSQL>простой SQL-запрос</ptSQL>
+    <ptSTORED_PROC>хранимая процедура БД</ptSTORED_PROC>
+    <ptSTUB>заглушка, объявление без реализации</ptSTUB>
+  </ProcedureType>
+  <ProxyMethodType>
+    <pmtCOPY>копировать</pmtCOPY>
+    <pmtCREATE>создать</pmtCREATE>
+    <pmtDROP>удалить</pmtDROP>
+    <pmtHISTORY>история</pmtHISTORY>
+    <pmtMERGE>объединить</pmtMERGE>
+    <pmtREAD>прочитать</pmtREAD>
+    <pmtSELECT>произвольный метод</pmtSELECT>
+    <pmtSTANDART>стандартный метод</pmtSTANDART>
+    <pmtWRITE>записать</pmtWRITE>
+  </ProxyMethodType>
+  <RedisStatus>
+    <OK>Операция завершилась успешно</OK>
+    <NETWORK_ERROR>Ошибка сетевого соединения</NETWORK_ERROR>
+    <KEY_NOT_FOUND>Значение по ключу не найдено</KEY_NOT_FOUND>
+    <SMALL_BUFFER_SIZE>Входной буфер недостаточного размера</SMALL_BUFFER_SIZE>
+  </RedisStatus>
+  <ResourceType>
+    <rtAREA_OF_SIGHT>сама область видимости</rtAREA_OF_SIGHT>
+    <rtAREA_OF_SIGHT_FUNCTION>функция построения области видимости</rtAREA_OF_SIGHT_FUNCTION>
+    <rtCONVERTER_EXTENSION>конвертер</rtCONVERTER_EXTENSION>
+    <rtDECLARATIVE_SELECT>декларативное описание выборки</rtDECLARATIVE_SELECT>
+    <rtFILE_READ_LIST_METHOD>прочитать список файлов с данным GUID-ом</rtFILE_READ_LIST_METHOD>
+    <rtFILE_READ_METHOD>метод для чтения файлов</rtFILE_READ_METHOD>
+    <rtFILE_WRITE_AND_ATTACH_METHOD>метод для записи файлов с одновременным прикреплением к объекту</rtFILE_WRITE_AND_ATTACH_METHOD>
+    <rtFILE_WRITE_METHOD> метод для записи файлов</rtFILE_WRITE_METHOD>
+    <rtGENERATED_METHOD>метод, сгенерированный автоматически</rtGENERATED_METHOD>
+    <rtHTTP_REQUEST>метод - HTTP-запрос</rtHTTP_REQUEST>
+    <rtPROXY>proxy-метод</rtPROXY>
+    <rtROLE>роль</rtROLE>
+    <rtSELECT>обычная выборка, хранимая процедура или функция С++</rtSELECT>
+    <rtSTANDART_SELECT>метод со стандартными параметрами</rtSTANDART_SELECT>
+    <rtTABLE>таблица</rtTABLE>
+    <rtTRIGGER_FUNCTION>триггерная функция</rtTRIGGER_FUNCTION>
+    <rtUSER_ACTION>логическое действие пользователя</rtUSER_ACTION>
+  </ResourceType>
+  <SortOrder>
+    <soASCENDING>восходящая сортировка</soASCENDING>
+    <soDESCENDING>нисходящая сортировка</soDESCENDING>
+  </SortOrder>
+  <StringField></StringField>
+  <TimeField></TimeField>
+  <TransactionLevel>
+    <READ_COMMITTED>чтение фиксированных данных</READ_COMMITTED>
+    <READ_UNCOMMITTED>чтение незафиксированных данных</READ_UNCOMMITTED>
+    <REPEATABLE_READ>повторяемость чтения</REPEATABLE_READ>
+    <SERIALIZABLE>упорядочиваемость</SERIALIZABLE>
+  </TransactionLevel>
+  <TransactionMode>
+    <READ>Чтение</READ>
+    <WRITE>Запись</WRITE>
+  </TransactionMode>
+  <TransportError></TransportError>
+  <TriboolValue>
+    <false_value>Ложь</false_value>
+    <indeterminate_value>Неопределенное значение</indeterminate_value>
+    <true_value>Истина</true_value>
+  </TriboolValue>
+  <UuidField></UuidField>
+  <WebServerContextKey>
+    <icsASYNC_INVOKE>Асинхронный запрос без ожидания ответа</icsASYNC_INVOKE>
+    <icsBROWSER>Браузер (определяется по заголовку User-Agent)</icsBROWSER>
+    <icsCERTIFICATE>сертификат в BASE64</icsCERTIFICATE>
+    <icsCONNECTION>Connection</icsCONNECTION>
+    <icsCONTENT_DISPOSITION>заголовок ContentDisposition</icsCONTENT_DISPOSITION>
+    <icsCONTENT_LENGTH>заголовок Content-Length</icsCONTENT_LENGTH>
+    <icsCONTENT_RANGE>Content-Range</icsCONTENT_RANGE>
+    <icsCONTENT_TYPE>http-заголовок CONTENT_TYPE</icsCONTENT_TYPE>
+    <icsENCODING>кодировка запроса</icsENCODING>
+    <icsPATH_INFO>PathInfo</icsPATH_INFO>
+    <icsQUERY_STRING>Запрос</icsQUERY_STRING>
+    <icsRAW_HEADERS>Сырые заголовки запроса</icsRAW_HEADERS>
+    <icsREMOTE_ADDR>ip-адрес клиента или его прокси/файрвола</icsREMOTE_ADDR>
+    <icsREPOSITORY_HASH>http-заголовок X-RepositoryHash</icsREPOSITORY_HASH>
+    <icsREQUEST_NUMBER>Номер запроса</icsREQUEST_NUMBER>
+    <icsREQUEST_TYPE>тип запроса (POST/GET)</icsREQUEST_TYPE>
+    <icsSESSION_ID>идентификатор сессии</icsSESSION_ID>
+    <icsSET_COOKIE>Устанавливаемые куки</icsSET_COOKIE>
+    <icsSID_EXPIRATION>дата и время, до которого валиден sid</icsSID_EXPIRATION>
+    <icsSTATUS>статус</icsSTATUS>
+    <icsTIMEOUT>Время в мс, в течение которого запрос актуален</icsTIMEOUT>
+    <icsX_FORWARDED_FOR>http-заголовок X-Forwarded-For из запроса (внутренний ip-адрес клиента и цепочки прокси)</icsX_FORWARDED_FOR>
+    <icsX_IP_ORIG>http-заголовок X-Forwarded-For,RemoteAddr</icsX_IP_ORIG>
+  </WebServerContextKey>
+</sbis_classes>
+</docstrings>

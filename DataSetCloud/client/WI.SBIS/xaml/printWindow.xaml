@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<Window Height="Auto" Icon="muzzle.dll;#-177" MinHeight="340" MinWidth="420" Name="printWindow" Title="Предварительный просмотр" Visibility="Visible" Width="Auto" WindowStyle="SingleBorderWindow" x:Class="SbisDotNet.Window" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:sbis="clr-namespace:SbisDotNet" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Window.Tag>
+    <Properties ConvertMode="Page" Height="338" HtmlCreate="True" JamlVersion="1.1" SkinName="СкинСотрудникиWI" TotalChildrenCount="5" Width="418">
+      <WebPage OutFileName="" Template=""/>
+    </Properties>
+  </Window.Tag>
+  <Grid HorizontalAlignment="Stretch" Margin="0,0,0,0" MinHeight="0" MinWidth="0" Name="" ResizeMode="CanResize" TabIndex="1" VerticalAlignment="Stretch" Visibility="Visible" drawLines="No">
+    <Grid.Tag>
+      <Properties Height="338" Width="418"/>
+    </Grid.Tag>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="1.000000*" MinHeight="0">
+        <RowDefinition.Tag Height="338"/>
+      </RowDefinition>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition MinWidth="0" Width="1.000000*">
+        <ColumnDefinition.Tag Width="418"/>
+      </ColumnDefinition>
+    </Grid.ColumnDefinitions>
+    <ToolBar ButtonsSide="Left" Height="26" HorizontalAlignment="Stretch" Margin="0,0,0,0" Name="printToolBar" TabIndex="1" VerticalAlignment="Top" Visibility="Visible">
+      <ToolBar.ControlEvents>
+        <ControlEvent Name="onInit" Type="handler" Value="printActions/addPrintButton"/>
+      </ToolBar.ControlEvents>
+      <ToolBar.Tag>
+        <Properties Width="418"/>
+      </ToolBar.Tag>
+    </ToolBar>
+    <HTMLView Height="Auto" HorizontalAlignment="Left" Margin="4,28,0,0" MinHeight="0" MinWidth="0" Name="ws-dataview-print-report" VerticalAlignment="Top" Visibility="Visible" Width="Auto">
+      <HTMLView.Tag>
+        <Properties Height="308" Width="412"/>
+      </HTMLView.Tag>
+    </HTMLView>
+  </Grid>
+</Window>

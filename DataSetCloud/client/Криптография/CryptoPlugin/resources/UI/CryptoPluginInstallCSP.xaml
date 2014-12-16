@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<Window Height="Auto" Icon="muzzle.dll;#-177" MainGridIsNew="True" MaxWidth="Infinity" MinHeight="0" MinWidth="0" Name="CryptoPluginInstallCSP" ResizeMode="NoResize" Responsible="Шергесов" Title="" Topmost="False" Visibility="Visible" Width="753" WindowState="Normal" WindowStyle="None" highlightFirstError="False" independentContext="False" isEnabled="False" last_changed="Шергесов Н.Н." x:Class="SbisDotNet.Window" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:sbis="clr-namespace:SbisDotNet" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Window.ControlEvents>
+    <ControlEvent Name="onAfterClose" Type="handler" Value="CryptoPluginHandlers/onWindowClose"/>
+  </Window.ControlEvents>
+  <Window.Tag>
+    <Properties ConvertMode="Application" Height="160" HtmlCreate="False" JamlVersion="1.1" SkinName="СкинСотрудникиWI" TotalChildrenCount="24" WindowHeader="True">
+      <WebPage HTMLTemplate="" OutFileName="" Template="">
+        <CSSFiles>
+          <CSS File="\Криптография\CryptoPlugin\resources\UI\CryptoPluginStyles.css"/>
+        </CSSFiles>
+      </WebPage>
+    </Properties>
+  </Window.Tag>
+  <Grid CssClass="" Height="Auto" HorizontalAlignment="Stretch" MinHeight="0" MinWidth="0" Name="" ResizeMode="CanResize" TabIndex="2" VerticalAlignment="Top" Visibility="Visible" Width="Auto" allowChangeEnable="True" convertToNew="True" drawLines="No">
+    <Grid.Tag>
+      <Properties Height="160" Width="753"/>
+      <GridCell Col="1" DefaultBkColor="True" Row="1" background-image="" background-position-x="Left" background-position-y="Top" background-repeat-x="False" background-repeat-y="False"/>
+      <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+    </Grid.Tag>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="1.000000*" MinHeight="140" UserChange="True">
+        <RowDefinition.Tag Height="160"/>
+      </RowDefinition>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition MinWidth="753" UserChange="False" Width="1.000000*">
+        <ColumnDefinition.Tag Width="753"/>
+      </ColumnDefinition>
+    </Grid.ColumnDefinitions>
+    <Rectangle CssClass="" Height="Auto" HorizontalAlignment="Left" Margin="156,48,0,0" MinHeight="0" MinWidth="0" Name="ОсновнойHTMLкусок" VerticalAlignment="Top" Visibility="Visible" Width="424">
+      <Rectangle.Tag>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+        <Properties Height="111" Source="Text" Type="HTMLContainer">
+          <Content>
+            <Run Text="Для работы системы необходима программа шифрования и использования цифровой подписи (СКЗИ)"/>
+            <LineBreak/>
+            <Run Text="&lt;br/&gt;&lt;br/&gt;"/>
+            <LineBreak/>
+            <Run Text="На вашем компьютере СКЗИ не установлена либо она работает некорректно"/>
+            <LineBreak/>
+            <Run Text="&lt;br/&gt;&lt;br/&gt;"/>
+            <LineBreak/>
+            <Run Text="Для разрешения вопросов о корректности работы вашей СКЗИ или установки другой программы, перейдите на официальную страницу СКЗИ и следуйте инструкциям на экране:"/>
+            <LineBreak/>
+            <Run Text="&lt;br/&gt;&lt;br/&gt;"/>
+            <LineBreak/>
+            <Run Text="&lt;ul type=&quot;disc&quot;&gt;"/>
+            <LineBreak/>
+            <Run Text="   &lt;li type=&quot;disc&quot;&gt;&lt;a href=&quot;http://infotecs.ru/downloads/product_full.php?id_product=2096&quot; target=&quot;_blank&quot;&gt;VipNet CSP (предоставляется бесплатно)&lt;/a&gt;&lt;/li&gt;"/>
+            <LineBreak/>
+            <Run Text="   &lt;li&gt;&lt;a href=&quot;http://www.cryptopro.ru/products/csp/overview&quot; target=&quot;_blank&quot;&gt;КриптоПро CSP&lt;/a&gt;&lt;/li&gt;"/>
+            <LineBreak/>
+            <Run Text="&lt;/ul&gt;"/>
+            <LineBreak/>
+            <Run Text="&lt;br/&gt;"/>
+            <LineBreak/>
+            <Run Text="или вставьте &lt;a href=&quot;http://help.sbis.ru/about_edo/teh_terms/sczi/rutoken_ecp&quot; target=&quot;_blank&quot;&gt;Рутокен ЭЦП&lt;/a&gt;"/>
+            <LineBreak/>
+            <Run Text="&lt;br/&gt;&lt;br/&gt;"/>
+          </Content>
+        </Properties>
+      </Rectangle.Tag>
+    </Rectangle>
+    <Rectangle CssClass="" Height="114" HorizontalAlignment="Left" Margin="536,40,0,0" MinHeight="0" MinWidth="0" Name="" VerticalAlignment="Top" Visibility="Visible" Width="180">
+      <Rectangle.Tag>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+        <Properties Source="Text" Type="HTMLContainer">
+          <Content>
+            <Run Text="&lt;div class=&quot;cpPtic&quot;&gt;"/>
+            <LineBreak/>
+            <Run Text="      — Если потребуется помощь,&lt;br/&gt;"/>
+            <LineBreak/>
+            <Run Text="      вы всегда можете спросить меня "/>
+            <LineBreak/>
+            <Run Text="      &lt;a class=&quot;cpHelpLink&quot; href=&quot;http://help.sbis.ru/about_edo/teh_terms/sczi&quot; target=&quot;_blank&quot;&gt;&lt;/a&gt;"/>
+            <LineBreak/>
+            <Run Text="&lt;/div&gt;"/>
+          </Content>
+        </Properties>
+      </Rectangle.Tag>
+    </Rectangle>
+    <Image CssClass="" Height="114" HorizontalAlignment="Left" Margin="20,24,0,0" Name="Картинка 1" Source="\Тема Скрепка\Шаблоны\img\pic.png" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="115">
+      <Image.Tag>
+        <Properties FixImageSize="False" Type="ScaleImageInput" TypeSource="File" saveRotate="False" zoomEnabled="False"/>
+      </Image.Tag>
+    </Image>
+    <Image CssClass="" Height="51" HorizontalAlignment="Left" Margin="611,78,0,0" Name="Картинка 2" Source="\Тема Скрепка\Шаблоны\img\ptic1.gif" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="78">
+      <Image.Tag>
+        <Properties FixImageSize="False" Type="ScaleImageInput" TypeSource="File" saveRotate="False" zoomEnabled="False"/>
+      </Image.Tag>
+    </Image>
+    <TitleBorder BorderBrush="#400080" BorderThickness="0" CssClass="" DefaultFrameColor="False" Height="40" HorizontalAlignment="Stretch" Name="windowTitleContainer" Text="" VerticalAlignment="Top" Visibility="Visible" Width="Stretch" allowChangeEnable="True" convertToNew="True">
+      <TitleBorder.Tag>
+        <Properties Width="753"/>
+      </TitleBorder.Tag>
+      <Grid Margin="0" TabIndex="1" VerticalAlignment="Top" allowChangeEnable="True" convertToNew="True">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="1.000000*" MinHeight="40">
+            <RowDefinition.Tag Height="40"/>
+          </RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock CssClass="" DisableProperties="True" FontFamily="Tahoma" FontSize="14 pt" FontStyle="Normal" FontWeight="Normal" Height="23" HorizontalAlignment="Left" Name="windowTitle" Text="" TextAlignment="Left" TextVerticalAlignment="Top" ToolTip="" VerticalAlignment="Center" Visibility="Visible" Width="4"/>
+        <TextBlock CssClass="" FontFamily="Tahoma" FontSize="18 pt" FontStyle="Normal" FontWeight="Normal" Height="31" HorizontalAlignment="Left" Margin="155,8,0,0" Name="ЗаголовокОтсутствуетСКЗИ" Text="Отсутствует СКЗИ" TextAlignment="Left" TextVerticalAlignment="Top" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="425"/>
+        <Button Content="" CssClass="" DisableProperties="True" Height="24" HorizontalAlignment="Right" IsDefault="False" IsEnabled="True" Margin="0,8,8,0" Name="windowTitleClose" TabIndex="1" TextAlignment="Center" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="24" allowChangeEnable="True">
+          <Button.ControlEvents>
+            <ControlEvent Name="onActivated" Type="command" Value="close"/>
+          </Button.ControlEvents>
+          <Button.Tag>
+            <Properties Icon="ws:/titlebar-close.png" IconPlacement="Left" Owner="" Press="False" renderStyle="classic"/>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          </Button.Tag>
+        </Button>
+      </Grid>
+    </TitleBorder>
+  </Grid>
+</Window>

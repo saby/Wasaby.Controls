@@ -1,0 +1,25 @@
+{
+   "name" : "RoleRegistry",
+   "title" : "Role",
+   "properties" : {
+      "ws-config" : {
+         "options" : {
+            "disableButton" : {
+               "title" : "Возможность добавить роль?",
+               "type" : "boolean",
+               "default" : false
+            },
+            "onlyRead" : {
+               "title" : "Диалог редактирования только для чтения?",
+               "type" : "boolean",
+               "default" : false
+            },
+            "switch" : {
+               "title" : "Отображать переключатель классов?",
+               "type" : "boolean",
+               "default" : false
+            }
+         }
+      }
+   }
+}

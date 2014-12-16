@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<dictionary dicx_version="1.21">
+
+  <table last_changed="Майер И.Ю." name="Параметр" personal_data="1" responsible="Buravlevms" table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>4</max_size>
+      </format>
+    </column>
+    <column name="Название">
+      <format>
+        <not_null>1</not_null>
+        <default>""</default>
+        <type>STRING</type>
+        <max_size>255</max_size>
+      </format>
+    </column>
+    <column name="Значение">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <column name="ИдПользователь">
+      <format>
+        <type>LINK_BY_VALUE</type>
+        <table>Пользователь</table>
+        <enable_trg_lnkbyval>0</enable_trg_lnkbyval>
+      </format>
+    </column>
+    <column name="Раздел">
+      <format>
+        <type>HIERARCHY</type>
+        <on_delete>1</on_delete>
+        <nodes_field>1</nodes_field>
+      </format>
+    </column>
+    <index method="btree" name="ИдПользователь" null_keys="1" service="1" unique="0">
+      <column is_expressions="0" name="ИдПользователь" nulls_place="LAST" sorting="ASC"/>
+    </index>
+    <index method="btree" name="Раздел" null_keys="1" service="1" unique="0">
+      <column is_expressions="0" name="Раздел" nulls_place="LAST" sorting="ASC"/>
+      <column is_expressions="0" name="Раздел@" nulls_place="LAST" sorting="DESC"/>
+    </index>
+    <index method="btree" name="ИдПользовательРазделНазвание" null_keys="1" service="0" unique="1">
+      <column is_expressions="0" name="ИдПользователь" nulls_place="LAST" sorting="ASC"/>
+      <column is_expressions="0" name="Раздел" nulls_place="LAST" sorting="ASC"/>
+      <column is_expressions="0" name="Название" nulls_place="LAST" sorting="ASC"/>
+    </index>
+    <index method="btree" name="РазделСУсловием" null_keys="1" service="0" unique="0">
+      <column is_expressions="0" name="Раздел" nulls_place="DEFAULT" sorting="ASC"/>
+      <predicate>
+        <body>"ИдПользователь" IS NULL</body>
+      </predicate>
+    </index>
+    <index method="btree" name="ИдПользовательНазвание" null_keys="1" service="0" unique="0">
+      <column is_expressions="0" name="ИдПользователь" nulls_place="LAST" sorting="ASC"/>
+      <column is_expressions="0" name="Название" nulls_place="LAST" sorting="ASC"/>
+      <predicate>
+        <body>"Раздел" IS NULL</body>
+      </predicate>
+    </index>
+    <trigger_list/>
+  </table>
+
+  <table name="Пользователь" personal_data="0" table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>4</max_size>
+      </format>
+    </column>
+    <trigger_list/>
+  </table>
+
+</dictionary>

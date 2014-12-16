@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<Window Background="#ffffff" Height="559" Icon="muzzle.dll;#-177" MainGridIsNew="False" MaxWidth="Infinity" MinHeight="559" MinWidth="900" Name="Сертификат" ResizeMode="CanResize" Responsible="Никитин И.С." Title="Сертификат" Topmost="False" Visibility="Visible" Width="900" WindowState="Normal" WindowStyle="None" highlightFirstError="False" independentContext="False" isEnabled="False" last_changed="Шергесов Н.Н." x:Class="SbisDotNet.Window" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:sbis="clr-namespace:SbisDotNet" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Window.ControlEvents>
+    <ControlEvent Name="onBeforeShow" Type="handler" Value="Сертификат/onInitWindow"/>
+  </Window.ControlEvents>
+  <Window.Tag>
+    <Properties ButtonMaximized="False" ConvertMode="Application" HtmlCreate="False" JamlVersion="1.1" SkinName="СкинСотрудникиWI" TotalChildrenCount="23" WindowHeader="True">
+      <WebPage HTMLTemplate="" OutFileName="" Template=""/>
+    </Properties>
+  </Window.Tag>
+  <Grid CssClass="" Height="Auto" HorizontalAlignment="Stretch" MinHeight="0" MinWidth="0" Name="ГлавнаяСетка" ResizeMode="CanResize" TabIndex="4" VerticalAlignment="Stretch" Visibility="Visible" Width="Auto" convertToNew="False" drawLines="No">
+    <Grid.Tag>
+      <Properties Height="559" Width="900"/>
+      <GridCell Col="1" DefaultBkColor="True" Row="1" background-image="" background-position-x="Left" background-position-y="Top" background-repeat-x="False" background-repeat-y="False"/>
+      <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+    </Grid.Tag>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="1.000000*" MinHeight="0">
+        <RowDefinition.Tag Height="559"/>
+      </RowDefinition>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition MinWidth="0" Width="1.000000*">
+        <ColumnDefinition.Tag Width="900"/>
+      </ColumnDefinition>
+    </Grid.ColumnDefinitions>
+    <Rectangle CssClass="" Height="5" HorizontalAlignment="Stretch" Margin="16,0,16,46" MinHeight="0" MinWidth="0" Name="" VerticalAlignment="Bottom" Visibility="Visible" Width="Auto">
+      <Rectangle.Tag>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+        <Properties Source="Text" Type="HTMLContainer" Width="868">
+          <Content>
+            <Run Text="&lt;div class=&quot;border-top&quot;&gt;&lt;/div&gt;"/>
+          </Content>
+        </Properties>
+      </Rectangle.Tag>
+    </Rectangle>
+    <HTMLView CssClass="" HorizontalAlignment="Stretch" Margin="16,48,16,16" MinHeight="0" MinWidth="0" Name="Элемент для отображения данных сертификата" VerticalAlignment="Stretch" Visibility="Visible" docType="string">
+      <HTMLView.Tag>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+        <Properties Height="495" Width="868">
+          <string>
+            <Run Text=""/>
+          </string>
+        </Properties>
+      </HTMLView.Tag>
+    </HTMLView>
+    <TitleBorder BorderBrush="#c0c0c0" BorderThickness="0" CssClass="" DefaultFrameColor="False" Height="40" HorizontalAlignment="Stretch" Name="windowTitleContainer" Text="" VerticalAlignment="Top" Visibility="Visible" convertToNew="False">
+      <TitleBorder.Tag>
+        <Properties Width="900"/>
+      </TitleBorder.Tag>
+      <Grid Margin="0" TabIndex="1" convertToNew="False">
+        <TextBlock CssClass="" DisableProperties="True" FontFamily="Tahoma" FontSize="14 pt" FontStyle="Normal" FontWeight="Normal" Height="23" HorizontalAlignment="Left" Margin="20,0,0,0" Name="windowTitle" Text="Сертификат" TextAlignment="Left" TextVerticalAlignment="Top" ToolTip="" VerticalAlignment="Center" Visibility="Visible" Width="109"/>
+        <Button Content="Распечатать" CssClass="" DisableProperties="False" Height="24" HorizontalAlignment="Right" IsDefault="True" IsEnabled="True" Margin="0,8,38,0" Name="Распечатать" TabIndex="3" TextAlignment="Center" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="110" allowChangeEnable="True">
+          <Button.ControlEvents>
+            <ControlEvent Name="onActivated" Type="command" Value="print"/>
+          </Button.ControlEvents>
+          <Button.Tag>
+            <Properties Icon="" IconPlacement="UnderText" Owner="Элемент для отображения данных сертификата" Press="False" renderStyle="classic"/>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          </Button.Tag>
+        </Button>
+        <Button Content="Сохранить в PDF" CssClass="" DisableProperties="False" Height="24" HorizontalAlignment="Right" IsDefault="False" IsEnabled="True" Margin="0,8,156,0" Name="СохранитьВPDF" TabIndex="2" TextAlignment="Center" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="130" allowChangeEnable="True">
+          <Button.ControlEvents>
+            <ControlEvent Name="onActivated" Type="handler" Value="Сертификат/saveToPDF"/>
+          </Button.ControlEvents>
+          <Button.Tag>
+            <Properties Icon="" IconPlacement="Left" Owner="" Press="False" renderStyle="classic"/>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          </Button.Tag>
+        </Button>
+        <Button Content="" CssClass="" DisableProperties="True" FontFamily="Tahoma" FontSize="8 pt" FontStyle="Normal" FontWeight="Normal" Height="24" HorizontalAlignment="Right" IsDefault="False" IsEnabled="True" Margin="0,8,8,0" Name="windowTitleClose" TabIndex="1" TextAlignment="Center" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="24" allowChangeEnable="True">
+          <Button.ControlEvents>
+            <ControlEvent Name="onActivated" Type="command" Value="close"/>
+          </Button.ControlEvents>
+          <Button.Tag>
+            <Properties Icon="ws:/titlebar-close.png" IconPlacement="Left" Owner="" Press="False" renderStyle="classic"/>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          </Button.Tag>
+        </Button>
+      </Grid>
+    </TitleBorder>
+  </Grid>
+</Window>

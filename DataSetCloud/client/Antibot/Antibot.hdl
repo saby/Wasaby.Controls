@@ -1,0 +1,26 @@
+ hdl =
+{
+   OnSendCaptureCode: function()
+   {
+      var dialog = this.getTopParent();
+      if (!dialog.validate())
+         return;
+
+      var code = dialog.getChildControlByName('code').getValue(); // введенная капча
+
+      var obj = new $ws.proto.BLObject("Antibot");
+      obj.call("CheckCaptureCode", {'Code':code}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (result) {
+         if (!result)
+         {
+            dialog.getChildControlByName('image').reloadImage(); // перезапросить капчу
+         } else
+            dialog.close(); // все ок
+      }).addErrback(function (error) {
+          $ws.core.alert( error.message );
+      });
+   },
+   OnReloadCaptureCode: function()
+   {
+      this.getTopParent().getChildControlByName('image').reloadImage(); // перезапросить капчу
+   }
+};

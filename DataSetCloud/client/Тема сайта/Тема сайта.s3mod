@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ui_module id="045c9705-6b43-4c7c-a9a2-ab0513e9eaed" name="Тема сайта" version="1.00">
+
+  <description/>
+
+  <depends/>
+
+  <load_after/>
+
+  <parameters/>
+
+  <resources/>
+
+</ui_module>

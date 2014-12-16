@@ -1,0 +1,1173 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<repository orx_version="1.71">
+
+  <object name="Excel">
+    <select access_mode="0" is_service="0" last_changed="Абрамов В.И." module_api_part="1" name="Excel.Сохранить" responsible="Абрамов В.И." returns="SCALAR" type="PYTHON">
+      <parameter name="ИмяМетода">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="Фильтр">
+        <format>
+          <type>RECREFERENCE</type>
+          <free>1</free>
+        </format>
+      </parameter>
+      <parameter name="Сортировка">
+        <format>
+          <type>RECREFERENCE</type>
+          <free>1</free>
+        </format>
+      </parameter>
+      <parameter name="Название">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="fileDownloadToken">
+        <format>
+          <type>INT64</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>RPCFILE</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>return Excel.Сохранить( ИмяМетода, Фильтр, Сортировка, None, Название, fileDownloadToken )</body>
+      </definition>
+    </select>
+    <select access_mode="0" is_service="0" last_changed="Абрамов В.И." module_api_part="1" name="Excel.Сохранить" responsible="Абрамов В.И." returns="SCALAR" type="PYTHON">
+      <parameter name="ИмяМетода">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="Фильтр">
+        <format>
+          <type>RECREFERENCE</type>
+          <free>1</free>
+        </format>
+      </parameter>
+      <parameter name="Сортировка">
+        <format>
+          <type>RECREFERENCE</type>
+          <free>1</free>
+        </format>
+      </parameter>
+      <parameter name="Поля">
+        <format>
+          <type>TEXT[]</type>
+        </format>
+      </parameter>
+      <parameter name="Название">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="fileDownloadToken">
+        <format>
+          <type>INT64</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>RPCFILE</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>if ИмяМетода is None:
+    raise Warning( 'Параметр "ИмяМетода" не может быть пустым!' )
+pos = ИмяМетода.find( '.' )
+if pos == -1:
+    raise Warning( 'Параметр "ИмяМетода" должен содержать название метода!' )
+
+try:
+    # получение метода по названию
+    method = getattr( getattr( sbis, ИмяМетода[:pos] ), ИмяМетода[pos+1:] )
+    rs_ptr = method( None, Фильтр, Сортировка, None )
+    return Excel.СохранитьВыборочно( rs_ptr, Поля, Название, fileDownloadToken )
+except:
+    return Excel.СохранитьВыборочно( None, None, Название, fileDownloadToken )</body>
+      </definition>
+    </select>
+    <select access_mode="0" is_service="0" last_changed="Абрамов В.И." module_api_part="1" name="Excel.СохранитьВыборочно" responsible="Абрамов В.И." returns="SCALAR" type="PYTHON">
+      <parameter name="Записи">
+        <format>
+          <type>RECORDSET</type>
+        </format>
+      </parameter>
+      <parameter name="Поля">
+        <format>
+          <type>TEXT[]</type>
+        </format>
+      </parameter>
+      <parameter name="Название">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="fileDownloadToken">
+        <format>
+          <type>INT64</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>RPCFILE</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body># сразу выставляем куку, чтобы "ромашка" в браузере пропала и в случае ошибки
+if fileDownloadToken is not None:
+   Session.SetCookie( "fileDownloadToken_" + str(fileDownloadToken), str(fileDownloadToken) )
+
+import xlwt3 as xlwt
+from datetime import datetime, date, time
+
+class Result( object ):
+   def __init__(self):
+      self.res = b''
+   def write(self, data ):
+      self.res += data
+
+#Получить примерную ширину строки
+def getWidth(num_characters):
+   return int((1+num_characters) * 300)
+
+wb = xlwt.Workbook()
+ws = wb.add_sheet('Таблица')
+
+if Записи is not None:
+   if Записи.Size() == 0:
+      raise Warning( 'Нельзя выгрузить в Excel пустую таблицу!', 'Нельзя выгрузить в Excel пустую таблицу!' )
+
+   frmt = Записи.Format()
+   flds = [] # список номеров полей, которые нужно сохранить
+   if Поля is not None and len(Поля) &gt;= 0:
+      for i in Поля:
+         if i is not None:
+            flds.append( frmt.IndexByName( i ) )
+   else:
+      flds = range( frmt.Count() )
+       
+   # Печать шапки
+   font0 = xlwt.Font()
+   font0.bold = True
+   style0 = xlwt.XFStyle()
+   style0.font = font0
+   for j in range( len(flds) ):
+      col_name = frmt[flds[j]].Name()
+      ws.write( 0, j, col_name, style0 )
+      ws.col( j ).width = getWidth( len(col_name) )    
+   # Печать данных
+   for i in range( Записи.Size() ):
+      for j in range( len(flds) ):
+         cur = Записи[i][flds[j]]
+         if not cur.IsNull():
+            cur_type = cur.Type()
+            style = xlwt.XFStyle()
+            value_len = len( str( cur ) ) 
+            if cur_type == FieldType.ftDOUBLE or cur_type == FieldType.ftFLOAT:
+               value = float( cur )
+            elif cur_type == FieldType.ftMONEY:
+               style.num_format_str = '0.00'
+               value = float( cur )
+            elif cur_type == FieldType.ftINT64 or cur_type == FieldType.ftINT32 or cur_type == FieldType.ftINT16 or cur_type == FieldType.ftINT8:
+               value = int( cur )
+            elif cur_type == FieldType.ftTIME:
+               style.num_format_str = 'hh:mm:ss'
+               value = cur.ToTime()
+            elif cur_type == FieldType.ftDATE:
+               style.num_format_str = 'YYYY.MM.DD'
+               value = cur.ToDate()
+            elif cur_type == FieldType.ftDATETIME:
+               style.num_format_str = 'YYYY.MM.DD hh:mm:ss'
+               value_len = len( style.num_format_str )
+               value = cur.ToDateTime()
+            else:
+               value = str( cur )
+            ws.write( i+1, j, value, style )
+            ws.col( j ).width = min( max( ws.col( j ).width, getWidth( value_len ) ), 15000 )
+            
+xls_result = Result()
+wb.save(xls_result)
+file = RpcFile()
+file.SetData( xls_result.res )
+file.SetName( Название + '.xls' )
+return file</body>
+      </definition>
+    </select>
+    <select access_mode="0" is_service="0" last_changed="Абрамов В.И." module_api_part="1" name="Excel.СохранитьПоHTML" responsible="Абрамов В.И." returns="SCALAR" type="PYTHON">
+      <parameter name="html">
+        <format>
+          <type>TEXT</type>
+          <unsafe_html/>
+        </format>
+      </parameter>
+      <parameter name="Название">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="fileDownloadToken">
+        <format>
+          <type>INT64</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>RPCFILE</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body># сразу выставляем куку, чтобы "ромашка" в браузере пропала и в случае ошибки
+if fileDownloadToken is not None:
+   Session.SetCookie( "fileDownloadToken_" + str(fileDownloadToken), str(fileDownloadToken) )
+
+from html.parser import HTMLParser
+import xlwt3 as xlwt
+
+class Result( object ):
+    def __init__(self):
+        self.res = b''
+    def write(self, data ):
+        self.res += data
+
+class MyHTMLParser(HTMLParser):
+    def __init__(self):
+        super(MyHTMLParser, self).__init__()
+        self.wb = xlwt.Workbook()
+        self.ws = self.wb.add_sheet('Таблица')
+        self.row = 0
+        self.col = 0
+        self.cur = ''    #текст текущей ячейки
+        self.cclass = '' #класс текущей ячейки
+        self.thead = 0   #счетчик вложенности заголовков таблиц
+        self.table = 0   #счетчик вложенности таблиц (вложенные таблицы считаем одной ячейкой)
+        self.hidden = 0  #счетчик вложенности скрытого тега (внутри скрытого тега все скрыто)
+        self.styles = {}      # кэш стилей, ключ - пара строк: описание стиля и формат, значение - класс стиля
+        self.merged = {}      # map смерженных ячеек, ключ - левый вехний угол, значение - правый нижний угол
+        self.merged_rows = {} # построчный map смерженных ячеек, ключ - номер строки, значение - set столбцов
+        
+    #Возвращается ссылка на стиль текущей ячейки
+    def Style(self):
+        style = ''
+        format = ''
+        if self.thead &gt; 0:
+            style += 'font: bold True;'
+        if self.cclass == 'ws-browser-type-money':
+            format = '#,##0.00'
+        if (self.row, self.col) in self.merged:
+            corner = self.merged[ (self.row, self.col) ]
+            if corner[0] != self.row:
+                style += 'alignment: vertical center;'
+            if corner[1] != self.col:
+                style += 'alignment: horizontal center;'
+        if (style, format) not in self.styles:
+            self.styles.update({(style, format):xlwt.easyxf(style, num_format_str=format)})
+        return self.styles[ (style, format) ]
+        
+    def getWidth(self, num_characters):
+        return int((1+num_characters) * 300)
+        
+    def strToInt( self, num ):
+        num = num.replace( ' ', '' )  # удаляем разделители разрядов
+        if len( num ) == 0:
+            return None
+        return int( num )
+        
+    def strToFloat( self, num ):
+        num = num.replace( ' ', '' )  # удаляем разделители разрядов
+        num = num.replace( ',', '.' ) # десятичный разделитель заменяем на стандартный
+        if len( num ) == 0:
+            return None
+        return float( num )
+        
+    def handle_starttag(self, tag, attrs):
+        if self.hidden == 0:
+            if tag == 'option' or tag == 'style':
+                self.hidden = 1
+            else:
+                # если в текущей строке есть смерженные ячейки, то возможно нужно скорректировать столбец
+                if (tag == 'td' or tag == 'th') and self.table == 1 and self.row in self.merged_rows:
+                    row_info = self.merged_rows[ self.row ]
+                    while self.col in row_info:
+                        self.col += 1
+
+                self.cclass = None
+                colspan = 1
+                rowspan = 1
+                for attr in attrs:
+                    if attr[0] == 'style' and attr[1].find('display: none') != -1:
+                        self.hidden = 1
+                    if attr[0] == 'class':
+                        self.cclass = attr[1]
+                    if attr[0] == 'colspan':
+                        colspan = int(attr[1])
+                    if attr[0] == 'rowspan':
+                        rowspan = int(attr[1])
+                if colspan != 1 or rowspan != 1:
+                    self.merged.update( {(self.row, self.col):(self.row + rowspan - 1, self.col + colspan - 1)} )
+                    for r in range( self.row, self.row + rowspan ):
+                        if r in self.merged_rows:
+                            self.merged_rows[r].update( range(self.col, self.col + colspan) )
+                        else:
+                            self.merged_rows.update( {r : set(range(self.col, self.col + colspan))} )
+            if self.hidden == 0:
+                if tag == 'table':
+                    self.table += 1
+                    # весь текст, который был до таблицы, сваливаем в одну строчку
+                    if self.table == 1 and len(self.cur) &gt; 0:
+                        self.ws.write( self.row, 0, self.cur )
+                        self.row += 1
+                        self.cur = ''
+                elif tag == 'thead':
+                    self.thead += 1
+        else:
+            self.hidden += 1
+    def handle_endtag(self, tag):
+        if self.hidden &gt; 0:
+            self.hidden -= 1
+        else:
+            if tag == 'table':
+                self.table -= 1
+            elif tag == 'thead':
+                self.thead -= 1
+            elif tag == 'tr' and self.table == 1:
+                self.row += 1
+                self.col = 0
+            elif (tag == 'td' or tag == 'th') and self.table == 1:
+                value = self.cur
+                if self.cclass == 'ws-browser-type-integer':
+                    value = self.strToInt( self.cur )
+                elif self.cclass == 'ws-browser-type-float' or self.cclass =='ws-browser-type-money':
+                    value = self.strToFloat( self.cur )
+
+                if (self.row, self.col) in self.merged:
+                    corner = self.merged[ (self.row, self.col) ]
+                    self.ws.write_merge( self.row, corner[0], self.col, corner[1], value, self.Style() )
+                else:
+                    self.ws.write( self.row, self.col, value, self.Style() )
+
+                if self.row == 0:
+                    self.ws.col( self.col ).width = self.getWidth( len(self.cur) )
+                else:
+                    self.ws.col( self.col ).width = min( max( self.ws.col( self.col ).width, self.getWidth( len(self.cur) ) ), 15000 )
+
+                self.cur = ''
+                self.col += 1
+    def handle_data(self, data):
+        if self.hidden == 0 and data != '\n':
+            self.cur += data.strip()
+    def save(self):
+        xls_result = Result()
+        self.wb.save(xls_result)
+        file = RpcFile()
+        file.SetData( xls_result.res )
+        return file
+      
+parser = MyHTMLParser()
+parser.feed( html )
+res = parser.save()
+res.SetName( Название + '.xls' )
+return res</body>
+      </definition>
+    </select>
+  </object>
+
+  <object last_changed="Бойцов Е.А." name="FormatValidation" responsible="Бойцов Е.А.">
+    <comment>Объект предоставляет методы для проверки соответствия различных данных формату объектов БЛ</comment>
+    <select access_mode="1" is_proxy="0" is_service="1" last_changed="Бойцов Е.А." name="FormatValidation.CheckRecord2ObjectCompliance" responsible="Бойцов Е.А." returns="TABLE" type="NATIVE">
+      <comment>Метод проверяет, соответствует ли переданная запись Data ограничениям структуры объекта БЛ с названием ObjectName.
+
+Метод возвращает список найденных несоответствий. Если список пустой, то несоответствий нет.</comment>
+      <parameter name="ObjectName">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="Data">
+        <format>
+          <type>RECREFERENCE</type>
+          <free>1</free>
+        </format>
+      </parameter>
+      <return name="Error">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="Type">
+        <format>
+          <type>ENUM</type>
+          <element>
+            <string>Field not found in object</string>
+            <value>0</value>
+          </element>
+          <element>
+            <string>Data right truncation</string>
+            <value>1</value>
+          </element>
+        </format>
+      </return>
+      <return name="Column">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+    </select>
+  </object>
+
+  <object name="Администратор">
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="Бойцов Е.А." module_api_part="1" name="Администратор.УдалитьСтарыеЧерновики" responsible="Абрамов В.И." returns="SCALAR" type="NATIVE">
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>BOOLEAN</type>
+        </format>
+      </return>
+    </select>
+  </object>
+
+  <object name="Версия">
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="Бойцов Е.А." module_api_part="1" name="Версия.ВерсияJson" responsible="abramovvi" returns="SCALAR" type="NATIVE">
+      <parameter name="ВерсияКлиента">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+    </select>
+  </object>
+
+  <object name="ДанныеОСхемах">
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="Майер И.Ю." module_api_part="1" name="ДанныеОСхемах.РазмерБЛОБовСхемы" responsible="Майер И.Ю." returns="RECORD" type="NATIVE">
+      <parameter name="ИмяСхемы">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="Таблицы">
+        <format>
+          <type>TEXT[]</type>
+        </format>
+      </parameter>
+      <return name="РазмерСхемы">
+        <format>
+          <type>INT64</type>
+        </format>
+      </return>
+    </select>
+    <select access_mode="1" is_service="0" last_changed="Кузнецов А.П." name="ДанныеОСхемах.РазмерСхемы" responsible="Кузнецов А.П." returns="TABLE" type="SQL">
+      <parameter name="Схема">
+        <format>
+          <type>TEXT[]</type>
+        </format>
+      </parameter>
+      <return name="schemaname">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="Размер">
+        <format>
+          <type>INT64</type>
+        </format>
+      </return>
+      <definition>
+        <language>PLPGSQL</language>
+        <body>WITH sch AS (
+  SELECT
+    oid relnamespace
+  , nspname schemaname
+  FROM
+    pg_namespace T
+  WHERE
+    nspname = ANY( :Схема )
+)
+SELECT
+  sch.schemaname
+, T."Размер"
+FROM
+  sch
+JOIN
+  (
+    SELECT
+      relnamespace
+    , sum(pg_total_relation_size(oid))::bigint "Размер"
+    FROM
+      pg_class cl
+    WHERE
+      oid = ANY(ARRAY(
+        SELECT
+          objid
+        FROM
+          pg_depend
+        WHERE
+          (refclassid, deptype, classid) = ('pg_namespace'::regclass, 'n'::char, 'pg_class'::regclass) AND
+          refobjid = ANY(ARRAY(SELECT relnamespace FROM sch))
+      ))
+    GROUP BY 1
+  ) T
+    USING(relnamespace)</body>
+      </definition>
+    </select>
+    <select access_mode="1" is_service="0" name="ДанныеОСхемах.СписокСхем" returns="TABLE" type="SQL">
+      <return name="schemaname">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PLPGSQL</language>
+        <body>SELECT schemaname
+   FROM pg_tables
+      where schemaname like E'\\_%'
+         group by schemaname
+            order by schemaname</body>
+      </definition>
+    </select>
+  </object>
+
+  <object name="Документация">
+    <select access_mode="1" is_proxy="0" is_service="0" last_changed="Shilovda" name="Документация.СписокПоОбластиСайта" responsible="kerimovva" returns="TABLE" type="NATIVE">
+      <cached forwhom="user" lifetime="20"/>
+      <parameter name="ОбластьСайта">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="@Идентификатор">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+      <return name="Название">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="КороткоеНазвание">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="Ссылка">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="СсылкаНаОбласть">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="НазваниеФункции">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="Комментарий">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="СсылкаНаОбластьКод">
+        <format>
+          <type>BOOLEAN</type>
+        </format>
+      </return>
+      <return name="ВНовойВкладке">
+        <format>
+          <type>BOOLEAN</type>
+        </format>
+      </return>
+    </select>
+  </object>
+
+  <object name="КэшированиеМетодов">
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="kerimovva" name="КэшированиеМетодов.ОчиститьКэш" responsible="kerimovva" returns="SCALAR" type="NATIVE">
+      <parameter name="ИмяМетода">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="ЧислоПараметров">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+    </select>
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="Шаброва А.Н." name="КэшированиеМетодов.ОчиститьКэшКлиента" responsible="Шаброва А.Н." returns="SCALAR" type="NATIVE">
+      <parameter name="ИдентификаторКлиента">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <parameter name="ИмяМетода">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="ЧислоПараметров">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+    </select>
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="Абрамов В.И." name="КэшированиеМетодов.ОчиститьКэшПользователейКлиента" responsible="Абрамов В.И." returns="SCALAR" type="NATIVE">
+      <parameter name="ИдентификаторКлиента">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <parameter name="ИмяМетода">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="ЧислоПараметров">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+    </select>
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="Шаброва А.Н." name="КэшированиеМетодов.ОчиститьКэшПользователя" responsible="Шаброва А.Н." returns="SCALAR" type="NATIVE">
+      <parameter name="ИдентификаторПользователя">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <parameter name="ИмяМетода">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="ЧислоПараметров">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+    </select>
+  </object>
+
+  <object name="Платформа">
+    <select access_mode="1" is_proxy="0" is_service="0" last_changed="kerimovva" name="Платформа.Версия" responsible="kerimovva" returns="SCALAR" type="NATIVE">
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+    </select>
+    <select access_mode="1" is_service="0" last_changed="Кузнецов А.П." name="Платформа.Версия" responsible="Кузнецов А.П." returns="SCALAR" type="PYTHON">
+      <parameter name="Объект">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>result = ''
+if Объект == 'Продукт':
+   result = ConfigGet( "ВерсияПродукта.НомерВерсии" )
+   build_number = ConfigGet( "ВерсияПродукта.НомерСборки" )
+   if build_number != '':
+      result += '-' + build_number
+      build_date = ConfigGet( "ВерсияПродукта.ДатаСборки" )
+      if build_date != '':
+         result += ' от ' + build_date
+elif Объект == 'Платформа':
+   result = Платформа.Версия()
+else:
+   err_str = 'Неизвестный тип объекта: %s' % (msg)
+   raise Error( err_str, err_str )
+return result</body>
+      </definition>
+    </select>
+    <select access_mode="0" deprecated="1" is_proxy="0" is_service="0" last_changed="Бойцов Е.А." module_api_part="1" name="Платформа.СписокМетодовСПараметрами" responsible="Абрамов В.И." returns="RECORD" type="NATIVE">
+      <return name="Хеш">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="Методы">
+        <format>
+          <type>RECORDSET</type>
+        </format>
+      </return>
+    </select>
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="Бойцов Е.А." module_api_part="1" name="Платформа.ФорматМетода" responsible="Волконский А.С." returns="RECORD" type="NATIVE">
+      <parameter name="ИмяМетода">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="ЧислоПараметров">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <return name="Название">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="ИменаПараметров">
+        <format>
+          <type>TEXT[]</type>
+        </format>
+      </return>
+      <return name="ТипыПараметров">
+        <format>
+          <type>INT8[]</type>
+        </format>
+      </return>
+      <return name="ТипРезультата">
+        <format>
+          <type>INT64</type>
+        </format>
+      </return>
+      <return name="ХэшМетода">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+    </select>
+  </object>
+
+  <object last_changed="Абрамов В.И." name="ПорядковыйНомер" responsible="Абрамов В.И.">
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="Абрамов В.И." name="ПорядковыйНомер.ВставитьДо" responsible="Абрамов В.И." returns="NONE" type="NATIVE">
+      <transaction type="required"/>
+      <parameter name="Объект">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="ИдО">
+        <format>
+          <type>INT64</type>
+        </format>
+      </parameter>
+      <parameter name="ИдОДо">
+        <format>
+          <type>INT64</type>
+        </format>
+      </parameter>
+      <parameter name="ПорядковыйНомер">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="Иерархия">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+    </select>
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="Абрамов В.И." name="ПорядковыйНомер.ВставитьПосле" responsible="Абрамов В.И." returns="NONE" type="NATIVE">
+      <transaction type="required"/>
+      <parameter name="Объект">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="ИдО">
+        <format>
+          <type>INT64</type>
+        </format>
+      </parameter>
+      <parameter name="ИдОПосле">
+        <format>
+          <type>INT64</type>
+        </format>
+      </parameter>
+      <parameter name="ПорядковыйНомер">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="Иерархия">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+    </select>
+  </object>
+
+  <object last_changed="Щукин А.В." name="САП" responsible="Щукин А.В.">
+    <select access_mode="0" is_service="1" last_changed="Терентьев А.А." name="САП.АутентифицироватьсяПоЛогину" responsible="Терентьев А.А." returns="SCALAR" type="PYTHON">
+      <comment>Выполняется аутентификация на web-сервисе Аутентификации по адресу "АдресАутентификации", например, https://online.sbis.ru/auth
+Логин - логин пользователя
+Пароль - пароль пользователя</comment>
+      <parameter name="АдресАутентификации">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="Логин">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="Пароль">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>import remotecall.utils as callers
+# удаленный вызов на аутентификацию ( в специфических сервиcах Аутентифкация и Управление облаком он может перекрываться )
+return callers.do_auth_by_login_pwd( АдресАутентификации, Логин, Пароль )</body>
+      </definition>
+    </select>
+    <select access_mode="1" is_service="1" last_changed="Щукин А.В." name="САП.ВнутренняяАутентификация" responsible="Щукин А.В." returns="SCALAR" type="PYTHON">
+      <parameter name="ИдПользователя">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <parameter name="ИдСхемы">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>return САП.ВнутренняяАутентификация('/auth', ИдПользователя, ИдСхемы)</body>
+      </definition>
+    </select>
+    <select access_mode="1" is_service="1" last_changed="Абрамов В.И." name="САП.ВнутренняяАутентификация" responsible="Щукин А.В." returns="SCALAR" type="PYTHON">
+      <comment>Заправшивает сессию через служебный доверительный вход с сервиса аутентификации</comment>
+      <parameter name="АдресСервисаАутентификации">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="ИдПользователя">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <parameter name="ИдСхемы">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>import uuid
+
+key = str(uuid.uuid1())
+САП.ВнутренняяАутентификация(АдресСервисаАутентификации, ИдПользователя, ИдСхемы, key)
+redis = RedisClient( "ХранилищеМежсервиснойАутентификации", True, True )
+sid = redis.Value(key);
+return sid</body>
+      </definition>
+    </select>
+    <select access_mode="1" is_service="1" last_changed="Щукин А.В." name="САП.ВнутренняяАутентификация" responsible="Щукин А.В." returns="NONE" type="PYTHON">
+      <parameter name="АдресСервисаАутентификации">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="ИдПользователя">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <parameter name="ИдСхемы">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <parameter name="Ключ">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <definition>
+        <language>PYTHON</language>
+        <body># удаленный вызов на аутентификацию
+param = Record()
+param.AddString('АдресСервисаАутентификации') # значение будет игнорироваться
+param.AddInt32('ИдПользователя', ИдПользователя)
+param.AddInt32('ИдСхемы', ИдСхемы)
+param.AddString('Ключ', Ключ)
+res = Record()
+res.AddBool('res') # не смотря на то, что функция ничего не возвращает, поле под результат необходимо (запишется null)
+rc = RemoteCommandRecParam('САП.ВнутренняяАутентификация', param, res[0])
+rc.execute(АдресСервисаАутентификации + "/service/", Session.ID() or '')</body>
+      </definition>
+    </select>
+    <select access_mode="1" is_service="1" last_changed="Абрамов В.И." name="САП.ВнутренняяАутентификацияПоВнешнемуИд" responsible="Щукин А.В." returns="SCALAR" type="PYTHON">
+      <parameter name="ВнешнийИд">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>import uuid
+
+Ключ = str(uuid.uuid1())
+
+# удаленный вызов на аутентификацию
+param = Record()
+param.AddInt32('ВнешнийИд', ВнешнийИд)
+param.AddString('Ключ', Ключ)
+res = Record()
+res.AddBool('res') # не смотря на то, что функция ничего не возвращает, поле под результат необходимо (запишется null)
+rc = RemoteCommandRecParam('САП.ВнутренняяАутентификацияПоВнешнемуИд', param, res[0])
+rc.execute(ConfigGet("СервисАутентификацииСайта") + "/service/", Session.ID() or '')
+
+# получение сессии 
+redis = RedisClient( "ХранилищеМежсервиснойАутентификации", True, True )
+sid = redis.Value(Ключ);
+return sid</body>
+      </definition>
+    </select>
+    <select access_mode="1" is_service="1" last_changed="Абрамов В.И." name="САП.ВнутренняяАутентификацияПоЛогину" responsible="Щукин А.В." returns="SCALAR" type="PYTHON">
+      <parameter name="АдресСервисаАутентификации">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="Логин">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>import uuid
+
+key = str(uuid.uuid1())
+
+param = Record()
+param.AddString('АдресСервисаАутентификации') # значение будет игнорироваться
+param.AddString( 'Логин', Логин )
+param.AddString( 'Ключ', key )
+res = Record()
+res.AddBool('res') # не смотря на то, что функция ничего не возвращает, поле под результат необходимо (запишется null)
+rc = RemoteCommandRecParam( 'САП.ВнутренняяАутентификацияПоЛогину', param, res[0] )
+rc.execute( АдресСервисаАутентификации + "/service/", '' )
+
+redis = RedisClient( "ХранилищеМежсервиснойАутентификации", True, True )
+sid = redis.Value(key);
+return sid</body>
+      </definition>
+    </select>
+    <proxy access_mode="0" is_service="1" last_changed="Абрамов В.И." method_type="1" name="САП.ВосстановитьСессию" responsible="Абрамов В.И." returns="NONE" section="СервисАдминистрирования">
+      <parameter name="Сессия">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+    </proxy>
+    <proxy access_mode="0" is_service="1" last_changed="Абрамов В.И." method_type="1" name="САП.ВосстановитьСессию" responsible="Абрамов В.И." returns="SCALAR" section="СервисАдминистрирования">
+      <parameter name="Сессия">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="Адрес">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="ИдБизнесЛогики">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>BOOLEAN</type>
+        </format>
+      </return>
+    </proxy>
+  </object>
+
+  <object name="Сеть">
+    <select access_mode="1" is_proxy="0" is_service="0" last_changed="Гуров О.А." name="Сеть.АдресаПользователя" responsible="Гуров О.А." returns="RECORD" type="NATIVE">
+      <return name="АдресВнешний">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="АдресВнутренний">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+    </select>
+  </object>
+
+  <object name="Сумма">
+    <select access_mode="1" is_proxy="0" is_service="0" last_changed="Абрамов В.И." name="Сумма.ПоВыборке" responsible="Абрамов В.И." returns="RECORD" type="NATIVE">
+      <parameter name="Записи">
+        <format>
+          <type>RECORDSET</type>
+        </format>
+      </parameter>
+      <parameter name="Поля">
+        <format>
+          <type>TEXT[]</type>
+        </format>
+      </parameter>
+    </select>
+    <select access_mode="1" is_proxy="0" is_service="0" last_changed="Абрамов В.И." name="Сумма.ПоМетоду" responsible="Абрамов В.И." returns="RECORD" type="NATIVE">
+      <parameter name="ИмяМетода">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="Фильтр">
+        <format>
+          <type>RECREFERENCE</type>
+          <free>1</free>
+        </format>
+      </parameter>
+      <parameter name="Поля">
+        <format>
+          <type>TEXT[]</type>
+        </format>
+      </parameter>
+    </select>
+  </object>
+
+  <object name="Тест">
+    <select access_mode="0" is_service="0" last_changed="Краснов Д.В." name="Тест.ЗаглушкаДляiFin" responsible="Краснов Д.В." returns="TABLE" type="PYTHON">
+      <parameter name="rs">
+        <format>
+          <type>RECORDSET</type>
+        </format>
+      </parameter>
+      <return name="int_field">
+        <format>
+          <type>INT64</type>
+        </format>
+      </return>
+      <return name="string_field">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>LogMsg('======================================')
+frmt = rs.Format()
+field_names = [frmt[i].Name() for i in range(frmt.Count())]
+for i,rec in enumerate(rs):
+   template = '{} '.format(i)
+   for field_name in field_names:
+      template += field_name + ':' + str(rec[field_name]) + ' || '
+   template += '\n'
+   LogMsg(template)
+LogMsg('======================================')
+
+retr_frmt = CreateRecordFormat()
+retr_frmt.AddInt32('int_field')
+retr_frmt.AddString('string_field')
+rs2 = CreateRecordSet(retr_frmt)
+rec1 = Record({'int_field': len(rs), 'string_field':'rows_count'})
+rec2 = Record({'int_field': frmt.Count(), 'string_field':'columns_count'})
+rs2.AddRow(rec1)
+rs2.AddRow(rec2)
+return rs2</body>
+      </definition>
+    </select>
+    <select access_mode="0" is_service="0" last_changed="Краснов Д.М." name="Тест.ПроверкаОчисткиКэша" responsible="Краснов Д.М." returns="SCALAR" type="PYTHON">
+      <cached forwhom="all" lifetime="2880"/>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>rs = SqlQuery(''' select * from "Пользователь" ''')
+return len(rs)</body>
+      </definition>
+    </select>
+    <select access_mode="1" is_service="0" last_changed="Абрамов В.И." module_api_part="1" name="Тест.Эхо" responsible="Голованов К.А." returns="SCALAR" type="SQL">
+      <parameter name="Параметр">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PLPGSQL</language>
+        <body>-- используется процессом "Worker" при создании пула клиентов;
+select :Параметр</body>
+      </definition>
+    </select>
+  </object>
+
+</repository>

@@ -1,0 +1,25 @@
+hdl = {
+   rowRender: function (record) {
+      if (record) {
+         var isRemembered = record.get('isRemembered'),
+             value = record.get('request');
+         return $(['<div class="ws-FilterButton__request',
+            (isRemembered ? ' ws-FilterButton__request-remembered' : ''),
+            '" title="',
+            value,
+            '">',
+            '<span class="ws-FilterButton__historyIcon icon-16',
+            (isRemembered ? ' icon-Pin icon-primary' : ''),
+            '" title="',
+            (isRemembered ? 'Помнить' : 'Запомнить этот выбор'),
+            '"></span>',
+            '<div class="ws-FilterButton__requestContainer"><span class="ws-FilterButton__requestText">',
+            value,
+            '</span>',
+            '<div class="ws-FilterButton__helper"></div></div>',
+            '</div>'].join(''));
+      }
+   }
+};
+//@ sourceURL="requestsHistory.hdl"
+//@ sourceURL="requestsHistory.hdl"

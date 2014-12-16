@@ -1,0 +1,20 @@
+{
+   "name" : "roleEdit",
+   "title" : "edit",
+   "properties" : {
+      "ws-config" : {
+         "options" : {
+            "typeDialog" : {
+               "title" : "Тип окна: Диалог(true)/Панель(flase)",
+               "type" : "boolean",
+               "default" : false
+            },
+            "nameDialog" : {
+               "title" : "Текст кнопки",
+               "type" : "String",
+               "default" : "Изменить"
+            }
+         }
+      }
+   }
+}

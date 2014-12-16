@@ -1,0 +1,11 @@
+<div class="Role_RoleEdit">
+    <component class="Role_RoleEdit_Button_Open" data-component="SBIS3.CORE.Button">
+        <option name="name">openRoleEdit</option>
+        <option name="caption" type="String" value="{{=it.nameDialog}}"></option>
+        <option name="renderStyle" value="asLink"></option>
+        <options name="handlers">
+            <option name="onInit" value="js!SBIS3.ROLE.RoleFunction:subscribeRoleView" type="function"></option>
+            <option name="onDestroy" value="js!SBIS3.ROLE.RoleFunction:unSubscribeRoleView" type="function"></option>
+        </options>
+    </component>
+</div>

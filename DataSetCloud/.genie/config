@@ -1,0 +1,12 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	symlinks = false
+	ignorecase = true
+	hideDotFiles = dotGitOnly
+	worktree = C:\\projects\\sbis3-controls\\DataSetCloud
+	quotepath = off
+[i18n]
+	logoutputencoding = utf8
+	commitencoding = utf8

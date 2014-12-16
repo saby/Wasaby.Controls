@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<Window Height="198" Icon="muzzle.dll;#-177" MainGridIsNew="True" MaxWidth="Infinity" MinHeight="0" MinWidth="0" Name="" ResizeMode="NoResize" Responsible="Елифантьев О.Н." Title="" Topmost="False" Visibility="Visible" Width="246" WindowState="Normal" WindowStyle="None" highlightFirstError="False" isEnabled="False" last_changed="Елифантьев О.Н." x:Class="SbisDotNet.Window" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:sbis="clr-namespace:SbisDotNet" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Window.Tag>
+    <Properties ConvertMode="Application" HtmlCreate="False" JamlVersion="1.1" SkinName="СкинСотрудникиWI" TotalChildrenCount="39" WindowHeader="True">
+      <WebPage HTMLTemplate="" OutFileName="" Template=""/>
+    </Properties>
+  </Window.Tag>
+  <Grid CssClass="" Height="Auto" HorizontalAlignment="Stretch" MinHeight="0" MinWidth="0" Name="" ResizeMode="CanResize" TabIndex="1" VerticalAlignment="Top" Visibility="Visible" Width="Auto" convertToNew="True" drawLines="No">
+    <Grid.Tag>
+      <Properties Height="198" Width="246"/>
+      <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+    </Grid.Tag>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="1.000000*" MinHeight="198" UserChange="False">
+        <RowDefinition.Tag Height="198"/>
+      </RowDefinition>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition MinWidth="246" UserChange="False" Width="1.000000*">
+        <ColumnDefinition.Tag Width="246"/>
+      </ColumnDefinition>
+    </Grid.ColumnDefinitions>
+    <Rectangle CssClass="" Height="20" HorizontalAlignment="Stretch" Margin="8,48,8,0" MinHeight="0" MinWidth="0" Name="Цвета" VerticalAlignment="Top" Visibility="Visible" Width="Stretch">
+      <Rectangle.Tag>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+        <Properties Source="Text" Type="HTMLContainer" Width="230">
+          <Content>
+            <Run Text=""/>
+          </Content>
+        </Properties>
+      </Rectangle.Tag>
+    </Rectangle>
+    <TitleBorder BorderBrush="#c0c0c0" BorderThickness="0" CssClass="" DefaultFrameColor="False" Height="40" HorizontalAlignment="Stretch" Name="windowTitleContainer" Text="" VerticalAlignment="Top" Visibility="Visible" Width="Stretch" convertToNew="True">
+      <TitleBorder.Tag>
+        <Properties Width="246"/>
+      </TitleBorder.Tag>
+      <Grid Margin="0" TabIndex="2" VerticalAlignment="Top" convertToNew="True">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="1.000000*" MinHeight="40">
+            <RowDefinition.Tag Height="40"/>
+          </RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock CssClass="" DisableProperties="True" FontFamily="Tahoma" FontSize="14 pt" FontStyle="Normal" FontWeight="Normal" Height="23" HorizontalAlignment="Left" Name="windowTitle" Text="" TextAlignment="Left" TextVerticalAlignment="Top" ToolTip="" VerticalAlignment="Center" Visibility="Visible" Width="4"/>
+        <Button Content="Пометить" CssClass="" DisableProperties="False" Height="24" HorizontalAlignment="Left" IsDefault="True" IsEnabled="True" Margin="16,8,0,0" Name="Пометить" TabIndex="3" TextAlignment="Center" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="80" allowChangeEnable="True">
+          <Button.Tag>
+            <Properties Icon="" IconPlacement="Left" Owner="" Press="False" renderStyle="classic"/>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          </Button.Tag>
+        </Button>
+        <Button Content="" CssClass="" DisableProperties="True" FontFamily="Tahoma" FontSize="8 pt" FontStyle="Normal" FontWeight="Normal" Height="24" HorizontalAlignment="Right" IsDefault="False" IsEnabled="True" Margin="0,8,8,0" Name="windowTitleClose" TabIndex="2" TextAlignment="Center" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="24" allowChangeEnable="True">
+          <Button.ControlEvents>
+            <ControlEvent Name="onActivated" Type="command" Value="close"/>
+          </Button.ControlEvents>
+          <Button.Tag>
+            <Properties Icon="ws:/titlebar-close.png" IconPlacement="Left" Owner="" Press="False" renderStyle="classic"/>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          </Button.Tag>
+        </Button>
+      </Grid>
+    </TitleBorder>
+    <Grid CssClass="" Height="Stretch" HorizontalAlignment="Stretch" Margin="8,76,8,8" MinHeight="0" MinWidth="0" Name="Сетка 1" ResizeMode="CanResize" TabIndex="1" VerticalAlignment="Stretch" Visibility="Visible" Width="Stretch" convertToNew="True" drawLines="No">
+      <Grid.Tag>
+        <Properties Height="114" Width="230"/>
+        <GridCell Col="1" DefaultBkColor="True" Row="1" background-image="" background-position-x="Left" background-position-y="Top" background-repeat-x="False" background-repeat-y="False"/>
+        <GridCell Col="2" DefaultBkColor="True" Row="1" background-image="" background-position-x="Left" background-position-y="Top" background-repeat-x="False" background-repeat-y="False"/>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+      </Grid.Tag>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="1.000000*" MinHeight="114" UserChange="False">
+          <RowDefinition.Tag Height="114"/>
+        </RowDefinition>
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition MinWidth="130" UserChange="False" Width="Auto">
+          <ColumnDefinition.Tag Width="130"/>
+        </ColumnDefinition>
+        <ColumnDefinition MinWidth="100" UserChange="False" Width="Auto">
+          <ColumnDefinition.Tag Width="100"/>
+        </ColumnDefinition>
+      </Grid.ColumnDefinitions>
+      <Checkboxes CssClass="" Height="Stretch" HorizontalAlignment="Stretch" IsEnabled="True" Margin="8,8,8,0" Name="Стили" TabIndex="1" ToolTip="" VerticalAlignment="Stretch" Visibility="Visible" Width="Stretch" allowChangeEnable="True">
+        <Checkboxes.Tag>
+          <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          <Properties ButtonDirection="AUTO" Height="106" Multiline="NO" Width="114" allowEmpty="True" columnWidth="114" columnsCount="1" useExtendedTooltip="False" wordWrap="False"/>
+        </Checkboxes.Tag>
+        <CheckBox Content="Жирный" FlowDirection="LeftToRight" Height="24" HorizontalAlignment="Left" IsChecked="False" IsEnabled="True" IsThreeState="False" Margin="1,1,0,0" Name="isBold" ToolTip="" VerticalAlignment="Top" Width="112" allowChangeEnable="True" useExtendedTooltip="False"/>
+        <CheckBox Content="Курсив" FlowDirection="LeftToRight" Height="24" HorizontalAlignment="Left" IsChecked="False" IsEnabled="True" IsThreeState="False" Margin="1,25,0,0" Name="isItalic" ToolTip="" VerticalAlignment="Top" Width="112" allowChangeEnable="True" useExtendedTooltip="False"/>
+        <CheckBox Content="Подчеркнутый" FlowDirection="LeftToRight" Height="24" HorizontalAlignment="Left" IsChecked="False" IsEnabled="True" IsThreeState="False" Margin="1,49,0,0" Name="isUnderline" ToolTip="" VerticalAlignment="Top" Width="112" allowChangeEnable="False" useExtendedTooltip="False"/>
+        <CheckBox Content="Перечеркнутый" FlowDirection="LeftToRight" Height="24" HorizontalAlignment="Left" IsChecked="False" IsEnabled="True" IsThreeState="False" Margin="1,73,0,0" Name="isStrike" ToolTip="" VerticalAlignment="Top" Width="112" allowChangeEnable="False" useExtendedTooltip="False"/>
+      </Checkboxes>
+      <Rectangle CssClass="" Grid.Column="1" Height="Stretch" HorizontalAlignment="Stretch" Margin="0,8,8,8" MinHeight="0" MinWidth="0" Name="ПримерИстория" VerticalAlignment="Stretch" Visibility="Visible" Width="Stretch">
+        <Rectangle.Tag>
+          <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          <Properties Height="98" Source="Text" Type="HTMLContainer" Width="92">
+            <Content>
+              <Run Text=""/>
+            </Content>
+          </Properties>
+        </Rectangle.Tag>
+      </Rectangle>
+    </Grid>
+  </Grid>
+</Window>

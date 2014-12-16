@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<cloud id="bd21e4a1-cb82-4850-b887-6dac1a4d33b9" name="DataSetCloud" platform="По умолчанию" responsible="Мануйлов А.С.">
+
+  <description/>
+
+  <items>
+    <application id="6047cec0-b262-455c-b2a5-1cadabcc302e" name="dataset.tensor.ru" url="./dataset.tensor.ru.s3app"/>
+  </items>
+
+  <cloud_templates>
+    <cloud_template id="c95539db-feab-4457-917b-63e01d717ec4" name="dataset.tensor.ru">
+      <item dbname="dataset" id="75678d93-1f87-4077-b218-ecd20c5475dd">
+        <service id="d2181eda-9c89-4493-b4b0-d9b980b3b089"/>
+      </item>
+    </cloud_template>
+  </cloud_templates>
+
+</cloud>

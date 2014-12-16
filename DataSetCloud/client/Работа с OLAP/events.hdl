@@ -1,0 +1,260 @@
+﻿hdl = {
+   /** Обработчик на открытие диалога редактирования расчетного счета
+    * */
+   onStartButton : function (){
+      text_string = $ws.single.ControlStorage.getByName("myString").getValue();
+      $ws.single.ControlStorage.getByName("myTable").getLinkedContext().setValue('query', text_string)
+      $ws.single.ControlStorage.getByName("myTable").reload();     
+   },
+
+   onGetDimensionvalue : function (){
+      cube = $ws.single.ControlStorage.getByName("Кубы").getStringValue();
+      measures = $ws.single.ControlStorage.getByName("МерыКуба").getActiveRecord().get("Measures");
+
+      table=$ws.single.ControlStorage.getByName("DimensionValueTableTree")
+
+
+      var RecSet =$ws.single.ControlStorage.getByName("ИзмеренияКуба").getRecordSet();
+      var rec = $ws.single.ControlStorage.getByName("ИзмеренияКуба").getActiveRecord();
+      var dimensions = "";
+      while(rec.get("idParent"))
+      {
+            dimensions = ".["+rec.get("Dimensions")+"]"+dimensions;
+            rec=RecSet.getRecordByPrimaryKey(rec.get("idParent"));
+      }
+      dimensions = "["+rec.get("Dimensions")+"]"+dimensions;
+
+      table.getLinkedContext().setValue('CubeName', cube)
+      table.getLinkedContext().setValue('CubeMeasure', measures)
+      table.getLinkedContext().setValue('CubeDimension', dimensions)
+
+      table.reload();
+   },
+   
+   onGetWhereValue : function (){
+      cube = $ws.single.ControlStorage.getByName("Кубы").getStringValue();
+      //measures = $ws.single.ControlStorage.getByName("МерыКуба").getActiveRecord().get("Measures");
+
+      table=$ws.single.ControlStorage.getByName("WhereValueTableTree")
+
+
+      var RecSet =$ws.single.ControlStorage.getByName("Where").getRecordSet();
+      var rec = $ws.single.ControlStorage.getByName("Where").getActiveRecord();
+      var dimensions = "";
+      while(rec.get("idParent"))
+      {
+            dimensions = ".["+rec.get("Dimensions")+"]"+dimensions;
+            rec=RecSet.getRecordByPrimaryKey(rec.get("idParent"));
+      }
+      dimensions = "["+rec.get("Dimensions")+"]"+dimensions;
+
+      table.getLinkedContext().setValue('CubeName', cube)
+      table.getLinkedContext().setValue('CubeMeasure', "")
+      table.getLinkedContext().setValue('CubeDimension', dimensions)
+
+      table.reload();
+   },
+
+
+   onMyRender: function(event, result) {
+   		var collsShow=new Array();
+   		var type;
+   		var rc_cols = this.getRecordSet().getColumns();
+		var first=true;
+   		for (var coll in rc_cols){
+			if(first)
+			{
+				Align='right'
+				first=false;
+			}
+			else
+			{
+				Align='left'
+			}
+			collsShow.push({
+				'title': coll,
+				'field': coll,
+				'width': 300,
+				'fixedSize': true,
+				'type':type,
+				'textAlign': Align,
+				'captionAlign': Align
+			})
+		}
+	   event.setResult(collsShow);
+   },
+
+   
+   	//function getTreeValue( treeName, idParent, field ) {
+	//	var RecSet = $ws.single.ControlStorage.getByName( treeName ).getRecordSet();
+	//	var rec = $ws.single.ControlStorage.getByName( treeName ).getActiveRecord();
+	//	var res = "";
+	//	//while( rec.get( "idParent" ) )
+	//	while( rec.get( idParent ) )
+	//	{
+	//		//dimensions = ".[" + rec.get( "Dimensions" )+ "]" + dimensions;
+	//		//rec=RecSet.getRecordByPrimaryKey( rec.get( "idParent" ) );
+	//		res = ".[" + rec.get( field )+ "]" + res;
+	//		rec = RecSet.getRecordByPrimaryKey( rec.get( idParent ) );
+	//	}
+	//	
+	//	strRoot = rec.get( field );
+	//	res = "[" + strRoot + "]" + res;
+	//
+	//	return res;
+	//};
+
+   onQueryButton : function (){
+   //var selRec = $ws.single.ControlStorage.getByName(tableName).getSelection(true),
+    //        gntx = $ws.single.GlobalContext;
+     //   var massOKDP =  gntx.getValue(typeClassifier+"id"),
+      //      massOKDPDel = gntx.getValue(typeClassifier+"idDel");
+      //  if(massOKDP===undefined)massOKDP=Array();
+      //  for (var i=0; i< selRec.length;i++)
+      //  {
+      //      if(massOKDP.lastIndexOf(selRec[i].get(id))==-1) massOKDP[massOKDP.length] = selRec[i].get(id);
+      //  }
+   
+   
+	cube = $ws.single.ControlStorage.getByName( "Кубы" ).getStringValue();
+	measures = $ws.single.ControlStorage.getByName( "МерыКуба" ).getActiveRecord().get("Measures");
+	topCount = $ws.single.ControlStorage.getByName( "TopCount" ).getStringValue();
+	useNonEmpty = $ws.single.ControlStorage.getByName( "UseNonEmpty" ).getValue();
+	
+	useDateRange = $ws.single.ControlStorage.getByName("UseDateRange").isVisible();
+        if(useDateRange)
+	{
+		useDateRange = $ws.single.ControlStorage.getByName("UseDateRange").getValue();
+		dateRangeFrom = $ws.single.ControlStorage.getByName("DateRangeFrom").getValue();
+		dateRangeTo = $ws.single.ControlStorage.getByName("DateRangeTo").getValue();
+	}	
+	
+	cube = "[" + cube + "]";
+	var RecSet =$ws.single.ControlStorage.getByName("ИзмеренияКуба").getRecordSet();
+	var rec = $ws.single.ControlStorage.getByName("ИзмеренияКуба").getActiveRecord();
+
+
+	var dimensions="";
+    	while(rec.get("idParent"))
+	{
+		dimensions = ".[" + rec.get( "Dimensions" )+ "]" + dimensions;
+		rec=RecSet.getRecordByPrimaryKey( rec.get( "idParent" ) );
+	}
+
+	strDimensionsRoot = rec.get( "Dimensions" );
+	dimensions = "[" + strDimensionsRoot + "]" + dimensions;
+	
+	//dimensions = getTreeValue( "ИзмеренияКуба", "idParent", "Dimensions");
+	
+	RecSet = $ws.single.ControlStorage.getByName( "Where" ).getRecordSet();
+	rec = $ws.single.ControlStorage.getByName( "Where" ).getActiveRecord();
+	var whereDimension = "";
+        while( rec.get( "idParent" ) )
+	{
+		whereDimension = ".[" + rec.get( "Dimensions" )+ "]" + whereDimension;
+		rec=RecSet.getRecordByPrimaryKey( rec.get( "idParent" ) );
+	}
+	strWhereRoot = rec.get( "Dimensions" );
+	whereDimension = "[" + strWhereRoot + "]" + whereDimension;
+	
+	RecSet = $ws.single.ControlStorage.getByName( "WhereValueTableTree" ).getRecordSet();
+	rec = $ws.single.ControlStorage.getByName( "WhereValueTableTree" ).getActiveRecord();
+	var where = "";
+        while( rec.get( "idParent" ) )
+	{
+		where = ".[" + rec.get( "DimensionValue" )+ "]" + where;
+		rec=RecSet.getRecordByPrimaryKey( rec.get( "idParent" ) );
+		if( topcount )
+			dimensions = "topcount( " + dimensions + ", " + topcount + ", [" + measures + "] )";
+	}
+	strRoot = rec.get( "DimensionValue" );
+	where = "[" + strRoot + "]" + where;
+	
+	//where = getTreeValue( "WhereValueTableTree", "idParent", "DimensionValue");
+	
+	where = whereDimension + "." + where;
+	
+	if( strDimensionsRoot == strWhereRoot )
+	{
+		$ws.core.alert( "Измерение и Where не могут совпадать" );
+		return;
+	}
+
+	dimensions = dimensions + ".members";
+	if( topCount )
+		dimensions = "topCount( " + dimensions + ", " + topCount + ", [" + measures + "] )";
+	
+	if( useDateRange )
+		where = "{" + strWhereRoot + ".[" + dateRangeFrom.getFullYear() + "].[" + dateRangeFrom.getMonth() + "].[" + dateRangeFrom.getDate() + "]:" + strWhereRoot + ".[" + dateRangeTo.getFullYear() + "].[" + dateRangeTo.getMonth() + "].[" + dateRangeTo.getDate() + "]}";
+	
+	if( useNonEmpty )
+		dimensions = "NON EMPTY{ " + dimensions + " }";
+	
+	var text_string = "SELECT "+"["+measures+"]"+" ON COLUMNS, "+dimensions+" ON ROWS " + "FROM "+cube + " WHERE " + where;
+	$ws.single.ControlStorage.getByName("myString").setValue(text_string);
+	
+	//$ws.single.ControlStorage.getByName("myTable").getLinkedContext().setValue('query', text_string);
+	//$ws.single.ControlStorage.getByName("myTable").reload();
+	
+	//$ws.single.ControlStorage.getByName("myString").setValue( strDimensionsRoot + "  " + strWhereRoot );
+   },
+
+   onChange: function(eventObject, value)
+   {        
+
+      table=$ws.single.ControlStorage.getByName("МерыКуба")
+      if(value)
+      {
+         table.getLinkedContext().setValue('CubeName', value);
+         table.reload();
+      }
+      else
+      {
+         table.clear();
+      } 
+
+      table = $ws.single.ControlStorage.getByName( "ИзмеренияКуба" );
+      tableWhere = $ws.single.ControlStorage.getByName( "Where" );
+      if(value)
+      {
+         table.getLinkedContext().setValue('CubeName', value);
+         table.reload();
+		 tableWhere.getLinkedContext().setValue('CubeName', value);
+         tableWhere.reload();
+		 //onGetWhereValue.call();
+      }
+      else
+      {
+         table.clear();
+		 tableWhere.clear();
+      }
+   },
+
+   onDimensionActivate: function(eventObject,row,dataRow)
+   {
+      if(dataRow.get("TypeDimension")==1)
+      { 
+          $ws.single.ControlStorage.getByName("UseDateRange").setEnabled( true );
+	  $ws.single.ControlStorage.getByName("DateRange").setEnabled( true );
+      }
+      else
+      {
+          $ws.single.ControlStorage.getByName("UseDateRange").setEnabled( false );
+	  $ws.single.ControlStorage.getByName("DateRange").setEnabled( false );
+      }
+
+   },
+   
+   onSetDataRangeFrom: function()
+   {
+      var date = new Date();
+      return new Date(date.getFullYear(), date.getMonth() - 1, date.getDate());
+   },
+   
+   onSetDataRangeTo: function()
+   {
+      var date = new Date();
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+   }
+
+}

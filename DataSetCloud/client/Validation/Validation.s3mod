@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui_module id="a1d40778-92e8-4c5e-bb0a-9a45724c168f" name="Validation" package="Платформа" responsible="Ткачук М.И." version="1.00">
+
+  <description/>
+
+  <depends/>
+
+  <load_after/>
+
+  <parameters/>
+
+  <resources/>
+
+</ui_module>

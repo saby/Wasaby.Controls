@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<Window Height="677" Icon="muzzle.dll;#-177" MainGridIsNew="False" MaxWidth="Infinity" MinHeight="0" MinWidth="0" Name="ДиалогРоли" ResizeMode="NoResize" Responsible="Шилов Д.А" Title="Роль" Topmost="False" Visibility="Visible" Width="Auto" WindowState="Normal" WindowStyle="None" highlightFirstError="False" independentContext="False" isEnabled="False" last_changed="Курдамосов С.А." x:Class="SbisDotNet.Window" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:sbis="clr-namespace:SbisDotNet" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Window.ControlEvents>
+    <ControlEvent Name="onReady">
+      <Event Type="handler" Value="js!SBIS3.ROLE.RoleFunction/OnReadyRoleDialog"/>
+      <Event Type="handler" Value="js!SBIS3.ROLE.RoleFunction/setOnlyRead"/>
+    </ControlEvent>
+    <ControlEvent Name="onBeforeShow" Type="handler" Value="js!SBIS3.ROLE.RoleFunction/onBeforeShowDialog"/>
+    <ControlEvent Name="onAfterShow" Type="handler" Value="js!SBIS3.ROLE.RoleFunction/onAfterShow"/>
+    <ControlEvent Name="onBeforeClose" Type="handler" Value="js!SBIS3.ROLE.RoleFunction/onCloseWindow"/>
+    <ControlEvent Name="onAfterClose" Type="handler" Value="js!SBIS3.ROLE.RoleFunction/OnAfterClose"/>
+    <ControlEvent Name="onAfterLoad" Type="handler" Value="js!SBIS3.ROLE.RoleFunction/onAfterLoad"/>
+    <ControlEvent Name="onBeforeSave" Type="handler" Value="js!SBIS3.ROLE.RoleFunction/onBeforeSaveRole"/>
+  </Window.ControlEvents>
+  <Window.Tag>
+    <AccessArray>
+      <Action Id="Роли" Name="Роли"/>
+    </AccessArray>
+    <Properties ConvertMode="Application" HtmlCreate="False" JamlVersion="1.1" SkinName="СкинСотрудникиWI" TotalChildrenCount="30" Width="712" WindowHeader="True">
+      <WebPage HTMLTemplate="" OutFileName="" Template=""/>
+    </Properties>
+  </Window.Tag>
+  <Grid CssClass="" Height="Auto" HorizontalAlignment="Stretch" MinHeight="0" MinWidth="0" Name="" ResizeMode="CanResize" TabIndex="1" VerticalAlignment="Stretch" Visibility="Visible" Width="Auto" allowChangeEnable="True" convertToNew="False" drawLines="No">
+    <Grid.Tag>
+      <Properties Height="677" Width="712"/>
+      <GridCell Col="1" DefaultBkColor="True" Row="1" background-image="" background-position-x="Left" background-position-y="Top" background-repeat-x="False" background-repeat-y="False"/>
+      <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+    </Grid.Tag>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="1.000000*" MinHeight="0">
+        <RowDefinition.Tag Height="677"/>
+      </RowDefinition>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition MinWidth="0" Width="1.000000*">
+        <ColumnDefinition.Tag Width="712"/>
+      </ColumnDefinition>
+    </Grid.ColumnDefinitions>
+    <TemplateArea CssClass="" HorizontalAlignment="Left" Margin="8,48,0,100" Name="Область по шаблону 1" SetSizeFromTemplate="False" TabIndex="7" Template="Таблица ролей" VerticalAlignment="Stretch" Visibility="Visible" Width="696" allowChangeEnable="True">
+      <TemplateArea.Tag>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+        <Properties ContentPage="False" Height="529"/>
+      </TemplateArea.Tag>
+    </TemplateArea>
+    <TextBox CharacterCasing="Normal" CssClass="" Height="24" HorizontalAlignment="Left" IsEnabled="True" Margin="8,0,0,54" Name="Группа" TabIndex="6" TextWrapping="NoWrap" ToolTip="" VerticalAlignment="Bottom" Visibility="Visible" Width="268" allowChangeEnable="True" trim="False" useExtendedTooltip="False">
+      <TextBox.Tag>
+        <Properties BackToolTip="False" FieldType="ftSTRING" InitValue="" InputFilter="" Type="InputLine" maxlength="255">
+          <FieldView>
+            <FldFormat Name="Группа" Type="ftSTRING"/>
+          </FieldView>
+          <InputLine DigitLeftAlign="True" LimitText="255" RegionalMoneyFormat="False"/>
+        </Properties>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+      </TextBox.Tag>
+    </TextBox>
+    <Label Content="Группа" CssClass="" Height="14" HorizontalAlignment="Left" Margin="8,585,0,0" Name="Метка 1" VerticalAlignment="Top" Width="100">
+      <Label.Tag>
+        <Properties LinkedObject="Группа" Multiline="False" TextAlignment="Left" Type="Label" TypeBinding="Top"/>
+      </Label.Tag>
+    </Label>
+    <FieldText CharacterCasing="Normal" CssClass="" Height="70" HorizontalAlignment="Stretch" IsEnabled="True" Margin="284,0,16,8" Name="Примечание" TabIndex="5" TextWrapping="Wrap" ToolTip="" VerticalAlignment="Bottom" Visibility="Visible" allowChangeEnable="True" trim="False" useExtendedTooltip="False">
+      <FieldText.Tag>
+        <Properties BackToolTip="False" FieldType="ftSTRING" InitValue="" InputFilter="" Type="InputLine" Width="412" maxlength="255">
+          <FieldView>
+            <FldFormat Name="Примечание" Type="ftSTRING"/>
+          </FieldView>
+          <InputLine DigitLeftAlign="True" EditStylesMask="True" LimitText="255" Multiline="True" NoBind="True" RegionalMoneyFormat="False"/>
+        </Properties>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+      </FieldText.Tag>
+    </FieldText>
+    <Label Content="Описание роли" CssClass="" Height="14" HorizontalAlignment="Left" Margin="284,585,0,0" Name="Метка 3" VerticalAlignment="Top" Width="100">
+      <Label.Tag>
+        <Properties LinkedObject="Примечание" Multiline="False" TextAlignment="Left" Type="Label" TypeBinding="Top"/>
+      </Label.Tag>
+    </Label>
+    <CheckBox Content="Только для служебных пользователей" CssClass="" FlowDirection="LeftToRight" Height="20" HorizontalAlignment="Left" IsChecked="False" IsEnabled="True" IsThreeState="False" Margin="8,0,0,8" Name="ForServiceUsers" TabIndex="4" ToolTip="" VerticalAlignment="Bottom" Visibility="Visible" Width="268" allowChangeEnable="True" useExtendedTooltip="False">
+      <CheckBox.Tag>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+        <Properties/>
+      </CheckBox.Tag>
+    </CheckBox>
+    <CheckBox Content="Не используется" CssClass="" FlowDirection="LeftToRight" Height="20" HorizontalAlignment="Left" IsChecked="False" IsEnabled="True" IsThreeState="False" Margin="8,0,0,28" Name="Скрытая" TabIndex="3" ToolTip="" VerticalAlignment="Bottom" Visibility="Visible" Width="268" allowChangeEnable="True" useExtendedTooltip="False">
+      <CheckBox.Tag>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+        <Properties/>
+      </CheckBox.Tag>
+    </CheckBox>
+    <TitleBorder BorderBrush="#c0c0c0" BorderThickness="0" CssClass="" DefaultFrameColor="False" Height="40" HorizontalAlignment="Stretch" Name="windowTitleContainer" Text="" VerticalAlignment="Top" Visibility="Visible" allowChangeEnable="True" convertToNew="False">
+      <TitleBorder.Tag>
+        <Properties Width="712"/>
+      </TitleBorder.Tag>
+      <Grid Margin="0" TabIndex="8" allowChangeEnable="True" convertToNew="False">
+        <TextBlock CssClass="" DisableProperties="True" FontFamily="Tahoma" FontSize="16 pt" FontStyle="Normal" FontWeight="Normal" Height="25" HorizontalAlignment="Left" Margin="20,0,0,0" Name="windowTitle" Text="Роль" TextAlignment="Left" TextVerticalAlignment="Top" ToolTip="" VerticalAlignment="Center" Visibility="Visible" Width="50"/>
+        <TextBox CharacterCasing="Normal" CssClass="nameInput" Height="24" HorizontalAlignment="Stretch" IsEnabled="True" Margin="65,8,185,0" Name="Название" TabIndex="10" TextWrapping="NoWrap" ToolTip="" VerticalAlignment="Top" Visibility="Visible" allowChangeEnable="True" trim="True" useExtendedTooltip="False">
+          <TextBox.Tag>
+            <Properties BackToolTip="False" FieldType="ftSTRING" InitValue="" InputFilter="" Type="InputLine" Width="462" maxlength="255">
+              <FieldView>
+                <FldFormat Name="Название" Type="ftSTRING"/>
+              </FieldView>
+              <InputLine DigitLeftAlign="True" LimitText="255" RegionalMoneyFormat="False"/>
+              <Validator ErrorMessage="" Function="coreValidators/required" noFailOnError="False"/>
+            </Properties>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          </TextBox.Tag>
+        </TextBox>
+        <Button Content="Сохранить" CssClass="" DisableProperties="False" Height="24" HorizontalAlignment="Right" IsDefault="True" IsEnabled="True" Margin="0,8,44,0" Name="save" TabIndex="9" TextAlignment="Center" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="91" allowChangeEnable="True">
+          <Button.ControlEvents>
+            <ControlEvent Name="onActivated" Type="command" Value="save"/>
+          </Button.ControlEvents>
+          <Button.Tag>
+            <Properties Icon="" IconPlacement="Left" Owner="" Press="False" renderStyle="classic"/>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          </Button.Tag>
+        </Button>
+        <Button Content="" CssClass="" DisableProperties="True" FontFamily="Tahoma" FontSize="8 pt" FontStyle="Normal" FontWeight="Normal" Height="24" HorizontalAlignment="Right" IsDefault="False" IsEnabled="True" Margin="0,8,8,0" Name="windowTitleClose" TabIndex="8" TextAlignment="Center" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="24" allowChangeEnable="True">
+          <Button.ControlEvents>
+            <ControlEvent Name="onActivated" Type="command" Value="close"/>
+          </Button.ControlEvents>
+          <Button.Tag>
+            <Properties Icon="ws:/titlebar-close.png" IconPlacement="Left" Owner="" Press="False" renderStyle="classic"/>
+            <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+          </Button.Tag>
+        </Button>
+      </Grid>
+    </TitleBorder>
+    <TemplateArea CssClass="" Height="Auto" HorizontalAlignment="Left" Margin="508,442,0,0" Name="Access" SetSizeFromTemplate="True" TabIndex="2" Template="Что можно" VerticalAlignment="Top" Visibility="Hidden" Width="Auto" allowChangeEnable="True">
+      <TemplateArea.Tag>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+        <Properties ContentPage="False" Height="38" Width="196"/>
+      </TemplateArea.Tag>
+    </TemplateArea>
+    <TemplateArea CssClass="" Height="Auto" HorizontalAlignment="Left" Margin="508,377,0,0" Name="Scope" SetSizeFromTemplate="True" TabIndex="1" Template="Область видимости" VerticalAlignment="Top" Visibility="Hidden" Width="Auto" allowChangeEnable="True">
+      <TemplateArea.Tag>
+        <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+        <Properties ContentPage="False" Height="42" Width="196"/>
+      </TemplateArea.Tag>
+    </TemplateArea>
+  </Grid>
+</Window>

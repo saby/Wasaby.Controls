@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui_module id="552bce95-a330-4a0a-82b7-110647eb6266" name="ws-res-xaml" responsible="Тюрин В.С." version="1.00">
+
+  <description/>
+
+  <depends/>
+
+  <load_after/>
+
+  <parameters/>
+
+  <resources/>
+
+  <externals/>
+
+</ui_module>

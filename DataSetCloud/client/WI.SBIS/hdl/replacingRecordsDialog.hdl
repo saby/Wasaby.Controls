@@ -1,0 +1,10 @@
+hdl = {
+   rowRender: function(record, tr){
+      if(record){
+         var parentRecordSet = record.getRecordSet(),
+             hierName = parentRecordSet.getQuery()["ЗаголовокИерархии"];
+         return $('<a class="ws-browser-folder-link" href="javascript:void(0)">' + record.get(hierName) + '</a>');
+      }
+   }
+};
+//@ sourceURL="replacingRecordsDialog.hdl"

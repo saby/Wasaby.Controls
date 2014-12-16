@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<Window Height="400" Icon="muzzle.dll;#-177" MainGridIsNew="False" MinHeight="0" MinWidth="0" Name="Сканирование" ResizeMode="CanResize" Title="Сканирование" Topmost="False" Visibility="Visible" Width="751" WindowState="Maximized" WindowStyle="None" highlightFirstError="False" x:Class="SbisDotNet.Window" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:sbis="clr-namespace:SbisDotNet" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Window.ControlEvents>
+    <ControlEvent Name="onAfterShow" Type="handler" Value="scanApplet/onAfterLoad"/>
+  </Window.ControlEvents>
+  <Window.Tag>
+    <Properties ConvertMode="Application" HtmlCreate="False" JamlVersion="1.1" SkinName="СкинСотрудникиWI" TotalChildrenCount="26" WindowHeader="True"/>
+  </Window.Tag>
+  <Grid CssClass="" Height="Auto" HorizontalAlignment="Stretch" MinHeight="0" MinWidth="0" Name="" ResizeMode="CanResize" TabIndex="4" VerticalAlignment="Stretch" Visibility="Visible" Width="Auto" convertToNew="False" drawLines="No">
+    <Grid.Tag>
+      <Properties Height="400" Width="751"/>
+      <GridCell Col="1" DefaultBkColor="True" Row="1" background-image="" background-position-x="Left" background-position-y="Top" background-repeat-x="False" background-repeat-y="False"/>
+    </Grid.Tag>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="1.000000*" MinHeight="0">
+        <RowDefinition.Tag Height="400"/>
+      </RowDefinition>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition MinWidth="0" Width="1.000000*">
+        <ColumnDefinition.Tag Width="751"/>
+      </ColumnDefinition>
+    </Grid.ColumnDefinitions>
+    <Rectangle CssClass="" HorizontalAlignment="Stretch" Margin="256,48,8,8" MinHeight="0" MinWidth="0" Name="image" VerticalAlignment="Stretch" Visibility="Visible">
+      <Rectangle.Tag>
+        <Properties Height="344" Source="Text" Type="HTMLContainer" Width="487">
+          <Content>
+            <Run Text="&lt;div id=&quot;scanApplet&quot; style=&quot;width: 100%; height: 100%; z-index:-100&quot; &gt;&lt;/div&gt;"/>
+          </Content>
+        </Properties>
+      </Rectangle.Tag>
+    </Rectangle>
+    <DataGrid HorizontalAlignment="Left" ItemsSource="" ItemsSourceApplication="" ItemsSourceService="" Margin="8,88,0,8" MinHeight="50" Name="ScanStack" Width="240">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Название" IsReadOnly="True" Width="196"/>
+      </DataGrid.Columns>
+      <DataGrid.ControlEvents>
+        <ControlEvent Name="onSetCursor" Value="scanApplet/onSetCursor"/>
+      </DataGrid.ControlEvents>
+      <DataGrid.Tag>
+        <Properties Height="304" Type="LiteBrowser" editMode="thisPage" showHead="False" showRecordsCount="False">
+          <Color/>
+          <SuperBrowser allowAdd="False" allowDelete="False" firstRequest="False" multiSelect="False" newCutLongRows="False" pagesShowType="Disable" useSorting="False">
+            <Content>
+              <Run Text="Нет сканов"/>
+            </Content>
+          </SuperBrowser>
+          <MarkedRowOptions/>
+          <TreeBrowser/>
+          <Browser>
+            <MethodParameters/>
+          </Browser>
+          <DataView>
+            <Options doZEBRA="False"/>
+            <AdditionalFields>
+              <RecFormat>
+                <Fields/>
+              </RecFormat>
+            </AdditionalFields>
+          </DataView>
+          <Reports/>
+          <ReportsForList/>
+          <Ladder/>
+        </Properties>
+      </DataGrid.Tag>
+    </DataGrid>
+    <ComboBox CssClass="" Foreground="#000000" Height="24" HorizontalAlignment="Left" IsEnabled="True" Margin="8,56,0,0" Name="Сканеры" SelectedIndex="0" TabIndex="4" TextAlignment="Left" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="240" allowChangeEnable="True">
+      <ComboBox.ControlEvents>
+        <ControlEvent Name="onChange" Type="handler" Value="scanApplet/onChangeScanner"/>
+      </ComboBox.ControlEvents>
+      <ComboBox.Tag>
+        <Properties DisplayHandler="" TypeDataSource="List" wordWrap="False"/>
+      </ComboBox.Tag>
+      <ComboBoxItem Name="-1" Value="Идет поиск сканеров..."/>
+    </ComboBox>
+    <Label Content="Устройства" CssClass="" Height="16" HorizontalAlignment="Left" Margin="8,40,0,0" Name="Устройства" VerticalAlignment="Top" Width="100">
+      <Label.Tag>
+        <Properties Hidden="False" LinkedObject="Сканеры" Multiline="False" TextAlignment="Left" TextVerticalAlignment="Top" Type="Label" TypeBinding="Top"/>
+      </Label.Tag>
+    </Label>
+    <TitleBorder BorderBrush="#c0c0c0" BorderThickness="0" CssClass="" DefaultFrameColor="False" Height="40" HorizontalAlignment="Stretch" Name="windowTitleContainer" Text="" VerticalAlignment="Top" Visibility="Visible">
+      <TitleBorder.Tag>
+        <Properties Width="751"/>
+      </TitleBorder.Tag>
+      <Grid Margin="0" TabIndex="1">
+        <TextBlock CssClass="" DisableProperties="True" FontFamily="Tahoma" FontSize="16 pt" FontWeight="Normal" Height="25" HorizontalAlignment="Left" Margin="20,0,0,0" Name="windowTitle" Text="Сканирование" TextAlignment="Left" TextVerticalAlignment="Top" ToolTip="" VerticalAlignment="Center" Visibility="Visible" Width="142"/>
+        <Button Content="Сканировать" CssClass="" DisableProperties="False" Height="24" HorizontalAlignment="Right" IsDefault="True" IsEnabled="True" Margin="0,0,156,7" Name="Сканировать" TabIndex="3" TextAlignment="Center" ToolTip="" VerticalAlignment="Bottom" Visibility="Visible" Width="108" allowChangeEnable="True">
+          <Button.ControlEvents>
+            <ControlEvent Name="onActivated" Type="handler" Value="scanApplet/onButtonScanner"/>
+          </Button.ControlEvents>
+          <Button.Tag>
+            <Properties Icon="" IconPlacement="Left" Owner="" Press="False" renderStyle="classic"/>
+          </Button.Tag>
+        </Button>
+        <Button Content="Сохранить" CssClass="" DisableProperties="False" Height="24" HorizontalAlignment="Right" IsDefault="False" IsEnabled="False" Margin="0,0,40,7" Name="Загрузить на сервер" TabIndex="2" TextAlignment="Center" ToolTip="" VerticalAlignment="Bottom" Visibility="Visible" Width="108" allowChangeEnable="True">
+          <Button.ControlEvents>
+            <ControlEvent Name="onActivated" Type="handler" Value="scanApplet/onButtonUpload"/>
+          </Button.ControlEvents>
+          <Button.Tag>
+            <Properties Icon="" IconPlacement="Left" Owner="" Press="False" renderStyle="classic"/>
+          </Button.Tag>
+        </Button>
+        <Button Content="" CssClass="" DisableProperties="True" FontFamily="Tahoma" FontSize="8 pt" FontWeight="Normal" Height="24" HorizontalAlignment="Right" IsDefault="False" IsEnabled="True" Margin="0,8,8,0" Name="windowTitleClose" TabIndex="1" TextAlignment="Center" ToolTip="" VerticalAlignment="Top" Visibility="Visible" Width="24" allowChangeEnable="True">
+          <Button.ControlEvents>
+            <ControlEvent Name="onActivated" Type="command" Value="close"/>
+          </Button.ControlEvents>
+          <Button.Tag>
+            <Properties Icon="ws:/titlebar-close.png" IconPlacement="Left" Owner="" Press="False" renderStyle="classic"/>
+          </Button.Tag>
+        </Button>
+      </Grid>
+    </TitleBorder>
+  </Grid>
+</Window>

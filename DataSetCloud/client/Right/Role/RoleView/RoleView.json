@@ -1,0 +1,15 @@
+{
+   "name" : "roleView",
+   "title" : "",
+   "properties" : {
+      "ws-config" : {
+         "options" : {
+            "autoHeight" : {
+               "title" : "АвтоВысота",
+               "type" : "boolean",
+               "default" : false
+            }
+         }
+      }
+   }
+}

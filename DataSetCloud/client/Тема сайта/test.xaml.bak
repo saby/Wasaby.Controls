@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<Window Height="730" Icon="muzzle.dll;#-177" MainGridIsNew="True" MaxWidth="Infinity" MinHeight="0" MinWidth="0" Name="test" ResizeMode="CanResize" Responsible="Ман" Title="" Visibility="Visible" Width="1088" WindowStyle="SingleBorderWindow" highlightFirstError="False" independentContext="False" isEnabled="False" last_changed="Мануйлов А.С." saveLastState="True" x:Class="SbisDotNet.Window" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:sbis="clr-namespace:SbisDotNet" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Window.Tag>
+    <Properties ConvertMode="Page" HtmlCreate="True" JamlVersion="1.1" SkinName="СкинСотрудникиWI" TotalChildrenCount="19" WindowHeader="False">
+      <WebPage HTMLTemplate="" OutFileName="test" Template=""/>
+    </Properties>
+  </Window.Tag>
+  <Grid CssClass="" Height="Auto" HorizontalAlignment="Stretch" MinHeight="0" MinWidth="0" Name="" ResizeMode="CanResize" TabIndex="1" VerticalAlignment="Top" Visibility="Visible" Width="Auto" allowChangeEnable="True" convertToNew="True" drawLines="No">
+    <Grid.Tag>
+      <Properties Height="730" Width="1088"/>
+      <AccessArray TextMessage="У Вас недостаточно прав для просмотра" UseMessage="True"/>
+    </Grid.Tag>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="1.000000*" MinHeight="730" UserChange="False">
+        <RowDefinition.Tag Height="730"/>
+      </RowDefinition>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition MinWidth="1088" UserChange="False" Width="1.000000*">
+        <ColumnDefinition.Tag Width="1088"/>
+      </ColumnDefinition>
+    </Grid.ColumnDefinitions>
+    <WIUserControl Height="200" HorizontalAlignment="Left" Margin="689,209,0,0" Module="js!SBIS3.CONTROLS.ListViewDS" TabIndex="2" Type="" VerticalAlignment="Top" Width="200">
+      <WIUserControl.Tag>
+        <Properties/>
+      </WIUserControl.Tag>
+      <configuration/>
+    </WIUserControl>
+    <DataGrid Height="Stretch" ItemsSource="Производитель.Список" ItemsSourceApplication="" ItemsSourceService="" Margin="32,17,548,82" MinHeight="50" Name="Табличное представление 1" TabIndex="1" Width="Stretch">
+      <DataGrid.Columns>
+        <DataGridTextColumn Binding="@Производитель" Header="@Производитель" IsReadOnly="True" Width="200" filterName="@Производитель"/>
+        <DataGridTextColumn Binding="Название" Header="Название" IsReadOnly="True" Width="200" allowEditAtThePlace="True" filterName="Название"/>
+        <DataGridTextColumn Binding="Сайт" Header="Сайт" IsReadOnly="True" Width="200" allowEditAtThePlace="True" filterName="Сайт"/>
+      </DataGrid.Columns>
+      <DataGrid.Tag>
+        <Properties Height="631" Type="LiteBrowser" Width="508" partiallyLoad="False">
+          <RowOptions Edit="True"/>
+          <Color/>
+          <SuperBrowser allowAddAtThePlace="True" useEditAtThePlaceForColumns="True" useSorting="False">
+            <Content>
+              <Run Text="Нет данных"/>
+            </Content>
+          </SuperBrowser>
+          <MarkedRowOptions/>
+          <UserRowOptions/>
+          <TreeBrowser/>
+          <Browser>
+            <MethodParameters/>
+          </Browser>
+          <DataView>
+            <Options/>
+            <AdditionalFields>
+              <RecFormat>
+                <Fields/>
+              </RecFormat>
+            </AdditionalFields>
+          </DataView>
+          <Reports/>
+          <ReportsForList/>
+          <Ladder/>
+        </Properties>
+        <AccessArray/>
+      </DataGrid.Tag>
+    </DataGrid>
+  </Grid>
+</Window>
