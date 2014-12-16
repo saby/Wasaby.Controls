@@ -48,8 +48,23 @@ define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3
          }
       },
 
-      _itemActivatedHandler : function() {
-         this.hide();
+      _itemActivatedHandler : function(menuItem) {
+         var elem = $("<div></div>").appendTo('body');
+         var subMenu = new Menu({
+            element: elem,
+            items: this._items,
+            visible: false,
+            target : menuItem.getContainer(),
+            corner : 'tr',
+            verticalAlign : {
+               side : 'top'
+            },
+            horizontalAlign : {
+               side : 'left'
+            },
+            closeByExternalClick: true
+         });
+         subMenu.show();
       }
    });
 
