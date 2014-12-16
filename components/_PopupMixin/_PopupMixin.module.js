@@ -106,6 +106,9 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
 
          //TODO: Придрот
          container.removeClass('ws-area');
+         container.addClass('ws-hidden');
+         this._isVisible = false;
+         /********************************/
 
          this._initOppositeCorners();
          //При ресайзе расчитываем размеры
