@@ -1,9 +1,8 @@
-<div class="controls-EditAtPlace controls-TextBox  {{?it.isMultiline}}controls-EditAtPlace__autoHeight{{?}}">
-    {{?!it.displayAsEditor}}
-        <div class="controls-EditAtPlace__fieldWrapper controls-TextBox__fieldWrapper">
-                <div class="controls-EditAtPlace__textField controls-TextBox__field {{?it.isMultiline}}controls-EditAtPlace__multiline{{?}}">{{?it.text}}{{=it.text}}{{?}}</div>
+<div class="controls-EditAtPlace controls-TextBox {{?it.isMultiline}}controls-EditAtPlace__autoHeight{{?}}">
+        <div class="js-controls-EditAtPlace__fieldWrapper controls-EditAtPlace__fieldWrapper controls-TextBox__fieldWrapper {{?it.displayAsEditor}}controls-EditAtPlace__fieldWrapperHidden{{?}}">
+                <span class="controls-EditAtPlace__textField controls-TextBox__field {{?it.isMultiline}}controls-EditAtPlace__multiline{{?}}">{{?it.text}}{{=it.text}}{{?}}</span>
         </div>
-    {{??}}
-        {{=it.editorTpl}}
-    {{?}}
+        <div class="js-controls-EditAtPlace__editor controls-EditAtPlace__editor {{?!it.displayAsEditor}}controls-EditAtPlace__editorHidden{{?}}">
+            {{=it.editorTpl}}
+        </div>
 </div>
