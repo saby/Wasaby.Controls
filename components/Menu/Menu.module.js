@@ -2,18 +2,18 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS._PopupMixin', 'html!SBIS3.CONTROLS.Menu', 'js!SBIS3.CONTROLS._TreeMixin', 'js!SBIS3.CONTROLS.FloatArea', 'css!SBIS3.CONTROLS.Menu'], function(ButtonGroupBase, _PopupMixin, dot, _TreeMixin, FloatArea) {
+define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'html!SBIS3.CONTROLS.Menu', 'js!SBIS3.CONTROLS._TreeMixin', 'js!SBIS3.CONTROLS.FloatArea', 'css!SBIS3.CONTROLS.Menu'], function(ButtonGroupBase, dot, _TreeMixin, FloatArea) {
 
    'use strict';
 
    /**
     * Контрол, отображающий меню всплывающее в определенном месте страницы
     * @class SBIS3.CONTROLS.Menu
-    * @extends $ws.proto.Control
-    * @mixes SBIS3.CONTROLS._PopupMixin
+    * @extends SBIS3.CONTROLS.ButtonGroupBase
+    * @mixes SBIS3.CONTROLS._TreeMixin
     */
 
-   var Menu = ButtonGroupBase.extend([_PopupMixin, _TreeMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
+   var Menu = ButtonGroupBase.extend([_TreeMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
       _dotTplFn : dot,
       $protected: {
          _subContainers : {},
