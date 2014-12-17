@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS._PopupMixin', 'html!SBIS3.CONTROLS.Menu', 'js!SBIS3.CONTROLS._TreeMixin'], function(ButtonGroupBase, _PopupMixin, dot, _TreeMixin) {
+define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS._PopupMixin', 'html!SBIS3.CONTROLS.Menu', 'js!SBIS3.CONTROLS._TreeMixin', 'js!SBIS3.CONTROLS.FloatArea', 'css!SBIS3.CONTROLS.Menu'], function(ButtonGroupBase, _PopupMixin, dot, _TreeMixin, FloatArea) {
 
    'use strict';
 
@@ -16,6 +16,7 @@ define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3
    var Menu = ButtonGroupBase.extend([_PopupMixin, _TreeMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
       _dotTplFn : dot,
       $protected: {
+         _subContainers : {},
          _subMenus : {},
          _options: {
             /**
@@ -50,31 +51,51 @@ define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3
       },
 
       _itemActivatedHandler : function(menuItem) {
-         var id = menuItem.getContainer().attr('data-id');
-         if (!this._subMenus[id]) {
-            var container = $('<div class="controls-Menu__submenu" data-menuId="' + this.getId() + '_' + id + '"></div>').appendTo('body');
-            this._subMenus[id] = new Menu({
-               parent : this,
-               element: container,
-               visible: false,
-               target : menuItem.getContainer(),
-               corner : 'tr',
-               items : this._items,
-               verticalAlign : {
-                  side : 'top'
-               },
-               horizontalAlign : {
-                  side : 'left'
-               },
-               closeByExternalClick: true
-            })
+         var
+            id = menuItem.getContainer().attr('data-id'),
+            item = this._items.getItem(id),
+            parId = this._items.getParent(item),
+            parent = this;
+         if (parId) {
+            parent = this._subMenus[parId];
          }
-         this._subMenus[id].show();
+         if (this._subContainers[id]) {
+            if (!this._subMenus[id]) {
+               this._subMenus[id] = new FloatArea({
+                  element: $('<div class="controls-Menu__Popup"></div>'),
+                  parent : parent,
+                  target : menuItem.getContainer(),
+                  corner : 'tr',
+                  hierField : 'par',
+                  verticalAlign : {
+                     side : 'top'
+                  },
+                  horizontalAlign : {
+                     side : 'left',
+                     offset: 0
+                  },
+                  closeByExternalClick: true
+               });
+               this._subMenus[id].getContainer().append(this._subContainers[id]);
+            }
+            this._subMenus[id].show();
+         }
+         console.log(id);
       },
 
       _getTargetContainer : function(item, key, parItem, lvl) {
          if (!parItem) {
             return this._container;
+         }
+         else {
+            var
+               parId = this._items.getKey(parItem),
+               targetBtnContainer = $('.controls-ListView__item[data-id="'+parId+'"]', this._container);
+            if (!this._subContainers[parId]) {
+               this._subContainers[parId] = $('<div class="controls-Menu__submenu" data-menuId="' + this.getId() + '_' + parId + '"></div>').appendTo('body');
+            }
+
+            return this._subContainers[parId];
          }
       }
    });

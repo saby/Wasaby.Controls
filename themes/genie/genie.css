@@ -576,6 +576,10 @@
 .controls-MenuItem__text {
   margin-left: 22px;
 }
-.controls-Menu {
+.controls-Menu__Popup {
   border: 1px solid #919197;
+  box-sizing: border-box;
+}
+.controls-FloatArea.controls-Menu__Popup {
+  margin-top: -1px;
 }
