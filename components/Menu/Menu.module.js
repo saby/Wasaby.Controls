@@ -76,6 +76,7 @@ define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'html!SBI
                   },
                   closeByExternalClick: true
                });
+
                this._subMenus[id].getContainer().append(this._subContainers[id]);
             }
             this._subMenus[id].show();
@@ -88,9 +89,7 @@ define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'html!SBI
             return this._container;
          }
          else {
-            var
-               parId = this._items.getKey(parItem),
-               targetBtnContainer = $('.controls-ListView__item[data-id="'+parId+'"]', this._container);
+            var parId = this._items.getKey(parItem);
             if (!this._subContainers[parId]) {
                this._subContainers[parId] = $('<div class="controls-Menu__submenu" data-menuId="' + this.getId() + '_' + parId + '"></div>').appendTo('body');
             }
