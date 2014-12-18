@@ -580,3 +580,15 @@
   box-shadow: 0 0 8px 1px #aaaaaa;
   box-sizing: border-box;
 }
+.controls-Menu__hasChild:hover:after {
+  background-position: 0 -16px;
+}
+.controls-Menu__hasChild:after {
+  content: ' ';
+  background: url('img/MenuExpand.png') 0 0 no-repeat;
+  position: absolute;
+  right: 0;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+}

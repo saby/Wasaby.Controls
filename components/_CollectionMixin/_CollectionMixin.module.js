@@ -90,9 +90,12 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
          });
          itemsReadyDef.done().getResult().addCallback(function(){
             self._notify('onDrawItems');
+            self._drawItemsCallback();
          });
       },
+      _drawItemsCallback : function() {
 
+      },
       //метод определяющий в какой контейнер разместить определенный элемент
       _getTargetContainer : function() {
          //по стандарту все строки рисуются в itemsContainer

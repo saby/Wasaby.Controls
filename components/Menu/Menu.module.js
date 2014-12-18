@@ -2,7 +2,16 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'html!SBIS3.CONTROLS.Menu', 'js!SBIS3.CONTROLS._TreeMixin', 'js!SBIS3.CONTROLS.FloatArea', 'css!SBIS3.CONTROLS.Menu'], function(ButtonGroupBase, dot, _TreeMixin, FloatArea) {
+define('js!SBIS3.CONTROLS.Menu', [
+   'js!SBIS3.CONTROLS.ButtonGroupBase',
+   'html!SBIS3.CONTROLS.Menu',
+   'js!SBIS3.CONTROLS._TreeMixin',
+   'js!SBIS3.CONTROLS.FloatArea',
+   'js!SBIS3.CONTROLS.ControlHierarchyManager',
+   'css!SBIS3.CONTROLS.Menu',
+   'js!SBIS3.CONTROLS.MenuItem'
+
+], function(ButtonGroupBase, dot, _TreeMixin, FloatArea, ControlHierarchyManager) {
 
    'use strict';
 
@@ -51,37 +60,12 @@ define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'html!SBI
       },
 
       _itemActivatedHandler : function(menuItem) {
-         var
-            id = menuItem.getContainer().attr('data-id'),
-            item = this._items.getItem(id),
-            parId = this._items.getParent(item),
-            parent = this;
-         if (parId) {
-            parent = this._subMenus[parId];
-         }
-         if (this._subContainers[id]) {
-            if (!this._subMenus[id]) {
-               this._subMenus[id] = new FloatArea({
-                  element: $('<div class="controls-Menu__Popup"></div>'),
-                  parent : parent,
-                  target : menuItem.getContainer(),
-                  corner : 'tr',
-                  hierField : 'par',
-                  verticalAlign : {
-                     side : 'top'
-                  },
-                  horizontalAlign : {
-                     side : 'left',
-                     offset: 0
-                  },
-                  closeByExternalClick: true
-               });
-
-               this._subMenus[id].getContainer().append(this._subContainers[id]);
+         this.hide();
+         for (var j in this._subMenus) {
+            if (this._subMenus.hasOwnProperty(j)) {
+               this._subMenus.hide();
             }
-            this._subMenus[id].show();
          }
-         console.log(id);
       },
 
       _getTargetContainer : function(item, key, parItem, lvl) {
@@ -91,11 +75,114 @@ define('js!SBIS3.CONTROLS.Menu', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'html!SBI
          else {
             var parId = this._items.getKey(parItem);
             if (!this._subContainers[parId]) {
-               this._subContainers[parId] = $('<div class="controls-Menu__submenu" data-menuId="' + this.getId() + '_' + parId + '"></div>').appendTo('body');
+               this._subContainers[parId] = $('<div class="controls-Menu__submenu" data-parId="' + parId + '"></div>');
+               this._subContainers[parId].parentCtrl = this;
             }
 
             return this._subContainers[parId];
          }
+      },
+      _drawItemsCallback : function() {
+         for (var i in this._subContainers) {
+            if (this._subContainers.hasOwnProperty(i)) {
+
+               var
+                  ctrl = this._subContainers[i].parentCtrl,
+                  butId = this._subContainers[i].attr('data-parId'),
+                  button = ctrl.getItemInstance(butId);
+               button.getContainer().addClass('controls-Menu__hasChild');
+
+            }
+         }
+
+         var instances = this.getItemsInstances();
+         var self = this;
+         for (i in instances) {
+            if (instances.hasOwnProperty(i)) {
+               instances[i].getContainer().hover(function(e){
+                  var
+                     id = $(this).attr('data-id'),
+                     item = self._items.getItem(id),
+                     parId = self._items.getParent(item),
+                     parent;
+                  if (parId) {
+                     parent = self._subMenus[parId];
+                  }
+                  else {
+                     parent = self
+                  }
+
+                  //получаем саб меню для текущей кнопки и показываем его
+                  var mySubmenu;
+                  if (self._subContainers[id]) {
+                     if (!self._subMenus[id]) {
+                        self._subContainers[id].appendTo('body');
+                        self._subMenus[id] = self._createSubMenu(this, parent);
+                        self._subMenus[id].getContainer().append(self._subContainers[id]);
+                     }
+                     mySubmenu = self._subMenus[id];
+                     self._subMenus[id].show();
+                  }
+
+                  //перебираем все остальные и скрываем их по принципу вложенности
+                  for (var j in self._subMenus) {
+                     if ((self._subMenus.hasOwnProperty(j)) && (self._subMenus[j] !== mySubmenu)) {
+                        var flag = true;
+                        if (self._subMenus.hasOwnProperty(j)) {
+                           flag = ControlHierarchyManager.checkInclusion(self._subMenus[j], e.target);
+                        }
+                        if (flag) self._subMenus[j].show(); else self._subMenus[j].hide();
+                     }
+                  }
+
+
+               })
+            }
+         }
+
+
+         /*button.getContainer().hover(function(e){
+
+            var parent = button.getParent();
+            if (!ControlHierarchyManager.checkInclusion(self, target)) {
+               self.hide();
+            }
+            var
+               id = $(this).attr('data-id'),
+               item = self._items.getItem(id),
+               parId = self._items.getParent(item),
+               parent = self;
+            if (parId) {
+               parent = self._subMenus[parId];
+            }
+            if (self._subContainers[id]) {
+               if (!self._subMenus[id]) {
+                  self._subContainers[id].appendTo('body');
+                  self._subMenus[id] = self._createSubMenu(this);
+
+                  self._subMenus[id].getContainer().append(self._subContainers[id]);
+               }
+               self._subMenus[id].show();
+            }
+         });*/
+      },
+      _createSubMenu : function(target, parent) {
+         target = $(target);
+         return new FloatArea({
+            element: $('<div class="controls-Menu__Popup"></div>'),
+            parent : parent,
+            target : target,
+            corner : 'tr',
+            hierField : 'par',
+            verticalAlign : {
+               side : 'top'
+            },
+            horizontalAlign : {
+               side : 'left',
+               offset: 0
+            },
+            closeByExternalClick: true
+         })
       }
    });
 
