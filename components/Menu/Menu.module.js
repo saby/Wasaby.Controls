@@ -61,8 +61,6 @@ define('js!SBIS3.CONTROLS.Menu', [
 
       _itemActivatedHandler : function(menuItem) {
          if (!(menuItem.getContainer().hasClass('controls-Menu__hasChild'))) {
-            this.hide();
-
             for (var j in this._subMenus) {
                if (this._subMenus.hasOwnProperty(j)) {
                   this._subMenus[j].hide();
