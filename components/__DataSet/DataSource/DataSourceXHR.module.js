@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.DataSourceXHR', ['js!SBIS3.CONTROLS.IDataSource'], fun
        * @param {Object} [headers] Заголовки
        * @return {$ws.proto.Deferred}
        */
-      execute: function (data, headers) {
+      _execute: function (data, headers) {
          var
             dResult = new $ws.proto.Deferred(),
             self = this;

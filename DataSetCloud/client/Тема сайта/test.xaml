@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <Window Height="730" Icon="muzzle.dll;#-177" MainGridIsNew="True" MaxWidth="Infinity" MinHeight="0" MinWidth="0" Name="test" ResizeMode="CanResize" Responsible="Ман" Title="" Visibility="Visible" Width="1088" WindowStyle="SingleBorderWindow" highlightFirstError="False" independentContext="False" isEnabled="False" last_changed="Мануйлов А.С." saveLastState="True" x:Class="SbisDotNet.Window" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:sbis="clr-namespace:SbisDotNet" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Window.Tag>
-    <Properties ConvertMode="Page" HtmlCreate="True" JamlVersion="1.1" SkinName="СкинСотрудникиWI" TotalChildrenCount="17" WindowHeader="False">
+    <Properties ConvertMode="Page" HtmlCreate="True" JamlVersion="1.1" SkinName="СкинСотрудникиWI" TotalChildrenCount="18" WindowHeader="False">
       <WebPage HTMLTemplate="" OutFileName="test" Template=""/>
     </Properties>
   </Window.Tag>
@@ -27,7 +27,7 @@
         <DataGridTextColumn Binding="Сайт" Header="Сайт" IsReadOnly="True" Width="200" allowEditAtThePlace="True" filterName="Сайт"/>
       </DataGrid.Columns>
       <DataGrid.Tag>
-        <Properties Height="631" Type="LiteBrowser" Width="508" partiallyLoad="False">
+        <Properties Height="631" Type="LiteBrowser" Width="508" partiallyLoad="False" rowOptions="True">
           <RowOptions Edit="True"/>
           <Color/>
           <SuperBrowser allowAddAtThePlace="True" useEditAtThePlaceForColumns="True" useSorting="False">

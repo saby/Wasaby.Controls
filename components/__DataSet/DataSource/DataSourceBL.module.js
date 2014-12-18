@@ -29,6 +29,117 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR'], fu
          }
       },
 
+      create: function () {
+
+      },
+
+      read: function (method) {
+
+         var self = this,
+            def = new $ws.proto.Deferred();
+
+         if (!method || typeof(method) != 'string') {
+            method = 'Список';
+         }
+
+         this.callMethod(this._name + '.' + method,
+            {'ДопПоля': [], 'Фильтр': {'d': [], 's': []}, 'Сортировка': null, 'Навигация': null}
+         ).addCallback(function (result) {
+
+               var rs = new $ws.proto.RecordSet({dataSource: self, readerParams: { adapterType: 'TransportAdapterStatic', adapterParams: { data: result } } });
+               def.callback(rs);
+
+            });
+         return def;
+
+      },
+
+      update: function () {
+
+         //TODO updateRecord ?
+
+      },
+
+      destroy: function (pk) {
+
+         var self = this,
+            def = new $ws.proto.Deferred();
+
+         this.callMethod(this._name + '.Удалить',
+            { 'ИдО': pk}
+         ).addCallback(function (result) {
+               // вернется номер записи
+               console.log(result);
+            });
+         return def;
+
+      },
+
+
+      query: function (method, filter, paging, sorting) {
+         var self = this,
+            def = new $ws.proto.Deferred();
+
+         if (!method || typeof(method) != 'string') {
+            throw new TypeError('Method name must be specified');
+         }
+
+         if (paging) {
+            if (typeof paging != 'object') {
+               throw new TypeError('Paging parameter must be an object');
+            } else {
+               if (paging.type) {
+                  paging.page = +paging.page;
+                  paging.pageSize = +paging.pageSize;
+                  if (isNaN(paging.page)) {
+                     throw new TypeError('Page must be a number (paging.page)');
+                  }
+                  if (isNaN(paging.pageSize)) {
+                     throw new TypeError('Page size must be a number (paging.pageSize)');
+                  }
+               }
+            }
+         }
+
+         if (sorting && !(sorting instanceof Array)) {
+            throw new TypeError('Sorting parameter must be an array');
+         }
+
+         this.callMethod(this._name + '.' + method,
+            //TODO: как то заполнить надо
+            {'ДопПоля': [], 'Фильтр': {'d': [], 's': []}, 'Сортировка': null, 'Навигация': null}
+         ).addCallback(function (result) {
+
+               var rs = new $ws.proto.RecordSet({dataSource: self, readerParams: { adapterType: 'TransportAdapterStatic', adapterParams: { data: result } } });
+               def.callback(rs);
+
+            });
+         return def;
+      },
+
+      updateRecord: function (record, options) {
+         //_makeArgsForUpdate
+         var retval = {
+            "Запись": $ws.single.SerializatorSBIS.serialize(record, options)
+         };
+         // TODO Выпилить в 3.7 (?) поддержку передачи boolean
+         if (options && (typeof options == 'boolean' || options.consistencyCheck)) {
+            retval["Проверка"] = true;
+         }
+
+         var self = this,
+            def = new $ws.proto.Deferred();
+
+         this.callMethod(this._name + '.Записать',
+               retval
+            ).addCallback(function (result) {
+               // вернется номер записи
+               console.log(result);
+            });
+         return def;
+      },
+
+
       _handleRPCError: function (dResult, method, args, response) {
          var
             error = response.error,
@@ -79,13 +190,17 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR'], fu
          }
       },
 
+      // нужен для обработки RPC запросов
       callMethod: function (method, args) {
          var dResult = new $ws.proto.Deferred(),
             rpcErrorHandler = this._handleRPCError.bind(this, dResult, method, args),
             httpErrorHandler = this._handleHTTPError.bind(this, dResult, method, args),
             req = $ws.helpers.jsonRpcPreparePacket(method, args),
             dExecute;
-         dExecute = this.execute(req.reqBody, req.reqHeaders);
+
+         dExecute = this._execute(req.reqBody, req.reqHeaders);
+
+         // на случай логирования
          if ($ws._const.debug) {
             dExecute.addCallbacks(
                function (r) {
@@ -123,81 +238,10 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR'], fu
                httpErrorHandler(e);
                return e;
             });
+
          return dResult;
-      },
-
-      query: function (method, filter, paging, sorting) {
-         var self = this,
-            def = new $ws.proto.Deferred();
-
-         if (!method || typeof(method) != 'string') {
-            throw new TypeError('Method name must be specified');
-         }
-         if (paging) {
-            if (typeof paging != 'object') {
-               throw new TypeError('Paging parameter must be an object');
-            } else {
-               if (paging.type) {
-                  paging.page = +paging.page;
-                  paging.pageSize = +paging.pageSize;
-                  if (isNaN(paging.page)) {
-                     throw new TypeError('Page must be a number (paging.page)');
-                  }
-                  if (isNaN(paging.pageSize)) {
-                     throw new TypeError('Page size must be a number (paging.pageSize)');
-                  }
-               }
-            }
-         }
-         if (sorting && !(sorting instanceof Array)) {
-            throw new TypeError('Sorting parameter must be an array');
-         }
-
-         this.callMethod(this._name + '.' + method,
-            //TODO: как то заполнить надо
-            {'ДопПоля': [], 'Фильтр': {'d': [], 's': []}, 'Сортировка': null, 'Навигация': null}
-         ).addCallback(function (result) {
-
-               console.log(result);
-
-               var model = new $ws.proto.RecordSet({dataSource: self, readerParams: { adapterType: 'TransportAdapterStatic', adapterParams: { data: result } } });
-
-               def.callback(model);
-            });
-         return def;
-      },
-
-      create: function () {
-      },
-      destroy: function () {
-      },
-      updateRecord: function (record, options) {
-         console.log(record);
-         console.log(options);
-         console.log('DS update record. измененные колонки');
-         console.log(record.getChangedColumns());
-         console.log(record.getKey());
-         console.log('isChanged '+record.isChanged());
-
-         //_makeArgsForUpdate
-         var retval = {
-            "Запись": $ws.single.SerializatorSBIS.serialize(record, options)
-         };
-         // TODO Выпилить в 3.7 (?) поддержку передачи boolean
-         if(options && (typeof options == 'boolean' || options.consistencyCheck)) {
-            retval["Проверка"] = true;
-         }
-
-         var self = this,
-            def = new $ws.proto.Deferred();
-
-         this.callMethod(this._name + '.Записать',
-               retval
-         ).addCallback(function (result) {
-               // вернется номер записи
-               console.log(result);
-            });
-         return def;
       }
+
+
    });
 });
