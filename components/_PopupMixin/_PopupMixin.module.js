@@ -377,7 +377,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
                   bottom: 'br'
                },
                vertical: {
-                  left: 'br',
+                  left: 'tr',
                   right: 'tr'
                }
             },
@@ -387,7 +387,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
                   bottom: 'tl'
                },
                vertical: {
-                  left: 'tr',
+                  left: 'br',
                   right: 'br'
                }
             },
