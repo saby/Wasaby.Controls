@@ -60,12 +60,7 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
 
       _itemActivatedHandler : function(menuItem) {
-         this.hide();
-         for (var j in this._subMenus) {
-            if (this._subMenus.hasOwnProperty(j)) {
-               this._subMenus.hide();
-            }
-         }
+         
       },
 
       _getTargetContainer : function(item, key, parItem, lvl) {
@@ -139,32 +134,6 @@ define('js!SBIS3.CONTROLS.Menu', [
                })
             }
          }
-
-
-         /*button.getContainer().hover(function(e){
-
-            var parent = button.getParent();
-            if (!ControlHierarchyManager.checkInclusion(self, target)) {
-               self.hide();
-            }
-            var
-               id = $(this).attr('data-id'),
-               item = self._items.getItem(id),
-               parId = self._items.getParent(item),
-               parent = self;
-            if (parId) {
-               parent = self._subMenus[parId];
-            }
-            if (self._subContainers[id]) {
-               if (!self._subMenus[id]) {
-                  self._subContainers[id].appendTo('body');
-                  self._subMenus[id] = self._createSubMenu(this);
-
-                  self._subMenus[id].getContainer().append(self._subContainers[id]);
-               }
-               self._subMenus[id].show();
-            }
-         });*/
       },
       _createSubMenu : function(target, parent) {
          target = $(target);
