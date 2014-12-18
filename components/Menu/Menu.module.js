@@ -60,7 +60,17 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
 
       _itemActivatedHandler : function(menuItem) {
-         
+         if (!(menuItem.getContainer().hasClass('controls-Menu__hasChild'))) {
+            this.hide();
+
+            for (var j in this._subMenus) {
+               if (this._subMenus.hasOwnProperty(j)) {
+                  this._subMenus[j].hide();
+               }
+            }
+         }
+
+
       },
 
       _getTargetContainer : function(item, key, parItem, lvl) {
@@ -152,6 +162,15 @@ define('js!SBIS3.CONTROLS.Menu', [
             },
             closeByExternalClick: true
          })
+      },
+      destroy : function(){
+         Menu.superclass.destroy.call(this);
+         for (var j in this._subMenus) {
+            if (this._subMenus.hasOwnProperty(j)) {
+               this._subMenus[j].destroy();
+            }
+         }
+         this._subContainers = {};
       }
    });
 
