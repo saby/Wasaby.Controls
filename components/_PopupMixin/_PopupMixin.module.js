@@ -181,6 +181,11 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
 
       },
 
+      setTarget: function(target){
+         this._options.target = target;
+         this.recalcPosition(true);
+      },
+
       //Позиционируем относительно body
       _bodyPositioning: function () {
          var
@@ -254,13 +259,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          }
          this._containerSizes.clientWidth = this._containerSizes.originWidth;
          this._containerSizes.clientHeight = this._containerSizes.originHeight;
-
-         if (this._container.get(0).clientWidth < this._container.get(0).scrollWidth) {
-            this._containerSizes.clientHeight += 17;
-         }
-         if (this._container.get(0).clientHeight < this._container.get(0).scrollHeight) {
-            this._containerSizes.clientWidth += 17;
-         }
          //Запоминаем координаты правого нижнего угла контейнера необходимые для отображения контейнера целиком и там где нужно.
          if (target) {
             this._containerSizes.requredOffset = {
@@ -576,8 +574,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
             if (this._initOrigins) {
                this._containerSizes.originWidth = this._container.get(0).scrollWidth + this._containerSizes.border * 2;
                this._containerSizes.originHeight = this._container.get(0).scrollHeight + this._containerSizes.border * 2;
-               this._cssHeight = (this._container.css('height') == '0px') ? 'auto' : this._container.css('height');
-               this._cssWidth = (this._container.css('width') == '0px') ? 'auto' : this._container.css('width');
                this._initOrigins = false;
             }
             this.recalcPosition();
