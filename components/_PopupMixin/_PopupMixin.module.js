@@ -600,7 +600,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
 
          hide: function () {
             var zIndex = this._container.css('zIndex');
-            ControlHierarchyManager.zIndexManager.setFree(zIndex);
             // Убираем оверлей
             if (this._options.isModal) {
                var pos = Array.indexOf($ws.single.WindowManager._modalIndexes, zIndex);
