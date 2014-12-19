@@ -158,7 +158,8 @@ define('js!SBIS3.CONTROLS.Menu', [
                side : 'left',
                offset: 0
             },
-            closeByExternalClick: true
+            closeByExternalOver: true,
+            targetPart : true
          })
       },
       destroy : function(){
