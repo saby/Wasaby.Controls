@@ -42,6 +42,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          _margins: null,
          _initOrigins: true,
          _marginsInited: false,
+         _zIndex: null,
          _options: {
             /**
              * @typedef {Object} CornerEnum
@@ -137,8 +138,8 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          }
 
          container.appendTo('body');
-         var zIndex = ControlHierarchyManager.zIndexManager.getNext();
-         container.css('zIndex', zIndex);
+         this._zIndex = ControlHierarchyManager.zIndexManager.getNext();
+         container.css('zIndex', this._zIndex);
          this._defaultCorner = this._options.corner;
          this._defaultVerticalAlignSide = this._options.verticalAlign.side;
          this._defaultHorizontalAlignSide = this._options.horizontalAlign.side;
@@ -599,12 +600,11 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          },
 
          hide: function () {
-            var zIndex = this._container.css('zIndex');
             // Убираем оверлей
             if (this._options.isModal) {
-               var pos = Array.indexOf($ws.single.WindowManager._modalIndexes, zIndex);
+               var pos = Array.indexOf($ws.single.WindowManager._modalIndexes, this._zIndex);
                $ws.single.WindowManager._modalIndexes.splice(pos, 1);
-               pos = Array.indexOf($ws.single.WindowManager._visibleIndexes, zIndex);
+               pos = Array.indexOf($ws.single.WindowManager._visibleIndexes, this._zIndex);
                $ws.single.WindowManager._visibleIndexes.splice(pos, 1);
                ModalOverlay.adjust();
             }
@@ -617,13 +617,11 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
                left: '-10000px',
                top: '-10000px'
             });
-            var zIndex = ControlHierarchyManager.zIndexManager.getNext();
-            this._container.css('zIndex', zIndex);
             ControlHierarchyManager.setTopWindow(this);
             //Показываем оверлей
             if (this._options.isModal) {
-               $ws.single.WindowManager._modalIndexes.push(zIndex);
-               $ws.single.WindowManager._visibleIndexes.push(zIndex);
+               $ws.single.WindowManager._modalIndexes.push(this._zIndex);
+               $ws.single.WindowManager._visibleIndexes.push(this._zIndex);
                ModalOverlay.adjust();
                var self = this;
                ModalOverlay._overlay.bind('mousedown', function(e){
@@ -635,8 +633,7 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
             }
          },
          destroy: function(){
-            var zIndex = this._container.css('zIndex');
-            ControlHierarchyManager.zIndexManager.setFree(zIndex);
+            ControlHierarchyManager.zIndexManager.setFree(this._zIndex);
             ControlHierarchyManager.removeNode(this);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._windowChangeHandler, this);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._windowChangeHandler, this);
