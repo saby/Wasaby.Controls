@@ -104,6 +104,7 @@ define('js!SBIS3.CONTROLS.Menu', [
             if (instances.hasOwnProperty(i)) {
                instances[i].getContainer().hover(function(e){
                   var
+                     isFirstLevel = false,
                      id = $(this).attr('data-id'),
                      item = self._items.getItem(id),
                      parId = self._items.getParent(item),
@@ -112,7 +113,8 @@ define('js!SBIS3.CONTROLS.Menu', [
                      parent = self._subMenus[parId];
                   }
                   else {
-                     parent = self
+                     parent = self;
+                     isFirstLevel = true;
                   }
 
                   //получаем саб меню для текущей кнопки и показываем его
@@ -120,7 +122,7 @@ define('js!SBIS3.CONTROLS.Menu', [
                   if (self._subContainers[id]) {
                      if (!self._subMenus[id]) {
                         self._subContainers[id].appendTo('body');
-                        self._subMenus[id] = self._createSubMenu(this, parent);
+                        self._subMenus[id] = self._createSubMenu(this, parent, isFirstLevel);
                         self._subMenus[id].getContainer().append(self._subContainers[id]);
                      }
                      mySubmenu = self._subMenus[id];
@@ -143,25 +145,42 @@ define('js!SBIS3.CONTROLS.Menu', [
             }
          }
       },
-      _createSubMenu : function(target, parent) {
+      _createSubMenu : function(target, parent, isFirstLevel) {
          target = $(target);
-         return new FloatArea({
-            element: $('<div class="controls-Menu__Popup"></div>'),
-            parent : parent,
-            target : target,
+         var config = this._getSubMenuConfig(isFirstLevel);
+
+         config.element = $('<div class="controls-Menu__Popup"></div>');
+         config.parent = parent;
+         config.target = target;
+         return new FloatArea(config)
+      },
+
+      _getSubMenuConfig : function(isFirstLevel) {
+         var config =  {
             corner : 'tr',
-            hierField : 'par',
             verticalAlign : {
                side : 'top'
             },
             horizontalAlign : {
-               side : 'left',
-               offset: 0
+               side : 'left'
             },
             closeByExternalOver: true,
             targetPart : true
-         })
+         };
+         config = this._onMenuConfig(config, isFirstLevel);
+         return config;
       },
+
+      _onMenuConfig : function(config, isFirstLevel) {
+         if (isFirstLevel) {
+            config.corner = 'bl';
+            return config;
+         }
+         else {
+            return config;
+         }
+      },
+
       destroy : function(){
          Menu.superclass.destroy.call(this);
          for (var j in this._subMenus) {
