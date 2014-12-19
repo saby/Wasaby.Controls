@@ -35,7 +35,16 @@ define('js!SBIS3.CONTROLS.Menu', [
             /**
              * @cfg {Number} Задержка перед закрытием
              */
-            hideDelay: null
+            hideDelay: null,
+            /**
+             * @typedef {Object} firstLevelDirection
+             * @variant right
+             * @variant down
+             */
+            /**
+             * @cfg {firstLevelDirection} Задержка перед закрытием
+             */
+            firstLevelDirection: 'down'
          }
       },
 
@@ -159,7 +168,7 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
 
       _onMenuConfig : function(config, isFirstLevel) {
-         if (isFirstLevel) {
+         if (isFirstLevel && this._options.firstLevelDirection == 'down') {
             config.corner = 'bl';
             return config;
          }
