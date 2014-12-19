@@ -11,6 +11,10 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          eventsChannel.notify('onDocumentClick', e.target);
       });
 
+      $(document).bind('mouseover', function (e) {
+         eventsChannel.notify('onDocumentMouseOver', e.target);
+      });
+
       $(window).bind('scroll', function () {
          eventsChannel.notify('onWindowScroll');
       });
@@ -87,6 +91,14 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
              */
             closeByExternalClick: false,
             /**
+             * @cfg {Boolean} закрывать или нет при уходе мышки с элемента
+             */
+            closeByExternalOver: false,
+            /**
+             * @cfg {Boolean} при клике мышки на таргет или перемещении по нему панель не закрывается
+             */
+            targetPart : false,
+            /**
              * @cfg {Boolean} модальный или нет
              */
             isModal: false
@@ -117,7 +129,10 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
          //Скрываем попап если при скролле таргет скрылся
          $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowScroll', this._windowChangeHandler, this);
 
-         if (this._options.closeByExternalClick) {
+         if (this._options.closeByExternalOver) {
+            $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentMouseOver', this._clickHandler, this);
+         }
+         else if (this._options.closeByExternalClick) {
             $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
 
@@ -211,8 +226,12 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
 
       _clickHandler: function (eventObject, target) {
          if (this.isVisible()) {
-            var self = this;
-            if (!ControlHierarchyManager.checkInclusion(self, target)) {
+            var self = this,
+               inTarget;
+            if (self._options.target && self._options.targetPart) {
+               inTarget = !!((self._options.target.get(0) == target) || self._options.target.find($(target)).length);
+            }
+            if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target)) {
                self.hide();
             }
          }
@@ -621,7 +640,12 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
             ControlHierarchyManager.removeNode(this);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._windowChangeHandler, this);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._windowChangeHandler, this);
-            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentClick', this._clickHandler, this);
+            if (this._options.closeByExternalOver) {
+               $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentMouseOver', this._clickHandler, this);
+            }
+            else if (this._options.closeByExternalClick) {
+               $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentClick', this._clickHandler, this);
+            }
          }
       },
 

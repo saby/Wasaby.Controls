@@ -14,7 +14,20 @@ define('js!SBIS3.CONTROLS.ContextMenu', ['js!SBIS3.CONTROLS.Menu', 'js!SBIS3.CON
     */
 
    var ContextMenu = Menu.extend([PopupMixin], /** @lends SBIS3.CONTROLS.ContextMenu.prototype */ {
-      _dotTplFn : dotTplFn
+      _dotTplFn : dotTplFn,
+      _itemActivatedHandler : function(menuItem) {
+         if (!(menuItem.getContainer().hasClass('controls-Menu__hasChild'))) {
+            this.hide();
+
+            for (var j in this._subMenus) {
+               if (this._subMenus.hasOwnProperty(j)) {
+                  this._subMenus[j].hide();
+               }
+            }
+         }
+
+
+      },
    });
 
    return ContextMenu;
