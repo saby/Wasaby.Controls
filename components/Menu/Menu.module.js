@@ -128,19 +128,6 @@ define('js!SBIS3.CONTROLS.Menu', [
                      mySubmenu = self._subMenus[id];
                      self._subMenus[id].show();
                   }
-
-                  //перебираем все остальные и скрываем их по принципу вложенности
-                  for (var j in self._subMenus) {
-                     if ((self._subMenus.hasOwnProperty(j)) && (self._subMenus[j] !== mySubmenu)) {
-                        var flag = true;
-                        if (self._subMenus.hasOwnProperty(j)) {
-                           flag = ControlHierarchyManager.checkInclusion(self._subMenus[j], e.target);
-                        }
-                        if (flag) self._subMenus[j].show(); else self._subMenus[j].hide();
-                     }
-                  }
-
-
                })
             }
          }
