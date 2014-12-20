@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS._DSMixin', [], function () {
    var _DSMixin = /**@lends SBIS3.CONTROLS._DSMixin.prototype  */{
       $protected: {
          _dataSource: undefined,
-         _items: null,
+         _DataSet: null,
          _dotItemTpl: null,
          _keyField: '',
          _options: {
@@ -22,7 +22,6 @@ define('js!SBIS3.CONTROLS._DSMixin', [], function () {
 
       $constructor: function () {
          this._dataSource = this._options.dataSource;
-         console.log(this._dataSource);
       },
 
       _drawItems: function () {
@@ -30,8 +29,7 @@ define('js!SBIS3.CONTROLS._DSMixin', [], function () {
          console.log('draw');
          this._query().addCallback(function () {
 
-            self._items.each(function (rec) {
-
+            self._DataSet.each(function (rec) {
                var
                   oneItemContainer = self._drawOneItemContainer(),
                   targetContainer = self._getTargetContainer();
@@ -84,9 +82,9 @@ define('js!SBIS3.CONTROLS._DSMixin', [], function () {
          var self = this,
             def = new $ws.proto.Deferred();
          this._dataSource.query('Список').addCallback(
-            function (rs) {
-               self.setItems(rs);
-               def.callback(rs);
+            function (DS) {
+               self.setItems(DS);
+               def.callback(DS);
             }
          );
          return def;
@@ -94,7 +92,7 @@ define('js!SBIS3.CONTROLS._DSMixin', [], function () {
 
 
       setItems: function (items) {
-         this._items = items;
+         this._DataSet = items;
       }
 
    };

@@ -3,11 +3,11 @@
 <head>
    <meta name="ws-access" content=""/>
    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
    <title>C:/projects/sbis3-controls/DataSetCloud/client/Тема сайта/test.xaml</title>
-   <link rel="stylesheet" href="/ws/css/core.css" type="text/css" />
-   <link rel="stylesheet" href="/ws/css/themes/wi_scheme.css" type="text/css" />
-   
+   <link rel="stylesheet" href="/ws/css/core.css" type="text/css"/>
+   <link rel="stylesheet" href="/ws/css/themes/wi_scheme.css" type="text/css"/>
+
    <script type="text/javascript">
       // new config support
       window.wsConfig = {
@@ -37,42 +37,92 @@
    <script type="text/javascript" data-pack-name="ws" src="/ws/lib/core.js"></script>
 
    <script type="text/javascript" id="ws-include-components"></script>
-   
+
    <script type="text/javascript">
-      $ws.core.ready.addCallback(function(){
-         require([ 'bootup' ], function() {
+      $ws.core.ready.addCallback(function () {
+         require([ 'bootup' ], function () {
             $ws.core.bootup();
          });
       });
    </script>
+
+   <style>
+
+      table {
+         width: 100%;
+      }
+
+      table td {
+         padding: 25px;
+         border: 1px solid #000000;
+         vertical-align: top;
+      }
+
+   </style>
+
 </head>
 <body>
-      <p>ListView</p>
-   <div id="ListViewDS" class="testBlock listView"></div>
-   <script type="text/javascript">
+
+<table>
+   <tr>
+      <td>
+         <p>ListView DataSourceBL</p>
+
+         <div id="ListViewDS1" class="testBlock listView"></div>
+
+      </td>
+      <td>
+         <p>ListView DataSourceArray</p>
+
+         <div id="ListViewDS2" class="testBlock listView"></div>
+
+      </td>
+   </tr>
+</table>
+
+
+<script type="text/javascript">
    $ws.core.withComponents('Source').addCallback(function () {
       $(document).ready(function () {
          require([
             'js!SBIS3.CONTROLS.ListViewDS',
-			'js!SBIS3.CONTROLS.DataSourceBL'
-            ], function ( ListViewDS,DataSourceBL) {
+            'js!SBIS3.CONTROLS.Record',
+            'js!SBIS3.CONTROLS.DataSourceArray',
+            'js!SBIS3.CONTROLS.DataSourceBL'
+         ], function (ListViewDS, Record, DataSourceArray, DataSourceBL) {
 
-			var ds = new DataSourceBL('Производитель');
-		
-             var itemTpl1 = '<div class="listViewItem">\
-                     <div style="color:#999999; font-size:15px">{{=it.get("Название")}}</div>\
-                     <div style="color:{{?it.flag}}#008000{{??}}#800000{{?}};">{{=it.get("Сайт")}}</div>\
+            var ds1 = new DataSourceBL('Производитель');
+
+            var itemTpl1 = '<div class="listViewItem">\
+                     <div style="color:#999999; font-size:15px">{{=it.get(1)}}</div>\
+                     <div style="color:{{?it.flag}}#008000{{??}}#800000{{?}};">{{=it.get(2)}}</div>\
 					 <hr>\
                </div>';
 
             new ListViewDS({
-               element: "ListViewDS",
-               dataSource: ds,
+               element: "ListViewDS1",
+               dataSource: ds1,
                itemTemplate: itemTpl1
             });
 
+            var ds2 = new DataSourceArray({
+               columns:[
+                  {n: '@Производитель', t: 'Идентификатор'},
+                  {n: 'Название', t: 'Текст'},
+                  {n: 'Сайт', t: 'Текст'}
+               ],
+               data: [
+                  [1,'Dell','Dell.com'],
+                  [2,'asus','asus.com'],
+                  [3,'hp','hp.com']
+               ]
+            });
 
-
+            new ListViewDS({
+               element: "ListViewDS2",
+               dataSource: ds2,
+               itemTemplate: itemTpl1
+            });
 
          });
       })

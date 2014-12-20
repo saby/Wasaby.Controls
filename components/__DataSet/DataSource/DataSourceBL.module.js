@@ -1,7 +1,7 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR'], function (DataSourceXHR) {
+define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR', 'js!SBIS3.CONTROLS.DataSet'], function (DataSourceXHR, DataSet) {
    'use strict';
    return DataSourceXHR.extend({
       $protected: {
@@ -42,12 +42,13 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR'], fu
             method = 'Список';
          }
 
-         this.callMethod(this._name + '.' + method,
+         this._callMethod(this._name + '.' + method,
             {'ДопПоля': [], 'Фильтр': {'d': [], 's': []}, 'Сортировка': null, 'Навигация': null}
          ).addCallback(function (result) {
 
-               var rs = new $ws.proto.RecordSet({dataSource: self, readerParams: { adapterType: 'TransportAdapterStatic', adapterParams: { data: result } } });
-               def.callback(rs);
+
+                var rs = new $ws.proto.RecordSet({dataSource: self, readerParams: { adapterType: 'TransportAdapterStatic', adapterParams: { data: result } } });
+                def.callback(rs);
 
             });
          return def;
@@ -65,7 +66,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR'], fu
          var self = this,
             def = new $ws.proto.Deferred();
 
-         this.callMethod(this._name + '.Удалить',
+         this._callMethod(this._name + '.Удалить',
             { 'ИдО': pk}
          ).addCallback(function (result) {
                // вернется номер записи
@@ -105,13 +106,24 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR'], fu
             throw new TypeError('Sorting parameter must be an array');
          }
 
-         this.callMethod(this._name + '.' + method,
+         this._callMethod(this._name + '.' + method,
             //TODO: как то заполнить надо
             {'ДопПоля': [], 'Фильтр': {'d': [], 's': []}, 'Сортировка': null, 'Навигация': null}
          ).addCallback(function (result) {
+/*
 
                var rs = new $ws.proto.RecordSet({dataSource: self, readerParams: { adapterType: 'TransportAdapterStatic', adapterParams: { data: result } } });
                def.callback(rs);
+
+*/
+               var DS = new DataSet({
+                  strategy: 'SBIS300',
+                  dataSource: self,
+                  data: result
+               });
+
+               console.log(DS);
+               def.callback(DS);
 
             });
          return def;
@@ -130,7 +142,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR'], fu
          var self = this,
             def = new $ws.proto.Deferred();
 
-         this.callMethod(this._name + '.Записать',
+         this._callMethod(this._name + '.Записать',
                retval
             ).addCallback(function (result) {
                // вернется номер записи
@@ -191,7 +203,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR'], fu
       },
 
       // нужен для обработки RPC запросов
-      callMethod: function (method, args) {
+      _callMethod: function (method, args) {
          var dResult = new $ws.proto.Deferred(),
             rpcErrorHandler = this._handleRPCError.bind(this, dResult, method, args),
             httpErrorHandler = this._handleHTTPError.bind(this, dResult, method, args),

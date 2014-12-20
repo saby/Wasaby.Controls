@@ -5,8 +5,6 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
    'use strict';
    return $ws.core.extend({}, {
       $protected: {
-         _rawData: undefined, // данные которые пришли после запроса
-         _strategy: ''// имя класса стратегии для работы с сырыми данными
       },
       $constructor: function () {
       },
