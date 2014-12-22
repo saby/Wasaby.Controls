@@ -101,9 +101,15 @@ define('js!SBIS3.CONTROLS.ListView',
                var targ = $(e.target).hasClass('controls-ListView__item') ? e.target : $(e.target).closest('.controls-ListView__item');
                if (targ.length) {
                   var id = targ.attr('data-id');
+
+                  if (self._actsContainer) {
+                     self._getItemActionsContainer(id).append(self._actsContainer.show());
+                  }
                }
-               if (self._actsContainer) {
-                  self._getItemActionsContainer(id).append(self._actsContainer.show());
+               else {
+                  if (self._actsContainer) {
+                     self._actsContainer.hide()
+                  }
                }
             });
             if (this._options.itemsActions.length) {
