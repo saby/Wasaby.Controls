@@ -560,6 +560,7 @@
   cursor: pointer;
   background-color: #ffffff;
   font-size: 11px;
+  position: relative;
 }
 .controls-MenuItem:hover {
   background-color: #00c795;
