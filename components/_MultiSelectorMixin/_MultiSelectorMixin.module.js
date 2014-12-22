@@ -138,8 +138,6 @@ define('js!SBIS3.CONTROLS._MultiSelectorMixin', [], function() {
                   }
                }
             }
-            this._drawSelectedItems(this._options.selectedItems);
-            this._notifySelectedItem(this._options.selectedItems);
          }
          else {
             throw new Error('Argument must be instance of Array');
