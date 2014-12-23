@@ -32,6 +32,13 @@
   box-sizing: border-box;
   background-size: contain;
 }
+@-moz-document url-prefix()
+{
+   //text valign bug
+   .controls-Button {
+      padding-bottom: 1px;
+   }
+}
 .controls-Button__content {
    position: relative;
 }
