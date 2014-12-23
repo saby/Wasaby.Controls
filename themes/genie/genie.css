@@ -312,6 +312,7 @@
   background-color: white;
   height: 22px;
   min-height: 22px;
+  line-height: normal;
 }
 .controls-FormattedTextBox__fieldWrapper {
   height: 100%;
@@ -549,4 +550,46 @@
   background-image: url('img/rowSelect.png');
   background-position: left top;
   background-repeat: repeat-y;
+}
+.controls-MenuItem {
+  display: block;
+  height: 24px;
+  box-sizing: border-box;
+  padding: 0 16px;
+  line-height: 24px;
+  cursor: pointer;
+  background-color: #ffffff;
+  font-size: 11px;
+  position: relative;
+}
+.controls-MenuItem:hover {
+  background-color: #00c795;
+  color: #ffffff;
+}
+.controls-MenuItem__content {
+  position: relative;
+}
+.controls-MenuItem__icon {
+  position: absolute;
+  left: -2px;
+  top: -2px;
+}
+.controls-MenuItem__text {
+  margin-left: 22px;
+}
+.controls-Menu__Popup {
+  box-shadow: 0 0 8px 1px #aaaaaa;
+  box-sizing: border-box;
+}
+.controls-Menu__Popup .controls-Menu__hasChild:hover:after {
+  background-position: 0 -16px;
+}
+.controls-Menu__Popup .controls-Menu__hasChild:after {
+  content: ' ';
+  background: url('img/MenuExpand.png') 0 0 no-repeat;
+  position: absolute;
+  right: 0;
+  top: 2px;
+  width: 16px;
+  height: 16px;
 }

@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS._ClickMixin', 'js!SBIS3.CONTROLS._FormWidgetMixin', 'js!SBIS3.CONTROLS._DataBindMixin'], function(Control, ClickMixin, FormWidgetMixin, _DataBindMixin) {
+define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS._ClickMixin', 'js!SBIS3.CONTROLS._FormWidgetMixin', 'js!SBIS3.CONTROLS._DataBindMixin'], function(Control, ClickMixin, FormWidgetMixin, _DataBindMixin) {
 
    'use strict';
 
@@ -11,10 +11,10 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTR
     * Поведенческий класс, задающий базовое поведение кнопки. Основное предназначение - обрабатывать клик.
     * Все контролы-кнопки должны наследоваться от этого класса. Отображение и вёрстка задаются именно в унаследованных классах.
     * @class SBIS3.CONTROLS.ButtonBase
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CONTROLS.CompoundControl
     */
 
-   var ButtonBase = Control.Control.extend([ClickMixin, FormWidgetMixin, _DataBindMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
+   var ButtonBase = Control.extend([ClickMixin, FormWidgetMixin, _DataBindMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
       /**
        * @event onActivated Происходит при активации кнопки (клик мышкой, кнопки клавиатуры)
        * @param {$ws.proto.EventObject} eventObject дескриптор события
@@ -49,7 +49,15 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTR
       },
 
       $constructor: function() {
+         this._container.removeClass('ws-area');
+      },
 
+      init : function() {
+         ButtonBase.superclass.init.call(this);
+         /*TODO хак чтоб не срабатывал клик на кнопку при нажатии на дочерние компоненты*/
+         $('[data-component]', this._container.get(0)).mousedown(function(e){
+            e.stopPropagation();
+         })
       },
 
       /**
@@ -91,7 +99,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTR
       /**
        * Установить изображение на кнопке.
        * Метод установки или замены изображения, заданного опцией {@link icon}.
-       * @param {String} iconTxt Путь к изображению.
+       * @param {String} iconPath Путь к изображению.
        * @example
        * <pre>
        *     var btn = this.getChildControlByName("myButton");

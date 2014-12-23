@@ -101,6 +101,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   self.togglePicker();
                }
             }
+         }).mousedown(function(e){
+            e.stopPropagation();
          });
 
       },
@@ -157,6 +159,19 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._picker.getContainer().addClass('controls-ComboBox__picker');
       },
 
+      _setPickerConfig: function() {
+         return {
+            corner: 'bl',
+            verticalAlign: {
+               side: 'top'
+            },
+            horizontalAlign: {
+               side: 'left'
+            },
+            closeByExternalClick: true,
+            targetPart: true
+         };
+      },
 
       _getItemsContainer : function() {
          return this._picker.getContainer();

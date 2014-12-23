@@ -67,6 +67,10 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
          }
       },
 
+      getParent : function(item) {
+         return this._adapter.getParent(item, this._hierField);
+      },
+
       /*TODO проброс метода в Adapter*/
       iterate : function(hdlFunction) {
          var self = this;

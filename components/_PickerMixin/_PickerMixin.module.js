@@ -36,11 +36,16 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
       },
 
       _createPicker: function(pickerContainer){
-         var self = this;
-         var picker = new FloatArea({
-            parent: self.getParent(),
-            element : pickerContainer,
-            target : this._container,
+         var pickerConfig = this._setPickerConfig();
+         pickerConfig.parent = this.getParent();
+         pickerConfig.context = this.getParent() ? this.getParent().getLinkedContext() : {};
+         pickerConfig.target = this._container;
+         pickerConfig.element = pickerContainer;
+         return new FloatArea(pickerConfig);
+      },
+
+      _setPickerConfig: function(){
+         return {
             corner: 'bl',
             verticalAlign: {
                side: 'top'
@@ -49,8 +54,7 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
                side: 'left'
             },
             closeByExternalClick: true
-         });
-         return picker;
+         };
       },
 
       /**
@@ -78,12 +82,15 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
       togglePicker: function() {
          if (!this._picker) {
             this._initializePicker();
-         }
-         this._container.toggleClass('controls-Picker__show');
-         if (this._picker.isVisible()){
-            this.hidePicker();
-         }else {
             this.showPicker();
+         }
+         else {
+            this._container.toggleClass('controls-Picker__show');
+            if (this._picker.isVisible()) {
+               this.hidePicker();
+            } else {
+               this.showPicker();
+            }
          }
       },
 
