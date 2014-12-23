@@ -20,6 +20,11 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
   background-size: contain;
 }
+@-moz-document url-prefix() {
+  .controls-Button {
+    padding-bottom: 1px;
+  }
+}
 .controls-Button__content {
   position: relative;
 }
@@ -734,8 +739,6 @@ input[type="reset"]::-moz-focus-inner {
   margin-left: 22px;
 }
 .controls-Menu__Popup {
-  /*box-shadow: 0 0 0 1px #cccccc;*/
-
   border: 1px solid #cccccc;
   box-sizing: border-box;
   margin-top: -1px;
