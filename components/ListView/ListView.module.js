@@ -86,8 +86,8 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _elemClickHandler : function(id, data) {
             this.setSelectedItems([id]);
-            if (this._options.elemClickHander) {
-               this._options.elemClickHander(id, data);
+            if (this._options.elemClickHandler) {
+               this._options.elemClickHandler(id, data);
             }
          },
 
@@ -121,7 +121,13 @@ define('js!SBIS3.CONTROLS.ListView',
                      action.addClass(acts[i].icon.substring(7));
                   }
                   if (acts[i].handler) {
-                     var handler = acts[i].handler;
+                     var handler;
+                     if (this.getParent()) {
+                        handler = acts[i].handler.bind(this.getParent());
+                     }
+                     else {
+                        handler = acts[i].handler.bind(this)
+                     }
                      action.mouseup(function(e){
                         e.stopPropagation();
                         var
