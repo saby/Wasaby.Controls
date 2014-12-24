@@ -37,31 +37,31 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR', 'js
 
       },
 
-      read: function (method) {
+      read: function (pk) {
+
+      },
+
+      update: function (record) {
+         var options;
+         //_makeArgsForUpdate
+         var retval = {
+            "Запись": $ws.single.SerializatorSBIS.serialize(record, options)
+         };
+         // TODO Выпилить в 3.7 (?) поддержку передачи boolean
+         if (options && (typeof options == 'boolean' || options.consistencyCheck)) {
+            retval["Проверка"] = true;
+         }
 
          var self = this,
             def = new $ws.proto.Deferred();
 
-         if (!method || typeof(method) != 'string') {
-            method = 'Список';
-         }
-
-         this._callMethod(this._name + '.' + method,
-            {'ДопПоля': [], 'Фильтр': {'d': [], 's': []}, 'Сортировка': null, 'Навигация': null}
-         ).addCallback(function (result) {
-
-
-               var rs = new $ws.proto.RecordSet({dataSource: self, readerParams: { adapterType: 'TransportAdapterStatic', adapterParams: { data: result } } });
-               def.callback(rs);
-
+         this._callMethod(this._name + '.Записать',
+               retval
+            ).addCallback(function (result) {
+               // вернется номер записи
+               console.log(result);
             });
          return def;
-
-      },
-
-      update: function () {
-
-         //TODO updateRecord ?
 
       },
 
@@ -150,28 +150,6 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR', 'js
       },
 
 */
-
-      updateRecord: function (record, options) {
-         //_makeArgsForUpdate
-         var retval = {
-            "Запись": $ws.single.SerializatorSBIS.serialize(record, options)
-         };
-         // TODO Выпилить в 3.7 (?) поддержку передачи boolean
-         if (options && (typeof options == 'boolean' || options.consistencyCheck)) {
-            retval["Проверка"] = true;
-         }
-
-         var self = this,
-            def = new $ws.proto.Deferred();
-
-         this._callMethod(this._name + '.Записать',
-               retval
-            ).addCallback(function (result) {
-               // вернется номер записи
-               console.log(result);
-            });
-         return def;
-      },
 
 
       _handleRPCError: function (dResult, method, args, response) {
