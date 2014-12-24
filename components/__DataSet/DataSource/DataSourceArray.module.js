@@ -5,15 +5,7 @@ define('js!SBIS3.CONTROLS.DataSourceArray', ['js!SBIS3.CONTROLS.IDataSource', 'j
    'use strict';
    return IDataSource.extend({
       $protected: {
-         _options: {
-            data: undefined,
-            columns: undefined,
-            url: $ws._const.defaultServiceUrl,
-            method: 'POST',
-            dataType: 'json',
-            contentType: 'application/json; charset=utf-8'
-         },
-         _name: ''
+         _data: undefined
       },
       $constructor: function (cfg) {
          this._data = cfg.data;
