@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS._DSMixin', [], function () {
       _query: function () {
          var self = this,
             def = new $ws.proto.Deferred();
-         this._dataSource.query('Список').addCallback(
+         this._dataSource.query().addCallback(
             function (DS) {
                self.setItems(DS);
                def.callback(DS);
