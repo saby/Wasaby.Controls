@@ -8,23 +8,45 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
       },
       $constructor: function () {
       },
-      _getRawData: function () {
-         return this._rawData;
-      },
-      read: function () {
-         /*Method must be implemented*/
-      },
-      query: function () {
-         /*Method must be implemented*/
-      },
+
+      //FixMe: видимо тут ничего не передаем?!
       create: function () {
          /*Method must be implemented*/
       },
-      destroy: function () {
+
+      /**
+       * Прочитать запись
+       * @param id - идентификатор записи
+       */
+      read: function (id) {
          /*Method must be implemented*/
       },
-      update: function () {
+
+      /**
+       * Обновить запись
+       * @param record - измененная запись
+       */
+      update: function (record) {
+         /*Method must be implemented*/
+      },
+
+      /**
+       * Удалить запись
+       * @param id - идентификатор записи
+       */
+      destroy: function (id) {
+         /*Method must be implemented*/
+      },
+      /**
+       * Вызов списочного метода
+       * @param filter - [{property: 'id', value: 2}]
+       * @param sorting - [{property1: 'id', direction: 'ASC'},{property2: 'name', direction: 'DESC'}]
+       * @param offset - number
+       * @param limit - number
+       */
+      query: function (filter, sorting, offset, limit) {
          /*Method must be implemented*/
       }
+
    });
 });

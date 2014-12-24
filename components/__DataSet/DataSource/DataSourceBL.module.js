@@ -9,8 +9,11 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR', 'js
             url: $ws._const.defaultServiceUrl,
             method: 'POST',
             dataType: 'json',
-            contentType: 'application/json; charset=utf-8'
+            contentType: 'application/json; charset=utf-8',
+            queryMethodName: 'Список',
+            destroyMethodName: 'Удалить'
          },
+         _BL: undefined,
          _name: ''
       },
       $constructor: function (cfg) {
@@ -24,6 +27,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR', 'js
          } else if (typeof(cfg) == 'string') {
             this._name = cfg;
          }
+         this._BL = new $ws.proto.ClientBLObject(cfg);
          if (!this._name) {
             throw new Error('Name of the object must be specified then creating BLObject instance');
          }
@@ -47,8 +51,8 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR', 'js
          ).addCallback(function (result) {
 
 
-                var rs = new $ws.proto.RecordSet({dataSource: self, readerParams: { adapterType: 'TransportAdapterStatic', adapterParams: { data: result } } });
-                def.callback(rs);
+               var rs = new $ws.proto.RecordSet({dataSource: self, readerParams: { adapterType: 'TransportAdapterStatic', adapterParams: { data: result } } });
+               def.callback(rs);
 
             });
          return def;
@@ -76,7 +80,28 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR', 'js
 
       },
 
+      query: function (filter, sorting, offset, limit) {
 
+         var self = this,
+            def = new $ws.proto.Deferred();
+
+         self._BL.call(self._options.queryMethodName, {'ДопПоля': [], 'Фильтр': {'d': [], 's': []}, 'Сортировка': null, 'Навигация': null}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+
+            var DS = new DataSet({
+               strategy: 'SBIS300',
+               dataSource: self,
+               data: res
+            });
+
+            console.log(DS);
+            def.callback(DS);
+
+         });
+
+         return def;
+
+      },
+/*
       query: function (method, filter, paging, sorting) {
          var self = this,
             def = new $ws.proto.Deferred();
@@ -110,12 +135,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR', 'js
             //TODO: как то заполнить надо
             {'ДопПоля': [], 'Фильтр': {'d': [], 's': []}, 'Сортировка': null, 'Навигация': null}
          ).addCallback(function (result) {
-/*
 
-               var rs = new $ws.proto.RecordSet({dataSource: self, readerParams: { adapterType: 'TransportAdapterStatic', adapterParams: { data: result } } });
-               def.callback(rs);
-
-*/
                var DS = new DataSet({
                   strategy: 'SBIS300',
                   dataSource: self,
@@ -128,6 +148,8 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.DataSourceXHR', 'js
             });
          return def;
       },
+
+*/
 
       updateRecord: function (record, options) {
          //_makeArgsForUpdate
