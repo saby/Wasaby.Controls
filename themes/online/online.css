@@ -20,6 +20,11 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
   background-size: contain;
 }
+@-moz-document url-prefix() {
+  .controls-Button {
+    padding-bottom: 1px;
+  }
+}
 .controls-Button__content {
   position: relative;
 }
