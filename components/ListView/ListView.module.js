@@ -87,7 +87,8 @@ define('js!SBIS3.CONTROLS.ListView',
          _elemClickHandler : function(id, data) {
             this.setSelectedItems([id]);
             if (this._options.elemClickHandler) {
-               this._options.elemClickHandler(id, data);
+               var parent = this.getParent();
+               this._options.elemClickHandler.call((parent ? parent : this), id, data);
             }
          },
 
