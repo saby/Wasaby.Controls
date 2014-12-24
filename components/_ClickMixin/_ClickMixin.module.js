@@ -37,11 +37,10 @@ define('js!SBIS3.CONTROLS._ClickMixin', [], function() {
          this._notify('onActivated');
       },
 
-      around : {
+      instead : {
          //TODO сделано через onClickHandler WS в базовом контроле
          _onClickHandler: function(parentFnc, e) {
             if (this.isEnabled()) {
-               parentFnc.call(this, e);
                this._container.removeClass('controls-Click__active');
                this._clickHandler(e);
                this._notifyOnActivated();
