@@ -25,6 +25,9 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
          // чтобы не нарушать выравнивание по базовой линии
          $('body').append(pickerContainer);
          self._picker = this._createPicker(pickerContainer);
+         self._picker.subscribe('onClose', function(){
+            self._container.removeClass('controls-Picker__show');
+         });
          self._setWidth();
          container.hover(function(){
             self._picker.getContainer().addClass('controls-Picker__owner__hover');
