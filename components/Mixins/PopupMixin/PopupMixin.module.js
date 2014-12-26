@@ -138,8 +138,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          }
 
          container.appendTo('body');
-         this._zIndex = ControlHierarchyManager.zIndexManager.getNext();
-         container.css('zIndex', this._zIndex);
          this._defaultCorner = this._options.corner;
          this._defaultVerticalAlignSide = this._options.verticalAlign.side;
          this._defaultHorizontalAlignSide = this._options.horizontalAlign.side;
@@ -153,6 +151,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          });
       },
 
+      /**
+       * Пересчитать положение и размеры
+       * @param recalcFlag
+       */
       recalcPosition: function (recalcFlag) {
          if (this._isVisible) {
             if (recalcFlag) {
@@ -168,7 +170,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
                offset = this._addOffset(offset, buff);
                offset = this._getOffsetByWindowSize(offset);
-
 
                if (!this._isMovedV) {
                   offset.top += this._margins.top - this._margins.bottom + (this._options.verticalAlign.offset || 0);
@@ -189,11 +190,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                   'left': offset.left + 'px'
                });
             } else {
-               this._container.offset(this._bodyPositioning());
+               this._initSizes();
+               var bodyOffset = this._bodyPositioning();
+               this._container.offset(bodyOffset);
+
             }
             this._initOrigins = false;
          }
-
       },
 
       setTarget: function(target){
@@ -215,13 +218,53 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                top: this._options.verticalAlign.offset || 0,
                left: this._options.horizontalAlign.offset || 0
             };
-         if (vAlign == 'bottom') {
-            offset.top = bodyHeight - offset.top - height;
+
+         if (!vAlign) {
+            offset.top = this._windowSizes.height/2 + (this._options.verticalAlign.offset || 0) - this._containerSizes.height/2
+         } else {
+            if (vAlign == 'bottom') {
+               offset.top = bodyHeight - offset.top - height;
+            }
          }
-         if (hAlign == 'right') {
-            offset.left = bodyWidth - offset.left - width;
+         if (!hAlign) {
+            offset.left = this._windowSizes.width/2 + (this._options.horizontalAlign.offset || 0) - this._containerSizes.width/2
+         } else {
+            if (hAlign == 'right') {
+               offset.left = bodyWidth - offset.left - width;
+            }
          }
+         //TODO избавиться от дублирования
+         if (this._containerSizes.requredOffset.top > this._windowSizes.height - 3) {
+            offset.top = this._windowSizes.height - 3 - this._containerSizes.originHeight;
+         }
+         if (this._containerSizes.requredOffset.left > this._windowSizes.width - 3) {
+            offset.left = this._windowSizes.width - 3 - this._containerSizes.originWidth;
+         }
+         this._calculateBodyOverflow(offset);
          return offset;
+      },
+
+      _calculateBodyOverflow: function(offset){
+         if (offset.top < 0) {
+            offset.top = 0;
+            this._container.css('overflow-y', 'auto');
+            this._container.height(this._windowSizes.height - 3);
+         } else {
+            this._container.css({
+               'overflow-y': 'visible',
+               'height': ''
+            });
+         }
+         if (offset.left < 0) {
+            offset.left = 0;
+            this._container.css('overflow-x', 'auto');
+            this._container.width(this._windowSizes.width - 3);
+         } else {
+            this._container.css({
+               'overflow-x': 'visible',
+               'width': ''
+            });
+         }
       },
 
       _clickHandler: function (eventObject, target) {
@@ -284,6 +327,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                top: buff.top + this._targetSizes.offset.top + this._containerSizes.clientHeight + (this._options.verticalAlign.offset || 0),
                left: buff.left + this._targetSizes.offset.left + this._containerSizes.clientWidth + (this._options.horizontalAlign.offset || 0)
             };
+         } else {
+            this._containerSizes.requredOffset = {
+               top: this._options.verticalAlign.offset + this._containerSizes.originHeight,
+               left: this._options.horizontalAlign.offset + this._containerSizes.originWidth
+            };
          }
          this._containerSizes.width = this._containerSizes.clientWidth;
          this._containerSizes.height = this._containerSizes.clientHeight;
@@ -292,10 +340,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
 
       _initWindowSizes: function () {
-         this._windowSizes = {
-            height: this._container.offset().top - this._containerSizes.boundingClientRect.top + $(window).height(),
-            width: this._container.offset().left - this._containerSizes.boundingClientRect.left + $(window).width()
-         };
+            this._windowSizes = {
+               height: this._container.offset().top - this._containerSizes.boundingClientRect.top + $(window).height(),
+               width: this._container.offset().left - this._containerSizes.boundingClientRect.left + $(window).width()
+            };
       },
 
       _initMargins: function () {
@@ -334,8 +382,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             case 'tl':
                offset.top -= border;
                break;
-            default:
-               throw new Error('PopupMixin: Параметр corner является обязательным');
+         }
+         if (this._options.target && !this.options.corner) {
+            throw new Error('PopupMixin: Параметр corner является обязательным');
          }
          if (!notSave) {
             this._options.corner = corner;
@@ -368,7 +417,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          return offset;
       },
 
-      _getOppositeOffset: function (corner, orientation) { // Получить offset при сдвиге в противоположный угол относительно corner по горизонтали или верткали 'horizontal'/'vertical'
+      // Получить offset при сдвиге в противоположный угол относительно corner по горизонтали или верткали 'horizontal'/'vertical'
+      _getOppositeOffset: function (corner, orientation) {
          var side = (orientation == 'vertical') ? this._options.horizontalAlign.side : this._options.verticalAlign.side,
             offset,
             oppositeSide, oppositeCorner;
@@ -470,6 +520,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
 
       _calculateOverflow: function (offset, orientation) {
+         //TODO Избавиться от дублирования
          var spaces, oppositeOffset;
          spaces = this._getSpaces(this._options.corner);
          if (orientation == 'vertical') {
@@ -492,7 +543,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             }
             return offset.top;
          }
-
          else {
             if (offset.left < 0) {
                this._container.css('overflow-x', 'auto');
@@ -584,6 +634,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          },
 
          show: function () {
+            this._zIndex = ControlHierarchyManager.zIndexManager.getNext();
+            this._container.css('zIndex', this._zIndex);
+
             if (!this._marginsInited) {
                this._initMargins();
                this._container.css('margin', 0);
@@ -607,6 +660,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                $ws.single.WindowManager._visibleIndexes.splice(pos, 1);
                ModalOverlay.adjust();
             }
+            ControlHierarchyManager.zIndexManager.setFree(this._zIndex);
          }
       },
 
