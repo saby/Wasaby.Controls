@@ -383,7 +383,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                offset.top -= border;
                break;
          }
-         if (this._options.target && !this.options.corner) {
+         if (this._options.target && !this._options.corner) {
             throw new Error('PopupMixin: Параметр corner является обязательным');
          }
          if (!notSave) {
