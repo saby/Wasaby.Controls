@@ -127,57 +127,6 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
        */
       getIcon: function() {
          return this._options.icon;
-      },
-
-      /**
-       * Установить значение primary
-       * @param {Boolean} flag значение primary
-       */
-      setPrimary: function(flag){
-         this._options.primary = !!flag;
-      },
-
-      /**
-       * Является ли кнопка primary
-       * @returns {boolean}
-       */
-
-      isPrimary: function(){
-         return this._options.primary;
-      },
-      
-     /**
-       * Изменить текущее значение текста на кнопке.
-       * @param {String} value Вставляемое значение.
-       * @example
-       * <pre>
-       *     var btn = this.getChildControlByName("myButton");
-       *        btn.setValue("Отказаться")
-       * </pre>
-       * @see caption
-       * @see setCaption
-       * @see getCaption
-       * @see getValue
-       */
-     setValue: function(value){
-        this.setCaption(value);
-     },
-      
-      /**
-       * Возвращает текущее значение текста на кнопке.
-       * @returns {String}
-       * @example
-       * <pre>
-       *     var btn = this.getChildControlByName("myButton");
-       *        btn.getValue();
-       * </pre>
-       * @see caption
-       * @see setCaption
-       * @see getCaption
-       * @see setValue
-       */
-      getValue: function(){
-         return this.getCaption();
       }
    });
 

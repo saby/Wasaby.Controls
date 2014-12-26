@@ -25,9 +25,6 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
 
       $constructor: function() {
          this._publish('onDrawItems');
-         if (this._options.keyField) {
-            this._keyField = this._options.keyField;
-         }
          this._initItems(this._options.items || []);
       },
 
@@ -44,16 +41,16 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
             this._items = items;
          }
          else {
-            if (!this._keyField) {
+            if (!this._options.keyField) {
                //пробуем взять первое поле из коллекции
                var item = items[0];
                if (item && Object.prototype.toString.call(item) === '[object Object]') {
-                  this._keyField = Object.keys(item)[0];
+                  this._options.keyField = Object.keys(item)[0];
                }
             }
             this._items = new Collection({
                data: items,
-               keyField: this._keyField,
+               keyField: this._options.keyField,
                hierField: this._options.hierField,
                adapter: new AdapterJSON()
             });
@@ -117,7 +114,7 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
       },
 
       _getItemTemplate : function() {
-         return '<div>template</div>'
+         throw new Error('Method _getItemTemplate() must be implemented')
       },
 
       _addItemClasses : function (container, key){

@@ -57,12 +57,16 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
       },
 
       setPrimary: function(flag){
-         Button.superclass.setPrimary.call(this,flag);
-         if (this.isPrimary()){
-            this._container.addClass('controls-Button__primary');
-         } else {
-            this._container.removeClass('controls-Button__primary');
-         }
+         this._options.primary = !!flag;
+         this._container.toggleClass('controls-Button__primary', this.isPrimary());
+      },
+      /**
+       * Является ли кнопка primary
+       * @returns {boolean}
+       */
+
+      isPrimary: function(){
+         return this._options.primary;
       },
 
       setIcon: function(icon) {

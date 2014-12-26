@@ -17,11 +17,12 @@ define('js!SBIS3.CONTROLS.TreeView', ['js!SBIS3.CONTROLS.ListView', 'js!SBIS3.CO
       _drawItem : function(item, targetContainer) {
          var
             self = this,
+            resContainer,
             itemWrapper = this._drawItemWrapper(item).appendTo(targetContainer);
 
          this._addItemClasses(itemWrapper, this._items.getKey(item));
 
-         var resContainer = itemWrapper.hasClass('js-controls-ListView__itemContent') ? itemWrapper : $('.js-controls-ListView__itemContent', itemWrapper);
+         resContainer = itemWrapper.hasClass('js-controls-ListView__itemContent') ? itemWrapper : $('.js-controls-ListView__itemContent', itemWrapper);
 
          return this._createItemInstance(item, resContainer).addCallback(function(container){
             if (!($('.js-controls-TreeView__expand', resContainer).length)) {
