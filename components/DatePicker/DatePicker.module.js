@@ -5,11 +5,11 @@ define(
    'js!SBIS3.CONTROLS.DatePicker',
    [
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
-      'js!SBIS3.CONTROLS._PickerMixin',
+      'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.Calendar',
       'html!SBIS3.CONTROLS.DatePicker'
    ],
-   function (FormattedTextBoxBase, _PickerMixin, Calendar, dotTplFn) {
+   function (FormattedTextBoxBase, PickerMixin, Calendar, dotTplFn) {
 
    'use strict';
 
@@ -19,7 +19,7 @@ define(
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
     */
 
-   var DatePicker = FormattedTextBoxBase.extend( [_PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
+   var DatePicker = FormattedTextBoxBase.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
       $protected: {
          _dotTplFn: dotTplFn,
          /**
@@ -160,7 +160,7 @@ define(
          // Потеря фокуса. Работает так же при клике по иконке календарика.
          // Если пользователь ввел слишком большие данные ( напр., 45.23.7234 ), то значение установится корректно,
          // ввиду особенностей работы setMonth(), setDate() и т.д., но нужно обновить поле
-         $('.controls-DatePicker__field', this.getContainer().get(0)).blur(function(){
+         $('.js-controls-FormattedTextBox__field', this.getContainer().get(0)).blur(function(){
             if ( self._options.date ){ self._drawDate(); }
          });
       },

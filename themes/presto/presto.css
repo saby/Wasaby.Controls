@@ -62,6 +62,7 @@
   background: none;
   color: #ffffff;
   font: inherit;
+  padding: 0;
 }
 .controls-TextBox__field-uppercase {
   text-transform: uppercase;
@@ -126,15 +127,7 @@
   margin-top: -1px;
 }
 .controls-ComboBox__fieldNotEditable {
-  display: none;
   line-height: 39px;
-}
-.controls-ComboBox__editable-false .controls-ComboBox__fieldNotEditable {
-  display: inline-block;
-}
-.controls-ComboBox__editable-false .controls-ComboBox__field {
-  visibility: hidden;
-  position: absolute;
 }
 .controls-CheckBox {
   cursor: pointer;

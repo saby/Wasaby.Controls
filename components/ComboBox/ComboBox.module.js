@@ -1,13 +1,15 @@
 define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CONTROLS.TextBox',
    'html!SBIS3.CONTROLS.ComboBox',
-   'js!SBIS3.CONTROLS._PickerMixin',
-   'js!SBIS3.CONTROLS._CollectionMixin',
-   'js!SBIS3.CONTROLS._SelectorMixin',
-   'js!SBIS3.CONTROLS._DataBindMixin',
+   'js!SBIS3.CONTROLS.PickerMixin',
+   'js!SBIS3.CONTROLS.CollectionMixin',
+   'js!SBIS3.CONTROLS.SelectorMixin',
+   'js!SBIS3.CONTROLS.DataBindMixin',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown',
-   'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxItemTpl'
-], function(TextBox, dotTplFn, _PickerMixin, _CollectionMixin, _SelectorMixin, _DataBindMixin, arrowTpl, itemTpl) {
+   'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxItemTpl',
+   'css!SBIS3.CONTROLS.ComboBox'
+
+], function(TextBox, dotTplFn, PickerMixin, CollectionMixin, SelectorMixin, DataBindMixin, arrowTpl, itemTpl) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора. Есть настройка которая позволяет также  вручную вводить значения.
@@ -19,13 +21,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * <component data-component='SBIS3.CONTROLS.ComboBox' style='width: 100px'>    *
     * </component>
     * @category Inputs
-    * @mixes SBIS3.CONTROLS._PickerMixin
-    * @mixes SBIS3.CONTROLS._FormWidgetMixin
-    * @mixes SBIS3.CONTROLS._CollectionMixin
-    * @mixes SBIS3.CONTROLS._SelectorMixin
+    * @mixes SBIS3.CONTROLS.PickerMixin
+    * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    * @mixes SBIS3.CONTROLS.CollectionMixin
+    * @mixes SBIS3.CONTROLS.SelectorMixin
     */
 
-   var ComboBox = TextBox.extend([_PickerMixin, _CollectionMixin, _SelectorMixin, _DataBindMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
+   var ComboBox = TextBox.extend([PickerMixin, CollectionMixin, SelectorMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       $protected: {
          _dotTplFn : dotTplFn,
          _itemTpl : itemTpl,
@@ -77,18 +79,15 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             /*устанавливаем первое значение TODO по идее переписан метод setSelectedItem для того чтобы не срабатывало событие при первой установке*/
             var item;
 
-            if (!this._options.selectedItem) {
-               if (!this._options.text) {
-                  item = this._items.getNextItem();
-                  this._options.selectedItem = this._items.getKey(item);
-               }
-            }
-            else {
+            if (this._options.selectedItem) {
                item = this._items.getItem(this._options.selectedItem);
-            }
-            if (item) {
                ComboBox.superclass.setText.call(this, item[this._options.displayField]);
                $(".js-controls-ComboBox__fieldNotEditable", this._container.get(0)).text(item[this._options.displayField]);
+            }
+            else {
+               if (this._options.text) {
+                  this._setKeyByText();
+               }
             }
          }
 
@@ -102,6 +101,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   self.togglePicker();
                }
             }
+         }).mousedown(function(e){
+            e.stopPropagation();
          });
 
       },
@@ -116,8 +117,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _drawSelectedItem : function(key) {
          if (typeof(key) != 'undefined') {
             var item = this._items.getItem(key);
-            ComboBox.superclass.setText.call(this, item[this._options.displayField]);
-            $(".js-controls-ComboBox__fieldNotEditable", this._container.get(0)).text(item[this._options.displayField]);
+            if(item) {
+               ComboBox.superclass.setText.call(this, item[this._options.displayField]);
+               $(".js-controls-ComboBox__fieldNotEditable", this._container.get(0)).text(item[this._options.displayField]);
+            }
+            else {
+               ComboBox.superclass.setText.call(this, '');
+               $(".js-controls-ComboBox__fieldNotEditable", this._container.get(0)).text('');
+            }
          }
          if (this._picker) {
             $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
@@ -152,6 +159,19 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._picker.getContainer().addClass('controls-ComboBox__picker');
       },
 
+      _setPickerConfig: function() {
+         return {
+            corner: 'bl',
+            verticalAlign: {
+               side: 'top'
+            },
+            horizontalAlign: {
+               side: 'left'
+            },
+            closeByExternalClick: true,
+            targetPart: true
+         };
+      },
 
       _getItemsContainer : function() {
          return this._picker.getContainer();

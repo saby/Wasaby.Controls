@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS._ClickMixin', 'html!SBIS3.CONTROLS.IconButton'], function(Control, _ClickMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS.ClickMixin', 'html!SBIS3.CONTROLS.IconButton'], function(Control, ClickMixin, dotTplFn) {
 
    'use strict';
 
@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTR
     * @category Buttons
     */
 
-   var IconButton = Control.Control.extend([_ClickMixin], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
+   var IconButton = Control.Control.extend([ClickMixin], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {
