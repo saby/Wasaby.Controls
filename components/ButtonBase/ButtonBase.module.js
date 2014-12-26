@@ -127,23 +127,6 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
        */
       getIcon: function() {
          return this._options.icon;
-      },
-
-      /**
-       * Установить значение primary
-       * @param {Boolean} flag значение primary
-       */
-      setPrimary: function(flag){
-         this._options.primary = !!flag;
-      },
-
-      /**
-       * Является ли кнопка primary
-       * @returns {boolean}
-       */
-
-      isPrimary: function(){
-         return this._options.primary;
       }
    });
 
