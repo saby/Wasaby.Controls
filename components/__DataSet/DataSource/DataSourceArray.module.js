@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.DataSourceArray', ['js!SBIS3.CONTROLS.IDataSource', 'j
             def = new $ws.proto.Deferred();
 
          var DS = new DataSet({
-            strategy: 'Array',
+            strategy: 'DataStrategyArray',
             dataSource: self,
             columns: self._options.columns,
             data: self._options.data

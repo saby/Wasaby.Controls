@@ -1,7 +1,10 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.DataSet', ['js!SBIS3.CONTROLS.Record'], function (Record) {
+define('js!SBIS3.CONTROLS.DataSet', [
+   'js!SBIS3.CONTROLS.DataStrategyArray',
+   'js!SBIS3.CONTROLS.DataStrategyBL'
+], function (DataStrategyArray, DataStrategyBL) {
    'use strict';
    return $ws.proto.Abstract.extend({
       $protected: {
@@ -11,12 +14,13 @@ define('js!SBIS3.CONTROLS.DataSet', ['js!SBIS3.CONTROLS.Record'], function (Reco
          options: {
             dataSource: undefined,
             data: undefined,
-            strategy: 'SBIS300' // пока по дефолту оставим так
+            strategy: 'DataStrategyBL' // пока по дефолту оставим так
          }
       },
       $constructor: function () {
          this._dataSource = this._options.dataSource;
          this._strategy = this._options.strategy;
+
          if (this._options.data) {
             this._prepareData(this._options.data, this._options.fields);
          }
@@ -30,29 +34,13 @@ define('js!SBIS3.CONTROLS.DataSet', ['js!SBIS3.CONTROLS.Record'], function (Reco
 
          self._data = [];
 
-         switch (self._strategy){
-            case 'SBIS300':
-               for (var i = 0, length = data['d'].length; i < length; i++) {
-                  self._data.push(
-                     new Record({
-                        columns: data['s'],
-                        row: data['d'][i]
-                     })
-                  );
-               }
+         switch (self._strategy) {
+            case 'DataStrategyBL':
+               self._data = (new DataStrategyBL()).prepareData(data['d'], data['s']);
                break;
-
-            case 'Array':
-               for (var i = 0, length = data.length; i < length; i++) {
-                  self._data.push(
-                     new Record({
-                        columns: fields,
-                        row: data[i]
-                     })
-                  );
-               }
+            case 'DataStrategyArray':
+               self._data = (new DataStrategyArray()).prepareData(data, fields);
                break;
-
          }
 
 

@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource', 'js!S
          self._BL.call(self._options.queryMethodName, {'ДопПоля': [], 'Фильтр': {'d': [], 's': []}, 'Сортировка': null, 'Навигация': null}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
 
             var DS = new DataSet({
-               strategy: 'SBIS300',
+               strategy: 'DataStrategyBL',
                dataSource: self,
                data: res
             });
