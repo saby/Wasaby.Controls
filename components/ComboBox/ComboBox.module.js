@@ -1,15 +1,15 @@
 define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CONTROLS.TextBox',
    'html!SBIS3.CONTROLS.ComboBox',
-   'js!SBIS3.CONTROLS._PickerMixin',
-   'js!SBIS3.CONTROLS._CollectionMixin',
-   'js!SBIS3.CONTROLS._SelectorMixin',
-   'js!SBIS3.CONTROLS._DataBindMixin',
+   'js!SBIS3.CONTROLS.PickerMixin',
+   'js!SBIS3.CONTROLS.CollectionMixin',
+   'js!SBIS3.CONTROLS.SelectorMixin',
+   'js!SBIS3.CONTROLS.DataBindMixin',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxItemTpl',
    'css!SBIS3.CONTROLS.ComboBox'
 
-], function(TextBox, dotTplFn, _PickerMixin, _CollectionMixin, _SelectorMixin, _DataBindMixin, arrowTpl, itemTpl) {
+], function(TextBox, dotTplFn, PickerMixin, CollectionMixin, SelectorMixin, DataBindMixin, arrowTpl, itemTpl) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора. Есть настройка которая позволяет также  вручную вводить значения.
@@ -21,13 +21,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * <component data-component='SBIS3.CONTROLS.ComboBox' style='width: 100px'>    *
     * </component>
     * @category Inputs
-    * @mixes SBIS3.CONTROLS._PickerMixin
-    * @mixes SBIS3.CONTROLS._FormWidgetMixin
-    * @mixes SBIS3.CONTROLS._CollectionMixin
-    * @mixes SBIS3.CONTROLS._SelectorMixin
+    * @mixes SBIS3.CONTROLS.PickerMixin
+    * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    * @mixes SBIS3.CONTROLS.CollectionMixin
+    * @mixes SBIS3.CONTROLS.SelectorMixin
     */
 
-   var ComboBox = TextBox.extend([_PickerMixin, _CollectionMixin, _SelectorMixin, _DataBindMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
+   var ComboBox = TextBox.extend([PickerMixin, CollectionMixin, SelectorMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       $protected: {
          _dotTplFn : dotTplFn,
          _itemTpl : itemTpl,

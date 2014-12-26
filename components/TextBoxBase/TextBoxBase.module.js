@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS._FormWidgetMixin','js!SBIS3.CONTROLS._DataBindMixin'], function(Control, FormWidgetMixin, DataBindMixin) {
+define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS.FormWidgetMixin','js!SBIS3.CONTROLS.DataBindMixin'], function(Control, FormWidgetMixin, DataBindMixin) {
 
    'use strict';
 
@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
     * Базовый класс для текстового поля
     * @class SBIS3.CONTROLS.TextBoxBase
     * @extends $ws.proto.Control
-    * @mixes SBIS3.CONTROLS._FormWidgetMixin
+    * @mixes SBIS3.CONTROLS.FormWidgetMixin
     */
 
    var TextBoxBase = Control.Control.extend([FormWidgetMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.TextBoxBase.prototype*/ {

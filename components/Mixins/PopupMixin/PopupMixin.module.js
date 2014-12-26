@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 12.08.2014.
  */
 
-define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManager', 'js!SBIS3.CORE.ModalOverlay'], function (ControlHierarchyManager, ModalOverlay) {
+define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManager', 'js!SBIS3.CORE.ModalOverlay'], function (ControlHierarchyManager, ModalOverlay) {
    'use strict';
    if (typeof window !== 'undefined') {
       var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
@@ -27,9 +27,9 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
    /**
     * Миксин определяющий поведение контролов, которые отображаются с абсолютным позиционированием поверх всех остальных компонентов (диалоговые окна, плавающие панели, подсказки).
     * При подмешивании этого миксина в контрол, он вырезается из своего местоположения и вставляется в Body.
-    * @mixin SBIS3.CONTROLS._PopupMixin
+    * @mixin SBIS3.CONTROLS.PopupMixin
     */
-   var _PopupMixin = /** @lends SBIS3.CONTROLS._PopupMixin.prototype */ {
+   var PopupMixin = /** @lends SBIS3.CONTROLS.PopupMixin.prototype */ {
       $protected: {
          _targetSizes: {},
          _containerSizes: {},
@@ -665,6 +665,6 @@ define('js!SBIS3.CONTROLS._PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyMana
 
    };
 
-   return _PopupMixin;
+   return PopupMixin;
 
 });

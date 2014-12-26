@@ -5,13 +5,13 @@
 define('js!SBIS3.CONTROLS.Menu', [
    'js!SBIS3.CONTROLS.ButtonGroupBase',
    'html!SBIS3.CONTROLS.Menu',
-   'js!SBIS3.CONTROLS._TreeMixin',
+   'js!SBIS3.CONTROLS.TreeMixin',
    'js!SBIS3.CONTROLS.FloatArea',
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'css!SBIS3.CONTROLS.Menu',
    'js!SBIS3.CONTROLS.MenuItem'
 
-], function(ButtonGroupBase, dot, _TreeMixin, FloatArea, ControlHierarchyManager) {
+], function(ButtonGroupBase, dot, TreeMixin, FloatArea, ControlHierarchyManager) {
 
    'use strict';
 
@@ -19,10 +19,10 @@ define('js!SBIS3.CONTROLS.Menu', [
     * Контрол, отображающий меню всплывающее в определенном месте страницы
     * @class SBIS3.CONTROLS.Menu
     * @extends SBIS3.CONTROLS.ButtonGroupBase
-    * @mixes SBIS3.CONTROLS._TreeMixin
+    * @mixes SBIS3.CONTROLS.TreeMixin
     */
 
-   var Menu = ButtonGroupBase.extend([_TreeMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
+   var Menu = ButtonGroupBase.extend([TreeMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
       _dotTplFn : dot,
       $protected: {
          _subContainers : {},

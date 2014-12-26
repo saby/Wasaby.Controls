@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function (Infobox) {
+define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function (Infobox) {
    /**
     * Добавляет к любому контролу методы для получения и установки “значения”.
     * Необходим для однообразной работы с набором контролов на диалоге, когда речь идет о сохранении набора данных в БЛ,
     * или заполнении контролов значениями из БЛ. В каждом контроле методы должны быть определены
-    * @mixin SBIS3.CONTROLS._FormWidgetMixin
+    * @mixin SBIS3.CONTROLS.FormWidgetMixin
     */
-   var _FormWidgetMixin = /** @lends SBIS3.CONTROLS._FormWidgetMixin.prototype */{
+   var FormWidgetMixin = /** @lends SBIS3.CONTROLS.FormWidgetMixin.prototype */{
       $protected: {
          _validationErrorCount: 0,
          _validating: false,
@@ -411,6 +411,6 @@ define('js!SBIS3.CONTROLS._FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function
 
    };
 
-   return _FormWidgetMixin;
+   return FormWidgetMixin;
 
 });

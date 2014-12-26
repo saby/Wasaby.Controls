@@ -1,10 +1,10 @@
-define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], function(FloatArea) {
+define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], function(FloatArea) {
    /**
     * Контрол умеющий отображать выдающий вниз блок, в котором можно что-то выбрать
     * Задается контент (протектед методом каким-то) и методы которые позволяют открывать, закрывать блок.
-    * @mixin SBIS3.CONTROLS._PickerMixin
+    * @mixin SBIS3.CONTROLS.PickerMixin
     */
-   var _PickerMixin = /** @lends SBIS3.CONTROLS._PickerMixin.prototype */{
+   var PickerMixin = /** @lends SBIS3.CONTROLS.PickerMixin.prototype */{
       $protected: {
          _picker : null,
          _border : 0,
@@ -118,6 +118,6 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
 
    };
 
-   return _PickerMixin;
+   return PickerMixin;
 
 });

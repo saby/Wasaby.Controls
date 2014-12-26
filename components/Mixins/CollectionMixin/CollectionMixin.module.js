@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*TODO для совместимости*/'js!SBIS3.CONTROLS.AdapterJSON'], function(Collection, AdapterJSON) {
+define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*TODO для совместимости*/'js!SBIS3.CONTROLS.AdapterJSON'], function(Collection, AdapterJSON) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
-    * @mixin SBIS3.CONTROLS._CollectionMixin
+    * @mixin SBIS3.CONTROLS.CollectionMixin
     */
 
-   var _CollectionMixin = /**@lends SBIS3.CONTROLS._CollectionMixin.prototype  */{
+   var CollectionMixin = /**@lends SBIS3.CONTROLS.CollectionMixin.prototype  */{
       $protected: {
          _items : null,
          _itemsInstances : {},
@@ -175,6 +175,6 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
       }
    };
 
-   return _CollectionMixin;
+   return CollectionMixin;
 
 });
