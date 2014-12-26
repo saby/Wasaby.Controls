@@ -5,11 +5,11 @@ define(
    'js!SBIS3.CONTROLS.DatePicker',
    [
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
-      'js!SBIS3.CONTROLS._PickerMixin',
+      'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.Calendar',
       'html!SBIS3.CONTROLS.DatePicker'
    ],
-   function (FormattedTextBoxBase, _PickerMixin, Calendar, dotTplFn) {
+   function (FormattedTextBoxBase, PickerMixin, Calendar, dotTplFn) {
 
    'use strict';
 
@@ -19,7 +19,7 @@ define(
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
     */
 
-   var DatePicker = FormattedTextBoxBase.extend( [_PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
+   var DatePicker = FormattedTextBoxBase.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
       $protected: {
          _dotTplFn: dotTplFn,
          /**

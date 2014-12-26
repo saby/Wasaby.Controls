@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS._ClickMixin', [], function() {
+define('js!SBIS3.CONTROLS.ClickMixin', [], function() {
 
    if (typeof window !== 'undefined') {
       $(document).mouseup(function () {
@@ -8,10 +8,10 @@ define('js!SBIS3.CONTROLS._ClickMixin', [], function() {
 
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного
-    * @mixin SBIS3.CONTROLS._ClickMixin
+    * @mixin SBIS3.CONTROLS.ClickMixin
     */
 
-   var _ClickMixin = /**@lends SBIS3.CONTROLS._ClickMixin.prototype  */{
+   var ClickMixin = /**@lends SBIS3.CONTROLS.ClickMixin.prototype  */{
       $protected: {
          _options: {
 
@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS._ClickMixin', [], function() {
       }
    };
 
-   return _ClickMixin;
+   return ClickMixin;
 
 });/**
  * Created by kraynovdo on 27.10.2014.

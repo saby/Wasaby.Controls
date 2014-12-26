@@ -2,19 +2,19 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS._SelectorMixin'], function(ButtonGroupBase, _SelectorMixin) {
+define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS.SelectorMixin'], function(ButtonGroupBase, SelectorMixin) {
 
    'use strict';
 
    /**
     * Контрол, реализующий поведение выбора одного из нескольких значений при помощи набора радиокнопок. Отображения не имеет.
     * @class SBIS3.CONTROLS.RadioGroupBase
-    * @mixes SBIS3.CONTROLS._CollectionMixin
-    * @mixes SBIS3.CONTROLS._SelectorMixin
+    * @mixes SBIS3.CONTROLS.CollectionMixin
+    * @mixes SBIS3.CONTROLS.SelectorMixin
     * @extends $ws.proto.Control
     */
 
-   var RadioGroupBase = ButtonGroupBase.extend([_SelectorMixin], /** @lends SBIS3.CONTROLS.RadioGroupBase.prototype */ {
+   var RadioGroupBase = ButtonGroupBase.extend([SelectorMixin], /** @lends SBIS3.CONTROLS.RadioGroupBase.prototype */ {
       $protected: {
          _options: {
 

@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.LoadingIndicator', ['js!SBIS3.CORE.Control'], function
     * Контрол, представляющий из себя диалоговое окно с рисунком или анимацией, визуально отображающей процесс прохождения какой-либо длительной операции
     * @class SBIS3.CONTROLS.LoadingIndicator
     * @extends $ws.proto.Control
-    * @mixes SBIS3.CONTROLS._PopupMixin
+    * @mixes SBIS3.CONTROLS.PopupMixin
     */
 
    var LoadingIndicator = Control.Control.extend( /** @lends SBIS3.CONTROLS.LoadingIndicator.prototype*/ {

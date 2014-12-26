@@ -4,8 +4,8 @@
 
 define('js!SBIS3.CONTROLS.ListView',
    ['js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS._CollectionMixin',
-      'js!SBIS3.CONTROLS._MultiSelectorMixin',
+      'js!SBIS3.CONTROLS.CollectionMixin',
+      'js!SBIS3.CONTROLS.MultiSelectorMixin',
       'html!SBIS3.CONTROLS.ListView'
    ],
    function (CompoundControl, CollectionMixin, MultiSelectorMixin, dotTplFn) {
@@ -16,8 +16,8 @@ define('js!SBIS3.CONTROLS.ListView',
        * Контрол, отображающий внутри себя набор однотипных сущностей, умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать
        * @class SBIS3.CONTROLS.ListView
        * @extends $ws.proto.Control
-       * @mixes SBIS3.CONTROLS._CollectionMixin
-       * @mixes SBIS3.CONTROLS._MultiSelectorMixin
+       * @mixes SBIS3.CONTROLS.CollectionMixin
+       * @mixes SBIS3.CONTROLS.MultiSelectorMixin
        * @control
        */
 

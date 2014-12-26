@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLS._CheckedMixin', [], function() {
+define('js!SBIS3.CONTROLS.CheckedMixin', [], function() {
 
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного
-    * @mixin SBIS3.CONTROLS._CheckedMixin
+    * @mixin SBIS3.CONTROLS.CheckedMixin
     */
 
-   var _CheckedMixin = /**@lends SBIS3.CONTROLS._CheckedMixin.prototype  */{
+   var CheckedMixin = /**@lends SBIS3.CONTROLS.CheckedMixin.prototype  */{
       $protected: {
          _options: {
             /**
@@ -97,7 +97,7 @@ define('js!SBIS3.CONTROLS._CheckedMixin', [], function() {
       }
    };
 
-   return _CheckedMixin;
+   return CheckedMixin;
 
 });/**
  * Created by kraynovdo on 27.10.2014.
