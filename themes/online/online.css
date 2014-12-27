@@ -461,9 +461,6 @@ input[type="reset"]::-moz-focus-inner {
   background: url('./img/NumberTextBox-arrowdown.png') left top no-repeat;
   margin-top: 1px;
 }
-.controls-NumberTextBox__arrowsEnabled {
-  margin-right: 0;
-}
 .controls-CheckBox {
   cursor: pointer;
   display: inline-block;
@@ -721,27 +718,19 @@ input[type="reset"]::-moz-focus-inner {
   height: 29px;
   display: inline-block;
 }
-.controls-TabButton__left {
-  background: url("img/tabButton.png") no-repeat;
+.controls-TabButton__side {
   width: 19px;
   height: 29px;
   display: inline-block;
   vertical-align: top;
   margin-right: -4px;
 }
+.controls-TabButton__left {
+  background: url("img/tabButtonLeft.png") no-repeat;
+}
 .controls-TabButton__right {
-  background: url("img/tabButton.png") no-repeat;
-  width: 19px;
-  height: 29px;
-  display: inline-block;
-  vertical-align: top;
+  background: url("img/tabButtonRight.png") no-repeat;
   margin-left: -4px;
-  -moz-transform: scale(-1, 1);
-  -webkit-transform: scale(-1, 1);
-  -o-transform: scale(-1, 1);
-  transform: scale(-1, 1);
-  filter: FlipH;
-  -ms-filter: "FlipH";
 }
 .controls-TabButton__caption {
   height: auto;
