@@ -1,38 +1,53 @@
 .controls-EditAtPlace {
   border: 1px solid transparent;
-  border-bottom: none;
 }
 
 .controls-EditAtPlace:hover, .controls-EditAtPlace.ws-has-focus{
+  border: none;
+}
+
+.controls-EditAtPlace__editorHidden.controls-EditAtPlace:hover, .controls-EditAtPlace.ws-has-focus{
   border: 1px solid transparent;
-  border-bottom: none;
+}
+
+.controls-TabButton .controls-EditAtPlace__editor {
+  margin-top: -1px;
 }
 
 .controls-EditAtPlace__textField{
   padding-top: 1px;
   cursor: pointer;
   border-bottom: dashed 1px #868686;
-  font-family: Arial, monospace;
+  font-family: inherit;
   width: auto;
+}
+
+.controls-EditAtPlace__textAreaWrapper{
+  border: none;
+  display: block;
+  padding: 4px;
+  box-sizing: border-box;
 }
 
 .controls-EditAtPlaceGroup__editorOverlay .controls-EditAtPlace{
   border: none;
 }
 
-.controls-EditAtPlace__editorOverlay .controls-TextArea__inputField{
-  line-height: 20px;
-  padding: 1px 4px;
-  font-size: inherit;
+.controls-EditAtPlace__fieldWrapperHidden {
+  border: none;
 }
 
-.controls-EditAtPlaceGroup__editorOverlay .controls-TextArea{
-  width: 100%;
+.controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace:hover{
+  border: none;
+}
+
+.controls-EditAtPlace__fieldWrapperHidden .controls-TextArea__inputField{
+  line-height: 20px;
+  font-size: inherit;
 }
 
 .controls-EditAtPlaceGroup__editorOverlay .controls-TextArea__inputField{
   line-height: 20px;
-  padding: 1px 4px;
   font-size: inherit;
 }
 
@@ -61,6 +76,7 @@
 .controls-EditAtPlaceGroup__controlPanel{
   margin: 4px;
   float: right;
+  height: 24px; 
 }
 
 .controls-EditAtPlace__cancel{
@@ -79,16 +95,12 @@
   background-position: 0 -16px;
 }
 
-.controls-EditAtPlace__fieldWrapper{
-  font: -webkit-small-control;
-}
-
 .controls-EditAtPlace__editorOverlay{
   padding: 4px;
   background: #f8f3f1!important;
   box-shadow: 0 0 3px #b2b2b2;
   border-radius: 3px;
-  margin-top: -4px;
+  margin-top: -3px;
   margin-left: -4px;
 }
 
@@ -96,9 +108,8 @@
   background: #f8f3f1!important;
   box-shadow: 0 0 3px #b2b2b2;
   border-radius: 3px;
-  margin-top: -1px;
 }
-.controls-EditAtPlace__editorHidden{
+.controls-EditAtPlace__editorHidden .controls-EditAtPlace__editor{
   display: none;
 }
 
@@ -106,6 +117,6 @@
   width: 100%;
 }
 
-.controls-EditAtPlace__fieldWrapperHidden{
+.controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace__fieldWrapper{
   display: none;
 }

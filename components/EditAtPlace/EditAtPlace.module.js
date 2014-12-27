@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 11.11.2014.
  */
 define('js!SBIS3.CONTROLS.EditAtPlace',
-     ['js!SBIS3.CORE.CompoundControl',
+   ['js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.TextBox',
       'js!SBIS3.CONTROLS.IconButton',
       'js!SBIS3.CONTROLS._PickerMixin',
@@ -24,14 +24,15 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
          _aliasForContent: 'editorTpl',
          $protected: {
             _textField: null,
-            _cancelButton: null,
+            _cancelCross: null,
             _okButton: null,
             _oldText: '',
             _options: {
                text: '',
                editorTpl: '<component data-component="SBIS3.CONTROLS.TextBox"></component>',
                isMultiline: false,
-               displayAsEditor: false
+               displayAsEditor: false,
+               editInPopup: false
             }
          },
 
@@ -41,29 +42,31 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             this._textField.bind('click', function () {
                self._clickHandler();
             });
-            this._container.removeClass('ws-area');
             /*TODO: придрот, выпилить когда будет номральный CompoundControl*/
-            $ws.single.EventBus.channel('EditAtPlaceChannel').subscribe('onCancel', this._cancelHandler, this);
-            $ws.single.EventBus.channel('EditAtPlaceChannel').subscribe('onOpen', this._openHandler, this);
-            if (this._options.displayAsEditor) {
-               $('[data-component]', this._container).attr('data-bind', this._container.attr('data-bind'));
-               this._loadChildControls();
+            this._container.removeClass('ws-area');
+            if (this._options.displayAsEditor || !this._options.editInPopup) {
+               $('[data-component]', this._container).attr('data-bind', this._container.attr('data-bind')).width(this._container.width());
             }
+            this._loadChildControls();
          },
 
-         _cancelHandler: function (e) {
-            /*if (this.isVisible()) {
-             this.setText(this._oldText);
-             }*/
-         },
-
-         _openHandler: function () {
+         _saveOldText: function () {
             this._oldText = this._options.text;
+         },
+
+         _setOldText: function () {
+            this.setText(this._oldText);
          },
 
          _clickHandler: function () {
-            this.showPicker();
-            this._oldText = this._options.text;
+            this._saveOldText();
+            if (this._options.editInPopup) {
+               this.showPicker();
+               this._oldText = this._options.text;
+            } else {
+               this.setInPlaceEditMode(true);
+               this._addControlPanel(this._container.parent());
+            }
          },
 
          _setClickHandler: function (newHandler) {
@@ -76,38 +79,62 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
 
          _setPickerContent: function () {
             this._picker.getContainer().addClass('controls-EditAtPlace__editorOverlay');
-            $('[data-component]', this._picker.getContainer().get(0)).attr('data-bind', this._container.attr('data-bind'));
+            $('[data-component]', this._picker.getContainer()).attr('data-bind', this._container.attr('data-bind'));
+            $('[data-component]', this._picker.getContainer()).width(this._container.width());
             this._picker._loadChildControls();
-            this._addControlPanel();
+            this._addControlPanel(this._picker._container);
          },
 
-         _setEditorMode: function () {
-            this._options.displayAsEditor = true;
-            $('.js-controls-EditAtPlace__editor', this._container.get(0)).removeClass('controls-EditAtPlace__editorHidden');
-            $('.js-controls-EditAtPlace__fieldWrapper', this._container.get(0)).addClass('controls-EditAtPlace__fieldWrapperHidden');
+         setInPlaceEditMode: function (inPlace) {
+            this._options.displayAsEditor = inPlace;
+            this._container.toggleClass('controls-EditAtPlace__editorHidden', !inPlace).toggleClass('controls-EditAtPlace__fieldWrapperHidden', inPlace);
          },
 
          // Добавляем кнопки
-         _addControlPanel: function () {
+         _addControlPanel: function (container) {
+            this._cancelCross = $('<span class="controls-EditAtPlace__cancel"></span>');
             var self = this,
-               $ok = $('<div class="controls-EditAtPlace__okButton"></div>'),
-               $cancel = $('<div class="controls-EditAtPlace__cancel"></div>'),
-               $cntrlPanel = $('<span class="controls-EditAtPlace__controlPanel"></span>').append($ok).append($cancel);
+               $ok = $('<span class="controls-EditAtPlace__okButton"></span>'),
+               $cntrlPanel = $('<span class="controls-EditAtPlace__controlPanel"></span>').append($ok).append(this._cancelCross);
+
             // Добавляем кнопки
             this._okButton = new IconButton({
-               parent: self._picker,
+               parent: (self._options.editInPopup) ? self._picker : self,
                element: $ok,
                icon: 'sprite:icon-24 icon-Successful icon-done action-hover'
             });
-            this._picker.getContainer().append($cntrlPanel);
-            // Подписываемся на клики кнопок
+            container.append($cntrlPanel);
             this._okButton.subscribe('onActivated', function () {
-               self.hidePicker();
+               self._applyEdit();
             });
-            $cancel.bind('click', function () {
-               self.hidePicker();
-               self.setText(self._oldText);
+            this._cancelCross.bind('click', function () {
+               self._cancelEdit();
             });
+         },
+
+         _cancelEdit: function () {
+            if (this._options.editInPopup) {
+               this.hidePicker();
+            } else {
+               this._removeControlPanel();
+               this.setInPlaceEditMode(false);
+            }
+            this._setOldText();
+            this._notify('onCancel');
+         },
+
+         _applyEdit: function () {
+            if (this._options.editInPopup) {
+               this.hidePicker();
+            } else {
+               this.setInPlaceEditMode(false);
+               this._removeControlPanel();
+            }
+            this._notify('onApply');
+         },
+
+         _removeControlPanel: function(){
+            this._cancelCross.parent().remove();
          },
 
          _setPickerConfig: function () {
@@ -132,7 +159,11 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                this.saveToContext('Text', text);
                this._notify('onTextChange', this._options.text);
             }
-            this._textField.html(text);
+            if (text !== '') {
+               this._textField.html(text);
+            } else {
+               this._textField.html('&nbsp');
+            }
          },
 
          getText: function () {
