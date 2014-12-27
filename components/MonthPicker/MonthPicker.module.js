@@ -8,11 +8,11 @@ define(
    'js!SBIS3.CONTROLS.MonthPicker',
    [
       'js!SBIS3.CORE.Control',
-      'js!SBIS3.CONTROLS._PickerMixin',
+      'js!SBIS3.CONTROLS.PickerMixin',
       'html!SBIS3.CONTROLS.MonthPicker/resources/MonthPickerDropdown',
       'html!SBIS3.CONTROLS.MonthPicker'
    ],
-   function(Control, _PickerMixin, DropdownTpl, dotTplFn){
+   function(Control, PickerMixin, DropdownTpl, dotTplFn){
 
    'use strict';
 
@@ -21,10 +21,10 @@ define(
     * Не наследуется от поля ввода, потому что там в принципе не требуется текстовый ввод
     * @class SBIS3.CONTROLS.MonthPicker
     * @extends $ws.proto.Control
-    * @mixes SBIS3.CONTROLS._PickerMixin
+    * @mixes SBIS3.CONTROLS.PickerMixin
     */
 
-   var MonthPicker = Control.Control.extend( [_PickerMixin], /** @lends SBIS3.CONTROLS.MonthPicker.prototype */{
+   var MonthPicker = Control.Control.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.MonthPicker.prototype */{
       _dropdownTpl: DropdownTpl,
       _dotTplFn: dotTplFn,
 

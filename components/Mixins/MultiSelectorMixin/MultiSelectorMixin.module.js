@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLS._MultiSelectorMixin', [], function() {
+define('js!SBIS3.CONTROLS.MultiSelectorMixin', [], function() {
 
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
-    * @mixin SBIS3.CONTROLS._MultiSelectorMixin
+    * @mixin SBIS3.CONTROLS.MultiSelectorMixin
     */
 
-   var _MultiSelectorMixin = /**@lends SBIS3.CONTROLS._MultiSelectorMixin.prototype  */{
+   var MultiSelectorMixin = /**@lends SBIS3.CONTROLS.MultiSelectorMixin.prototype  */{
       $protected: {
          _options: {
             /**
@@ -138,8 +138,6 @@ define('js!SBIS3.CONTROLS._MultiSelectorMixin', [], function() {
                   }
                }
             }
-            this._drawSelectedItems(this._options.selectedItems);
-            this._notifySelectedItem(this._options.selectedItems);
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -155,6 +153,6 @@ define('js!SBIS3.CONTROLS._MultiSelectorMixin', [], function() {
       }
    };
 
-   return _MultiSelectorMixin;
+   return MultiSelectorMixin;
 
 });

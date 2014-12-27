@@ -4,8 +4,8 @@
 
 define('js!SBIS3.CONTROLS.ListView',
    ['js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS._CollectionMixin',
-      'js!SBIS3.CONTROLS._MultiSelectorMixin',
+      'js!SBIS3.CONTROLS.CollectionMixin',
+      'js!SBIS3.CONTROLS.MultiSelectorMixin',
       'html!SBIS3.CONTROLS.ListView'
    ],
    function (CompoundControl, CollectionMixin, MultiSelectorMixin, dotTplFn) {
@@ -16,8 +16,8 @@ define('js!SBIS3.CONTROLS.ListView',
        * Контрол, отображающий внутри себя набор однотипных сущностей, умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать
        * @class SBIS3.CONTROLS.ListView
        * @extends $ws.proto.Control
-       * @mixes SBIS3.CONTROLS._CollectionMixin
-       * @mixes SBIS3.CONTROLS._MultiSelectorMixin
+       * @mixes SBIS3.CONTROLS.CollectionMixin
+       * @mixes SBIS3.CONTROLS.MultiSelectorMixin
        * @control
        */
 
@@ -86,8 +86,9 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _elemClickHandler : function(id, data) {
             this.setSelectedItems([id]);
-            if (this._options.elemClickHander) {
-               this._options.elemClickHander(id, data);
+            if (this._options.elemClickHandler) {
+               var parent = this.getParent();
+               this._options.elemClickHandler.call(this, id, data);
             }
          },
 
@@ -101,33 +102,19 @@ define('js!SBIS3.CONTROLS.ListView',
                var targ = $(e.target).hasClass('controls-ListView__item') ? e.target : $(e.target).closest('.controls-ListView__item');
                if (targ.length) {
                   var id = targ.attr('data-id');
+
+                  if (self._actsContainer) {
+                     self._getItemActionsContainer(id).append(self._actsContainer.show());
+                  }
                }
-               if (self._actsContainer) {
-                  self._getItemActionsContainer(id).append(self._actsContainer.show());
+               else {
+                  if (self._actsContainer) {
+                     self._actsContainer.hide()
+                  }
                }
             });
-            if (this._options.itemsActions.length) {
-               this._actsContainer = $('<div class="controls-ListView__itemActions"></div>').hide().appendTo(this._container);
-               var acts = this._options.itemsActions;
-               for (var i = 0; i < acts.length; i++) {
-                  var action = $("<span></span>").addClass('controls-ListView__action');
-                  if (acts[i].icon && acts[i].icon.indexOf('sprite:') == 0) {
-                     action.addClass(acts[i].icon.substring(7));
-                  }
-                  if (acts[i].handler) {
-                     var handler = acts[i].handler;
-                     action.mouseup(function(e){
-                        e.stopPropagation();
-                        var
-                           id = $(this).closest('.controls-ListView__item').attr('data-id'),
-                           item = self._items.getItem(id);
-                        handler(id, item);
-                     })
-                  }
-                  this._actsContainer.append(action);
 
-               }
-            }
+            this._drawItemsActions(this._options.itemsActions);
 
             this._container.mouseout(function(){
                if (self._actsContainer) self._actsContainer.hide();
@@ -137,6 +124,48 @@ define('js!SBIS3.CONTROLS.ListView',
          _drawSelectedItems : function(idArray) {
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
             $(".controls-ListView__item[data-id='" + idArray[0] + "']", this._container).addClass('controls-ListView__item__selected');
+         },
+
+         setElemClickHandler : function(method){
+            this._options.elemClickHander = method;
+         },
+
+         setItemsActions : function(itemsActions) {
+            this._options.itemsActions = itemsActions;
+            this._drawItemsActions(itemsActions);
+         },
+
+         _drawItemsActions : function(itemsActions) {
+            var self = this;
+            if (itemsActions.length) {
+               if (!this._actsContainer) {
+                  this._actsContainer = $('<div class="controls-ListView__itemActions"></div>').hide().appendTo(this._container);
+               }
+               var acts = itemsActions;
+               for (var i = 0; i < acts.length; i++) {
+                  var action = $("<span></span>").addClass('controls-ListView__action');
+                  if (acts[i].icon && acts[i].icon.indexOf('sprite:') == 0) {
+                     action.addClass(acts[i].icon.substring(7));
+                  }
+                  if (acts[i].handler) {
+                     var handler = acts[i].handler.bind(this);
+                     action.mouseup(function(e){
+                        e.stopPropagation();
+                        var
+                           id = $(this).closest('.controls-ListView__item').attr('data-id'),
+                           item = self._items.getItem(id);
+                        handler(id, item);
+                     })
+                  }
+                  this._actsContainer.append(action);
+               }
+            }
+            else {
+               if (this._actsContainer) {
+                  this._actsContainer.remove();
+                  this._actsContainer = null
+               }
+            }
          }
       });
 

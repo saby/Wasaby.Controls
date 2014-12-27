@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*TODO для совместимости*/'js!SBIS3.CONTROLS.AdapterJSON'], function(Collection, AdapterJSON) {
+define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*TODO для совместимости*/'js!SBIS3.CONTROLS.AdapterJSON'], function(Collection, AdapterJSON) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
-    * @mixin SBIS3.CONTROLS._CollectionMixin
+    * @mixin SBIS3.CONTROLS.CollectionMixin
     */
 
-   var _CollectionMixin = /**@lends SBIS3.CONTROLS._CollectionMixin.prototype  */{
+   var CollectionMixin = /**@lends SBIS3.CONTROLS.CollectionMixin.prototype  */{
       $protected: {
          _items : null,
          _itemsInstances : {},
@@ -25,9 +25,6 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
 
       $constructor: function() {
          this._publish('onDrawItems');
-         if (this._options.keyField) {
-            this._keyField = this._options.keyField;
-         }
          this._initItems(this._options.items || []);
       },
 
@@ -44,16 +41,16 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
             this._items = items;
          }
          else {
-            if (!this._keyField) {
+            if (!this._options.keyField) {
                //пробуем взять первое поле из коллекции
                var item = items[0];
                if (item && Object.prototype.toString.call(item) === '[object Object]') {
-                  this._keyField = Object.keys(item)[0];
+                  this._options.keyField = Object.keys(item)[0];
                }
             }
             this._items = new Collection({
                data: items,
-               keyField: this._keyField,
+               keyField: this._options.keyField,
                hierField: this._options.hierField,
                adapter: new AdapterJSON()
             });
@@ -90,9 +87,12 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
          });
          itemsReadyDef.done().getResult().addCallback(function(){
             self._notify('onDrawItems');
+            self._drawItemsCallback();
          });
       },
+      _drawItemsCallback : function() {
 
+      },
       //метод определяющий в какой контейнер разместить определенный элемент
       _getTargetContainer : function() {
          //по стандарту все строки рисуются в itemsContainer
@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
       },
 
       _getItemTemplate : function() {
-         return '<div>template</div>'
+         throw new Error('Method _getItemTemplate() must be implemented')
       },
 
       _addItemClasses : function (container, key){
@@ -172,6 +172,6 @@ define('js!SBIS3.CONTROLS._CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*
       }
    };
 
-   return _CollectionMixin;
+   return CollectionMixin;
 
 });

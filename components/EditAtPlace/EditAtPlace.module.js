@@ -5,8 +5,8 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
    ['js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.TextBox',
       'js!SBIS3.CONTROLS.IconButton',
-      'js!SBIS3.CONTROLS._PickerMixin',
-      'js!SBIS3.CONTROLS._DataBindMixin',
+      'js!SBIS3.CONTROLS.PickerMixin',
+      'js!SBIS3.CONTROLS.DataBindMixin',
       'html!SBIS3.CONTROLS.EditAtPlace'],
    function (CompoundControl, TextBox, IconButton, _PickerMixin, _DataBindMixin, dotTplFn) {
       'use strict';

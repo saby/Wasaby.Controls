@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
              * @cfg {String} Маска, на базе которой будет создана html-разметка и в соответствии с которой
              * будет определён весь функционал
              */
-            mask: 'd(ddd)ddd-dd-dd'
+            mask: ''
          }
       },
 

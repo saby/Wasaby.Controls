@@ -1,10 +1,10 @@
-define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], function(FloatArea) {
+define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], function(FloatArea) {
    /**
     * Контрол умеющий отображать выдающий вниз блок, в котором можно что-то выбрать
     * Задается контент (протектед методом каким-то) и методы которые позволяют открывать, закрывать блок.
-    * @mixin SBIS3.CONTROLS._PickerMixin
+    * @mixin SBIS3.CONTROLS.PickerMixin
     */
-   var _PickerMixin = /** @lends SBIS3.CONTROLS._PickerMixin.prototype */{
+   var PickerMixin = /** @lends SBIS3.CONTROLS.PickerMixin.prototype */{
       $protected: {
          _picker : null,
          _border : 0,
@@ -25,6 +25,9 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
          // чтобы не нарушать выравнивание по базовой линии
          $('body').append(pickerContainer);
          self._picker = this._createPicker(pickerContainer);
+         self._picker.subscribe('onClose', function(){
+            self._container.removeClass('controls-Picker__show');
+         });
          self._setWidth();
          container.hover(function(){
             self._picker.getContainer().addClass('controls-Picker__owner__hover');
@@ -82,12 +85,15 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
       togglePicker: function() {
          if (!this._picker) {
             this._initializePicker();
-         }
-         this._container.toggleClass('controls-Picker__show');
-         if (this._picker.isVisible()){
-            this.hidePicker();
-         }else {
             this.showPicker();
+         }
+         else {
+            this._container.toggleClass('controls-Picker__show');
+            if (this._picker.isVisible()) {
+               this.hidePicker();
+            } else {
+               this.showPicker();
+            }
          }
       },
 
@@ -112,6 +118,6 @@ define('js!SBIS3.CONTROLS._PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functi
 
    };
 
-   return _PickerMixin;
+   return PickerMixin;
 
 });

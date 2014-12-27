@@ -2,19 +2,19 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS._MultiSelectorMixin'], function(ButtonGroupBase, _MultiSelectorMixin) {
+define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS.MultiSelectorMixin'], function(ButtonGroupBase, MultiSelectorMixin) {
 
    'use strict';
 
    /**
     * Контрол, реализующий поведение выбора одного или нескольких значений из набора. Отображения не имеет.
     * @class SBIS3.CONTROLS.CheckBoxGroupBase
-    * @mixes SBIS3.CONTROLS._CollectionMixin
-    * @mixes SBIS3.CONTROLS._MultiSelectorMixin
+    * @mixes SBIS3.CONTROLS.CollectionMixin
+    * @mixes SBIS3.CONTROLS.MultiSelectorMixin
     * @extends SBIS3.CONTROLS.ButtonGroupBase
     */
 
-   var CheckBoxGroupBase = ButtonGroupBase.extend([_MultiSelectorMixin], /** @lends SBIS3.CONTROLS.CheckBoxGroupBase.prototype */ {
+   var CheckBoxGroupBase = ButtonGroupBase.extend([MultiSelectorMixin], /** @lends SBIS3.CONTROLS.CheckBoxGroupBase.prototype */ {
       $protected: {
          _options: {
 

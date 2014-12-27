@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.Dialog', ['js!SBIS3.CORE.Control'], function(Control) 
     * Сам компонент не имеет визуального отображения, не рисует крестик или заголовок, эта логика переносится на компоненты, лежащие внутри.
     * @class SBIS3.CONTROLS.Dialog
     * @extends $ws.proto.Control
-    * @mixes SBIS3.CONTROLS._PopupMixin
+    * @mixes SBIS3.CONTROLS.PopupMixin
     */
 
    var Dialog = Control.Control.extend( /** @lends SBIS3.CONTROLS.Dialog.prototype*/ {

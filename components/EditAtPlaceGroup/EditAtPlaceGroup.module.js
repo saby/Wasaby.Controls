@@ -4,11 +4,11 @@
 define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
      ['js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.IconButton',
-      'js!SBIS3.CONTROLS._PickerMixin',
+      'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.EditAtPlace',
       'js!SBIS3.CORE.Dialog',
       'html!SBIS3.CONTROLS.EditAtPlaceGroup'],
-   function (CompoundControl, IconButton, _PickerMixin, EditAtPlace, Dialog, dotTplFn) {
+   function (CompoundControl, IconButton, PickerMixin, EditAtPlace, Dialog, dotTplFn) {
       'use strict';
       /**
        * @class SBIS3.CONTROLS.EditAtPlaceGroup
@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
        * @mixes SBIS3.CONTROLS._PickerMixin
        */
 
-      var EditAtPlaceGroup = CompoundControl.extend([_PickerMixin], /** @lends SBIS3.CONTROLS.EditAtPlaceGroup.prototype */{
+      var EditAtPlaceGroup = CompoundControl.extend([PickerMixin], /** @lends SBIS3.CONTROLS.EditAtPlaceGroup.prototype */{
          $protected: {
             _dotTplFn: dotTplFn,
             _textField: null,
