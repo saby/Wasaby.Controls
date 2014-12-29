@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.ClickMixin', [], function() {
 
       instead : {
          //TODO сделано через onClickHandler WS в базовом контроле
-         _onClickHandler: function(parentFnc, e) {
+         _onClickHandler: function(e) {
             if (this.isEnabled()) {
                this._container.removeClass('controls-Click__active');
                this._clickHandler(e);
