@@ -136,7 +136,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          else if (this._options.closeByExternalClick) {
             $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
-
          container.appendTo('body');
          this._defaultCorner = this._options.corner;
          this._defaultVerticalAlignSide = this._options.verticalAlign.side;
@@ -198,7 +197,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             this._initOrigins = false;
          }
       },
-
+      /**
+       * Установить новый таргет
+       * @param target новый таргет
+       */
       setTarget: function (target) {
          this._options.target = target;
          this.recalcPosition(true);
@@ -219,6 +221,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                left: this._options.horizontalAlign.offset || 0
             };
 
+         //TODO избавиться от дублирования
          if (!vAlign) {
             offset.top = this._windowSizes.height / 2 + (this._options.verticalAlign.offset || 0) - this._containerSizes.height / 2
          } else {
@@ -233,12 +236,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                offset.left = bodyWidth - offset.left - width;
             }
          }
-         //TODO избавиться от дублирования
-         if (this._containerSizes.requredOffset.top > this._windowSizes.height - 3) {
-            offset.top = this._windowSizes.height - 3 - this._containerSizes.originHeight;
+         if (this._containerSizes.requredOffset.top > bodyHeight - 3) {
+            offset.top = bodyHeight - 3 - this._containerSizes.originHeight;
          }
-         if (this._containerSizes.requredOffset.left > this._windowSizes.width - 3) {
-            offset.left = this._windowSizes.width - 3 - this._containerSizes.originWidth;
+         if (this._containerSizes.requredOffset.left > bodyWidth - 3) {
+            offset.left = bodyWidth - 3 - this._containerSizes.originWidth;
          }
          this._calculateBodyOverflow(offset);
          return offset;
@@ -282,7 +284,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
       _windowChangeHandler: function () {
          if (this.isVisible()) {
-            this.recalcPosition();
+            this.recalcPosition(false);
          } else {
             this._initSizes();
          }
@@ -319,13 +321,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             this._containerSizes.originWidth = this._container.get(0).scrollWidth + this._containerSizes.border * 2;
             this._containerSizes.originHeight = this._container.get(0).scrollHeight + this._containerSizes.border * 2;
          }
-         this._containerSizes.clientWidth = this._containerSizes.originWidth;
-         this._containerSizes.clientHeight = this._containerSizes.originHeight;
          //Запоминаем координаты правого нижнего угла контейнера необходимые для отображения контейнера целиком и там где нужно.
          if (target) {
             this._containerSizes.requredOffset = {
-               top: buff.top + this._targetSizes.offset.top + this._containerSizes.clientHeight + (this._options.verticalAlign.offset || 0),
-               left: buff.left + this._targetSizes.offset.left + this._containerSizes.clientWidth + (this._options.horizontalAlign.offset || 0)
+               top: buff.top + this._targetSizes.offset.top + this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0),
+               left: buff.left + this._targetSizes.offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0)
             };
          } else {
             this._containerSizes.requredOffset = {
@@ -333,8 +333,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                left: this._options.horizontalAlign.offset + this._containerSizes.originWidth
             };
          }
-         this._containerSizes.width = this._containerSizes.clientWidth;
-         this._containerSizes.height = this._containerSizes.clientHeight;
+         this._containerSizes.width = this._containerSizes.originWidth;
+         this._containerSizes.height = this._containerSizes.originHeight;
          this._containerSizes.boundingClientRect = container.get(0).getBoundingClientRect();
          this._initWindowSizes();
       },
@@ -398,10 +398,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             left: 0
          };
          if (vert == 'bottom') {
-            offset.top -= this._containerSizes.clientHeight - this._targetSizes.border;
+            offset.top -= this._containerSizes.originHeight - this._targetSizes.border;
          }
          if (horiz == 'right') {
-            offset.left -= this._containerSizes.clientWidth - this._targetSizes.border;
+            offset.left -= this._containerSizes.originWidth - this._targetSizes.border;
          }
          if (!notSave) {
             this._options.horizontalAlign.side = horiz;
@@ -489,7 +489,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       _getOffsetByWindowSize: function (offset) {
          var buf = this._targetSizes.offset;
          //Проверяем убираемся ли в экран снизу
-         if (offset.top + this._containerSizes.clientHeight + (this._options.verticalAlign.offset || 0) >= this._windowSizes.height - 3 && !this._isMovedV) {
+         if (offset.top + this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) >= this._windowSizes.height - 3 && !this._isMovedV) {
             this._isMovedV = true;
             offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
             offset.top = this._addOffset(offset, buf).top;
@@ -504,7 +504,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
          //TODO Избавиться от дублирования
          //Проверяем убираемся ли в экран справа
-         if (offset.left + this._containerSizes.clientWidth + (this._options.horizontalAlign.offset || 0) >= this._windowSizes.width - 3 && !this._isMovedH) {
+         if (offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) >= this._windowSizes.width - 3 && !this._isMovedH) {
             this._isMovedH = true;
             offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
             offset.left = this._addOffset(offset, buf).left;
@@ -537,7 +537,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                }
                this._isMovedV = !this._isMovedV;
             }
-            if (this._containerSizes.clientHeight + (this._options.verticalAlign.offset || 0) < spaces.bottom) {
+            if (this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) < spaces.bottom) {
                this._container.css('overflow-y', 'visible');
                this._container.css('height', '');
             }
@@ -558,7 +558,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                }
                this._isMovedH = !this._isMovedH;
             }
-            if (this._containerSizes.clientWidth + (this._options.horizontalAlign.offset || 0) < spaces.right) {
+            if (this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) < spaces.right) {
                this._container.css('overflow-x', 'visible');
                this._container.css('width', '');
             }
