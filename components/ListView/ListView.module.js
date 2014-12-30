@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _createItemsActions : function() {
             var self = this;
-            this._container.mousemove(function(e){
+            this._container.mouseover(function(e){
                var targ = $(e.target).hasClass('controls-ListView__item') ? e.target : $(e.target).closest('.controls-ListView__item');
                if (targ.length) {
                   var id = targ.attr('data-id');
