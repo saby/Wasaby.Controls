@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {Function} Обработчик клика на элемент
                 */
-               elemClickHander : null,
+               elemClickHandler : null,
                multiselect : false,
                itemSelect : false
             }
@@ -127,7 +127,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          setElemClickHandler : function(method){
-            this._options.elemClickHander = method;
+            this._options.elemClickHandler = method;
          },
 
          setItemsActions : function(itemsActions) {
