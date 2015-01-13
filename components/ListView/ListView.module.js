@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _createItemsActions : function() {
             var self = this;
-            this._container.mouseover(function(e){
+            this._container.mousemove(function(e){
                var targ = $(e.target).hasClass('controls-ListView__item') ? e.target : $(e.target).closest('.controls-ListView__item');
                if (targ.length) {
                   var id = targ.attr('data-id');
@@ -113,8 +113,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                }
             });
-
-            this._drawItemsActions(this._options.itemsActions);
 
             this._container.mouseout(function(){
                if (self._actsContainer) self._actsContainer.hide();
@@ -141,6 +139,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if (!this._actsContainer) {
                   this._actsContainer = $('<div class="controls-ListView__itemActions"></div>').hide().appendTo(this._container);
                }
+               this._actsContainer.empty();
                var acts = itemsActions;
                for (var i = 0; i < acts.length; i++) {
                   var action = $("<span></span>").addClass('controls-ListView__action');
@@ -166,8 +165,13 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._actsContainer = null
                }
             }
+         },
+         _drawItemsCallback : function() {
+            this._drawItemsActions(this._options.itemsActions);
          }
       });
+
+
 
       return ListView;
 
