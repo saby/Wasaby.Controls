@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS._DSMixin', [], function () {
+define('js!SBIS3.CONTROLS._DSMixin', ['js!SBIS3.CONTROLS.Algorithm'], function (_) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS._DSMixin', [], function () {
          console.log('draw');
          this._query().addCallback(function () {
 
-            self._DataSet.each(function (rec) {
+            _.each(self._DataSet, function (rec) {
                var
                   oneItemContainer = self._drawOneItemContainer(),
                   targetContainer = self._getTargetContainer();

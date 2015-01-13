@@ -33,8 +33,6 @@ define('js!SBIS3.CONTROLS.DataSourceArray', ['js!SBIS3.CONTROLS.IDataSource', 'j
 
          var DS = new DataSet({
             strategy: 'DataStrategyArray',
-            dataSource: self,
-            columns: self._options.columns,
             data: self._options.data
          });
 

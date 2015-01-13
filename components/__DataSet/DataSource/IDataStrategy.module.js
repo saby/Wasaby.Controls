@@ -8,13 +8,11 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
       },
       $constructor: function () {
       },
-      /**
-       * Приводит данные к единому формату, для заполнения датасета
-       * @param data - данные
-       * @param columns - описание полей
-       */
-      prepareData: function (data, columns) {
-         /*Method must be implemented*/
+      each: function () {
+
+      },
+      value: function () {
+
       }
 
    });

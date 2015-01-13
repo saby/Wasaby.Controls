@@ -40,11 +40,9 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource', 'js!S
 
             var DS = new DataSet({
                strategy: 'DataStrategyBL',
-               dataSource: self,
                data: res
             });
 
-            console.log(DS);
             def.callback(DS);
 
          });

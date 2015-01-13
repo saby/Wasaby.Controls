@@ -8,19 +8,12 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy', '
       },
       $constructor: function () {
       },
-
-      prepareData: function (data, columns) {
-         var result = [];
-         for (var i = 0, length = data.length; i < length; i++) {
-            result.push(
-               new Record({
-                  columns: columns,
-                  row: data[i]
-               })
-            );
+      each: function (data, iterateCallback, context) {
+         var d = data.d,
+            length = d.length;
+         for (var i = 0; i < length; i++) {
+            iterateCallback.call(context, d[i]);
          }
-         return result;
       }
-
    });
 });

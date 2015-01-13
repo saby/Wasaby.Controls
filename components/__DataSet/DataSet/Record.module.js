@@ -5,26 +5,21 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
    'use strict';
    return $ws.core.extend({}, {
       $protected: {
-         _columns: [],
-         _row: []
+         _raw: undefined
       },
-      $constructor: function (cfg) {
-         if (cfg) {
-            this._columns = cfg.columns;
-            this._row = cfg.row;
-         }
-      },
-      set: function (name, value) {
-         this._row = value;
-      },
+      $constructor: function () {
 
-      get: function (key) {
-         return this._row[key];
       },
-
+      setRaw: function (raw) {
+         this._raw = raw;
+      },
+      get: function (i) {
+         return this._raw[i];
+      },
       getKey: function () {
-         var key = this._row[0];
+         var key = this._raw[0];
          return (typeof key === 'object') ? key[0] : key;
       }
+
    });
 });
