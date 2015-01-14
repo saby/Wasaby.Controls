@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.ColorPicker',
     'js!SBIS3.CONTROLS.PickerMixin',
     'html!SBIS3.CONTROLS.ColorPicker/resources/ColorSquare',
     'is!browser?js!SBIS3.CONTROLS.ColorPicker/resources/colpick',
-    'css!SBIS3.CONTROLS.ColorPicker/resources/colpick'
+    'is!browser?css!SBIS3.CONTROLS.ColorPicker/resources/colpick'
    ], function(TextBox, PickerMixin, ColorSquareTpl) {
 
    'use strict';
