@@ -17,6 +17,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
          }
       },
       $constructor: function () {
+
+         //FixME: сделаем глобальный объект со всеми стратегиями и свитч будет не нужен?
          switch (this._options.strategy) {
             case 'DataStrategyBL':
                this.strategy = new DataStrategyBL();
@@ -35,8 +37,11 @@ define('js!SBIS3.CONTROLS.DataSet', [
       _prepareData: function (data) {
          var self = this;
          self._rawData = data;
-      }
+      },
 
+      getRawData: function(){
+         return this._rawData;
+      }
 
    });
 });
