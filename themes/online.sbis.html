@@ -406,7 +406,12 @@
          require(["js!SBIS3.CONTROLS.TextBox"], function (r) {
             new r({
                element: "TextBox",
-               placeholder: 'This is TextBox'
+               placeholder: 'This is TextBox',
+               handlers : {
+                  'onTextChange' : function(e, val) {
+                     console.log(val)
+                  }
+               }
             });
 
             new r({
