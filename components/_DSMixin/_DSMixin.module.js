@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS._DSMixin', ['js!SBIS3.CONTROLS.Algorithm'], function (
                   oneItemContainer = self._drawOneItemContainer(),
                   targetContainer = self._getTargetContainer();
 
-               oneItemContainer.attr('data-id', rec.getKey()).addClass('controls-ListView__item');
+               oneItemContainer.attr('data-id', rec.get('@Производитель')).addClass('controls-ListView__item');
                targetContainer.append(oneItemContainer);
 
                self._drawItem(oneItemContainer, rec);

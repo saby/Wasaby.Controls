@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.Algorithm', ['js!SBIS3.CONTROLS.Record'], function (Re
 
       each: function (object, iterateCallback, context) {
          // object - пока только DataSource
-         var record = new Record();
+         var record = new Record(object.strategy);
          object.strategy.each(object.getRawData(), function (rawRow) {
             record.setRaw(rawRow);
             iterateCallback.call(context, record);

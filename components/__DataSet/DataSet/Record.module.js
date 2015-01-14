@@ -5,20 +5,17 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
    'use strict';
    return $ws.core.extend({}, {
       $protected: {
-         _raw: undefined
+         _raw: undefined,
+         _strategy: undefined
       },
-      $constructor: function () {
-
+      $constructor: function (strategy) {
+         this._strategy = strategy;
       },
       setRaw: function (raw) {
          this._raw = raw;
       },
-      get: function (i) {
-         return this._raw[i];
-      },
-      getKey: function () {
-         var key = this._raw[0];
-         return (typeof key === 'object') ? key[0] : key;
+      get: function (field) {
+         return this._strategy.value(this._raw, field);
       }
 
    });

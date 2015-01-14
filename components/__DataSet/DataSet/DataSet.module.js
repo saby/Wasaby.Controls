@@ -9,7 +9,6 @@ define('js!SBIS3.CONTROLS.DataSet', [
    return $ws.proto.Abstract.extend({
       strategy: null,
       $protected: {
-         _data: [],
          _rawData: [],
          _options: {
             data: undefined,
@@ -39,7 +38,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          self._rawData = data;
       },
 
-      getRawData: function(){
+      getRawData: function () {
          return this._rawData;
       }
 
