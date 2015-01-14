@@ -10,13 +10,8 @@ define('js!SBIS3.CONTROLS._DSMixin', ['js!SBIS3.CONTROLS.Algorithm'], function (
          _dataSource: undefined,
          _DataSet: null,
          _dotItemTpl: null,
-         _keyField: '',
          _options: {
-            dataSource: undefined,
-            /**
-             * @cfg {String} Поле элемента коллекции, которое является ключом
-             * */
-            keyField: null
+            dataSource: undefined
          }
       },
 
