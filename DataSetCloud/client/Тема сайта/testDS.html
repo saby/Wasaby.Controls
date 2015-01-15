@@ -94,8 +94,8 @@
             var ds1 = new DataSourceBL('Производитель');
 
             var itemTpl1 = '<div class="listViewItem">\
-                     <div style="color:#999999; font-size:15px">{{=it.get(1)}}</div>\
-                     <div style="color:#800000;">{{=it.get(2)}}</div>\
+                     <div style="color:#999999; font-size:15px">{{=it.get("Название")}}</div>\
+                     <div style="color:#800000;">{{=it.get("Сайт")}}</div>\
 					 <hr>\
                </div>';
 
@@ -106,15 +106,10 @@
             });
 
             var ds2 = new DataSourceArray({
-               columns:[
-                  {n: '@Производитель', t: 'Идентификатор'},
-                  {n: 'Название', t: 'Текст'},
-                  {n: 'Сайт', t: 'Текст'}
-               ],
                data: [
-                  [1,'Dell','Dell.com'],
-                  [2,'asus','asus.com'],
-                  [3,'hp','hp.com']
+                  {'@Производитель': 1, 'Название': 'Dell', 'Сайт': 'Dell.com'},
+                  {'@Производитель': 2, 'Название': 'asus', 'Сайт': 'asus.com'},
+                  {'@Производитель': 3, 'Название': 'hp', 'Сайт': 'hp.com'}
                ]
             });
 
