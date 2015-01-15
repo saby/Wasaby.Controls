@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource', 'js!S
 
       },
 
-      read: function (pk) {
+      read: function (id) {
 
       },
 
@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource', 'js!S
 
       },
 
-      destroy: function (pk) {
+      delete: function (id) {
 
       },
 

@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
        * Удалить запись
        * @param id - идентификатор записи
        */
-      destroy: function (id) {
+      delete: function (id) {
          /*Method must be implemented*/
       },
       /**
