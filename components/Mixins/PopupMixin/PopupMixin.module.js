@@ -222,11 +222,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             $ws.single.WindowManager._visibleIndexes.push(this._zIndex);
             ModalOverlay.adjust();
             var self = this;
-            ModalOverlay._overlay.bind('mousedown', function (e) {
-               if (self._options.closeByExternalClick) {
+            ModalOverlay._overlay.bind('mousedown', function(){
+               if (self._options.closeByExternalClick && self.getId() == $ws.single.WindowManager.getMaxZWindow().getId()) {
                   ControlHierarchyManager.getTopWindow().hide();
                }
-               e.stopPropagation();
             });
          }
          else {
