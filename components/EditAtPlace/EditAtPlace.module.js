@@ -60,6 +60,11 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                   self._forceClose = true;
                }
             });
+
+            if ($(this._options.editorTpl).attr('data-component') == 'SBIS3.CONTROLS.TextArea'){
+               $(this._container.children()[0]).addClass('controls-EditAtPlace__textAreaWrapper');
+            }
+
             this._loadChildControls();
          },
 
