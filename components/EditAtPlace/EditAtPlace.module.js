@@ -49,9 +49,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             this._container.removeClass('ws-area');
             if (this._options.displayAsEditor || !this._options.editInPopup) {
                if (this._container.attr('data-bind')) {
-                  $('[data-component]', this._container).attr('data-bind', this._container.attr('data-bind')).width(this._container.width() + 4);
+                  $('[data-component]', this._container).attr('data-bind', this._container.attr('data-bind')).width(this._container.width());
                } else {
-                  $('[data-component]', this._container).width(this._container.width() + 4);
+                  $('[data-component]', this._container).width(this._container.width());
                }
             }
             this.subscribe('onTextChange', function(event, text){
