@@ -507,7 +507,6 @@
   margin-right: 23px;
 }
 .controls-ButtonGroup__vertical .controls-ListView__item {
-  display: block;
   margin-right: 0;
   margin-bottom: 8px;
 }
@@ -528,6 +527,9 @@
 }
 .controls-DataGrid__table {
   width: 100%;
+}
+.controls-DataGrid__tr {
+  cursor: pointer;
 }
 .controls-DataGrid__tr:hover .controls-DataGrid__td {
   background-color: #00c795;

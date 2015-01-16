@@ -70,16 +70,18 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
 
          //FixMe Придрот для менеджера окон. Выпилить когда будет свой
          _moveToTop: function(adjust){
-            if (this._picker.isVisible()) {
-               var pos = Array.indexOf($ws.single.WindowManager._modalIndexes, this._picker._zIndex);
-               $ws.single.WindowManager._modalIndexes.splice(pos, 1);
-               pos = Array.indexOf($ws.single.WindowManager._visibleIndexes, this._picker._zIndex);
-               $ws.single.WindowManager._visibleIndexes.splice(pos, 1);
-               if (adjust) {
-                  this._picker._zIndex = $ws.single.WindowManager.acquireZIndex(true);
-                  this._picker._container.css('z-index', this._picker._zIndex);
-                  $ws.single.WindowManager.setVisible(this._picker._zIndex);
-                  $ws.single.ModalOverlay.adjust();
+            if (this._options.editInPopup) {
+               if (this._picker.isVisible()) {
+                  var pos = Array.indexOf($ws.single.WindowManager._modalIndexes, this._picker._zIndex);
+                  $ws.single.WindowManager._modalIndexes.splice(pos, 1);
+                  pos = Array.indexOf($ws.single.WindowManager._visibleIndexes, this._picker._zIndex);
+                  $ws.single.WindowManager._visibleIndexes.splice(pos, 1);
+                  if (adjust) {
+                     this._picker._zIndex = $ws.single.WindowManager.acquireZIndex(true);
+                     this._picker._container.css('z-index', this._picker._zIndex);
+                     $ws.single.WindowManager.setVisible(this._picker._zIndex);
+                     $ws.single.ModalOverlay.adjust();
+                  }
                }
             }
          },

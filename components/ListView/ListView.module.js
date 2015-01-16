@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {Function} Обработчик клика на элемент
                 */
-               elemClickHander : null,
+               elemClickHandler : null,
                multiselect : false,
                itemSelect : false
             }
@@ -114,8 +114,6 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             });
 
-            this._drawItemsActions(this._options.itemsActions);
-
             this._container.mouseout(function(){
                if (self._actsContainer) self._actsContainer.hide();
             });
@@ -127,7 +125,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          setElemClickHandler : function(method){
-            this._options.elemClickHander = method;
+            this._options.elemClickHandler = method;
          },
 
          setItemsActions : function(itemsActions) {
@@ -141,6 +139,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if (!this._actsContainer) {
                   this._actsContainer = $('<div class="controls-ListView__itemActions"></div>').hide().appendTo(this._container);
                }
+               this._actsContainer.empty();
                var acts = itemsActions;
                for (var i = 0; i < acts.length; i++) {
                   var action = $("<span></span>").addClass('controls-ListView__action');
@@ -166,8 +165,13 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._actsContainer = null
                }
             }
+         },
+         _drawItemsCallback : function() {
+            this._drawItemsActions(this._options.itemsActions);
          }
       });
+
+
 
       return ListView;
 

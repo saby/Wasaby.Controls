@@ -704,9 +704,6 @@ input[type="reset"]::-moz-focus-inner {
   font-style: normal;
   white-space: pre;
 }
-.controls-ButtonGroup__vertical .controls-ListView__item {
-  display: block;
-}
 .controls-IconButton {
   cursor: pointer;
 }

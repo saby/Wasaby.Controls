@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             /**
              * @cfg {Boolean} при клике мышки на таргет или перемещении по нему панель не закрывается
              */
-            targetPart : false,
+            targetPart: false,
             /**
              * @cfg {Boolean} модальный или нет
              */
@@ -136,7 +136,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          else if (this._options.closeByExternalClick) {
             $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
-
          container.appendTo('body');
          this._defaultCorner = this._options.corner;
          this._defaultVerticalAlignSide = this._options.verticalAlign.side;
@@ -198,10 +197,49 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             this._initOrigins = false;
          }
       },
-
-      setTarget: function(target){
+      /**
+       * Установить новый таргет
+       * @param target новый таргет
+       */
+      setTarget: function (target) {
          this._options.target = target;
          this.recalcPosition(true);
+      },
+
+      /**
+       * Сделать текущий диалог / панель модальным, либо наоборот убрать модальность
+       * @param {Boolean} isModal - флаг модальности
+       */
+      setModal: function (isModal) {
+         if (this._options.isModal !== isModal){
+            this._options.isModal = isModal;
+            this._setModal(isModal);
+         }
+      },
+      _setModal: function(isModal){
+         if (isModal){
+            $ws.single.WindowManager._modalIndexes.push(this._zIndex);
+            $ws.single.WindowManager._visibleIndexes.push(this._zIndex);
+            ModalOverlay.adjust();
+            var self = this;
+            ModalOverlay._overlay.bind('mousedown', function (e) {
+               if (self._options.closeByExternalClick) {
+                  ControlHierarchyManager.getTopWindow().hide();
+               }
+               e.stopPropagation();
+            });
+         }
+         else {
+            var pos = Array.indexOf($ws.single.WindowManager._modalIndexes, this._zIndex);
+            $ws.single.WindowManager._modalIndexes.splice(pos, 1);
+            pos = Array.indexOf($ws.single.WindowManager._visibleIndexes, this._zIndex);
+            $ws.single.WindowManager._visibleIndexes.splice(pos, 1);
+            ModalOverlay.adjust();
+         }
+      },
+
+      isModal: function(){
+         return !!this._options.isModal;
       },
 
       //Позиционируем относительно body
@@ -219,32 +257,32 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                left: this._options.horizontalAlign.offset || 0
             };
 
+         //TODO избавиться от дублирования
          if (!vAlign) {
-            offset.top = this._windowSizes.height/2 + (this._options.verticalAlign.offset || 0) - this._containerSizes.height/2
+            offset.top = this._windowSizes.height / 2 + (this._options.verticalAlign.offset || 0) - this._containerSizes.height / 2
          } else {
             if (vAlign == 'bottom') {
                offset.top = bodyHeight - offset.top - height;
             }
          }
          if (!hAlign) {
-            offset.left = this._windowSizes.width/2 + (this._options.horizontalAlign.offset || 0) - this._containerSizes.width/2
+            offset.left = this._windowSizes.width / 2 + (this._options.horizontalAlign.offset || 0) - this._containerSizes.width / 2
          } else {
             if (hAlign == 'right') {
                offset.left = bodyWidth - offset.left - width;
             }
          }
-         //TODO избавиться от дублирования
-         if (this._containerSizes.requredOffset.top > this._windowSizes.height - 3) {
-            offset.top = this._windowSizes.height - 3 - this._containerSizes.originHeight;
+         if (this._containerSizes.requredOffset.top > bodyHeight - 3) {
+            offset.top = bodyHeight - 3 - this._containerSizes.originHeight;
          }
-         if (this._containerSizes.requredOffset.left > this._windowSizes.width - 3) {
-            offset.left = this._windowSizes.width - 3 - this._containerSizes.originWidth;
+         if (this._containerSizes.requredOffset.left > bodyWidth - 3) {
+            offset.left = bodyWidth - 3 - this._containerSizes.originWidth;
          }
          this._calculateBodyOverflow(offset);
          return offset;
       },
 
-      _calculateBodyOverflow: function(offset){
+      _calculateBodyOverflow: function (offset) {
          if (offset.top < 0) {
             offset.top = 0;
             this._container.css('overflow-y', 'auto');
@@ -284,7 +322,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
       _windowChangeHandler: function () {
          if (this.isVisible()) {
-            this.recalcPosition();
+            this.recalcPosition(false);
          } else {
             this._initSizes();
          }
@@ -321,13 +359,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             this._containerSizes.originWidth = this._container.get(0).scrollWidth + this._containerSizes.border * 2;
             this._containerSizes.originHeight = this._container.get(0).scrollHeight + this._containerSizes.border * 2;
          }
-         this._containerSizes.clientWidth = this._containerSizes.originWidth;
-         this._containerSizes.clientHeight = this._containerSizes.originHeight;
          //Запоминаем координаты правого нижнего угла контейнера необходимые для отображения контейнера целиком и там где нужно.
          if (target) {
             this._containerSizes.requredOffset = {
-               top: buff.top + this._targetSizes.offset.top + this._containerSizes.clientHeight + (this._options.verticalAlign.offset || 0),
-               left: buff.left + this._targetSizes.offset.left + this._containerSizes.clientWidth + (this._options.horizontalAlign.offset || 0)
+               top: buff.top + this._targetSizes.offset.top + this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0),
+               left: buff.left + this._targetSizes.offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0)
             };
          } else {
             this._containerSizes.requredOffset = {
@@ -335,8 +371,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                left: this._options.horizontalAlign.offset + this._containerSizes.originWidth
             };
          }
-         this._containerSizes.width = this._containerSizes.clientWidth;
-         this._containerSizes.height = this._containerSizes.clientHeight;
+         this._containerSizes.width = this._containerSizes.originWidth;
+         this._containerSizes.height = this._containerSizes.originHeight;
          this._containerSizes.boundingClientRect = container.get(0).getBoundingClientRect();
          this._initWindowSizes();
       },
@@ -400,10 +436,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             left: 0
          };
          if (vert == 'bottom') {
-            offset.top -= this._containerSizes.clientHeight - this._targetSizes.border;
+            offset.top -= this._containerSizes.originHeight - this._targetSizes.border;
          }
          if (horiz == 'right') {
-            offset.left -= this._containerSizes.clientWidth - this._targetSizes.border;
+            offset.left -= this._containerSizes.originWidth - this._targetSizes.border;
          }
          if (!notSave) {
             this._options.horizontalAlign.side = horiz;
@@ -491,7 +527,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       _getOffsetByWindowSize: function (offset) {
          var buf = this._targetSizes.offset;
          //Проверяем убираемся ли в экран снизу
-         if (offset.top + this._containerSizes.clientHeight + (this._options.verticalAlign.offset || 0) >= this._windowSizes.height - 3 && !this._isMovedV) {
+         if (offset.top + this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) >= this._windowSizes.height - 3 && !this._isMovedV) {
             this._isMovedV = true;
             offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
             offset.top = this._addOffset(offset, buf).top;
@@ -506,7 +542,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
          //TODO Избавиться от дублирования
          //Проверяем убираемся ли в экран справа
-         if (offset.left + this._containerSizes.clientWidth + (this._options.horizontalAlign.offset || 0) >= this._windowSizes.width - 3 && !this._isMovedH) {
+         if (offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) >= this._windowSizes.width - 3 && !this._isMovedH) {
             this._isMovedH = true;
             offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
             offset.left = this._addOffset(offset, buf).left;
@@ -539,7 +575,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                }
                this._isMovedV = !this._isMovedV;
             }
-            if (this._containerSizes.clientHeight + (this._options.verticalAlign.offset || 0) < spaces.bottom) {
+            if (this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) < spaces.bottom) {
                this._container.css('overflow-y', 'visible');
                this._container.css('height', '');
             }
@@ -560,7 +596,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                }
                this._isMovedH = !this._isMovedH;
             }
-            if (this._containerSizes.clientWidth + (this._options.horizontalAlign.offset || 0) < spaces.right) {
+            if (this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) < spaces.right) {
                this._container.css('overflow-x', 'visible');
                this._container.css('width', '');
             }
@@ -630,8 +666,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          return offset;
       },
 
-
-
       after: {
          init: function () {
             ControlHierarchyManager.addNode(this, this.getParent());
@@ -655,11 +689,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          hide: function () {
             // Убираем оверлей
             if (this._options.isModal) {
-               var pos = Array.indexOf($ws.single.WindowManager._modalIndexes, this._zIndex);
-               $ws.single.WindowManager._modalIndexes.splice(pos, 1);
-               pos = Array.indexOf($ws.single.WindowManager._visibleIndexes, this._zIndex);
-               $ws.single.WindowManager._visibleIndexes.splice(pos, 1);
-               ModalOverlay.adjust();
+               this._setModal(false);
             }
          }
       },
@@ -675,18 +705,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             ControlHierarchyManager.setTopWindow(this);
             //Показываем оверлей
             if (this._options.isModal) {
-               $ws.single.WindowManager._modalIndexes.push(this._zIndex);
-               $ws.single.WindowManager._visibleIndexes.push(this._zIndex);
-               ModalOverlay.adjust();
-               var self = this;
-               ModalOverlay._overlay.bind('mousedown', function(e){
-                  if (self._options.closeByExternalClick && self.getId() == $ws.single.WindowManager.getMaxZWindow().getId()) {
-                     ControlHierarchyManager.getTopWindow().hide();
-                  }
-               });
+               this._setModal(true);
             }
          },
-         destroy: function(){
+         destroy: function () {
             ControlHierarchyManager.zIndexManager.setFree(this._zIndex);
             ControlHierarchyManager.removeNode(this);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._windowChangeHandler, this);

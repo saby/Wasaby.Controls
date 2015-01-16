@@ -6,12 +6,12 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
          setFree: function (zIndex) {
             zIndex = parseInt(zIndex, 10);
             if (zIndex == this._cur) {
-               this._cur--;
+               this._cur -= 2;
             }
             return this._cur;
          },
          getNext: function () {
-            this._cur++;
+            this._cur += 2;
             return this._cur;
          }
       },

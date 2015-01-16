@@ -42,6 +42,8 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListView', 'html!SBIS3.
       },
 
       $constructor: function() {
+         this._thead = $('.controls-DataGrid__thead', this._container.get(0));
+         this._colgroup = $('.controls-DataGrid__colgroup', this._container.get(0))
       },
       /**
        * Установить страницу
@@ -59,7 +61,7 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListView', 'html!SBIS3.
       },
 
       _getItemsContainer: function(){
-         return $(".controls-DataGrid__tbody", this._container);
+         return $('.controls-DataGrid__tbody', this._container);
       },
 
       _getItemTemplate: function(item){
@@ -80,6 +82,27 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListView', 'html!SBIS3.
 
       _getItemActionsContainer : function(id) {
          return $(".controls-ListView__item[data-id='" + id + "']", this._container.get(0)).find('.controls-DataGrid__td').last();
+      },
+
+      getColumns : function() {
+         return this._options.columns;
+      },
+
+      setColumns : function(columns) {
+         this._options.columns = columns;
+         this._thead.empty();
+         this._colgroup.empty();
+
+         for (var i = 0; i < columns.length; i++) {
+            var column = $('<col/>');
+            if (columns[i]['width']) column.attr('width', columns[i]['width']);
+            this._colgroup.append(column);
+
+            var th = $('<th class="controls-DataGrid__th"></th>').text(columns[i].title);
+            this._thead.append(th);
+         }
+
+         this._drawItems();
       }
 
    });
