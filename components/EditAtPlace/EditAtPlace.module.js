@@ -7,8 +7,10 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'js!SBIS3.CONTROLS.IconButton',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.DataBindMixin',
+      'js!SBIS3.CORE.Dialog',
+      'js!SBIS3.CONTROLS.ControlHierarchyManager',
       'html!SBIS3.CONTROLS.EditAtPlace'],
-   function (CompoundControl, TextBox, IconButton, _PickerMixin, _DataBindMixin, dotTplFn) {
+   function (CompoundControl, TextBox, IconButton, _PickerMixin, _DataBindMixin, Dialog, ControlHierarchyManager, dotTplFn) {
       'use strict';
       /**
        * @class SBIS3.CONTROLS.EditAtPlace
@@ -27,6 +29,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             _cancelCross: null,
             _okButton: null,
             _oldText: '',
+            _forceClose: true,
             _options: {
                text: '',
                editorTpl: '<component data-component="SBIS3.CONTROLS.TextBox"></component>',
@@ -45,9 +48,40 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             /*TODO: придрот, выпилить когда будет номральный CompoundControl*/
             this._container.removeClass('ws-area');
             if (this._options.displayAsEditor || !this._options.editInPopup) {
-               $('[data-component]', this._container).attr('data-bind', this._container.attr('data-bind')).width(this._container.width());
+               if (this._container.attr('data-bind')) {
+                  $('[data-component]', this._container).attr('data-bind', this._container.attr('data-bind')).width(this._container.width() + 4);
+               } else {
+                  $('[data-component]', this._container).width(this._container.width() + 4);
+               }
             }
+            this.subscribe('onTextChange', function(event, text){
+               self._forceClose = false;
+               if (text == self._oldText) {
+                  self._forceClose = true;
+               }
+            });
             this._loadChildControls();
+         },
+
+         showPicker: function(){
+            EditAtPlace.superclass.showPicker.call(this);
+            this._forceClose = true;
+         },
+
+         //FixMe Придрот для менеджера окон. Выпилить когда будет свой
+         _moveToTop: function(adjust){
+            if (this._picker.isVisible()) {
+               var pos = Array.indexOf($ws.single.WindowManager._modalIndexes, this._picker._zIndex);
+               $ws.single.WindowManager._modalIndexes.splice(pos, 1);
+               pos = Array.indexOf($ws.single.WindowManager._visibleIndexes, this._picker._zIndex);
+               $ws.single.WindowManager._visibleIndexes.splice(pos, 1);
+               if (adjust) {
+                  this._picker._zIndex = $ws.single.WindowManager.acquireZIndex(true);
+                  this._picker._container.css('z-index', this._picker._zIndex);
+                  $ws.single.WindowManager.setVisible(this._picker._zIndex);
+                  $ws.single.ModalOverlay.adjust();
+               }
+            }
          },
 
          _saveOldText: function () {
@@ -78,11 +112,18 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
          },
 
          _setPickerContent: function () {
+            var self = this;
             this._picker.getContainer().addClass('controls-EditAtPlace__editorOverlay');
             $('[data-component]', this._picker.getContainer()).attr('data-bind', this._container.attr('data-bind'));
             $('[data-component]', this._picker.getContainer()).width(this._container.width());
             this._picker._loadChildControls();
             this._addControlPanel(this._picker._container);
+            this._picker._container.bind('keydown', function (e) {
+               self._keyPressHandler(e);
+            });
+            this._picker._container.bind('mousedown', function(){
+               self._moveToTop(true);
+            });
          },
 
          setInPlaceEditMode: function (inPlace) {
@@ -114,7 +155,8 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
 
          _cancelEdit: function () {
             if (this._options.editInPopup) {
-               this.hidePicker();
+               this._forceClose = true;
+               this._picker.hide();
             } else {
                this._removeControlPanel();
                this.setInPlaceEditMode(false);
@@ -124,13 +166,17 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
          },
 
          _applyEdit: function () {
-            if (this._options.editInPopup) {
-               this.hidePicker();
-            } else {
-               this.setInPlaceEditMode(false);
-               this._removeControlPanel();
+            if (this.validate()) {
+               if (this._options.editInPopup) {
+                  this._forceClose = true;
+                  this._picker.hide();
+               } else {
+                  this.setInPlaceEditMode(false);
+                  this._removeControlPanel();
+               }
+               this._notify('onApply');
+               this._moveToTop(true);
             }
-            this._notify('onApply');
          },
 
          _removeControlPanel: function(){
@@ -152,6 +198,91 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             };
          },
 
+         /**
+          * Открывает диалог подтверждения при отмене радактирования.
+          * @returns {$ws.proto.Deferred} deferred на закрытие модального диалога подтверждения.
+          * @private
+          */
+         _openConfirmDialog: function () {
+            var result,
+               deferred = new $ws.proto.Deferred();
+            this._dialogConfirm = new Dialog({
+               parent: this,
+               opener: this,
+               template: 'confirmRecordActionsDialog',
+               resizable: false,
+               handlers: {
+                  onReady: function () {
+                     var children = this.getChildControls(),
+                        dialog = this,
+                        onActivatedHandler = function () {
+                           dialog.getLinkedContext().setValue('result', this.getName());
+                           dialog.close();
+                        };
+                     for (var i = 0, len = children.length; i < len; i++) {
+                        if (children[i].hasEvent('onActivated')) {
+                           children[i].subscribe('onActivated', onActivatedHandler);
+                        }
+                     }
+                  },
+                  onKeyPressed: function (event, result) {
+                     if (result.keyCode === $ws._const.key.esc) {
+                        this.getLinkedContext().setValue('result', 'cancelButton');
+                     }
+                  },
+                  onAfterClose: function () {
+                     result = this.getLinkedContext().getValue('result');
+                  },
+                  onDestroy: function () {
+                     deferred.callback(result);
+                  }
+               }
+            });
+            ControlHierarchyManager.setTopWindow(this._dialogConfirm);
+            return deferred;
+         },
+
+         _initializePicker: function(){
+            var self = this;
+            EditAtPlace.superclass._initializePicker.call(this);
+            this._picker.subscribe('onClose', function(event){
+               event.setResult(self._forceClose);
+               if (!self._forceClose) {
+                  self._moveToTop(true);
+                  self._openConfirmDialog().addCallback(function (result) {
+                     switch (result) {
+                        case 'yesButton':
+                           self._applyEdit();
+                           break;
+                        case 'noButton':
+                           self._cancelEdit();
+                           break;
+                        default:
+                           self._moveToTop(true);
+                     }
+                  });
+               }
+            });
+         },
+
+
+
+         _keyPressHandler: function (e) {
+            switch (e.which) {
+               case 13: {
+                  this._applyEdit();
+               }
+                  break;
+               case 27: {
+                  this._cancelEdit();
+                  e.stopPropagation();
+               }
+                  break;
+               default:
+                  break;
+            }
+         },
+
          setText: function (text) {
             var oldText = this._options.text;
             this._options.text = text || '';
@@ -159,10 +290,11 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                this.saveToContext('Text', text);
                this._notify('onTextChange', this._options.text);
             }
-            if (text !== '') {
+            if (text) {
                this._textField.html(text);
             } else {
-               this._textField.html('&nbsp');
+               this._textField.html('&nbsp;');
+               this._textField.width('100%');
             }
          },
 

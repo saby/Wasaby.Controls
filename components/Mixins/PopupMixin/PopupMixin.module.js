@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
    if (typeof window !== 'undefined') {
       var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
 
-      $(document).bind('mousedown', function (e) {
+      $(document).bind('click', function (e) {
          eventsChannel.notify('onDocumentClick', e.target);
       });
 
@@ -275,7 +275,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                inTarget = !!((self._options.target.get(0) == target) || self._options.target.find($(target)).length);
             }
             if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target)) {
-               self.hide();
+               if ($(target).hasClass('ws-window-overlay') && parseInt($(target).css('z-index'), 10) < this._zIndex) {
+                  self.hide();
+               }
             }
          }
       },
@@ -340,10 +342,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
 
       _initWindowSizes: function () {
-            this._windowSizes = {
-               height: this._container.offset().top - this._containerSizes.boundingClientRect.top + $(window).height(),
-               width: this._container.offset().left - this._containerSizes.boundingClientRect.left + $(window).width()
-            };
+         this._windowSizes = {
+            height: this._container.offset().top - this._containerSizes.boundingClientRect.top + $(window).height(),
+            width: this._container.offset().left - this._containerSizes.boundingClientRect.left + $(window).width()
+         };
       },
 
       _initMargins: function () {
@@ -628,6 +630,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          return offset;
       },
 
+
+
       after: {
          init: function () {
             ControlHierarchyManager.addNode(this, this.getParent());
@@ -676,10 +680,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                ModalOverlay.adjust();
                var self = this;
                ModalOverlay._overlay.bind('mousedown', function(e){
-                  if (self._options.closeByExternalClick) {
+                  if (self._options.closeByExternalClick && self.getId() == $ws.single.WindowManager.getMaxZWindow().getId()) {
                      ControlHierarchyManager.getTopWindow().hide();
                   }
-                  e.stopPropagation();
                });
             }
          },

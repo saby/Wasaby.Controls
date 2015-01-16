@@ -2,13 +2,14 @@
  * Created by iv.cheremushkin on 18.11.2014.
  */
 define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
-     ['js!SBIS3.CORE.CompoundControl',
+   ['js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.IconButton',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.EditAtPlace',
       'js!SBIS3.CORE.Dialog',
+      'js!SBIS3.CONTROLS.ControlHierarchyManager',
       'html!SBIS3.CONTROLS.EditAtPlaceGroup'],
-   function (CompoundControl, IconButton, PickerMixin, EditAtPlace, Dialog, dotTplFn) {
+   function (CompoundControl, IconButton, PickerMixin, EditAtPlace, Dialog, ControlHierarchyManager, dotTplFn) {
       'use strict';
       /**
        * @class SBIS3.CONTROLS.EditAtPlaceGroup
@@ -27,6 +28,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             _okButton: null,
             _cancelCross: null,
             _editorTpl: null,
+            _forceClose: true,
             _options: {
                /**
                 * @cfg {String} шаблон
@@ -59,14 +61,64 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
                   if ($(child._options.editorTpl).attr('data-component') == 'SBIS3.CONTROLS.TextArea'){
                      $(child._container.children()[0]).addClass('controls-EditAtPlace__textAreaWrapper');
                   }
+                  child.subscribe('onTextChange', function(event, text){
+                     self._forceClose = false;
+                     if (text == child._oldText) {
+                        self._forceClose = true;
+                     }
+                  });
                });
+            }
+         },
+
+         _initializePicker: function(){
+            var self = this;
+            EditAtPlaceGroup.superclass._initializePicker.call(this);
+            this._picker.subscribe('onClose', function(event){
+               event.setResult(self._forceClose);
+               if (!self._forceClose) {
+                  self._moveToTop(true);
+                  self._openConfirmDialog().addCallback(function (result) {
+                     switch (result) {
+                        case 'yesButton':
+                           self._applyEdit();
+                           break;
+                        case 'noButton':
+                           self._cancelEdit();
+                           break;
+                        default:
+                           self._moveToTop(true);
+                     }
+                  });
+               }
+            });
+         },
+
+         showPicker: function(){
+            EditAtPlaceGroup.superclass.showPicker.call(this);
+            this._forceClose = true;
+         },
+
+         //FixMe Придрот для менеджера окон. Выпилить когда будет свой
+         _moveToTop: function(adjust){
+            if (this._picker.isVisible()) {
+               var pos = Array.indexOf($ws.single.WindowManager._modalIndexes, this._picker._zIndex);
+               $ws.single.WindowManager._modalIndexes.splice(pos, 1);
+               pos = Array.indexOf($ws.single.WindowManager._visibleIndexes, this._picker._zIndex);
+               $ws.single.WindowManager._visibleIndexes.splice(pos, 1);
+               if (adjust) {
+                  this._picker._zIndex = $ws.single.WindowManager.acquireZIndex(true);
+                  this._picker._container.css('z-index', this._picker._zIndex);
+                  $ws.single.WindowManager.setVisible(this._picker._zIndex);
+                  $ws.single.ModalOverlay.adjust();
+               }
             }
          },
 
          _setPickerContent: function () {
             var self = this;
             this._picker._container.addClass('controls-EditAtPlaceGroup__editorOverlay');
-            this._picker._container.bind('keypress', function (e) {
+            this._picker._container.bind('keydown', function (e) {
                self._keyPressHandler(e);
             });
             this._picker._loadChildControls();
@@ -74,8 +126,10 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             this._iterateChildEditAtPlaces(function(child){
                child.setInPlaceEditMode(true);
             }, this._picker);
-
             this._addControlPanel(this._picker._container);
+            this._picker._container.bind('mousedown', function(){
+               self._moveToTop(true);
+            });
          },
 
          _iterateChildEditAtPlaces: function(func, parent){
@@ -87,11 +141,15 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             }
             for (var i = 0; i < children.length; i++) {
                if (children[i] instanceof EditAtPlace) {
-                  func(children[i]);
+                  func(children[i], i);
                }
             }
          },
 
+         /**
+          * Установить режим отображения
+          * @param inPlace true - редактирвоание / false - отображение
+          */
          setInPlaceEditMode: function (inPlace) {
             this._iterateChildEditAtPlaces(function(child){
                child.setInPlaceEditMode(inPlace);
@@ -115,14 +173,15 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             this._okButton.subscribe('onActivated', function () {
                self._applyEdit();
             });
-            this._cancelCross.bind('click', function () {
+            this._cancelCross.bind('mousedown', function () {
                self._cancelEdit();
             });
          },
 
          _cancelEdit: function () {
             if (this._options.editInPopup) {
-               this.hidePicker();
+               this._forceClose = true;
+               this._picker.hide();
             } else {
                this._removeControlPanel();
                this.setInPlaceEditMode(false);
@@ -134,13 +193,17 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
          },
 
          _applyEdit: function () {
-            if (this._options.editInPopup) {
-               this.hidePicker();
-            } else {
-               this.setInPlaceEditMode(false);
-               this._removeControlPanel();
+            if (this.validate()) {
+               if (this._options.editInPopup) {
+                  this._forceClose = true;
+                  this._picker.hide();
+               } else {
+                  this.setInPlaceEditMode(false);
+                  this._removeControlPanel();
+               }
+               this._notify('onApply');
             }
-            this._notify('onApply');
+            this._moveToTop(true);
          },
 
          _removeControlPanel: function(){
@@ -165,6 +228,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
          _clickHandler: function () {
             this._iterateChildEditAtPlaces(function (child) {
                child._saveOldText();
+
             });
             if (this._options.editInPopup) {
                this.showPicker();
@@ -172,11 +236,22 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
                this.setInPlaceEditMode(true);
                this._addControlPanel(this._container);
             }
+            $('.js-controls-TextBox__field', this._picker._container).get(0).focus();
          },
 
          _keyPressHandler: function (e) {
-            if (e.which == 13) {
-               //this.hidePicker();
+            switch (e.which) {
+               case 13: {
+                  this._applyEdit();
+               }
+                  break;
+               case 27: {
+                  this._cancelEdit();
+                  e.stopPropagation();
+               }
+                  break;
+               default:
+                  break;
             }
          },
 
@@ -189,6 +264,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             var result,
                deferred = new $ws.proto.Deferred();
             this._dialogConfirm = new Dialog({
+               parent: this,
                opener: this,
                template: 'confirmRecordActionsDialog',
                resizable: false,
@@ -219,6 +295,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
                   }
                }
             });
+            ControlHierarchyManager.setTopWindow(this._dialogConfirm);
             return deferred;
          },
 
