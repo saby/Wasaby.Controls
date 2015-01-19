@@ -34,7 +34,21 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
       $constructor: function() {
          var self = this;
          this._inputField = $('.controls-TextArea__inputField', this._container);
+         // При потере фокуса делаем trim, если нужно
+         // TODO Переделать на платформенное событие потери фокуса
+         this._inputField.bind('focusout', function () {
+            if (self._options.trim) {
+               self.setText(String.trim(self.getText()));
+            }
+         });
 
+         this._container.bind('keyup',function(e){
+            self._keyUpBind(e);
+         });
+      },
+
+      init :function(){
+         TextArea.superclass.init.call(this);
          if (this._options.autoResize.state) {
             this._options.minLinesCount = parseInt(this._options.minLinesCount, 10);
             if (!this._options.autoResize.maxLinesCount) {
@@ -52,18 +66,6 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
                this._inputField.attr('rows',parseInt(this._options.minLinesCount, 10));
             }
          }
-
-         // При потере фокуса делаем trim, если нужно
-         // TODO Переделать на платформенное событие потери фокуса
-         this._inputField.bind('focusout', function () {
-            if (self._options.trim) {
-               self.setText(String.trim(self.getText()));
-            }
-         });
-
-         this._container.bind('keyup',function(e){
-            self._keyUpBind(e);
-         });
       },
 
       _keyUpBind: function() {
