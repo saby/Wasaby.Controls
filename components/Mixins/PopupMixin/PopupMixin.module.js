@@ -312,7 +312,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                inTarget = !!((self._options.target.get(0) == target) || self._options.target.find($(target)).length);
             }
             if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target)) {
-               if ($(target).hasClass('ws-window-overlay') && parseInt($(target).css('z-index'), 10) < this._zIndex) {
+               if ($(target).hasClass('ws-window-overlay')) {
+                  if (parseInt($(target).css('z-index'), 10) < this._zIndex) {
+                     self.hide();
+                  }
+               } else {
                   self.hide();
                }
             }
