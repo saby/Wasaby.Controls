@@ -10,3 +10,7 @@
    visibility: hidden;
    position: absolute;
 }
+
+.controls-ComboBox .controls-TextBox__fieldWrapper {
+   position: relative;
+}
