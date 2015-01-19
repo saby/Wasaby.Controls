@@ -349,9 +349,13 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             }
             if (text) {
                this._textField.html(text);
+               this._textField.css('display', 'inline');
             } else {
                this._textField.html('&nbsp;');
-               this._textField.width('100%');
+               this._textField.css({
+                  display: 'inline-block',
+                  width: '100%'
+               });
             }
          },
 
