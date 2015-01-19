@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
    var IconMixin = /**@lends SBIS3.CONTROLS.IconMixin.prototype  */{
       $protected: {
          _options: {
-            iconWrapper: IconTemplate,
+            iconClass: IconTemplate,
             /**
              * @cfg {String}  Путь до иконки
              * Путь задаётся относительно корня сайта либо через sprite.
