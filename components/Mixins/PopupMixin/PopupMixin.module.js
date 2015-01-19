@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
    if (typeof window !== 'undefined') {
       var eventsChannel = $ws.single.EventBus.channel('WindowChangeChannel');
 
-      $(document).bind('click', function (e) {
+      $(document).bind('mousedown', function (e) {
          eventsChannel.notify('onDocumentClick', e.target);
       });
 
