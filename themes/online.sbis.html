@@ -267,6 +267,18 @@
             <div id="buttonlight2" class="controls-Button__light"></div>
          </td>
       </tr>
+      <tr>
+         <td style="height: 40px;">
+            Link Button
+         </td>
+         <td>
+            <div id="link"  style="width: 100px"></div>
+         </td>
+         <td>
+         </td>
+         <td>
+         </td>
+      </tr>
    </table>
    <br/><br/>
    Зуев смотрим чтоб не сломалось (в первой колонке должны быть три кнопки одинаковой ширины = ширине самой большой кнопки, ширина колонки должна соотвествовать, ничего не должно наезжать)
@@ -300,6 +312,16 @@
 <script type="text/javascript">
    $ws.core.withComponents('Source').addCallback(function () {
       $(document).ready(function () {
+
+         require(["js!SBIS3.Engine.Link"], function (r) {
+            new r({
+               element: "link",
+               caption: 'This is Link',
+               link: 'http://wi.sbis.ru',
+               inNewTab: true,
+               icon: 'sprite:icon-24 icon-Attach icon-primary action-hover'
+            })
+         });
 
          require(["js!SBIS3.Engine.SwitcherDoubleOnline"], function (r) {
             new r({
