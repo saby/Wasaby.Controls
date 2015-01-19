@@ -94,10 +94,24 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
          showPicker: function(){
             EditAtPlaceGroup.superclass.showPicker.call(this);
             this._requireDialog = false;
-            //FixMe костыль для неправильного автосайза TextArea
-            $('.controls-TextArea__inputField', this._picker._container).each(function(){
-               $(this).data('autosize', false).autosize();
-            });
+            this._resizeTextArea();
+         },
+
+         //FixMe костыль для авторесайза TextArea
+         _resizeTextArea: function(){
+            if (this._options.editInPopup) {
+               $('.controls-TextArea__inputField', this._picker._container).each(function () {
+                  if ($(this).data('autosize')) {
+                     $(this).data('autosize', false).autosize();
+                  }
+               });
+               this._picker._container.height('');
+               this._picker.recalcPosition(true);
+            } else {
+               $('.controls-TextArea__inputField', this._container).each(function () {
+                  $(this).data('autosize', false).autosize();
+               });
+            }
          },
 
          //FixMe Придрот для менеджера окон. Выпилить когда будет свой

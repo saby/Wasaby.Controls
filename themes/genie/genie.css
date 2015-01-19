@@ -624,6 +624,9 @@
   box-sizing: border-box;
   line-height: 20px;
 }
+.controls-EditAtPlaceGroup .controls-EditAtPlace__textAreaWrapper {
+  padding: 6px 7px;
+}
 .controls-EditAtPlace__textAreaWrapper .controls-TextBox__field {
   padding: 0;
 }

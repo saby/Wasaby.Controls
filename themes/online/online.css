@@ -811,8 +811,13 @@ input[type="reset"]::-moz-focus-inner {
 .controls-EditAtPlace__textAreaWrapper {
   border: none;
   display: block;
-  padding: 8px 4px;
   box-sizing: border-box;
+}
+.controls-EditAtPlace .controls-EditAtPlace__textAreaWrapper {
+  padding: 8px 4px;
+}
+.controls-EditAtPlaceGroup .controls-EditAtPlace__textAreaWrapper {
+  padding: 4px 4px;
 }
 .controls-EditAtPlaceGroup__editorOverlay .controls-EditAtPlace {
   border: none;
