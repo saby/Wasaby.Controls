@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             _okButton: null,
             _cancelCross: null,
             _editorTpl: null,
-            _forceClose: true,
+            _requireDialog: false,
             _options: {
                /**
                 * @cfg {String} шаблон
@@ -62,10 +62,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
                      $(child._container.children()[0]).addClass('controls-EditAtPlace__textAreaWrapper');
                   }
                   child.subscribe('onTextChange', function(event, text){
-                     self._forceClose = false;
-                     if (text == child._oldText) {
-                        self._forceClose = true;
-                     }
+                     self._requireDialog = text != child._oldText;
                   });
                });
             }
@@ -75,8 +72,8 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             var self = this;
             EditAtPlaceGroup.superclass._initializePicker.call(this);
             this._picker.subscribe('onClose', function(event){
-               event.setResult(self._forceClose);
-               if (!self._forceClose) {
+               event.setResult(!self._requireDialog);
+               if (self._requireDialog) {
                   self._moveToTop(true);
                   self._openConfirmDialog().addCallback(function (result) {
                      switch (result) {
@@ -96,7 +93,11 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
 
          showPicker: function(){
             EditAtPlaceGroup.superclass.showPicker.call(this);
-            this._forceClose = true;
+            this._requireDialog = false;
+            //FixMe костыль для неправильного автосайза TextArea
+            $('.controls-TextArea__inputField', this._picker._container).each(function(){
+               $(this).data('autosize', false).autosize();
+            });
          },
 
          //FixMe Придрот для менеджера окон. Выпилить когда будет свой
@@ -182,7 +183,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
 
          _cancelEdit: function () {
             if (this._options.editInPopup) {
-               this._forceClose = true;
+               this._requireDialog = false;
                this._picker.hide();
             } else {
                this._removeControlPanel();
@@ -196,14 +197,16 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
 
          _applyEdit: function () {
             if (this.validate()) {
+               var value = {};
                if (this._options.editInPopup) {
-                  this._forceClose = true;
+                  this._requireDialog = false;
                   this._picker.hide();
                } else {
                   this.setInPlaceEditMode(false);
                   this._removeControlPanel();
                }
-               this._notify('onApply');
+
+               this._notify('onApply', value);
             }
             this._moveToTop(true);
          },
@@ -243,6 +246,12 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
                   $('.js-controls-TextBox__field', this._picker._container).get(0).focus();
                } else if ($('.controls-TextArea__inputField', this._picker._container).get(0)) {
                   $('.controls-TextArea__inputField', this._picker._container).get(0).focus();
+               }
+            } else {
+               if ($('.js-controls-TextBox__field', this._container).get(0)) {
+                  $('.js-controls-TextBox__field', this._container).get(0).focus();
+               } else if ($('.controls-TextArea__inputField', this._container).get(0)) {
+                  $('.controls-TextArea__inputField', this._container).get(0).focus();
                }
             }
          },
@@ -307,6 +316,20 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             return deferred;
          },
 
+         /**
+          * Сохранение текущих значений полей ввода (контекста) в объект
+          * @param obj {Object} объект, куда сохранить контекст
+          * @private
+          */
+         _saveContextTo: function (obj) {
+            var cnt = this.getLinkedContext()._context._contextObject;
+            for (var i in cnt){
+               if (cnt.hasOwnProperty(i)){
+                  obj[i] = cnt[i].value;
+               }
+            }
+            return obj;
+         },
 
          //*TODO переопределяем метод compoundControl - костыль*//*
          _loadControls: function (pdResult) {

@@ -811,7 +811,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-EditAtPlace__textAreaWrapper {
   border: none;
   display: block;
-  padding: 4px;
+  padding: 8px 4px;
   box-sizing: border-box;
 }
 .controls-EditAtPlaceGroup__editorOverlay .controls-EditAtPlace {
@@ -822,6 +822,10 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace:hover {
   border: none;
+}
+.controls-EditAtPlace__editorOverlay .controls-TextArea__inputField {
+  line-height: 20px;
+  font-size: inherit;
 }
 .controls-EditAtPlace__fieldWrapperHidden .controls-TextArea__inputField {
   line-height: 20px;
@@ -879,7 +883,7 @@ input[type="reset"]::-moz-focus-inner {
   background: #f8f3f1!important;
   box-shadow: 0 0 3px #b2b2b2;
   border-radius: 3px;
-  margin-top: -3px;
+  margin-top: 1px;
   margin-left: -4px;
 }
 .controls-EditAtPlaceGroup__editorOverlay {

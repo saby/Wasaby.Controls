@@ -620,7 +620,7 @@
 .controls-EditAtPlace__textAreaWrapper {
   border: none;
   display: block;
-  padding: 6px 7px;
+  padding: 10px 7px;
   box-sizing: border-box;
   line-height: 20px;
 }
@@ -635,6 +635,10 @@
 }
 .controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace:hover {
   border: none;
+}
+.controls-EditAtPlace__editorOverlay .controls-TextArea__inputField {
+  line-height: 20px;
+  font-size: inherit;
 }
 .controls-EditAtPlace__fieldWrapperHidden .controls-TextArea__inputField {
   line-height: 20px;
@@ -692,7 +696,7 @@
   background: #f8f3f1!important;
   box-shadow: 0 0 3px #b2b2b2;
   border-radius: 3px;
-  margin-top: -3px;
+  margin-top: 1px;
   margin-left: -4px;
 }
 .controls-EditAtPlaceGroup__editorOverlay {

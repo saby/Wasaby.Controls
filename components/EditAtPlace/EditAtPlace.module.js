@@ -29,11 +29,11 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             _cancelCross: null,
             _okButton: null,
             _oldText: '',
-            _forceClose: true,
+            _requireDialog: false,
             _options: {
                text: '',
                editorTpl: '<component data-component="SBIS3.CONTROLS.TextBox"></component>',
-               isMultiline: false,
+               multiline: false,
                displayAsEditor: false,
                editInPopup: false
             }
@@ -45,20 +45,16 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             this._textField.bind('click', function () {
                self._clickHandler();
             });
-            /*TODO: придрот, выпилить когда будет номральный CompoundControl*/
+            /*FixMe: придрот, выпилить когда будет номральный CompoundControl*/
             this._container.removeClass('ws-area');
             if (this._options.displayAsEditor || !this._options.editInPopup) {
+               $('[data-component]', this._container).width(this._container.width());
                if (this._container.attr('data-bind')) {
-                  $('[data-component]', this._container).attr('data-bind', this._container.attr('data-bind')).width(this._container.width());
-               } else {
-                  $('[data-component]', this._container).width(this._container.width());
+                  $('[data-component]', this._container).attr('data-bind', this._container.attr('data-bind'));
                }
             }
             this.subscribe('onTextChange', function(event, text){
-               self._forceClose = false;
-               if (text == self._oldText) {
-                  self._forceClose = true;
-               }
+               self._requireDialog = text != self._oldText;
             });
 
             if ($(this._options.editorTpl).attr('data-component') == 'SBIS3.CONTROLS.TextArea'){
@@ -66,11 +62,33 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             }
 
             this._loadChildControls();
+
+            this.getContext().subscribe('onFieldChange', function(e, f, v, o){
+               self.getParent().getLinkedContext().setValue(f, v, false, o);
+            });
          },
 
          showPicker: function(){
             EditAtPlace.superclass.showPicker.call(this);
-            this._forceClose = true;
+            this._requireDialog = false;
+            this._resizeTextArea();
+         },
+
+         //FixMe костыль для авторесайза TextArea
+         _resizeTextArea: function(){
+            if (this._options.editInPopup) {
+               $('.controls-TextArea__inputField', this._picker._container).each(function () {
+                  if ($(this).data('autosize')) {
+                     $(this).data('autosize', false).autosize();
+                  }
+               });
+               this._picker._container.height('');
+               this._picker.recalcPosition(true);
+            } else {
+               $('.controls-TextArea__inputField', this._container).each(function () {
+                  $(this).data('autosize', false).autosize();
+               });
+            }
          },
 
          //FixMe Придрот для менеджера окон. Выпилить когда будет свой
@@ -107,6 +125,21 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             } else {
                this.setInPlaceEditMode(true);
                this._addControlPanel(this._container.parent());
+            }
+            this._resizeTextArea();
+
+            if (this._options.editInPopup) {
+               if ($('.js-controls-TextBox__field', this._picker._container).get(0)) {
+                  $('.js-controls-TextBox__field', this._picker._container).get(0).focus();
+               } else if ($('.controls-TextArea__inputField', this._picker._container).get(0)) {
+                  $('.controls-TextArea__inputField', this._picker._container).get(0).focus();
+               }
+            } else {
+               if ($('.js-controls-TextBox__field', this._container).get(0)) {
+                  $('.js-controls-TextBox__field', this._container).get(0).focus();
+               } else if ($('.controls-TextArea__inputField', this._container).get(0)) {
+                  $('.controls-TextArea__inputField', this._container).get(0).focus();
+               }
             }
          },
 
@@ -162,7 +195,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
 
          _cancelEdit: function () {
             if (this._options.editInPopup) {
-               this._forceClose = true;
+               this._requireDialog = false;
                this._picker.hide();
             } else {
                this._removeControlPanel();
@@ -174,14 +207,16 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
 
          _applyEdit: function () {
             if (this.validate()) {
+               var values = {};
                if (this._options.editInPopup) {
-                  this._forceClose = true;
+                  this._requireDialog = false;
                   this._picker.hide();
                } else {
                   this.setInPlaceEditMode(false);
                   this._removeControlPanel();
                }
-               this._notify('onApply');
+               this._saveContextTo(values);
+               this._notify('onApply', values);
                this._moveToTop(true);
             }
          },
@@ -249,12 +284,27 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             return deferred;
          },
 
+         /**
+          * Сохранение текущих значений полей ввода (контекста) в объект
+          * @param obj {Object} объект, куда сохранить контекст
+          * @private
+          */
+         _saveContextTo: function (obj) {
+            var cnt = this.getLinkedContext()._context._contextObject;
+            for (var i in cnt){
+               if (cnt.hasOwnProperty(i)){
+                  obj[i] = cnt[i].value;
+               }
+            }
+            return obj;
+         },
+
          _initializePicker: function(){
             var self = this;
             EditAtPlace.superclass._initializePicker.call(this);
             this._picker.subscribe('onClose', function(event){
-               event.setResult(self._forceClose);
-               if (!self._forceClose) {
+               event.setResult(!self._requireDialog);
+               if (self._requireDialog) {
                   self._moveToTop(true);
                   self._openConfirmDialog().addCallback(function (result) {
                      switch (result) {
@@ -276,10 +326,10 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
 
          _keyPressHandler: function (e) {
             switch (e.which) {
-               case 13: {
+               /*case 13: {
                   this._applyEdit();
                }
-                  break;
+                  break;*/
                case 27: {
                   this._cancelEdit();
                   e.stopPropagation();
