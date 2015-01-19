@@ -97,7 +97,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             text = String.trim(text);
          }
          TextBox.superclass.setText.call(this, text);
-         if (this._compatPlaceholder) this._compatPlaceholder.toggle(!text);
+         if (this._compatPlaceholder) {
+            this._compatPlaceholder.toggle(!text);
+         }
          this._inputField.attr('value', text);
       },
 
@@ -146,7 +148,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          if (newText != this._options.text) {
             TextBox.superclass.setText.call(this, newText);
          }
-         if (this._compatPlaceholder) this._compatPlaceholder.toggle(!newText);
+         if (this._compatPlaceholder) {
+            this._compatPlaceholder.toggle(!newText);
+         }
       },
 
       _keyDownBind: function() {

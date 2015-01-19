@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.DataBindMixin', ['js!SBIS3.CORE.AttributeCfgParser'], 
       _getBindingContext : function() {
          var ctx;
          if (this.getParent()) {
-            ctx = this.getParent().getContext()
+            ctx = this.getParent().getContext();
          }
          else {
             ctx = this.getLinkedContext();
