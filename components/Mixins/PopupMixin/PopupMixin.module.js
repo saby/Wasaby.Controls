@@ -222,11 +222,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             $ws.single.WindowManager._visibleIndexes.push(this._zIndex);
             ModalOverlay.adjust();
             var self = this;
-            ModalOverlay._overlay.bind('mousedown', function (e) {
-               if (self._options.closeByExternalClick) {
+            ModalOverlay._overlay.bind('mousedown', function(){
+               if (self._options.closeByExternalClick && self.getId() == $ws.single.WindowManager.getMaxZWindow().getId()) {
                   ControlHierarchyManager.getTopWindow().hide();
                }
-               e.stopPropagation();
             });
          }
          else {
@@ -313,7 +312,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                inTarget = !!((self._options.target.get(0) == target) || self._options.target.find($(target)).length);
             }
             if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target)) {
-               self.hide();
+               if ($(target).hasClass('ws-window-overlay')) {
+                  if (parseInt($(target).css('z-index'), 10) < this._zIndex) {
+                     self.hide();
+                  }
+               } else {
+                  self.hide();
+               }
             }
          }
       },

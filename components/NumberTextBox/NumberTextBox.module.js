@@ -41,7 +41,11 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
              * @cfg {Number} Количество знаков после запятой
              * @noShow
              */
-            numberFractDigits: null
+            numberFractDigits: null,
+            /**
+             * @cfg {Boolean} Показать стрелки
+             */
+            enableArrows: false
          }
       },
 
