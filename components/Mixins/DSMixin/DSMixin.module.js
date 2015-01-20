@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLS._DSMixin', ['js!SBIS3.CONTROLS.Algorithm'], function (_) {
+define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm'], function (_) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
-    * @mixin SBIS3.CONTROLS._DSMixin
+    * @mixin SBIS3.CONTROLS.DSMixin
     */
 
-   var _DSMixin = /**@lends SBIS3.CONTROLS._DSMixin.prototype  */{
+   var DSMixin = /**@lends SBIS3.CONTROLS.DSMixin.prototype  */{
       $protected: {
          _dataSource: undefined,
          _DataSet: null,
@@ -92,6 +92,6 @@ define('js!SBIS3.CONTROLS._DSMixin', ['js!SBIS3.CONTROLS.Algorithm'], function (
 
    };
 
-   return _DSMixin;
+   return DSMixin;
 
 });

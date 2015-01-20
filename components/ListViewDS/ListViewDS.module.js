@@ -4,8 +4,8 @@
 
 define('js!SBIS3.CONTROLS.ListViewDS',
    ['js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS._DSMixin',
-      'js!SBIS3.CONTROLS._MultiSelectorMixin',
+      'js!SBIS3.CONTROLS.DSMixin',
+      'js!SBIS3.CONTROLS.MultiSelectorMixin',
       'html!SBIS3.CONTROLS.ListViewDS'
    ],
    function (CompoundControl, DSMixin, MultiSelectorMixin, dotTplFn) {
