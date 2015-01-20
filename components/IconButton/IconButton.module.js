@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS.ClickMixin', 'html!SBIS3.CONTROLS.IconButton'], function(Control, ClickMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS.ClickMixin', 'js!SBIS3.CONTROLS.IconMixin', 'html!SBIS3.CONTROLS.IconButton'], function(Control, ClickMixin, IconMixin, dotTplFn) {
 
    'use strict';
 
@@ -20,20 +20,12 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTR
     * @category Buttons
     */
 
-   var IconButton = Control.Control.extend([ClickMixin], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
+   var IconButton = Control.Control.extend([ClickMixin, IconMixin], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {
-            /**
-             * @cfg {String}  Путь до иконки
-             * Путь задаётся относительно корня сайта либо через sprite.
-             * @see setIcon
-             * @see getIcon
-             * @editor ImageEditor
-             */
-            icon: ''
          }
-      }      
+      }
    });
 
    return IconButton;

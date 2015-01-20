@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.ClickMixin', 'js!SBIS3.CONTROLS.FormWidgetMixin', 'js!SBIS3.CONTROLS.DataBindMixin'], function(Control, ClickMixin, FormWidgetMixin, DataBindMixin) {
+define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.ClickMixin', 'js!SBIS3.CONTROLS.FormWidgetMixin', 'js!SBIS3.CONTROLS.DataBindMixin', 'js!SBIS3.CONTROLS.IconMixin'], function(Control, ClickMixin, FormWidgetMixin, DataBindMixin, IconMixin) {
 
    'use strict';
 
@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
     * @extends SBIS3.CONTROLS.CompoundControl
     */
 
-   var ButtonBase = Control.extend([ClickMixin, FormWidgetMixin, DataBindMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
+   var ButtonBase = Control.extend([ClickMixin, FormWidgetMixin, DataBindMixin, IconMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
       /**
        * @event onActivated Происходит при активации кнопки (клик мышкой, кнопки клавиатуры)
        * @param {$ws.proto.EventObject} eventObject дескриптор события
@@ -36,15 +36,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
              * @see setValue
              * @see getValue
              */
-            caption: '',
-            /**
-             * @cfg {String}  Путь до иконки
-             * Путь задаётся относительно корня сайта либо через sprite.
-             * @see setIcon
-             * @see getIcon
-             * @editor ImageEditor
-             */
-            icon: ''
+            caption: ''
          }
       },
 
@@ -57,7 +49,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
          /*TODO хак чтоб не срабатывал клик на кнопку при нажатии на дочерние компоненты*/
          $('[data-component]', this._container.get(0)).mousedown(function(e){
             e.stopPropagation();
-         })
+         });
       },
 
       /**
