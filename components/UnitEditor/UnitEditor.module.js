@@ -4,7 +4,7 @@
 
 define('js!SBIS3.Genie.UnitEditor',
      ['js!SBIS3.CONTROLS.NumberTextBox',
-      'js!SBIS3.CONTROLS._PickerMixin',
+      'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.FloatArea',
       'html!SBIS3.Genie.UnitEditor',
       'css!SBIS3.Genie.UnitEditor'], function (NumberTextBox, PickerMixin, FloatArea, dotTplFn) {
@@ -16,7 +16,7 @@ define('js!SBIS3.Genie.UnitEditor',
        * Можно устанавливать значения вида 96px/50%/auto
        * @class SBIS3.Genie.UnitEditor
        * @extends SBIS3.CONTROLS.NumberTextBox
-       * @mixes SBIS3.CONTROLS._PickerMixin
+       * @mixes SBIS3.CONTROLS.PickerMixin
        * @control
        */
 

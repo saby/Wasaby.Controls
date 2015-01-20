@@ -11,7 +11,7 @@ function(RadioGroupBase, dotTpl) {
     * Контрол задающий оформление выбора одного из нескольких значений в виде классических радиокнопок
     * @class SBIS3.CONTROLS.RadioGroup
     * @extends SBIS3.CONTROLS.RadioGroupBase
-    * @mixes SBIS3.CONTROLS._FormWidgetMixin
+    * @mixes SBIS3.CONTROLS.FormWidgetMixin
     */
 
    var RadioGroup = RadioGroupBase.extend( /** @lends SBIS3.CONTROLS.RadioGroup.prototype */ {

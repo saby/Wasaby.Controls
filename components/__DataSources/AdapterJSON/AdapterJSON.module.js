@@ -20,26 +20,28 @@ define('js!SBIS3.CONTROLS.AdapterJSON', ['js!SBIS3.CONTROLS.AdapterBase'], funct
          }
       },
 
+
       _hierIterate : function(data, hdlFunction, keyField, hierField) {
          var
-            self = this,
-            parItem = null,
-            lvl = -1;
-         function recursiveWalk(idParent) {
-            lvl++;
-            self._simpleIterate(data, function(item, i){
-               var key = self.getValue(item, keyField);
-               //корневой элемент
-               if (self.getValue(item, hierField) == idParent) {
-                  hdlFunction(data[i], i, parItem, lvl);
-                  parItem = data[i];
-                  recursiveWalk(key);
+            lvl = 0,
+            curParent = null,
+            parents = [];
+         do {
+            this._simpleIterate(data, function (item, i) {
+               if ((item[hierField] || null) === (curParent ? curParent[keyField] : null)) {
+                  parents.push(data[i]);
+                  hdlFunction(data[i], i, curParent, lvl);
                }
             });
-            parItem = null;
-            lvl--;
+
+            if (parents.length) {
+               curParent = Array.remove(parents, 0)[0];
+            }
+            else {
+               curParent = null;
+            }
          }
-         recursiveWalk(null);
+         while (curParent)
       },
 
       getValue : function(item, field) {
@@ -50,6 +52,14 @@ define('js!SBIS3.CONTROLS.AdapterJSON', ['js!SBIS3.CONTROLS.AdapterBase'], funct
       },
       getItemsCount : function(data) {
          return data.length;
+      },
+
+      getParent : function (item, hierField) {
+         var parent = null;
+         if (hierField) {
+            parent = item[hierField];
+         }
+         return parent;
       },
 
       getSibling : function(data, item, type) {

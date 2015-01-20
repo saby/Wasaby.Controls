@@ -8,23 +8,35 @@
 }
 
 .controls-CheckBox__icon {
-   width: 17px;
-   height: 17px;
-   background: url('./img/CheckBox-sprite.png') 0 -4px;
+   width: 16px;
+   height: 16px;
+   background: url('./img/CheckBox-sprite.png') 0 -0px;
    display: inline-block;
 }
 .controls-CheckBox:hover .controls-CheckBox__icon{
-   background-position: 0 -54px;
+   background-position: 0 -16px;
 }
 
 .controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon{
-   background-position: 0 -29px;
+   background-position: 0 -32px;
 }
 
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon{
-   background-position: 0 -78px;
+   background-position: 0 -48px;
 }
 
 .controls-CheckBox__caption {
    margin-left: 8px;
+}
+
+.controls-CheckBox.ws-disabled {
+   cursor: default;
+}
+
+.controls-CheckBox.ws-disabled .controls-CheckBox__caption{
+   color: @color_base-gray_light;
+}
+
+.controls-CheckBox.ws-disabled .controls-CheckBox__icon{
+   background-position: 0 0px;
 }

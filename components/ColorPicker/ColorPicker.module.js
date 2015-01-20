@@ -3,11 +3,11 @@
  */
 define('js!SBIS3.CONTROLS.ColorPicker',
    ['js!SBIS3.CONTROLS.TextBox',
-    'js!SBIS3.CONTROLS._PickerMixin',
+    'js!SBIS3.CONTROLS.PickerMixin',
     'html!SBIS3.CONTROLS.ColorPicker/resources/ColorSquare',
-    'js!SBIS3.CONTROLS.ColorPicker/resources/colpick',
-    'css!SBIS3.CONTROLS.ColorPicker/resources/colpick'
-   ], function(TextBox, _PickerMixin, ColorSquareTpl) {
+    'is!browser?js!SBIS3.CONTROLS.ColorPicker/resources/colpick',
+    'is!browser?css!SBIS3.CONTROLS.ColorPicker/resources/colpick'
+   ], function(TextBox, PickerMixin, ColorSquareTpl) {
 
    'use strict';
 
@@ -15,10 +15,10 @@ define('js!SBIS3.CONTROLS.ColorPicker',
     * Контрол, позволяющий выбрать цвет. Можно задать как шестадцатеричный код в виде текста, так и выбрать из выпадающего блока
     * @class SBIS3.CONTROLS.ColorPicker
     * @extends SBIS3.CONTROLS.TextBox
-    * @mixes SBIS3.CONTROLS._PickerMixin
+    * @mixes SBIS3.CONTROLS.PickerMixin
     */
 
-   var ColorPicker = TextBox.extend( [_PickerMixin],/** @lends SBIS3.CONTROLS.ColorPicker.prototype */{
+   var ColorPicker = TextBox.extend( [PickerMixin],/** @lends SBIS3.CONTROLS.ColorPicker.prototype */{
       $protected: {
          _colorBox: null,
          _byKeyUp: true,

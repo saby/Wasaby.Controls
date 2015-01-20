@@ -20,6 +20,11 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
   background-size: contain;
 }
+@-moz-document url-prefix() {
+  .controls-Button {
+    padding-bottom: 1px;
+  }
+}
 .controls-Button__content {
   position: relative;
 }
@@ -113,10 +118,10 @@ input[type="reset"]::-moz-focus-inner {
   left: -2px;
   top: 1px;
 }
-.js-controls-Button__text {
+.controls-Button__text {
   white-space: nowrap;
 }
-.controls-Button__icon + .js-controls-Button__text {
+.controls-Button__icon + .controls-Button__text {
   margin-left: 20px;
 }
 .controls-Button.controls-Checked__checked {
@@ -357,13 +362,16 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextBox__field {
   border: none;
   min-height: 19px;
-  height: 99%;
+  height: 100%;
   width: 100%;
   margin: 0;
   box-sizing: border-box;
   outline: none;
   background: transparent;
-  line-height: 22px;
+  line-height: 20px !important;
+  font: inherit;
+  color: inherit;
+  padding: 1px 0;
 }
 .controls-TextBox__field-uppercase {
   text-transform: uppercase;
@@ -402,7 +410,7 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   vertical-align: top;
   border: 1px solid #EAEAEA;
-  font-family: inherit;
+  font: inherit;
 }
 .controls-TextArea:hover,
 .controls-TextArea.ws-has-focus {
@@ -415,7 +423,7 @@ input[type="reset"]::-moz-focus-inner {
   resize: none;
   border: none;
   display: block;
-  font-family: inherit;
+  font: inherit;
   width: 100%;
   height: 100%;
   border-radius: 2px;
@@ -608,45 +616,38 @@ input[type="reset"]::-moz-focus-inner {
   cursor: default;
 }
 .controls-DatePicker {
-  display: inline-block;
-  vertical-align: top;
   border: none;
-}
-.controls-DatePicker:hover {
-  border: none;
-}
-.controls-DatePicker__field {
-  margin-right: 16px;
+  box-sizing: border-box;
 }
 .controls-DatePicker__calendarIcon {
-  background: url("img/DatePicker-calendar.png") no-repeat 0 0;
+  background: url("img/DatePicker-calendar.png") no-repeat -1px 0;
   display: inline-block;
   position: absolute;
   min-height: 22px;
   top: 50%;
   margin-left: 1px;
-  margin-top: -7px;
+  margin-top: -5px;
   width: 16px;
   cursor: pointer;
   text-decoration: none;
 }
 .controls-DatePicker__calendarIcon:hover {
-  background-position: -17px 0;
+  background-position: -18px 0;
 }
 .controls-DatePicker__calendar {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
-.controls-DatePicker .controls-FormattedTextBox {
-  height: 100%;
-  box-sizing: border-box;
-}
-.controls-DatePicker .controls-FormattedTextBox__field {
+.controls-DatePicker .controls-FormattedTextBox__fieldWrapper {
   border: 1px solid transparent;
   border-bottom: 1px solid #EAEAEA;
 }
-.controls-DatePicker .controls-FormattedTextBox__field:hover {
+.controls-DatePicker .controls-FormattedTextBox__fieldWrapper:hover,
+.controls-DatePicker.ws-has-focus .controls-FormattedTextBox__fieldWrapper {
   border: 1px solid #EAEAEA;
   border-bottom: 1px solid #CCCCCC;
+}
+.controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
+  margin-right: 19px;
 }
 .controls-ComboBox__arrowDown {
   background-image: url('./img/ComboBox.png');
@@ -662,12 +663,11 @@ input[type="reset"]::-moz-focus-inner {
   height: 16px;
 }
 .controls-ComboBox__arrowDown:hover,
-.controls-ComboBox__isEditable-false:hover .controls-ComboBox__arrowDown {
+.controls-ComboBox__editable-false:hover .controls-ComboBox__arrowDown {
   text-decoration: none;
   background-position: -3px -28px;
 }
-.controls-ComboBox__isEditable-false,
-.controls-ComboBox__isEditable-false .controls-TextBox__field {
+.controls-ComboBox__editable-false {
   cursor: pointer;
 }
 .controls-ComboBox__itemRow {
@@ -676,10 +676,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox__itemRow:hover {
   background-color: #E7F0F9;
-}
-.controls-ComboBox__field__isEditable-false,
-.controls-ComboBox__field__isEditable-false .controls-TextBox__field {
-  cursor: pointer;
 }
 .controls-ComboBox__inputWrapper {
   margin-right: 18px;
@@ -690,21 +686,235 @@ input[type="reset"]::-moz-focus-inner {
   margin-top: -1px;
 }
 .controls-FormattedTextBox {
+  display: inline-block;
   vertical-align: top;
+  background-color: transparent;
+  line-height: normal;
+}
+.controls-FormattedTextBox__fieldWrapper {
+  height: 100%;
+  padding: 0 4px;
+  min-height: 22px;
+  background-color: white;
 }
 .controls-FormattedTextBox__field {
-  display: table;
-  height: 100%;
-  margin-right: 2px;
-  padding: 0 2px;
-  min-height: 22px;
+  padding-top: 3px;
 }
-.controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
-  display: table-cell;
-  vertical-align: middle;
+.controls-FormattedTextBox__field-symbol {
   font-style: normal;
   white-space: pre;
 }
-.controls-ButtonGroup__vertical .controls-ListView__item {
+.controls-IconButton {
+  cursor: pointer;
+}
+.controls-IconButton.controls-Button {
+  padding: 0;
+  cursor: pointer;
+}
+.controls-TabButton {
+  height: 29px;
+  display: inline-block;
+}
+.controls-TabButton__side {
+  width: 19px;
+  height: 29px;
+  display: inline-block;
+  vertical-align: top;
+  margin-right: -4px;
+}
+.controls-TabButton__left {
+  background: url("img/tabButtonLeft.png") no-repeat;
+}
+.controls-TabButton__right {
+  background: url("img/tabButtonRight.png") no-repeat;
+  margin-left: -4px;
+}
+.controls-TabButton__caption {
+  height: auto;
+  vertical-align: bottom;
+  padding-top: 3px;
+  display: inline-block;
+}
+.controls-TabButton__inner {
+  background: url("img/tabButtonInner.png");
+  height: 29px;
+  display: inline-block;
+  font-family: Cambria, sans-serif;
+  color: #000000;
+  font-size: 18px;
+  font-weight: bold;
+  font-style: italic;
+}
+.controls-MenuItem {
   display: block;
+  height: 24px;
+  box-sizing: border-box;
+  padding: 0 16px 0 8px;
+  line-height: 24px;
+  cursor: pointer;
+  background-color: #ffffff;
+  position: relative;
+}
+.controls-MenuItem:hover {
+  background-color: #e7f0f9;
+}
+.controls-MenuItem__content {
+  position: relative;
+}
+.controls-MenuItem__icon {
+  position: absolute;
+  left: -2px;
+  top: -2px;
+}
+.controls-MenuItem__text {
+  margin-left: 22px;
+}
+.controls-Menu__Popup {
+  border: 1px solid #cccccc;
+  box-sizing: border-box;
+  margin-top: -1px;
+}
+.controls-Menu__Popup .controls-Menu__hasChild:hover:after {
+  background-position: 0 -16px;
+}
+.controls-Menu__Popup .controls-Menu__hasChild:after {
+  content: ' ';
+  background: url('img/MenuExpand.png') 0 0 no-repeat;
+  position: absolute;
+  right: 0;
+  top: 3px;
+  width: 16px;
+  height: 16px;
+}
+.controls-EditAtPlace {
+  border: 1px solid transparent;
+}
+.controls-EditAtPlace:hover,
+.controls-EditAtPlace.ws-has-focus {
+  border: none;
+}
+.controls-EditAtPlace__editorHidden.controls-EditAtPlace:hover,
+.controls-EditAtPlace.ws-has-focus {
+  border: 1px solid transparent;
+}
+.controls-TabButton .controls-EditAtPlace__editor {
+  margin-top: -1px;
+}
+.controls-EditAtPlace__textField {
+  padding-top: 1px;
+  cursor: pointer;
+  border-bottom: dashed 1px #868686;
+  font-family: inherit;
+  width: auto;
+  display: inline-block;
+}
+.controls-EditAtPlace__textAreaWrapper {
+  border: none;
+  display: block;
+  padding: 7px 4px;
+  box-sizing: border-box;
+}
+.controls-EditAtPlaceGroup .controls-EditAtPlace__textAreaWrapper {
+  padding: 4px 4px;
+}
+.controls-EditAtPlaceGroup__editorOverlay .controls-EditAtPlace {
+  border: none;
+}
+.controls-EditAtPlace__fieldWrapperHidden {
+  border: none;
+}
+.controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace:hover {
+  border: none;
+}
+.controls-EditAtPlace__editorOverlay .controls-TextArea__inputField {
+  line-height: 20px;
+  font-size: inherit;
+}
+.controls-EditAtPlace__fieldWrapperHidden .controls-TextArea__inputField {
+  line-height: 20px;
+  font-size: inherit;
+}
+.controls-EditAtPlaceGroup__editorOverlay .controls-TextArea__inputField {
+  line-height: 20px;
+  font-size: inherit;
+}
+.controls-EditAtPlace__textAreaField {
+  margin: 0;
+}
+.controls-EditAtPlace__multiline {
+  white-space: pre-wrap;
+  /* css-3 */
+
+  white-space: -moz-pre-wrap;
+  /* Mozilla, since 1999 */
+
+  word-wrap: break-word;
+  /* Internet Explorer 5.5+ */
+
+  display: inline;
+  text-indent: 0;
+}
+.controls-EditAtPlace__autoHeight {
+  height: auto;
+}
+.controls-EditAtPlace__controlPanel {
+  margin-left: 8px;
+  vertical-align: middle;
+  display: inline-block;
+}
+.controls-EditAtPlaceGroup__controlPanel {
+  margin: 4px;
+  float: right;
+  height: 24px;
+}
+.controls-EditAtPlace__cancel {
+  width: 16px;
+  height: 16px;
+  margin-left: 4px;
+  margin-top: -13px;
+  display: inline-block;
+  background: url("img/cancelIcon-sprite.png") top left no-repeat;
+  background-position: 0 -32px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.controls-EditAtPlace__cancel:hover {
+  background-position: 0 -16px;
+}
+.controls-EditAtPlace__editorOverlay {
+  padding: 4px;
+  background: #f8f3f1!important;
+  box-shadow: 0 0 3px #b2b2b2;
+  border-radius: 3px;
+  margin-top: 1px;
+  margin-left: -4px;
+}
+.controls-EditAtPlaceGroup__editorOverlay {
+  background: #f8f3f1!important;
+  box-shadow: 0 0 3px #b2b2b2;
+  border-radius: 3px;
+}
+.controls-EditAtPlace__editorHidden .controls-EditAtPlace__editor {
+  display: none;
+}
+.controls-EditAtPlace__editor {
+  width: 100%;
+}
+.controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace__fieldWrapper {
+  display: none;
+}
+.controls-Link {
+  display: inline-block;
+  text-align: center;
+  color: #0055BB;
+  text-decoration: none;
+}
+.controls-Link__icon {
+  margin-top: -2px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.controls-Link:hover {
+  color: #ff7033;
+  text-decoration: underline;
 }

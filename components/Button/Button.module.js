@@ -57,26 +57,38 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
       },
 
       setPrimary: function(flag){
-         Button.superclass.setPrimary.call(this,flag);
-         if (this.isPrimary()){
-            this._container.addClass('controls-Button__primary');
-         } else {
-            this._container.removeClass('controls-Button__primary');
-         }
+         this._options.primary = !!flag;
+         this._container.toggleClass('controls-Button__primary', this.isPrimary());
+      },
+      /**
+       * Является ли кнопка primary
+       * @returns {boolean}
+       */
+
+      isPrimary: function(){
+         return this._options.primary;
       },
 
       setIcon: function(icon) {
          Button.superclass.setIcon.call(this);
+         var caption;
          if (!icon) {
-            $('.js-controls-Button__icon', this._container.get(0)).remove();
+            caption = $(".js-controls-Button__text", this._container.get(0)).html();
+            this._container.html(caption).addClass('controls-Button__text');
          }
-         if (icon.indexOf('sprite:') >= 0) {
+         else if (icon.indexOf('sprite:') >= 0) {
             var iconCont = $('.js-controls-Button__icon', this._container.get(0));
             if (!(iconCont.length)) {
-               iconCont = $('<i></i>').addClass('js-controls-Button__icon');
-               $('.js-controls-Button__text', this._container.get(0)).before(iconCont);
+               caption = this._container.html();
+               var content = $('<span class="controls-Button__content">\
+                  <i class="controls-Button__icon js-controls-Button__icon '+icon.substr(7)+'"></i><span class="controls-Button__text js-controls-Button__text">'+caption+'</span>\
+               </span>');
+               this._container.html(content);
             }
-            $('.js-controls-Button__icon', this._container.get(0)).get(0).className = 'controls-Button__icon js-controls-Button__icon ' + icon.substr(7);
+            else {
+               $('.js-controls-Button__icon', this._container.get(0)).get(0).className = 'controls-Button__icon js-controls-Button__icon ' + icon.substr(7);
+            }
+            this._container.removeClass('controls-Button__text');
          }
       },
 

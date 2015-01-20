@@ -6,18 +6,19 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
          setFree: function (zIndex) {
             zIndex = parseInt(zIndex, 10);
             if (zIndex == this._cur) {
-               this._cur--;
+               this._cur -= 2;
             }
             return this._cur;
          },
          getNext: function () {
-            this._cur++;
+            this._cur += 2;
             return this._cur;
          }
       },
 
       _index: {},
       _tree: [],
+      _topWindow: null,
 
       addNode: function (component) {
          var parent = component.getParent(),
@@ -90,6 +91,14 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
             'self': component,
             'children': []
          };
+      },
+
+      setTopWindow: function(window){
+         this.topWindow = window;
+      },
+
+      getTopWindow: function(){
+         return this.topWindow;
       }
    };
 

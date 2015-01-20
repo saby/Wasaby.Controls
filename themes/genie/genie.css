@@ -2,7 +2,7 @@
   border: 1px solid #d1d1d4;
 }
 .mixin_gray_border:hover {
-  border-color: #00d7d7;
+  border-color: #00c795;
 }
 .controls-Button {
   cursor: pointer;
@@ -18,11 +18,20 @@
   box-sizing: border-box;
 }
 .controls-Button:hover {
-  border-color: #00d7d7;
+  border-color: #00c795;
+}
+.controls-Button.controls-Button__primary {
+  border: 1px solid #00c795;
+  color: #00c795;
 }
 .controls-Button:hover {
   color: #ffffff;
-  background-color: #00d7d7;
+  background-color: #00c795;
+}
+.controls-Button.controls-Button__addButton {
+  width: 24px;
+  height: 24px;
+  padding: 0;
 }
 .controls-Button.controls-Checked__checked {
   background-color: #d1d1d4;
@@ -38,19 +47,28 @@
 }
 .controls-RadioButton__icon {
   margin-right: 8px;
-  width: 17px;
-  height: 17px;
-  background: url('./img/RadioButton-sprite.png') 0 -4px;
+  width: 16px;
+  height: 16px;
+  background: url('./img/RadioButton-sprite.png') 0 0px;
   display: inline-block;
 }
 .controls-RadioButton:hover .controls-RadioButton__caption {
-  color: #00d7d7;
+  color: #00c795;
 }
 .controls-RadioButton:hover .controls-RadioButton__icon {
-  background-position: 0 -54px;
+  background-position: 0 -32px;
 }
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__icon {
-  background-position: 0 -29px;
+  background-position: 0 -16px;
+}
+.controls-RadioButton.ws-disabled {
+  cursor: default;
+}
+.controls-RadioButton.ws-disabled .controls-RadioButton__caption {
+  color: #d1d1d4;
+}
+.controls-RadioButton.ws-disabled .controls-RadioButton__icon {
+  background-position: 0 0px;
 }
 .controls-TextBox {
   display: inline-block;
@@ -60,7 +78,7 @@
   border-radius: 2px;
 }
 .controls-TextBox:hover {
-  border-color: #00d7d7;
+  border-color: #00c795;
 }
 .controls-TextBox__fieldWrapper {
   height: 100%;
@@ -87,6 +105,7 @@
   line-height: 100%;
   outline: none;
   background: transparent;
+  font: inherit;
 }
 .controls-TextBox__field-uppercase {
   text-transform: uppercase;
@@ -119,8 +138,8 @@
   background-color: #f1f1f2;
 }
 .controls-NumberTextBox__arrow:hover {
-  background-color: #00d7d7;
-  border-left-color: #00d7d7;
+  background-color: #00c795;
+  border-left-color: #00c795;
 }
 .controls-NumberTextBox__arrowDown {
   background-position: center -12px;
@@ -139,25 +158,34 @@
   display: inline-block;
 }
 .controls-CheckBox:hover .controls-CheckBox__caption {
-  color: #00d7d7;
+  color: #00c795;
 }
 .controls-CheckBox__icon {
-  width: 17px;
-  height: 17px;
-  background: url('./img/CheckBox-sprite.png') 0 -4px;
+  width: 16px;
+  height: 16px;
+  background: url('./img/CheckBox-sprite.png') 0 0px;
   display: inline-block;
 }
 .controls-CheckBox:hover .controls-CheckBox__icon {
-  background-position: 0 -54px;
+  background-position: 0 -16px;
 }
 .controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon {
-  background-position: 0 -29px;
+  background-position: 0 -32px;
 }
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
-  background-position: 0 -78px;
+  background-position: 0 -48px;
 }
 .controls-CheckBox__caption {
   margin-left: 8px;
+}
+.controls-CheckBox.ws-disabled {
+  cursor: default;
+}
+.controls-CheckBox.ws-disabled .controls-CheckBox__caption {
+  color: #d1d1d4;
+}
+.controls-CheckBox.ws-disabled .controls-CheckBox__icon {
+  background-position: 0 0px;
 }
 .controls-ComboBox__arrowDown {
   background-image: url('./img/ComboBox.png');
@@ -172,7 +200,7 @@
   height: 16px;
 }
 .controls-ComboBox__arrowDown:hover,
-.controls-ComboBox__isEditable-false:hover .controls-ComboBox__arrowDown {
+.controls-ComboBox__editable-false:hover .controls-ComboBox__arrowDown {
   text-decoration: none;
   background-position: 0 -16px;
 }
@@ -182,22 +210,22 @@
 }
 .controls-ComboBox__itemRow:hover {
   color: #ffffff;
-  background-color: #00d7d7;
+  background-color: #00c795;
 }
 .controls-ComboBox__itemRow__selected,
 .controls-ComboBox__itemRow__selected:hover {
   color: #999999;
   background-color: #ffffff;
 }
-.controls-ComboBox__isEditable-false,
-.controls-ComboBox__isEditable-false .controls-TextBox__field {
+.controls-ComboBox__editable-false,
+.controls-ComboBox__editable-false .controls-TextBox__field {
   cursor: pointer;
 }
-.controls-ComboBox__isEditable-false.controls-Picker__show .controls-ComboBox__field {
+.controls-ComboBox__editable-false.controls-Picker__show .controls-ComboBox__field {
   color: #919197;
 }
-.controls-ComboBox__isEditable-false:hover .controls-ComboBox__field {
-  color: #00d7d7;
+.controls-ComboBox__editable-false:hover .controls-ComboBox__field {
+  color: #00c795;
 }
 .controls-ComboBox__inputWrapper {
   margin-right: 18px;
@@ -209,11 +237,28 @@
   border-radius: 0 0 2px 2px;
 }
 .controls-ComboBox__picker.controls-Picker__owner__hover {
-  border-top-color: #00d7d7;
+  border-top-color: #00c795;
   margin-top: -2px;
+}
+.controls-ComboBox__fieldNotEditable {
+  line-height: 22px;
 }
 .controls-ListView__item {
   overflow: hidden;
+  position: relative;
+}
+.controls-ListView__itemActions {
+  position: absolute;
+  height: 16px;
+  right: 0;
+  top: 50%;
+  margin-top: -8px;
+  z-index: 10;
+  display: none;
+  background: #00c795;
+}
+.controls-ListView__action {
+  margin-right: 16px;
 }
 .controls-ListView > .controls-TreeView__childContainer {
   display: block;
@@ -244,7 +289,7 @@
   resize: none;
   border: none;
   display: block;
-  font-family: inherit;
+  font: inherit;
   width: 100%;
   height: 100%;
   padding: 6px 7px;
@@ -259,21 +304,24 @@
   vertical-align: top;
 }
 .controls-TextArea:hover {
-  border-color: #00d7d7;
+  border-color: #00c795;
 }
 .controls-FormattedTextBox {
+  display: inline-block;
   vertical-align: top;
+  background-color: white;
   height: 22px;
   min-height: 22px;
+  line-height: normal;
 }
-.controls-FormattedTextBox__field {
-  display: table;
+.controls-FormattedTextBox__fieldWrapper {
   height: 100%;
   margin: 0 7px;
 }
-.controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
-  display: table-cell;
-  vertical-align: middle;
+.controls-FormattedTextBox__field {
+  padding-top: 3px;
+}
+.controls-FormattedTextBox__field-symbol {
   font-style: normal;
   white-space: pre;
 }
@@ -286,10 +334,10 @@
   height: 24px;
 }
 .controls-TabButton:hover {
-  color: #00d7d7;
+  color: #00c795;
 }
 .controls-TabButton.controls-Checked__checked {
-  border-bottom-color: #00d7d7;
+  border-bottom-color: #00c795;
 }
 .controls-Calendar {
   padding-top: 8px;
@@ -411,21 +459,21 @@
   text-align: center;
 }
 .controls-DatePicker {
-  display: inline-block;
-  vertical-align: top;
   border: none;
-  height: 24px;
+  box-sizing: border-box;
+  background-color: transparent;
 }
-.controls-DatePicker__field {
+.controls-DatePicker__fieldWrapper {
   margin-right: 16px;
+  background-color: white;
   padding: 0 7px;
   border: 1px solid #d1d1d4;
   border-radius: 2px;
 }
-.controls-DatePicker__field:hover {
-  border-color: #00d7d7;
+.controls-DatePicker__fieldWrapper:hover {
+  border-color: #00c795;
 }
-.controls-DatePicker .controls-FormattedTextBox__field {
+.controls-DatePicker .controls-FormattedTextBox__fieldWrapper {
   margin: 0;
 }
 .controls-DatePicker__calendarIconWrapper {
@@ -455,11 +503,223 @@
 .controls-DatePicker__calendar {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
+.controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
+  margin-right: 23px;
+}
 .controls-ButtonGroup__vertical .controls-ListView__item {
-  display: block;
   margin-right: 0;
   margin-bottom: 8px;
 }
 .controls-RadioGroup .controls-ListView__item {
   margin-right: 16px;
+}
+.controls-CheckBoxGroup .controls-ListView__item {
+  margin-right: 16px;
+}
+.controls-IconButton {
+  cursor: pointer;
+}
+.controls-IconButton.controls-Button {
+  padding: 0;
+  cursor: pointer;
+  height: auto;
+  box-sizing: content-box;
+}
+.controls-DataGrid__table {
+  width: 100%;
+}
+.controls-DataGrid__tr {
+  cursor: pointer;
+}
+.controls-DataGrid__tr:hover .controls-DataGrid__td {
+  background-color: #00c795;
+  color: #ffffff;
+}
+.controls-DataGrid__th,
+.controls-DataGrid__td {
+  text-align: left;
+  height: 32px;
+  padding: 0 10px;
+}
+.controls-DataGrid__td {
+  border-top: 1px solid #d1d1d4;
+  position: relative;
+}
+.controls-DataGrid__th {
+  color: #919197;
+}
+.controls-DataGrid__itemSelect .controls-ListView__item__selected .controls-DataGrid__td:first-child {
+  background-image: url('img/rowSelect.png');
+  background-position: left top;
+  background-repeat: repeat-y;
+}
+.controls-MenuItem {
+  display: block;
+  height: 24px;
+  box-sizing: border-box;
+  padding: 0 16px;
+  line-height: 24px;
+  cursor: pointer;
+  background-color: #ffffff;
+  font-size: 11px;
+  position: relative;
+}
+.controls-MenuItem:hover {
+  background-color: #00c795;
+  color: #ffffff;
+}
+.controls-MenuItem__content {
+  position: relative;
+}
+.controls-MenuItem__icon {
+  position: absolute;
+  left: -2px;
+  top: -2px;
+}
+.controls-MenuItem__text {
+  margin-left: 22px;
+}
+.controls-Menu__Popup {
+  box-shadow: 0 0 8px 1px #aaaaaa;
+  box-sizing: border-box;
+}
+.controls-Menu__Popup .controls-Menu__hasChild:hover:after {
+  background-position: 0 -16px;
+}
+.controls-Menu__Popup .controls-Menu__hasChild:after {
+  content: ' ';
+  background: url('img/MenuExpand.png') 0 0 no-repeat;
+  position: absolute;
+  right: 0;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+}
+.controls-EditAtPlace {
+  border: 1px solid transparent;
+}
+.controls-EditAtPlace:hover,
+.controls-EditAtPlace.ws-has-focus {
+  border: none;
+}
+.controls-EditAtPlace__editorHidden.controls-EditAtPlace:hover,
+.controls-EditAtPlace.ws-has-focus {
+  border: 1px solid transparent;
+}
+.controls-TabButton .controls-EditAtPlace__editor {
+  margin-top: -3px;
+}
+.controls-EditAtPlace__textField {
+  padding-top: 1px;
+  cursor: pointer;
+  border-bottom: dashed 1px #868686;
+  font-family: inherit;
+  width: auto;
+  display: inline-block;
+}
+.controls-EditAtPlace__textAreaWrapper {
+  border: none;
+  display: block;
+  padding: 9px 7px;
+  box-sizing: border-box;
+  line-height: 20px;
+}
+.controls-EditAtPlaceGroup .controls-EditAtPlace__textAreaWrapper {
+  padding: 6px 7px;
+}
+.controls-EditAtPlace__textAreaWrapper .controls-TextBox__field {
+  padding: 0;
+}
+.controls-EditAtPlaceGroup__editorOverlay .controls-EditAtPlace {
+  border: none;
+}
+.controls-EditAtPlace__fieldWrapperHidden {
+  border: none;
+}
+.controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace:hover {
+  border: none;
+}
+.controls-EditAtPlace__editorOverlay .controls-TextArea__inputField {
+  line-height: 20px;
+  font-size: inherit;
+}
+.controls-EditAtPlace__fieldWrapperHidden .controls-TextArea__inputField {
+  line-height: 20px;
+  font-size: inherit;
+}
+.controls-EditAtPlaceGroup__editorOverlay .controls-TextArea__inputField {
+  line-height: 20px;
+  font-size: inherit;
+}
+.controls-EditAtPlace__textAreaField {
+  margin: 0;
+}
+.controls-EditAtPlace__multiline {
+  white-space: pre-wrap;
+  /* css-3 */
+
+  white-space: -moz-pre-wrap;
+  /* Mozilla, since 1999 */
+
+  word-wrap: break-word;
+  /* Internet Explorer 5.5+ */
+
+  display: inline;
+  text-indent: 0;
+}
+.controls-EditAtPlace__autoHeight {
+  height: auto;
+}
+.controls-EditAtPlace__controlPanel {
+  margin-left: 8px;
+  vertical-align: middle;
+  display: inline-block;
+}
+.controls-EditAtPlaceGroup__controlPanel {
+  margin: 4px;
+  float: right;
+  height: 24px;
+}
+.controls-EditAtPlace__cancel {
+  width: 16px;
+  height: 16px;
+  margin-left: 4px;
+  margin-top: -13px;
+  display: inline-block;
+  background: url("img/cancelIcon-sprite.png") top left no-repeat;
+  background-position: 0 -32px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.controls-EditAtPlace__cancel:hover {
+  background-position: 0 -16px;
+}
+.controls-EditAtPlace__editorOverlay {
+  padding: 4px;
+  background: #f8f3f1!important;
+  box-shadow: 0 0 3px #b2b2b2;
+  border-radius: 3px;
+  margin-top: 1px;
+  margin-left: -4px;
+}
+.controls-EditAtPlaceGroup__editorOverlay {
+  background: #f8f3f1!important;
+  box-shadow: 0 0 3px #b2b2b2;
+  border-radius: 3px;
+}
+.controls-EditAtPlace__editorHidden .controls-EditAtPlace__editor {
+  display: none;
+}
+.controls-EditAtPlace__editor {
+  width: 100%;
+}
+.controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace__fieldWrapper {
+  display: none;
+}
+.controls-Link {
+  display: inline-block;
+}
+.controls-Link__icon {
+  cursor: pointer;
+  vertical-align: middle;
 }

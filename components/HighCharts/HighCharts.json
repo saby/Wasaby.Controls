@@ -1,0 +1,650 @@
+{
+   "name"       : "HighChartsLight",
+   "title"      : "Диаграмма HighChartsLight",
+   "initial"    : "<component data-component=\"SBIS3.CONTROLS.HighChartsLight\"></component>",
+   "category"   : "CORE",
+   "fullname": "SBIS3.CONTROLS.HighChartsLight",
+   "properties" : {
+      "ws-config" : {
+         "title"    : "Базовая конфигурация",
+         "options"  : {
+            "name" : {
+               "title" : "Имя контрола, для привязки к данным",
+               "default" : "",
+               "type" : "text"
+            },
+            "wsSeries" : {
+               "title" : "Набор графиков",
+               "type" : "array",
+               "options" : {
+                  "type" : {
+                     "title" : "Тип графика",
+                     "type" : {
+                        "line" : "График",
+                        "spline" : "Сглаженный график",
+                        "pie" : "Круговая диаграмма",
+                        "column" : "Столбчатая диаграмма",
+                        "bar" : "Столбчатая горизонтальная",
+                        "area" : "График с областью под ним",
+                        "areaspline" : "Сглаженный график с областью под ним",
+                        "scatter" : "Точки",
+                        "arearange" : "Область - интервал значений",
+                        "areasplinerange" : "Сглаженная область - интервал значений"
+                     },
+                     "default" : "line"
+                  },
+                  "name" : {
+                     "title" : "Имя графика",
+                     "type" : "text"
+                  },
+                  "sourceFieldX" : {
+                     "title" : "Поле источника данных для координаты x (Круговые диаграммы - для подписи сектора)",
+                     "type" : "text"
+                  },
+                  "sourceFieldY" : {
+                     "title" : "Поле источника данных для координаты y (Круговые диаграммы - для значения сектора)",
+                     "type" : "text"
+                  },
+                  "sourceField_3" : {
+                     "title" : "sourceField_3 Поле источника данных для интервала значений (Круговые диаграммы - для цвета сектора)",
+                     "type" : "text"
+                  },
+                  "color" : {
+                     "title" : "Цвет",
+                     "type" : "text"
+                  },
+                  "xAxis" : {
+                     "title" : "Номер связанной оси X",
+                     "type" : "integer"
+                  },
+                  "yAxis" : {
+                     "title" : "Номер связанной оси Y",
+                     "type" : "integer"
+                  }
+               
+               }
+            },
+            "wsAxis" : {
+               "title" : "Набор осей координат",
+               "type" : "array",
+               "options" : {
+                  "type" : {
+                     "title" : "Тип оси",
+                     "type" : {
+                        "xAxis" : "Горизонтальная",
+                        "yAxis" : "Вертикальная"
+                     },
+                     "default" : "xAxis"
+                  },
+                  "sourceField" : {
+                     "title" : "Поле источника данных",
+                     "type" : "text"
+                  },
+                  "title" : {
+                     "title" : "Заголовок",
+                     "type" : "text",
+                     "default" : ""
+                  },
+                  "gridLineWidth" : {
+                     "title" : "Толщина линий сетки",
+                     "type" : "integer",
+                     "default" : 0
+                  },
+                  "labelsFormatter" : {
+                     "title" : "Функция рендеринга меток",
+                     "type" : "function"
+                  },
+                  "staggerLines" : {
+                     "title" : "Количество строк при выводе меток",
+                     "type" : "integer",
+                     "default" : 1
+                  },
+                  "step" : {
+                     "title" : "Шаг подписи меток",
+                     "type" : "integer",
+                     "default" : 0
+                  },
+                  "lineWidth" : {
+                     "title" : "Толщина оси",
+                     "type" : "integer",
+                     "default" : 1
+                  },
+                  "allowDecimals" : {
+                     "title" : "Разрешить дробные значения",
+                     "type" : "Boolean",
+                     "default" : true
+                  },
+                  "min" : {
+                     "title" : "Минимальное значение",
+                     "type" : "integer"
+                  },
+                  "max" : {
+                     "title" : "Максимальное значение",
+                     "type" : "integer"
+                  },
+                  "opposite" : {
+                     "title" : "Располагать ось напротив стандартного расположения",
+                     "type" : "Boolean",
+                     "default" : false
+                  },
+                  "linkedTo" : {
+                     "title" : "Номер связанной оси",
+                     "type" : "integer"
+                  }
+               }
+            },
+            "sourceData" : {
+               "title" : "Параметы получения данных",
+               "type" : "group",
+               "options" : {
+                  "getDataType" : {
+                     "type" : {
+                        "standartBL" : "Метод бизнес-логики",
+                        "custom" : "Пользовательский"
+                     },
+                     "title" : "Получение данных",
+                     "default" : "standartBL"
+                  },
+                  "methodBL" : {
+                     "title" : "Метод бизнес-логики",
+                     "default" : "",
+                     "type" : "text"
+                  },
+                  "firstRequest" : {
+                     "title" : "Запрашивать данные при инициализации",
+                     "default" : "true",
+                     "type" : "boolean"
+                  },
+                  "userGetData" : {
+                     "type" : "function",
+                     "title" : "Метод для пользовательского получения данных"
+                  },
+                  "prepareDataType" : {
+                     "type" : {
+                        "recordSet" : "Стандартный рекордсет",
+                        "custom" : "Пользовательский"
+                     },
+                     "default" : "recordSet",
+                     "title" : "Тип преобразования данных"
+                  },
+                  "userPrepareData" : {
+                     "type" : "function",
+                     "title" : "Метод для пользовательского преобразования данных"
+                  },
+                  "prepareAxisType" : {
+                     "type" : {
+                        "recordSet" : "Стандартный рекордсет",
+                        "custom" : "Пользовательский"
+                     },
+                     "default" : "recordSet",
+                     "title" : "Тип преобразования настроек осей координат"
+                  },
+                  "userPrepareAxis" : {
+                     "type" : "function",
+                     "title" : "Метод для пользовательского преобразования настроек осей координат"
+                  }
+               }
+            },
+
+            "filterFields" : {
+               "title" : "Поля фильтрации",
+               "type" : "array",
+               "options" : {
+                  "name" : {
+                     "type" : "text",
+                     "title" : "Имя поля"
+                  },
+                  "type" : {
+                     "type" : {
+                        "ctx" : "Из контекста",
+                        "fix" : "Значение"
+                     },
+                     "title" : "Тип фильтра",
+                     "default" : "ctx"
+                  },
+                  "value" : {
+                     "type" : "text",
+                     "title" : "Значение фильтра"
+                  },
+                  "refresh" : {
+                     "type" : "boolean",
+                     "title" : "Обновлять при изменении значения"
+                  }
+               }
+            },
+            "highChartOptions" : {
+               "options" : {
+                  "chart" : {
+                     "options" : {
+                        "type" : {
+                           "title" : "Тип диаграммы",
+                           "type" : {
+                              "line" : "Линейная",
+                              "spline" : "Линейная сглаженная",
+                              "column" : "Столбчатая",
+                              "pie" : "Круговая"
+                           },
+                           "default" : "line"
+                        },
+                        "marginTop" : {
+                           "default" : null,
+                           "title": "Верхний отступ",
+                           "type": "integer"
+                        },
+                        "marginRight" : {
+                           "default" : null,
+                           "title": "Правый отступ",
+                           "type": "integer"
+                        },
+                        "marginBottom" : {
+                           "default" : null,
+                           "title": "Нижний отступ",
+                           "type": "integer"
+                        },
+                        "marginLeft" : {
+                           "default" : null,
+                           "title": "Левый отступ",
+                           "type": "integer"
+                        }
+                     },
+                     "title": "Основные настройки",
+                     "type": "group"
+                  },
+                  "legend" : {
+                     "options" : {
+                        "align" : {
+                           "title" : "Горизонтальное расположение",
+                           "type" : {
+                              "center" : "По центру",
+                              "left" : "Слева",
+                              "right" : "Справа"
+                           },
+                           "default" : "center"
+                        },
+                        "verticalAlign" : {
+                           "title" : "Вертикальное расположение",
+                           "type" : {
+                              "bottom" : "Снизу",
+                              "top" : "Сверху",
+                              "middle" : "По центру"
+                           },
+                           "default" : "bottom"
+                        },
+                        "layout" : {
+                           "title" : "Расположение элементов в легенде",
+                           "type" : {
+                              "horizontal" : "Горизонтальное",
+                              "vertical" : "Вертикальное"
+                           },
+                           "default" : "horizontal"
+                        },
+                        "enabled" : {
+                           "default" : true,
+                           "title": "Отображается",
+                           "type": "Boolean"
+                        },
+                        "width": {
+                           "title": "Ширина легенды",
+                           "type": "integer"
+                        },
+                        "height": {
+                           "title": "Высота легенды",
+                           "type": "integer"
+                        },
+                        "x": {
+                           "default": 0,
+                           "title": "Смещение по горизонтали",
+                           "type": "integer"
+                        },
+                        "y": {
+                           "default": 0,
+                           "title": "Смещение по вертикали",
+                           "type": "integer"
+                        },
+                        "labelFormatter": {
+                           "title": "Функция рендеринга подписи легенды",
+                           "type": "function"
+                        },
+                        "floating" : {
+                           "default" : false,
+                           "title": "Располагать легенду поверх графика",
+                           "type": "Boolean"
+                        },
+                        "margin" : {
+                           "default" : 15,
+                           "title": "Отступ между графиком и легендой (только для отключенного floating)",
+                           "type": "integer"
+                        },
+                        "padding" : {
+                           "default" : 8,
+                           "title": "Внутренний отступ",
+                           "type": "integer"
+                        },
+                        "borderWidth" : {
+                           "default" : 0,
+                           "title": "Ширина границы",
+                           "type": "integer"
+                        }
+
+                     },
+                     "title": "Параметры легенды",
+                     "type": "group"
+                  },
+                  "plotOptions": {
+                     "options" : {
+                        "line": {
+                           "options" : {
+                              "dataLabels" : {
+                                 "options" : {
+                                    "enabled":  {
+                                       "default" : true,
+                                       "title": "Отображаются",
+                                       "type": "Boolean"
+                                    },
+                                    "color" :{
+                                       "title": "Цвет",
+                                       "type": "String"
+                                    },
+                                    "format" : {
+                                       "default" : "",
+                                       "title": "Форматная строка",
+                                       "type": "String"
+                                    },
+                                    "formatter" : {
+                                       "title": "Функция рендеринга",
+                                       "type": "function"
+                                    }
+
+                                 },
+                                 "title": "Подписи значений",
+                                 "type": "group"
+                              },
+
+
+                              "marker": {
+                                 "options" : {
+                                    "enabled":  {
+                                       "default" : true,
+                                       "title": "Отображаются",
+                                       "type": "Boolean"
+                                    },
+                                    "radius":  {
+                                       "default" : 4,
+                                       "title": "Радиус точек",
+                                       "type": "integer"
+                                    }
+                                 },
+                                 "title": "Выделения точек графика",
+                                 "type": "group"
+                              },
+                              "point" : {
+                                 "options": {
+                                    "events": {
+                                       "options" : {
+                                          "click" : {
+                                             "type" : "function",
+                                             "title" : "Клик на точку"
+                                          }
+                                       },
+                                       "title": "События",
+                                       "type": "group"
+                                    }
+                                 },
+                                 "title" : "Точки графика",
+                                 "type" : "group"
+
+                              },
+                              "pointInterval" : {
+                                 "default" : 1,
+                                 "title": "Интервал x значений (только если значения x не заданы)",
+                                 "type": "integer"
+                              },
+                              "connectEnds" : {
+                                 "default" : true,
+                                 "title": "Соединять конец и начало графика (только для полярных диаграмм)",
+                                 "type": "boolean"
+                              },
+                              "connectNulls" : {
+                                 "default" : false,
+                                 "title": "Включать в график точки со значением null",
+                                 "type": "boolean"
+                              }
+
+                           },
+                           "title": "Линейные диаграммы (графики)",
+                           "type": "group"
+                        },
+                        "column" : {
+                           "options" : {
+                              "dataLabels" : {
+                                 "options" : {
+                                    "enabled":  {
+                                       "default" : true,
+                                       "title": "Отображаются",
+                                       "type": "Boolean"
+                                    },
+                                    "color" :{
+                                       "title": "Цвет",
+                                       "type": "String"
+                                    },
+                                    "format" : {
+                                       "default" : "",
+                                       "title": "Форматная строка",
+                                       "type": "String"
+                                    },
+                                    "formatter" : {
+                                       "title": "Функция рендеринга",
+                                       "type": "function"
+                                    }
+
+                                 },
+                                 "title": "Подписи значений",
+                                 "type": "group"
+                              },
+                              "point" : {
+                                 "options": {
+                                    "events": {
+                                       "options" : {
+                                          "click" : {
+                                             "type" : "function",
+                                             "title" : "Клик на точку"
+                                          }
+                                       },
+                                       "title": "События",
+                                       "type": "group"
+                                    }
+                                 },
+                                 "title" : "Точки графика",
+                                 "type" : "group"
+
+                              },
+                              "stacking" : {
+                                 "title": "Stacking",
+                                 "type": {
+                                    "null" : "Отсутствует",
+                                    "normal" : "По значению"
+                                 },
+                                 "default" : "null"
+                              }
+                           },
+                           "title": "Столбчатые диаграммы",
+                           "type": "group"
+                        },
+                        "pie" : {
+                           "options" : {
+                              "allowPointSelect" : {
+                                 "default" : false,
+                                 "title": "Выделение сектора по клику",
+                                 "type": "boolean"
+                              },
+                              "dataLabels" : {
+                                 "options" : {
+                                    "distance":  {
+                                       "default" : 30,
+                                       "title": "Расстояние от диаграммы до подписей",
+                                       "type": "integer"
+                                    },
+                                    "enabled":  {
+                                       "default" : true,
+                                       "title": "Отображаются",
+                                       "type": "Boolean"
+                                    },
+                                    "color" :{
+                                       "title": "Цвет",
+                                       "type": "String"
+                                    },
+                                    "format" : {
+                                       "default" : "",
+                                       "title": "Форматная строка",
+                                       "type": "String"
+                                    },
+                                    "formatter" : {
+                                       "title": "Функция рендеринга",
+                                       "type": "function"
+                                    }
+
+                                 },
+                                 "title": "Подписи значений",
+                                 "type": "group"
+                              },
+                              "showInLegend" : {
+                                 "default": false,
+                                 "title": "Отображать в легенде",
+                                 "type": "boolean"
+                              }
+                           },
+                           "title": "Круговые диаграммы",
+                           "type": "group"
+                        },
+                        "series" : {
+                           "title" : "Все графики",
+                           "type" : "group",
+                           "options" : {
+                              "animation" : {
+                                 "default" : true,
+                                 "title": "Анимированный график",
+                                 "type": "Boolean"
+                              },
+                              "cursor": {
+                                 "title" : "Курсор",
+                                 "default" : "default",
+                                 "type" : "string"
+                              },
+                              "dataLabels" : {
+                                 "options" : {
+                                    "enabled":  {
+                                       "default" : true,
+                                       "title": "Отображаются",
+                                       "type": "Boolean"
+                                    },
+                                    "color" :{
+                                       "title": "Цвет",
+                                       "type": "String"
+                                    },
+                                    "format" : {
+                                       "default" : "",
+                                       "title": "Форматная строка",
+                                       "type": "String"
+                                    },
+                                    "formatter" : {
+                                       "title": "Функция рендеринга",
+                                       "type": "function"
+                                    }
+
+                                 },
+                                 "title": "Подписи значений",
+                                 "type": "group"
+                              },
+                              "point" : {
+                                 "options": {
+                                    "events": {
+                                       "options" : {
+                                          "click" : {
+                                             "type" : "function",
+                                             "title" : "Клик на точку"
+                                          }
+                                       },
+                                       "title": "События",
+                                       "type": "group"
+                                    }
+                                 },
+                                 "title" : "Точки графика",
+                                 "type" : "group"
+
+                              }
+                           }
+                        }
+                     },
+                     "title": "График",
+                     "type": "group"
+                  },
+                  "title" : {
+                     "options" : {
+                        "align" : {
+                           "title" : "Горизонтальное расположение",
+                           "type" : {
+                              "center" : "По центру",
+                              "left" : "Слева",
+                              "right" : "Справа"
+                           },
+                           "default" : "center"
+                        },
+                        "text" : {
+                           "type" : "text",
+                           "title" : "Текст заголовка диаграммы"
+                        },
+                        "floating" : {
+                           "default" : false,
+                           "title": "Располагать заголовок поверх графика",
+                           "type": "Boolean"
+                        },
+                        "margin" : {
+                           "default" : 15,
+                           "title": "Отступы заголовка",
+                           "type": "integer"
+                        }
+                     }
+                  },
+                  "tooltip" : {
+                     "options" : {
+                        "enabled" : {
+                           "default" : true,
+                           "title": "Отображается",
+                           "type" : "Boolean"
+                        },
+                        "shared" : {
+                           "default" : false,
+                           "title": "Общий тултип. (Все точки с одним значением X выделяются вместе)",
+                           "type" : "Boolean"
+                        },
+                        "formatter" : {
+                           "title" : "Функция рендеринга",
+                           "type" : "function"
+                        }
+                     },
+                     "type" : "group",
+                     "title" : "Всплывающие подсказки"
+                  }
+               },
+               "title": "Параметры HighChart",
+               "type": "group"
+            },
+            "handlers": {
+               "title": "Обработчики",
+               "type" : "group",
+               "options": {
+                  "onBeforeReload": {
+                     "title": "До перерисовки",
+                     "type": "function"
+                  },
+
+                  "onFilterChange": {
+                     "title": "При смене фильтра",
+                     "type": "function"
+                  }
+               }
+            }
+         }
+      }
+   }
+}

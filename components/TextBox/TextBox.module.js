@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.TextBox.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
+         _pasteProcessing : 0,
          _inputField : null,
          _compatPlaceholder: null,
          _options: {
@@ -49,7 +50,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       $constructor: function() {
          var self = this;
-         this._inputField = $('.controls-TextBox__field', this.getContainer().get(0));
+         this._inputField = $('.js-controls-TextBox__field', this.getContainer().get(0));
          this._container.bind('keypress',function(e){
             self._keyPressBind(e);
          });
@@ -59,6 +60,16 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
          this._container.bind('keyup',function(e){
             self._keyUpBind(e);
+         });
+
+         this._inputField.bind('paste', function(){
+            self._pasteProcessing++;
+            window.setTimeout(function(){
+               self._pasteProcessing--;
+               if (!self._pasteProcessing) {
+                  TextBox.superclass.setText.call(self, self._inputField.val());
+               }
+            }, 100)
          });
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
@@ -86,7 +97,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             text = String.trim(text);
          }
          TextBox.superclass.setText.call(this, text);
-         if (this._compatPlaceholder) this._compatPlaceholder.toggle(!text);
+         if (this._compatPlaceholder) {
+            this._compatPlaceholder.toggle(!text);
+         }
          this._inputField.attr('value', text);
       },
 
@@ -135,7 +148,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          if (newText != this._options.text) {
             TextBox.superclass.setText.call(this, newText);
          }
-         if (this._compatPlaceholder) this._compatPlaceholder.toggle(!newText);
+         if (this._compatPlaceholder) {
+            this._compatPlaceholder.toggle(!newText);
+         }
       },
 
       _keyDownBind: function() {

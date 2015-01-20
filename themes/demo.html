@@ -46,7 +46,8 @@
 
    </style>
    <script type="text/javascript" id="ws-include-css"></script>
-   <link rel="stylesheet" type="text/css" href="../sprites.css"/>
+   <link rel="stylesheet" type="text/css" href="../fonts/index.css"/>
+   <link rel="stylesheet" type="text/css" href="../icons/index.css"/>
    <link rel="stylesheet" type="text/css" href="./demo/demo.css"/>
 </head>
 <body class="view-main">
@@ -66,6 +67,8 @@
       <div id="RadioButton" class="testBlock">4</div>
       с текстом
       <div id="TabButton" class="testBlock">5</div>
+      туруру
+      <div id="iconbutton" class="controls-Button testBlock">1</div>
    </div>
 
 
@@ -132,6 +135,13 @@
             new r({
                element: "button",
                caption: 'This is Button'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.IconButton"], function (r) {
+            new r({
+               element: "iconbutton",
+               icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
             })
          });
 

@@ -28,16 +28,9 @@
    <script type="text/javascript" src="/sbis3-ws/ws/lib/Source.js"></script>
    <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/res/js/bootup.js"></script>
    <style>
-      .view-main {
-         font-family: Arial, SANS-SERIF;
-         font-size: 13px;
-         padding: 0;
-         margin: 0;
-         height: 100%;
-      }
-
       html, body {
          font-family: Tahoma !important;
+         font-size: 13px;
       }
 
       #content {
@@ -64,7 +57,7 @@
    <link rel="stylesheet" type="text/css" href="../icons/index.css"/>
    <link rel="stylesheet" type="text/css" href="./online/online.css"/>
 </head>
-<body class="view-main">
+<body>
 
 <div id="content">
    <h3>Переключатели</h3>
@@ -136,24 +129,40 @@
          <td>
             <div id="CheckBox2"></div>
          </td>
+         <td>
+            <div id="MenuItem"></div>
+         </td>
       </tr>
    </table>
    <br/>   <br/>
 
    <h3>Текстовое поле</h3>
-
+   <table>
+      <tr>
+         <td>
    <div id="TextBox"></div>
    <div id="TextBox2"></div>
    <br/><br/>
    <div id="TextArea"></div>
    <br/><br/>
-   <div id="ComboBox"></div>
+   <div id="ComboBox" style="width: 200px"></div>
+
+   <br/><br/>
+
+   <div id="ComboBox2" style="width: 200px"></div>
 
    <br/><br/>
 
    <div id="NumberTextBox"></div>
    <div id="FormattedTextBox"></div>
-
+   </td>
+         <td valign="top">
+            <div id="Menu" ></div>
+            <div id="MenuBar"></div>
+            <div id="menuButton"></div>
+         </td>
+         </tr>
+      </table>
    <br/><br/>
 
    <h3>Кнопки</h3>
@@ -172,6 +181,20 @@
          </td>
          <td>
             <div id="button1big" class="controls-Button__big"></div>
+         </td>
+      </tr>
+      <tr>
+         <td>
+            primary
+         </td>
+         <td>
+            <div id="buttonIcon"></div>
+         </td>
+         <td>
+            primary big
+         </td>
+         <td>
+            <div id="buttonIcon2" class="controls-Button"></div>
          </td>
       </tr>
       <tr>
@@ -244,6 +267,18 @@
             <div id="buttonlight2" class="controls-Button__light"></div>
          </td>
       </tr>
+      <tr>
+         <td style="height: 40px;">
+            Link Button
+         </td>
+         <td>
+            <div id="link"  style="width: 100px"></div>
+         </td>
+         <td>
+         </td>
+         <td>
+         </td>
+      </tr>
    </table>
    <br/><br/>
    Зуев смотрим чтоб не сломалось (в первой колонке должны быть три кнопки одинаковой ширины = ширине самой большой кнопки, ширина колонки должна соотвествовать, ничего не должно наезжать)
@@ -277,6 +312,16 @@
 <script type="text/javascript">
    $ws.core.withComponents('Source').addCallback(function () {
       $(document).ready(function () {
+
+         require(["js!SBIS3.Engine.Link"], function (r) {
+            new r({
+               element: "link",
+               caption: 'This is Link',
+               link: 'http://wi.sbis.ru',
+               inNewTab: true,
+               icon: 'sprite:icon-24 icon-Attach icon-primary action-hover'
+            })
+         });
 
          require(["js!SBIS3.Engine.SwitcherDoubleOnline"], function (r) {
             new r({
@@ -328,6 +373,17 @@
             })
          });
 
+         require(["js!SBIS3.CONTROLS.IconButton"], function (r) {
+            new r({
+               element: "buttonIcon",
+               icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
+            });
+            new r({
+               element: "buttonIcon2",
+               icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
+            })
+         });
+
          require(["js!SBIS3.CONTROLS.DatePicker"], function (r) {
             new r({
                element: "FormattedTextBox"
@@ -360,11 +416,24 @@
             })
          });
 
+         require(["js!SBIS3.CONTROLS.MenuItem"], function (r) {
+            new r({
+               element: "MenuItem",
+               caption: 'Меню'
+            });
+
+         });
+
 
          require(["js!SBIS3.CONTROLS.TextBox"], function (r) {
             new r({
                element: "TextBox",
-               placeholder: 'This is TextBox'
+               placeholder: 'This is TextBox',
+               handlers : {
+                  'onTextChange' : function(e, val) {
+                     console.log(val)
+                  }
+               }
             });
 
             new r({
@@ -385,7 +454,26 @@
          require(["js!SBIS3.CONTROLS.ComboBox"], function (r) {
             new r({
                element: "ComboBox",
-               isEditable : false,
+               editable : false,
+               items : [
+                  {
+                     key : 1,
+                     title : 'Первый'
+                  },
+                  {
+                     key : 2,
+                     title : 'Второй'
+                  },
+                  {
+                     key : 3,
+                     title : 'Третий'
+                  }
+               ]
+            });
+
+            new r({
+               element: "ComboBox2",
+               editable : true,
                items : [
                   {
                      key : 1,
@@ -501,7 +589,108 @@
                primary: true
             })
          });
-      })
+      });
+
+      require(["js!SBIS3.CONTROLS.ContextMenu", "js!SBIS3.CONTROLS.Menu", 'js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.Collection', 'js!SBIS3.CONTROLS.DatePicker'], function (rCtx, r, but, Collection) {
+         var col3 =
+            [
+               {
+                  id : 1,
+                  title : 'Title 1',
+                  icon : 'sprite:icon-16 icon-Successful icon-done'
+               },
+               {
+                  id : 2,
+                  title : 'Title 2',
+                  icon: 'sprite:icon-16 icon-Successful icon-error'
+               },
+               {
+                  id : 3,
+                  title : 'Title 3',
+                  icon: 'sprite:icon-16 icon-Successful icon-done'
+               },
+               {
+                  id : 4,
+                  title : 'Title 4',
+                  icon : 'sprite:icon-16 icon-Successful icon-done',
+                  par : 2
+               },
+               {
+                  id : 5,
+                  title : 'Title 5',
+                  icon : 'sprite:icon-16 icon-Phone icon-done',
+                  par : 4
+               },
+               {
+                  id : 6,
+                  title : 'Title 6',
+                  icon : 'sprite:icon-16 icon-Successful icon-done',
+                  par : 4
+               },
+               {
+                  id : 7,
+                  title : 'Title 7',
+                  icon : 'sprite:icon-16 icon-Successful icon-done',
+                  par : 2
+               },
+               {
+                  id : 8,
+                  title : 'Title 8',
+                  icon : 'sprite:icon-16 icon-Successful icon-done',
+                  par : 2
+               },
+               {
+                  id : 9,
+                  title : 'Поросенок',
+                  icon : 'sprite:icon-16 icon-Successful icon-done'
+               },
+               {
+                  id : 10,
+                  title : 'Петр',
+                  icon : 'sprite:icon-16 icon-Successful icon-done'
+               },
+               {
+                  id : 11,
+                  title : 'Трактор',
+                  icon : 'sprite:icon-16 icon-Successful icon-done'
+               }
+
+            ];
+
+
+         new but({
+            element: 'menuButton',
+            caption: 'Show menu',
+            handlers : {
+               onActivated : function() {
+                  menuCtx.show()
+               }
+            }
+         });
+
+         var menu = new r({
+            element: "MenuBar",
+            items: col3,
+            hierField : 'par',
+            firstLevelDirection : 'right'
+         });
+
+         var menuCtx = new rCtx({
+            element: "Menu",
+            items: col3,
+            target : $("#menuButton"),
+            corner : 'br',
+            hierField: 'par',
+            verticalAlign: {
+               side: 'top'
+            },
+            horizontalAlign: {
+               side: 'right',
+               offset: 0
+            },
+            closeByExternalClick: true
+         });
+      });
    });
 </script>
 </body>

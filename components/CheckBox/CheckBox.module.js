@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS._CheckedMixin', 'html!SBIS3.CONTROLS.CheckBox'], function(ButtonBase, _CheckedMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.CheckedMixin', 'html!SBIS3.CONTROLS.CheckBox'], function(ButtonBase, CheckedMixin, dotTplFn) {
 
    'use strict';
 
@@ -11,13 +11,13 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
     * Контрол, отображающий стандартный чекбокс.
     * @class SBIS3.CONTROLS.CheckBox
     * @extends SBIS3.CONTROLS.ToggleButtonBase
-    * @mixes SBIS3.CONTROLS._FormWidgetMixin
+    * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @control
     * @public
     * @category Inputs
     */
 
-   var CheckBox = ButtonBase.extend([_CheckedMixin], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
+   var CheckBox = ButtonBase.extend([CheckedMixin], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
       $protected: {
          _dotTplFn : dotTplFn,
          _checkBoxCaption: null,
@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
             }
          }
          this.saveToContext('Checked', this._options.checked);
-         this._notify('onChange', this._options.checked);
+         this._notify('onCheckedChange', this._options.checked);
       },
 
       _clickHandler: function() {
