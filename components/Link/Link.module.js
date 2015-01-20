@@ -1,4 +1,4 @@
-define('js!SBIS3.Engine.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.Engine.Link' ], function(ButtonBase, dotTplFn) {
+define('js!SBIS3.CORE.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CORE.Link' ], function(ButtonBase, dotTplFn) {
 
    'use strict';
 
@@ -14,7 +14,7 @@ define('js!SBIS3.Engine.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.Engi
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
-            link: '',
+            href: '',
             inNewTab: false
          }
       },
