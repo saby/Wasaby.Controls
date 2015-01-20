@@ -716,3 +716,10 @@
 .controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace__fieldWrapper {
   display: none;
 }
+.controls-Link {
+  display: inline-block;
+}
+.controls-Link__icon {
+  cursor: pointer;
+  vertical-align: middle;
+}
