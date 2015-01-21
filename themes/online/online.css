@@ -126,14 +126,17 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-Checked__checked {
   color: red;
-  box-shadow: inset 0px 1px 1px #939292;
+  box-shadow: inset 0 1px 1px #939292;
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXBWQ6DIABAwXf/sxlj3UUJhIqKogSX+tsZ3t/Fc0fuM3DGgxg8YV85vMOvM5uzuHlksYZp1Fij+GqJUT1aCtTQIkXN0FaIpqCrPjRFRp2nlFnyB0tqP75XY7RKAAAAAElFTkSuQmCC');
+}
+.controls-Button__primary.controls-Checked__checked {
+  color: #ffffff;
 }
 .controls-Button__big.controls-Checked__checked {
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAJNJREFUGFcNw1USgzAAQMF3/6tVcAiugWDB6W/ZmeV3H9zXznVunMfKuS8cu2bfNNs6sy0Tqx5Z5gE99+ipZx4V09Ax9u1TMqiGvmtQbY2SFZ0saZsCWefIKqcpM+oipSoSqjymzCKKNCJPwqcgiwPSyCcJPRLhEQuXKHAIfZvQsxCuSeCY+I6Bb3/xrA+u+cYxXn8Tm385Ml6/+QAAAABJRU5ErkJggg==');
 }
 .controls-Button__primary.controls-Checked__checked {
-  box-shadow: inset 0px 1px 1px #8E5F42;
+  box-shadow: inset 0 1px 1px #8E5F42;
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAGtJREFUGFcBYACf/wD+om4A/J5qAPuZZgD6lWIA+ZFeAPiNWgD3iVYA9oVSAPWBTgD0fUoA83hGAPJ0QwDxcD8A72w7AO5oNwDtZDMA7GAvAOtcKwDqVycA6VMjAOhPHwDnSxsA5kcYAOVDFBcJJ2BPy3aDAAAAAElFTkSuQmCC');
 }
 .controls-Button__big.controls-Button__primary.controls-Checked__checked {
@@ -770,7 +773,7 @@ input[type="reset"]::-moz-focus-inner {
   margin-left: 22px;
 }
 .controls-Menu__Popup {
-  border: 1px solid #cccccc;
+  border: 1px solid #ededed;
   box-sizing: border-box;
   margin-top: -1px;
 }
@@ -785,6 +788,21 @@ input[type="reset"]::-moz-focus-inner {
   top: 3px;
   width: 16px;
   height: 16px;
+}
+.controls-Link {
+  display: inline-block;
+  text-align: center;
+  color: #0055BB;
+  text-decoration: none;
+}
+.controls-Link__icon {
+  margin-top: -2px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.controls-Link:hover {
+  color: #ff7033;
+  text-decoration: underline;
 }
 .controls-EditAtPlace {
   border: 1px solid transparent;
@@ -903,18 +921,47 @@ input[type="reset"]::-moz-focus-inner {
 .controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace__fieldWrapper {
   display: none;
 }
-.controls-Link {
+.controls-MenuButton {
+  position: relative;
+}
+.controls-MenuButton__arrowDown {
   display: inline-block;
-  text-align: center;
-  color: #0055BB;
-  text-decoration: none;
-}
-.controls-Link__icon {
-  margin-top: -2px;
-  cursor: pointer;
   vertical-align: middle;
+  background: transparent url("img/MenuButton-arrowDown.png");
+  height: 6px;
+  width: 8px;
 }
-.controls-Link:hover {
-  color: #ff7033;
-  text-decoration: underline;
+.controls-MenuButton__Menu {
+  margin-top: 4px;
+}
+.controls-MenuButton__header {
+  left: 0;
+  top: -28px;
+  display: inline-block;
+  border: none;
+  width: 100%;
+  position: absolute;
+}
+.controls-MenuButton__headerLeft {
+  float: left;
+  background: transparent url("img/MenuButton-header.png");
+  height: 28px;
+  width: 16px;
+  margin-left: -1px;
+}
+.controls-MenuButton__headerCenter {
+  height: 28px;
+  background: transparent url("img/MenuButton-header.png");
+  background-position: 0 -60px;
+  left: 8px;
+  display: inline-block;
+  margin-left: -8px;
+}
+.controls-MenuButton__headerRight {
+  background: transparent url("img/MenuButton-header.png");
+  width: 28px;
+  height: 28px;
+  background-position: 0 -30px;
+  margin-left: -10px;
+  display: inline-block;
 }
