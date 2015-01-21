@@ -35,7 +35,8 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                editorTpl: '<component data-component="SBIS3.CONTROLS.TextBox"></component>',
                multiline: false,
                displayAsEditor: false,
-               editInPopup: false
+               editInPopup: false,
+               enableControlPanel: true
             }
          },
 
@@ -66,6 +67,12 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             this.getContext().subscribe('onFieldChange', function(e, f, v, o){
                self.getParent().getLinkedContext().setValue(f, v, false, o);
             });
+
+            if (!this._options.editInPopup){
+               this._container.children().bind('focusout', function(){
+                  self._applyEdit();
+               });
+            }
          },
 
          showPicker: function(){
@@ -124,21 +131,23 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                this._oldText = this._options.text;
             } else {
                this.setInPlaceEditMode(true);
-               this._addControlPanel(this._container.parent());
+               if (this._options.enableControlPanel) {
+                  this._addControlPanel(this._container.parent());
+               }
             }
             this._resizeTextArea();
 
             if (this._options.editInPopup) {
                if ($('.js-controls-TextBox__field', this._picker._container).get(0)) {
-                  $('.js-controls-TextBox__field', this._picker._container).get(0).focus();
+                  $('.js-controls-TextBox__field', this._picker._container).focus();
                } else if ($('.controls-TextArea__inputField', this._picker._container).get(0)) {
-                  $('.controls-TextArea__inputField', this._picker._container).get(0).focus();
+                  $('.controls-TextArea__inputField', this._picker._container).focus();
                }
             } else {
                if ($('.js-controls-TextBox__field', this._container).get(0)) {
-                  $('.js-controls-TextBox__field', this._container).get(0).focus();
+                  $('.js-controls-TextBox__field', this._container).focus();
                } else if ($('.controls-TextArea__inputField', this._container).get(0)) {
-                  $('.controls-TextArea__inputField', this._container).get(0).focus();
+                  $('.controls-TextArea__inputField', this._container).focus();
                }
             }
          },
@@ -157,7 +166,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             $('[data-component]', this._picker.getContainer()).attr('data-bind', this._container.attr('data-bind'));
             $('[data-component]', this._picker.getContainer()).width(this._container.width());
             this._picker._loadChildControls();
-            this._addControlPanel(this._picker._container);
+            if (this._options.enableControlPanel) {
+               this._addControlPanel(this._picker._container);
+            }
             this._picker._container.bind('keydown', function (e) {
                self._keyPressHandler(e);
             });
@@ -222,7 +233,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
          },
 
          _removeControlPanel: function(){
-            this._cancelCross.parent().remove();
+            if (this._options.enableControlPanel) {
+               this._cancelCross.parent().remove();
+            }
          },
 
          _setPickerConfig: function () {
