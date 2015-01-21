@@ -5,10 +5,20 @@ define('js!SBIS3.CONTROLS.DataSourceArray', ['js!SBIS3.CONTROLS.IDataSource', 'j
    'use strict';
    return IDataSource.extend({
       $protected: {
-         _data: undefined
+         _data: undefined,
+         _keyField: undefined,
+         _options: {
+            data: [],
+            keyField: ''
+         }
       },
-      $constructor: function (cfg) {
-         this._data = cfg.data;
+      $constructor: function () {
+         if (this._options.data) {
+            this._data = this._options.data;
+         }
+         if (this._options.keyField) {
+            this._keyField = this._options.keyField;
+         }
       },
 
       create: function () {
@@ -33,7 +43,8 @@ define('js!SBIS3.CONTROLS.DataSourceArray', ['js!SBIS3.CONTROLS.IDataSource', 'j
 
          var DS = new DataSet({
             strategy: 'DataStrategyArray',
-            data: self._options.data
+            data: self._options.data,
+            keyField: self._keyField
          });
 
          // когда будет чудо-библиотека можно будет отсортировать, отфильтровать и потом только вернуть результат

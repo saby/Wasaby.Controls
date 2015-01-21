@@ -8,6 +8,9 @@
    <link rel="stylesheet" href="/ws/css/core.css" type="text/css"/>
    <link rel="stylesheet" href="/ws/css/themes/wi_scheme.css" type="text/css"/>
 
+   <link rel="stylesheet" type="text/css" href="/resources/Tema_sajta/fonts/index.css">
+   <link rel="stylesheet" type="text/css" href="/resources/Tema_sajta/icons/index.css">
+
    <script type="text/javascript">
       // new config support
       window.wsConfig = {
@@ -38,6 +41,7 @@
 
    <script type="text/javascript" id="ws-include-components"></script>
 
+
    <script type="text/javascript">
       $ws.core.ready.addCallback(function () {
          require([ 'bootup' ], function () {
@@ -56,6 +60,27 @@
          padding: 25px;
          border: 1px solid #000000;
          vertical-align: top;
+      }
+
+      .listViewItem{
+         position: relative;
+      }
+
+      .controls-ListView__item {
+         overflow: hidden;
+         position: relative;
+      }
+      .controls-ListView__itemActions {
+         position: absolute;
+         height: 16px;
+         right: 0;
+         top: 50%;
+         margin-top: -8px;
+         z-index: 10;
+         display: none;
+      }
+      .controls-ListView__action {
+         margin-right: 16px;
       }
 
    </style>
@@ -110,13 +135,25 @@
                   {'@Производитель': 1, 'Название': 'Dell', 'Сайт': 'Dell.com'},
                   {'@Производитель': 2, 'Название': 'asus', 'Сайт': 'asus.com'},
                   {'@Производитель': 3, 'Название': 'hp', 'Сайт': 'hp.com'}
-               ]
+               ],
+               keyField: '@Производитель'
             });
 
             new ListViewDS({
                element: "ListViewDS2",
                dataSource: ds2,
-               itemTemplate: itemTpl1
+               itemTemplate: itemTpl1,
+               itemsActions : [
+                  {
+                     icon : 'sprite:icon-16 icon-AddButton icon-primary',
+                     handler : function(id, item) {
+                        console.log(id +' '+ item);
+                     }
+                  }
+               ],
+               elemClickHandler : function(id, data) {
+                  console.log('rowClick ' + id + ' ' + JSON.stringify(data));
+               }
             });
 
          });

@@ -8,6 +8,19 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
       },
       $constructor: function () {
       },
+
+      getKey:function(data){
+         var s = data.s,
+            index;
+         for (var i = 0, l = s.length; i < l; i++) {
+            if (s[i]['t'] == 'Идентификатор') {
+               index = i;
+               break;
+            }
+         }
+         return s[index]['n'];
+      },
+
       each: function (data, iterateCallback, context) {
          var d = data.d,
             s = data.s,
