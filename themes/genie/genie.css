@@ -64,11 +64,11 @@
 .controls-RadioButton.ws-disabled {
   cursor: default;
 }
+.controls-RadioButton.ws-disabled .controls-RadioButton__icon {
+  background-position: 0 -48px;
+}
 .controls-RadioButton.ws-disabled .controls-RadioButton__caption {
   color: #d1d1d4;
-}
-.controls-RadioButton.ws-disabled .controls-RadioButton__icon {
-  background-position: 0 0px;
 }
 .controls-TextBox {
   display: inline-block;
@@ -595,6 +595,13 @@
   width: 16px;
   height: 16px;
 }
+.controls-Link {
+  display: inline-block;
+}
+.controls-Link__icon {
+  cursor: pointer;
+  vertical-align: middle;
+}
 .controls-EditAtPlace {
   border: 1px solid transparent;
 }
@@ -715,11 +722,4 @@
 }
 .controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace__fieldWrapper {
   display: none;
-}
-.controls-Link {
-  display: inline-block;
-}
-.controls-Link__icon {
-  cursor: pointer;
-  vertical-align: middle;
 }
