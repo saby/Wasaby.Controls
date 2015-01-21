@@ -68,11 +68,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                self.getParent().getLinkedContext().setValue(f, v, false, o);
             });
 
-            if (!this._options.editInPopup){
-               this._container.children().bind('focusout', function(){
-                  self._applyEdit();
-               });
-            }
+            $('.js-controls-EditAtPlace__editor', this._container.get(0)).bind('keydown', function (e) {
+               self._keyPressHandler(e);
+            });
          },
 
          showPicker: function(){
@@ -131,9 +129,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                this._oldText = this._options.text;
             } else {
                this.setInPlaceEditMode(true);
-               if (this._options.enableControlPanel) {
-                  this._addControlPanel(this._container.parent());
-               }
+               this._addControlPanel(this._container.parent());
             }
             this._resizeTextArea();
 
@@ -166,9 +162,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             $('[data-component]', this._picker.getContainer()).attr('data-bind', this._container.attr('data-bind'));
             $('[data-component]', this._picker.getContainer()).width(this._container.width());
             this._picker._loadChildControls();
-            if (this._options.enableControlPanel) {
-               this._addControlPanel(this._picker._container);
-            }
+            this._addControlPanel(this._picker._container);
             this._picker._container.bind('keydown', function (e) {
                self._keyPressHandler(e);
             });
@@ -184,24 +178,26 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
 
          // Добавляем кнопки
          _addControlPanel: function (container) {
-            this._cancelCross = $('<span class="controls-EditAtPlace__cancel"></span>');
-            var self = this,
-               $ok = $('<span class="controls-EditAtPlace__okButton"></span>'),
-               $cntrlPanel = $('<span class="controls-EditAtPlace__controlPanel"></span>').append($ok).append(this._cancelCross);
+            if (this._options.enableControlPanel) {
+               this._cancelCross = $('<span class="controls-EditAtPlace__cancel"></span>');
+               var self = this,
+                  $ok = $('<span class="controls-EditAtPlace__okButton"></span>'),
+                  $cntrlPanel = $('<span class="controls-EditAtPlace__controlPanel"></span>').append($ok).append(this._cancelCross);
 
-            // Добавляем кнопки
-            this._okButton = new IconButton({
-               parent: (self._options.editInPopup) ? self._picker : self,
-               element: $ok,
-               icon: 'sprite:icon-24 icon-Successful icon-done action-hover'
-            });
-            container.append($cntrlPanel);
-            this._okButton.subscribe('onActivated', function () {
-               self._applyEdit();
-            });
-            this._cancelCross.bind('click', function () {
-               self._cancelEdit();
-            });
+               // Добавляем кнопки
+               this._okButton = new IconButton({
+                  parent: (self._options.editInPopup) ? self._picker : self,
+                  element: $ok,
+                  icon: 'sprite:icon-24 icon-Successful icon-done action-hover'
+               });
+               container.append($cntrlPanel);
+               this._okButton.subscribe('onActivated', function () {
+                  self._applyEdit();
+               });
+               this._cancelCross.bind('click', function () {
+                  self._cancelEdit();
+               });
+            }
          },
 
          _cancelEdit: function () {
