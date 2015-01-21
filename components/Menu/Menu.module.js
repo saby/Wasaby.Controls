@@ -94,6 +94,10 @@ define('js!SBIS3.CONTROLS.Menu', [
             return this._subContainers[parId];
          }
       },
+      _drawItems : function() {
+         this.destroySubObjects();
+         Menu.superclass._drawItems.call(this);
+      },
       _drawItemsCallback : function() {
          for (var i in this._subContainers) {
             if (this._subContainers.hasOwnProperty(i)) {
@@ -179,12 +183,17 @@ define('js!SBIS3.CONTROLS.Menu', [
 
       destroy : function(){
          Menu.superclass.destroy.call(this);
+         this.destroySubObjects();
+      },
+
+      destroySubObjects : function() {
+         this._subMenus = {};
+         this._subContainers = {};
          for (var j in this._subMenus) {
             if (this._subMenus.hasOwnProperty(j)) {
                this._subMenus[j].destroy();
             }
          }
-         this._subContainers = {};
       }
    });
 

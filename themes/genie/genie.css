@@ -64,11 +64,11 @@
 .controls-RadioButton.ws-disabled {
   cursor: default;
 }
+.controls-RadioButton.ws-disabled .controls-RadioButton__icon {
+  background-position: 0 -48px;
+}
 .controls-RadioButton.ws-disabled .controls-RadioButton__caption {
   color: #d1d1d4;
-}
-.controls-RadioButton.ws-disabled .controls-RadioButton__icon {
-  background-position: 0 0px;
 }
 .controls-TextBox {
   display: inline-block;
@@ -627,7 +627,7 @@
 .controls-EditAtPlace__textAreaWrapper {
   border: none;
   display: block;
-  padding: 9px 7px;
+  padding: 6px 7px;
   box-sizing: border-box;
   line-height: 20px;
 }
