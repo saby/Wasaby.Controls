@@ -20,7 +20,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       $protected: {
          _zIndex: '',
          _options: {
-            primary: true
          }
       },
 
