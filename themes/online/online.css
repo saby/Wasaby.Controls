@@ -917,3 +917,30 @@ input[type="reset"]::-moz-focus-inner {
 .controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace__fieldWrapper {
   display: none;
 }
+.controls-LinkMenu {
+  display: inline-block;
+  height: 32px;
+  padding: 0 8px;
+}
+.controls-LinkMenu .controls-Link {
+  margin-top: 7px;
+}
+.controls-LinkMenu__Menu {
+  margin-top: -33px;
+  margin-left: -1px;
+  background: #ffffff;
+}
+.controls-LinkMenu__Menu .controls-Link {
+  color: #FF7033;
+}
+.controls-LinkMenu__Menu .controls-Link:hover {
+  text-decoration: none;
+}
+.controls-LinkMenu__Menu .controls-LinkMenu {
+  box-sizing: border-box;
+  width: 100%;
+  border-bottom: 1px solid #ededed;
+}
+.controls-LinkMenu__Menu .controls-MenuItem {
+  height: 32px;
+}
