@@ -69,6 +69,11 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
          this._drawItems();
       },
 
+      addItem : function(item) {
+         this._items.addItem(item);
+         this._drawItems();
+      },
+
       _drawItems: function(){
          this._itemsInstances = {};
          var

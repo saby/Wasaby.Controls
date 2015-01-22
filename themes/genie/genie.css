@@ -185,7 +185,10 @@
   color: #d1d1d4;
 }
 .controls-CheckBox.ws-disabled .controls-CheckBox__icon {
-  background-position: 0 0px;
+  background-position: 0 -64px;
+}
+.controls-CheckBox.controls-ToggleButton__null.ws-disabled .controls-CheckBox__icon {
+  background-position: 0 -80px;
 }
 .controls-ComboBox__arrowDown {
   background-image: url('./img/ComboBox.png');
