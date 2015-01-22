@@ -27,8 +27,15 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource', 'js!S
 
       },
 
-      remove: function (id) {
+      destroy: function (id) {
+         var self = this,
+            def = new $ws.proto.Deferred();
 
+         self._BL.call(self._options.destroyMethodName, {'ИдО': id}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+            def.callback();
+         });
+
+         return def;
       },
 
       query: function (filter, sorting, offset, limit) {

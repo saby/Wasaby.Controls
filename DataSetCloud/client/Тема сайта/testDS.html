@@ -127,7 +127,19 @@
             new ListViewDS({
                element: "ListViewDS1",
                dataSource: ds1,
-               itemTemplate: itemTpl1
+               itemTemplate: itemTpl1,
+               itemsActions : [
+                  {
+                     icon : 'sprite:icon-16 icon-Erase icon-error',
+                     handler : function(id) {
+                        var self = this;
+                        this._dataSource.destroy(id).addCallback(function(){
+                           self._drawItems();
+                        });
+
+                     }
+                  }
+               ]
             });
 
             var ds2 = new DataSourceArray({
@@ -145,9 +157,13 @@
                itemTemplate: itemTpl1,
                itemsActions : [
                   {
-                     icon : 'sprite:icon-16 icon-AddButton icon-primary',
-                     handler : function(id, item) {
-                        console.log(id +' '+ item);
+                     icon : 'sprite:icon-16 icon-Erase icon-error',
+                     handler : function(id) {
+                        var self = this;
+                        this._dataSource.destroy(id).addCallback(function(){
+                           self._drawItems();
+                        });
+
                      }
                   }
                ],

@@ -5,20 +5,13 @@ define('js!SBIS3.CONTROLS.DataSourceArray', ['js!SBIS3.CONTROLS.IDataSource', 'j
    'use strict';
    return IDataSource.extend({
       $protected: {
-         _data: undefined,
-         _keyField: undefined,
          _options: {
             data: [],
             keyField: ''
          }
       },
       $constructor: function () {
-         if (this._options.data) {
-            this._data = this._options.data;
-         }
-         if (this._options.keyField) {
-            this._keyField = this._options.keyField;
-         }
+
       },
 
       create: function () {
@@ -26,18 +19,29 @@ define('js!SBIS3.CONTROLS.DataSourceArray', ['js!SBIS3.CONTROLS.IDataSource', 'j
       },
 
       read: function (id) {
-         var self = this,
-            def = new $ws.proto.Deferred();
 
-         return def;
       },
 
       update: function () {
 
       },
 
-      remove: function (id) {
+      destroy: function (id) {
+         var def = new $ws.proto.Deferred(),
+            key;
+         for (var i = 0; i < this._options.data.length; i++) {
+            if (this._options.data[i]['@Производитель'] == parseInt(id, 10)) {
+               key = i;
+               break;
+            }
 
+         }
+
+         Array.remove(this._options.data, key);
+
+         def.callback();
+
+         return def;
       },
 
       query: function (filter, sorting, offset, limit) {
@@ -46,8 +50,8 @@ define('js!SBIS3.CONTROLS.DataSourceArray', ['js!SBIS3.CONTROLS.IDataSource', 'j
 
          var DS = new DataSet({
             strategy: 'DataStrategyArray',
-            data: self._options.data,
-            keyField: self._keyField
+            data: this._options.data,
+            keyField: this._options.keyField
          });
 
          // когда будет чудо-библиотека можно будет отсортировать, отфильтровать и потом только вернуть результат
