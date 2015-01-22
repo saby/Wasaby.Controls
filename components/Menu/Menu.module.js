@@ -52,6 +52,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          if (this._items.getItemsCount()) {
             this._drawItems();
          }
+         this._publish('onMenuItemActivate');
       },
 
       _getItemClass : function() {
@@ -99,7 +100,17 @@ define('js!SBIS3.CONTROLS.Menu', [
          Menu.superclass._drawItems.call(this);
       },
       _drawItemsCallback : function() {
-         for (var i in this._subContainers) {
+         var
+            menuItems = this.getItemsInstances(),
+            self = this;
+         for (var i in menuItems) {
+            if (menuItems.hasOwnProperty(i)){
+               menuItems[i].subscribe('onActivated', function () {
+                  self._notify('onMenuItemActivate', this.getContainer().attr('data-id'));
+               });
+            }
+         }
+         for (i in this._subContainers) {
             if (this._subContainers.hasOwnProperty(i)) {
 
                var
@@ -112,7 +123,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          }
 
          var instances = this.getItemsInstances();
-         var self = this;
+
          for (i in instances) {
             if (instances.hasOwnProperty(i)) {
                instances[i].getContainer().hover(function(e){
@@ -139,11 +150,12 @@ define('js!SBIS3.CONTROLS.Menu', [
                         self._subMenus[id].getContainer().append(self._subContainers[id]);
                      }
                      mySubmenu = self._subMenus[id];
-                     self._subMenus[id].show();
+                     mySubmenu.show();
                   }
                })
             }
          }
+
       },
       _createSubMenu : function(target, parent, isFirstLevel) {
          target = $(target);
