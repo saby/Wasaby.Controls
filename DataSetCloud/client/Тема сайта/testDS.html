@@ -83,6 +83,23 @@
          margin-right: 16px;
       }
 
+      .taskIcon {
+         float: left;
+         margin-top: 10px;
+         cursor: pointer;
+      }
+      .taskTxt {
+         height: 44px;
+         line-height: 44px;
+         padding-left: 35px;
+         font-size: 24px;
+
+      }
+      .taskComplete {
+         color: #a9a9a9;
+         text-decoration: line-through;
+      }
+
    </style>
 
 </head>
@@ -119,8 +136,8 @@
             var ds1 = new DataSourceBL('Заметка');
 
             var itemTpl1 = '<div class="listViewItem" style="overflow: hidden; border-bottom: 1px solid">\
-                     <div style="float:left; width: 30px;height:32px;line-height:32px;">{{=it.get("Завершена")}}</div>\
-                     <div style="color:#800000;margin-left: 35px;height:32px;line-height:32px;">{{=it.get("Содержимое")}}</div>\
+                     <div class="taskIcon icon-24 icon-Successful{{?it.get("Завершена")}} icon-done{{??}} icon-disabled{{?}}"></div>\
+                     <div class="taskTxt{{?it.get("Завершена")}} taskComplete{{?}}">{{=it.get("Содержимое")}}</div>\
                </div>';
 
             new ListViewDS({
@@ -145,7 +162,7 @@
                data: [
                   {'@Заметка': 1, 'Содержимое': 'Поиграть в бильярд', 'Завершена': false},
                   {'@Заметка': 2, 'Содержимое': 'Посидеть в планшете', 'Завершена': false},
-                  {'@Заметка': 3, 'Содержимое': 'Пожрать', 'Завершена': false}
+                  {'@Заметка': 3, 'Содержимое': 'Пожрать', 'Завершена': true}
                ],
                keyField: '@Заметка'
             });
