@@ -26,14 +26,17 @@ define('js!SBIS3.CONTROLS.DataSourceArray', ['js!SBIS3.CONTROLS.IDataSource', 'j
       },
 
       read: function (id) {
+         var self = this,
+            def = new $ws.proto.Deferred();
 
+         return def;
       },
 
       update: function () {
 
       },
 
-      delete: function (id) {
+      remove: function (id) {
 
       },
 

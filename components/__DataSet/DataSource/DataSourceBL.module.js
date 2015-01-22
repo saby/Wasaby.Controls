@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource', 'js!S
 
       },
 
-      delete: function (id) {
+      remove: function (id) {
 
       },
 

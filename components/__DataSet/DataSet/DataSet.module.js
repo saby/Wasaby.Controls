@@ -37,8 +37,6 @@ define('js!SBIS3.CONTROLS.DataSet', [
                break;
          }
 
-
-
       },
 
       _prepareData: function (data) {
@@ -52,6 +50,12 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
       getKey: function (item) {
          return item.get(this._keyField);
+      },
+
+      getRecordByKeyField: function(key){
+         console.log(this._data)
+
+         return key;
       },
 
       getStrategy:function(){

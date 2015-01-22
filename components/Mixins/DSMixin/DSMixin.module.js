@@ -131,16 +131,16 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm'], function (_
             //иначе функция выбиратор
             else if (tplConfig.componentType && tplConfig.componentType.indexOf('js!') == 0) {
                //если передали имя класса то реквайрим его и создаем
-               require([tplConfig.componentType], function (ctor) {
+               require([tplConfig.componentType], function (Ctor) {
                   var
-                     ctrlWrapper = $("<div></div>").appendTo(resContainer),
+                     ctrlWrapper = $('<div></div>').appendTo(resContainer),
                      config = tplConfig.config;
                   config.element = ctrlWrapper;
                   config.parent = self;
-                  var ctrl = new ctor(config);
+                  var ctrl = new Ctor(config);
                   self._itemsInstances[self._DataSet.getKey()] = ctrl;
                   def.callback(ctrl.getContainer());
-               })
+               });
             }
             else {
                //и также можно передать dot шаблон
