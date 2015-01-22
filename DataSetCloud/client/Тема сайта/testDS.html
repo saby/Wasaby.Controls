@@ -116,12 +116,11 @@
             'js!SBIS3.CONTROLS.DataSourceBL'
          ], function (ListViewDS, Record, DataSourceArray, DataSourceBL) {
 
-            var ds1 = new DataSourceBL('Производитель');
+            var ds1 = new DataSourceBL('Заметка');
 
-            var itemTpl1 = '<div class="listViewItem">\
-                     <div style="color:#999999; font-size:15px">{{=it.get("Название")}}</div>\
-                     <div style="color:#800000;">{{=it.get("Сайт")}}</div>\
-					 <hr>\
+            var itemTpl1 = '<div class="listViewItem" style="overflow: hidden; border-bottom: 1px solid">\
+                     <div style="float:left; width: 30px;height:32px;line-height:32px;">{{=it.get("Завершена")}}</div>\
+                     <div style="color:#800000;margin-left: 35px;height:32px;line-height:32px;">{{=it.get("Содержимое")}}</div>\
                </div>';
 
             new ListViewDS({
@@ -144,11 +143,11 @@
 
             var ds2 = new DataSourceArray({
                data: [
-                  {'@Производитель': 1, 'Название': 'Dell', 'Сайт': 'Dell.com'},
-                  {'@Производитель': 2, 'Название': 'asus', 'Сайт': 'asus.com'},
-                  {'@Производитель': 3, 'Название': 'hp', 'Сайт': 'hp.com'}
+                  {'@Заметка': 1, 'Содержимое': 'Поиграть в бильярд', 'Завершена': false},
+                  {'@Заметка': 2, 'Содержимое': 'Посидеть в планшете', 'Завершена': false},
+                  {'@Заметка': 3, 'Содержимое': 'Пожрать', 'Завершена': false}
                ],
-               keyField: '@Производитель'
+               keyField: '@Заметка'
             });
 
             new ListViewDS({
