@@ -153,9 +153,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                      action.mouseup(function(e){
                         e.stopPropagation();
                         var
-                           id = $(this).closest('.controls-ListView__item').attr('data-id'),
-                           item = self._items.getItem(id);
-                        handler(id, item);
+                           id = $(this).closest('.controls-ListView__item').attr('data-id')/*,
+                           item = self._items.getItem(id)*/;
+                        handler(id/*, item*/);
                      })
                   }
                   this._actsContainer.append(action);
