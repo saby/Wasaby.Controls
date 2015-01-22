@@ -48,17 +48,19 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
       },
 
       _drawSelectedItem : function(id) {
-         var controls = this._childControls;
-         for (var i = 0; i < controls.length; i++) {
-            if (!id) {
-               controls[i].setChecked(false);
-            }
-            else {
-               if (controls[i].getContainer().data('id') == id) {
-                  controls[i].setChecked(true);
+         var controls = this.getItemsInstances();
+         for (var i in controls) {
+            if (controls.hasOwnProperty(i)) {
+               if (!id) {
+                  controls[i].setChecked(false);
                }
                else {
-                  controls[i].setChecked(false);
+                  if (controls[i].getContainer().data('id') == id) {
+                     controls[i].setChecked(true);
+                  }
+                  else {
+                     controls[i].setChecked(false);
+                  }
                }
             }
          }

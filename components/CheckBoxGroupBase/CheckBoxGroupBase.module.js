@@ -62,20 +62,22 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
 
       _drawSelectedItems : function(idArray) {
          var
-            controls = this._childControls,
+            controls = this.getItemsInstances(),
             arrLen = idArray.length;
 
-         for (var i = 0; i < controls.length; i++) {
-            if (!arrLen) {
-               controls[i].setChecked(false);
-            }
-            else {
-               var key = controls[i].getContainer().data('id');
-               if (idArray.indexOf(key) >= 0) {
-                  controls[i].setChecked(true);
+         for (var i in controls) {
+            if (controls.hasOwnProperty(i)) {
+               if (!arrLen) {
+                  controls[i].setChecked(false);
                }
                else {
-                  controls[i].setChecked(false);
+                  var key = controls[i].getContainer().data('id');
+                  if (idArray.indexOf(key) >= 0) {
+                     controls[i].setChecked(true);
+                  }
+                  else {
+                     controls[i].setChecked(false);
+                  }
                }
             }
          }
