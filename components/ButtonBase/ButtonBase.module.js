@@ -86,39 +86,6 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
        */
       getCaption: function() {
          return this._options.caption;
-      },
-
-      /**
-       * Установить изображение на кнопке.
-       * Метод установки или замены изображения, заданного опцией {@link icon}.
-       * @param {String} iconPath Путь к изображению.
-       * @example
-       * <pre>
-       *     var btn = this.getChildControlByName("myButton");
-       *        btn.setIcon("sprite:icon-16 icon-Successful icon-primary")
-       * </pre>
-       * @see icon
-       * @see getIcon
-       */
-      setIcon: function(iconPath) {
-         this._options.icon = iconPath;
-      },
-
-      /**
-       * Получить изображение на кнопке.
-       * Метод получения изображения, заданного опцией {@link icon}, либо методом {@link setIcon}.
-       * @example
-       * <pre>
-       *     var btn = this.getChildControlByName("myButton");
-       *     if (/icon-Alert/g.test(btn.getIcon())){
-       *        btn.setIcon("sprite:icon16 icon-Alert icon-done");
-       *     }
-       * </pre>
-       * @see icon
-       * @see setIcon
-       */
-      getIcon: function() {
-         return this._options.icon;
       }
    });
 
