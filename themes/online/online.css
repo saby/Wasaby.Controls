@@ -773,7 +773,7 @@ input[type="reset"]::-moz-focus-inner {
   margin-left: 22px;
 }
 .controls-Menu__Popup {
-  border: 1px solid #ededed;
+  border: 1px solid #cccccc;
   box-sizing: border-box;
   margin-top: -1px;
 }
