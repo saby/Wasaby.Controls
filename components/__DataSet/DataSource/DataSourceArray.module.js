@@ -19,28 +19,37 @@ define('js!SBIS3.CONTROLS.DataSourceArray', ['js!SBIS3.CONTROLS.IDataSource', 'j
       },
 
       read: function (id) {
-
+         var def = new $ws.proto.Deferred(),
+            key;
+         for (var i = 0; i < this._options.data.length; i++) {
+            if (this._options.data[i][this._options.keyField] == parseInt(id, 10)) {
+               key = i;
+               break;
+            }
+         }
+         def.callback(this._options.data[key]);
+         return def;
       },
 
-      update: function () {
-
+      update: function (item) {
+         var def = new $ws.proto.Deferred(),
+            key = item[this._options.keyField];
+         def.callback(item);
+         return def;
       },
 
       destroy: function (id) {
          var def = new $ws.proto.Deferred(),
             key;
          for (var i = 0; i < this._options.data.length; i++) {
-            if (this._options.data[i][this.keyField] == parseInt(id, 10)) {
+            if (this._options.data[i][this._options.keyField] == parseInt(id, 10)) {
                key = i;
                break;
             }
 
          }
-
          Array.remove(this._options.data, key);
-
          def.callback();
-
          return def;
       },
 

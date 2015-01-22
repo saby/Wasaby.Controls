@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   var targ = $(e.target).hasClass('controls-ListView__item') ? e.target : $(e.target).closest('.controls-ListView__item');
                   if (targ.length) {
                      var id = targ.attr('data-id');
-                     self._elemClickHandler(id, self._items.getItem(id));
+                     self._elemClickHandler(id/*, self._items.getItem(id)*/);
                   }
                }
             });
@@ -86,7 +86,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 /* +++++++++++++++++++++++++++ */
 
          _elemClickHandler : function(id, data) {
-            console.log('click')
             this.setSelectedItems([id]);
             if (this._options.elemClickHandler) {
                var parent = this.getParent();

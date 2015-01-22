@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource', 'js!S
       $protected: {
          _options: {
             queryMethodName: 'Список',
+            readMethodName: 'Прочитать',
             destroyMethodName: 'Удалить'
          },
          _BL: undefined
@@ -20,7 +21,12 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource', 'js!S
       },
 
       read: function (id) {
-
+         var self = this,
+            def = new $ws.proto.Deferred();
+         self._BL.call(self._options.readMethodName, {'ИдО': id, 'ИмяМетода': 'Список'}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+            def.callback(res);
+         });
+         return def;
       },
 
       update: function (record) {
