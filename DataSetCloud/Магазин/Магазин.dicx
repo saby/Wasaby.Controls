@@ -1,5 +1,26 @@
-<?xml version="1.0" encoding="WINDOWS-1251" ?>
+<?xml version="1.0" encoding="WINDOWS-1251"?>
 <dictionary dicx_version="1.21">
+
+  <table last_changed="Крайнов Д.О." name="Заметка" personal_data="0" responsible="Крайнов Д.О." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>4</max_size>
+      </format>
+    </column>
+    <column name="Содержимое">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <column name="Завершена">
+      <format>
+        <default>0</default>
+        <type>BOOLEAN</type>
+      </format>
+    </column>
+    <trigger_list/>
+  </table>
 
   <table last_changed="Мануйлов А.С." name="Производитель" personal_data="0" responsible="Мануйлов А.С." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">

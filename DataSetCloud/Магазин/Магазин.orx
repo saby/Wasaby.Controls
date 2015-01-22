@@ -1,5 +1,31 @@
-<?xml version="1.0" encoding="WINDOWS-1251" ?>
+<?xml version="1.0" encoding="WINDOWS-1251"?>
 <repository orx_version="1.71">
+
+  <object insert_on_create="0" last_changed="Крайнов Д.О." name="Заметка" read_only="0" responsible="Крайнов Д.О.">
+    <source name="Заметка">
+      <trigger_list/>
+    </source>
+    <generate_method name="Заметка.Записать"/>
+    <generate_method name="Заметка.История"/>
+    <generate_method name="Заметка.Копировать"/>
+    <generate_method name="Заметка.Объединить"/>
+    <generate_method name="Заметка.Прочитать"/>
+    <generate_method name="Заметка.Создать"/>
+    <declarative key="@Заметка" last_changed="Крайнов Д.О." name="Заметка.Список" responsible="Крайнов Д.О." type="0">
+      <field>@Заметка</field>
+      <field>Содержимое</field>
+      <field>Завершена</field>
+      <source name="Заметка"/>
+      <parameter filter_category="USER" filter_class="0" name="Завершена" param_type="OPTIONAL" type="BOOLEAN"/>
+      <composite operation="AND">
+        <simple operation="EQ">
+          <left name="Завершена" type="PARAMETER"/>
+          <right name="Завершена" type="FIELD"/>
+        </simple>
+      </composite>
+    </declarative>
+    <generate_method name="Заметка.Удалить"/>
+  </object>
 
   <object insert_on_create="0" last_changed="Мануйлов А.С." name="Производитель" read_only="0" responsible="Мануйлов А.С.">
     <source name="Производитель"/>
