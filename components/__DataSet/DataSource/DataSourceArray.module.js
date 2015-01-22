@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.DataSourceArray', ['js!SBIS3.CONTROLS.IDataSource', 'j
          var def = new $ws.proto.Deferred(),
             key;
          for (var i = 0; i < this._options.data.length; i++) {
-            if (this._options.data[i]['@Производитель'] == parseInt(id, 10)) {
+            if (this._options.data[i][this.keyField] == parseInt(id, 10)) {
                key = i;
                break;
             }
