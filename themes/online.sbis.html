@@ -58,6 +58,7 @@
    <link rel="stylesheet" type="text/css" href="./online/online.css"/>
 </head>
 <body>
+<div id="Back"></div>
 
 <div id="content">
    <h3>Переключатели</h3>
@@ -313,7 +314,7 @@
    $ws.core.withComponents('Source').addCallback(function () {
       $(document).ready(function () {
 
-         require(["js!SBIS3.CORE.Link"], function (r) {
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
                element: "link",
                caption: 'This is Link',
@@ -689,6 +690,15 @@
                offset: 0
             },
             closeByExternalClick: true
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "Back",
+               caption: 'Назад',
+               href: '../../',
+               icon: 'sprite:icon-16 icon-DayBackward icon-primary'
+            })
          });
       });
    });

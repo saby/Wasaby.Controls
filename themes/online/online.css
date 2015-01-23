@@ -116,7 +116,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Button__icon {
   position: absolute;
   left: -2px;
-  top: 0;
 }
 .controls-Button__text {
   white-space: nowrap;
@@ -773,7 +772,7 @@ input[type="reset"]::-moz-focus-inner {
   margin-left: 22px;
 }
 .controls-Menu__Popup {
-  border: 1px solid #ededed;
+  border: 1px solid #cccccc;
   box-sizing: border-box;
   margin-top: -1px;
 }
@@ -919,6 +918,33 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace__fieldWrapper {
   display: none;
+}
+.controls-MenuLink__header {
+  display: inline-block;
+  height: 32px;
+  padding: 0 8px;
+}
+.controls-MenuLink__header .controls-Link {
+  margin-top: 7px;
+}
+.controls-MenuLink__Menu {
+  margin-top: -24px;
+  margin-left: -9px;
+  background: #ffffff;
+}
+.controls-MenuLink__Menu .controls-Link {
+  color: #FF7033;
+}
+.controls-MenuLink__Menu .controls-Link:hover {
+  text-decoration: none;
+}
+.controls-MenuLink__Menu .controls-MenuLink__header {
+  box-sizing: border-box;
+  width: 100%;
+  border-bottom: 1px solid #ededed;
+}
+.controls-MenuLink__Menu .controls-MenuItem {
+  height: 32px;
 }
 .controls-MenuButton {
   position: relative;

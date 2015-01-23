@@ -1,4 +1,4 @@
-define('js!SBIS3.CORE.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CORE.Link' ], function(ButtonBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.Link' ], function(ButtonBase, dotTplFn) {
 
    'use strict';
 

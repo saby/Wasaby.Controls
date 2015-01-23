@@ -1,9 +1,4 @@
-/**
- * Модуль 'Компонент кнопка'.
- *
- * @description
- */
-define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.CollectionMixin', 'html!SBIS3.CONTROLS.MenuButton'], function(Button, ContextMenu, PickerMixin, CollectionMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.CollectionMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'html!SBIS3.CONTROLS.MenuButton'], function(Button, ContextMenu, PickerMixin, CollectionMixin, MenuButtonMixin, dotTplFn) {
 
    'use strict';
 
@@ -15,7 +10,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * @mixes SBIS3.CONTROLS.CollectionMixin
     */
 
-   var MenuButton = Button.extend( [PickerMixin, CollectionMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
+   var MenuButton = Button.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _zIndex: '',
@@ -29,13 +24,13 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             this.subscribe('onActivated', function () {
                this._container.addClass('controls-Checked__checked');
                self.togglePicker();
-            })
+            });
          } else {
             $('.js-controls-MenuButton__arrowDown', this._container).hide();
-            if (this.getItems().getNextItem()['handler']) {
+            if (this.getItems().getNextItem().handler) {
                this.subscribe('onActivated', function () {
-                  this.getItems().getNextItem()['handler']();
-               })
+                  this.getItems().getNextItem().handler();
+               });
             }
          }
       },
@@ -53,36 +48,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
 
       _createPicker: function(){
          return new ContextMenu(this._setPickerConfig());
-      },
-
-      _setPickerConfig: function(){
-         return {
-            parent: this.getParent(),
-            context: this.getParent() ? this.getParent().getLinkedContext() : {},
-            element: $('<div></div>'),
-            target : this.getContainer(),
-            items: this._options.items,
-            corner : 'bl',
-            hierField: 'par',
-            verticalAlign: {
-               side: 'top'
-            },
-            horizontalAlign: {
-               side: 'left'
-            },
-            closeByExternalClick: true,
-            targetPart: true
-         };
-      },
-
-      showPicker: function(){
-         MenuButton.superclass.showPicker.call(this);
-         this._container.css('z-index', this._picker._container.css('z-index') + 1);
-      },
-
-      hidePicker: function(){
-         MenuButton.superclass.hidePicker.call(this);
-         this._container.css('z-index', this._zIndex);
       },
 
       _setWidth: function(){
