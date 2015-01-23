@@ -760,6 +760,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuItem__content {
   position: relative;
+  vertical-align: middle;
 }
 .controls-MenuItem__icon {
   position: absolute;
@@ -917,17 +918,17 @@ input[type="reset"]::-moz-focus-inner {
 .controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace__fieldWrapper {
   display: none;
 }
-.controls-LinkMenu {
+.controls-LinkMenu__header {
   display: inline-block;
   height: 32px;
   padding: 0 8px;
 }
-.controls-LinkMenu .controls-Link {
+.controls-LinkMenu__header .controls-Link {
   margin-top: 7px;
 }
 .controls-LinkMenu__Menu {
-  margin-top: -33px;
-  margin-left: -1px;
+  margin-top: -24px;
+  margin-left: -9px;
   background: #ffffff;
 }
 .controls-LinkMenu__Menu .controls-Link {
@@ -936,7 +937,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-LinkMenu__Menu .controls-Link:hover {
   text-decoration: none;
 }
-.controls-LinkMenu__Menu .controls-LinkMenu {
+.controls-LinkMenu__Menu .controls-LinkMenu__header {
   box-sizing: border-box;
   width: 100%;
   border-bottom: 1px solid #ededed;

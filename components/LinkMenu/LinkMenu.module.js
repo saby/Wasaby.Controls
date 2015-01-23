@@ -25,12 +25,12 @@ define('js!SBIS3.CORE.LinkMenu', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONT
             this.subscribe('onActivated', function () {
                this._container.addClass('controls-Checked__checked');
                self.togglePicker();
-            })
+            });
          } else {
             if (this.getItems().getNextItem()['handler']) {
                this.subscribe('onActivated', function () {
                   this.getItems().getNextItem()['handler']();
-               })
+               });
             }
          }
       },
@@ -82,8 +82,10 @@ define('js!SBIS3.CORE.LinkMenu', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONT
             self._closeHandler();
          });
          this._picker._container.addClass('controls-LinkMenu__Menu');
-         this._picker.getContainer().prepend(this._container.clone());
-         $('.controls-LinkMenu', this._picker._container).bind('click', function(){
+         var header= $('<div class="controls-LinkMenu__header"></div>');
+         header.append(this._container.clone());
+         this._picker.getContainer().prepend(header);
+         $('.controls-LinkMenu__header', this._picker._container).bind('click', function(){
             self.hidePicker();
          });
       },
