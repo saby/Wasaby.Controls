@@ -30,12 +30,13 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource', 'js!S
          return def;
       },
 
-      update: function (item) {
+      update: function (record) {
          var self = this,
+            rawData = record.getRawData(),
             def = new $ws.proto.Deferred();
          var rec = {
-            s: item.s,
-            d: item.d,
+            s: rawData.s,
+            d: rawData.d,
             //FixME: можно ли раскомментить
             /*_key: 2,*/
             _type: 'record'

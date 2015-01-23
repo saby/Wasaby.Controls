@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.DataSourceArray', ['js!SBIS3.CONTROLS.IDataSource', 'j
          return def;
       },
 
-      update: function (item) {
+      update: function (record) {
          var def = new $ws.proto.Deferred(),
             key = item[this._options.keyField];
          for (var i = 0; i < this._options.data.length; i++) {
