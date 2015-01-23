@@ -2,9 +2,7 @@
 <repository orx_version="1.71">
 
   <object insert_on_create="0" last_changed="Крайнов Д.О." name="Заметка" read_only="0" responsible="Крайнов Д.О.">
-    <source name="Заметка">
-      <trigger_list/>
-    </source>
+    <source name="Заметка"/>
     <generate_method name="Заметка.Записать"/>
     <generate_method name="Заметка.История"/>
     <generate_method name="Заметка.Копировать"/>
@@ -16,6 +14,7 @@
       <field>Содержимое</field>
       <field>Завершена</field>
       <source name="Заметка"/>
+      <sorting column="@Заметка" nulls_place="FIRST" order="ASC"/>
       <parameter filter_category="USER" filter_class="0" name="Завершена" param_type="OPTIONAL" type="BOOLEAN"/>
       <composite operation="AND">
         <simple operation="EQ">

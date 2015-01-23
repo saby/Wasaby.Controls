@@ -60,6 +60,7 @@
          padding: 25px;
          border: 1px solid #000000;
          vertical-align: top;
+         width: 50%;
       }
 
       .listViewItem{
@@ -155,7 +156,20 @@
 
                      }
                   }
-               ]
+               ],
+               elemClickHandler : function(id, data, target){
+                  if ($(target).hasClass('taskIcon')) {
+                     var self = this;
+                     data.set('Завершена', !(data.get('Завершена')));
+                     this._dataSource.update(data).addCallback(function(){
+                        self._drawItems();
+                     });
+                  }
+                  else if ($(target).hasClass('taskTxt')) {
+
+                  }
+               }
+
             });
 
             var ds2 = new DataSourceArray({
@@ -183,8 +197,17 @@
                      }
                   }
                ],
-               elemClickHandler : function(id, data) {
-                  console.log('rowClick ' + id + ' ' + JSON.stringify(data));
+               elemClickHandler : function(id, data, target) {
+                  if ($(target).hasClass('taskIcon')) {
+                     var self = this;
+                     data.set('Завершена', !(data.get('Завершена')));
+                     this._dataSource.update(data).addCallback(function(){
+                        self._drawItems();
+                     });
+                  }
+                  else if ($(target).hasClass('taskTxt')) {
+
+                  }
                }
             });
 
