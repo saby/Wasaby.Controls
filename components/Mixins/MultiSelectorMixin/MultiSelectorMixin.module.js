@@ -136,6 +136,8 @@ define('js!SBIS3.CONTROLS.MultiSelectorMixin', [], function() {
                   else {
                      this._options.selectedItems = idArray.slice(0, 1);
                   }
+                  this._drawSelectedItems(this._options.selectedItems);
+                  this._notifySelectedItem(this._options.selectedItems);
                }
             }
          }

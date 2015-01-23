@@ -1,17 +1,17 @@
-define('js!SBIS3.CORE.LinkMenu', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.CollectionMixin', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.ContextMenu', 'html!SBIS3.CORE.LinkMenu'], function(ButtonBase, CollectionMixin, PickerMixin, ContextMenu, dotTplFn) {
+define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.CollectionMixin', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.ContextMenu', 'html!SBIS3.CONTROLS.MenuLink'], function(ButtonBase, CollectionMixin, PickerMixin, ContextMenu, dotTplFn) {
 
    'use strict';
 
    /**
     * Контрол, отображающий кнопку в виде ссылки и выпадающее из нее меню
-    * @class SBIS3.Engine.LinkMenu
+    * @class SBIS3.Engine.MenuLink
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
     */
 
-   var LinkMenu = ButtonBase.extend( [PickerMixin, CollectionMixin], /** @lends SBIS3.Engine.Link.prototype */ {
+   var MenuLink = ButtonBase.extend( [PickerMixin, CollectionMixin], /** @lends SBIS3.Engine.Link.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _zIndex: '',
@@ -60,12 +60,12 @@ define('js!SBIS3.CORE.LinkMenu', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONT
       },
 
       showPicker: function(){
-         LinkMenu.superclass.showPicker.call(this);
+         MenuLink.superclass.showPicker.call(this);
          this._container.css('z-index', this._picker._container.css('z-index') + 1);
       },
 
       hidePicker: function(){
-         LinkMenu.superclass.hidePicker.call(this);
+         MenuLink.superclass.hidePicker.call(this);
          this._container.css('z-index', this._zIndex);
       },
 
@@ -81,11 +81,11 @@ define('js!SBIS3.CORE.LinkMenu', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONT
          this._picker.subscribe('onClose', function(){
             self._closeHandler();
          });
-         this._picker._container.addClass('controls-LinkMenu__Menu');
-         var header= $('<div class="controls-LinkMenu__header"></div>');
+         this._picker._container.addClass('controls-MenuLink__Menu');
+         var header= $('<div class="controls-MenuLink__header"></div>');
          header.append(this._container.clone());
          this._picker.getContainer().prepend(header);
-         $('.controls-LinkMenu__header', this._picker._container).bind('click', function(){
+         $('.controls-MenuLink__header', this._picker._container).bind('click', function(){
             self.hidePicker();
          });
       },
@@ -96,6 +96,6 @@ define('js!SBIS3.CORE.LinkMenu', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONT
 
    });
 
-   return LinkMenu;
+   return MenuLink;
 
 });

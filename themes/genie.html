@@ -32,7 +32,6 @@
          font-family: Arial, SANS-SERIF;
          font-size: 13px;
          padding: 0;
-         margin: 0;
          height: 100%;
       }
 
@@ -51,6 +50,7 @@
    <link rel="stylesheet" type="text/css" href="./genie/genie.css"/>
 </head>
 <body class="view-main">
+<div id="Back"></div>
 
 <div id="content">
 
@@ -235,6 +235,16 @@
                minLinesCount : 3
             })
          });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "Back",
+               caption: 'Назад',
+               href: '../../',
+               icon: 'sprite:icon-16 icon-DayBackward icon-primary'
+            })
+         });
+
       })
    });
 </script>

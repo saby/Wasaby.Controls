@@ -70,26 +70,24 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
       },
 
       setIcon: function(icon) {
-         Button.superclass.setIcon.call(this);
+         Button.superclass.setIcon.call(this, icon);
          var caption;
          if (!icon) {
             caption = $(".js-controls-Button__text", this._container.get(0)).html();
             this._container.html(caption).addClass('controls-Button__text');
          }
-         else if (icon.indexOf('sprite:') >= 0) {
             var iconCont = $('.js-controls-Button__icon', this._container.get(0));
             if (!(iconCont.length)) {
                caption = this._container.html();
                var content = $('<span class="controls-Button__content">\
-                  <i class="controls-Button__icon js-controls-Button__icon '+icon.substr(7)+'"></i><span class="controls-Button__text js-controls-Button__text">'+caption+'</span>\
+                  <i class="controls-Button__icon js-controls-Button__icon ' + this._iconClass + '"></i><span class="controls-Button__text js-controls-Button__text">'+caption+'</span>\
                </span>');
                this._container.html(content);
             }
             else {
-               $('.js-controls-Button__icon', this._container.get(0)).get(0).className = 'controls-Button__icon js-controls-Button__icon ' + icon.substr(7);
+               $('.js-controls-Button__icon', this._container.get(0)).get(0).className = 'controls-Button__icon js-controls-Button__icon ' + this._iconClass;
             }
             this._container.removeClass('controls-Button__text');
-         }
       },
 
       /*TODO методы для поддержки defaultButton*/

@@ -75,6 +75,13 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
       },
 
       _drawItems: function(){
+         if (!Object.isEmpty(this._itemsInstances)) {
+            for (var i in this._itemsInstances) {
+               if (this._itemsInstances.hasOwnProperty(i)) {
+                  this._itemsInstances[i].destroy();
+               }
+            }
+         }
          this._itemsInstances = {};
          var
             itemsReadyDef = new $ws.proto.ParallelDeferred(),
