@@ -15,6 +15,18 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
             iterateCallback.call(context, data[i]);
          }
       },
+
+      getByKey: function (data, keyField, key) {
+         var item,
+            length = data.length;
+         for (var i = 0; i < length; i++) {
+            if (data[i][keyField] == parseInt(key, 10)) {
+               item = data[i];
+            }
+         }
+         return item;
+      },
+
       value: function (data, field) {
          return data[field];
       }

@@ -2,9 +2,10 @@
  * Created by as.manuylov on 10.11.14.
  */
 define('js!SBIS3.CONTROLS.DataSet', [
+   'js!SBIS3.CONTROLS.Record',
    'js!SBIS3.CONTROLS.DataStrategyArray',
    'js!SBIS3.CONTROLS.DataStrategyBL'
-], function (DataStrategyArray, DataStrategyBL) {
+], function (Record, DataStrategyArray, DataStrategyBL) {
    'use strict';
    return $ws.proto.Abstract.extend({
       $protected: {
@@ -27,7 +28,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          switch (this._options.strategy) {
             case 'DataStrategyBL':
                this._strategy = new DataStrategyBL();
-               this._keyField=this._strategy.getKey(this._rawData);
+               this._keyField = this._strategy.getKey(this._rawData);
                break;
             case 'DataStrategyArray':
                this._strategy = new DataStrategyArray();
@@ -52,13 +53,13 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return item.get(this._keyField);
       },
 
-      getRecordByKeyField: function(key){
-         console.log(this._data)
-
-         return key;
+      get: function (key) {
+         var record = new Record(this._strategy);
+         record.setRaw(this._strategy.getByKey(this._rawData, this._keyField, key));
+         return record;
       },
 
-      getStrategy:function(){
+      getStrategy: function () {
          return this._strategy;
       }
 

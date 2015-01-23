@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _dotTplFn: dotTplFn,
             _dotItemTpl: null,
             _itemsContainer: null,
-            _actsContainer : null,
+            _actsContainer: null,
             _options: {
                /**
                 * @cfg {} Шаблон отображения каждого элемента коллекции
@@ -47,28 +47,28 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                /**
                 * @cfg {Function} Обработчик клика на элемент
                 */
-               elemClickHandler : null,
-               multiselect : false,
-               itemSelect : false
+               elemClickHandler: null,
+               multiselect: false,
+               itemSelect: false
             }
          },
 
          $constructor: function () {
             //this._items.setHierField(null);
             var self = this;
-            this._container.mouseup(function(e){
+            this._container.mouseup(function (e) {
                if (e.which == 1) {
                   var targ = $(e.target).hasClass('controls-ListView__item') ? e.target : $(e.target).closest('.controls-ListView__item');
                   if (targ.length) {
                      var id = targ.attr('data-id');
-                     self._elemClickHandler(id/*, self._items.getItem(id)*/);
+                     self._elemClickHandler(id, self._DataSet.get(id));
                   }
                }
             });
             this._createItemsActions();
          },
 
-         init : function() {
+         init: function () {
             this._drawItems();
          },
 
@@ -79,13 +79,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          setEmptyHTML: function (html) {
 
          },
-         _getItemTemplate : function() {
+         _getItemTemplate: function () {
             return this._options.itemTemplate;
          },
 
-/* +++++++++++++++++++++++++++ */
+         /* +++++++++++++++++++++++++++ */
 
-         _elemClickHandler : function(id, data) {
+         _elemClickHandler: function (id, data) {
             this.setSelectedItems([id]);
             if (this._options.elemClickHandler) {
                var parent = this.getParent();
@@ -93,13 +93,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
          },
 
-         _getItemActionsContainer : function(id) {
+         _getItemActionsContainer: function (id) {
             return $(".controls-ListView__item[data-id='" + id + "']", this._container.get(0));
          },
 
-         _createItemsActions : function() {
+         _createItemsActions: function () {
             var self = this;
-            this._container.mousemove(function(e){
+            this._container.mousemove(function (e) {
                var targ = $(e.target).hasClass('controls-ListView__item') ? e.target : $(e.target).closest('.controls-ListView__item');
                if (targ.length) {
                   var id = targ.attr('data-id');
@@ -115,26 +115,26 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                }
             });
 
-            this._container.mouseout(function(){
+            this._container.mouseout(function () {
                if (self._actsContainer) self._actsContainer.hide();
             });
          },
 
-         _drawSelectedItems : function(idArray) {
+         _drawSelectedItems: function (idArray) {
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
             $(".controls-ListView__item[data-id='" + idArray[0] + "']", this._container).addClass('controls-ListView__item__selected');
          },
 
-         setElemClickHandler : function(method){
+         setElemClickHandler: function (method) {
             this._options.elemClickHandler = method;
          },
 
-         setItemsActions : function(itemsActions) {
+         setItemsActions: function (itemsActions) {
             this._options.itemsActions = itemsActions;
             this._drawItemsActions(itemsActions);
          },
 
-         _drawItemsActions : function(itemsActions) {
+         _drawItemsActions: function (itemsActions) {
             var self = this;
             if (itemsActions.length) {
                if (!this._actsContainer) {
@@ -149,12 +149,12 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   }
                   if (acts[i].handler) {
                      var handler = acts[i].handler.bind(this);
-                     action.mouseup(function(e){
+                     action.mouseup(function (e) {
                         e.stopPropagation();
                         var
-                           id = $(this).closest('.controls-ListView__item').attr('data-id')/*,
-                           item = self._items.getItem(id)*/;
-                        handler(id/*, item*/);
+                           id = $(this).closest('.controls-ListView__item').attr('data-id'),
+                           item = self._DataSet.get(id);
+                        handler(id, item);
                      })
                   }
                   this._actsContainer.append(action);
@@ -167,7 +167,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                }
             }
          },
-         _drawItemsCallback : function() {
+         _drawItemsCallback: function () {
             this._drawItemsActions(this._options.itemsActions);
          }
 

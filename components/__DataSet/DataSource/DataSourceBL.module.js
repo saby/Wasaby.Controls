@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource', 'js!S
          _options: {
             queryMethodName: 'Список',
             readMethodName: 'Прочитать',
+            updateMethodName: 'Записать',
             destroyMethodName: 'Удалить'
          },
          _BL: undefined
@@ -29,8 +30,22 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource', 'js!S
          return def;
       },
 
-      update: function (record) {
+      update: function (item) {
+         var self = this,
+            def = new $ws.proto.Deferred();
+         var rec = {
+            s: item.s,
+            d: item.d,
+            //FixME: можно ли раскомментить
+            /*_key: 2,*/
+            _type: 'record'
+         };
 
+         self._BL.call(self._options.updateMethodName, {'Запись': rec}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+            def.callback(true);
+         });
+
+         return def;
       },
 
       destroy: function (id) {
