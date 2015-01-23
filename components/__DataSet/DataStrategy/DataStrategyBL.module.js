@@ -43,6 +43,20 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
          return {d: item, s: s};
       },
 
+      setValue: function (data, field, value) {
+         var d = data.d,
+            s = data.s,
+            index;
+         for (var i = 0, l = s.length; i < l; i++) {
+            if (s[i]['n'] == field) {
+               index = i;
+               break;
+            }
+         }
+         d[index] = value;
+         return data;
+      },
+
       value: function (data, field) {
          var d = data.d,
             s = data.s,

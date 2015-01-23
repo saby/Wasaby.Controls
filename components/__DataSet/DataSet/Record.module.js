@@ -17,6 +17,9 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
       get: function (field) {
          return this._strategy.value(this._raw, field);
       },
+      set: function (field, value) {
+         this._raw = this._strategy.setValue(this._raw, field, value);
+      },
       getRawData: function () {
          return this._raw;
       }

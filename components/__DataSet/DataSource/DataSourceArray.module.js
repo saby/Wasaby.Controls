@@ -33,10 +33,11 @@ define('js!SBIS3.CONTROLS.DataSourceArray', ['js!SBIS3.CONTROLS.IDataSource', 'j
 
       update: function (record) {
          var def = new $ws.proto.Deferred(),
-            key = record[this._options.keyField];
+            rawData = record.getRawData(),
+            key = rawData[this._options.keyField];
          for (var i = 0; i < this._options.data.length; i++) {
             if (this._options.data[i][this._options.keyField] == key) {
-               this._options.data[i] = record;
+               this._options.data[i] = rawData;
                break;
             }
          }

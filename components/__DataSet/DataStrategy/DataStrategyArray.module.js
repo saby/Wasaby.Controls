@@ -27,6 +27,11 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
          return item;
       },
 
+      setValue: function (data, field, value) {
+         data[field] = value;
+         return data;
+      },
+
       value: function (data, field) {
          return data[field];
       }
