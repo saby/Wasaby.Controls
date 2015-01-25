@@ -65,6 +65,7 @@
 
       .listViewItem{
          position: relative;
+         height: 44px;
       }
 
       .controls-ListView__item {
@@ -89,6 +90,15 @@
          margin-top: 10px;
          cursor: pointer;
       }
+
+      .editing .controls-ListView__itemActions{
+         display: none !important;
+      }
+
+      .editing .view{
+         display: none;
+      }
+
       .taskTxt {
          height: 44px;
          line-height: 44px;
@@ -99,6 +109,14 @@
       .taskComplete {
          color: #a9a9a9;
          text-decoration: line-through;
+      }
+
+      .listViewItem .text{
+         width: 100%;
+         height: 100%;
+         font-size: 24px;
+         line-height: 44px;
+         box-sizing: border-box;
       }
 
    </style>
@@ -137,8 +155,11 @@
             var ds1 = new DataSourceBL('Заметка');
 
             var itemTpl1 = '<div class="listViewItem" style="overflow: hidden; border-bottom: 1px solid">\
+                  <div class="view">\
                      <div class="taskIcon icon-24 icon-Successful{{?it.get("Завершена")}} icon-done{{??}} icon-disabled{{?}}"></div>\
                      <div class="taskTxt{{?it.get("Завершена")}} taskComplete{{?}}">{{=it.get("Содержимое")}}</div>\
+                  </div>\
+                  <input type="text" class="text"/>\
                </div>';
 
             new ListViewDS({
@@ -158,15 +179,35 @@
                   }
                ],
                elemClickHandler : function(id, data, target){
+                  //потому что теряется фокус при клике на инпут
+                  this.getContainer().unbind('click');
+                  this.setActive = function(){};
+                  this.onBringToFront = function(){};
+
+                  var self = this;
                   if ($(target).hasClass('taskIcon')) {
-                     var self = this;
                      data.set('Завершена', !(data.get('Завершена')));
                      this._dataSource.update(data).addCallback(function(){
                         self._drawItems();
                      });
                   }
                   else if ($(target).hasClass('taskTxt')) {
-
+                     var listViewItem = $(target).closest('.listViewItem');
+                     listViewItem.addClass('editing');
+                     var $view = listViewItem.find('.view');
+                     var $text=listViewItem.find('.text');
+                     $text.val(data.get('Содержимое')).unbind('keydown').keydown(function (e) {
+                              if (e.which === 13) {
+                                 data.set('Содержимое', $(this).val());
+                                 self._dataSource.update(data).addCallback(function(){
+                                    self._drawItems();
+                                 });
+                              }
+                              if (e.which === 27) {
+                                 listViewItem.removeClass('editing');
+                                 $view.show();
+                              }
+                           }).focus();
                   }
                }
 
@@ -198,15 +239,35 @@
                   }
                ],
                elemClickHandler : function(id, data, target) {
+                  //потому что теряется фокус при клике на инпут
+                  this.getContainer().unbind('click');
+                  this.setActive = function(){};
+                  this.onBringToFront = function(){};
+
+                  var self = this;
                   if ($(target).hasClass('taskIcon')) {
-                     var self = this;
                      data.set('Завершена', !(data.get('Завершена')));
                      this._dataSource.update(data).addCallback(function(){
                         self._drawItems();
                      });
                   }
                   else if ($(target).hasClass('taskTxt')) {
-
+                     var listViewItem = $(target).closest('.listViewItem');
+                     listViewItem.addClass('editing');
+                     var $view = listViewItem.find('.view');
+                     var $text=listViewItem.find('.text');
+                     $text.val(data.get('Содержимое')).unbind('keydown').keydown(function (e) {
+                        if (e.which === 13) {
+                           data.set('Содержимое', $(this).val());
+                           self._dataSource.update(data).addCallback(function(){
+                              self._drawItems();
+                           });
+                        }
+                        if (e.which === 27) {
+                           listViewItem.removeClass('editing');
+                           $view.show();
+                        }
+                     }).focus();
                   }
                }
             });
