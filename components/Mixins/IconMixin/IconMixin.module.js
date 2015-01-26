@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTemplate'], function(IconTemplate) {
 
    /**
-    * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного
+    * Миксин, добавляющий иконку
     * @mixin SBIS3.CONTROLS.IconMixin
     */
 
@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
       $protected: {
          _iconClass: '',
          _options: {
-            iconClass: IconTemplate,
+            iconTemplate: IconTemplate,
             /**
              * @cfg {String}  Путь до иконки
              * Путь задаётся относительно корня сайта либо через sprite.
@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
        */
       setIcon: function(iconPath) {
          this._options.icon = iconPath;
-         if (iconPath.indexOf('sprite:')>= 0) {
+         if (iconPath && iconPath.indexOf('sprite:')>= 0) {
             this._iconClass = iconPath.substr(7);
          }
       },
