@@ -455,13 +455,13 @@ input[type="reset"]::-moz-focus-inner {
   width: 100%;
   height: 50%;
   min-height: 9px;
-}
-.controls-NumberTextBox__arrowUp {
-  background: url('./img/NumberTextBox-arrowup.png') left bottom no-repeat;
+  cursor: pointer;
 }
 .controls-NumberTextBox__arrowDown {
-  background: url('./img/NumberTextBox-arrowdown.png') left top no-repeat;
-  margin-top: 1px;
+  margin-top: -2px;
+}
+.controls-NumberTextBox__arrowUp {
+  margin-top: -1px;
 }
 .controls-CheckBox {
   cursor: pointer;
@@ -652,17 +652,8 @@ input[type="reset"]::-moz-focus-inner {
   margin-right: 19px;
 }
 .controls-ComboBox__arrowDown {
-  background-image: url('./img/ComboBox.png');
-  background-position: -3px -4px;
-  background-color: #ffffff;
-  text-decoration: none;
-  position: absolute;
-  right: 0;
-  top: 50%;
-  margin-top: -8px;
-  display: inline-block;
-  width: 16px;
-  height: 16px;
+  cursor: pointer;
+  margin-top: 2px;
 }
 .controls-ComboBox__arrowDown:hover,
 .controls-ComboBox__editable-false:hover .controls-ComboBox__arrowDown {
@@ -686,6 +677,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ComboBox__picker {
   border: 1px solid #CCCCCC;
   margin-top: -1px;
+}
+.controls-ComboBox__fieldNotEditable {
+  line-height: 20px;
+  width: 100%;
+  height: 100%;
 }
 .controls-FormattedTextBox {
   display: inline-block;
