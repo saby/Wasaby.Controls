@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource', 'js!S
    'use strict';
    return IDataSource.extend({
       $protected: {
+         _filter : {},
          _options: {
             queryMethodName: 'Список',
             readMethodName: 'Прочитать',
@@ -65,7 +66,35 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource', 'js!S
          var self = this,
             def = new $ws.proto.Deferred();
 
-         self._BL.call(self._options.queryMethodName, {'ДопПоля': [], 'Фильтр': {'d': [], 's': []}, 'Сортировка': null, 'Навигация': null}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+         filter = filter ? filter : this._filter;
+         this._filter = filter;
+
+         var filterParam = {
+            d : [],
+            s : []
+         };
+
+         if (!Object.isEmpty(filter)) {
+            for (var j in filter) {
+               if (filter.hasOwnProperty(j)) {
+                  if (typeof filter[j] == 'boolean') {
+                     filterParam.s.push({
+                        n : j,
+                        t : 'Логическое'
+                     });
+                  }
+                  else {
+                     filterParam.s.push({
+                        n : j,
+                        t : 'Строка'
+                     });
+                  }
+                  filterParam.d.push(filter[j])
+               }
+            }
+         }
+
+         self._BL.call(self._options.queryMethodName, {'ДопПоля': [], 'Фильтр': filterParam, 'Сортировка': null, 'Навигация': null}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
 
             var DS = new DataSet({
                strategy: 'DataStrategyBL',
