@@ -65,6 +65,9 @@
   cursor: default;
 }
 .controls-RadioButton.ws-disabled .controls-RadioButton__icon {
+  background-position: 0 0px;
+}
+.controls-RadioButton.controls-Checked__checked.ws-disabled .controls-RadioButton__icon {
   background-position: 0 -48px;
 }
 .controls-RadioButton.ws-disabled .controls-RadioButton__caption {
@@ -185,6 +188,9 @@
   color: #d1d1d4;
 }
 .controls-CheckBox.ws-disabled .controls-CheckBox__icon {
+  background-position: 0 0px;
+}
+.controls-CheckBox.controls-Checked__checked.ws-disabled .controls-CheckBox__icon {
   background-position: 0 -64px;
 }
 .controls-CheckBox.controls-ToggleButton__null.ws-disabled .controls-CheckBox__icon {
