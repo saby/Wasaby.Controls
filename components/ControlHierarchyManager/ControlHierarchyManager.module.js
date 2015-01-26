@@ -58,21 +58,20 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
 
       //Проверить является ли target jQuery элементом component или его детей
       checkInclusion: function (component, target) {
-         var node, flag = false;
+         var node;
          node = this._index[component.getId()];
          if (node) {
             var len = node.children.length;
             if (len) {
                for (var i = 0; i < len; i++) {
                   var self = node.children[i].self;
-                  flag = this.checkInclusion(self, target);
+                  if (this.checkInclusion(self, target)){
+                     return true;
+                  }
                }
             }
          }
-         if (component._container.find($(target)).length || $(component._container).get(0) == target) {
-            flag = true;
-         }
-         return flag;
+         return (component._container.find($(target)).length || $(component._container).get(0) == target);
       },
 
       _wasAdded: function (node) {
