@@ -1,6 +1,15 @@
 .controls-ComboBox__arrowDown {
-  cursor: pointer;
-  margin-top: 2px;
+   background-image: url('./img/ComboBox.png');
+   background-position: -3px -4px;
+   background-color: #ffffff;
+   text-decoration: none;
+   position: absolute;
+   right: 0;
+   top: 50%;
+   margin-top: -8px;
+   display: inline-block;
+   width: 16px;
+   height: 16px;
 }
 
 .controls-ComboBox__arrowDown:hover, .controls-ComboBox__editable-false:hover .controls-ComboBox__arrowDown {
@@ -8,7 +17,8 @@
    background-position: -3px -28px;
 }
 
-.controls-ComboBox__editable-false {
+.controls-ComboBox__editable-false,
+ {
    cursor: pointer;
 }
 
@@ -30,10 +40,4 @@
 .controls-ComboBox__picker {
    border: 1px solid #CCCCCC;
    margin-top: -1px;
-}
-
-.controls-ComboBox__fieldNotEditable{
-  line-height: 20px;
-  width: 100%;
-  height: 100%;
 }
