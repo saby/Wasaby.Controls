@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
        */
       update: function (record) {
          var self = this,
-            rawData = record.getRawData(),
+            rawData = record.getRaw(),
             def = new $ws.proto.Deferred();
          var rec = {
             s: rawData.s,
