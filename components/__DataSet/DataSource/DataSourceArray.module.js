@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
    'use strict';
    return IDataSource.extend({
       $protected: {
-         _filter : {},
+         _filter: {},
          _options: {
             /**
              * Массив сырых данных, по которым строится DataSource
@@ -27,7 +27,12 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
       },
 
       create: function () {
-
+         var def = new $ws.proto.Deferred();
+         var record = new Record(new DataStrategyArray());
+         record.set(this._options.keyField, this._options.data[this._options.data.length - 1][this._options.keyField] + 1);
+         this._options.data.push(record.getRaw());
+         def.callback(record);
+         return def;
       },
 
       /**

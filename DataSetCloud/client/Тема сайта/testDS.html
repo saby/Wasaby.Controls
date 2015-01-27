@@ -99,7 +99,7 @@
          display: none;
       }
 
-      .taskTxt {
+       .taskTxt {
          height: 44px;
          line-height: 44px;
          padding-left: 35px;
@@ -111,12 +111,17 @@
          text-decoration: line-through;
       }
 
-      .listViewItem .text{
+      .newTask,.listViewItem .text{
          width: 100%;
          height: 100%;
          font-size: 24px;
          line-height: 44px;
          box-sizing: border-box;
+      }
+
+      .newTask{
+         margin-top: 10px;
+         height: 44px;
       }
       .Tabs {
          margin-bottom: 8px;
@@ -152,7 +157,7 @@
          </div>
          <div id="ListViewDS1" class="testBlock listView"></div>
 
-
+         <input data-list="ListViewDS1" class="newTask" type="text" placeholder="new task"/>
       </td>
       <td>
          <p>ListView DataSourceArray</p>
@@ -163,7 +168,7 @@
             <a data-value="complete" class="tab">Completed</a>
          </div>
          <div id="ListViewDS2" class="testBlock listView"></div>
-
+         <input data-list="ListViewDS2" class="newTask" type="text" placeholder="new task"/>
       </td>
    </tr>
 </table>
@@ -189,54 +194,58 @@
                   <input type="text" class="text"/>\
                </div>';
 
+            var itemsActions=[
+               {
+                  icon : 'sprite:icon-16 icon-Erase icon-error',
+                  handler : function(id) {
+                     var self = this;
+                     this._dataSource.destroy(id).addCallback(function(){
+                        self._drawItems();
+                     });
+
+                  }
+               }
+            ];
+
+            var elemClickHandler = function(id, data, target){
+               //потому что теряется фокус при клике на инпут
+               this.getContainer().unbind('click');
+               this.setActive = function(){};
+               this.onBringToFront = function(){};
+
+               var self = this;
+               if ($(target).hasClass('taskIcon')) {
+                  data.set('Завершена', !(data.get('Завершена')));
+                  this._dataSource.update(data).addCallback(function(){
+                     self._drawItems();
+                  });
+               }
+               else if ($(target).hasClass('taskTxt')) {
+                  var listViewItem = $(target).closest('.listViewItem');
+                  listViewItem.addClass('editing');
+                  var $view = listViewItem.find('.view');
+                  var $text=listViewItem.find('.text');
+                  $text.val(data.get('Содержимое')).unbind('keydown').keydown(function (e) {
+                     if (e.which === 13) {
+                        data.set('Содержимое', $(this).val());
+                        self._dataSource.update(data).addCallback(function(){
+                           self._drawItems();
+                        });
+                     }
+                     if (e.which === 27) {
+                        listViewItem.removeClass('editing');
+                        $view.show();
+                     }
+                  }).focus();
+               }
+            }
+
             new ListViewDS({
                element: "ListViewDS1",
                dataSource: ds1,
                itemTemplate: itemTpl1,
-               itemsActions : [
-                  {
-                     icon : 'sprite:icon-16 icon-Erase icon-error',
-                     handler : function(id) {
-                        var self = this;
-                        this._dataSource.destroy(id).addCallback(function(){
-                           self._drawItems();
-                        });
-
-                     }
-                  }
-               ],
-               elemClickHandler : function(id, data, target){
-                  //потому что теряется фокус при клике на инпут
-                  this.getContainer().unbind('click');
-                  this.setActive = function(){};
-                  this.onBringToFront = function(){};
-
-                  var self = this;
-                  if ($(target).hasClass('taskIcon')) {
-                     data.set('Завершена', !(data.get('Завершена')));
-                     this._dataSource.update(data).addCallback(function(){
-                        self._drawItems();
-                     });
-                  }
-                  else if ($(target).hasClass('taskTxt')) {
-                     var listViewItem = $(target).closest('.listViewItem');
-                     listViewItem.addClass('editing');
-                     var $view = listViewItem.find('.view');
-                     var $text=listViewItem.find('.text');
-                     $text.val(data.get('Содержимое')).unbind('keydown').keydown(function (e) {
-                              if (e.which === 13) {
-                                 data.set('Содержимое', $(this).val());
-                                 self._dataSource.update(data).addCallback(function(){
-                                    self._drawItems();
-                                 });
-                              }
-                              if (e.which === 27) {
-                                 listViewItem.removeClass('editing');
-                                 $view.show();
-                              }
-                           }).focus();
-                  }
-               }
+               itemsActions : itemsActions,
+               elemClickHandler : elemClickHandler
 
             });
 
@@ -244,7 +253,7 @@
                data: [
                   {'@Заметка': 1, 'Содержимое': 'Поиграть в бильярд', 'Завершена': false},
                   {'@Заметка': 2, 'Содержимое': 'Посидеть в планшете', 'Завершена': false},
-                  {'@Заметка': 3, 'Содержимое': 'Пожрать', 'Завершена': true}
+                  {'@Заметка': 3, 'Содержимое': 'Купить булку', 'Завершена': true}
                ],
                keyField: '@Заметка'
             });
@@ -253,50 +262,8 @@
                element: "ListViewDS2",
                dataSource: ds2,
                itemTemplate: itemTpl1,
-               itemsActions : [
-                  {
-                     icon : 'sprite:icon-16 icon-Erase icon-error',
-                     handler : function(id) {
-                        var self = this;
-                        this._dataSource.destroy(id).addCallback(function(){
-                           self._drawItems();
-                        });
-
-                     }
-                  }
-               ],
-               elemClickHandler : function(id, data, target) {
-                  //потому что теряется фокус при клике на инпут
-                  this.getContainer().unbind('click');
-                  this.setActive = function(){};
-                  this.onBringToFront = function(){};
-
-                  var self = this;
-                  if ($(target).hasClass('taskIcon')) {
-                     data.set('Завершена', !(data.get('Завершена')));
-                     this._dataSource.update(data).addCallback(function(){
-                        self._drawItems();
-                     });
-                  }
-                  else if ($(target).hasClass('taskTxt')) {
-                     var listViewItem = $(target).closest('.listViewItem');
-                     listViewItem.addClass('editing');
-                     var $view = listViewItem.find('.view');
-                     var $text=listViewItem.find('.text');
-                     $text.val(data.get('Содержимое')).unbind('keydown').keydown(function (e) {
-                        if (e.which === 13) {
-                           data.set('Содержимое', $(this).val());
-                           self._dataSource.update(data).addCallback(function(){
-                              self._drawItems();
-                           });
-                        }
-                        if (e.which === 27) {
-                           listViewItem.removeClass('editing');
-                           $view.show();
-                        }
-                     }).focus();
-                  }
-               }
+               itemsActions : itemsActions,
+               elemClickHandler : elemClickHandler
             });
             $(".tab").click(function(){
                var tabs = $(this).closest(".Tabs");
@@ -316,6 +283,21 @@
                   view._drawItems();
                });
             })
+
+            $('.newTask').keydown(function (e) {
+               var inp = $(this);
+               if (e.which === 13) {
+                  var view = $ws.single.ControlStorage.get($(this).attr('data-list'));
+                  view._dataSource.create().addCallback(function (rec) {
+                     rec.set('Содержимое', inp.val());
+                     view._dataSource.update(rec).addCallback(function () {
+                        view._drawItems();
+                        inp.val('');
+                     });
+                  });
+               }
+            })
+
          });
       })
    });

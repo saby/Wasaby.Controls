@@ -10,9 +10,10 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
    'use strict';
    return IDataSource.extend({
       $protected: {
-         _filter : {},
+         _filter: {},
          _options: {
             queryMethodName: 'Список',
+            crateMethodName: 'Создать',
             readMethodName: 'Прочитать',
             updateMethodName: 'Записать',
             destroyMethodName: 'Удалить'
@@ -27,7 +28,14 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
       },
 
       create: function () {
-
+         var self = this,
+            def = new $ws.proto.Deferred();
+         self._BL.call(self._options.crateMethodName, {'Фильтр': null, 'ИмяМетода': null}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+            var record = new Record(new DataStrategyBL());
+            record.setRaw(res);
+            def.callback(record);
+         });
+         return def;
       },
 
       /**
@@ -100,8 +108,8 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
          this._filter = filter;
 
          var filterParam = {
-            d : [],
-            s : []
+            d: [],
+            s: []
          };
 
          if (!Object.isEmpty(filter)) {
@@ -109,14 +117,14 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
                if (filter.hasOwnProperty(j)) {
                   if (typeof filter[j] == 'boolean') {
                      filterParam.s.push({
-                        n : j,
-                        t : 'Логическое'
+                        n: j,
+                        t: 'Логическое'
                      });
                   }
                   else {
                      filterParam.s.push({
-                        n : j,
-                        t : 'Строка'
+                        n: j,
+                        t: 'Строка'
                      });
                   }
                   filterParam.d.push(filter[j])
