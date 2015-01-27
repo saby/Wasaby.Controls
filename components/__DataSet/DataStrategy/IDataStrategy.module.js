@@ -8,10 +8,28 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
       },
       $constructor: function () {
       },
+      /**
+       * Метод для обхода по сырым данным
+       */
       each: function () {
 
       },
+      /**
+       * Получить значение поля записи
+       */
       value: function () {
+
+      },
+      /**
+       * Установить значение поля записи
+       */
+      setValue: function () {
+
+      },
+      /**
+       * Получить сырые данные для записи по ключевому полю
+       */
+      getByKey: function () {
 
       }
 

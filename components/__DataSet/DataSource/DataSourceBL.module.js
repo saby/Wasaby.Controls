@@ -1,7 +1,12 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource', 'js!SBIS3.CONTROLS.DataSet'], function (IDataSource, DataSet) {
+define('js!SBIS3.CONTROLS.DataSourceBL', [
+   'js!SBIS3.CONTROLS.IDataSource',
+   'js!SBIS3.CONTROLS.Record',
+   'js!SBIS3.CONTROLS.DataSet',
+   'js!SBIS3.CONTROLS.DataStrategyBL'
+], function (IDataSource, Record, DataSet, DataStrategyBL) {
    'use strict';
    return IDataSource.extend({
       $protected: {
@@ -11,6 +16,9 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource', 'js!S
             updateMethodName: 'Записать',
             destroyMethodName: 'Удалить'
          },
+         /**
+          * Объект, который умеет ходить на бизнес-логику
+          */
          _BL: undefined
       },
       $constructor: function (cfg) {
@@ -21,15 +29,26 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource', 'js!S
 
       },
 
+      /**
+       * Прочитать запись
+       * @param id - идентификатор записи
+       */
       read: function (id) {
          var self = this,
             def = new $ws.proto.Deferred();
          self._BL.call(self._options.readMethodName, {'ИдО': id, 'ИмяМетода': 'Список'}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
-            def.callback(res);
+            //TODO: переделать установку стратегии стратегию
+            var record = new Record(new DataStrategyBL());
+            record.setRaw(res);
+            def.callback(record);
          });
          return def;
       },
 
+      /**
+       * Обновить запись
+       * @param record - измененная запись
+       */
       update: function (record) {
          var self = this,
             rawData = record.getRawData(),
@@ -49,6 +68,10 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource', 'js!S
          return def;
       },
 
+      /**
+       * Удалить запись
+       * @param id - идентификатор записи
+       */
       destroy: function (id) {
          var self = this,
             def = new $ws.proto.Deferred();
@@ -60,6 +83,13 @@ define('js!SBIS3.CONTROLS.DataSourceBL', ['js!SBIS3.CONTROLS.IDataSource', 'js!S
          return def;
       },
 
+      /**
+       * Вызов списочного метода
+       * @param filter - [{property: 'id', value: 2}]
+       * @param sorting - [{property1: 'id', direction: 'ASC'},{property2: 'name', direction: 'DESC'}]
+       * @param offset - number
+       * @param limit - number
+       */
       query: function (filter, sorting, offset, limit) {
 
          var self = this,

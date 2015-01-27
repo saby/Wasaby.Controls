@@ -17,7 +17,6 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
       /**
        * Прочитать запись
        * @param id - идентификатор записи
-       * //TODO - не понятен тип возвращаяемого значения
        */
       read: function (id) {
          /*Method must be implemented*/
@@ -25,7 +24,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
 
       /**
        * Обновить запись
-       * @param record - измененная запись //TODO - под вопросом
+       * @param record - измененная запись
        */
       update: function (record) {
          /*Method must be implemented*/

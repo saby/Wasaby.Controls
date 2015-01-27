@@ -5,8 +5,13 @@ define('js!SBIS3.CONTROLS.Algorithm', ['js!SBIS3.CONTROLS.Record'], function (Re
    'use strict';
    var _ = {
 
+      /**
+       * Хэлепр обхода (пока только по DataSource)
+       * @param object
+       * @param iterateCallback
+       * @param context
+       */
       each: function (object, iterateCallback, context) {
-         // object - пока только DataSource
          var record = new Record(object.getStrategy());
          object.getStrategy().each(object.getRawData(), function (rawRow) {
             record.setRaw(rawRow);

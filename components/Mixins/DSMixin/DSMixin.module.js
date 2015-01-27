@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm'], function (_
       $protected: {
          _itemsInstances: {},
          _dataSource: undefined,
-         _DataSet: null,
+         _dataSet: null,
          _dotItemTpl: null,
          _options: {
             /**
@@ -25,12 +25,12 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm'], function (_
       },
 
       getDataSet: function () {
-         return this._DataSet;
+         return this._dataSet;
       },
 
       setDataSet: function (DS) {
          //TODO: проверка что действительно DataSource.
-         this._DataSet = DS;
+         this._dataSet = DS;
       },
 
       _drawItems: function () {
@@ -92,7 +92,7 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm'], function (_
 
       _drawItem: function (item, targetContainer) {
          var
-            key = this._DataSet.getKey(item),
+            key = this._dataSet.getKey(item),
             self = this;
          return this._createItemInstance(item, targetContainer).addCallback(function (container) {
             self._addItemClasses(container, key);
@@ -138,7 +138,7 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm'], function (_
                   config.element = ctrlWrapper;
                   config.parent = self;
                   var ctrl = new Ctor(config);
-                  self._itemsInstances[self._DataSet.getKey()] = ctrl;
+                  self._itemsInstances[self._dataSet.getKey()] = ctrl;
                   def.callback(ctrl.getContainer());
                });
             }

@@ -30,6 +30,13 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
          }
       },
 
+      /**
+       * Получить сырые данные для записи по ключевому полю
+       * @param data
+       * @param keyField
+       * @param key
+       * @returns {{d: *, s: (data.s|*)}}
+       */
       getByKey: function (data, keyField, key) {
          var d = data.d,
             s = data.s,

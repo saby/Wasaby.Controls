@@ -1,12 +1,23 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.DataSourceArray', ['js!SBIS3.CONTROLS.IDataSource', 'js!SBIS3.CONTROLS.DataSet'], function (IDataSource, DataSet) {
+define('js!SBIS3.CONTROLS.DataSourceArray', [
+   'js!SBIS3.CONTROLS.IDataSource',
+   'js!SBIS3.CONTROLS.Record',
+   'js!SBIS3.CONTROLS.DataSet',
+   'js!SBIS3.CONTROLS.DataStrategyArray'
+], function (IDataSource, Record, DataSet, DataStrategyArray) {
    'use strict';
    return IDataSource.extend({
       $protected: {
          _options: {
+            /**
+             * Массив сырых данных, по которым строится DataSource
+             */
             data: [],
+            /**
+             * @cfg {String}  Ключевое поле
+             */
             keyField: ''
          }
       },
@@ -18,6 +29,10 @@ define('js!SBIS3.CONTROLS.DataSourceArray', ['js!SBIS3.CONTROLS.IDataSource', 'j
 
       },
 
+      /**
+       * Прочитать запись
+       * @param id - идентификатор записи
+       */
       read: function (id) {
          var def = new $ws.proto.Deferred(),
             key;
@@ -27,10 +42,17 @@ define('js!SBIS3.CONTROLS.DataSourceArray', ['js!SBIS3.CONTROLS.IDataSource', 'j
                break;
             }
          }
-         def.callback(this._options.data[key]);
+         //TODO: переделать установку стратегии
+         var record = new Record(new DataStrategyArray());
+         record.setRaw(this._options.data[key]);
+         def.callback(record);
          return def;
       },
 
+      /**
+       * Обновить запись
+       * @param record - измененная запись
+       */
       update: function (record) {
          var def = new $ws.proto.Deferred(),
             rawData = record.getRawData(),
@@ -45,6 +67,10 @@ define('js!SBIS3.CONTROLS.DataSourceArray', ['js!SBIS3.CONTROLS.IDataSource', 'j
          return def;
       },
 
+      /**
+       * Удалить запись
+       * @param id - идентификатор записи
+       */
       destroy: function (id) {
          var def = new $ws.proto.Deferred(),
             key;
@@ -60,6 +86,13 @@ define('js!SBIS3.CONTROLS.DataSourceArray', ['js!SBIS3.CONTROLS.IDataSource', 'j
          return def;
       },
 
+      /**
+       * Вызов списочного метода
+       * @param filter - [{property: 'id', value: 2}]
+       * @param sorting - [{property1: 'id', direction: 'ASC'},{property2: 'name', direction: 'DESC'}]
+       * @param offset - number
+       * @param limit - number
+       */
       query: function (filter, sorting, offset, limit) {
          var self = this,
             def = new $ws.proto.Deferred();

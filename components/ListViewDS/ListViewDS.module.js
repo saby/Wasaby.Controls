@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   var targ = $(e.target).hasClass('controls-ListView__item') ? e.target : $(e.target).closest('.controls-ListView__item');
                   if (targ.length) {
                      var id = targ.attr('data-id');
-                     self._elemClickHandler(id, self._DataSet.get(id), e.target);
+                     self._elemClickHandler(id, self._dataSet.get(id), e.target);
                   }
                }
             });
@@ -88,7 +88,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          _elemClickHandler: function (id, data, target) {
             this.setSelectedItems([id]);
             if (this._options.elemClickHandler) {
-               var parent = this.getParent();
                this._options.elemClickHandler.call(this, id, data, target);
             }
          },
@@ -153,7 +152,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                         e.stopPropagation();
                         var
                            id = $(this).closest('.controls-ListView__item').attr('data-id'),
-                           item = self._DataSet.get(id);
+                           item = self._dataSet.get(id);
                         handler(id, item);
                      })
                   }
