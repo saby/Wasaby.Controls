@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
    'use strict';
    return IDataSource.extend({
       $protected: {
+         _filter : {},
          _options: {
             /**
              * Массив сырых данных, по которым строится DataSource
@@ -95,11 +96,34 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
        */
       query: function (filter, sorting, offset, limit) {
          var self = this,
-            def = new $ws.proto.Deferred();
+            def = new $ws.proto.Deferred(),
+            data = this._options.data;
+
+         filter = filter ? filter : this._filter;
+         this._filter = filter;
+
+         if (!Object.isEmpty(filter)) {
+            data = [];
+            for (var i = 0; i < this._options.data.length; i++) {
+               var equal = true;
+               for (var j in filter) {
+                  if (filter.hasOwnProperty(j)) {
+                     if (this._options.data[i][j] != filter[j]) {
+                        equal = false;
+                        break;
+                     }
+                  }
+               }
+               if (equal) {
+                  data.push(this._options.data[i]);
+               }
+            }
+         }
+
 
          var DS = new DataSet({
             strategy: 'DataStrategyArray',
-            data: this._options.data,
+            data: data,
             keyField: this._options.keyField
          });
 
