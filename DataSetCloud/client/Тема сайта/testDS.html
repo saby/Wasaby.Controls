@@ -222,6 +222,7 @@
                }
                else if ($(target).hasClass('taskTxt')) {
                   var listViewItem = $(target).closest('.listViewItem');
+                  $('.listViewItem', this.getContainer()).removeClass('editing');
                   listViewItem.addClass('editing');
                   var $view = listViewItem.find('.view');
                   var $text=listViewItem.find('.text');
