@@ -206,6 +206,31 @@ define('js!SBIS3.CONTROLS.Menu', [
                this._subMenus[j].destroy();
             }
          }
+      },
+      /*TODO Методы для Зуева, посмотреть в будущем нужны ли они*/
+      addSubMenu : function(pointsArr, id) {
+         for (var i = 0; i < pointsArr.length; i++) {
+            pointsArr[i][this._options.hierField] = id;
+            this._items.addItem(pointsArr[i]);
+         }
+         this._drawItems();
+      },
+      destroySubMenu : function(id) {
+         var childItems = this._items.getChildItems(id);
+         for (var i = 0; i < childItems.length; i++) {
+            this._items.destroyItem(this._items.getKey(childItems[i]));
+         }
+         this._drawItems();
+      },
+
+      hasSubMenu : function(id) {
+         return this._items.hasChild(id)
+      },
+
+      setItemTitle : function(id, title) {
+         var item = this._items.getItem(id);
+         item.title = title;
+         this._drawItems();
       }
    });
 

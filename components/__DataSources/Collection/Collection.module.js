@@ -29,7 +29,19 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
       addItem : function(newItem) {
          this._adapter.addItem(this._data, newItem);
          this._reindex();
+      },
 
+      destroyItem : function(id) {
+         this._adapter.destroyItem(this._data, id, this._options.keyField);
+         this._reindex();
+      },
+
+      hasChild : function(id) {
+         return this._adapter.hasChild(this._data, id, this._options.keyField, this._hierField);
+      },
+
+      getChildItems : function(id) {
+         return this._adapter.getChildItems(this._data, id, this._options.keyField, this._hierField);
       },
 
       /**
