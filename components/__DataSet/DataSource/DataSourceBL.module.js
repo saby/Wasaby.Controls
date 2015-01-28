@@ -8,10 +8,18 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
    'js!SBIS3.CONTROLS.DataStrategyBL'
 ], function (IDataSource, Record, DataSet, DataStrategyBL) {
    'use strict';
+
+   /**
+    * Класс, реализующий интерфейс IDataSource, для работы с бизнес-логикой СБИС как с источником данных
+    */
+
    return IDataSource.extend({
       $protected: {
          _filter: {},
          _options: {
+            /**
+             * сопоставление CRUD операций и методов БЛ
+             */
             queryMethodName: 'Список',
             crateMethodName: 'Создать',
             readMethodName: 'Прочитать',
@@ -19,7 +27,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
             destroyMethodName: 'Удалить'
          },
          /**
-          * Объект, который умеет ходить на бизнес-логику
+          * @cfg {$ws.proto.ClientBLObject} Объект, который умеет ходить на бизнес-логику
           */
          _BL: undefined
       },
@@ -27,6 +35,10 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
          this._BL = new $ws.proto.ClientBLObject(cfg);
       },
 
+      /**
+       * Метод создает запись в источнике данных
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record
+       */
       create: function () {
          var self = this,
             def = new $ws.proto.Deferred();
@@ -39,8 +51,9 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
       },
 
       /**
-       * Прочитать запись
-       * @param id - идентификатор записи
+       * Метод для чтения записи из БЛ по ее идентификатору
+       * @param {Number} id - идентификатор записи
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record
        */
       read: function (id) {
          var self = this,
@@ -55,13 +68,15 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
       },
 
       /**
-       * Обновить запись
-       * @param record - измененная запись
+       * Метод для обновления записи на БЛ
+       * @param (js!SBIS3.CONTROLS.Record) record - измененная запись
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет Boolean - результат успешности выполнения операции
        */
       update: function (record) {
          var self = this,
             rawData = record.getRaw(),
             def = new $ws.proto.Deferred();
+         // поддержим формат запросов к БЛ
          var rec = {
             s: rawData.s,
             d: rawData.d,
@@ -78,26 +93,29 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
       },
 
       /**
-       * Удалить запись
-       * @param id - идентификатор записи
+       * Метод для удаления записи из БЛ
+       * @param {Number} id - идентификатор записи
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет Boolean - результат успешности выполнения операции
        */
       destroy: function (id) {
          var self = this,
             def = new $ws.proto.Deferred();
 
          self._BL.call(self._options.destroyMethodName, {'ИдО': id}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
-            def.callback();
+            def.callback(true);
          });
 
          return def;
       },
 
       /**
-       * Вызов списочного метода
-       * @param filter - [{property: 'id', value: 2}]
-       * @param sorting - [{property1: 'id', direction: 'ASC'},{property2: 'name', direction: 'DESC'}]
-       * @param offset - number
-       * @param limit - number
+       * Вызов списочного метода БЛ
+       * Возможно применене фильтрации, сортировки и выбора определенного количества записей с заданной позиции
+       * @param {Object} filter - {property: value}
+       * @param {Array} sorting - [{property1: 'ASC'},{property2: 'DESC'}]
+       * @param {Number} offset смещение начала выборки
+       * @param {Number} limit количество возвращаемых записей
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.DataSet - набор отобранных элементов
        */
       query: function (filter, sorting, offset, limit) {
 
@@ -107,6 +125,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
          filter = filter ? filter : this._filter;
          this._filter = filter;
 
+         // настройка объекта фильтрации для отправки на БЛ
          var filterParam = {
             d: [],
             s: []

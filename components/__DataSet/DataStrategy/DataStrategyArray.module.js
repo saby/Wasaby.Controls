@@ -3,6 +3,11 @@
  */
 define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'], function (IDataStrategy) {
    'use strict';
+
+   /**
+    * Реализация интерфеса IDataStrategy для работы с массивами
+    */
+
    return IDataStrategy.extend({
       $protected: {
       },
@@ -10,9 +15,9 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
       },
       /**
        * Метод для обхода по сырым данным
-       * @param data
-       * @param iterateCallback
-       * @param context
+       * @param {Array} data исходный массив по которому производится обход
+       * @param {function} iterateCallback пользовательская функция обратного вызова
+       * @param context контекст
        */
       each: function (data, iterateCallback, context) {
          var
@@ -24,14 +29,15 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
 
       /**
        * Получить сырые данные для записи по ключевому полю
-       * @param data
-       * @param keyField
-       * @param key
-       * @returns {*}
+       * @param {Array} data массив "сырых" данных
+       * @param {String} keyField название поля-идентификатора
+       * @param {Number} key искомый идентификатор
+       * @returns {*} соответствующие "сырые" данные для записи
        */
       getByKey: function (data, keyField, key) {
          var item,
             length = data.length;
+         // ищем простым перебором
          for (var i = 0; i < length; i++) {
             if (data[i][keyField] == parseInt(key, 10)) {
                item = data[i];
@@ -42,10 +48,10 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
 
       /**
        * Установить значение поля записи
-       * @param data
-       * @param field
-       * @param value
-       * @returns {*}
+       * @param {Array} data массив "сырых" данных
+       * @param {String} field название поля, в которой производится запись значения
+       * @param {Object} value новое значение
+       * @returns {Object} новый объект "сырых" данных
        */
       setValue: function (data, field, value) {
          data = data || {};
@@ -55,8 +61,8 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
 
       /**
        * Получить значение поля записи
-       * @param data
-       * @param field
+       * @param {Object} data "сырые" данные записи
+       * @param {String} field название поля для получения значения
        * @returns {*}
        */
       value: function (data, field) {

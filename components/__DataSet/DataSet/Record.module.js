@@ -3,6 +3,11 @@
  */
 define('js!SBIS3.CONTROLS.Record', [], function () {
    'use strict';
+
+   /**
+    * Обертка для данных
+    */
+
    return $ws.core.extend({}, {
       $protected: {
          _raw: undefined,
@@ -11,15 +16,39 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
       $constructor: function (strategy) {
          this._strategy = strategy;
       },
+
+      /**
+       * установить "сырые" данные
+       * @param {Object} raw
+       */
       setRaw: function (raw) {
          this._raw = raw;
       },
+
+      /**
+       * Получить значение по наименованию поля
+       * @param {String} field
+       * @returns {*}
+       */
       get: function (field) {
+         // с данными можем работать только через стратегию
          return this._strategy.value(this._raw, field);
       },
+
+      /**
+       * Установить значение поля записи
+       * @param {String} field название поля
+       * @param value новое значение
+       */
       set: function (field, value) {
+         // с данными можем работать только через стратегию
          this._raw = this._strategy.setValue(this._raw, field, value);
       },
+
+      /**
+       * Получить исходные "сырые" данные для записи
+       * @returns {Object}
+       */
       getRaw: function () {
          return this._raw;
       }

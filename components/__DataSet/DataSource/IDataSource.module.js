@@ -3,46 +3,54 @@
  */
 define('js!SBIS3.CONTROLS.IDataSource', [], function () {
    'use strict';
+
+   /**
+    * Интерфейс предназначен для работы с источником данных
+    */
+
    return $ws.core.extend({}, {
       $protected: {
       },
       $constructor: function () {
       },
 
-      //FixMe: видимо тут ничего не передаем?!
+      /**
+       * Метод создает запись в источнике данных
+       */
       create: function () {
          /*Method must be implemented*/
       },
 
       /**
-       * Прочитать запись
-       * @param id - идентификатор записи
+       * Метод для чтения записи из источника данных по ее идентификатору
+       * @param {Number} id - идентификатор записи
        */
       read: function (id) {
          /*Method must be implemented*/
       },
 
       /**
-       * Обновить запись
-       * @param record - измененная запись
+       * Метод для обновлениязаписи в источнике данных
+       * @param (js!SBIS3.CONTROLS.Record) record - измененная запись
        */
       update: function (record) {
          /*Method must be implemented*/
       },
 
       /**
-       * Удалить запись
-       * @param id - идентификатор записи
+       * Метод для удаления записи из источника данных
+       * @param {Number} id - идентификатор записи
        */
       destroy: function (id) {
          /*Method must be implemented*/
       },
       /**
-       * Вызов списочного метода
-       * @param filter - [{property: 'id', value: 2}]
-       * @param sorting - [{property1: 'id', direction: 'ASC'},{property2: 'name', direction: 'DESC'}]
-       * @param offset - number
-       * @param limit - number
+       * Метод для получения набора записей из источника данных
+       * Возможно применене фильтрации, сортировки и выбора определенного количества записей с заданной позиции
+       * @param {Object} filter - {property: value}
+       * @param {Array} sorting - [{property1: 'ASC'},{property2: 'DESC'}]
+       * @param {Number} offset смещение начала выборки
+       * @param {Number} limit количество возвращаемых записей
        */
       query: function (filter, sorting, offset, limit) {
          /*Method must be implemented*/

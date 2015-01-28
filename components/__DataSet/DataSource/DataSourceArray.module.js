@@ -8,16 +8,21 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
    'js!SBIS3.CONTROLS.DataStrategyArray'
 ], function (IDataSource, Record, DataSet, DataStrategyArray) {
    'use strict';
+
+   /**
+    * Класс, реализующий интерфейс IDataSource, для работы с массивами как с источником данных
+    */
+
    return IDataSource.extend({
       $protected: {
          _filter: {},
          _options: {
             /**
-             * Массив сырых данных, по которым строится DataSource
+             * @cfg {Array} Исходный массив данных, с которым работает DataSourceArray
              */
             data: [],
             /**
-             * @cfg {String}  Ключевое поле
+             * @cfg {String} Название поля, являющегося первичных ключом
              */
             keyField: ''
          }
@@ -26,9 +31,14 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
 
       },
 
+      /**
+       * Метод создает запись в источнике данных
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record
+       */
       create: function () {
          var def = new $ws.proto.Deferred();
          var record = new Record(new DataStrategyArray());
+         // идентификатор берем на 1 больще, чем у последней записи
          record.set(this._options.keyField, this._options.data[this._options.data.length - 1][this._options.keyField] + 1);
          this._options.data.push(record.getRaw());
          def.callback(record);
@@ -36,12 +46,15 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
       },
 
       /**
-       * Прочитать запись
-       * @param id - идентификатор записи
+       * Метод для чтения записи из массива по ее идентификатору
+       * @param {Number} id - идентификатор записи
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record
        */
       read: function (id) {
          var def = new $ws.proto.Deferred(),
             key;
+         //перебиаем массим исходных данных пока не найдем нужный элемент
+         //TODO: сделать ошибку если такой записи не нашлось
          for (var i = 0; i < this._options.data.length; i++) {
             if (this._options.data[i][this._options.keyField] == parseInt(id, 10)) {
                key = i;
@@ -50,19 +63,22 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
          }
          //TODO: переделать установку стратегии
          var record = new Record(new DataStrategyArray());
+         //установка "сырых" данных для записи
          record.setRaw(this._options.data[key]);
          def.callback(record);
          return def;
       },
 
       /**
-       * Обновить запись
-       * @param record - измененная запись
+       * Метод для обновления записи в источнике данных
+       * @param (js!SBIS3.CONTROLS.Record) record - измененная запись
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет Boolean - результат успешности выполнения операции
        */
       update: function (record) {
          var def = new $ws.proto.Deferred(),
             rawData = record.getRaw(),
             key = rawData[this._options.keyField];
+         // проходим по исходному массиву, когда находим нужных элемент - заменяем
          for (var i = 0; i < this._options.data.length; i++) {
             if (this._options.data[i][this._options.keyField] == key) {
                this._options.data[i] = rawData;
@@ -74,30 +90,34 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
       },
 
       /**
-       * Удалить запись
-       * @param id - идентификатор записи
+       * Метод для удаления записи из источника данных
+       * @param {Number} id - идентификатор записи
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет Boolean - результат успешности выполнения операции
        */
       destroy: function (id) {
          var def = new $ws.proto.Deferred(),
             key;
+         // проходим по исходному массиву, пока не найдем позицию искомого элемента
          for (var i = 0; i < this._options.data.length; i++) {
             if (this._options.data[i][this._options.keyField] == parseInt(id, 10)) {
                key = i;
                break;
             }
-
          }
+         // удаляем эемент из исходного набора
          Array.remove(this._options.data, key);
-         def.callback();
+         def.callback(true);
          return def;
       },
 
       /**
-       * Вызов списочного метода
-       * @param filter - [{property: 'id', value: 2}]
-       * @param sorting - [{property1: 'id', direction: 'ASC'},{property2: 'name', direction: 'DESC'}]
-       * @param offset - number
-       * @param limit - number
+       * Метод для получения набора записей из источника данных
+       * Возможно применене фильтрации, сортировки и выбора определенного количества записей с заданной позиции
+       * @param {Object} filter - {property: value}
+       * @param {Array} sorting - [{property1: 'ASC'},{property2: 'DESC'}]
+       * @param {Number} offset смещение начала выборки
+       * @param {Number} limit количество возвращаемых записей
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.DataSet - набор отобранных элементов
        */
       query: function (filter, sorting, offset, limit) {
          var self = this,
@@ -125,17 +145,12 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
             }
          }
 
-
          var DS = new DataSet({
             strategy: 'DataStrategyArray',
             data: data,
             keyField: this._options.keyField
          });
-
-         // когда будет чудо-библиотека можно будет отсортировать, отфильтровать и потом только вернуть результат
-
          def.callback(DS);
-
          return def;
       }
 

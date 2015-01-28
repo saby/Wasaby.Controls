@@ -3,34 +3,39 @@
  */
 define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
    'use strict';
+
+   /**
+    * Интерфейс предназначен для унификации работы с исходными данными датасорсов
+    */
+
    return $ws.core.extend({}, {
       $protected: {
       },
       $constructor: function () {
       },
       /**
-       * Метод для обхода по сырым данным
+       * Метод-итератор для обхода по сырым данным
        */
       each: function () {
-
+         /*Method must be implemented*/
       },
       /**
        * Получить значение поля записи
        */
       value: function () {
-
+         /*Method must be implemented*/
       },
       /**
        * Установить значение поля записи
        */
       setValue: function () {
-
+         /*Method must be implemented*/
       },
       /**
        * Получить сырые данные для записи по ключевому полю
        */
       getByKey: function () {
-
+         /*Method must be implemented*/
       }
 
    });
