@@ -3,9 +3,6 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
       $protected : {
          _data : [],
          _index : {},
-         _keyField : null,
-         _hierField : null,
-         _adapter : null,
          _options : {
             adapter : null,
             data : [],
@@ -17,32 +14,26 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
             this._data = this._options.data;
 
          }
-         if (this._options.keyField) {
-            this._keyField = this._options.keyField;
-         }
-         if (this._options.adapter) {
-            this._adapter = this._options.adapter;
-         }
          this._reindex();
       },
 
       addItem : function(newItem) {
-         this._adapter.addItem(this._data, newItem);
-         var key = this._adapter.getValue(newItem, this._keyField);
+         this._options.adapter.addItem(this._data, newItem);
+         var key = this._options.adapter.getValue(newItem, this._options.keyField);
          this._addToIndex(newItem, key);
       },
 
       destroyItem : function(id) {
-         this._adapter.destroyItem(this._data, id, this._options.keyField);
+         this._options.adapter.destroyItem(this._data, id, this._options.keyField);
          this._removeFromIndex(id);
       },
 
       hasChild : function(id) {
-         return this._adapter.hasChild(this._data, id, this._options.keyField, this._hierField);
+         return this._options.adapter.hasChild(this._data, id, this._options.keyField, this._options.hierField);
       },
 
       getChildItems : function(id) {
-         return this._adapter.getChildItems(this._data, id, this._options.keyField, this._hierField);
+         return this._options.adapter.getChildItems(this._data, id, this._options.keyField, this._options.hierField);
       },
 
       /**
@@ -59,7 +50,7 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
        */
       getNextItem: function(key){
          var item = this.getItem(key);
-         return this._adapter.getSibling(this._data, item, 'next');
+         return this._options.adapter.getSibling(this._data, item, 'next');
       },
 
       /**
@@ -68,36 +59,36 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
        */
       getPreviousItem: function(key){
          var item = this.getItem(key);
-         return this._adapter.getSibling(this._data, item, 'prev');
+         return this._options.adapter.getSibling(this._data, item, 'prev');
       },
 
       getKey : function(item) {
-         if (this._keyField) {
-            return this._adapter.getValue(item, this._keyField)
+         if (this._options.keyField) {
+            return this._options.adapter.getValue(item, this._options.keyField)
          }
          else {
-            return this._adapter._getIndexOf(item);
+            return this._options.adapter._getIndexOf(item);
          }
       },
 
       getParent : function(item) {
-         return this._adapter.getParent(item, this._hierField);
+         return this._options.adapter.getParent(item, this._options.hierField);
       },
 
       /*TODO проброс метода в Adapter*/
       iterate : function(hdlFunction) {
          var self = this;
-         this._adapter.iterate(this._data, function(item, i, parItem, lvl){
+         this._options.adapter.iterate(this._data, function(item, i, parItem, lvl){
             var key;
-            if (self._keyField) {
-               key = self.getValue(item, self._keyField);
+            if (self._options.keyField) {
+               key = self.getValue(item, self._options.keyField);
             }
             hdlFunction(item, key, i, parItem, lvl);
-         }, self._keyField, self._hierField)
+         }, self._options.keyField, self._options.hierField)
       },
 
       getValue : function(item, field) {
-         return this._adapter.getValue(item, field);
+         return this._options.adapter.getValue(item, field);
       },
 
 
@@ -138,11 +129,11 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
       },
 
       getItemsCount : function() {
-         return this._adapter.getItemsCount(this._data);
+         return this._options.adapter.getItemsCount(this._data);
       },
 
       setHierField : function(hierField) {
-         this._hierField = hierField;
+         this._options.hierField = hierField;
       }
    });
 });
