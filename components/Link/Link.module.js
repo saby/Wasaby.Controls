@@ -44,6 +44,10 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
 
       setHref: function(href){
          this._options.href = href;
+         if (!href) {
+            href = 'javascript:void(0);';
+         } 
+         this._container.attr('href', href);
       }
 
    });
