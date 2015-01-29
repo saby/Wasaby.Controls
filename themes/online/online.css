@@ -16,7 +16,7 @@ input[type="reset"]::-moz-focus-inner {
   border-radius: 16px;
   box-shadow: inset 0px -1px 1px #afacab;
   font: 13px Tahoma, Geneva, sans-serif;
-  padding: 0 8px;
+  padding: 0 12px;
   box-sizing: border-box;
   background-size: contain;
 }
@@ -117,11 +117,22 @@ input[type="reset"]::-moz-focus-inner {
   position: absolute;
   left: -2px;
 }
+.controls-Button__icon.icon-24 {
+  top: -3px;
+}
 .controls-Button__text {
   white-space: nowrap;
 }
 .controls-Button__icon + .controls-Button__text {
   margin-left: 20px;
+}
+.controls-Button {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .controls-Button__emptyCaption {
   margin-left: 13px!important;

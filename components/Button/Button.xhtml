@@ -1,4 +1,4 @@
-<button class="controls-Button{{?!(it.icon)}} controls-Button__text{{?}}{{?it.primary}} controls-Button__primary{{?}}">
+<button class="controls-Button{{?!(it.icon)}} controls-Button__text{{?}}{{?it.primary}} controls-Button__primary{{?}}"{{?it.tooltip}} title="{{=it.tooltip}}"{{?}}>
     {{?it.icon}}
     <span class="controls-Button__content">
         <i class="controls-Button__icon js-controls-Button__icon {{=it.iconTemplate(it)}}"></i><span class="controls-Button__text js-controls-Button__text {{?!it.caption}}controls-Button__emptyCaption{{?}}">{{?it.caption}}{{=it.caption}}{{?}}</span>
