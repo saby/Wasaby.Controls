@@ -307,7 +307,46 @@
          <td>Текст 3</td>
       </tr>
    </table>
+   <br/><br/>
+   Макаров
+   <div id="IconTitle" class="ws-hover-target" style="width: 410px">
+      <div id="icon" class="controls-IconButton__zplBigIcon">
 
+      </div>
+      <div id="text"></div>
+
+   </div>
+   <span>Тралалала</span>
+   <style type="text/css">
+      .controls-IconButton__zplBigIcon {
+         width: 48px;
+         height: 48px;
+         text-align: center;
+         line-height: 48px !important;
+         border: 1px solid #dddddd;
+         border-radius: 4px;
+      }
+      #icon {
+         float: left;
+         margin-right: 8px;
+      }
+      #text {
+         font-family: 'Trebuchet MS Обычный', 'Trebuchet MS';
+         font-weight: 400;
+         font-style: normal;
+         font-size: 18px;
+         color: #587AB0;
+      }
+      #text:hover {
+         text-decoration: none;
+      }
+      #IconTitle:hover .controls-IconButton__zplBigIcon {
+         border-color: #ff7033;
+      }
+      #IconTitle:hover #text {
+         color: #ff7033;
+      }
+   </style>
 </div>
 
 <script type="text/javascript">
@@ -321,6 +360,11 @@
                link: 'http://wi.sbis.ru',
                inNewTab: true,
                icon: 'sprite:icon-24 icon-Attach icon-primary action-hover'
+            });
+
+            new r({
+               element : 'text',
+               caption : 'Расчеты и среднесписочная численность'
             })
          });
 
@@ -382,7 +426,12 @@
             new r({
                element: "buttonIcon2",
                icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
-            })
+            });
+
+            new r({
+               element : 'icon',
+               icon: 'sprite:icon-16 icon-Payment icon-primary  action-hover'
+            });
          });
 
          require(["js!SBIS3.CONTROLS.DatePicker"], function (r) {
