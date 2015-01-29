@@ -1,7 +1,7 @@
 <button class="controls-MenuButton controls-Button{{?it.primary}} controls-Button__primary{{?}}{{?it.checked===true}} controls-Checked__checked{{?}}">
    {{?it.icon}}
     <span class="controls-Button__content">
-        <i class="controls-Button__icon js-controls-Button__icon {{=it.iconClass(it)}}"></i><span class="controls-Button__text js-controls-Button__text">{{?it.caption}}{{=it.caption}}{{?}}</span>
+        <i class="controls-Button__icon js-controls-Button__icon {{=it.iconTemplate(it)}}"></i><span class="controls-Button__text js-controls-Button__text">{{?it.caption}}{{=it.caption}}{{?}}</span>
     </span>
    {{??}}
    {{?it.caption}}{{=it.caption}}{{?}}

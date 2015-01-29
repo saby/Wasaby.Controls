@@ -82,6 +82,9 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
                var content = $('<span class="controls-Button__content">\
                   <i class="controls-Button__icon js-controls-Button__icon ' + this._iconClass + '"></i><span class="controls-Button__text js-controls-Button__text">'+caption+'</span>\
                </span>');
+               if (!caption) {
+                  $('.controls-Button__text', content).addClass('controls-Button__emptyCaption');
+               }
                this._container.html(content);
             }
             else {
