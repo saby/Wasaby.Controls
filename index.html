@@ -77,34 +77,34 @@
             <h3>Просмотр контролов</h3>
             <ul>
                <li>
-                  <a href="/pages/textBoxCommonStyles.html">TextBox's</a>
+                  <div id="TextBoxes"></div>
                </li>
                <li>
-                  <a href="/pages/buttonCommonStyles.html">Button's</a>
+                  <div id="Buttons"></div>
                </li>
                <li>
-                  <a href="/pages/switcherCommonStyles.html">Switcher's</a>
+                  <div id="Switchers"></div>
                </li>
                <li>
-                  <a href="/pages/ButtonGroups.html">Button groups</a>
-               </li>               
+                  <div id="ButtonGroups"></div>
+               </li>
 					<li>
-                  <a href="/pages/FieldFormat.html">Field Format</a>
+                  <div id="FieldFormat"></div>
                </li>
                <li>
-                  <a href="/pages/Views.html">Views</a>
+                  <div id="Views"></div>
                </li>
                <li>
-                  <a href="/pages/PopupDemo.html">Popup</a>
+                  <div id="Popup"></div>
                </li>
                <li>
-                  <a href="/pages/data-bind.html">Data binding</a>
+                  <div id="DataBinding"></div>
                </li>
                <li>
-                  <a href="/pages/buttonContent.html">Button content</a>
+                  <div id="ButtonContent"></div>
                </li>
                <li>
-                  <a href="/pages/editAtPlace.html">Edit At Place</a>
+                  <div id="EditAtPlace"></div>
                </li>
             </ul>
          </td>
@@ -112,16 +112,16 @@
             <h3>Темы</h3>
             <ul>
                <li>
-                  <a href="/themes/online.sbis.html">online.sbis.ru</a>
+                  <div id="onlinesbis"></div>
                </li>
                <li>
-                  <a href="/themes/demo.html">demo</a>
+                  <div id="demo"></div>
                </li>
                <li>
-                  <a href="/themes/presto.html">presto</a>
+                  <div id="presto"></div>
                </li>
                <li>
-                  <a href="/themes/genie.html">genie</a>
+                  <div id="genie"></div>
                </li>
             </ul>
          </td>
@@ -132,13 +132,13 @@
             <h3>Темы - демонстрация</h3>
             <ul>
                <li>
-                  <a href="/pages/online.sbis.html">online.sbis.ru</a>
+                  <div id="onlinesbisDemo"></div>
                </li>
                <li>
-                  <a href="/pages/presto.html">presto</a>
+                  <div id="prestoDemo"></div>
                </li>
                <li>
-                  <a href="/pages/genie.html">genie</a>
+                  <div id="genieDemo"></div>
                </li>
             </ul>
          </td>
@@ -149,6 +149,143 @@
 <script type="text/javascript">
    $ws.core.withComponents('Source').addCallback(function () {
       $(document).ready(function () {
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "prestoDemo",
+               caption: 'presto',
+               href: '/pages/presto.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "genieDemo",
+               caption: 'genie',
+               href: '/pages/genie.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "onlinesbisDemo",
+               caption: 'online.sbis',
+               href: '/pages/online.sbis.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "presto",
+               caption: 'presto',
+               href: '/themes/presto.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "genie",
+               caption: 'genie',
+               href: '/themes/genie.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "demo",
+               caption: 'demo',
+               href: '/themes/demo.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "onlinesbis",
+               caption: 'online.sbis',
+               href: '/themes/online.sbis.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "TextBoxes",
+               caption: 'TextBoxes',
+               href: '/pages/textBoxCommonStyles.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "Buttons",
+               caption: 'Buttons',
+               href: '/pages/buttonCommonStyles.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "Switchers",
+               caption: 'Switchers',
+               href: '/pages/switcherCommonStyles.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "ButtonGroups",
+               caption: 'Button groups',
+               href: '/pages/ButtonGroups.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "FieldFormat",
+               caption: 'FieldFormat',
+               href: '/pages/FieldFormat.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "Views",
+               caption: 'Views',
+               href: '/pages/Views.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "Popup",
+               caption: 'Popup',
+               href: '/pages/PopupDemo.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "DataBinding",
+               caption: 'Data binding',
+               href: '/pages/data-bind.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "ButtonContent",
+               caption: 'Button content',
+               href: '/pages/buttonContent.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "EditAtPlace",
+               caption: 'Edit At Place',
+               href: '/pages/editAtPlace.html'
+            })
+         });
+
 
       })
    });

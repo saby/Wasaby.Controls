@@ -52,6 +52,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          if (this._items.getItemsCount()) {
             this._drawItems();
          }
+         this._publish('onMenuItemActivate');
       },
 
       _getItemClass : function() {
@@ -94,8 +95,22 @@ define('js!SBIS3.CONTROLS.Menu', [
             return this._subContainers[parId];
          }
       },
+      _drawItems : function() {
+         this.destroySubObjects();
+         Menu.superclass._drawItems.call(this);
+      },
       _drawItemsCallback : function() {
-         for (var i in this._subContainers) {
+         var
+            menuItems = this.getItemsInstances(),
+            self = this;
+         for (var i in menuItems) {
+            if (menuItems.hasOwnProperty(i)){
+               menuItems[i].subscribe('onActivated', function () {
+                  self._notify('onMenuItemActivate', this.getContainer().attr('data-id'));
+               });
+            }
+         }
+         for (i in this._subContainers) {
             if (this._subContainers.hasOwnProperty(i)) {
 
                var
@@ -108,7 +123,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          }
 
          var instances = this.getItemsInstances();
-         var self = this;
+
          for (i in instances) {
             if (instances.hasOwnProperty(i)) {
                instances[i].getContainer().hover(function(e){
@@ -135,11 +150,12 @@ define('js!SBIS3.CONTROLS.Menu', [
                         self._subMenus[id].getContainer().append(self._subContainers[id]);
                      }
                      mySubmenu = self._subMenus[id];
-                     self._subMenus[id].show();
+                     mySubmenu.show();
                   }
                })
             }
          }
+
       },
       _createSubMenu : function(target, parent, isFirstLevel) {
          target = $(target);
@@ -179,12 +195,42 @@ define('js!SBIS3.CONTROLS.Menu', [
 
       destroy : function(){
          Menu.superclass.destroy.call(this);
+         this.destroySubObjects();
+      },
+
+      destroySubObjects : function() {
+         this._subMenus = {};
+         this._subContainers = {};
          for (var j in this._subMenus) {
             if (this._subMenus.hasOwnProperty(j)) {
                this._subMenus[j].destroy();
             }
          }
-         this._subContainers = {};
+      },
+      /*TODO Методы для Зуева, посмотреть в будущем нужны ли они*/
+      addSubMenu : function(pointsArr, id) {
+         for (var i = 0; i < pointsArr.length; i++) {
+            pointsArr[i][this._options.hierField] = id;
+            this._items.addItem(pointsArr[i]);
+         }
+         this._drawItems();
+      },
+      destroySubMenu : function(id) {
+         var childItems = this._items.getChildItems(id);
+         for (var i = 0; i < childItems.length; i++) {
+            this._items.destroyItem(this._items.getKey(childItems[i]));
+         }
+         this._drawItems();
+      },
+
+      hasSubMenu : function(id) {
+         return this._items.hasChild(id)
+      },
+
+      setItemTitle : function(id, title) {
+         var item = this._items.getItem(id);
+         item.title = title;
+         this._drawItems();
       }
    });
 

@@ -58,6 +58,7 @@
    <link rel="stylesheet" type="text/css" href="./online/online.css"/>
 </head>
 <body>
+<div id="Back"></div>
 
 <div id="content">
    <h3>Переключатели</h3>
@@ -258,7 +259,7 @@
             light
          </td>
          <td>
-            <div id="buttonlight" class="controls-Button__light" style="width: 100px"></div>
+            <div id="buttonlight" class="controls-Button__light"></div>
          </td>
          <td>
             disable big
@@ -313,7 +314,7 @@
    $ws.core.withComponents('Source').addCallback(function () {
       $(document).ready(function () {
 
-         require(["js!SBIS3.CORE.Link"], function (r) {
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
                element: "link",
                caption: 'This is Link',
@@ -507,7 +508,9 @@
 
             new r({
                element: "button2",
-               caption: 'Удалить'
+               caption: 'Траль',
+               tooltip : 'Лалала',
+               icon : 'sprite:icon-16 icon-Alert icon-primary'
             });
 
             new r({
@@ -569,7 +572,8 @@
          require(["js!SBIS3.CONTROLS.ToggleButton"], function (r) {
             new r({
                element: "ToggleButton",
-               caption: 'Переключаемая'
+               caption: 'Переключаемая',
+               icon : 'sprite:icon-24 icon-IPmask icon-primary'
             });
 
             new r({
@@ -689,6 +693,15 @@
                offset: 0
             },
             closeByExternalClick: true
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "Back",
+               caption: 'Назад',
+               href: '../../',
+               icon: 'sprite:icon-16 icon-DayBackward icon-primary'
+            })
          });
       });
    });

@@ -50,9 +50,43 @@ define('js!SBIS3.CONTROLS.AdapterJSON', ['js!SBIS3.CONTROLS.AdapterBase'], funct
       addItem : function(data, newItem) {
          data.push(newItem);
       },
+      destroyItem : function(data, id, keyField) {
+         var num;
+         for (var i = 0; i < data.length; i++) {
+            if (data[i][keyField] == id) {
+               num = i;
+               break;
+            }
+         }
+         if (typeof num != 'undefined') {
+            Array.remove(data, num);
+         }
+      },
+
+      hasChild : function(data, id, key, hier) {
+         var result = false;
+         this._hierIterate(data, function(item, i){
+            if (item[hier] == id) {
+               result = true;
+            }
+         }, key, hier);
+         return result;
+      },
+
+      getChildItems : function(data, id, key, hier) {
+         var child = [];
+         this._hierIterate(data, function(item, i){
+            if (item[hier] == id) {
+               child.push(item);
+            }
+         }, key, hier);
+         return child;
+      },
+
       getItemsCount : function(data) {
          return data.length;
       },
+
 
       getParent : function (item, hierField) {
          var parent = null;

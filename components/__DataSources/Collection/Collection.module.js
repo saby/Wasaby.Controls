@@ -28,8 +28,21 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
 
       addItem : function(newItem) {
          this._adapter.addItem(this._data, newItem);
-         this._reindex();
+         var key = this._adapter.getValue(newItem, this._keyField);
+         this._addToIndex(newItem, key);
+      },
 
+      destroyItem : function(id) {
+         this._adapter.destroyItem(this._data, id, this._options.keyField);
+         this._removeFromIndex(id);
+      },
+
+      hasChild : function(id) {
+         return this._adapter.hasChild(this._data, id, this._options.keyField, this._hierField);
+      },
+
+      getChildItems : function(id) {
+         return this._adapter.getChildItems(this._data, id, this._options.keyField, this._hierField);
       },
 
       /**
@@ -109,6 +122,10 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
             }
          }
          this._index[key] = item;
+      },
+
+      _removeFromIndex : function(key) {
+         delete (this._index[key]);
       },
 
       _getChildItems : function(parentId) {

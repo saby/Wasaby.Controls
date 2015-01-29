@@ -102,13 +102,13 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
          if (!this._options.threeState) {
             this.setChecked(!(this.isChecked()));
          } else {
-            if (this._options.checked === true){
-               this.setChecked(false);
-            } else
             if (this._options.checked === false){
+               this.setChecked(true);
+            } else
+            if (this._options.checked === true){
                this.setChecked(null);
             } else  {
-               this.setChecked(true);
+               this.setChecked(false);
             }
          }
       }

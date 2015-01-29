@@ -68,6 +68,12 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          }
       },
 
+
+      _getElementToFocus: function() {
+         return this._inputField;
+      },
+
+
       _keyUpBind: function() {
          var newText = this._inputField.val();
          if (newText != this._options.text) {
