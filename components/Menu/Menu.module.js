@@ -146,7 +146,7 @@ define('js!SBIS3.CONTROLS.Menu', [
                   if (self._subContainers[id]) {
                      if (!self._subMenus[id]) {
                         self._subContainers[id].appendTo('body');
-                        self._subMenus[id] = self._createSubMenu(this, parent, isFirstLevel);
+                        self._subMenus[id] = self._createSubMenu(this, parent, isFirstLevel, item);
                         self._subMenus[id].getContainer().append(self._subContainers[id]);
                      }
                      mySubmenu = self._subMenus[id];
@@ -157,9 +157,9 @@ define('js!SBIS3.CONTROLS.Menu', [
          }
 
       },
-      _createSubMenu : function(target, parent, isFirstLevel) {
+      _createSubMenu : function(target, parent, isFirstLevel, item) {
          target = $(target);
-         var config = this._getSubMenuConfig(isFirstLevel);
+         var config = this._getSubMenuConfig(isFirstLevel, item);
 
          config.element = $('<div class="controls-Menu__Popup"></div>');
          config.parent = parent;
@@ -167,7 +167,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          return new FloatArea(config)
       },
 
-      _getSubMenuConfig : function(isFirstLevel) {
+      _getSubMenuConfig : function(isFirstLevel, item) {
          var config =  {
             corner : 'tr',
             verticalAlign : {
@@ -179,18 +179,37 @@ define('js!SBIS3.CONTROLS.Menu', [
             closeByExternalOver: true,
             targetPart : true
          };
-         config = this._onMenuConfig(config, isFirstLevel);
+         config = this._onMenuConfig(config, isFirstLevel, item);
          return config;
       },
 
-      _onMenuConfig : function(config, isFirstLevel) {
-         if (isFirstLevel && this._options.firstLevelDirection == 'down') {
-            config.corner = 'bl';
-            return config;
+      _onMenuConfig : function(config, isFirstLevel, item) {
+         var direction;
+         if (isFirstLevel) {
+            direction = 'down';
          }
-         else {
-            return config;
+         if (item.direction) {
+            direction = item.direction;
          }
+         if (direction) {
+            switch (direction) {
+               case 'down' : {
+                  config.corner = 'bl';
+                  break;
+               }
+               case 'up' : {
+                  config.corner = 'tl';
+                  config.verticalAlign.side = 'bottom';
+                  break;
+               }
+               case 'right' : {
+                  config.corner = 'tl';
+                  config.horizontalAlign.side = 'right';
+                  break;
+               }
+            }
+         }
+         return config;
       },
 
       destroy : function(){
