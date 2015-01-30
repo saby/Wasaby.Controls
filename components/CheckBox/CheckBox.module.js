@@ -79,23 +79,23 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
        */
       setChecked: function(flag) {
          if (flag === true) {
-            this._container.addClass('controls-ToggleButton__checked');
+            this._container.addClass('controls-Checked__checked');
             this._container.removeClass('controls-ToggleButton__null');
             this._options.checked = true;
          } else
          if (flag === false) {
-            this._container.removeClass('controls-ToggleButton__checked');
+            this._container.removeClass('controls-Checked__checked');
             this._container.removeClass('controls-ToggleButton__null');
             this._options.checked = false;
          } else {
             if (this._options.threeState) {
-               this._container.removeClass('controls-ToggleButton__checked');
+               this._container.removeClass('controls-Checked__checked');
                this._container.addClass('controls-ToggleButton__null');
                this._options.checked = null;
             }
          }
          this.saveToContext('Checked', this._options.checked);
-         this._notify('onChange', this._options.checked);
+         this._notify('onCheckedChange', this._options.checked);
       },
 
       _clickHandler: function() {

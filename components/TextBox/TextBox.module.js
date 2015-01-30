@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       _dotTplFn: dotTplFn,
       $protected: {
          _inputField : null,
+         _compatPlaceholder: null,
          _options: {
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
@@ -48,7 +49,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       $constructor: function() {
          var self = this;
-         this._inputField = $('.controls-TextBox__field', this.getContainer().get(0));
+         this._inputField = $('.js-controls-TextBox__field', this.getContainer().get(0));
          this._container.bind('keypress',function(e){
             self._keyPressBind(e);
          });
@@ -73,6 +74,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             }
          });
 
+         if (this._options.placeholder && !$ws._const.compatibility.placeholder) {
+            this._createCompatPlaceholder();
+         }
       },
 
       setText: function(text){
@@ -82,6 +86,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             text = String.trim(text);
          }
          TextBox.superclass.setText.call(this, text);
+         if (this._compatPlaceholder) this._compatPlaceholder.toggle(!text);
          this._inputField.attr('value', text);
       },
 
@@ -92,7 +97,17 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       setPlaceholder: function(text){
          TextBox.superclass.setPlaceholder.call(this, text);
-         this._inputField.attr('placeholder', text);
+         if ($ws._const.compatibility.placeholder) {
+            if (this._compatPlaceholder) {
+               this._compatPlaceholder.text(text || '');
+            }
+            else {
+               this._createCompatPlaceholder();
+            }
+         }
+         else {
+            this._inputField.attr('placeholder', text || '');
+         }
       },
 
       /**
@@ -102,16 +117,16 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       setTextTransform: function(textTransform){
          switch (textTransform) {
             case 'uppercase':
-               this._inputField.removeClass('controls-TextBox__field-lowercase');
-               this._inputField.addClass('controls-TextBox__field-uppercase');
+               this._inputField.removeClass('controls-TextBox__field-lowercase')
+                  .addClass('controls-TextBox__field-uppercase');
                break;
             case 'lowercase':
-               this._inputField.removeClass('controls-TextBox__field-uppercase');
-               this._inputField.addClass('controls-TextBox__field-lowercase');
+               this._inputField.removeClass('controls-TextBox__field-uppercase')
+                  .addClass('controls-TextBox__field-lowercase');
                break;
             default:
-               this._inputField.removeClass('controls-TextBox__field-uppercase');
-               this._inputField.removeClass('controls-TextBox__field-lowercase');
+               this._inputField.removeClass('controls-TextBox__field-uppercase')
+                  .removeClass('controls-TextBox__field-lowercase');
          }
       },
 
@@ -120,12 +135,23 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          if (newText != this._options.text) {
             TextBox.superclass.setText.call(this, newText);
          }
+         if (this._compatPlaceholder) this._compatPlaceholder.toggle(!newText);
       },
 
       _keyDownBind: function() {
+
       },
 
       _keyPressBind: function() {
+
+      },
+
+      setActive: function(active){
+         var firstSelect = this._isControlActive != active;
+         TextBox.superclass.setActive.apply(this, arguments);
+         if (active && firstSelect) {
+            this._inputField.get(0).focus();
+         }
       },
 
       _setEnabled : function(enabled) {
@@ -136,6 +162,21 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          else {
             this._inputField.removeAttr('readonly');
          }
+      },
+
+      _createCompatPlaceholder : function() {
+         var self = this;
+         this._compatPlaceholder = $('<div class="controls-TextBox__placeholder">' + this._options.placeholder + '</div>');
+         if (this._options.text) {
+            this._compatPlaceholder.hide()
+         }
+         this._inputField.after(this._compatPlaceholder);
+         this._compatPlaceholder.css('left', this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10));
+         this._compatPlaceholder.click(function(){
+            if (self.isEnabled()) {
+               self._inputField.get(0).focus();
+            }
+         });
       }
    });
 

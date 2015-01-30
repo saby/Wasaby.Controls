@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS._SelectorMixin', [], function() {
       },
 
       $constructor: function() {
-         this._publish('onChangeSelectedItem');
+         this._publish('onSelectedItemChange');
       },
 
       /**
@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS._SelectorMixin', [], function() {
 
       _notifySelectedItem : function(id) {
          //TODO: может тут указать, что метод надо переопредить чтобы текст передавать и пр.?
-         this._notify('onChangeSelectedItem', id);
+         this._notify('onSelectedItemChange', id);
       }
    };
 

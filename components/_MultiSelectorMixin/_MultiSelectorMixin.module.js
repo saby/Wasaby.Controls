@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS._MultiSelectorMixin', [], function() {
       },
 
       $constructor: function() {
-         this._publish('onChangeSelectedItems');
+         this._publish('onSelectedItemsChange');
          if (this._options.selectedItems) {
             if (Object.prototype.toString.call(this._options.selectedItems) == '[object Array]' ) {
                if (!this._options.multiselect) {
@@ -151,7 +151,7 @@ define('js!SBIS3.CONTROLS._MultiSelectorMixin', [], function() {
       },
 
       _notifySelectedItem : function(idArray) {
-         this._notify('onChangeSelectedItems', idArray);
+         this._notify('onSelectedItemsChange', idArray);
       }
    };
 

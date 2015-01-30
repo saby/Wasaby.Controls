@@ -28,16 +28,9 @@
    <script type="text/javascript" src="/sbis3-ws/ws/lib/Source.js"></script>
    <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/res/js/bootup.js"></script>
    <style>
-      .view-main {
-         font-family: Arial, SANS-SERIF;
-         font-size: 13px;
-         padding: 0;
-         margin: 0;
-         height: 100%;
-      }
-
       html, body {
          font-family: Tahoma !important;
+         font-size: 13px;
       }
 
       #content {
@@ -54,7 +47,9 @@
             min-width: 100%;
          }
       }
-
+      #TextBox2 {
+         width: 100px;
+      }
 
    </style>
    <script type="text/javascript" id="ws-include-css"></script>
@@ -62,7 +57,7 @@
    <link rel="stylesheet" type="text/css" href="../icons/index.css"/>
    <link rel="stylesheet" type="text/css" href="./online/online.css"/>
 </head>
-<body class="view-main">
+<body>
 
 <div id="content">
    <h3>Переключатели</h3>
@@ -145,7 +140,11 @@
    <br/><br/>
    <div id="TextArea"></div>
    <br/><br/>
-   <div id="ComboBox"></div>
+   <div id="ComboBox" style="width: 200px"></div>
+
+   <br/><br/>
+
+   <div id="ComboBox2" style="width: 200px"></div>
 
    <br/><br/>
 
@@ -170,6 +169,20 @@
          </td>
          <td>
             <div id="button1big" class="controls-Button__big"></div>
+         </td>
+      </tr>
+      <tr>
+         <td>
+            primary
+         </td>
+         <td>
+            <div id="buttonIcon"></div>
+         </td>
+         <td>
+            primary big
+         </td>
+         <td>
+            <div id="buttonIcon2" class="controls-Button"></div>
          </td>
       </tr>
       <tr>
@@ -326,6 +339,17 @@
             })
          });
 
+         require(["js!SBIS3.CONTROLS.IconButton"], function (r) {
+            new r({
+               element: "buttonIcon",
+               icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
+            });
+            new r({
+               element: "buttonIcon2",
+               icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
+            })
+         });
+
          require(["js!SBIS3.CONTROLS.DatePicker"], function (r) {
             new r({
                element: "FormattedTextBox"
@@ -362,12 +386,12 @@
          require(["js!SBIS3.CONTROLS.TextBox"], function (r) {
             new r({
                element: "TextBox",
-               text: 'This is TextBox'
+               placeholder: 'This is TextBox'
             });
 
             new r({
                element: "TextBox2",
-               text: 'This is TextBox enabled',
+               placeholder: 'This is TextBox enabled',
                enabled: false
             })
          });
@@ -383,7 +407,26 @@
          require(["js!SBIS3.CONTROLS.ComboBox"], function (r) {
             new r({
                element: "ComboBox",
-               isEditable : false,
+               editable : false,
+               items : [
+                  {
+                     key : 1,
+                     title : 'Первый'
+                  },
+                  {
+                     key : 2,
+                     title : 'Второй'
+                  },
+                  {
+                     key : 3,
+                     title : 'Третий'
+                  }
+               ]
+            });
+
+            new r({
+               element: "ComboBox2",
+               editable : true,
                items : [
                   {
                      key : 1,

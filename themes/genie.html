@@ -46,12 +46,21 @@
 
    </style>
    <script type="text/javascript" id="ws-include-css"></script>
-   <link rel="stylesheet" type="text/css" href="../sprites.css"/>
+   <link rel="stylesheet" type="text/css" href="../fonts/index.css"/>
+   <link rel="stylesheet" type="text/css" href="../icons/index.css"/>
    <link rel="stylesheet" type="text/css" href="./genie/genie.css"/>
 </head>
 <body class="view-main">
 
 <div id="content">
+
+   <div id="IconButton">4</div>
+
+   <br/><br/>
+
+   <div id="IconButton2" class="controls-Button">4</div>
+
+   <br/><br/>
 
    <div id="RadioButton">4</div>
 
@@ -73,12 +82,11 @@
 
    <br/><br/>
 
-   <div id="ComboBox"></div>
+   <div id="ComboBox" style="width: 200px"></div>
 
    <br/><br/>
 
-   <div id="ComboBox2"></div>
-
+   <div id="ComboBox2" style="width: 200px"></div>
    <br/><br/>
 
    <div id="FormattedTextBox"></div>
@@ -87,6 +95,8 @@
    <div id="button1"></div>
    <br/><br/>
    <div id="button2"></div>
+   <br/><br/>
+   <div id="button3"></div>
 
 
    <br/><br/>
@@ -98,7 +108,17 @@
    $ws.core.withComponents('Source').addCallback(function () {
       $(document).ready(function () {
 
+         require(["js!SBIS3.CONTROLS.IconButton"], function (r) {
+            new r({
+               element: "IconButton",
+               icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
+            });
 
+            new r({
+               element: "IconButton2",
+               icon: 'sprite:icon-16 icon-AddButton icon-primary action-hover'
+            })
+         });
 
          require(["js!SBIS3.CONTROLS.RadioButton"], function (r) {
             new r({
@@ -153,7 +173,7 @@
          require(["js!SBIS3.CONTROLS.ComboBox"], function (r) {
             new r({
                element: "ComboBox2",
-               isEditable: false,
+               editable: false,
                items : [
                   {
                      key : 1,
@@ -175,6 +195,12 @@
             new r({
                element: "button1",
                caption: 'Сохранить'
+            });
+
+            new r({
+               element: "button3",
+               caption: 'Сохранить',
+               primary : true
             })
          });
 

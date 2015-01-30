@@ -47,7 +47,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
       $constructor: function () {
          var self = this;
-         this._publish('onChangeText');
          this.getContainer().addClass('controls-NumberTextBox');
          $('.js-controls-NumberTextBox__arrowDown', this.getContainer().get(0)).click(function () {
             if (self.isEnabled()) {
@@ -96,6 +95,11 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          }
 
          if(/[-]/.test(symbol) && !self._options.onlyPositive){
+            return true;
+         }
+
+         //для клавиш типа backspace, delete, стрелок
+         if(e.which === 0 || e.which == 8) {
             return true;
          }
 

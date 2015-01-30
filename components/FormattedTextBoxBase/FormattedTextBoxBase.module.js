@@ -461,8 +461,8 @@ define(
          var
             htmlMask = '',
             placeholder = this._placeholder,
-            placeholderContainers = this._clearMask.match(new RegExp('('+placeholder+'+)', 'g')),
-            separatorContainers = this._clearMask.match(new RegExp('([^'+placeholder+']+)', 'g'));
+            placeholderContainers = this._clearMask.match(new RegExp('('+placeholder+'+)', 'g')) || [],
+            separatorContainers = this._clearMask.match(new RegExp('([^'+placeholder+']+)', 'g')) || [];
 
          var
             textExist = false,
@@ -596,8 +596,12 @@ define(
        * @private
        */
       _getHtmlContainer: function(container, type){
-         if (type == 'placeholder'){return '<em class="controls-FormattedTextBox__field-placeholder controls-FormattedTextBox__field-symbol">' + container + '</em>';}
-         else if (type == 'separator') {return '<em class="controls-FormattedTextBox__field-symbol">' + container + '</em>'}
+         if (type == 'placeholder'){
+            return '<em class="controls-FormattedTextBox__field-placeholder controls-FormattedTextBox__field-symbol">' + container + '</em>';
+         }
+         else if (type == 'separator') {
+            return '<em class="controls-FormattedTextBox__field-symbol">' + container + '</em>'
+         }
       },
       
       /**

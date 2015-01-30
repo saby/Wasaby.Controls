@@ -30,6 +30,14 @@
   font: 13px Tahoma,Geneva,sans-serif;
   padding: 0 8px;
   box-sizing: border-box;
+  background-size: contain;
+}
+@-moz-document url-prefix()
+{
+   //text valign bug
+   .controls-Button {
+      padding-bottom: 1px;
+   }
 }
 .controls-Button__content {
    position: relative;
@@ -72,21 +80,21 @@
   background-image: url(@bigDefaultHoverBackground);
 }
 
-.controls-Button.controls-Button__active {
+.controls-Button.controls-Click__active {
   box-shadow: inset 0px 1px 1px #939292;
   background-image: url(@classicActiveBackground);
 }
 
-.controls-Button__big.controls-Button__active {
+.controls-Button__big.controls-Click__active {
   background-image: url(@bigActiveBackground);
 }
 
-.controls-Button__primary.controls-Button__active {
+.controls-Button__primary.controls-Click__active {
   box-shadow: inset 0px 1px 1px #8E5F42;
   background-image: url(@defaultActiveBackground);
 }
 
-.controls-Button__big.controls-Button__primary.controls-Button__active {
+.controls-Button__big.controls-Button__primary.controls-Click__active {
   background-image: url(@bigDefaultActiveBackground);
 }
 
@@ -114,7 +122,7 @@
   background-image: none;
 }
 
-.controls-Button__light.controls-Button__active {
+.controls-Button__light.controls-Click__active {
   background-color: #CBD5E5;
   background-image: none;
   box-shadow: none;
@@ -128,7 +136,7 @@
   background-color: #FDECD9;
 }
 
-.controls-Button__light.controls-Button__primary.controls-Button__active {
+.controls-Button__light.controls-Button__primary.controls-Click__active {
   background-color: #FDD2C0;
 }
 
@@ -143,9 +151,9 @@
   left: -2px;
   top: 1px;
 }
-.js-controls-Button__text {
+.controls-Button__text {
    white-space: nowrap;
 }
-.controls-Button__icon + .js-controls-Button__text{
+.controls-Button__icon + .controls-Button__text{
   margin-left: 20px;
 }

@@ -18,6 +18,12 @@ input[type="reset"]::-moz-focus-inner {
   font: 13px Tahoma, Geneva, sans-serif;
   padding: 0 8px;
   box-sizing: border-box;
+  background-size: contain;
+}
+@-moz-document url-prefix() {
+  .controls-Button {
+    padding-bottom: 1px;
+  }
 }
 .controls-Button__content {
   position: relative;
@@ -54,18 +60,18 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Button__primary.controls-Button__big:hover {
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMtJREFUGFcBwAA//wD8wYIA+75/APu8fQD6unsA+rd4APm1dgD5s3QA+LFxAPiubwD3rGwA96pqAPanaAD2pWUA9aNjAPWhYAD0nl4A9JxcAPOaWQDzmFcA8pVVAPKTUgDxkVAA8Y5OAPCMSwDwikkA74hGAO+FRADug0IA7oE/AO1+PQDtfDoA7Ho4AOx3NgDrdTMA63MxAOpxLwDqbiwA6WwqAOlqKADoZyUA6GUjAOdjIADnYB4A5l4cAOZcGQDlWRcA5VcUAORVEuAhVOdbDqsIAAAAAElFTkSuQmCC');
 }
-.controls-Button.controls-Button__active {
+.controls-Button.controls-Click__active {
   box-shadow: inset 0px 1px 1px #939292;
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXBWQ6DIABAwXf/sxlj3UUJhIqKogSX+tsZ3t/Fc0fuM3DGgxg8YV85vMOvM5uzuHlksYZp1Fij+GqJUT1aCtTQIkXN0FaIpqCrPjRFRp2nlFnyB0tqP75XY7RKAAAAAElFTkSuQmCC');
 }
-.controls-Button__big.controls-Button__active {
+.controls-Button__big.controls-Click__active {
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAJNJREFUGFcNw1USgzAAQMF3/6tVcAiugWDB6W/ZmeV3H9zXznVunMfKuS8cu2bfNNs6sy0Tqx5Z5gE99+ipZx4V09Ax9u1TMqiGvmtQbY2SFZ0saZsCWefIKqcpM+oipSoSqjymzCKKNCJPwqcgiwPSyCcJPRLhEQuXKHAIfZvQsxCuSeCY+I6Bb3/xrA+u+cYxXn8Tm385Ml6/+QAAAABJRU5ErkJggg==');
 }
-.controls-Button__primary.controls-Button__active {
+.controls-Button__primary.controls-Click__active {
   box-shadow: inset 0px 1px 1px #8E5F42;
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAGtJREFUGFcBYACf/wD+om4A/J5qAPuZZgD6lWIA+ZFeAPiNWgD3iVYA9oVSAPWBTgD0fUoA83hGAPJ0QwDxcD8A72w7AO5oNwDtZDMA7GAvAOtcKwDqVycA6VMjAOhPHwDnSxsA5kcYAOVDFBcJJ2BPy3aDAAAAAElFTkSuQmCC');
 }
-.controls-Button__big.controls-Button__primary.controls-Button__active {
+.controls-Button__big.controls-Button__primary.controls-Click__active {
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMlJREFUGFcFwYtmQgEAgOH/GVKUWJKZSWYmmSRJpbWttmqbHEmSJEkmkcxMMpNMJmNm9myd7vdO95p9H3+/afY/KXbfSXZfCbafcbb1GJuPKJtahPV7mHVVYFUJsXp7YPl6x6IcYFG6Zf7iY/58jfR0iVS8YFZwM8s7meYcTB/tTLI2Jhkr47SFUcrMKHnOMGFiGDcyiJ0xiJ7Sj5zQDxvoCXp6oWO690d0g4d0/DraN1raXg2tqwNaHjVNt4qmS4noUCDa5TRssn8T6U5Ugnh02QAAAABJRU5ErkJggg==');
 }
 .controls-Button.ws-disabled {
@@ -88,7 +94,7 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background-image: none;
 }
-.controls-Button__light.controls-Button__active {
+.controls-Button__light.controls-Click__active {
   background-color: #CBD5E5;
   background-image: none;
   box-shadow: none;
@@ -99,7 +105,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Button__light.controls-Button__primary:hover {
   background-color: #FDECD9;
 }
-.controls-Button__light.controls-Button__primary.controls-Button__active {
+.controls-Button__light.controls-Button__primary.controls-Click__active {
   background-color: #FDD2C0;
 }
 .controls-Button__light.ws-disabled {
@@ -112,25 +118,25 @@ input[type="reset"]::-moz-focus-inner {
   left: -2px;
   top: 1px;
 }
-.js-controls-Button__text {
+.controls-Button__text {
   white-space: nowrap;
 }
-.controls-Button__icon + .js-controls-Button__text {
+.controls-Button__icon + .controls-Button__text {
   margin-left: 20px;
 }
-.controls-Button.controls-ToggleButton__checked {
+.controls-Button.controls-Checked__checked {
   color: red;
   box-shadow: inset 0px 1px 1px #939292;
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXBWQ6DIABAwXf/sxlj3UUJhIqKogSX+tsZ3t/Fc0fuM3DGgxg8YV85vMOvM5uzuHlksYZp1Fij+GqJUT1aCtTQIkXN0FaIpqCrPjRFRp2nlFnyB0tqP75XY7RKAAAAAElFTkSuQmCC');
 }
-.controls-Button__big.controls-ToggleButton__checked {
+.controls-Button__big.controls-Checked__checked {
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAJNJREFUGFcNw1USgzAAQMF3/6tVcAiugWDB6W/ZmeV3H9zXznVunMfKuS8cu2bfNNs6sy0Tqx5Z5gE99+ipZx4V09Ax9u1TMqiGvmtQbY2SFZ0saZsCWefIKqcpM+oipSoSqjymzCKKNCJPwqcgiwPSyCcJPRLhEQuXKHAIfZvQsxCuSeCY+I6Bb3/xrA+u+cYxXn8Tm385Ml6/+QAAAABJRU5ErkJggg==');
 }
-.controls-Button__primary.controls-ToggleButton__checked {
+.controls-Button__primary.controls-Checked__checked {
   box-shadow: inset 0px 1px 1px #8E5F42;
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAGtJREFUGFcBYACf/wD+om4A/J5qAPuZZgD6lWIA+ZFeAPiNWgD3iVYA9oVSAPWBTgD0fUoA83hGAPJ0QwDxcD8A72w7AO5oNwDtZDMA7GAvAOtcKwDqVycA6VMjAOhPHwDnSxsA5kcYAOVDFBcJJ2BPy3aDAAAAAElFTkSuQmCC');
 }
-.controls-Button__big.controls-Button__primary.controls-ToggleButton__checked {
+.controls-Button__big.controls-Button__primary.controls-Checked__checked {
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMlJREFUGFcFwYtmQgEAgOH/GVKUWJKZSWYmmSRJpbWttmqbHEmSJEkmkcxMMpNMJmNm9myd7vdO95p9H3+/afY/KXbfSXZfCbafcbb1GJuPKJtahPV7mHVVYFUJsXp7YPl6x6IcYFG6Zf7iY/58jfR0iVS8YFZwM8s7meYcTB/tTLI2Jhkr47SFUcrMKHnOMGFiGDcyiJ0xiJ7Sj5zQDxvoCXp6oWO690d0g4d0/DraN1raXg2tqwNaHjVNt4qmS4noUCDa5TRssn8T6U5Ugnh02QAAAABJRU5ErkJggg==');
 }
 .controls-RadioButton {
@@ -138,7 +144,7 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   color: #999999;
 }
-.controls-ToggleButton__checked,
+.controls-Checked__checked,
 .controls-RadioButton:hover {
   color: #000000;
 }
@@ -155,7 +161,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-RadioButton:hover .controls-RadioButton__icon {
   background-position: 0 -100px;
 }
-.controls-RadioButton.controls-ToggleButton__checked .controls-RadioButton__icon {
+.controls-RadioButton.controls-Checked__checked .controls-RadioButton__icon {
   background-position: 0 -52px;
 }
 .controls-RadioButton.ws-disabled .controls-RadioButton__icon {
@@ -322,8 +328,9 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   background: #ffffff;
   border: 1px solid transparent;
-  border-bottom: 1px solid #EAEAEA;
-  height: 22px;
+  border-bottom-color: #EAEAEA;
+  height: 24px;
+  box-sizing: border-box;
 }
 .controls-TextBox.ws-validation-error {
   background: #fadadd !important;
@@ -332,7 +339,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextBox:hover,
 .controls-TextBox.ws-has-focus {
   border: 1px solid #EAEAEA;
-  border-bottom: 1px solid #CCCCCC;
+  border-bottom-color: #CCCCCC;
 }
 .controls-TextBox.ws-disabled {
   border: 1px solid transparent;
@@ -340,6 +347,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextBox__fieldWrapper {
   height: 100%;
   padding: 0 4px;
+  position: relative;
 }
 .controls-TextBox__afterFieldWrapper {
   float: right;
@@ -358,9 +366,12 @@ input[type="reset"]::-moz-focus-inner {
   width: 100%;
   margin: 0;
   box-sizing: border-box;
-  line-height: 100%;
   outline: none;
   background: transparent;
+  line-height: 20px !important;
+  font: inherit;
+  color: inherit;
+  padding: 1px 0;
 }
 .controls-TextBox__field-uppercase {
   text-transform: uppercase;
@@ -368,11 +379,38 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextBox__field-lowercase {
   text-transform: lowercase;
 }
+.controls-TextBox__field::-webkit-input-placeholder {
+  color: #cccccc !important;
+}
+.controls-TextBox__field::-moz-placeholder {
+  color: #a1a1a1 !important;
+}
+.controls-TextBox__field:-moz-placeholder {
+  color: #a1a1a1 !important;
+}
+.controls-TextBox__field:-ms-input-placeholder {
+  color: #cccccc !important;
+}
+.controls-TextBox__placeholder {
+  position: absolute;
+  top: 0;
+  color: #cccccc !important;
+  font: inherit;
+  text-align: inherit;
+  padding-top: 3px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -ms-text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.controls-TextBox__field::-ms-clear {
+  display: none;
+}
 .controls-TextArea {
   display: inline-block;
   vertical-align: top;
   border: 1px solid #EAEAEA;
-  font-family: inherit;
+  font: inherit;
 }
 .controls-TextArea:hover,
 .controls-TextArea.ws-has-focus {
@@ -385,7 +423,7 @@ input[type="reset"]::-moz-focus-inner {
   resize: none;
   border: none;
   display: block;
-  font-family: inherit;
+  font: inherit;
   width: 100%;
   height: 100%;
   border-radius: 2px;
@@ -443,10 +481,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-CheckBox.ws-disabled .controls-CheckBox__icon {
   background-position: 16px 1px;
 }
-.controls-CheckBox.controls-ToggleButton__checked .controls-CheckBox__icon {
+.controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon {
   background-position: 0 49px;
 }
-.controls-CheckBox.controls-ToggleButton__checked.ws-disabled .controls-CheckBox__icon {
+.controls-CheckBox.controls-Checked__checked.ws-disabled .controls-CheckBox__icon {
   background-position: 16px 49px;
 }
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
@@ -588,15 +626,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DatePicker__field {
   margin-right: 16px;
 }
-.controls-DatePicker__calendarIconWrapper {
-  width: 16px;
-  min-height: 22px;
-  height: 100%;
-  box-sizing: border-box;
-  position: relative;
-  float: right;
-  margin-left: 2px;
-}
 .controls-DatePicker__calendarIcon {
   background: url("img/DatePicker-calendar.png") no-repeat 0 0;
   display: inline-block;
@@ -641,12 +670,11 @@ input[type="reset"]::-moz-focus-inner {
   height: 16px;
 }
 .controls-ComboBox__arrowDown:hover,
-.controls-ComboBox__isEditable-false:hover .controls-ComboBox__arrowDown {
+.controls-ComboBox__editable-false:hover .controls-ComboBox__arrowDown {
   text-decoration: none;
   background-position: -3px -28px;
 }
-.controls-ComboBox__isEditable-false,
-.controls-ComboBox__isEditable-false .controls-TextBox__field {
+.controls-ComboBox__editable-false {
   cursor: pointer;
 }
 .controls-ComboBox__itemRow {
@@ -656,10 +684,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ComboBox__itemRow:hover {
   background-color: #E7F0F9;
 }
-.controls-ComboBox__field__isEditable-false,
-.controls-ComboBox__field__isEditable-false .controls-TextBox__field {
-  cursor: pointer;
-}
 .controls-ComboBox__inputWrapper {
   margin-right: 18px;
   height: 100%;
@@ -667,6 +691,15 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ComboBox__picker {
   border: 1px solid #CCCCCC;
   margin-top: -1px;
+}
+.controls-ComboBox__fieldNotEditable {
+  display: none;
+}
+.controls-ComboBox__editable-false .controls-ComboBox__fieldNotEditable {
+  display: inline-block;
+}
+.controls-ComboBox__editable-false .controls-ComboBox__field {
+  display: none;
 }
 .controls-FormattedTextBox {
   vertical-align: top;
@@ -682,7 +715,15 @@ input[type="reset"]::-moz-focus-inner {
   display: table-cell;
   vertical-align: middle;
   font-style: normal;
+  white-space: pre;
 }
 .controls-ButtonGroup__vertical .controls-ListView__item {
   display: block;
+}
+.controls-IconButton {
+  cursor: pointer;
+}
+.controls-IconButton.controls-Button {
+  padding: 0;
+  cursor: pointer;
 }

@@ -40,7 +40,7 @@ define(
          },
 
          $constructor: function () {
-            this._publish('onSelect');
+            this._publish('onDateChange');
          },
 
          init: function(){
@@ -130,16 +130,8 @@ define(
             // Обработка клика по календарному дню
             var self = this;
             $('.controls-Calendar__tableBodyElement', this.getContainer().get(0)).click(function(){
-               workingDate = new Date(new Date(date).setDate($(this).attr('data-day')));
-               self._setDate(workingDate);
-               self._notify('onSelect', workingDate);
-            });
-
-            // Если контролл Calendar находится в пикере другого контролла, который в свою очередь
-            // находится в пикере третьего контролла, то клик в пикере с Calendar'ём закроет внешний пикер.
-            // Необходимо предотвратить данное поведение
-            $('.controls-Calendar__tableBodyElement', this.getContainer().get(0)).mousedown(function(e){
-               e.stopPropagation();
+               workingDate = new Date( date.getFullYear(), date.getMonth(), $(this).attr('data-day'), 0, 0, 0, 0 );
+               self.setDate(workingDate);
             });
          },
 
@@ -157,11 +149,13 @@ define(
          },
 
          /**
-          * Установить дату по переданному объекту Date. Публичный метод
-          * TODO в будущем, возможно, будет отличатся тем, что будет генерировать событие
+          * Установить дату по переданному объекту Date. Публичный метод.
+          * Отличается от приватного метода тем, что генерирует событие.
           */
          setDate: function(date){
+            date = date ? date : new Date();
             this._setDate(date);
+            this._notify('onDateChange', date);
          },
 
          /**
@@ -171,6 +165,8 @@ define(
           */
          _setDate: function(date){
             if( date instanceof Date ){
+               // Зануляем время
+               date.setHours(0, 0, 0, 0);
                // Обновляем значение даты
                this._options.date = date;
                // Устанавливаем дату в дочерний контролл MonthPicker
