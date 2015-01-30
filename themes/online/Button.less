@@ -155,13 +155,23 @@
   top: 1px;
   left: -5px;
 }
+
+.controls-Button__icon.icon-24 {
+  top: -4px;
+}
+
 @-moz-document url-prefix() {
    .controls-Button__icon {
       top: 2px;
    }
+   .controls-Button__icon.icon-24 {
+      top: -3px;
+   }
 }
-.controls-Button__icon.icon-24 {
-  top: -3px;
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+   .controls-Button__icon.icon-24 {
+      top: -3px;
+   }
 }
 .controls-Button__text {
 }
@@ -185,4 +195,10 @@
 
 .controls-Button__emptyCaption{
   margin-left: 13px!important;
+}
+
+.controls-Button__ellispis {
+   overflow: hidden;
+   text-overflow: ellipsis;
+   line-height: 22px;
 }
