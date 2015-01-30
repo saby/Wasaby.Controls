@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   var targ = $(e.target).hasClass('controls-ListView__item') ? e.target : $(e.target).closest('.controls-ListView__item');
                   if (targ.length) {
                      var id = targ.attr('data-id');
-                     self._elemClickHandler(id, self._dataSet.get(id), e.target);
+                     self._elemClickHandler(id, self._dataSet.getRecord(id), e.target);
                   }
                }
             });

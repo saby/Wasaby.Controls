@@ -15,7 +15,6 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
 
    return IDataSource.extend({
       $protected: {
-         _filter: {},
          _options: {
             /**
              * сопоставление CRUD операций и методов БЛ
@@ -122,9 +121,6 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
          var self = this,
             def = new $ws.proto.Deferred();
 
-         filter = filter ? filter : this._filter;
-         this._filter = filter;
-
          // настройка объекта фильтрации для отправки на БЛ
          var filterParam = {
             d: [],
@@ -151,7 +147,33 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
             }
          }
 
-         self._BL.call(self._options.queryMethodName, {'ДопПоля': [], 'Фильтр': filterParam, 'Сортировка': null, 'Навигация': null}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+         // настройка сортировки
+         var sortingParam = null;
+         if (sorting) {
+            var sort = [];
+            $ws.helpers.forEach(sorting, function (value) {
+               var fl;
+               if (!Object.isEmpty(value)) {
+                  for (var i in value) {
+                     if (value.hasOwnProperty(i)) {
+                        fl = (value[i] == 'ASC');
+                        sort.push([i, fl, !fl]);
+                     }
+                  }
+               }
+            });
+            sortingParam = {
+               s: [
+                  {'n': 'n', 't': 'Строка'},
+                  {'n': 'o', 't': 'Логическое'},
+                  {'n': 'l', 't': 'Логическое'}
+               ],
+               d: sort
+            };
+         }
+
+
+         self._BL.call(self._options.queryMethodName, {'ДопПоля': [], 'Фильтр': filterParam, 'Сортировка': sortingParam, 'Навигация': null}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
 
             var DS = new DataSet({
                strategy: 'DataStrategyBL',

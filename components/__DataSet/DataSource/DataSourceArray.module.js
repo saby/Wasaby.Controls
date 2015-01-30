@@ -15,7 +15,6 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
 
    return IDataSource.extend({
       $protected: {
-         _filter: {},
          _options: {
             /**
              * @cfg {Array} Исходный массив данных, с которым работает DataSourceArray
@@ -123,9 +122,6 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
          var self = this,
             def = new $ws.proto.Deferred(),
             data = this._options.data;
-
-         filter = filter ? filter : this._filter;
-         this._filter = filter;
 
          if (!Object.isEmpty(filter)) {
             data = [];

@@ -29,51 +29,45 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm'], function (_
       },
 
       setDataSet: function (DS) {
-         //TODO: проверка что действительно DataSource.
+         //TODO: проверка что действительно DataSet.
          this._dataSet = DS;
       },
 
       _drawItems: function () {
-         this._itemsInstances = {};
-
-         var
-            itemsReadyDef = new $ws.proto.ParallelDeferred(),
-            self = this,
-            itemsContainer = this._getItemsContainer();
-
-         itemsContainer.empty();
-
-
-         this._query().addCallback(function (DS) {
-            _.each(DS, function (item, key, i, parItem, lvl) {
-
-               var
-                  targetContainer = self._getTargetContainer(item, key, parItem, lvl);
-
-               itemsReadyDef.push(self._drawItem(item, targetContainer, key, i, parItem, lvl));
-
-            });
-         });
-
-
-         itemsReadyDef.done().getResult().addCallback(function () {
-            self._notify('onDrawItems');
-            self._drawItemsCallback();
-         });
-
+         this.query();
       },
 
       _drawItemsCallback: function () {
 
       },
 
-      _query: function () {
+      query: function (filter, sorting, offset, limit) {
          var self = this,
             def = new $ws.proto.Deferred();
-         this._dataSource.query().addCallback(
+         this._dataSource.query(filter, sorting, offset, limit).addCallback(
             function (DS) {
+               var
+                  itemsReadyDef = new $ws.proto.ParallelDeferred(),
+                  itemsContainer = self._getItemsContainer();
+
                self.setDataSet(DS);
-               def.callback(DS);
+               self._itemsInstances = {};
+               itemsContainer.empty();
+
+               _.each(DS, function (item, key, i, parItem, lvl) {
+
+                  var
+                     targetContainer = self._getTargetContainer(item, key, parItem, lvl);
+
+                  itemsReadyDef.push(self._drawItem(item, targetContainer, key, i, parItem, lvl));
+
+               });
+
+               itemsReadyDef.done().getResult().addCallback(function () {
+                  self._notify('onDrawItems');
+                  self._drawItemsCallback();
+               });
+
             }
          );
          return def;

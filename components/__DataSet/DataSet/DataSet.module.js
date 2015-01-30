@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @param {Number} key
        * @returns {js!SBIS3.CONTROLS.Record}
        */
-      get: function (key) {
+      getRecord: function (key) {
          var record = new Record(this._strategy);
          record.setRaw(this._strategy.getByKey(this._rawData, this._keyField, key));
          return record;

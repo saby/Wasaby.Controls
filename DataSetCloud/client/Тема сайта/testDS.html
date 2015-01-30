@@ -154,10 +154,11 @@
             <a data-value="all" class="tab active">All</a>
             <a data-value="active" class="tab">Active</a>
             <a data-value="complete" class="tab">Completed</a>
+            <button class="sort" data-list="ListViewDS1" data-dir="ASC" style="float: right">сменить сортировку по выполнению</button>
          </div>
          <div id="ListViewDS1" class="testBlock listView"></div>
-
          <input data-list="ListViewDS1" class="newTask" type="text" placeholder="new task"/>
+
       </td>
       <td>
          <p>ListView DataSourceArray</p>
@@ -166,6 +167,7 @@
             <a data-value="all" class="tab active">All</a>
             <a data-value="active" class="tab">Active</a>
             <a data-value="complete" class="tab">Completed</a>
+            <!--<button class="sort" data-list="ListViewDS2" data-dir="ASC" style="float: right">сменить сортировку по выполнению</button>-->
          </div>
          <div id="ListViewDS2" class="testBlock listView"></div>
          <input data-list="ListViewDS2" class="newTask" type="text" placeholder="new task"/>
@@ -280,10 +282,27 @@
                   case 'complete' : filter = {'Завершена' : true}; break;
                   default : filter = {};
                }
-               view._dataSource.query(filter).addCallback(function(){
-                  view._drawItems();
-               });
-            })
+               view.query(filter);
+            });
+
+            $('.sort').click(function () {
+               var self = $(this),
+                     view = $ws.single.ControlStorage.get(self.attr('data-list')),
+                     filter = {},
+                     dir = self.attr('data-dir'),
+                     newDir,
+                     sorting = [];
+               if (dir == 'ASC') {
+                  newDir = 'DESC';
+               } else {
+                  newDir = 'ASC';
+               }
+               self.attr('data-dir', newDir);
+               sorting = [
+                  {'Завершена': newDir}
+               ];
+               view.query(filter, sorting);
+            });
 
             $('.newTask').keydown(function (e) {
                var inp = $(this);
