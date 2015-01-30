@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', [], function() {
             context: this.getParent() ? this.getParent().getLinkedContext() : {},
             element: $('<div></div>'),
             target : this.getContainer(),
-            items: this._options.items,
+            items: this._items,
             corner : 'bl',
             hierField: 'par',
             verticalAlign: {
@@ -36,6 +36,11 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', [], function() {
             closeByExternalClick: true,
             targetPart: true
          };
+      },
+
+      _drawItems : function() {
+         this._picker.destroy();
+         this._initializePicker();
       },
 
       after: {
