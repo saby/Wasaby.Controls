@@ -175,13 +175,13 @@
             primary
          </td>
          <td>
-            <div id="button1"></div>
+            <div id="button1" style="width: 50px"></div>
          </td>
          <td>
             primary big
          </td>
          <td>
-            <div id="button1big" class="controls-Button__big"></div>
+            <div id="coreButton" style="width: 50px"></div>
          </td>
       </tr>
       <tr>
@@ -569,7 +569,7 @@
             });
 
             new r({
-               element: "button1big",
+               element: "coreButton",
                caption: 'Сохранить',
                primary: true
             });
@@ -643,6 +643,14 @@
             })
          });
       });
+
+      require(["js!SBIS3.CORE.Button"], function (r) {
+         new r({
+            element: "coreButton",
+            caption: 'Сохранить'
+         });
+      });
+
 
       require(["js!SBIS3.CONTROLS.ContextMenu", "js!SBIS3.CONTROLS.Menu", 'js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.Collection', 'js!SBIS3.CONTROLS.DatePicker'], function (rCtx, r, but, Collection) {
          var col3 =

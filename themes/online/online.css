@@ -11,15 +11,17 @@ input[type="reset"]::-moz-focus-inner {
   height: 24px;
   line-height: normal;
   border: none;
-  color: #000000;
   outline: none;
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXB2xKCIABAwfP/X+ekhWAYiXhjYGAwtTd3+V8/zqNw7Jm9JEqO5BRI0RPDSvALfpvYFsc6W2Y3MFnDOPRYo/l+OoxW9O8WrQSdfKJEjXw9EE11A2vvQIELisuiAAAAAElFTkSuQmCC');
   border-radius: 16px;
   box-shadow: inset 0px -1px 1px #afacab;
   font: 13px Tahoma, Geneva, sans-serif;
-  padding: 0 12px;
   box-sizing: border-box;
   background-size: contain;
+  min-width: 24px;
+  white-space: nowrap;
+  padding: 3px 12px;
+  vertical-align: middle;
 }
 @-moz-document url-prefix() {
   .controls-Button {
@@ -35,9 +37,10 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 18px;
   height: 48px;
   border-radius: 24px;
+  padding: 15px 24px;
 }
-.controls-Button__big .controls-Button__content {
-  padding: 0 24px;
+.controls-Button__big .controls-Button__text {
+  padding-top: 11px;
 }
 .controls-Button:hover {
   box-shadow: inset 0px -1px 1px #919090;
@@ -116,16 +119,17 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button__icon {
   position: absolute;
-  left: -2px;
+  top: 0;
+  left: -5px;
 }
 .controls-Button__icon.icon-24 {
-  top: -4px;
-}
-.controls-Button__text {
-  white-space: nowrap;
+  top: -3px;
 }
 .controls-Button__icon + .controls-Button__text {
-  margin-left: 20px;
+  margin-left: 16px;
+}
+.controls-Button__icon.icon-24 + .controls-Button__text {
+  margin-left: 26px;
 }
 .controls-Button {
   -webkit-touch-callout: none;

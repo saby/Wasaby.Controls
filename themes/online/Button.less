@@ -23,15 +23,17 @@
   height: 24px;
   line-height: normal;
   border: none;
-  color: #000000;
   outline: none;
   background-image: url(@classicPrimaryBackground);
   border-radius: 16px;
   box-shadow: inset 0px -1px 1px #AFACAB;
   font: 13px Tahoma,Geneva,sans-serif;
-  padding: 0 12px;
   box-sizing: border-box;
   background-size: contain;
+  min-width: 24px;
+  white-space: nowrap;
+  padding: 3px 12px;
+  vertical-align: middle;
 }
 
 @-moz-document url-prefix()
@@ -50,10 +52,13 @@
   line-height: 18px;
   height: 48px;
   border-radius: 24px;
+  padding: 15px 24px;
 }
-.controls-Button__big .controls-Button__content {
-   padding: 0 24px;
+
+.controls-Button__big .controls-Button__text{
+  padding-top: 11px;
 }
+
 .controls-Button:hover {
   box-shadow: inset 0px -1px 1px #919090;
   background-image: url(@classicHoverBackground);
@@ -150,16 +155,21 @@
 
 .controls-Button__icon {
   position: absolute;
-  left: -2px;
+  top: 0;
+  left: -5px;
 }
 .controls-Button__icon.icon-24 {
-   top: -4px;
+  top: -3px;
 }
 .controls-Button__text {
-   white-space: nowrap;
 }
+
 .controls-Button__icon + .controls-Button__text{
-  margin-left: 20px;
+  margin-left: 16px;
+}
+
+.controls-Button__icon.icon-24 + .controls-Button__text{
+  margin-left: 26px;
 }
 
 .controls-Button {
