@@ -9,21 +9,21 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   display: inline-block;
   height: 24px;
-  line-height: normal;
-  border: none;
-  color: #000000;
+  font: 13px/21px Tahoma, Geneva, sans-serif;
+  border: 1px transparent;
   outline: none;
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXB2xKCIABAwfP/X+ekhWAYiXhjYGAwtTd3+V8/zqNw7Jm9JEqO5BRI0RPDSvALfpvYFsc6W2Y3MFnDOPRYo/l+OoxW9O8WrQSdfKJEjXw9EE11A2vvQIELisuiAAAAAElFTkSuQmCC');
   border-radius: 16px;
   box-shadow: inset 0px -1px 1px #afacab;
-  font: 13px Tahoma, Geneva, sans-serif;
-  padding: 0 12px;
   box-sizing: border-box;
   background-size: contain;
+  min-width: 24px;
+  white-space: nowrap;
+  padding: 0 12px;
 }
-@-moz-document url-prefix() {
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
   .controls-Button {
-    padding-bottom: 1px;
+    line-height: 22px;
   }
 }
 .controls-Button__content {
@@ -35,9 +35,10 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 18px;
   height: 48px;
   border-radius: 24px;
+  padding: 15px 24px;
 }
-.controls-Button__big .controls-Button__content {
-  padding: 0 24px;
+.controls-Button__big .controls-Button__text {
+  padding-top: 11px;
 }
 .controls-Button:hover {
   box-shadow: inset 0px -1px 1px #919090;
@@ -116,16 +117,30 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button__icon {
   position: absolute;
-  left: -2px;
+  top: 1px;
+  left: -5px;
 }
 .controls-Button__icon.icon-24 {
   top: -4px;
 }
-.controls-Button__text {
-  white-space: nowrap;
+@-moz-document url-prefix() {
+  .controls-Button__icon {
+    top: 2px;
+  }
+  .controls-Button__icon.icon-24 {
+    top: -3px;
+  }
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .controls-Button__icon.icon-24 {
+    top: -3px;
+  }
 }
 .controls-Button__icon + .controls-Button__text {
-  margin-left: 20px;
+  margin-left: 16px;
+}
+.controls-Button__icon.icon-24 + .controls-Button__text {
+  margin-left: 26px;
 }
 .controls-Button {
   -webkit-touch-callout: none;
@@ -137,6 +152,11 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button__emptyCaption {
   margin-left: 13px!important;
+}
+.controls-Button__ellispis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 22px;
 }
 .controls-Button.controls-Checked__checked {
   color: red;
