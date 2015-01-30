@@ -86,14 +86,18 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
          var
             itemsReadyDef = new $ws.proto.ParallelDeferred(),
             self = this,
-            itemsContainer = this._getItemsContainer();
-         itemsContainer.empty();
+            drawStart = false;
+
+
 
          this._items.iterate(function (item, key, i, parItem, lvl) {
 
             var
                targetContainer = self._getTargetContainer(item, key, parItem, lvl);
-
+            if (!drawStart) {
+               targetContainer.empty();
+               drawStart = true;
+            }
             itemsReadyDef.push(self._drawItem(item, targetContainer, key, i, parItem, lvl));
 
          });
