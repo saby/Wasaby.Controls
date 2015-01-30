@@ -26,10 +26,12 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTRO
                self.togglePicker();
             });
          } else {
-            if (this.getItems().getNextItem().handler) {
-               this.subscribe('onActivated', function () {
-                  this.getItems().getNextItem().handler();
-               });
+            if (this.getItems().getItemsCount() == 1) {
+               if (this.getItems().getNextItem().handler) {
+                  this.subscribe('onActivated', function () {
+                     this.getItems().getNextItem().handler();
+                  });
+               }
             }
          }
       },
@@ -44,6 +46,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTRO
          var header= $('<div class="controls-MenuLink__header"></div>');
          header.append(this._container.clone());
          this._picker.getContainer().prepend(header);
+         $(".controls-Link__icon", header.get(0)).addClass('icon-hover');
          $('.controls-MenuLink__header', this._picker._container).bind('click', function(){
             self.hidePicker();
          });

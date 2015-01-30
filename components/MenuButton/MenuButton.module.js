@@ -27,10 +27,12 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             });
          } else {
             $('.js-controls-MenuButton__arrowDown', this._container).hide();
-            if (this.getItems().getNextItem().handler) {
-               this.subscribe('onActivated', function () {
-                  this.getItems().getNextItem().handler();
-               });
+            if (this.getItems().getItemsCount() == 1) {
+               if (this.getItems().getNextItem().handler) {
+                  this.subscribe('onActivated', function () {
+                     this.getItems().getNextItem().handler();
+                  });
+               }
             }
          }
       },

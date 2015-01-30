@@ -956,16 +956,25 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuLink__header {
   display: inline-block;
-  height: 32px;
+  height: 24px;
   padding: 0 8px;
 }
 .controls-MenuLink__header .controls-Link {
-  margin-top: 7px;
+  margin-top: 3px;
 }
 .controls-MenuLink__Menu {
-  margin-top: -24px;
+  margin-top: -20px;
   margin-left: -9px;
   background: #ffffff;
+}
+.controls-MenuLink__Menu .controls-MenuItem__icon {
+  left: 0;
+  top: 0;
+}
+@-moz-document url-prefix() {
+  .controls-MenuLink__Menu {
+    margin-top: -21px;
+  }
 }
 .controls-MenuLink__Menu .controls-Link {
   color: #FF7033;
@@ -979,7 +988,8 @@ input[type="reset"]::-moz-focus-inner {
   border-bottom: 1px solid #ededed;
 }
 .controls-MenuLink__Menu .controls-MenuItem {
-  height: 32px;
+  height: 24px;
+  line-height: 24px;
 }
 .controls-MenuButton {
   position: relative;
