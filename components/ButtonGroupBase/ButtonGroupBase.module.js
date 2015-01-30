@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
          this._container.removeClass('ws-area');
       },
 
-      _getItemClass : function() {
+      _getItemClass : function(config) {
          /*метод должен быть перегружен*/
          return false;
       },
@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
 
          return function() {
             return {
-               componentType : self._getItemClass(),
+               componentType : self._getItemClass(config),
                config : config
             };
          }
