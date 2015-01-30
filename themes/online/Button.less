@@ -18,29 +18,26 @@
 @bigDefaultActiveBackground : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMlJREFUGFcFwYtmQgEAgOH/GVKUWJKZSWYmmSRJpbWttmqbHEmSJEkmkcxMMpNMJmNm9myd7vdO95p9H3+/afY/KXbfSXZfCbafcbb1GJuPKJtahPV7mHVVYFUJsXp7YPl6x6IcYFG6Zf7iY/58jfR0iVS8YFZwM8s7meYcTB/tTLI2Jhkr47SFUcrMKHnOMGFiGDcyiJ0xiJ7Sj5zQDxvoCXp6oWO690d0g4d0/DraN1raXg2tqwNaHjVNt4qmS4noUCDa5TRssn8T6U5Ugnh02QAAAABJRU5ErkJggg==';
 
 .controls-Button {
-  cursor: pointer;
-  display: inline-block;
-  height: 24px;
-  line-height: normal;
-  border: none;
-  outline: none;
-  background-image: url(@classicPrimaryBackground);
-  border-radius: 16px;
-  box-shadow: inset 0px -1px 1px #AFACAB;
-  font: 13px Tahoma,Geneva,sans-serif;
-  box-sizing: border-box;
-  background-size: contain;
-  min-width: 24px;
-  white-space: nowrap;
-  padding: 3px 12px;
-  vertical-align: middle;
+   cursor: pointer;
+   display: inline-block;
+   height: 24px;
+   font: 13px/21px Tahoma, Geneva, sans-serif;
+   border: 1px transparent;
+   outline: none;
+   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXB2xKCIABAwfP/X+ekhWAYiXhjYGAwtTd3+V8/zqNw7Jm9JEqO5BRI0RPDSvALfpvYFsc6W2Y3MFnDOPRYo/l+OoxW9O8WrQSdfKJEjXw9EE11A2vvQIELisuiAAAAAElFTkSuQmCC');
+   border-radius: 16px;
+   box-shadow: inset 0px -1px 1px #afacab;
+   box-sizing: border-box;
+   background-size: contain;
+   min-width: 24px;
+   white-space: nowrap;
+   padding: 0 12px;
 }
 
-@-moz-document url-prefix()
-{
+@media screen and (-webkit-min-device-pixel-ratio:0) {
    //text valign bug
    .controls-Button {
-      padding-bottom: 1px;
+      line-height: 22px;
    }
 }
 .controls-Button__content {
@@ -155,8 +152,13 @@
 
 .controls-Button__icon {
   position: absolute;
-  top: 0;
+  top: 1px;
   left: -5px;
+}
+@-moz-document url-prefix() {
+   .controls-Button__icon {
+      top: 2px;
+   }
 }
 .controls-Button__icon.icon-24 {
   top: -3px;
