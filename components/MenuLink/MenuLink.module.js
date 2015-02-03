@@ -19,19 +19,21 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTRO
       },
 
       $constructor: function() {
-         var self = this;
+
+      },
+
+      _initMenu: function(){
+         this.unsubscribe('onActivated', this._activatedHandler);
+         this.subscribe('onActivated', this._activatedHandler);
+      },
+
+      _activatedHandler: function(){
          if (this.getItems().getItemsCount() > 1) {
-            this.subscribe('onActivated', function () {
-               this._container.addClass('controls-Checked__checked');
-               self.togglePicker();
-            });
+            this._container.addClass('controls-Checked__checked');
+            this.togglePicker();
          } else {
             if (this.getItems().getItemsCount() == 1) {
-               if (this.getItems().getNextItem().handler) {
-                  this.subscribe('onActivated', function () {
-                     this.getItems().getNextItem().handler();
-                  });
-               }
+               this.getItems().getNextItem().handler();
             }
          }
       },
