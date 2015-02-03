@@ -89,13 +89,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       _closeHandler: function(){
          this._container.removeClass('controls-Checked__checked');
          $('.controls-MenuButton__header', self._container).addClass('controls-MenuButton__header-hidden');
-      },
-
-      _drawItems: function(){
-         MenuButton.superclass._drawItems.call(this);
-         this._initMenu();
       }
-
    });
 
    return MenuButton;
