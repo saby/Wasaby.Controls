@@ -829,10 +829,6 @@ input[type="reset"]::-moz-focus-inner {
   color: #0055BB;
   text-decoration: none;
 }
-.controls-Link:hover:active {
-  text-decoration: none;
-  cursor: pointer;
-}
 .controls-Link__icon {
   margin-top: -2px;
   cursor: pointer;
@@ -842,6 +838,10 @@ input[type="reset"]::-moz-focus-inner {
   color: #ff7033;
   cursor: pointer;
   text-decoration: underline;
+}
+.controls-Link.controls-Click__active {
+  text-decoration: none;
+  cursor: pointer;
 }
 .controls-EditAtPlace {
   border: 1px solid transparent;
