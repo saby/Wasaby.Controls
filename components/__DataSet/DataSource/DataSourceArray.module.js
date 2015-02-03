@@ -37,7 +37,8 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
       create: function () {
          var def = new $ws.proto.Deferred();
          var record = new Record(new DataStrategyArray());
-         // идентификатор берем на 1 больще, чем у последней записи
+         //TODO: просчет идентификатора
+         // идентификатор берем на 1 больше, чем у последней записи
          record.set(this._options.keyField, this._options.data[this._options.data.length - 1][this._options.keyField] + 1);
          this._options.data.push(record.getRaw());
          def.callback(record);
@@ -51,19 +52,11 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
        */
       read: function (id) {
          var def = new $ws.proto.Deferred(),
-            key;
-         //перебиаем массим исходных данных пока не найдем нужный элемент
-         //TODO: сделать ошибку если такой записи не нашлось
-         for (var i = 0; i < this._options.data.length; i++) {
-            if (this._options.data[i][this._options.keyField] == parseInt(id, 10)) {
-               key = i;
-               break;
-            }
-         }
          //TODO: переделать установку стратегии
-         var record = new Record(new DataStrategyArray());
-         //установка "сырых" данных для записи
-         record.setRaw(this._options.data[key]);
+            strategy = new DataStrategyArray();
+         var record = new Record(strategy);
+         // установка "сырых" данных для записи
+         record.setRaw(strategy.findRawRecordByKey(this._options.data, this._options.keyField, id));
          def.callback(record);
          return def;
       },
@@ -75,15 +68,9 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
        */
       update: function (record) {
          var def = new $ws.proto.Deferred(),
-            rawData = record.getRaw(),
-            key = rawData[this._options.keyField];
-         // проходим по исходному массиву, когда находим нужных элемент - заменяем
-         for (var i = 0; i < this._options.data.length; i++) {
-            if (this._options.data[i][this._options.keyField] == key) {
-               this._options.data[i] = rawData;
-               break;
-            }
-         }
+         //TODO: переделать установку стратегии
+            strategy = new DataStrategyArray();
+         strategy.updateRawRecordByKey(this._options.data, this._options.keyField, record);
          def.callback(true);
          return def;
       },
@@ -95,16 +82,8 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
        */
       destroy: function (id) {
          var def = new $ws.proto.Deferred(),
-            key;
-         // проходим по исходному массиву, пока не найдем позицию искомого элемента
-         for (var i = 0; i < this._options.data.length; i++) {
-            if (this._options.data[i][this._options.keyField] == parseInt(id, 10)) {
-               key = i;
-               break;
-            }
-         }
-         // удаляем эемент из исходного набора
-         Array.remove(this._options.data, key);
+            strategy = new DataStrategyArray();
+         strategy.destroy(this._options.data, this._options.keyField, id);
          def.callback(true);
          return def;
       },
@@ -119,28 +98,10 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.DataSet - набор отобранных элементов
        */
       query: function (filter, sorting, offset, limit) {
-         var self = this,
-            def = new $ws.proto.Deferred(),
-            data = this._options.data;
-
-         if (!Object.isEmpty(filter)) {
-            data = [];
-            for (var i = 0; i < this._options.data.length; i++) {
-               var equal = true;
-               for (var j in filter) {
-                  if (filter.hasOwnProperty(j)) {
-                     if (this._options.data[i][j] != filter[j]) {
-                        equal = false;
-                        break;
-                     }
-                  }
-               }
-               if (equal) {
-                  data.push(this._options.data[i]);
-               }
-            }
-         }
-
+         var def = new $ws.proto.Deferred(),
+         //TODO: переделать установку стратегии
+            strategy = new DataStrategyArray(),
+            data = strategy.query(this._options.data, filter, sorting, offset, limit);
          var DS = new DataSet({
             strategy: 'DataStrategyArray',
             data: data,

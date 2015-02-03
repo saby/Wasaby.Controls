@@ -67,7 +67,85 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
        */
       value: function (data, field) {
          return data[field];
+      },
+
+      /**
+       * Найти запись в сырых данных по ее идентификатору
+       * @param {Array} data массив "сырых" данных
+       * @param {String} keyField название поля-идентификатора
+       * @param {Number} key идентификатор записи
+       * @returns {*}
+       */
+      findRawRecordByKey: function (data, keyField, key) {
+         var index;
+         //перебиаем массим исходных данных пока не найдем нужный элемент
+         //TODO: сделать ошибку если такой записи не нашлось
+         for (var i = 0; i < this._options.data.length; i++) {
+            if (data[i][keyField] == parseInt(key, 10)) {
+               index = i;
+               break;
+            }
+         }
+         return data[index];
+      },
+
+      /**
+       * Обновить запись в сырых данных
+       * @param {Array} data массив "сырых" данных
+       * @param {String} keyField название поля-идентификатора
+       * @param {js!SBIS3.CONTROLS.Record} record обновленная запись
+       */
+      updateRawRecordByKey: function (data, keyField, record) {
+         var newRawData = record.getRaw(),
+            key = newRawData[keyField];
+         // проходим по исходному массиву, когда находим нужных элемент - заменяем
+         for (var i = 0; i < data.length; i++) {
+            if (data[i][keyField] == key) {
+               data[i] = newRawData;
+               break;
+            }
+         }
+      },
+      /**
+       * Удалить элемент из массива
+       * @param {Array} data массив "сырых" данных
+       * @param {String} keyField название поля-идентификатора
+       * @param {Number} key идентификатор записи
+       */
+      destroy: function (data, keyField, key) {
+         var index;
+         // проходим по исходному массиву, пока не найдем позицию искомого элемента
+         for (var i = 0; i < data.length; i++) {
+            if (data[i][keyField] == parseInt(key, 10)) {
+               index = i;
+               break;
+            }
+         }
+         // удаляем эемент из исходного набора
+         Array.remove(data, index);
+      },
+
+      query: function (data, filter, sorting, offset, limit) {
+         var newData = [];
+         if (!Object.isEmpty(filter)) {
+            for (var i = 0; i < data.length; i++) {
+               var equal = true;
+               for (var j in filter) {
+                  if (filter.hasOwnProperty(j)) {
+                     if (data[i][j] != filter[j]) {
+                        equal = false;
+                        break;
+                     }
+                  }
+               }
+               if (equal) {
+                  newData.push(data[i]);
+               }
+            }
+         }
+         return newData;
       }
+
 
    });
 });

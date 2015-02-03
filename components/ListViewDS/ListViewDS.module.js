@@ -152,7 +152,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                         e.stopPropagation();
                         var
                            id = $(this).closest('.controls-ListView__item').attr('data-id'),
-                           item = self._dataSet.get(id);
+                           item = self._dataSet.getRecord(id);
                         handler(id, item);
                      })
                   }
