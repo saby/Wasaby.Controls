@@ -33,7 +33,9 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTRO
             this.togglePicker();
          } else {
             if (this.getItems().getItemsCount() == 1) {
-               this.getItems().getNextItem().handler();
+               if (this.getItems().getNextItem().handler instanceof Function)
+                  this.getItems().getNextItem().handler();
+
             }
          }
       },

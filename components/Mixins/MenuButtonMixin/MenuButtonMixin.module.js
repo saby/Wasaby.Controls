@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', [], function() {
       },
 
       $constructor: function () {
-
+         this._publish('onMenuItemActivate');
       },
 
       _setPickerConfig: function(){
@@ -39,10 +39,14 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', [], function() {
       },
 
       _drawItems : function() {
+         var self = this;
          if (this._picker) {
             this._picker.destroy();
          }
          this._initializePicker();
+         this._picker.subscribe('onMenuItemActivate', function(e, id){
+            self._notify('onMenuItemActivate', id);
+         });
          this._initMenu();
       }
    };
