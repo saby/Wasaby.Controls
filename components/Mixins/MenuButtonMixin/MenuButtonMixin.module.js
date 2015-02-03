@@ -39,7 +39,9 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', [], function() {
       },
 
       _drawItems : function() {
-         this._picker.destroy();
+         if (this._picker) {
+            this._picker.destroy();
+         }
          this._initializePicker();
       },
 
