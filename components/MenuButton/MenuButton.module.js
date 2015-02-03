@@ -29,7 +29,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             this.togglePicker();
          } else {
             if (this.getItems().getItemsCount() == 1) {
-               this.getItems().getNextItem().handler();
+               if (this.getItems().getNextItem().handler instanceof Function)
+                  this.getItems().getNextItem().handler();
             }
          }
       },

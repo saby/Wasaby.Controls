@@ -38,15 +38,21 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', [], function() {
          };
       },
 
+      after : {
+         _initializePicker : function() {
+            var self = this;
+            this._picker.subscribe('onMenuItemActivate', function(e, id) {
+               self._notify('onMenuItemActivate', id)
+            })
+         }
+      },
+
       _drawItems : function() {
          var self = this;
          if (this._picker) {
             this._picker.destroy();
          }
          this._initializePicker();
-         this._picker.subscribe('onMenuItemActivate', function(e, id){
-            self._notify('onMenuItemActivate', id);
-         });
          this._initMenu();
       }
    };
