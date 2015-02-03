@@ -1,7 +1,3 @@
-* {
-  outline: 0;
-}
-
 button::-moz-focus-inner,
 input[type="button"]::-moz-focus-inner,
 input[type="submit"]::-moz-focus-inner,
@@ -833,6 +829,10 @@ input[type="reset"]::-moz-focus-inner {
   color: #0055BB;
   text-decoration: none;
 }
+.controls-Link:hover:active {
+  text-decoration: none;
+  cursor: pointer;
+}
 .controls-Link__icon {
   margin-top: -2px;
   cursor: pointer;
@@ -840,6 +840,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Link:hover {
   color: #ff7033;
+  cursor: pointer;
   text-decoration: underline;
 }
 .controls-EditAtPlace {
