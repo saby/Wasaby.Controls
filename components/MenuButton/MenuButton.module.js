@@ -13,39 +13,56 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
    var MenuButton = Button.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
-         _zIndex: '',
          _options: {
-         }
-      },
-
-      $constructor: function() {
-         var self = this;
-         if (this.getItems().getItemsCount() > 1) {
-            this.subscribe('onActivated', function () {
-               this._container.addClass('controls-Checked__checked');
-               self.togglePicker();
-            });
-         } else {
-            $('.js-controls-MenuButton__arrowDown', this._container).hide();
-            if (this.getItems().getItemsCount() == 1) {
-               if (this.getItems().getNextItem().handler) {
-                  this.subscribe('onActivated', function () {
-                     this.getItems().getNextItem().handler();
-                  });
-               }
-            }
          }
       },
 
       init: function(){
          MenuButton.superclass.init.call(this);
+         this._initMenu();
+      },
+
+      _activatedHandler: function () {
+         if (this.getItems().getItemsCount() > 1) {
+            this._container.addClass('controls-Checked__checked');
+            $('.controls-MenuButton__header', this._container).toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
+            this.togglePicker();
+         } else {
+            if (this.getItems().getItemsCount() == 1) {
+               this.getItems().getNextItem().handler();
+            }
+         }
+      },
+
+      _initMenu: function(){
+         var self = this;
+
+         this.unsubscribe('onActivated', this._activatedHandler);
+         this.subscribe('onActivated', this._activatedHandler);
+
+         if (this.getItems().getItemsCount() > 1) {
+            $('.js-controls-MenuButton__arrowDown', self._container).show();
+         } else {
+            $('.js-controls-MenuButton__arrowDown', self._container).hide();
+         }
+
+         var header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
+                            <i class="controls-MenuButton__headerLeft"></i>\
+                            <i class="controls-MenuButton__headerCenter"></i>\
+                            <i class="controls-MenuButton__headerRight"></i>\
+                         </span>');
+         $('.controls-MenuButton__headerCenter', header).width(this._container.width());
+         this.getContainer().css('z-index', 'auto').append(header);
          $('.controls-MenuButton__header', this._container.get(0)).css({
             width: this._container.outerWidth(),
             height: this._container.outerHeight(),
-            'z-index': (this._container.css('z-index') - 1) || -1
+            'z-index':  -1
          });
-         this._zIndex = this._container.css('z-index') || 'auto';
-         $('.controls-MenuButton__headerCenter', this._container.get(0)).width(this._container.width());
+      },
+
+      togglePicker: function(){
+         MenuButton.superclass.togglePicker.call(this);
+         $('.controls-MenuButton__Menu-whiteLine', this._picker.container).width(this._container.outerWidth() + 8);
       },
 
       _createPicker: function(){
@@ -55,7 +72,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       _setWidth: function(){
          var self = this;
          this._picker.getContainer().css({
-            'min-width': self._container.outerWidth() - this._border + 15/*ширина бордеров*/
+            'min-width': self._container.outerWidth() - this._border + 15
          });
       },
 
@@ -65,17 +82,18 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             self._closeHandler();
          });
          this._picker._container.addClass('controls-MenuButton__Menu');
-         var header = $('<span class="controls-MenuButton__header">\
-                            <i class="controls-MenuButton__headerLeft"></i>\
-                            <i class="controls-MenuButton__headerCenter"></i>\
-                            <i class="controls-MenuButton__headerRight"></i>\
-                         </span>');
-         $('.controls-MenuButton__headerCenter', header).width(this._container.width());
-         this._picker.getContainer().prepend(header);
+         var whiteLine = $('<span class="controls-MenuButton__Menu-whiteLine" style="height: 1px; background: #ffffff; position: absolute; top: -1px;"></span>').width(this._container.outerWidth() + 8);
+         this._picker.getContainer().append(whiteLine);
       },
 
       _closeHandler: function(){
          this._container.removeClass('controls-Checked__checked');
+         $('.controls-MenuButton__header', self._container).addClass('controls-MenuButton__header-hidden');
+      },
+
+      _drawItems: function(){
+         MenuButton.superclass._drawItems.call(this);
+         this._initMenu();
       }
 
    });
