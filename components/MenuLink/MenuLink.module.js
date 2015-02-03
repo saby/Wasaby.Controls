@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTRO
       },
 
       $constructor: function() {
-
+         this._initMenu();
       },
 
       _initMenu: function(){
