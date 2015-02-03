@@ -35,16 +35,7 @@ define('js!SBIS3.CONTROLS.Menu', [
             /**
              * @cfg {Number} Задержка перед закрытием
              */
-            hideDelay: null,
-            /**
-             * @typedef {Object} firstLevelDirection
-             * @variant right
-             * @variant down
-             */
-            /**
-             * @cfg {firstLevelDirection} Задержка перед закрытием
-             */
-            firstLevelDirection: 'down'
+            hideDelay: null
          }
       },
 
