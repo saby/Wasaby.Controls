@@ -289,7 +289,7 @@
                      view = $ws.single.ControlStorage.get(self.attr('data-list')),
                      dir = self.attr('data-dir'),
                      newDir=undefined,
-                     sorting = [];
+                     sorting = [{'@Заметка':'DESC'}];
                if (dir == 'Decline') {
                   newDir = 'DESC';
                   self.removeClass('icon-ArrowUp').removeClass('icon-Decline').addClass('icon-ArrowDown');
