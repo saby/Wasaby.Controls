@@ -26,7 +26,8 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', [], function() {
             target : this.getContainer(),
             items: this._items,
             corner : 'bl',
-            hierField: 'par',
+            hierField: this._options.hierField,
+            keyField: this._options.keyField,
             verticalAlign: {
                side: 'top'
             },

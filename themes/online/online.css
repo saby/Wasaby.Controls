@@ -998,12 +998,15 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuButton {
   position: relative;
+  padding-right: 23px;
 }
 .controls-MenuButton__arrowDown {
+  position: absolute;
   display: inline-block;
-  vertical-align: middle;
   height: 6px;
   width: 8px;
+  right: 10px;
+  top: 11px;
   background: transparent;
   background-image: url("img/MenuButton-arrowDown.png");
 }
@@ -1039,13 +1042,11 @@ input[type="reset"]::-moz-focus-inner {
   background-position: 0 -60px;
   left: 8px;
   display: inline-block;
-  margin-left: -8px;
 }
 .controls-MenuButton__headerRight {
   background: transparent url("img/MenuButton-header.png");
   width: 28px;
   height: 28px;
   background-position: 0 -30px;
-  margin-left: -3px;
   display: inline-block;
 }
