@@ -73,16 +73,9 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
        */
       update: function (record) {
          var self = this,
-            rawData = record.getRaw(),
-            def = new $ws.proto.Deferred();
-         // поддержим формат запросов к БЛ
-         var rec = {
-            s: rawData.s,
-            d: rawData.d,
-            //FixME: можно ли раскомментить
-            /*_key: 2,*/
-            _type: 'record'
-         };
+            strategy = new DataStrategyBL(),
+            def = new $ws.proto.Deferred(),
+            rec = strategy.prepareRecordForUpdate(record);
 
          self._BL.call(self._options.updateMethodName, {'Запись': rec}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
             def.callback(true);
@@ -119,66 +112,13 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
       query: function (filter, sorting, offset, limit) {
 
          var self = this,
+            strategy = new DataStrategyBL(),
             def = new $ws.proto.Deferred();
 
          filter = filter || [];
 
-         // настройка объекта фильтрации для отправки на БЛ
-         var filterParam = {
-            d: [],
-            s: []
-         };
-
-         if (filter.length) {
-            $ws.helpers.forEach(filter, function (value) {
-               if (!Object.isEmpty(value)) {
-                  for (var j in value) {
-                     if (value.hasOwnProperty(j)) {
-                        if (typeof value[j] == 'boolean') {
-                           filterParam.s.push({
-                              n: j,
-                              t: 'Логическое'
-                           });
-                        }
-                        else {
-                           filterParam.s.push({
-                              n: j,
-                              t: 'Строка'
-                           });
-                        }
-                        filterParam.d.push(value[j]);
-                     }
-                  }
-               }
-            });
-         }
-
-
-         // настройка сортировки
-         var sortingParam = null;
-         if (sorting) {
-            var sort = [];
-            $ws.helpers.forEach(sorting, function (value) {
-               var fl;
-               if (!Object.isEmpty(value)) {
-                  for (var i in value) {
-                     if (value.hasOwnProperty(i)) {
-                        fl = (value[i] == 'ASC');
-                        sort.push([i, fl, !fl]);
-                     }
-                  }
-               }
-            });
-            sortingParam = {
-               s: [
-                  {'n': 'n', 't': 'Строка'},
-                  {'n': 'o', 't': 'Логическое'},
-                  {'n': 'l', 't': 'Логическое'}
-               ],
-               d: sort
-            };
-         }
-
+         var filterParam = strategy.prepareFilterParam(filter);
+         var sortingParam = strategy.prepareSortingParam(sorting);
 
          self._BL.call(self._options.queryMethodName, {'ДопПоля': [], 'Фильтр': filterParam, 'Сортировка': sortingParam, 'Навигация': null}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
 

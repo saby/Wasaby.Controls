@@ -98,6 +98,82 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
             }
          }
          return d[index];
+      },
+
+      prepareFilterParam:function(filter){
+         console.log(filter)
+         // настройка объекта фильтрации для отправки на БЛ
+         var filterParam = {
+            d: [],
+            s: []
+         };
+
+         if (filter.length) {
+            $ws.helpers.forEach(filter, function (value) {
+               if (!Object.isEmpty(value)) {
+                  for (var j in value) {
+                     if (value.hasOwnProperty(j)) {
+                        if (typeof value[j] == 'boolean') {
+                           filterParam.s.push({
+                              n: j,
+                              t: 'Логическое'
+                           });
+                        }
+                        else {
+                           filterParam.s.push({
+                              n: j,
+                              t: 'Строка'
+                           });
+                        }
+                        filterParam.d.push(value[j]);
+                     }
+                  }
+               }
+            });
+         }
+
+         return filterParam;
+      },
+
+      prepareSortingParam:function(sorting){
+         // настройка сортировки
+         var sortingParam = null;
+         if (sorting) {
+            var sort = [];
+            $ws.helpers.forEach(sorting, function (value) {
+               var fl;
+               if (!Object.isEmpty(value)) {
+                  for (var i in value) {
+                     if (value.hasOwnProperty(i)) {
+                        fl = (value[i] == 'ASC');
+                        sort.push([i, fl, !fl]);
+                     }
+                  }
+               }
+            });
+            sortingParam = {
+               s: [
+                  {'n': 'n', 't': 'Строка'},
+                  {'n': 'o', 't': 'Логическое'},
+                  {'n': 'l', 't': 'Логическое'}
+               ],
+               d: sort
+            };
+         }
+         return sortingParam;
+      },
+
+      prepareRecordForUpdate:function(record){
+         // поддержим формат запросов к БЛ
+         var  rawData = record.getRaw();
+         return {
+            s: rawData.s,
+            d: rawData.d,
+            //FixME: можно ли раскомментить
+            /*_key: 2,*/
+            _type: 'record'
+         };
       }
+
    });
 });

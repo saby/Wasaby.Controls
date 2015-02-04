@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
       /**
        * Метод для получения набора записей из источника данных
        * Возможно применене фильтрации, сортировки и выбора определенного количества записей с заданной позиции
-       * @param {Object} filter - {property: value}
+       * @param {Array} filter - [{property1: value},{property2: value}]
        * @param {Array} sorting - [{property1: 'ASC'},{property2: 'DESC'}]
        * @param {Number} offset смещение начала выборки
        * @param {Number} limit количество возвращаемых записей
