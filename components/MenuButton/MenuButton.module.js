@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
                             <i class="controls-MenuButton__headerCenter"></i>\
                             <i class="controls-MenuButton__headerRight"></i>\
                          </span>');
-         $('.controls-MenuButton__headerCenter', header).width(this._container.width() + 11);
+         $('.controls-MenuButton__headerCenter', header).width(this._container.width());
          this.getContainer().css('z-index', 'auto').append(header);
          $('.controls-MenuButton__header', this._container.get(0)).css({
             width: this._container.outerWidth(),
