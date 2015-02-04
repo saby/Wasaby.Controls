@@ -1,3 +1,7 @@
+.controls-MenuLink{
+  position: relative;
+  padding-right: 12px;
+}
 .controls-MenuLink__header{
   display: inline-block;
   height: 24px;
@@ -39,4 +43,23 @@
 .controls-MenuLink__Menu .controls-MenuItem{
   height: 24px;
   line-height: 24px;
+}
+
+.controls-MenuLink__arrowDown{
+  position: absolute;
+  display: inline-block;
+  height: 6px;
+  width: 8px;
+  right: 0;
+  top: 7px;
+  background: transparent;
+  background-image: url("img/MenuButton-arrowDown.png");
+}
+
+.controls-MenuLink:hover .controls-MenuLink__arrowDown{
+  background-position: 0 6px;
+}
+
+.controls-MenuLink__header .controls-MenuLink__arrowDown{
+  display: none;
 }
