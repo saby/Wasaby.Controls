@@ -101,7 +101,6 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
       },
 
       prepareFilterParam:function(filter){
-         console.log(filter)
          // настройка объекта фильтрации для отправки на БЛ
          var filterParam = {
             d: [],

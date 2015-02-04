@@ -138,6 +138,7 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
                      var equal = true;
                      for (var j in value) {
                         if (value.hasOwnProperty(j)) {
+                           console.log(data[i][j])
                            if (data[i][j] != value[j]) {
                               equal = false;
                               break;
@@ -166,11 +167,11 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
                         newData.sort(function (a, b) {
 
                            if (a[j] > b[j]) {
-                              return (value[j] == 'ASC') ? 1 : -1;
+                              return (value[j] == 'ASC') ? -1 : 1;
                            }
 
                            if (a[j] < b[j]) {
-                              return (value[j] == 'ASC') ? -1 : 1;
+                              return (value[j] == 'ASC') ? 1 : -1;
                            }
 
                            return 0;

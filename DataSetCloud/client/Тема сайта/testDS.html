@@ -140,6 +140,11 @@
          background: #0a6a1e;
       }
 
+      .sort{
+         width: 24px;
+         cursor: pointer;
+      }
+
    </style>
 
 </head>
@@ -154,8 +159,8 @@
             <a data-value="all" class="tab active">All</a>
             <a data-value="active" class="tab">Active</a>
             <a data-value="complete" class="tab">Completed</a>
-            <button class="sort" data-list="ListViewDS1" data-dir="ASC" style="float: right">сменить сортировку по выполнению</button>
          </div>
+         <div class="sort icon-24 icon-ArrowDown icon-done" data-list="ListViewDS1" data-dir="DESC"></div>
          <div id="ListViewDS1" class="testBlock listView"></div>
          <input data-list="ListViewDS1" class="newTask" type="text" placeholder="new task"/>
 
@@ -167,8 +172,8 @@
             <a data-value="all" class="tab active">All</a>
             <a data-value="active" class="tab">Active</a>
             <a data-value="complete" class="tab">Completed</a>
-            <button class="sort" data-list="ListViewDS2" data-dir="ASC" style="float: right">сменить сортировку по выполнению</button>
          </div>
+         <div class="sort icon-24 icon-ArrowDown icon-done" data-list="ListViewDS2" data-dir="DESC"></div>
          <div id="ListViewDS2" class="testBlock listView"></div>
          <input data-list="ListViewDS2" class="newTask" type="text" placeholder="new task"/>
       </td>
@@ -294,8 +299,11 @@
                      sorting = [];
                if (dir == 'ASC') {
                   newDir = 'DESC';
+                  self.removeClass('icon-ArrowUp').addClass('icon-ArrowDown');
                } else {
                   newDir = 'ASC';
+                  self.removeClass('icon-ArrowDown').addClass('icon-ArrowUp');
+
                }
                self.attr('data-dir', newDir);
                sorting = [
