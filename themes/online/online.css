@@ -804,6 +804,10 @@ input[type="reset"]::-moz-focus-inner {
   width: auto;
   display: inline-block;
 }
+.ws-disabled .controls-EditAtPlace__textField {
+  border-bottom: none;
+  cursor: text;
+}
 .controls-EditAtPlace__textAreaWrapper {
   border: none;
   display: block;
