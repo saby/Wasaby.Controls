@@ -166,7 +166,7 @@
 
       </td>
       <td>
-         <p>ListView DataSourceArray</p>
+         <p>ListView DataSourceMemory</p>
 
          <div class="Tabs" data-list="ListViewDS2">
             <a data-value="all" class="tab active">All</a>
@@ -187,9 +187,9 @@
          require([
             'js!SBIS3.CONTROLS.ListViewDS',
             'js!SBIS3.CONTROLS.Record',
-            'js!SBIS3.CONTROLS.DataSourceArray',
+            'js!SBIS3.CONTROLS.DataSourceMemory',
             'js!SBIS3.CONTROLS.DataSourceBL'
-         ], function (ListViewDS, Record, DataSourceArray, DataSourceBL) {
+         ], function (ListViewDS, Record, DataSourceMemory, DataSourceBL) {
 
             var ds1 = new DataSourceBL('Заметка');
 
@@ -257,7 +257,7 @@
 
             });
 
-            var ds2 = new DataSourceArray({
+            var ds2 = new DataSourceMemory({
                data: [
                   {'@Заметка': 1, 'Содержимое': 'Поиграть в бильярд', 'Завершена': false},
                   {'@Заметка': 2, 'Содержимое': 'Посидеть в планшете', 'Завершена': false},

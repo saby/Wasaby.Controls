@@ -1,7 +1,7 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.DataSourceArray', [
+define('js!SBIS3.CONTROLS.DataSourceMemory', [
    'js!SBIS3.CONTROLS.IDataSource',
    'js!SBIS3.CONTROLS.Record',
    'js!SBIS3.CONTROLS.DataSet',
@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.DataSourceArray', [
       $protected: {
          _options: {
             /**
-             * @cfg {Array} Исходный массив данных, с которым работает DataSourceArray
+             * @cfg {Array} Исходный массив данных, с которым работает DataSourceMemory
              */
             data: [],
             /**
