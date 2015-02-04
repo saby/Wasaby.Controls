@@ -35,12 +35,10 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record
        */
       create: function () {
-         var def = new $ws.proto.Deferred();
-         var record = new Record(new DataStrategyArray());
-         //TODO: просчет идентификатора
-         // идентификатор берем на 1 больше, чем у последней записи
-         record.set(this._options.keyField, this._options.data[this._options.data.length - 1][this._options.keyField] + 1);
-         this._options.data.push(record.getRaw());
+         var def = new $ws.proto.Deferred(),
+            strategy=new DataStrategyArray(),
+            record = new Record(strategy);
+         strategy.addRawRecord(this._options.data,this._options.keyField,record);
          def.callback(record);
          return def;
       },

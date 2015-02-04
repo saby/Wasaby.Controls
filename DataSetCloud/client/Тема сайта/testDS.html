@@ -206,10 +206,7 @@
                   icon : 'sprite:icon-16 icon-Erase icon-error',
                   handler : function(id) {
                      var self = this;
-                     this._dataSource.destroy(id).addCallback(function(){
-                        self._drawItems();
-                     });
-
+                     this.destroy(id);
                   }
                }
             ];
@@ -223,9 +220,7 @@
                var self = this;
                if ($(target).hasClass('taskIcon')) {
                   data.set('Завершена', !(data.get('Завершена')));
-                  this._dataSource.update(data).addCallback(function(){
-                     self._drawItems();
-                  });
+                  this.update(data);
                }
                else if ($(target).hasClass('taskTxt')) {
                   var listViewItem = $(target).closest('.listViewItem');
@@ -236,9 +231,7 @@
                   $text.val(data.get('Содержимое')).unbind('keydown').keydown(function (e) {
                      if (e.which === 13) {
                         data.set('Содержимое', $(this).val());
-                        self._dataSource.update(data).addCallback(function(){
-                           self._drawItems();
-                        });
+                        self.update(data);
                      }
                      if (e.which === 27) {
                         listViewItem.removeClass('editing');
@@ -287,13 +280,13 @@
                   case 'complete' : filter = [{'Завершена' : true}]; break;
                   default : filter = [];
                }
-               view.query(filter);
+               view.setFilter(filter);
+               view.query();
             });
 
             $('.sort').click(function () {
                var self = $(this),
                      view = $ws.single.ControlStorage.get(self.attr('data-list')),
-                     filter = {},
                      dir = self.attr('data-dir'),
                      newDir,
                      sorting = [];
@@ -309,20 +302,19 @@
                sorting = [
                   {'Завершена': newDir}
                ];
-               view.query(filter, sorting);
+               view.setSorting(sorting);
+               view.query();
             });
 
             $('.newTask').keydown(function (e) {
                var inp = $(this);
                if (e.which === 13) {
                   var view = $ws.single.ControlStorage.get($(this).attr('data-list'));
-                  view._dataSource.create().addCallback(function (rec) {
+                  view.create().addCallback(function (rec) {
                      rec.set('Содержимое', inp.val());
                      rec.set('Завершена', false);
-                     view._dataSource.update(rec).addCallback(function () {
-                        view._drawItems();
-                        inp.val('');
-                     });
+                     view.update(rec);
+                     inp.val('');
                   });
                }
             })

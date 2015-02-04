@@ -8,6 +8,8 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm'], function (_
    var DSMixin = /**@lends SBIS3.CONTROLS.DSMixin.prototype  */{
       $protected: {
          _itemsInstances: {},
+         _filter: undefined,
+         _sorting: undefined,
          _dataSource: undefined,
          _dataSet: null,
          _dotItemTpl: null,
@@ -41,10 +43,50 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm'], function (_
 
       },
 
+      create: function () {
+         var def = new $ws.proto.Deferred();
+         this._dataSource.create().addCallback(function (rec) {
+            def.callback(rec);
+         });
+         return def;
+      },
+
+      read: function (id) {
+         this._dataSource.read(id);
+      },
+
+      update: function (data) {
+         var self = this;
+         this._dataSource.update(data).addCallback(function () {
+            self._drawItems();
+         });
+      },
+
+      destroy: function (id) {
+         var self = this;
+         this._dataSource.destroy(id).addCallback(function () {
+            self._drawItems();
+         });
+      },
+
+      setFilter: function (filter) {
+         this._filter = filter;
+      },
+
+      setSorting: function (sorting) {
+         this._sorting = sorting;
+      },
+
       query: function (filter, sorting, offset, limit) {
          var self = this,
             def = new $ws.proto.Deferred();
-         this._dataSource.query(filter, sorting, offset, limit).addCallback(
+         if (filter) {
+            self._filter = filter;
+         }
+         if (sorting) {
+            self._sorting = sorting;
+         }
+         this._dataSource.query(self._filter, self._sorting, offset, limit).addCallback(
             function (DS) {
                var
                   itemsReadyDef = new $ws.proto.ParallelDeferred(),

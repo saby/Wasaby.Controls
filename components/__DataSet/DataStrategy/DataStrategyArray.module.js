@@ -106,6 +106,14 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
             }
          }
       },
+
+      addRawRecord:function(data,keyField,record){
+         //TODO: просчет идентификатора
+         // идентификатор берем на 1 больше, чем у последней записи
+         record.set(keyField, data[data.length - 1][keyField] + 1);
+         data.push(record.getRaw());
+      },
+
       /**
        * Удалить элемент из массива
        * @param {Array} data массив "сырых" данных
