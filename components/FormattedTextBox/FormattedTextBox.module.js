@@ -53,6 +53,11 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
          else {
             this._options.text = text;
          }
+      },
+
+      setEnabled: function(enabled){
+         FormattedTextBoxBase.superclass.setEnabled.call(this, enabled);
+         this._inputField.attr('contenteditable', enabled);
       }
 });
 
