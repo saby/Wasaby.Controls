@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
       /**
        * Вызов списочного метода БЛ
        * Возможно применене фильтрации, сортировки и выбора определенного количества записей с заданной позиции
-       * @param {Object} filter - {property: value}
+       * @param {Array} filter - [{property1: value},{property2: value}]
        * @param {Array} sorting - [{property1: 'ASC'},{property2: 'DESC'}]
        * @param {Number} offset смещение начала выборки
        * @param {Number} limit количество возвращаемых записей
@@ -121,31 +121,38 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
          var self = this,
             def = new $ws.proto.Deferred();
 
+         filter = filter || [];
+
          // настройка объекта фильтрации для отправки на БЛ
          var filterParam = {
             d: [],
             s: []
          };
 
-         if (!Object.isEmpty(filter)) {
-            for (var j in filter) {
-               if (filter.hasOwnProperty(j)) {
-                  if (typeof filter[j] == 'boolean') {
-                     filterParam.s.push({
-                        n: j,
-                        t: 'Логическое'
-                     });
+         if (filter.length) {
+            $ws.helpers.forEach(filter, function (value) {
+               if (!Object.isEmpty(value)) {
+                  for (var j in value) {
+                     if (value.hasOwnProperty(j)) {
+                        if (typeof value[j] == 'boolean') {
+                           filterParam.s.push({
+                              n: j,
+                              t: 'Логическое'
+                           });
+                        }
+                        else {
+                           filterParam.s.push({
+                              n: j,
+                              t: 'Строка'
+                           });
+                        }
+                        filterParam.d.push(value[j]);
+                     }
                   }
-                  else {
-                     filterParam.s.push({
-                        n: j,
-                        t: 'Строка'
-                     });
-                  }
-                  filterParam.d.push(filter[j])
                }
-            }
+            });
          }
+
 
          // настройка сортировки
          var sortingParam = null;

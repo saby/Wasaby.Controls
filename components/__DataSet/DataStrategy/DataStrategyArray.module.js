@@ -126,23 +126,65 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
       },
 
       query: function (data, filter, sorting, offset, limit) {
-         var newData = [];
-         if (!Object.isEmpty(filter)) {
-            for (var i = 0; i < data.length; i++) {
-               var equal = true;
-               for (var j in filter) {
-                  if (filter.hasOwnProperty(j)) {
-                     if (data[i][j] != filter[j]) {
-                        equal = false;
-                        break;
+         var newData = data;
+         filter = filter || [];
+         sorting = sorting || [];
+
+         if (filter.length) {
+            newData = [];
+            $ws.helpers.forEach(filter, function (value) {
+               if (!Object.isEmpty(value)) {
+                  for (var i = 0; i < data.length; i++) {
+                     var equal = true;
+                     for (var j in value) {
+                        if (value.hasOwnProperty(j)) {
+                           if (data[i][j] != value[j]) {
+                              equal = false;
+                              break;
+                           }
+                        }
+                     }
+                     if (equal) {
+                        newData.push(data[i]);
                      }
                   }
                }
-               if (equal) {
-                  newData.push(data[i]);
-               }
-            }
+
+            });
          }
+
+         if (sorting.length) {
+            //TODO: сортировка по нескольким полям одновременно
+
+            $ws.helpers.forEach(sorting, function (value) {
+
+               if (!Object.isEmpty(value)) {
+
+                  for (var j in value) {
+                     if (value.hasOwnProperty(j)) {
+
+                        newData.sort(function (a, b) {
+
+                           if (a[j] > b[j]) {
+                              return (value[j] == 'ASC') ? 1 : -1;
+                           }
+
+                           if (a[j] < b[j]) {
+                              return (value[j] == 'ASC') ? -1 : 1;
+                           }
+
+                           return 0;
+
+                        });
+
+                     }
+                  }
+
+               }
+
+            });
+         }
+
          return newData;
       }
 

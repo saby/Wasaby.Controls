@@ -167,7 +167,7 @@
             <a data-value="all" class="tab active">All</a>
             <a data-value="active" class="tab">Active</a>
             <a data-value="complete" class="tab">Completed</a>
-            <!--<button class="sort" data-list="ListViewDS2" data-dir="ASC" style="float: right">сменить сортировку по выполнению</button>-->
+            <button class="sort" data-list="ListViewDS2" data-dir="ASC" style="float: right">сменить сортировку по выполнению</button>
          </div>
          <div id="ListViewDS2" class="testBlock listView"></div>
          <input data-list="ListViewDS2" class="newTask" type="text" placeholder="new task"/>
@@ -278,9 +278,9 @@
                   filter;
 
                switch (value) {
-                  case 'active' : filter = {'Завершена' : false}; break;
-                  case 'complete' : filter = {'Завершена' : true}; break;
-                  default : filter = {};
+                  case 'active' : filter = [{'Завершена' : false}]; break;
+                  case 'complete' : filter = [{'Завершена' : true}]; break;
+                  default : filter = [];
                }
                view.query(filter);
             });
