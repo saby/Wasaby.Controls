@@ -310,6 +310,7 @@
                   var view = $ws.single.ControlStorage.get($(this).attr('data-list'));
                   view._dataSource.create().addCallback(function (rec) {
                      rec.set('Содержимое', inp.val());
+                     rec.set('Завершена', false);
                      view._dataSource.update(rec).addCallback(function () {
                         view._drawItems();
                         inp.val('');
