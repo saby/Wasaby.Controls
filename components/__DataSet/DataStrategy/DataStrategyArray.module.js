@@ -107,10 +107,12 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
          }
       },
 
-      addRawRecord:function(data,keyField,record){
+      addRawRecord: function (data, keyField, record) {
          //TODO: просчет идентификатора
          // идентификатор берем на 1 больше, чем у последней записи
-         record.set(keyField, data[data.length - 1][keyField] + 1);
+         //var newKey = data[data.length - 1][keyField] + 1;
+         var newKey = data.length + 10;
+         record.set(keyField, newKey);
          data.push(record.getRaw());
       },
 
@@ -146,7 +148,6 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
                      var equal = true;
                      for (var j in value) {
                         if (value.hasOwnProperty(j)) {
-                           console.log(data[i][j])
                            if (data[i][j] != value[j]) {
                               equal = false;
                               break;
