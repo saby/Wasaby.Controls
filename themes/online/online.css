@@ -152,6 +152,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Button__ellispis {
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.controls-Button__ellispis.controls-Button {
   line-height: 22px;
 }
 .controls-Button.controls-Checked__checked {
@@ -841,6 +844,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Link.controls-Click__active {
   text-decoration: none;
   cursor: pointer;
+}
+.controls-Link__field {
+  margin-left: 4px;
 }
 .controls-EditAtPlace {
   border: 1px solid transparent;
