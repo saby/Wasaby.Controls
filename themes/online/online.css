@@ -118,7 +118,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Button__icon {
   position: absolute;
   top: 1px;
-  left: -5px;
 }
 .controls-Button__icon.icon-24 {
   top: -4px;
@@ -134,10 +133,10 @@ input[type="reset"]::-moz-focus-inner {
   }
 }
 .controls-Button__icon + .controls-Button__text {
-  margin-left: 16px;
+  margin-left: 20px;
 }
 .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin-left: 26px;
+  margin-left: 28px;
 }
 .controls-Button {
   -webkit-touch-callout: none;
