@@ -17,6 +17,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          _pasteProcessing : 0,
          _inputField : null,
          _compatPlaceholder: null,
+         _wasSelected: false,
          _options: {
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
@@ -44,7 +45,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              *    <li>false - не выделять.</li>
              * </ul>
              */
-            selectOnClick: false
+            selectOnClick: true
          }
       },
 
@@ -77,11 +78,13 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             if (self._options.trim) {
                self.setText(String.trim(self.getText()));
             }
+            self._wasSelected = false;
          });
 
          self._inputField.bind('mouseup',function(){
-            if (self._options.selectOnClick) {
+            if (self._options.selectOnClick && !self._wasSelected) {
                self._inputField.select();
+               self._wasSelected = true;
             }
          });
 
