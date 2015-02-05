@@ -9,7 +9,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   display: inline-block;
   height: 24px;
-  font: 13px/21px Tahoma, Geneva, sans-serif;
+  font: 13px/22px Tahoma, Geneva, sans-serif;
   border: 1px transparent;
   outline: none;
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXB2xKCIABAwfP/X+ekhWAYiXhjYGAwtTd3+V8/zqNw7Jm9JEqO5BRI0RPDSvALfpvYFsc6W2Y3MFnDOPRYo/l+OoxW9O8WrQSdfKJEjXw9EE11A2vvQIELisuiAAAAAElFTkSuQmCC');
@@ -21,9 +21,9 @@ input[type="reset"]::-moz-focus-inner {
   white-space: nowrap;
   padding: 0 12px;
 }
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
+@-moz-document url-prefix() {
   .controls-Button {
-    line-height: 22px;
+    line-height: 23px;
   }
 }
 .controls-Button__content {
@@ -126,9 +126,6 @@ input[type="reset"]::-moz-focus-inner {
 @-moz-document url-prefix() {
   .controls-Button__icon {
     top: 2px;
-  }
-  .controls-Button__icon.icon-24 {
-    top: -3px;
   }
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
