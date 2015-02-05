@@ -827,6 +827,7 @@ input[type="reset"]::-moz-focus-inner {
   text-align: center;
   color: #0055BB;
   text-decoration: none;
+  line-height: normal;
 }
 .controls-Link__icon {
   margin-top: -2px;
