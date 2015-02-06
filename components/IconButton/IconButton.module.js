@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS.ClickMixin', 'js!SBIS3.CONTROLS.IconMixin', 'html!SBIS3.CONTROLS.IconButton'], function(Control, ClickMixin, IconMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS.Clickable', 'js!SBIS3.CONTROLS.IconMixin', 'html!SBIS3.CONTROLS.IconButton'], function(Control, Clickable, IconMixin, dotTplFn) {
 
    'use strict';
 
@@ -19,10 +19,10 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTR
     * @public
     * @category Buttons
     * @mixes SBIS3.CONTROLS.IconMixin
-    * @mixes SBIS3.CONTROLS.ClickMixin
+    * @mixes SBIS3.CONTROLS.Clickable
     */
 
-   var IconButton = Control.Control.extend([ClickMixin, IconMixin], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
+   var IconButton = Control.Control.extend([Clickable, IconMixin], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {

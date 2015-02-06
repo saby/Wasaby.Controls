@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.ClickMixin', 'js!SBIS3.CONTROLS.FormWidgetMixin', 'js!SBIS3.CONTROLS.DataBindMixin', 'js!SBIS3.CONTROLS.IconMixin'], function(Control, ClickMixin, FormWidgetMixin, DataBindMixin, IconMixin) {
+define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.Clickable', 'js!SBIS3.CONTROLS.FormWidgetMixin', 'js!SBIS3.CONTROLS.DataBindMixin', 'js!SBIS3.CONTROLS.IconMixin'], function(Control, Clickable, FormWidgetMixin, DataBindMixin, IconMixin) {
 
    'use strict';
 
@@ -12,13 +12,13 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
     * Все контролы-кнопки должны наследоваться от этого класса. Отображение и вёрстка задаются именно в унаследованных классах.
     * @class SBIS3.CONTROLS.ButtonBase
     * @extends SBIS3.CONTROLS.CompoundControl
-    * @mixes SBIS3.CONTROLS.ClickMixin
+    * @mixes SBIS3.CONTROLS.Clickable
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.DataBindMixin
     * @mixes SBIS3.CONTROLS.IconMixin
     */
 
-   var ButtonBase = Control.extend([ClickMixin, FormWidgetMixin, DataBindMixin, IconMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
+   var ButtonBase = Control.extend([Clickable, FormWidgetMixin, DataBindMixin, IconMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
       /**
        * @event onActivated Происходит при активации кнопки (клик мышкой, кнопки клавиатуры)
        * @param {$ws.proto.EventObject} eventObject дескриптор события

@@ -5,10 +5,10 @@
 define('js!SBIS3.CONTROLS.ListView',
    ['js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.CollectionMixin',
-      'js!SBIS3.CONTROLS.MultiSelectorMixin',
+      'js!SBIS3.CONTROLS.MultiSelectable',
       'html!SBIS3.CONTROLS.ListView'
    ],
-   function (CompoundControl, CollectionMixin, MultiSelectorMixin, dotTplFn) {
+   function (CompoundControl, CollectionMixin, MultiSelectable, dotTplFn) {
 
       'use strict';
 
@@ -17,11 +17,11 @@ define('js!SBIS3.CONTROLS.ListView',
        * @class SBIS3.CONTROLS.ListView
        * @extends $ws.proto.Control
        * @mixes SBIS3.CONTROLS.CollectionMixin
-       * @mixes SBIS3.CONTROLS.MultiSelectorMixin
+       * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
        */
 
-      var ListView = CompoundControl.extend([CollectionMixin, MultiSelectorMixin], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      var ListView = CompoundControl.extend([CollectionMixin, MultiSelectable], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          $protected: {
             _dotTplFn: dotTplFn,
             _dotItemTpl: null,

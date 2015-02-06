@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLS.MultiSelectorMixin', [], function() {
+define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
-    * @mixin SBIS3.CONTROLS.MultiSelectorMixin
+    * @mixin SBIS3.CONTROLS.MultiSelectable
     */
 
-   var MultiSelectorMixin = /**@lends SBIS3.CONTROLS.MultiSelectorMixin.prototype  */{
+   var MultiSelectable = /**@lends SBIS3.CONTROLS.MultiSelectable.prototype  */{
       $protected: {
          _options: {
             /**
@@ -155,6 +155,6 @@ define('js!SBIS3.CONTROLS.MultiSelectorMixin', [], function() {
       }
    };
 
-   return MultiSelectorMixin;
+   return MultiSelectable;
 
 });

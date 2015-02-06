@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
     * Контрол, реализующий поведение выбора одного из нескольких значений при помощи набора радиокнопок. Отображения не имеет.
     * @class SBIS3.CONTROLS.ButtonGroupBase
     * @mixes SBIS3.CONTROLS.CollectionMixin
-    * @mixes SBIS3.CONTROLS.SelectorMixin
+    * @mixes SBIS3.CONTROLS.Selectable
     * @extends SBIS3.CORE.CompoundControl
     */
 
