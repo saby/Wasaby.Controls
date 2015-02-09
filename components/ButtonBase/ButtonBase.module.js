@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
     * Поведенческий класс, задающий базовое поведение кнопки. Основное предназначение - обрабатывать клик.
     * Все контролы-кнопки должны наследоваться от этого класса. Отображение и вёрстка задаются именно в унаследованных классах.
     * @class SBIS3.CONTROLS.ButtonBase
-    * @extends SBIS3.CONTROLS.CompoundControl
+    * @extends $ws.proto.CompoundControl
     * @mixes SBIS3.CONTROLS.Clickable
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.DataBindMixin
@@ -35,6 +35,10 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
             /**
              * @cfg {String}  Текст на кнопке
              * Данный текст должен отображать смысл действия клика по кнопке или побуждать к действию.
+             * @example
+             * <pre>
+             *     <option name="caption">Сохранить</option>
+             * </pre>
              * @see setCaption
              * @see getCaption
              * @see setValue
