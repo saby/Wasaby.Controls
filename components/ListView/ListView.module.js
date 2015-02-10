@@ -147,14 +147,15 @@ define('js!SBIS3.CONTROLS.ListView',
                      action.addClass(acts[i].icon.substring(7));
                   }
                   if (acts[i].handler) {
-                     var handler = acts[i].handler.bind(this);
-                     action.mouseup(function(e){
-                        e.stopPropagation();
-                        var
-                           id = $(this).closest('.controls-ListView__item').attr('data-id'),
-                           item = self._items.getItem(id);
-                        handler(id, item);
-                     })
+                     (function(handler){
+                        action.mouseup(function(e){
+                           e.stopPropagation();
+                           var
+                              id = $(this).closest('.controls-ListView__item').attr('data-id'),
+                              item = self._items.getItem(id);
+                           handler(id, item);
+                        });
+                     })(acts[i].handler.bind(this));
                   }
                   this._actsContainer.append(action);
                }
