@@ -35,16 +35,7 @@ define('js!SBIS3.CONTROLS.Menu', [
             /**
              * @cfg {Number} Задержка перед закрытием
              */
-            hideDelay: null,
-            /**
-             * @typedef {Object} firstLevelDirection
-             * @variant right
-             * @variant down
-             */
-            /**
-             * @cfg {firstLevelDirection} Задержка перед закрытием
-             */
-            firstLevelDirection: 'down'
+            hideDelay: null
          }
       },
 
@@ -52,6 +43,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          if (this._items.getItemsCount()) {
             this._drawItems();
          }
+         this._publish('onMenuItemActivate');
       },
 
       _getItemClass : function() {
@@ -99,7 +91,17 @@ define('js!SBIS3.CONTROLS.Menu', [
          Menu.superclass._drawItems.call(this);
       },
       _drawItemsCallback : function() {
-         for (var i in this._subContainers) {
+         var
+            menuItems = this.getItemsInstances(),
+            self = this;
+         for (var i in menuItems) {
+            if (menuItems.hasOwnProperty(i)){
+               menuItems[i].subscribe('onActivated', function () {
+                  self._notify('onMenuItemActivate', this.getContainer().attr('data-id'));
+               });
+            }
+         }
+         for (i in this._subContainers) {
             if (this._subContainers.hasOwnProperty(i)) {
 
                var
@@ -112,7 +114,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          }
 
          var instances = this.getItemsInstances();
-         var self = this;
+
          for (i in instances) {
             if (instances.hasOwnProperty(i)) {
                instances[i].getContainer().hover(function(e){
@@ -135,19 +137,20 @@ define('js!SBIS3.CONTROLS.Menu', [
                   if (self._subContainers[id]) {
                      if (!self._subMenus[id]) {
                         self._subContainers[id].appendTo('body');
-                        self._subMenus[id] = self._createSubMenu(this, parent, isFirstLevel);
+                        self._subMenus[id] = self._createSubMenu(this, parent, isFirstLevel, item);
                         self._subMenus[id].getContainer().append(self._subContainers[id]);
                      }
                      mySubmenu = self._subMenus[id];
-                     self._subMenus[id].show();
+                     mySubmenu.show();
                   }
                })
             }
          }
+
       },
-      _createSubMenu : function(target, parent, isFirstLevel) {
+      _createSubMenu : function(target, parent, isFirstLevel, item) {
          target = $(target);
-         var config = this._getSubMenuConfig(isFirstLevel);
+         var config = this._getSubMenuConfig(isFirstLevel, item);
 
          config.element = $('<div class="controls-Menu__Popup"></div>');
          config.parent = parent;
@@ -155,7 +158,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          return new FloatArea(config)
       },
 
-      _getSubMenuConfig : function(isFirstLevel) {
+      _getSubMenuConfig : function(isFirstLevel, item) {
          var config =  {
             corner : 'tr',
             verticalAlign : {
@@ -167,18 +170,37 @@ define('js!SBIS3.CONTROLS.Menu', [
             closeByExternalOver: true,
             targetPart : true
          };
-         config = this._onMenuConfig(config, isFirstLevel);
+         config = this._onMenuConfig(config, isFirstLevel, item);
          return config;
       },
 
-      _onMenuConfig : function(config, isFirstLevel) {
-         if (isFirstLevel && this._options.firstLevelDirection == 'down') {
-            config.corner = 'bl';
-            return config;
+      _onMenuConfig : function(config, isFirstLevel, item) {
+         var direction;
+         if (isFirstLevel) {
+            direction = 'down';
          }
-         else {
-            return config;
+         if (item.direction) {
+            direction = item.direction;
          }
+         if (direction) {
+            switch (direction) {
+               case 'down' : {
+                  config.corner = 'bl';
+                  break;
+               }
+               case 'up' : {
+                  config.corner = 'tl';
+                  config.verticalAlign.side = 'bottom';
+                  break;
+               }
+               case 'right' : {
+                  config.corner = 'tl';
+                  config.horizontalAlign.side = 'right';
+                  break;
+               }
+            }
+         }
+         return config;
       },
 
       destroy : function(){
@@ -194,6 +216,31 @@ define('js!SBIS3.CONTROLS.Menu', [
                this._subMenus[j].destroy();
             }
          }
+      },
+      /*TODO Методы для Зуева, посмотреть в будущем нужны ли они*/
+      addSubMenu : function(pointsArr, id) {
+         for (var i = 0; i < pointsArr.length; i++) {
+            pointsArr[i][this._options.hierField] = id;
+            this._items.addItem(pointsArr[i]);
+         }
+         this._drawItems();
+      },
+      destroySubMenu : function(id) {
+         var childItems = this._items.getChildItems(id);
+         for (var i = 0; i < childItems.length; i++) {
+            this._items.destroyItem(this._items.getKey(childItems[i]));
+         }
+         this._drawItems();
+      },
+
+      hasSubMenu : function(id) {
+         return this._items.hasChild(id)
+      },
+
+      setItemTitle : function(id, title) {
+         var item = this._items.getItem(id);
+         item.title = title;
+         this._drawItems();
       }
    });
 

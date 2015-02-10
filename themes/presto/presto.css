@@ -9,12 +9,22 @@
   color: #333333;
   box-sizing: border-box;
   padding: 0 16px;
+  display: inline-block;
+  line-height: 56px;
 }
 .controls-Button__primary {
   background-color: #FFCC99;
 }
 .controls-Button__big {
   font-size: 18px;
+}
+.controls-Button {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .controls-TextBox {
   display: inline-block;

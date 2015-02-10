@@ -75,18 +75,30 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
       },
 
       _drawItems: function(){
+         if (!Object.isEmpty(this._itemsInstances)) {
+            for (var i in this._itemsInstances) {
+               if (this._itemsInstances.hasOwnProperty(i)) {
+                  this._itemsInstances[i].destroy();
+               }
+            }
+         }
          this._itemsInstances = {};
          var
             itemsReadyDef = new $ws.proto.ParallelDeferred(),
             self = this,
-            itemsContainer = this._getItemsContainer();
-         itemsContainer.empty();
+            targetContainersList = [];
+
+
 
          this._items.iterate(function (item, key, i, parItem, lvl) {
 
             var
                targetContainer = self._getTargetContainer(item, key, parItem, lvl);
 
+            if (Array.indexOf(targetContainersList, targetContainer.get(0)) < 0) {
+               targetContainer.empty();
+               targetContainersList.push(targetContainer.get(0));
+            }
             itemsReadyDef.push(self._drawItem(item, targetContainer, key, i, parItem, lvl));
 
          });

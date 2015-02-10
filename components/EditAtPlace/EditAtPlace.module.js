@@ -123,27 +123,29 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
          },
 
          _clickHandler: function () {
-            this._saveOldText();
-            if (this._options.editInPopup) {
-               this.showPicker();
-               this._oldText = this._options.text;
-            } else {
-               this.setInPlaceEditMode(true);
-               this._addControlPanel(this._container.parent());
-            }
-            this._resizeTextArea();
-
-            if (this._options.editInPopup) {
-               if ($('.js-controls-TextBox__field', this._picker._container).get(0)) {
-                  $('.js-controls-TextBox__field', this._picker._container).focus();
-               } else if ($('.controls-TextArea__inputField', this._picker._container).get(0)) {
-                  $('.controls-TextArea__inputField', this._picker._container).focus();
+            if (this.isEnabled()) {
+               this._saveOldText();
+               if (this._options.editInPopup) {
+                  this.showPicker();
+                  this._oldText = this._options.text;
+               } else {
+                  this.setInPlaceEditMode(true);
+                  this._addControlPanel(this._container.parent());
                }
-            } else {
-               if ($('.js-controls-TextBox__field', this._container).get(0)) {
-                  $('.js-controls-TextBox__field', this._container).focus();
-               } else if ($('.controls-TextArea__inputField', this._container).get(0)) {
-                  $('.controls-TextArea__inputField', this._container).focus();
+               this._resizeTextArea();
+
+               if (this._options.editInPopup) {
+                  if ($('.js-controls-TextBox__field', this._picker._container).get(0)) {
+                     $('.js-controls-TextBox__field', this._picker._container).focus();
+                  } else if ($('.controls-TextArea__inputField', this._picker._container).get(0)) {
+                     $('.controls-TextArea__inputField', this._picker._container).focus();
+                  }
+               } else {
+                  if ($('.js-controls-TextBox__field', this._container).get(0)) {
+                     $('.js-controls-TextBox__field', this._container).focus();
+                  } else if ($('.controls-TextArea__inputField', this._container).get(0)) {
+                     $('.controls-TextArea__inputField', this._container).focus();
+                  }
                }
             }
          },

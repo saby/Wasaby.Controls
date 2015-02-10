@@ -1,7 +1,9 @@
-<button class="controls-Button{{?it.primary}} controls-Button__primary{{?}}{{?it.checked===true}} controls-Checked__checked{{?}}">
-{{?it.icon}}
-    <span class="controls-Button__content">
-        <i class="controls-Button__icon js-controls-Button__icon{{?(it.icon.indexOf('sprite:') >= 0)}}{{=' '+it.icon.substr(7)}}{{?}}"></i><span class="js-controls-Button__text">{{?it.caption}}{{=it.caption}}{{?}}</span>
-    </span>
-    {{??}}{{?it.caption}}{{=it.caption}}{{?}}{{?}}
-</button>
+<span class="controls-Button{{?it.primary}} controls-Button__primary{{?}}{{?it.checked===true}} controls-Checked__checked{{?}}">
+   {{?it.icon}}
+   <span class="controls-Button__content">
+       <i class="controls-Button__icon js-controls-Button__icon {{=it.iconTemplate(it)}}"></i><span class="controls-Button__text js-controls-Button__text {{?!it.caption}}controls-Button__emptyCaption{{?}}">{{?it.caption}}{{=it.caption}}{{?}}</span>
+   </span>
+   {{??}}
+      {{?it.caption}}{{=it.caption}}{{?}}
+   {{?}}
+</span>

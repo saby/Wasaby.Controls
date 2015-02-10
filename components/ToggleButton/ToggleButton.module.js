@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.ToggleButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.CheckedMixin', 'html!SBIS3.CONTROLS.ToggleButton'], function(Button, CheckedMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.ToggleButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.Checkable', 'html!SBIS3.CONTROLS.ToggleButton'], function(Button, Checkable, dotTplFn) {
 
    'use strict';
 
@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.ToggleButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.
     * @category Buttons
     */
 
-   var ToggleButton = Button.extend([CheckedMixin], /** @lends SBIS3.CONTROLS.ToggleButton.prototype */ {
+   var ToggleButton = Button.extend([Checkable], /** @lends SBIS3.CONTROLS.ToggleButton.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

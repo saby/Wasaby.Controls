@@ -3,15 +3,15 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.MenuItem', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.MenuItem'], function(RadioButtonBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.MenuItem', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.MenuItem'], function(ButtonBase, dotTplFn) {
 
    'use strict';
    /**
-    * Контрол, отображающий корешок закладки. Работает только в составе группы. В джине не вытаскивается
-    * @class SBIS3.CONTROLS.ButtonBase
-    * @extends SBIS3.CONTROLS.RadioButtonBase
+    * Контрол, отображающий элемент меню. Работает только в составе группы. В джине не вытаскивается
+    * @class SBIS3.CONTROLS.MenuItem
+    * @extends SBIS3.CONTROLS.ButtonBase
     */
-   var MenuItem = RadioButtonBase.extend( /** @lends SBIS3.CONTROLS.MenuItem.prototype */ {
+   var MenuItem = ButtonBase.extend( /** @lends SBIS3.CONTROLS.MenuItem.prototype */ {
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {

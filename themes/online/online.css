@@ -9,20 +9,21 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   display: inline-block;
   height: 24px;
-  line-height: normal;
-  border: none;
-  color: #000000;
+  font: 13px/22px Tahoma, Geneva, sans-serif;
+  border: 1px transparent;
+  outline: none;
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXB2xKCIABAwfP/X+ekhWAYiXhjYGAwtTd3+V8/zqNw7Jm9JEqO5BRI0RPDSvALfpvYFsc6W2Y3MFnDOPRYo/l+OoxW9O8WrQSdfKJEjXw9EE11A2vvQIELisuiAAAAAElFTkSuQmCC');
   border-radius: 16px;
   box-shadow: inset 0px -1px 1px #afacab;
-  font: 13px Tahoma, Geneva, sans-serif;
-  padding: 0 8px;
   box-sizing: border-box;
   background-size: contain;
+  min-width: 24px;
+  white-space: nowrap;
+  padding: 0 12px;
 }
 @-moz-document url-prefix() {
   .controls-Button {
-    padding-bottom: 1px;
+    line-height: 23px;
   }
 }
 .controls-Button__content {
@@ -34,9 +35,10 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 18px;
   height: 48px;
   border-radius: 24px;
+  padding: 15px 24px;
 }
-.controls-Button__big .controls-Button__content {
-  padding: 0 24px;
+.controls-Button__big .controls-Button__text {
+  padding-top: 11px;
 }
 .controls-Button:hover {
   box-shadow: inset 0px -1px 1px #919090;
@@ -115,14 +117,45 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button__icon {
   position: absolute;
-  left: -2px;
   top: 1px;
 }
-.controls-Button__text {
-  white-space: nowrap;
+.controls-Button__icon.icon-24 {
+  top: -4px;
+}
+@-moz-document url-prefix() {
+  .controls-Button__icon {
+    top: 2px;
+  }
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .controls-Button__icon.icon-24 {
+    top: -3px;
+  }
 }
 .controls-Button__icon + .controls-Button__text {
   margin-left: 20px;
+}
+.controls-Button__icon.icon-24 + .controls-Button__text {
+  margin-left: 28px;
+}
+.controls-Button {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.controls-Button__emptyCaption {
+  margin-left: 13px!important;
+}
+.controls-Button__ellispis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.controls-Button__ellispis.controls-Button {
+  line-height: 22px;
 }
 .controls-Button.controls-Checked__checked {
   color: red;
@@ -694,6 +727,9 @@ input[type="reset"]::-moz-focus-inner {
   background-color: transparent;
   line-height: normal;
 }
+.ws-disabled .controls-FormattedTextBox__fieldWrapper {
+  cursor: default;
+}
 .controls-FormattedTextBox__fieldWrapper {
   height: 100%;
   padding: 0 4px;
@@ -794,6 +830,7 @@ input[type="reset"]::-moz-focus-inner {
   text-align: center;
   color: #0055BB;
   text-decoration: none;
+  line-height: normal;
 }
 .controls-Link__icon {
   margin-top: -2px;
@@ -802,7 +839,15 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Link:hover {
   color: #ff7033;
+  cursor: pointer;
   text-decoration: underline;
+}
+.controls-Link.controls-Click__active {
+  text-decoration: none;
+  cursor: pointer;
+}
+.controls-Link__field {
+  margin-left: 4px;
 }
 .controls-EditAtPlace {
   border: 1px solid transparent;
@@ -821,6 +866,10 @@ input[type="reset"]::-moz-focus-inner {
   font-family: inherit;
   width: auto;
   display: inline-block;
+}
+.ws-disabled .controls-EditAtPlace__textField {
+  border-bottom: none;
+  cursor: text;
 }
 .controls-EditAtPlace__textAreaWrapper {
   border: none;
@@ -920,33 +969,102 @@ input[type="reset"]::-moz-focus-inner {
 .controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace__fieldWrapper {
   display: none;
 }
-.controls-MenuButton {
+.controls-MenuLink {
   position: relative;
+  padding-right: 12px;
 }
-.controls-MenuButton__arrowDown {
+.controls-MenuLink__header {
   display: inline-block;
-  vertical-align: middle;
-  background: transparent url("img/MenuButton-arrowDown.png");
+  height: 24px;
+  padding: 0 8px;
+}
+.controls-MenuLink__header .controls-Link {
+  margin-top: 3px;
+}
+.controls-MenuLink__Menu {
+  margin-top: -20px;
+  margin-left: -9px;
+  background: #ffffff;
+}
+.controls-MenuLink__Menu .controls-MenuItem__icon {
+  left: 0;
+  top: 0;
+}
+@-moz-document url-prefix() {
+  .controls-MenuLink__Menu {
+    margin-top: -21px;
+  }
+}
+.controls-MenuLink__Menu .controls-Link {
+  color: #FF7033;
+}
+.controls-MenuLink__Menu .controls-Link:hover {
+  text-decoration: none;
+}
+.controls-MenuLink__Menu .controls-MenuLink__header {
+  box-sizing: border-box;
+  width: 100%;
+  border-bottom: 1px solid #ededed;
+}
+.controls-MenuLink__Menu .controls-MenuItem {
+  height: 24px;
+  line-height: 24px;
+}
+.controls-MenuLink__arrowDown {
+  position: absolute;
+  display: inline-block;
   height: 6px;
   width: 8px;
+  right: 0;
+  top: 7px;
+  background: transparent;
+  background-image: url("img/MenuButton-arrowDown.png");
+}
+.controls-MenuLink:hover .controls-MenuLink__arrowDown {
+  background-position: 0 6px;
+}
+.controls-MenuLink__header .controls-MenuLink__arrowDown {
+  display: none;
+}
+.controls-MenuButton {
+  position: relative;
+  padding-right: 23px;
+}
+.controls-MenuButton__arrowDown {
+  position: absolute;
+  display: inline-block;
+  height: 6px;
+  width: 8px;
+  right: 10px;
+  top: 11px;
+  background: transparent;
+  background-image: url("img/MenuButton-arrowDown.png");
+}
+.controls-MenuButton:hover .controls-MenuButton__arrowDown {
+  background-position: 0 6px;
+}
+.controls-Button__primary .controls-MenuButton__arrowDown {
+  background-image: url("img/MenuButton-arrowDown__primary.png");
 }
 .controls-MenuButton__Menu {
-  margin-top: 4px;
+  margin-top: 3px;
 }
 .controls-MenuButton__header {
   left: 0;
-  top: -28px;
+  top: 0;
   display: inline-block;
   border: none;
   width: 100%;
   position: absolute;
+}
+.controls-MenuButton__header-hidden {
+  display: none;
 }
 .controls-MenuButton__headerLeft {
   float: left;
   background: transparent url("img/MenuButton-header.png");
   height: 28px;
   width: 16px;
-  margin-left: -1px;
 }
 .controls-MenuButton__headerCenter {
   height: 28px;
@@ -954,13 +1072,11 @@ input[type="reset"]::-moz-focus-inner {
   background-position: 0 -60px;
   left: 8px;
   display: inline-block;
-  margin-left: -8px;
 }
 .controls-MenuButton__headerRight {
   background: transparent url("img/MenuButton-header.png");
   width: 28px;
   height: 28px;
   background-position: 0 -30px;
-  margin-left: -10px;
   display: inline-block;
 }

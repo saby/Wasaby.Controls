@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.CheckedMixin', 'html!SBIS3.CONTROLS.CheckBox'], function(ButtonBase, CheckedMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.Checkable', 'html!SBIS3.CONTROLS.CheckBox'], function(ButtonBase, Checkable, dotTplFn) {
 
    'use strict';
 
@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
     * @category Inputs
     */
 
-   var CheckBox = ButtonBase.extend([CheckedMixin], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
+   var CheckBox = ButtonBase.extend([Checkable], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
       $protected: {
          _dotTplFn : dotTplFn,
          _checkBoxCaption: null,
@@ -102,13 +102,13 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
          if (!this._options.threeState) {
             this.setChecked(!(this.isChecked()));
          } else {
-            if (this._options.checked === true){
-               this.setChecked(false);
-            } else
             if (this._options.checked === false){
+               this.setChecked(true);
+            } else
+            if (this._options.checked === true){
                this.setChecked(null);
             } else  {
-               this.setChecked(true);
+               this.setChecked(false);
             }
          }
       }

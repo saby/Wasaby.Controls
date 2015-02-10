@@ -51,6 +51,7 @@
    <link rel="stylesheet" type="text/css" href="./demo/demo.css"/>
 </head>
 <body class="view-main">
+<div id="Back"></div>
 
 <div id="content">
 
@@ -303,6 +304,15 @@
             new r({
                element: "FormattedTextBox",
                mask: "xxxxx-dddddd"
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "Back",
+               caption: 'Назад',
+               href: '../../',
+               icon: 'sprite:icon-16 icon-DayBackward icon-primary'
             })
          });
       })
