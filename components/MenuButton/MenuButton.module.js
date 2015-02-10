@@ -43,8 +43,10 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
 
          if (this.getItems().getItemsCount() > 1) {
             $('.js-controls-MenuButton__arrowDown', self._container).show();
+            this._container.removeClass('controls-MenuButton__withoutMenu');
          } else {
             $('.js-controls-MenuButton__arrowDown', self._container).hide();
+            this._container.addClass('controls-MenuButton__withoutMenu');
          }
 
          var header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
