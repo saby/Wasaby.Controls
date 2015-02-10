@@ -142,19 +142,31 @@ define(
             this._setDate( this._options.date );
          }
 
+         this._calendarInit();
+
+      },
+
+      /**
+       * Инициализация календарика
+       */
+      _calendarInit: function() {
+         var self = this;
+         this._calendarIcon = $('.js-controls-DatePicker__calendarIcon', this.getContainer().get(0));
          if ( self._options.isCalendarIconShown ) {
             // Клик по иконке календарика
-            $('.js-controls-DatePicker__calendarIcon', this.getContainer().get(0)).click(function(){
-               self.togglePicker();
+            this._calendarIcon.click(function(){
+               if (self.isEnabled()) {
+                  self.togglePicker();
 
-               // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
-               if ( self._picker.isVisible() && self._options.date ){
-                  self._calendarControl._setDate(self._options.date);
+                  // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
+                  if ( self._picker.isVisible() && self._options.date ){
+                     self._calendarControl._setDate(self._options.date);
+                  }
                }
             });
          }
          else {
-            $('.js-controls-DatePicker__calendarIcon', this.getContainer().get(0)).parent().addClass('ws-hidden');
+            this._calendarIcon.parent().addClass('ws-hidden');
          }
 
          // Потеря фокуса. Работает так же при клике по иконке календарика.
@@ -163,6 +175,16 @@ define(
          $('.js-controls-FormattedTextBox__field', this.getContainer().get(0)).blur(function(){
             if ( self._options.date ){ self._drawDate(); }
          });
+      },
+
+      _setEnabled : function(enabled) {
+         DatePicker.superclass._setEnabled.call(this, enabled);
+         if (this._options.isCalendarIconShown) {
+            this._calendarIcon.toggleClass('calendar-disabled', !enabled);
+         }
+         if (this._picker && this._picker.isVisible()){
+            this.hidePicker();
+         }
       },
 
       /**

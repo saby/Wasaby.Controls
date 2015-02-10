@@ -343,6 +343,9 @@
   font-style: normal;
   white-space: pre;
 }
+.ws-disabled .controls-FormattedTextBox__field {
+  cursor: default;
+}
 .controls-TabButton {
   cursor: pointer;
   display: inline-block;
@@ -514,6 +517,9 @@
   width: 16px;
   cursor: pointer;
   text-decoration: none;
+}
+.controls-DatePicker__calendarIcon.calendar-disabled {
+  background-position: -35px 0 !important;
 }
 .controls-DatePicker__calendarIcon:hover {
   background-position: -17px 0;

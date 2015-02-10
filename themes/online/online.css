@@ -667,6 +667,9 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   text-decoration: none;
 }
+.controls-DatePicker__calendarIcon.calendar-disabled {
+  background-position: -35px 0 !important;
+}
 .controls-DatePicker__calendarIcon:hover {
   background-position: -18px 0;
 }
@@ -729,6 +732,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .ws-disabled .controls-FormattedTextBox__fieldWrapper {
   cursor: default;
+  border: none !important;
 }
 .controls-FormattedTextBox__fieldWrapper {
   height: 100%;
