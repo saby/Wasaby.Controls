@@ -23,6 +23,12 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
          this._initMenu();
       },
 
+
+      setCaption: function(caption){
+         Link.superclass.setCaption.call(this, caption);
+         $('.controls-Link__field', this._container).html(caption);
+      },
+
       _initMenu: function(){
          this.unsubscribe('onActivated', this._activatedHandler);
          this.subscribe('onActivated', this._activatedHandler);
