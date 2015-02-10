@@ -2,14 +2,14 @@
  * Created by iv.cheremushkin on 14.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.SelectorMixin', [], function() {
+define('js!SBIS3.CONTROLS.Selectable', [], function() {
 
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного
-    * @mixin SBIS3.CONTROLS.SelectorMixin
+    * @mixin SBIS3.CONTROLS.Selectable
     */
 
-   var SelectorMixin = /**@lends SBIS3.CONTROLS.SelectorMixin.prototype  */{
+   var Selectable = /**@lends SBIS3.CONTROLS.Selectable.prototype  */{
       $protected: {
          _options: {
             /**
@@ -51,6 +51,6 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [], function() {
       }
    };
 
-   return SelectorMixin;
+   return Selectable;
 
 });

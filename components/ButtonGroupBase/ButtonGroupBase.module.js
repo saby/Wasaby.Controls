@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
     * Контрол, реализующий поведение выбора одного из нескольких значений при помощи набора радиокнопок. Отображения не имеет.
     * @class SBIS3.CONTROLS.ButtonGroupBase
     * @mixes SBIS3.CONTROLS.CollectionMixin
-    * @mixes SBIS3.CONTROLS.SelectorMixin
+    * @mixes SBIS3.CONTROLS.Selectable
     * @extends SBIS3.CORE.CompoundControl
     */
 
@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
          this._container.removeClass('ws-area');
       },
 
-      _getItemClass : function() {
+      _getItemClass : function(config) {
          /*метод должен быть перегружен*/
          return false;
       },
@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
 
          return function() {
             return {
-               componentType : self._getItemClass(),
+               componentType : self._getItemClass(config),
                config : config
             };
          }

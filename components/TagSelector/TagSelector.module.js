@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.TagSelector', ['js!SBIS3.CONTROLS.TextBox'], function(
     * @extends SBIS3.CONTROLS.TextBox
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.CollectionMixin
-    * @mixes SBIS3.CONTROLS.MultiSelectorMixin
+    * @mixes SBIS3.CONTROLS.MultiSelectable
     */
 
    var TagSelector = TextBox.extend(/** @lends SBIS3.CONTROLS.TagSelector.prototype */{

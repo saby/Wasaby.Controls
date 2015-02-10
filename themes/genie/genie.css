@@ -9,7 +9,7 @@
   text-align: center;
   display: inline-block;
   height: 30px;
-  line-height: normal;
+  line-height: 28px;
   border: 1px solid #d1d1d4;
   border-radius: 2px;
   background-color: #f1f1f2;
@@ -32,6 +32,14 @@
   width: 24px;
   height: 24px;
   padding: 0;
+}
+.controls-Button {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .controls-Button.controls-Checked__checked {
   background-color: #d1d1d4;
@@ -64,11 +72,14 @@
 .controls-RadioButton.ws-disabled {
   cursor: default;
 }
-.controls-RadioButton.ws-disabled .controls-RadioButton__caption {
-  color: #d1d1d4;
-}
 .controls-RadioButton.ws-disabled .controls-RadioButton__icon {
   background-position: 0 0px;
+}
+.controls-RadioButton.controls-Checked__checked.ws-disabled .controls-RadioButton__icon {
+  background-position: 0 -48px;
+}
+.controls-RadioButton.ws-disabled .controls-RadioButton__caption {
+  color: #d1d1d4;
 }
 .controls-TextBox {
   display: inline-block;
@@ -186,6 +197,12 @@
 }
 .controls-CheckBox.ws-disabled .controls-CheckBox__icon {
   background-position: 0 0px;
+}
+.controls-CheckBox.controls-Checked__checked.ws-disabled .controls-CheckBox__icon {
+  background-position: 0 -64px;
+}
+.controls-CheckBox.controls-ToggleButton__null.ws-disabled .controls-CheckBox__icon {
+  background-position: 0 -80px;
 }
 .controls-ComboBox__arrowDown {
   background-image: url('./img/ComboBox.png');
@@ -595,6 +612,13 @@
   width: 16px;
   height: 16px;
 }
+.controls-Link {
+  display: inline-block;
+}
+.controls-Link__icon {
+  cursor: pointer;
+  vertical-align: middle;
+}
 .controls-EditAtPlace {
   border: 1px solid transparent;
 }
@@ -617,10 +641,14 @@
   width: auto;
   display: inline-block;
 }
+.ws-disabled .controls-EditAtPlace__textField {
+  border-bottom: none;
+  cursor: text;
+}
 .controls-EditAtPlace__textAreaWrapper {
   border: none;
   display: block;
-  padding: 9px 7px;
+  padding: 6px 7px;
   box-sizing: border-box;
   line-height: 20px;
 }
@@ -715,11 +743,4 @@
 }
 .controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace__fieldWrapper {
   display: none;
-}
-.controls-Link {
-  display: inline-block;
-}
-.controls-Link__icon {
-  cursor: pointer;
-  vertical-align: middle;
 }

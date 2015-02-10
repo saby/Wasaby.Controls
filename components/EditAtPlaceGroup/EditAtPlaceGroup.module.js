@@ -245,27 +245,29 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
          },
 
          _clickHandler: function () {
-            this._iterateChildEditAtPlaces(function (child) {
-               child._saveOldText();
+            if (this.isEnabled()) {
+               this._iterateChildEditAtPlaces(function (child) {
+                  child._saveOldText();
 
-            });
-            if (this._options.editInPopup) {
-               this.showPicker();
-            } else {
-               this.setInPlaceEditMode(true);
-               this._addControlPanel(this._container);
-            }
-            if (this._options.editInPopup) {
-               if ($('.js-controls-TextBox__field', this._picker._container).get(0)) {
-                  $('.js-controls-TextBox__field', this._picker._container).get(0).focus();
-               } else if ($('.controls-TextArea__inputField', this._picker._container).get(0)) {
-                  $('.controls-TextArea__inputField', this._picker._container).get(0).focus();
+               });
+               if (this._options.editInPopup) {
+                  this.showPicker();
+               } else {
+                  this.setInPlaceEditMode(true);
+                  this._addControlPanel(this._container);
                }
-            } else {
-               if ($('.js-controls-TextBox__field', this._container).get(0)) {
-                  $('.js-controls-TextBox__field', this._container).get(0).focus();
-               } else if ($('.controls-TextArea__inputField', this._container).get(0)) {
-                  $('.controls-TextArea__inputField', this._container).get(0).focus();
+               if (this._options.editInPopup) {
+                  if ($('.js-controls-TextBox__field', this._picker._container).get(0)) {
+                     $('.js-controls-TextBox__field', this._picker._container).get(0).focus();
+                  } else if ($('.controls-TextArea__inputField', this._picker._container).get(0)) {
+                     $('.controls-TextArea__inputField', this._picker._container).get(0).focus();
+                  }
+               } else {
+                  if ($('.js-controls-TextBox__field', this._container).get(0)) {
+                     $('.js-controls-TextBox__field', this._container).get(0).focus();
+                  } else if ($('.controls-TextArea__inputField', this._container).get(0)) {
+                     $('.controls-TextArea__inputField', this._container).get(0).focus();
+                  }
                }
             }
          },
@@ -284,6 +286,13 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
                default:
                   break;
             }
+         },
+
+         setEnabled: function(enabled){
+            EditAtPlaceGroup.superclass.setEnabled.call(this, enabled);
+            this._iterateChildEditAtPlaces(function(child){
+               child.setEnabled(enabled);
+            });
          },
 
          /**
