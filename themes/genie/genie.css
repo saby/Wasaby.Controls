@@ -276,6 +276,7 @@
 }
 .controls-ListView__action {
   margin-right: 16px;
+  display: inline;
 }
 .controls-ListView > .controls-TreeView__childContainer {
   display: block;
@@ -341,6 +342,9 @@
 .controls-FormattedTextBox__field-symbol {
   font-style: normal;
   white-space: pre;
+}
+.ws-disabled .controls-FormattedTextBox__field {
+  cursor: default;
 }
 .controls-TabButton {
   cursor: pointer;
@@ -513,6 +517,9 @@
   width: 16px;
   cursor: pointer;
   text-decoration: none;
+}
+.controls-DatePicker__calendarIcon.calendar-disabled {
+  background-position: -35px 0 !important;
 }
 .controls-DatePicker__calendarIcon:hover {
   background-position: -17px 0;
