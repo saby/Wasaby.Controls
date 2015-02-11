@@ -1,12 +1,12 @@
 /**
  * Created by iv.cheremushkin on 23.01.2015.
  */
-define('js!SBIS3.CONTROLS.MenuButtonMixin', [], function() {
-
+define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], function(ContextMenu) {
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
     * @mixin SBIS3.CONTROLS.MenuButtonMixin
     */
+   'use strict';
 
    var MenuButtonMixin = /**@lends SBIS3.CONTROLS.MenuButtonMixin.prototype  */{
       $protected: {
@@ -37,6 +37,10 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', [], function() {
             closeByExternalClick: true,
             targetPart: true
          };
+      },
+
+      _createPicker: function(){
+         return new ContextMenu(this._setPickerConfig());
       },
 
       after : {

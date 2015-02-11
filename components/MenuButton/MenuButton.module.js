@@ -29,16 +29,15 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             this.togglePicker();
          } else {
             if (this.getItems().getItemsCount() == 1) {
-               if (this.getItems().getNextItem().handler instanceof Function)
+               if (this.getItems().getNextItem().handler instanceof Function) {
                   this.getItems().getNextItem().handler();
+               }
             }
          }
       },
 
       _initMenu: function(){
          var self = this;
-
-         this.unsubscribe('onActivated', this._activatedHandler);
          this.subscribe('onActivated', this._activatedHandler);
 
          if (this.getItems().getItemsCount() > 1) {
@@ -52,22 +51,17 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
                             <i class="controls-MenuButton__headerCenter"></i>\
                             <i class="controls-MenuButton__headerRight"></i>\
                          </span>');
-         $('.controls-MenuButton__headerCenter', header).width(this._container.width());
-         this.getContainer().css('z-index', 'auto').append(header);
+         $('.controls-MenuButton__headerCenter', header).width(this._container.width() + 4);
+         this.getContainer().append(header);
          $('.controls-MenuButton__header', this._container.get(0)).css({
             width: this._container.outerWidth(),
-            height: this._container.outerHeight(),
-            'z-index':  -1
+            height: this._container.outerHeight()
          });
       },
 
       togglePicker: function(){
          MenuButton.superclass.togglePicker.call(this);
          $('.controls-MenuButton__Menu-whiteLine', this._picker.container).width(this._container.outerWidth() + 8);
-      },
-
-      _createPicker: function(){
-         return new ContextMenu(this._setPickerConfig());
       },
 
       _setWidth: function(){
@@ -83,7 +77,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             self._closeHandler();
          });
          this._picker._container.addClass('controls-MenuButton__Menu');
-         var whiteLine = $('<span class="controls-MenuButton__Menu-whiteLine" style="height: 1px; background: #ffffff; position: absolute; top: -1px;"></span>').width(this._container.outerWidth() + 8);
+         var whiteLine = $('<span class="controls-MenuButton__Menu-whiteLine" style="height: 1px; background: #ffffff; position: absolute; top: -1px;"></span>')
+            .width(this._container.outerWidth() + 8);
          this._picker.getContainer().append(whiteLine);
       },
 
