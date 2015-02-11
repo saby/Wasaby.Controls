@@ -798,6 +798,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   background-color: #ffffff;
   position: relative;
+  text-overflow: ellipsis;
 }
 .controls-MenuItem:hover {
   background-color: #e7f0f9;
@@ -1093,6 +1094,9 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   margin-left: -4px;
 }
+.controls-MenuButton.controls-MenuButton__withoutMenu {
+  padding-right: 12px;
+}
 .controls-MenuIcon {
   position: relative;
 }
@@ -1120,7 +1124,4 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuIcon__Menu {
   margin-top: 3px;
   margin-left: 2px;
-}
-.controls-MenuButton.controls-MenuButton__withoutMenu {
-  padding-right: 12px;
 }
