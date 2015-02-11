@@ -31,9 +31,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             if (this.getItems().getItemsCount() == 1) {
                var id = this.getItems().getKey(this.getItems().getNextItem());
                this._notify('onMenuItemActivate', id);
-               if (this.getItems().getNextItem().handler instanceof Function) {
-                  this.getItems().getNextItem().handler();
-               }
             }
          }
       },
