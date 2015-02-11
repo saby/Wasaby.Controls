@@ -385,6 +385,11 @@ define(
          }
       },
 
+      _setEnabled : function(enabled) {
+         FormattedTextBoxBase.superclass._setEnabled.call(this, enabled);
+         this._inputField.attr('contenteditable', !!enabled)
+      },
+
       /**
        * Получить положение курсора
        * @param {Boolean} position Позиция: true — начала, false — конца

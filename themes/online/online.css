@@ -667,6 +667,9 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   text-decoration: none;
 }
+.controls-DatePicker__calendarIcon.calendar-disabled {
+  background-position: -35px 0 !important;
+}
 .controls-DatePicker__calendarIcon:hover {
   background-position: -18px 0;
 }
@@ -729,6 +732,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .ws-disabled .controls-FormattedTextBox__fieldWrapper {
   cursor: default;
+  border: none !important;
 }
 .controls-FormattedTextBox__fieldWrapper {
   height: 100%;
@@ -1027,6 +1031,15 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuLink__header .controls-MenuLink__arrowDown {
   display: none;
 }
+.controls-Link__field {
+  margin-left: 0;
+}
+.controls-Link__icon + .controls-Link__field {
+  margin-left: 4px;
+}
+.controls-MenuLink.controls-MenuLink__withoutMenu {
+  padding-right: 0;
+}
 .controls-MenuButton {
   position: relative;
   padding-right: 23px;
@@ -1107,4 +1120,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuIcon__Menu {
   margin-top: 3px;
   margin-left: 2px;
+}
+.controls-MenuButton.controls-MenuButton__withoutMenu {
+  padding-right: 12px;
 }
