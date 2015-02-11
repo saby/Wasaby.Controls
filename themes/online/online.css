@@ -749,6 +749,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-IconButton {
   cursor: pointer;
+  vertical-align: middle;
 }
 .controls-IconButton.controls-Button {
   padding: 0;
@@ -1080,11 +1081,9 @@ input[type="reset"]::-moz-focus-inner {
   width: 16px;
 }
 .controls-MenuButton__headerCenter {
-  height: 28px;
-  background: transparent url("img/MenuButton-header.png");
-  background-position: 0 -60px;
-  left: 8px;
+  height: 4px;
   display: inline-block;
+  background: white;
 }
 .controls-MenuButton__headerRight {
   background: transparent url("img/MenuButton-header.png");
@@ -1092,6 +1091,35 @@ input[type="reset"]::-moz-focus-inner {
   height: 28px;
   background-position: 0 -30px;
   display: inline-block;
+  margin-left: -4px;
+}
+.controls-MenuIcon {
+  position: relative;
+}
+.controls-MenuIcon__headerLeft {
+  position: absolute;
+  left: 2px;
+  top: 0;
+  background: transparent url("img/MenuButton-header.png");
+  height: 28px;
+  width: 12px;
+}
+.controls-MenuIcon__headerRight {
+  position: absolute;
+  left: 6px;
+  top: 0;
+  background: transparent url("img/MenuButton-header.png");
+  width: 28px;
+  height: 28px;
+  background-position: 0 -30px;
+  display: inline-block;
+}
+.controls-MenuIcon__header-hidden {
+  display: none;
+}
+.controls-MenuIcon__Menu {
+  margin-top: 3px;
+  margin-left: 2px;
 }
 .controls-MenuButton.controls-MenuButton__withoutMenu {
   padding-right: 12px;

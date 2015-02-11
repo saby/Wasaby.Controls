@@ -47,15 +47,11 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
             this.togglePicker();
          } else {
             if (this.getItems().getItemsCount() == 1) {
-               if (this.getItems().getNextItem().handler instanceof Function)
+               if (this.getItems().getNextItem().handler instanceof Function) {
                   this.getItems().getNextItem().handler();
-
+               }
             }
          }
-      },
-
-      _createPicker: function(){
-         return new ContextMenu(this._setPickerConfig());
       },
 
       _setPickerContent: function(){
