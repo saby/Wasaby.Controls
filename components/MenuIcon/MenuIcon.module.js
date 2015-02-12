@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
 
    var MenuIcon = IconButton.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuIcon.prototype */ {
       _dotTplFn: dotTplFn,
+      _hasHeader: false,
       $protected: {
          _options: {
          }
@@ -36,13 +37,22 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
       },
 
       _initMenu: function(){
-         var self = this;
+         this.unsubscribe('onActivated', this._activatedHandler);
          this.subscribe('onActivated', this._activatedHandler);
-         var header = $('<span class="controls-MenuIcon__header controls-MenuIcon__header-hidden">\
+         if (this.getItems().getItemsCount() > 1) {
+            if (!this._hasHeader) {
+               var header = $('<span class="controls-MenuIcon__header controls-MenuIcon__header-hidden">\
                             <i class="controls-MenuIcon__headerLeft"></i>\
                             <i class="controls-MenuIcon__headerRight"></i>\
                          </span>');
-         this.getContainer().append(header);
+               this.getContainer().append(header);
+               this._hasHeader = true;
+            }
+         } else {
+            $('.controls-MenuIcon__header', this._container).remove();
+            this._container.removeClass('controls-Picker__show');
+            this._hasHeader = false;
+         }
       },
 
       _setWidth: function(){
