@@ -798,6 +798,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   background-color: #ffffff;
   position: relative;
+  overflow: hidden;
 }
 .controls-MenuItem:hover {
   background-color: #e7f0f9;

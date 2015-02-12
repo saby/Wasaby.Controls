@@ -20,6 +20,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
    var MenuButton = Button.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
+         _hasHeader: false,
          _options: {
          }
       },
@@ -43,28 +44,35 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       },
 
       _initMenu: function(){
-         var self = this;
+         this.unsubscribe('onActivated', this._activatedHandler);
          this.subscribe('onActivated', this._activatedHandler);
 
          if (this.getItems().getItemsCount() > 1) {
-            $('.js-controls-MenuButton__arrowDown', self._container).show();
+            $('.js-controls-MenuButton__arrowDown', this._container).show();
             this._container.removeClass('controls-MenuButton__withoutMenu');
-         } else {
-            $('.js-controls-MenuButton__arrowDown', self._container).hide();
-            this._container.addClass('controls-MenuButton__withoutMenu');
-         }
-
-         var header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
+            if (!this._hasHeader) {
+               var header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
                             <i class="controls-MenuButton__headerLeft"></i>\
                             <i class="controls-MenuButton__headerCenter"></i>\
                             <i class="controls-MenuButton__headerRight"></i>\
                          </span>');
-         $('.controls-MenuButton__headerCenter', header).width(this._container.width() + 4);
-         this.getContainer().append(header);
-         $('.controls-MenuButton__header', this._container.get(0)).css({
-            width: this._container.outerWidth(),
-            height: this._container.outerHeight()
-         });
+               $('.controls-MenuButton__headerCenter', header).width(this._container.width() + 4);
+               this.getContainer().append(header);
+               $('.controls-MenuButton__header', this._container.get(0)).css({
+                  width: this._container.outerWidth(),
+                  height: this._container.outerHeight()
+               });
+               this._hasHeader = true;
+            }
+         } else {
+            $('.js-controls-MenuButton__arrowDown', this._container).hide();
+            this._container.addClass('controls-MenuButton__withoutMenu');
+            this._container.removeClass('controls-Picker__show');
+            $('.controls-MenuButton__header', this._container).remove();
+            this._hasHeader = false;
+         }
+
+
       },
 
       togglePicker: function(){
