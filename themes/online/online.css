@@ -191,7 +191,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-RadioButton__icon {
   width: 24px;
   height: 17px;
-  background: url('./img/RadioButton-sprite.png') 0 -4px;
+  background: url('img/RadioButton-sprite.png') 0 -4px;
   display: inline-block;
 }
 .controls-RadioButton:hover .controls-RadioButton__icon {
@@ -212,7 +212,7 @@ input[type="reset"]::-moz-focus-inner {
   height: 16px;
   cursor: pointer;
   margin: 0 4px;
-  background: transparent url('./img/SwitcherDoubleOnline-sprite.png') no-repeat;
+  background: transparent url('img/SwitcherDoubleOnline-sprite.png') no-repeat;
   display: inline-block;
 }
 .controls-SwitcherDoubleOnline.ws-disabled {
@@ -232,7 +232,7 @@ input[type="reset"]::-moz-focus-inner {
   height: 32px;
   cursor: pointer;
   margin: 0 2px 0 0;
-  background: transparent url('./img/SwitcherDoubleOnline-sprite-double.png') no-repeat;
+  background: transparent url('img/SwitcherDoubleOnline-sprite-double.png') no-repeat;
   display: inline-block;
   vertical-align: top;
 }
@@ -301,7 +301,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Switcher__position {
   height: 21px;
-  background: url('./img/switcher.png') 0 -96px;
+  background: url('img/switcher.png') 0 -96px;
   text-align: center;
   display: inline-block;
   padding: 2px 0;
@@ -332,7 +332,7 @@ input[type="reset"]::-moz-focus-inner {
   display: block;
   top: 0;
   left: -16px;
-  background: url('./img/switcher.png') 0 0;
+  background: url('img/switcher.png') 0 0;
 }
 .controls-Switcher__toggle__position-on .controls-Switcher__position:before {
   width: 32px;
@@ -350,7 +350,7 @@ input[type="reset"]::-moz-focus-inner {
   display: block;
   top: 0;
   right: -32px;
-  background: url('./img/switcher.png') 0 -24px;
+  background: url('img/switcher.png') 0 -24px;
 }
 .controls-Switcher__toggle__position-on .controls-Switcher__position:after {
   width: 16px;
@@ -491,10 +491,10 @@ input[type="reset"]::-moz-focus-inner {
   min-height: 9px;
 }
 .controls-NumberTextBox__arrowUp {
-  background: url('./img/NumberTextBox-arrowup.png') left bottom no-repeat;
+  background: url('img/NumberTextBox-arrowup.png') left bottom no-repeat;
 }
 .controls-NumberTextBox__arrowDown {
-  background: url('./img/NumberTextBox-arrowdown.png') left top no-repeat;
+  background: url('img/NumberTextBox-arrowdown.png') left top no-repeat;
   margin-top: 1px;
 }
 .controls-CheckBox {
@@ -508,7 +508,7 @@ input[type="reset"]::-moz-focus-inner {
   width: 16px;
   height: 16px;
   line-height: 19px;
-  background: url('./img/CheckBox.png') 0 1px;
+  background: url('img/CheckBox.png') 0 1px;
   display: inline-block;
 }
 .controls-CheckBox:hover .controls-CheckBox__icon {
@@ -689,7 +689,7 @@ input[type="reset"]::-moz-focus-inner {
   margin-right: 19px;
 }
 .controls-ComboBox__arrowDown {
-  background-image: url('./img/ComboBox.png');
+  background-image: url('img/ComboBox.png');
   background-position: -3px -4px;
   background-color: #ffffff;
   text-decoration: none;
@@ -913,13 +913,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-EditAtPlace__multiline {
   white-space: pre-wrap;
   /* css-3 */
-
   white-space: -moz-pre-wrap;
   /* Mozilla, since 1999 */
-
   word-wrap: break-word;
   /* Internet Explorer 5.5+ */
-
   display: inline;
   text-indent: 0;
 }

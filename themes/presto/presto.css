@@ -98,7 +98,7 @@
   height: 16px;
   background-position: 0 0;
   background-repeat: no-repeat;
-  background-image: url('./img/combobox.png');
+  background-image: url('img/combobox.png');
 }
 .controls-ComboBox.controls-Picker__show .controls-ComboBox__arrowDown {
   background-position: 0 -32px;
@@ -155,7 +155,7 @@
 }
 .controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon {
   background-repeat: no-repeat;
-  background-image: url('./img/checkbox.png');
+  background-image: url('img/checkbox.png');
   background-position: -2px -5px;
 }
 .controls-CheckBox__caption {

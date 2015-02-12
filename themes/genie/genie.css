@@ -57,7 +57,7 @@
   margin-right: 8px;
   width: 16px;
   height: 16px;
-  background: url('./img/RadioButton-sprite.png') 0 0px;
+  background: url('img/RadioButton-sprite.png') 0 0px;
   display: inline-block;
 }
 .controls-RadioButton:hover .controls-RadioButton__caption {
@@ -174,7 +174,7 @@
 .controls-CheckBox__icon {
   width: 16px;
   height: 16px;
-  background: url('./img/CheckBox-sprite.png') 0 0px;
+  background: url('img/CheckBox-sprite.png') 0 0px;
   display: inline-block;
 }
 .controls-CheckBox:hover .controls-CheckBox__icon {
@@ -205,7 +205,7 @@
   background-position: 0 -80px;
 }
 .controls-ComboBox__arrowDown {
-  background-image: url('./img/ComboBox.png');
+  background-image: url('img/ComboBox.png');
   background-color: #ffffff;
   text-decoration: none;
   position: absolute;
@@ -291,7 +291,7 @@
   height: 16px;
   width: 16px;
   cursor: pointer;
-  background-image: url('./img/Tree_expand.png');
+  background-image: url('img/Tree_expand.png');
   visibility: hidden;
 }
 .controls-TreeView__hasChild > .controls-TreeView__expand {
@@ -692,13 +692,10 @@
 .controls-EditAtPlace__multiline {
   white-space: pre-wrap;
   /* css-3 */
-
   white-space: -moz-pre-wrap;
   /* Mozilla, since 1999 */
-
   word-wrap: break-word;
   /* Internet Explorer 5.5+ */
-
   display: inline;
   text-indent: 0;
 }
