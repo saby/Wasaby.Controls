@@ -93,7 +93,9 @@ define(
          $('.js-controls-MonthPicker__arrowLeft', this.getContainer().get(0)).click(function(){
             self.setPrev();
          });
-
+         $('.controls-MonthPicker__arrowWrapper', this.getContainer().get(0)).mousedown(function(e){
+            e.stopPropagation();
+         });
          // Клик по полю с датой
          $('.js-controls-MonthPicker__field', this.getContainer().get(0)).click(function(){
             self.togglePicker();
