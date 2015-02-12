@@ -1,31 +1,31 @@
-/**
- * Created by iv.cheremushkin on 12.08.2014.
- */
-
-define('js!SBIS3.CONTROLS.Panel', ['js!SBIS3.CORE.Control'], function(Control) {
-
-   'use strict';
-
+define('js!SBIS3.CONTROLS.Panel', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Panel', 'css!SBIS3.CONTROLS.Panel'], function(CompoundControl, dotTplFn) {
    /**
+    * SBIS3.CONTROLS.Panel
     * @class SBIS3.CONTROLS.Panel
-    * @extends $ws.proto.Control
+    * @extends $ws.proto.CompoundControl
+    * @control
+    * @designTime actions /design/design
+    * @designTime plugin /design/DesignPlugin 
+    * @initial
+    * <component data-component="SBIS3.CONTROLS.Panel">
+    * </component>
     */
-
-   var Panel = Control.Control.extend( /** @lends SBIS3.CONTROLS.Panel.prototype*/ {
+   var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Panel.prototype */{
+      _dotTplFn: dotTplFn,
       $protected: {
          _options: {
             /**
-             * @cfg {String} xhtml разметка, задающая внутренности области
-             */
-            content: ''
+             * @cfg {Content}
+            */
+            content: ""
          }
+      }, 
+      $constructor: function() {
       },
 
-      $constructor: function() {
-
+      init: function() {
+         moduleClass.superclass.init.call(this);
       }
    });
-
-   return Panel;
-   
+   return moduleClass;
 });
