@@ -35,6 +35,10 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
             /**
              * @cfg {String}  Текст на кнопке
              * Данный текст должен отображать смысл действия клика по кнопке или побуждать к действию.
+             * @example
+             * <pre>
+             *     <option name="caption">Сохранить</option>
+             * </pre>
              * @see setCaption
              * @see getCaption
              * @see setValue
