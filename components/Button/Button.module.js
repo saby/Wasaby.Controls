@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
     * @initial
-    * <component data-component='SBIS3.CONTROLS.Button' style='width: 100px'>
+    * <component data-component='SBIS3.CONTROLS.Button'>
     *    <option name='caption' value='Кнопка'></option>
     * </component>
     * @public
@@ -33,6 +33,10 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
              *    <li>true - кнопка является кнопкой по умолчанию;</li>
              *    <li>false - обычная кнопка.</li>
              * </ul>
+             * @example
+             * <pre>
+             *     <option name="primary">true</option>
+             * </pre>
              */
             primary: false
          }
@@ -56,7 +60,10 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
          }
          btnText.text(caption || '');
       },
-
+       /**
+        * Метод установки кнопки по умолчанию
+        * @param flag
+        */
       setPrimary: function(flag){
          this._options.primary = !!flag;
          this._container.toggleClass('controls-Button__primary', this.isPrimary());
@@ -65,11 +72,13 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
        * Является ли кнопка primary
        * @returns {boolean}
        */
-
       isPrimary: function(){
          return this._options.primary;
       },
-
+       /**
+        * Метод установки/замены иконки на кнопке
+        * @param icon
+        */
       setIcon: function(icon) {
          Button.superclass.setIcon.call(this, icon);
          var caption;
@@ -94,6 +103,10 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
       },
 
       /*TODO методы для поддержки defaultButton*/
+       /**
+        * @noShow
+        * @returns {boolean}
+        */
       isDefaultButton: function(){
          return !!this._options.primary;
       },
@@ -107,6 +120,10 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
          if(parent && parent.registerDefaultButton)
             parent.registerDefaultButton(this);
       },
+       /**
+        * @noShow
+        * @param isDefault
+        */
       setDefaultButton: function(isDefault){
          if(isDefault === undefined)
             isDefault = true;
