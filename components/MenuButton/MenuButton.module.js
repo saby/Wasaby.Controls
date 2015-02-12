@@ -6,6 +6,13 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * Кнопка с выпадающим меню
     * @class SBIS3.CONTROLS.MenuButton
     * @extends SBIS3.CONTROLS.ToggleButton
+    * @control
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.Button'>
+    *    <option name='caption' value='Кнопка с меню'></option>
+    * </component>
+    * @public
+    * @category Buttons
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.CollectionMixin
     */
@@ -29,9 +36,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             this.togglePicker();
          } else {
             if (this.getItems().getItemsCount() == 1) {
-               if (this.getItems().getNextItem().handler instanceof Function) {
-                  this.getItems().getNextItem().handler();
-               }
+               var id = this.getItems().getKey(this.getItems().getNextItem());
+               this._notify('onMenuItemActivate', id);
             }
          }
       },

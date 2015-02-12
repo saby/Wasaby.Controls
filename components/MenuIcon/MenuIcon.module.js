@@ -29,8 +29,8 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
             this.togglePicker();
          } else {
             if (this.getItems().getItemsCount() == 1) {
-               if (this.getItems().getNextItem().handler instanceof Function)
-                  this.getItems().getNextItem().handler();
+               var id = this.getItems().getKey(this.getItems().getNextItem());
+               this._notify('onMenuItemActivate', id);
             }
          }
       },

@@ -47,9 +47,8 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
             this.togglePicker();
          } else {
             if (this.getItems().getItemsCount() == 1) {
-               if (this.getItems().getNextItem().handler instanceof Function) {
-                  this.getItems().getNextItem().handler();
-               }
+               var id = this.getItems().getKey(this.getItems().getNextItem());
+               this._notify('onMenuItemActivate', id);
             }
          }
       },
