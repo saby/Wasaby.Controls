@@ -1,28 +1,33 @@
 .controls-Link {
   display: inline-block;
-  text-align: center;
-  color: #0055BB;
-  text-decoration: none;
-  line-height: normal;
+  cursor: @link-cursor;
+  color: @link-text-color;
+  text-decoration: @link-text-decoration;
+  text-align: @link-text-alignment;
+  line-height: @link-line-height;
 
   &:hover {
-    color: #ff7033;
-    cursor: pointer;
-    text-decoration: underline;
+    cursor: @link-cursor;
+    color: @link-hover-text-color;
+    text-decoration: @link-hover-text-decoration;
   }
 
   &.controls-Click__active {
-    text-decoration: none;
-    cursor: pointer;
+    cursor: @link-cursor;
+    color: @link-active-text-color;
+    text-decoration: @link-active-text-decoration;
   }
-}
 
-.controls-Link__field {
-  margin-left: 4px;
-}
+  .controls-Link__icon {
+    vertical-align: @link-icon-vertical-alignment;
+    margin: @link-icon-margin;
+  }
 
-.controls-Link__icon{
-  margin-top: -2px;
-  cursor: pointer;
-  vertical-align: middle;
+  .controls-Link__field {
+    margin: @link-field-margin;
+  }
+
+  .controls-Link__icon + .controls-Link__field {
+    margin: @link-icon-field-margin;
+  }
 }

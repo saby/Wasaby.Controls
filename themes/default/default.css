@@ -5,6 +5,34 @@ input[type="reset"]::-moz-focus-inner {
   padding: 0 !important;
   border: 0 none !important;
 }
+.controls-Link {
+  display: inline-block;
+  cursor: pointer;
+  color: #0055bb;
+  text-decoration: none;
+  text-align: center;
+  line-height: normal;
+}
+.controls-Link:hover {
+  cursor: pointer;
+  color: #ff7033;
+  text-decoration: underline;
+}
+.controls-Link.controls-Click__active {
+  cursor: pointer;
+  color: #ff7033;
+  text-decoration: none;
+}
+.controls-Link .controls-Link__icon {
+  vertical-align: middle;
+  margin: -2px 0 0;
+}
+.controls-Link .controls-Link__field {
+  margin: 0;
+}
+.controls-Link .controls-Link__icon + .controls-Link__field {
+  margin: 0 0 0 4px;
+}
 .controls-Button {
   cursor: pointer;
   display: inline-block;
@@ -297,6 +325,40 @@ input[type="reset"]::-moz-focus-inner {
 .controls-RadioButton.ws-disabled .controls-RadioButton__icon {
   background: url('img/RadioButton-sprite.png') 0 -4px;
 }
+.controls-TabButton {
+  height: 29px;
+  display: inline-block;
+}
+.controls-TabButton__side {
+  width: 19px;
+  height: 29px;
+  display: inline-block;
+  vertical-align: top;
+  margin-right: -4px;
+}
+.controls-TabButton__left {
+  background: url("img/tabButtonLeft.png") no-repeat;
+}
+.controls-TabButton__right {
+  background: url("img/tabButtonRight.png") no-repeat;
+  margin-left: -4px;
+}
+.controls-TabButton__caption {
+  height: auto;
+  vertical-align: bottom;
+  padding-top: 3px;
+  display: inline-block;
+}
+.controls-TabButton__inner {
+  background: url("img/tabButtonInner.png");
+  height: 29px;
+  display: inline-block;
+  font-family: Cambria, sans-serif;
+  color: #000000;
+  font-size: 18px;
+  font-weight: bold;
+  font-style: italic;
+}
 .controls-MenuButton {
   position: relative;
   padding-right: 23px;
@@ -352,64 +414,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuButton.controls-MenuButton__withoutMenu {
   padding-right: 12px;
-}
-.controls-TabButton {
-  height: 29px;
-  display: inline-block;
-}
-.controls-TabButton__side {
-  width: 19px;
-  height: 29px;
-  display: inline-block;
-  vertical-align: top;
-  margin-right: -4px;
-}
-.controls-TabButton__left {
-  background: url("img/tabButtonLeft.png") no-repeat;
-}
-.controls-TabButton__right {
-  background: url("img/tabButtonRight.png") no-repeat;
-  margin-left: -4px;
-}
-.controls-TabButton__caption {
-  height: auto;
-  vertical-align: bottom;
-  padding-top: 3px;
-  display: inline-block;
-}
-.controls-TabButton__inner {
-  background: url("img/tabButtonInner.png");
-  height: 29px;
-  display: inline-block;
-  font-family: Cambria, sans-serif;
-  color: #000000;
-  font-size: 18px;
-  font-weight: bold;
-  font-style: italic;
-}
-.controls-Link {
-  display: inline-block;
-  text-align: center;
-  color: #0055BB;
-  text-decoration: none;
-  line-height: normal;
-}
-.controls-Link:hover {
-  color: #ff7033;
-  cursor: pointer;
-  text-decoration: underline;
-}
-.controls-Link.controls-Click__active {
-  text-decoration: none;
-  cursor: pointer;
-}
-.controls-Link__field {
-  margin-left: 4px;
-}
-.controls-Link__icon {
-  margin-top: -2px;
-  cursor: pointer;
-  vertical-align: middle;
 }
 .controls-Menu__Popup {
   border: 1px solid #cccccc;
@@ -509,12 +513,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuLink__header .controls-MenuLink__arrowDown {
   display: none;
-}
-.controls-Link__field {
-  margin-left: 0;
-}
-.controls-Link__icon + .controls-Link__field {
-  margin-left: 4px;
 }
 .controls-MenuLink.controls-MenuLink__withoutMenu {
   padding-right: 0;
