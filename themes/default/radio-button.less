@@ -1,34 +1,37 @@
 .controls-RadioButton {
   cursor: pointer;
   display: inline-block;
-  color: #999999;
-}
+  color: @radio-button-text-color;
 
-.controls-Checked__checked,
-.controls-RadioButton:hover{
-  color: #000000;
-}
+  .controls-RadioButton__icon {
+    display: inline-block;
+    width: @radio-button-icon-width;
+    height: @radio-button-icon-height;
+    background: @radio-button-icon-bg;
+  }
 
-.controls-RadioButton.ws-disabled {
-  cursor: default;
-  color: #cccccc;
-}
+  &:hover {
+    color: @radio-button-hover-text-color;
 
-.controls-RadioButton__icon {
-  width: 24px;
-  height: 17px;
-  background: url('img/RadioButton-sprite.png') 0 -4px;
-  display: inline-block;
-}
+    .controls-RadioButton__icon {
+      background: @radio-button-hover-icon-bg;
+    }
+  }
 
-.controls-RadioButton:hover .controls-RadioButton__icon {
-  background-position: 0 -100px;
-}
+  &.controls-Checked__checked {
+    color: @radio-button-checked-text-color;
 
-.controls-RadioButton.controls-Checked__checked .controls-RadioButton__icon {
-  background-position: 0 -52px;
-}
+    .controls-RadioButton__icon {
+      background: @radio-button-checked-icon-bg;
+    }
+  }
 
-.controls-RadioButton.ws-disabled .controls-RadioButton__icon {
-  background-position: 0 -4px;
+  &.ws-disabled {
+    cursor: default;
+    color: @radio-button-disabled-text-color;
+
+    .controls-RadioButton__icon {
+      background: @radio-button-disabled-icon-bg;
+    }
+  }
 }
