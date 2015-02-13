@@ -11,6 +11,8 @@
    <link rel="stylesheet" type="text/css" href="/resources/Tema_sajta/fonts/index.css">
    <link rel="stylesheet" type="text/css" href="/resources/Tema_sajta/icons/index.css">
 
+   <link rel="stylesheet" type="text/css" href="/resources/Tema_sajta/demo.css">
+
    <script type="text/javascript">
       // new config support
       window.wsConfig = {
@@ -178,6 +180,16 @@
          <input data-list="ListViewDS2" class="newTask" type="text" placeholder="new task"/>
       </td>
    </tr>
+   <tr>
+      <td>
+         ComboBox DataSourceBL
+         <div id="ComboBoxDSBL" class="testBlock" style="height: auto">5</div>
+      </td>
+      <td>
+         ComboBox DataSourceMemory
+         <div id="ComboBoxDS" class="testBlock" style="height: auto">5</div>
+      </td>
+   </tr>
 </table>
 
 
@@ -187,9 +199,10 @@
          require([
             'js!SBIS3.CONTROLS.ListViewDS',
             'js!SBIS3.CONTROLS.Record',
+            'js!SBIS3.CONTROLS.ComboBoxDS',
             'js!SBIS3.CONTROLS.DataSourceMemory',
             'js!SBIS3.CONTROLS.DataSourceBL'
-         ], function (ListViewDS, Record, DataSourceMemory, DataSourceBL) {
+         ], function (ListViewDS, Record, ComboBoxDS, DataSourceMemory, DataSourceBL) {
 
             var ds1 = new DataSourceBL('Заметка');
 
@@ -324,6 +337,22 @@
                   });
                }
             })
+
+
+            new ComboBoxDS({
+               element: "ComboBoxDSBL",
+               displayField:'Содержимое',
+               selectedItem: 2,
+               dataSource: ds1
+            });
+
+            new ComboBoxDS({
+               element: "ComboBoxDS",
+               //text: 'Второй',
+               displayField:'Содержимое',
+               selectedItem: 2,
+               dataSource: ds2
+            });
 
          });
       })

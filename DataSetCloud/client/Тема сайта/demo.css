@@ -1,0 +1,515 @@
+.controls-Button {
+  display: inline-block;
+  background-color: #ffffff;
+  cursor: pointer;
+  border: 1px solid #c7c7c7;
+  text-align: center;
+  border-radius: 4px;
+  height: 24px;
+  box-sizing: border-box;
+  line-height: 22px;
+  padding: 0 10px;
+}
+.controls-Button:hover {
+  background-color: #e6e6e6;
+}
+.controls-Button__primary {
+  background-color: #ffbf60;
+  border: 1px solid #ffbf60;
+  color: #ffffff;
+}
+.controls-Button__primary:hover {
+  background-color: #ffaf53;
+  border: 1px solid #ffaf53;
+}
+.controls-Button {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.controls-Button.controls-Checked__checked {
+  background-color: #e6e6e6;
+  color: red;
+}
+.controls-Button__primary.controls-Checked__checked {
+  background-color: #ffaf53;
+  border: 1px solid #ffaf53;
+}
+.controls-RadioButton {
+  cursor: pointer;
+  display: inline-block;
+}
+.controls-RadioButton__icon {
+  width: 16px;
+  height: 15px;
+  background: url('./img/RadioButton.png') 0 0;
+  margin-right: 4px;
+  display: inline-block;
+}
+.controls-RadioButton:hover .controls-RadioButton__icon {
+  background-position: 0 13px;
+}
+.controls-RadioButton.controls-Checked__checked .controls-RadioButton__icon {
+  background-position: 0 27px;
+}
+.controls-SwitcherDoubleOnline {
+  display: inline-block;
+}
+.controls-SwitcherDoubleOnline_toggle {
+  width: 30px;
+  height: 16px;
+  cursor: pointer;
+  margin: 0 4px;
+  background: transparent url('./img/SwitcherDoubleOnline-sprite.png') no-repeat;
+  display: inline-block;
+}
+.controls-SwitcherDoubleOnline-vertical {
+  vertical-align: top;
+}
+.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline_toggle {
+  width: 16px;
+  height: 32px;
+  cursor: pointer;
+  margin: 0 2px 0 0;
+  background: transparent url('./img/SwitcherDoubleOnline-sprite-double.png') no-repeat;
+  display: inline-block;
+  vertical-align: top;
+}
+.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline-on-toggled {
+  background-position: 0 0;
+}
+.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline-off-toggled {
+  background-position: -16px 0;
+}
+.controls-SwitcherDoubleOnline-off-toggled {
+  background-position: 0 -4px;
+}
+.controls-SwitcherDoubleOnline-on-toggled {
+  background-position: 0 -28px;
+}
+.controls-SwitcherDoubleOnline__unselected {
+  color: #999999;
+  cursor: pointer;
+}
+.controls-SwitcherDoubleOnline__unselected:hover {
+  text-decoration: underline;
+}
+.controls-SwitcherDoubleOnline__text {
+  display: inline-block;
+}
+.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline__text {
+  display: block;
+}
+.controls-SwitcherDoubleOnline__text-block {
+  display: inline-block;
+  height: 100%;
+}
+.controls-Switcher {
+  display: inline-block;
+  height: 21px;
+}
+.controls-Switcher__toggle {
+  height: 21px;
+  min-width: 100px;
+  width: 100%;
+  background-color: #868686;
+  border-radius: 10px;
+  display: inline-block;
+  cursor: pointer;
+  padding: 2px;
+  box-sizing: border-box;
+}
+.controls-Switcher__position {
+  min-width: 70%;
+  min-height: 17px;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  text-align: center;
+  display: inline-block;
+}
+.controls-Switcher__toggle__position-on {
+  text-align: right;
+}
+.controls-TextBox {
+  border: 1px solid #CCCCCC;
+  display: inline-block;
+  background: #ffffff;
+}
+.controls-TextBox.ws-validation-error {
+  border-color: red;
+}
+.controls-TextBox__fieldWrapper {
+  height: 100%;
+  box-sizing: border-box;
+}
+.controls-TextBox__afterFieldWrapper {
+  float: right;
+  width: 16px;
+  min-height: 19px;
+  height: 100%;
+  position: relative;
+}
+.controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
+  margin-right: 19px;
+  margin-left: 2px;
+}
+.controls-TextBox__beforeFieldWrapper {
+  float: left;
+  width: 16px;
+  min-height: 19px;
+  height: 100%;
+  position: relative;
+  display: inline-block;
+}
+.controls-TextBox__beforeFieldWrapper ~ .controls-TextBox__fieldWrapper {
+  margin-left: 20px;
+}
+.controls-TextBox__field {
+  border: none;
+  min-height: 19px;
+  height: 99%;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  line-height: 100%;
+  outline: none;
+  background: transparent;
+  font: inherit;
+}
+.controls-TextBox__field-uppercase {
+  text-transform: uppercase;
+}
+.controls-TextBox__field-lowercase {
+  text-transform: lowercase;
+}
+.controls-TextBox__placeholder {
+  display: none;
+}
+.controls-TextBox__field__fixIE {
+  font-size: 12px;
+}
+.controls-NumberTextBox .controls-TextBox__field {
+  text-align: right;
+}
+.controls-NumberTextBox__fieldWrapper {
+  margin-right: 14px;
+  height: 100%;
+}
+.controls-NumberTextBox__arrow {
+  background-repeat: no-repeat;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  height: 50%;
+  min-height: 9px;
+}
+.controls-NumberTextBox__arrowUp {
+  background: url('./img/NumberTextBox-arrowup.png') left bottom no-repeat;
+}
+.controls-NumberTextBox__arrowDown {
+  background: url('./img/NumberTextBox-arrowdown.png') left top no-repeat;
+  margin-top: 1px;
+}
+.controls-TabButton {
+  display: inline-block;
+  height: 20px;
+  background: #dddddd;
+  border: 1px solid #909090;
+  cursor: pointer;
+  padding: 2px 10px;
+  line-height: 20px;
+  border-radius: 4px 4px 0 0;
+}
+.controls-TabButton.controls-Checked__checked {
+  background: #ffffff;
+  border-bottom: 1px solid #ffffff;
+}
+.controls-CheckBox {
+  cursor: pointer;
+  display: inline-block;
+}
+.controls-CheckBox__icon {
+  width: 16px;
+  height: 16px;
+  line-height: 19px;
+  background: url('./img/CheckBox.png') 0 1px;
+  display: inline-block;
+}
+.controls-CheckBox:hover .controls-CheckBox__icon {
+  background-position: 0 17px;
+}
+.controls-CheckBox__caption {
+  margin-left: 4px;
+}
+.controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon {
+  background-position: 0 49px;
+}
+.controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
+  background-position: 0 33px;
+}
+.controls-ColorPicker .controls-TextBox__optionsContainer + .controls-TextBox__fieldWrapper {
+  margin-right: 21px;
+}
+.controls-ColorPicker__currentColor {
+  cursor: pointer;
+  background: #000000;
+  border-left: 1px solid #CCCCCC;
+  border-right: 1px solid #CCCCCC;
+  min-height: 19px;
+  height: 100%;
+  min-width: 15px;
+  display: inline-block;
+  text-decoration: none;
+}
+.controls-ColorPicker__currentColor:hover {
+  text-decoration: none;
+}
+.controls-ComboBox__arrowDown {
+  background-image: url('./img/ComboBox.png');
+  background-color: #ffffff;
+  text-decoration: none;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  margin-top: -8px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+}
+.controls-ComboBox__arrowDown:hover {
+  text-decoration: none;
+}
+.controls-ComboBox__itemRow {
+  padding: 4px;
+  cursor: pointer;
+}
+.controls-ComboBox__itemRow:hover {
+  background-color: #E7F0F9;
+}
+.controls-ComboBox__itemRow__selected {
+  font-weight: bold;
+}
+.controls-ComboBox__field__editable-false,
+.controls-ComboBox__field__editable-false .controls-TextBox__field {
+  cursor: pointer;
+}
+.controls-ComboBox__inputWrapper {
+  margin-right: 18px;
+  height: 100%;
+}
+.controls-ComboBox__picker {
+  border: 1px solid #CCCCCC;
+  margin-top: -1px;
+}
+.controls-ComboBox__fieldNotEditable {
+  line-height: 19px;
+}
+.controls-MonthPicker {
+  text-align: center;
+  display: inline-block;
+}
+.controls-MonthPicker__field {
+  color: #0055BB;
+  white-space: nowrap;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  height: 16px;
+  line-height: 16px;
+  margin: 0 16px;
+}
+.controls-MonthPicker__field:hover {
+  text-decoration: underline;
+  color: #FF7033;
+}
+.controls-MonthPicker__arrowWrapper {
+  width: 16px;
+  min-height: 16px;
+  height: 100%;
+  position: relative;
+  display: inline-block;
+}
+.controls-MonthPicker__arrowLeftWrapper {
+  float: left;
+  display: inline-block;
+}
+.controls-MonthPicker__arrowRightWrapper {
+  float: right;
+}
+.controls-MonthPicker__arrow {
+  position: absolute;
+  display: inline-block;
+  background: #FFFFFF;
+  background: url("img/MonthPicker-arrows.png");
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  top: 0;
+  right: 0;
+  text-decoration: none;
+}
+.controls-MonthPicker__arrowLeft {
+  background-position: 32px 0px;
+}
+.controls-MonthPicker__arrowLeft:hover {
+  background-position: 0px 0px;
+}
+.controls-MonthPicker__arrowRight {
+  background-position: -32px -32px;
+}
+.controls-MonthPicker__arrowRight:hover {
+  background-position: 0px -32px;
+}
+.controls-MonthPicker__dropdownWrapper {
+  border: 1px solid #FFFFFF;
+  background: #FFFFFF;
+}
+.controls-MonthPicker__dropdownElement {
+  padding: 2px;
+  height: 22px;
+  line-height: 22px;
+  cursor: pointer;
+  color: #333;
+}
+.controls-MonthPicker__dropdownElement:hover {
+  background: #E5ECF4;
+}
+.controls-MonthPicker__dropdownElementActive {
+  background: #F2F2F2;
+}
+.controls-MonthPicker__dropdownElementMonth {
+  padding-left: 24px;
+}
+.controls-MonthPicker__dropdownElementYear {
+  text-align: center;
+}
+.controls-Calendar {
+  padding-top: 8px;
+  display: inline-block;
+  background: #FFFFFF;
+  text-align: center;
+}
+.controls-Calendar__monthPicker {
+  width: 148px;
+}
+.controls-Calendar__dayTable {
+  vertical-align: middle;
+  width: 100%;
+  border-spacing: 1px;
+}
+.controls-Calendar__tableHead {
+  font-size: 11px;
+}
+.controls-Calendar__tableBody {
+  text-align: left;
+}
+.controls-Calendar__tableElement {
+  padding-left: 8px;
+  width: 56px;
+  height: 24px;
+}
+.controls-Calendar__tableBodyElement {
+  background: #F2F2F2;
+  cursor: pointer;
+}
+.controls-Calendar__tableBodyElement:hover {
+  background: #E5ECF4;
+}
+.controls-Calendar__tableBodyElement__active,
+.controls-Calendar__tableBodyElement__active:hover {
+  background: #ffc37e;
+}
+.controls-Calendar__tableElementFog {
+  color: #999999;
+  cursor: default;
+}
+.controls-DatePicker {
+  border: none;
+  box-sizing: border-box;
+}
+.controls-DatePicker__calendarIcon {
+  background: url("img/DatePicker-calendar.png") no-repeat -1px 0;
+  display: inline-block;
+  position: absolute;
+  min-height: 22px;
+  top: 50%;
+  margin-left: 1px;
+  margin-top: -5px;
+  width: 16px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.controls-DatePicker__calendarIcon:hover {
+  background-position: -18px 0;
+}
+.controls-DatePicker__calendar {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+.controls-DatePicker .controls-FormattedTextBox__fieldWrapper {
+  border: 1px solid transparent;
+  border-bottom: 1px solid #EAEAEA;
+}
+.controls-DatePicker .controls-FormattedTextBox__fieldWrapper:hover,
+.controls-DatePicker.ws-has-focus .controls-FormattedTextBox__fieldWrapper {
+  border: 1px solid #EAEAEA;
+  border-bottom: 1px solid #CCCCCC;
+}
+.controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
+  margin-right: 19px;
+}
+.controls-TextArea__inputField {
+  resize: none;
+  border: none;
+  display: block;
+  font: inherit;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border-radius: 2px;
+}
+.controls-TextArea__autoheight {
+  height: auto !important;
+}
+.controls-TextArea {
+  display: inline-block;
+  border: 1px solid #CCCCCC;
+  vertical-align: top;
+}
+.controls-FormattedTextBox {
+  display: inline-block;
+  vertical-align: top;
+  background-color: transparent;
+  line-height: normal;
+}
+.controls-FormattedTextBox__fieldWrapper {
+  height: 100%;
+  padding: 0 4px;
+  min-height: 22px;
+  background-color: white;
+}
+.controls-FormattedTextBox__field {
+  padding-top: 3px;
+}
+.controls-FormattedTextBox__field-symbol {
+  font-style: normal;
+  white-space: pre;
+}
+.controls-IconButton {
+  cursor: pointer;
+}
+.controls-IconButton.controls-Button {
+  padding: 0;
+  cursor: pointer;
+  box-sizing: content-box;
+}
+.controls-Link {
+  display: inline-block;
+}
+.controls-Link__icon {
+  margin-top: -2px;
+  cursor: pointer;
+  vertical-align: middle;
+}
