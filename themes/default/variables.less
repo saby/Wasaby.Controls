@@ -1,0 +1,145 @@
+// ------- //
+// Buttons //
+// ------- //
+
+// Normal button
+@button-font:                             13px Tahoma, Geneva, sans-serif;
+@button-min-width:                        24px;
+@button-height:                           24px;
+@button-line-height:                      22px;
+@button-padding:                          0 12px;
+@button-margin:                           auto;
+@button-border-radius:                    16px;
+@button-icon-top-shift:                   1px;                      // vertical shift of 16x16 icon
+@button-icon-text-margin:                 0 0 0 20px;               // margin of text following 16x16 icon
+@button-icon-big-top-shift:               -3px;                     // vertical shift of 24x24 icon
+@button-icon-big-text-margin:             0 0 0 28px;               // margin of text following 24x24 icon
+@button-text-padding:                     0;                        // padding of text
+@button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
+
+@button-text-color:                       #000;
+@button-border:                           1px transparent;
+@button-shadow:                           inset 0 -1px 1px #afacab;
+@button-bg:                               url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXB2xKCIABAwfP/X+ekhWAYiXhjYGAwtTd3+V8/zqNw7Jm9JEqO5BRI0RPDSvALfpvYFsc6W2Y3MFnDOPRYo/l+OoxW9O8WrQSdfKJEjXw9EE11A2vvQIELisuiAAAAAElFTkSuQmCC');
+
+@button-hover-text-color:                 @button-text-color;
+@button-hover-border:                     @button-border;
+@button-hover-shadow:                     inset 0 -1px 1px #919090;
+@button-hover-bg:                         url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAVElEQVQYVwXB2RJAIABA0fv/n2hNEi0oqonx4By+WnlL4cmZmhLlvsgxkkLgOk/isRO853CO3Rq82bDritGabVFoNbNIiZoEUoxM44DoO4aupW+bH5+uQdm94t5JAAAAAElFTkSuQmCC');
+
+@button-active-text-color:                @button-text-color;
+@button-active-border:                    @button-border;
+@button-active-shadow:                    inset 0 1px 1px #939292;
+@button-active-bg:                        url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXBWQ6DIABAwXf/sxlj3UUJhIqKogSX+tsZ3t/Fc0fuM3DGgxg8YV85vMOvM5uzuHlksYZp1Fij+GqJUT1aCtTQIkXN0FaIpqCrPjRFRp2nlFnyB0tqP75XY7RKAAAAAElFTkSuQmCC');
+
+// Normal primary button
+@button-primary-text-color:               #fff;
+@button-primary-border:                   1px transparent;
+@button-primary-shadow:                   inset 0 -1px 1px #c0401e;
+@button-primary-bg:                       url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAGtJREFUGFcBYACf/wD9sn8A/K57APupdwD6pXMA+qFvAPmdawD4mWgA+JRkAPeQYAD2jFwA9YhYAPWEVQD0gFEA83tNAPN3SQDyc0UA8W9BAPFrPgDwZzoA72M2AO5eMgDuWi4A7VYqAOxSJrQMKtPRuIzAAAAAAElFTkSuQmCC');
+
+@button-primary-hover-text-color:         @button-primary-text-color;
+@button-primary-hover-border:             @button-primary-border;
+@button-primary-hover-shadow:             inset 0 -1px 1px #a15823;
+@button-primary-hover-bg:                 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAGtJREFUGFcBYACf/wD8wYIA+7x9APq3eAD5s3QA+K5vAPeqagD2pWUA9aFgAPScXADzmFcA8pNSAPGOTgDwikkA74VEAO6BPwDtfDoA7Hc2AOtzMQDqbiwA6WooAOhlIwDnYB4A5lwZAOVXFMyDKrhOhVNDAAAAAElFTkSuQmCC');
+
+@button-primary-active-text-color:        @button-primary-text-color;
+@button-primary-active-border:            @button-primary-border;
+@button-primary-active-shadow:            inset 0 1px 1px #8e5f42;
+@button-primary-active-bg:                url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAGtJREFUGFcBYACf/wD+om4A/J5qAPuZZgD6lWIA+ZFeAPiNWgD3iVYA9oVSAPWBTgD0fUoA83hGAPJ0QwDxcD8A72w7AO5oNwDtZDMA7GAvAOtcKwDqVycA6VMjAOhPHwDnSxsA5kcYAOVDFBcJJ2BPy3aDAAAAAElFTkSuQmCC');
+
+// Normal disabled button
+@button-disabled-text-color:              #ccc;
+@button-disabled-border:                  @button-border;
+@button-disabled-shadow:                  inset 0 -1px 1px #bbbbba;
+@button-disabled-bg:                      url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAARUlEQVQYVxXDCRIAEQwAwfn/Y9cRQcSxdFVzzmHvzVrrnsx5u+M+GOM2w6xjvdHbW2lVqfoWtAgqQpGM5ISkSH5jIIXvByxNRX+NbFFRAAAAAElFTkSuQmCC');
+
+// Normal light button
+@button-light-text-color:                 #000;
+@button-light-border:                     1px solid #587ab0;
+@button-light-shadow:                     none;
+@button-light-bg:                         #fff;
+
+@button-light-hover-text-color:           @button-light-text-color;
+@button-light-hover-border:               @button-light-border;
+@button-light-hover-shadow:               @button-light-shadow;
+@button-light-hover-bg:                   #e4e9f1;
+
+@button-light-active-text-color:          @button-light-text-color;
+@button-light-active-border:              @button-light-border;
+@button-light-active-shadow:              @button-light-shadow;
+@button-light-active-bg:                  #cbd5e5;
+
+// Normal light primary button
+@button-light-primary-text-color:         @button-light-text-color;
+@button-light-primary-border:             1px solid #ff7033;
+@button-light-primary-shadow:             @button-light-shadow;
+@button-light-primary-bg:                 @button-light-bg;
+
+@button-light-primary-hover-text-color:   @button-light-primary-text-color;
+@button-light-primary-hover-border:       @button-light-primary-border;
+@button-light-primary-hover-shadow:       @button-light-primary-shadow;
+@button-light-primary-hover-bg:           #fdecd9;
+
+@button-light-primary-active-text-color:  @button-light-primary-text-color;
+@button-light-primary-active-border:      @button-light-primary-border;
+@button-light-primary-active-shadow:      @button-light-primary-shadow;
+@button-light-primary-active-bg:          #fdd2c0;
+
+// Normal light disabled button
+@button-light-disabled-text-color:        @button-disabled-text-color;
+@button-light-disabled-border:            1px solid @button-light-disabled-text-color;
+@button-light-disabled-shadow:            @button-light-shadow;
+@button-light-disabled-bg:                #fff !important;
+
+// Big button
+@button-big-font:                         italic normal 18px 'Cambria', Georgia, serif;
+@button-big-min-width:                    @button-min-width;
+@button-big-height:                       48px;
+@button-big-line-height:                  18px;
+@button-big-padding:                      15px 24px;
+@button-big-margin:                       @button-margin;
+@button-big-border-radius:                24px;
+@button-big-icon-top-shift:               2px;                              // vertical shift of 16x16 icon
+@button-big-icon-text-margin:             @button-icon-text-margin;         // margin of text following 16x16 icon
+@button-big-icon-big-top-shift:           -1px;                             // vertical shift of 24x24 icon
+@button-big-icon-big-text-margin:         @button-icon-big-text-margin;     // margin of text following 24x24 icon
+@button-big-text-padding:                 11px 0 0;
+@button-big-empty-text-margin:            @button-empty-text-margin;
+
+@button-big-text-color:                   @button-text-color;
+@button-big-border:                       @button-border;
+@button-big-shadow:                       @button-shadow;
+@button-big-bg:                           url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAjklEQVQYVx3DVxKDIABAwXf/26WoKDasKCh2zV9Mdmb5XDvXuXEeK8e+/O/bzLZObItjvS/zyDINzM4yOYMb70PPaDsGqxmMxvYtpm8wXU2va7q2Qrcluilo64KmUvecusyoirtKKVVCkceoTKJSSZ5GZElIFgtSKUhkQBL5xKGHFB6ReBMFL0L/ifj1Hl+0S4EyIQKdsQAAAABJRU5ErkJggg==');
+
+@button-big-hover-text-color:             @button-big-text-color;
+@button-big-hover-border:                 @button-big-border;
+@button-big-hover-shadow:                 @button-hover-shadow;
+@button-big-hover-bg:                     url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAINJREFUGFcdw1cSgyAAQMF3/xvGiojYkWZJ+Qi6M8vvuvieJ5/jeL73nSvG5xkCR/Ac3rM7R3SWaC1h2/B3Y3Bmxa7psrAtM2ZOp4l1GlnG+8A89Ez9XTNqzdB1qaJXCq1adCvppETJBtUIWiGQokbWFU0qqhJRFtRpVeRUeUaZFtnrD2rdg354PlYsAAAAAElFTkSuQmCC');
+
+@button-big-active-text-color:            @button-big-text-color;
+@button-big-active-border:                @button-big-border;
+@button-big-active-shadow:                @button-active-shadow;
+@button-big-active-bg:                    url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAJNJREFUGFcNw1USgzAAQMF3/6tVcAiugWDB6W/ZmeV3H9zXznVunMfKuS8cu2bfNNs6sy0Tqx5Z5gE99+ipZx4V09Ax9u1TMqiGvmtQbY2SFZ0saZsCWefIKqcpM+oipSoSqjymzCKKNCJPwqcgiwPSyCcJPRLhEQuXKHAIfZvQsxCuSeCY+I6Bb3/xrA+u+cYxXn8Tm385Ml6/+QAAAABJRU5ErkJggg==');
+
+// Big primary button
+@button-big-primary-text-color:           @button-primary-text-color;
+@button-big-primary-border:               @button-big-border;
+@button-big-primary-shadow:               @button-primary-shadow;
+@button-big-primary-bg:                   url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMZJREFUGFcFwQ1HAwEAgOH3zzTJTJLMZDOTJGmbmplzpvV9ambmnNlKkmRmbCKTJEkk6Xftvu92H7ux52H+f0P01yH6bRP9KMy+ZWZfLcLPJuFHg/C9TvB2TfAqEYwv8V/O8Z9P8UfHeMMjvEEVry8y7QlMnyq4j2XchxLu/SHOXRHntoDT3cdu72Eru9jyDlZrG6u5hdXIYdazmFcZTCmNcbGJcZZCP0mi1zbQq+to4hqasIpWSaCW46ilFdSDZSbFGJP80gKLzlU+l/UpHgAAAABJRU5ErkJggg==');
+
+@button-big-primary-hover-text-color:     @button-big-primary-text-color;
+@button-big-primary-hover-border:         @button-big-primary-border;
+@button-big-primary-hover-shadow:         @button-big-primary-shadow;
+@button-big-primary-hover-bg:             url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMtJREFUGFcBwAA//wD8wYIA+75/APu8fQD6unsA+rd4APm1dgD5s3QA+LFxAPiubwD3rGwA96pqAPanaAD2pWUA9aNjAPWhYAD0nl4A9JxcAPOaWQDzmFcA8pVVAPKTUgDxkVAA8Y5OAPCMSwDwikkA74hGAO+FRADug0IA7oE/AO1+PQDtfDoA7Ho4AOx3NgDrdTMA63MxAOpxLwDqbiwA6WwqAOlqKADoZyUA6GUjAOdjIADnYB4A5l4cAOZcGQDlWRcA5VcUAORVEuAhVOdbDqsIAAAAAElFTkSuQmCC');
+
+@button-big-primary-active-text-color:    @button-big-primary-text-color;
+@button-big-primary-active-border:        @button-big-primary-border;
+@button-big-primary-active-shadow:        @button-big-primary-shadow;
+@button-big-primary-active-bg:            url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMlJREFUGFcFwYtmQgEAgOH/GVKUWJKZSWYmmSRJpbWttmqbHEmSJEkmkcxMMpNMJmNm9myd7vdO95p9H3+/afY/KXbfSXZfCbafcbb1GJuPKJtahPV7mHVVYFUJsXp7YPl6x6IcYFG6Zf7iY/58jfR0iVS8YFZwM8s7meYcTB/tTLI2Jhkr47SFUcrMKHnOMGFiGDcyiJ0xiJ7Sj5zQDxvoCXp6oWO690d0g4d0/DraN1raXg2tqwNaHjVNt4qmS4noUCDa5TRssn8T6U5Ugnh02QAAAABJRU5ErkJggg==');
+
+// Big disabled button
+@button-big-disabled-text-color:          @button-disabled-text-color;
+@button-big-disabled-border:              @button-disabled-border;
+@button-big-disabled-shadow:              @button-disabled-shadow;
+@button-big-disabled-bg:                  url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAFVJREFUGFc9wwkOgDAIBMD9/2OtLb2AHgaqTjLYe2Ot9Z9zvgfG+CqGKtQLVATiGcIncwd329Bts9W3aouvxWZfsqWTCJnSmSLoG2+f7B18tOFCDNcDpuCK5d42KGsAAAAASUVORK5CYII=');
