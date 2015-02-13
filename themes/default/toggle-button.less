@@ -1,21 +1,31 @@
-.controls-Checked__checked {
-  &.controls-Button {
-    color: #c00;
-    box-shadow: inset 0 1px 1px #939292;
-    background: @button-active-bg;
-  }
-
-  &.controls-Button__primary {
-    color: #fff;
-    box-shadow: inset 0 1px 1px #8E5F42;
-    background: @button-primary-active-bg;
-  }
-
-  &.controls-Button__big {
-    background: @button-big-active-bg;
+.controls-Button {
+  &.controls-Checked__checked {
+    &.controls-Button {
+      color: @button-checked-text-color;
+      border: @button-checked-border;
+      box-shadow: @button-checked-shadow;
+      background: @button-checked-bg;
+    }
 
     &.controls-Button__primary {
-      background: @button-big-primary-active-bg;
+      color: @button-primary-checked-text-color;
+      border: @button-primary-checked-border;
+      box-shadow: @button-primary-checked-shadow;
+      background: @button-primary-checked-bg;
+    }
+
+    &.controls-Button__big {
+      color: @button-big-checked-text-color;
+      border: @button-big-checked-border;
+      box-shadow: @button-big-checked-shadow;
+      background: @button-big-checked-bg;
+
+      &.controls-Button__primary {
+        color: @button-big-primary-checked-text-color;
+        border: @button-big-primary-checked-border;
+        box-shadow: @button-big-primary-checked-shadow;
+        background: @button-big-primary-checked-bg;
+      }
     }
   }
 }
