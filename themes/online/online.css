@@ -180,7 +180,7 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   color: #999999;
 }
-.controls-Checked__checked,
+.controls-RadioButton.controls-Checked__checked,
 .controls-RadioButton:hover {
   color: #000000;
 }
@@ -1096,6 +1096,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuButton.controls-MenuButton__withoutMenu {
   padding-right: 12px;
+}
+.controls-MenuButton.controls-Checked__checked {
+  color: #000000;
 }
 .controls-MenuIcon {
   position: relative;
