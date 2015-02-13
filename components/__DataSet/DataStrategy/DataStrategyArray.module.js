@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
          var index;
          //перебиаем массим исходных данных пока не найдем нужный элемент
          //TODO: сделать ошибку если такой записи не нашлось
-         for (var i = 0; i < this._options.data.length; i++) {
+         for (var i = 0; i < data.length; i++) {
             if (data[i][keyField] == parseInt(key, 10)) {
                index = i;
                break;
