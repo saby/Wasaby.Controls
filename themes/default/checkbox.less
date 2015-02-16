@@ -1,44 +1,61 @@
 .controls-CheckBox {
-   cursor: pointer;
-   display: inline-block;
-}
+  cursor: pointer;
+  display: inline-block;
+  color: @checkbox-text-color;
 
-.controls-CheckBox.ws-disabled{
-  color: #999999;
-}
+  .controls-CheckBox__caption {
+    margin: @checkbox-text-margin;
+  }
 
-.controls-CheckBox__icon {
-   width: 16px;
-   height: 16px;
-   line-height: 19px;
-   background: url('img/CheckBox.png') 0 1px;
-   display: inline-block;
-}
+  .controls-CheckBox__icon {
+    display: inline-block;
+    width: @checkbox-width;
+    height: @checkbox-height;
+    line-height: @checkbox-line-height;
+    background: @checkbox-bg;
+  }
 
-.controls-CheckBox:hover .controls-CheckBox__icon{
-   background-position: 0 17px;
-}
+  &:hover {
+    .controls-CheckBox__icon {
+      background: @checkbox-hover-bg;
+    }
+  }
 
-.controls-CheckBox.ws-disabled .controls-CheckBox__icon{
-  background-position: 16px 1px;
-}
+  &.controls-Checked__checked {
+    .controls-CheckBox__icon {
+      background: @checkbox-checked-bg;
+    }
+  }
 
-.controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon{
-   background-position: 0 49px;
-}
+  &.ws-disabled {
+    color: @checkbox-disabled-text-color;
 
-.controls-CheckBox.controls-Checked__checked.ws-disabled .controls-CheckBox__icon{
-  background-position: 16px 49px;
-}
+    .controls-CheckBox__icon {
+      background: @checkbox-disabled-bg;
+    }
 
-.controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon{
-   background-position: 0 33px;
-}
+    &:hover {
+      .controls-CheckBox__icon {
+        background: @checkbox-disabled-hover-bg;
+      }
+    }
 
-.controls-CheckBox.ws-disabled.controls-ToggleButton__null .controls-CheckBox__icon{
-  background-position: 16px 33px;
-}
+    &.controls-Checked__checked {
+      .controls-CheckBox__icon {
+        background: @checkbox-disabled-checked-bg;
+      }
+    }
+  }
 
-.controls-CheckBox__caption {
-   margin-left: 4px;
+  &.controls-ToggleButton__null {
+    .controls-CheckBox__icon{
+      background: @checkbox-third-state-bg;
+    }
+
+    &.ws-disabled {
+      .controls-CheckBox__icon {
+        background: @checkbox-disabled-third-state-bg;
+      }
+    }
+  }
 }

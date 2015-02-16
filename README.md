@@ -4,7 +4,7 @@
 
 1. Установить [Node.js](http://nodejs.org/) и [NPM](http://npmjs.com).
 
-2. Установить глобально командный интерфейс [Grunt.js](http://gruntjs.com):
+2. Установить глобально интерфейс командной строки [Grunt.js](http://gruntjs.com):
 
         npm install -g grunt-cli
 

@@ -2,6 +2,7 @@
 
 $ws.core.withComponents('Source').addCallback(function() {
    $(document).ready(function() {
+      initButtons();
       initMenus();
       initBackButton();
 
@@ -17,56 +18,6 @@ $ws.core.withComponents('Source').addCallback(function() {
          new r({
             element : 'text',
             caption : 'Расчеты и среднесписочная численность'
-         })
-      });
-
-      require(['js!SBIS3.Engine.SwitcherDoubleOnline'], function (r) {
-         new r({
-            element: 'Switcher1',
-            caption: 'This is SwitcherDoubleOnline',
-            stateOn: 'По видам',
-            stateOff: 'По подразделениям'
-         });
-
-         new r({
-            element: 'Switcher12',
-            caption: 'This is SwitcherDoubleOnline',
-            stateOn: 'По видам',
-            stateOff: 'По подразделениям',
-            enabled: false
-         });
-
-         new r({
-            element: 'Switcher2',
-            caption: 'This is SwitcherDoubleOnline',
-            stateOn: 'По видам',
-            stateOff: 'По подразделениям',
-            'disposition': 'vertical'
-         });
-
-         new r({
-            element: 'Switcher22',
-            caption: 'This is SwitcherDoubleOnline',
-            stateOn: 'По видам',
-            stateOff: 'По подразделениям',
-            'disposition': 'vertical',
-            enabled: false
-         })
-      });
-
-      require(['js!SBIS3.CONTROLS.Switcher'], function (r) {
-         new r({
-            element: 'Switcher3',
-            caption: 'This is Switcher',
-            stateOn: 'On',
-            stateOff: 'Off'
-         });
-         new r({
-            element: 'Switcher32',
-            caption: 'This is Switcher',
-            stateOn: 'On',
-            stateOff: 'Off',
-            enabled: false
          })
       });
 
@@ -90,32 +41,6 @@ $ws.core.withComponents('Source').addCallback(function() {
          new r({
             element: 'FormattedTextBox'
          });
-      });
-
-
-      require(['js!SBIS3.CONTROLS.RadioButton'], function (r) {
-         new r({
-            element: 'RadioButton',
-            caption: 'Оперативный срез'
-         });
-         new r({
-            element: 'RadioButton2',
-            caption: 'Оперативный срез enabled',
-            enabled: false
-         })
-      });
-
-      require(['js!SBIS3.CONTROLS.CheckBox'], function (r) {
-         new r({
-            element: 'CheckBox',
-            caption: 'Флаг'
-         });
-
-         new r({
-            element: 'CheckBox2',
-            caption: 'Флаг enabled',
-            enabled: false
-         })
       });
 
       require(['js!SBIS3.CONTROLS.TextBox'], function (r) {
@@ -292,6 +217,109 @@ $ws.core.withComponents('Source').addCallback(function() {
       });
    });
 });
+
+function initButtons() {
+   require([
+      'js!SBIS3.CONTROLS.CheckBox',
+      'js!SBIS3.CONTROLS.RadioButton',
+      'js!SBIS3.CONTROLS.Switcher',
+      'js!SBIS3.Engine.SwitcherDoubleOnline'
+   ], function(
+      CheckBox,
+      RadioButton,
+      Switcher,
+      SwitcherDoubleOnline
+   ) {
+      new CheckBox({
+         element: 'checkBox1',
+         caption: 'Флаг',
+         checked: false
+      });
+
+      new CheckBox({
+         element: 'checkBox2',
+         caption: 'Три состояния',
+         checked: false,
+         threeState: true
+      });
+
+      new CheckBox({
+         element: 'checkBox3',
+         caption: 'Неактивный',
+         enabled: false
+      });
+
+      new CheckBox({
+         element: 'checkBox4',
+         caption: 'Неактивный',
+         enabled: false,
+         checked: true
+      });
+
+      new CheckBox({
+         element: 'checkBox5',
+         caption: 'Неактивный',
+         enabled: false,
+         checked: null
+      });
+
+      new RadioButton({
+         element: 'radioButton1',
+         caption: 'Радио'
+      });
+      new RadioButton({
+         element: 'radioButton2',
+         caption: 'Неактивный',
+         enabled: false
+      });
+
+      new Switcher({
+         element: 'switcher11',
+         caption: 'This is Switcher',
+         stateOn: 'On',
+         stateOff: 'Off'
+      });
+      new Switcher({
+         element: 'switcher12',
+         caption: 'This is Switcher',
+         stateOn: 'On',
+         stateOff: 'Off',
+         enabled: false
+      });
+
+      new SwitcherDoubleOnline({
+         element: 'switcher21',
+         caption: 'This is SwitcherDoubleOnline',
+         stateOn: 'По видам',
+         stateOff: 'По подразделениям'
+      });
+
+      new SwitcherDoubleOnline({
+         element: 'switcher22',
+         caption: 'This is SwitcherDoubleOnline',
+         stateOn: 'По видам',
+         stateOff: 'По подразделениям',
+         enabled: false
+      });
+
+      new SwitcherDoubleOnline({
+         element: 'switcher31',
+         caption: 'This is SwitcherDoubleOnline',
+         stateOn: 'По видам',
+         stateOff: 'По подразделениям',
+         disposition: 'vertical'
+      });
+
+      new SwitcherDoubleOnline({
+         element: 'switcher32',
+         caption: 'This is SwitcherDoubleOnline',
+         stateOn: 'По видам',
+         stateOff: 'По подразделениям',
+         disposition: 'vertical',
+         enabled: false
+      })
+   });
+}
 
 function initMenus() {
    require([
