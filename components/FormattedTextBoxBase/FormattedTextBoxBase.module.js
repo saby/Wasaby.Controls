@@ -153,8 +153,14 @@ define(
          });
 
          this._inputField.keydown(function (event) {
-            var
-               key = event.which || event.keyCode;
+
+            var key = event.which || event.keyCode;
+
+            // сдвиг на 48 позиций по символьной таблице для корректного определения
+            // цифровых значений на NumLock'е
+            if (key >= 96 && key <= 105) {
+               key -= 48;
+            }
 
             if (key == self._KEYS.HOME && !event.shiftKey) {
                event.preventDefault();
