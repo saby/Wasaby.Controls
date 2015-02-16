@@ -484,29 +484,30 @@ input[type="reset"]::-moz-focus-inner {
   margin: 3px 0 0;
 }
 .controls-MenuItem {
-  display: block;
-  height: 24px;
-  box-sizing: border-box;
-  padding: 0 16px 0 8px;
-  line-height: 24px;
-  cursor: pointer;
-  background-color: #ffffff;
   position: relative;
+  display: block;
+  box-sizing: border-box;
   overflow: hidden;
+  cursor: pointer;
+  width: auto;
+  height: 24px;
+  line-height: 24px;
+  padding: 0 16px 0 8px;
+  background: #ffffff;
 }
 .controls-MenuItem:hover {
-  background-color: #e7f0f9;
+  background: #e7f0f9;
 }
-.controls-MenuItem__content {
+.controls-MenuItem .controls-MenuItem__content {
   position: relative;
 }
-.controls-MenuItem__icon {
+.controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
   position: absolute;
-  left: -2px;
   top: -2px;
+  left: -2px;
 }
-.controls-MenuItem__text {
-  margin-left: 22px;
+.controls-MenuItem .controls-MenuItem__content .controls-MenuItem__text {
+  margin: 0 0 0 22px;
 }
 .controls-MenuLink {
   position: relative;

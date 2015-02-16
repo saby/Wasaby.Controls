@@ -1,28 +1,30 @@
 .controls-MenuItem {
-   display: block;
-   height: 24px;
-   box-sizing: border-box;
-   padding: 0 16px 0 8px;
-   line-height: 24px;
-   cursor: pointer;
-   background-color: #ffffff;
-   position: relative;
-   overflow: hidden;
-}
-.controls-MenuItem:hover {
-   background-color: #e7f0f9;
-}
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  overflow: hidden;
+  cursor: @menu-item-cursor;
+  width: @menu-item-width;
+  height: @menu-item-height;
+  line-height: @menu-item-line-height;
+  padding: @menu-item-padding;
+  background: @menu-item-bg;
 
-.controls-MenuItem__content {
-   position: relative;
-}
+  &:hover {
+    background: @menu-item-hover-bg;
+  }
 
-.controls-MenuItem__icon {
-   position: absolute;
-   left: -2px;
-   top: -2px;
-}
+  .controls-MenuItem__content {
+    position: relative;
 
-.controls-MenuItem__text{
-   margin-left: 22px;
+    .controls-MenuItem__icon {
+      position: absolute;
+      top: @menu-item-icon-top-offset;
+      left: @menu-item-icon-left-offset;
+    }
+
+    .controls-MenuItem__text {
+      margin: @menu-item-text-margin;
+    }
+  }
 }

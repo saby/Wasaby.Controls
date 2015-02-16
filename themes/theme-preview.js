@@ -3,10 +3,11 @@
 $ws.core.withComponents('Source').addCallback(function() {
    $(document).ready(function() {
       initMenus();
+      initBackButton();
 
-      require(["js!SBIS3.CONTROLS.Link"], function(r) {
+      require(['js!SBIS3.CONTROLS.Link'], function(r) {
          new r({
-            element: "link",
+            element: 'link',
             caption: 'This is Link',
             link: 'http://wi.sbis.ru',
             inNewTab: true,
@@ -19,16 +20,16 @@ $ws.core.withComponents('Source').addCallback(function() {
          })
       });
 
-      require(["js!SBIS3.Engine.SwitcherDoubleOnline"], function (r) {
+      require(['js!SBIS3.Engine.SwitcherDoubleOnline'], function (r) {
          new r({
-            element: "Switcher1",
+            element: 'Switcher1',
             caption: 'This is SwitcherDoubleOnline',
             stateOn: 'По видам',
             stateOff: 'По подразделениям'
          });
 
          new r({
-            element: "Switcher12",
+            element: 'Switcher12',
             caption: 'This is SwitcherDoubleOnline',
             stateOn: 'По видам',
             stateOff: 'По подразделениям',
@@ -36,7 +37,7 @@ $ws.core.withComponents('Source').addCallback(function() {
          });
 
          new r({
-            element: "Switcher2",
+            element: 'Switcher2',
             caption: 'This is SwitcherDoubleOnline',
             stateOn: 'По видам',
             stateOff: 'По подразделениям',
@@ -44,7 +45,7 @@ $ws.core.withComponents('Source').addCallback(function() {
          });
 
          new r({
-            element: "Switcher22",
+            element: 'Switcher22',
             caption: 'This is SwitcherDoubleOnline',
             stateOn: 'По видам',
             stateOff: 'По подразделениям',
@@ -53,15 +54,15 @@ $ws.core.withComponents('Source').addCallback(function() {
          })
       });
 
-      require(["js!SBIS3.CONTROLS.Switcher"], function (r) {
+      require(['js!SBIS3.CONTROLS.Switcher'], function (r) {
          new r({
-            element: "Switcher3",
+            element: 'Switcher3',
             caption: 'This is Switcher',
             stateOn: 'On',
             stateOff: 'Off'
          });
          new r({
-            element: "Switcher32",
+            element: 'Switcher32',
             caption: 'This is Switcher',
             stateOn: 'On',
             stateOff: 'Off',
@@ -69,13 +70,13 @@ $ws.core.withComponents('Source').addCallback(function() {
          })
       });
 
-      require(["js!SBIS3.CONTROLS.IconButton"], function (r) {
+      require(['js!SBIS3.CONTROLS.IconButton'], function (r) {
          new r({
-            element: "buttonIcon",
+            element: 'buttonIcon',
             icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
          });
          new r({
-            element: "buttonIcon2",
+            element: 'buttonIcon2',
             icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
          });
 
@@ -85,48 +86,41 @@ $ws.core.withComponents('Source').addCallback(function() {
          });
       });
 
-      require(["js!SBIS3.CONTROLS.DatePicker"], function (r) {
+      require(['js!SBIS3.CONTROLS.DatePicker'], function (r) {
          new r({
-            element: "FormattedTextBox"
+            element: 'FormattedTextBox'
          });
       });
 
 
-      require(["js!SBIS3.CONTROLS.RadioButton"], function (r) {
+      require(['js!SBIS3.CONTROLS.RadioButton'], function (r) {
          new r({
-            element: "RadioButton",
+            element: 'RadioButton',
             caption: 'Оперативный срез'
          });
          new r({
-            element: "RadioButton2",
+            element: 'RadioButton2',
             caption: 'Оперативный срез enabled',
             enabled: false
          })
       });
 
-      require(["js!SBIS3.CONTROLS.CheckBox"], function (r) {
+      require(['js!SBIS3.CONTROLS.CheckBox'], function (r) {
          new r({
-            element: "CheckBox",
+            element: 'CheckBox',
             caption: 'Флаг'
          });
 
          new r({
-            element: "CheckBox2",
+            element: 'CheckBox2',
             caption: 'Флаг enabled',
             enabled: false
          })
       });
 
-      require(["js!SBIS3.CONTROLS.MenuItem"], function (r) {
+      require(['js!SBIS3.CONTROLS.TextBox'], function (r) {
          new r({
-            element: "MenuItem",
-            caption: 'Пункт меню'
-         });
-      });
-
-      require(["js!SBIS3.CONTROLS.TextBox"], function (r) {
-         new r({
-            element: "TextBox",
+            element: 'TextBox',
             placeholder: 'This is TextBox',
             handlers : {
                'onTextChange' : function(e, val) {
@@ -136,23 +130,23 @@ $ws.core.withComponents('Source').addCallback(function() {
          });
 
          new r({
-            element: "TextBox2",
+            element: 'TextBox2',
             placeholder: 'This is TextBox enabled',
             enabled: false
          })
       });
 
-      require(["js!SBIS3.CONTROLS.TextArea"], function (r) {
+      require(['js!SBIS3.CONTROLS.TextArea'], function (r) {
          new r({
-            element: "TextArea",
+            element: 'TextArea',
             text: 'This is TextBox',
             minLinesCount : 5
          });
       });
 
-      require(["js!SBIS3.CONTROLS.ComboBox"], function (r) {
+      require(['js!SBIS3.CONTROLS.ComboBox'], function (r) {
          new r({
-            element: "ComboBox",
+            element: 'ComboBox',
             editable : false,
             items : [
                {
@@ -171,7 +165,7 @@ $ws.core.withComponents('Source').addCallback(function() {
          });
 
          new r({
-            element: "ComboBox2",
+            element: 'ComboBox2',
             editable : true,
             items : [
                {
@@ -190,110 +184,110 @@ $ws.core.withComponents('Source').addCallback(function() {
          })
       });
 
-      require(["js!SBIS3.CONTROLS.NumberTextBox"], function (r) {
+      require(['js!SBIS3.CONTROLS.NumberTextBox'], function (r) {
          new r({
-            element: "NumberTextBox",
+            element: 'NumberTextBox',
             text: '666'
          })
       });
 
-      require(["js!SBIS3.CONTROLS.Button"], function (r) {
+      require(['js!SBIS3.CONTROLS.Button'], function (r) {
          new r({
-            element: "button1",
+            element: 'button1',
             caption: 'Сохранить',
             primary: true
          });
 
          new r({
-            element: "button2",
+            element: 'button2',
             caption: 'Траль',
             tooltip : 'Лалала',
             icon : 'sprite:icon-16 icon-Alert icon-primary'
          });
 
          new r({
-            element: "button3",
+            element: 'button3',
             caption: 'Сохранить',
             enabled: false
          });
 
          new r({
-            element: "coreButton",
+            element: 'coreButton',
             caption: 'Сохранить',
             primary: true
          });
 
          new r({
-            element: "button2big",
+            element: 'button2big',
             caption: 'Удалить'
          });
 
          new r({
-            element: "button3big",
+            element: 'button3big',
             caption: 'Сохранить',
             enabled: false
          });
 
          new r({
-            element: "buttonlight",
+            element: 'buttonlight',
             caption: 'Утвердить',
             primary:true,
-            icon: "sprite:icon-16 icon-Successful icon-done"
+            icon: 'sprite:icon-16 icon-Successful icon-done'
          });
 
          new r({
-            element: "buttonlight2",//zButton1
+            element: 'buttonlight2',//zButton1
             caption: 'Отклонить',
             icon:'sprite:icon-16 icon-Unsuccess icon-error'
          });
 
          //Зуев
          new r({
-            element: "zButton1",
+            element: 'zButton1',
             caption: '123',
             icon:'sprite:icon-16 icon-Unsuccess icon-error'
          });
          new r({
-            element: "zButton2",
+            element: 'zButton2',
             caption: 'Отклонить какую то весчь',
             icon:'sprite:icon-16 icon-Unsuccess icon-error'
          });
          new r({
-            element: "zButton3",
+            element: 'zButton3',
             caption: '*',
             icon:'sprite:icon-16 icon-Unsuccess icon-error'
          });
       });
 
-      require(["js!SBIS3.CONTROLS.ToggleButton"], function (r) {
+      require(['js!SBIS3.CONTROLS.ToggleButton'], function (r) {
          new r({
-            element: "ToggleButton",
+            element: 'ToggleButton',
             caption: 'Переключаемая',
             icon : 'sprite:icon-24 icon-IPmask icon-primary'
          });
 
          new r({
-            element: "ToggleButton2",
+            element: 'ToggleButton2',
             caption: 'Переключаемая',
             primary: true
          });
 
          new r({
-            element: "ToggleButtonbig",
+            element: 'ToggleButtonbig',
             caption: 'Переключаемая'
          });
 
          new r({
-            element: "ToggleButton2big",
+            element: 'ToggleButton2big',
             caption: 'Переключаемая',
             primary: true
          })
       });
    });
 
-   require(["js!SBIS3.CORE.Button"], function (r) {
+   require(['js!SBIS3.CORE.Button'], function (r) {
       new r({
-         element: "coreButton",
+         element: 'coreButton',
          caption: 'Сохранить'
       });
    });
@@ -304,12 +298,14 @@ function initMenus() {
       'js!SBIS3.CONTROLS.ContextMenu',
       'js!SBIS3.CONTROLS.Menu',
       'js!SBIS3.CONTROLS.Button',
-      'js!SBIS3.CONTROLS.MenuButton'
+      'js!SBIS3.CONTROLS.MenuButton',
+      'js!SBIS3.CONTROLS.MenuItem'
    ], function(
       ContextMenu,
       Menu,
       Button,
-      MenuButton
+      MenuButton,
+      MenuItem
    ) {
       var items = [
          {
@@ -385,9 +381,9 @@ function initMenus() {
       });
 
       var menuCtx = new ContextMenu({
-         element: "menu",
+         element: 'menu',
          items: items,
-         target : $("#menuButton"),
+         target : $('#menuButton'),
          corner : 'br',
          hierField: 'par',
          verticalAlign: {
@@ -416,20 +412,27 @@ function initMenus() {
          caption: 'Show dropdown menu'
       });
 
-      var menu = new Menu({
-         element: "menuBar",
+       new Menu({
+         element: 'menuBar',
          items: items,
          hierField : 'par',
          firstLevelDirection : 'right'
       });
 
-      require(["js!SBIS3.CONTROLS.Link"], function (r) {
-         new r({
-            element: "Back",
-            caption: 'Назад',
-            href: '../../',
-            icon: 'sprite:icon-16 icon-DayBackward icon-primary'
-         })
+      new MenuItem({
+         element: 'menuItem',
+         caption: 'Пункт меню'
+      });
+   });
+}
+
+function initBackButton() {
+   require(['js!SBIS3.CONTROLS.Link'], function(Link) {
+      new Link({
+         element: 'back',
+         caption: 'Назад',
+         href: '../../',
+         icon: 'sprite:icon-16 icon-DayBackward icon-primary'
       });
    });
 }
