@@ -15,6 +15,7 @@
 
   font: @button-font;
   color: @button-text-color;
+  text-align: @button-text-alignment;
   min-width: @button-min-width;
   height: @button-height;
   line-height: @button-line-height + 1px;
@@ -57,9 +58,9 @@
   // Button's icon
   .controls-Button__icon {
     position: absolute;
-    top: @button-icon-top-shift - 1px;
+    top: @button-icon-top-offset - 1px;
     @media screen and (-webkit-min-device-pixel-ratio: 0) {
-      top: @button-icon-top-shift;
+      top: @button-icon-top-offset;
     }
 
     & + .controls-Button__text {
@@ -67,9 +68,9 @@
     }
 
     &.icon-24 {
-      top: @button-icon-big-top-shift - 1px;
+      top: @button-icon-big-top-offset - 1px;
       @media screen and (-webkit-min-device-pixel-ratio: 0) {
-        top: @button-icon-big-top-shift;
+        top: @button-icon-big-top-offset;
       }
 
       & + .controls-Button__text {
@@ -155,6 +156,7 @@
   &.controls-Button__big {
     font: @button-big-font;
     color: @button-big-text-color;
+    text-align: @button-big-text-alignment;
     min-width: @button-big-min-width;
     height: @button-big-height;
     line-height: @button-big-line-height;
@@ -190,9 +192,9 @@
     // Button's icon
     .controls-Button__icon {
       position: absolute;
-      top: @button-big-icon-top-shift - 1px;
+      top: @button-big-icon-top-offset - 1px;
       @media screen and (-webkit-min-device-pixel-ratio: 0) {
-        top: @button-big-icon-top-shift;
+        top: @button-big-icon-top-offset;
       }
 
       & + .controls-Button__text {
@@ -200,9 +202,9 @@
       }
 
       &.icon-24 {
-        top: @button-big-icon-big-top-shift - 1px;
+        top: @button-big-icon-big-top-offset - 1px;
         @media screen and (-webkit-min-device-pixel-ratio: 0) {
-          top: @button-big-icon-big-top-shift;
+          top: @button-big-icon-big-top-offset;
         }
 
         & + .controls-Button__text {

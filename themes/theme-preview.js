@@ -1,6 +1,8 @@
+'use strict';
+
 $ws.core.withComponents('Source').addCallback(function() {
    $(document).ready(function() {
-      initMenu();
+      initMenus();
 
       require(["js!SBIS3.CONTROLS.Link"], function(r) {
          new r({
@@ -295,22 +297,21 @@ $ws.core.withComponents('Source').addCallback(function() {
          caption: 'Сохранить'
       });
    });
+});
 
+function initMenus() {
    require([
       'js!SBIS3.CONTROLS.ContextMenu',
       'js!SBIS3.CONTROLS.Menu',
       'js!SBIS3.CONTROLS.Button',
-      'js!SBIS3.CONTROLS.MenuButton',
-      'js!SBIS3.CONTROLS.Collection',
-      'js!SBIS3.CONTROLS.DatePicker'
+      'js!SBIS3.CONTROLS.MenuButton'
    ], function(
       ContextMenu,
       Menu,
       Button,
-      MenuButton,
-      Collection
+      MenuButton
    ) {
-      var col3 = [
+      var items = [
          {
             id : 1,
             title : 'Title 1',
@@ -371,29 +372,10 @@ $ws.core.withComponents('Source').addCallback(function() {
             title : 'Трактор',
             icon : 'sprite:icon-16 icon-Successful icon-done'
          }
-
       ];
-
-      var menuCtx = new ContextMenu({
-         element: "Menu",
-         items: col3,
-         target : $("#menuButton"),
-         corner : 'br',
-         hierField: 'par',
-         verticalAlign: {
-            side: 'top'
-         },
-         horizontalAlign: {
-            side: 'right',
-            offset: 0
-         },
-         closeByExternalClick: true
-      });
 
       new Button({
          element: 'menuButton',
-         items: col3,
-         hierField: 'par',
          caption: 'Show menu',
          handlers : {
             onActivated : function() {
@@ -402,114 +384,9 @@ $ws.core.withComponents('Source').addCallback(function() {
          }
       });
 
-      new MenuButton({
-         element: 'menuButton2',
-         hasHeader: true,
-         items: col3,
-         hierField: 'par',
-         caption: 'Show dropdown menu'
-      });
-
-      var menu = new Menu({
-         element: "MenuBar",
-         items: col3,
-         hierField : 'par',
-         firstLevelDirection : 'right'
-      });
-
-      require(["js!SBIS3.CONTROLS.Link"], function (r) {
-         new r({
-            element: "Back",
-            caption: 'Назад',
-            href: '../../',
-            icon: 'sprite:icon-16 icon-DayBackward icon-primary'
-         })
-      });
-   });
-});
-
-function initMenu() {
-   require([
-      'js!SBIS3.CONTROLS.ContextMenu',
-      'js!SBIS3.CONTROLS.Menu',
-      'js!SBIS3.CONTROLS.Button',
-      'js!SBIS3.CONTROLS.MenuButton',
-      'js!SBIS3.CONTROLS.Collection',
-      'js!SBIS3.CONTROLS.DatePicker'
-   ], function(
-      ContextMenu,
-      Menu,
-      Button,
-      MenuButton,
-      Collection
-   ) {
-      var col3 = [
-         {
-            id : 1,
-            title : 'Title 1',
-            icon : 'sprite:icon-16 icon-Successful icon-done'
-         },
-         {
-            id : 2,
-            title : 'Title 2',
-            icon: 'sprite:icon-16 icon-Successful icon-error'
-         },
-         {
-            id : 3,
-            title : 'Title 3',
-            icon: 'sprite:icon-16 icon-Successful icon-done'
-         },
-         {
-            id : 4,
-            title : 'Title 4',
-            icon : 'sprite:icon-16 icon-Successful icon-done',
-            par : 2
-         },
-         {
-            id : 5,
-            title : 'Title 5',
-            icon : 'sprite:icon-16 icon-Phone icon-done',
-            par : 4
-         },
-         {
-            id : 6,
-            title : 'Title 6',
-            icon : 'sprite:icon-16 icon-Successful icon-done',
-            par : 4
-         },
-         {
-            id : 7,
-            title : 'Title 7',
-            icon : 'sprite:icon-16 icon-Successful icon-done',
-            par : 2
-         },
-         {
-            id : 8,
-            title : 'Title 8',
-            icon : 'sprite:icon-16 icon-Successful icon-done',
-            par : 2
-         },
-         {
-            id : 9,
-            title : 'Поросенок',
-            icon : 'sprite:icon-16 icon-Successful icon-done'
-         },
-         {
-            id : 10,
-            title : 'Петр',
-            icon : 'sprite:icon-16 icon-Successful icon-done'
-         },
-         {
-            id : 11,
-            title : 'Трактор',
-            icon : 'sprite:icon-16 icon-Successful icon-done'
-         }
-
-      ];
-
       var menuCtx = new ContextMenu({
-         element: "Menu",
-         items: col3,
+         element: "menu",
+         items: items,
          target : $("#menuButton"),
          corner : 'br',
          hierField: 'par',
@@ -524,29 +401,24 @@ function initMenu() {
          closeByExternalClick: true
       });
 
-      new Button({
-         element: 'menuButton',
-         items: col3,
+      new MenuButton({
+         element: 'menuDropdownButton',
+         items: items,
          hierField: 'par',
-         caption: 'Show menu',
-         handlers : {
-            onActivated : function() {
-               menuCtx.show();
-            }
-         }
+         caption: 'Show dropdown menu'
       });
 
       new MenuButton({
-         element: 'menuButton2',
-         hasHeader: true,
-         items: col3,
+         element: 'menuDropdownButtonPrimary',
+         primary: true,
+         items: items,
          hierField: 'par',
          caption: 'Show dropdown menu'
       });
 
       var menu = new Menu({
-         element: "MenuBar",
-         items: col3,
+         element: "menuBar",
+         items: items,
          hierField : 'par',
          firstLevelDirection : 'right'
       });

@@ -28,15 +28,16 @@
 
 // Normal button
 @button-font:                             13px Tahoma, Geneva, sans-serif;
+@button-text-alignment:                   center;
 @button-min-width:                        24px;
 @button-height:                           24px;
 @button-line-height:                      22px;
 @button-padding:                          0 12px;
 @button-margin:                           auto;
 @button-border-radius:                    16px;
-@button-icon-top-shift:                   1px;                      // vertical shift of 16x16 icon
+@button-icon-top-offset:                  1px;                      // top offset of 16x16 icon
 @button-icon-text-margin:                 0 0 0 20px;               // margin of text following 16x16 icon
-@button-icon-big-top-shift:               -3px;                     // vertical shift of 24x24 icon
+@button-icon-big-top-offset:              -3px;                     // top offset of 24x24 icon
 @button-icon-big-text-margin:             0 0 0 28px;               // margin of text following 24x24 icon
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
@@ -119,15 +120,16 @@
 
 // Big button
 @button-big-font:                         italic normal 18px 'Cambria', Georgia, serif;
+@button-big-text-alignment:               @button-text-alignment;
 @button-big-min-width:                    @button-min-width;
 @button-big-height:                       48px;
 @button-big-line-height:                  18px;
 @button-big-padding:                      15px 24px;
 @button-big-margin:                       @button-margin;
 @button-big-border-radius:                24px;
-@button-big-icon-top-shift:               2px;                              // vertical shift of 16x16 icon
+@button-big-icon-top-offset:              2px;                              // top offset of 16x16 icon
 @button-big-icon-text-margin:             @button-icon-text-margin;         // margin of text following 16x16 icon
-@button-big-icon-big-top-shift:           -1px;                             // vertical shift of 24x24 icon
+@button-big-icon-big-top-offset:          -1px;                             // top offset of 24x24 icon
 @button-big-icon-big-text-margin:         @button-icon-big-text-margin;     // margin of text following 24x24 icon
 @button-big-text-padding:                 11px 0 0;
 @button-big-empty-text-margin:            @button-empty-text-margin;
@@ -207,16 +209,16 @@
 
 @radio-button-icon-width:                 24px;
 @radio-button-icon-height:                17px;
-@radio-button-icon-spritesheet:           url('img/RadioButton-sprite.png');
+@radio-button-icon-spritesheet:           'img/RadioButton-sprite.png';
 
 @radio-button-text-color:                 #999;
-@radio-button-icon-bg:                    @radio-button-icon-spritesheet 0 -4px;
+@radio-button-icon-bg:                    url(@radio-button-icon-spritesheet) 0 -4px;
 
 @radio-button-hover-text-color:           #000;
-@radio-button-hover-icon-bg:              @radio-button-icon-spritesheet 0 -100px;
+@radio-button-hover-icon-bg:              url(@radio-button-icon-spritesheet) 0 -100px;
 
 @radio-button-checked-text-color:         @radio-button-hover-text-color;
-@radio-button-checked-icon-bg:            @radio-button-icon-spritesheet 0 -52px;
+@radio-button-checked-icon-bg:            url(@radio-button-icon-spritesheet) 0 -52px;
 
 @radio-button-disabled-text-color:        #ccc;
 @radio-button-disabled-icon-bg:           @radio-button-icon-bg;
@@ -234,6 +236,57 @@
 @menu-expand-height:                      16px;
 @menu-expand-top-shift:                   3px;
 @menu-expand-right-shift:                 0;
-@menu-expand-spritesheet:                 url('img/MenuExpand.png');
-@menu-expand-bg:                          @menu-expand-spritesheet 0 0 no-repeat;
-@menu-expand-hover-bg:                    @menu-expand-spritesheet 0 -16px no-repeat;
+@menu-expand-spritesheet:                'img/MenuExpand.png';
+@menu-expand-bg:                          url(@menu-expand-spritesheet) 0 0 no-repeat;
+@menu-expand-hover-bg:                    url(@menu-expand-spritesheet) 0 -16px no-repeat;
+
+
+
+// ----------- //
+// Menu button //
+// ----------- //
+
+@menu-button-arrow-width:                 8px;
+@menu-button-arrow-height:                6px;
+@menu-button-arrow-right-offset:          10px;
+@menu-button-arrow-top-offset:            11px;
+
+@menu-button-arrow-padding:               0 23px 0 12px;          // padding for menu button containing dropdown arrow
+@menu-button-no-arrow-padding:            @button-padding;        // padding for menu button when dropdown arrow is missed
+
+// Default menu button
+@menu-button-text-color:                  @button-text-color;
+@menu-button-checked-text-color:          @menu-button-text-color;
+
+@menu-button-arrow-spritesheet:          'img/MenuButton-arrowDown.png';
+@menu-button-arrow-bg:                    transparent url(@menu-button-arrow-spritesheet) 0 0;
+@menu-button-arrow-hover-bg:              transparent url(@menu-button-arrow-spritesheet) 0 6px;
+
+// Primary menu button
+@menu-button-primary-text-color:          #fff;
+@menu-button-primary-checked-color:       @menu-button-primary-text-color;
+
+@menu-button-primary-arrow-spritesheet:  'img/MenuButton-arrowDown__primary.png';
+@menu-button-primary-arrow-bg:            transparent url(@menu-button-primary-arrow-spritesheet) 0 0;
+@menu-button-primary-arrow-hover-bg:      @menu-button-primary-arrow-bg;
+
+// Menu positioning
+@menu-button-menu-margin:                 3px 0 0;
+
+// Menu header
+@menu-button-header-spritesheet:          'img/MenuButton-header.png';
+
+@menu-button-header-left-width:           16px;
+@menu-button-header-left-height:          28px;
+@menu-button-header-left-margin:          0;
+@menu-button-header-left-bg:              transparent url(@menu-button-header-spritesheet) 0 0;
+
+@menu-button-header-center-width:         auto;
+@menu-button-header-center-height:        4px;
+@menu-button-header-center-margin:        0;
+@menu-button-header-center-bg:            #fff;
+
+@menu-button-header-right-width:          28px;
+@menu-button-header-right-height:         @menu-button-header-left-height;
+@menu-button-header-right-margin:         0 0 0 -8px;
+@menu-button-header-right-bg:             transparent url(@menu-button-header-spritesheet) 0 -30px;

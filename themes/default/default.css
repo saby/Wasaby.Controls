@@ -48,6 +48,7 @@ input[type="reset"]::-moz-focus-inner {
   user-select: none;
   font: 13px Tahoma, Geneva, sans-serif;
   color: #000000;
+  text-align: center;
   min-width: 24px;
   height: 24px;
   line-height: 23px;
@@ -170,6 +171,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Button.controls-Button__big {
   font: italic normal 18px 'Cambria', Georgia, serif;
   color: #000000;
+  text-align: center;
   min-width: 24px;
   height: 48px;
   line-height: 18px;
@@ -325,6 +327,41 @@ input[type="reset"]::-moz-focus-inner {
 .controls-RadioButton.ws-disabled .controls-RadioButton__icon {
   background: url('img/RadioButton-sprite.png') 0 -4px;
 }
+.controls-CheckBox {
+  cursor: pointer;
+  display: inline-block;
+}
+.controls-CheckBox.ws-disabled {
+  color: #999999;
+}
+.controls-CheckBox__icon {
+  width: 16px;
+  height: 16px;
+  line-height: 19px;
+  background: url('img/CheckBox.png') 0 1px;
+  display: inline-block;
+}
+.controls-CheckBox:hover .controls-CheckBox__icon {
+  background-position: 0 17px;
+}
+.controls-CheckBox.ws-disabled .controls-CheckBox__icon {
+  background-position: 16px 1px;
+}
+.controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon {
+  background-position: 0 49px;
+}
+.controls-CheckBox.controls-Checked__checked.ws-disabled .controls-CheckBox__icon {
+  background-position: 16px 49px;
+}
+.controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
+  background-position: 0 33px;
+}
+.controls-CheckBox.ws-disabled.controls-ToggleButton__null .controls-CheckBox__icon {
+  background-position: 16px 33px;
+}
+.controls-CheckBox__caption {
+  margin-left: 4px;
+}
 .controls-TabButton {
   height: 29px;
   display: inline-block;
@@ -359,62 +396,6 @@ input[type="reset"]::-moz-focus-inner {
   font-weight: bold;
   font-style: italic;
 }
-.controls-Button.controls-MenuButton {
-  position: relative;
-  padding-right: 23px;
-}
-.controls-Button.controls-MenuButton.controls-MenuButton__withoutMenu {
-  padding-right: 12px;
-}
-.controls-Button.controls-MenuButton .controls-MenuButton__arrowDown {
-  position: absolute;
-  display: inline-block;
-  height: 6px;
-  width: 8px;
-  right: 10px;
-  top: 11px;
-  background: transparent;
-  background-image: url('img/MenuButton-arrowDown.png');
-}
-.controls-Button.controls-MenuButton:hover .controls-MenuButton__arrowDown {
-  background-position: 0 6px;
-}
-.controls-Button.controls-MenuButton.controls-Button__primary .controls-MenuButton__arrowDown {
-  background-image: url('img/MenuButton-arrowDown__primary.png');
-}
-.controls-Button.controls-MenuButton .controls-MenuButton__Menu {
-  margin-top: 3px;
-}
-.controls-Button.controls-MenuButton .controls-MenuButton__header {
-  left: 0;
-  top: 0;
-  display: inline-block;
-  border: none;
-  width: 100%;
-  position: absolute;
-}
-.controls-Button.controls-MenuButton .controls-MenuButton__header-hidden {
-  display: none;
-}
-.controls-Button.controls-MenuButton .controls-MenuButton__headerLeft {
-  float: left;
-  background: transparent url('img/MenuButton-header.png');
-  height: 28px;
-  width: 16px;
-}
-.controls-Button.controls-MenuButton .controls-MenuButton__headerCenter {
-  height: 4px;
-  display: inline-block;
-  background: white;
-}
-.controls-Button.controls-MenuButton .controls-MenuButton__headerRight {
-  background: transparent url('img/MenuButton-header.png');
-  width: 28px;
-  height: 28px;
-  background-position: 0 -30px;
-  display: inline-block;
-  margin-left: -4px;
-}
 .controls-Menu__Popup {
   box-sizing: border-box;
   margin: -1px 0 0;
@@ -431,6 +412,76 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Menu__Popup .controls-Menu__hasChild:hover:after {
   background: url('img/MenuExpand.png') 0 -16px no-repeat;
+}
+.controls-Button.controls-MenuButton {
+  position: relative;
+  color: #000000;
+  padding: 0 23px 0 12px;
+}
+.controls-Button.controls-MenuButton.controls-MenuButton__withoutMenu {
+  padding: 0 12px;
+}
+.controls-Button.controls-MenuButton:hover .controls-MenuButton__arrowDown {
+  background: transparent url('img/MenuButton-arrowDown.png') 0 6px;
+}
+.controls-Button.controls-MenuButton.controls-Checked__checked {
+  color: #000000;
+}
+.controls-Button.controls-MenuButton .controls-MenuButton__arrowDown {
+  position: absolute;
+  display: inline-block;
+  width: 8px;
+  height: 6px;
+  right: 10px;
+  top: 11px;
+  background: transparent url('img/MenuButton-arrowDown.png') 0 0;
+}
+.controls-Button.controls-MenuButton.controls-Button__primary {
+  color: #ffffff;
+}
+.controls-Button.controls-MenuButton.controls-Button__primary:hover .controls-MenuButton__arrowDown {
+  background: transparent url('img/MenuButton-arrowDown__primary.png') 0 0;
+}
+.controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked {
+  color: #ffffff;
+}
+.controls-Button.controls-MenuButton.controls-Button__primary .controls-MenuButton__arrowDown {
+  background: transparent url('img/MenuButton-arrowDown__primary.png') 0 0;
+}
+.controls-Button.controls-MenuButton .controls-MenuButton__header {
+  display: inline-block;
+  position: absolute;
+  border: none;
+  left: 0;
+  top: 0;
+  width: 100%;
+}
+.controls-Button.controls-MenuButton .controls-MenuButton__header.controls-MenuButton__header-hidden {
+  display: none;
+}
+.controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerLeft {
+  display: inline-block;
+  width: 16px;
+  height: 28px;
+  margin: 0;
+  background: transparent url('img/MenuButton-header.png') 0 0;
+}
+.controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerCenter {
+  display: inline-block;
+  width: auto;
+  height: 4px;
+  margin: 0;
+  background: #ffffff;
+}
+.controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerRight {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  margin: 0 0 0 -8px;
+  background: transparent url('img/MenuButton-header.png') 0 -30px;
+}
+.controls-MenuButton__Menu {
+  margin: 3px 0 0;
 }
 .controls-MenuItem {
   display: block;
@@ -860,41 +911,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox__field__fixIE {
   font-size: 12px;
-}
-.controls-CheckBox {
-  cursor: pointer;
-  display: inline-block;
-}
-.controls-CheckBox.ws-disabled {
-  color: #999999;
-}
-.controls-CheckBox__icon {
-  width: 16px;
-  height: 16px;
-  line-height: 19px;
-  background: url('img/CheckBox.png') 0 1px;
-  display: inline-block;
-}
-.controls-CheckBox:hover .controls-CheckBox__icon {
-  background-position: 0 17px;
-}
-.controls-CheckBox.ws-disabled .controls-CheckBox__icon {
-  background-position: 16px 1px;
-}
-.controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon {
-  background-position: 0 49px;
-}
-.controls-CheckBox.controls-Checked__checked.ws-disabled .controls-CheckBox__icon {
-  background-position: 16px 49px;
-}
-.controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
-  background-position: 0 33px;
-}
-.controls-CheckBox.ws-disabled.controls-ToggleButton__null .controls-CheckBox__icon {
-  background-position: 16px 33px;
-}
-.controls-CheckBox__caption {
-  margin-left: 4px;
 }
 .controls-ComboBox__arrowDown {
   background-image: url('img/ComboBox.png');

@@ -1,70 +1,93 @@
 .controls-Button {
+  // Normal button
   &.controls-MenuButton {
     position: relative;
-    padding-right: 23px;
+    color: @menu-button-text-color;
+    padding: @menu-button-arrow-padding;
 
     &.controls-MenuButton__withoutMenu {
-      padding-right: 12px;
+      padding: @menu-button-no-arrow-padding;
+    }
+
+    &:hover {
+      .controls-MenuButton__arrowDown {
+        background: @menu-button-arrow-hover-bg;
+      }
+    }
+
+    &.controls-Checked__checked {
+      color: @menu-button-checked-text-color;
     }
 
     .controls-MenuButton__arrowDown {
       position: absolute;
       display: inline-block;
-      height: 6px;
-      width: 8px;
-      right: 10px;
-      top: 11px;
-      background: transparent;
-      background-image: url('img/MenuButton-arrowDown.png');
+      width: @menu-button-arrow-width;
+      height: @menu-button-arrow-height;
+      right: @menu-button-arrow-right-offset;
+      top: @menu-button-arrow-top-offset;
+      background: @menu-button-arrow-bg;
     }
 
-    &:hover .controls-MenuButton__arrowDown{
-      background-position: 0 6px;
-    }
-
+    // Primary button
     &.controls-Button__primary {
+      color: @menu-button-primary-text-color;
+
+      &:hover {
+        .controls-MenuButton__arrowDown {
+          background: @menu-button-primary-arrow-hover-bg;
+        }
+      }
+
+      &.controls-Checked__checked {
+        color: @menu-button-primary-checked-color;
+      }
+
       .controls-MenuButton__arrowDown {
-        background-image: url('img/MenuButton-arrowDown__primary.png');
+        background: @menu-button-primary-arrow-bg;
       }
     }
 
-    .controls-MenuButton__Menu {
-      margin-top: 3px;
-    }
-
+    // Header
     .controls-MenuButton__header {
+      display: inline-block;
+      position: absolute;
+      border: none;
       left: 0;
       top: 0;
-      display: inline-block;
-      border: none;
       width: 100%;
-      position: absolute;
-    }
 
-    .controls-MenuButton__header-hidden {
-      display: none;
-    }
+      &.controls-MenuButton__header-hidden {
+        display: none;
+      }
 
-    .controls-MenuButton__headerLeft{
-      float: left;
-      background: transparent url('img/MenuButton-header.png');
-      height: 28px;
-      width: 16px;
-    }
+      .controls-MenuButton__headerLeft {
+        display: inline-block;
+        width: @menu-button-header-left-width;
+        height: @menu-button-header-left-height;
+        margin: @menu-button-header-left-margin;
+        background: @menu-button-header-left-bg;
+      }
 
-    .controls-MenuButton__headerCenter{
-      height: 4px;
-      display: inline-block;
-      background: white;
-    }
+      .controls-MenuButton__headerCenter {
+        display: inline-block;
+        width: @menu-button-header-center-width;
+        height: @menu-button-header-center-height;
+        margin: @menu-button-header-center-margin;
+        background: @menu-button-header-center-bg;
+      }
 
-    .controls-MenuButton__headerRight {
-      background: transparent url('img/MenuButton-header.png');
-      width: 28px;
-      height: 28px;
-      background-position: 0 -30px;
-      display: inline-block;
-      margin-left: -4px;
+      .controls-MenuButton__headerRight {
+        display: inline-block;
+        width: @menu-button-header-right-width;
+        height: @menu-button-header-right-height;
+        margin: @menu-button-header-right-margin;
+        background: @menu-button-header-right-bg;
+      }
     }
   }
+}
+
+.controls-MenuButton__Menu {
+  margin: @menu-button-menu-margin;
 }
