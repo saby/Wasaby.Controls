@@ -2,8 +2,8 @@
   // Normal button
   &.controls-MenuButton {
     position: relative;
-    color: @menu-button-text-color;
     padding: @menu-button-arrow-padding;
+    color: @menu-button-text-color;
 
     &.controls-MenuButton__withoutMenu {
       padding: @menu-button-no-arrow-padding;
@@ -53,8 +53,8 @@
       display: inline-block;
       position: absolute;
       border: none;
-      left: 0;
       top: 0;
+      left: 0;
       width: 100%;
 
       &.controls-MenuButton__header-hidden {
@@ -89,5 +89,7 @@
 }
 
 .controls-MenuButton__Menu {
-  margin: @menu-button-menu-margin;
+  margin-top: @menu-button-menu-top-margin;
+  margin-left: @menu-button-menu-left-margin;
+  background: @menu-button-menu-bg;
 }

@@ -1,69 +1,63 @@
-.controls-MenuLink{
+.controls-MenuLink {
   position: relative;
-  padding-right: 12px;
+  color: @menu-link-text-color;
+  text-decoration: @menu-link-text-decoration;
+  padding: @menu-link-arrow-padding;
+
+  &.controls-MenuLink__withoutMenu {
+    padding: @menu-link-no-arrow-padding;
+  }
+
+  &:hover {
+    color: @menu-link-hover-text-color;
+    text-decoration: @menu-link-hover-text-decoration;
+
+    .controls-MenuLink__arrowDown {
+      background: @menu-link-hover-arrow-bg;
+    }
+  }
+
+  .controls-MenuLink__arrowDown {
+    position: absolute;
+    display: inline-block;
+    width: @menu-link-arrow-width;
+    height: @menu-link-arrow-height;
+    right: @menu-link-arrow-right-offset;
+    top: @menu-link-arrow-top-offset;
+    background: @menu-link-arrow-bg;
+  }
 }
-.controls-MenuLink__header{
-  display: inline-block;
-  height: 24px;
-  padding: 0 8px;
-}
-.controls-MenuLink__header .controls-Link{
-   margin-top: 3px;
-}
+
+// Menu
 .controls-MenuLink__Menu {
-  margin-top: -20px;
-  margin-left: -9px;
-  background: #ffffff;
-}
-.controls-MenuLink__Menu .controls-MenuItem__icon{
-   left : 0;
-   top: 0;
-}
+  margin-top: @menu-link-menu-top-margin - 1px;
+  @media screen and (-webkit-min-device-pixel-ratio: 0) {
+    margin-top: @menu-link-menu-top-margin;
+  }
+  margin-left: @menu-link-menu-left-margin;
+  background: @menu-link-menu-bg;
 
-@-moz-document url-prefix() {
-   .controls-MenuLink__Menu {
-      margin-top: -21px;
-   }
-}
+  .controls-MenuLink__header {
+    display: inline-block;
+    box-sizing: border-box;
+    width: @menu-link-header-width;
+    height: @menu-link-header-height;
+    padding: @menu-link-header-padding;
+    border-bottom: @menu-link-header-bottom-border;
 
-.controls-MenuLink__Menu .controls-Link{
-  color: #FF7033;
-}
+    .controls-Link {
+      margin: @menu-link-header-link-margin;
+      color: @menu-link-checked-text-color;
+      text-decoration: @menu-link-checked-text-decoration;
 
-.controls-MenuLink__Menu .controls-Link:hover{
-  text-decoration: none;
-}
+      &:hover {
+        color: @menu-link-checked-hover-text-color;
+        text-decoration: @menu-link-checked-hover-text-decoration;
+      }
+    }
 
-.controls-MenuLink__Menu .controls-MenuLink__header{
-  box-sizing: border-box;
-  width: 100%;
-  border-bottom: 1px solid #ededed;
-}
-
-.controls-MenuLink__Menu .controls-MenuItem{
-  height: 24px;
-  line-height: 24px;
-}
-
-.controls-MenuLink__arrowDown{
-  position: absolute;
-  display: inline-block;
-  height: 6px;
-  width: 8px;
-  right: 0;
-  top: 7px;
-  background: transparent;
-  background-image: url("img/MenuButton-arrowDown.png");
-}
-
-.controls-MenuLink:hover .controls-MenuLink__arrowDown{
-  background-position: 0 6px;
-}
-
-.controls-MenuLink__header .controls-MenuLink__arrowDown{
-  display: none;
-}
-
-.controls-MenuLink.controls-MenuLink__withoutMenu {
-   padding-right: 0;
+    .controls-MenuLink__arrowDown {
+      display: none;
+    }
+  }
 }

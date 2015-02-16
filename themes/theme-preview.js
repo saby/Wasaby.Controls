@@ -297,15 +297,19 @@ function initMenus() {
    require([
       'js!SBIS3.CONTROLS.ContextMenu',
       'js!SBIS3.CONTROLS.Menu',
+      'js!SBIS3.CONTROLS.MenuItem',
       'js!SBIS3.CONTROLS.Button',
       'js!SBIS3.CONTROLS.MenuButton',
-      'js!SBIS3.CONTROLS.MenuItem'
+      'js!SBIS3.CONTROLS.MenuLink',
+      'js!SBIS3.CONTROLS.MenuIcon'
    ], function(
       ContextMenu,
       Menu,
+      MenuItem,
       Button,
       MenuButton,
-      MenuItem
+      MenuLink,
+      MenuIcon
    ) {
       var items = [
          {
@@ -372,7 +376,7 @@ function initMenus() {
 
       new Button({
          element: 'menuButton',
-         caption: 'Show menu',
+         caption: 'Menu',
          handlers : {
             onActivated : function() {
                menuCtx.show();
@@ -397,22 +401,7 @@ function initMenus() {
          closeByExternalClick: true
       });
 
-      new MenuButton({
-         element: 'menuDropdownButton',
-         items: items,
-         hierField: 'par',
-         caption: 'Show dropdown menu'
-      });
-
-      new MenuButton({
-         element: 'menuDropdownButtonPrimary',
-         primary: true,
-         items: items,
-         hierField: 'par',
-         caption: 'Show dropdown menu'
-      });
-
-       new Menu({
+      new Menu({
          element: 'menuBar',
          items: items,
          hierField : 'par',
@@ -421,7 +410,36 @@ function initMenus() {
 
       new MenuItem({
          element: 'menuItem',
-         caption: 'Пункт меню'
+         caption: 'Menu item'
+      });
+
+      new MenuButton({
+         element: 'menuDropdownButton',
+         items: items,
+         hierField: 'par',
+         caption: 'Dropdown menu'
+      });
+
+      new MenuButton({
+         element: 'menuDropdownButtonPrimary',
+         primary: true,
+         items: items,
+         hierField: 'par',
+         caption: 'Primary dropdown menu'
+      });
+
+      new MenuLink({
+         caption: 'Menu link',
+         element: 'menuLink',
+         items: items,
+         hierField: 'par'
+      });
+
+      new MenuIcon({
+         element: 'menuIcon',
+         icon: 'sprite:icon-24 icon-ThumbUp icon-primary action-hover',
+         items: items,
+         hierField: 'par'
       });
    });
 }

@@ -64,6 +64,10 @@ ul.preview-list li {
    padding: 0 15px;
 }
 
+ul.preview-list li .row {
+   margin: 0 0 10px;
+}
+
 .clearfix:after {
    clear: both;
    content: ".";
@@ -71,9 +75,11 @@ ul.preview-list li {
    height: 0;
    visibility: hidden;
 }
+
 .clearfix {
    display: inline-block;
 }
+
 .clearfix {
    display: block;
 }
