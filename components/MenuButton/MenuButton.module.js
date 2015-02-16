@@ -77,7 +77,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
 
       togglePicker: function(){
          MenuButton.superclass.togglePicker.call(this);
-         $('.controls-MenuButton__Menu-whiteLine', this._picker.container).width(this._container.outerWidth() + 8);
+         $('.controls-MenuButton__Menu-whiteLine', this._picker._container).width(this._container.outerWidth() + 8);
+         $('.controls-MenuButton__headerCenter', this._container).width(this._container.width() + 4);
       },
 
       _setWidth: function(){
