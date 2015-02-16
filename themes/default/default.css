@@ -359,11 +359,14 @@ input[type="reset"]::-moz-focus-inner {
   font-weight: bold;
   font-style: italic;
 }
-.controls-MenuButton {
+.controls-Button.controls-MenuButton {
   position: relative;
   padding-right: 23px;
 }
-.controls-MenuButton__arrowDown {
+.controls-Button.controls-MenuButton.controls-MenuButton__withoutMenu {
+  padding-right: 12px;
+}
+.controls-Button.controls-MenuButton .controls-MenuButton__arrowDown {
   position: absolute;
   display: inline-block;
   height: 6px;
@@ -371,18 +374,18 @@ input[type="reset"]::-moz-focus-inner {
   right: 10px;
   top: 11px;
   background: transparent;
-  background-image: url("img/MenuButton-arrowDown.png");
+  background-image: url('img/MenuButton-arrowDown.png');
 }
-.controls-MenuButton:hover .controls-MenuButton__arrowDown {
+.controls-Button.controls-MenuButton:hover .controls-MenuButton__arrowDown {
   background-position: 0 6px;
 }
-.controls-Button__primary .controls-MenuButton__arrowDown {
-  background-image: url("img/MenuButton-arrowDown__primary.png");
+.controls-Button.controls-MenuButton.controls-Button__primary .controls-MenuButton__arrowDown {
+  background-image: url('img/MenuButton-arrowDown__primary.png');
 }
-.controls-MenuButton__Menu {
+.controls-Button.controls-MenuButton .controls-MenuButton__Menu {
   margin-top: 3px;
 }
-.controls-MenuButton__header {
+.controls-Button.controls-MenuButton .controls-MenuButton__header {
   left: 0;
   top: 0;
   display: inline-block;
@@ -390,30 +393,27 @@ input[type="reset"]::-moz-focus-inner {
   width: 100%;
   position: absolute;
 }
-.controls-MenuButton__header-hidden {
+.controls-Button.controls-MenuButton .controls-MenuButton__header-hidden {
   display: none;
 }
-.controls-MenuButton__headerLeft {
+.controls-Button.controls-MenuButton .controls-MenuButton__headerLeft {
   float: left;
-  background: transparent url("img/MenuButton-header.png");
+  background: transparent url('img/MenuButton-header.png');
   height: 28px;
   width: 16px;
 }
-.controls-MenuButton__headerCenter {
+.controls-Button.controls-MenuButton .controls-MenuButton__headerCenter {
   height: 4px;
   display: inline-block;
   background: white;
 }
-.controls-MenuButton__headerRight {
-  background: transparent url("img/MenuButton-header.png");
+.controls-Button.controls-MenuButton .controls-MenuButton__headerRight {
+  background: transparent url('img/MenuButton-header.png');
   width: 28px;
   height: 28px;
   background-position: 0 -30px;
   display: inline-block;
   margin-left: -4px;
-}
-.controls-MenuButton.controls-MenuButton__withoutMenu {
-  padding-right: 12px;
 }
 .controls-Menu__Popup {
   box-sizing: border-box;
