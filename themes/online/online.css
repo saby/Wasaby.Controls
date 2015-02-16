@@ -20,6 +20,7 @@ input[type="reset"]::-moz-focus-inner {
   min-width: 24px;
   white-space: nowrap;
   padding: 0 12px;
+  text-align: center;
 }
 @-moz-document url-prefix() {
   .controls-Button {
@@ -180,7 +181,7 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   color: #999999;
 }
-.controls-Checked__checked,
+.controls-RadioButton.controls-Checked__checked,
 .controls-RadioButton:hover {
   color: #000000;
 }
@@ -1093,6 +1094,12 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuButton.controls-MenuButton__withoutMenu {
   padding-right: 12px;
+}
+.controls-MenuButton.controls-Checked__checked {
+  color: #000000;
+}
+.controls-MenuButton.controls-Checked__checked.controls-Button__primary {
+  color: #ffffff;
 }
 .controls-MenuIcon {
   position: relative;
