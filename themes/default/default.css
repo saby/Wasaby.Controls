@@ -554,6 +554,7 @@ input[type="reset"]::-moz-focus-inner {
   height: 24px;
   padding: 0 8px;
   border-bottom: 1px solid #ededed;
+  background: #ffffff;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header .controls-Link {
   margin: 3px 0 0;
@@ -570,30 +571,32 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuIcon {
   position: relative;
 }
-.controls-MenuIcon__headerLeft {
-  position: absolute;
-  left: 2px;
-  top: 0;
-  background: transparent url("img/MenuButton-header.png");
-  height: 28px;
-  width: 12px;
+.controls-MenuIcon .controls-MenuIcon__header {
+  background: #ffffff;
 }
-.controls-MenuIcon__headerRight {
+.controls-MenuIcon .controls-MenuIcon__header.controls-MenuIcon__header-hidden {
+  display: none;
+}
+.controls-MenuIcon .controls-MenuIcon__header .controls-MenuIcon__headerLeft {
   position: absolute;
-  left: 6px;
+  width: 12px;
+  height: 28px;
   top: 0;
-  background: transparent url("img/MenuButton-header.png");
+  left: 2px;
+  background: transparent url('img/MenuButton-header.png') 0 0;
+}
+.controls-MenuIcon .controls-MenuIcon__header .controls-MenuIcon__headerRight {
+  position: absolute;
   width: 28px;
   height: 28px;
-  background-position: 0 -30px;
-  display: inline-block;
-}
-.controls-MenuIcon__header-hidden {
-  display: none;
+  top: 0;
+  left: 6px;
+  background: transparent url('img/MenuButton-header.png') 0 -30px;
 }
 .controls-MenuIcon__Menu {
   margin-top: 3px;
   margin-left: 2px;
+  background: #ffffff;
 }
 .controls-Calendar {
   padding-top: 8px;

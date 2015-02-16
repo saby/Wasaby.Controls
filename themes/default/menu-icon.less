@@ -1,32 +1,36 @@
-.controls-MenuIcon{
+.controls-MenuIcon {
   position: relative;
+
+  .controls-MenuIcon__header {
+    background: @menu-icon-header-bg;
+
+    &.controls-MenuIcon__header-hidden {
+      display: none;
+    }
+
+    .controls-MenuIcon__headerLeft {
+      position: absolute;
+      width: @menu-icon-header-left-width;
+      height: @menu-icon-header-left-height;
+      top: @menu-icon-header-left-top-offset;
+      left: @menu-icon-header-left-left-offset;
+      background: @menu-icon-header-left-bg;
+    }
+
+    .controls-MenuIcon__headerRight {
+      position: absolute;
+      width: @menu-icon-header-right-width;
+      height: @menu-icon-header-right-height;
+      top: @menu-icon-header-right-top-offset;
+      left: @menu-icon-header-right-left-offset;
+      background: @menu-icon-header-right-bg;
+    }
+  }
 }
 
-.controls-MenuIcon__headerLeft{
-  position: absolute;
-  left: 2px;
-  top: 0;
-  background: transparent url("img/MenuButton-header.png");
-  height: 28px;
-  width: 12px;
-}
-
-.controls-MenuIcon__headerRight {
-  position: absolute;
-  left: 6px;
-  top: 0;
-  background: transparent url("img/MenuButton-header.png");
-  width: 28px;
-  height: 28px;
-  background-position: 0 -30px;
-  display: inline-block;
-}
-
-.controls-MenuIcon__header-hidden{
-  display: none;
-}
-
-.controls-MenuIcon__Menu{
-  margin-top: 3px;
-  margin-left: 2px;
+// Menu
+.controls-MenuIcon__Menu {
+  margin-top: @menu-icon-menu-top-margin;
+  margin-left: @menu-icon-menu-left-margin;
+  background: @menu-icon-menu-bg;
 }
