@@ -1,37 +1,36 @@
-.controls-TabButton{
-  height: 29px;
+.controls-TabButton {
   display: inline-block;
-}
-.controls-TabButton__side{
-  width: 19px;
-  height: 29px;
-  display: inline-block;
-  vertical-align: top;
-  margin-right: -4px;
-}
-.controls-TabButton__left{
-  background: url("img/tabButtonLeft.png") no-repeat;
-}
+  height: @tab-button-height;
 
-.controls-TabButton__right{
-  background: url("img/tabButtonRight.png") no-repeat;
-  margin-left: -4px;
-}
+  .controls-TabButton__side {
+    display: inline-block;
+    vertical-align: top;
+    width: @tab-button-side-width;
+    height: @tab-button-side-height;
 
-.controls-TabButton__caption{
-  height: auto;
-  vertical-align: bottom;
-  padding-top: 3px;
-  display: inline-block;
-}
+    &.controls-TabButton__left {
+      margin: @tab-button-left-side-margin;
+      background: url("img/tabButtonLeft.png") no-repeat;
+    }
 
-.controls-TabButton__inner{
-  background: url("img/tabButtonInner.png");
-  height: 29px;
-  display: inline-block;
-  font-family: Cambria, sans-serif;
-  color: #000000;
-  font-size: 18px;
-  font-weight: bold;
-  font-style: italic;
+    &.controls-TabButton__right {
+      margin: @tab-button-right-side-margin;
+      background: url("img/tabButtonRight.png") no-repeat;
+    }
+  }
+
+  .controls-TabButton__inner {
+    font: @tab-button-font;
+    color: @tab-button-text-color;
+    display: inline-block;
+    height: @tab-button-inner-height;
+    background: @tab-button-inner-bg;
+
+    .controls-TabButton__caption {
+      display: inline-block;
+      height: auto;
+      vertical-align: bottom;
+      padding: @tab-button-text-padding;
+    }
+  }
 }

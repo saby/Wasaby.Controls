@@ -220,16 +220,23 @@ $ws.core.withComponents('Source').addCallback(function() {
 
 function initButtons() {
    require([
+      'js!SBIS3.CONTROLS.TabButton',
       'js!SBIS3.CONTROLS.CheckBox',
       'js!SBIS3.CONTROLS.RadioButton',
       'js!SBIS3.CONTROLS.Switcher',
       'js!SBIS3.Engine.SwitcherDoubleOnline'
    ], function(
+      TabButton,
       CheckBox,
       RadioButton,
       Switcher,
       SwitcherDoubleOnline
    ) {
+      new TabButton({
+         element: 'tabButton',
+         caption: 'Tab button'
+      });
+
       new CheckBox({
          element: 'checkBox1',
          caption: 'Флаг',
