@@ -100,7 +100,9 @@ define(
             TAB: 9,
             BACKSPACE: 8,
             ARROW_LEFT: 37,
-            ARROW_RIGHT: 39
+            ARROW_RIGHT: 39,
+            END: 35,
+            HOME: 36
          }
       },
 
@@ -151,27 +153,38 @@ define(
          });
 
          this._inputField.keydown(function (event) {
-            event.preventDefault();
             var
-               key = event.which,
-               type = '';
+               key = event.which || event.keyCode;
 
-            if (!event.ctrlKey && key != self._KEYS.DELETE && key != self._KEYS.BACKSPACE
-                  && key != self._KEYS.ARROW_LEFT && key != self._KEYS.ARROW_RIGHT) {
-               type = event.shiftKey ? 'shift_character' : 'character';
-               self._keyPressHandler(key, type);
+            if (key == self._KEYS.HOME && !event.shiftKey) {
+               event.preventDefault();
+               self._keyPressHandler(key, 'home');
+            }
+            else if (key == self._KEYS.END && !event.shiftKey) {
+               event.preventDefault();
+               self._keyPressHandler(key, 'end');
             }
             else if (key == self._KEYS.DELETE) {
+               event.preventDefault();
                self._keyPressHandler(key, 'delete');
             }
             else if (key == self._KEYS.BACKSPACE) {
+               event.preventDefault();
                self._keyPressHandler(key, 'backspace');
             }
-            else if (key == self._KEYS.ARROW_LEFT) {
+            else if (key == self._KEYS.ARROW_LEFT && !event.shiftKey) {
+               event.preventDefault();
                self._keyPressHandler(key, 'arrow_left');
             }
-            else if (key == self._KEYS.ARROW_RIGHT) {
+            else if (key == self._KEYS.ARROW_RIGHT && !event.shiftKey) {
+               event.preventDefault();
                self._keyPressHandler(key, 'arrow_right');
+            }
+            else if (!event.ctrlKey
+            && key != self._KEYS.END && key != self._KEYS.HOME
+            && key != self._KEYS.ARROW_LEFT && key != self._KEYS.ARROW_RIGHT) {
+               event.preventDefault();
+               self._keyPressHandler(key, 'character', event.shift);
             }
          });
       },
@@ -179,7 +192,7 @@ define(
       /**
        * Обработка события фокусировки на элементе
        * TODO пока работает только в IE8+ и FireFox
-       * @private
+       * @protected
        */
       _focusHandler: function(){
          // Если в поле еще не введено ни единого символа -- установить курсор в начало поля
@@ -197,22 +210,30 @@ define(
        * Обработка события нажатия клавиши
        * @param key
        * @param type
+       * @param isShiftPressed
        * @private
        */
-      _keyPressHandler: function(key, type){
+      _keyPressHandler: function(key, type, isShiftPressed){
          var
-            positionIndexes = this._getCursor(true),
+            positionIndexesBegin = this._getCursor(true),
+            positionIndexesEnd = this._getCursor(false),
             positionObject = {
-               container: this._getContainerByIndex(positionIndexes[0]),
-               position: positionIndexes[1]
+               container: this._getContainerByIndex(positionIndexesBegin[0]),
+               position: positionIndexesBegin[1]
             },
-            regexp = this._keyExp(positionIndexes[0], positionIndexes[1]),
+            positionObjEnd = {
+               container: this._getContainerByIndex(positionIndexesEnd[0]),
+               position: positionIndexesEnd[1]
+            },
+            regexp = this._keyExp(positionIndexesBegin[0], positionIndexesBegin[1]),
             character = String.fromCharCode(key),
             nextSibling = positionObject.container.parentNode.nextSibling;
 
-         if ( type == 'character' || type == 'shift_character' ) {
+         this._clearSelect(positionObject, positionObjEnd);
+
+         if ( type == 'character' ) {
             // Обработка зажатой кнопки shift ( -> в букву верхнего регистра)
-            character = type == 'shift_character' ? character.toUpperCase() : character.toLowerCase();
+            character = isShiftPressed ? character.toUpperCase() : character.toLowerCase();
             // Проверка по действительной маске
             character = regexp[1] ? ( regexp[1] == 'toUpperCase' ? character.toUpperCase() : character.toLowerCase() ) : character;
 
@@ -252,6 +273,7 @@ define(
                this._replaceCharacter(positionObject.container, positionObject.position, this._placeholder);
                positionObject.position++;
             }
+            positionObject = positionObjEnd;
          }
          else if ( type == 'backspace' ){
             this._getPreviousPosition(positionObject);
@@ -263,8 +285,37 @@ define(
          else if ( type == 'arrow_right' ){
             this._getNextPosition(positionObject);
          }
-
+         else if ( type == 'home' ){
+            positionObject.container = this._getContainerByIndex(0);
+            if ( !$(positionObject.container.parentNode).hasClass('controls-FormattedTextBox__field-placeholder') ) {
+               positionObject.container = nextSibling.childNodes[0];
+            }
+            positionObject.position = 0;
+         }
+         else if ( type == 'end' ){
+            positionObject.container = this._getContainerByIndex(this._inputField.get(0).childNodes.length - 1);
+            if ( !$(positionObject.container.parentNode).hasClass('controls-FormattedTextBox__field-placeholder') ) {
+               positionObject.container = positionObject.container.parentNode.previousSibling.childNodes[0];
+            }
+            positionObject.position = positionObject.container.nodeValue.length;
+         }
          this._moveCursor(positionObject.container, positionObject.position);
+      },
+
+      /**
+       * очищает выделение из полученных координат,
+       * заменяя спектр выделения символом-заполнителем (placeholder)
+       * @param positionObjStart
+       * @param positionObjEnd
+       */
+      _clearSelect : function(positionObjStart, positionObjEnd){
+         for (var i = $(positionObjEnd.container).parent().index(); i >= $(positionObjStart.container).parent().index(); i = i - 2){
+            for (var j = (i == $(positionObjEnd.container).parent().index() ? positionObjEnd.position : this._inputField.get(0).childNodes[i].childNodes[0].nodeValue.toString().length); j > (i == $(positionObjStart.container).parent().index() ? positionObjStart.position : 0); j--){
+               var b = this._inputField.get(0).childNodes[i].childNodes[0].nodeValue.split('');
+               b[j - 1] = this._placeholder;
+               this._inputField.get(0).childNodes[i].childNodes[0].nodeValue = b.join('');
+            }
+         }
       },
 
       _getPreviousPosition: function (positionObject) {
