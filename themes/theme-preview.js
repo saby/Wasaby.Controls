@@ -39,12 +39,6 @@ $ws.core.withComponents('Source').addCallback(function() {
          });
       });
 
-      require(['js!SBIS3.CONTROLS.DatePicker'], function (r) {
-         new r({
-            element: 'FormattedTextBox'
-         });
-      });
-
       require(['js!SBIS3.CONTROLS.TextArea'], function (r) {
          new r({
             element: 'TextArea',
@@ -500,8 +494,12 @@ function initMenus() {
 
 function initInputFields() {
    require([
-      'js!SBIS3.CONTROLS.TextBox'
-   ], function (TextBox) {
+      'js!SBIS3.CONTROLS.TextBox',
+      'js!SBIS3.CONTROLS.DatePicker'
+   ], function(
+      TextBox,
+      DatePicker
+   ) {
       new TextBox({
          element: 'textBox1',
          placeholder: 'This is textbox',
@@ -515,6 +513,15 @@ function initInputFields() {
       new TextBox({
          element: 'textBox2',
          placeholder: 'This is disabled textbox',
+         enabled: false
+      });
+
+      new DatePicker({
+         element: 'formattedTextBox1'
+      });
+
+      new DatePicker({
+         element: 'formattedTextBox2',
          enabled: false
       });
    });

@@ -1,22 +1,28 @@
 .controls-FormattedTextBox {
   display: inline-block;
   vertical-align: top;
-  background-color: transparent;
-   line-height: normal;
+  line-height: @formatted-text-box-line-height;
+  background: @formatted-text-box-bg;
+
+  .controls-FormattedTextBox__fieldWrapper {
+    min-height: @formatted-text-box-wrapper-min-height;
+    height: 100%;
+    padding: @formatted-text-box-wrapper-padding;
+    background-color: @formatted-text-box-wrapper-bg;
+
+    .controls-FormattedTextBox__field {
+      padding: @formatted-text-box-field-padding;
+    }
+  }
+
+  &.ws-disabled  {
+    .controls-FormattedTextBox__fieldWrapper {
+      cursor: @formatted-text-box-wrapper-disabled-cursor;
+      border: @formatted-text-box-wrapper-disabled-border;
+    }
+  }
 }
-.ws-disabled .controls-FormattedTextBox__fieldWrapper{
-  cursor: default;
-   border: none !important;
-}
-.controls-FormattedTextBox__fieldWrapper {
-  height: 100%;
-  padding: 0 4px;
-  min-height: 22px;
-  background-color: white;
-}
-.controls-FormattedTextBox__field {
-  padding-top: 3px;
-}
+
 .controls-FormattedTextBox__field-symbol {
   font-style: normal;
   white-space: pre;

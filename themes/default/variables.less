@@ -99,7 +99,7 @@
 
 // Normal light primary button
 @button-light-primary-text-color:         @button-light-text-color;
-@button-light-primary-border:             1px solid #ff7033;
+@button-light-primary-border:             1px solid @link-hover-text-color;
 @button-light-primary-shadow:             @button-light-shadow;
 @button-light-primary-bg:                 @button-light-bg;
 
@@ -313,7 +313,7 @@
 @switcher-on-toggle-bg:                         @switcher-off-toggle-bg;
 @switcher-on-toggle-left-edge-bg:               url(@switcher-spritesheet) 0 -48px;
 @switcher-on-toggle-right-edge-bg:              url(@switcher-spritesheet) 0 -312px;
-@switcher-on-disabled-toggle-text-color: @switcher-off-disabled-toggle-text-color;
+@switcher-on-disabled-toggle-text-color:        @switcher-off-disabled-toggle-text-color;
 @switcher-on-disabled-toggle-bg:                none;
 @switcher-on-disabled-toggle-left-edge-bg:      none;
 @switcher-on-disabled-toggle-right-edge-bg:     none;
@@ -569,3 +569,19 @@
 @text-box-compat-placeholder-font:        inherit;
 @text-box-compat-placeholder-padding:     3px 0 0;
 @text-box-compat-placeholder-alignment:   inherit;
+
+
+
+// ------------------ //
+// Formatted text box //
+// ------------------ //
+
+@formatted-text-box-line-height:                normal;
+@formatted-text-box-bg:                         transparent;
+
+@formatted-text-box-wrapper-min-height:         22px;
+@formatted-text-box-wrapper-padding:            @text-box-wrapper-padding;
+@formatted-text-box-wrapper-disabled-cursor:    default;
+@formatted-text-box-wrapper-bg:                 #fff;
+@formatted-text-box-wrapper-disabled-border:    none !important;
+@formatted-text-box-field-padding:              3px 0 0;

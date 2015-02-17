@@ -1,6 +1,8 @@
 html, body {
    font-family: Tahoma !important;
    font-size: 13px;
+   padding: 0;
+   margin: 0;
 }
 
 #content {

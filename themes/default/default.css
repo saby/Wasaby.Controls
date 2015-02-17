@@ -943,21 +943,21 @@ input[type="reset"]::-moz-focus-inner {
 .controls-FormattedTextBox {
   display: inline-block;
   vertical-align: top;
-  background-color: transparent;
   line-height: normal;
+  background: transparent;
 }
-.ws-disabled .controls-FormattedTextBox__fieldWrapper {
-  cursor: default;
-  border: none !important;
-}
-.controls-FormattedTextBox__fieldWrapper {
+.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper {
+  min-height: 22px;
   height: 100%;
   padding: 0 4px;
-  min-height: 22px;
-  background-color: white;
+  background-color: #ffffff;
 }
-.controls-FormattedTextBox__field {
-  padding-top: 3px;
+.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
+  padding: 3px 0 0;
+}
+.controls-FormattedTextBox.ws-disabled .controls-FormattedTextBox__fieldWrapper {
+  cursor: default;
+  border: none !important;
 }
 .controls-FormattedTextBox__field-symbol {
   font-style: normal;
