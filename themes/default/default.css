@@ -899,6 +899,7 @@ input[type="reset"]::-moz-focus-inner {
   height: 100%;
   font: inherit;
   color: inherit;
+  text-align: left;
   min-height: 19px;
   line-height: 20px !important;
   margin: 0;
@@ -955,35 +956,36 @@ input[type="reset"]::-moz-focus-inner {
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
   padding: 3px 0 0;
 }
+.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
+  font-style: normal;
+  white-space: pre;
+}
 .controls-FormattedTextBox.ws-disabled .controls-FormattedTextBox__fieldWrapper {
   cursor: default;
   border: none !important;
 }
-.controls-FormattedTextBox__field-symbol {
-  font-style: normal;
-  white-space: pre;
-}
-.controls-NumberTextBox {
-  text-align: right;
-}
-.controls-NumberTextBox__fieldWrapper {
-  margin-right: 14px;
+.controls-NumberTextBox .controls-TextBox__fieldWrapper {
+  margin: 0 14px 0 0;
   height: 100%;
 }
-.controls-NumberTextBox__arrow {
-  background-repeat: no-repeat;
-  text-decoration: none;
-  display: block;
-  width: 100%;
-  height: 50%;
-  min-height: 9px;
+.controls-NumberTextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
+  text-align: left;
 }
-.controls-NumberTextBox__arrowUp {
+.controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow {
+  display: block;
+  text-decoration: none;
+}
+.controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp {
+  width: 16px;
+  height: 11px;
+  margin: 0;
   background: url('img/NumberTextBox-arrowup.png') left bottom no-repeat;
 }
-.controls-NumberTextBox__arrowDown {
+.controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown {
+  width: 16px;
+  height: 11px;
+  margin: 1px 0 0;
   background: url('img/NumberTextBox-arrowdown.png') left top no-repeat;
-  margin-top: 1px;
 }
 .controls-TextBox__field__fixIE {
   font-size: 12px;

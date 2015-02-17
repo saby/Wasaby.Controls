@@ -87,13 +87,6 @@ $ws.core.withComponents('Source').addCallback(function() {
          })
       });
 
-      require(['js!SBIS3.CONTROLS.NumberTextBox'], function (r) {
-         new r({
-            element: 'NumberTextBox',
-            text: '666'
-         })
-      });
-
       require(['js!SBIS3.CONTROLS.Button'], function (r) {
          new r({
             element: 'button1',
@@ -495,10 +488,12 @@ function initMenus() {
 function initInputFields() {
    require([
       'js!SBIS3.CONTROLS.TextBox',
-      'js!SBIS3.CONTROLS.DatePicker'
+      'js!SBIS3.CONTROLS.DatePicker',
+      'js!SBIS3.CONTROLS.NumberTextBox'
    ], function(
       TextBox,
-      DatePicker
+      DatePicker,
+      NumberTextBox
    ) {
       new TextBox({
          element: 'textBox1',
@@ -522,6 +517,23 @@ function initInputFields() {
 
       new DatePicker({
          element: 'formattedTextBox2',
+         enabled: false
+      });
+
+      new NumberTextBox({
+         element: 'numberTextBox1',
+         text: '123'
+      });
+
+      new NumberTextBox({
+         element: 'numberTextBox2',
+         text: '123',
+         enableArrows: true
+      });
+
+      new NumberTextBox({
+         element: 'numberTextBox3',
+         text: '123',
          enabled: false
       });
    });
