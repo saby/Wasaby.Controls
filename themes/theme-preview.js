@@ -3,7 +3,9 @@
 $ws.core.withComponents('Source').addCallback(function() {
    $(document).ready(function() {
       initButtons();
+      initSwitchers();
       initMenus();
+      initInputFields();
       initBackButton();
 
       require(['js!SBIS3.CONTROLS.Link'], function(r) {
@@ -41,24 +43,6 @@ $ws.core.withComponents('Source').addCallback(function() {
          new r({
             element: 'FormattedTextBox'
          });
-      });
-
-      require(['js!SBIS3.CONTROLS.TextBox'], function (r) {
-         new r({
-            element: 'TextBox',
-            placeholder: 'This is TextBox',
-            handlers : {
-               'onTextChange' : function(e, val) {
-                  console.log(val)
-               }
-            }
-         });
-
-         new r({
-            element: 'TextBox2',
-            placeholder: 'This is TextBox enabled',
-            enabled: false
-         })
       });
 
       require(['js!SBIS3.CONTROLS.TextArea'], function (r) {
@@ -220,23 +204,29 @@ $ws.core.withComponents('Source').addCallback(function() {
 
 function initButtons() {
    require([
-      'js!SBIS3.CONTROLS.TabButton',
-      'js!SBIS3.CONTROLS.CheckBox',
-      'js!SBIS3.CONTROLS.RadioButton',
-      'js!SBIS3.CONTROLS.Switcher',
-      'js!SBIS3.Engine.SwitcherDoubleOnline'
+      'js!SBIS3.CONTROLS.TabButton'
    ], function(
-      TabButton,
-      CheckBox,
-      RadioButton,
-      Switcher,
-      SwitcherDoubleOnline
+      TabButton
    ) {
       new TabButton({
          element: 'tabButton',
          caption: 'Tab button'
       });
+   });
+}
 
+function initSwitchers() {
+   require([
+      'js!SBIS3.CONTROLS.CheckBox',
+      'js!SBIS3.CONTROLS.RadioButton',
+      'js!SBIS3.CONTROLS.Switcher',
+      'js!SBIS3.Engine.SwitcherDoubleOnline'
+   ], function(
+      CheckBox,
+      RadioButton,
+      Switcher,
+      SwitcherDoubleOnline
+   ) {
       new CheckBox({
          element: 'checkBox1',
          caption: 'Флаг',
@@ -504,6 +494,28 @@ function initMenus() {
          icon: 'sprite:icon-24 icon-ThumbUp icon-primary action-hover',
          items: items,
          hierField: 'par'
+      });
+   });
+}
+
+function initInputFields() {
+   require([
+      'js!SBIS3.CONTROLS.TextBox'
+   ], function (TextBox) {
+      new TextBox({
+         element: 'textBox1',
+         placeholder: 'This is textbox',
+         handlers: {
+            'onTextChange': function(e, val) {
+               console.log(val)
+            }
+         }
+      });
+
+      new TextBox({
+         element: 'textBox2',
+         placeholder: 'This is disabled textbox',
+         enabled: false
       });
    });
 }

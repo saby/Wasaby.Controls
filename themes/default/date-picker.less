@@ -1,39 +1,53 @@
 .controls-DatePicker {
    border: none;
-   box-sizing: border-box;
-}
-.controls-DatePicker__calendarIcon {
-   background: url("img/DatePicker-calendar.png") no-repeat -1px 0;
-   display: inline-block;
-   position: absolute;
-   min-height: 22px;
-   top: 50%;
-   margin-left: 1px;
-   margin-top: -5px;
-   width: 16px;
-   cursor: pointer;
-   text-decoration: none;
-   &.calendar-disabled {
+   .box-sizing(border-box);
+
+  .controls-TextBox__afterFieldWrapper {
+    &:extend(.controls-TextBox .controls-TextBox__afterFieldWrapper);
+
+    & + .controls-DatePicker__fieldWrapper {
+      margin-right: 19px;
+    }
+  }
+
+  .controls-FormattedTextBox__fieldWrapper {
+    border: 1px solid transparent;
+    border-bottom: 1px solid #EAEAEA;
+
+    &:hover {
+      border: 1px solid #EAEAEA;
+      border-bottom: 1px solid #CCCCCC;
+    }
+  }
+
+  &.ws-has-focus {
+    .controls-FormattedTextBox__fieldWrapper {
+      &:extend(.controls-DatePicker .controls-FormattedTextBox__fieldWrapper:hover);
+    }
+  }
+
+  .controls-DatePicker__calendarIcon {
+    background: url("img/DatePicker-calendar.png") no-repeat -1px 0;
+    display: inline-block;
+    position: absolute;
+    min-height: 22px;
+    top: 50%;
+    margin-left: 1px;
+    margin-top: -5px;
+    width: 16px;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover {
+      background-position: -18px 0;
+    }
+
+    &.calendar-disabled {
       background-position: -35px 0 !important;
-   }
+    }
+  }
 }
-.controls-DatePicker__calendarIcon:hover {
-   background-position: -18px 0;
-}
+
 .controls-DatePicker__calendar {
    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-}
-
-.controls-DatePicker  .controls-FormattedTextBox__fieldWrapper {
-   border: 1px solid transparent;
-   border-bottom: 1px solid #EAEAEA;
-}
-.controls-DatePicker  .controls-FormattedTextBox__fieldWrapper:hover,
-.controls-DatePicker.ws-has-focus  .controls-FormattedTextBox__fieldWrapper {
-   border: 1px solid #EAEAEA;
-   border-bottom: 1px solid #CCCCCC;
-}
-
-.controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
-   margin-right: 19px;
 }

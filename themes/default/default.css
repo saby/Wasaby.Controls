@@ -38,9 +38,11 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   display: inline-block;
   outline: none;
-  box-sizing: border-box;
   background-size: contain;
   white-space: nowrap;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -407,6 +409,8 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Switcher .controls-Switcher__toggle {
   display: inline-block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   cursor: pointer;
   width: 100%;
@@ -417,6 +421,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Switcher .controls-Switcher__toggle .controls-Switcher__position {
   position: relative;
   display: inline-block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
   box-sizing: content-box;
   text-align: center;
   width: 100%;
@@ -568,6 +574,8 @@ input[type="reset"]::-moz-focus-inner {
   text-decoration: none;
 }
 .controls-Menu__Popup {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   margin: -1px 0 0;
   border: 1px solid #cccccc;
@@ -587,8 +595,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuItem {
   position: relative;
   display: block;
-  box-sizing: border-box;
   overflow: hidden;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   cursor: pointer;
   width: auto;
   height: 24px;
@@ -719,6 +729,8 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
   display: inline-block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   width: 100%;
   height: 24px;
@@ -768,273 +780,105 @@ input[type="reset"]::-moz-focus-inner {
   margin-left: 2px;
   background: #ffffff;
 }
-.controls-Calendar {
-  padding-top: 8px;
-  display: inline-block;
-  background: #FFFFFF;
-  text-align: center;
-}
-.controls-Calendar__monthPicker {
-  width: 148px;
-}
-.controls-Calendar__dayTable {
-  vertical-align: middle;
-  width: 100%;
-  border-spacing: 1px;
-}
-.controls-Calendar__tableHead {
-  font-size: 11px;
-}
-.controls-Calendar__tableBody {
-  text-align: left;
-}
-.controls-Calendar__tableElement {
-  padding-left: 8px;
-  width: 56px;
-  height: 24px;
-}
-.controls-Calendar__tableBodyElement {
-  background: #F2F2F2;
-  cursor: pointer;
-}
-.controls-Calendar__tableBodyElement:hover {
-  background: #E5ECF4;
-}
-.controls-Calendar__tableBodyElement__active,
-.controls-Calendar__tableBodyElement__active:hover {
-  background: #ffc37e;
-}
-.controls-Calendar__tableElementFog {
-  color: #999999;
-  cursor: default;
-}
-.controls-DatePicker {
-  border: none;
-  box-sizing: border-box;
-}
-.controls-DatePicker__calendarIcon {
-  background: url("img/DatePicker-calendar.png") no-repeat -1px 0;
-  display: inline-block;
-  position: absolute;
-  min-height: 22px;
-  top: 50%;
-  margin-left: 1px;
-  margin-top: -5px;
-  width: 16px;
-  cursor: pointer;
-  text-decoration: none;
-}
-.controls-DatePicker__calendarIcon.calendar-disabled {
-  background-position: -35px 0 !important;
-}
-.controls-DatePicker__calendarIcon:hover {
-  background-position: -18px 0;
-}
-.controls-DatePicker__calendar {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-}
-.controls-DatePicker .controls-FormattedTextBox__fieldWrapper {
-  border: 1px solid transparent;
-  border-bottom: 1px solid #EAEAEA;
-}
-.controls-DatePicker .controls-FormattedTextBox__fieldWrapper:hover,
-.controls-DatePicker.ws-has-focus .controls-FormattedTextBox__fieldWrapper {
-  border: 1px solid #EAEAEA;
-  border-bottom: 1px solid #CCCCCC;
-}
-.controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
-  margin-right: 19px;
-}
-.controls-MonthPicker {
-  text-align: center;
-  display: inline-block;
-}
-.controls-MonthPicker__field {
-  color: #0055BB;
-  white-space: nowrap;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 700;
-  height: 16px;
-  line-height: 16px;
-  margin: 0 16px;
-}
-.controls-MonthPicker__field:hover {
-  text-decoration: underline;
-  color: #FF7033;
-}
-.controls-MonthPicker__arrowWrapper {
-  width: 16px;
-  min-height: 16px;
-  height: 100%;
-  position: relative;
-  display: inline-block;
-}
-.controls-MonthPicker__arrowLeftWrapper {
-  float: left;
-  display: inline-block;
-}
-.controls-MonthPicker__arrowRightWrapper {
-  float: right;
-}
-.controls-MonthPicker__arrow {
-  position: absolute;
-  display: inline-block;
-  background: #FFFFFF;
-  background: url("img/MonthPicker-arrows.png");
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-  top: 0;
-  right: 0;
-  text-decoration: none;
-}
-.controls-MonthPicker__arrowLeft {
-  background-position: 32px 0px;
-}
-.controls-MonthPicker__arrowLeft:hover {
-  background-position: 0px 0px;
-}
-.controls-MonthPicker__arrowRight {
-  background-position: -32px -32px;
-}
-.controls-MonthPicker__arrowRight:hover {
-  background-position: 0px -32px;
-}
-.controls-MonthPicker__dropdownWrapper {
-  border: 1px solid #FFFFFF;
-  background: #FFFFFF;
-}
-.controls-MonthPicker__dropdownElement {
-  padding: 2px;
-  height: 22px;
-  line-height: 22px;
-  cursor: pointer;
-  color: #333;
-}
-.controls-MonthPicker__dropdownElement:hover {
-  background: #E5ECF4;
-}
-.controls-MonthPicker__dropdownElementActive {
-  background: #F2F2F2;
-}
-.controls-MonthPicker__dropdownElementMonth {
-  padding-left: 24px;
-}
-.controls-MonthPicker__dropdownElementYear {
-  text-align: center;
-}
-.controls-TextArea {
-  display: inline-block;
-  vertical-align: top;
-  border: 1px solid #EAEAEA;
-  font: inherit;
-}
-.controls-TextArea:hover,
-.controls-TextArea.ws-has-focus {
-  border-bottom-color: #CCCCCC;
-}
-.controls-TextArea.ws-disabled {
-  border: 1px solid transparent;
-}
-.controls-TextArea__inputField {
-  resize: none;
-  border: none;
-  display: block;
-  font: inherit;
-  width: 100%;
-  height: 100%;
-  border-radius: 2px;
-  padding: 4px;
-  box-sizing: border-box;
-}
-.controls-TextArea.ws-disabled .controls-TextArea__inputField {
-  overflow-y: hidden;
-}
-.controls-TextArea__autoheight {
-  height: auto !important;
-}
 .controls-TextBox {
   display: inline-block;
-  background: #ffffff;
-  border: 1px solid transparent;
-  border-bottom-color: #EAEAEA;
-  height: 24px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
+  height: 24px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent transparent #eaeaea transparent;
+  background: #ffffff;
+}
+.controls-TextBox.ws-has-focus {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #eaeaea #eaeaea #cccccc;
+  background: #ffffff;
 }
 .controls-TextBox.ws-validation-error {
-  background: #fadadd !important;
+  border-width: 1px;
+  border-style: solid;
   border-color: #ff302b !important;
+  background: #fadadd !important;
 }
-.controls-TextBox:hover,
-.controls-TextBox.ws-has-focus {
-  border: 1px solid #EAEAEA;
-  border-bottom-color: #CCCCCC;
+.controls-TextBox:hover {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #eaeaea #eaeaea #cccccc;
+  background: #ffffff;
 }
 .controls-TextBox.ws-disabled {
-  border: 1px solid transparent;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  background: #ffffff;
 }
-.controls-TextBox__fieldWrapper {
-  height: 100%;
-  padding: 0 4px;
+.controls-TextBox .controls-TextBox__afterFieldWrapper,
+.controls-DatePicker .controls-TextBox__afterFieldWrapper {
   position: relative;
-}
-.controls-TextBox__afterFieldWrapper {
   float: right;
   width: 16px;
   min-height: 19px;
   height: 100%;
+}
+.controls-TextBox .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
+  margin: 0 19px 0 0;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper {
   position: relative;
-}
-.controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
-  margin-right: 19px;
-}
-.controls-TextBox__field {
-  border: none;
-  min-height: 19px;
+  padding: 0 4px;
   height: 100%;
-  width: 100%;
-  margin: 0;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
-  outline: none;
-  background: transparent;
-  line-height: 20px !important;
+  width: 100%;
+  height: 100%;
   font: inherit;
   color: inherit;
+  min-height: 19px;
+  line-height: 20px !important;
+  margin: 0;
   padding: 1px 0;
+  border: none;
+  outline: none;
+  background: transparent;
 }
-.controls-TextBox__field-uppercase {
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-webkit-input-placeholder {
+  color: #cccccc !important;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field:-moz-placeholder {
+  color: #cccccc !important;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-moz-placeholder {
+  color: #cccccc !important;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field:-ms-input-placeholder {
+  color: #cccccc !important;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-ms-clear {
+  display: none;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-TextBox__field-uppercase {
   text-transform: uppercase;
 }
-.controls-TextBox__field-lowercase {
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-TextBox__field-lowercase {
   text-transform: lowercase;
 }
-.controls-TextBox__field::-webkit-input-placeholder {
-  color: #cccccc !important;
-}
-.controls-TextBox__field::-moz-placeholder {
-  color: #a1a1a1 !important;
-}
-.controls-TextBox__field:-moz-placeholder {
-  color: #a1a1a1 !important;
-}
-.controls-TextBox__field:-ms-input-placeholder {
-  color: #cccccc !important;
-}
-.controls-TextBox__placeholder {
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__placeholder {
   position: absolute;
   top: 0;
-  color: #cccccc !important;
-  font: inherit;
-  text-align: inherit;
-  padding-top: 3px;
-  text-overflow: ellipsis;
   overflow: hidden;
+  text-overflow: ellipsis;
   -ms-text-overflow: ellipsis;
   white-space: nowrap;
-}
-.controls-TextBox__field::-ms-clear {
-  display: none;
+  color: #cccccc !important;
+  font: inherit;
+  padding: 3px 0 0;
+  text-align: inherit;
 }
 .controls-FormattedTextBox {
   display: inline-block;
@@ -1120,6 +964,196 @@ input[type="reset"]::-moz-focus-inner {
   border: 1px solid #CCCCCC;
   margin-top: -1px;
 }
+.controls-TextArea {
+  display: inline-block;
+  vertical-align: top;
+  border: 1px solid #EAEAEA;
+  font: inherit;
+}
+.controls-TextArea:hover,
+.controls-TextArea.ws-has-focus {
+  border-bottom-color: #CCCCCC;
+}
+.controls-TextArea.ws-disabled {
+  border: 1px solid transparent;
+}
+.controls-TextArea__inputField {
+  resize: none;
+  border: none;
+  display: block;
+  font: inherit;
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+  padding: 4px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.controls-TextArea.ws-disabled .controls-TextArea__inputField {
+  overflow-y: hidden;
+}
+.controls-TextArea__autoheight {
+  height: auto !important;
+}
+.controls-Calendar {
+  padding-top: 8px;
+  display: inline-block;
+  background: #FFFFFF;
+  text-align: center;
+}
+.controls-Calendar__monthPicker {
+  width: 148px;
+}
+.controls-Calendar__dayTable {
+  vertical-align: middle;
+  width: 100%;
+  border-spacing: 1px;
+}
+.controls-Calendar__tableHead {
+  font-size: 11px;
+}
+.controls-Calendar__tableBody {
+  text-align: left;
+}
+.controls-Calendar__tableElement {
+  padding-left: 8px;
+  width: 56px;
+  height: 24px;
+}
+.controls-Calendar__tableBodyElement {
+  background: #F2F2F2;
+  cursor: pointer;
+}
+.controls-Calendar__tableBodyElement:hover {
+  background: #E5ECF4;
+}
+.controls-Calendar__tableBodyElement__active,
+.controls-Calendar__tableBodyElement__active:hover {
+  background: #ffc37e;
+}
+.controls-Calendar__tableElementFog {
+  color: #999999;
+  cursor: default;
+}
+.controls-DatePicker {
+  border: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.controls-DatePicker .controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
+  margin-right: 19px;
+}
+.controls-DatePicker .controls-FormattedTextBox__fieldWrapper {
+  border: 1px solid transparent;
+  border-bottom: 1px solid #EAEAEA;
+}
+.controls-DatePicker .controls-FormattedTextBox__fieldWrapper:hover,
+.controls-DatePicker.ws-has-focus .controls-FormattedTextBox__fieldWrapper {
+  border: 1px solid #EAEAEA;
+  border-bottom: 1px solid #CCCCCC;
+}
+.controls-DatePicker .controls-DatePicker__calendarIcon {
+  background: url("img/DatePicker-calendar.png") no-repeat -1px 0;
+  display: inline-block;
+  position: absolute;
+  min-height: 22px;
+  top: 50%;
+  margin-left: 1px;
+  margin-top: -5px;
+  width: 16px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.controls-DatePicker .controls-DatePicker__calendarIcon:hover {
+  background-position: -18px 0;
+}
+.controls-DatePicker .controls-DatePicker__calendarIcon.calendar-disabled {
+  background-position: -35px 0 !important;
+}
+.controls-DatePicker__calendar {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+.controls-MonthPicker {
+  text-align: center;
+  display: inline-block;
+}
+.controls-MonthPicker__field {
+  color: #0055BB;
+  white-space: nowrap;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  height: 16px;
+  line-height: 16px;
+  margin: 0 16px;
+}
+.controls-MonthPicker__field:hover {
+  text-decoration: underline;
+  color: #FF7033;
+}
+.controls-MonthPicker__arrowWrapper {
+  width: 16px;
+  min-height: 16px;
+  height: 100%;
+  position: relative;
+  display: inline-block;
+}
+.controls-MonthPicker__arrowLeftWrapper {
+  float: left;
+  display: inline-block;
+}
+.controls-MonthPicker__arrowRightWrapper {
+  float: right;
+}
+.controls-MonthPicker__arrow {
+  position: absolute;
+  display: inline-block;
+  background: #FFFFFF;
+  background: url("img/MonthPicker-arrows.png");
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  top: 0;
+  right: 0;
+  text-decoration: none;
+}
+.controls-MonthPicker__arrowLeft {
+  background-position: 32px 0px;
+}
+.controls-MonthPicker__arrowLeft:hover {
+  background-position: 0px 0px;
+}
+.controls-MonthPicker__arrowRight {
+  background-position: -32px -32px;
+}
+.controls-MonthPicker__arrowRight:hover {
+  background-position: 0px -32px;
+}
+.controls-MonthPicker__dropdownWrapper {
+  border: 1px solid #FFFFFF;
+  background: #FFFFFF;
+}
+.controls-MonthPicker__dropdownElement {
+  padding: 2px;
+  height: 22px;
+  line-height: 22px;
+  cursor: pointer;
+  color: #333;
+}
+.controls-MonthPicker__dropdownElement:hover {
+  background: #E5ECF4;
+}
+.controls-MonthPicker__dropdownElementActive {
+  background: #F2F2F2;
+}
+.controls-MonthPicker__dropdownElementMonth {
+  padding-left: 24px;
+}
+.controls-MonthPicker__dropdownElementYear {
+  text-align: center;
+}
 .controls-EditAtPlace {
   border: 1px solid transparent;
 }
@@ -1146,6 +1180,8 @@ input[type="reset"]::-moz-focus-inner {
   border: none;
   display: block;
   padding: 3px 4px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 .controls-EditAtPlaceGroup .controls-EditAtPlace__textAreaWrapper {

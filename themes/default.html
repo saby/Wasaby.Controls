@@ -3,6 +3,7 @@
       xmlns:ws="ws-component">
 <head>
    <title>Default template</title>
+   <meta charset="utf-8" />
    <link rel="stylesheet" type="text/css" href="../fonts/index.css" />
    <link rel="stylesheet" type="text/css" href="../icons/index.css" />
    <link rel="stylesheet" type="text/css" href="default/default.css" />
@@ -108,33 +109,29 @@
          </li>
       </ul>
 
-      <h3>Текстовое поле</h3>
-      <table>
-         <tr>
-            <td>
-               <div id="TextBox"></div>
-               <div id="TextBox2"></div>
-               <br/><br/>
-               <div id="TextArea"></div>
-               <br/><br/>
-               <div id="ComboBox" style="width: 200px"></div>
-
-               <br/><br/>
-
-               <div id="ComboBox2" style="width: 200px"></div>
-
-               <br/><br/>
+      <h3>Поля ввода</h3>
+      <ul class="preview-list clearfix">
+         <li>
+            <div class="row">
+               <div id="textBox1"></div>
+               <div id="textBox2"></div>
+            </div>
+            <div class="row">
 
                <div id="NumberTextBox"></div>
-               <div id="FormattedTextBox"></div>
-            </td>
-         </tr>
-      </table>
-      <br/><br/>
+            </div>
+            <div class="row">
+               <div id="ComboBox" style="width: 200px"></div>
+               <div id="ComboBox2" style="width: 200px"></div>
+            </div>
+         </li>
+         <li>
+            <div id="TextArea"></div>
+            <div id="FormattedTextBox"></div>
+         </li>
+      </ul>
 
       <h3>Кнопки</h3>
-
-
       <table>
          <tr>
             <td>
