@@ -302,10 +302,10 @@
 @switcher-off-toggle-bg:                        url(@switcher-spritesheet) 0 -96px;
 @switcher-off-toggle-left-edge-bg:              url(@switcher-spritesheet) 0 0;
 @switcher-off-toggle-right-edge-bg:             url(@switcher-spritesheet) 0 -24px;
-@switcher-off-toggle-disabled-text-color:       #ccc;
-@switcher-off-toggle-disabled-bg:               none;
-@switcher-off-toggle-disabled-left-edge-bg:     none;
-@switcher-off-toggle-disabled-right-edge-bg:    none;
+@switcher-off-disabled-toggle-text-color:       #ccc;
+@switcher-off-disabled-toggle-bg:               none;
+@switcher-off-disabled-toggle-left-edge-bg:     none;
+@switcher-off-disabled-toggle-right-edge-bg:    none;
 
 @switcher-on-toggle-padding:                    2px 0 2px 32px;
 @switcher-on-toggle-position-margin:            0 16px 0 auto;
@@ -313,10 +313,49 @@
 @switcher-on-toggle-bg:                         @switcher-off-toggle-bg;
 @switcher-on-toggle-left-edge-bg:               url(@switcher-spritesheet) 0 -48px;
 @switcher-on-toggle-right-edge-bg:              url(@switcher-spritesheet) 0 -312px;
-@switcher-on-toggle-disabled-text-color:        @switcher-off-toggle-disabled-text-color;
-@switcher-on-toggle-disabled-bg:                none;
-@switcher-on-toggle-disabled-left-edge-bg:      none;
-@switcher-on-toggle-disabled-right-edge-bg:     none;
+@switcher-on-disabled-toggle-text-color: @switcher-off-disabled-toggle-text-color;
+@switcher-on-disabled-toggle-bg:                none;
+@switcher-on-disabled-toggle-left-edge-bg:      none;
+@switcher-on-disabled-toggle-right-edge-bg:     none;
+
+
+
+// ---------------------- //
+// Double online switcher //
+// ---------------------- //
+
+@switcher-do-margin:                            0 0 0 8px;
+
+@switcher-do-toggle-cursor:                     pointer;
+@switcher-do-text-cursor:                       @switcher-do-toggle-cursor;
+@switcher-do-text-color:                        #000;
+@switcher-do-decoration:                        none;
+@switcher-do-unselected-text-cursor:            @switcher-do-text-cursor;
+@switcher-do-unselected-text-color:             #999;
+@switcher-do-unselected-text-decoration:        none;
+
+@switcher-do-disabled-toggle-cursor:            default;
+@switcher-do-disabled-text-cursor:              @switcher-do-disabled-toggle-cursor;
+@switcher-do-disabled-text-color:               #999;
+@switcher-do-disabled-text-decoration:          none;
+
+@switcher-do-horizontal-spritesheet:            'img/SwitcherDoubleOnline-sprite.png';
+@switcher-do-horizontal-toggle-width:           30px;
+@switcher-do-horizontal-toggle-height:          16px;
+@switcher-do-horizontal-toggle-margin:          0 4px;
+@switcher-do-horizontal-off-toggle-bg:          transparent url(@switcher-do-horizontal-spritesheet) 0 -4px no-repeat;
+@switcher-do-horizontal-on-toggle-bg:           transparent url(@switcher-do-horizontal-spritesheet) 0 -28px no-repeat;
+@switcher-do-horizontal-off-disabled-toggle-bg: transparent url(@switcher-do-horizontal-spritesheet) 0 -52px no-repeat;
+@switcher-do-horizontal-on-disabled-toggle-bg:  transparent url(@switcher-do-horizontal-spritesheet) 0 -76px no-repeat;
+
+@switcher-do-vertical-spritesheet:              'img/SwitcherDoubleOnline-sprite-double.png';
+@switcher-do-vertical-toggle-width:             16px;
+@switcher-do-vertical-toggle-height:            32px;
+@switcher-do-vertical-toggle-margin:            0 2px 0 0;
+@switcher-do-vertical-off-toggle-bg:            transparent url(@switcher-do-vertical-spritesheet) -16px 0 no-repeat;
+@switcher-do-vertical-on-toggle-bg:             transparent url(@switcher-do-vertical-spritesheet) 0 0 no-repeat;
+@switcher-do-vertical-off-disabled-toggle-bg:   transparent url(@switcher-do-vertical-spritesheet) -48px 0 no-repeat;
+@switcher-do-vertical-on-disabled-toggle-bg:    transparent url(@switcher-do-vertical-spritesheet) -32px 0 no-repeat;
 
 
 

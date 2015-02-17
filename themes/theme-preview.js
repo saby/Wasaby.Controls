@@ -306,35 +306,54 @@ function initButtons() {
 
       new SwitcherDoubleOnline({
          element: 'switcher21',
-         caption: 'This is SwitcherDoubleOnline',
-         stateOn: 'По видам',
-         stateOff: 'По подразделениям'
+         caption: 'Double online switcher',
+         stateOn: 'On',
+         stateOff: 'Off'
       });
 
       new SwitcherDoubleOnline({
          element: 'switcher22',
-         caption: 'This is SwitcherDoubleOnline',
-         stateOn: 'По видам',
-         stateOff: 'По подразделениям',
+         caption: 'Double online switcher',
+         stateOn: 'On',
+         stateOff: 'Off',
          enabled: false
       });
 
       new SwitcherDoubleOnline({
+         element: 'switcher23',
+         caption: 'Double online switcher',
+         stateOn: 'On',
+         stateOff: 'Off',
+         enabled: false,
+         state: 'on'
+      });
+
+      new SwitcherDoubleOnline({
          element: 'switcher31',
-         caption: 'This is SwitcherDoubleOnline',
-         stateOn: 'По видам',
-         stateOff: 'По подразделениям',
+         caption: 'Double online vertical switcher',
+         stateOn: 'On',
+         stateOff: 'Off',
          disposition: 'vertical'
       });
 
       new SwitcherDoubleOnline({
          element: 'switcher32',
-         caption: 'This is SwitcherDoubleOnline',
-         stateOn: 'По видам',
-         stateOff: 'По подразделениям',
+         caption: 'Double online vertical switcher',
+         stateOn: 'On',
+         stateOff: 'Off',
          disposition: 'vertical',
          enabled: false
-      })
+      });
+
+      new SwitcherDoubleOnline({
+         element: 'switcher33',
+         caption: 'Double online vertical switcher',
+         stateOn: 'On',
+         stateOff: 'Off',
+         disposition: 'vertical',
+         enabled: false,
+         state: 'on'
+      });
    });
 }
 
