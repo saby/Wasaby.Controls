@@ -365,8 +365,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          //Запоминаем координаты правого нижнего угла контейнера необходимые для отображения контейнера целиком и там где нужно.
          if (target) {
             this._containerSizes.requredOffset = {
-               top: buff.top + this._targetSizes.offset.top + this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0),
-               left: buff.left + this._targetSizes.offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0)
+               top: buff.top + this._targetSizes.offset.top + this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom,
+               left: buff.left + this._targetSizes.offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right
             };
          } else {
             this._containerSizes.requredOffset = {
@@ -472,8 +472,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             oppositeSide = (this._options.horizontalAlign.side == 'left') ? 'right' : 'left';
             offset = this._getGeneralOffset(this._options.verticalAlign.side, oppositeSide, oppositeCorner);
          }
-         offset.top += (this._options.verticalAlign.offset || 0);
-         offset.left += (this._options.horizontalAlign.offset || 0);
+         offset.top += (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom;
+         offset.left += (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right;
          return offset;
       },
 
@@ -530,7 +530,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       _getOffsetByWindowSize: function (offset) {
          var buf = this._targetSizes.offset;
          //Проверяем убираемся ли в экран снизу
-         if (offset.top + this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) >= this._windowSizes.height - 3 && !this._isMovedV) {
+         if (offset.top + this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom >= this._windowSizes.height - 3 && !this._isMovedV) {
             this._isMovedV = true;
             offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
             offset.top = this._addOffset(offset, buf).top;
@@ -545,7 +545,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
          //TODO Избавиться от дублирования
          //Проверяем убираемся ли в экран справа
-         if (offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) >= this._windowSizes.width - 3 && !this._isMovedH) {
+         if (offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right >= this._windowSizes.width - 3 && !this._isMovedH) {
             this._isMovedH = true;
             offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
             offset.left = this._addOffset(offset, buf).left;
@@ -570,15 +570,15 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
                if (spaces.top < spaces.bottom) {
                   spaces = this._getSpaces(this._options.corner);
-                  this._container.css('height', spaces.bottom - (this._options.verticalAlign.offset || 0) - 3);
+                  this._container.css('height', spaces.bottom - (this._options.verticalAlign.offset || 0) - 3 - this._margins.top + this._margins.bottom);
                   offset.top = this._targetSizes.offset.top + oppositeOffset.top;
                } else {
                   offset.top = 0;
-                  this._container.css('height', spaces.top - (this._options.verticalAlign.offset || 0));
+                  this._container.css('height', spaces.top - (this._options.verticalAlign.offset || 0)  - this._margins.top + this._margins.bottom);
                }
                this._isMovedV = !this._isMovedV;
             }
-            if (this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) < spaces.bottom) {
+            if (this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom < spaces.bottom) {
                this._container.css('overflow-y', 'visible');
                this._container.css('height', '');
             }
@@ -591,15 +591,15 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
                if (spaces.left < spaces.right) {
                   spaces = this._getSpaces(this._options.corner);
-                  this._container.css('width', spaces.right - (this._options.horizontalAlign.offset || 0) - 3);
+                  this._container.css('width', spaces.right - (this._options.horizontalAlign.offset || 0) - 3 - this._margins.left + this._margins.right);
                   offset.left = this._targetSizes.offset.left + oppositeOffset.left;
                } else {
                   offset.left = 0;
-                  this._container.css('width', spaces.left - (this._options.horizontalAlign.offset || 0));
+                  this._container.css('width', spaces.left - (this._options.horizontalAlign.offset || 0) - this._margins.left + this._margins.right);
                }
                this._isMovedH = !this._isMovedH;
             }
-            if (this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) < spaces.right) {
+            if (this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right < spaces.right) {
                this._container.css('overflow-x', 'visible');
                this._container.css('width', '');
             }
