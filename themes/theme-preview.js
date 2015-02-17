@@ -282,15 +282,25 @@ function initButtons() {
 
       new Switcher({
          element: 'switcher11',
-         caption: 'This is Switcher',
+         caption: 'Switcher',
          stateOn: 'On',
          stateOff: 'Off'
       });
+
       new Switcher({
          element: 'switcher12',
-         caption: 'This is Switcher',
+         caption: 'Switcher',
          stateOn: 'On',
          stateOff: 'Off',
+         enabled: false
+      });
+
+      new Switcher({
+         element: 'switcher13',
+         caption: 'Switcher',
+         stateOn: 'On',
+         stateOff: 'Off',
+         state: 'on',
          enabled: false
       });
 

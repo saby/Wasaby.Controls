@@ -298,6 +298,37 @@ input[type="reset"]::-moz-focus-inner {
   padding: 0;
   cursor: pointer;
 }
+.controls-TabButton {
+  display: inline-block;
+  height: 29px;
+}
+.controls-TabButton .controls-TabButton__side {
+  display: inline-block;
+  vertical-align: top;
+  width: 19px;
+  height: 29px;
+}
+.controls-TabButton .controls-TabButton__side.controls-TabButton__left {
+  margin: 0 -4px 0 0;
+  background: url("img/tabButtonLeft.png") no-repeat;
+}
+.controls-TabButton .controls-TabButton__side.controls-TabButton__right {
+  margin: 0 0 0 -4px;
+  background: url("img/tabButtonRight.png") no-repeat;
+}
+.controls-TabButton .controls-TabButton__inner {
+  font: italic bold 18px Cambria, sans-serif;
+  color: #000000;
+  display: inline-block;
+  height: 29px;
+  background: url('img/tabButtonInner.png');
+}
+.controls-TabButton .controls-TabButton__inner .controls-TabButton__caption {
+  display: inline-block;
+  height: auto;
+  vertical-align: bottom;
+  padding: 3px 0 0;
+}
 .controls-RadioButton {
   cursor: pointer;
   display: inline-block;
@@ -367,36 +398,174 @@ input[type="reset"]::-moz-focus-inner {
 .controls-CheckBox.controls-ToggleButton__null.ws-disabled .controls-CheckBox__icon {
   background: url('img/CheckBox.png') 16px 33px;
 }
-.controls-TabButton {
+.controls-Switcher {
   display: inline-block;
-  height: 29px;
+  min-width: 90px;
+  height: 23px;
+  padding: 0 16px 0 0;
+  color: #000000;
 }
-.controls-TabButton .controls-TabButton__side {
+.controls-Switcher .controls-Switcher__toggle {
+  display: inline-block;
+  box-sizing: border-box;
+  cursor: pointer;
+  width: 100%;
+  height: 23px;
+  color: #999999;
+  padding: 2px 32px 2px 0;
+}
+.controls-Switcher .controls-Switcher__toggle .controls-Switcher__position {
+  position: relative;
+  display: inline-block;
+  box-sizing: content-box;
+  text-align: center;
+  width: 100%;
+  height: 21px;
+  padding: 2px 0;
+  margin: 0 0 0 16px;
+  background: url('img/switcher.png') 0 -96px;
+}
+.controls-Switcher .controls-Switcher__toggle .controls-Switcher__position:before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 23px;
+  display: block;
+  top: 0;
+  left: -16px;
+  background: url('img/switcher.png') 0 0;
+}
+.controls-Switcher .controls-Switcher__toggle .controls-Switcher__position:after {
+  content: '';
+  position: absolute;
+  width: 32px;
+  height: 23px;
+  display: block;
+  top: 0;
+  right: -32px;
+  background: url('img/switcher.png') 0 -24px;
+}
+.controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on {
+  color: #000000;
+  padding: 2px 0 2px 32px;
+}
+.controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position {
+  margin: 0 16px 0 auto;
+  background: url('img/switcher.png') 0 -96px;
+}
+.controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:before {
+  width: 32px;
+  left: -32px;
+  background: url('img/switcher.png') 0 -48px;
+}
+.controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:after {
+  width: 16px;
+  right: -16px;
+  background: url('img/switcher.png') 0 -312px;
+}
+.controls-Switcher.ws-disabled {
+  color: #999999 !important;
+  background: none !important;
+}
+.controls-Switcher.ws-disabled .controls-Switcher__toggle {
+  color: #cccccc;
+}
+.controls-Switcher.ws-disabled .controls-Switcher__toggle .controls-Switcher__position {
+  background: none;
+}
+.controls-Switcher.ws-disabled .controls-Switcher__toggle .controls-Switcher__position:before {
+  background: none;
+}
+.controls-Switcher.ws-disabled .controls-Switcher__toggle .controls-Switcher__position:after {
+  background: none;
+}
+.controls-Switcher.ws-disabled .controls-Switcher__toggle.controls-Switcher__toggle__position-on {
+  color: #cccccc;
+}
+.controls-Switcher.ws-disabled .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position {
+  background: none;
+}
+.controls-Switcher.ws-disabled .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:before {
+  background: none;
+}
+.controls-Switcher.ws-disabled .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:after {
+  background: none;
+}
+.controls-SwitcherDoubleOnline {
+  display: inline-block;
+  margin-left: 8px;
+}
+.controls-SwitcherDoubleOnline_toggle {
+  width: 30px;
+  height: 16px;
+  cursor: pointer;
+  margin: 0 4px;
+  background: transparent url('img/SwitcherDoubleOnline-sprite.png') no-repeat;
+  display: inline-block;
+}
+.controls-SwitcherDoubleOnline.ws-disabled {
+  color: #999999;
+}
+.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline_toggle {
+  cursor: default;
+}
+.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline_toggle {
+  background-position: 0 -52px;
+}
+.controls-SwitcherDoubleOnline-vertical {
+  vertical-align: top;
+}
+.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline_toggle {
+  width: 16px;
+  height: 32px;
+  cursor: pointer;
+  margin: 0 2px 0 0;
+  background: transparent url('img/SwitcherDoubleOnline-sprite-double.png') no-repeat;
   display: inline-block;
   vertical-align: top;
-  width: 19px;
-  height: 29px;
 }
-.controls-TabButton .controls-TabButton__side.controls-TabButton__left {
-  margin: 0 -4px 0 0;
-  background: url("img/tabButtonLeft.png") no-repeat;
+.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline-on-toggled {
+  background-position: 0 0;
 }
-.controls-TabButton .controls-TabButton__side.controls-TabButton__right {
-  margin: 0 0 0 -4px;
-  background: url("img/tabButtonRight.png") no-repeat;
+.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline-off-toggled {
+  background-position: -16px 0;
 }
-.controls-TabButton .controls-TabButton__inner {
-  font: italic bold 18px Cambria, sans-serif;
-  color: #000000;
+.controls-SwitcherDoubleOnline-vertical.ws-disabled .controls-SwitcherDoubleOnline-off-toggled {
+  background-position: -48px 0px;
+}
+.controls-SwitcherDoubleOnline-off-toggled {
+  background-position: 0 -4px;
+}
+.controls-SwitcherDoubleOnline-on-toggled {
+  background-position: 0 -28px;
+}
+.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline-on-toggled {
+  background-position: 0 -76px;
+}
+.controls-SwitcherDoubleOnline-vertical.ws-disabled .controls-SwitcherDoubleOnline-on-toggled {
+  background-position: -32px 0px;
+}
+.controls-SwitcherDoubleOnline__unselected {
+  color: #999999;
+  cursor: pointer;
+}
+.controls-SwitcherDoubleOnline__unselected:hover {
+  text-decoration: underline;
+}
+.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline__text {
+  text-decoration: none;
+  cursor: default;
+  color: #CCCCCC;
+}
+.controls-SwitcherDoubleOnline__text {
   display: inline-block;
-  height: 29px;
-  background: url('img/tabButtonInner.png');
 }
-.controls-TabButton .controls-TabButton__inner .controls-TabButton__caption {
+.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline__text {
+  display: block;
+}
+.controls-SwitcherDoubleOnline__text-block {
   display: inline-block;
-  height: auto;
-  vertical-align: bottom;
-  padding: 3px 0 0;
+  height: 100%;
 }
 .controls-Menu__Popup {
   box-sizing: border-box;
@@ -950,163 +1119,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ComboBox__picker {
   border: 1px solid #CCCCCC;
   margin-top: -1px;
-}
-.controls-Switcher {
-  display: inline-block;
-  height: 23px;
-  min-width: 90px;
-  padding-right: 16px;
-}
-.controls-Switcher.ws-disabled {
-  background: none !important;
-  color: #999999 !important;
-}
-.controls-Switcher__toggle {
-  height: 23px;
-  width: 100%;
-  display: inline-block;
-  cursor: pointer;
-  padding: 2px 0;
-  box-sizing: border-box;
-  color: #999999;
-  padding-right: 32px;
-}
-.controls-Switcher__position {
-  height: 21px;
-  background: url('img/switcher.png') 0 -96px;
-  text-align: center;
-  display: inline-block;
-  padding: 2px 0;
-  position: relative;
-  margin-left: 16px;
-  box-sizing: content-box;
-  width: 100%;
-}
-.controls-Switcher__toggle__position-on {
-  text-align: right;
-  color: #000000;
-  padding-right: 0;
-  padding-left: 32px;
-}
-.controls-Switcher.ws-disabled .controls-Switcher__position {
-  background: none;
-  color: #CCCCCC;
-}
-.controls-Switcher__toggle__position-on .controls-Switcher__position {
-  margin-right: 16px;
-  margin-left: auto;
-}
-.controls-Switcher__position:before {
-  content: '';
-  position: absolute;
-  height: 23px;
-  width: 16px;
-  display: block;
-  top: 0;
-  left: -16px;
-  background: url('img/switcher.png') 0 0;
-}
-.controls-Switcher__toggle__position-on .controls-Switcher__position:before {
-  width: 32px;
-  left: -32px;
-  background-position: 0 -48px;
-}
-.controls-Switcher.ws-disabled .controls-Switcher__position:before {
-  background: none;
-}
-.controls-Switcher__position:after {
-  content: '';
-  position: absolute;
-  height: 23px;
-  width: 32px;
-  display: block;
-  top: 0;
-  right: -32px;
-  background: url('img/switcher.png') 0 -24px;
-}
-.controls-Switcher__toggle__position-on .controls-Switcher__position:after {
-  width: 16px;
-  right: -16px;
-  background-position: 0 -312px;
-}
-.controls-Switcher.ws-disabled .controls-Switcher__position:after {
-  background: none;
-}
-.controls-SwitcherDoubleOnline {
-  display: inline-block;
-  margin-left: 8px;
-}
-.controls-SwitcherDoubleOnline_toggle {
-  width: 30px;
-  height: 16px;
-  cursor: pointer;
-  margin: 0 4px;
-  background: transparent url('img/SwitcherDoubleOnline-sprite.png') no-repeat;
-  display: inline-block;
-}
-.controls-SwitcherDoubleOnline.ws-disabled {
-  color: #999999;
-}
-.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline_toggle {
-  cursor: default;
-}
-.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline_toggle {
-  background-position: 0 -52px;
-}
-.controls-SwitcherDoubleOnline-vertical {
-  vertical-align: top;
-}
-.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline_toggle {
-  width: 16px;
-  height: 32px;
-  cursor: pointer;
-  margin: 0 2px 0 0;
-  background: transparent url('img/SwitcherDoubleOnline-sprite-double.png') no-repeat;
-  display: inline-block;
-  vertical-align: top;
-}
-.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline-on-toggled {
-  background-position: 0 0;
-}
-.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline-off-toggled {
-  background-position: -16px 0;
-}
-.controls-SwitcherDoubleOnline-vertical.ws-disabled .controls-SwitcherDoubleOnline-off-toggled {
-  background-position: -48px 0px;
-}
-.controls-SwitcherDoubleOnline-off-toggled {
-  background-position: 0 -4px;
-}
-.controls-SwitcherDoubleOnline-on-toggled {
-  background-position: 0 -28px;
-}
-.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline-on-toggled {
-  background-position: 0 -76px;
-}
-.controls-SwitcherDoubleOnline-vertical.ws-disabled .controls-SwitcherDoubleOnline-on-toggled {
-  background-position: -32px 0px;
-}
-.controls-SwitcherDoubleOnline__unselected {
-  color: #999999;
-  cursor: pointer;
-}
-.controls-SwitcherDoubleOnline__unselected:hover {
-  text-decoration: underline;
-}
-.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline__text {
-  text-decoration: none;
-  cursor: default;
-  color: #CCCCCC;
-}
-.controls-SwitcherDoubleOnline__text {
-  display: inline-block;
-}
-.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline__text {
-  display: block;
-}
-.controls-SwitcherDoubleOnline__text-block {
-  display: inline-block;
-  height: 100%;
 }
 .controls-EditAtPlace {
   border: 1px solid transparent;

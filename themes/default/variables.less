@@ -204,6 +204,29 @@
 
 
 
+// ---------- //
+// Tab button //
+// ---------- //
+
+@tab-button-font:                         italic bold 18px Cambria, sans-serif;
+@tab-button-text-color:                   #000;
+
+@tab-button-height:                       29px;
+@tab-button-side-width:                   19px;
+@tab-button-side-height:                  @tab-button-height;
+@tab-button-inner-height:                 @tab-button-height;
+@tab-button-text-padding:                 3px 0 0;
+
+@tab-button-left-side-margin:             0 -4px 0 0;
+@tab-button-left-side-bg:                 url('img/tabButtonLeft.png') no-repeat;
+
+@tab-button-right-side-margin:            0 0 0 -4px;
+@tab-button-right-side-bg:                url('img/tabButtonRight.png') no-repeat;
+
+@tab-button-inner-bg:                     url('img/tabButtonInner.png');
+
+
+
 // ------------ //
 // Radio button //
 // ------------ //
@@ -252,26 +275,48 @@
 
 
 
-// ---------- //
-// Tab button //
-// ---------- //
+// -------- //
+// Switcher //
+// -------- //
 
-@tab-button-font:                         italic bold 18px Cambria, sans-serif;
-@tab-button-text-color:                   #000;
+@switcher-spritesheet:                          'img/switcher.png';
 
-@tab-button-height:                       29px;
-@tab-button-side-width:                   19px;
-@tab-button-side-height:                  @tab-button-height;
-@tab-button-inner-height:                 @tab-button-height;
-@tab-button-text-padding:                 3px 0 0;
+@switcher-toggle-edge-width:                    16px;
+@switcher-gap-width:                            16px;
 
-@tab-button-left-side-margin:             0 -4px 0 0;
-@tab-button-left-side-bg:                 url('img/tabButtonLeft.png') no-repeat;
+@switcher-text-alignment:                       center;
+@switcher-cursor:                               pointer;
+@switcher-min-width:                            90px;
+@switcher-height:                               23px;
+@switcher-padding:                              0 16px 0 0;
 
-@tab-button-right-side-margin:            0 0 0 -4px;
-@tab-button-right-side-bg:                url('img/tabButtonRight.png') no-repeat;
+@switcher-toggle-position-height:               21px;
+@switcher-toggle-position-padding:              2px 0;
 
-@tab-button-inner-bg:                     url('img/tabButtonInner.png');
+@switcher-text-color:                           #000;
+@switcher-disabled-text-color:                  #999 !important;
+
+@switcher-off-toggle-padding:                   2px 32px 2px 0;
+@switcher-off-toggle-position-margin:           0 0 0 16px;
+@switcher-off-toggle-text-color:                #999;
+@switcher-off-toggle-bg:                        url(@switcher-spritesheet) 0 -96px;
+@switcher-off-toggle-left-edge-bg:              url(@switcher-spritesheet) 0 0;
+@switcher-off-toggle-right-edge-bg:             url(@switcher-spritesheet) 0 -24px;
+@switcher-off-toggle-disabled-text-color:       #ccc;
+@switcher-off-toggle-disabled-bg:               none;
+@switcher-off-toggle-disabled-left-edge-bg:     none;
+@switcher-off-toggle-disabled-right-edge-bg:    none;
+
+@switcher-on-toggle-padding:                    2px 0 2px 32px;
+@switcher-on-toggle-position-margin:            0 16px 0 auto;
+@switcher-on-toggle-text-color:                 #000;
+@switcher-on-toggle-bg:                         @switcher-off-toggle-bg;
+@switcher-on-toggle-left-edge-bg:               url(@switcher-spritesheet) 0 -48px;
+@switcher-on-toggle-right-edge-bg:              url(@switcher-spritesheet) 0 -312px;
+@switcher-on-toggle-disabled-text-color:        @switcher-off-toggle-disabled-text-color;
+@switcher-on-toggle-disabled-bg:                none;
+@switcher-on-toggle-disabled-left-edge-bg:      none;
+@switcher-on-toggle-disabled-right-edge-bg:     none;
 
 
 

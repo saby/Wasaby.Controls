@@ -1,93 +1,110 @@
 .controls-Switcher {
-   display: inline-block;
-   height: 23px;
-   min-width: 90px;
-   padding-right: 16px;
-}
+  display: inline-block;
+  min-width: @switcher-min-width;
+  height: @switcher-height;
+  padding: @switcher-padding;
+  color: @switcher-text-color;
 
-.controls-Switcher.ws-disabled{
-  background: none !important;
-  color: #999999 !important;
-}
+  .controls-Switcher__toggle {
+    display: inline-block;
+    box-sizing: border-box;
+    cursor: @switcher-cursor;
+    width: 100%;
+    height: @switcher-height;
+    color: @switcher-off-toggle-text-color;
+    padding: @switcher-off-toggle-padding;
 
-.controls-Switcher__toggle {
-   height: 23px;
-   width: 100%;
-   display: inline-block;
-   cursor: pointer;
-   padding: 2px 0;
-   box-sizing: border-box;
-   color: #999999;
-   padding-right: 32px;
-}
+    .controls-Switcher__position {
+      position: relative;
+      display: inline-block;
+      box-sizing: content-box;
+      text-align: @switcher-text-alignment;
+      width: 100%;
+      height: @switcher-toggle-position-height;
+      padding: @switcher-toggle-position-padding;
+      margin: @switcher-off-toggle-position-margin;
+      background: @switcher-off-toggle-bg;
 
-.controls-Switcher__position {
-   height: 21px;
-   background: url('img/switcher.png') 0 -96px;
-   text-align: center;
-   display: inline-block;
-   padding: 2px 0;
-   position: relative;
-   margin-left: 16px;
-   box-sizing: content-box;
-   width: 100%;
-}
+      &:before {
+        content: '';
+        position: absolute;
+        width: @switcher-toggle-edge-width;
+        height: @switcher-height;
+        display: block;
+        top: 0;
+        left: -@switcher-toggle-edge-width;
+        background: @switcher-off-toggle-left-edge-bg;
+      }
 
-.controls-Switcher__toggle__position-on {
-   text-align: right;
-   color: #000000;
-   padding-right: 0;
-   padding-left: 32px;
-}
+      &:after {
+        content: '';
+        position: absolute;
+        width: @switcher-toggle-edge-width + @switcher-gap-width;
+        height: @switcher-height;
+        display: block;
+        top: 0;
+        right: -(@switcher-toggle-edge-width + @switcher-gap-width);
+        background: @switcher-off-toggle-right-edge-bg;
+      }
+    }
 
-.controls-Switcher.ws-disabled .controls-Switcher__position {
-  background: none;
-  color: #CCCCCC;
-}
+    &.controls-Switcher__toggle__position-on {
+      color: @switcher-on-toggle-text-color;
+      padding: @switcher-on-toggle-padding;
 
-.controls-Switcher__toggle__position-on .controls-Switcher__position {
-   margin-right: 16px;
-   margin-left: auto;
-}
+      .controls-Switcher__position {
+        margin: @switcher-on-toggle-position-margin;
+        background: @switcher-on-toggle-bg;
 
-.controls-Switcher__position:before {
-   content: '';
-   position: absolute;
-   height: 23px;
-   width: 16px;
-   display: block;
-   top: 0;
-   left: -16px;
-   background: url('img/switcher.png') 0 0;
-}
+        &:before {
+          width: @switcher-toggle-edge-width + @switcher-gap-width;
+          left: -(@switcher-toggle-edge-width + @switcher-gap-width);
+          background: @switcher-on-toggle-left-edge-bg;
+        }
 
-.controls-Switcher__toggle__position-on .controls-Switcher__position:before {
-   width: 32px;
-   left: -32px;
-   background-position: 0 -48px;
-}
+        &:after {
+          width: @switcher-toggle-edge-width;
+          right: -@switcher-toggle-edge-width;
+          background: @switcher-on-toggle-right-edge-bg;
+        }
+      }
+    }
+  }
 
-.controls-Switcher.ws-disabled .controls-Switcher__position:before{
-  background: none;
-}
+  &.ws-disabled {
+    color: @switcher-disabled-text-color;
+    background: none !important;
 
-.controls-Switcher__position:after {
-   content: '';
-   position: absolute;
-   height: 23px;
-   width: 32px;
-   display: block;
-   top: 0;
-   right: -32px;
-   background: url('img/switcher.png') 0 -24px;
-}
+    .controls-Switcher__toggle {
+      color: @switcher-off-toggle-disabled-text-color;
 
-.controls-Switcher__toggle__position-on .controls-Switcher__position:after {
-   width: 16px;
-   right: -16px;
-   background-position: 0 -312px;
-}
+      .controls-Switcher__position {
+        background: @switcher-off-toggle-disabled-bg;
 
-.controls-Switcher.ws-disabled .controls-Switcher__position:after{
-  background: none;
+        &:before {
+          background: @switcher-off-toggle-disabled-left-edge-bg;
+        }
+
+        &:after {
+          background: @switcher-off-toggle-disabled-right-edge-bg;
+        }
+      }
+
+      &.controls-Switcher__toggle__position-on {
+        color: @switcher-on-toggle-disabled-text-color;
+
+        .controls-Switcher__position {
+          background: @switcher-on-toggle-disabled-bg;
+
+          &:before {
+            background: @switcher-on-toggle-disabled-left-edge-bg;
+          }
+
+          &:after {
+            background: @switcher-on-toggle-disabled-right-edge-bg;
+          }
+        }
+      }
+    }
+  }
 }
