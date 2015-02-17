@@ -488,10 +488,12 @@ function initMenus() {
 function initInputFields() {
    require([
       'js!SBIS3.CONTROLS.TextBox',
+      'js!SBIS3.CONTROLS.PasswordTextBox',
       'js!SBIS3.CONTROLS.DatePicker',
       'js!SBIS3.CONTROLS.NumberTextBox'
    ], function(
       TextBox,
+      PasswordTextBox,
       DatePicker,
       NumberTextBox
    ) {
@@ -509,6 +511,19 @@ function initInputFields() {
          element: 'textBox2',
          placeholder: 'This is disabled textbox',
          enabled: false
+      });
+
+      new PasswordTextBox({
+         element: 'passwordTextBox1',
+         placeholder: 'This is password textbox',
+         text: 'Password'
+      });
+
+      new PasswordTextBox({
+         element: 'passwordTextBox2',
+         placeholder: 'This is password textbox',
+         text: 'Password',
+         checked: false
       });
 
       new DatePicker({
