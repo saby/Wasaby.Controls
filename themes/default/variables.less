@@ -593,9 +593,6 @@
 @formatted-text-box-wrapper-padding:            @text-box-wrapper-padding;
 @formatted-text-box-wrapper-bg:                 #fff;
 
-@formatted-text-box-wrapper-disabled-cursor:    default;
-@formatted-text-box-wrapper-disabled-border:    none !important;
-
 @formatted-text-box-field-padding:              3px 0 0;
 
 
@@ -689,6 +686,42 @@
 @text-area-disabled-bg:                         @text-area-bg;
 
 @text-area-field-padding:                       4px;
+
+
+
+// ----------- //
+// Date picker //
+// ----------- //
+
+@date-picker-calendar-spritesheet:              'img/DatePicker-calendar.png';
+
+@date-picker-calendar-icon-cursor:              pointer;
+@date-picker-calendar-icon-width:               16px;
+@date-picker-calendar-icon-height:              16px;
+@date-picker-calendar-icon-top-offset:          4px;
+@date-picker-calendar-icon-left-offset:         1px;
+@date-picker-calendar-icon-bg:                  url(@date-picker-calendar-spritesheet) -1px 0 no-repeat;
+@date-picker-calendar-icon-hover-bg:            url(@date-picker-calendar-spritesheet) -18px 0 no-repeat;
+@date-picker-calendar-icon-disabled-bg:         url(@date-picker-calendar-spritesheet) -35px 0 no-repeat !important;
+
+@date-picker-calendar-shadow:                   0 4px 10px rgba(0, 0, 0, 0.5);
+
+@date-picker-wrapper-border-width:              @text-box-border-width;
+@date-picker-wrapper-border-style:              @text-box-border-style;
+@date-picker-wrapper-border-color:              @text-box-border-color;
+
+@date-picker-wrapper-focus-border-width:        @date-picker-wrapper-border-width;
+@date-picker-wrapper-focus-border-style:        @date-picker-wrapper-border-style;
+@date-picker-wrapper-focus-border-color:        @text-box-focus-border-color;
+
+@date-picker-wrapper-hover-border-width:        @date-picker-wrapper-border-width;
+@date-picker-wrapper-hover-border-style:        @date-picker-wrapper-border-style;
+@date-picker-wrapper-hover-border-color:        @text-box-hover-border-color;
+
+@date-picker-wrapper-disabled-cursor:           default;
+@date-picker-wrapper-disabled-border-width:     @date-picker-wrapper-border-width;
+@date-picker-wrapper-disabled-border-style:     @date-picker-wrapper-border-style;
+@date-picker-wrapper-disabled-border-color:     transparent;
 
 
 

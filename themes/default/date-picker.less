@@ -6,48 +6,61 @@
     &:extend(.controls-TextBox .controls-TextBox__afterFieldWrapper);
 
     & + .controls-DatePicker__fieldWrapper {
-      margin-right: 19px;
+      &:extend(.controls-TextBox .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper);
     }
   }
 
   .controls-FormattedTextBox__fieldWrapper {
-    border: 1px solid transparent;
-    border-bottom: 1px solid #EAEAEA;
-
-    &:hover {
-      border: 1px solid #EAEAEA;
-      border-bottom: 1px solid #CCCCCC;
-    }
+    border-width: @date-picker-wrapper-border-width;
+    border-style: @date-picker-wrapper-border-style;
+    border-color: @date-picker-wrapper-border-color;
   }
 
   &.ws-has-focus {
     .controls-FormattedTextBox__fieldWrapper {
-      &:extend(.controls-DatePicker .controls-FormattedTextBox__fieldWrapper:hover);
+      border-width: @date-picker-wrapper-focus-border-width;
+      border-style: @date-picker-wrapper-focus-border-style;
+      border-color: @date-picker-wrapper-focus-border-color;
+    }
+  }
+
+  &:hover {
+    .controls-FormattedTextBox__fieldWrapper {
+      border-width: @date-picker-wrapper-hover-border-width;
+      border-style: @date-picker-wrapper-hover-border-style;
+      border-color: @date-picker-wrapper-hover-border-color;
+    }
+  }
+
+  &.ws-disabled  {
+    .controls-FormattedTextBox__fieldWrapper {
+      cursor: @date-picker-wrapper-disabled-cursor;
+      border-width: @date-picker-wrapper-disabled-border-width;
+      border-style: @date-picker-wrapper-disabled-border-style;
+      border-color: @date-picker-wrapper-disabled-border-color;
     }
   }
 
   .controls-DatePicker__calendarIcon {
-    background: url("img/DatePicker-calendar.png") no-repeat -1px 0;
-    display: inline-block;
     position: absolute;
-    min-height: 22px;
-    top: 50%;
-    margin-left: 1px;
-    margin-top: -5px;
-    width: 16px;
-    cursor: pointer;
     text-decoration: none;
+    cursor: @date-picker-calendar-icon-cursor;
+    width: @date-picker-calendar-icon-width;
+    height: @date-picker-calendar-icon-height;
+    top: @date-picker-calendar-icon-top-offset;
+    left: @date-picker-calendar-icon-left-offset;
+    background: @date-picker-calendar-icon-bg;
 
     &:hover {
-      background-position: -18px 0;
+      background: @date-picker-calendar-icon-hover-bg;
     }
 
     &.calendar-disabled {
-      background-position: -35px 0 !important;
+      background: @date-picker-calendar-icon-disabled-bg;
     }
   }
 }
 
 .controls-DatePicker__calendar {
-   .box-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
+   .box-shadow(@date-picker-calendar-shadow);
 }

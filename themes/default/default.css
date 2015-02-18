@@ -901,7 +901,8 @@ input[type="reset"]::-moz-focus-inner {
   min-height: 19px;
   height: 100%;
 }
-.controls-TextBox .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
+.controls-TextBox .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper,
+.controls-DatePicker .controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
   margin: 0 19px 0 0;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper {
@@ -977,10 +978,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
   font-style: normal;
   white-space: pre;
-}
-.controls-FormattedTextBox.ws-disabled .controls-FormattedTextBox__fieldWrapper {
-  cursor: default;
-  border: none !important;
 }
 .controls-NumberTextBox .controls-TextBox__fieldWrapper {
   margin: 0 14px 0 0;
@@ -1142,35 +1139,42 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-.controls-DatePicker .controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
-  margin-right: 19px;
-}
 .controls-DatePicker .controls-FormattedTextBox__fieldWrapper {
-  border: 1px solid transparent;
-  border-bottom: 1px solid #EAEAEA;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent transparent #eaeaea transparent;
 }
-.controls-DatePicker .controls-FormattedTextBox__fieldWrapper:hover,
 .controls-DatePicker.ws-has-focus .controls-FormattedTextBox__fieldWrapper {
-  border: 1px solid #EAEAEA;
-  border-bottom: 1px solid #CCCCCC;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #eaeaea #eaeaea #cccccc;
+}
+.controls-DatePicker:hover .controls-FormattedTextBox__fieldWrapper {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #eaeaea #eaeaea #cccccc;
+}
+.controls-DatePicker.ws-disabled .controls-FormattedTextBox__fieldWrapper {
+  cursor: default;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
 }
 .controls-DatePicker .controls-DatePicker__calendarIcon {
-  background: url("img/DatePicker-calendar.png") no-repeat -1px 0;
-  display: inline-block;
   position: absolute;
-  min-height: 22px;
-  top: 50%;
-  margin-left: 1px;
-  margin-top: -5px;
-  width: 16px;
-  cursor: pointer;
   text-decoration: none;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  top: 4px;
+  left: 1px;
+  background: url('img/DatePicker-calendar.png') -1px 0 no-repeat;
 }
 .controls-DatePicker .controls-DatePicker__calendarIcon:hover {
-  background-position: -18px 0;
+  background: url('img/DatePicker-calendar.png') -18px 0 no-repeat;
 }
 .controls-DatePicker .controls-DatePicker__calendarIcon.calendar-disabled {
-  background-position: -35px 0 !important;
+  background: url('img/DatePicker-calendar.png') -35px 0 no-repeat !important;
 }
 .controls-DatePicker__calendar {
   -webkit-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
