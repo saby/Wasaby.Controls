@@ -39,14 +39,6 @@ $ws.core.withComponents('Source').addCallback(function() {
          });
       });
 
-      require(['js!SBIS3.CONTROLS.TextArea'], function (r) {
-         new r({
-            element: 'TextArea',
-            text: 'This is TextBox',
-            minLinesCount : 5
-         });
-      });
-
       require(['js!SBIS3.CONTROLS.Button'], function (r) {
          new r({
             element: 'button1',
@@ -452,14 +444,16 @@ function initInputFields() {
       'js!SBIS3.CONTROLS.FormattedTextBox',
       'js!SBIS3.CONTROLS.DatePicker',
       'js!SBIS3.CONTROLS.NumberTextBox',
-      'js!SBIS3.CONTROLS.ComboBox'
+      'js!SBIS3.CONTROLS.ComboBox',
+      'js!SBIS3.CONTROLS.TextArea'
    ], function(
       TextBox,
       PasswordTextBox,
       FormattedTextBox,
       DatePicker,
       NumberTextBox,
-      ComboBox
+      ComboBox,
+      TextArea
    ) {
       new TextBox({
          element: 'textBox1',
@@ -554,6 +548,19 @@ function initInputFields() {
          element: 'comboBox2',
          editable: true,
          items: comboItems
+      });
+
+      new TextArea({
+         element: 'textArea1',
+         text: 'This is text area',
+         minLinesCount: 7
+      });
+
+      new TextArea({
+         element: 'textArea2',
+         text: 'This is text area',
+         minLinesCount: 7,
+         enabled: false
       });
    });
 }
