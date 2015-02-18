@@ -47,46 +47,6 @@ $ws.core.withComponents('Source').addCallback(function() {
          });
       });
 
-      require(['js!SBIS3.CONTROLS.ComboBox'], function (r) {
-         new r({
-            element: 'ComboBox',
-            editable : false,
-            items : [
-               {
-                  key : 1,
-                  title : 'Первый'
-               },
-               {
-                  key : 2,
-                  title : 'Второй'
-               },
-               {
-                  key : 3,
-                  title : 'Третий'
-               }
-            ]
-         });
-
-         new r({
-            element: 'ComboBox2',
-            editable : true,
-            items : [
-               {
-                  key : 1,
-                  title : 'Первый'
-               },
-               {
-                  key : 2,
-                  title : 'Второй'
-               },
-               {
-                  key : 3,
-                  title : 'Третий'
-               }
-            ]
-         })
-      });
-
       require(['js!SBIS3.CONTROLS.Button'], function (r) {
          new r({
             element: 'button1',
@@ -490,12 +450,14 @@ function initInputFields() {
       'js!SBIS3.CONTROLS.TextBox',
       'js!SBIS3.CONTROLS.PasswordTextBox',
       'js!SBIS3.CONTROLS.DatePicker',
-      'js!SBIS3.CONTROLS.NumberTextBox'
+      'js!SBIS3.CONTROLS.NumberTextBox',
+      'js!SBIS3.CONTROLS.ComboBox'
    ], function(
       TextBox,
       PasswordTextBox,
       DatePicker,
-      NumberTextBox
+      NumberTextBox,
+      ComboBox
    ) {
       new TextBox({
          element: 'textBox1',
@@ -550,6 +512,33 @@ function initInputFields() {
          element: 'numberTextBox3',
          text: '123',
          enabled: false
+      });
+
+      var comboItems = [
+         {
+            key : 1,
+            title: 'Первый'
+         },
+         {
+            key : 2,
+            title: 'Второй'
+         },
+         {
+            key: 3,
+            title: 'Третий'
+         }
+      ];
+
+      new ComboBox({
+         element: 'comboBox1',
+         editable: false,
+         items: comboItems
+      });
+
+      new ComboBox({
+         element: 'comboBox2',
+         editable: true,
+         items: comboItems
       });
    });
 }

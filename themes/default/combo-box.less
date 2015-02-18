@@ -1,0 +1,84 @@
+.controls-ComboBox {
+  .controls-TextBox__fieldWrapper {
+    position: relative;
+
+    .controls-TextBox__field {
+      &.controls-ComboBox__field {
+        color: @combo-box-text-color;
+      }
+
+      &.controls-ComboBox__fieldNotEditable {
+        display: none;
+      }
+    }
+  }
+
+  .controls-TextBox__afterFieldWrapper {
+    .controls-ComboBox__arrowDown {
+      position: absolute;
+      text-decoration: none;
+      display: inline-block;
+      width: @combo-box-arrow-width;
+      height: @combo-box-arrow-height;
+      top: @combo-box-arrow-top-offset;
+      right: @combo-box-arrow-right-offset;
+      margin: @combo-box-arrow-margin;
+      background: @combo-box-arrow-bg;
+
+      &:hover {
+        text-decoration: none;
+        background: @combo-box-arrow-hover-bg;
+      }
+    }
+  }
+
+  &.controls-ComboBox__editable-false {
+    cursor: pointer;
+
+    .controls-TextBox__fieldWrapper {
+      .controls-TextBox__field {
+        &.controls-ComboBox__field {
+          visibility: hidden;
+          position: absolute;
+        }
+
+        &.controls-ComboBox__fieldNotEditable {
+          display: inline-block;
+          color: @combo-box-text-color;
+        }
+      }
+    }
+
+    &:hover {
+      .controls-TextBox__afterFieldWrapper {
+        .controls-ComboBox__arrowDown {
+          text-decoration: none;
+          background-position: @combo-box-arrow-hover-bg;
+        }
+      }
+    }
+  }
+}
+
+.controls-ComboBox__picker {
+  border: @combo-box-picker-border;
+  margin: @combo-box-picker-margin;
+
+  .controls-ComboBox__itemRow {
+    cursor: pointer;
+    padding: @combo-box-picker-item-padding;
+    color: @combo-box-picker-item-text-color;
+    background: @combo-box-picker-item-bg;
+
+    &:hover {
+      color: @combo-box-picker-item-hover-text-color;
+      background-color: @combo-box-picker-item-hover-bg;
+    }
+  }
+}
+
+// TODO: what is it - modifier?
+.controls-ComboBox__inputWrapper {
+  height: 100%;
+  margin-right: @combo-box-input-wrapper-right-offset;
+}
