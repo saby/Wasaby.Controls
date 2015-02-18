@@ -94,6 +94,13 @@
       .box-shadow(@button-primary-active-shadow);
       background: @button-primary-active-bg;
     }
+
+    &.ws-disabled {
+      color: @button-disabled-text-color;
+      border: @button-disabled-border;
+      .box-shadow(@button-disabled-shadow);
+      background: @button-disabled-bg;
+    }
   }
 
   // Normal default light button
@@ -136,6 +143,13 @@
         border: @button-light-primary-active-border;
         .box-shadow(@button-light-primary-active-shadow);
         background: @button-light-primary-active-bg;
+      }
+
+      &.ws-disabled {
+        color: @button-light-disabled-text-color;
+        border: @button-light-disabled-border;
+        .box-shadow(@button-light-disabled-shadow);
+        background: @button-light-disabled-bg;
       }
     }
 
@@ -227,6 +241,13 @@
         border: @button-big-primary-active-border;
         .box-shadow(@button-big-primary-active-shadow);
         background: @button-big-primary-active-bg;
+      }
+
+      &.ws-disabled {
+        color: @button-big-disabled-text-color;
+        border: @button-big-disabled-border;
+        .box-shadow(@button-big-disabled-shadow);
+        background: @button-big-disabled-bg;
       }
     }
 

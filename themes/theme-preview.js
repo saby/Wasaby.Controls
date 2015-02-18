@@ -7,146 +7,233 @@ $ws.core.withComponents('Source').addCallback(function() {
       initMenus();
       initInputFields();
       initBackButton();
-
-      require(['js!SBIS3.CONTROLS.Link'], function(r) {
-         new r({
-            element: 'link',
-            caption: 'This is Link',
-            link: 'http://wi.sbis.ru',
-            inNewTab: true,
-            icon: 'sprite:icon-24 icon-Attach icon-primary action-hover'
-         });
-
-         new r({
-            element : 'text',
-            caption : 'Расчеты и среднесписочная численность'
-         })
-      });
-
-      require(['js!SBIS3.CONTROLS.IconButton'], function (r) {
-         new r({
-            element: 'buttonIcon',
-            icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
-         });
-         new r({
-            element: 'buttonIcon2',
-            icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
-         });
-
-         new r({
-            element : 'icon',
-            icon: 'sprite:icon-16 icon-Payment icon-primary  action-hover'
-         });
-      });
-
-      require(['js!SBIS3.CONTROLS.Button'], function (r) {
-         new r({
-            element: 'button1',
-            caption: 'Сохранить',
-            primary: true
-         });
-
-         new r({
-            element: 'button2',
-            caption: 'Траль',
-            tooltip : 'Лалала',
-            icon : 'sprite:icon-16 icon-Alert icon-primary'
-         });
-
-         new r({
-            element: 'button3',
-            caption: 'Сохранить',
-            enabled: false
-         });
-
-         new r({
-            element: 'coreButton',
-            caption: 'Сохранить',
-            primary: true
-         });
-
-         new r({
-            element: 'button2big',
-            caption: 'Удалить'
-         });
-
-         new r({
-            element: 'button3big',
-            caption: 'Сохранить',
-            enabled: false
-         });
-
-         new r({
-            element: 'buttonlight',
-            caption: 'Утвердить',
-            primary:true,
-            icon: 'sprite:icon-16 icon-Successful icon-done'
-         });
-
-         new r({
-            element: 'buttonlight2',//zButton1
-            caption: 'Отклонить',
-            icon:'sprite:icon-16 icon-Unsuccess icon-error'
-         });
-
-         //Зуев
-         new r({
-            element: 'zButton1',
-            caption: '123',
-            icon:'sprite:icon-16 icon-Unsuccess icon-error'
-         });
-         new r({
-            element: 'zButton2',
-            caption: 'Отклонить какую то весчь',
-            icon:'sprite:icon-16 icon-Unsuccess icon-error'
-         });
-         new r({
-            element: 'zButton3',
-            caption: '*',
-            icon:'sprite:icon-16 icon-Unsuccess icon-error'
-         });
-      });
-
-      require(['js!SBIS3.CONTROLS.ToggleButton'], function (r) {
-         new r({
-            element: 'ToggleButton',
-            caption: 'Переключаемая',
-            icon : 'sprite:icon-24 icon-IPmask icon-primary'
-         });
-
-         new r({
-            element: 'ToggleButton2',
-            caption: 'Переключаемая',
-            primary: true
-         });
-
-         new r({
-            element: 'ToggleButtonbig',
-            caption: 'Переключаемая'
-         });
-
-         new r({
-            element: 'ToggleButton2big',
-            caption: 'Переключаемая',
-            primary: true
-         })
-      });
-   });
-
-   require(['js!SBIS3.CORE.Button'], function (r) {
-      new r({
-         element: 'coreButton',
-         caption: 'Сохранить'
-      });
    });
 });
 
 function initButtons() {
    require([
+      'js!SBIS3.CONTROLS.Link',
+      'js!SBIS3.CONTROLS.Button',
+      'js!SBIS3.CONTROLS.ToggleButton',
+      'js!SBIS3.CONTROLS.IconButton',
       'js!SBIS3.CONTROLS.TabButton'
    ], function(
+      Link,
+      Button,
+      ToggleButton,
+      IconButton,
       TabButton
    ) {
+      new Link({
+         element: 'link',
+         caption: 'Link',
+         link: 'http://wi.sbis.ru',
+         inNewTab: true,
+         icon: 'sprite:icon-24 icon-Attach icon-primary action-hover'
+      });
+
+      new Button({
+         element: 'normalDefaultButton',
+         caption: 'Default button'
+      });
+
+      new Button({
+         element: 'normalDisabledDefaultButton',
+         caption: 'Default button',
+         enabled: false
+      });
+
+      new ToggleButton({
+         element: 'normalDefaultToggleButton',
+         caption: 'Default toggle button'
+      });
+
+      new Button({
+         element: 'normalEllipsisDefaultButton',
+         caption: 'Default button'
+      });
+
+      new Button({
+         element: 'normalDefaultButton16',
+         caption: 'Default button 16x16',
+         icon: 'sprite:icon-16 icon-Alert icon-primary'
+      });
+
+      new Button({
+         element: 'normalDefaultButton24',
+         caption: 'Default button 24x24',
+         icon: 'sprite:icon-24 icon-Alert icon-primary'
+      });
+
+      new Button({
+         element: 'bigDefaultButton',
+         caption: 'Default button'
+      });
+
+      new Button({
+         element: 'bigDisabledDefaultButton',
+         caption: 'Default button',
+         enabled: false
+      });
+
+      new ToggleButton({
+         element: 'bigDefaultToggleButton',
+         caption: 'Default toggle button'
+      });
+
+      new Button({
+         element: 'bigEllipsisDefaultButton',
+         caption: 'Default button'
+      });
+
+      new Button({
+         element: 'bigDefaultButton16',
+         caption: 'Default button 16x16',
+         icon: 'sprite:icon-16 icon-Alert icon-primary'
+      });
+
+      new Button({
+         element: 'bigDefaultButton24',
+         caption: 'Default button 24x24',
+         icon: 'sprite:icon-24 icon-Alert icon-primary'
+      });
+
+      new Button({
+         element: 'normalPrimaryButton',
+         caption: 'Primary button',
+         primary: true
+      });
+
+      new Button({
+         element: 'normalDisabledPrimaryButton',
+         caption: 'Primary button',
+         primary: true,
+         enabled: false
+      });
+
+      new ToggleButton({
+         element: 'normalPrimaryToggleButton',
+         caption: 'Primary toggle button',
+         primary: true
+      });
+
+      new Button({
+         element: 'normalEllipsisPrimaryButton',
+         caption: 'Primary button',
+         primary: true
+      });
+
+      new Button({
+         element: 'normalPrimaryButton16',
+         caption: 'Primary button 16x16',
+         primary: true,
+         icon: 'sprite:icon-16 icon-Alert icon-attention'
+      });
+
+      new Button({
+         element: 'normalPrimaryButton24',
+         caption: 'Primary button 24x24',
+         primary: true,
+         icon: 'sprite:icon-24 icon-Alert icon-attention'
+      });
+
+      new Button({
+         element: 'bigPrimaryButton',
+         caption: 'Primary button',
+         primary: true
+      });
+
+      new Button({
+         element: 'bigDisabledPrimaryButton',
+         caption: 'Primary button',
+         primary: true,
+         enabled: false
+      });
+
+      new ToggleButton({
+         element: 'bigPrimaryToggleButton',
+         caption: 'Primary toggle button',
+         primary: true
+      });
+
+      new Button({
+         element: 'bigEllipsisPrimaryButton',
+         caption: 'Primary button',
+         primary: true
+      });
+
+      new Button({
+         element: 'bigPrimaryButton16',
+         caption: 'Primary button 16x16',
+         primary: true,
+         icon: 'sprite:icon-16 icon-Alert icon-attention'
+      });
+
+      new Button({
+         element: 'bigPrimaryButton24',
+         caption: 'Primary button 24x24',
+         primary: true,
+         icon: 'sprite:icon-24 icon-Alert icon-attention'
+      });
+
+      new Button({
+         element: 'lightDefaultButton',
+         caption: 'Light default button'
+      });
+
+      new Button({
+         element: 'lightDisabledDefaultButton',
+         caption: 'Light default button',
+         enabled: false
+      });
+
+      new Button({
+         element: 'lightEllipsisDefaultButton',
+         caption: 'Light default button'
+      });
+
+      new Button({
+         element: 'lightDefaultButton16',
+         caption: 'Light default button 16x16',
+         icon: 'sprite:icon-16 icon-Alert icon-primary'
+      });
+
+      new Button({
+         element: 'lightPrimaryButton',
+         caption: 'Light primary button',
+         primary: true
+      });
+
+      new Button({
+         element: 'lightDisabledPrimaryButton',
+         caption: 'Light primary button',
+         primary: true,
+         enabled: false
+      });
+
+      new Button({
+         element: 'lightEllipsisPrimaryButton',
+         caption: 'Light primary button',
+         primary: true
+      });
+
+      new Button({
+         element: 'lightPrimaryButton16',
+         caption: 'Light primary button 16x16',
+         primary: true,
+         icon: 'sprite:icon-16 icon-Alert icon-primary'
+      });
+
+      new IconButton({
+         element: 'iconButton1',
+         icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
+      });
+
+      new IconButton({
+         element: 'iconButton2',
+         icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
+      });
+
       new TabButton({
          element: 'tabButton',
          caption: 'Tab button'
@@ -445,7 +532,8 @@ function initInputFields() {
       'js!SBIS3.CONTROLS.DatePicker',
       'js!SBIS3.CONTROLS.NumberTextBox',
       'js!SBIS3.CONTROLS.ComboBox',
-      'js!SBIS3.CONTROLS.TextArea'
+      'js!SBIS3.CONTROLS.TextArea',
+      'js!SBIS3.CONTROLS.EditAtPlace'
    ], function(
       TextBox,
       PasswordTextBox,
@@ -453,7 +541,8 @@ function initInputFields() {
       DatePicker,
       NumberTextBox,
       ComboBox,
-      TextArea
+      TextArea,
+      EditAtPlace
    ) {
       new TextBox({
          element: 'textBox1',
@@ -561,6 +650,11 @@ function initInputFields() {
          text: 'This is text area',
          minLinesCount: 7,
          enabled: false
+      });
+
+      new EditAtPlace({
+         element: 'editAtPlace',
+         text: 'Edit at place'
       });
    });
 }

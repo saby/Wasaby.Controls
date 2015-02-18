@@ -37,13 +37,125 @@
    <script src="theme-preview.js"></script>
 </head>
 <body>
-   <div id="back"></div>
-
    <div id="content">
+
+      <div id="back"></div>
+
       <h3>Кнопки</h3>
       <ul class="preview-list clearfix">
          <li>
-            <div id="tabButton"></div>
+            <div class="row">
+               <div id="normalDefaultButton"></div>
+            </div>
+            <div class="row">
+               <div id="normalDisabledDefaultButton"></div>
+            </div>
+            <div class="row">
+               <div id="normalDefaultToggleButton"></div>
+            </div>
+            <div class="row">
+               <div id="normalEllipsisDefaultButton" class="controls-Button__ellispis" style="width: 70px;"></div>
+            </div>
+            <div class="row">
+               <div id="normalDefaultButton16"></div>
+            </div>
+            <div class="row">
+               <div id="normalDefaultButton24"></div>
+            </div>
+            <div class="row">
+               <div id="bigDefaultButton" class="controls-Button__big"></div>
+            </div>
+            <div class="row">
+               <div id="bigDisabledDefaultButton" class="controls-Button__big"></div>
+            </div>
+            <div class="row">
+               <div id="bigDefaultToggleButton" class="controls-Button__big"></div>
+            </div>
+            <div class="row">
+               <div id="bigEllipsisDefaultButton" class="controls-Button__big controls-Button__ellispis" style="width: 100px;"></div>
+            </div>
+            <div class="row">
+               <div id="bigDefaultButton16" class="controls-Button__big"></div>
+            </div>
+            <div class="row">
+               <div id="bigDefaultButton24" class="controls-Button__big"></div>
+            </div>
+         </li>
+         <li>
+            <div class="row">
+               <div id="normalPrimaryButton"></div>
+            </div>
+            <div class="row">
+               <div id="normalDisabledPrimaryButton"></div>
+            </div>
+            <div class="row">
+               <div id="normalPrimaryToggleButton"></div>
+            </div>
+            <div class="row">
+               <div id="normalEllipsisPrimaryButton" class="controls-Button__ellispis" style="width: 70px;"></div>
+            </div>
+            <div class="row">
+               <div id="normalPrimaryButton16"></div>
+            </div>
+            <div class="row">
+               <div id="normalPrimaryButton24"></div>
+            </div>
+            <div class="row">
+               <div id="bigPrimaryButton" class="controls-Button__big"></div>
+            </div>
+            <div class="row">
+               <div id="bigDisabledPrimaryButton" class="controls-Button__big"></div>
+            </div>
+            <div class="row">
+               <div id="bigPrimaryToggleButton" class="controls-Button__big"></div>
+            </div>
+            <div class="row">
+               <div id="bigEllipsisPrimaryButton" class="controls-Button__big controls-Button__ellispis" style="width: 100px;"></div>
+            </div>
+            <div class="row">
+               <div id="bigPrimaryButton16" class="controls-Button__big"></div>
+            </div>
+            <div class="row">
+               <div id="bigPrimaryButton24" class="controls-Button__big"></div>
+            </div>
+         </li>
+         <li>
+            <div class="row">
+               <div id="lightDefaultButton" class="controls-Button__light"></div>
+            </div>
+            <div class="row">
+               <div id="lightDisabledDefaultButton" class="controls-Button__light"></div>
+            </div>
+            <div class="row">
+               <div id="lightEllipsisDefaultButton" class="controls-Button__light controls-Button__ellispis" style="width: 70px;"></div>
+            </div>
+            <div class="row">
+               <div id="lightDefaultButton16" class="controls-Button__light"></div>
+            </div>
+            <div class="row">
+               <div id="lightPrimaryButton" class="controls-Button__light"></div>
+            </div>
+            <div class="row">
+               <div id="lightDisabledPrimaryButton" class="controls-Button__light"></div>
+            </div>
+            <div class="row">
+               <div id="lightEllipsisPrimaryButton" class="controls-Button__light controls-Button__ellispis" style="width: 70px;"></div>
+            </div>
+            <div class="row">
+               <div id="lightPrimaryButton16" class="controls-Button__light"></div>
+            </div>
+         </li>
+         <li>
+            <div class="row">
+               <div id="link"></div>
+            </div>
+            <div class="row">
+               <div id="iconButton1"></div>
+               <div id="iconButton2" class="controls-Button"></div>
+            </div>
+            <div class="row">
+               <div id="tabButton"></div>
+            </div>
          </li>
       </ul>
 
@@ -139,160 +251,18 @@
             </div>
          </li>
          <li>
-            <div id="textArea1"></div>
-            <div id="textArea2"></div>
+            <div class="row">
+               <div id="textArea1"></div>
+            </div>
+            <div class="row">
+               <div id="textArea2"></div>
+            </div>
+         </li>
+         <li>
+            <div id="editAtPlace"></div>
          </li>
       </ul>
 
-      <h3>Кнопки</h3>
-      <table>
-         <tr>
-            <td>
-               primary
-            </td>
-            <td>
-               <div id="button1" style="width: 50px" class="controls-Button__ellispis"></div>
-            </td>
-            <td>
-               primary big
-            </td>
-            <td>
-               <div id="coreButton" style="width: 50px"></div>
-            </td>
-         </tr>
-         <tr>
-            <td>
-               primary
-            </td>
-            <td>
-               <div id="buttonIcon"></div>
-            </td>
-            <td>
-               primary big
-            </td>
-            <td>
-               <div id="buttonIcon2" class="controls-Button"></div>
-            </td>
-         </tr>
-         <tr>
-            <td>
-               кнопка
-            </td>
-            <td>
-               <div id="button2"></div>
-            </td>
-            <td>
-               кнопка big
-            </td>
-            <td>
-               <div id="button2big" class="controls-Button__big"></div>
-            </td>
-         </tr>
-         <tr>
-            <td>
-               переключаемая
-            </td>
-            <td>
-               <div id="ToggleButton"></div>
-            </td>
-            <td>
-               переключаемая big
-            </td>
-            <td>
-               <div id="ToggleButtonbig" class="controls-Button__big"></div>
-            </td>
-         </tr>
-         <tr>
-            <td>
-               переключаемая primary
-            </td>
-            <td>
-               <div id="ToggleButton2"></div>
-            </td>
-            <td>
-               переключаемая primary big
-            </td>
-            <td>
-               <div id="ToggleButton2big" class="controls-Button__big"></div>
-            </td>
-         </tr>
-         <tr>
-            <td>
-               disable
-            </td>
-            <td>
-               <div id="button3"></div>
-            </td>
-            <td>
-               disable big
-            </td>
-            <td>
-               <div id="button3big" class="controls-Button__big"></div>
-            </td>
-         </tr>
-         <tr>
-            <td>
-               light
-            </td>
-            <td>
-               <div id="buttonlight" class="controls-Button__light"></div>
-            </td>
-            <td>
-               disable big
-            </td>
-            <td>
-               <div id="buttonlight2" class="controls-Button__light"></div>
-            </td>
-         </tr>
-         <tr>
-            <td style="height: 40px;">
-               Link Button
-            </td>
-            <td>
-               <div id="link"  style="width: 100px"></div>
-            </td>
-            <td>
-            </td>
-            <td>
-            </td>
-         </tr>
-      </table>
-      <br/><br/>
-      Зуев смотрим чтоб не сломалось (в первой колонке должны быть три кнопки одинаковой ширины = ширине самой большой кнопки, ширина колонки должна соотвествовать, ничего не должно наезжать)
-      <table>
-         <colgroup>
-            <col width="25"/>
-            <col/>
-         </colgroup>
-         <tr>
-            <td>
-               <div id="zButton1" class="zButton controls-Button__light"></div>
-            </td>
-            <td>Текст 1</td>
-         </tr>
-         <tr>
-            <td>
-               <div id="zButton2" class="zButton controls-Button__light"></div>
-            </td>
-            <td>Текст 2</td>
-         </tr>
-         <tr>
-            <td>
-               <div id="zButton3" class="zButton controls-Button__light"></div>
-            </td>
-            <td>Текст 3</td>
-         </tr>
-      </table>
-      <br/><br/>
-      Макаров
-      <div id="IconTitle" class="ws-hover-target" style="width: 410px">
-         <div id="icon" class="controls-IconButton__zplBigIcon">
-
-         </div>
-         <div id="text"></div>
-
-      </div>
-      <span>Тралалала</span>
    </div>
 
 </body>
