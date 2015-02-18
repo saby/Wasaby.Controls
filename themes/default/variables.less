@@ -525,34 +525,9 @@
 // -------- //
 @text-box-height:                         24px;
 @text-box-wrapper-padding:                0 4px;
-
-@text-box-border-width:                   1px;
-@text-box-border-style:                   solid;
-@text-box-border-color:                   transparent transparent #eaeaea transparent;
-@text-box-bg:                             #fff;
-
-@text-box-focus-border-width:             @text-box-border-width;
-@text-box-focus-border-style:             @text-box-border-style;
-@text-box-focus-border-color:             #eaeaea #eaeaea #ccc;
-@text-box-focus-bg:                       @text-box-bg;
-
-@text-box-error-border-width:             @text-box-border-width;
-@text-box-error-border-style:             @text-box-border-style;
-@text-box-error-border-color:             #ff302b !important;
-@text-box-error-bg:                       #fadadd !important;
-
-@text-box-hover-border-width:             @text-box-focus-border-width;
-@text-box-hover-border-style:             @text-box-focus-border-style;
-@text-box-hover-border-color:             @text-box-focus-border-color;
-@text-box-hover-bg:                       @text-box-bg;
-
-@text-box-disabled-border-width:          @text-box-border-width;
-@text-box-disabled-border-style:          @text-box-border-style;
-@text-box-disabled-border-color:          transparent;
-@text-box-disabled-bg:                    @text-box-bg;
+@text-box-border-radius:                  0;
 
 @text-box-field-font:                     inherit;
-@text-box-field-text-color:               inherit;
 @text-box-field-text-alignment:           left;
 @text-box-field-min-height:               19px;
 @text-box-field-line-height:              20px !important;
@@ -562,6 +537,36 @@
 @text-box-field-outline:                  none;
 @text-box-field-bg:                       transparent;
 @text-box-field-after-margin:             0 19px 0 0;
+
+@text-box-field-text-color:               inherit;
+@text-box-border-width:                   1px;
+@text-box-border-style:                   solid;
+@text-box-border-color:                   transparent transparent #eaeaea transparent;
+@text-box-bg:                             #fff;
+
+@text-box-focus-field-text-color:         @text-box-field-text-color;
+@text-box-focus-border-width:             @text-box-border-width;
+@text-box-focus-border-style:             @text-box-border-style;
+@text-box-focus-border-color:             #eaeaea #eaeaea #ccc;
+@text-box-focus-bg:                       @text-box-bg;
+
+@text-box-error-field-text-color:         @text-box-field-text-color;
+@text-box-error-border-width:             @text-box-border-width;
+@text-box-error-border-style:             @text-box-border-style;
+@text-box-error-border-color:             #ff302b !important;
+@text-box-error-bg:                       #fadadd !important;
+
+@text-box-hover-field-text-color:         @text-box-field-text-color;
+@text-box-hover-border-width:             @text-box-focus-border-width;
+@text-box-hover-border-style:             @text-box-focus-border-style;
+@text-box-hover-border-color:             @text-box-focus-border-color;
+@text-box-hover-bg:                       @text-box-bg;
+
+@text-box-disabled-field-text-color:      @text-box-field-text-color;
+@text-box-disabled-border-width:          @text-box-border-width;
+@text-box-disabled-border-style:          @text-box-border-style;
+@text-box-disabled-border-color:          transparent;
+@text-box-disabled-bg:                    @text-box-bg;
 
 @text-box-after-width:                    16px;
 @text-box-after-min-height:               @text-box-field-min-height;
@@ -578,13 +583,14 @@
 // ------------------ //
 
 @formatted-text-box-line-height:                normal;
-@formatted-text-box-bg:                         transparent;
 
 @formatted-text-box-wrapper-min-height:         22px;
 @formatted-text-box-wrapper-padding:            @text-box-wrapper-padding;
-@formatted-text-box-wrapper-disabled-cursor:    default;
 @formatted-text-box-wrapper-bg:                 #fff;
+
+@formatted-text-box-wrapper-disabled-cursor:    default;
 @formatted-text-box-wrapper-disabled-border:    none !important;
+
 @formatted-text-box-field-padding:              3px 0 0;
 
 
@@ -614,7 +620,8 @@
 
 @combo-box-arrow-spritesheet:                   'img/ComboBox.png';
 
-@combo-box-text-color:                          inherit;
+@combo-box-field-font:                          inherit;
+@combo-box-field-text-color:                    inherit;
 
 @combo-box-arrow-width:                         16px;
 @combo-box-arrow-height:                        16px;
@@ -627,10 +634,52 @@
 @combo-box-picker-border:                       1px solid #ccc;
 @combo-box-picker-margin:                       -1px 0 0;
 @combo-box-picker-item-padding:                 4px;
-@combo-box-picker-item-text-color:              @combo-box-text-color;
+@combo-box-picker-item-font:                    inherit;
+@combo-box-picker-item-text-color:              @combo-box-field-text-color;
 @combo-box-picker-item-bg:                      #fff;
 @combo-box-picker-item-hover-text-color:        @combo-box-picker-item-text-color;
 @combo-box-picker-item-hover-bg:                #e7f0f9;
 
 // TODO: check whether it's required
 @combo-box-input-wrapper-right-offset:          18px;
+
+
+
+// --------- //
+// Text area //
+// --------- //
+
+@text-area-field-font:                          inherit;
+@text-area-border-radius:                       0;
+
+@text-area-field-text-color:                    inherit;
+@text-area-border-width:                        1px;
+@text-area-border-style:                        solid;
+@text-area-border-color:                        #eaeaea;
+@text-area-bg:                                  @text-box-bg;
+
+@text-area-focus-field-text-color:              @text-area-field-text-color;
+@text-area-focus-border-width:                  @text-area-border-width;
+@text-area-focus-border-style:                  @text-area-border-style;
+@text-area-focus-border-color:                  #eaeaea #eaeaea #ccc #eaeaea;
+@text-area-focus-bg:                            @text-area-bg;
+
+@text-area-error-field-text-color:              @text-area-field-text-color;
+@text-area-error-border-width:                  @text-area-border-width;
+@text-area-error-border-style:                  @text-area-border-style;
+@text-area-error-border-color:                  @text-box-error-border-color;
+@text-area-error-bg:                            @text-box-error-bg;
+
+@text-area-hover-field-text-color:              @text-area-field-text-color;
+@text-area-hover-border-width:                  @text-area-focus-border-width;
+@text-area-hover-border-style:                  @text-area-focus-border-style;
+@text-area-hover-border-color:                  @text-area-focus-border-color;
+@text-area-hover-bg:                            @text-area-focus-bg;
+
+@text-area-disabled-field-text-color:           @text-area-field-text-color;
+@text-area-disabled-border-width:               @text-area-border-width;
+@text-area-disabled-border-style:               @text-area-border-style;
+@text-area-disabled-border-color:               transparent;
+@text-area-disabled-bg:                         @text-area-bg;
+
+@text-area-field-padding:                       4px;

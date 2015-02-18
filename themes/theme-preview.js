@@ -449,12 +449,14 @@ function initInputFields() {
    require([
       'js!SBIS3.CONTROLS.TextBox',
       'js!SBIS3.CONTROLS.PasswordTextBox',
+      'js!SBIS3.CONTROLS.FormattedTextBox',
       'js!SBIS3.CONTROLS.DatePicker',
       'js!SBIS3.CONTROLS.NumberTextBox',
       'js!SBIS3.CONTROLS.ComboBox'
    ], function(
       TextBox,
       PasswordTextBox,
+      FormattedTextBox,
       DatePicker,
       NumberTextBox,
       ComboBox
@@ -488,12 +490,25 @@ function initInputFields() {
          checked: false
       });
 
-      new DatePicker({
-         element: 'formattedTextBox1'
+      new FormattedTextBox({
+         element: 'formattedTextBox1',
+         text: '15:00:00',
+         mask: 'dd:dd:dd'
+      });
+
+      new FormattedTextBox({
+         element: 'formattedTextBox2',
+         text: '15:00:00',
+         mask: 'dd:dd:dd',
+         enabled: false
       });
 
       new DatePicker({
-         element: 'formattedTextBox2',
+         element: 'formattedTextBox3'
+      });
+
+      new DatePicker({
+         element: 'formattedTextBox4',
          enabled: false
       });
 

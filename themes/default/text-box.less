@@ -2,6 +2,8 @@
   display: inline-block;
   .box-sizing(border-box);
   height: @text-box-height;
+  .border-radius(@text-box-border-radius);
+
   border-width: @text-box-border-width;
   border-style: @text-box-border-style;
   border-color: @text-box-border-color;
@@ -12,6 +14,12 @@
     border-style: @text-box-focus-border-style;
     border-color: @text-box-focus-border-color;
     background: @text-box-focus-bg;
+
+    .controls-TextBox__fieldWrapper {
+      .controls-TextBox__field {
+        color: @text-box-focus-field-text-color;
+      }
+    }
   }
 
   &.ws-validation-error {
@@ -19,6 +27,12 @@
     border-style: @text-box-error-border-style;
     border-color: @text-box-error-border-color;
     background: @text-box-error-bg;
+
+    .controls-TextBox__fieldWrapper {
+      .controls-TextBox__field {
+        color: @text-box-error-field-text-color;
+      }
+    }
   }
 
   &:hover {
@@ -26,6 +40,12 @@
     border-style: @text-box-hover-border-style;
     border-color: @text-box-hover-border-color;
     background: @text-box-hover-bg;
+
+    .controls-TextBox__fieldWrapper {
+      .controls-TextBox__field {
+        color: @text-box-hover-field-text-color;
+      }
+    }
   }
 
   &.ws-disabled {
@@ -33,6 +53,12 @@
     border-style: @text-box-disabled-border-style;
     border-color: @text-box-disabled-border-color;
     background: @text-box-disabled-bg;
+
+    .controls-TextBox__fieldWrapper {
+      .controls-TextBox__field {
+        color: @text-box-disabled-field-text-color;
+      }
+    }
   }
 
   .controls-TextBox__afterFieldWrapper {

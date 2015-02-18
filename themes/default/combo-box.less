@@ -4,7 +4,8 @@
 
     .controls-TextBox__field {
       &.controls-ComboBox__field {
-        color: @combo-box-text-color;
+        font: @combo-box-field-font;
+        color: @combo-box-field-text-color;
       }
 
       &.controls-ComboBox__fieldNotEditable {
@@ -44,7 +45,8 @@
 
         &.controls-ComboBox__fieldNotEditable {
           display: inline-block;
-          color: @combo-box-text-color;
+          font: @combo-box-field-font;
+          color: @combo-box-field-text-color;
         }
       }
     }
@@ -67,6 +69,7 @@
   .controls-ComboBox__itemRow {
     cursor: pointer;
     padding: @combo-box-picker-item-padding;
+    font: @combo-box-picker-item-font;
     color: @combo-box-picker-item-text-color;
     background: @combo-box-picker-item-bg;
 

@@ -2,7 +2,7 @@
   display: inline-block;
   vertical-align: top;
   line-height: @formatted-text-box-line-height;
-  background: @formatted-text-box-bg;
+  background: transparent;
 
   .controls-FormattedTextBox__fieldWrapper {
     min-height: @formatted-text-box-wrapper-min-height;
@@ -20,6 +20,7 @@
     }
   }
 
+  // TODO: move to date picker
   &.ws-disabled  {
     .controls-FormattedTextBox__fieldWrapper {
       cursor: @formatted-text-box-wrapper-disabled-cursor;
