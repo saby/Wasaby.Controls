@@ -1,3 +1,7 @@
+@font-size-basic:                         13px;
+@font-name-basic:                         Tahoma, Geneva, sans-serif;
+
+
 // ---- //
 // Link //
 // ---- //
@@ -28,7 +32,7 @@
 // ------ //
 
 // Normal button
-@button-font:                             13px Tahoma, Geneva, sans-serif;
+@button-font:                             @font-size-basic @font-name-basic;
 @button-text-alignment:                   center;
 @button-min-width:                        24px;
 @button-height:                           24px;
@@ -539,30 +543,31 @@
 @text-box-field-after-margin:             0 19px 0 0;
 
 @text-box-field-text-color:               inherit;
+@text-box-field-focus-text-color:         @text-box-field-text-color;
+@text-box-field-error-text-color:         @text-box-field-text-color;
+@text-box-field-hover-text-color:         @text-box-field-text-color;
+@text-box-field-disabled-text-color:      @text-box-field-text-color;
+
 @text-box-border-width:                   1px;
 @text-box-border-style:                   solid;
 @text-box-border-color:                   transparent transparent #eaeaea transparent;
 @text-box-bg:                             #fff;
 
-@text-box-focus-field-text-color:         @text-box-field-text-color;
 @text-box-focus-border-width:             @text-box-border-width;
 @text-box-focus-border-style:             @text-box-border-style;
 @text-box-focus-border-color:             #eaeaea #eaeaea #ccc;
 @text-box-focus-bg:                       @text-box-bg;
 
-@text-box-error-field-text-color:         @text-box-field-text-color;
 @text-box-error-border-width:             @text-box-border-width;
 @text-box-error-border-style:             @text-box-border-style;
 @text-box-error-border-color:             #ff302b !important;
 @text-box-error-bg:                       #fadadd !important;
 
-@text-box-hover-field-text-color:         @text-box-field-text-color;
-@text-box-hover-border-width:             @text-box-focus-border-width;
+@text-box-hover-border-width: @text-box-focus-border-width;
 @text-box-hover-border-style:             @text-box-focus-border-style;
 @text-box-hover-border-color:             @text-box-focus-border-color;
 @text-box-hover-bg:                       @text-box-bg;
 
-@text-box-disabled-field-text-color:      @text-box-field-text-color;
 @text-box-disabled-border-width:          @text-box-border-width;
 @text-box-disabled-border-style:          @text-box-border-style;
 @text-box-disabled-border-color:          transparent;
@@ -653,33 +658,127 @@
 @text-area-border-radius:                       0;
 
 @text-area-field-text-color:                    inherit;
+@text-area-field-focus-text-color:              @text-area-field-text-color;
+@text-area-field-error-text-color:              @text-area-field-text-color;
+@text-area-field-hover-text-color:              @text-area-field-text-color;
+@text-area-field-disabled-text-color:           @text-area-field-text-color;
+
 @text-area-border-width:                        1px;
 @text-area-border-style:                        solid;
 @text-area-border-color:                        #eaeaea;
 @text-area-bg:                                  @text-box-bg;
 
-@text-area-focus-field-text-color:              @text-area-field-text-color;
 @text-area-focus-border-width:                  @text-area-border-width;
 @text-area-focus-border-style:                  @text-area-border-style;
 @text-area-focus-border-color:                  #eaeaea #eaeaea #ccc #eaeaea;
 @text-area-focus-bg:                            @text-area-bg;
 
-@text-area-error-field-text-color:              @text-area-field-text-color;
 @text-area-error-border-width:                  @text-area-border-width;
 @text-area-error-border-style:                  @text-area-border-style;
 @text-area-error-border-color:                  @text-box-error-border-color;
 @text-area-error-bg:                            @text-box-error-bg;
 
-@text-area-hover-field-text-color:              @text-area-field-text-color;
 @text-area-hover-border-width:                  @text-area-focus-border-width;
 @text-area-hover-border-style:                  @text-area-focus-border-style;
 @text-area-hover-border-color:                  @text-area-focus-border-color;
 @text-area-hover-bg:                            @text-area-focus-bg;
 
-@text-area-disabled-field-text-color:           @text-area-field-text-color;
 @text-area-disabled-border-width:               @text-area-border-width;
 @text-area-disabled-border-style:               @text-area-border-style;
 @text-area-disabled-border-color:               transparent;
 @text-area-disabled-bg:                         @text-area-bg;
 
 @text-area-field-padding:                       4px;
+
+
+
+// -------- //
+// Calendar //
+// -------- //
+
+@calendar-font:                                 inherit;
+@calendar-padding:                              8px 0 0;
+@calendar-bg:                                   #fff;
+
+@calendar-month-picker-width:                   148px;
+
+@calendar-day-border-spacing:                   1px;
+
+@calendar-day-header-font:                      11px @font-name-basic;
+@calendar-day-header-text-alignment:            center;
+
+@calendar-day-body-font:                        @calendar-font;
+@calendar-day-body-text-alignment:              left;
+
+@calendar-day-cell-width:                       56px;
+@calendar-day-table-cell-height:                24px;
+@calendar-day-table-cell-padding:               0 0 0 8px;
+
+@calendar-day-cell-cursor:                      pointer;
+@calendar-day-cell-text-color:                  inherit;
+@calendar-day-cell-bg:                          #f2f2f2;
+@calendar-day-cell-hover-text-color:            @calendar-day-cell-text-color;
+@calendar-day-cell-hover-bg:                    #e5ecf4;
+@calendar-day-cell-active-text-color:           @calendar-day-cell-text-color;
+@calendar-day-cell-active-bg:                   #ffc37e;
+@calendar-day-cell-active-hover-text-color:     @calendar-day-cell-active-text-color;
+@calendar-day-cell-active-hover-bg:             @calendar-day-cell-active-bg;
+
+@calendar-day-fog-cell-cursor:                  default;
+@calendar-day-fog-cell-text-color:              #999;
+@calendar-day-fog-cell-bg:                      transparent;
+@calendar-day-fog-cell-hover-text-color:        @calendar-day-fog-cell-text-color;
+@calendar-day-fog-cell-hover-bg:                @calendar-day-fog-cell-bg;
+
+
+
+// ------------ //
+// Month picker //
+// ------------ //
+
+@month-picker-field-cursor:                     pointer;
+@month-picker-field-height:                     16px;
+@month-picker-field-margin:                     0 16px;
+@month-picker-field-font:                       700 14px/16px @font-name-basic;
+
+@month-picker-field-text-color:                 @link-text-color;
+@month-picker-field-text-decoration:            none;
+
+@month-picker-field-hover-text-color:           @link-hover-text-color;
+@month-picker-field-hover-text-decoration:      underline;
+
+@month-picker-arrow-spritesheet:                'img/MonthPicker-arrows.png';
+
+@month-picker-arrow-cursor:                     pointer;
+@month-picker-arrow-width:                      16px;
+@month-picker-arrow-height:                     16px;
+@month-picker-arrow-top-offset:                 0;
+@month-picker-arrow-right-offset:               0;
+
+@month-picker-arrow-bg:                         #fff;
+@month-picker-left-arrow-bg:                    url(@month-picker-arrow-spritesheet) -32px 0 no-repeat;
+@month-picker-left-arrow-hover-bg:              url(@month-picker-arrow-spritesheet) 0 0 no-repeat;
+@month-picker-right-arrow-bg:                   url(@month-picker-arrow-spritesheet) -32px -32px no-repeat;
+@month-picker-right-arrow-hover-bg:             url(@month-picker-arrow-spritesheet) 0 -32px no-repeat;
+
+@month-picker-wrapper-border:                   1px solid #fff;
+@month-picker-wrapper-bg:                       #fff;
+
+@month-picker-item-cursor:                      pointer;
+@month-picker-item-height:                      22px;
+@month-picker-item-line-height:                 @month-picker-item-height;
+
+@month-picker-item-text-color:                  #333;
+@month-picker-item-bg:                          @month-picker-wrapper-bg;
+
+@month-picker-item-hover-text-color:            @month-picker-item-text-color;
+@month-picker-item-hover-bg:                    @calendar-day-cell-hover-bg;
+
+@month-picker-item-active-text-color:           @month-picker-item-text-color;
+@month-picker-item-active-bg:                   @calendar-day-cell-bg;
+
+@month-picker-item-month-text-alignment:        left;
+@month-picker-item-month-padding:               2px 2px 2px 24px;
+
+@month-picker-item-year-text-alignment:         center;
+@month-picker-item-year-padding:                2px;

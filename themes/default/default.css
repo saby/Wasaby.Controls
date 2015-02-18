@@ -1136,46 +1136,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextArea.controls-TextArea__autoheight {
   height: auto !important;
 }
-.controls-Calendar {
-  padding-top: 8px;
-  display: inline-block;
-  background: #FFFFFF;
-  text-align: center;
-}
-.controls-Calendar__monthPicker {
-  width: 148px;
-}
-.controls-Calendar__dayTable {
-  vertical-align: middle;
-  width: 100%;
-  border-spacing: 1px;
-}
-.controls-Calendar__tableHead {
-  font-size: 11px;
-}
-.controls-Calendar__tableBody {
-  text-align: left;
-}
-.controls-Calendar__tableElement {
-  padding-left: 8px;
-  width: 56px;
-  height: 24px;
-}
-.controls-Calendar__tableBodyElement {
-  background: #F2F2F2;
-  cursor: pointer;
-}
-.controls-Calendar__tableBodyElement:hover {
-  background: #E5ECF4;
-}
-.controls-Calendar__tableBodyElement__active,
-.controls-Calendar__tableBodyElement__active:hover {
-  background: #ffc37e;
-}
-.controls-Calendar__tableElementFog {
-  color: #999999;
-  cursor: default;
-}
 .controls-DatePicker {
   border: none;
   -webkit-box-sizing: border-box;
@@ -1217,84 +1177,139 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
+.controls-Calendar {
+  display: inline-block;
+  text-align: center;
+  font: inherit;
+  padding: 8px 0 0;
+  background: #ffffff;
+}
+.controls-Calendar .controls-Calendar__monthPicker {
+  width: 148px;
+}
+.controls-Calendar .controls-Calendar__dayTable {
+  vertical-align: middle;
+  width: 100%;
+  border-spacing: 1px;
+}
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableHead {
+  font: 11px Tahoma, Geneva, sans-serif;
+  text-align: center;
+}
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableBody {
+  font: inherit;
+  text-align: left;
+}
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement {
+  width: 56px;
+  height: 24px;
+  padding: 0 0 0 8px;
+}
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement {
+  cursor: pointer;
+  color: inherit;
+  background: #f2f2f2;
+}
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement:hover {
+  color: inherit;
+  background: #e5ecf4;
+}
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement.controls-Calendar__tableBodyElement__active {
+  color: inherit;
+  background: #ffc37e;
+}
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement.controls-Calendar__tableBodyElement__active:hover {
+  color: inherit;
+  background: #ffc37e;
+}
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableElementFog {
+  cursor: default;
+  color: #999999;
+  background: transparent;
+}
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableElementFog:hover {
+  color: #999999;
+  background: transparent;
+}
 .controls-MonthPicker {
   text-align: center;
   display: inline-block;
 }
-.controls-MonthPicker__field {
-  color: #0055BB;
+.controls-MonthPicker .controls-MonthPicker__field {
   white-space: nowrap;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 700;
   height: 16px;
-  line-height: 16px;
   margin: 0 16px;
+  font: 700 14px/16px Tahoma, Geneva, sans-serif;
+  color: #0055bb;
+  text-decoration: none;
 }
-.controls-MonthPicker__field:hover {
+.controls-MonthPicker .controls-MonthPicker__field:hover {
+  color: #ff7033;
   text-decoration: underline;
-  color: #FF7033;
 }
-.controls-MonthPicker__arrowWrapper {
+.controls-MonthPicker .controls-MonthPicker__arrowWrapper {
+  position: relative;
+  display: inline-block;
   width: 16px;
   min-height: 16px;
   height: 100%;
-  position: relative;
-  display: inline-block;
 }
-.controls-MonthPicker__arrowLeftWrapper {
+.controls-MonthPicker .controls-MonthPicker__arrowWrapper.controls-MonthPicker__arrowLeftWrapper {
   float: left;
-  display: inline-block;
 }
-.controls-MonthPicker__arrowRightWrapper {
+.controls-MonthPicker .controls-MonthPicker__arrowWrapper.controls-MonthPicker__arrowRightWrapper {
   float: right;
 }
-.controls-MonthPicker__arrow {
+.controls-MonthPicker .controls-MonthPicker__arrowWrapper .controls-MonthPicker__arrow {
   position: absolute;
   display: inline-block;
-  background: #FFFFFF;
-  background: url("img/MonthPicker-arrows.png");
+  text-decoration: none;
+  cursor: pointer;
   width: 16px;
   height: 16px;
-  cursor: pointer;
   top: 0;
   right: 0;
-  text-decoration: none;
+  background: #ffffff;
 }
-.controls-MonthPicker__arrowLeft {
-  background-position: 32px 0px;
+.controls-MonthPicker .controls-MonthPicker__arrowWrapper .controls-MonthPicker__arrow.controls-MonthPicker__arrowLeft {
+  background: url('img/MonthPicker-arrows.png') -32px 0 no-repeat;
 }
-.controls-MonthPicker__arrowLeft:hover {
-  background-position: 0px 0px;
+.controls-MonthPicker .controls-MonthPicker__arrowWrapper .controls-MonthPicker__arrow.controls-MonthPicker__arrowLeft:hover {
+  background: url('img/MonthPicker-arrows.png') 0 0 no-repeat;
 }
-.controls-MonthPicker__arrowRight {
-  background-position: -32px -32px;
+.controls-MonthPicker .controls-MonthPicker__arrowWrapper .controls-MonthPicker__arrow.controls-MonthPicker__arrowRight {
+  background: url('img/MonthPicker-arrows.png') -32px -32px no-repeat;
 }
-.controls-MonthPicker__arrowRight:hover {
-  background-position: 0px -32px;
+.controls-MonthPicker .controls-MonthPicker__arrowWrapper .controls-MonthPicker__arrow.controls-MonthPicker__arrowRight:hover {
+  background: url('img/MonthPicker-arrows.png') 0 -32px no-repeat;
 }
 .controls-MonthPicker__dropdownWrapper {
-  border: 1px solid #FFFFFF;
-  background: #FFFFFF;
+  border: 1px solid #ffffff;
+  background: #ffffff;
 }
-.controls-MonthPicker__dropdownElement {
-  padding: 2px;
+.controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement {
+  cursor: pointer;
   height: 22px;
   line-height: 22px;
-  cursor: pointer;
-  color: #333;
+  color: #333333;
+  background: #ffffff;
 }
-.controls-MonthPicker__dropdownElement:hover {
-  background: #E5ECF4;
+.controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement:hover {
+  color: #333333;
+  background: #e5ecf4;
 }
-.controls-MonthPicker__dropdownElementActive {
-  background: #F2F2F2;
+.controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement.controls-MonthPicker__dropdownElementActive {
+  color: #333333;
+  background: #f2f2f2;
 }
-.controls-MonthPicker__dropdownElementMonth {
-  padding-left: 24px;
+.controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement.controls-MonthPicker__dropdownElementMonth {
+  text-align: left;
+  padding: 2px 2px 2px 24px;
 }
-.controls-MonthPicker__dropdownElementYear {
+.controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement.controls-MonthPicker__dropdownElementYear {
   text-align: center;
+  padding: 2px;
 }
 .controls-EditAtPlace {
   border: 1px solid transparent;
