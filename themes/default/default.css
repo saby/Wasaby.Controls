@@ -1031,7 +1031,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox__picker {
   border: 1px solid #cccccc;
-  margin: 1px 0 0;
+  margin: -1px 0 0;
 }
 .controls-ComboBox__picker .controls-ComboBox__itemRow {
   cursor: pointer;
