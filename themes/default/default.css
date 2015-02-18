@@ -1027,7 +1027,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox.controls-ComboBox__editable-false:hover .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
   text-decoration: none;
-  background-position: #ffffff url('img/ComboBox.png') -3px -28px no-repeat;
+  background: #ffffff url('img/ComboBox.png') -3px -28px no-repeat;
 }
 .controls-ComboBox__picker {
   border: 1px solid #cccccc;
@@ -1053,8 +1053,8 @@ input[type="reset"]::-moz-focus-inner {
   border: 1px solid #EAEAEA;
   font: inherit;
 }
-.controls-TextArea:hover,
-.controls-TextArea.ws-has-focus {
+.controls-TextArea.ws-has-focus,
+.controls-TextArea:hover {
   border-bottom-color: #CCCCCC;
 }
 .controls-TextArea.ws-disabled {
