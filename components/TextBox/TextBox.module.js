@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
          this._inputField.bind('focusout', function () {
-            self.setText(self._formatValue(self.getText()));
+            self.setText(self.getText());
          });
 
          this._inputField.bind('focusin', function () {
@@ -99,9 +99,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       setText: function(text){
          text = text || ''; // так как есть датабиндинг может прийти undefined
          //перед изменением делаем trim если нужно
-         if (this._options.trim) {
-            text = String.trim(text);
-         }
+         text = this._formatValue(text);
          TextBox.superclass.setText.call(this, text);
          if (this._compatPlaceholder) {
             this._compatPlaceholder.toggle(!text);

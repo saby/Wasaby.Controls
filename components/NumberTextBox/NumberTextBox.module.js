@@ -77,27 +77,12 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             }
          });
 
-         // Сразу отрезаем лишнее
-         if (this._options.decimals && !this._options.onlyInteger){
-            this._options.text = parseFloat(this._options.text).toFixed(self._options.decimals);
-            if (isNaN(this._options.text)){
-               this._options.text = '';
-            }
-            this._inputField.val(this._options.text);
-         }
 
-         if (this._options.onlyInteger && this._options.text.indexOf('.') != -1){
-            this._options.text = this._options.text.substr(0, this._options.text.indexOf('.'));
-            this._inputField.val(this._options.text);
-         }
       },
 
       setText: function (text) {
-         var self = this;
-         if (self._options.decimals && !self._options.onlyInteger) {
-            text = parseFloat(text).toFixed(self._options.decimals);
-         }
-         NumberTextBox.superclass.setText.call(self, text);
+         text = this._formatValue(text);
+         NumberTextBox.superclass.setText.call(this, text);
       },
 
       getText: function(){
@@ -109,18 +94,21 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _formatValue: function(value){
-            value = value.toString();
+         value = value.toString();
          value = String.trim(value);
          if (this._options.onlyInteger) {
-            value = parseInt(this._inputField.val(), 10) || 0;
+            value = parseInt(value, 10) || 0;
          } else {
-            value = parseFloat(this._inputField.val());
+            value = parseFloat(value) || 0;
             if (this._options.decimals) {
                value = value.toFixed(this._options.decimals);
             }
             if (isNaN(value)){
                value = '';
             }
+         }
+         if (this._options.onlyInteger && value.indexOf('.') != -1){
+            value = value.substr(0, value.indexOf('.'));
          }
          return value;
       },
@@ -133,43 +121,41 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          this.setText(this._getSibling(this.getText(), 1));
       },
 
-      _keyDownBind: function (e) {
-
-         if (e.which == 16){
+      _keyDownBind: function (event) {
+         this._caretPosition = this._getCaretPosition();
+         if (event.which == 16){
             this._SHIFT_KEY = true;
          }
-         if (e.which == 17){
+         if (event.which == 17){
             this._CTRL_KEY = true;
          }
-         var symbol = String.fromCharCode(e.which);
-         this._caretPosition = this._getCaretPosition();
-
-         if(e.which == 190 && !this._options.onlyInteger){
-            this._dotHandler(e);
-            return;
-         }
-         if(e.which == 189 && !this._options.onlyPositive){
-            this._toggleMinus();
-            e.preventDefault();
-         }
-         if (/[0-9]/.test(symbol)){
-            this._numberPressHandler(e);
-            return true;
-         }
-
-         if (e.which == 46){
-            this._deleteHandler();
-         } else if (e.which == 8){
-            this._backspaceHandler();
-         } else
-         if (  e.which == $ws._const.key.f5    || // F5, не отменяем действие по-умолчанию
-               e.which == $ws._const.key.f12   || // F12,не отменяем действие по-умолчанию
-               e.which == $ws._const.key.left  || // не отменяем arrow keys (влево, вправо)
-               e.which == $ws._const.key.right ||
-               e.which == $ws._const.key.end   || // не отменяем home, end
-               e.which == $ws._const.key.home
+         if (event.which == $ws._const.key.f5   || // F5, не отменяем действие по-умолчанию
+            event.which == $ws._const.key.f12   || // F12,не отменяем действие по-умолчанию
+            event.which == $ws._const.key.left  || // не отменяем arrow keys (влево, вправо)
+            event.which == $ws._const.key.right ||
+            event.which == $ws._const.key.end   || // не отменяем home, end
+            event.which == $ws._const.key.home
          ) {
             return true;
+         }
+
+         var symbol = String.fromCharCode(event.which);
+
+         if(event.which == 190 && !this._options.onlyInteger){
+            this._dotHandler(event);
+            return;
+         }
+         if(event.which == 189 && !this._options.onlyPositive){
+            this._toggleMinus();
+            event.preventDefault();
+         }
+         if (/[0-9]/.test(symbol)){
+            this._numberPressHandler(event);
+            return true;
+         } else if (event.which == 46){
+            this._deleteHandler();
+         } else if (event.which == 8){
+            this._backspaceHandler();
          }
          if (this._inputField.val().indexOf('.') == 0){
             this._inputField.val('0' + this._inputField.val());
@@ -180,7 +166,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          if (this._CTRL_KEY){
             return true;
          }
-         e.preventDefault();
+         event.preventDefault();
       },
 
       _deleteHandler: function(){
