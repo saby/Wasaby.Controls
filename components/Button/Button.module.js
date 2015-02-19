@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
          _options: {
             /**
              * @cfg {Boolean} Кнопка по умолчанию
-             * Кнопка будет срабатывать при нажатии клавиши Enter.
+             * Кнопка будет срабатывать при нажатии клавиши Enter, и будет визуально отличаться от других кнопок.
              * На странице может быть только одна кнопка по умолчанию.
              * Возможные значения:
              * <ul>
@@ -37,6 +37,8 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
              * <pre>
              *     <option name="primary">true</option>
              * </pre>
+             * @see isPrimary
+             * @see setPrimary
              */
             primary: false
          }
@@ -61,23 +63,53 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
          btnText.text(caption || '');
       },
        /**
-        * Метод установки кнопки по умолчанию
-        * @param flag
+        * Метод установки кнопки по умолчанию.
+        * @param flag Признак является ли кнопкой по умолчанию.
+        * Возможные значения:
+        * <ul>
+        *    <li>true - кнопка по умолчанию;</li>
+        *    <li>false - обычная кнопка.</li>
+        * </ul>
+        * @example
+        * <pre>
+        *    var btn = this.getChildControlByName('myButton')
+        *    btn.setPrimary(false);
+        * </pre>
+        * @see isPrimary
+        * @see primary
         */
       setPrimary: function(flag){
          this._options.primary = !!flag;
          this._container.toggleClass('controls-Button__primary', this.isPrimary());
       },
       /**
-       * Является ли кнопка primary
-       * @returns {boolean}
+       * Является ли кнопкой по умолчанию.
+       * @returns {Boolean} Возвращает признак является ли кнопкой по умолчанию.
+       * Возможные значения:
+       * <ul>
+       *    <li>true - кнопка по умолчанию;</li>
+       *    <li>false - обычная кнопка.</li>
+       * </ul>
+       * @example
+       * <pre>
+       *     if (!button.isPrimary()) {
+       *        button.setPrimary(true);
+       *     }
+       * </pre>
+       * @see primary
+       * @see setPrimary
        */
       isPrimary: function(){
          return this._options.primary;
       },
        /**
-        * Метод установки/замены иконки на кнопке
-        * @param icon
+        * Метод установки/замены иконки на кнопке.
+        * @param icon Иконка из набора {@link http://wi.sbis.ru/docs/3.8.0/#icons общих иконок}. Задаётся через sprite.
+        * @example
+        * <pre>
+        *    var btn = this.getChildControlByName('myButton');
+        *    btn.setIcon('sprite:icon16 icon-Alert icon-done');
+        * </pre>
         */
       setIcon: function(icon) {
          Button.superclass.setIcon.call(this, icon);

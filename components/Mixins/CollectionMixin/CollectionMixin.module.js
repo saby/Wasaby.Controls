@@ -6,6 +6,10 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
     */
 
    var CollectionMixin = /**@lends SBIS3.CONTROLS.CollectionMixin.prototype  */{
+      /**
+       * @event onDrawItems После отрисовки всех элементов
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       */
       $protected: {
          _items : null,
          _itemsInstances : {},
@@ -14,10 +18,43 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
          _options: {
             /**
              * @cfg {String} Поле элемента коллекции, которое является ключом
-             * */
+             * @example
+             * <pre>
+             *     <option name="keyField">Идентификатор</option>
+             * </pre>
+             * @see items
+             */
             keyField : null,
+             /**
+              * @typedef {Object} Items
+              * @property {String} id Идентификатор.
+              * @property {String} title Текст пункта меню.
+              * @property {String} icon Иконка пункта меню.
+              * @property {String} parent Идентификатор родительского пункта меню. Опция задаётся для подменю.
+              * @editor icon ImageEditor
+              */
             /**
-             * @cfg {Array} Набор исходных данных по которому строится отображение
+             * @cfg {Items[]} Набор исходных данных, по которому строится отображение
+             * @example
+             * <pre>
+             *     <options name="items" type="array">
+             *        <options>
+             *            <option name="id">1</option>
+             *            <option name="title">Пункт1</option>
+             *         </options>
+             *         <options>
+             *            <option name="id">2</option>
+             *            <option name="title">Пункт2</option>
+             *         </options>
+             *         <options>
+             *            <option name="id">3</option>
+             *            <option name="title">ПунктПодменю</option>
+             *            <option name="parent">2</option>
+             *            <option name="icon">sprite:icon-16 icon-Birthday icon-primary</option>
+             *         </options>
+             *      </options>
+             * </pre>
+             * @see keyField
              */
             items: undefined
          }
@@ -56,7 +93,10 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
             });
          }
       },
-
+       /**
+        * Задать коллекцию
+        * @param items
+        */
       setItems : function(items) {
          if (items instanceof Collection) {
             this._items = items;
@@ -68,7 +108,10 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
          }
          this._drawItems();
       },
-
+     /**
+      *
+      * @param item
+      */
       addItem : function(item) {
          this._items.addItem(item);
          this._drawItems();
@@ -180,10 +223,18 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
          }
          return def;
       },
-
+     /**
+      *
+      * @returns {*}
+      */
       getItemsInstances : function() {
          return this._itemsInstances;
       },
+     /**
+      *
+      * @param id
+      * @returns {*}
+      */
       getItemInstance : function(id) {
          return this._itemsInstances[id];
       }

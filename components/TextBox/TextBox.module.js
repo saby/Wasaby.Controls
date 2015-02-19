@@ -67,20 +67,19 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  TextBox.superclass.setText.call(self, self._inputField.val());
+                  TextBox.superclass.setText.call(self, self._formatValue(self._inputField.val()));
+                  self._inputField.val(self._options.text);
                }
             }, 100)
          });
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
-         self._inputField.bind('focusout', function () {
-            if (self._options.trim) {
-               self.setText(String.trim(self.getText()));
-            }
+         this._inputField.bind('focusout', function () {
+            self.setText(self.getText());
          });
 
-         self._inputField.bind('mouseup',function(){
-            if (self._options.selectOnClick) {
+         this._inputField.bind('focusin', function () {
+            if (self._options.selectOnClick){
                self._inputField.select();
             }
          });
@@ -90,12 +89,17 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          }
       },
 
-      setText: function(text){
-         text = text || ''; // так как есть датабиндинг может прийти undefined
-         //перед изменением делаем trim если нужно
+      _formatValue: function(value){
+         value = value || ''; // так как есть датабиндинг может прийти undefined
          if (this._options.trim) {
-            text = String.trim(text);
+            value = String.trim(value);
          }
+         return value;
+      },
+
+      setText: function(text){
+         //перед изменением делаем trim если нужно
+         text = this._formatValue(text);
          TextBox.superclass.setText.call(this, text);
          if (this._compatPlaceholder) {
             this._compatPlaceholder.toggle(!text);
