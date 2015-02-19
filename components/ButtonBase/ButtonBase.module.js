@@ -21,11 +21,11 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
    var ButtonBase = Control.extend([Clickable, FormWidgetMixin, DataBindMixin, IconMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
       /**
        * @event onActivated Происходит при активации кнопки (клик мышкой, кнопки клавиатуры)
-       * @param {$ws.proto.EventObject} eventObject дескриптор события
-       * @param {Boolean} pressed Нажата ли кнопки (при использовании опции press)
+       * @param {$ws.proto.EventObject} eventObject дескриптор события.
+       * @param {Boolean} pressed Нажата ли кнопка (при использовании опции press).
        * <pre>
-       *    onButtonClick: function(event){
-       *       var list = $ws.single.ControlStorage.getByName('listOfPersons');
+       *    onActivated: function(event){
+       *       var list = this.getChildControlByName('listOfPersons');
        *       list.sendCommand('newItem');
        *    }
        * </pre>
