@@ -6,6 +6,10 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
     */
 
    var CollectionMixin = /**@lends SBIS3.CONTROLS.CollectionMixin.prototype  */{
+      /**
+       * @event onDrawItems
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       */
       $protected: {
          _items : null,
          _itemsInstances : {},
@@ -14,10 +18,18 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
          _options: {
             /**
              * @cfg {String} Поле элемента коллекции, которое является ключом
-             * */
+             * @example
+             * <pre>
+             *     <option name="keyField">Сумма</option>
+             * </pre>
+             */
             keyField : null,
             /**
              * @cfg {Array} Набор исходных данных по которому строится отображение
+             * @example
+             * <pre>
+             *
+             * </pre>
              */
             items: undefined
          }
@@ -56,7 +68,10 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
             });
          }
       },
-
+       /**
+        * Задать коллекцию
+        * @param items
+        */
       setItems : function(items) {
          if (items instanceof Collection) {
             this._items = items;
@@ -180,10 +195,18 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
          }
          return def;
       },
-
+     /**
+      *
+      * @returns {*}
+      */
       getItemsInstances : function() {
          return this._itemsInstances;
       },
+     /**
+      *
+      * @param id
+      * @returns {*}
+      */
       getItemInstance : function(id) {
          return this._itemsInstances[id];
       }
