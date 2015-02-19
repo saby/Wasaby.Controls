@@ -1340,135 +1340,113 @@ input[type="reset"]::-moz-focus-inner {
   padding: 2px;
 }
 .controls-EditAtPlace {
-  border: 1px solid transparent;
+  border: none;
 }
 .controls-EditAtPlace:hover,
-.controls-EditAtPlace.ws-has-focus {
+.controls-EditAtPlace.ws-disabled {
   border: none;
 }
-.controls-EditAtPlace__editorHidden.controls-EditAtPlace:hover,
-.controls-EditAtPlace.ws-has-focus {
-  border: 1px solid transparent;
-}
-.controls-EditAtPlace__textField {
-  cursor: pointer;
-  border-bottom: dashed 1px #868686;
-  font-family: inherit;
-  width: auto;
-  display: inline-block;
-}
-.ws-disabled .controls-EditAtPlace__textField {
-  border-bottom: none;
+.controls-EditAtPlace.ws-disabled .controls-EditAtPlace__fieldWrapper .controls-EditAtPlace__textField {
   cursor: text;
 }
-.controls-EditAtPlace__textAreaWrapper {
-  border: none;
-  display: block;
-  padding: 3px 4px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-.controls-EditAtPlaceGroup .controls-EditAtPlace__textAreaWrapper {
-  padding: 4px 4px;
-}
-.controls-EditAtPlaceGroup__editorOverlay .controls-EditAtPlace {
-  border: none;
-}
-.controls-EditAtPlace__fieldWrapperHidden {
-  border: none;
-}
-.controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace:hover {
-  border: none;
-}
-.controls-EditAtPlace__editorOverlay .controls-TextArea__inputField {
-  line-height: 20px;
-  font-size: inherit;
-}
-.controls-EditAtPlace__fieldWrapperHidden .controls-TextArea__inputField {
-  line-height: 20px;
-  font-size: inherit;
-}
-.controls-EditAtPlaceGroup__editorOverlay .controls-TextArea__inputField {
-  line-height: 20px;
-  font-size: inherit;
-}
-.controls-EditAtPlace__textAreaField {
-  margin: 0;
-}
-.controls-EditAtPlace__multiline {
+.controls-EditAtPlace.controls-EditAtPlace__multiline {
+  display: inline;
+  text-indent: 0;
   white-space: pre-wrap;
   /* css-3 */
   white-space: -moz-pre-wrap;
   /* Mozilla, since 1999 */
   word-wrap: break-word;
   /* Internet Explorer 5.5+ */
-  display: inline;
-  text-indent: 0;
 }
-.controls-EditAtPlace__autoHeight {
+.controls-EditAtPlace.controls-EditAtPlace__autoHeight {
   height: auto;
 }
-.controls-EditAtPlace__controlPanel {
-  margin-left: 8px;
-  vertical-align: top;
+.controls-EditAtPlace .controls-EditAtPlace__fieldWrapper {
+  margin: 0 0 2px 0;
+  border-width: 2px 1px;
+  border-style: solid;
+  border-color: transparent;
+}
+.controls-EditAtPlace .controls-EditAtPlace__fieldWrapper.controls-EditAtPlace__textAreaWrapper {
+  display: block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 3px 4px;
+}
+.controls-EditAtPlace .controls-EditAtPlace__fieldWrapper .controls-EditAtPlace__textField {
   display: inline-block;
+  font: inherit;
+  width: auto;
+  cursor: pointer;
+  border-width: 0 0 1px 0;
+  border-style: dashed;
+  border-color: #868686;
 }
-.controls-EditAtPlaceGroup__controlPanel {
-  margin: 4px;
-  float: right;
-  height: 24px;
+.controls-EditAtPlace .controls-EditAtPlace__editor {
+  width: 100%;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
 }
-.controls-EditAtPlace__cancel {
+.controls-EditAtPlace .controls-EditAtPlace__editor .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
+  font: 13px/20px Tahoma, Geneva, sans-serif;
+}
+.controls-EditAtPlace .controls-EditAtPlace__editor .controls-TextArea .controls-TextArea__inputField {
+  font: 13px/20px Tahoma, Geneva, sans-serif;
+}
+.controls-EditAtPlace.controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace__fieldWrapper {
+  display: none;
+}
+.controls-EditAtPlace.controls-EditAtPlace__editorHidden .controls-EditAtPlace__editor {
+  display: none;
+}
+.controls-EditAtPlaceGroup .controls-EditAtPlace .controls-EditAtPlace__fieldWrapper.controls-EditAtPlace__textAreaWrapper {
+  padding: 4px 4px;
+}
+.controls-EditAtPlace__editorOverlay,
+.controls-EditAtPlaceGroup__editorOverlay {
+  margin: -4px 0 0 -4px;
+  padding: 4px;
+  border: none;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  -webkit-box-shadow: 0 0 3px #b2b2b2;
+  -moz-box-shadow: 0 0 3px #b2b2b2;
+  box-shadow: 0 0 3px #b2b2b2;
+  background: #f8f3f1 !important;
+}
+.controls-EditAtPlace__editorOverlay .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
+  font: 13px/20px Tahoma, Geneva, sans-serif;
+}
+.controls-EditAtPlace__editorOverlay .controls-TextArea .controls-TextArea__inputField {
+  font: 13px/20px Tahoma, Geneva, sans-serif;
+}
+.controls-EditAtPlace__controlPanel {
+  display: inline-block;
+  vertical-align: top;
+  margin: 0 0 0 8px;
+}
+.controls-EditAtPlace__controlPanel .controls-EditAtPlace__cancel,
+.controls-EditAtPlaceGroup__controlPanel .controls-EditAtPlace__cancel {
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
   width: 16px;
   height: 16px;
-  margin-left: 4px;
-  margin-top: -13px;
-  display: inline-block;
-  background: url("img/cancelIcon-sprite.png") top left no-repeat;
-  background-position: 0 -32px;
-  cursor: pointer;
-  vertical-align: middle;
+  margin: 0 0 0 4px;
+  background: url('img/cancelIcon-sprite.png') 0 -32px no-repeat;
 }
-.controls-EditAtPlace__cancel:hover {
-  background-position: 0 -16px;
+.controls-EditAtPlace__controlPanel .controls-EditAtPlace__cancel:hover,
+.controls-EditAtPlaceGroup__controlPanel .controls-EditAtPlace__cancel:hover {
+  background: url('img/cancelIcon-sprite.png') 0 -16px no-repeat;
 }
-.controls-EditAtPlace__editorOverlay {
-  padding: 4px;
-  background: #f8f3f1!important;
-  -webkit-box-shadow: 0 0 3px #b2b2b2;
-  -moz-box-shadow: 0 0 3px #b2b2b2;
-  box-shadow: 0 0 3px #b2b2b2;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  -webkit-background-clip: padding-box;
-  -moz-background-clip: padding;
-  background-clip: padding-box;
-  margin-top: -3px;
-  margin-left: -4px;
-}
-.controls-EditAtPlaceGroup__editorOverlay {
-  background: #f8f3f1!important;
-  -webkit-box-shadow: 0 0 3px #b2b2b2;
-  -moz-box-shadow: 0 0 3px #b2b2b2;
-  box-shadow: 0 0 3px #b2b2b2;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  -webkit-background-clip: padding-box;
-  -moz-background-clip: padding;
-  background-clip: padding-box;
-}
-.controls-EditAtPlace__editorHidden .controls-EditAtPlace__editor {
-  display: none;
-}
-.controls-EditAtPlace__editor {
-  width: 100%;
-}
-.controls-EditAtPlace__fieldWrapper {
-  border-top: 1px solid transparent;
-}
-.controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace__fieldWrapper {
-  display: none;
+.controls-EditAtPlaceGroup__controlPanel {
+  float: right;
+  margin: 4px;
 }

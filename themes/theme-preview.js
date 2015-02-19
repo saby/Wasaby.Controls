@@ -533,7 +533,9 @@ function initInputFields() {
       'js!SBIS3.CONTROLS.NumberTextBox',
       'js!SBIS3.CONTROLS.ComboBox',
       'js!SBIS3.CONTROLS.TextArea',
-      'js!SBIS3.CONTROLS.EditAtPlace'
+      'js!SBIS3.CORE.AreaAbstract',
+      'js!SBIS3.CONTROLS.EditAtPlace',
+      'js!SBIS3.CONTROLS.EditAtPlaceGroup'
    ], function(
       TextBox,
       PasswordTextBox,
@@ -542,7 +544,9 @@ function initInputFields() {
       NumberTextBox,
       ComboBox,
       TextArea,
-      EditAtPlace
+      AreaAbstract,
+      EditAtPlace,
+      EditAtPlaceGroup
    ) {
       new TextBox({
          element: 'textBox1',
@@ -647,15 +651,98 @@ function initInputFields() {
 
       new TextArea({
          element: 'textArea2',
-         text: 'This is text area',
+         text: 'This is disabled text area',
          minLinesCount: 7,
          enabled: false
       });
 
+      var editAtPlaceAreas = [];
+      for (var i = 0; i < 5; i += 1) {
+         editAtPlaceAreas.push(new AreaAbstract({
+            element: 'editAtPlaceArea' + (i + 1),
+            isRelativeTemplate: true
+         }));
+      }
+
       new EditAtPlace({
-         element: 'editAtPlace',
-         text: 'Edit at place'
+         parent: editAtPlaceAreas[0],
+         context: editAtPlaceAreas[0].getLinkedContext(),
+         element: 'editAtPlace1'
       });
+
+      new EditAtPlace({
+         parent: editAtPlaceAreas[1],
+         context: editAtPlaceAreas[1].getLinkedContext(),
+         element: 'editAtPlace2',
+         editInPopup: true
+      });
+
+      new EditAtPlace({
+         parent: editAtPlaceAreas[2],
+         context: editAtPlaceAreas[2].getLinkedContext(),
+         element: 'editAtPlace3',
+         editorTpl: '<component data-component="SBIS3.CONTROLS.TextArea"><options name="autoResize"><option name="state">true</option></options></component>',
+         multiline: true
+      });
+
+      new EditAtPlace({
+         parent: editAtPlaceAreas[3],
+         context: editAtPlaceAreas[3].getLinkedContext(),
+         element: 'editAtPlace4',
+         editorTpl: '<component data-component="SBIS3.CONTROLS.TextArea"><options name="autoResize"><option name="state">true</option></options></component>',
+         multiline: true,
+         editInPopup: true
+      });
+
+      new EditAtPlace({
+         parent: editAtPlaceAreas[4],
+         context: editAtPlaceAreas[4].getLinkedContext(),
+         element: 'editAtPlace5',
+         enabled: false
+      });
+
+      editAtPlaceAreas[0].getLinkedContext().setValue('field1', 'Edit at place');
+      editAtPlaceAreas[1].getLinkedContext().setValue('field2', 'Edit at place in popup');
+      editAtPlaceAreas[2].getLinkedContext().setValue('field3', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vel tincidunt magna, iaculis accumsan mi. Cras lorem arcu, bibendum sed augue eget, dictum posuere ante. Aenean at cursus nunc. Etiam.');
+      editAtPlaceAreas[3].getLinkedContext().setValue('field4', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vel tincidunt magna, iaculis accumsan mi. Cras lorem arcu, bibendum sed augue eget, dictum posuere ante. Aenean at cursus nunc. Etiam.');
+      editAtPlaceAreas[4].getLinkedContext().setValue('field5', 'Disabled edit at place');
+
+
+      var editAtPlaceGroupArea = new AreaAbstract({
+         element: 'editAtPlaceGroupArea',
+         isRelativeTemplate: true
+      });
+
+      var editAtPlaceGroup = new EditAtPlaceGroup({
+         parent: editAtPlaceGroupArea,
+         context: editAtPlaceGroupArea.getLinkedContext(),
+         element: "editAtPlaceGroup",
+         displayAsEditor: false,
+         editInPopup: true,
+         template: '\
+         <div class="inline-group">\
+            <div>\
+               Edit at place\
+               <component data-component="SBIS3.CONTROLS.EditAtPlace" data-bind="{Text: field1}" style="width: 85px">\
+                  <option name="editorTpl">\
+                     <component data-component="SBIS3.CONTROLS.TextBox" data-bind="{Text: field1}">\
+                        <option name="maxLength">13</option>\
+                     </component>\
+                  </option>\
+               </component>\
+               Group\
+               <component data-component="SBIS3.CONTROLS.EditAtPlace" data-bind="{Text: field2}" style="width: 80px">\
+                  <option name="editorTpl">\
+                     <component data-component="SBIS3.CONTROLS.TextBox" data-bind="{Text: field2}">\
+                     </component>\
+                  </option>\
+               </component>\
+            </div>\
+         </div>'
+      });
+
+      editAtPlaceGroupArea.getLinkedContext().setValue('field1', '7703585780');
+      editAtPlaceGroupArea.getLinkedContext().setValue('field2', '997150001');
    });
 }
 

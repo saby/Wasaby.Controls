@@ -1,5 +1,6 @@
-@font-size-basic:                         13px;
-@font-name-basic:                         Tahoma, Geneva, sans-serif;
+@font-basic-name:                         Tahoma, Geneva, sans-serif;
+@font-basic-size:                         13px;
+@font-basic-line-height:                  20px;
 
 
 // ---- //
@@ -32,7 +33,7 @@
 // ------ //
 
 // Normal button
-@button-font:                             @font-size-basic @font-name-basic;
+@button-font:                             @font-basic-size @font-basic-name;
 @button-text-alignment:                   center;
 @button-min-width:                        24px;
 @button-height:                           24px;
@@ -737,7 +738,7 @@
 
 @calendar-day-border-spacing:                   1px;
 
-@calendar-day-header-font:                      11px @font-name-basic;
+@calendar-day-header-font:                      11px @font-basic-name;
 @calendar-day-header-text-alignment:            center;
 
 @calendar-day-body-font:                        @calendar-font;
@@ -772,7 +773,7 @@
 @month-picker-field-cursor:                     pointer;
 @month-picker-field-height:                     16px;
 @month-picker-field-margin:                     0 16px;
-@month-picker-field-font:                       700 14px/16px @font-name-basic;
+@month-picker-field-font:                       700 14px/16px @font-basic-name;
 
 @month-picker-field-text-color:                 @link-text-color;
 @month-picker-field-text-decoration:            none;
@@ -815,3 +816,45 @@
 
 @month-picker-item-year-text-alignment:         center;
 @month-picker-item-year-padding:                2px;
+
+
+
+// ------------- //
+// Edit at place //
+// ------------- //
+
+@edit-at-place-wrapper-margin:                  0 0 2px 0;
+@edit-at-place-wrapper-text-area-padding:       3px 4px;
+@edit-at-place-wrapper-border-width:            2px 1px;
+@edit-at-place-wrapper-border-style:            solid;
+@edit-at-place-wrapper-border-color:            transparent;
+
+@edit-at-place-field-cursor:                    pointer;
+@edit-at-place-field-disabled-cursor:           text;
+@edit-at-place-field-border-width:              0 0 1px 0;
+@edit-at-place-field-border-style:              dashed;
+@edit-at-place-field-border-color:              #868686;
+
+@edit-at-place-editor-border-width:             0;
+@edit-at-place-editor-border-style:             solid;
+@edit-at-place-editor-border-color:             transparent;
+
+@edit-at-place-text-box-editor-font:            @font-basic-size/@font-basic-line-height @font-basic-name;
+@edit-at-place-text-area-editor-font:           @edit-at-place-text-box-editor-font;
+
+@edit-at-place-editor-overlay-margin:           -4px 0 0 -4px;
+@edit-at-place-editor-overlay-padding:          4px;
+@edit-at-place-editor-overlay-border:           none;
+@edit-at-place-editor-overlay-border-radius:    3px;
+@edit-at-place-editor-overlay-shadow:           0 0 3px #b2b2b2;
+@edit-at-place-editor-overlay-bg:               #f8f3f1 !important;
+
+@edit-at-place-control-margin:                  0 0 0 8px;
+@edit-at-place-group-control-margin:            4px;
+
+@edit-at-place-cancel-button-width:             16px;
+@edit-at-place-cancel-button-height:            16px;
+@edit-at-place-cancel-button-margin:            0 0 0 4px;
+@edit-at-place-cancel-button-spritesheet:       'img/cancelIcon-sprite.png';
+@edit-at-place-cancel-button-bg:                url(@edit-at-place-cancel-button-spritesheet) 0 -32px no-repeat;
+@edit-at-place-cancel-button-hover-bg:          url(@edit-at-place-cancel-button-spritesheet) 0 -16px no-repeat;
