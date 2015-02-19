@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
         * </ul>
         * @example
         * <pre>
-        *    var btn = this.getChildControlByName("myButton")
+        *    var btn = this.getChildControlByName('myButton')
         *    btn.setPrimary(false);
         * </pre>
         * @see isPrimary
