@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
 
    var CollectionMixin = /**@lends SBIS3.CONTROLS.CollectionMixin.prototype  */{
       /**
-       * @event onDrawItems
+       * @event onDrawItems После отрисовки всех элементов
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        */
       $protected: {
@@ -20,8 +20,9 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
              * @cfg {String} Поле элемента коллекции, которое является ключом
              * @example
              * <pre>
-             *     <option name="keyField">Сумма</option>
+             *     <option name="keyField">Идентификатор</option>
              * </pre>
+             * @see items
              */
             keyField : null,
             /**
@@ -30,6 +31,7 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
              * <pre>
              *
              * </pre>
+             * @see keyField
              */
             items: undefined
          }
@@ -83,7 +85,10 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
          }
          this._drawItems();
       },
-
+     /**
+      *
+      * @param item
+      */
       addItem : function(item) {
          this._items.addItem(item);
          this._drawItems();
