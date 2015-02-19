@@ -24,8 +24,9 @@ define('js!SBIS3.CONTROLS.Menu', [
 
    var Menu = ButtonGroupBase.extend([TreeMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
       /**
-       * @event onMenuItemActivate
+       * @event onMenuItemActivate При активации пункта меню
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String} ID Идентификатор нажатого пункта.
        */
       _dotTplFn : dot,
       $protected: {
