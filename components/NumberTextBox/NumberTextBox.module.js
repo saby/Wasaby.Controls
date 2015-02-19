@@ -77,7 +77,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             }
          });
 
-
+         this._options.text = this._formatValue(this._options.text)
+         this._inputField.val(this._options.text);
       },
 
       setText: function (text) {
@@ -86,6 +87,10 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       getText: function(){
+         return this._options.text;
+      },
+
+      getNumberValue: function(){
          if (this._options.onlyInteger) {
             return parseInt(this._options.text, 10);
          } else {
@@ -97,9 +102,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          value = value.toString();
          value = String.trim(value);
          if (this._options.onlyInteger) {
-            value = parseInt(value, 10) || 0;
+            value = parseInt(value, 10).toString() || '0';
          } else {
-            value = parseFloat(value) || 0;
+            value = parseFloat(value).toString() || '0';
             if (this._options.decimals) {
                value = value.toFixed(this._options.decimals);
             }

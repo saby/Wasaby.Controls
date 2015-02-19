@@ -90,6 +90,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _formatValue: function(value){
+         value = value || ''; // так как есть датабиндинг может прийти undefined
          if (this._options.trim) {
             value = String.trim(value);
          }
@@ -97,7 +98,6 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       setText: function(text){
-         text = text || ''; // так как есть датабиндинг может прийти undefined
          //перед изменением делаем trim если нужно
          text = this._formatValue(text);
          TextBox.superclass.setText.call(this, text);
