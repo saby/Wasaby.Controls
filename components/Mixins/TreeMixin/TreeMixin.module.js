@@ -10,14 +10,17 @@ define('js!SBIS3.CONTROLS.TreeMixin', [], function() {
          _options: {
             /**
              * @cfg {Boolean} Отображать сначала узлы, потом листья
+             * @noShow
              */
             folderSort: false,
             /**
              * @cfg {String} Идентификатор узла, относительно которого надо отображать данные
+             * @noShow
              */
             root: '',
             /**
              * @cfg {Boolean} При открытия узла закрывать другие
+             * @noShow
              */
             singleExpand: '',
             /**
