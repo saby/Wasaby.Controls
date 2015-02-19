@@ -17,7 +17,6 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          _pasteProcessing : 0,
          _inputField : null,
          _compatPlaceholder: null,
-         _wasSelected: false,
          _options: {
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
@@ -45,7 +44,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              *    <li>false - не выделять.</li>
              * </ul>
              */
-            selectOnClick: true
+            selectOnClick: false
          }
       },
 
@@ -68,23 +67,21 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  TextBox.superclass.setText.call(self, self._inputField.val());
+                  self._pasteHandler();
                }
             }, 100)
          });
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
-         self._inputField.bind('focusout', function () {
+         this._inputField.bind('focusout', function () {
             if (self._options.trim) {
                self.setText(String.trim(self.getText()));
             }
-            self._wasSelected = false;
          });
 
-         self._inputField.bind('mouseup',function(){
-            if (self._options.selectOnClick && !self._wasSelected) {
+         this._inputField.bind('focusin', function () {
+            if (self._options.selectOnClick){
                self._inputField.select();
-               self._wasSelected = true;
             }
          });
 
@@ -144,6 +141,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
                this._inputField.removeClass('controls-TextBox__field-uppercase')
                   .removeClass('controls-TextBox__field-lowercase');
          }
+      },
+
+      _pasteHandler: function(){
+         TextBox.superclass.setText.call(this, this._inputField.val());
       },
 
       _keyUpBind: function() {
