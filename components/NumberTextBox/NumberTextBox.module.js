@@ -108,21 +108,21 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          }
       },
 
-      _pasteHandler: function(){
-         var buff;
+      _formatValue: function(value){
+            value = value.toString();
+         value = String.trim(value);
          if (this._options.onlyInteger) {
-            TextBox.superclass.setText.call(this, parseInt(this._inputField.val(), 10) || '0');
-            this._inputField.val(parseInt(this._inputField.val(), 10) || '0');
+            value = parseInt(this._inputField.val(), 10) || 0;
          } else {
-            buff =  parseFloat(this._inputField.val()).toFixed(this._options.decimals);
-            if (isNaN(buff)){
-               TextBox.superclass.setText.call(this, '');
-               this._inputField.val('');
-            } else {
-               TextBox.superclass.setText.call(this, parseFloat(this._inputField.val()).toFixed(this._options.decimals) || '0');
-               this._inputField.val(parseFloat(this._inputField.val()).toFixed(this._options.decimals) || '0');
+            value = parseFloat(this._inputField.val());
+            if (this._options.decimals) {
+               value = value.toFixed(this._options.decimals);
+            }
+            if (isNaN(value)){
+               value = '';
             }
          }
+         return value;
       },
 
       _arrowUpClick: function(){
@@ -288,14 +288,14 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
          if (!this._options.onlyInteger) {
             // добаляем нули в пустое поле
-            if (currentVal == ''){
+            if (currentVal == '' && this._options.decimals){
                this._inputField.val('.' + this._getZeroString(this._options.decimals));
                this._setCaretPosition(0);
                return true;
             }
 
             // если точка в выделении
-            if (dotPosition >= b && dotPosition < e) {
+            if (dotPosition >= b && dotPosition < e && this._options.decimals) {
                buff = currentVal.substr(0, b) + '.' + this._getZeroString(e - dotPosition - 1) + currentVal.substr(e);
                if (dotPosition == b) {
                   event.preventDefault();

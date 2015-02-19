@@ -67,16 +67,15 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  self._pasteHandler();
+                  TextBox.superclass.setText.call(self, self._formatValue(self._inputField.val()));
+                  self._inputField.val(self._options.text);
                }
             }, 100)
          });
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
          this._inputField.bind('focusout', function () {
-            if (self._options.trim) {
-               self.setText(String.trim(self.getText()));
-            }
+            self.setText(self._formatValue(self.getText()));
          });
 
          this._inputField.bind('focusin', function () {
@@ -88,6 +87,13 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          if (this._options.placeholder && !$ws._const.compatibility.placeholder) {
             this._createCompatPlaceholder();
          }
+      },
+
+      _formatValue: function(value){
+         if (this._options.trim) {
+            value = String.trim(value);
+         }
+         return value;
       },
 
       setText: function(text){
@@ -141,10 +147,6 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
                this._inputField.removeClass('controls-TextBox__field-uppercase')
                   .removeClass('controls-TextBox__field-lowercase');
          }
-      },
-
-      _pasteHandler: function(){
-         TextBox.superclass.setText.call(this, this._inputField.val());
       },
 
       _keyUpBind: function() {
