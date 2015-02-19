@@ -14,7 +14,6 @@ define(
     * какие символы могут вводиться, определяются предназначением контролла.
     * @class SBIS3.CONTROLS.FormattedTextBoxBase
     * @extends $ws.proto.Control
-    * @control
     */
 
    var FormattedTextBoxBase = TextBoxBase.extend( /** @lends SBIS3.CONTROLS.FormattedTextBoxBase.prototype */ {
@@ -138,6 +137,15 @@ define(
          this._isSeparatorContainerFirst = this._getTypeOfFirstContainer();
          this._inputField.html( this._getHtmlMask() );
 
+         this.setValidators(
+            [{
+               validator: function () {
+                  return self._checkTextByMask(self._inputField.text());
+               },
+               errorMessage: 'Устанавливаемое значение не удовлетворяет маске данного контролла'
+            }]
+         );
+
          if(this._options.text){
             this.setText(this._options.text);
          }
@@ -193,6 +201,21 @@ define(
                self._keyPressHandler(key, 'character', event.shift);
             }
          });
+
+         this._inputField.bind('paste', function(){
+            self._pasteProcessing++;
+            window.setTimeout(function(){
+               self._pasteProcessing--;
+               if (!self._pasteProcessing) {
+                  if (self.validate()) {
+                     self.setText(self._inputField.text());
+                  } else {
+                     self.setText(self._options.text);
+                  }
+               }
+            }, 100)
+         });
+
       },
 
       /**
@@ -236,6 +259,7 @@ define(
             nextSibling = positionObject.container.parentNode.nextSibling;
 
          this._clearSelect(positionObject, positionObjEnd);
+         this.clearMark();
 
          if ( type == 'character' ) {
             // Обработка зажатой кнопки shift ( -> в букву верхнего регистра)
@@ -574,14 +598,17 @@ define(
        * Пример. Если маска 'd(ddd)ddd-dd-dd', то setText('8(111)888-11-88')
        * @param text Строка нового значения
        */
-      setText: function( text ){
-         text = text ? text: '';
+      setText: function( text ) {
+         text = text ? text : '';
+         if (text != this._options.text) {
+            this.clearMark();
+         }
+         if (typeof text == 'string') {
+            if (text == '' || this._checkTextByMask(text)) {
 
-         if ( typeof text == 'string' ) {
-            if ( text == '' || this._checkTextByMask( text ) ) {
-               text = text == '' ? '' : this._correctRegister( text );
-               this._inputField.html( this._getHtmlMask(text) );
-               FormattedTextBoxBase.superclass.setText.call( this, text );
+               text = text == '' ? '' : this._correctRegister(text);
+               this._inputField.html(this._getHtmlMask(text));
+               FormattedTextBoxBase.superclass.setText.call(this, text);
             }
             else {
                throw new Error('Устанавливаемое значение не удовлетворяет маске данного контролла');
