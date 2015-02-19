@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
          _options: {
             /**
              * @cfg {Boolean} Кнопка по умолчанию
-             * Кнопка будет срабатывать при нажатии клавиши Enter.
+             * Кнопка будет срабатывать при нажатии клавиши Enter, и будет визуально отличаться от других кнопок.
              * На странице может быть только одна кнопка по умолчанию.
              * Возможные значения:
              * <ul>
@@ -64,7 +64,12 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
       },
        /**
         * Метод установки кнопки по умолчанию.
-        * @param flag
+        * @param flag Признак является ли кнопкой по умолчанию.
+        * Возможные значения:
+        * <ul>
+        *    <li>true - кнопка по умолчанию;</li>
+        *    <li>false - обычная кнопка.</li>
+        * </ul>
         * @example
         * <pre>
         *    var btn = this.getChildControlByName("myButton")
@@ -102,8 +107,8 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
         * @param icon Иконка из набора {@link http://wi.sbis.ru/docs/3.8.0/#icons общих иконок}. Задаётся через sprite.
         * @example
         * <pre>
-        *    var btn = this.getChildControlByName("myButton");
-        *    btn.setIcon(sprite:icon16 icon-Alert icon-done);
+        *    var btn = this.getChildControlByName('myButton');
+        *    btn.setIcon('sprite:icon16 icon-Alert icon-done');
         * </pre>
         */
       setIcon: function(icon) {
