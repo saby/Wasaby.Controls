@@ -16,13 +16,17 @@ define('js!SBIS3.CONTROLS.Menu', [
    'use strict';
 
    /**
-    * Контрол, отображающий меню всплывающее в определенном месте страницы
+    * Контрол, отображающий меню, всплывающее в определенном месте страницы
     * @class SBIS3.CONTROLS.Menu
     * @extends SBIS3.CONTROLS.ButtonGroupBase
     * @mixes SBIS3.CONTROLS.TreeMixin
     */
 
    var Menu = ButtonGroupBase.extend([TreeMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
+      /**
+       * @event onMenuItemActivate
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       */
       _dotTplFn : dot,
       $protected: {
          _subContainers : {},
@@ -30,10 +34,12 @@ define('js!SBIS3.CONTROLS.Menu', [
          _options: {
             /**
              * @cfg {Number} Задержка перед открытием
+             * @noShow
              */
             showDelay: null,
             /**
              * @cfg {Number} Задержка перед закрытием
+             * @noShow
              */
             hideDelay: null
          }
