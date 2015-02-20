@@ -2,13 +2,14 @@
    .box-sizing(border-box);
    margin: @menu-margin;
    border: @menu-border;
+  .box-shadow(@menu-shadow);
 
   .controls-Menu__hasChild {
     &:after {
       content: ' ';
       position: absolute;
-      top: @menu-expand-top-shift;
-      right: @menu-expand-right-shift;
+      top: @menu-expand-top-offset;
+      right: @menu-expand-right-offset;
       width: @menu-expand-width;
       height: @menu-expand-height;
       background: @menu-expand-bg;

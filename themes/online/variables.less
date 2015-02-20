@@ -1,10 +1,12 @@
 @white-color:                             #fff;
 @black-color:                             #000;
+
+@gray-dark-color:                         #666;
 @gray-color:                              #999;
 @gray-light-color:                        #ccc;
 
+@default-color:                           transparent;
 @primary-color:                           transparent;
-@secondary-color:                         transparent;
 
 @font-basic-name:                         Tahoma, Geneva, sans-serif;
 @font-basic-size:                         13px;
@@ -250,7 +252,7 @@
 @radio-button-hover-text-color:                 @black-color;
 
 @radio-button-checked-text-color:               @radio-button-hover-text-color;
-@radio-button-checked-hover-text-color:         @radio-button-checked-text-color;
+@radio-button-checked-hover-text-color:         @radio-button-hover-text-color;
 
 @radio-button-disabled-text-color:              @gray-light-color;
 @radio-button-disabled-hover-text-color:        @radio-button-disabled-text-color;
@@ -409,11 +411,12 @@
 
 @menu-margin:                             -1px 0 0;
 @menu-border:                             1px solid @gray-light-color;
+@menu-shadow:                             none;
 
 @menu-expand-width:                       16px;
 @menu-expand-height:                      16px;
-@menu-expand-top-shift:                   3px;
-@menu-expand-right-shift:                 0;
+@menu-expand-top-offset:                  3px;
+@menu-expand-right-offset:                0;
 @menu-expand-spritesheet:                'img/MenuExpand.png';
 @menu-expand-bg:                          url(@menu-expand-spritesheet) 0 0 no-repeat;
 @menu-expand-hover-bg:                    url(@menu-expand-spritesheet) 0 -16px no-repeat;
@@ -429,7 +432,10 @@
 @menu-item-line-height:                   @menu-item-height;
 @menu-item-padding:                       0 16px 0 8px;
 
+@menu-item-text-color:                    @black-color;
 @menu-item-bg:                            @white-color;
+
+@menu-item-hover-text-color:              @menu-item-text-color;
 @menu-item-hover-bg:                      #e7f0f9;
 
 @menu-item-icon-top-offset:               -2px;
@@ -443,8 +449,6 @@
 // Menu button //
 // ----------- //
 
-@menu-button-arrow-spritesheet:          'img/MenuButton-arrowDown.png';
-
 @menu-button-arrow-width:                 8px;
 @menu-button-arrow-height:                6px;
 @menu-button-arrow-right-offset:          10px;
@@ -454,16 +458,11 @@
 @menu-button-no-arrow-padding:            @button-padding;        // padding for menu button when dropdown arrow is missed
 
 // Default menu button
-@menu-button-text-color:                  @button-text-color;
-@menu-button-checked-text-color:          @menu-button-text-color;
-
+@menu-button-arrow-spritesheet:          'img/MenuButton-arrowDown.png';
 @menu-button-arrow-bg:                    transparent url(@menu-button-arrow-spritesheet) 0 0;
 @menu-button-arrow-hover-bg:              transparent url(@menu-button-arrow-spritesheet) 0 6px;
 
 // Primary menu button
-@menu-button-primary-text-color:          @white-color;
-@menu-button-primary-checked-color:       @menu-button-primary-text-color;
-
 @menu-button-primary-arrow-spritesheet:  'img/MenuButton-arrowDown__primary.png';
 @menu-button-primary-arrow-bg:            transparent url(@menu-button-primary-arrow-spritesheet) 0 0;
 @menu-button-primary-arrow-hover-bg:      @menu-button-primary-arrow-bg;
