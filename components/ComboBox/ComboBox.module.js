@@ -219,7 +219,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
          filterFieldObj[this._options.displayField] = self._options.text;
          filter.push(filterFieldObj);
-         
+
          self._dataSource.query(filter).addCallback(function (DataSet) {
             _.each(DataSet, function (item) {
                selKey = DataSet.getKey(item);

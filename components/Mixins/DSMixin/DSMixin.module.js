@@ -29,6 +29,9 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
          //TODO совместимость
          if (this._options.items) {
             this._options.dataSource = this._options.items;
+            if (typeof(window) != 'undefined'){
+               console['log']('Опция items устарела. Она прекратит работу в версии 3.7.2');
+            }
          }
 
          //TODO совместимость
