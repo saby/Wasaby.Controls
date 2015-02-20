@@ -244,21 +244,34 @@
 // Radio button //
 // ------------ //
 
-@radio-button-icon-width:                 24px;
-@radio-button-icon-height:                17px;
-@radio-button-icon-spritesheet:           'img/RadioButton-sprite.png';
+@radio-button-text-margin:                      0 8px;
 
-@radio-button-text-color:                 @gray-color;
-@radio-button-icon-bg:                    url(@radio-button-icon-spritesheet) 0 -4px;
+@radio-button-text-color:                       @black-color;
+@radio-button-hover-text-color:                 @primary-color;
 
-@radio-button-hover-text-color:           @black-color;
-@radio-button-hover-icon-bg:              url(@radio-button-icon-spritesheet) 0 -100px;
+@radio-button-checked-text-color:               @radio-button-text-color;
+@radio-button-checked-hover-text-color:         @radio-button-hover-text-color;
 
-@radio-button-checked-text-color:         @radio-button-hover-text-color;
-@radio-button-checked-icon-bg:            url(@radio-button-icon-spritesheet) 0 -52px;
+@radio-button-disabled-text-color:              @gray-light-color;
+@radio-button-disabled-hover-text-color:        @radio-button-disabled-text-color;
 
-@radio-button-disabled-text-color:        @gray-light-color;
-@radio-button-disabled-icon-bg:           @radio-button-icon-bg;
+@radio-button-icon-width:                       16px;
+@radio-button-icon-height:                      16px;
+@radio-button-icon-line-height:                 normal;
+
+@radio-button-icon-spritesheet:                 'img/RadioButton-sprite.png';
+
+@radio-button-icon-bg:                          url(@radio-button-icon-spritesheet) 0 0;
+@radio-button-icon-hover-bg:                    url(@radio-button-icon-spritesheet) 0 -32px;
+
+@radio-button-icon-checked-bg:                  url(@radio-button-icon-spritesheet) 0 -16px;
+@radio-button-icon-checked-hover-bg:            url(@radio-button-icon-spritesheet) 0 -16px;
+
+@radio-button-icon-disabled-bg:                 url(@radio-button-icon-spritesheet) 0 0;
+@radio-button-icon-disabled-hover-bg:           @radio-button-icon-disabled-bg;
+
+@radio-button-icon-disabled-checked-bg:         url(@radio-button-icon-spritesheet) 0 -48px;
+@radio-button-icon-disabled-checked-hover-bg:   @radio-button-icon-disabled-checked-bg;
 
 
 
@@ -266,34 +279,43 @@
 // Checkbox //
 // -------- //
 
-@check-box-spritesheet:                         'img/CheckBox-sprite.png';
-
-@check-box-text-margin:                         0 0 0 8px;
-@check-box-width:                               16px;
-@check-box-height:                              16px;
-@check-box-line-height:                         normal;
+@check-box-text-margin:                         0 8px;
 
 @check-box-text-color:                          @black-color;
 @check-box-hover-text-color:                    @primary-color;
+
+@check-box-checked-text-color:                  @check-box-text-color;
+@check-box-checked-hover-text-color:            @check-box-hover-text-color;
+
+@check-box-third-state-text-color:              @check-box-text-color;
+@check-box-third-state-hover-text-color:        @check-box-hover-text-color;
+
 @check-box-disabled-text-color:                 @gray-light-color;
+@check-box-disabled-hover-text-color:           @check-box-disabled-text-color;
 
-@check-box-bg:                                  url(@check-box-spritesheet) 0 0px;
-@check-box-hover-bg:                            url(@check-box-spritesheet) 0 -16px;
+@check-box-icon-width:                          16px;
+@check-box-icon-height:                         16px;
+@check-box-icon-line-height:                    normal;
 
-@check-box-checked-bg:                          url(@check-box-spritesheet) 0 -64px;
-@check-box-checked-hover-bg:                    url(@check-box-spritesheet) 0 -32px;
+@check-box-icon-spritesheet:                    'img/CheckBox-sprite.png';
 
-@check-box-third-state-bg:                      url(@check-box-spritesheet) 0 -80px;
-@check-box-third-state-hover-bg:                url(@check-box-spritesheet) 0 -48px;
+@check-box-icon-bg:                             url(@check-box-icon-spritesheet) 0 0px;
+@check-box-icon-hover-bg:                       url(@check-box-icon-spritesheet) 0 -16px;
 
-@check-box-disabled-bg:                         url(@check-box-spritesheet) 0px 0px;
-@check-box-disabled-hover-bg:                   @check-box-disabled-bg;
+@check-box-icon-checked-bg:                     url(@check-box-icon-spritesheet) 0 -32px;
+@check-box-icon-checked-hover-bg:               url(@check-box-icon-spritesheet) 0 -32px;
 
-@check-box-disabled-checked-bg:                 url(@check-box-spritesheet) 0px -64px;
-@check-box-disabled-checked-hover-bg:           @check-box-disabled-checked-bg;
+@check-box-icon-third-state-bg:                 url(@check-box-icon-spritesheet) 0 -48px;
+@check-box-icon-third-state-hover-bg:           url(@check-box-icon-spritesheet) 0 -48px;
 
-@check-box-disabled-third-state-bg:             url(@check-box-spritesheet) 0px -80px;
-@check-box-disabled-third-state-hover-bg:       @check-box-disabled-third-state-bg;
+@check-box-icon-disabled-bg:                    url(@check-box-icon-spritesheet) 0 0;
+@check-box-icon-disabled-hover-bg:              @check-box-icon-disabled-bg;
+
+@check-box-icon-disabled-checked-bg:            url(@check-box-icon-spritesheet) 0 -64px;
+@check-box-icon-disabled-checked-hover-bg:      @check-box-icon-disabled-checked-bg;
+
+@check-box-icon-disabled-third-state-bg:        url(@check-box-icon-spritesheet) 0 -80px;
+@check-box-icon-disabled-third-state-hover-bg:  @check-box-icon-disabled-third-state-bg;
 
 
 

@@ -418,31 +418,55 @@ input[type="reset"]::-moz-focus-inner {
 .controls-RadioButton {
   cursor: pointer;
   display: inline-block;
+}
+.controls-RadioButton .controls-RadioButton__caption {
+  margin: 0;
   color: #999999;
 }
 .controls-RadioButton .controls-RadioButton__icon {
   display: inline-block;
   width: 24px;
   height: 17px;
+  line-height: normal;
   background: url('img/RadioButton-sprite.png') 0 -4px;
 }
-.controls-RadioButton:hover {
+.controls-RadioButton:hover .controls-RadioButton__caption {
   color: #000000;
 }
 .controls-RadioButton:hover .controls-RadioButton__icon {
   background: url('img/RadioButton-sprite.png') 0 -100px;
 }
-.controls-RadioButton.controls-Checked__checked {
+.controls-RadioButton.controls-Checked__checked .controls-RadioButton__caption {
   color: #000000;
 }
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__icon {
   background: url('img/RadioButton-sprite.png') 0 -52px;
 }
+.controls-RadioButton.controls-Checked__checked:hover .controls-RadioButton__caption {
+  color: #000000;
+}
+.controls-RadioButton.controls-Checked__checked:hover .controls-RadioButton__icon {
+  background: url('img/RadioButton-sprite.png') 0 -52px;
+}
+.controls-RadioButton.controls-Checked__checked.ws-disabled .controls-RadioButton__icon {
+  background: url('img/RadioButton-sprite.png') 0 -4px;
+}
+.controls-RadioButton.controls-Checked__checked.ws-disabled:hover .controls-RadioButton__icon {
+  background: url('img/RadioButton-sprite.png') 0 -4px;
+}
 .controls-RadioButton.ws-disabled {
   cursor: default;
+}
+.controls-RadioButton.ws-disabled .controls-RadioButton__caption {
   color: #cccccc;
 }
 .controls-RadioButton.ws-disabled .controls-RadioButton__icon {
+  background: url('img/RadioButton-sprite.png') 0 -4px;
+}
+.controls-RadioButton.ws-disabled:hover .controls-RadioButton__caption {
+  color: #cccccc;
+}
+.controls-RadioButton.ws-disabled:hover .controls-RadioButton__icon {
   background: url('img/RadioButton-sprite.png') 0 -4px;
 }
 .controls-CheckBox {
@@ -450,10 +474,7 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
 }
 .controls-CheckBox .controls-CheckBox__caption {
-  margin: 0 0 0 4px;
-  color: #000000;
-}
-.controls-CheckBox .controls-CheckBox__caption:hover {
+  margin: 0 4px;
   color: #000000;
 }
 .controls-CheckBox .controls-CheckBox__icon {
@@ -463,17 +484,32 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 19px;
   background: url('img/CheckBox.png') 0 1px;
 }
+.controls-CheckBox:hover .controls-CheckBox__caption {
+  color: #000000;
+}
 .controls-CheckBox:hover .controls-CheckBox__icon {
   background: url('img/CheckBox.png') 0 17px;
+}
+.controls-CheckBox.controls-Checked__checked .controls-CheckBox__caption {
+  color: #000000;
 }
 .controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon {
   background: url('img/CheckBox.png') 0 49px;
 }
+.controls-CheckBox.controls-Checked__checked:hover .controls-CheckBox__caption {
+  color: #000000;
+}
 .controls-CheckBox.controls-Checked__checked:hover .controls-CheckBox__icon {
   background: url('img/CheckBox.png') 0 49px;
 }
+.controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__caption {
+  color: #000000;
+}
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
   background: url('img/CheckBox.png') 0 33px;
+}
+.controls-CheckBox.controls-ToggleButton__null:hover .controls-CheckBox__caption {
+  color: #000000;
 }
 .controls-CheckBox.controls-ToggleButton__null:hover .controls-CheckBox__icon {
   background: url('img/CheckBox.png') 0 33px;
@@ -484,11 +520,17 @@ input[type="reset"]::-moz-focus-inner {
 .controls-CheckBox.controls-ToggleButton__null.ws-disabled:hover .controls-CheckBox__icon {
   background: url('img/CheckBox.png') 16px 33px;
 }
+.controls-CheckBox.ws-disabled {
+  cursor: default;
+}
 .controls-CheckBox.ws-disabled .controls-CheckBox__caption {
   color: #999999;
 }
 .controls-CheckBox.ws-disabled .controls-CheckBox__icon {
   background: url('img/CheckBox.png') 16px 1px;
+}
+.controls-CheckBox.ws-disabled:hover .controls-CheckBox__caption {
+  color: #999999;
 }
 .controls-CheckBox.ws-disabled:hover .controls-CheckBox__icon {
   background: url('img/CheckBox.png') 16px 1px;

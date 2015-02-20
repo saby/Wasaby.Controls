@@ -257,44 +257,52 @@
       ) {
          new CheckBox({
             element: 'checkBox1',
-            caption: 'Флаг',
+            caption: 'Checkbox',
             checked: false
          });
 
          new CheckBox({
             element: 'checkBox2',
-            caption: 'Три состояния',
+            caption: 'Checkbox three state',
             checked: false,
             threeState: true
          });
 
          new CheckBox({
             element: 'checkBox3',
-            caption: 'Неактивный',
+            caption: 'Checkbox disabled',
             enabled: false
          });
 
          new CheckBox({
             element: 'checkBox4',
-            caption: 'Неактивный',
+            caption: 'Checkbox disabled checked',
             enabled: false,
             checked: true
          });
 
          new CheckBox({
             element: 'checkBox5',
-            caption: 'Неактивный',
+            caption: 'Checkbox disabled third state checked',
             enabled: false,
             checked: null
          });
 
          new RadioButton({
             element: 'radioButton1',
-            caption: 'Радио'
+            caption: 'Radio'
          });
+
          new RadioButton({
             element: 'radioButton2',
-            caption: 'Неактивный',
+            caption: 'Radio disabled',
+            enabled: false
+         });
+
+         new RadioButton({
+            element: 'radioButton3',
+            caption: 'Radio disabled checked',
+            checked: true,
             enabled: false
          });
 
@@ -772,6 +780,7 @@
          new ComboBox({
             element: 'themeSelector',
             items: themes,
+            editable: false,
             selectedItem: 'genie-new',
             handlers: {
                onSelectedItemChange: function(e, themeName) {
