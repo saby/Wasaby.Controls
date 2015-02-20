@@ -14,7 +14,6 @@ define(
     * какие символы могут вводиться, определяются предназначением контролла.
     * @class SBIS3.CONTROLS.FormattedTextBoxBase
     * @extends $ws.proto.Control
-    * @control
     */
 
    var FormattedTextBoxBase = TextBoxBase.extend( /** @lends SBIS3.CONTROLS.FormattedTextBoxBase.prototype */ {
@@ -127,7 +126,7 @@ define(
       },
 
       _initializeComponents: function(){
-         var self = this;
+         var inputValue, self = this;
 
          this._inputField = $('.js-controls-FormattedTextBox__field', this.getContainer().get(0));
 
@@ -193,6 +192,23 @@ define(
                self._keyPressHandler(key, 'character', event.shift);
             }
          });
+
+         this._inputField.bind('paste', function(){
+            self._pasteProcessing++;
+            window.setTimeout(function(){
+               self._pasteProcessing--;
+               if (!self._pasteProcessing) {
+                  inputValue = self._inputField.text();
+                  if (this._checkTextByMask(inputValue)) {
+                     self.setText(inputValue);
+                  } else {
+                     self.setText(self._options.text);
+                     throw new Error('Устанавливаемое значение не удовлетворяет маске данного контролла');
+                  }
+               }
+            }, 100)
+         });
+
       },
 
       /**
@@ -574,14 +590,13 @@ define(
        * Пример. Если маска 'd(ddd)ddd-dd-dd', то setText('8(111)888-11-88')
        * @param text Строка нового значения
        */
-      setText: function( text ){
-         text = text ? text: '';
-
-         if ( typeof text == 'string' ) {
-            if ( text == '' || this._checkTextByMask( text ) ) {
-               text = text == '' ? '' : this._correctRegister( text );
-               this._inputField.html( this._getHtmlMask(text) );
-               FormattedTextBoxBase.superclass.setText.call( this, text );
+      setText: function( text ) {
+         text = text ? text : '';
+         if (typeof text == 'string') {
+            if (text == '' || this._checkTextByMask(text)) {
+               text = text == '' ? '' : this._correctRegister(text);
+               this._inputField.html(this._getHtmlMask(text));
+               FormattedTextBoxBase.superclass.setText.call(this, text);
             }
             else {
                throw new Error('Устанавливаемое значение не удовлетворяет маске данного контролла');
