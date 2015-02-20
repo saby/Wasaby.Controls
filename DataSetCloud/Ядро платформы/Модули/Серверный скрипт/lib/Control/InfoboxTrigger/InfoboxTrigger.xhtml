@@ -1,0 +1,16 @@
+<div class="{{? it.cssClass}} {{=it.cssClass}}{{?}}{{? !it.visible}} ws-hidden{{?}}">
+    <div>
+        {{? it.img && it.imgAlign == 'left'}}
+        <img class="ws-helper-img ws-helper-img-align-left" src="{{=it.img}}"/>
+        {{?? !it.img}}
+        <div class="ws-helper-img ws-helper-img-align-{{=it.imgAlign}} icon-16 icon-Question2 icon-disabled"></div>
+        {{??}}
+        {{?}}
+        {{? it.text}}
+        <span class='ws-helper-text'>{{=it.text}}</span>
+        {{?}}
+        {{? it.img && it.imgAlign == 'right'}}
+        <img class="ws-helper-img ws-helper-img-align-right" src="{{=it.img}}"/>
+        {{?}}
+    </div>
+</div>

@@ -1,0 +1,79 @@
+{{ var pagesLeftRight = it.options.pagesLeftRight,
+       currentPage = it.options.currentPage,
+       countPages = it.countPages,
+       /*<!-- текущая страница больше чем максимально отображаемое количество?
+              да - берем разницу текущей страницы и количества отображаемых страниц
+              нет - берем первую страницу -->*/
+       maxLeftPage = currentPage > pagesLeftRight ? currentPage - pagesLeftRight : 2,
+       /*<!--берем минимальное значение из:
+             а) сумма текущей страницы и количество отображаемых страниц (для частичной навигации ещё +1)
+             б) разница общего количества страниц -->*/
+       maxRightPage = Math.min(currentPage + pagesLeftRight + (it.options.onlyLeftSide ? 1 : 0), countPages),
+       /*<!--Количество страниц, которое уже нарисовали справа от текущей-->*/
+       drawedRightPages = 0,
+       /*<!--режим частичной подгрузки?
+             да:
+               берем минимальную из:
+                  а) сумма текущей страницы
+                  б) максимум из:
+                     а) максимальная, загруженная страница
+                     б) текущая страница
+             нет:
+               берем максимально правую страницу -->*/
+       lastPage = it.options.onlyLeftSide ? Math.min(currentPage + pagesLeftRight, Math.max(it.context._maxPage, currentPage)) : maxRightPage,
+       getConfiguredSpan = function(p1, p2) {
+          if (p1 === p2) {
+             return '<span class="ws-paging-small ws-paging-current">' + p2 + '</span>';
+          } else {
+             return '<span class="ws-paging-small ws-paging-active" title="Перейти на страницу ' + p2 + '">' + p2 + '</span>';
+          }
+       };
+   maxLeftPage = maxLeftPage === 1 ? 2 : maxLeftPage;
+}}
+<!--Добавляем кнопки перехода на первую и предыдущую страницы-->
+<span class='ws-paging-small {{?currentPage > 1}}ws-paging-active{{?}} ws-paging-first' title='Перейти на первую страницу'>&#8592;</span>
+<span class='ws-paging-small {{?currentPage > 1}}ws-paging-active{{?}} ws-paging-prev' title='Перейти на предыдущую страницу'>&#8592;</span>
+<!--Добавляем ссылку на первую страницу-->
+{{=getConfiguredSpan(currentPage, 1)}}
+{{? currentPage - pagesLeftRight > 2 }}<!--Если слева от текущей страницы больше чем 2 страницы, то рисуем многоточие-->
+   <span class='ws-paging-small'>&hellip;</span>
+{{?}}
+{{? currentPage !== 1}}<!--Если текущая страница не первая, то...-->
+   {{? currentPage > maxLeftPage}}
+      {{ for (var i = maxLeftPage; i < currentPage; i++) { }}<!--Цикл с самой левой страницы и до текущей страницы-->
+         {{=getConfiguredSpan(currentPage, i)}}
+      {{ } }}
+   {{?}}
+   {{=getConfiguredSpan(currentPage, currentPage)}}<!--Добавляем текущую страницу-->
+{{?}}
+{{? currentPage < maxRightPage}}
+   {{ for (var i = currentPage + 1; i <= maxRightPage; i++, drawedRightPages++) { }}<!--Цикл с текущей и до максимально возможной страницы (максимально возможной, а не последней)-->
+      {{=getConfiguredSpan(currentPage, i)}}
+   {{ } }}
+{{?}}
+{{? it.options.onlyLeftSide }}<!--Если режим частичной навигации-->
+   {{? it.context._hasAfterMax}}<!--Если после максимальной есть ещё страницы, то рисуем многоточие-->
+      {{? drawedRightPages < pagesLeftRight}}<!--Если справа от текущей добавлено меньше, чем возможно, то рисуем ссылку на ещё незагруженную страницу-->
+         {{=getConfiguredSpan(currentPage, maxRightPage + 1)}}
+      {{?}}
+      <span class='ws-paging-small'>&hellip;</span>
+   {{?}}
+{{??}}<!--Иначе (режим полной навигации)-->
+   {{? currentPage !== countPages}}<!--Если текущая страница не максимальная (она не была добавлена в цикле выше)-->
+      {{var balanceRightPages = countPages - (currentPage + drawedRightPages);}}<!--Вычисляем, сколько осталось страниц после последней нарисованной справа-->
+      {{? balanceRightPages > 1 }}<!--Если справа от текущей страницы больше одной страницы, то рисуем многоточие-->
+         <span class='ws-paging-small'>&hellip;</span>
+      {{?}}
+      {{? balanceRightPages >= 1 }}<!--Если справа от текущей страницы одна или больше страниц, то рисуем последнюю-->
+         {{=getConfiguredSpan(currentPage, countPages)}}
+      {{?}}
+   {{?}}
+{{?}}
+<!--Добавляем кнопки перехода на следующую и последнюю страницы-->
+{{? it.options.onlyLeftSide }}
+   <span class='ws-paging-small {{?it.options.rightArrow}}ws-paging-active{{?}} ws-paging-next' title='Перейти на следующую страницу'>&#8594;</span>
+   <span class='ws-paging-small {{?it.options.rightArrow}}ws-paging-active{{?}} ws-paging-end' title='Перейти к последней странице'>&#8594;</span>
+{{??}}
+   <span class='ws-paging-small {{?currentPage < countPages}}ws-paging-active{{?}} ws-paging-next' title='Перейти на следующую страницу'>&#8594;</span>
+   <span class='ws-paging-small {{?currentPage < countPages}}ws-paging-active{{?}} ws-paging-end' title='Перейти к последней странице'>&#8594;</span>
+{{?}}

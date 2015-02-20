@@ -1,0 +1,173 @@
+@import "../../../css/themes/wi_scheme/index";
+/*Панель навигации*/
+
+@navigationPanelTitleCounterFont: italic 14px e('/') 16px "Trebuchet MS";
+@navigationPanelCounterColor: #999;
+
+.ws-navigation-panel{
+   overflow-y: auto;
+   color: #000;
+
+   &.ws-disabled{
+
+      * {
+         cursor: default !important;
+         text-decoration: none !important;
+      }
+
+      .ws-accordion-wr {
+         .ws-accordion-element-title {
+            &.ws-accordion-active {
+               cursor: default !important;
+            }
+         }
+      }
+   }
+
+   .ws-accordion-wr{
+      .ws-accordion-element-title{
+         white-space: normal;
+         height: auto;
+         max-height: 56px;
+         box-sizing: border-box;
+         -moz-box-sizing: border-box;
+         -webkit-box-sizing: border-box;
+         width: 100%;
+
+         &.ws-accordion-active{
+            cursor: pointer !important;
+
+            .ws-navigation-panel-text:hover {
+               text-decoration: none;
+            }
+         }
+
+         &:hover, {
+            text-decoration: underline;
+         }
+
+         &.counters:hover {
+            text-decoration: none;
+         }
+
+         .ws-navigation-panel-text-container {
+            display: table-cell;
+         }
+
+         .ws-navigation-panel-text {
+            &:hover {
+               text-decoration: underline;
+            }
+         }
+
+         .ws-navigation-panel-counter{
+            font: @navigationPanelTitleCounterFont;
+            height: 14px;
+         }
+
+         .ws-accordion-element-title-table-wrapper {
+            display: table;
+            width: 100%;
+         }
+      }
+
+      .ws-navigation-panel-counter{
+         font: @globalDefaultFontSize @globalFontFamily;
+         color: #999;
+         height: 16px;
+         line-height: 16px;
+         text-align: right;
+
+         &:hover {
+            text-decoration: underline;
+         }
+      }
+
+      &.ws-navigation-panel-open-default{
+         .ws-accordion-element-title{
+            color: inherit;
+            background: #F7F3F0;
+            margin-bottom: -6px;
+         }
+
+         .ws-accordion-element-area{
+            display: block !important;
+            padding-bottom: 6px;
+
+            &>ul.ws-navigation-panel-list{
+               display: block !important;
+            }
+         }
+      }
+   }
+
+   ul.ws-navigation-panel-list{
+      display: none;
+      padding-left: 16px;
+      padding-top: 6px;
+
+      li.ws-navigation-panel-item{
+         padding: 6px 0;
+         list-style: none;
+         font-size: 0;
+
+         .ws-navigation-panel-text-container{
+            display: table;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            width: 100%;
+            text-decoration: none;
+            cursor: pointer;
+            min-height: 16px;
+            max-height: 32px;
+            font: @globalDefaultFontSize @globalFontFamily;
+            line-height: 16px;
+            overflow: hidden;
+
+            &.counters:hover {
+               text-decoration: none;
+            }
+
+            &:hover{
+               text-decoration: underline;
+            }
+         }
+
+         .ws-navigation-panel-text {
+            display: table-cell;
+            vertical-align: top;
+
+            &:hover {
+               text-decoration: underline;
+            }
+         }
+      }
+
+      &.ws-navigation-panel-open-default{
+         display: block !important;
+      }
+   }
+
+   .ws-accordion-element-area{
+      padding: 0 16px;
+      width: auto;
+
+      &>ul.ws-navigation-panel-list{
+         padding-left: 0;
+         padding-top: 0;
+
+         ul.ws-navigation-panel-list{
+            li.ws-navigation-panel-item:last-child{
+               padding-bottom: 0;
+            }
+         }
+      }
+   }
+
+   .ws-navigation-panel-custom-render{
+      & > *:hover{
+         text-decoration: inherit;
+      }
+   }
+}

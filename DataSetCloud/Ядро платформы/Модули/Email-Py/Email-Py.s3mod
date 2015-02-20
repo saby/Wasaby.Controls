@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<bl_module id="db28153f-68dc-435a-87c4-04ac6aaed9e4" name="Email-Py" package="Платформа" responsible="Бойцов Е.А." version="1.00">
+
+  <description>Модуль является оберткой в питон для библиотеки sbis-email300.dll.</description>
+
+  <depends>
+    <bl_module id="16779777-d6ee-4d93-bd86-83dbd7ce03b4" name="Python"/>
+    <bl_module id="b6b6a4c5-7ab2-4065-a4e4-40d4a3bae410" name="Работа с электронной почтой"/>
+  </depends>
+
+  <load_after/>
+
+  <parameters/>
+
+  <resources>
+    <resource deployment_root="1" name="sbis_email" platform="3" type="0" version="3"/>
+  </resources>
+
+</bl_module>

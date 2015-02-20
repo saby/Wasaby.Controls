@@ -1,0 +1,169 @@
+@import "../../../css/themes/wi_scheme/index";
+@checkBoxSpritePath: "../FieldCheckbox/resources/images/checkbox-sprite.png";
+@buttonSpritePath: "resources/images/sprites.png";
+
+.ws-OperationsPanel__action, .ws-OperationsPanel__selectBox {
+   cursor: pointer;
+}
+
+.ws-OperationsPanel__action, .ws-OperationsPanel__mark,
+.ws-OperationsPanel__buttons, .ws-OperationsPanel__operations,
+.ws-OperationsPanel__separator {
+   height: 24px;
+}
+
+.ws-OperationsPanel, .ws-OperationsPanel__action {
+   width: 30px;
+}
+
+.ws-OperationsPanel, .ws-OperationsPanel__inner,
+.ws-OperationsPanel__triangle {
+   height: 30px;
+}
+
+.ws-OperationsPanel__selectBox, .ws-OperationsPanel__mark,
+.ws-OperationsPanel__separator, .ws-OperationsPanel__operations,
+.ws-OperationsPanel__selectionCount, .ws-OperationsPanel__showAll,
+.ws-OperationsPanel__triangle {
+   display: inline-block;
+}
+
+.ws-OperationsPanel__action-opened, .ws-OperationsPanel__buttons,
+.ws-OperationsPanel__selection {
+   float: left;
+}
+
+.ws-OperationsPanel, .ws-OperationsPanel__inner {
+   position: relative;
+}
+
+.ws-OperationsPanel__wrapper, .ws-OperationsPanel__triangle {
+   position: absolute;
+}
+
+.ws-OperationsPanel__wrapper, .ws-OperationsPanel__inner {
+   width: auto;
+}
+
+.ws-OperationsPanel__wrapper {
+   overflow: hidden;
+}
+
+.ws-OperationsPanel {
+   overflow: visible;
+
+   .ws-OperationsPanel__action-closed {
+      background: url("@{buttonSpritePath}") no-repeat 0 0;
+      margin: 3px 0;
+
+      &:hover {
+         background-position: 0 -24px;
+      }
+
+      &.ws-mousedown {
+         background-position: 0 -48px;
+      }
+   }
+
+   &.ws-disabled {
+      .ws-OperationsPanel__action {
+         cursor: auto;
+      }
+
+      .ws-OperationsPanel__action-closed {
+         background-position: 0 -72px;
+      }
+   }
+}
+
+.ws-OperationsPanel__inner {
+   white-space: nowrap;
+   background-color: #E5ECF5;
+   left: -100%;
+   margin-right: 8px;
+
+   & div {
+      vertical-align: top;
+   }
+
+   .ws-OperationsPanel__buttons {
+      margin-top: 3px;
+   }
+
+   .ws-OperationsPanel__action-opened {
+      background: url("@{buttonSpritePath}") no-repeat -30px 0;
+      margin: 3px 2px 3px 0;
+
+      &:hover {
+         background-position: -30px -24px;
+      }
+
+      &.ws-mousedown {
+         background-position: -30px -48px;
+      }
+   }
+
+   .ws-OperationsPanel__selectBox {
+      background: url("@{checkBoxSpritePath}") no-repeat scroll 0 0;
+      margin: 4px 2px 0 0;
+      width: 16px;
+      height: 16px;
+
+      &:hover {
+         background-position: 0 -48px;
+      }
+
+      &.ws-OperationsPanel__selectBox-someCheck {
+         background-position: 0 -32px;
+      }
+
+      &.ws-OperationsPanel__selectBox-allCheck {
+         background-position: 0 -16px;
+      }
+   }
+
+   .ws-OperationsPanel__separator {
+      width: 3px;
+      margin-right: 8px;
+      background: url("@{globalImagesPath}line.png") no-repeat 0 0;
+   }
+
+   .ws-OperationsPanel__operations {
+      margin-right: 4px;
+   }
+
+   .ws-OperationsPanel__button {
+      height: 100%;
+      margin-right: 8px;
+   }
+
+   .ws-OperationsPanel__selection {
+      margin-top: 3px;
+   }
+
+   .ws-OperationsPanel__selectionCount, .ws-OperationsPanel__showAll{
+      margin-right: 8px;
+      line-height: 24px;
+   }
+
+   .ws-OperationsPanel__selectionCount {
+      color: #999999;
+   }
+
+   .ws-OperationsPanel__showAll {
+      color: #0055BB;
+      text-decoration: none;
+
+      &:hover {
+         cursor: pointer;
+         text-decoration: underline;
+      }
+   }
+
+   .ws-OperationsPanel__triangle {
+      width: 8px;
+      background: url("@{globalImagesPath}triangle.png") no-repeat;
+      top: 0;
+      right: -8px;
+   }
+}

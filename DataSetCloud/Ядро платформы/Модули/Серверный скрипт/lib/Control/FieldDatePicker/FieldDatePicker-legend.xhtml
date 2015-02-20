@@ -1,0 +1,10 @@
+<div class="ws-dp-legend">
+   {{ for(var d in it.legend) { }}
+      <div class='ws-dp-row-legend'>
+         <span class='{{=d}}'>
+         &nbsp;
+         </span>
+         {{=it.legend[d]}}
+      </div>
+   {{ } }}
+</div>

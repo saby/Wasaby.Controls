@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<bl_module bl_module_library="sbis-validation300" id="aeef0691-b070-4341-9ca1-4558f771f30d" name="Validation" package="Платформа" responsible="Ткачук М.И." version="1.00">
+
+  <description/>
+
+  <depends>
+    <bl_module id="6f8333a3-aa5f-404e-ae9f-6fa42dcdc349" name="Бизнес-логика"/>
+    <bl_module id="b6b6a4c5-7ab2-4065-a4e4-40d4a3bae410" name="Работа с электронной почтой"/>
+  </depends>
+
+  <load_after/>
+
+  <parameters>
+    <parameter db_deployment_enabled="1" group_name="Администрирование клиента" name="Подтверждения" required_debug="0" required_release="0" type="composite" version="2">
+      <comment><![CDATA[Параметры механизма подтверждений.
+
+АктуальностьКодаПодтверждения - время действия кода подтверждения в минутах.
+
+КоличествоНеудачныхПопыток - максимальное количество попыток ввода неправильного кода подтверждения.]]></comment>
+      <default configuration="debug"><![CDATA[АктуальностьКодаПодтверждения='5' КоличествоПопытокВвода='5' ]]></default>
+      <default configuration="release"><![CDATA[АктуальностьКодаПодтверждения='5' КоличествоПопытокВвода='5' ]]></default>
+    </parameter>
+    <parameter db_deployment_enabled="1" group_name="Администрирование клиента" name="ПочтовыйЯщикДляРассылок" required_debug="0" required_release="1" type="composite" version="2">
+      <comment><![CDATA[Ящик для отправления подтверждений по email.]]></comment>
+      <default configuration="debug"><![CDATA[АдресОтправителя='dev_reg@tensor.ru' Логин='dev_reg@tensor.ru' Пароль='Y4p2AeZS' Порт='25' Сервер='corpmail.tensor.ru' ]]></default>
+    </parameter>
+    <parameter db_deployment_enabled="1" group_name="Настройки внешних сервисов" name="СервисСМС" required_debug="0" required_release="1" type="service_address" version="1">
+      <comment><![CDATA[Адрес сервера СМС для отправки смс-подтверждений]]></comment>
+      <default configuration="debug"><![CDATA[Адрес='http://test-sms.inner.tensor.ru' Аутентификация='http://test-sms.inner.tensor.ru/auth' Логин='sendersms-su' Пароль='123sms']]></default>
+    </parameter>
+  </parameters>
+
+  <resources/>
+
+  <source_directory path="../../../../core-server/sbis-validation"/>
+
+  <externals>
+    <external cloud="." method="САП.Аутентифицировать" num_args="2" service_name="Аутентификация" signature="САП.Аутентифицировать(login: Текст, password: Текст): Текст"/>
+    <external cloud="online" method="Сообщение.НовоеОтправить" num_args="4" service_name="SMS sending service" signature="Сообщение.НовоеОтправить(Агент: Строка, Содержание: Строка, Адресат: Строка, ЧасыДоставки: Массив чисел): Число целое"/>
+  </externals>
+
+</bl_module>

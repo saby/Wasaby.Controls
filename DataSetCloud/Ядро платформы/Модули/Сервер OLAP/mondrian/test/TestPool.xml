@@ -1,0 +1,19 @@
+﻿<Pool>
+  <Connect default="true" name="TestCube" line="Jdbc=jdbc:postgresql://sbis-dev6/sbis3.7.0;JdbcDrivers=org.postgresql.Driver;JdbcUser=postgres;JdbcPassword=postgres;Catalog=file:Модули/Сервер OLAP/mondrian/test/TestCube.xml;">
+    <WarmUpDimension default="true" name="TestCube" CubeName="TestCube" >Measures</WarmUpDimension>
+    <WarmUpHierarhy CubeName="TestCube" CubeDimension="Time" >Time.Time</WarmUpHierarhy>
+    <WarmUpQuery>SELECT [Measures].[Duration] ON COLUMNS, [Методы].children on rows FROM TestCube</WarmUpQuery>
+  </Connect>
+  <Connect default="false" name="LiveStat" line="Jdbc=jdbc:postgresql://sb-osr-db.unix.tensor.ru/platform-online.sbis.ru.olap;JdbcDrivers=org.postgresql.Driver;JdbcUser=service_user;JdbcPassword=iiS;Catalog=Модули/Сервер OLAP/mondrian/demo/LiveStat.xml;">
+    <WarmUpDimension CubeName="Статистика" >Время</WarmUpDimension>
+    <WarmUpHierarhy  CubeName="Статистика" CubeDimension="Время" >Время.Дата</WarmUpHierarhy>
+    <WarmUpHierarhy  CubeName="Статистика" CubeDimension="Время" >Время.Время</WarmUpHierarhy>
+    <WarmUpHierarhy  CubeName="Статистика" CubeDimension="Время" >Время.Год</WarmUpHierarhy>
+    <WarmUpHierarhy  CubeName="Статистика" CubeDimension="Время" >Время.Месяц</WarmUpHierarhy>
+    <WarmUpHierarhy  CubeName="Статистика" CubeDimension="Время" >Время.День</WarmUpHierarhy>
+    <WarmUpDimension CubeName="Статистика" >Measures</WarmUpDimension>
+    <WarmUpDimension CubeName="Статистика" >Метод</WarmUpDimension>
+    <WarmUpHierarhy  CubeName="Статистика" CubeDimension="Метод" >Метод.Метод</WarmUpHierarhy>
+  </Connect>
+  <Connect default="false" name="ErrorConnection" line="кривая строка подключения"/>
+</Pool>

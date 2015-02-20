@@ -1,0 +1,62 @@
+<div class="ws-FilterController">
+   <div class="ws-FilterController__pathFilter">
+      <component data-component="SBIS3.CORE.PathFilter">
+         <option name="name" value="fastFilter-{{=it.name}}"></option>
+         <option name="filters" type="ref">{{@it.filters}}</option>
+         <option name="mode" value="{{=it.mode}}"></option>
+         <option name="textAlign" value="right"></option>
+         <option name="autoWidth" value="true" type="boolean"></option>
+         <!--Возникла проблема передачи уже загруженных обработчиков, было предложено передать опции через ссылку,
+         но обнаружилось, что не всегда срабатывает type="ref", приходится обходить свойства объекта и
+         передавать значение по ссылке, Косте Ершову выписана задача на эту проблему-->
+         {{? !Object.isEmpty(it.pathFilterHandlers)}}
+         <options name="handlers">
+            {{for (var i in it.pathFilterHandlers) {}}
+               {{? it.pathFilterHandlers.hasOwnProperty(i)}}
+                  {{? it.pathFilterHandlers[i] instanceof Array}}
+                     <options name="{{=i}}" type="array">
+                        {{for (var j = 0, l = it.pathFilterHandlers[i].length; j < l; j++) {}}
+                           <option type="ref">{{@it.pathFilterHandlers[i][j]}}</option>
+                        {{}}}
+                     </options>
+                  {{??}}
+                     <option name="{{=i}}" type="ref">{{@it.pathFilterHandlers[i]}}</option>
+                  {{?}}
+               {{?}}
+            {{}}}
+         </options>
+         {{?}}
+      </component>
+   </div>
+   <div class="ws-FilterController__filterButton">
+      <component data-component="SBIS3.CORE.FilterButton">
+         <option name="name" value="filterButton-{{=it.name}}"></option>
+         <option name="autoWidth" value="true" type="boolean"></option>
+         <option name="template" value="{{=it.template}}"></option>
+         {{? it.browserId}}
+         <option name="browserId" value="{{=it.browserId}}"></option>
+         {{?}}
+         <option name="sendDefault" type="ref">{{@it.sendDefault}}</option>
+         <option name="showHistory" type="ref">{{@it.showHistory}}</option>
+         <option name="filterLine" type="ref">{{@it.filterLine}}</option>
+         <option name="singleFilterItem" type="ref">{{@it.singleFilterItem}}</option>
+         {{? !Object.isEmpty(it.filterButtonHandlers)}}
+         <options name="handlers">
+            {{for (var i in it.filterButtonHandlers) {}}
+               {{? it.filterButtonHandlers.hasOwnProperty(i)}}
+                  {{? it.filterButtonHandlers[i] instanceof Array}}
+                     <options name="{{=i}}" type="array">
+                        {{for (var j = 0, l = it.filterButtonHandlers[i].length; j < l; j++) {}}
+                           <option type="ref">{{@it.filterButtonHandlers[i][j]}}</option>
+                        {{}}}
+                     </options>
+                  {{??}}
+                     <option name="{{=i}}" type="ref">{{@it.filterButtonHandlers[i]}}</option>
+                  {{?}}
+               {{?}}
+            {{}}}
+         </options>
+         {{?}}
+      </component>
+   </div>
+</div>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bl_module id="a728b057-604b-4425-aee6-dfed7fc93e2a" name="Управление правами" package="Платформа" responsible="Шаброва А.Н." version="1.00">
+
+  <description/>
+
+  <depends>
+    <bl_module id="01e3e02e-428c-4d98-a2b5-152a81998958" name="Авторизация"/>
+    <bl_module id="16779777-d6ee-4d93-bd86-83dbd7ce03b4" name="Python"/>
+    <bl_module id="6d82cd69-d5f3-4a22-8684-41a082ab0335" name="Аутентификация"/>
+    <bl_module id="6f8333a3-aa5f-404e-ae9f-6fa42dcdc349" name="Бизнес-логика"/>
+    <bl_module id="6fc02564-c885-4b66-b8e8-727bff7a8436" name="Работа с БД"/>
+  </depends>
+
+  <load_after/>
+
+  <parameters/>
+
+  <resources/>
+
+  <externals/>
+
+</bl_module>

@@ -1,0 +1,24 @@
+@import "../../../css/themes/wi_scheme/index";
+
+.ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
+   border-radius: 0;
+   width: 30px !important;
+   height: 24px !important;
+   right: 0 !important;
+   top: 8px !important;
+   position: absolute;
+   background: transparent url("@{globalImagesPath}button.png") -30px 0;
+   box-shadow: none !important;
+
+   &:hover{
+      background-position: -30px -24px;
+   }
+
+   &:active{
+      background-position: -30px -48px;
+   }
+
+   .ws-button-caption, .ws-button-image {
+      display: none;
+   }
+}

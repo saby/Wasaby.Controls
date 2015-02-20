@@ -276,6 +276,7 @@
 }
 .controls-ListView__action {
   margin-right: 16px;
+  display: inline;
 }
 .controls-ListView > .controls-TreeView__childContainer {
   display: block;

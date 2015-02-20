@@ -1,0 +1,1697 @@
+<?xml version="1.0" encoding="WINDOWS-1251" ?>
+<repository orx_version="1.74">
+
+  <object last_changed="Буравлев М.С." name="ActiveDirectory" responsible="Буравлев М.С.">
+    <select access_mode="1" is_service="1" last_changed="Буравлев М.С." name="ActiveDirectory.GUIDПользователя" responsible="Буравлев М.С." returns="SCALAR" type="SQL">
+      <parameter name="Пользователь">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PLPGSQL</language>
+        <body>SELECT "GUID"
+   FROM "ПользовательActiveDirectory"
+      WHERE "@Пользователь" = :Пользователь</body>
+      </definition>
+    </select>
+    <select access_mode="1" is_proxy="0" is_service="0" last_changed="Буравлев М.С." name="ActiveDirectory.ИнформацияПоПользователю" responsible="Буравлев М.С." returns="SCALAR" type="NATIVE">
+      <parameter name="userId">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+    </select>
+    <select access_mode="0" is_service="0" last_changed="Буравлев М.С." name="ActiveDirectory.ОтвязатьАккаунт" responsible="Буравлев М.С." returns="SCALAR" type="PYTHON">
+      <parameter name="userId">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>BOOLEAN</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>SqlQueryScalar( """
+DELETE FROM "ПользовательActiveDirectory"
+   WHERE "@Пользователь" = """ + str( userId ) )
+
+cli = RedisClient( "ХранилищеСессий", True, False )
+keys = cli.Keys( "*-%08d-00ad-*" % userId )
+for key in keys:
+   cli.Del( key )</body>
+      </definition>
+    </select>
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="Буравлев М.С." name="ActiveDirectory.Установить" responsible="Буравлев М.С." returns="SCALAR" type="NATIVE">
+      <parameter name="userId">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <parameter name="login">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>BOOLEAN</type>
+        </format>
+      </return>
+    </select>
+    <select access_mode="0" is_service="1" last_changed="Буравлев М.С." name="ActiveDirectory.УстановитьВБД" responsible="Буравлев М.С." returns="NONE" type="PYTHON">
+      <parameter name="userId">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <parameter name="guid">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <definition>
+        <language>PYTHON</language>
+        <body>ActiveDirectory.ОтвязатьАккаунт( userId )
+
+SqlQuery( """
+INSERT INTO "ПользовательActiveDirectory"( "@Пользователь", "GUID" )
+   VALUES( {userId}, '{guid}' )
+""".format( userId=userId, guid=guid ) )</body>
+      </definition>
+    </select>
+  </object>
+
+  <object name="БазовыйПользователь">
+    <object name="Клиент">
+      <select access_mode="1" is_proxy="0" is_service="0" last_changed="Шаброва А.Н." name="Клиент.ВнешнийИдентификаторТекущегоКлиента" responsible="Buravlevms" returns="SCALAR" type="NATIVE">
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+      </select>
+      <select access_mode="1" is_service="0" last_changed="Шаброва А.Н." name="Клиент.ВозможностьРазворотаСхемы" responsible="Шаброва А.Н." returns="SCALAR" type="PYTHON">
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </return>
+        <definition>
+          <language>PYTHON</language>
+          <body>return False</body>
+        </definition>
+      </select>
+      <select access_mode="0" is_proxy="1" is_service="0" last_changed="Буравлев М.С." module_api_part="1" name="Клиент.Записать" responsible="Buravlevms" returns="SCALAR" type="NATIVE">
+        <parameter name="Запись">
+          <format>
+            <type>RECREFERENCE</type>
+            <free>1</free>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INT64</type>
+          </format>
+        </return>
+      </select>
+      <select access_mode="1" is_service="0" last_changed="Рыбаков М.А." name="Клиент.ПолучитьВнешнийИдентификатор" responsible="Буравлев М.С." returns="SCALAR" type="PYTHON">
+        <comment>ВНИМАНИЕ!!!
+Данный метод можно вызывать только с сервиса аутентификации либо с сервиса администрирования!</comment>
+        <parameter name="ЛогинПараметр">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+        <definition>
+          <language>PYTHON</language>
+          <body>if ЛогинПараметр is None:
+    return None
+
+safetyQuotesStr = lambda param : 'null' if param is None else "'{Параметр}'".format( Параметр=str( param ).replace( "'", "''" ) )
+
+res = SqlQuery( """SELECT "Раздел@", "Раздел"
+    FROM "Пользователь"
+        WHERE "Логин" = {ЛогинПараметр}""".format( ЛогинПараметр = safetyQuotesStr( ЛогинПараметр ).lower() )
+)
+
+if res.Size() == 0:
+    return None
+
+rec = res[0]
+
+if rec["Раздел@"].IsNull() != True and rec["Раздел@"].__bool__() == False:
+    return None
+
+return SqlQueryScalar( """SELECT "ВнешнийИдентификатор"
+    FROM "Пользователь"
+        WHERE "@Пользователь" = {client_id}""".format( client_id = БазовыйПользователь.ПолучитьКлиента( rec["Раздел"].__int__() ) ) )</body>
+        </definition>
+      </select>
+      <proxy access_mode="1" is_service="0" last_changed="Буравлев М.С." method_type="6" module_api_part="1" name="Клиент.Прочитать" responsible="Буравлев М.С." returns="TABLE" section="СервисАдминистрирования"/>
+      <select access_mode="0" is_proxy="0" is_service="0" last_changed="Ткачук М.И." module_api_part="1" name="Клиент.СписокАдминистраторовКлиента" responsible="Buravlevms" returns="TABLE" type="NATIVE">
+        <parameter name="client_id">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </parameter>
+        <parameter name="только_временный_логин">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </parameter>
+        <return name="user_id">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+      </select>
+      <select access_mode="1" is_service="1" last_changed="Щукин А.В." name="Клиент.СписокАдминистраторовКлиентаСлужебный" responsible="Buravlevms" returns="TABLE" type="SQL">
+        <parameter name="client_id">
+          <format>
+            <type>INT64</type>
+          </format>
+        </parameter>
+        <parameter name="только_временный_логин">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </parameter>
+        <parameter name="административныеРоли">
+          <format>
+            <type>TEXT[]</type>
+          </format>
+        </parameter>
+        <return name="user_id">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+        <definition>
+          <language>PLPGSQL</language>
+          <body>SELECT "@Пользователь" as user_id
+   FROM "Пользователь" P
+      WHERE "Раздел"=:client_id AND (
+      --если пользователь наследует права от клиента
+      (
+         WITH RECURSIVE T( "@Пользователь", "НаследоватьПрава", "Раздел", n ) AS (
+            SELECT u."@Пользователь", u."НаследоватьПрава", u."Раздел", 1
+               FROM "Пользователь" u
+                  WHERE u."@Пользователь" = P."@Пользователь"
+            UNION
+            SELECT u."@Пользователь", u."НаследоватьПрава", u."Раздел", n + 1
+               FROM "Пользователь" u JOIN T 
+                  ON ( T."Раздел" = u."@Пользователь" AND u."Раздел@" IS DISTINCT FROM FALSE )
+         )
+         SELECT count(*)=0
+            FROM T
+               WHERE "НаследоватьПрава" IS DISTINCT FROM TRUE
+      )
+      --или у него есть роль 'Администратор'
+      OR ( EXISTS ( SELECT * FROM "РолиПользователей" WHERE "Пользователь" = P."@Пользователь" AND "Название" = ANY( :административныеРоли ) ) )
+   );</body>
+        </definition>
+      </select>
+      <proxy access_mode="1" is_service="0" last_changed="Шаброва А.Н." method_type="0" name="Клиент.СписокПользователей" responsible="Шаброва А.Н." returns="TABLE" section="СервисАдминистрирования">
+        <return name="@Пользователь">
+          <format>
+            <type>FIELDFROMTABLE</type>
+            <table>Пользователь</table>
+            <column>@Пользователь</column>
+          </format>
+        </return>
+        <return name="Имя">
+          <format>
+            <type>FIELDFROMTABLE</type>
+            <table>Пользователь</table>
+            <column>Имя</column>
+          </format>
+        </return>
+      </proxy>
+      <proxy access_mode="1" is_service="0" last_changed="Buravlevms" method_type="1" name="Клиент.ЯвляетсяЛиКлиентом" responsible="Buravlevms" returns="SCALAR" section="СервисАдминистрирования">
+        <parameter name="client_id">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </return>
+      </proxy>
+    </object>
+    <object insert_on_create="1" last_changed="Желдокас С.А." name="Пользователь" read_only="0" responsible="Желдокас С.А.">
+      <source name="Пользователь"/>
+      <select access_mode="0" is_service="1" last_changed="Ткачук М.И." name="Пользователь.GetIdByPhone" responsible="Ткачук М.И." returns="SCALAR" type="PYTHON">
+        <parameter name="phone">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+        <definition>
+          <language>PYTHON</language>
+          <body>start = 0
+if phone[0] == "8":
+   start = 1
+if phone[0:2] == "+7":
+   start = 2
+return SqlQueryScalar("""select "@Пользователь" from "Пользователь" where "МобильныйТелефон" like '%""" + phone[start:] + """' and coalesce("Логин", '') &lt;&gt; '' and "Заблокирован" is distinct from true limit 1""" )</body>
+        </definition>
+      </select>
+      <select access_mode="0" is_service="1" last_changed="Ткачук М.И." name="Пользователь.GetLoginById" responsible="Ткачук М.И." returns="SCALAR" type="SQL">
+        <parameter name="user_id">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </return>
+        <definition>
+          <language>PLPGSQL</language>
+          <body>select "Логин" from "Пользователь" where "@Пользователь" = :user_id</body>
+        </definition>
+      </select>
+      <select access_mode="0" is_service="1" last_changed="Ткачук М.И." name="Пользователь.GetUserEmail" responsible="Ткачук М.И." returns="SCALAR" type="SQL">
+        <parameter name="user_id">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </return>
+        <definition>
+          <language>PLPGSQL</language>
+          <body>select email from "Пользователь" where "@Пользователь" = :user_id</body>
+        </definition>
+      </select>
+      <select access_mode="0" is_service="1" last_changed="Ткачук М.И." name="Пользователь.GetUserPhone" responsible="Ткачук М.И." returns="SCALAR" type="SQL">
+        <parameter name="user_id">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </return>
+        <definition>
+          <language>PLPGSQL</language>
+          <body>select "МобильныйТелефон" from "Пользователь"  where "@Пользователь" = :user_id</body>
+        </definition>
+      </select>
+      <select access_mode="1" is_service="1" last_changed="Буравлев М.С." name="Пользователь.БольшеN" responsible="Буравлев М.С." returns="SCALAR" type="SQL">
+        <parameter name="N">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </parameter>
+        <parameter name="Все">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </return>
+        <definition>
+          <language>PLPGSQL</language>
+          <body>SELECT COUNT( "@Пользователь" ) = ( :N + 1 )
+   FROM ( SELECT "@Пользователь"
+            FROM "Пользователь" 
+               WHERE "Раздел" = current_setting('sbis3.clientID')::INTEGER AND 
+                     ( :Все IS TRUE OR "Заблокирован" IS FALSE ) AND 
+                     "$Черновик" IS NULL
+                  LIMIT ( :N + 1 ) ) T</body>
+        </definition>
+      </select>
+      <proxy access_mode="1" is_service="0" last_changed="Щукин А.В." method_type="1" name="Пользователь.ВремяПоследнегоВхода" responsible="Щукин А.В." returns="TABLE" section="СервисАдминистрирования">
+        <parameter name="Идентификаторы">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </parameter>
+        <return name="Пользователь">
+          <format>
+            <type>INT64</type>
+          </format>
+        </return>
+        <return name="ПоследнийВход">
+          <format>
+            <type>DATETIME</type>
+          </format>
+        </return>
+      </proxy>
+      <proxy access_mode="0" is_service="0" last_changed="shabrovaan" method_type="1" name="Пользователь.ЗадатьПароль" responsible="Buravlevms" returns="SCALAR" section="СервисАдминистрирования">
+        <parameter name="ИдО">
+          <format>
+            <type>INT64</type>
+          </format>
+        </parameter>
+        <parameter name="Пароль">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+      </proxy>
+      <select access_mode="0" is_service="0" last_changed="Желдокас С.А." name="Пользователь.ЗадатьПарольСИсторией" responsible="Желдокас С.А." returns="SCALAR" type="PYTHON">
+        <parameter name="ИдО">
+          <format>
+            <type>INT64</type>
+          </format>
+        </parameter>
+        <parameter name="Пароль">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+        <definition>
+          <language>PYTHON</language>
+          <body>obj = BLObject( 'Пользователь' )
+res = obj.Invoke( 'ЗадатьПароль', ИдО, Пароль )
+UserID = SqlQueryScalar( """SELECT
+                              "@СвязиПользователя"
+                            FROM
+                              "СвязиПользователя"
+                            WHERE
+                              "Пользователь" = {ObjID} """.format( ObjID = ИдО ) )
+История.ЗарегистрироватьСобытие( 'Изменил пароль', 'Изменение сотрудника', 'Сотрудник', UserID )
+return res</body>
+        </definition>
+      </select>
+      <select access_mode="0" category="Стандартные" is_proxy="1" is_service="0" last_changed="Щукин А.В." name="Пользователь.Записать" responsible="Щукин А.В." returns="SCALAR" type="NATIVE">
+        <parameter name="Запись">
+          <format>
+            <type>RECREFERENCE</type>
+            <free>1</free>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INT64</type>
+          </format>
+        </return>
+      </select>
+      <select access_mode="0" category="Стандартные" is_proxy="0" is_service="0" last_changed="Шаброва А.Н." name="Пользователь.Записать" responsible="Шаброва А.Н." returns="SCALAR" type="NATIVE">
+        <parameter name="Запись">
+          <format>
+            <type>RECREFERENCE</type>
+            <free>1</free>
+          </format>
+        </parameter>
+        <parameter name="Проверка">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INT64</type>
+          </format>
+        </return>
+      </select>
+      <select access_mode="0" category="Служебные" is_service="1" last_changed="Буравлев М.С." name="Пользователь.ЗаписатьВSlave" responsible="Буравлев М.С." returns="NONE" type="PYTHON">
+        <parameter name="Запись">
+          <format>
+            <type>RECREFERENCE</type>
+            <free>1</free>
+          </format>
+        </parameter>
+        <definition>
+          <language>PYTHON</language>
+          <body>if '@Пользователь' not in Запись:
+   return
+
+safetyQuotesStr = lambda param : 'NULL' if param is None else "'{Параметр}'".format( Параметр=str( param.lower().strip() ).replace( "'", "''" ) )
+
+set_str = ''
+
+if 'email' in Запись:
+   set_str += "\"email\" = {value}".format( value = safetyQuotesStr( Запись.email ) )
+
+if 'Логин' in Запись:
+   if set_str:
+      set_str += ', '
+   set_str += "\"Логин\" = {value}".format( value = safetyQuotesStr( Запись.Логин ) )
+   
+if 'Заблокирован' in Запись:
+   if set_str:
+      set_str += ', '
+   set_str += "\"Заблокирован\" = {value}".format( value = 'TRUE' if Запись.Заблокирован else 'FALSE' )
+
+if set_str:
+   SqlQueryScalar( """
+      UPDATE "Пользователь"
+      SET {set_str}
+      WHERE "@Пользователь" = {id}
+   """.format( 
+      set_str = set_str,
+      id = str( Запись[ "@Пользователь" ] ) 
+      )
+   )</body>
+        </definition>
+      </select>
+      <select access_mode="0" category="Служебные" is_proxy="1" is_service="1" last_changed="Буравлев М.С." name="Пользователь.ЗаписатьСАктивациейКорпРегистрации" responsible="Буравлев М.С." returns="SCALAR" type="NATIVE">
+        <parameter name="user_data">
+          <format>
+            <type>RECREFERENCE</type>
+            <free>1</free>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+      </select>
+      <select access_mode="0" is_service="0" last_changed="Желдокас С.А." name="Пользователь.ЗаписатьСИсторией" responsible="Желдокас С.А." returns="SCALAR" type="PYTHON">
+        <parameter name="Запись">
+          <format>
+            <type>RECREFERENCE</type>
+            <free>1</free>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INT64</type>
+          </format>
+        </return>
+        <definition>
+          <language>PYTHON</language>
+          <body>if "@Пользователь" in Запись:
+   def get_History_Msg( item, old, new ):
+      msg = ''
+      if new:
+         if old:
+            msg = """Изменил {it} с "{old}" на "{new}" """.format( it = item, old = old, new = new )
+         else:
+            msg = """Задал {it} "{new}" """.format( it = item, new = new )
+      elif old:
+         msg = """Удалил {it} "{old}" """.format( it = item, old = old )
+      return msg
+
+   def write_History_Msg( message, objID ):
+      event = "Изменение"
+      obj = "Сотрудники"
+      ido = SqlQueryScalar( """SELECT "@СвязиПользователя"
+                                  FROM
+                                    "СвязиПользователя"
+                                  WHERE
+                                    "Пользователь" = $1 """, objID )
+
+      HistoryMsg( message, event, obj, ido )
+
+   ######################################################################################################################
+
+   objID = int( Запись["@Пользователь"] )
+
+   loginEmail = SqlQuery( """SELECT "email" AS email,
+                                    "Логин" AS login
+                                 FROM
+                                    "Пользователь" AS _USR
+                                 WHERE
+                                    _USR."@Пользователь" = $1 """, objID )
+
+   res = Пользователь.Записать( Запись )
+
+   if loginEmail:
+      oldLogin = loginEmail[ 0 ].login
+      oldEmail = loginEmail[ 0 ].email
+
+   if "Логин" in Запись:
+      newLogin = Запись.Логин
+      if not oldLogin == newLogin:
+         msg = get_History_Msg( 'логин', oldLogin, newLogin )
+         write_History_Msg( msg, objID )
+
+
+   return res
+return Пользователь.Записать( Запись )</body>
+        </definition>
+      </select>
+      <proxy access_mode="1" category="Инициализация" is_service="1" last_changed="Буравлев М.С." method_type="1" name="Пользователь.ИдАдминистратора" responsible="Buravlevms" returns="SCALAR" section="СервисАдминистрирования">
+        <cached forwhom="all" lifetime="60"/>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INT64</type>
+          </format>
+        </return>
+      </proxy>
+      <proxy access_mode="1" category="Инициализация" is_service="1" last_changed="Буравлев М.С." method_type="1" name="Пользователь.ИдАдминистратораПользователя" responsible="Buravlevms" returns="SCALAR" section="СервисАдминистрирования">
+        <cached forwhom="all" lifetime="60"/>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INT64</type>
+          </format>
+        </return>
+      </proxy>
+      <proxy access_mode="1" category="Инициализация" is_service="1" last_changed="Терентьев А.А." method_type="1" name="Пользователь.ИдГостя" responsible="Buravlevms" returns="SCALAR" section="СервисАдминистрирования">
+        <comment>Возвращает идентифкатор анонимного гостевого клиента</comment>
+        <cached forwhom="all" lifetime="60"/>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INT64</type>
+          </format>
+        </return>
+      </proxy>
+      <proxy access_mode="1" category="Инициализация" is_service="1" last_changed="Терентьев А.А." method_type="1" name="Пользователь.ИдГостяПользователя" responsible="Buravlevms" returns="SCALAR" section="СервисАдминистрирования">
+        <comment>Вовзвращает идентифкаторо гостевого пользователя анономного гостевого клиента</comment>
+        <cached forwhom="all" lifetime="60"/>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INT64</type>
+          </format>
+        </return>
+      </proxy>
+      <select access_mode="1" is_service="0" last_changed="Ткачук М.И." name="Пользователь.ИдПоEmail" responsible="Buravlevms" returns="SCALAR" type="SQL">
+        <parameter name="Email">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+        <definition>
+          <language>PLPGSQL</language>
+          <body>SELECT USR."@Пользователь"
+   FROM "Пользователь" AS USR
+      WHERE lower( USR."email" ) = lower( :Email ) AND coalesce("Логин", '') &lt;&gt; '' AND "Заблокирован" is distinct from true  AND USR."Раздел@" IS NULL LIMIT 1;</body>
+        </definition>
+      </select>
+      <select access_mode="1" is_service="0" last_changed="Ткачук М.И." name="Пользователь.ИдПоЛогину" responsible="Buravlevms" returns="SCALAR" type="SQL">
+        <parameter name="Логин">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+        <definition>
+          <language>PLPGSQL</language>
+          <body>SELECT USR."@Пользователь"
+   FROM "Пользователь" AS USR
+		WHERE lower( USR."Логин" ) = lower( :Логин ) AND USR."Раздел@" IS NULL;</body>
+        </definition>
+      </select>
+      <proxy access_mode="1" category="Инициализация" is_service="1" last_changed="Буравлев М.С." method_type="1" name="Пользователь.ИдСервиса" responsible="Buravlevms" returns="SCALAR" section="СервисАдминистрирования">
+        <cached forwhom="all" lifetime="60"/>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INT64</type>
+          </format>
+        </return>
+      </proxy>
+      <select access_mode="1" is_service="1" last_changed="Буравлев М.С." name="Пользователь.ИдентификаторПоПараметрамВызоваЗаписать" responsible="Буравлев М.С." returns="ARRAY" type="PYTHON">
+        <parameter name="параметры">
+          <format>
+            <type>RECREFERENCE</type>
+            <free>1</free>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INT4[]</type>
+          </format>
+        </return>
+        <definition>
+          <language>PYTHON</language>
+          <body>rec = параметры[ "Запись" ].RefRecord()
+
+if( "@Пользователь" in rec ):
+   return [ int( rec["@Пользователь"] ) ]
+else:
+   return []</body>
+        </definition>
+      </select>
+      <select access_mode="1" is_service="1" last_changed="Буравлев М.С." name="Пользователь.ИдентификаторПоПараметрамВызоваУдалить" responsible="Буравлев М.С." returns="ARRAY" type="PYTHON">
+        <parameter name="параметры">
+          <format>
+            <type>RECREFERENCE</type>
+            <free>1</free>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INT4[]</type>
+          </format>
+        </return>
+        <definition>
+          <language>PYTHON</language>
+          <body>if isinstance( параметры.ИдО, list):
+   return параметры.ИдО
+else:
+   return [ int( параметры.ИдО ) ]</body>
+        </definition>
+      </select>
+      <select access_mode="1" is_service="1" last_changed="Буравлев М.С." name="Пользователь.Идентификаторы" responsible="Щукин А.В." returns="TABLE" type="SQL">
+        <parameter name="Пользователи">
+          <format>
+            <type>INT4[]</type>
+          </format>
+        </parameter>
+        <return name="@Пользователь">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+        <return name="Идентификатор">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </return>
+        <definition>
+          <language>PLPGSQL</language>
+          <body>with arr as(
+   select
+      :Пользователи as ids
+)
+select
+   "@Пользователь",
+   "Идентификатор"
+from
+   "Пользователь" T
+join
+   (
+      select
+         row_number() over() rn,
+         "Пользователь"
+      from
+         unnest((
+            select
+               ids
+            from
+               arr
+         )) "Пользователь"
+   ) ord
+on
+   T."@Пользователь" = ord."Пользователь"
+where
+   "@Пользователь" = any ( :Пользователи )
+order by
+   rn</body>
+        </definition>
+      </select>
+      <select access_mode="0" is_proxy="0" is_service="0" name="Пользователь.ИзменитьСвойПароль" returns="SCALAR" type="NATIVE">
+        <parameter name="ТекущийПароль">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </parameter>
+        <parameter name="НовыйПароль">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </return>
+      </select>
+      <select access_mode="1" category="Права" is_proxy="0" is_service="1" last_changed="Buravlevms" name="Пользователь.ИмяАдминистративнойРолиДляПользователя" responsible="Buravlevms" returns="ARRAY" type="NATIVE">
+        <comment>Метод возвращает название административной роли для указанного пользователя. Определяет его класс и по классу возвращает имя. Если для класса не определена Административная роль, то возвращается NULL</comment>
+        <parameter name="Пользователь">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>TEXT[]</type>
+          </format>
+        </return>
+      </select>
+      <select access_mode="1" category="Права" is_service="1" last_changed="Шаброва А.Н." name="Пользователь.ИмяАдминистративнойРолиДляПользователяСлужебный" responsible="Buravlevms" returns="ARRAY" type="SQL">
+        <parameter name="класс">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>TEXT[]</type>
+          </format>
+        </return>
+        <definition>
+          <language>PLPGSQL</language>
+          <body>SELECT
+   CASE
+      WHEN "Логин" = '__сбис__клиенты' THEN '{Администратор системы}'::text[]
+      WHEN "Логин" = '__сбис__администратор' THEN '{Администратор облака}'::text[]
+      ELSE '{}'::text[]
+   END
+ FROM "Пользователь" WHERE "@Пользователь" = :класс;</body>
+        </definition>
+      </select>
+      <generate_method name="Пользователь.История"/>
+      <select access_mode="1" category="Права" is_service="1" last_changed="Рыбаков М.А." name="Пользователь.КлассПользователя" responsible="Buravlevms" returns="RECORD" type="PYTHON">
+        <parameter name="Пользователь">
+          <format>
+            <type>INT64</type>
+          </format>
+        </parameter>
+        <return name="ИдКласса">
+          <format>
+            <type>INT64</type>
+          </format>
+        </return>
+        <return name="ЛогинКласса">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </return>
+        <definition>
+          <language>PYTHON</language>
+          <body>userID = str( Пользователь )
+classes = str( sbis.Пользователь.СписокКлассов() )
+query = """
+   with recursive T ("@Пользователь", "Логин", "Раздел") as (
+      select u."@Пользователь", u."Логин", u."Раздел" 
+         from "Пользователь" u where "@Пользователь" = """ + userID + """
+   union
+      select u."@Пользователь", u."Логин", u."Раздел"
+         from T inner join "Пользователь" u on u."@Пользователь" = T."Раздел" 
+         where coalesce(T."Логин", '') not in ( """ + classes + """ )
+   )   
+   select "@Пользователь" as "ИдКласса", "Логин" as "ЛогинКласса" from T where "Логин" in (  """ + classes + """ ) limit 1;
+"""
+res = SqlQuery( query )
+if res.Size() &gt; 0:
+   return MoveToSharedPtr( res[0] )
+return None</body>
+        </definition>
+      </select>
+      <proxy access_mode="1" is_service="0" last_changed="Буравлев М.С." method_type="1" name="Пользователь.Классы" responsible="Буравлев М.С." returns="TABLE" section="СервисАдминистрирования">
+        <return name="@Пользователь">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+        <return name="Логин">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </return>
+      </proxy>
+      <select access_mode="1" is_service="0" last_changed="Ткачук М.И." module_api_part="1" name="Пользователь.КоличествоПользователей" responsible="Кондратьев М.А." returns="SCALAR" type="SQL">
+        <parameter name="Все">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+        <definition>
+          <language>PLPGSQL</language>
+          <body>SELECT count( "@Пользователь" ) as usersCount
+   FROM "Пользователь" 
+      WHERE "Раздел" = current_setting('sbis3.clientID')::INTEGER AND 
+            ( :Все IS TRUE OR "Заблокирован" IS FALSE ) AND 
+            "$Черновик" IS NULL;</body>
+        </definition>
+      </select>
+      <select access_mode="0" category="Запрещенные методы" is_service="0" last_changed="Buravlevms" name="Пользователь.Копировать" responsible="Buravlevms" returns="RECORD" type="SQL">
+        <cached forwhom="all" lifetime="2880"/>
+        <parameter name="ИдО">
+          <format>
+            <type>INT64</type>
+          </format>
+        </parameter>
+        <return name="НичегоНеВозвращает">
+          <format>
+            <type>OBJECT_IDENTIFIER</type>
+          </format>
+        </return>
+        <definition>
+          <language>PLPGSQL</language>
+          <body>RAISE EXCEPTION 'sbis_err::Запрещено копировать пользователей!';</body>
+        </definition>
+      </select>
+      <select access_mode="0" category="Служебные" is_proxy="0" is_service="1" last_changed="Буравлев М.С." name="Пользователь.МожноСохранить" responsible="Буравлев М.С." returns="SCALAR" type="NATIVE">
+        <parameter name="Фильтр">
+          <format>
+            <type>RECREFERENCE</type>
+            <free>1</free>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </return>
+      </select>
+      <select access_mode="1" is_service="0" last_changed="Buravlevms" name="Пользователь.Найти" responsible="Buravlevms" returns="SCALAR" type="SQL">
+        <parameter name="Строка">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+        <definition>
+          <language>PLPGSQL</language>
+          <body>SELECT "@Пользователь"
+   FROM "Пользователь"
+      WHERE ( "Имя" ilike '%' || :Строка || '%' ) OR
+            ( "Логин" ilike '%' || :Строка || '%' ) OR
+            ( "email" ilike '%' || :Строка || '%' )</body>
+        </definition>
+      </select>
+      <select access_mode="0" category="Запрещенные методы" is_service="0" last_changed="Buravlevms" name="Пользователь.Объединить" responsible="Buravlevms" returns="SCALAR" type="SQL">
+        <cached forwhom="all" lifetime="2880"/>
+        <parameter name="ИдО">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </parameter>
+        <parameter name="ИдОУд">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </return>
+        <definition>
+          <language>PLPGSQL</language>
+          <body>RAISE EXCEPTION 'sbis_err::Запрещено объединять пользователей!';</body>
+        </definition>
+      </select>
+      <select access_mode="0" is_proxy="0" is_service="0" last_changed="Михайлов И.А." name="Пользователь.ОпределитьПолноеИмя" responsible="Михайлов И.А." returns="SCALAR" type="NATIVE">
+        <parameter name="ФИО">
+          <format>
+            <type>RECREFERENCE</type>
+            <free>1</free>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </return>
+      </select>
+      <select access_mode="1" is_proxy="0" is_service="0" last_changed="Щукин А.В." module_api_part="1" name="Пользователь.ПолучитьПоЛицу" responsible="Buravlevms" returns="RECORD" type="NATIVE">
+        <comment>Получить запись таблицы "Пользователь" по первичному ключу Лица, через таблицу СвязиПользователя</comment>
+        <parameter name="вхЛицо">
+          <format>
+            <type>INT64</type>
+          </format>
+        </parameter>
+        <return name="Результат">
+          <format>
+            <type>RECREFERENCE</type>
+            <table>Пользователь</table>
+          </format>
+        </return>
+      </select>
+      <select access_mode="1" category="Служебные" is_service="1" last_changed="shchukinav" name="Пользователь.ПолучитьПоЛицуСлужебный" responsible="Buravlevms" returns="SCALAR" type="SQL">
+        <parameter name="вхЛицо">
+          <format>
+            <type>INT64</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+        <definition>
+          <language>PLPGSQL</language>
+          <body>SELECT "Пользователь"
+   FROM "СвязиПользователя"
+      WHERE "ЧастноеЛицо" = $1
+         AND "УправленческаяСтруктура"
+            LIMIT 1;</body>
+        </definition>
+      </select>
+      <proxy access_mode="0" category="Права" is_service="1" last_changed="Буравлев М.С." method_type="1" name="Пользователь.ПользователиСВозможностьВхода" responsible="Буравлев М.С." returns="ARRAY" section="СервисАдминистрирования">
+        <parameter name="Пользователи">
+          <format>
+            <type>INT4[]</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INT4[]</type>
+          </format>
+        </return>
+      </proxy>
+      <proxy access_mode="1" is_service="0" last_changed="Buravlevms" method_type="1" name="Пользователь.ПроверитьДоступностьЛогина" responsible="Buravlevms" returns="SCALAR" section="СервисАдминистрирования">
+        <parameter name="ИдО">
+          <format>
+            <type>INT64</type>
+          </format>
+        </parameter>
+        <parameter name="Логин">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </return>
+      </proxy>
+      <proxy access_mode="1" is_service="0" last_changed="Buravlevms" method_type="1" name="Пользователь.ПроверитьДоступностьПочтовогоЯщика" responsible="Buravlevms" returns="SCALAR" section="СервисАдминистрирования">
+        <parameter name="ИдО">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </parameter>
+        <parameter name="email">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </return>
+      </proxy>
+      <proxy access_mode="1" category="Служебные" is_service="1" last_changed="Buravlevms" method_type="1" name="Пользователь.ПроверитьПароль" responsible="Buravlevms" returns="SCALAR" section="СервисАдминистрирования">
+        <parameter name="ИдО">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </return>
+      </proxy>
+      <proxy access_mode="1" category="Стандартные" is_service="0" last_changed="Buravlevms" method_type="6" name="Пользователь.Прочитать" responsible="Buravlevms" returns="TABLE" section="СервисАдминистрирования"/>
+      <proxy access_mode="1" category="Служебные" is_service="1" last_changed="Buravlevms" method_type="1" name="Пользователь.ПрочитатьСПроверкойПароля" responsible="Buravlevms" returns="RECORD" section="СервисАдминистрирования">
+        <parameter name="ИдО">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </parameter>
+        <return name="@Пользователь">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+        <return name="Имя">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </return>
+        <return name="Логин">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </return>
+        <return name="Заблокирован">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </return>
+        <return name="ВнешнийИдентификатор">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+        <return name="НаследоватьПрава">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </return>
+        <return name="ДатаВремяСоздания">
+          <format>
+            <type>DATETIME</type>
+          </format>
+        </return>
+        <return name="ДатаВремяБлокировки">
+          <format>
+            <type>DATETIME</type>
+          </format>
+        </return>
+        <return name="email">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </return>
+        <return name="ЕстьПароль">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </return>
+        <return name="КоличествоСертификатов">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+      </proxy>
+      <select access_mode="0" category="Служебные" is_service="1" last_changed="Буравлев М.С." name="Пользователь.Репликация" responsible="Буравлев М.С." returns="NONE" type="PYTHON">
+        <comment>Нужен для принудительного запуска репликации</comment>
+        <definition>
+          <language>PYTHON</language>
+          <body>pass</body>
+        </definition>
+      </select>
+      <select access_mode="0" category="Стандартные" is_proxy="1" is_service="0" last_changed="Щукин А.В." name="Пользователь.Создать" responsible="Buravlevms" returns="RECORD" type="NATIVE">
+        <parameter name="ИмяМетода">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </parameter>
+        <parameter name="Фильтр">
+          <format>
+            <type>RECREFERENCE</type>
+            <free>1</free>
+          </format>
+        </parameter>
+        <return name="@Пользователь">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+      </select>
+      <declarative allfields="true" key="@Пользователь" last_changed="Буравлев М.С." name="Пользователь.Список" responsible="Buravlevms" type="0">
+        <source name="Пользователь"/>
+        <composite operation="AND">
+          <sql_expression>
+            <definition>
+              <language>PLPGSQL</language>
+              <body>Поле:Раздел = current_setting( 'sbis3.clientID' )::integer</body>
+            </definition>
+            <definition>
+              <language>TRANSACTSQL</language>
+              <body/>
+            </definition>
+          </sql_expression>
+        </composite>
+      </declarative>
+      <select access_mode="1" category="Служебные" is_service="1" last_changed="Кондратьев М.А." name="Пользователь.СписокКлассов" responsible="Buravlevms" returns="SCALAR" type="PYTHON">
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </return>
+        <definition>
+          <language>PYTHON</language>
+          <body>return """
+       '__сбис__клиенты',
+       '__сбис__администратор',
+       '__сбис__гость',
+       '__сбис__сервисы',
+       '__сбис__демоклиенты',
+       '__сбис__cвободныеклиенты',
+       '__сбис__удаленные'
+      """</body>
+        </definition>
+      </select>
+      <select access_mode="1" category="Служебные" is_service="1" last_changed="Буравлев М.С." name="Пользователь.СписокКлассовСтрокой" responsible="Buravlevms" returns="SCALAR" type="PYTHON">
+        <comment>Метод на время, пока в 3.4.1 метод Пользователь.СписокКлассов возвращает RecordSet. Используется в методе Пользователь.Классы</comment>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </return>
+        <definition>
+          <language>PYTHON</language>
+          <body>return """
+       '__сбис__клиенты',
+       '__сбис__администратор',
+       '__сбис__гость',
+       '__сбис__сервисы',
+       '__сбис__демоклиенты',
+       '__сбис__cвободныеклиенты',
+       '__сбис__удаленные'
+      """</body>
+        </definition>
+      </select>
+      <declarative name="Пользователь.СписокПользователей" type="2">
+        <field>@Пользователь</field>
+        <field>Имя</field>
+        <field>Заблокирован</field>
+        <field>Раздел</field>
+        <source name="Пользователь"/>
+        <sorting column="Раздел@" nulls_place="LAST" order="DESC"/>
+        <parameter default="Раздел" filter_category="SOFTWARE" filter_class="0" name="ИмяИерархии" param_type="CONSTANT" type="STRING"/>
+        <parameter default="С разворотом" filter_category="SOFTWARE" filter_class="0" name="Разворот" param_type="DEFAULT" type="STRING"/>
+        <parameter default="С узлами и листьями" filter_category="SOFTWARE" filter_class="0" name="ВидДерева" param_type="DEFAULT" type="STRING"/>
+        <parameter default="Нет" filter_category="SOFTWARE" filter_class="0" name="РазворотСкрытыхУзлов" param_type="DEFAULT" type="STRING"/>
+        <parameter filter_category="USER" filter_class="0" name="Имя" param_type="OPTIONAL" type="TEXT"/>
+        <composite operation="AND">
+          <sql_expression>
+            <definition>
+              <language>PLPGSQL</language>
+              <body>Поле:Имя like (Фильтр:Имя || '%')</body>
+            </definition>
+            <definition>
+              <language>TRANSACTSQL</language>
+              <body/>
+            </definition>
+          </sql_expression>
+        </composite>
+      </declarative>
+      <select access_mode="1" is_service="0" last_changed="Ткачук М.И." module_api_part="1" name="Пользователь.СтатусАктивности" responsible="Щукин А.В." returns="TABLE" type="PYTHON">
+        <parameter name="Пользователи">
+          <format>
+            <type>INT4[]</type>
+          </format>
+        </parameter>
+        <return name="@Пользователь">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+        <return name="Статус">
+          <format>
+            <type>TEXT</type>
+          </format>
+        </return>
+        <definition>
+          <language>PYTHON</language>
+          <body>rs = CreateRecordSet(MethodResultFormat('Пользователь.СтатусАктивности', 1))
+
+if len(Пользователи) == 0:
+   return rs
+
+# идентификаторы пользователей, зарегистрированные в сервисе профилей
+idsRs = Пользователь.Идентификаторы(Пользователи)
+# т.к. sql перемешал порядок, в котором шли id, восстановим его в массиве ids
+# заодно сформируем строку запроса в редис
+ids = []
+redisRequest = 'return {'
+isFirst = True
+for rec in idsRs: # TODO не понятно зачем этот цикл был завернут в цикл по всем пользователям
+   extId = None
+   if rec.Идентификатор:
+      extId = str(rec.Идентификатор)
+      id4redis = 'user:' + extId
+      if isFirst:
+         isFirst = False
+      else:
+         redisRequest += ','
+      redisRequest += "redis.call('hget', '" + id4redis + "', 'last_update')"
+   ids += [(int( rec['@Пользователь'] ), extId)]
+redisRequest += '}'
+
+#ХранилищеИнформацииПользователей
+redisServer = RedisClient( 'ХранилищеИнформацииПользователей', True, False )
+
+if not isFirst:
+   activityFromRedis = redisServer.Eval(redisRequest)
+else:
+   # не нишли ни одного идентификатора сервиса профилей для запроса информации
+   return rs
+# формирование ответа. Записываем все, что получили из редиса + сохраняем id, за которыми стоит сходить в админку
+statusFromServer = "{"
+isFirst = True
+defferedRecord = dict() # позиции записей, за информацией по которым пойдет запрос в админку
+j = 0 # индекс в массиве активности, извлеченного из редиса
+for user, extId in ids:
+   i = rs.Size()
+   rs.InsRow(i)
+   rs[i]['@Пользователь'].From(user)
+   if extId is not None:
+      # без идентификатора сервиса профилей у пользователя в поле "Статус" будет значение null
+      status = activityFromRedis[j]
+      j += 1
+      if status is None:
+         # в редисе информации об активности нет
+         defferedRecord.update({user:i}) # запоминаем порядковый номер записи в результирующем рекордсете
+         if isFirst:
+            isFirst = False
+         else:
+            statusFromServer += ','
+         statusFromServer += str(user)
+      else:
+         rs[i].Статус = status
+statusFromServer += '}'
+
+if len(statusFromServer) &gt; 2:
+   resRs = Пользователь.ВремяПоследнегоВхода(statusFromServer)
+   redisRequest = ''
+   for rec in resRs:
+      if rec.ПоследнийВход is not None:
+         n = defferedRecord[ rec.Пользователь ] # порядковый номер записи в результирующем рекордсете
+         d = rec.ПоследнийВход #время последнего входа
+         value = str(int(d.timestamp() * 1000)) # приведение значения к UNIX-time
+         rs[n].Статус = value
+         # n совпадает по номерам строк между ids и rs
+         redisRequest += " redis.call('hset', 'user:" + ids[n][1] + "', 'last_update', '" + value + "')"
+         
+   if len(redisRequest) &gt; 0:
+      redisServer.Eval(redisRequest)
+
+return rs</body>
+        </definition>
+      </select>
+      <select access_mode="1" is_service="0" last_changed="Кондратьев М.А." name="Пользователь.Текущий" responsible="Кондратьев М.А." returns="SCALAR" type="PYTHON">
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </return>
+        <definition>
+          <language>PYTHON</language>
+          <body>userID = Session.UserID()
+res = 0;
+if str( userID ) == '' or userID is None :
+   raise TypeError ( 'Не удалось определить текущего клиента. Идентификатор sbis3.userID не заполнен.' )
+try:
+   res = int( userID )
+except ValueError:
+   raise ValueError ( 'Не удалось определить текущего клиента. Идентификатор sbis3.userID должен быть целым числом, а имеет значение - "%s".' % userID )
+return res</body>
+        </definition>
+      </select>
+      <select access_mode="0" category="Стандартные" is_proxy="1" is_service="1" last_changed="Шаброва А.Н." name="Пользователь.Удалить" responsible="Buravlevms" returns="SCALAR" type="NATIVE">
+        <parameter name="ИдО">
+          <format>
+            <type>INT4[]</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </return>
+        <area_of_sight alias="ОбластьВидимости.ДокументыМоегоОфиса" name="ОбластьВидимости.ДокументыМоегоОфиса"/>
+      </select>
+      <select access_mode="0" category="Служебные" is_proxy="1" is_service="0" last_changed="Буравлев М.С." module_api_part="1" name="Пользователь.ЭтоОн" responsible="Buravlevms" returns="SCALAR" type="NATIVE">
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </return>
+      </select>
+      <select access_mode="1" category="Права" is_proxy="0" is_service="0" last_changed="Buravlevms" name="Пользователь.ЯвляетсяЛиАдминистраторомКлиента" responsible="Buravlevms" returns="SCALAR" type="NATIVE">
+        <parameter name="user_id">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </return>
+      </select>
+      <select access_mode="1" category="Права" is_service="1" last_changed="Буравлев М.С." name="Пользователь.ЯвляетсяЛиАдминистраторомКлиентаСлужебный" responsible="Buravlevms" returns="SCALAR" type="SQL">
+        <parameter name="user_id">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </parameter>
+        <parameter name="административныеРоли">
+          <format>
+            <type>TEXT[]</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </return>
+        <definition>
+          <language>PLPGSQL</language>
+          <body>select exists (
+   SELECT "@Пользователь" FROM "Пользователь" P
+      WHERE "Раздел"= ( select current_setting('sbis3.clientID')::integer )
+         AND "@Пользователь"= :user_id
+         AND ( (WITH RECURSIVE T( "@Пользователь", "НаследоватьПрава", "Раздел", n ) AS (
+                  SELECT u."@Пользователь", u."НаследоватьПрава", u."Раздел", 1
+                     FROM "Пользователь" u
+                        WHERE u."@Пользователь" = P."@Пользователь"
+                  UNION
+                  SELECT u."@Пользователь", u."НаследоватьПрава", u."Раздел", n + 1
+                     FROM "Пользователь" u JOIN T 
+                        ON ( T."Раздел" = u."@Пользователь" AND  u."Раздел@" IS DISTINCT FROM FALSE ) )
+               SELECT count(*)=0 FROM T WHERE "НаследоватьПрава" IS DISTINCT FROM TRUE) 
+               OR (EXISTS ( SELECT * FROM "РолиПользователей" WHERE "Пользователь"=P."@Пользователь" 
+                                       AND ( "Название" = ANY( :административныеРоли ) )
+                           )
+                  )
+              )
+) is not distinct from true;</body>
+        </definition>
+      </select>
+      <select access_mode="1" category="Права" is_proxy="0" is_service="1" last_changed="Buravlevms" name="Пользователь.ЯвляетсяЛиПоследнимАдминистраторомКлиента" responsible="Buravlevms" returns="SCALAR" type="NATIVE">
+        <parameter name="user_id">
+          <format>
+            <type>INTEGER</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </return>
+      </select>
+      <select access_mode="0" category="Права" is_service="0" last_changed="Шаброва А.Н." module_api_part="1" name="Пользователь.ЯвляетсяЛиЧерновиком" responsible="shabrovaan" returns="SCALAR" type="SQL">
+        <parameter name="Пользователь">
+          <format>
+            <type>INT64</type>
+          </format>
+        </parameter>
+        <return name="___SBIS_SCALAR_RETURN___">
+          <format>
+            <type>BOOLEAN</type>
+          </format>
+        </return>
+        <definition>
+          <language>PLPGSQL</language>
+          <body>select "$Черновик" is not null from "Пользователь" where "@Пользователь" = :Пользователь;</body>
+        </definition>
+      </select>
+    </object>
+    <proxy access_mode="1" is_service="0" last_changed="Буравлев М.С." method_type="1" name="БазовыйПользователь.ПолучитьКлиента" responsible="Буравлев М.С." returns="SCALAR" section="СервисАдминистрирования">
+      <parameter name="ИдО">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+    </proxy>
+  </object>
+
+  <object last_changed="Буравлев М.С." name="КонтрольВходаАдминистратора" responsible="Буравлев М.С.">
+    <proxy access_mode="1" is_service="1" last_changed="Буравлев М.С." method_type="1" name="КонтрольВходаАдминистратора.КонтрольИзмененияПользователя" responsible="Буравлев М.С." returns="RECORD" section="СервисАдминистрирования">
+      <parameter name="параметры">
+        <format>
+          <type>RECREFERENCE</type>
+          <free>1</free>
+        </format>
+      </parameter>
+      <return name="МожетВходить">
+        <format>
+          <type>BOOLEAN</type>
+        </format>
+      </return>
+      <return name="Сообщение">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="ДальшеПроверять">
+        <format>
+          <type>BOOLEAN</type>
+        </format>
+      </return>
+    </proxy>
+    <select access_mode="0" is_service="1" last_changed="Буравлев М.С." name="КонтрольВходаАдминистратора.КонтрольУдаления" responsible="Буравлев М.С." returns="RECORD" type="PYTHON">
+      <parameter name="параметры">
+        <format>
+          <type>RECREFERENCE</type>
+          <free>1</free>
+        </format>
+      </parameter>
+      <return name="МожетВходить">
+        <format>
+          <type>BOOLEAN</type>
+        </format>
+      </return>
+      <return name="Сообщение">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="ДальшеПроверять">
+        <format>
+          <type>BOOLEAN</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>outRec = Record()
+outRec.AddBool( "МожетВходить", False )
+outRec.AddBool( "ДальшеПроверять", True )
+outRec.AddString( "Сообщение", "" )
+
+if str( параметры._ИмяВызываемогоМетода ) == 'Пользователь.Удалить':
+   outRec.ДальшеПроверять = False
+   outRec.Сообщение = """Вы не сможете войти в систему с &lt;a target="about:blank" href="http://help.sbis.ru/about_edo/configure/user_law"&gt;максимальными правами&lt;/a&gt;"""
+   
+return outRec</body>
+      </definition>
+    </select>
+  </object>
+
+  <object name="МастерБаза">
+    <select access_mode="0" is_service="0" last_changed="Buravlevms" name="МастерБаза.Проверить" responsible="Buravlevms" returns="SCALAR" type="SQL">
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>BOOLEAN</type>
+        </format>
+      </return>
+      <definition>
+        <language>PLPGSQL</language>
+        <body>SELECT EXISTS( SELECT * FROM "МастерБаза" );</body>
+      </definition>
+    </select>
+  </object>
+
+  <object name="НеактуальныйПользователь">
+    <select access_mode="1" is_service="1" last_changed="Буравлев М.С." name="НеактуальныйПользователь.МетодыДляРепликаций" responsible="Buravlevms" returns="ARRAY" type="PYTHON">
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>TEXT[]</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>return [ 'Пользователь.СписокПоСтруктуреПредприятия',
+         'Пользователь.СписокДляАвтодополнения',
+   		'Пользователь.СписокПоСтруктуреПредприятияДекларативный',
+   		'Пользователь.Список',
+         'Пользователь.Найти',
+         'Пользователь.ИдПоЛогину',
+         'Пользователь.ИдПоEmail',
+         'Пользователь.КлассПользователя',
+         'Пользователь.КоличествоПользователей',
+   		'Роль.СписокПользователей',
+   		'Авторизация.МаксимальныеРолиПользователя',
+   		'РолиПользователя.Установить',
+   		'РолиПользователя.УстановитьРоль',
+   		'РолиПользователя.МожноЛиУстановить',
+         'Авторизация.РолиПользователя',
+         'Авторизация.СписокЯвноНазначенных',
+         'Пользователь.ДобавитьЧастноеЛицо',
+         'ПользовательПолучательСертификата.Список',
+         'ЧастноеЛицо.СписокПользователей',
+         'Продукт.Создать', # метод сервиса "Управление версиями"
+         'Продукт.Прочитать', # метод сервиса "Управление версиями"
+         'Пользователь.БольшеN',
+         'Персонал.СписокПерсонала',
+         'Пользователь.Репликация',
+         'Сертификат.СписокССекретнымКлючом',
+         'СлужебныйСотрудник.Список',
+         'Документ.СписокДоступныхСертификатов',
+         'ПерсональныеДанные.КодировкаБД',
+         'Клиент.СписокПользователейОнлайн' ]</body>
+      </definition>
+    </select>
+    <select access_mode="1" is_service="1" last_changed="Buravlevms" name="НеактуальныйПользователь.НомерРевизии" responsible="Buravlevms" returns="SCALAR" type="SQL">
+      <parameter name="ИдО">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+      <definition>
+        <language>PLPGSQL</language>
+        <body>SELECT "Ревизия"
+   FROM "НеактуальныйПользователь"
+      WHERE "Пользователь" = :ИдО;</body>
+      </definition>
+    </select>
+    <proxy access_mode="0" is_service="1" last_changed="Buravlevms" method_type="1" name="НеактуальныйПользователь.ОбновитьВRedis" responsible="Buravlevms" returns="SCALAR" section="СервисАдминистрирования">
+      <parameter name="ИдО">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>BOOLEAN</type>
+        </format>
+      </return>
+    </proxy>
+    <select access_mode="1" is_service="1" last_changed="Рыбаков М.А." name="НеактуальныйПользователь.Ревизия" responsible="Buravlevms" returns="SCALAR" type="PYTHON">
+      <parameter name="ИдО">
+        <format>
+          <type>INT64</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>fun = lambda res: str( res ) if res is not None else 'null'
+ido = fun( int( ИдО ) )
+revision = None
+
+res = SqlQuery( """SELECT "Ревизия" as "res" FROM "НеактуальныйПользователь" WHERE "Пользователь" = """ + ido )
+curs = res.Cursor()   
+while curs.Next():
+   res = curs.Data()
+   revision = str( res["res"] )
+
+if revision is None:
+   SqlQuery( """INSERT INTO "НеактуальныйПользователь"( "Пользователь", "Ревизия" ) VALUES ( """ + ido + """, 0 );""" )
+   revision = 0
+
+return str( revision )</body>
+      </definition>
+    </select>
+    <select access_mode="1" is_service="1" last_changed="Buravlevms" name="НеактуальныйПользователь.СписокИдентификаторов" responsible="Buravlevms" returns="TABLE" type="SQL">
+      <parameter name="ИдО">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <return name="Пользователь">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+      <return name="Ревизия">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+      <definition>
+        <language>PLPGSQL</language>
+        <body>(
+WITH RECURSIVE T( "@Пользователь", "Ревизия" ) AS (
+	SELECT T2."@Пользователь", T1."Ревизия"
+		FROM "Пользователь" T2
+			LEFT JOIN "НеактуальныйПользователь" T1 ON T1."Пользователь" = T2."@Пользователь"
+				WHERE T2."@Пользователь" = :ИдО
+	UNION
+	SELECT T2."@Пользователь", T1."Ревизия"
+		FROM "Пользователь" T2
+			LEFT JOIN "НеактуальныйПользователь" T1 ON T1."Пользователь" = T2."@Пользователь"
+				JOIN T ON ( T."@Пользователь" = T2."Раздел" )
+)
+SELECT T."@Пользователь", T."Ревизия"
+	FROM T
+)
+UNION
+(
+WITH RECURSIVE T( "@Пользователь", "Ревизия", "Раздел" ) AS (
+	SELECT T2."@Пользователь", T1."Ревизия", T2."Раздел"
+		FROM "Пользователь" T2
+			LEFT JOIN "НеактуальныйПользователь" T1 ON T1."Пользователь" = T2."@Пользователь"
+				WHERE T2."@Пользователь" = :ИдО
+	UNION
+	SELECT T2."@Пользователь", T1."Ревизия", T2."Раздел"
+		FROM "Пользователь" T2
+			LEFT JOIN "НеактуальныйПользователь" T1 ON T1."Пользователь" = T2."@Пользователь"
+				JOIN T ON ( T."Раздел" = T2."@Пользователь" )
+)
+SELECT T."@Пользователь", T."Ревизия"
+	FROM T
+)
+UNION
+SELECT T2."@Пользователь", T1."Ревизия"
+	FROM "Пользователь" T2
+		LEFT JOIN "НеактуальныйПользователь" T1 ON T1."Пользователь" = T2."@Пользователь"
+			WHERE T2."Логин" like '__сбис__%'</body>
+      </definition>
+    </select>
+  </object>
+
+  <object name="САП">
+    <select access_mode="0" is_service="0" last_changed="Буравлев М.С." name="САП.ВойтиКакПользователь" responsible="Buravlevms" returns="TABLE" type="PYTHON">
+      <parameter name="ИдПользователя">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <return name="Значение">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="Параметр">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>if not Пользователь.ЭтоОн():
+   raise Error( _T( "Извините, но это предназначено не для вас!" ), _T( "Извините, но это предназначено не для вас!" ) );
+
+obj = BLObject( "САП", "СервисАдминистрирования" )
+return obj.Invoke( "ВойтиКакПользователь", ИдПользователя, Session.Get(WebServerContextKey.icsHOST), False )</body>
+      </definition>
+    </select>
+  </object>
+
+</repository>

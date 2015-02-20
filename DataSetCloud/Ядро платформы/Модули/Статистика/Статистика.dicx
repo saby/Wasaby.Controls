@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<dictionary dicx_version="1.21">
+
+  <table name="БДЗависшихЗапросов" personal_data="0" table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>4</max_size>
+      </format>
+    </column>
+    <column name="НазваниеБД">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <trigger_list/>
+  </table>
+
+  <table name="ПриложениеИсточник" personal_data="0" table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>4</max_size>
+      </format>
+    </column>
+    <trigger_list/>
+  </table>
+
+  <table name="Стат_ВходКлиента" personal_data="0" table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="Регистрация">
+      <format>
+        <type>DATETIME</type>
+      </format>
+    </column>
+    <column name="Счетчик">
+      <format>
+        <type>INT64</type>
+      </format>
+    </column>
+    <column name="Пользователь">
+      <format>
+        <type>INTEGER</type>
+      </format>
+    </column>
+    <column name="ПриложениеИсточник">
+      <format>
+        <type>LINK1-N</type>
+        <table>ПриложениеИсточник</table>
+        <on_delete>1</on_delete>
+      </format>
+    </column>
+    <index method="btree" name="ПриложениеИсточник" null_keys="1" service="1" unique="0">
+      <column is_expressions="0" name="ПриложениеИсточник" nulls_place="LAST" sorting="ASC"/>
+    </index>
+    <trigger_list/>
+  </table>
+
+</dictionary>

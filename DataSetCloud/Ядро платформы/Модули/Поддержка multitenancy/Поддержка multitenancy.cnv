@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<converter_library version="1.00">
+
+  <converter abstract="0" call_once="1" name="ПеренестиПраваИзПабликаВСхему">
+    <rule name=".*" schema=".*" stage="1" type="0"/>
+    <callback event="26">
+      <body>DECLARE
+  client int := null;
+  schem text := context-&gt;'schema';
+BEGIN
+  IF schem IS DISTINCT FROM 'public' AND schem IS NOT NULL THEN
+     EXECUTE 'SELECT x''' || substring( schem from '........$') || '''::int' INTO client;
+     IF client IS NOT NULL THEN
+        EXECUTE ' DELETE FROM ' || schem || '."РолиПользователей";';
+        EXECUTE ' INSERT INTO ' || schem || '."РолиПользователей"( "@РолиПользователей", "Название", "Пользователь", "Доступ" ) 
+                                      select "@РолиПользователей", "Название", "Пользователь", "Доступ" from "public"."РолиПользователей" where "Пользователь" IN
+                                              ( select "@Пользователь" from "Пользователь" where "Раздел" = ' || client || ' );';
+                                    
+        EXECUTE 'select setval( ''"' || schem || '"."РолиПользователей_@РолиПользователей_seq"'', ( SELECT MAX( "@РолиПользователей" )+1 FROM ' || schem || '."РолиПользователей" t ) );';
+     END IF;
+  END IF;
+END</body>
+    </callback>
+  </converter>
+
+</converter_library>

@@ -1,0 +1,33 @@
+@import "../../../css/themes/wi_scheme/index";
+
+.ws-float-area-nostack-panel-shadow-filter {
+  background: #f7f3f0;
+}
+
+.ws-float-area-filter-shadow {
+  position: absolute;
+  width: 100%;
+  height: 8px;
+  background: transparent url("@{globalImagesPath}shadow-start.png") no-repeat;
+}
+
+.ws-float-area-filter-shadow-stretch {
+  height: 8px;
+  background: transparent url("@{globalImagesPath}shadow-long.png") no-repeat;
+  background-size: 100% 16px;
+}
+
+.ws-float-area-filter-shadow-left{
+  background-position: right -8px;
+  right: 0;
+}
+.ws-float-area-filter-shadow-right{
+  left: 0;
+  background-position: left 0;
+}
+.ws-float-area-filter-shadow-left .ws-float-area-filter-shadow-stretch {
+  background-position: -15px -8px;
+}
+.ws-float-area-filter-shadow-right .ws-float-area-filter-shadow-stretch {
+  background-position: 15px 0;
+}

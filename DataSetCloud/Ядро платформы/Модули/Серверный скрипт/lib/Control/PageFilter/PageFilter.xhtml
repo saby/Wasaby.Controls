@@ -1,0 +1,24 @@
+<div class='{{? it.cssClassName}}{{=it.cssClassName}}{{?}}'>
+    <div class='ws-pageFilter__item ws-pageFilter__allItems{{? !it.countDefaultItems }} ws-pageFilter__item__checked{{?}}'>
+        <span class='ws-pageFilter__checkbox{{? it.countDefaultItems }} ws-hidden{{?}}'></span>
+        <span class='ws-pageFilter__itemValue'>
+           {{=it.itemCaption}}
+        </span>
+        {{? !it.data.length }}
+        <div class='ws-pageFilter__shadow'></div>
+        {{?}}
+    </div>
+    {{? it.data.length }}
+    {{~it.data :value:index}}
+    <div class='ws-pageFilter__item {{? value[it.defaultColumn] === true}} ws-pageFilter__item__default ws-pageFilter__item__checked{{?}}'  key='{{=value[it.itemValueColumn]}}'>
+        <span class='ws-pageFilter__checkbox{{? value[it.defaultColumn] !== true}} ws-hidden{{?}}'></span>
+        <span class='ws-pageFilter__itemValue'>
+           {{=value[it.displayColumn]}}
+        </span>
+        {{? index === (it.data.length - 1)}}
+        <div class='ws-pageFilter__shadow'></div>
+        {{?}}
+    </div>
+    {{~}}
+    {{?}}
+</div>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<roles_repository version="1.2">
+
+  <role identifier_role="Пользователь системы" is_service="1" last_changed="Драгутенко А.А." name="Пользователь системы" responsible="Драгутенко А.А.">
+    <privilegy access_mode="3" action="УведомленияОбОбновлении"/>
+  </role>
+
+  <role identifier_role="Шайтан" is_service="0" last_changed="Майер И.Ю." name="Шайтан" responsible="Майер И.Ю.">
+    <privilegy access_mode="2" action="Администрирование схем клиентов пула ( автоматическое )"/>
+    <user_class type="cloud_admin"/>
+    <user_class type="service_clients"/>
+    <user_class type="pool_users"/>
+    <user_class type="remove_users"/>
+  </role>
+
+</roles_repository>

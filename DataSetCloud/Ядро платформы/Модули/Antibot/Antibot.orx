@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<repository orx_version="1.71">
+
+  <object last_changed="Щукин А.В." name="Antibot" responsible="Щукин А.В.">
+    <select access_mode="1" is_proxy="0" is_service="0" last_changed="Щукин А.В." name="Antibot.Alarm" responsible="Щукин А.В." returns="NONE" type="NATIVE">
+      <comment>кидает исключение по подозрению в ботоводстве</comment>
+    </select>
+    <select access_mode="1" is_proxy="0" is_service="0" last_changed="Щукин А.В." name="Antibot.Captcha" responsible="Щукин А.В." returns="SCALAR" type="NATIVE">
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>RPCFILE</type>
+        </format>
+      </return>
+    </select>
+    <select access_mode="1" is_proxy="0" is_service="0" last_changed="Щукин А.В." name="Antibot.CheckCaptureCode" responsible="Щукин А.В." returns="SCALAR" type="NATIVE">
+      <parameter name="Code">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>BOOLEAN</type>
+        </format>
+      </return>
+    </select>
+  </object>
+
+</repository>

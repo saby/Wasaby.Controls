@@ -1,0 +1,28 @@
+<div class="ws-FieldEditAtPlace {{=it.isTabEditor?'isTabEditor ':''}}{{=!it.visible?'ws-hidden ':''}}ws-FieldEditAtPlace__idle">
+   <div class="ws-FieldEditAtPlace__dummy ws-hidden"></div>
+   <div class="ws-FieldEditAtPlace__string genie-Placeholder" data-name="content">
+      {{=it.content}}
+      {{?it.isTabEditor}}
+      <span class="ws-FieldEditAtPlace__controlPanel ws-hidden">
+         <component data-component="SBIS3.CORE.Button" name="{{=it.name}}_apply" class="ws-FieldEditAtPlace__apply">
+            <option name="image" value="sprite:icon-16 icon-Successful icon-done action-hover"></option>
+            <option name="tabindex" value="0"/>
+         </component>
+         <div class="ws-FieldEditAtPlace__cancel"></div>
+      </span>
+      {{?}}
+   </div>
+   {{?!it.isTabEditor}}
+   <div class="ws-hidden ws-FieldEditAtPlace__editArea">
+      <span class="ws-FieldEditAtPlace__editors"></span>
+
+      <span class="ws-FieldEditAtPlace__controlPanel">
+         <component data-component="SBIS3.CORE.Button" name="{{=it.name}}_apply" class="ws-FieldEditAtPlace__apply">
+            <option name="image" value="sprite:icon-16 icon-Successful icon-done action-hover"></option>
+            <option name="tabindex" value="0"/>
+         </component>
+         <div class="ws-FieldEditAtPlace__cancel"></div>
+      </span>
+   </div>
+   {{?}}
+</div>

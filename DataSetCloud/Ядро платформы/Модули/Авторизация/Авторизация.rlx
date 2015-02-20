@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="WINDOWS-1251" ?>
+<roles_repository version="1.2">
+
+  <role identifier_role="qwe" is_service="0" last_changed="Шаброва А.Н." name="qwe" responsible="Шаброва А.Н." service="0">
+    <base name="qwer"/>
+    <user_class type="system_clients"/>
+  </role>
+
+  <role identifier_role="qwer" is_service="0" last_changed="Шаброва А.Н." name="qwer" responsible="Шаброва А.Н." service="0"/>
+
+  <role identifier_role="Администратор системы" is_service="0" last_changed="shabrovaan" name="Администратор системы" responsible="shabrovaan" service="0">
+    <comment>Полный доступ ко всем разделам.</comment>
+    <privilegy access_mode="3" action="Конфигурация"/>
+    <user_class type="service_clients"/>
+    <user_class type="system_clients"/>
+  </role>
+
+  <role identifier_role="Гость" is_service="0" last_changed="Шаброва А.Н." name="Гость" responsible="Шаброва А.Н." service="0">
+    <base name="Гость служебный"/>
+    <user_class type="guests"/>
+  </role>
+
+  <role identifier_role="Гость служебный" is_service="1" last_changed="Шаброва А.Н." name="Гость служебный" responsible="Шаброва А.Н." service="0">
+    <privilegy access_mode="3" action="Проверка прав"/>
+  </role>
+
+  <role identifier_role="Пользователь системы" is_service="1" last_changed="Щукин А.В." name="Пользователь системы" responsible="shabrovaan" service="0">
+    <comment>Служебная роль по умолчанию для всех сотрудников. Дает доступ на первую страницу в режиме «на чтение» и доступ к моим заданиям. </comment>
+    <privilegy access_mode="3" action="Проверка прав"/>
+    <user_class type="cloud_admin"/>
+    <user_class type="service_clients"/>
+    <user_class type="system_clients"/>
+    <user_class type="demo_clients"/>
+    <user_class type="pool_users"/>
+    <user_class type="remove_users"/>
+  </role>
+
+</roles_repository>

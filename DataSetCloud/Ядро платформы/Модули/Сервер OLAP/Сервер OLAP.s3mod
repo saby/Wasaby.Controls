@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<bl_module bl_module_library="sbis-olap-server300" id="ba4b58bd-bd75-4813-a556-f59e1b8ec066" name="Сервер OLAP" package="Платформа" responsible="Думп Ю.П." version="1.00">
+
+  <description/>
+
+  <depends>
+    <bl_module id="e68c03f7-4173-41cb-8468-d50981553882" name="Работа с JAVA"/>
+  </depends>
+
+  <load_after>
+    <bl_module id="e68c03f7-4173-41cb-8468-d50981553882" name="Работа с JAVA"/>
+  </load_after>
+
+  <parameters>
+    <parameter db_deployment_enabled="1" group_name="Прочие" name="Многомерные запросы.МаксимальныйРазмерКучи" required_debug="0" required_release="0" type="number" version="1">
+      <comment><![CDATA[Максимальный размер памяти, доступный для Java-машины.]]></comment>
+      <default configuration="debug"><![CDATA[64]]></default>
+      <default configuration="release"><![CDATA[512]]></default>
+    </parameter>
+    <parameter db_deployment_enabled="1" group_name="Прочие" name="Многомерные запросы.СерверОЛАП" required_debug="0" required_release="0" type="text" version="1">
+      <comment><![CDATA[Хост и порт, на котором сервер ожидает подключения.]]></comment>
+      <default configuration="debug"><![CDATA[host='localhost' port='25000']]></default>
+      <default configuration="release"><![CDATA[host='localhost' port='25000']]></default>
+    </parameter>
+    <parameter db_deployment_enabled="1" group_name="Прочие" name="Многомерные запросы.ТаймаутЗапроса" required_debug="0" required_release="0" type="number" version="1">
+      <comment><![CDATA[Максимальная длительность обработки OLAP-запроса.]]></comment>
+      <default configuration="debug"><![CDATA[180]]></default>
+      <default configuration="release"><![CDATA[180]]></default>
+    </parameter>
+    <parameter db_deployment_enabled="1" group_name="Прочие" name="Многомерные запросы.ХранилищеПодключенийОЛАП" required_debug="1" required_release="1" type="text" version="1">
+      <comment><![CDATA[Перечень OLAP-хранилищ, загружаемых сервером.]]></comment>
+    </parameter>
+  </parameters>
+
+  <resources>
+    <resource deployment_root="1" name="sbis-olap300" platform="3" type="0" version="3"/>
+  </resources>
+
+</bl_module>

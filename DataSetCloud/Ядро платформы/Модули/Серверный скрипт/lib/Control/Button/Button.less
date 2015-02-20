@@ -1,0 +1,373 @@
+@import "../../../css/themes/wi_scheme/index";
+
+@bigButtonFont              : italic normal 18px 'Cambria', Georgia, serif;   //Шрифт большой кнопки
+@bigButtonDoubleLineFont    : italic normal 13px 'Cambria', Georgia, serif;   //Шрифт большой кнопки для случая с двустрочным текстом
+
+@defaultButtonTextColor     : #FFF;
+
+@classicPrimaryBackground   : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXB2xKCIABAwfP/X+ekhWAYiXhjYGAwtTd3+V8/zqNw7Jm9JEqO5BRI0RPDSvALfpvYFsc6W2Y3MFnDOPRYo/l+OoxW9O8WrQSdfKJEjXw9EE11A2vvQIELisuiAAAAAElFTkSuQmCC';
+@classicHoverBackground     : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAVElEQVQYVwXB2RJAIABA0fv/n2hNEi0oqonx4By+WnlL4cmZmhLlvsgxkkLgOk/isRO853CO3Rq82bDritGabVFoNbNIiZoEUoxM44DoO4aupW+bH5+uQdm94t5JAAAAAElFTkSuQmCC';
+@classicActiveBackground    : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXBWQ6DIABAwXf/sxlj3UUJhIqKogSX+tsZ3t/Fc0fuM3DGgxg8YV85vMOvM5uzuHlksYZp1Fij+GqJUT1aCtTQIkXN0FaIpqCrPjRFRp2nlFnyB0tqP75XY7RKAAAAAElFTkSuQmCC';
+@disableBackground          : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAARUlEQVQYVxXDCRIAEQwAwfn/Y9cRQcSxdFVzzmHvzVrrnsx5u+M+GOM2w6xjvdHbW2lVqfoWtAgqQpGM5ISkSH5jIIXvByxNRX+NbFFRAAAAAElFTkSuQmCC';
+@defaultPrimaryBackground   : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAGtJREFUGFcBYACf/wD9sn8A/K57APupdwD6pXMA+qFvAPmdawD4mWgA+JRkAPeQYAD2jFwA9YhYAPWEVQD0gFEA83tNAPN3SQDyc0UA8W9BAPFrPgDwZzoA72M2AO5eMgDuWi4A7VYqAOxSJrQMKtPRuIzAAAAAAElFTkSuQmCC';
+@defaultHoverBackground     : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAGtJREFUGFcBYACf/wD8wYIA+7x9APq3eAD5s3QA+K5vAPeqagD2pWUA9aFgAPScXADzmFcA8pNSAPGOTgDwikkA74VEAO6BPwDtfDoA7Hc2AOtzMQDqbiwA6WooAOhlIwDnYB4A5lwZAOVXFMyDKrhOhVNDAAAAAElFTkSuQmCC';
+@defaultActiveBackground    : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAGtJREFUGFcBYACf/wD+om4A/J5qAPuZZgD6lWIA+ZFeAPiNWgD3iVYA9oVSAPWBTgD0fUoA83hGAPJ0QwDxcD8A72w7AO5oNwDtZDMA7GAvAOtcKwDqVycA6VMjAOhPHwDnSxsA5kcYAOVDFBcJJ2BPy3aDAAAAAElFTkSuQmCC';
+
+@bigPrimaryBackground       : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAjklEQVQYVx3DVxKDIABAwXf/26WoKDasKCh2zV9Mdmb5XDvXuXEeK8e+/O/bzLZObItjvS/zyDINzM4yOYMb70PPaDsGqxmMxvYtpm8wXU2va7q2Qrcluilo64KmUvecusyoirtKKVVCkceoTKJSSZ5GZElIFgtSKUhkQBL5xKGHFB6ReBMFL0L/ifj1Hl+0S4EyIQKdsQAAAABJRU5ErkJggg==';
+@bigHoverBackground         : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAINJREFUGFcdw1cSgyAAQMF3/xvGiojYkWZJ+Qi6M8vvuvieJ5/jeL73nSvG5xkCR/Ac3rM7R3SWaC1h2/B3Y3Bmxa7psrAtM2ZOp4l1GlnG+8A89Ez9XTNqzdB1qaJXCq1adCvppETJBtUIWiGQokbWFU0qqhJRFtRpVeRUeUaZFtnrD2rdg354PlYsAAAAAElFTkSuQmCC';
+@bigActiveBackground        : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAJNJREFUGFcNw1USgzAAQMF3/6tVcAiugWDB6W/ZmeV3H9zXznVunMfKuS8cu2bfNNs6sy0Tqx5Z5gE99+ipZx4V09Ax9u1TMqiGvmtQbY2SFZ0saZsCWefIKqcpM+oipSoSqjymzCKKNCJPwqcgiwPSyCcJPRLhEQuXKHAIfZvQsxCuSeCY+I6Bb3/xrA+u+cYxXn8Tm385Ml6/+QAAAABJRU5ErkJggg==';
+@bigDisableBackground       : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAFVJREFUGFc9wwkOgDAIBMD9/2OtLb2AHgaqTjLYe2Ot9Z9zvgfG+CqGKtQLVATiGcIncwd329Bts9W3aouvxWZfsqWTCJnSmSLoG2+f7B18tOFCDNcDpuCK5d42KGsAAAAASUVORK5CYII=';
+@bigDefaultPrimaryBackground: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMZJREFUGFcFwQ1HAwEAgOH3zzTJTJLMZDOTJGmbmplzpvV9ambmnNlKkmRmbCKTJEkk6Xftvu92H7ux52H+f0P01yH6bRP9KMy+ZWZfLcLPJuFHg/C9TvB2TfAqEYwv8V/O8Z9P8UfHeMMjvEEVry8y7QlMnyq4j2XchxLu/SHOXRHntoDT3cdu72Eru9jyDlZrG6u5hdXIYdazmFcZTCmNcbGJcZZCP0mi1zbQq+to4hqasIpWSaCW46ilFdSDZSbFGJP80gKLzlU+l/UpHgAAAABJRU5ErkJggg==';
+@bigDefaultHoverBackground  : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMtJREFUGFcBwAA//wD8wYIA+75/APu8fQD6unsA+rd4APm1dgD5s3QA+LFxAPiubwD3rGwA96pqAPanaAD2pWUA9aNjAPWhYAD0nl4A9JxcAPOaWQDzmFcA8pVVAPKTUgDxkVAA8Y5OAPCMSwDwikkA74hGAO+FRADug0IA7oE/AO1+PQDtfDoA7Ho4AOx3NgDrdTMA63MxAOpxLwDqbiwA6WwqAOlqKADoZyUA6GUjAOdjIADnYB4A5l4cAOZcGQDlWRcA5VcUAORVEuAhVOdbDqsIAAAAAElFTkSuQmCC';
+@bigDefaultActiveBackground : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMlJREFUGFcFwYtmQgEAgOH/GVKUWJKZSWYmmSRJpbWttmqbHEmSJEkmkcxMMpNMJmNm9myd7vdO95p9H3+/afY/KXbfSXZfCbafcbb1GJuPKJtahPV7mHVVYFUJsXp7YPl6x6IcYFG6Zf7iY/58jfR0iVS8YFZwM8s7meYcTB/tTLI2Jhkr47SFUcrMKHnOMGFiGDcyiJ0xiJ7Sj5zQDxvoCXp6oWO690d0g4d0/DraN1raXg2tqwNaHjVNt4qmS4noUCDa5TRssn8T6U5Ugnh02QAAAABJRU5ErkJggg==';
+
+@classicMenuEnabled         : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAGCAYAAAD+Bd/7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAIJJREFUGFdjWLd29f/KykqseOvmjf8ZPn98t/XYsaP/Z86ciYJPnTz5/9OHt7sYXj57yPDx/Zvm48ePwSVPnjzx/+P718dAcgwvntwHYa0P7173HweadAKo8MPbV4eh4gwMzx7dheP3b1/2v3/zcgWQzQgTY3j64DYylgRiUwT/NjMAw42KSvkzIqwAAAAASUVORK5CYII=';
+@classicMenuHovered         : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAGCAYAAAD+Bd/7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAIRJREFUGFdj+N5S8v+/rghW/K2/8T/D54/vKv5s6P//v8AYBf/ZOu3/pw9vGxlePnvI8PH9m+Y/mybCJX8DJT++fz0bKMfE8OLJfRBm+vDu9dY/Gyf+/7N58v8Pb1/1A8UYQXIMzx7dhWGu929fzn7/5mUzkC0CE2d4+uA2MmZE5d9mBgDWYYaQwD+fRAAAAABJRU5ErkJggg==';
+@classicMenuDefault         : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAGCAYAAAD+Bd/7AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAS0lEQVQYV2P4vXPa//8Pz2DFvzb3/2f4//8/w++tkzElN/UBpf4zgBWA8K9N/QjJ9T1gSRQFIPxrfe//X+sQkiCMogAbxiqIwP8ZAMH2mYbyHj0NAAAAAElFTkSuQmCC';
+@classicMenuDisabled        : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAGCAYAAAD+Bd/7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAG1JREFUGFd9ikEKgCAQRUdadHxvELgLOkAdoUDqAG4C9QZpjS1sNIqCaPHg89+DYeijEOKTaRwj7AFrrXWUUr6w1sRADlbvyoDYmkdkDUncOnKQggxFTYrMKTl9LAfeLTeIW0Vw2sX1gZ3VD4odGVCWdfVb7VgAAAAASUVORK5CYII=';
+
+//IE8 - особенный, для него нужен filter
+@media @ie8 {
+   .ws-button-classic {
+      filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@classicPrimaryBackground, sizingMethod='scale');
+      &.ws-enabled {
+         &:hover {
+            filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@classicHoverBackground, sizingMethod='scale');
+            &.ws-button-with-menu:after {
+               filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@classicMenuHovered, sizingMethod='scale');
+            }
+         }
+         &:active, &.ws-field-button-element-active, &.ws-button-pressed {
+            filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@classicActiveBackground, sizingMethod='scale');
+         }
+      }
+      &.ws-disabled, &.ws-default-button.ws-disabled {
+         filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@disableBackground, sizingMethod='scale');
+         &:after {
+            filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@classicMenuDisabled, sizingMethod='scale');
+         }
+      }
+      &.ws-default-button {
+         filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@defaultPrimaryBackground, sizingMethod='scale');
+         &.ws-enabled {
+            filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@defaultPrimaryBackground, sizingMethod='scale');
+            &:hover {
+               filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@defaultHoverBackground, sizingMethod='scale');
+            }
+            &:active, &.ws-field-button-element-active, &.ws-button-pressed {
+               filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@defaultActiveBackground, sizingMethod='scale');
+            }
+         }
+      }
+      &.ws-button-with-menu {
+         &:after {
+            filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@classicMenuEnabled, sizingMethod='scale');
+         }
+         &.ws-default-button.ws-enabled {
+            &, &:hover, &:active, &.ws-field-button-element-active, &.ws-button-pressed {
+               &:after {
+                  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@classicMenuDefault, sizingMethod='scale');
+               }
+            }
+         }
+      }
+      &.ws-btn-big {
+         filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@bigPrimaryBackground, sizingMethod='scale');
+         &.ws-enabled {
+            &:hover {
+               filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@bigHoverBackground, sizingMethod='scale');
+               &.ws-button-with-menu:after {
+                  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@classicMenuHovered, sizingMethod='scale');
+               }
+            }
+            &:active, &.ws-field-button-element-active, &.ws-button-pressed {
+               filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@bigActiveBackground, sizingMethod='scale');
+            }
+         }
+         &.ws-disabled, &.ws-default-button.ws-disabled {
+            filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@bigDisableBackground, sizingMethod='scale');
+         }
+         &.ws-default-button {
+            filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@bigDefaultPrimaryBackground, sizingMethod='scale');
+            &.ws-enabled {
+               &:hover {
+                  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@bigDefaultHoverBackground, sizingMethod='scale');
+               }
+               &:active, &.ws-field-button-element-active, &.ws-button-pressed {
+                  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=@bigDefaultActiveBackground, sizingMethod='scale');
+               }
+            }
+         }
+      }
+   }
+}
+
+.ws-button-classic {
+   color: @globalDefaultColor;
+   background-image: url(@classicPrimaryBackground);
+   background-size: 100% 100%;
+   border-radius: 16px;
+   box-shadow: inset 0px -1px 1px #AFACAB;
+   &.ws-enabled {
+      &.ws-has-focus {
+         box-shadow: inset 0px -1px 1px #919090;
+         background-image: url(@classicHoverBackground);
+      }
+      &:hover {
+         box-shadow: inset 0px -1px 1px #919090;
+         background-image: url(@classicHoverBackground);
+         &.ws-button-with-menu:after {
+            background-image: url(@classicMenuHovered);
+         }
+      }
+      &:active, &.ws-field-button-element-active, &.ws-button-pressed {
+         box-shadow: inset 0px 1px 1px #939292;
+         background-image: url(@classicActiveBackground);
+      }
+   }
+   &.ws-disabled, &.ws-default-button.ws-disabled {
+      color: @disabledButtonTextColor !important;
+      background-image: url(@disableBackground);
+      cursor: default;
+      box-shadow: inset 0px -1px 1px #BBBBBA;
+      &:after {
+         background-image: url(@classicMenuDisabled);
+      }
+   }
+   &.ws-default-button {
+      box-shadow: inset 0px -1px 1px #C0401E;
+      color: @defaultButtonTextColor;
+      background-image: url(@defaultPrimaryBackground);
+      &.ws-enabled {
+         &.ws-has-focus, &:hover {
+            background-image: url(@defaultHoverBackground);
+            box-shadow: inset 0px -1px 1px #A15823;
+         }
+         &:active, &.ws-field-button-element-active, &.ws-button-pressed {
+            box-shadow: inset 0px 1px 1px #8E5F42;
+            background-image: url(@defaultActiveBackground);
+         }
+      }
+   }
+   &.ws-button-with-menu {
+      .ws-button-caption {
+         margin-right: 24px;
+      }
+      &:after {
+         content: '';
+         background-size: 100% 100%;
+         display: block;
+         position: absolute;
+         top: 11px;
+         right: 10px;
+         width: 8px;
+         height: 6px;
+         background-image: url(@classicMenuEnabled);
+      }
+      &.ws-enabled.ws-default-button {
+         &, &:hover, &:active, &.ws-field-button-element-active {
+            &:after {
+               background-image: url(@classicMenuDefault);
+            }
+         }
+      }
+   }
+   &.ws-button-image-right {
+      .ws-button-image {
+         right: 8px;
+      }
+      .ws-button-caption {
+         margin-right: 28px;
+      }
+      &.ws-button-with-menu {
+         .ws-button-image {
+            right: 20px;
+         }
+         .ws-button-caption {
+            margin-right: 36px;
+         }
+      }
+   }
+   &.ws-button-image-left {
+      .ws-button-image {
+         left: 8px;
+      }
+      .ws-button-caption {
+         margin-left: 28px;
+      }
+      &.ws-button-with-menu .ws-button-caption {
+         margin-right: 20px;
+      }
+   }
+   .ws-button-caption {
+      margin: 0 8px;
+   }
+   &.ws-button-autoWidth {
+      .ws-button-caption {
+         margin: 0 12px;
+      }
+      &.ws-button-with-menu {
+         .ws-button-caption {
+            margin-right: 24px;
+         }
+      }
+      &.ws-button-image-right {
+         .ws-button-image {
+            right: 12px;
+         }
+         .ws-button-caption {
+            margin-right: 40px;
+         }
+         &.ws-button-with-menu {
+            .ws-button-image {
+               right: 24px;
+            }
+            .ws-button-caption {
+               margin-right: 44px;
+            }
+         }
+      }
+      &.ws-button-image-left {
+         .ws-button-image {
+            left: 12px;
+         }
+         .ws-button-caption {
+            margin-left: 40px;
+         }
+         &.ws-button-with-menu .ws-button-caption {
+            margin-right: 24px;
+         }
+      }
+   }
+   &.ws-btn-big {
+      height: 48px !important;
+      border-radius: 24px;
+      font: @bigButtonFont;
+      background-image: url(@bigPrimaryBackground);
+      &.ws-enabled {
+         &:hover {
+            background-image: url(@bigHoverBackground);
+         }
+         &:active, &.ws-field-button-element-active, .ws-button-pressed {
+            background-image: url(@bigActiveBackground);
+         }
+      }
+      &.ws-disabled, &.ws-default-button.ws-disabled {
+         background-image: url(@bigDisableBackground);
+      }
+      &.ws-default-button {
+         background-image: url(@bigDefaultPrimaryBackground);
+         &.ws-enabled {
+            &:hover {
+               background-image: url(@bigDefaultHoverBackground);
+            }
+            &:active, &.ws-field-button-element-active, &.ws-button-pressed {
+               background-image: url(@bigDefaultActiveBackground);
+            }
+         }
+      }
+      .ws-button-image {
+         top: 11px;
+      }
+      .ws-button-caption {
+         line-height: 34px;
+         margin: 7px 24px;
+         white-space: normal;
+      }
+      &.ws-button-image-left {
+         .ws-button-image {
+            left: 20px;
+         }
+         .ws-button-caption {
+            margin: 7px 24px 7px 48px;
+         }
+      }
+      &.ws-button-image-right {
+         .ws-button-image {
+            right: 20px;
+         }
+         .ws-button-caption {
+            margin: 7px 48px 7px 24px;
+         }
+      }
+      &.dbl-line{
+         font: @bigButtonDoubleLineFont;
+      }
+   }
+   &.ws-button-classic.sbisname-window-title-close {
+      background: none;
+   }
+   &.ws-button-small {
+      min-width: 20px;
+      max-width: 20px;
+      min-height: 20px;
+      max-height: 20px;
+      &, &.ws-has-focus {
+         background: transparent url("resources/images/btn_add_20px.png") no-repeat 0 0px;
+      }
+      &.ws-enabled {
+         &:hover {
+            background: transparent url("resources/images/btn_add_20px.png") no-repeat 0 -20px;
+         }
+         &:active, &.ws-field-button-element-active {
+            background: transparent url("resources/images/btn_add_20px.png") no-repeat 0 -40px;
+         }
+      }
+      &.ws-field-button.ws-disabled, &.ws-disabled:hover {
+         background: transparent url("resources/images/btn_add_20px.png") no-repeat 0 -60px;
+      }
+      .ws-button-image, .ws-button-caption, &:after {
+         display: none;
+      }
+   }
+}
+
+@-moz-document url-prefix() {
+   .ws-button-classic {
+      .ws-button-caption, .ws-button-image {
+         line-height: 21px;
+      }
+   }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+   .ws-button-classic {
+      .ws-button-caption, .ws-button-image {
+         line-height: 22px;
+      }
+   }
+}
+
+.ws-button-menu-header-left, .ws-button-menu-header-right, .ws-button-menu-header-center{
+   height: 28px;
+   background: transparent url("@{globalImagesPath}menu-header.png");
+}
+
+.ws-button-menu-header-center{
+   position: absolute;
+   left: 16px;
+   background-position: 0 -60px;
+}
+
+.ws-button-menu-clone-container {
+   .ws-field-button {
+      overflow: visible;
+      margin: 0;
+      &:after {
+         background-image: url(@classicMenuHovered);
+      }
+      .ws-button-image {
+         color: @globalHoverColor !important;
+      }
+   }
+}
+
+.ws-add-button {
+   width: 24px !important;
+   .icon-AddButton {
+      font-size: 24px !important;
+   }
+   .ws-button-caption, .ws-link-body:after {
+      display: none !important;
+   }
+}

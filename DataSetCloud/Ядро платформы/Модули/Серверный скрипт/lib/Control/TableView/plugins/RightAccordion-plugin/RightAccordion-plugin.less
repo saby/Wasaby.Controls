@@ -1,0 +1,228 @@
+@import "../../../../../css/themes/wi_scheme/index";
+
+@rightAccordionBGColor: #E7F0F9;
+@rightAccordionWidth: 190px;
+
+.ws-right-accordion {
+   background: @rightAccordionBGColor;
+
+   .ws-browser-container-wrapper {
+      border: 0;
+
+      .ws-browser-container {
+         .ws-browser-table-row {
+
+            &[treelevel="1"] {
+               .ws-browser-tree-text-container {
+                  padding-left: 24px;
+               }
+            }
+
+            &:first-child{
+               .ws-browser-cell .ws-browser-cell-paddings {
+                  .ws-browser-cell-container {
+                     margin-top: 8px;
+                  }
+               }
+
+               &.ws-browser-row-selected{
+                  .ws-browser-cell-container{
+                     margin-top: -3px !important;
+                  }
+               }
+            }
+
+            &:last-child{
+               &.ws-browser-row-selected{
+                  .ws-browser-cell-container{
+                     margin-bottom: 0 !important;
+                  }
+               }
+               .ws-browser-cell-container{
+                  padding-bottom: 12px;
+               }
+            }
+
+            .ws-browser-cell-container {
+               padding: 0 8px;
+               line-height: 32px;
+               min-height: 32px;
+               height: 32px;
+               position: relative;
+            }
+
+            &.ws-browser-row-selected {
+               & > .ws-browser-cell:first-child {
+                  background: none;
+
+                  .ws-browser-cell-paddings {
+                     background: url("@{globalImagesPath}RightAccordion__icon-selector.png") no-repeat 0 0;
+
+                     .ws-browser-cell-container {
+                        margin-bottom: -12px;
+                        margin-top: -11px;
+                        padding-top: 11px;
+                        padding-bottom: 12px;
+                        position: static;
+                     }
+                  }
+               }
+            }
+
+            &.ws-browser-row-dblline{
+
+               .ws-browser-cell-container {
+                  height: 48px;
+               }
+
+               &.ws-browser-row-selected{
+                  .ws-browser-cell-paddings {
+                     background-position: 0 -55px !important;
+                  }
+               }
+
+               .ws-right-accordion-title,
+               .ws-right-accordion-subtitle,
+               .ws-right-accordion-counter,
+               .ws-right-accordion-warning{
+                  height: 20px;
+                  line-height: 24px;
+               }
+
+               .ws-right-accordion-warning{
+                  float: left;
+                  padding-left: 1px;
+               }
+            }
+
+            .ws-browser-cell{
+               border: 0 none !important;
+               padding: 0 !important;
+               overflow: visible;
+            }
+         }
+
+         .ws-right-accordion-title {
+            font-size: @globalDefaultFontSize;
+            color: @globalDefaultColor;
+            float: left;
+			   white-space: nowrap;
+            //Пробуем починить отображение на Ipad
+            @media only screen and (device-width: 768px) {
+               white-space: normal !important;
+            }
+         }
+
+         .ws-right-accordion-subtitle, .ws-right-accordion-warning {
+            font-size: @globalDefaultFontSize;
+            display: inline-block;
+            float: right;
+            height: 32px;
+         }
+         .ws-right-accordion-subtitle{
+            color: @globalDefaultLabelColor;
+            margin-left: 8px;
+			   text-align: right;
+            max-width: 174px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+         }
+
+         .ws-right-accordion-counter {
+            font-size: @globalDefaultFontSize;
+            color: @globalDefaultLabelColor;
+            display: inline-block;
+            float: right;
+            margin-left: 8px;
+         }
+
+         .ws-right-accordion-warning {
+            color: @globalErrorColor;
+         }
+      }
+
+      .ws-browser-hover tr.ws-browser-table-row:hover {
+         background: none transparent !important;
+      }
+   }
+
+   &.ws-treeview{
+      .ws-browser-table-row{
+         &.ws-browser-row-dblline {
+            .ws-browser-hierarchy-cell-container.ws-browser-cell-container {
+               height: 41px;
+               padding-top: 7px;
+            }
+            .ws-browser-tree-text-container {
+               line-height: 16px;
+            }
+
+            &.ws-browser-row-selected{
+               .ws-browser-hierarchy-cell-container {
+                  padding-top: 18px;
+                  background-position: 0 -55px !important;
+               }
+            }
+         }
+
+         .ws-browser-cell-container.ws-browser-hierarchy-cell-container {
+            padding-left: 0 !important;
+            padding-right: 16px;
+            margin: 0;
+            white-space: normal;
+
+            .ws-right-accordion-title {
+               white-space: inherit;
+               line-height: inherit;
+            }
+         }
+
+         &.ws-browser-row-selected{
+            .ws-browser-cell-container{
+               background: url("@{globalImagesPath}RightAccordion__icon-selector.png") no-repeat 0 0;
+               margin-bottom: -12px;
+               margin-top: -11px;
+               padding-bottom: 12px;
+               padding-top: 11px;
+               position: static;
+            }
+         }
+
+         &:first-child{
+            .ws-browser-cell-container{
+               margin-top: 8px;
+            }
+         }
+
+         .ws-browser-tree-text-container{
+            margin: 0;
+            padding-left: 16px;
+            overflow: visible;
+         }
+
+         .ws-browser-expander-container{
+            margin: 6px 0 0 !important;
+            width: 16px;
+            height: 16px;
+         }
+
+         &[treelevel="0"]{
+            .ws-browser-tree-text-container{
+               color: @globalDefaultColor;
+            }
+         }
+      }
+   }
+
+   .ws-browser-ajax-loader{
+      display: none !important;
+   }
+
+   .ws-browser {
+      width: @rightAccordionWidth !important;
+   }
+}
+.ws-browser-disabled-item {
+  color: @globalDefaultLabelColor !important;
+}

@@ -1,0 +1,54 @@
+<div class="{{? it.cssClass}} {{=it.cssClass}} {{?}} {{? it.cssClassName}} {{=it.cssClassName}} {{?}} {{? !it.visible}}
+  ws-hidden{{?}}" title='{{=it.tooltip}}' hasMarkup="false">
+    {{var isShowFooter = (it.display.showRecordsCount || it.display.showPaging || (it.display.showSelectionCheckbox && it.useSelection !== false));}}
+<div class='ws-browser-data-container ws-listview'>
+    <div style='width: 100%;'>
+        <div class="ws-browser-container-wrapper">
+            <div class="ws-browser-ajax-loader ws-hidden">
+                <div class="ws-loading-indicator-outer">
+                    <div class="ws-loading-indicator-block">
+                        <div class="ws-loading-indicator ws-browser-loading-indicator">
+                            {{? $ws._const.theme !== 'wi_scheme' }}Загрузка{{?}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="ws-browser-empty listView ws-hidden">
+                {{=it.display.emptyHtml}}
+                </div>
+            <div class="ws-browser-container" tabindex="-1">
+                <div class='ws-browser'></div>
+                {{? it.display.allowHorizontalScroll}}
+                <div class="ws-browser-empty-scroller ws-hidden"> {{? $ws._const.browser.isIE }}&nbsp;{{?}}</div>
+                {{?}}
+            </div>
+        </div>
+        <div class="ws-browser-footer">
+            {{? isShowFooter }}
+            <table class="ws-browser-foot" cellspacing="0"><tfoot>
+            <tr>
+                <td class="ws-browser-pager-cont">
+                    {{? it.display.showPaging }}
+                    <div class="ws-browser-paging"></div>
+                    {{?}}
+                    {{? it.display.showRecordsCount }}
+                    <div class="ws-browser-pager ws-hidden">
+                        <span class="ws-browser-pager-text">&nbsp;</span>
+                        {{? it.display.usePaging && it.display.usePageSizeSelect }}
+                        <div class="ws-browser-dropdown-container">
+                            <span class="ws-browser-page-selector ws-browser-pager-select-text">, по</span>
+                            <div  class="ws-browser-page-selector ws-browser-pager-select"></div>
+                            <span class="ws-browser-page-selector ws-browser-pager-select-text"></span>
+                            </div>
+                        {{?}}
+                        </div>
+                    {{?}}
+                    </td>
+                </tr>
+            </tfoot>
+            </table>
+            {{?}}
+        </div>
+    </div>
+</div>
+</div>

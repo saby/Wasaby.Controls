@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<repository orx_version="1.72">
+
+  <object name="Лог">
+    <standart_select access_mode="0" is_service="0" last_changed="Рыбаков М.А." name="Лог.МастерПользОтчетаИдО" responsible="Буравлев М.С." type="PYTHON">
+      <return name="midr">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="mТранзакция_i">
+        <format>
+          <type>INT64</type>
+        </format>
+      </return>
+      <return name="mОперация">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="mВремя">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="mТаблица">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="mПользователь">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="mАдрес">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="mПоле">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="mСтарое значение">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="mНовое значение">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>#Фильтр = Record()
+#Фильтр.AddString( "ВремяДо", '2013-05-05' )
+#Фильтр.AddString( "ВремяОт", '2012-05-05' )
+#Фильтр.AddInt64( "ИдО", 2 )
+#Фильтр.AddBool( "Изменение", True )
+#Фильтр.AddBool( "Очистка", True )
+#Фильтр.AddBool( "Создание", True )
+#Фильтр.AddString( "Таблицы", 'ТестИстории' )
+#Фильтр.AddBool( "ТолькоИзмененные", True )
+#Фильтр.AddBool( "Удаление", True )
+#Фильтр.AddString( "Связи", 'Номенклатура.Раздел=ТестИстории.@ТестИстории' )
+#СвязаннаяТаблица1.ПолеX=ТаблицаИзСтруктурыОбъекта1.ПолеY; СвязаннаяТаблица2.ПолеX=ТаблицаИзСтруктурыОбъекта2.ПолеY
+
+defined = lambda fld: fld is not None and not fld.IsNull()
+format = MethodResultFormat('Лог.МастерПользОтчетаИдО',4)
+res = RecordSet(format)
+captions = Лог.ПользовОтчетИдОЗаголовки( None, Фильтр, None, None )
+
+#print( "captions_ptr = " + str( captions_ptr ) )
+
+for caption in range( captions.Size() ):
+   rec = Record()
+   rec.AddInt64( "ИдИзменения", int( captions[caption][0] ) )        
+   detailed_caption = Лог.ПользовательскийОтчетИдО( None, rec, None, None )
+   first_rec = True
+   for rec in range( detailed_caption.Size() ):
+      res.InsRow( len(res) )
+      num_rec = len(res) - 1
+      if first_rec == True:
+         res[ num_rec ][ 0 ].From( captions[caption][0] ) #midr
+         res[ num_rec ][ 1 ].From( captions[caption][3] ) #mТранзакция_i
+         res[ num_rec ][ 2 ].From( captions[caption][7] ) #mОперация
+         res[ num_rec ][ 3 ].From( str( captions[caption][1] ) )#mВремя
+         res[ num_rec ][ 4 ].From( captions[caption][2] )#mТаблица
+         res[ num_rec ][ 5 ].From( captions[caption][5] )#mПользователь
+         res[ num_rec ][ 6 ].From( captions[caption][6] )#mАдрес
+         res[ num_rec ][ 7 ].From( detailed_caption[rec][3] )#mПоле
+         res[ num_rec ][ 8 ].From( detailed_caption[rec][4] )#mСтарое значение
+         res[ num_rec ][ 9 ].From( detailed_caption[rec][5] )#mНовое значение
+         first_rec = False
+      else:
+         res[ num_rec ][ 0 ].From( captions[caption][0] ) #midr
+         res[ num_rec ][ 1 ].FromNull() #mТранзакция_i
+         res[ num_rec ][ 2 ].FromNull() #mОперация
+         res[ num_rec ][ 3 ].FromNull()#mВремя
+         res[ num_rec ][ 4 ].FromNull()#mТаблица
+         res[ num_rec ][ 5 ].FromNull()#mПользователь
+         res[ num_rec ][ 6 ].FromNull()#mАдрес
+         res[ num_rec ][ 7 ].From( detailed_caption[rec][3] )#mПоле
+         res[ num_rec ][ 8 ].From( detailed_caption[rec][4] )#mСтарое значение
+         res[ num_rec ][ 9 ].From( detailed_caption[rec][5] )#mНовое значение
+
+#print( "res = " + str( res ) )
+#print( "----------res = " + str( res.Size() ) )
+sort_cond = lambda rec_a, rec_b: int( rec_a[ 0 ] ) &gt; int( rec_b[ 0 ] )
+res.SortRows( sort_cond )
+return res</body>
+      </definition>
+      <std_parameter filter_category="USER" name="Удаление" param_type="OPTIONAL" type="BOOLEAN"/>
+      <std_parameter filter_category="USER" name="ТолькоИзмененные" param_type="OPTIONAL" type="BOOLEAN"/>
+      <std_parameter filter_category="USER" name="Таблицы" param_type="OPTIONAL" type="TEXT"/>
+      <std_parameter filter_category="USER" name="Создание" param_type="OPTIONAL" type="BOOLEAN"/>
+      <std_parameter filter_category="USER" name="Связи" param_type="OPTIONAL" type="TEXT"/>
+      <std_parameter filter_category="USER" name="Очистка" param_type="OPTIONAL" type="BOOLEAN"/>
+      <std_parameter filter_category="USER" name="Изменение" param_type="OPTIONAL" type="BOOLEAN"/>
+      <std_parameter filter_category="USER" name="ИдО" param_type="OPTIONAL" type="INT64"/>
+      <std_parameter filter_category="USER" name="ВремяОт" param_type="OPTIONAL" type="TEXT"/>
+      <std_parameter filter_category="USER" name="ВремяДо" param_type="OPTIONAL" type="TEXT"/>
+    </standart_select>
+    <select access_mode="1" is_service="1" last_changed="Буравлев М.С." name="Лог.НазваниеПервичногоКлючаТаблицы" responsible="Буравлев М.С." returns="SCALAR" type="PYTHON">
+      <parameter name="Таблица">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>return SqlQueryScalar( """
+   SELECT
+      pg_attribute.attname
+   FROM
+      pg_index, pg_class, pg_attribute
+   WHERE
+      indrelid = pg_class.oid AND
+      pg_attribute.attrelid = pg_class.oid AND
+      pg_attribute.attnum = any(pg_index.indkey) AND
+      pg_class.oid = '"{table_name}"'::regclass
+      AND indisprimary
+   """.format(
+      table_name = Таблица
+   )
+)</body>
+      </definition>
+    </select>
+    <select access_mode="1" is_proxy="0" is_service="0" last_changed="Гуров О.А." name="Лог.ОписаниеПолей" responsible="Буравлев М.С." returns="TABLE" type="NATIVE">
+      <parameter name="Таблицы">
+        <format>
+          <type>RECORDSET</type>
+        </format>
+      </parameter>
+      <return name="ИмяПоля">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="Описание">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+    </select>
+    <select access_mode="1" is_service="0" last_changed="Буравлев М.С." name="Лог.ПолучитьИдИзмПоИдО" responsible="Буравлев М.С." returns="TABLE" type="PYTHON">
+      <parameter name="id_in">
+        <format>
+          <type>INT64</type>
+        </format>
+      </parameter>
+      <parameter name="_table">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="time_old">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="time_new">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="_id">
+        <format>
+          <type>INT64</type>
+        </format>
+      </return>
+      <return name="_action">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>simple_table_name = _table
+
+if _table.find(".\"") == -1:
+   simple_table_name = simple_table_name.replace( 'log.', '' )
+   simple_table_name = simple_table_name[simple_table_name.find('."')+2:-1]
+   simple_table_name = simple_table_name.replace( '"', '')
+else:
+   simple_table_name = (_table.replace("log.", "")).replace('"', "")
+
+pk_t = Лог.НазваниеПервичногоКлючаТаблицы( simple_table_name )
+
+return SqlQuery( """
+SELECT
+   "_id",
+   "_action"
+FROM
+(
+   SELECT
+   (
+      SELECT
+         T1."@$Изменение"
+      FROM
+         "log.$Изменение" T1
+      WHERE
+         T1."@$Изменение" = T."@$Изменение" AND
+         "ДатаВремя" &gt;= '{time_old}'::timestamp AND
+         "ДатаВремя" &lt;= '{time_new}'::timestamp
+   ) as "_id",
+   ( 
+      case
+         when "ЗаписьСтарая" is null then 1
+         when "ЗаписьНовая" is null then 3
+         else 2 end
+   ) as "_action"
+   FROM
+   (
+      SELECT
+         *
+      FROM
+         {log_table}
+      WHERE
+         "ЗаписьНовая" = '{pk}'
+      {subQuerySecond}
+   ) T
+) T
+WHERE
+   _id IS NOT NULL
+ORDER BY
+   _id
+""".format(
+   pk = str( id_in ),
+   log_table = _table,
+   time_old = str(time_old),
+   time_new = str(time_new),
+   subQuerySecond = """
+      UNION
+      SELECT
+         *
+      FROM
+         {log_table}
+      WHERE
+         "ЗаписьСтарая"-&gt;'{pk_t}' = '{pk}'
+   """.format( 
+      pk = str( id_in ),
+      log_table = _table,
+      pk_t = str( pk_t )
+   ) if pk_t is not None else ""
+) )</body>
+      </definition>
+    </select>
+    <standart_select access_mode="0" is_service="0" last_changed="Буравлев М.С." name="Лог.ПользовОтчетИдОЗаголовки" responsible="Буравлев М.С." type="PYTHON">
+      <return name="idr">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="Транзакция_i">
+        <format>
+          <type>INT64</type>
+        </format>
+      </return>
+      <return name="Операция">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="Время">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="Пользователь">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="Адрес">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>defined = lambda fld: fld is not None and not fld.IsNull()
+tables = str(Фильтр["Таблицы"]).split( ';' )
+format = MethodResultFormat('Лог.ПолучитьИдИзмПоИдО',4)
+res = RecordSet(format)
+str_array = ''
+
+#####################################################################
+if defined( Фильтр.TestField('Связи') ):
+   links = str(Фильтр["Связи"]).split(';')
+   for link in links:
+      #ПулСерверов.Порт=ТестИстории.Поле2
+      flds = link.split( '=' )                  #list: ['ПулСерверов.Порт', 'ТестИстории.Поле2']
+      table_s = flds[0].split( '.' )[0]         #str: ПулСерверов
+      fld_s = flds[0].split( '.' )[1]           #str: Порт
+      table_m = flds[1].split( '.' )[0]         #str: ТестИстории
+      fld_m = flds[1].split( '.' )[1]           #str: Поле2
+      
+      name_t = SqlQueryScalar( """SELECT
+                       attname
+                       FROM
+                         pg_attribute
+                       WHERE
+                         (attrelid, attnum) = (( quote_ident( '""" + table_s + """' ) )::regclass, 1)""" )
+
+      name_t2 = SqlQueryScalar( """SELECT
+                       attname
+                       FROM
+                         pg_attribute
+                       WHERE
+                         (attrelid, attnum) = (( quote_ident( '""" + table_m + """' ) )::regclass, 1)""" )
+      
+      #name_t = @ПулСерверов
+      #name_t2 = @ТестИстории
+
+      table_slave1_idos = SqlQueryScalar( """select  array( select \"""" + name_t + """\" 
+            from \"""" + table_s + """\"
+            where \"""" + fld_s + """\" = 
+            (
+               select \"""" + fld_m + """\"
+               from \"""" + table_m + """\"
+               where \"""" + name_t2 + """\" = """ + str(Фильтр["ИдО"]) + """) )""" )
+      
+      #связанные записи в реальном времени
+      #select  array( select "@ПулСерверов" 
+      #                     from "ПулСерверов"
+      #                     where "Порт" = 
+      #                     (
+      #                        select "Поле2"
+      #                        from "ТестИстории"
+      #                        where "@ТестИстории" = 269) )      
+      
+      arr_del_idos = []
+      if str(Фильтр["Удаление"]) == "true":
+         table_slave1_prim_key = SqlQueryScalar( """SELECT
+                     attname
+                     FROM
+                  pg_attribute
+                     WHERE
+                  (attrelid, attnum) = (('"log.""" + table_s + """\"')::regclass, 3)""" )
+         
+         fld_tmp = SqlQueryScalar( """SELECT
+               attname
+               FROM
+                  pg_attribute
+               WHERE
+                  (attrelid, attnum) = (( quote_ident( '""" + table_m + """' ) )::regclass, 1)""" )
+                  
+         #table_slave1_prim_key = ЗаписьСтарая
+         #fld_tmp = @ТестИстории
+                       
+         #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         
+         #select  array
+         #( 
+         #        select hstore("ЗаписьСтарая") -&gt; '@ПулСерверов'
+         #        from "log.ПулСерверов" 
+         #        where 
+         #                hstore("ЗаписьСтарая") -&gt; 'Порт' in 
+         #                (
+         #                        select hstore("ЗаписьСтарая") -&gt; 'Поле2'
+         #                        from "log.ТестИстории" 
+         #                        where 
+         #                                hstore("ЗаписьСтарая") -&gt; '@ТестИстории' = 269::text
+         #                                or "ЗаписьНовая"  = 269 
+         #                )
+         #)         
+         #удаленные связанные записи
+         arr_del_idos = SqlQueryScalar( """select  array
+            ( 
+                    select hstore("ЗаписьСтарая") -&gt; '""" + name_t + """'
+                    from "log.""" + table_s + """\" 
+                    where 
+                            hstore("ЗаписьСтарая") -&gt; '""" + fld_s + """' in 
+                            (
+                                    select hstore("ЗаписьСтарая") -&gt; '""" + fld_m + """'
+                                    from "log.""" + table_m + """\" 
+                                    where 
+                                            hstore("ЗаписьСтарая") -&gt; '""" + name_t2 + """' = """ + str(Фильтр["ИдО"]) + """::text
+                                            or "ЗаписьНовая"  = """ + str(Фильтр["ИдО"]) + """ 
+                            )
+            )""" )
+
+
+         #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+      #table_slave1_idos.append( arr_del_idos ) #убрать нулы и дубликаты
+      #table_slave1_idos = sorted(set(table_slave1_idos))
+      #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      common_idos = []
+      for ido in table_slave1_idos:
+         common_idos.append( ido )
+      for ido in arr_del_idos:
+         common_idos.append( ido )
+
+      common_idos = sorted(set( common_idos ))
+      
+      #print( "===============&gt;" + str( common_idos ) ) 
+
+      for ido in common_idos:
+         tmp_res = Лог.ПолучитьИдИзмПоИдО( str(ido), ( table_s.replace(".\"", ".\"log.") if table_s.find(".") &gt; 0 else ("\"log." + table_s + "\"") ), str(Фильтр["ВремяОт"]), str(Фильтр["ВремяДо"]) )
+         for item in range( tmp_res.Size() ):
+            str_array = str_array + str(tmp_res[ item ][0]) + ','
+#####################################################################
+
+for table in tables:
+   if( len(table) &lt; 1 ):
+      continue
+   tmp_res = Лог.ПолучитьИдИзмПоИдО( int(Фильтр["ИдО"]), ( table.replace(".\"", ".\"log.") if table.find(".") &gt; 0 else ("\"log." + table + "\"") ), str(Фильтр["ВремяОт"]), str(Фильтр["ВремяДо"]) )
+   for rec in range( tmp_res.Size() ):
+      res.InsRow( len(res), tmp_res[ rec ] )
+      str_array = str_array + str(tmp_res[ rec ][0]) + ',' 
+
+pk_t_c = Лог.НазваниеПервичногоКлючаТаблицы( tables[0] )
+format2 = CreateRecordFormat()
+only_changed = CreateRecordSet(format2)
+if str(Фильтр["ТолькоИзмененные"]) == 'true':
+   only_changed = SqlQuery("""select DISTINCT ON (B."res") B."res"  from (
+      select ( case when 	( new is null and old is not null ) or 
+      			( new is not null and old is null ) or 
+      			( new is not null and old is not null and new &lt;&gt; old ) then T."@$Изменение" else 0 end ) as "res" from
+      			(
+      				SELECT  "@$Изменение", "Транзакция" as "tx", "ДатаВремя" as "ts",(log_diff( "@$Изменение", '"""+pk_t_c+"""' )).* 
+      				from "log.$Изменение" where "@$Изменение" = any('{""" + str_array[0:-1] + """}'::integer[] )
+      			)T
+      )B
+      where B."res" &lt;&gt; 0
+      ORDER BY B."res\"""")
+   str_array = ""
+   for rec in range( only_changed.Size() ):
+      str_array = str_array + str(only_changed[ rec ][0]) + ',' 
+############################################################################
+utbl_exist = SqlQueryScalar( """select ( select tablename from pg_tables 
+	 where tablename='Пользователь' 
+	 limit 1 ) is not NULL""")
+
+
+res_proc = SqlQuery( """
+		SELECT
+						T0."@$Изменение" as "idr",
+						T0."ДатаВремя" as "Время",
+						substring(T0."Таблица"::text from 6 for length(T0."Таблица"::text) - 6) AS "table",
+						T0."Транзакция" as "Транзакция_i",
+						0 as "session",
+						(""" 
+                                                
+                                                + ("""select "Имя" || ' (' || "@Пользователь"::text || ')' from "Пользователь" where "@Пользователь" = (
+                                              select "Пользователь" from "log.$Пользователь" where "@$Пользователь" = ( select case when T."Предок" &lt; 0 then 
+                                                  (
+                                                          select "Предок" 
+                                                          FROM "log.$Изменение" 
+                                                          WHERE "Транзакция" = abs( T."Предок" ) AND "Предок" is not null 
+                                                          LIMIT 1
+                                                  ) else "Предок" end  
+                                                  FROM "log.$Изменение" T
+                                                  WHERE T."Транзакция" = T0."Транзакция" AND T."Предок" is not null 
+                                                  LIMIT 1 ) ) """ if utbl_exist else """'не определен'""") + 
+                                                  
+                                                """) as "Пользователь",
+						( select case when _ipe is NOT NULL and _ipi is NOT NULL then _ipe || ' ' || _ipi else
+                                                case when _ipe is NOT NULL and _ipi is NULL then _ipe else _ipi end 
+                                                end from
+                                                (
+                                                        SELECT "IP"::text as _ipe, "IPВнутренний"::text as _ipi
+                                                        FROM "log.$Пользователь"
+                                                        where "@$Пользователь" = ( select case when T."Предок" &lt; 0 then 
+                                                        (
+                                                                select "Предок" 
+                                                                FROM "log.$Изменение" 
+                                                                WHERE "Транзакция" = abs( T."Предок" ) AND "Предок" is not null 
+                                                                LIMIT 1
+                                                        ) else "Предок" end  
+                                                        FROM "log.$Изменение" T
+                                                        WHERE T."Транзакция" = T0."Транзакция" AND T."Предок" is not null 
+                                                        LIMIT 1 )
+                                                ) T ) as "Адрес",
+						0 as "Операция",
+                  T0."Таблица" as "tbl"
+			FROM "log.$Изменение" T0
+			WHERE 	        T0."@$Изменение" = ANY( '{""" + str_array[0:-1] + """}'::integer[]  )
+      	ORDER BY "Время" DESC, "Транзакция_i" DESC;""" )
+      #2;"2013-03-14 10:26:43.143";"ТестИстории";73583;0;0;0;0
+
+for rec in range( res_proc.Size() ):
+   res_proc[rec][7].From( str( SqlQueryScalar( """select
+	(
+		case 
+			when "ЗаписьСтарая" is null then 1 
+			when "ЗаписьНовая" is null then 3
+			else 2 end
+	) as "action" 
+   from """ + str( res_proc[rec][8] ) + """ log_tbl
+   where 
+   log_tbl."@$Изменение" = """ + str( res_proc[rec][0] ) + """; """) ) )
+   if res_proc[rec][5].IsNull():
+      res_proc[rec][5].From( "не определен" )
+   
+return res_proc</body>
+      </definition>
+      <std_parameter filter_category="USER" name="Удаление" param_type="OPTIONAL" type="BOOLEAN"/>
+      <std_parameter filter_category="USER" name="ТолькоИзмененные" param_type="OPTIONAL" type="BOOLEAN"/>
+      <std_parameter filter_category="USER" name="Таблицы" param_type="OPTIONAL" type="TEXT"/>
+      <std_parameter filter_category="USER" name="Создание" param_type="OPTIONAL" type="BOOLEAN"/>
+      <std_parameter filter_category="USER" name="Связи" param_type="OPTIONAL" type="TEXT"/>
+      <std_parameter filter_category="USER" name="Очистка" param_type="OPTIONAL" type="BOOLEAN"/>
+      <std_parameter filter_category="USER" name="Изменение" param_type="OPTIONAL" type="BOOLEAN"/>
+      <std_parameter filter_category="USER" name="ИдО" param_type="OPTIONAL" type="INT64"/>
+      <std_parameter filter_category="USER" name="ВремяОт" param_type="OPTIONAL" type="TEXT"/>
+      <std_parameter filter_category="USER" name="ВремяДо" param_type="OPTIONAL" type="TEXT"/>
+    </standart_select>
+    <standart_select access_mode="0" is_service="0" last_changed="Керимов В.А." name="Лог.ПользовательскийОтчетИдО" responsible="Буравлев М.С." type="PYTHON">
+      <return name="idr">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="Транзакция_i">
+        <format>
+          <type>INT64</type>
+        </format>
+      </return>
+      <return name="Время">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="Поле">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="Старое значение">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="Новое значение">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>table_name = SqlQueryScalar( """
+   SELECT
+      "Таблица"::text
+   FROM
+      "log.$Изменение"
+   WHERE
+      "@$Изменение" = {id}
+   """.format(
+      id = str( Фильтр.ИдИзменения )
+   )
+)
+
+table_name = table_name[table_name.find(".")+1:-1]
+pk_t = Лог.НазваниеПервичногоКлючаТаблицы( table_name )
+
+changes = SqlQuery( """
+   SELECT
+      T."id" as "idr",
+      T."tx" as "Транзакция_i",
+      T."ts" as "Время",
+      T."key" as "Поле",
+      T."old" as "Старое значение",
+      T."new" as "Новое значение"
+   FROM
+      (
+         SELECT
+            "@$Изменение" as "id",
+            "Транзакция" as "tx",
+            "ДатаВремя" as "ts",
+            (log_diff( "@$Изменение", '{pk_t}' )).*
+         FROM
+            "log.$Изменение"
+         WHERE
+            "@$Изменение" = {id}
+      ) T
+   """.format(
+      pk_t = pk_t,
+      id = str( Фильтр.ИдИзменения )
+   )
+)
+
+addTableName = False
+
+if 'Таблицы' in Фильтр and\
+      Фильтр.Таблицы is not None and\
+      len( Фильтр.Таблицы ) &gt;= 1:
+   addTableName = ( table_name != Фильтр.Таблицы.split(';')[0] )
+
+for rec in changes:
+   if addTableName:
+      rec.Поле = table_name + "." + rec.Поле
+      
+return changes</body>
+      </definition>
+      <std_parameter filter_category="USER" name="ИдИзменения" param_type="OPTIONAL" type="INT64"/>
+    </standart_select>
+  </object>
+
+</repository>

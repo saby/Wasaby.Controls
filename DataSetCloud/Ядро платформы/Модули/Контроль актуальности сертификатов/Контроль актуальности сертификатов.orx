@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<repository orx_version="1.7">
+
+  <object insert_on_create="0" name="ИдентификацияСертификата" read_only="0">
+    <source name="ИдентификацияСертификата"/>
+    <generate_method name="ИдентификацияСертификата.Записать"/>
+    <generate_method name="ИдентификацияСертификата.История"/>
+    <generate_method name="ИдентификацияСертификата.Копировать"/>
+    <generate_method name="ИдентификацияСертификата.Объединить"/>
+    <generate_method name="ИдентификацияСертификата.Прочитать"/>
+    <generate_method name="ИдентификацияСертификата.Создать"/>
+    <generate_method name="ИдентификацияСертификата.Удалить"/>
+  </object>
+
+  <object insert_on_create="0" name="КорневойСертификат" read_only="0">
+    <source name="КорневойСертификат"/>
+    <generate_method name="КорневойСертификат.Записать"/>
+    <generate_method name="КорневойСертификат.История"/>
+    <generate_method name="КорневойСертификат.Копировать"/>
+    <generate_method name="КорневойСертификат.Объединить"/>
+    <select is_service="0" name="КорневойСертификат.Прочитать" returns="TABLE" type="SQL">
+      <parameter name="ИдО">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <parameter name="ИмяМетода">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="@Сертификат">
+        <format>
+          <type>FIELDFROMTABLE</type>
+          <table>Сертификат</table>
+          <column>@Сертификат</column>
+        </format>
+      </return>
+      <return name="Отозван">
+        <format>
+          <type>FIELDFROMTABLE</type>
+          <table>Сертификат</table>
+          <column>Отозван</column>
+        </format>
+      </return>
+      <return name="ИдКлючаЦС">
+        <format>
+          <type>FIELDFROMTABLE</type>
+          <table>Сертификат</table>
+          <column>ИдКлючаЦС</column>
+        </format>
+      </return>
+      <return name="Отпечаток">
+        <format>
+          <type>FIELDFROMTABLE</type>
+          <table>Сертификат</table>
+          <column>Отпечаток</column>
+        </format>
+      </return>
+      <return name="СерийныйНомер">
+        <format>
+          <type>FIELDFROMTABLE</type>
+          <table>Сертификат</table>
+          <column>СерийныйНомер</column>
+        </format>
+      </return>
+      <return name="ДействителенС">
+        <format>
+          <type>FIELDFROMTABLE</type>
+          <table>Сертификат</table>
+          <column>ДействителенС</column>
+        </format>
+      </return>
+      <return name="ДействителенПо">
+        <format>
+          <type>FIELDFROMTABLE</type>
+          <table>Сертификат</table>
+          <column>ДействителенПо</column>
+        </format>
+      </return>
+      <return name="ФИО">
+        <format>
+          <type>FIELDFROMTABLE</type>
+          <table>Сертификат</table>
+          <column>ФИО</column>
+        </format>
+      </return>
+      <return name="Файл">
+        <format>
+          <type>FIELDFROMTABLE</type>
+          <table>Сертификат</table>
+          <column>Файл</column>
+        </format>
+      </return>
+      <return name="ИмяКонтейнера">
+        <format>
+          <type>FIELDFROMTABLE</type>
+          <table>Сертификат</table>
+          <column>ИмяКонтейнера</column>
+        </format>
+      </return>
+      <return name="КлючеваяПара">
+        <format>
+          <type>FIELDFROMTABLE</type>
+          <table>Сертификат</table>
+          <column>КлючеваяПара</column>
+        </format>
+      </return>
+      <return name="ИНН">
+        <format>
+          <type>FIELDFROMTABLE</type>
+          <table>Сертификат</table>
+          <column>ИНН</column>
+        </format>
+      </return>
+      <return name="Издатель">
+        <format>
+          <type>FIELDFROMTABLE</type>
+          <table>Сертификат</table>
+          <column>Издатель</column>
+        </format>
+      </return>
+      <return name="Организация">
+        <format>
+          <type>FIELDFROMTABLE</type>
+          <table>Сертификат</table>
+          <column>Организация</column>
+        </format>
+      </return>
+      <definition>
+        <language>PLPGSQL</language>
+        <body>SELECT cert."@Сертификат", cert."Отозван", cert."ИдКлючаЦС", cert."Отпечаток", cert."СерийныйНомер", cert."ДействителенС",
+cert."ДействителенПо", cert."ФИО", cert."Файл", cert."ИмяКонтейнера", cert."КлючеваяПара", cert."ИНН", cert."Издатель", 
+cert."Организация", root_cert."ИдКлючаСубъекта", root_cert."Доверенный"
+FROM "Сертификат" cert
+INNER JOIN "КорневойСертификат" root_cert ON cert."@Сертификат" =  root_cert."@Сертификат"
+WHERE cert."@Сертификат" = :ИдО;</body>
+      </definition>
+    </select>
+    <generate_method name="КорневойСертификат.Создать"/>
+    <generate_method name="КорневойСертификат.Удалить"/>
+  </object>
+
+  <object insert_on_create="0" name="Сертификат" read_only="0">
+    <source name="Сертификат"/>
+    <generate_method name="Сертификат.Записать"/>
+    <generate_method name="Сертификат.История"/>
+    <generate_method name="Сертификат.Копировать"/>
+    <generate_method name="Сертификат.Объединить"/>
+    <generate_method name="Сертификат.Прочитать"/>
+    <generate_method name="Сертификат.Создать"/>
+    <declarative key="@Сертификат" name="Сертификат.СписокДействительных" type="0">
+      <field>@Сертификат</field>
+      <field>Отпечаток</field>
+      <field>СерийныйНомер</field>
+      <field>ДействителенС</field>
+      <field>ДействителенПо</field>
+      <field>ФИО</field>
+      <field>Файл</field>
+      <field>ИмяКонтейнера</field>
+      <field>КлючеваяПара</field>
+      <field>ИНН</field>
+      <field>Издатель</field>
+      <field>Организация</field>
+      <field>ИдКлючаЦС</field>
+      <source name="Сертификат"/>
+      <composite operation="AND">
+        <simple operation="EQ">
+          <left name="Отозван" type="FIELD"/>
+          <right name="false" type="SCALAR"/>
+        </simple>
+      </composite>
+    </declarative>
+    <generate_method name="Сертификат.Удалить"/>
+  </object>
+
+  <object insert_on_create="0" name="СписокОтзываСертификатов" read_only="0">
+    <source name="СписокОтзываСертификатов"/>
+    <generate_method name="СписокОтзываСертификатов.Записать"/>
+    <generate_method name="СписокОтзываСертификатов.История"/>
+    <generate_method name="СписокОтзываСертификатов.Копировать"/>
+    <select is_service="0" name="СписокОтзываСертификатов.Найти" returns="TABLE" type="SQL">
+      <parameter name="Фильтр">
+        <format>
+          <type>RECREFERENCE</type>
+          <free>1</free>
+        </format>
+      </parameter>
+      <return name="ИдО">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+      <definition>
+        <language>PLPGSQL</language>
+        <body>SELECT "@СписокОтзываСертификатов"
+FROM "СписокОтзываСертификатов"
+WHERE "ИдКлючаЦС" = (($1::hstore)-&gt;'ИдКлючаЦС')::text</body>
+      </definition>
+    </select>
+    <generate_method name="СписокОтзываСертификатов.Объединить"/>
+    <read_file column="Файл" name="СписокОтзываСертификатов.ПолучитьФайл" object="СписокОтзываСертификатов" type="DEFAULT"/>
+    <generate_method name="СписокОтзываСертификатов.Прочитать"/>
+    <generate_method name="СписокОтзываСертификатов.Создать"/>
+    <select is_service="0" name="СписокОтзываСертификатов.СписокАдресов" returns="TABLE" type="SQL">
+      <return name="Адрес">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PLPGSQL</language>
+        <body>SELECT "URL" 
+FROM "АдресСпискаОтзываСертификатов"</body>
+      </definition>
+    </select>
+    <generate_method name="СписокОтзываСертификатов.Удалить"/>
+  </object>
+
+</repository>

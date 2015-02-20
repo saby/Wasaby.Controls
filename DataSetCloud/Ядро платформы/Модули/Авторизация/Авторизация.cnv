@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="WINDOWS-1251" ?>
+<converter_library version="1.02">
+
+  <converter abstract="0" call_once="1" for_new_db="0" last_changed="Шаброва А.Н." name="FillClientForRoles1" responsible="Шаброва А.Н.">
+    <comment>Задает идентификатор клиента для клиентских ролей</comment>
+    <rule name="КлиентскаяРоль" schema=".*" stage="0" type="0"/>
+    <rule name="ЗависимостиРолей" schema=".*" stage="0" type="0"/>
+    <rule name="ПараметрыРоли" schema=".*" stage="0" type="0"/>
+    <rule name="НастройкиЗоныДоступа" schema=".*" stage="0" type="0"/>
+    <callback event="16">
+      <body>DECLARE
+  client int := null;
+  schem text := context-&gt;'schema';
+  tbl text := context-&gt;'table';
+BEGIN
+  IF schem IS DISTINCT FROM 'public' AND schem IS NOT NULL THEN
+     EXECUTE 'SELECT x''' || substring( schem from '........$') || '''::int' INTO client;     
+  ELSE
+     EXECUTE 'SELECT "@Пользователь" FROM ' || schem || '."Пользователь" WHERE "Раздел@" IS FALSE AND "Логин" = ''__сбис__тензор''' INTO client;
+  END IF;
+  IF client IS NOT NULL THEN
+     EXECUTE 'UPDATE ' || schem || '."' || tbl || '" SET "Пользователь" = ' || client || ' WHERE "Пользователь" IS NULL;';
+  ELSE
+     EXECUTE 'DELETE FROM ' || schem || '."' || tbl || '" WHERE "Пользователь" IS NULL;';
+  END IF;
+END</body>
+    </callback>
+  </converter>
+  <converter abstract="0" call_once="1" for_new_db="0" last_changed="Шаброва А.Н." name="ReplaceAndChangeAosUserSettings" responsible="Шаброва А.Н." version="1">
+    <comment>Перносит и модифицирует ограничения на пользователя по областям видимости из таблицы "НастройкиОВПользователя" в "НастройкиЗоныДоступа". А также модифицирует саму таблицу НастройкиЗоныДоступа под новую систему прав</comment>
+    <rule name="НастройкиЗоныДоступа" schema=".*" stage="1" type="0"/>
+    <callback event="1">
+      <body>DECLARE
+   schema_name text := context-&gt;'schema';
+BEGIN
+   -- проверка на наличие таблички "НастройкиЗоныДоступа" и "НастройкиОВПользователя"
+   IF ( select exists ( select * from pg_tables where tablename='НастройкиОВПользователя' ) ) THEN 
+      IF ( select not exists ( select * from pg_tables where tablename='old_НастройкиОВПользователя' ) ) THEN -- проверка на отсутстие таблички "old_НастройкиОВПользователя"
+         EXECUTE('CREATE TEMPORARY TABLE "old_НастройкиОВПользователя"
+                           (
+                              "@НастройкиОВПользователя" integer,
+                              "ОбластьВидимости" text,
+                              "Настройки" text,
+                              "Пользователь" integer
+                           ) ON COMMIT DROP;'); -- создаем временную табличку до конца транзакции
+         EXECUTE('INSERT INTO "old_НастройкиОВПользователя" 
+                     ( "@НастройкиОВПользователя", "ОбластьВидимости", "Настройки", "Пользователь" ) 
+                  SELECT "@НастройкиОВПользователя", "ОбластьВидимости", "Настройки", "Пользователь" 
+                     FROM ' || schema_name || '."НастройкиОВПользователя";'); -- переписываем данные во временную таюлицу   
+         EXECUTE('TRUNCATE TABLE ' || schema_name || '."НастройкиОВПользователя";'); -- очищаем таблицу   
+      END IF;
+      IF ( select not exists ( select * from pg_tables where tablename='old_НастройкиЗоныДоступа' ) ) THEN -- проверка на отсутстие таблички "old_НастройкиЗоныДоступа"
+         EXECUTE('CREATE TEMPORARY TABLE "old_НастройкиЗоныДоступа"
+                           (
+                              "Имя" text,
+                              "Роль" text,
+                              "Доступ" text,
+                              "AosFunction" text,
+                              "Пользователь" integer
+                           ) ON COMMIT DROP;'); -- создаем временную табличку до конца транзакции
+         EXECUTE('INSERT INTO "old_НастройкиЗоныДоступа" 
+                     ( "Имя", "Роль", "Доступ", "AosFunction", "Пользователь" ) 
+                  SELECT "Имя", "Роль", "Доступ", unnest( ( "ОбластиВидимости"::text[] ) || (''{null}'')::text[] ) "AosFunction", "Пользователь" 
+                     FROM ' || schema_name || '."НастройкиЗоныДоступа";'); -- переписываем данные во временную таюлицу   
+         EXECUTE('TRUNCATE TABLE ' || schema_name || '."НастройкиЗоныДоступа";'); -- очищаем таблицу   
+      END IF;
+   END IF;
+END;</body>
+    </callback>
+    <callback event="26">
+      <body>DECLARE
+   schema_name text := context-&gt;'schema';
+BEGIN
+   -- сначала модифицируем данные в таблице НастройкиЗоныДоступа под новую систему прав   
+   IF ( select exists ( select * from pg_tables where tablename='НастройкиЗоныДоступа' ) ) THEN -- проверка на наличие таблички "НастройкиЗоныДоступа"
+      IF ( select exists ( select * from pg_tables where tablename='old_НастройкиЗоныДоступа' ) ) THEN -- проверка на наличие временной таблички
+          EXECUTE('INSERT INTO ' || schema_name || '."НастройкиЗоныДоступа"
+                     ( "AccessArea", "Роль", "Access", "AosFunction", "Пользователь", "ScopeFlags", "Settings" ) 
+                  SELECT 
+                     o."Имя", 
+                     o."Роль", 
+                     (CASE
+                        WHEN o."AosFunction" IS NULL THEN
+                           o."Доступ"
+                        ELSE
+                           NULL
+                     END),
+                     (CASE 
+                        WHEN o."AosFunction" IS NOT NULL AND o."AosFunction" NOT LIKE ''ОбластьВидимости.%'' THEN
+                           ''ОбластьВидимости.'' || o."AosFunction"
+                        WHEN  o."AosFunction" IS NOT NULL THEN
+                           o."AosFunction"
+                        ELSE
+                           NULL
+                     END), 
+                     o."Пользователь",
+                     (CASE
+                        WHEN o."AosFunction" IS NOT NULL AND o."AosFunction" LIKE ''%ДокументыМоегоОфиса'' THEN
+                           ''---++''
+                        WHEN o."AosFunction" IS NOT NULL AND o."AosFunction" LIKE ''%НашиОрганизации'' THEN
+                           ''+----''
+                        WHEN  o."AosFunction" IS NOT NULL THEN
+                           ''-+----''
+                        ELSE
+                           NULL
+                     END),
+                     NULL
+                     FROM "old_НастройкиЗоныДоступа" o;');
+      END IF;
+------------------------------------------------------------------------------------       
+      IF ( select exists ( select * from pg_tables where tablename='old_НастройкиОВПользователя' ) ) THEN -- проверка на наличие временной таблички
+      -- заполняем табличку "ОбщиеПараметры" и "ЗначенияОбщихПараметров"  
+         EXECUTE('INSERT INTO ' || schema_name || '."НастройкиЗоныДоступа"
+                     ( "AccessArea", "Роль", "Access", "AosFunction", "Пользователь", "ScopeFlags", "Settings" ) 
+                  SELECT 
+                     NULL,
+                     NULL,
+                     NULL,
+                     (CASE 
+                        WHEN o."ОбластьВидимости" NOT LIKE ''ОбластьВидимости.%'' THEN
+                           ''ОбластьВидимости.'' || o."ОбластьВидимости"
+                        ELSE 
+                           o."ОбластьВидимости"
+                     END), 
+                     o."Пользователь",
+                     (CASE
+                        WHEN (o."Настройки"::hstore-&gt;''Подразделение'') = ''ВсеПодразделения'' THEN
+                           ''+----''
+                        WHEN (o."Настройки"::hstore-&gt;''Подразделение'') = ''МойОфис'' THEN
+                           ''---++''
+                        ELSE
+                           ''-+----''
+                     END),
+                     (CASE
+                        WHEN (o."Настройки"::hstore-&gt;''Подразделение'') &lt;&gt; ''ВсеПодразделения'' AND (o."Настройки"::hstore-&gt;''Подразделение'') &lt;&gt; ''МойОфис'' THEN
+                           (o."Настройки"::hstore-&gt;''Подразделение'')::integer[]
+                     END)
+                     FROM "old_НастройкиОВПользователя" o WHERE o."ОбластьВидимости" LIKE ''%ДокументыМоегоОфиса'';');
+                     
+         EXECUTE('INSERT INTO ' || schema_name || '."НастройкиЗоныДоступа"
+                     ( "AccessArea", "Роль", "Access", "AosFunction", "Пользователь", "ScopeFlags", "Settings" ) 
+                  SELECT 
+                     NULL,
+                     NULL,
+                     NULL,
+                     (CASE 
+                        WHEN o."ОбластьВидимости" NOT LIKE ''ОбластьВидимости.%'' THEN
+                           ''ОбластьВидимости.'' || o."ОбластьВидимости"
+                        ELSE 
+                           o."ОбластьВидимости"
+                     END), 
+                     o."Пользователь",
+                     (CASE
+                        WHEN (o."Настройки"::hstore-&gt;''Организация'') = ''ВсеОрганизации'' THEN
+                           ''+----''
+                        ELSE
+                           ''-+----''
+                     END),
+                     (CASE
+                        WHEN (o."Настройки"::hstore-&gt;''Организация'') &lt;&gt; ''ВсеОрганизации'' THEN
+                           (o."Настройки"::hstore-&gt;''Организация'')::integer[]
+                     END)
+                     FROM "old_НастройкиОВПользователя" o WHERE o."ОбластьВидимости" LIKE ''%НашиОрганизации'';');
+      END IF;
+------------------------------------------------------------------------------------        
+      EXECUTE('ALTER SEQUENCE '|| ( pg_get_serial_sequence( schema_name || '."НастройкиЗоныДоступа"'::text, '@НастройкиЗоныДоступа'::text ) ) || ' RESTART WITH ' || 
+      ( coalesce( ( SELECT max("@НастройкиЗоныДоступа") FROM "НастройкиЗоныДоступа" ), 0 ) + 1 )::text );
+------------------------------------------------------------------------------------            
+   END IF;
+END;</body>
+    </callback>
+  </converter>
+
+  <converter abstract="0" call_once="1" for_new_db="0" last_changed="Шаброва А.Н." name="ReplaceAosSettingsFromPublic" responsible="Шаброва А.Н." version="2">
+    <comment>Разносит данные таблицы "НастройкаОВПользователя" из паблика по схемам</comment>
+    <rule name=".*" schema=".*" stage="1" type="0"/>
+    <callback event="26">
+      <body>DECLARE
+  client int := null;
+  schem text := context-&gt;'schema';
+BEGIN
+  IF schem IS DISTINCT FROM 'public' AND schem IS NOT NULL THEN
+     EXECUTE 'SELECT x''' || substring( schem from '........$') || '''::int' INTO client;     
+  END IF;
+  IF client IS NOT NULL THEN
+     -- нужно отобрать все пользователей данного клиента, чтобы по этим идентификаторам перенести инфо в схему
+     EXECUTE 'WITH ins_rows AS (
+         INSERT INTO ' || schem || '."НастройкиОВПользователя"("ОбластьВидимости", "Настройки", "Пользователь")
+         SELECT            
+            p."ОбластьВидимости", p."Настройки", p."Пользователь"
+         FROM 
+            public."НастройкиОВПользователя" p 
+         WHERE 
+            p."Пользователь" IN ( SELECT "@Пользователь" FROM ' || schem || '."Пользователь" WHERE "Раздел" = ' || client || ' ) RETURNING "Пользователь" )
+         DELETE FROM public."НастройкиОВПользователя" WHERE "Пользователь" IN ( SELECT * FROM ins_rows );';
+  END IF;
+END</body>
+    </callback>
+  </converter>
+
+  <converter abstract="0" call_once="1" for_new_db="0" last_changed="Шаброва А.Н." name="ЗаменаОфисовПродажВОбластяхВидимости" responsible="Шаброва А.Н.">
+    <rule name=".*" schema="public" stage="1" type="0"/>
+    <callback event="26">
+      <body>begin
+   if context-&gt;'schema' = 'public' then
+      update "НастройкиОВПользователя" set "Настройки" = replace( "Настройки", 'ОфисПродаж', 'СтруктураПредприятия' ) 
+      where "ОбластьВидимости" = 'ДокументыМоегоОфиса'; 
+   end if;
+end;</body>
+    </callback>
+  </converter>
+
+  <converter abstract="0" call_once="1" for_new_db="0" last_changed="Шаброва А.Н." name="ПереходКНовымРолямДокументообоорота" responsible="Шаброва А.Н.">
+    <rule name=".*" schema=".*" stage="1" type="0"/>
+    <callback event="26">
+      <body>begin
+   -- перепривяжем пользователей к другой роли 
+   update "РолиПользователей" 
+   set "Название" = 'Редактирование документов' 
+   where "Название" = 'Оператор документооборота';
+   
+   update "РолиПользователей" 
+   set "Название" = 'Просмотр документов' 
+   where "Название" = 'Пользователь документооборота';
+                           
+   update "РолиПользователей" rp
+   set "Название" = 'Редактирование документов' 
+   where "Название" = 'Администратор документооборота' 
+         and 
+         not exists( select true from "РолиПользователей" as sub 
+                     where sub."Пользователь" = rp."Пользователь" 
+                           and sub."Название" = 'Редактирование документов' ); 
+                           
+   update "РолиПользователей"
+   set "Название" = 'Просмотр документов' 
+   where "Название" = 'Пользователь документооборота'; 
+                           
+   delete from "РолиПользователей" where "Название" = 'Администратор документооборота';
+   
+   -- перепривяжем клиентские роли
+   update "ЗависимостиРолей"
+   set "ДочерняяРоль" = 'Редактирование документов' 
+   where "ДочерняяРоль" = 'Оператор документооборота';
+ 
+   update "ЗависимостиРолей"
+   set "ДочерняяРоль" = 'Просмотр документов' 
+   where "ДочерняяРоль" = 'Пользователь документооборота';
+   
+   update "ЗависимостиРолей" zr
+   set "ДочерняяРоль" = 'Редактирование документов' 
+   where "ДочерняяРоль" = 'Администратор документооборота' 
+         and 
+         not exists( select true from "ЗависимостиРолей" as sub 
+                     where sub."БазоваяРоль" = zr."БазоваяРоль" 
+                           and sub."ДочерняяРоль" = 'Редактирование документов' );
+                           
+   update "ЗависимостиРолей"
+   set "ДочерняяРоль" = 'Просмотр документов' 
+   where "ДочерняяРоль" = 'Пользователь документооборота';
+                           
+   delete from "ЗависимостиРолей" where "ДочерняяРоль" = 'Администратор документооборота';        
+end;</body>
+    </callback>
+  </converter>
+
+  <converter abstract="0" call_once="1" for_new_db="0" name="УбратьРолиСКлассов">
+    <rule name=".*" schema="public" stage="1" type="0"/>
+    <callback event="26">
+      <body>BEGIN
+IF context-&gt;'schema' = 'public' THEN
+   delete from "РолиПользователей"
+     WHERE "@РолиПользователей" IN (
+     select rp."@РолиПользователей" from "Пользователь" p
+     inner join "РолиПользователей" rp on rp."Пользователь" = p."@Пользователь"
+          where p."Логин" in
+   	      ( '__сбис__клиенты', 
+   		'__сбис__администратор',
+   		'__сбис__гость',
+   		'__сбис__сервисы',
+   		'__сбис__демоклиенты',
+   		'__сбис__cвободныеклиенты',
+   		'__сбис__удаленные' )
+   );
+END IF;
+END;</body>
+    </callback>
+  </converter>
+
+  <converter abstract="0" call_once="1" for_new_db="0" last_changed="Шаброва А.Н." name="УбратьСложныеИдДляНашихОрганизаций" responsible="Шаброва А.Н.">
+    <rule name=".*" schema="public" stage="1" type="0"/>
+    <callback event="26">
+      <body>begin
+   if context-&gt;'schema' = 'public' then
+		--убираются из строки ',НашаОрганизация' ',НашаОрганизацияПредприниматель'
+      update 
+         "НастройкиОВПользователя" 
+      set 
+         "Настройки" = replace( replace( "Настройки", ',НашаОрганизацияПредприниматель', '') , ',НашаОрганизация', '') 
+		where "ОбластьВидимости" = 'НашиОрганизации' and "Настройки" ilike '%НашаОрганизация%';
+   end if;
+end;</body>
+    </callback>
+  </converter>
+
+  <converter abstract="0" call_once="1" for_new_db="0" last_changed="Шаброва А.Н." name="УдалениеРедактированиеСотрудниковЗакрепленныхОфисов" responsible="Шаброва А.Н.">
+    <rule name=".*" schema=".*" stage="1" type="0"/>
+    <callback event="26">
+      <body>begin
+   update "НастройкиЗоныДоступа" set "ОбластиВидимости" = replace( "ОбластиВидимости", 'РедактированиеСотрудниковЗакрепленныхОфисов', 'ДокументыМоегоОфиса' ); 
+end;</body>
+    </callback>
+  </converter>
+
+  <converter abstract="0" call_once="1" for_new_db="0" last_changed="Шаброва А.Н." name="УдалениеСтруктурыПредприятия" responsible="Шаброва А.Н.">
+    <rule name=".*" schema="public" stage="1" type="0"/>
+    <callback event="26">
+      <body>begin
+   if context-&gt;'schema' = 'public' then
+      update "НастройкиОВПользователя" set "Настройки" = replace( replace( ( replace( replace( replace( "Настройки", E'\\', ''), '"', '' ), ',СтруктураПредприятия', '' ) ), ',', ';')::hstore::text, ';',',')
+      where "ОбластьВидимости" = 'ДокументыМоегоОфиса'; 
+
+      update "НастройкиОВПользователя" set "Настройки" = replace( replace( replace( replace( "Настройки", E'\\', ''), '"', ''  ), ',', ';')::hstore::text, ';',',')
+      where "ОбластьВидимости" = 'НашиОрганизации';
+   end if;
+end;</body>
+    </callback>
+  </converter>
+
+  <converter abstract="0" call_once="1" for_new_db="0" last_changed="Buravlevms" name="УдалитьЗависимостиРолей" responsible="Buravlevms">
+    <rule name="ЗависимостиРолей" schema=".*" stage="0" type="0"/>
+    <callback event="6">
+      <body>BEGIN
+IF context-&gt;'column' = 'БазоваяРоль' THEN
+   delete from "ЗависимостиРолей";
+END IF;
+END;</body>
+    </callback>
+  </converter>
+
+</converter_library>

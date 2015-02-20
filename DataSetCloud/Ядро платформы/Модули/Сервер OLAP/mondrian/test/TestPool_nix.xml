@@ -1,0 +1,5 @@
+﻿<Pool>
+  <Connect default="true" name="TestCube_nix" line="Jdbc=jdbc:postgresql://sbis-dev6/nix_3.7.0_wchar;JdbcDrivers=org.postgresql.Driver;JdbcUser=postgres;JdbcPassword=postgres;Catalog=file:Модули/Сервер OLAP/mondrian/test/TestCube.xml;"/>
+  <Connect default="false" name="LiveStat" line="Jdbc=jdbc:postgresql://sb-osr-db.unix.tensor.ru/platform-online.sbis.ru.olap;JdbcDrivers=org.postgresql.Driver;JdbcUser=service_user;JdbcPassword=iiS;Catalog=Модули/Сервер OLAP/mondrian/demo/LiveStat.xml;"/>
+  <Connect default="false" name="ErrorConnection" line="кривая строка подключения"/>
+</Pool>

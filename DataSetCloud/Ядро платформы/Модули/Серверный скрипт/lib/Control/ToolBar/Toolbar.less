@@ -1,0 +1,244 @@
+@import "../../../css/themes/wi_scheme/index";
+
+.ws-toolbar-block {
+   display: table;
+   .ws-item-toolbar {
+      min-width: 16px;
+      height: 24px;
+      vertical-align: top;
+      float: none !important;
+   }
+}
+
+.ws-toolbar {
+   overflow: hidden;
+   line-height: 24px;
+   -webkit-user-select: none;
+   -khtml-user-select: none;
+   -moz-user-select: -moz-none;
+   -o-user-select: none;
+   user-select: none;
+   border-collapse: initial;
+
+   .ws-item-toolbar {
+      padding: 0 0 0 8px;
+   }
+
+   &.size-24px, &.transfer-style {
+      .ws-item-toolbar {
+         display: table-cell;
+         &.ws-toolbar-item-hide-caption .ws-button-caption {
+            display: none;
+         }
+      }
+   }
+
+   .ws-toolbar-separator {
+      padding-left: 8px;
+      border-right: 2px solid @globalDefaultLabelColor !important;
+      display: table-cell;
+      height: 20px;
+   }
+
+   &.size-24px {
+      height: 24px !important;
+      line-height: 24px;
+      .ws-toolbar-block {
+         margin-left: -8px;
+      }
+   }
+
+   &.transfer-style {
+      .ws-toolbar-block {
+         margin-left: 0;
+      }
+
+      .ws-item-toolbar {
+         padding: 0;
+         &.ws-default-button {
+            .ws-toolbar-menu-button-24px {
+               background: transparent url('../../../img/toolbar/menu-transfer.png') no-repeat 0 -144px;
+               &:hover {
+                  background-position: 0 -168px;
+               }
+               &:active{
+                  background-position: 0 -192px;
+               }
+            }
+         }
+      }
+
+      .ws-toolbar-separator {
+         padding-left: 0;
+      }
+
+      .ws-toolbar__transfer-button-middle, .ws-toolbar__transfer-button-middle.ws-has-focus {
+         border-radius: 0;
+      }
+
+      .ws-toolbar__transfer-button-first, .ws-toolbar__transfer-button-first.ws-has-focus {
+         border-radius: 16px 0 0 16px;
+      }
+
+      .ws-toolbar__transfer-button-last, .ws-toolbar__transfer-button-last.ws-has-focus {
+         border-radius: 0 16px 16px 0;
+      }
+
+      &.ws-toolbar__transfer-button-one {
+         .ws-toolbar__transfer-button-first {
+            border-radius: auto;
+         }
+         .ws-toolbar-menu-button-24px.transfer-style {
+            background: transparent url('../../../img/toolbar/menu-24px.png') no-repeat 0 -72px;
+            width: 24px;
+            &:hover {
+               background-position: 0 -96px;
+            }
+            &:active{
+               background-position: 0 -120px;
+            }
+         }
+      }
+   }
+
+   .button {
+      white-space: nowrap;
+   }
+
+   &.top, &bottom {
+      left: 0;
+      right: 0;
+      height: 22px;
+   }
+
+   &.right, &.left {
+      background: @toolbarBackground url('../../../img/area/toolbar-h-bg.png') repeat-y top left;
+      top: 0;
+      bottom: 0;
+      width: 22px;
+   }
+
+   &.right {
+      padding-left: 2px;
+   }
+
+   &.left {
+      padding-right: 2px;
+   }
+}
+
+.ws-toolbar-menu-button-24px {
+   z-index: 9999;
+   display: block;
+   width: 24px;
+   height: 24px;
+   background: transparent url('../../../img/toolbar/menu-24px.png') no-repeat 0 -72px;
+   cursor: pointer;
+   &.transfer-style {
+      width: 32px;
+      background: transparent url('../../../img/toolbar/menu-transfer.png') no-repeat 0 -72px;
+   }
+   &:hover {
+      background-position: 0 -96px;
+   }
+   &:active{
+      background-position: 0 -120px;
+   }
+   &.open {
+      width: 24px;
+      height: 24px;
+      position: absolute;
+      top: 4px;
+      background: transparent url('../../../img/toolbar/menu-24px.png') no-repeat 0 0px;
+      cursor: pointer;
+      &.transfer-style {
+         right: 10px;
+      }
+      &.short-style {
+         right: 4px;
+      }
+      &.ws-default-button {
+         background: transparent url('../../../img/toolbar/menu-transfer.png') no-repeat;
+      }
+      &:hover {
+         background-position: 0 -24px;
+      }
+      &:active {
+         background-position: 0 -48px;
+      }
+   }
+}
+
+.ws-toolbar-menu {
+   height: auto;
+   width: auto;
+   position: absolute;
+   cursor: default;
+   background: none repeat scroll 0 0 @globalBGColor;
+   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+   display: block;
+
+   &.item-height-32px {
+      .ws-menu-item {
+         height: 32px;
+      }
+      .ws-menu-image, .menu-span {
+         margin-top: 4px;
+      }
+   }
+
+   .transfer-style {
+      right: 5px;
+   }
+
+   &.menu-left-turn { //Если меню повернуто влево
+      .has-hide-menu-button {
+         .ws-toolbar-menu-button-24px.open { //Прикрепляем кнопку скрытия меню в правый угол
+            left: auto;
+            right: 4px;
+         }
+         &.ws-menu-image-padding { //Расставляем паддинги для элементов с картинками и без них
+            .ws-menu-item-without-image {
+               padding: 0 32px 0 32px;
+            }
+            .ws-menu-hasImg {
+               padding: 0 32px 0 4px;
+            }
+         }
+      }
+      .has-hide-menu-button .ws-menu-item-without-image { //Отступ слева, если нет иконок
+         padding: 0 32px 0 4px;
+      }
+   }
+   &.menu-top-turn { //Если меню повернуто вверх
+      .has-hide-menu-button {
+         .ws-toolbar-menu-button-24px.open { // - прикрепляем кнопку скрытия меню в нижний угол
+            top: auto;
+            bottom: 6px;
+         }
+      }
+   }
+}
+
+.menu-ul {
+   &.has-hide-menu-button { //Только если есть кнопка скрытия меню
+      .ws-menu-item-without-image { //Отступ слева, если нет иконок
+         padding: 0 4px 0 32px;
+      }
+      &.ws-menu-image-padding { //Если есть иконки, увеличиваем отступ
+         .ws-menu-hasImg {
+            padding: 0 4px 0 32px;
+         }
+         .ws-menu-item-without-image {
+            padding: 0 4px 0 58px;
+         }
+      }
+      .ws-toolbar-menu-button-24px.open { //В меню, открытом вправо прикрепляем кнопку скрытия в левый угол
+         left: 4px;
+         right: auto;
+      }
+      &.ws-menu-image-padding .ws-with-submenu, .ws-with-submenu { //Если в меню есть подменю, то добавляем правый паддинг
+         padding-right: 24px;
+      }
+   }
+}

@@ -1,0 +1,6 @@
+<div class="{{? it.cssClass}} {{=it.cssClass}}{{?}}{{? !it.visible}} ws-hidden{{?}}" hasMarkup="true">
+   <div class='ws-field ws-field-label'>
+      {{ var value = it.highlightLinks ? $ws.helpers.wrapFiles($ws.helpers.wrapURLs($ws.helpers.escapeHtml(it.value))) : $ws.helpers.escapeHtml(it.value); }}
+      <div class='input-field{{? it.multiline}} ws-field-label-multiline{{?}}'><span>{{= value}}</span></div>
+   </div>
+</div>

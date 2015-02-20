@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<bl_module bl_module_library="sbis-multitenancy300" id="a06924af-5907-4cb0-8b69-5a232d1077c6" name="Поддержка multitenancy" package="Платформа" responsible="Сбоев А.В." version="1.00">
+
+  <description>Модуль для управлением запросами к схемам клиентов</description>
+
+  <depends>
+    <bl_module id="b23836ee-86c3-4ee2-aa62-7bc88a88d233" name="Пользователь"/>
+  </depends>
+
+  <load_after/>
+
+  <parameters>
+    <parameter db_deployment_enabled="1" group_name="Прочие" name="ГенерацияПерсональныхДанныхТолькоРоботом" required_debug="0" required_release="0" type="boolean" version="2">
+      <comment><![CDATA[Параметр в значение да собщает сервису, чтобы он не генерировал сам схему по первому запросу от клиента.]]></comment>
+      <default configuration="debug"><![CDATA[1]]></default>
+      <default configuration="release"><![CDATA[1]]></default>
+    </parameter>
+  </parameters>
+
+  <resources>
+    <resource deployment_root="1" name="sbis-data-deployment300" platform="3" type="0" version="3"/>
+    <resource deployment_root="1" name="sbis-db-converter300" platform="3" type="0" version="3"/>
+    <resource deployment_root="1" name="sbis-multitenancy300" platform="3" type="0" version="3"/>
+  </resources>
+
+  <source_directory path="../../../../core-server/sbis-multitenancy"/>
+
+  <externals>
+    <external cloud="." method="Клиент.ПроверитьУведомление" num_args="1" service_name="Конфигурация" signature="Клиент.ПроверитьУведомление(ИдКлиента: Число целое): Текст"/>
+    <external cloud="." method="РегистрацияКлиента.ПроверитьУстановитьРазворотСхемы" num_args="1" service_name="Конфигурация" signature="РегистрацияКлиента.ПроверитьУстановитьРазворотСхемы(ВнешнийИдентификатор: Число целое): Логическое"/>
+  </externals>
+
+</bl_module>

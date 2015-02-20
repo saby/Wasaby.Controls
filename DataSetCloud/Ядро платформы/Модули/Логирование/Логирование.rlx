@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<roles_repository version="1.1">
+
+  <role identifier_role="Администратор облака" is_service="0" last_changed="shabrovaan" name="Администратор облака" responsible="av.korostil">
+    <privilegy access="2" access_mode="0" action="Просмотр отчетов логирования"/>
+    <user_class type="cloud_admin"/>
+  </role>
+
+  <role identifier_role="Администратор облака (просмотр)" is_service="0" last_changed="shabrovaan" name="Администратор облака (просмотр)" responsible="av.korostil">
+    <privilegy access="2" access_mode="0" action="Просмотр отчетов логирования"/>
+    <user_class type="cloud_admin"/>
+  </role>
+
+</roles_repository>

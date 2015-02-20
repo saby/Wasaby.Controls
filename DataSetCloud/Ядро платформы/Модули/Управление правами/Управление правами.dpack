@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dictionary responsible="" last_changed="Бойцов Е.А.">
+    <description></description>
+    <schema name="public">
+        <package type="1" synchronization="0" name="РолиПользователей" responsible="Бойцов Е.А." last_changed="Бойцов Е.А." id="eb4947cf-9847-4f48-95af-c56d1a1ec867">
+            <description></description>
+            <metadata>
+                <item name="has_own_pk" type="0" value="true"/>
+                <item name="hierarchy_column" type="1" value=""/>
+                <item name="hierarchy_title_column" type="1" value=""/>
+                <item name="table" type="1" value="РолиПользователей"/>
+            </metadata>
+            <format>
+                <column name="Название" type="10" table="РолиПользователей" table_column="Название">
+                </column>
+                <column name="Доступ" type="10" table="РолиПользователей" table_column="Доступ">
+                </column>
+                <column name="Пользователь" type="23" table="РолиПользователей" table_column="Пользователь">
+                    <metadata>
+                        <item name="linked_table" type="1" value="Пользователь"/>
+                    </metadata>
+                </column>
+            </format>
+            <key_columns>
+                <key_column name="Название"/>
+                <key_column name="Пользователь"/>
+            </key_columns>
+            <data>
+                <record id="1c256a00-d3a4-4b84-b672-f2807dc63564">
+                    <f t="2" v="Получатель конфигурации">
+                    </f>
+                    <f t="0" v="null">
+                    </f>
+                    <f t="5" v="1ea85f7c-0f05-11e3-9465-b7675986cab3">
+                    </f>
+                </record>
+            </data>
+        </package>
+    </schema>
+</dictionary>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<action_repository version="1.1">
+
+  <action identifier_action="Просмотр отчетов логирования" last_changed="Гуров О.А." name="Просмотр отчетов логирования" responsible="Гуров О.А.">
+    <privilegy access="2" object="Лог.ПользовОтчетИдОЗаголовки"/>
+    <privilegy access="2" object="Лог.ПользовательскийОтчетИдО"/>
+    <privilegy access="2" object="Лог.МастерПользОтчетаИдО"/>
+    <privilegy access="2" object="Лог.ОписаниеПолей"/>
+  </action>
+
+</action_repository>

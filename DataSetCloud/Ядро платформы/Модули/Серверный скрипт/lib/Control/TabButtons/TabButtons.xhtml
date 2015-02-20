@@ -1,0 +1,11 @@
+<div class="ws-TabButtons"><div class="ws-TabButtons__container">
+{{var active = it.defaultTab || null;}}
+{{~it.tabs :value:index}}{{? value.align == 'left' }}
+   {{=it.buttonTemplate({ outer: it, value: value, index: index, active: (active == value.id) && !!value.enabled })}}
+   {{if ((active == value.id) && !!value.enabled) { active = null} }}
+{{?}}{{~}}
+{{for (var i = it.tabs.length - 1; i >= 0; i--) { }}{{? it.tabs[i].align == 'right' || !it.tabs[i].align }}
+   {{=it.buttonTemplate({ outer: it, value: it.tabs[i], index: i, active: (active == it.tabs[i].id) && !!it.tabs[i].enabled})}}
+   {{if ((active == it.tabs[i].id) && !!it.tabs[i].enabled) { active = null} }}
+{{?}}{{ } }}
+<div class="ws-TabButtons__bottomBorder"></div></div></div>

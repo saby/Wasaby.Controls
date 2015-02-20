@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<dictionary dicx_version="1.21">
+
+  <table last_changed="Бойцов Е.А." name="cache" personal_data="0" responsible="Бойцов Е.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <comment>Основная табица, в которой хранится кэш.</comment>
+    <column name="crc">
+      <comment>Хэш ключа кэша для быстрого поиска.</comment>
+      <format>
+        <type>INT64</type>
+      </format>
+    </column>
+    <column index_in_pk="0" is_pk_part="1" name="object">
+      <format>
+        <type>STRING</type>
+        <max_size>30</max_size>
+      </format>
+    </column>
+    <column index_in_pk="1" is_pk_part="1" name="method">
+      <comment>Имя метода, для которого сделана запись в кэше.</comment>
+      <format>
+        <type>STRING</type>
+        <max_size>60</max_size>
+      </format>
+    </column>
+    <column index_in_pk="2" is_pk_part="1" name="num_args">
+      <comment>Число параметров метода, 
+для которого сделана запись в кэше.</comment>
+      <format>
+        <type>INT16</type>
+      </format>
+    </column>
+    <column index_in_pk="3" is_pk_part="1" name="client">
+      <comment>Идентификатор клиента. По умолчанию равен -1,
+что означает, что запись в кэше глобальная.</comment>
+      <format>
+        <not_null>1</not_null>
+        <default>-1</default>
+        <type>INT64</type>
+      </format>
+    </column>
+    <column index_in_pk="4" is_pk_part="1" name="user">
+      <comment>Идентификатор пользователя. По умолчанию равен -1,
+что означает, что запись в кэше глобальная.</comment>
+      <format>
+        <not_null>1</not_null>
+        <default>-1</default>
+        <type>INTEGER</type>
+      </format>
+    </column>
+    <column index_in_pk="5" is_pk_part="1" name="session">
+      <comment>Идентификатор сессии, для которой сделана запись. Если пустая строка, то запись не относится к какой-либо сессии.</comment>
+      <format>
+        <type>STRING</type>
+        <max_size>50</max_size>
+      </format>
+    </column>
+    <column index_in_pk="6" is_pk_part="1" name="service">
+      <comment>Адрес сервиса, для которого сделана запись в кэше.</comment>
+      <format>
+        <type>STRING</type>
+        <max_size>80</max_size>
+      </format>
+    </column>
+    <column index_in_pk="7" is_pk_part="1" name="hash">
+      <comment>Хэш аргументов, переданных при вызове кэшированного метода.</comment>
+      <format>
+        <type>STRING</type>
+        <max_size>40</max_size>
+      </format>
+    </column>
+    <column name="data">
+      <comment>Сами кэшированные данные (ответ).</comment>
+      <format>
+        <type>BINARY</type>
+        <max_size>268435456</max_size>
+      </format>
+    </column>
+    <column name="expires">
+      <comment>Время, когда запись в кэше 
+перестанет быть актуальной.</comment>
+      <format>
+        <type>DATETIME</type>
+      </format>
+    </column>
+    <index method="btree" name="crc" null_keys="1" service="0" unique="0">
+      <column is_expressions="0" name="crc" nulls_place="DEFAULT" sorting="ASC"/>
+    </index>
+    <index method="btree" name="del_by_client" null_keys="1" service="0" unique="0">
+      <column is_expressions="0" name="object" nulls_place="DEFAULT" sorting="ASC"/>
+      <column is_expressions="0" name="method" nulls_place="DEFAULT" sorting="ASC"/>
+      <column is_expressions="0" name="num_args" nulls_place="DEFAULT" sorting="ASC"/>
+      <column is_expressions="0" name="client" nulls_place="DEFAULT" sorting="ASC"/>
+    </index>
+    <index method="btree" name="del_by_user" null_keys="1" service="0" unique="0">
+      <column is_expressions="0" name="object" nulls_place="DEFAULT" sorting="ASC"/>
+      <column is_expressions="0" name="method" nulls_place="DEFAULT" sorting="ASC"/>
+      <column is_expressions="0" name="num_args" nulls_place="DEFAULT" sorting="ASC"/>
+      <column is_expressions="0" name="user" nulls_place="DEFAULT" sorting="ASC"/>
+    </index>
+    <index method="btree" name="del_by_object" null_keys="1" service="0" unique="0">
+      <column is_expressions="0" name="object" nulls_place="DEFAULT" sorting="ASC"/>
+    </index>
+    <trigger_list/>
+  </table>
+
+</dictionary>

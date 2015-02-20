@@ -1,0 +1,183 @@
+@import "../../../css/themes/wi_scheme/index";
+
+@activeTabBorderColor: #05B;
+@disabledTabTextColor: #999;
+@bottomLineColor: #BDBDBD;
+@disabledTabBorderColor: transparent;
+@tabHeight: 28px;
+
+.ws-TabButtons {
+   font: @globalDefaultFontSize @globalFontFamily;
+   overflow: hidden;
+   height: @tabHeight;
+}
+
+// конвертер прописывает display: table для контрола с авторазмерами в новых сетках
+// при display: table высота получается по содержимому в FF и IE (из-за того, что внутри float-элементы)
+// нужно, чтобы высота табов не увеличивалась на 1px из-за хака для iPad
+// TODO: убрать, когда переделают ярлыки на таблицах (без float-элементов)
+.ws-TabButtons {
+   display: block !important;
+   &.ws-hidden {
+      display: none !important;
+   }
+}
+
+.ws-TabButtons__bottomBorder {
+   border-bottom: 1px solid @bottomLineColor;
+   height: (@tabHeight - 1);
+   left: 0;
+   right: 0;
+   top: 0;
+   position: absolute;
+   z-index: 1;
+}
+
+.ws-TabButtons__container {
+
+   height: (@tabHeight + 1);
+   width: 100%;
+   position: relative;
+   z-index: 10;
+   margin-bottom: -1px;
+
+   &:after {
+      content: "";
+      display: block;
+      clear: both;
+      overflow: hidden;
+      height: 0px;
+   }
+}
+
+.ws-TabButtons__icon {
+   vertical-align: -3px;
+}
+
+.ws-TabButtons__button {
+   overflow: hidden !important;
+   cursor: pointer;
+   display: block;
+   height: (@tabHeight + 1);
+   position: relative;
+   white-space: nowrap;
+   z-index: 1000;
+}
+
+.ws-TabButtons__buttonInside {
+   height: @tabHeight;
+   line-height: @tabHeight;
+   background: transparent;
+   display: inline-block;
+   vertical-align: top;
+}
+
+.ws-TabButtons__buttonLeft {
+   display: inline-block;
+   width: 20px;
+   height: @tabHeight;
+   line-height: @tabHeight;
+   background: transparent;
+}
+
+.ws-TabButtons__buttonRight {
+   display: inline-block;
+   width: 20px;
+   height: @tabHeight;
+   line-height: @tabHeight;
+   background: transparent;
+}
+
+.ws-TabButtons__button__state-active {
+
+   &.ws-TabButtons__button__state-active-ios-bg-hack {
+      background: url('@{globalImagesPath}ios-white-bg.png') left bottom repeat-x !important;
+   }
+
+   //border-bottom: 1px solid #FFF;
+   z-index: 10000;
+   cursor: default;
+
+   .ws-TabButtons__buttonInside {
+      background: url('@{globalImagesPath}tab-buttons-sprite.png') 0 -31px repeat-x;
+   }
+
+   .ws-TabButtons__buttonLeft {
+      background: url('@{globalImagesPath}tab-buttons-sprite.png') 0 -61px no-repeat;
+   }
+
+   .ws-TabButtons__buttonRight {
+      background: url('@{globalImagesPath}tab-buttons-sprite.png') -20px -61px no-repeat;
+   }
+}
+
+.ws-TabButtons__button__state-inactive {
+   color: @disabledTabTextColor;
+}
+
+.ws-TabButtons__button__state-inactive.hover {
+
+   z-index: 1000;
+
+   .ws-TabButtons__buttonInside {
+      background: url('@{globalImagesPath}tab-buttons-sprite.png') 0 -1px repeat-x;
+   }
+
+   .ws-TabButtons__buttonLeft {
+      background: url('@{globalImagesPath}tab-buttons-sprite.png') -40px -61px no-repeat;
+   }
+
+   .ws-TabButtons__buttonRight {
+      background: url('@{globalImagesPath}tab-buttons-sprite.png') -60px -61px no-repeat;
+   }
+}
+
+.ws-TabButtons__button__state-disabled.hover{
+
+   border-bottom: none;
+
+   .ws-TabButtons__buttonInside, .ws-TabButtons__buttonLeft, .ws-TabButtons__buttonRight  {
+      background: none;
+   }
+}
+
+.ws-TabButtons__buttonTitle {
+   line-height: @tabHeight;
+}
+
+.ws-TabButtons__button__align-left {
+   float: left;
+   margin-left: -15px;
+
+   &.first-child {
+      margin-left: -28px;
+      .ws-TabButtons__buttonInside {
+         padding-left: 16px;
+      }
+   }
+}
+
+.ws-TabButtons__button__align-right {
+   float: right;
+   margin-left: -15px;
+}
+
+.ws-TabButtons__button__state-hidden {
+   display: none;
+}
+
+.ws-TabButtons__button__state-disabled {
+   color: @disabledTabTextColor;
+   cursor: default;
+}
+
+.ws-TabButtons__overlay {
+   position: absolute;
+   left: 0;
+   right: 0;
+   top: 0;
+   bottom: 0;
+   background: white;
+   -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";/*IE8*/
+   opacity: 0;
+}

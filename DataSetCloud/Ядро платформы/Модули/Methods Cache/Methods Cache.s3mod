@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bl_module id="d28b8bc8-d724-44ff-b4bb-2d70e19aa8b7" name="Methods Cache" package="Платформа" responsible="Бойцов Е.А." version="1.00">
+
+  <description>Описывает структуру БД для кэша методов БЛ</description>
+
+  <depends>
+    <bl_module id="6fc02564-c885-4b66-b8e8-727bff7a8436" name="Работа с БД"/>
+  </depends>
+
+  <load_after/>
+
+  <parameters/>
+
+  <resources/>
+
+  <externals/>
+
+</bl_module>

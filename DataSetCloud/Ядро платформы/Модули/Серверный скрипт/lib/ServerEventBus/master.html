@@ -1,0 +1,47 @@
+<html>
+<head>
+   <title>Интеграционные тесты WS SBIS Framework</title>
+   <meta charset="utf-8">
+</head>
+<body>
+   <script src="/resources/lockableStorage.js"></script>
+   <script>
+      var id = Math.random();
+      function setMaster() {
+         var mid = localStorage.getItem('master');
+         if (!mid) {
+            LockableStorage.lock('master', function() {
+               var mid = localStorage.getItem('master');
+               if (!mid) {
+                  mid = id;
+                  localStorage.setItem('master', mid);
+               }
+
+               document.body.style.backgroundColor = mid == id ? 'red' : 'green';
+               document.title = mid == id ? 'MASTER' : 'SLAVE';
+               setTimeout(setMaster, 1000);
+
+            });
+         } else {
+            document.body.style.backgroundColor = mid == id ? 'red' : 'green';
+            document.title = mid == id ? 'MASTER' : 'SLAVE';
+            setTimeout(setMaster, 1000);
+         }
+      }
+
+      setMaster();
+
+      if (document.body.addEventListener) {
+         document.body.addEventListener('click', function () {
+            localStorage.removeItem('master');
+         })
+      } else {
+         document.body.attachEvent('onclick', function() {
+            localStorage.removeItem('master');
+         })
+      }
+
+
+   </script>
+</body>
+</html>

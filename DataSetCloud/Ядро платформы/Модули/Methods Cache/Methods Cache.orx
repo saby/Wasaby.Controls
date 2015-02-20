@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="WINDOWS-1251" ?>
+<repository orx_version="1.71">
+
+  <object last_changed="Бойцов Е.А." name="MethodsCache" responsible="Бойцов Е.А.">
+    <select access_mode="0" is_service="0" last_changed="Бойцов Е.А." name="MethodsCache.Read" responsible="Бойцов Е.А." returns="RECORD" type="STORED">
+      <parameter name="_crc">
+        <format>
+          <type>INT64</type>
+        </format>
+      </parameter>
+      <parameter name="_object">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="_method">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="_num_args">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <parameter name="_client">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <parameter name="_user">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <parameter name="_session">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="_service">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="_hash">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="result">
+        <format>
+          <type>BINARY</type>
+          <max_size>1073741824</max_size>
+        </format>
+      </return>
+      <definition>
+        <language>PLPGSQL</language>
+        <body>begin
+
+return query
+
+   with same as ( select * from "cache" where "crc" = $1 ) select "data" from same where
+      ( "object", "method", "num_args", "client", "user", "session", "service", "hash" ) 
+      = ( $2, $3, $4, $5, $6, $7, $8, $9 ) and "expires" &gt; now() limit 1;
+
+end;</body>
+      </definition>
+    </select>
+    <select access_mode="0" is_service="0" last_changed="Бойцов Е.А." name="MethodsCache.Write" responsible="Бойцов Е.А." returns="SCALAR" type="STORED">
+      <parameter name="_crc">
+        <format>
+          <type>INT64</type>
+        </format>
+      </parameter>
+      <parameter name="_object">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="_method">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="_num_args">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <parameter name="_client">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <parameter name="_user">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </parameter>
+      <parameter name="_session">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="_service">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="_hash">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="_expires">
+        <format>
+          <type>DATETIME</type>
+        </format>
+      </parameter>
+      <parameter name="_data">
+        <format>
+          <type>BINARY</type>
+          <max_size>1073741824</max_size>
+        </format>
+      </parameter>
+      <return name="___SBIS_SCALAR_RETURN___">
+        <format>
+          <type>BOOLEAN</type>
+        </format>
+      </return>
+      <definition>
+        <language>PLPGSQL</language>
+        <body>begin
+with upd as 
+( update "cache" set "data" = $11, "expires" = $10 
+   where 
+      "crc" = $1 and 
+      ( "object", "method", "num_args", "client", "user", "session", "service", "hash" ) = 
+      ( $2, $3, $4, $5, $6, $7, $8, $9 ) returning * )
+insert into "cache"("crc", "object", "method", "num_args", "client", "user", "session", "service", "hash", "data", "expires" ) 
+   select $1,$2,$3,$4,$5,$6,$7,$8,$9,$11,$10 where not exists ( select * from upd );
+return true;
+   
+exception when unique_violation then
+   return false;
+end;</body>
+      </definition>
+    </select>
+  </object>
+
+</repository>

@@ -1,0 +1,65 @@
+@import "../../../css/themes/wi_scheme/index";
+
+.ws-fieldImage-loading-indicator {
+  display: block!important;
+  margin: -16px auto 0 -16px;
+  top: 50%!important;
+  left: 50%!important;
+}
+
+.ws-fieldImage-zoom {
+
+   height: 100%;
+   width: 100%;
+   position: relative;
+
+   &.full-screen {
+      background: #000;
+      color: #fff;
+   }
+
+   &-container {
+      position: absolute;
+      width: 100%;
+      top: 40px;
+      bottom: 0;
+      overflow: auto;
+   }
+
+   &-image-container { position: absolute; }
+
+   &-buttons-container {
+      height: 24px;
+      width: 100%;
+      position: absolute;
+      top: 0;
+   }
+
+   &-button {
+
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      cursor: pointer;
+      margin: 4px 4px 4px 0;
+      float: left;
+
+      &.icon-disabled { cursor: default; }
+      &.icon-TurnL { margin-left: 20px; }
+
+   }
+
+   &-select {
+
+      line-height: 22px;
+      display: inline-block;
+      vertical-align: top;
+      width: 80px;
+      margin-right: 4px;
+      float: left;
+
+      .custom-select-option { line-height: normal; }
+
+   }
+
+}

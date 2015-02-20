@@ -1,0 +1,8 @@
+<div class="ws-FieldMonth-type-{{=it.viewType}} {{? it.cssClass}}{{=it.cssClass}}{{?}}{{? !it.visible}} ws-hidden{{?}}" hasMarkup="true">
+   <div class="ws-fieldMonth">
+      {{var valueName = (it.viewType === 'month' ? 'месяц' : 'год');}}
+      <div class="ws-date-button ws-date-button-left icon-16 icon-DayBackward icon-primary action-hover ws-date-button-enabled" title="Выбрать предыдущий {{=valueName}}"></div>
+      <div class="ws-date-month-title-block asLink" title="{{=it.tooltip}}"></div>
+      <div class="ws-date-button ws-date-button-right icon-16 icon-DayForward icon-primary action-hover ws-date-button-enabled" title="Выбрать следующий {{=valueName}}"></div>
+   </div>
+</div>

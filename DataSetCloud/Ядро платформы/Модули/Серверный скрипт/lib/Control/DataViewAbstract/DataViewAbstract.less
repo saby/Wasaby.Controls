@@ -1,0 +1,1393 @@
+@import "../../../css/themes/wi_scheme/index";
+
+@rowSelectionColor: #0055BB;
+@rowHoverColor: #F3F3F3;
+@rowBorderColor: #f5f5f5;
+@headerFooterBorderColor: #EAEAEA;
+@FooterBorderColor: #FFFFFF;
+@headBottomBackground: none transparent;
+@treeViewImgPath: "@{globalImagesPath}browser-expander-sprite.png";
+@treeViewHasZebraBorderColor: #F5F5F5;
+@checkBoxSpritePath: "../FieldCheckbox/resources/images/checkbox-sprite.png";
+@checkBoxTdHover: #EFEFEF;
+@scrollThumbColor: #313E78;
+@loadingIndicatorHeight: 32px;//Высота крутилки 32 пикселя
+@minHeightForLoadingIndicator: @loadingIndicatorHeight + 1px;//высота крутилки плюс пиксель на внутренний бордюр
+@mediumTextSize: 13px;
+@smallTextSize: 11px;
+@greyColor: #999999;
+@redTensorColor: #EF463A;
+
+.ws-browser {
+   tbody {
+      tr.ws-browser-table-row {
+         background: transparent;
+
+         &.rE {
+            background: transparent;
+         }
+
+         &.ws-browser-want-drag:hover {
+            -moz-box-shadow: inset 0 0 8px #fff;
+            -webkit-box-shadow: inset 0 0 8px #fff;
+            box-shadow: inset 0 0 8px #fff;
+            background: #9fd3fe ! important;
+            .ws-browser-cell {
+               background: transparent ! important;
+            }
+
+            &.ws-drop-top-row, &.ws-drop-bottom-row, &.ws-drop-top-row-only{
+               background: transparent !important;
+            }
+         }
+
+         &.ws-browser-droppable-row:hover {
+            -moz-box-shadow: inset 0 0 8px #fff;
+            -webkit-box-shadow: inset 0 0 8px #fff;
+            box-shadow: inset 0 0 8px #fff;
+            background: none repeat scroll 0 0 #fed39f ! important;
+            .ws-browser-cell {
+               cursor: move ! important;
+               background: transparent ! important;
+            }
+         }
+
+         .ws-ladder-bottom-last{
+            border-bottom: 1px solid @rowBorderColor !important;
+         }
+      }
+      .ws-browser-second-thirdLine-greyText {
+         font-size: @mediumTextSize;
+         color: @greyColor;
+         padding-left: 16px;
+      }
+      .ws-browser-greyText {
+         font-size: @mediumTextSize;
+         color: @greyColor;
+      }
+      .ws-browser-smallGreyText {
+         font-size: @smallTextSize;
+         color: @greyColor;
+      }
+      .ws-browser-smallGreyText-withPadding {
+         font-size: @smallTextSize;
+         color: @greyColor;
+         padding-left: 16px;
+      }
+      .ws-browser-redText {
+         font-size: @mediumTextSize;
+         color: @redTensorColor;
+      }
+      .ws-browser-smallRedText {
+         font-size: @smallTextSize;
+         color: @redTensorColor;
+      }
+      tr.ws-ladder-top .ws-browser-cell{
+         border-top: 1px solid @rowBorderColor;
+      }
+
+      tr.ws-ladder-bottom .ws-browser-cell{
+         border-bottom: 1px solid @rowBorderColor;
+      }
+
+      tr.ws-ladder-top-last .ws-browser-cell{
+         border-top: none !important;
+      }
+
+      .ws-browser-add-at-place-cell {
+         div[class*='icon-'] {
+            vertical-align: middle;
+         }
+         padding: 1px 1px 1px 0px;
+         height: 27px;
+         text-align: left;
+      }
+
+      .ws-browser-item-over {
+         background-color: transparent ! important;
+         color: #000;
+         &.rE {
+            background-color: transparent ! important;
+         }
+      }
+   }
+
+   &.ws-browser-active-hover {
+      tr.ws-browser-item-over.ws-browser-table-row {
+         background-color: @rowHoverColor ! important;
+         &.rE {
+            background-color: @rowHoverColor ! important;
+         }
+      }
+
+     .ws-browser-editable-row {
+        background-color: @rowHoverColor ! important;
+     }
+
+      .ws-ladder-hover .ws-browser-cell, tr.ws-active-hover .ws-browser-cell{
+         background-color: @rowHoverColor ! important;
+      }
+   }
+
+   &.ws-one-click-browser{
+     tbody tr.ws-browser-table-row, tbody tr.ws-browser-table-row a {
+        cursor: pointer ! important;
+     }
+   }
+
+   &, &.ws-browser-hasZebra{
+      tbody{
+         tr.ws-TableView__redBorder-true, td.ws-TableView__redBorder-true {
+            border: 1px solid #FF1713 !important;
+         }
+         tr.ws-browser-table-row[rowgroup] > .ws-browser-cell.ws-TableView__redBorder-true:first-child,
+         tr.ws-browser-table-row > .ws-browser-cell.ws-TableView__redBorder-true{
+            border-bottom-color: #FF1713 !important;
+         }
+      }
+   }
+
+   &.ws-browser-hasZebra {
+      tbody {
+         .ws-browser-table-row.ws-drop-bottom-row{
+            .ws-browser-cell-container{
+               padding-bottom: 4px;
+            }
+
+            .ws-browser-checkbox{
+               margin-bottom: 6px;
+            }
+         }
+         .ws-browser-table-row > .ws-browser-cell {
+            border: 1px solid @treeViewHasZebraBorderColor;
+            border-width: 0 0 1px 0;
+         }
+         tr[rowgroup].ws-browser-table-row.ws-ladder-top > .ws-browser-cell{
+            border-top: 1px solid @rowBorderColor !important;
+         }
+         tr[rowgroup].ws-browser-table-row > .ws-browser-cell:first-child,
+         tr.ws-browser-table-row > .ws-browser-cell {
+            border-bottom: 1px solid @treeViewHasZebraBorderColor !important;
+         }
+         tr.ws-browser-table-row.ws-browser-row-before-add-at-place > .ws-browser-cell {
+            border-bottom: none !important;
+         }
+         tr[rowgroup].ws-browser-table-row.ws-drop-bottom-row > .ws-browser-cell:first-child,
+         tr.ws-browser-table-row.ws-drop-bottom-row > .ws-browser-cell {
+            border-bottom: 2px solid #9fd3fe !important;
+         }
+         tr[rowgroup].ws-browser-table-row > .ws-browser-cell,
+         tr[rowgroup].ws-browser-table-row > .ws-ladder-first{
+            border-color: transparent !important;
+         }
+         tr[rowgroup].ws-browser-table-row.ws-ladder-top-last > .ws-browser-cell,
+         tr[rowgroup].ws-browser-table-row.ws-ladder-bottom > .ws-browser-cell{
+            border-bottom: 1px solid @rowBorderColor !important;
+         }
+         tr.ws-browser-table-row-last > .ws-browser-cell{
+            border-bottom-color: @headerFooterBorderColor !important;
+         }
+         tr.ws-browser-no-table-row-last > .ws-browser-cell{
+            border-bottom-color: @FooterBorderColor !important;
+         }
+       }
+    }
+
+   &.ws-browser-selection-none {
+      tbody {
+         tr.ws-browser-table-row {
+            .ws-browser-cell:hover, &:hover .ws-browser-cell {
+               background-color: transparent ! important;
+            }
+
+            &.ws-browser-table-row {
+               &.ws-browser-row-hover, &:hover {
+                  .ws-browser-cell {
+                     background-color: transparent ! important;
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+
+
+.ws-browser-add-at-place-link {
+   padding: 0 15px 0 0;
+   margin-left: 0px;
+   color: @globalAsLinkColor;
+   width: auto;
+}
+
+.ws-browser-add-at-place-link:hover {
+  color: @globalHoverColor;
+}
+
+.ws-disabled {
+  .ws-browser-add-at-place-link {
+    color: @globalAsLinkColorDisabled;
+  }
+  .ws-browser-add-at-place-link:hover {
+    color: @globalAsLinkColorDisabled;
+  }
+}
+
+.ws-browser-noAddLink .ws-browser-add-at-place-link-row{
+  display: none;
+}
+
+.ws-browser.ws-browser-active-hover tr.ws-browser-item-over.ws-browser-add-at-place-link-row:hover,
+.ws-browser tbody tr.ws-browser-table-row.ws-browser-add-at-place-link-row:hover{
+  background-color: @globalBGColor !important;
+}
+
+.ws-browser-add-disabled .ws-browser-add-at-place-link{
+  color: @globalAsLinkColorDisabled;
+}
+
+.ws-browser-add-at-place-item-icon {
+  padding: 0 5px 0 1px;
+}
+
+.ws-browser-cell-container {
+   font-size: @globalDefaultFontSize;
+   vertical-align: middle;
+   min-height: 20px;
+   line-height: 20px;
+   padding: 5px 4px;
+   // Обрезаем длинный текст в ячейках
+   overflow: hidden;
+}
+// Увеличиваем высоту строк в иерерхических браузера
+.ws-browser-hierarchy-cell-container {
+   margin: 1px 0;
+   .ws-browser-folder .ws-browser-folder-column &{
+      font-size: 15px;
+   }
+   .ws-browser-foldersTree .ws-browser-folder-column &{
+      font-size: @mediumTextSize;
+   }
+}
+.ws-browser-hierarchy-expander{
+   line-height: 20px !important;
+}
+.ws-browser-tree-text-container{
+   margin-left: 32px;
+}
+
+.ws-browser-edit-column, .ws-browser-mark-edit-place{
+  .ws-browser-table-row & .ws-browser-cell-container {
+     padding: 2px 5px;
+     &.ws-browser-hierarchy-cell-container{
+        padding: 4px 5px !important;
+     }
+  }
+  .ws-browser-cell-container {
+     margin: 1px !important;
+  }
+  .ws-browser-cell-paddings {
+     margin: 3px 4px 3px 4px;
+  }
+}
+
+.ws-browser-edit-column{
+   .ws-browser-table-row & .ws-browser-cell-container {
+      cursor: text;
+      border-color: @globalEditAtPlaceColor !important;
+      border-bottom-color: @globalEditAtPlaceBottomColor !important;
+      &.ws-browser-hierarchy-cell-container{
+         min-height: 22px !important;
+      }
+      &.ws-browser-has-edit-field {
+         padding: 2px 0px;
+      }
+   }
+   .ws-browser-hover .ws-browser-table-row:hover > & > .ws-browser-cell-paddings > .ws-browser-cell-container,
+   .ws-browser-hover .ws-browser-table-row:hover > & > .ws-browser-cell-container,
+   .ws-browser-active-hover .ws-browser-item-over > & > .ws-browser-cell-paddings > .ws-browser-cell-container,
+   .ws-browser-active-hover .ws-browser-item-over > & > .ws-browser-cell-container,
+   .ws-browser-row-hover > & > .ws-browser-cell-paddings > .ws-browser-cell-container,
+   .ws-browser-row-hover > & > .ws-browser-cell-container,
+   .ws-browser-has-edit-field{
+      border: 1px solid #B2B5B2;
+      min-height: 18px;
+      line-height: 18px;
+      background: #fff;
+      &.ws-browser-cell-container {
+         margin: 0 !important;
+      }
+      .ws-browser-expander {
+         margin-top: -6px;
+      }
+      .ws-browser-hierarchy-expander{
+         margin-top: -2px;
+      }
+      .ws-browser-hierarchy-cell-container{
+         margin-top: 2px !important;
+         padding: 5px 4px !important;
+      }
+   }
+   .ws-browser-hover .ws-browser-table-row:hover > &[coldefindex="0"] > .ws-browser-cell-paddings > .ws-browser-hierarchy-cell-container,
+   .ws-browser-active-hover .ws-browser-item-over > &[coldefindex="0"] > .ws-browser-cell-paddings > .ws-browser-hierarchy-cell-container,
+   .ws-browser-row-hover > &[coldefindex="0"] > .ws-browser-cell-paddings > .ws-browser-hierarchy-cell-container{
+      margin-left: 0 !important;
+   }
+}
+
+.ws-browser-editable-row {
+  .ws-browser-edit-column{
+     .ws-browser-cell-container{
+        cursor: text;
+        border: 1px solid @globalEditAtPlaceColor !important;
+        border-bottom-color: @globalEditAtPlaceBottomColor !important;
+        min-height: 18px;
+        line-height: 18px;
+        background: #fff;
+     }
+  }
+}
+
+tr.ws-browser-table-row:hover .ws-browser-border-edit,
+table.ws-browser-active-hover tr.ws-browser-item-over .ws-browser-border-edit {
+   border-bottom: 1px dashed @globalEditAtPlaceBottomColor;
+}
+
+tr.ws-browser-editable-row:hover .ws-browser-border-edit,
+table.ws-browser-active-hover tr.ws-browser-editable-row .ws-browser-border-edit {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.ws-browser-edit-field{
+   height: 18px !important;
+
+   & > .ws-field{
+      border: none !important;
+      background: transparent;
+      padding: 0 !important;
+   }
+   & input{
+      background: transparent;
+   }
+   & textarea{
+      padding-right: 1px;
+   }
+
+   &.ws-field-dropdown-container .custom-select {
+      margin-top: -2px;
+      margin-left: -4px;
+   }
+
+   &.ws-field-date > .ws-field, &.ws-field-numeric > .ws-field {
+      padding: 0 5px !important;
+      border-top-width: 0 !important;
+      & > .input-field{
+         padding-top: 0 !important;
+         vertical-align: top !important;
+      }
+   }
+}
+
+@-moz-document url-prefix() {
+   .ws-browser-edit-field .ws-field {
+      input, textarea {
+         margin-left: 0px;
+      }
+   }
+}
+
+.ws-browser-checkbox, .ws-browser-checkbox-logic{
+   display: block;
+   width: 16px;
+   height: 16px;
+
+   background: url("@{checkBoxSpritePath}") no-repeat scroll 0 0;
+}
+
+.ws-browser-checkbox-holder.ws-disabled,
+.ws-browser-checkbox-holder.ws-disabled:hover{
+   cursor: auto;
+
+   .ws-browser-checkbox{
+      background-position: -16px 0 !important;
+   }
+}
+
+/**
+ * Элемент с чекбоксом, который может находиться в отдельной колонке
+ */
+.ws-browser-checkbox {
+   margin: 7px 4px;
+   float: left;
+
+   visibility: hidden;
+
+   .ws-browser-hover .ws-browser-checkbox-holder:hover > &,
+   .ws-browser-active-hover .ws-browser-item-over .ws-browser-checkbox-holder:hover > &,
+   .ws-browser-head .ws-browser-checkbox-holder:hover > & {
+      background-position: 0 -48px;
+   }
+
+   .ws-browser-selected-part & {
+      background-position: 0 -32px !important;
+   }
+
+   .ws-browser-selected & {
+      background-position: 0 -16px !important;
+   }
+
+   .ws-browser-selected-part &,
+   .ws-browser-selected &,
+   .ws-browser-row-hover &,
+   .ws-browser-editable-row &,
+   .ws-browser-hover .ws-browser-table-row:hover &,
+   .ws-browser-active-hover .ws-browser-item-over &,
+   .ws-browser-head & {
+      visibility: visible;
+   }
+}
+
+/**
+ * Элемент с чекбоксом, который отображается внутри колонки, как вариант отображения данных
+ */
+.ws-browser-checkbox-logic-true {
+   background-position: 0 -16px;
+}
+
+.ws-browser-checkbox-holder {
+   padding: 0;
+
+   cursor: pointer;
+
+   /**
+    * При наведении на колонку с чекбоксом она должна менять фон
+    */
+   .ws-browser-hover &:hover,
+   .ws-browser-active-hover .ws-browser-item-over:hover {
+      background: @checkBoxTdHover;
+   }
+}
+
+.ws-browser-expander{
+   margin: -5px 0 -7px -1px;
+   width: 32px;
+
+   cursor: pointer;
+}
+
+.ws-browser-expander-container {
+   height: 32px;
+   float: left;
+   line-height: 20px !important;
+   vertical-align: middle;
+
+   &.ws-browser-icon-user {
+     margin: 0;
+   }
+
+   .no-select();
+}
+
+/**
+ * Иконка с папкой для иерархии
+ */
+.ws-browser-hierarchy-expander {
+   float: left;
+   margin: 0 4px -5px 4px;
+   width: 24px;
+   height: 24px;
+   font-size: 15px;
+}
+
+.ws-browser-hierarchy-padding {
+   margin-left: 32px;
+}
+
+.ws-treeview-employees .ws-browser-hierarchy-padding {
+   margin-left: 0;
+}
+
+.ws-browser-head {
+   thead {
+      >tr.ws-browser-ie-head-row-colspan-fix {
+         height: 0 !important;
+      }
+
+      tr:first-child .ws-browser-checkbox-border {
+         border-top: 1px solid #C0C0C0;
+      }
+
+      tr:last-child .ws-browser-checkbox-border {
+         border-bottom: 1px solid #C0C0C0;
+      }
+   }
+
+   .ws-browser-checkbox-border {
+      border: 1px solid #C0C0C0;
+      border-top: none;
+      border-bottom: none;
+   }
+   //В шапке для ячейки с чекбоксом не учитывался отступ в 2 пиксела как в теле таблицы
+   .ws-browser-checkbox-holder{
+      padding-left: 2px;
+   }
+}
+
+.ws-browser-border.ws-browser-head {
+   .ws-header-cell-left-border{
+      border-left: 1px solid #C0C0C0 !important;
+   }
+
+   tr:last-child .ws-browser-header-cell{
+      border-bottom: 1px solid #C0C0C0 !important;
+   }
+
+   .ws-header-cell-bottom-border,
+   .ws-browser-head-bottom:last-child .ws-browser-header-cell{
+      border-bottom: 1px solid #C0C0C0 !important;
+   }
+
+   .ws-browser-head-top .ws-browser-header-cell{
+      border-top: 1px solid #C0C0C0 !important;
+   }
+}
+
+.ws-browser-container-wrapper {
+  min-height: @minHeightForLoadingIndicator;
+}
+
+.ws-browser-container-wrapper-zebra {
+   border-top: 1px solid @headerFooterBorderColor;
+}
+
+.ws-browser-pager {
+   padding: 6px 6px 6px 1px;
+   float: right;
+   min-height: 20px;
+   height: auto;
+
+   line-height: 20px;
+   font-size: @smallTextSize;
+   color: @globalDefaultLabelColor ! important;
+
+   .custom-select-text {
+      font-size: @smallTextSize !important;
+      text-decoration: underline !important;
+   }
+   .custom-select-text:hover{
+      color: @globalHoverColor !important;
+   }
+}
+
+.ws-browser-head-link {
+   font-size: @smallTextSize;
+   background-color: transparent ! important;
+   font-family: @globalFontFamily;
+   color: @globalAsLinkColor;
+}
+.ws-browser-head-bottom {
+   background: @headBottomBackground;
+}
+
+.ws-browser-valign-top {
+   vertical-align: top;
+}
+
+.ws-browser-valign-bottom {
+   vertical-align: bottom;
+}
+
+.ws-browser-header-cell {
+   background: none transparent ! important;
+   font-family: @globalFontFamily;
+   color: @greyColor;
+   font-size: @smallTextSize;
+   font-weight: normal;
+   div {
+      line-height: 15px ! important;
+      div {
+         display: inline-block;
+      }
+   }
+   .ws-PathSelector {
+     margin-bottom: 2px;
+   }
+}
+
+.ws-browser-row-selection {
+   position: absolute;
+   left: 0;
+   padding-top: 0 ! important;
+   padding-bottom: 0 ! important;
+   width: 4px;
+   background: @rowSelectionColor;
+}
+
+.ws-browser-row-selected > .ws-browser-cell:first-child,
+.ws-selected{
+   background-image: url("@{globalImagesPath}row-selection-indicator.png");
+   background-position: left top;
+   background-repeat: repeat-y;
+}
+
+.ws-browser-cell:first-child{
+   padding-left: 2px;
+}
+
+.ws-bg-none .ws-browser-cell:first-child{
+    background: none !important;
+}
+
+.ws-browser-active-hover .ws-browser-row-selected > .ws-browser-cell:first-child {
+   background: none !important;
+}
+
+.ws-suggest-browser {
+   .ws-browser {
+      tbody {
+         tr.ws-browser-table-row {
+            background-color: white;
+            &.rE {
+               background-color: white;
+            }
+         }
+      }
+
+      .ws-browser-item-over {
+         background-color: white ! important;
+         &.rE {
+            background-color: white;
+         }
+      }
+   }
+
+   .ws-browser-selected {
+      background: white ! important;
+   }
+
+   &.ws-browser-selection-none {
+      tbody {
+         tr.ws-browser-table-row {
+            .ws-browser-cell:hover, &:hover .ws-browser-cell {
+               background-color: white ! important;
+            }
+
+            &.ws-browser-table-row {
+               &.ws-browser-row-hover, &:hover {
+                  .ws-browser-cell {
+                     background-color: white ! important;
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+
+.ws-listview .ws-browser-item-over {
+   background-color: #E7F0F9 ! important;
+}
+
+.ws-browser-selected {
+   background: none ! important;
+}
+.ws-listview .ws-browser .ws-customView__element:hover,
+.ws-listview .ws-browser .ws-customView__element.ws-browser-row-hover,
+.ws-browser-hover tr.ws-browser-table-row:hover,
+.ws-browser-hover tr.ws-browser-table-row.ws-browser-row-hover,
+.ws-browser-hover tr.ws-browser-table-row.ws-ladder-hover .ws-browser-cell{
+   background-color: @rowHoverColor ! important;
+}
+
+.ws-browser-hover tr.ws-browser-table-row.ws-drop-top-row-only:hover,
+.ws-browser-hover tr.ws-browser-table-row.ws-drop-top-row:hover,
+.ws-browser-hover tr.ws-browser-table-row.ws-drop-bottom-row:hover,
+.ws-browser-hover tr.ws-browser-table-row.ws-drop-top-row-only.ws-browser-row-hover,
+.ws-browser-hover tr.ws-browser-table-row.ws-drop-top-row.ws-browser-row-hover,
+.ws-browser-hover tr.ws-browser-table-row.ws-drop-bottom-row.ws-browser-row-hover{
+   background-color: transparent ! important;
+}
+
+.ws-browser-div-cut > .ws-browser-text-container{
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+.ws-browser-paging {
+   float: right;
+   height: 28px;
+   padding: 5px 0 0 6px;
+}
+
+.ws-browser-pager-cont , .ws-browser-timing {
+   background-color: transparent;
+   font-size: @globalDefaultFontSize;
+}
+
+.ws-browser-add-at-place-link {
+   top: 6px;
+   left: 5px;
+}
+
+.ws-browser-sortable {
+   display: inline-block;
+   height: 16px;
+   width: 16px;
+   vertical-align: top;
+}
+
+.ws-BrowserPathSelector {
+   height: 24px;
+   overflow: hidden;
+   white-space: nowrap;
+   text-overflow: ellipsis;
+   &.ws-PathInHead div{
+      width: 100%;
+   }
+}
+
+.ws-browser-icon {
+   &.plus {
+      background: url("@{treeViewImgPath}") 0 0 no-repeat;
+      &:hover {
+         background-position: 0 -30px;
+      }
+   }
+
+   &.minus {
+      background: url("@{treeViewImgPath}") 0 -60px no-repeat;
+      &:hover {
+         background-position: 0 -90px;
+      }
+   }
+
+   &.item {
+      background-image: url("@{globalImagesPath}dot.png");
+      background-position: 1px 2px;
+   }
+
+   &.folder {
+      background-image: url("@{globalImagesPath}folder.png");
+      background-position: 1px 2px;
+   }
+
+   &.close {
+      background-image: url("@{globalImagesPath}folder.png");
+      background-position: 0;
+   }
+
+   .open {
+      background-image: url("@{globalImagesPath}open_folder.png");
+      background-position: 0;
+   }
+}
+
+.ws-browser-row-options-block,
+.ws-browser-edit-buttons-block {
+   position:absolute;
+   padding: 0 0 0 5px;
+   overflow: hidden;
+   background: ~"transparent url('@{globalImagesPath}row_options_bg.png') no-repeat\9";
+}
+.ws-browser-row-options-block {
+   height: 22px;
+   box-shadow: -2px -3px 5px 1px @rowHoverColor;
+}
+.ws-browser-rowOptions-highShadow {
+   box-shadow: -2px -7px 5px 1px @rowHoverColor !important;
+}
+.ws-browser-row-options-block.ws-browser-rowOptions-top {
+   margin-top: 5px !important;
+}
+.ws-browser-row-options-container,
+.ws-browser-edit-buttons-container {
+   position: relative;
+   background-color: @rowHoverColor;
+   box-shadow: 0 0 6px 7px @rowHoverColor;
+}
+.ws-browser-edit-buttons-container{
+   height: 28px;
+}
+.ws-browser-row-options-container {
+   height: 22px;
+}
+
+.ws-browser-row-option {
+   display: inline-block;
+   width: 16px;
+   height: 16px;
+   cursor: pointer;
+}
+
+.ws-browser-row-option-menu-button {
+   background: transparent url('@{globalImagesPath}row_options_menu.png') no-repeat;
+
+   &:hover {
+      background-position: 0 -20px;
+   }
+
+   &.menu {
+      background-position: 0 0;
+   }
+}
+
+.ws-browser-row-option-sprite{
+   cursor: pointer;
+}
+
+.ws-browser-row-options-hide{
+   &{
+      width: 16px;
+      height: 16px;
+      position: absolute;
+      top: 4px;
+      background: transparent url('@{globalImagesPath}row_options_menu.png') no-repeat 0 -40px;
+      cursor: pointer;
+   }
+
+   &:hover{
+      background-position: 0 -60px;
+   }
+}
+
+.ws-browser-row-option-border,
+.ws-browser-edit-button {
+   display: inline-block;
+   height: 16px;
+   position: relative;
+   cursor: pointer;
+   z-index: 1;
+}
+.ws-browser-edit-button {
+   margin: 7px 4px;
+}
+
+.ws-browser-row-option-border.ws-browser-row-option-menu-button {
+   float: right;
+}
+.ws-browser-row-option-border {
+   margin: 0 4px;
+}
+
+.ws-browser-row-option-as-link {
+  width: auto;
+  background: none;
+  position: relative;
+  top: -3px;
+}
+
+.ws-browser-dragged {
+   background: transparent url('@{globalImagesPath}move.png') no-repeat;
+   width: 22px;
+   height: 21px;
+   position: absolute;
+   z-index: @kingOfHillZIndex;
+   color: #fff;
+}
+
+.ws-browser-dragged-count {
+   margin: 12px 0 0 10px;
+   font-size: 7px;
+}
+
+.ws-browser-dragged-out {
+   background: transparent url('@{globalImagesPath}moveout.png') no-repeat;
+}
+
+.ws-browser-drop-over {
+   background: transparent url('@{globalImagesPath}moveover.png') no-repeat;
+}
+
+.ws-browser-has-paging > .ws-browser-paging {
+   min-height: 28px;
+}
+
+.ws-browser-pager-select {
+   float: left;
+   height: 24px !important;
+   position: relative;
+   text-align: left;
+   line-height: 18px;
+   margin-top: -2px;
+
+   select {
+      font-size: @smallTextSize;
+      font-family: @globalFontFamily;
+      color: @globalDefaultLabelColor ! important;
+   }
+
+   .ws-field-dropdown {
+      .custom-select {
+         padding: 0 5px;
+      }
+   }
+}
+
+.ws-browser-empty {
+   color: @greyColor;
+   padding-left: 1px;   
+   .box-sizing(border-box);
+   min-height: @minHeightForLoadingIndicator;
+   margin-left: 8px;
+}
+
+.ws-browser-deny {
+   color: #000;
+}
+
+.ws-browser-ajax-loader {
+   background: none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
+}
+.ws-browser-scroll-loading-indicator{
+  display: block;
+  margin: 0 auto !important;
+  top: 50%!important;
+  height: 32px;
+  width: 32px;
+}
+
+.ws-browser-foot-row-options {
+   margin-top: 5px;
+   float: left;
+}
+
+#ws-browser-foot-row-options , .ws-browser-foot-row-option , .ws-browser-foot-row-option-icon , .ws-browser-foot-row-option-button {
+   display: inline-block;
+}
+
+.ws-browser-foot-row-option-icon {
+   width: 16px;
+   height: 16px;
+   margin-left: 20px;
+}
+
+.ws-browser-foot-row-option-button {
+   margin-left: 5px;
+   text-decoration: none;
+
+   &:hover{
+      text-decoration: underline;
+   }
+}
+
+.ws-browser-foot-row-option {
+   cursor: pointer;
+   color: #255AA9;
+   font-size: @globalDefaultFontSize;
+}
+
+.ws-browser-no-pointer {
+   .ws-browser {
+      tbody tr.ws-browser-table-row, tbody tr.ws-browser-table-row a {
+        cursor: default ! important;
+      }
+   }
+   .ws-listview .ws-browser [rowkey] {
+      cursor: default ! important;
+   }
+}
+
+.ws-browser-no-selection .ws-browser-row-selected > .ws-browser-cell:first-child, .ws-browser-no-selection .ws-selected{
+   background: none !important;
+}
+
+.ws-loading-indicator.ws-browser-loading-indicator{
+   position: absolute;
+}
+
+.ws-colorize-color {
+  display: block;
+  float: left;
+  margin-left: 16px;
+  border: 1px solid black;
+  padding: 1px;
+}
+
+.ws-colorize-active {
+  border-color: red !important;
+  background: white !important;
+}
+.ws-browser-head  {
+  border-collapse: separate;
+}
+.ws-colorize-box {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.ws-colorize-color:first-child {
+  margin-left: 10px;
+}
+
+.ws-colorize-sample-and-history {
+  border-left: 1px solid #EBEBEB;
+  text-align: right;
+  height: 100%;
+}
+
+.ws-colorize-sample, .ws-colorize-history  {
+  margin: 0;
+  line-height: 20px;
+}
+
+.ws-colorize-history {
+  list-style-type: none;
+  list-style-position: inside;
+}
+
+.ws-colorize-sample {
+  margin-right: 2px;
+}
+
+.ws-colorize-history-item {
+  cursor: pointer;
+  margin-right: 2px;
+}
+
+.ws-colorize-altered-isBold .checkbox-label {
+  font-weight: bold;
+}
+
+.ws-colorize-altered-isItalic .checkbox-label {
+  font-style: italic;
+}
+
+.ws-colorize-altered-isUnderline .checkbox-label {
+  text-decoration: underline;
+}
+
+.ws-colorize-altered-isStrike .checkbox-label {
+  text-decoration: line-through;
+}
+
+.ws-browser-resizer{
+   min-height: @minHeightForLoadingIndicator;
+}
+
+.ws-browser-row-options-menu {
+   /* По-умолчанию отображаем меню опций, повернутое вправо, а значит прикрепляем кнопку скрытия меню
+   к его левому краю, увеличиваем левые паддинги и уменьшаем правые */
+   .ws-browser-row-options-hide {
+      left: 4px;
+      right: auto;
+   }
+   .ws-menu-item-without-image {
+      padding: 0 4px 0 58px;
+   }
+   .ws-menu-hasImg {
+      padding: 0 4px 0 24px;
+   }
+   /* Для повернутого влево меню опций прикрепляем кнопку скрытия в правый угол, увеличиваем правые
+   паддинги, уменьашем левые */
+   &.ws-menu.menu-left-turn {
+      padding: 0;
+      .ws-menu-item-without-image {
+         padding: 0 24px 0 28px; //Левый отступ = 4 пикселя основной оступ и 24 пикселя - картинка
+      }
+      .ws-menu-hasImg {
+         padding: 0 24px 0 4px; //Левый отступ не теряем!
+      }
+      .ws-browser-row-options-hide {
+         right: 4px;
+         left: auto;
+      }
+   }
+   &.menu-top-turn .ws-browser-row-options-hide { //Если меню повернуто по вертикали, то кнопку скрытия отправляем вниз
+      bottom: 4px;
+      top: auto;
+   }
+}
+
+.ws-browser-small-paddings {
+   .ws-browser-hierarchy-expander{
+      line-height: 16px !important;
+   }
+
+   .ws-browser-expander-container{
+      line-height: 16px !important
+   }
+
+   .ws-browser-cell-container {
+      padding: 3px 4px;
+      min-height: 16px;
+      line-height: 16px;
+   }
+
+   .ws-browser-checkbox-holder {
+      vertical-align: top;
+   }
+
+   .ws-browser-checkbox {
+      margin: 4px 4px 3px 2px;
+   }
+
+   .ws-drop-top-row-only{
+      .ws-browser-cell-container{
+         padding-top: 1px;
+      }
+
+      .ws-browser-checkbox{
+         margin-top: 2px;
+      }
+   }
+   .ws-drop-bottom-row{
+      .ws-browser-cell-container{
+         padding-bottom: 1px;
+      }
+
+      .ws-browser-checkbox{
+         margin-bottom: 1px;
+      }
+   }
+   .ws-browser-hasZebra tbody{
+      .ws-browser-table-row.ws-drop-bottom-row{
+         .ws-browser-cell-container{
+            padding-bottom: 2px;
+         }
+
+         .ws-browser-checkbox{
+            margin-bottom: 2px;
+         }
+      }
+   }
+}
+
+.ws-treeview-employees .ws-browser-text-container{
+   margin-left: -4px;
+}
+
+.ws-browser-without-last-page .ws-browser-paging .ws-paging-end{
+  display: none;
+}
+
+.ws-browser-edit-button-apply {
+   height: 24px;
+   width: 24px;
+   //Выравниваю иконку по центру кнопки
+   &.ws-button-classic.ws-button-image-left .ws-button-image {
+      left: 5px;
+   }
+}
+
+.ws-browser-edit-button-element {
+  /*для корректного отображения мы должны перебить стили кнопки, если вдруг стили кнпоки загрузятся позже*/
+  display: table-cell !important;
+  cursor: pointer;
+}
+
+.ws-browser-edit-button-cancel {
+  background: url("../../../img/clear-sprites.png") no-repeat scroll right 0 transparent;
+  height: 20px;
+  width: 16px;
+  &:hover{
+     background-position: 0 -16px;
+  }
+}
+
+.ws-browser-edit-buttons-container {
+  display: inline;
+}
+
+.ws-browser-edit-buttons-block{
+  right: 0;
+  bottom: 0;
+  display: inline;
+  z-index: @kingOfHillZIndex;
+}
+
+.ws-browser-edit-button {
+  height: 24px;
+  margin: 3px 0px 1px 2px;
+}
+
+.ws-browser-results-block{
+   overflow: hidden;
+   clear: both;
+   color: #000;
+}
+
+.ws-browser-head-border-top {
+  border-top: 1px solid #f5f5f5;
+}
+.ws-browser-head-border-bottom {
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.ws-browser-cancel-edit{
+  height: 20px;
+}
+.ws-suggest-browser .ws-browser.ws-browser-hasZebra tr.ws-browser-table-row-last > .ws-browser-cell {
+  border-bottom: 0 !important;
+}
+.ws-browser-no-hightLight-rows span.ws-browser-highlight {
+  font-weight: normal;
+  text-decoration: none;
+}
+
+.ws-suggest-browser .ws-browser.ws-browser-hasZebra tr.ws-browser-table-row-last > .ws-browser-cell {
+  border-bottom: 0 !important;
+}
+
+.ws-drop-top-row-only{
+   .ws-browser-cell{
+      border-top: 2px solid #9fd3fe !important;
+   }
+}
+
+.ws-drop-bottom-row{
+   .ws-browser-cell{
+      border-bottom: 2px solid #9fd3fe !important;
+   }
+}
+
+.ws-drop-top-row-only{
+   .ws-browser-cell-container{
+      padding-top: 3px;
+   }
+
+   .ws-browser-checkbox{
+      margin-top: 5px;
+   }
+}
+.ws-drop-bottom-row{
+   .ws-browser-cell-container{
+      padding-bottom: 3px;
+   }
+
+   .ws-browser-checkbox{
+      margin-bottom: 5px;
+   }
+}
+.ws-browser-head-results {
+  overflow: hidden;
+  clear: both;
+}
+
+.ws-validation-error > .ws-browser-data-container{
+  padding: 0 !important;
+}
+.ws-browser-header-cell-scroll-placeholder {
+  display: none;
+}
+
+/*
+   Перенес из панели массовых операций, ответственный: Чистякова Алена
+*/
+.ws-sum-right{
+   float : right;
+}
+.ws-sum-left{
+   float : left;
+}
+.ws-sum-tr{
+   height: 30px;
+   display: block;
+}
+.ws-selected-columns-tr{
+   height: 30px;
+}
+.ws-selected-columns-right{
+   width: 16px;
+}
+.ws-dataview-sum{
+   width: inherit;
+   padding-left: 10px;
+   padding-right: 10px;
+}
+.ws-dataview-sum-table{
+   width: 100% !important;
+}
+/*//////////////////////////////////////////////////////////////////////*/
+
+.ws-select-columns-table{
+   width: 100% !important;
+}
+.ws-select-columns-table{
+   .ws-select-columns-checkbox{
+      background: url("@{checkBoxSpritePath}") no-repeat scroll 0 0;
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+
+      &:hover{
+         cursor: pointer;
+      }
+   }
+   .ws-select-columns-checkbox.ws-select-columns-checked{
+      background: url("@{checkBoxSpritePath}") no-repeat scroll 0 -16px !important;
+   }
+}
+.ws-browser-scrollContainer {
+   position: absolute;
+   height: 1px;
+
+   .ws-browser-scrollArrow-left {
+      position: relative;
+      float: left;
+      top: -12px;
+      z-index: 2;
+      cursor: pointer;
+   }
+
+   .ws-browser-scrollArrow-right {
+      position: relative;
+      float: right;
+      top: -22px;
+      z-index: 2;
+      left: 4px;
+      cursor: pointer;
+   }
+   .ws-browser-scrollWrapper {
+      height: 10px;
+      width: 96px;
+      top: -5px;
+      margin: 0 0 0 20px;
+      z-index: 2;
+      position: relative;
+      cursor: pointer;
+
+      .ws-browser-scroll {
+         height: 3px;
+         background-color: @scrollThumbColor;
+         position: relative;
+         top: 4px;
+         z-index: 2;
+         border-radius: 1px 1px;
+
+         &.ws-browser-scroll-clicked {
+            box-shadow: 0 0 0 1px @scrollThumbColor;
+         }
+      }
+   }
+}
+.ws-browser-cell-with-scroll{
+  position: relative;
+}
+@-moz-document url-prefix() {
+  td.ws-browser-cell-with-scroll {
+    overflow: auto;
+  }
+  td.ws-browser-cell-with-scroll > * {
+    position: relative;
+  }
+}
+.ws-browser-container .ws-browser .ws-browser-table-row >  td.ws-browser-cell-with-noScroll,
+td {
+  &.ws-browser-cell-with-noScroll.ws-browser-cell-hover {
+    background-color: @rowHoverColor !important;
+  }
+  &.ws-browser-cell-with-noScroll {
+    background-color: @FooterBorderColor !important;
+    z-index: 1;
+    position: relative;
+  }
+}
+.ws-browser-scroll-notWide {
+  float: right;
+}
+.ws-browser-with-partScroll .ws-browser-results {
+   background: @FooterBorderColor;
+}

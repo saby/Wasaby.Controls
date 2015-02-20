@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<bl_module bl_module_library="sbis-right300" id="01e3e02e-428c-4d98-a2b5-152a81998958" name="Авторизация" package="Платформа" responsible="Шаброва А.Н." version="1.00">
+
+  <description/>
+
+  <depends>
+    <bl_module id="6f8333a3-aa5f-404e-ae9f-6fa42dcdc349" name="Бизнес-логика"/>
+    <bl_module id="6fc02564-c885-4b66-b8e8-727bff7a8436" name="Работа с БД"/>
+    <bl_module id="b23836ee-86c3-4ee2-aa62-7bc88a88d233" name="Пользователь"/>
+  </depends>
+
+  <load_after/>
+
+  <parameters>
+    <parameter db_deployment_enabled="1" group_name="Права" name="ПроверятьПраваПользователя" required_debug="0" required_release="0" type="boolean" version="2">
+      <comment><![CDATA[Нужно ли проверять права пользователя. По умолчанию "Да".]]></comment>
+      <default configuration="debug"><![CDATA[1]]></default>
+      <default configuration="release"><![CDATA[1]]></default>
+    </parameter>
+    <parameter db_deployment_enabled="1" group_name="Хранилища сессий" name="ХранилищеПрав" required_debug="0" required_release="1" type="text" version="2">
+      <comment><![CDATA[Адрес сервера Redis, который используется для проверки актуальности прав пользователей]]></comment>
+      <default configuration="debug"><![CDATA[localhost:6379]]></default>
+    </parameter>
+  </parameters>
+
+  <resources/>
+
+  <source_directory path="../../../../core-server/sbis-right"/>
+
+  <externals>
+    <external cloud="." method="НеактуальныйПользователь.Список" num_args="1" service_name="Конфигурация" signature="НеактуальныйПользователь.Список(Клиент: Число целое): Таблица[@Пользователь: Число целое, Ревизия: Число целое, Логин: Текст, Заблокирован: Логическое, Раздел: Число целое, Раздел@: Логическое, НаследоватьПрава: Логическое, email: Текст, Имя: Текст, Идентификатор: Текст, Порядок: Число целое, $Черновик: Число целое]"/>
+    <external cloud="." method="Пользователь.Записать" num_args="1" service_name="Конфигурация" signature="Пользователь.Записать(Запись: Запись): Число целое"/>
+  </externals>
+
+</bl_module>

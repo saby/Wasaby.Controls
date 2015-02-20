@@ -1,0 +1,7 @@
+{{? it.icon && typeof(it.icon) == 'string' }}
+   {{? it.icon.substr(0, 7) == 'sprite:' }}
+      <span class="ws-TabButtons__icon {{=it.icon.replace('sprite:', '')}}"></span>
+   {{??}}
+      <img class="ws-TabButtons__icon" src="{{=$ws.helpers.processImagePath(it.icon)}}" />
+   {{?}}
+{{?}}

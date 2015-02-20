@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<dictionary dicx_version="1.21">
+
+  <table last_changed="Бойцов Е.А." name="МастерБаза" personal_data="0" responsible="Buravlevms" table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>4</max_size>
+      </format>
+    </column>
+    <column name="Флаг">
+      <format>
+        <type>BOOLEAN</type>
+      </format>
+    </column>
+    <trigger_list/>
+  </table>
+
+  <table last_changed="Буравлев М.С." name="НеактуальныйПользователь" personal_data="1" responsible="Buravlevms" table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>4</max_size>
+      </format>
+    </column>
+    <column name="Пользователь">
+      <format>
+        <type>INTEGER</type>
+      </format>
+    </column>
+    <column name="Ревизия">
+      <format>
+        <type>INTEGER</type>
+      </format>
+    </column>
+    <index method="btree" name="ПользовательСчетчик" null_keys="0" service="0" unique="1">
+      <column is_expressions="0" name="Пользователь" nulls_place="LAST" sorting="ASC"/>
+      <column is_expressions="0" name="Ревизия" nulls_place="LAST" sorting="ASC"/>
+    </index>
+    <index method="btree" name="Пользователь" null_keys="1" service="0" unique="1">
+      <column is_expressions="0" name="Пользователь" nulls_place="LAST" sorting="ASC"/>
+    </index>
+    <trigger_list/>
+  </table>
+
+  <table last_changed="Ткачук М.И." name="Пользователь" personal_data="1" responsible="Буравлев М.С." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>4</max_size>
+      </format>
+    </column>
+    <column name="Имя">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <column name="Логин">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <column name="Заблокирован">
+      <format>
+        <not_null>1</not_null>
+        <default>0</default>
+        <type>BOOLEAN</type>
+      </format>
+    </column>
+    <column name="email">
+      <format>
+        <type>STRING</type>
+        <max_size>320</max_size>
+      </format>
+    </column>
+    <column name="Идентификатор">
+      <comment>Содержит уникальный идентификатор пользователя для всех облаков</comment>
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <column name="Раздел">
+      <format>
+        <type>HIERARCHY</type>
+        <on_delete>0</on_delete>
+        <nodes_field>1</nodes_field>
+        <hierarchy_name>Имя</hierarchy_name>
+      </format>
+    </column>
+    <index method="btree" name="Раздел" null_keys="1" service="1" unique="0">
+      <column is_expressions="0" name="Раздел" nulls_place="LAST" sorting="ASC"/>
+      <column is_expressions="0" name="Раздел@" nulls_place="LAST" sorting="DESC"/>
+    </index>
+    <index method="btree" name="Логин" null_keys="1" service="0" unique="1">
+      <column is_expressions="0" name="Логин" nulls_place="LAST" sorting="ASC"/>
+    </index>
+    <trigger_list>
+      <trigger name="УдалитьРевизиюПользователя" priority="50" type="AFTER_REMOVE"/>
+    </trigger_list>
+  </table>
+
+</dictionary>

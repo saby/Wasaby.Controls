@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="WINDOWS-1251" ?>
+<repository orx_version="1.71">
+
+  <object last_changed="up.doump" name="OLAPClient" responsible="up.doump">
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="o.v.myakotina" name="OLAPClient.ClearSchemaCache" responsible="o.v.myakotina" returns="RECORD" type="NATIVE">
+      <parameter name="nameConnection">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="CubeName">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="bool">
+        <format>
+          <type>BOOLEAN</type>
+        </format>
+      </return>
+    </select>
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="PA.Busovikov" name="OLAPClient.ConnectByName" responsible="PA.Busovikov" returns="TABLE" type="NATIVE">
+      <parameter name="ConnectionName">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="ConnectionString">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+    </select>
+    <standart_select access_mode="0" is_service="0" last_changed="PA.Busovikov" name="OLAPClient.ConnectByNamePy" responsible="PA.Busovikov" type="PYTHON">
+      <return name="ConnectionString">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>return OLAPClient.ConnectByName(str(Фильтр["ConnectionName"]));</body>
+      </definition>
+    </standart_select>
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="iv.zhmarev" name="OLAPClient.ConnectionInfo" responsible="iv.zhmarev" returns="TABLE" type="NATIVE">
+      <parameter name="ConnectionName">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="key">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="value">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+    </select>
+    <standart_select access_mode="0" is_service="0" last_changed="iv.zhmarev" name="OLAPClient.ConnectionInfoPy" responsible="iv.zhmarev" type="PYTHON">
+      <return name="key">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="value">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>return OLAPClient.ConnectionInfo( str(Фильтр["ConnectionName"]) )</body>
+      </definition>
+    </standart_select>
+    <standart_select access_mode="0" is_proxy="0" is_service="0" last_changed="Альховка П.Ф." name="OLAPClient.CubeDimensionValue" responsible="Альховка П.Ф." type="NATIVE">
+      <return name="id">
+        <format>
+          <type>OBJECT_IDENTIFIER</type>
+        </format>
+      </return>
+      <return name="idParent">
+        <format>
+          <type>INT64</type>
+        </format>
+      </return>
+      <return name="DimensionValue">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+    </standart_select>
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="Альховка П.Ф." name="OLAPClient.CubeDimensionValue2" responsible="an.parygin" returns="TABLE" type="NATIVE">
+      <parameter name="MDXCubeName">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="MDXCubeDimension">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="MDXCubeMeasure">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <parameter name="ConnectionName">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="DimensionValue">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="id">
+        <format>
+          <type>OBJECT_IDENTIFIER</type>
+        </format>
+      </return>
+      <return name="idParent">
+        <format>
+          <type>HIERARCHY</type>
+          <nodes_field>1</nodes_field>
+        </format>
+      </return>
+    </select>
+    <standart_select access_mode="0" is_service="0" last_changed="PA.Busovikov" name="OLAPClient.CubeDimensionValuePy" responsible="an.parygin" type="PYTHON">
+      <return name="id">
+        <format>
+          <type>OBJECT_IDENTIFIER</type>
+        </format>
+      </return>
+      <return name="DimensionValue">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="idParent">
+        <format>
+          <type>HIERARCHY</type>
+          <nodes_field>1</nodes_field>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>return OLAPClient.CubeDimensionValue(str(Фильтр["CubeName"]), str(Фильтр["CubeMeasure"]), str(Фильтр["CubeDimension"]), str(Фильтр["ConnectionName"]))</body>
+      </definition>
+    </standart_select>
+    <standart_select access_mode="0" is_proxy="0" is_service="0" last_changed="Альховка П.Ф." name="OLAPClient.CubeDimensions" responsible="Альховка П.Ф." type="NATIVE">
+      <return name="Dimensions">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="id">
+        <format>
+          <type>OBJECT_IDENTIFIER</type>
+        </format>
+      </return>
+      <return name="TypeDimension">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+      <return name="idParent">
+        <format>
+          <type>INT64</type>
+        </format>
+      </return>
+    </standart_select>
+    <standart_select access_mode="0" is_proxy="0" is_service="0" last_changed="Альховка П.Ф." name="OLAPClient.CubeHierarchy" responsible="Альховка П.Ф." type="NATIVE">
+      <return name="id">
+        <format>
+          <type>OBJECT_IDENTIFIER</type>
+        </format>
+      </return>
+      <return name="Dimensions">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="idParent">
+        <format>
+          <type>INT64</type>
+        </format>
+      </return>
+      <return name="TypeDimension">
+        <format>
+          <type>INTEGER</type>
+        </format>
+      </return>
+    </standart_select>
+    <standart_select access_mode="0" is_proxy="0" is_service="0" last_changed="Альховка П.Ф." name="OLAPClient.CubeMeasures" responsible="Альховка П.Ф." type="NATIVE">
+      <return name="Measures">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+    </standart_select>
+    <standart_select access_mode="0" is_proxy="0" is_service="0" last_changed="Альховка П.Ф." name="OLAPClient.GetConnectionList" responsible="Альховка П.Ф." type="NATIVE">
+      <return name="ConnectionName">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+    </standart_select>
+    <standart_select access_mode="0" is_proxy="0" is_service="0" last_changed="Альховка П.Ф." name="OLAPClient.ListCubesName" responsible="Альховка П.Ф." type="NATIVE">
+      <return name="CubeName">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+    </standart_select>
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="iv.zhmarev" name="OLAPClient.MondrianInfo" responsible="iv.zhmarev" returns="TABLE" type="NATIVE">
+      <parameter name="ConnectionName">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="key">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="value">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+    </select>
+    <standart_select access_mode="0" is_service="0" last_changed="iv.zhmarev" name="OLAPClient.MondrianInfoPy" responsible="iv.zhmarev" type="PYTHON">
+      <return name="key">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="value">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>return OLAPClient.MondrianInfo( str(Фильтр["ConnectionName"]) )</body>
+      </definition>
+    </standart_select>
+    <standart_select access_mode="0" is_proxy="0" is_service="0" last_changed="Альховка П.Ф." name="OLAPClient.ProcessQuery" responsible="Альховка П.Ф." type="NATIVE"/>
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="????????? ?.?." name="OLAPClient.RebootConnectionPool" responsible="pa.busovikov" returns="TABLE" type="NATIVE">
+      <return name="RebootConnection">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+    </select>
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="Жмарев И.В." name="OLAPClient.ReconnectConnection" responsible="Жмарев И.В." returns="RECORD" type="NATIVE">
+      <parameter name="nameConnection">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="bool">
+        <format>
+          <type>BOOLEAN</type>
+        </format>
+      </return>
+    </select>
+    <select access_mode="0" is_proxy="0" is_service="0" last_changed="iv.zhmarev" name="OLAPClient.ServerInfo" responsible="iv.zhmarev" returns="TABLE" type="NATIVE">
+      <parameter name="ConnectionName">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </parameter>
+      <return name="key">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="value">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+    </select>
+    <standart_select access_mode="0" is_service="0" last_changed="iv.zhmarev" name="OLAPClient.ServerInfoPy" responsible="iv.zhmarev" type="PYTHON">
+      <return name="key">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <return name="value">
+        <format>
+          <type>TEXT</type>
+        </format>
+      </return>
+      <definition>
+        <language>PYTHON</language>
+        <body>return OLAPClient.ServerInfo( str(Фильтр["ConnectionName"]) )</body>
+      </definition>
+    </standart_select>
+  </object>
+
+</repository>

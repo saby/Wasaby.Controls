@@ -1,0 +1,42 @@
+<div class="ws-FieldLink {{? it.cssClass}} {{=it.cssClass}} {{?}} {{? it.cssClassName}} {{=it.cssClassName}} {{?}}
+{{? !it.visible}} ws-hidden{{?}} {{? !it.enabled }} ws-disabled readonly{{??}} ws-enabled{{?}} {{? it.renderStyle === 'linkOnly'}}ws-FieldLink__linkOnly{{?}}
+{{? it.linkTextAlign === 'right'}} ws-FieldLink__linkOnly__textAlign-right {{? it.canNotBeEmpty}}ws-FieldLink__notEmpty{{?}}{{?}}"
+  title='{{=$ws.helpers.escapeHtml(it.tooltip)}}' hasMarkup="true">
+   {{? it.title}}
+      <div class="ws-FieldLink__link {{? !it.enabled}}readonly{{?}} {{? it.renderStyle === 'inputAndLink' && it.labelPosition === 'top'}} ws-FieldLink__topLabel{{?}}"
+      {{?it.titleWidth}}style="width:{{=it.titleWidth}}px;"{{?}}>
+         {{? it.dictionaries.length === 2 && !it.imgTitle && it.renderStyle === 'inputAndLink'}}
+            {{~it.dictionaries :dictionary:dicindex}}
+               <a href="javascript:void(0)" dict="{{=dicindex}}" class="ws-FieldLink__twoDicts">
+                  {{=dictionary.name}}
+               </a>  {{? dicindex < it.dictionaries.length - 1}}<span class="ws-FieldLink__slash">/</span>{{?}}
+            {{~}}
+         {{??}}
+         <a href="javascript:void(0)"{{? it.imgTitle}} class="ws-FieldLink-imgTitle"{{?}} {{? it.tooltip}}title="{{? it.preProcessValue && it.renderStyle !== 'inputAndLink'}} {{=$ws.helpers.escapeHtml(it.preProcessValue.visual)}} {{??}} {{=$ws.helpers.escapeHtml(it.tooltip)}} {{?}}"{{?}}>{{? it.preProcessValue && it.renderStyle !== 'inputAndLink'}}{{=it.preProcessValue.visual}}{{??}}{{=$ws.helpers.escapeHtml(it.title)}}{{?}}</a>
+         {{?}}
+      </div>
+   {{?}}
+   {{? (it.renderStyle === 'linkOnly' || it.multiSelect)}}
+      <div class="ws-FieldLink__delete-allLinks{{? !it.preProcessValue || !it.enabled }} ws-invisible{{?}}" title="{{?it.multiSelect}}очистить выбор{{??}}отменить выбор записи{{?}}"></div>
+   {{?}}
+   {{? it.renderStyle !== 'linkOnly'}}
+      <component  data-component="SBIS3.CORE.FieldString">
+         <option name="name" value="{{=it.owner}}"></option>
+         <option name="cssClassName" value="ws-FieldLink__inputContainer {{?!it.multiSelect}}ws-FieldLink__oneValue{{?}} {{? it.preProcessValue && it.preProcessValue.key }}ws-fieldLink-withInitValue{{?}}"></option>
+         <option name="width" value="100%"></option>
+         <option name="height" value="100%"></option>
+         <option name="tooltip">{{? it.definition && it.suggestSettings.tooltipInside }}{{=it.dictionaries[0].name}}/{{?}}{{=it.suggestSettings.inputTooltip}}</option>
+         <option name="tooltipInside">{{=it.suggestSettings.tooltipInside}}</option>
+         <option name="inputFilter">{{=it.suggestSettings.inputFilter}}</option>
+         <option name="tabindex" value="1"></option>
+         <option name="subcontrol" type="boolean" value="true"></option>
+         <option name="allowChangeEnable" type="boolean" value="{{=it.allowChangeEnable}}"></option>
+         <option name="enabled" type="boolean" value="{{=it.enabled || !(!it.multiSelect && it.preProcessValue && it.preProcessValue.key) }}"></option>
+         {{? it.preProcessValue && it.preProcessValue.key }}
+            <option name="leftHtml" value="<div class='ws-FieldLink__active' dic='0' key='{{=it.preProcessValue.key}}'><a class='ws-FieldLink__activeLink' dic='0' key='{{=it.preProcessValue.key}}' target='_blank' href='javascript:void(0);' title='{{=$ws.helpers.escapeHtml(it.preProcessValue.visual)}}'>{{=$ws.helpers.escapeHtml(it.preProcessValue.visual)}}</a>{{? it.enabled}}<span class='ws-FieldLink__deleteContainer' title='отменить выбор записи'><div class='ws-FieldLink__delete'></div></span>{{?}}</div>"></option>
+         {{?}}
+         <options name="handlers">
+         </options>
+      </component>
+   {{?}}
+</div>

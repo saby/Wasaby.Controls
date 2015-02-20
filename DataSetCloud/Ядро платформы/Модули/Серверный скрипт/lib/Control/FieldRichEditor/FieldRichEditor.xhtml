@@ -1,0 +1,15 @@
+<div class="{{? it.cssClass}}{{=it.cssClass}}{{?}}{{? !it.visible}} ws-hidden{{?}}{{?it.hideBorder || !it.border}} ws-field-rich-editor-hide-borders{{?}}">
+   <div class='ws-field-rich-editor-toolbar-toggle-button'>
+   </div>
+   <div class='ws-field-rich-editor-toolbar'>
+   </div>
+   {{? it.highlightLinks }}
+      <div class='input-string-data-review{{? it.enabled}} ws-hidden{{?}} ws-basic-style'></div>
+   {{?}}
+   <div class='ws-field'>
+   </div>
+   {{? $ws._const.browser.isMobileSafari}}
+      <input class="ws-field-rich-editor-hack-input" tabindex="0"></input>
+      <div class="ws-field-rich-editor-hack-div" tabindex="0"></div>
+   {{?}}
+</div>

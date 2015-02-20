@@ -1,0 +1,83 @@
+@import "../../../css/themes/wi_scheme/index";
+
+.ws-progressbar-container{
+   margin: 25px;
+}
+
+.ws-progressbar-indicator{
+   background: url("@{globalImagesPath}progressBar_sprite.png") 0 -75px repeat-x;
+   height: 15px;
+   position: relative;
+}
+
+.ws-progressbar-indicator-left{
+   background: url("@{globalImagesPath}progressBar_sprite.png") 0 -30px repeat-x;
+   height: 15px;
+   width: 6px;
+   float: left;
+   margin-left: -6px;
+}
+
+.ws-progressbar-indicator-right{
+   background: url("@{globalImagesPath}progressBar_sprite.png") 0 -120px repeat-x;
+   height: 15px;
+   width: 6px;
+   float: right;
+   margin-right: -6px;
+}
+
+.ws-progressbar{
+   background: url("@{globalImagesPath}progressBar_sprite.png") 0 -60px repeat-x;
+   height: 15px;
+   margin: 0 auto;
+}
+
+.ws-progressbar-right{
+   background: url("@{globalImagesPath}progressBar_sprite.png") 0 -105px repeat-x;
+   height: 15px;
+   width: 6px;
+   margin-right: -6px;
+   float: right;
+}
+
+.ws-progressbar-left{
+   background: url("@{globalImagesPath}progressBar_sprite.png") 0 -15px repeat-x;
+   height: 15px;
+   width: 6px;
+   margin-left: -6px;
+   float: left;
+}
+
+.ws-progressbar-border{
+   background: url("@{globalImagesPath}progressBar_sprite.png") 0 -45px repeat-x;
+   height: 15px;
+   position: relative;
+}
+
+.ws-progressbar-border-left{
+   background: url("@{globalImagesPath}progressBar_sprite.png") 0 0 no-repeat;
+   height: 15px;
+   width: 6px;
+   margin-left: -6px;
+   float: left;
+}
+
+.ws-progressbar-border-right{
+   background: url("@{globalImagesPath}progressBar_sprite.png") 0 -90px no-repeat;
+   height: 15px;
+   width: 6px;
+   margin-right: -6px;
+   float: right;
+}
+
+.ws-progressbar-progress-value {
+   font-size: 10px;
+   line-height: 15px;
+   position: absolute;
+   left: 50%;
+   -webkit-transform: translateX(-50%);
+   -moz-transform: translateX(-50%);
+   -o-transform: translateX(-50%);
+   transform: translateX(-50%);
+   z-index: 2;
+}

@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<bl_module bl_module_library="sbis-server-script300" id="4a30a55f-e699-4ce8-9e01-24a4fa309a50" name="Серверный скрипт" package="Платформа" responsible="Алексеев В.А." version="1.00">
+
+  <description/>
+
+  <depends>
+    <bl_module id="6f8333a3-aa5f-404e-ae9f-6fa42dcdc349" name="Бизнес-логика"/>
+  </depends>
+
+  <load_after/>
+
+  <parameters>
+    <parameter db_deployment_enabled="1" group_name="Серверный JavaScript" name="АдресСервисаКЛАДРСерверныйСкрипт" required_debug="0" required_release="1" type="text" version="2">
+      <comment><![CDATA[Адрес сервиса КЛАДР. Используется для обработки get запросов к сервису КЛАДР в серверном JavaScript.]]></comment>
+      <default configuration="debug"><![CDATA[http://test-kladr.corp.tensor.ru:8000]]></default>
+    </parameter>
+    <parameter db_deployment_enabled="1" group_name="Серверный JavaScript" name="ВремяОжиданияПодключенияОтладчика" required_debug="0" required_release="1" type="number" version="2">
+      <comment><![CDATA[По истечении данного времени исполнение  скрипта будет продолжено, если отладчик не соединится с debug agent v8. Задается в секундах.]]></comment>
+      <default configuration="debug"><![CDATA[120]]></default>
+    </parameter>
+    <parameter db_deployment_enabled="1" group_name="Серверный JavaScript" name="ЛимитСтекаВызововV8" required_debug="0" required_release="1" type="number" version="2">
+      <comment><![CDATA[Ограничением размера стека вызовов в v8. Задается в килобайтах. ( По-умолчанию = -1. Ограничение размера стека вызовов v8 отключено. )]]></comment>
+      <default configuration="debug"><![CDATA[-1]]></default>
+    </parameter>
+    <parameter db_deployment_enabled="1" group_name="Серверный JavaScript" name="МаксимальноеВремяВыполненияСкрипта" required_debug="0" required_release="1" type="number" version="2">
+      <comment><![CDATA[Время, выделенное на выполнение  javascript на сервере. Задается в секундах. ( По-умолчанию = -1. Ограничение времени выполнения скрипта отключено. )]]></comment>
+      <default configuration="debug"><![CDATA[-1]]></default>
+    </parameter>
+    <parameter db_deployment_enabled="1" group_name="Серверный JavaScript" name="МаксимальноеКоличествоIsolates" required_debug="0" required_release="1" type="number" version="1">
+      <comment><![CDATA[Максимальное количество Isolate, которые могут быть созданы и заблокированы в v8 без out of memory]]></comment>
+      <default configuration="debug"><![CDATA[39]]></default>
+    </parameter>
+    <parameter db_deployment_enabled="1" group_name="Серверный JavaScript" name="ПортDebugAgentV8" required_debug="0" required_release="1" type="number" version="2">
+      <comment><![CDATA[Порт localhost, который будет слушать debug agent v8.]]></comment>
+      <default configuration="debug"><![CDATA[9345]]></default>
+    </parameter>
+  </parameters>
+
+  <resources>
+    <resource deployment_root="1" name="ext" platform="3" type="2" version="3"/>
+    <resource deployment_root="1" name="lib" platform="3" type="2" version="3"/>
+  </resources>
+
+  <source_directory path="../../../../core-server/sbis-server-script"/>
+
+</bl_module>

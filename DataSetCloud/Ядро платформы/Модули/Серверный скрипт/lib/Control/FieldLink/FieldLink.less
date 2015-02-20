@@ -1,0 +1,349 @@
+@import "../../../css/themes/wi_scheme/index";
+
+@fieldNormalBorderColor: #eaeaea;
+
+.ws-FieldLink {
+   min-height: 24px;
+   height : auto;
+   &.ws-FieldLink__without-edit .ws-FieldLink__inputContainer a.ws-FieldLink__activeLink,
+   &.ws-FieldLink__without-edit .ws-FieldLink__inputContainer a.ws-FieldLink__activeLink:hover,
+   &.ws-disabled .ws-FieldLink__activeLink.ws-FieldLink-notLink{
+     text-decoration: none !important;
+     cursor: default !important;
+   }
+}
+.ws-FieldLink__showAll-container,  .ws-FieldLink{
+   &.ws-disabled .ws-FieldLink__active{
+      padding-right: 8px;
+      top: 3px;
+   }
+}
+
+.ws-FieldLink__linkImg {
+   height: 24px;
+}
+
+.ws-FieldLink__inputContainer {
+   overflow: hidden;
+   display: block !important;
+   width: auto;
+   input {
+      float: right;
+   }
+   &.readonly {
+     padding-right: 0;
+   }
+
+   .ws-field.not-readonly, .ws-field.not-readonly:hover {
+      background-color: @globalBGColor;
+   }
+}
+
+.ws-FieldLink.ws-enabled .ws-FieldLink__inputContainer{
+   & .ws-field {
+      background-color: @globalBGColor;
+      border-width: 1px;
+   }
+   &.ws-has-focus .ws-field.not-readonly {
+      border-color: #eaeaea;
+      border-bottom-color: #ccc;
+   }
+}
+.ws-empty-field-validation {
+   .not-readonly {
+      &.ws-field {
+         border-color: @globalErrorColor !important;
+      }
+      &.ws-field, .input-string-field {
+         background-color: @globalBGColor !important;
+      }
+   }
+}
+
+.ws-FieldLink__active {
+   float: left;
+   white-space: nowrap;
+   min-height: 14px;
+   top: 2px;
+}
+.ws-FieldLink__activeLink.ws-FieldLink__activeLink-noGoodValue{
+   color: #8C8C8C;
+}
+.ws-FieldLink__showAll-container {
+   max-height: 500px;
+   min-height: 16px;
+   padding-top: 4px;
+   padding-bottom: 4px;
+   height: auto;
+   overflow: auto;
+   z-index: 10000;
+   border: 1px solid @globalDefaultLabelColor;
+   background: @globalBGColor;
+   -moz-border-radius: 2px;
+   -webkit-border-radius: 2px;
+   border-radius: 2px;
+   box-shadow: 1px 2px 4px @globalDefaultLabelColor;
+   -moz-box-shadow: 1px 2px 4px @globalDefaultLabelColor;
+   -webkit-box-shadow: 1px 2px 4px @globalDefaultLabelColor;
+   box-shadow: 1px 2px 4px @globalDefaultLabelColor;
+   bottom: auto !important;
+}
+
+.ws-FieldLink__comma {
+   width: 5px;
+   position: relative;
+   display: inline-block;
+   font-size: 13px;
+}
+
+.ws-FieldLink__delete-allLinks {
+   margin-top: 4px;
+   width: 16px;
+   height: 16px;
+   background:  url("../../../img/clear-sprites.png") 0 0px no-repeat;
+   position: relative;
+   float: right;
+   cursor: pointer;
+   &.ws-invisible {
+      display: none;
+   }
+   &:hover {
+     background-position: 0 -16px;
+   }
+}
+
+
+.ws-FieldLink__oneValue {
+  .ws-FieldLink__active {
+     overflow: hidden;
+     text-overflow: ellipsis;
+     padding-right: 15px !important;
+  }
+
+  .ws-FieldLink__activeLink {
+     white-space: nowrap;
+  }
+
+  .ws-FieldLink__deleteContainer {
+     position: absolute;
+     left: auto;
+     right: 0px;
+  }
+}
+
+.ws-FieldLink__history {
+   min-height: 16px;
+}
+
+.ws-FieldLink__historyLink {
+   text-decoration: none;
+   border-bottom: 1px dashed @globalAsLinkColor;
+   color: @globalAsLinkColor;
+}
+
+.ws-FieldLink__historyLink-container {
+   padding: 0 5px;
+   display: inline-block;
+}
+
+.ws-FieldLink__topLabel {
+  float: none;
+  text-align: left;
+}
+
+.ws-FieldLink__linkOnly {
+   .ws-errorMessage {
+      position: relative;
+      right: -5px;
+      top: 0;
+   }
+   .ws-FieldLink__deleteContainer {
+      position: static;
+      float: left;
+   }
+   .ws-FieldLink__link {
+      padding-right: 0 !important;
+      max-width: 100%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+   }
+   .ws-FieldLink__delete-allLinks {
+      float: left;
+   }
+}
+
+.ws-FieldLink__linkOnly__textAlign-right {
+  .ws-FieldLink__link {
+     position: absolute;
+     left: 0;
+     right: 18px;
+     text-align: right;
+  }
+
+  &.ws-FieldLink__notEmpty .ws-FieldLink__link {
+    right: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .ws-FieldLink__delete-allLinks {
+    float: right !important; //Нужно, чтобы перекрыть правило по умолчанию (для левого выравнивания), которое кнопку удаления ставит влево
+  }
+}
+
+.ws-has-focus > .ws-FieldLink__link a {
+   outline: 1px dotted;
+}
+
+.ws-disabled > .ws-FieldLink__link a{
+   outline: medium none;
+}
+
+.ws-FieldLink__deleteContainer {
+   position: relative;
+   width: 16px;
+   height: 14px !important;
+   left: auto;
+   right: auto;
+   display: inline-block;
+   margin-top: 0 !important;
+   .ws-position-absolute {
+      position: absolute;
+      left: auto;
+      right: 0px;
+   }
+}
+
+*:first-child+html .ws-FieldLink__deleteContainer {
+   top: -1px;
+}
+
+.ws-FieldLink__delete {
+   background: url("../../../img/clear-sprites.png") 0 0px no-repeat;
+   width: 100% !important;
+   height: 100% !important;
+   margin-top: 0px !important;
+   cursor: pointer;
+   &:hover {
+      background-position: 0 -16px;
+   }
+}
+
+a.ws-FieldLink__activeLink,
+a.ws-FieldLink__showAllLinks {
+   color: black;
+   font-family: @globalFontFamily;
+   font-size: @globalDefaultFontSize;
+   text-decoration: none;
+   &:hover {
+      text-decoration: underline;
+   }
+}
+
+.ws-FieldLink__withoutSuggest .ws-FieldLink__active:last-of-type .ws-FieldLink__comma {
+   display: none;
+}
+
+.ws-FieldLink__active,
+a.ws-FieldLink__showAllLinks {
+   float: left;
+   padding-right: 3px;
+   position: relative;
+}
+
+
+.ws-FieldLink__showAll-container .ws-FieldLink__active {
+   padding-left: 5px;
+   top: 0px !important;
+}
+
+.ws-FieldLink__inputContainer input {
+   float: left;
+}
+
+.ws-FieldLink__inputContainer.ws-field-string {
+  height: 24px;
+}
+
+.ws-FieldLink__inputContainer.ws-field-string .input-string-field,
+.ws-FieldLink__inputContainer.ws-field-string .ws-field {
+  height: 22px;
+}
+
+.ws-FieldLink__inputContainer.ws-field-string.readonly .ws-field.not-readonly {
+   &:hover {
+      border: 1px solid @fieldNormalBorderColor;
+      border-bottom-color: @globalAsLinkColorDisabled;
+   }
+   border-bottom: 1px solid @fieldNormalBorderColor;
+}
+
+.ws-FieldLink .ws-field {
+   position: relative;
+   padding: 0 5px 0px !important;
+}
+
+.ws-FieldLink__titleWidth {
+   width: auto !important;
+}
+
+.ws-FieldLink__link {
+   padding: 4px 8px 1px 0;
+   float: left;
+   margin-left: 0;
+   &.ws-FieldLink__topLabel{
+     padding-bottom: 0;
+   }
+   &.readonly > a {
+      color: @globalDefaultLabelColor !important;
+   }
+   &.ws-validation-error {
+      .ws-disabled > .ws-field,
+      .readonly > .ws-field {
+         border-bottom-color: @globalErrorColor !important;
+      }
+   }
+   &.ws-disabled > .ws-field,
+   &.readonly > .ws-field {
+      border-bottom-color: transparent !important;
+   }
+   a {
+      font-size: @globalDefaultFontSize !important;
+      font-family: @globalFontFamily;
+      color: @globalDefaultLabelColor;
+      text-decoration: underline !important;
+      white-space: nowrap;
+   }
+   & .ws-FieldLink-imgTitle{
+     outline: none !important;
+   }
+   &.readonly a,
+   &.readonly a:hover {
+     color : @globalDefaultColor;
+     text-decoration: none !important;
+     cursor: default;
+   }
+   & .ws-FieldLink__twoDicts{
+      display: inline-block;
+   }
+   & .ws-FieldLink__slash{
+      display: inline-block;
+      color: @globalDefaultLabelColor;
+   }
+}
+
+.ws-validation-error .ws-FieldLink__link a {
+    color: @globalErrorColor !important;
+}
+
+.ws-FieldLink__topLabel {
+  float: none;
+  text-align: left;
+}
+.ws-FieldLink-notLink {
+  text-decoration: none !important;
+  cursor: pointer;
+}
+
+.ws-fieldLink-withInitValue input{
+  display: none !important;
+}

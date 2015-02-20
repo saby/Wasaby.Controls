@@ -1,0 +1,18 @@
+﻿<Pool>
+   <Connect default="false" name="Контрагенты" line="Jdbc=jdbc:postgresql://dev-sbis3-dw.unix.tensor.ru/contractor;JdbcDrivers=org.postgresql.Driver;JdbcUser=postgres;JdbcPassword=postgres;Catalog=C:\inetpub\platform-inside.tensor.ru\mdx\service\модули\Сервер OLAP\mondrian\demo\contractor.xml;">
+   <WarmUpQuery>SELECT [Количество контрагентов] ON COLUMNS, NON EMPTY{ [Тип контрагента].members } ON ROWS FROM [Контрагенты]</WarmUpQuery>
+   </Connect>
+   <Connect default="false" name="Статистика методов" line="Jdbc=jdbc:postgresql://sb-osr-db.unix.tensor.ru/platform-online.sbis.ru.olap;JdbcDrivers=org.postgresql.Driver;JdbcUser=service_user;JdbcPassword=iiS;Catalog=C:\inetpub\platform-inside.tensor.ru\mdx\service\модули\Сервер OLAP\mondrian\demo\LiveStat.xml;">
+    <!--WarmUpDimension CubeName="Статистика" >Время</WarmUpDimension>
+    <WarmUpHierarhy  CubeName="Статистика" CubeDimension="Время" >Время.Дата</WarmUpHierarhy>
+    <WarmUpHierarhy  CubeName="Статистика" CubeDimension="Время" >Время.Время</WarmUpHierarhy>
+    <WarmUpHierarhy  CubeName="Статистика" CubeDimension="Время" >Время.Год</WarmUpHierarhy>
+    <WarmUpHierarhy  CubeName="Статистика" CubeDimension="Время" >Время.Месяц</WarmUpHierarhy>
+    <WarmUpHierarhy  CubeName="Статистика" CubeDimension="Время" >Время.День</WarmUpHierarhy>
+    <WarmUpDimension CubeName="Статистика" >Measures</WarmUpDimension>
+    <WarmUpDimension CubeName="Статистика" >Метод</WarmUpDimension>
+    <WarmUpHierarhy  CubeName="Статистика" CubeDimension="Метод" >Метод.Метод</WarmUpHierarhy-->
+	<WarmUpDimension CubeName="Статистика" >Пользователь</WarmUpDimension>
+  </Connect>
+  <Connect default="false" name="Продуктовый магазин" line="Jdbc=jdbc:postgresql://sb-osr-db.unix.tensor.ru/platform-online.sbis.ru.olap;JdbcDrivers=org.postgresql.Driver;JdbcUser=service_user;JdbcPassword=iiS;Catalog=C:\inetpub\platform-inside.tensor.ru\mdx\service\модули\Сервер OLAP\mondrian\demo\FoodMart.xml;"/>
+</Pool>

@@ -1,0 +1,14 @@
+{{var isVertical = it.disposition === 'vertical';}}
+<div class="{{? it.cssClass}}{{=it.cssClass}}{{?}}{{? !it.visible}} ws-hidden{{?}}{{? isVertical}} ws-vertical-switcher-double{{?}}" hasMarkup="true">
+   {{? isVertical}}
+      <span class="ws-switcher-toggler"></span>
+      <span class="ws-switcher-text-block">
+         <span class="ws-switcher-text-off ws-switcher-double-text">{{=it.textOff}}</span>
+         <span class="ws-switcher-text-on ws-switcher-double-text">{{=it.textOn}}</span>
+      </span>
+   {{??}}
+      <span class="ws-switcher-text-off ws-switcher-double-text">{{=it.textOff}}</span>
+      <span class="ws-switcher-toggler"></span>
+      <span class="ws-switcher-text-on ws-switcher-double-text">{{=it.textOn}}</span>
+   {{?}}
+</div>

@@ -1,0 +1,63 @@
+@import "../../../css/themes/wi_scheme/index";
+
+.ws-field {
+   .ws-field-text-autosize > & {
+      position: relative !important;
+      height: auto;
+   }
+}
+.ws-autosize__textarea{
+   position: relative;
+   vertical-align: top; // bugfix высота контейнера контрола на X пикс. больше высоты textarea (inline-block эл-т)
+}
+
+.ws-validation-error.ws-field-text .ws-editAtPlace {
+   background-color: transparent!important;// отмена стиля из FieldAbstract.less
+}
+
+.ws-field-text {
+   overflow: hidden;
+      &.ws-validation-error,
+      &.ws-validation-error textarea
+      {
+         background-color: @fieldValidationErrorBackgroundColor !important;
+         &.ws-field-underline {
+            background: url("../FieldEditAtPlace/@{globalImagesPath}underline.png") bottom left repeat-x;
+         }
+      }
+   > .ws-editAtPlace {
+      background: none;// отмена стиля из FieldAbstract.less
+      min-height: 24px;
+      vertical-align: top; // bugfix Высота контейнера контрола на X пикс. больше высоты .ws-editAtPlace (inline-block эл-т)
+      .ws-editAtPlace-inner {
+         white-space: normal;
+         vertical-align: top; // bugfix for textarea
+         div {
+            word-wrap: break-word;
+         }
+      }
+   }
+   &.ws-field-text-autosize {
+      &.ws-field-underline {
+         background: none;
+      }
+      > .ws-editAtPlace {
+         background: url("../FieldEditAtPlace/@{globalImagesPath}underline.png") bottom left repeat-x;
+      }
+   }
+   .input-string-data-review {
+      height: 100%;
+      width: 100%;
+      overflow-y: auto;
+      white-space: pre-wrap;
+   }
+}
+
+.ws-text-area-no-padding-right {
+   padding-right: 0px !important;
+}
+
+.cke_dialog_page_contents.ws-rich-editor {
+   position: absolute;
+   top: 30px;
+}

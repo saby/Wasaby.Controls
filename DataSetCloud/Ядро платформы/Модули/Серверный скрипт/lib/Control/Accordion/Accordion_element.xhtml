@@ -1,0 +1,5 @@
+<div class='ws-accordion-wr {{? it.element.visible == false }}ws-hidden{{?}}'>
+    <span data-acc-id="{{=(it.element.id || it.index)}}" class='ws-accordion-element-title ws-element-id-{{=it.index}}{{? it.element.active && it.hideActiveLabel}} ws-hidden{{?}}'>{{? it.element.image }}<img src='{{=$ws.helpers.processImagePath(it.element.image)}}' class='ws-accordion-element-img'/>{{?}}{{=it.element.title}}<div class='ws-accordion-arrow'></div></span>
+    <div class='ws-accordion-element-area ws-hidden'><div class='ws-accordion-area ws-accordion-area-{{=it.index}}'></div></div>
+    <div class='ws-accordion-shadow'></div>
+</div>

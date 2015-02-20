@@ -1,0 +1,55 @@
+@import "../../../css/themes/wi_scheme/index";
+
+.ws-pageFilter__item{
+   width: 198px;
+   height: 32px;
+   color: #999999;
+   border: 1px solid #CCCCCC;
+   float: right;
+   margin-bottom: -1px;
+   background: url("@{globalImagesPath}unselected-shadow-r.png") #F0F8FA 100% 0 repeat-y;
+   position: relative;
+   .rounded-corners(3px 0 0 3px);
+
+   .ws-pageFilter__shadow{
+      position: absolute;
+      background: url("@{globalImagesPath}shadow.png") no-repeat;
+      top: 33px;
+      width: 100%;
+      height: 8px;
+   }
+
+   &.ws-pageFilter__item__checked{
+      width: 230px !important;
+      color: #FF7033;
+      background-color: #FFFFFF !important;
+      border-right-style: dashed !important;
+      background-image: none !important;
+
+      .ws-page-filter-item-value{
+         margin-left: 0 !important;
+      }
+   }
+
+   &:hover{
+      color: #FF7033;
+      cursor: pointer;
+   }
+
+   .ws-pageFilter__checkbox{
+      width: 16px;
+      height: 16px;
+      margin: 8px;
+      display: inline-block;
+      background: url("../FieldCheckbox/resources/images/checkbox-sprite.png") 0 -16px no-repeat;
+   }
+
+   .ws-pageFilter__itemValue{
+      display: inline-block;
+      margin: 8px 16px 8px 8px;
+   }
+
+   .ws-pageFilter__checkbox, .ws-pageFilter__itemValue{
+      vertical-align: top;
+   }
+}

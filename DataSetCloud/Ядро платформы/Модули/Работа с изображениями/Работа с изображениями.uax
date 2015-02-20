@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<action_repository version="1.2">
+
+  <action identifier_action="Обработка изображений" is_service="1" last_changed="Шаброва А.Н." name="Обработка изображений" responsible="Делюкин М.В.">
+    <privilegy access="2" object="ImageEditingPython"/>
+    <privilegy access="2" object="ОбработкаИзображений"/>
+  </action>
+
+</action_repository>

@@ -1,0 +1,18 @@
+<div class="ws-field-string {{? it.cssClass}}{{=it.cssClass}}{{?}}{{? it.cssClassName}} {{=it.cssClassName}}{{?}}{{? !it.visible}} ws-hidden{{?}} {{? !it.enabled }} ws-disabled readonly{{??}} ws-enabled{{?}}" hasMarkup="true">
+   <div class='ws-field'>
+      {{
+         var value = it.value && typeof it.value !== 'function'
+            ? typeof it.value === 'string'
+               ? it.value.replace(/\"/g, '&quot;').replace(/\'/g, '&#39;')
+               : it.value + ''
+            : undefined;
+      }}
+      {{? it.leftHtml}}
+         {{=it.leftHtml}}
+      {{?}}
+      <input class='input-string-field{{? it.highlightLinks & !it.enabled}} ws-hidden{{?}}' {{? value !== undefined }}value='{{=value}}'{{?}} {{? !it.enabled }}readonly='readonly'{{?}} {{? !it.tooltipInside }}title='{{=$ws.helpers.escapeASCII(it.tooltip)}}'{{?}} {{? it.tooltipInside }}placeholder='{{=$ws.helpers.escapeASCII(it.tooltip)}}'{{?}} {{? it.maxlength || it.maxLength}}maxlength='{{=it.maxlength || it.maxLength}}'{{?}} type='{{? it.password }}password{{??}}text{{?}}' name='{{=it.name}}' />
+      {{? !it.password && it.highlightLinks }}
+         <div class='input-string-data-review{{? it.enabled}} ws-hidden{{?}}'>{{? value !== undefined}}{{=$ws.helpers.wrapFiles($ws.helpers.wrapURLs($ws.helpers.escapeHtml(value)))}}{{?}}</div>
+      {{?}}
+   </div>
+</div>

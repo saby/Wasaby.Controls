@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="WINDOWS-1251"?>
+<action_repository version="1.2">
+
+  <action identifier_action="Конфигурация" is_service="0" last_changed="shabrovaan" name="Конфигурация" responsible="shabrovaan">
+  </action>
+
+  <action identifier_action="Проверка прав" is_service="1" last_changed="Щукин А.В." name="Проверка прав" responsible="Шаброва А.Н.">
+    <comment>Эта зона доступа используется ТОЛЬКО для прав на визуальные элементы, в нее нельзя включать никаких доп. объектов, методов, ее нельзя включать в др. зоны доступа, она не должна в себя включать др. зоны доступа</comment>
+    <base name="Просмотр прав"/>
+    <privilegy access="2" object="ПроверкаПрав"/>
+    <comment>Эта зона доступа используется ТОЛЬКО для прав на визуальные элементы, в нее нельзя включать никаких доп. объектов, методов, ее нельзя включать в др. зоны доступа, она не должна в себя включать др. зоны доступа</comment>
+  </action>
+
+  <action identifier_action="Просмотр прав" is_service="1" last_changed="Щукин А.В." name="Просмотр прав" responsible="Щукин А.В.">
+    <privilegy access="2" object="РолиПользователя.ЧтоМожно"/>
+  </action>
+
+  <action identifier_action="Редактирование прав из реестра ролей" is_service="1" last_changed="Шаброва А.Н." name="Редактирование прав из реестра ролей" responsible="Шаброва А.Н.">
+    <base name="Просмотр прав"/>
+    <privilegy access="2" object="РолиПользователя.УдалитьПользователей"/>
+    <privilegy access="2" object="РолиПользователя.ДобавитьПользователей"/>
+  </action>
+
+  <action identifier_action="Редактирование прав сотрудников" is_service="1" last_changed="Шаброва А.Н." name="Редактирование прав сотрудников" responsible="Шаброва А.Н.">
+    <base name="Просмотр прав"/>
+    <privilegy access="2" object="РолиПользователя"/>
+    <privilegy access="2" object="ОбластьВидимости"/>
+    <privilegy access="0" object="РолиПользователя.УдалитьПользователей"/>
+    <privilegy access="0" object="РолиПользователя.ДобавитьПользователей"/>
+  </action>
+
+  <action identifier_action="Роли" is_service="0" last_changed="Шаброва А.Н." name="Роли" responsible="shabrovaan">
+    <base name="Редактирование прав из реестра ролей"/>
+    <privilegy access="2" object="ЗонаДоступа"/>
+    <privilegy access="2" object="Роль"/>
+  </action>
+
+</action_repository>

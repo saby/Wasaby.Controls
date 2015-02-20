@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="WINDOWS-1251" ?>
+<dictionary dicx_version="1.21">
+
+  <table last_changed="Желдокас С.А." name="ИсторияАтрибутОбъекта" personal_data="0" responsible="Буравлев М.С." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>4</max_size>
+      </format>
+    </column>
+    <column name="Атрибут">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <column name="Объект">
+      <format>
+        <type>INTEGER</type>
+      </format>
+    </column>
+    <index method="btree" name="Атрибут" null_keys="1" service="0" unique="1">
+      <column is_expressions="0" name="Атрибут" nulls_place="DEFAULT" sorting="ASC"/>
+      <column is_expressions="0" name="Объект" nulls_place="DEFAULT" sorting="ASC"/>
+    </index>
+    <trigger_list>
+      <trigger name="DenyDelete" priority="50" type="BEFORE_REMOVE"/>
+      <trigger name="DenyUpdate" priority="50" type="BEFORE_UPDATE"/>
+    </trigger_list>
+  </table>
+
+  <table last_changed="Желдокас С.А." name="ИсторияАтрибутЭкземпляраОбъекта" personal_data="0" responsible="Буравлев М.С." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>8</max_size>
+      </format>
+    </column>
+    <column name="ЭкземплярОбъекта">
+      <format>
+        <type>INT64</type>
+      </format>
+    </column>
+    <column name="Событие">
+      <format>
+        <type>INT64</type>
+      </format>
+    </column>
+    <column name="АтрибутОбъекта">
+      <format>
+        <type>INTEGER</type>
+      </format>
+    </column>
+    <column name="Значение">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <index method="btree" name="ЭкземплярАтрибут" null_keys="1" service="0" unique="0">
+      <column is_expressions="0" name="ЭкземплярОбъекта" nulls_place="DEFAULT" sorting="ASC"/>
+      <column is_expressions="0" name="АтрибутОбъекта" nulls_place="DEFAULT" sorting="ASC"/>
+    </index>
+    <trigger_list>
+      <trigger name="DenyDelete" priority="50" type="BEFORE_REMOVE"/>
+      <trigger name="DenyUpdate" priority="50" type="BEFORE_UPDATE"/>
+    </trigger_list>
+  </table>
+
+  <table last_changed="Буравлев М.С." name="ИсторияДействие" personal_data="1" responsible="Ткачук М.И." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>4</max_size>
+      </format>
+    </column>
+    <column name="Действие">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <index method="btree" name="Действие" null_keys="1" service="0" unique="0">
+      <column is_expressions="0" name="Действие" nulls_place="DEFAULT" sorting="ASC"/>
+    </index>
+    <trigger_list>
+      <trigger name="DenyDelete" priority="50" type="BEFORE_REMOVE"/>
+      <trigger name="DenyUpdate" priority="50" type="BEFORE_UPDATE"/>
+    </trigger_list>
+  </table>
+
+  <table last_changed="Ткачук М.И." name="ИсторияОбъект" personal_data="1" responsible="Ткачук М.И." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>4</max_size>
+      </format>
+    </column>
+    <column name="Объект">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <index method="btree" name="Объект" null_keys="1" service="0" unique="0">
+      <column is_expressions="0" name="Объект" nulls_place="DEFAULT" sorting="ASC"/>
+    </index>
+    <trigger_list>
+      <trigger name="DenyDelete" priority="50" type="BEFORE_REMOVE"/>
+      <trigger name="DenyUpdate" priority="50" type="BEFORE_UPDATE"/>
+    </trigger_list>
+  </table>
+
+  <table last_changed="Желдокас С.А." name="ИсторияСайтАдм" personal_data="0" responsible="Желдокас С.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>4</max_size>
+      </format>
+    </column>
+    <column name="Название">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <index method="btree" name="Название" null_keys="1" service="0" unique="1">
+      <column is_expressions="0" name="Название" nulls_place="DEFAULT" sorting="ASC"/>
+    </index>
+    <trigger_list>
+      <trigger name="DenyDelete" priority="50" type="BEFORE_REMOVE"/>
+      <trigger name="DenyUpdate" priority="50" type="BEFORE_UPDATE"/>
+    </trigger_list>
+  </table>
+
+  <table last_changed="Желдокас С.А." name="ИсторияСайтХост" personal_data="0" responsible="Буравлев М.С." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>4</max_size>
+      </format>
+    </column>
+    <column name="Название">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <index method="btree" name="Название" null_keys="1" service="0" unique="1">
+      <column is_expressions="0" name="Название" nulls_place="DEFAULT" sorting="ASC"/>
+    </index>
+    <trigger_list>
+      <trigger name="DenyDelete" priority="50" type="BEFORE_REMOVE"/>
+      <trigger name="DenyUpdate" priority="50" type="BEFORE_UPDATE"/>
+    </trigger_list>
+  </table>
+
+  <table last_changed="Желдокас С.А." name="ИсторияСобытие" personal_data="0" responsible="Ткачук М.И." table_ignore_convert="0" table_logged="0" table_partitioned="1" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>8</max_size>
+      </format>
+    </column>
+    <column name="ЭкземплярОбъекта">
+      <format>
+        <type>INT64</type>
+      </format>
+    </column>
+    <column name="ИдентификаторОбъекта">
+      <format>
+        <type>INTEGER</type>
+      </format>
+    </column>
+    <column name="Действие">
+      <format>
+        <type>INTEGER</type>
+      </format>
+    </column>
+    <column name="Сообщение">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <column name="КонтекстИсполнения">
+      <format>
+        <type>INT64</type>
+      </format>
+    </column>
+    <column name="Когда">
+      <format>
+        <type>DATETIME</type>
+      </format>
+    </column>
+    <column name="СайтХост">
+      <format>
+        <type>INTEGER</type>
+      </format>
+    </column>
+    <column name="СайтАдм">
+      <format>
+        <type>INTEGER</type>
+      </format>
+    </column>
+    <column name="РотацияГода">
+      <format>
+        <type>INT16</type>
+      </format>
+    </column>
+    <column name="Клиент">
+      <format>
+        <type>INTEGER</type>
+      </format>
+    </column>
+    <index method="btree" name="Main" null_keys="1" service="0" unique="0">
+      <column is_expressions="0" name="СайтАдм" nulls_place="DEFAULT" sorting="ASC"/>
+      <column is_expressions="0" name="СайтХост" nulls_place="DEFAULT" sorting="ASC"/>
+      <column is_expressions="0" name="Клиент" nulls_place="DEFAULT" sorting="ASC"/>
+      <column is_expressions="0" name="Когда" nulls_place="DEFAULT" sorting="ASC"/>
+    </index>
+    <partition name="y0" part_name="&quot;РотацияГода&quot; = 0"/>
+    <partition name="y1" part_name="&quot;РотацияГода&quot; = 1"/>
+    <partition name="y2" part_name="&quot;РотацияГода&quot; = 2"/>
+    <trigger_list>
+      <trigger name="DenyDelete" priority="50" type="BEFORE_REMOVE"/>
+      <trigger name="DenyUpdate" priority="50" type="BEFORE_UPDATE"/>
+    </trigger_list>
+  </table>
+
+  <table last_changed="Желдокас С.А." name="ИсторияТекущееЗначениеАтрибута" personal_data="0" responsible="Желдокас С.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>4</max_size>
+      </format>
+    </column>
+    <column name="АтрибутОбъекта">
+      <format>
+        <type>INTEGER</type>
+      </format>
+    </column>
+    <column name="ЭкземплярОбъекта">
+      <format>
+        <type>INTEGER</type>
+      </format>
+    </column>
+    <column name="Событие">
+      <format>
+        <type>INT64</type>
+      </format>
+    </column>
+    <column name="Значение">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <index method="btree" name="АтрибутОбъекта" null_keys="1" service="0" unique="1">
+      <column is_expressions="0" name="АтрибутОбъекта" nulls_place="DEFAULT" sorting="ASC"/>
+      <column is_expressions="0" name="ЭкземплярОбъекта" nulls_place="DEFAULT" sorting="ASC"/>
+    </index>
+    <trigger_list>
+      <trigger name="DenyDelete" priority="50" type="BEFORE_REMOVE"/>
+    </trigger_list>
+  </table>
+
+  <table last_changed="Желдокас С.А." name="ИсторияЭкземплярОбъекта" personal_data="0" responsible="Буравлев М.С." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>8</max_size>
+      </format>
+    </column>
+    <column name="Объект">
+      <format>
+        <type>INTEGER</type>
+      </format>
+    </column>
+    <column name="ИдО">
+      <format>
+        <type>INTEGER</type>
+      </format>
+    </column>
+    <column name="Клиент">
+      <format>
+        <type>INTEGER</type>
+      </format>
+    </column>
+    <column name="Название">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <index method="btree" name="Экземпляр" null_keys="1" service="0" unique="0">
+      <column is_expressions="0" name="Объект" nulls_place="DEFAULT" sorting="ASC"/>
+      <column is_expressions="0" name="ИдО" nulls_place="DEFAULT" sorting="ASC"/>
+    </index>
+    <trigger_list>
+      <trigger name="DenyDelete" priority="50" type="BEFORE_REMOVE"/>
+    </trigger_list>
+  </table>
+
+  <table last_changed="Желдокас С.А." name="КонтекстИсполнения" personal_data="0" responsible="Буравлев М.С." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>8</max_size>
+      </format>
+    </column>
+    <column name="Пользователь">
+      <format>
+        <type>INTEGER</type>
+      </format>
+    </column>
+    <column name="IP">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <column name="IPВнутренний">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <column name="ИмяХоста">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <column name="Имя">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <column name="СубъектИд">
+      <format>
+        <type>INTEGER</type>
+      </format>
+    </column>
+    <column name="СубъектСайтАдм">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <column name="СубъектСайтХост">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <trigger_list>
+      <trigger name="DenyDelete" priority="50" type="BEFORE_REMOVE"/>
+      <trigger name="DenyUpdate" priority="50" type="BEFORE_UPDATE"/>
+    </trigger_list>
+  </table>
+
+</dictionary>

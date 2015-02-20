@@ -1,0 +1,66 @@
+@import "../../css/themes/wi_scheme/index";
+
+@CollapsingNavigationCollapsedWidth: 64px;
+@CollapsingNavigationBG: #f7f3f0;
+@CollapsingNavigationFontSize: 11px;
+@CollapsingNavigationColor: @globalDefaultLabelColor;
+@CollapsingNavigationHoverColor: @globalHoverColor;
+@CollapsingNavigationSelectedColor: #fff;
+@CollapsingNavigationSelectedBG: @globalHoverColor;
+
+.ws-CollapsingNavigation__collapsed {
+   width: @CollapsingNavigationCollapsedWidth;
+   background: @CollapsingNavigationBG;
+   font: normal @CollapsingNavigationFontSize e('/') 16px @globalFontFamily;
+}
+
+.ws-CollapsingNavigation__element {
+   height: 64px;
+   cursor: pointer;
+   position: relative;
+
+   &:hover {
+      color: @CollapsingNavigationHoverColor;
+
+      .ws-CollapsingNavigation__element__image{
+         background-position: 0 -32px;
+      }
+   }
+
+   &.ws-CollapsingNavigation__element-selected {
+      background: @CollapsingNavigationSelectedBG;
+      color: @CollapsingNavigationSelectedColor;
+
+      .ws-CollapsingNavigation__element__image{
+         background-position: 0 -64px;
+      }
+   }
+}
+
+.ws-CollapsingNavigation__element__imageWrapper {
+   padding: 8px 16px 0;
+}
+
+.ws-CollapsingNavigation__element__image {
+   width: 32px;
+   height: 32px;
+   background-position: 0 0;
+}
+
+.ws-CollapsingNavigation__element__title {
+   color: inherit;
+   padding: 0 4px;
+   text-align: center;
+   text-overflow: ellipsis;
+   overflow: hidden;
+   height: 24px;
+   white-space: nowrap;
+}
+
+.ws-accordion.ws-CollapsingNavigation__container-collapsed {
+   width: @CollapsingNavigationCollapsedWidth;
+}
+
+.ws-CollapsingNavigation__element__content {
+   position: absolute;
+}

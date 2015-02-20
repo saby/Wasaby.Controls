@@ -1,0 +1,8 @@
+<div data-tab-id="{{=(it.value.id || it.index)}}" class="ws-TabButtons__button {{=it.value.cssClass || ''}} ws-TabButtons__button__state-{{? it.value.visible === false }}hidden{{??}}visible{{?}}{{? it.value.enabled === false }} ws-TabButtons__button__state-disabled{{?}} ws-TabButtons__button__state-{{=it.active ? 'active':'inactive'}} ws-TabButtons__button__align-{{=it.value.align || 'right' }}{{? it.value.editable }} ws-tab__underline {{?}}"
+   ><span class="ws-TabButtons__buttonLeft"></span><span class="ws-TabButtons__buttonInside">
+      {{=it.outer.iconTemplate({ icon: it.value.icon })}}<div
+      class="ws-TabButtons__editor {{? !it.value.editable }}ws-hidden{{?}}"></div
+      ><span class="ws-TabButtons__buttonTitle {{? it.value.editable }}ws-hidden{{?}}">{{=it.value.title}}</span
+      ></span><span class="ws-TabButtons__buttonRight"></span
+      ><div class="ws-TabButtons__overlay"></div
+></div>

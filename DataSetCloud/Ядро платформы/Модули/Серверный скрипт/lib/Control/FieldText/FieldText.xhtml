@@ -1,0 +1,8 @@
+<div class="{{? it.cssClass}}{{=it.cssClass}}{{?}}{{? !it.visible}} ws-hidden{{?}}{{? it.autoHeight}} ws-field-text-autosize{{?it.name}} ws-invisible {{?}} {{?}} {{? !it.enabled }} ws-disabled readonly {{??}} ws-enabled {{?}}" hasMarkup="true">
+   <div class='ws-field'>
+      <textarea class='{{? it.autoHeight}}ws-autosize__textarea{{?}}{{? it.highlightLinks & !it.enabled}} ws-hidden{{?}}' title='{{=it.tooltip}}' {{? it.tooltipInside }}placeholder='{{=it.tooltip}}'{{?}} {{? it.maxlength || it.maxLength}}maxlength='{{=it.maxlength || it.maxLength}}'{{?}} name='{{=it.name}}' ></textarea>
+      {{? it.highlightLinks }}
+         <div class='input-string-data-review{{? it.enabled}} ws-hidden{{?}}'>{{=$ws.helpers.wrapFiles($ws.helpers.wrapURLs(it.value))}}</div>
+      {{?}}
+   </div>
+</div>

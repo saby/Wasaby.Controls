@@ -1,0 +1,12 @@
+<div tabindex="-1" unselectable="on" title="{{=it.tooltip}}" class="ws-field-button {{?!it.enabled}}ws-disabled {{?}}{{=it.renderStyle === 'asLink' ? 'ws-button-link' : it.renderStyle === 'outline' ? 'ws-button-outline ' : 'ws-button-classic'}}{{? it.renderStyle !== 'outline'}}{{?it.enabled}} ws-hover-target{{?}} {{? it.menu }}ws-button-with-menu {{?}}{{= it.image !== '' ? ((it.imgAlign || it.imageAlign) === 'right' ? ' ws-button-image-right ' : ' ws-button-image-left ') : ''}}{{?it.autoWidth}} ws-button-autoWidth {{?}}{{?}}{{? it.isDefault || it.defaultButton }}ws-default-button {{?}}{{? !it.visible}} ws-hidden {{?}}ws-no-select{{? it.cssClass}} {{=it.cssClass}}{{?}}" hasMarkup="true"
+   >{{var caption = (typeof it.image !== 'string' || it.image.indexOf('icon-AddButton')===-1 || it.displayCaptionForAddButton) && it.caption ? '<div class="ws-button-caption">{{!it.caption}}</div>' : '';
+   }}{{? it.renderStyle === 'outline'}}{{= caption}}{{??}}{{? it.renderStyle === 'asLink' }}<a class="ws-link-body ws-hover-target"{{?it.openLink}} href="{{=it.openLink}}{{?it.openLinkInNewTab}}" target="_blank{{?}}"{{?}}
+   >{{ var str = '';
+            if ((it.imgAlign || it.imageAlign) === 'right') {
+               str += caption;
+               str += it.imageTemplate(it);
+            } else {
+               str += it.imageTemplate(it);
+               str += caption;
+            }
+         }}{{= str}}</a>{{??}}{{=it.imageTemplate(it)}}{{?it.caption}}<div class='ws-button-caption'>{{!it.caption}}</div>{{?}}{{?}}{{?}}</div>

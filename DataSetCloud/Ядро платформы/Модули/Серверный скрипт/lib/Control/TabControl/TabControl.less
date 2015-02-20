@@ -1,0 +1,34 @@
+@import "../../../css/themes/wi_scheme/index";
+
+@tabControlSplitLineColor: #BDBDBD;
+
+.ws-tabControl-container{
+   font: @globalDefaultFontSize @globalFontFamily;
+}
+
+.ws-tabControl{
+   &{
+      height: 100%;
+      width: 100%;
+      overflow:hidden !important;
+   }
+   &>.ws-tabControl-body{
+      z-index:2;
+      background: #FFF;
+   }
+   .ws-tabControl-header{
+   }
+}
+
+.ws-tabControl-header{
+   z-index:3;
+   background: transparent;
+}
+
+.ws-tabControl-body {
+   overflow:hidden !important;
+}
+
+.ws-tabControl-shadow-h, .ws-tabControl-shadow-v{
+   display:none !important;
+}

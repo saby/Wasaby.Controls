@@ -1,0 +1,23 @@
+<html>
+<head>
+   <title>Интеграционные тесты WS SBIS Framework</title>
+   <meta charset="utf-8">
+</head>
+<body>
+   <script src="/ws/lib/ServerEventBus/resources/lockableStorage.js"></script>
+   <script>
+      var indicator = [ '/', '-', '\\', '|' ];
+      var pos = 0, lastTs, tick = 1;
+      setInterval(function(){
+         var val = Math.random();
+         var now = +new Date();
+         if (val >= 0.8) {
+            localStorage.setItem('key', now);
+            pos = (pos  + 1) % indicator.length;
+         }
+         document.title = 'dt: ' + (now - lastTs - tick) + ' ' + indicator[pos];
+         lastTs = now;
+      }, tick);
+   </script>
+</body>
+</html>

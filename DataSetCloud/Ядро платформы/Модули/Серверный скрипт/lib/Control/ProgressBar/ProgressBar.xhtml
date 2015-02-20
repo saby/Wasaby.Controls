@@ -1,0 +1,25 @@
+<div class="{{? it.cssClass}}{{=it.cssClass}}{{?}}{{? !it.visible}} ws-hidden{{?}}" hasMarkup="true">
+   <div class='ws-progressbar' style='width:{{=it.width}}px;
+            {{? it.width !== 'auto' }}
+               {{? it.align === 'center'}}
+                  margin:0 auto;
+               {{??}}
+                  float:{{=it.align}};
+               {{?}}
+            {{?}}
+            '>
+       <div class='ws-progressbar-left'></div>
+       <div class='ws-progressbar-right'></div>
+       <div class='ws-progressbar-border'>
+           <div class='ws-progressbar-border-left'></div>
+           <div class='ws-progressbar-border-right'></div>
+           {{? it.showPercent}}
+           <span class='ws-progressbar-progress-value'>0%</span>
+           {{?}}
+           <div class='ws-progressbar-indicator' style='width: 0'>
+               <div class='ws-progressbar-indicator-left ws-hidden'></div>
+               <div class='ws-progressbar-indicator-right ws-hidden'></div>
+           </div>
+       </div>
+   </div>
+</div>

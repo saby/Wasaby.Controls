@@ -1,0 +1,8 @@
+<div class="{{? it.cssClass}}{{=it.cssClass}}{{?}}{{? !it.visible}} ws-hidden{{?}} {{? !it.enabled }} ws-disabled readonly{{??}} ws-enabled{{?}}" hasMarkup="true">
+   <div class='ws-field'>
+      {{? (it.value === 0 || it.value) && typeof it.value !== "function" }}
+         {{ var value = $ws.render.defaultColumn.numeric(it.value, it.integers, it.delimiters, it.decimals, it.notNegative, it.maxLength); }}
+      {{?}}
+      <input class='input-text-field' {{? value === 0 || value }}value='{{=value}}'{{?}} title='{{=it.tooltip}}' {{? it.tooltipInside }}placeholder='{{=it.tooltip}}'{{?}} {{? it.maxLength}}maxlength='{{=it.maxLength}}'{{?}} type='{{? it.password }}password{{??}}text{{?}}' name='{{=it.name}}' />
+   </div>
+</div>

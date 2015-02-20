@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bl_module id="78432f4b-4955-4046-84d8-9a9ec8c2a065" name="Пользователь-частное лицо" package="Платформа" version="1.00">
+
+  <description/>
+
+  <depends>
+    <bl_module id="b23836ee-86c3-4ee2-aa62-7bc88a88d233" name="Пользователь"/>
+  </depends>
+
+  <load_after/>
+
+  <parameters/>
+
+  <resources/>
+
+  <externals/>
+
+</bl_module>

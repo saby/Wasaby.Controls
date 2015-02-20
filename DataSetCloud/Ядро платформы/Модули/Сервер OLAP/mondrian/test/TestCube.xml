@@ -1,0 +1,40 @@
+<Schema name="StatCube">
+  <Dimension type="TimeDimension" visible="true" highCardinality="false" name="Time">
+    <Hierarchy name="Time" visible="true" hasAll="true" primaryKey="@&#1042;&#1088;&#1077;&#1084;&#1103;">
+      <Table name="&#1042;&#1088;&#1077;&#1084;&#1103;" schema="public">
+      </Table>
+      <Level name="&#1043;&#1086;&#1076;" visible="true" table="&#1042;&#1088;&#1077;&#1084;&#1103;" column="&#1043;&#1086;&#1076;" type="Integer" uniqueMembers="true" levelType="TimeYears" hideMemberIf="Never">
+      </Level>
+      <Level name="&#1052;&#1077;&#1089;&#1103;&#1094;" visible="true" table="&#1042;&#1088;&#1077;&#1084;&#1103;" column="&#1052;&#1077;&#1089;&#1103;&#1094;" type="Integer" uniqueMembers="true" levelType="TimeMonths" hideMemberIf="Never">
+      </Level>
+      <Level name="&#1044;&#1077;&#1085;&#1100;" visible="true" table="&#1042;&#1088;&#1077;&#1084;&#1103;" column="&#1044;&#1077;&#1085;&#1100;" type="Integer" uniqueMembers="true" levelType="TimeDays" hideMemberIf="Never">
+      </Level>
+      <Level name="&#1063;&#1072;&#1089;" visible="true" table="&#1042;&#1088;&#1077;&#1084;&#1103;" column="&#1063;&#1072;&#1089;" type="Integer" uniqueMembers="true" levelType="TimeHours" hideMemberIf="Never">
+      </Level>
+      <Level name="&#1044;&#1077;&#1089;&#1103;&#1090;&#1080;&#1084;&#1080;&#1085;&#1091;&#1090;&#1082;&#1072;" visible="true" table="&#1042;&#1088;&#1077;&#1084;&#1103;" column="&#1044;&#1077;&#1089;&#1103;&#1090;&#1080;&#1084;&#1080;&#1085;&#1091;&#1090;&#1082;&#1072;" type="Integer" uniqueMembers="true" levelType="TimeHours" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Dimension type="StandardDimension" visible="true" highCardinality="false" name="&#1052;&#1077;&#1090;&#1086;&#1076;&#1099;">
+    <Hierarchy name="&#1052;&#1077;&#1090;&#1086;&#1076;&#1099;" visible="true" hasAll="true" primaryKey="@&#1052;&#1077;&#1090;&#1086;&#1076;">
+      <Table name="&#1052;&#1077;&#1090;&#1086;&#1076;" schema="public">
+      </Table>
+      <Level name="KeyMethod" visible="true" table="&#1052;&#1077;&#1090;&#1086;&#1076;" column="@&#1052;&#1077;&#1090;&#1086;&#1076;" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+      </Level>
+      <Level name="Method" visible="true" table="&#1052;&#1077;&#1090;&#1086;&#1076;" column="&#1052;&#1077;&#1090;&#1086;&#1076;" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Cube name="TestCube" visible="true" cache="true" enabled="true">
+    <Table name="&#1042;&#1099;&#1079;&#1086;&#1074;" schema="public">
+    </Table>
+    <DimensionUsage source="Time" name="Time" visible="true" foreignKey="@&#1042;&#1088;&#1077;&#1084;&#1103;" highCardinality="false">
+    </DimensionUsage>
+    <DimensionUsage source="&#1052;&#1077;&#1090;&#1086;&#1076;&#1099;" name="&#1052;&#1077;&#1090;&#1086;&#1076;&#1099;" visible="true" foreignKey="@&#1052;&#1077;&#1090;&#1086;&#1076;" highCardinality="false">
+    </DimensionUsage>
+    <Measure name="Duration" column="&#1055;&#1088;&#1086;&#1076;&#1086;&#1083;&#1078;&#1080;&#1090;&#1077;&#1083;&#1100;&#1085;&#1086;&#1089;&#1090;&#1100;" datatype="Integer" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="Result" column="&#1056;&#1077;&#1079;&#1091;&#1083;&#1100;&#1090;&#1072;&#1090;" datatype="Integer" aggregator="sum" visible="true">
+    </Measure>
+  </Cube>
+</Schema>

@@ -1,0 +1,32 @@
+{{var table = arguments[1];}}
+{{~it.keys :value:index }}
+    <tr class='ws-browser-table-row ws-visible {{=it.classes[index]}}' rowkey='{{=value}}'>
+        {{? it.checkbox }}
+        <td class='ws-browser-cell ws-browser-checkbox-holder ws-browser-valign-{{=it.columns[0].textVerticalAlign}}'>
+            <span class='ws-browser-checkbox'/>
+        </td>
+        {{?}}
+        {{~it.columns :colvalue:colindex }}
+            <td class='ws-browser-cell {{? it.title[index] }}ws-browser-cell-cut{{?}}
+                    {{? colvalue.textAlign !== 'auto' }}ws-browser-{{=colvalue.textAlign}}{{?}}
+                    {{? colvalue.textVerticalAlign !== 'middle' }} ws-browser-valign-{{=colvalue.textVerticalAlign}}{{?}}
+                    {{? colvalue.className }}{{=colvalue.className}}{{?}}
+                                ' coldefindex="{{=colindex}}">
+                <div class='ws-browser-cell-paddings'>
+                    <div class='ws-browser-cell-container {{? it.title[index] }}ws-browser-div-cut{{?}}
+                                {{? colvalue.render }}ws-browser-render{{??}}ws-browser-text-no-render{{?}}
+                                {{? colvalue.highlight }}ws-browser-text-highlight{{?}}'
+                                {{? it.title[index] && it.title[index][colindex]}}
+                                    title='{{=it.title[index][colindex]}}'
+                                {{?}}>
+                        {{? colvalue.cellTemplate }}
+                            {{=table._applyTemplate(false, colvalue)}}
+                            {{??}}
+                            {{=it.data[index][colindex]}}
+                        {{?}}
+                    </div>
+                </div>
+            </td>
+        {{~}}
+    </tr>
+{{~}}
