@@ -1,7 +1,4 @@
 define('js!SBIS3.CONTROLS.DataBindMixin', ['js!SBIS3.CORE.AttributeCfgParser'], function(attributeCfgParser){
-   /**
-    * @mixin SBIS3.CONTROLS.DataBindMixin
-    */
    'use strict';
     /**
      * @mixin SBIS3.CONTROLS.DataBindMixin
