@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
          _dataSet: null,
          _dotItemTpl: null,
          _options: {
+            items : undefined,
             /**
              * @cfg {DataSource} Набор исходных данных по которому строится отображение
              */
@@ -25,6 +26,12 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
          this._publish('onDrawItems');
          //Для совместимости пока делаем Array
 
+         //TODO совместимость
+         if (this._options.items) {
+            this._options.dataSource = this._options.items;
+         }
+
+         //TODO совместимость
          if (this._options.dataSource instanceof Array) {
             var
                item = this._options.dataSource[0],
@@ -36,6 +43,9 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
                data: this._options.dataSource,
                keyField: keyField
             });
+            if (typeof(window) != 'undefined'){
+               console['log']('В опции dataSource надо передавать экземпляр класса DataSource. Array прекратит работу в версии 3.7.2');
+            }
          }
          else {
             this._dataSource = this._options.dataSource;
