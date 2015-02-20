@@ -753,6 +753,8 @@
 
 @date-picker-calendar-shadow:                   0 4px 10px rgba(0, 0, 0, 0.5);
 
+@date-picker-wrapper-border-radius:             @text-box-border-radius;
+
 @date-picker-wrapper-border-width:              @text-box-border-width;
 @date-picker-wrapper-border-style:              @text-box-border-style;
 @date-picker-wrapper-border-color:              @text-box-border-color;
@@ -795,12 +797,12 @@
 @calendar-day-table-cell-padding:               0 0 0 8px;
 
 @calendar-day-cell-cursor:                      pointer;
-@calendar-day-cell-text-color:                  inherit;
-@calendar-day-cell-bg:                          #f2f2f2;
-@calendar-day-cell-hover-text-color:            @calendar-day-cell-text-color;
-@calendar-day-cell-hover-bg:                    #e5ecf4;
-@calendar-day-cell-active-text-color:           @calendar-day-cell-text-color;
-@calendar-day-cell-active-bg:                   #ffc37e;
+@calendar-day-cell-text-color:                  @black-color;
+@calendar-day-cell-bg:                          @default-color;
+@calendar-day-cell-hover-text-color:            @primary-color;
+@calendar-day-cell-hover-bg:                    @white-color;
+@calendar-day-cell-active-text-color:           @white-color;
+@calendar-day-cell-active-bg:                   @primary-color;
 @calendar-day-cell-active-hover-text-color:     @calendar-day-cell-active-text-color;
 @calendar-day-cell-active-hover-bg:             @calendar-day-cell-active-bg;
 
@@ -848,14 +850,14 @@
 @month-picker-item-height:                      22px;
 @month-picker-item-line-height:                 @month-picker-item-height;
 
-@month-picker-item-text-color:                  #333;
+@month-picker-item-text-color:                  @black-color;
 @month-picker-item-bg:                          @month-picker-wrapper-bg;
 
-@month-picker-item-hover-text-color:            @month-picker-item-text-color;
-@month-picker-item-hover-bg:                    @calendar-day-cell-hover-bg;
+@month-picker-item-hover-text-color:            @white-color;
+@month-picker-item-hover-bg:                    @primary-color;
 
 @month-picker-item-active-text-color:           @month-picker-item-text-color;
-@month-picker-item-active-bg:                   @calendar-day-cell-bg;
+@month-picker-item-active-bg:                   @default-color;
 
 @month-picker-item-month-text-alignment:        left;
 @month-picker-item-month-padding:               2px 2px 2px 24px;

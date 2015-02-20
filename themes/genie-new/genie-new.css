@@ -1222,6 +1222,12 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
 }
 .controls-DatePicker .controls-FormattedTextBox__fieldWrapper {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
   border-width: 1px;
   border-style: solid;
   border-color: #d1d1d1;
@@ -1293,20 +1299,20 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement {
   cursor: pointer;
-  color: inherit;
-  background: #f2f2f2;
+  color: #353535;
+  background: #f1f1f1;
 }
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement:hover {
-  color: inherit;
-  background: #e5ecf4;
+  color: #00c795;
+  background: #ffffff;
 }
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement.controls-Calendar__tableBodyElement__active {
-  color: inherit;
-  background: #ffc37e;
+  color: #ffffff;
+  background: #00c795;
 }
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement.controls-Calendar__tableBodyElement__active:hover {
-  color: inherit;
-  background: #ffc37e;
+  color: #ffffff;
+  background: #00c795;
 }
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableElementFog {
   cursor: default;
@@ -1378,16 +1384,16 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   height: 22px;
   line-height: 22px;
-  color: #333333;
+  color: #353535;
   background: #ffffff;
 }
 .controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement:hover {
-  color: #333333;
-  background: #e5ecf4;
+  color: #ffffff;
+  background: #00c795;
 }
 .controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement.controls-MonthPicker__dropdownElementActive {
-  color: #333333;
-  background: #f2f2f2;
+  color: #353535;
+  background: #f1f1f1;
 }
 .controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement.controls-MonthPicker__dropdownElementMonth {
   text-align: left;

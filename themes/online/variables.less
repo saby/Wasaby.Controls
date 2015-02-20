@@ -475,10 +475,10 @@
 // Menu header
 @menu-button-header-spritesheet:          'img/MenuButton-header.png';
 
-@menu-button-header-left-width:           16px;
+@menu-button-header-left-width:           12px;
 @menu-button-header-left-height:          28px;
 @menu-button-header-left-margin:          0;
-@menu-button-header-left-bg:              transparent url(@menu-button-header-spritesheet) 0 0;
+@menu-button-header-left-bg:              transparent url(@menu-button-header-spritesheet) 0 28px;
 
 @menu-button-header-center-width:         auto;
 @menu-button-header-center-height:        4px;
@@ -486,9 +486,9 @@
 @menu-button-header-center-bg:            @white-color;
 
 @menu-button-header-right-width:          28px;
-@menu-button-header-right-height:         @menu-button-header-left-height;
-@menu-button-header-right-margin:         0 0 0 -8px;
-@menu-button-header-right-bg:             transparent url(@menu-button-header-spritesheet) 0 -30px;
+@menu-button-header-right-height:         28px;
+@menu-button-header-right-margin:         0 0 0 -5px;
+@menu-button-header-right-bg:             transparent url(@menu-button-header-spritesheet) 0 0;
 
 
 
@@ -752,6 +752,8 @@
 @date-picker-calendar-icon-disabled-bg:         url(@date-picker-calendar-spritesheet) -35px 0 no-repeat !important;
 
 @date-picker-calendar-shadow:                   0 4px 10px rgba(0, 0, 0, 0.5);
+
+@date-picker-wrapper-border-radius:             @text-box-border-radius;
 
 @date-picker-wrapper-border-width:              @text-box-border-width;
 @date-picker-wrapper-border-style:              @text-box-border-style;

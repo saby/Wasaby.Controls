@@ -1222,6 +1222,12 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
 }
 .controls-DatePicker .controls-FormattedTextBox__fieldWrapper {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
   border-width: 1px;
   border-style: solid;
   border-color: transparent transparent #eaeaea transparent;

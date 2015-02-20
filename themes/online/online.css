@@ -799,10 +799,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerLeft {
   float: left;
   display: inline-block;
-  width: 16px;
+  width: 12px;
   height: 28px;
   margin: 0;
-  background: transparent url('img/MenuButton-header.png') 0 0;
+  background: transparent url('img/MenuButton-header.png') 0 28px;
 }
 .controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerCenter {
   display: inline-block;
@@ -815,8 +815,8 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   width: 28px;
   height: 28px;
-  margin: 0 0 0 -8px;
-  background: transparent url('img/MenuButton-header.png') 0 -30px;
+  margin: 0 0 0 -5px;
+  background: transparent url('img/MenuButton-header.png') 0 0;
 }
 .controls-MenuButton__Menu {
   margin-top: 3px;
@@ -1222,6 +1222,12 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
 }
 .controls-DatePicker .controls-FormattedTextBox__fieldWrapper {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
   border-width: 1px;
   border-style: solid;
   border-color: transparent transparent #eaeaea transparent;
