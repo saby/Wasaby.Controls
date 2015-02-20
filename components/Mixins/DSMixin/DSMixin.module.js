@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm'], function (_) {
+define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CONTROLS.DataSourceMemory'], function (_, DataSourceMemory) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -23,7 +23,24 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm'], function (_
 
       $constructor: function () {
          this._publish('onDrawItems');
-         this._dataSource = this._options.dataSource;
+         //Для совместимости пока делаем Array
+
+         if (this._options.dataSource instanceof Array) {
+            var
+               item = this._options.dataSource[0],
+               keyField;
+            if (item && Object.prototype.toString.call(item) === '[object Object]') {
+               keyField = Object.keys(item)[0];
+            }
+            this._dataSource = new DataSourceMemory({
+               data: this._options.dataSource,
+               keyField: keyField
+            });
+         }
+         else {
+            this._dataSource = this._options.dataSource;
+         }
+
       },
 
       getDataSet: function () {
@@ -169,9 +186,8 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm'], function (_
                //если передали имя класса то реквайрим его и создаем
                require([tplConfig.componentType], function (Ctor) {
                   var
-                     ctrlWrapper = $('<div></div>').appendTo(resContainer),
                      config = tplConfig.config;
-                  config.element = ctrlWrapper;
+                  config.element = $('<div></div>').appendTo(resContainer);
                   config.parent = self;
                   var ctrl = new Ctor(config);
                   self._itemsInstances[self._dataSet.getKey()] = ctrl;
