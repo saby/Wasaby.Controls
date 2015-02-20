@@ -1063,7 +1063,8 @@ input[type="reset"]::-moz-focus-inner {
   background-image: url("img/MenuButton-arrowDown__primary.png");
 }
 .controls-MenuButton__Menu {
-  margin-top: 3px;
+  margin-top: 5px;
+  border-top: none;
 }
 .controls-MenuButton__header {
   left: 0;
@@ -1078,9 +1079,10 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuButton__headerLeft {
   float: left;
-  background: transparent url("img/MenuButton-header.png");
+  background: transparent url("img/MenuButton-header.png") 0 28px;
   height: 28px;
-  width: 16px;
+  width: 12px;
+  margin-top: 1px;
 }
 .controls-MenuButton__headerCenter {
   height: 4px;
@@ -1091,9 +1093,9 @@ input[type="reset"]::-moz-focus-inner {
   background: transparent url("img/MenuButton-header.png");
   width: 28px;
   height: 28px;
-  background-position: 0 -30px;
   display: inline-block;
   margin-left: -4px;
+  margin-top: 1px;
 }
 .controls-MenuButton.controls-MenuButton__withoutMenu {
   padding-right: 12px;
