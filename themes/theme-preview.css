@@ -4,8 +4,12 @@ html, body {
    margin: 0;
 }
 
-#content {
+.content {
    padding: 20px;
+}
+
+.theme-selector {
+   float: right;
 }
 
 ul.preview-list {

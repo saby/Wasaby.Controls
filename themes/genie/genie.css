@@ -253,10 +253,6 @@
   margin-top: -2px;
   border-radius: 0 0 2px 2px;
 }
-.controls-ComboBox__picker.controls-Picker__owner__hover {
-  border-top-color: #00c795;
-  margin-top: -2px;
-}
 .controls-ComboBox__fieldNotEditable {
   line-height: 22px;
 }

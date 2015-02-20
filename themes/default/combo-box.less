@@ -64,6 +64,7 @@
 
 .controls-ComboBox__picker {
   border: @combo-box-picker-border;
+  .border-radius(@combo-box-picker-border-radius);
   margin: @combo-box-picker-margin;
 
   .controls-ComboBox__itemRow {
@@ -75,7 +76,12 @@
 
     &:hover {
       color: @combo-box-picker-item-hover-text-color;
-      background-color: @combo-box-picker-item-hover-bg;
+      background: @combo-box-picker-item-hover-bg;
+    }
+
+    &.controls-ComboBox__itemRow__selected {
+      color: @combo-box-picker-item-selected-text-color;
+      background: @combo-box-picker-item-selected-bg;
     }
   }
 }
