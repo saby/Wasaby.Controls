@@ -797,6 +797,7 @@ input[type="reset"]::-moz-focus-inner {
   display: none;
 }
 .controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerLeft {
+  float: left;
   display: inline-block;
   width: 16px;
   height: 28px;
