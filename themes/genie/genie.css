@@ -298,6 +298,7 @@
 }
 .controls-TreeView__item {
   overflow: hidden;
+  position: relative;
 }
 .controls-TextArea__inputField {
   resize: none;
