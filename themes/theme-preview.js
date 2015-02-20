@@ -626,6 +626,13 @@
             enabled: false
          });
 
+         new NumberTextBox({
+            element: 'numberTextBox4',
+            text: '123',
+            enabled: false,
+            enableArrows: true
+         });
+
          var comboItems = [
             {
                key : 1,

@@ -12,19 +12,77 @@
     .controls-NumberTextBox__arrow {
       display: block;
       text-decoration: none;
+      .box-sizing(border-box);
 
       &.controls-NumberTextBox__arrowUp {
         width: @number-text-box-arrow-up-width;
         height: @number-text-box-arrow-up-height;
         margin: @number-text-box-arrow-up-margin;
+        border-radius: @number-text-box-arrow-up-border-radius;
+        border-width: @number-text-box-arrow-up-border-width;
+        border-style: @number-text-box-arrow-up-border-style;
+        border-color: @number-text-box-arrow-up-border-color;
         background: @number-text-box-arrow-up-bg;
+
+        &:hover {
+          background: @number-text-box-arrow-up-hover-bg;
+        }
       }
 
       &.controls-NumberTextBox__arrowDown {
         width: @number-text-box-arrow-down-width;
         height: @number-text-box-arrow-down-height;
         margin: @number-text-box-arrow-down-margin;
+        border-radius: @number-text-box-arrow-down-border-radius;
+        border-width: @number-text-box-arrow-down-border-width;
+        border-style: @number-text-box-arrow-down-border-style;
+        border-color: @number-text-box-arrow-down-border-color;
         background: @number-text-box-arrow-down-bg;
+
+        &:hover {
+          background: @number-text-box-arrow-down-hover-bg;
+        }
+      }
+    }
+  }
+
+  &:hover {
+    .controls-TextBox__afterFieldWrapper {
+      .controls-NumberTextBox__arrow {
+        &.controls-NumberTextBox__arrowUp {
+          border-width: @number-text-box-arrow-up-hover-border-width;
+          border-style: @number-text-box-arrow-up-hover-border-style;
+          border-color: @number-text-box-arrow-up-hover-border-color;
+        }
+
+        &.controls-NumberTextBox__arrowDown {
+          border-width: @number-text-box-arrow-down-hover-border-width;
+          border-style: @number-text-box-arrow-down-hover-border-style;
+          border-color: @number-text-box-arrow-down-hover-border-color;
+        }
+      }
+    }
+  }
+
+  &.ws-disabled,
+  &.ws-disabled:hover {
+    .controls-TextBox__afterFieldWrapper {
+      .controls-NumberTextBox__arrow {
+        cursor: default;
+
+        &.controls-NumberTextBox__arrowUp {
+          border-width: @number-text-box-arrow-up-disabled-border-width;
+          border-style: @number-text-box-arrow-up-disabled-border-style;
+          border-color: @number-text-box-arrow-up-disabled-border-color;
+          background: @number-text-box-arrow-up-disabled-bg;
+        }
+
+        &.controls-NumberTextBox__arrowDown {
+          border-width: @number-text-box-arrow-down-disabled-border-width;
+          border-style: @number-text-box-arrow-down-disabled-border-style;
+          border-color: @number-text-box-arrow-down-disabled-border-color;
+          background: @number-text-box-arrow-down-disabled-bg;
+        }
       }
     }
   }

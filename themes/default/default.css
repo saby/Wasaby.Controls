@@ -1061,18 +1061,63 @@ input[type="reset"]::-moz-focus-inner {
 .controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow {
   display: block;
   text-decoration: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp {
   width: 16px;
   height: 11px;
   margin: 0;
+  border-radius: 0;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  background: url('img/NumberTextBox-arrowup.png') left bottom no-repeat;
+}
+.controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp:hover {
   background: url('img/NumberTextBox-arrowup.png') left bottom no-repeat;
 }
 .controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown {
   width: 16px;
   height: 11px;
   margin: 1px 0 0;
+  border-radius: 0;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
   background: url('img/NumberTextBox-arrowdown.png') left top no-repeat;
+}
+.controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown:hover {
+  background: url('img/NumberTextBox-arrowdown.png') left top no-repeat;
+}
+.controls-NumberTextBox:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp {
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+}
+.controls-NumberTextBox:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown {
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+}
+.controls-NumberTextBox.ws-disabled .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow,
+.controls-NumberTextBox.ws-disabled:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow {
+  cursor: default;
+}
+.controls-NumberTextBox.ws-disabled .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp,
+.controls-NumberTextBox.ws-disabled:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp {
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  background: none;
+}
+.controls-NumberTextBox.ws-disabled .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown,
+.controls-NumberTextBox.ws-disabled:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown {
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  background: none;
 }
 .controls-PasswordTextField .controls-TextBox__field__fixIE {
   font-size: 12px;

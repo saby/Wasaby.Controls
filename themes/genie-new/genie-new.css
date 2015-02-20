@@ -958,7 +958,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextBox.ws-disabled {
   border-width: 1px;
   border-style: solid;
-  border-color: transparent;
+  border-color: #f1f1f1;
   background: #ffffff;
 }
 .controls-TextBox.ws-disabled .controls-TextBox__fieldWrapper .controls-TextBox__field {
@@ -970,7 +970,7 @@ input[type="reset"]::-moz-focus-inner {
   float: right;
   width: 16px;
   min-height: 19px;
-  margin: 0 4px 0 0;
+  margin: 0 2px 0 0;
   height: 100%;
 }
 .controls-TextBox .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper,
@@ -1061,18 +1061,63 @@ input[type="reset"]::-moz-focus-inner {
 .controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow {
   display: block;
   text-decoration: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp {
-  width: 16px;
-  height: 11px;
-  margin: 0;
-  background: url('img/NumberTextBox-arrowup.png') left bottom no-repeat;
+  width: 12px;
+  height: 12px;
+  margin: -1px 0 0;
+  border-radius: 0;
+  border-width: 1px 0 0 0;
+  border-style: solid;
+  border-color: #d1d1d1;
+  background: url('img/NumberTextBox-arrow.png') 0 0 no-repeat;
+}
+.controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp:hover {
+  background: url('img/NumberTextBox-arrow.png') 0 -24px no-repeat;
 }
 .controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown {
-  width: 16px;
-  height: 11px;
-  margin: 1px 0 0;
-  background: url('img/NumberTextBox-arrowdown.png') left top no-repeat;
+  width: 12px;
+  height: 12px;
+  margin: 0;
+  border-radius: 0;
+  border-width: 0 0 1px 0;
+  border-style: solid;
+  border-color: #d1d1d1;
+  background: url('img/NumberTextBox-arrow.png') 0 -12px no-repeat;
+}
+.controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown:hover {
+  background: url('img/NumberTextBox-arrow.png') 0 -36px no-repeat;
+}
+.controls-NumberTextBox:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp {
+  border-width: 1px 0 0 0;
+  border-style: solid;
+  border-color: #00c795;
+}
+.controls-NumberTextBox:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown {
+  border-width: 0 0 1px 0;
+  border-style: solid;
+  border-color: #00c795;
+}
+.controls-NumberTextBox.ws-disabled .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow,
+.controls-NumberTextBox.ws-disabled:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow {
+  cursor: default;
+}
+.controls-NumberTextBox.ws-disabled .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp,
+.controls-NumberTextBox.ws-disabled:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: url('img/NumberTextBox-arrow.png') 0 0 no-repeat;
+}
+.controls-NumberTextBox.ws-disabled .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown,
+.controls-NumberTextBox.ws-disabled:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: url('img/NumberTextBox-arrow.png') 0 -12px no-repeat;
 }
 .controls-PasswordTextField .controls-TextBox__field__fixIE {
   font-size: 12px;
@@ -1519,4 +1564,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Menu.controls-Menu__Popup .controls-MenuButton__Menu-whiteLine {
   background: transparent !important;
+}
+.controls-NumberTextBox .controls-TextBox__afterFieldWrapper {
+  margin: 0 -4px 0 0;
 }

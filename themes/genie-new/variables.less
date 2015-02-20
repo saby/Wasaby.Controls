@@ -610,12 +610,12 @@
 
 @text-box-disabled-border-width:          @text-box-border-width;
 @text-box-disabled-border-style:          @text-box-border-style;
-@text-box-disabled-border-color:          transparent;
+@text-box-disabled-border-color:          @default-color;
 @text-box-disabled-bg:                    @text-box-bg;
 
 @text-box-after-width:                    16px;
 @text-box-after-min-height:               @text-box-field-min-height;
-@text-box-after-margin:                   0 4px 0 0;
+@text-box-after-margin:                   0 2px 0 0;
 
 @text-box-placeholder-color:              @gray-light-color !important;
 @text-box-compat-placeholder-font:        inherit;
@@ -642,18 +642,52 @@
 // Number text box //
 // --------------- //
 
-@number-text-box-field-text-alignment:          left;
-@number-text-box-wrapper-margin:                0 14px 0 0;
+@number-text-box-field-text-alignment:                left;
+@number-text-box-wrapper-margin:                      0 14px 0 0;
 
-@number-text-box-arrow-up-width:                16px;
-@number-text-box-arrow-up-height:               11px;
-@number-text-box-arrow-up-margin:               0;
-@number-text-box-arrow-up-bg:                   url('img/NumberTextBox-arrowup.png') left bottom no-repeat;
+@number-text-box-arrow-spritesheet:                   'img/NumberTextBox-arrow.png';
 
-@number-text-box-arrow-down-width:              @number-text-box-arrow-up-width;
-@number-text-box-arrow-down-height:             @number-text-box-arrow-up-height;
-@number-text-box-arrow-down-margin:             1px 0 0;
-@number-text-box-arrow-down-bg:                 url('img/NumberTextBox-arrowdown.png') left top no-repeat;
+@number-text-box-arrow-up-width:                      12px;
+@number-text-box-arrow-up-height:                     12px;
+@number-text-box-arrow-up-margin:                     -1px 0 0;
+
+@number-text-box-arrow-up-border-radius:              0;
+
+@number-text-box-arrow-up-bg:                         url(@number-text-box-arrow-spritesheet) 0 0 no-repeat;
+@number-text-box-arrow-up-border-width:               1px 0 0 0;
+@number-text-box-arrow-up-border-style:               @text-box-border-style;
+@number-text-box-arrow-up-border-color:               @text-box-border-color;
+
+@number-text-box-arrow-up-hover-bg:                   url(@number-text-box-arrow-spritesheet) 0 -24px no-repeat;
+@number-text-box-arrow-up-hover-border-width:         @number-text-box-arrow-up-border-width;
+@number-text-box-arrow-up-hover-border-style:         @number-text-box-arrow-up-border-style;
+@number-text-box-arrow-up-hover-border-color:         @text-box-hover-border-color;
+
+@number-text-box-arrow-up-disabled-bg:                @number-text-box-arrow-up-bg;
+@number-text-box-arrow-up-disabled-border-width:      0;
+@number-text-box-arrow-up-disabled-border-style:      @number-text-box-arrow-up-border-style;
+@number-text-box-arrow-up-disabled-border-color:      transparent;
+
+@number-text-box-arrow-down-width:                    @number-text-box-arrow-up-width;
+@number-text-box-arrow-down-height:                   @number-text-box-arrow-up-height;
+@number-text-box-arrow-down-margin:                   0;
+
+@number-text-box-arrow-down-border-radius:            0;
+
+@number-text-box-arrow-down-bg:                       url(@number-text-box-arrow-spritesheet) 0 -12px no-repeat;
+@number-text-box-arrow-down-border-width:             0 0 1px 0;
+@number-text-box-arrow-down-border-style:             @text-box-border-style;
+@number-text-box-arrow-down-border-color:             @text-box-border-color;
+
+@number-text-box-arrow-down-hover-bg:                 url(@number-text-box-arrow-spritesheet) 0 -36px no-repeat;
+@number-text-box-arrow-down-hover-border-width:       @number-text-box-arrow-down-border-width;
+@number-text-box-arrow-down-hover-border-style:       @number-text-box-arrow-down-border-style;
+@number-text-box-arrow-down-hover-border-color:       @text-box-hover-border-color;
+
+@number-text-box-arrow-down-disabled-bg:              @number-text-box-arrow-down-bg;
+@number-text-box-arrow-down-disabled-border-width:    0;
+@number-text-box-arrow-down-disabled-border-style:    @number-text-box-arrow-down-border-style;
+@number-text-box-arrow-down-disabled-border-color:    transparent;
 
 
 
