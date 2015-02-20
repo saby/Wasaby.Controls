@@ -91,11 +91,16 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       getNumberValue: function(){
+         var val;
          if (this._options.onlyInteger) {
-            return parseInt(this._options.text, 10);
+            val = parseInt(this._options.text, 10);
          } else {
-            return parseFloat(this._options.text);
+            val = parseFloat(this._options.text);
          }
+         if (isNaN(val)){
+            return null;
+         }
+         return val;
       },
 
       _formatValue: function(value){
