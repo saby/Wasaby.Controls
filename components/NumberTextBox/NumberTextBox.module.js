@@ -97,10 +97,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          } else {
             val = parseFloat(this._options.text);
          }
-         if (isNaN(val)){
-            return null;
-         }
-         return val;
+        return (isNaN(val)) ? null : val
       },
 
       _formatValue: function(value){
