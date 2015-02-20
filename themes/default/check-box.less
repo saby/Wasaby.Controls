@@ -1,0 +1,91 @@
+.controls-CheckBox {
+  cursor: pointer;
+  display: inline-block;
+
+  .controls-CheckBox__caption {
+    margin: @check-box-text-margin;
+    color: @check-box-text-color;
+
+    &:hover {
+      color: @check-box-hover-text-color;
+    }
+  }
+
+  .controls-CheckBox__icon {
+    display: inline-block;
+    width: @check-box-width;
+    height: @check-box-height;
+    line-height: @check-box-line-height;
+    background: @check-box-bg;
+  }
+
+  &:hover {
+    .controls-CheckBox__icon {
+      background: @check-box-hover-bg;
+    }
+  }
+
+  &.controls-Checked__checked {
+    .controls-CheckBox__icon {
+      background: @check-box-checked-bg;
+    }
+
+    &:hover {
+      .controls-CheckBox__icon {
+        background: @check-box-checked-hover-bg
+      }
+    }
+  }
+
+  &.controls-ToggleButton__null {
+    .controls-CheckBox__icon {
+      background: @check-box-third-state-bg;
+    }
+
+    &:hover {
+      .controls-CheckBox__icon {
+        background: @check-box-third-state-hover-bg;
+      }
+    }
+
+    &.ws-disabled {
+      .controls-CheckBox__icon {
+        background: @check-box-disabled-third-state-bg;
+      }
+
+      &:hover {
+        .controls-CheckBox__icon {
+          background: @check-box-disabled-third-state-bg;
+        }
+      }
+    }
+  }
+
+  &.ws-disabled {
+    .controls-CheckBox__caption {
+      color: @check-box-disabled-text-color;
+    }
+
+    .controls-CheckBox__icon {
+      background: @check-box-disabled-bg;
+    }
+
+    &:hover {
+      .controls-CheckBox__icon {
+        background: @check-box-disabled-hover-bg;
+      }
+    }
+
+    &.controls-Checked__checked {
+      .controls-CheckBox__icon {
+        background: @check-box-disabled-checked-bg;
+      }
+
+      &:hover {
+        .controls-CheckBox__icon {
+          background: @check-box-disabled-checked-hover-bg;
+        }
+      }
+    }
+  }
+}

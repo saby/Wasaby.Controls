@@ -266,25 +266,34 @@
 // Checkbox //
 // -------- //
 
-@checkbox-spritesheet:                    'img/CheckBox.png';
+@check-box-spritesheet:                         'img/CheckBox-sprite.png';
 
-@checkbox-text-margin:                    0 0 0 4px;
-@checkbox-width:                          16px;
-@checkbox-height:                         16px;
-@checkbox-line-height:                    19px;
+@check-box-text-margin:                         0 0 0 8px;
+@check-box-width:                               16px;
+@check-box-height:                              16px;
+@check-box-line-height:                         normal;
 
-@checkbox-text-color:                     @black-color;
-@checkbox-disabled-text-color:            @gray-color;
+@check-box-text-color:                          @black-color;
+@check-box-hover-text-color:                    @primary-color;
+@check-box-disabled-text-color:                 @gray-light-color;
 
-@checkbox-bg:                             url(@checkbox-spritesheet) 0 1px;
-@checkbox-hover-bg:                       url(@checkbox-spritesheet) 0 17px;
-@checkbox-checked-bg:                     url(@checkbox-spritesheet) 0 49px;
-@checkbox-third-state-bg:                 url(@checkbox-spritesheet) 0 33px;
+@check-box-bg:                                  url(@check-box-spritesheet) 0 0px;
+@check-box-hover-bg:                            url(@check-box-spritesheet) 0 -16px;
 
-@checkbox-disabled-bg:                    url(@checkbox-spritesheet) 16px 1px;
-@checkbox-disabled-hover-bg:              @checkbox-disabled-bg;
-@checkbox-disabled-checked-bg:            url(@checkbox-spritesheet) 16px 49px;
-@checkbox-disabled-third-state-bg:        url(@checkbox-spritesheet) 16px 33px;
+@check-box-checked-bg:                          url(@check-box-spritesheet) 0 -64px;
+@check-box-checked-hover-bg:                    url(@check-box-spritesheet) 0 -32px;
+
+@check-box-third-state-bg:                      url(@check-box-spritesheet) 0 -80px;
+@check-box-third-state-hover-bg:                url(@check-box-spritesheet) 0 -48px;
+
+@check-box-disabled-bg:                         url(@check-box-spritesheet) 0px 0px;
+@check-box-disabled-hover-bg:                   @check-box-disabled-bg;
+
+@check-box-disabled-checked-bg:                 url(@check-box-spritesheet) 0px -64px;
+@check-box-disabled-checked-hover-bg:           @check-box-disabled-checked-bg;
+
+@check-box-disabled-third-state-bg:             url(@check-box-spritesheet) 0px -80px;
+@check-box-disabled-third-state-hover-bg:       @check-box-disabled-third-state-bg;
 
 
 

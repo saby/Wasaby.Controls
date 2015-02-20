@@ -448,41 +448,56 @@ input[type="reset"]::-moz-focus-inner {
 .controls-CheckBox {
   cursor: pointer;
   display: inline-block;
-  color: #000000;
 }
 .controls-CheckBox .controls-CheckBox__caption {
-  margin: 0 0 0 4px;
+  margin: 0 0 0 8px;
+  color: #000000;
+}
+.controls-CheckBox .controls-CheckBox__caption:hover {
+  color: #00c795;
 }
 .controls-CheckBox .controls-CheckBox__icon {
   display: inline-block;
   width: 16px;
   height: 16px;
-  line-height: 19px;
-  background: url('img/CheckBox.png') 0 1px;
+  line-height: normal;
+  background: url('img/CheckBox-sprite.png') 0 0px;
 }
 .controls-CheckBox:hover .controls-CheckBox__icon {
-  background: url('img/CheckBox.png') 0 17px;
+  background: url('img/CheckBox-sprite.png') 0 -16px;
 }
 .controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon {
-  background: url('img/CheckBox.png') 0 49px;
+  background: url('img/CheckBox-sprite.png') 0 -64px;
 }
-.controls-CheckBox.ws-disabled {
-  color: #919197;
-}
-.controls-CheckBox.ws-disabled .controls-CheckBox__icon {
-  background: url('img/CheckBox.png') 16px 1px;
-}
-.controls-CheckBox.ws-disabled:hover .controls-CheckBox__icon {
-  background: url('img/CheckBox.png') 16px 1px;
-}
-.controls-CheckBox.ws-disabled.controls-Checked__checked .controls-CheckBox__icon {
-  background: url('img/CheckBox.png') 16px 49px;
+.controls-CheckBox.controls-Checked__checked:hover .controls-CheckBox__icon {
+  background: url('img/CheckBox-sprite.png') 0 -32px;
 }
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
-  background: url('img/CheckBox.png') 0 33px;
+  background: url('img/CheckBox-sprite.png') 0 -80px;
+}
+.controls-CheckBox.controls-ToggleButton__null:hover .controls-CheckBox__icon {
+  background: url('img/CheckBox-sprite.png') 0 -48px;
 }
 .controls-CheckBox.controls-ToggleButton__null.ws-disabled .controls-CheckBox__icon {
-  background: url('img/CheckBox.png') 16px 33px;
+  background: url('img/CheckBox-sprite.png') 0px -80px;
+}
+.controls-CheckBox.controls-ToggleButton__null.ws-disabled:hover .controls-CheckBox__icon {
+  background: url('img/CheckBox-sprite.png') 0px -80px;
+}
+.controls-CheckBox.ws-disabled .controls-CheckBox__caption {
+  color: #d1d1d4;
+}
+.controls-CheckBox.ws-disabled .controls-CheckBox__icon {
+  background: url('img/CheckBox-sprite.png') 0px 0px;
+}
+.controls-CheckBox.ws-disabled:hover .controls-CheckBox__icon {
+  background: url('img/CheckBox-sprite.png') 0px 0px;
+}
+.controls-CheckBox.ws-disabled.controls-Checked__checked .controls-CheckBox__icon {
+  background: url('img/CheckBox-sprite.png') 0px -64px;
+}
+.controls-CheckBox.ws-disabled.controls-Checked__checked:hover .controls-CheckBox__icon {
+  background: url('img/CheckBox-sprite.png') 0px -64px;
 }
 .controls-Switcher {
   display: inline-block;

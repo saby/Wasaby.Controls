@@ -448,10 +448,13 @@ input[type="reset"]::-moz-focus-inner {
 .controls-CheckBox {
   cursor: pointer;
   display: inline-block;
-  color: #000000;
 }
 .controls-CheckBox .controls-CheckBox__caption {
   margin: 0 0 0 4px;
+  color: #000000;
+}
+.controls-CheckBox .controls-CheckBox__caption:hover {
+  color: #000000;
 }
 .controls-CheckBox .controls-CheckBox__icon {
   display: inline-block;
@@ -466,7 +469,22 @@ input[type="reset"]::-moz-focus-inner {
 .controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon {
   background: url('img/CheckBox.png') 0 49px;
 }
-.controls-CheckBox.ws-disabled {
+.controls-CheckBox.controls-Checked__checked:hover .controls-CheckBox__icon {
+  background: url('img/CheckBox.png') 0 49px;
+}
+.controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
+  background: url('img/CheckBox.png') 0 33px;
+}
+.controls-CheckBox.controls-ToggleButton__null:hover .controls-CheckBox__icon {
+  background: url('img/CheckBox.png') 0 33px;
+}
+.controls-CheckBox.controls-ToggleButton__null.ws-disabled .controls-CheckBox__icon {
+  background: url('img/CheckBox.png') 16px 33px;
+}
+.controls-CheckBox.controls-ToggleButton__null.ws-disabled:hover .controls-CheckBox__icon {
+  background: url('img/CheckBox.png') 16px 33px;
+}
+.controls-CheckBox.ws-disabled .controls-CheckBox__caption {
   color: #999999;
 }
 .controls-CheckBox.ws-disabled .controls-CheckBox__icon {
@@ -478,11 +496,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-CheckBox.ws-disabled.controls-Checked__checked .controls-CheckBox__icon {
   background: url('img/CheckBox.png') 16px 49px;
 }
-.controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
-  background: url('img/CheckBox.png') 0 33px;
-}
-.controls-CheckBox.controls-ToggleButton__null.ws-disabled .controls-CheckBox__icon {
-  background: url('img/CheckBox.png') 16px 33px;
+.controls-CheckBox.ws-disabled.controls-Checked__checked:hover .controls-CheckBox__icon {
+  background: url('img/CheckBox.png') 16px 49px;
 }
 .controls-Switcher {
   display: inline-block;
