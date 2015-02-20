@@ -126,7 +126,7 @@ define(
       },
 
       _initializeComponents: function(){
-         var self = this;
+         var inputValue, self = this;
 
          this._inputField = $('.js-controls-FormattedTextBox__field', this.getContainer().get(0));
 
@@ -136,15 +136,6 @@ define(
          this._maskRegExp = this._getRegExpByMask(this._primalMask);
          this._isSeparatorContainerFirst = this._getTypeOfFirstContainer();
          this._inputField.html( this._getHtmlMask() );
-
-         this.setValidators(
-            [{
-               validator: function () {
-                  return self._checkTextByMask(self._inputField.text());
-               },
-               errorMessage: 'Устанавливаемое значение не удовлетворяет маске данного контролла'
-            }]
-         );
 
          if(this._options.text){
             this.setText(this._options.text);
@@ -207,10 +198,12 @@ define(
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  if (self.validate()) {
-                     self.setText(self._inputField.text());
+                  inputValue = self._inputField.text();
+                  if (this._checkTextByMask(inputValue)) {
+                     self.setText(inputValue);
                   } else {
                      self.setText(self._options.text);
+                     throw new Error('Устанавливаемое значение не удовлетворяет маске данного контролла');
                   }
                }
             }, 100)
@@ -259,7 +252,6 @@ define(
             nextSibling = positionObject.container.parentNode.nextSibling;
 
          this._clearSelect(positionObject, positionObjEnd);
-         this.clearMark();
 
          if ( type == 'character' ) {
             // Обработка зажатой кнопки shift ( -> в букву верхнего регистра)
@@ -600,12 +592,8 @@ define(
        */
       setText: function( text ) {
          text = text ? text : '';
-         if (text != this._options.text) {
-            this.clearMark();
-         }
          if (typeof text == 'string') {
             if (text == '' || this._checkTextByMask(text)) {
-
                text = text == '' ? '' : this._correctRegister(text);
                this._inputField.html(this._getHtmlMask(text));
                FormattedTextBoxBase.superclass.setText.call(this, text);
