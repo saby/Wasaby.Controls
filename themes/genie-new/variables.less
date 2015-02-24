@@ -223,22 +223,56 @@
 // Tab button //
 // ---------- //
 
-@tab-button-font:                         italic bold 18px Cambria, sans-serif;
-@tab-button-text-color:                   @black-color;
+@tab-button-cursor:                             pointer;
 
-@tab-button-height:                       29px;
-@tab-button-side-width:                   19px;
-@tab-button-side-height:                  @tab-button-height;
-@tab-button-inner-height:                 @tab-button-height;
-@tab-button-text-padding:                 3px 0 0;
+@tab-button-font:                               inherit;
 
-@tab-button-left-side-margin:             0 -4px 0 0;
-@tab-button-left-side-bg:                 url('img/tabButtonLeft.png') no-repeat;
+@tab-button-text-color:                         @black-color;
+@tab-button-hover-text-color:                   @primary-color;
+@tab-button-checked-text-color:                 @tab-button-text-color;
+@tab-button-checked-hover-text-color:           @tab-button-hover-text-color;
+@tab-button-disabled-text-color:                @gray-color;
+@tab-button-disabled-checked-text-color:        @tab-button-disabled-text-color;
 
-@tab-button-right-side-margin:            0 0 0 -4px;
-@tab-button-right-side-bg:                url('img/tabButtonRight.png') no-repeat;
+@tab-button-height:                             21px;
+@tab-button-side-width:                         0;
+@tab-button-side-height:                        @tab-button-height;
+@tab-button-inner-height:                       @tab-button-height;
+@tab-button-text-padding:                       0 16px;
 
-@tab-button-inner-bg:                     url('img/tabButtonInner.png');
+@tab-button-border-radius:                      0;
+
+@tab-button-border-width:                       0 0 3px 0;
+@tab-button-border-style:                       solid;
+@tab-button-border-color:                       transparent;
+
+@tab-button-hover-border-width:                 @tab-button-border-width;
+@tab-button-hover-border-style:                 @tab-button-border-style;
+@tab-button-hover-border-color:                 @tab-button-border-color;
+
+@tab-button-checked-border-width:               @tab-button-border-width;
+@tab-button-checked-border-style:               @tab-button-border-style;
+@tab-button-checked-border-color:               @primary-color;
+
+@tab-button-checked-hover-border-width:         @tab-button-checked-border-width;
+@tab-button-checked-hover-border-style:         @tab-button-checked-border-style;
+@tab-button-checked-hover-border-color:         @tab-button-checked-border-color;
+
+@tab-button-disabled-border-width:              @tab-button-border-width;
+@tab-button-disabled-border-style:              @tab-button-border-style;
+@tab-button-disabled-border-color:              @tab-button-border-color;
+
+@tab-button-disabled-checked-border-width:      @tab-button-disabled-border-width;
+@tab-button-disabled-checked-border-style:      @tab-button-disabled-border-style;
+@tab-button-disabled-checked-border-color:      @gray-color;
+
+@tab-button-left-side-margin:                   0;
+@tab-button-left-side-bg:                       none;
+
+@tab-button-right-side-margin:                  0;
+@tab-button-right-side-bg:                      none;
+
+@tab-button-inner-bg:                           @white-color;
 
 
 

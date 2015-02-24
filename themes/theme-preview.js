@@ -237,8 +237,21 @@
          });
 
          new TabButton({
-            element: 'tabButton',
+            element: 'tabButton1',
             caption: 'Tab button'
+         });
+
+         new TabButton({
+            element: 'tabButton2',
+            caption: 'Disabled tab button',
+            enabled: false
+         });
+
+         new TabButton({
+            element: 'tabButton3',
+            caption: 'Disabled checked tab button',
+            enabled: false,
+            checked: true
          });
       });
    }

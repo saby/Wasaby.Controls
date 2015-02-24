@@ -1,6 +1,48 @@
 .controls-TabButton {
   display: inline-block;
+  cursor: @tab-button-cursor;
   height: @tab-button-height;
+
+  .border-radius(@tab-button-border-radius);
+  border-width: @tab-button-border-width;
+  border-style: @tab-button-border-style;
+  border-color: @tab-button-border-color;
+
+  &:hover {
+    border-width: @tab-button-hover-border-width;
+    border-style: @tab-button-hover-border-style;
+    border-color: @tab-button-hover-border-color;
+
+    .controls-TabButton__inner {
+      .controls-TabButton__caption {
+        color: @tab-button-hover-text-color;
+      }
+    }
+  }
+
+  &.controls-Checked__checked {
+    border-width: @tab-button-checked-border-width;
+    border-style: @tab-button-checked-border-style;
+    border-color: @tab-button-checked-border-color;
+
+    .controls-TabButton__inner {
+      .controls-TabButton__caption {
+        color: @tab-button-checked-text-color;
+      }
+    }
+
+    &:hover {
+      border-width: @tab-button-checked-hover-border-width;
+      border-style: @tab-button-checked-hover-border-style;
+      border-color: @tab-button-checked-hover-border-color;
+
+      .controls-TabButton__inner {
+        .controls-TabButton__caption {
+          color: @tab-button-checked-hover-text-color;
+        }
+      }
+    }
+  }
 
   .controls-TabButton__side {
     display: inline-block;
@@ -10,12 +52,12 @@
 
     &.controls-TabButton__left {
       margin: @tab-button-left-side-margin;
-      background: url("img/tabButtonLeft.png") no-repeat;
+      background: @tab-button-left-side-bg;
     }
 
     &.controls-TabButton__right {
       margin: @tab-button-right-side-margin;
-      background: url("img/tabButtonRight.png") no-repeat;
+      background: @tab-button-right-side-bg;
     }
   }
 
@@ -31,6 +73,30 @@
       height: auto;
       vertical-align: bottom;
       padding: @tab-button-text-padding;
+    }
+  }
+
+  &.ws-disabled {
+    border-width: @tab-button-disabled-border-width;
+    border-style: @tab-button-disabled-border-style;
+    border-color: @tab-button-disabled-border-color;
+
+    .controls-TabButton__inner {
+      .controls-TabButton__caption {
+        color: @tab-button-disabled-text-color;
+      }
+    }
+
+    &.controls-Checked__checked {
+      border-width: @tab-button-disabled-checked-border-width;
+      border-style: @tab-button-disabled-checked-border-style;
+      border-color: @tab-button-disabled-checked-border-color;
+
+      .controls-TabButton__inner {
+        .controls-TabButton__caption {
+          color: @tab-button-disabled-checked-text-color;
+        }
+      }
     }
   }
 }

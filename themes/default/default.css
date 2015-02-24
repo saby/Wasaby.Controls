@@ -380,7 +380,41 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TabButton {
   display: inline-block;
+  cursor: pointer;
   height: 29px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+}
+.controls-TabButton:hover {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+}
+.controls-TabButton:hover .controls-TabButton__inner .controls-TabButton__caption {
+  color: #000000;
+}
+.controls-TabButton.controls-Checked__checked {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+}
+.controls-TabButton.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__caption {
+  color: #000000;
+}
+.controls-TabButton.controls-Checked__checked:hover {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+}
+.controls-TabButton.controls-Checked__checked:hover .controls-TabButton__inner .controls-TabButton__caption {
+  color: #000000;
 }
 .controls-TabButton .controls-TabButton__side {
   display: inline-block;
@@ -390,11 +424,11 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TabButton .controls-TabButton__side.controls-TabButton__left {
   margin: 0 -4px 0 0;
-  background: url("img/tabButtonLeft.png") no-repeat;
+  background: url('img/tabButtonLeft.png') no-repeat;
 }
 .controls-TabButton .controls-TabButton__side.controls-TabButton__right {
   margin: 0 0 0 -4px;
-  background: url("img/tabButtonRight.png") no-repeat;
+  background: url('img/tabButtonRight.png') no-repeat;
 }
 .controls-TabButton .controls-TabButton__inner {
   font: italic bold 18px Cambria, sans-serif;
@@ -408,6 +442,22 @@ input[type="reset"]::-moz-focus-inner {
   height: auto;
   vertical-align: bottom;
   padding: 3px 0 0;
+}
+.controls-TabButton.ws-disabled {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+}
+.controls-TabButton.ws-disabled .controls-TabButton__inner .controls-TabButton__caption {
+  color: #999999;
+}
+.controls-TabButton.ws-disabled.controls-Checked__checked {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+}
+.controls-TabButton.ws-disabled.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__caption {
+  color: #999999;
 }
 .controls-RadioButton {
   cursor: pointer;

@@ -380,34 +380,84 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TabButton {
   display: inline-block;
-  height: 29px;
+  cursor: pointer;
+  height: 21px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border-width: 0 0 3px 0;
+  border-style: solid;
+  border-color: transparent;
+}
+.controls-TabButton:hover {
+  border-width: 0 0 3px 0;
+  border-style: solid;
+  border-color: transparent;
+}
+.controls-TabButton:hover .controls-TabButton__inner .controls-TabButton__caption {
+  color: #00c795;
+}
+.controls-TabButton.controls-Checked__checked {
+  border-width: 0 0 3px 0;
+  border-style: solid;
+  border-color: #00c795;
+}
+.controls-TabButton.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__caption {
+  color: #353535;
+}
+.controls-TabButton.controls-Checked__checked:hover {
+  border-width: 0 0 3px 0;
+  border-style: solid;
+  border-color: #00c795;
+}
+.controls-TabButton.controls-Checked__checked:hover .controls-TabButton__inner .controls-TabButton__caption {
+  color: #00c795;
 }
 .controls-TabButton .controls-TabButton__side {
   display: inline-block;
   vertical-align: top;
-  width: 19px;
-  height: 29px;
+  width: 0;
+  height: 21px;
 }
 .controls-TabButton .controls-TabButton__side.controls-TabButton__left {
-  margin: 0 -4px 0 0;
-  background: url("img/tabButtonLeft.png") no-repeat;
+  margin: 0;
+  background: none;
 }
 .controls-TabButton .controls-TabButton__side.controls-TabButton__right {
-  margin: 0 0 0 -4px;
-  background: url("img/tabButtonRight.png") no-repeat;
+  margin: 0;
+  background: none;
 }
 .controls-TabButton .controls-TabButton__inner {
-  font: italic bold 18px Cambria, sans-serif;
+  font: inherit;
   color: #353535;
   display: inline-block;
-  height: 29px;
-  background: url('img/tabButtonInner.png');
+  height: 21px;
+  background: #ffffff;
 }
 .controls-TabButton .controls-TabButton__inner .controls-TabButton__caption {
   display: inline-block;
   height: auto;
   vertical-align: bottom;
-  padding: 3px 0 0;
+  padding: 0 16px;
+}
+.controls-TabButton.ws-disabled {
+  border-width: 0 0 3px 0;
+  border-style: solid;
+  border-color: transparent;
+}
+.controls-TabButton.ws-disabled .controls-TabButton__inner .controls-TabButton__caption {
+  color: #919191;
+}
+.controls-TabButton.ws-disabled.controls-Checked__checked {
+  border-width: 0 0 3px 0;
+  border-style: solid;
+  border-color: #919191;
+}
+.controls-TabButton.ws-disabled.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__caption {
+  color: #919191;
 }
 .controls-RadioButton {
   cursor: pointer;
