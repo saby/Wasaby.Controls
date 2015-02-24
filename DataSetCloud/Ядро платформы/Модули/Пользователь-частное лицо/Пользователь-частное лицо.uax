@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="WINDOWS-1251"?>
-<action_repository version="1.2">
-
-  <action identifier_action="Данные пользователя" is_service="1" last_changed="Щукин А.В." name="Данные пользователя" responsible="Щукин А.В.">
-    <privilegy access="2" object="Пользователь.СводнаяИнформацияПоПользователю"/>
-  </action>
-
-</action_repository>

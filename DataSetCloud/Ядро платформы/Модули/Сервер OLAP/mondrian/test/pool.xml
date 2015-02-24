@@ -1,4 +1,0 @@
-﻿<Pool>
-   <Connect default="false" name="Контрагенты" line="Jdbc=jdbc:postgresql://localhost/contractor;JdbcDrivers=org.postgresql.Driver;JdbcUser=postgres;JdbcPassword=postgres;Catalog=Модули\Сервер OLAP\mondrian\demo\contractor.xml;">
-   </Connect>
-</Pool>

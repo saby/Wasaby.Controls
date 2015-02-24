@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="WINDOWS-1251"?>
-<action_repository version="1.2">
-
-  <action identifier_action="Antibot" is_service="1" last_changed="Щукин А.В." name="Antibot" responsible="Щукин А.В.">
-    <privilegy access="2" object="Antibot.Captcha"/>
-    <privilegy access="2" object="Antibot.CheckCaptureCode"/>
-  </action>
-
-</action_repository>

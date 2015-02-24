@@ -1,5 +1,0 @@
-<div class="{{? it.cssClass}}{{=it.cssClass}}{{?}}{{? !it.visible}} ws-hidden{{?}}" hasMarkup="true">
-{{ for(var i in it.elements) { }}
-    {{=it.elementTemplate({ element: it.elements[i], index: i, hideActiveLabel: it.hideActiveLabel })}}
-{{ } }}
-</div>
