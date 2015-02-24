@@ -615,7 +615,7 @@ input[type="reset"]::-moz-focus-inner {
   height: 21px;
   padding: 2px 0;
   margin: 0 0 0 16px;
-  background: url('img/switcher.png') 0 -96px;
+  background: none;
 }
 .controls-Switcher .controls-Switcher__toggle .controls-Switcher__position:before {
   content: '';
@@ -625,7 +625,7 @@ input[type="reset"]::-moz-focus-inner {
   display: block;
   top: 0;
   left: -16px;
-  background: url('img/switcher.png') 0 0;
+  background: none;
 }
 .controls-Switcher .controls-Switcher__toggle .controls-Switcher__position:after {
   content: '';
@@ -635,7 +635,7 @@ input[type="reset"]::-moz-focus-inner {
   display: block;
   top: 0;
   right: -32px;
-  background: url('img/switcher.png') 0 -24px;
+  background: none;
 }
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on {
   color: #353535;
@@ -643,17 +643,17 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position {
   margin: 0 16px 0 auto;
-  background: url('img/switcher.png') 0 -96px;
+  background: none;
 }
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:before {
   width: 32px;
   left: -32px;
-  background: url('img/switcher.png') 0 -48px;
+  background: url('') 0 -48px;
 }
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:after {
   width: 16px;
   right: -16px;
-  background: url('img/switcher.png') 0 -312px;
+  background: url('') 0 -312px;
 }
 .controls-Switcher.ws-disabled {
   color: #919191 !important;
@@ -695,10 +695,10 @@ input[type="reset"]::-moz-focus-inner {
   margin: 0 4px;
 }
 .controls-SwitcherDoubleOnline .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-off-toggled {
-  background: transparent url('img/SwitcherDoubleOnline-sprite.png') 0 -4px no-repeat;
+  background: transparent;
 }
 .controls-SwitcherDoubleOnline .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-on-toggled {
-  background: transparent url('img/SwitcherDoubleOnline-sprite.png') 0 -28px no-repeat;
+  background: transparent;
 }
 .controls-SwitcherDoubleOnline .controls-SwitcherDoubleOnline__text {
   display: inline-block;
@@ -727,16 +727,16 @@ input[type="reset"]::-moz-focus-inner {
   margin: 0 2px 0 0;
 }
 .controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-off-toggled {
-  background: transparent url('img/SwitcherDoubleOnline-sprite-double.png') -16px 0 no-repeat;
+  background: transparent;
 }
 .controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-on-toggled {
-  background: transparent url('img/SwitcherDoubleOnline-sprite-double.png') 0 0 no-repeat;
+  background: transparent;
 }
 .controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical.ws-disabled .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-off-toggled {
-  background: transparent url('img/SwitcherDoubleOnline-sprite-double.png') -48px 0 no-repeat;
+  background: transparent;
 }
 .controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical.ws-disabled .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-on-toggled {
-  background: transparent url('img/SwitcherDoubleOnline-sprite-double.png') -32px 0 no-repeat;
+  background: transparent;
 }
 .controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline__text-block {
   display: inline-block;
@@ -749,10 +749,10 @@ input[type="reset"]::-moz-focus-inner {
   cursor: default;
 }
 .controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-off-toggled {
-  background: transparent url('img/SwitcherDoubleOnline-sprite.png') 0 -52px no-repeat;
+  background: transparent;
 }
 .controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-on-toggled {
-  background: transparent url('img/SwitcherDoubleOnline-sprite.png') 0 -76px no-repeat;
+  background: transparent;
 }
 .controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline__text {
   cursor: default;
@@ -813,7 +813,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-MenuButton {
   position: relative;
-  padding: 0 24px 0 12px;
+  padding: 0 30px 0 12px;
 }
 .controls-Button.controls-MenuButton.controls-MenuButton__withoutMenu {
   padding: 0 8px;
@@ -823,7 +823,7 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   width: 10px;
   height: 5px;
-  right: 8px;
+  right: 12px;
   top: 13px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;

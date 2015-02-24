@@ -490,7 +490,7 @@
          var menuCtx = new ContextMenu({
             element: 'menu',
             items: items,
-            target : $('#menuButton'),
+            target : $('#menuButton1'),
             corner : 'br',
             hierField: 'par',
             verticalAlign: {

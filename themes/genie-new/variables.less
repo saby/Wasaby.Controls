@@ -361,7 +361,7 @@
 // Switcher //
 // -------- //
 
-@switcher-spritesheet:                          'img/switcher.png';
+@switcher-spritesheet:                          '';
 
 @switcher-toggle-edge-width:                    16px;
 @switcher-gap-width:                            16px;
@@ -381,9 +381,9 @@
 @switcher-off-toggle-padding:                   2px 32px 2px 0;
 @switcher-off-toggle-position-margin:           0 0 0 16px;
 @switcher-off-toggle-text-color:                @gray-color;
-@switcher-off-toggle-bg:                        url(@switcher-spritesheet) 0 -96px;
-@switcher-off-toggle-left-edge-bg:              url(@switcher-spritesheet) 0 0;
-@switcher-off-toggle-right-edge-bg:             url(@switcher-spritesheet) 0 -24px;
+@switcher-off-toggle-bg:                        none;
+@switcher-off-toggle-left-edge-bg:              none;
+@switcher-off-toggle-right-edge-bg:             none;
 @switcher-off-disabled-toggle-text-color:       @gray-light-color;
 @switcher-off-disabled-toggle-bg:               none;
 @switcher-off-disabled-toggle-left-edge-bg:     none;
@@ -421,23 +421,23 @@
 @switcher-do-disabled-text-color:               @gray-color;
 @switcher-do-disabled-text-decoration:          none;
 
-@switcher-do-horizontal-spritesheet:            'img/SwitcherDoubleOnline-sprite.png';
+@switcher-do-horizontal-spritesheet:            '';
 @switcher-do-horizontal-toggle-width:           30px;
 @switcher-do-horizontal-toggle-height:          16px;
 @switcher-do-horizontal-toggle-margin:          0 4px;
-@switcher-do-horizontal-off-toggle-bg:          transparent url(@switcher-do-horizontal-spritesheet) 0 -4px no-repeat;
-@switcher-do-horizontal-on-toggle-bg:           transparent url(@switcher-do-horizontal-spritesheet) 0 -28px no-repeat;
-@switcher-do-horizontal-off-disabled-toggle-bg: transparent url(@switcher-do-horizontal-spritesheet) 0 -52px no-repeat;
-@switcher-do-horizontal-on-disabled-toggle-bg:  transparent url(@switcher-do-horizontal-spritesheet) 0 -76px no-repeat;
+@switcher-do-horizontal-off-toggle-bg:          transparent;
+@switcher-do-horizontal-on-toggle-bg:           transparent;
+@switcher-do-horizontal-off-disabled-toggle-bg: transparent;
+@switcher-do-horizontal-on-disabled-toggle-bg:  transparent;
 
-@switcher-do-vertical-spritesheet:              'img/SwitcherDoubleOnline-sprite-double.png';
+@switcher-do-vertical-spritesheet:              '';
 @switcher-do-vertical-toggle-width:             16px;
 @switcher-do-vertical-toggle-height:            32px;
 @switcher-do-vertical-toggle-margin:            0 2px 0 0;
-@switcher-do-vertical-off-toggle-bg:            transparent url(@switcher-do-vertical-spritesheet) -16px 0 no-repeat;
-@switcher-do-vertical-on-toggle-bg:             transparent url(@switcher-do-vertical-spritesheet) 0 0 no-repeat;
-@switcher-do-vertical-off-disabled-toggle-bg:   transparent url(@switcher-do-vertical-spritesheet) -48px 0 no-repeat;
-@switcher-do-vertical-on-disabled-toggle-bg:    transparent url(@switcher-do-vertical-spritesheet) -32px 0 no-repeat;
+@switcher-do-vertical-off-toggle-bg:            transparent;
+@switcher-do-vertical-on-toggle-bg:             transparent;
+@switcher-do-vertical-off-disabled-toggle-bg:   transparent;
+@switcher-do-vertical-on-disabled-toggle-bg:    transparent;
 
 
 
@@ -487,10 +487,10 @@
 
 @menu-button-arrow-width:                       10px;
 @menu-button-arrow-height:                      5px;
-@menu-button-arrow-right-offset:                8px;
+@menu-button-arrow-right-offset:                12px;
 @menu-button-arrow-top-offset:                  13px;
 
-@menu-button-arrow-padding:                     0 24px 0 12px;          // padding for menu button containing dropdown arrow
+@menu-button-arrow-padding:                     0 30px 0 12px;          // padding for menu button containing dropdown arrow
 @menu-button-no-arrow-padding:                  @button-padding;        // padding for menu button when dropdown arrow is missed
 
 // Default menu button
