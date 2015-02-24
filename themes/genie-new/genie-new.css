@@ -417,8 +417,8 @@ input[type="reset"]::-moz-focus-inner {
   color: #00c795;
 }
 .controls-TabButton .controls-TabButton__side {
-  display: inline-block;
   vertical-align: top;
+  display: none;
   width: 0;
   height: 21px;
 }
