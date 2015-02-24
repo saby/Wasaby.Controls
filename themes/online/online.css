@@ -449,6 +449,10 @@ input[type="reset"]::-moz-focus-inner {
   border: 1px solid #EAEAEA;
   font: inherit;
 }
+.controls-TextArea.ws-validation-error {
+  background: #fadadd !important;
+  border-color: #ff302b !important;
+}
 .controls-TextArea:hover,
 .controls-TextArea.ws-has-focus {
   border-bottom-color: #CCCCCC;
