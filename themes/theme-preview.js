@@ -18,14 +18,27 @@
          'js!SBIS3.CONTROLS.Button',
          'js!SBIS3.CONTROLS.ToggleButton',
          'js!SBIS3.CONTROLS.IconButton',
-         'js!SBIS3.CONTROLS.TabButton'
+         'js!SBIS3.CONTROLS.TabButton',
+         'js!SBIS3.CONTROLS.TabButtons'
       ], function(
          Link,
          Button,
          ToggleButton,
          IconButton,
-         TabButton
+         TabButton,
+         TabButtons
       ) {
+         var items = [{
+            id: 1,
+            title: 'First'
+         }, {
+            id: 2,
+            title: 'Second'
+         }, {
+            id: 3,
+            title: 'Third'
+         }];
+
          new Link({
             element: 'link',
             caption: 'Link',
@@ -253,21 +266,42 @@
             enabled: false,
             checked: true
          });
+
+         new TabButtons({
+            element: 'tabButtons',
+            items: items,
+            selectedItem: 1
+         });
       });
    }
 
    function initSwitchers() {
       require([
          'js!SBIS3.CONTROLS.CheckBox',
+         'js!SBIS3.CONTROLS.CheckBoxGroup',
          'js!SBIS3.CONTROLS.RadioButton',
+         'js!SBIS3.CONTROLS.RadioGroup',
          'js!SBIS3.CONTROLS.Switcher',
          'js!SBIS3.Engine.SwitcherDoubleOnline'
       ], function(
          CheckBox,
+         CheckBoxGroup,
          RadioButton,
+         RadioGroup,
          Switcher,
          SwitcherDoubleOnline
       ) {
+         var items = [{
+            id: 1,
+            title: 'First'
+         }, {
+            id: 2,
+            title: 'Second'
+         }, {
+            id: 3,
+            title: 'Third'
+         }];
+
          new CheckBox({
             element: 'checkBox1',
             caption: 'Checkbox',
@@ -301,6 +335,16 @@
             checked: null
          });
 
+         new CheckBoxGroup({
+            element: 'checkBoxGroup1',
+            items: items
+         });
+
+         new CheckBoxGroup({
+            element: 'checkBoxGroup2',
+            items: items
+         });
+
          new RadioButton({
             element: 'radioButton1',
             caption: 'Radio'
@@ -317,6 +361,18 @@
             caption: 'Radio disabled checked',
             checked: true,
             enabled: false
+         });
+
+         new RadioGroup({
+            element: 'radioGroup1',
+            items: items,
+            selectedItem: 1
+         });
+
+         new RadioGroup({
+            element: 'radioGroup2',
+            items: items,
+            selectedItem: 1
          });
 
          new Switcher({

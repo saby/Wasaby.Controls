@@ -338,6 +338,14 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background: #d1d1d1;
 }
+.controls-ButtonGroup .controls-ListView__item {
+  display: inline-block;
+  margin: 0 16px 0 0;
+}
+.controls-ButtonGroup.controls-ButtonGroup__vertical .controls-ListView__item {
+  display: block;
+  margin: 0 0 8px 0;
+}
 .controls-Button.controls-Checked__checked.controls-Button {
   color: #00c795;
   border: 1px solid #00c795;
@@ -514,6 +522,14 @@ input[type="reset"]::-moz-focus-inner {
 .controls-RadioButton.ws-disabled:hover .controls-RadioButton__icon {
   background: url('img/RadioButton-sprite.png') 0 0;
 }
+.controls-RadioGroup .controls-ListView__item {
+  display: inline-block;
+  margin: 0 16px 0 0;
+}
+.controls-RadioGroup.controls-ButtonGroup__vertical .controls-ListView__item {
+  display: block;
+  margin: 0 0 8px 0;
+}
 .controls-CheckBox {
   cursor: pointer;
   display: inline-block;
@@ -585,6 +601,14 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CheckBox.ws-disabled.controls-Checked__checked:hover .controls-CheckBox__icon {
   background: url('img/CheckBox-sprite.png') 0 -64px;
+}
+.controls-CheckBoxGroup .controls-ListView__item {
+  display: inline-block;
+  margin: 0 16px 0 0;
+}
+.controls-CheckBoxGroup.controls-ButtonGroup__vertical .controls-ListView__item {
+  display: block;
+  margin: 0 0 8px 0;
 }
 .controls-Switcher {
   display: inline-block;
