@@ -1,4 +1,8 @@
 .controls-DataGrid {
+  .controls-ListView__item {
+    &:extend(.controls-ListView .controls-ListView__item all);
+  }
+
   .controls-DataGrid__table {
     width: 100%;
     border-spacing: @data-grid-border-spacing;

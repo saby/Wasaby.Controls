@@ -1045,6 +1045,22 @@
 
 
 // --------- //
+// List view //
+// --------- //
+
+@list-view-actions-cursor:                      pointer;
+@list-view-actions-height:                      16px;
+@list-view-actions-top-offset:                  50%;
+@list-view-actions-right-offset:                8px;
+@list-view-actions-margin:                      -8px 0 0;
+@list-view-actions-padding:                     0;
+@list-view-actions-gap:                         16px;
+@list-view-actions-zindex:                      10;
+@list-view-actions-bg:                          transparent;
+
+
+
+// --------- //
 // Data grid //
 // --------- //
 
@@ -1057,7 +1073,7 @@
 
 @data-grid-row-bg:                              transparent;
 @data-grid-row-hover-bg:                        @primary-color;
-@data-grid-row-selected-bg:                     lighten(@primary-color, 55%);
+@data-grid-row-selected-bg:                     @data-grid-row-bg;
 
 @data-grid-row-hover-header-cell-text-color:    inherit;
 @data-grid-row-hover-header-cell-bg:            @data-grid-row-hover-bg;

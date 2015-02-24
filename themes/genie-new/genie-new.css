@@ -1675,6 +1675,33 @@ input[type="reset"]::-moz-focus-inner {
   float: right;
   margin: 4px;
 }
+.controls-ListView .controls-ListView__item,
+.controls-DataGrid .controls-ListView__item {
+  overflow: hidden;
+  position: relative;
+}
+.controls-ListView .controls-ListView__item .controls-ListView__itemActions,
+.controls-DataGrid .controls-ListView__item .controls-ListView__itemActions {
+  position: absolute;
+  display: none;
+  height: 16px;
+  top: 50%;
+  right: 8px;
+  margin: -8px 0 0;
+  padding: 0;
+  z-index: 10;
+  background: transparent;
+}
+.controls-ListView .controls-ListView__item .controls-ListView__itemActions .controls-ListView__action,
+.controls-DataGrid .controls-ListView__item .controls-ListView__itemActions .controls-ListView__action {
+  display: inline;
+  cursor: pointer;
+  margin: 0 16px 0 0;
+}
+.controls-ListView .controls-ListView__item .controls-ListView__itemActions .controls-ListView__action:last-child,
+.controls-DataGrid .controls-ListView__item .controls-ListView__itemActions .controls-ListView__action:last-child {
+  margin: 0;
+}
 .controls-DataGrid .controls-DataGrid__table {
   width: 100%;
   border-spacing: 0;
@@ -1699,11 +1726,11 @@ input[type="reset"]::-moz-focus-inner {
   background: #00c795;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected {
-  background: #e1fff7;
+  background: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected .controls-DataGrid__td {
   color: inherit;
-  background: #e1fff7;
+  background: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th {
   position: relative;
@@ -1747,4 +1774,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-NumberTextBox .controls-TextBox__afterFieldWrapper {
   margin: 0 -4px 0 0;
+}
+.controls-DataGrid.controls-DataGrid__itemSelect .controls-ListView__item__selected .controls-DataGrid__td:first-child {
+  background-image: url('img/rowSelect.png');
+  background-position: left top;
+  background-repeat: repeat-y;
 }

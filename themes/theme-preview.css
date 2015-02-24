@@ -33,6 +33,19 @@ ul.preview-list li .row {
    margin: 4px 8px;
 }
 
+.list-view-item > .id {
+   color: #999;
+   font-size: 10px;
+}
+
+.list-view-item > .flag {
+   color: #008000;
+}
+
+.list-view-item > .no-flag {
+   color: #800000;
+}
+
 .clearfix:after {
    clear: both;
    content: ".";

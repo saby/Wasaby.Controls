@@ -845,10 +845,12 @@
       require([
          'js!SBIS3.CONTROLS.Collection',
          'js!SBIS3.CONTROLS.AdapterJSON',
+         'js!SBIS3.CONTROLS.ListView',
          'js!SBIS3.CONTROLS.DataGrid'
       ], function (
          Collection,
          AdapterJSON,
+         ListView,
          DataGrid
       ) {
 
@@ -878,18 +880,27 @@
             adapter: new AdapterJSON()
          });
 
+         new ListView({
+            element: 'listView',
+            items: items,
+            itemTemplate: '\
+               <div class="list-view-item">\
+                  <div class="id">{{= it.id }}</div>\
+                  <div class="{{? it.flag }}flag{{??}}no-flag{{?}}">{{= it.title }}</div>\
+               </div>\
+            ',
+            itemsActions: [{
+               icon: 'sprite:icon-16 icon-AddButton icon-primary',
+               handler: function(id, item) {
+                  console.log(id +' '+ item);
+               }
+            }]
+         });
+
          new DataGrid({
             element: 'dataGrid',
             items: items,
             itemSelect: true,
-            /*
-            itemsActions: [{
-               icon: 'sprite:icon-16 icon-AddButton icon-primary',
-               handler: function(id, item) {
-                  console.log(id + ' '+ item);
-               }
-            }],
-            */
             columns: [{
                title : 'Ид',
                field : 'id',
@@ -901,6 +912,12 @@
                title : 'Флаг',
                field : 'flag',
                width : 70
+            }],
+            itemsActions: [{
+               icon: 'sprite:icon-16 icon-AddButton icon-primary',
+               handler: function(id, item) {
+                  console.log(id +' '+ item);
+               }
             }]
          });
       });
