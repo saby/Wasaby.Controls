@@ -1,0 +1,17 @@
+<div class="controls-TableView{{?it.itemSelect !== false}} controls-TableView__itemSelect{{?}}">
+   <table class="controls-TableView__table">
+      <colgroup class="controls-TableView__colgroup">
+         {{~it.columns :column:index}}
+         <col{{?column.width}} width="{{=column.width}}" {{?}}/>
+         {{~}}
+      </colgroup>
+      <thead class="controls-TableView__thead{{?it.showHead === false}} ws-hidden{{?}}">
+         <tr>
+         {{~it.columns :column:index}}
+            <th class="controls-TableView__th">{{=column.title}}</th>
+         {{~}}
+         </tr>
+      </thead>
+      <tbody class="controls-TableView__tbody"></tbody>
+   </table>
+</div>
