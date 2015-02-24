@@ -27,6 +27,13 @@ define('js!SBIS3.CONTROLS.Menu', [
        * @event onMenuItemActivate При активации пункта меню
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} ID Идентификатор нажатого пункта.
+       * @example
+       * При выборе пункта меню данный ключ ставится в значение комбобокса
+       * <pre>
+       *     menu.subscribe('onMenuItemActivate', function (event, id) {
+       *        comboBox.setSelectedItem(id);
+       *     }); 
+       * </pre>
        */
       _dotTplFn : dot,
       $protected: {
