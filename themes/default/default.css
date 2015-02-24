@@ -444,6 +444,7 @@ input[type="reset"]::-moz-focus-inner {
   padding: 3px 0 0;
 }
 .controls-TabButton.ws-disabled {
+  cursor: default;
   border-width: 0;
   border-style: solid;
   border-color: transparent;
@@ -817,9 +818,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Button.controls-MenuButton.controls-MenuButton__withoutMenu {
   padding: 0 12px;
 }
-.controls-Button.controls-MenuButton:hover .controls-MenuButton__arrowDown {
-  background: transparent url('img/MenuButton-arrowDown.png') 0 6px;
-}
 .controls-Button.controls-MenuButton .controls-MenuButton__arrowDown {
   position: absolute;
   display: inline-block;
@@ -827,13 +825,57 @@ input[type="reset"]::-moz-focus-inner {
   height: 6px;
   right: 10px;
   top: 11px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
   background: transparent url('img/MenuButton-arrowDown.png') 0 0;
 }
-.controls-Button.controls-MenuButton.controls-Button__primary:hover .controls-MenuButton__arrowDown {
-  background: transparent url('img/MenuButton-arrowDown__primary.png') 0 0;
+.controls-Button.controls-MenuButton:hover .controls-MenuButton__arrowDown {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: transparent url('img/MenuButton-arrowDown.png') 0 6px;
+}
+.controls-Button.controls-MenuButton.controls-Checked__checked .controls-MenuButton__arrowDown {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+}
+.controls-Button.controls-MenuButton.controls-Checked__checked:hover .controls-MenuButton__arrowDown {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
 }
 .controls-Button.controls-MenuButton.controls-Button__primary .controls-MenuButton__arrowDown {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
   background: transparent url('img/MenuButton-arrowDown__primary.png') 0 0;
+}
+.controls-Button.controls-MenuButton.controls-Button__primary:hover .controls-MenuButton__arrowDown {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: transparent url('img/MenuButton-arrowDown__primary.png') 0 0;
+}
+.controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked .controls-MenuButton__arrowDown {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+}
+.controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked:hover .controls-MenuButton__arrowDown {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+}
+.controls-Button.controls-MenuButton.ws-disabled .controls-MenuButton__arrowDown {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: transparent url('img/MenuButton-arrowDown.png') 0 0;
 }
 .controls-Button.controls-MenuButton .controls-MenuButton__header {
   display: inline-block;

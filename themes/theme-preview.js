@@ -478,7 +478,7 @@
          ];
 
          new Button({
-            element: 'menuButton',
+            element: 'menuButton1',
             caption: 'Menu',
             handlers : {
                onActivated : function() {
@@ -517,18 +517,26 @@
          });
 
          new MenuButton({
-            element: 'menuDropdownButton',
+            element: 'menuButton2',
             items: items,
             hierField: 'par',
             caption: 'Dropdown menu'
          });
 
          new MenuButton({
-            element: 'menuDropdownButtonPrimary',
+            element: 'menuButton3',
             primary: true,
             items: items,
             hierField: 'par',
             caption: 'Primary dropdown menu'
+         });
+
+         new MenuButton({
+            element: 'menuButton4',
+            items: items,
+            hierField: 'par',
+            caption: 'Disabled dropdown menu',
+            enabled: false
          });
 
          new MenuLink({

@@ -224,6 +224,7 @@
 // ---------- //
 
 @tab-button-cursor:                             pointer;
+@tab-button-disabled-cursor:                    default;
 
 @tab-button-font:                               italic bold 18px Cambria, sans-serif;
 
@@ -484,46 +485,84 @@
 // Menu button //
 // ----------- //
 
-@menu-button-arrow-width:                 8px;
-@menu-button-arrow-height:                6px;
-@menu-button-arrow-right-offset:          10px;
-@menu-button-arrow-top-offset:            11px;
+@menu-button-arrow-width:                       8px;
+@menu-button-arrow-height:                      6px;
+@menu-button-arrow-right-offset:                10px;
+@menu-button-arrow-top-offset:                  11px;
 
-@menu-button-arrow-padding:               0 23px 0 12px;          // padding for menu button containing dropdown arrow
-@menu-button-no-arrow-padding:            @button-padding;        // padding for menu button when dropdown arrow is missed
+@menu-button-arrow-padding:                     0 23px 0 12px;          // padding for menu button containing dropdown arrow
+@menu-button-no-arrow-padding:                  @button-padding;        // padding for menu button when dropdown arrow is missed
 
 // Default menu button
-@menu-button-arrow-spritesheet:          'img/MenuButton-arrowDown.png';
-@menu-button-arrow-bg:                    transparent url(@menu-button-arrow-spritesheet) 0 0;
-@menu-button-arrow-hover-bg:              transparent url(@menu-button-arrow-spritesheet) 0 6px;
+@menu-button-arrow-spritesheet:                 'img/MenuButton-arrowDown.png';
+
+@menu-button-arrow-border-width:                0;
+@menu-button-arrow-border-style:                solid;
+@menu-button-arrow-border-color:                transparent;
+@menu-button-arrow-bg:                          transparent url(@menu-button-arrow-spritesheet) 0 0;
+
+@menu-button-arrow-hover-border-width:          @menu-button-arrow-border-width;
+@menu-button-arrow-hover-border-style:          @menu-button-arrow-border-style;
+@menu-button-arrow-hover-border-color:          @menu-button-arrow-border-color;
+@menu-button-arrow-hover-bg:                    transparent url(@menu-button-arrow-spritesheet) 0 6px;
+
+@menu-button-arrow-checked-border-width:        @menu-button-arrow-border-width;
+@menu-button-arrow-checked-border-style:        @menu-button-arrow-border-style;
+@menu-button-arrow-checked-border-color:        @menu-button-arrow-border-color;
+
+@menu-button-arrow-checked-hover-border-width:  @menu-button-arrow-checked-border-width;
+@menu-button-arrow-checked-hover-border-style:  @menu-button-arrow-checked-border-style;
+@menu-button-arrow-checked-hover-border-color:  @menu-button-arrow-checked-border-color;
 
 // Primary menu button
-@menu-button-primary-arrow-spritesheet:  'img/MenuButton-arrowDown__primary.png';
-@menu-button-primary-arrow-bg:            transparent url(@menu-button-primary-arrow-spritesheet) 0 0;
-@menu-button-primary-arrow-hover-bg:      @menu-button-primary-arrow-bg;
+@menu-button-primary-arrow-spritesheet:         'img/MenuButton-arrowDown__primary.png';
+
+@menu-button-primary-arrow-border-width:                @menu-button-arrow-border-width;
+@menu-button-primary-arrow-border-style:                @menu-button-arrow-border-style;
+@menu-button-primary-arrow-border-color:                @menu-button-arrow-border-color;
+@menu-button-primary-arrow-bg:                          transparent url(@menu-button-primary-arrow-spritesheet) 0 0;
+
+@menu-button-primary-arrow-hover-border-width:          @menu-button-primary-arrow-border-width;
+@menu-button-primary-arrow-hover-border-style:          @menu-button-primary-arrow-border-style;
+@menu-button-primary-arrow-hover-border-color:          @menu-button-primary-arrow-border-color;
+@menu-button-primary-arrow-hover-bg:                    @menu-button-primary-arrow-bg;
+
+@menu-button-primary-arrow-checked-border-width:        @menu-button-primary-arrow-border-width;
+@menu-button-primary-arrow-checked-border-style:        @menu-button-primary-arrow-border-style;
+@menu-button-primary-arrow-checked-border-color:        @menu-button-primary-arrow-border-color;
+
+@menu-button-primary-arrow-checked-hover-border-width:  @menu-button-primary-arrow-checked-border-width;
+@menu-button-primary-arrow-checked-hover-border-style:  @menu-button-primary-arrow-checked-border-style;
+@menu-button-primary-arrow-checked-hover-border-color:  @menu-button-primary-arrow-checked-border-color;
+
+// Disabled menu button
+@menu-button-arrow-disabled-border-width:       @menu-button-arrow-border-width;
+@menu-button-arrow-disabled-border-style:       @menu-button-arrow-border-style;
+@menu-button-arrow-disabled-border-color:       @menu-button-arrow-border-color;
+@menu-button-arrow-disabled-bg:                 @menu-button-arrow-bg;
 
 // Menu
-@menu-button-menu-top-margin:             3px;
-@menu-button-menu-left-margin:            0;
-@menu-button-menu-bg:                     @white-color;
+@menu-button-menu-top-margin:                   3px;
+@menu-button-menu-left-margin:                  0;
+@menu-button-menu-bg:                           @white-color;
 
 // Menu header
-@menu-button-header-spritesheet:          'img/MenuButton-header.png';
+@menu-button-header-spritesheet:                'img/MenuButton-header.png';
 
-@menu-button-header-left-width:           12px;
-@menu-button-header-left-height:          28px;
-@menu-button-header-left-margin:          0;
-@menu-button-header-left-bg:              transparent url(@menu-button-header-spritesheet) 0 28px;
+@menu-button-header-left-width:                 12px;
+@menu-button-header-left-height:                28px;
+@menu-button-header-left-margin:                0;
+@menu-button-header-left-bg:                    transparent url(@menu-button-header-spritesheet) 0 28px;
 
-@menu-button-header-center-width:         auto;
-@menu-button-header-center-height:        4px;
-@menu-button-header-center-margin:        0;
-@menu-button-header-center-bg:            @white-color;
+@menu-button-header-center-width:               auto;
+@menu-button-header-center-height:              4px;
+@menu-button-header-center-margin:              0;
+@menu-button-header-center-bg:                  @white-color;
 
-@menu-button-header-right-width:          28px;
-@menu-button-header-right-height:         28px;
-@menu-button-header-right-margin:         0 0 0 -5px;
-@menu-button-header-right-bg:             transparent url(@menu-button-header-spritesheet) 0 0;
+@menu-button-header-right-width:                28px;
+@menu-button-header-right-height:               28px;
+@menu-button-header-right-margin:               0 0 0 -5px;
+@menu-button-header-right-bg:                   transparent url(@menu-button-header-spritesheet) 0 0;
 
 
 
