@@ -1041,3 +1041,59 @@
 @edit-at-place-cancel-button-spritesheet:       'img/cancelIcon-sprite.png';
 @edit-at-place-cancel-button-bg:                url(@edit-at-place-cancel-button-spritesheet) 0 -32px no-repeat;
 @edit-at-place-cancel-button-hover-bg:          url(@edit-at-place-cancel-button-spritesheet) 0 -16px no-repeat;
+
+
+
+// --------- //
+// Data grid //
+// --------- //
+
+@data-grid-bg:                                  @white-color;
+@data-grid-border-spacing:                      0;
+@data-grid-border-collapse:                     collapse;
+@data-grid-border-width:                        0;
+@data-grid-border-style:                        solid;
+@data-grid-border-color:                        transparent;
+
+@data-grid-row-bg:                              transparent;
+@data-grid-row-hover-bg:                        @primary-color;
+@data-grid-row-selected-bg:                     lighten(@primary-color, 55%);
+
+@data-grid-row-hover-header-cell-text-color:    inherit;
+@data-grid-row-hover-header-cell-bg:            @data-grid-row-hover-bg;
+
+@data-grid-row-hover-cell-text-color:           @white-color;
+@data-grid-row-hover-cell-bg:                   @data-grid-row-hover-bg;
+
+@data-grid-row-selected-cell-text-color:        inherit;
+@data-grid-row-selected-cell-bg:                @data-grid-row-selected-bg;
+
+@data-grid-header-cell-cursor:                  pointer;
+@data-grid-header-cell-text-alignment:          left;
+@data-grid-header-cell-height:                  32px;
+@data-grid-header-cell-padding:                 0 10px;
+
+@data-grid-header-cell-border-width:            1px 1px 0 1px;
+@data-grid-header-cell-border-style:            solid;
+@data-grid-header-cell-border-color:            transparent;
+
+@data-grid-header-cell-text-color:              @gray-color;
+@data-grid-header-cell-bg:                      transparent;
+
+@data-grid-header-cell-hover-text-color:        @data-grid-header-cell-text-color;
+@data-grid-header-cell-hover-bg:                @data-grid-header-cell-bg;
+
+@data-grid-cell-cursor:                         @data-grid-header-cell-cursor;
+@data-grid-cell-text-alignment:                 @data-grid-header-cell-text-alignment;
+@data-grid-cell-height:                         @data-grid-header-cell-height;
+@data-grid-cell-padding:                        @data-grid-header-cell-padding;
+
+@data-grid-cell-border-width:                   1px 0 0;
+@data-grid-cell-border-style:                   solid;
+@data-grid-cell-border-color:                   @gray-light-color;
+
+@data-grid-cell-text-color:                     inherit;
+@data-grid-cell-bg:                             transparent;
+
+@data-grid-cell-hover-text-color:               @data-grid-cell-text-color;
+@data-grid-cell-hover-bg:                       @data-grid-cell-bg;

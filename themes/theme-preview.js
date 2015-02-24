@@ -7,6 +7,7 @@
          initSwitchers();
          initMenus();
          initInputFields();
+         initViews();
          initThemeSelector();
          initBackButton();
       });
@@ -837,6 +838,71 @@
 
          editAtPlaceGroupArea.getLinkedContext().setValue('field1', '7703585780');
          editAtPlaceGroupArea.getLinkedContext().setValue('field2', '997150001');
+      });
+   }
+
+   function initViews() {
+      require([
+         'js!SBIS3.CONTROLS.Collection',
+         'js!SBIS3.CONTROLS.AdapterJSON',
+         'js!SBIS3.CONTROLS.DataGrid'
+      ], function (
+         Collection,
+         AdapterJSON,
+         DataGrid
+      ) {
+
+         var items = new Collection({
+            data: [{
+               id: 1,
+               title: 'Title 1',
+               flag: true,
+               par: null
+            }, {
+               id: 2,
+               title : 'Title 2',
+               flag: false,
+               par: null
+            }, {
+               id: 3,
+               title: 'Title 3',
+               flag: true,
+               par: 1
+            }, {
+               id: 4,
+               title: 'Title 4',
+               flag: true,
+               par: 3
+            }],
+            keyField: 'id',
+            adapter: new AdapterJSON()
+         });
+
+         new DataGrid({
+            element: 'dataGrid',
+            items: items,
+            itemSelect: true,
+            /*
+            itemsActions: [{
+               icon: 'sprite:icon-16 icon-AddButton icon-primary',
+               handler: function(id, item) {
+                  console.log(id + ' '+ item);
+               }
+            }],
+            */
+            columns: [{
+               title : 'Ид',
+               field : 'id',
+               width : 50
+            }, {
+               title : 'Имя',
+               field  : 'title'
+            }, {
+               title : 'Флаг',
+               field : 'flag',
+               width : 70
+            }]
+         });
       });
    }
 

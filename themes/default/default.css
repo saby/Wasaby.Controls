@@ -1675,3 +1675,67 @@ input[type="reset"]::-moz-focus-inner {
   float: right;
   margin: 4px;
 }
+.controls-DataGrid .controls-DataGrid__table {
+  width: 100%;
+  border-spacing: 0;
+  border-collapse: collapse;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: #ffffff;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr {
+  background: transparent;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover {
+  background: transparent;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover .controls-DataGrid__th {
+  color: inherit;
+  background: transparent;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover .controls-DataGrid__td {
+  color: inherit;
+  background: transparent;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected {
+  background: transparent;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected .controls-DataGrid__td {
+  color: inherit;
+  background: transparent;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th {
+  position: relative;
+  cursor: pointer;
+  text-align: left;
+  height: auto;
+  padding: 6px;
+  color: inherit;
+  background: transparent;
+  border-collapse: collapse;
+  border-width: 1px 1px 0 1px;
+  border-style: solid;
+  border-color: transparent;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:hover {
+  color: inherit;
+  background: transparent;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
+  position: relative;
+  cursor: pointer;
+  text-align: left;
+  height: auto;
+  padding: 6px;
+  color: inherit;
+  background: transparent;
+  border-collapse: collapse;
+  border-width: 1px 0 0;
+  border-style: solid;
+  border-color: #cccccc;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:hover {
+  color: inherit;
+  background: transparent;
+}
