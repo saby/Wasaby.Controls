@@ -8,13 +8,33 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
     * @class SBIS3.CONTROLS.Link
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.Link'>
+    *    <option name='caption' value='Ссылка'></option>
+    * </component>
     */
 
    var Link = ButtonBase.extend( /** @lends SBIS3.Engine.Link.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
+             /**
+              * @cfg {String} Адрес документа, к которому нужно перейти
+              * @example
+              * <pre>
+              *     <option name="href">https://google.ru/</option>
+              * </pre>
+              * @see inNewTab
+              */
             href: '',
+             /**
+              * @cfg {Boolean} В новой ли вкладке открыть ссылку
+              * @example
+              * <pre>
+              *     <option name="inNewTab">true</option>
+              * </pre>
+              * @see href
+              */
             inNewTab: false
          }
       },
@@ -41,7 +61,13 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
          }
          this._container.html(content);
       },
-
+       /**
+        * Установить ссылку.
+        * Метод установки либо замены ссылки, заданноё опцией {@link href}.
+        * @param href Сыылка.
+        * @see href
+        * @see inNewTab
+        */
       setHref: function(href){
          this._options.href = href;
          if (!href) {
