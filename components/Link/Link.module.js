@@ -12,6 +12,9 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
     * <component data-component='SBIS3.CONTROLS.Link'>
     *    <option name='caption' value='Ссылка'></option>
     * </component>
+    * @public
+    * @category Buttons
+    * @ignoreOptions validators, independentContext, contextRestriction, allowChangeEnable, extendedTooltip
     */
 
    var Link = ButtonBase.extend( /** @lends SBIS3.Engine.Link.prototype */ {
