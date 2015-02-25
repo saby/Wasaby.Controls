@@ -23,30 +23,32 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
       },
 
       $constructor: function() {
-         var self = this;
-         this._textContainer['off'] = $('.js-controls-SwitcherDoubleOnline__textOff',self._container.get(0));
-         this._textContainer['on'] = $('.js-controls-SwitcherDoubleOnline__textOn',self._container.get(0));
+         this._textContainer.off = $('.js-controls-SwitcherDoubleOnline__textOff',this._container.get(0));
+         this._textContainer.on = $('.js-controls-SwitcherDoubleOnline__textOn',this._container.get(0));
+         this._container.bind('mousedown' , function(e) { e.preventDefault(); });
       },
 
       _clickHandler : function(e) {
-         if (e.target == this._textContainer['off'].get(0)) {
+         if (e.target == this._textContainer.off.get(0)) {
             if (this.isEnabled()) {
                this.setState('off');
             }
          }
-         else if (e.target == this._textContainer['on'].get(0)) {
+         else if (e.target == this._textContainer.on.get(0)) {
             if (this.isEnabled()) {
                this.setState('on');
             }
          }
          else {
-            SwitcherDoubleOnline.superclass._clickHandler.call(this);
+            if (e.target == this._switcher.get(0)) {
+               SwitcherDoubleOnline.superclass._clickHandler.call(this);
+            }
          }
       },
 
       setState: function(state) {
-         var oppositeState = (state == 'on') ? 'off' : 'on';
          SwitcherDoubleOnline.superclass.setState.call(this,state);
+         var oppositeState = (state == 'on') ? 'off' : 'on';
          if (state =='on' || state == 'off') {
             this._switcher.addClass('controls-SwitcherDoubleOnline-' + state + '-toggled').removeClass('controls-SwitcherDoubleOnline-' + oppositeState + '-toggled');
             this._textContainer[oppositeState].addClass('controls-SwitcherDoubleOnline__unselected');
