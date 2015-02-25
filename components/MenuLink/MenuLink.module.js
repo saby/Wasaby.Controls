@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
     * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuLink'>
-    *    <option name='caption' value='Кнопка в виде ссылки с меню'></option>
+    *    <option name='caption' value='Ссылка с меню'></option>
     *    <options name="items" type="array">
     *        <options>
     *            <option name="id">1</option>
