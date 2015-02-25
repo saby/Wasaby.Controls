@@ -148,7 +148,6 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
          this._dataSource.query(self._filter, self._sorting, offset, limit).addCallback(
             function (DS) {
                var
-                  itemsReadyDef = new $ws.proto.ParallelDeferred(),
                   itemsContainer = self._getItemsContainer();
 
                self.setDataSet(DS);
@@ -199,12 +198,19 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
 
       _createItemInstance: function (item, targetContainer) {
          var
-            itemTpl = this._getItemTemplate(item);
+            key = this._dataSet.getKey(item),
+            itemTpl = this._getItemTemplate(item),
+            container, dotTemplate;
 
          if (typeof itemTpl == 'string') {
-            var
-               key = this._dataSet.getKey(item),
-               container = $(MarkupTransformer(doT.template(itemTpl)(item)));
+            dotTemplate = itemTpl
+         }
+         else if (itemTpl instanceof Function) {
+            dotTemplate = itemTpl(item);
+         }
+
+         if (typeof dotTemplate == 'string') {
+            container = $(MarkupTransformer(doT.template(dotTemplate)(item)));
             this._addItemClasses(container, key);
             targetContainer.append(container);
          }
