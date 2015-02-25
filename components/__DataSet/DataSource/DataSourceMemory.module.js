@@ -4,9 +4,8 @@
 define('js!SBIS3.CONTROLS.DataSourceMemory', [
    'js!SBIS3.CONTROLS.IDataSource',
    'js!SBIS3.CONTROLS.Record',
-   'js!SBIS3.CONTROLS.DataSet',
-   'js!SBIS3.CONTROLS.DataStrategyArray'
-], function (IDataSource, Record, DataSet, DataStrategyArray) {
+   'js!SBIS3.CONTROLS.DataSet'
+], function (IDataSource, Record, DataSet) {
    'use strict';
 
    /**
@@ -36,9 +35,9 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
        */
       create: function () {
          var def = new $ws.proto.Deferred(),
-            strategy=new DataStrategyArray(),
+            strategy = this.getStrategy(),
             record = new Record(strategy);
-         strategy.addRawRecord(this._options.data,this._options.keyField,record);
+         strategy.addRawRecord(this._options.data, this._options.keyField, record);
          def.callback(record);
          return def;
       },
@@ -51,7 +50,7 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
       read: function (id) {
          var def = new $ws.proto.Deferred(),
          //TODO: переделать установку стратегии
-            strategy = new DataStrategyArray();
+            strategy = this.getStrategy();
          var record = new Record(strategy);
          // установка "сырых" данных для записи
          record.setRaw(strategy.findRawRecordByKey(this._options.data, this._options.keyField, id));
@@ -67,7 +66,7 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
       update: function (record) {
          var def = new $ws.proto.Deferred(),
          //TODO: переделать установку стратегии
-            strategy = new DataStrategyArray();
+            strategy = this.getStrategy();
          strategy.updateRawRecordByKey(this._options.data, this._options.keyField, record);
          def.callback(true);
          return def;
@@ -75,12 +74,12 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
 
       /**
        * Метод для удаления записи из источника данных
-       * @param {Number} id - идентификатор записи
+       * @param {Array | Number} id - идентификатор записи или массив идентификаторов
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет Boolean - результат успешности выполнения операции
        */
       destroy: function (id) {
          var def = new $ws.proto.Deferred(),
-            strategy = new DataStrategyArray();
+            strategy = this.getStrategy();
          strategy.destroy(this._options.data, this._options.keyField, id);
          def.callback(true);
          return def;
@@ -98,10 +97,10 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
       query: function (filter, sorting, offset, limit) {
          var def = new $ws.proto.Deferred(),
          //TODO: переделать установку стратегии
-            strategy = new DataStrategyArray(),
+            strategy = this.getStrategy(),
             data = strategy.query(this._options.data, filter, sorting, offset, limit);
          var DS = new DataSet({
-            strategy: 'DataStrategyArray',
+            strategyName: this._options.strategyName,
             data: data,
             keyField: this._options.keyField
          });

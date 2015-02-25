@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], function (IDataStrategy) {
    'use strict';
-   return IDataStrategy.extend({
+   var DataStrategyBL = IDataStrategy.extend({
       $protected: {
       },
       $constructor: function () {
@@ -100,7 +100,7 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
          return d[index];
       },
 
-      prepareFilterParam:function(filter){
+      prepareFilterParam: function (filter) {
          // настройка объекта фильтрации для отправки на БЛ
          var filterParam = {
             d: [],
@@ -134,7 +134,7 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
          return filterParam;
       },
 
-      prepareSortingParam:function(sorting){
+      prepareSortingParam: function (sorting) {
          // настройка сортировки
          var sortingParam = null;
          if (sorting) {
@@ -162,9 +162,9 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
          return sortingParam;
       },
 
-      prepareRecordForUpdate:function(record){
+      prepareRecordForUpdate: function (record) {
          // поддержим формат запросов к БЛ
-         var  rawData = record.getRaw();
+         var rawData = record.getRaw();
          return {
             s: rawData.s,
             d: rawData.d,
@@ -175,4 +175,6 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
       }
 
    });
+
+   return new DataStrategyBL();
 });

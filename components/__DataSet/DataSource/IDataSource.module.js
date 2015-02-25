@@ -1,7 +1,9 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.IDataSource', [], function () {
+define('js!SBIS3.CONTROLS.IDataSource', [
+   'js!SBIS3.CONTROLS.StrategyHelper'
+], function (StrategyHelper) {
    'use strict';
 
    /**
@@ -10,10 +12,33 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
 
    return $ws.core.extend({}, {
       $protected: {
+         /**
+          * Объект стратегии работы с данными
+          */
+         _strategy: undefined,
+         _options: {
+            strategyName: ''
+         }
       },
       $constructor: function () {
+         if (this._options.strategyName) {
+            this._strategy = StrategyHelper.getStrategyObjectByName(this._options.strategyName);
+         }
       },
-
+      /**
+       * Установить объект стратегии работы с данными
+       * @param {Object} strategyObject
+       */
+      setStrategy: function (strategyObject) {
+         this._strategy = strategyObject;
+      },
+      /**
+       * Получить объект стратегии работы с данными
+       * @returns {Object}
+       */
+      getStrategy: function () {
+         return this._strategy;
+      },
       /**
        * Метод создает запись в источнике данных
        */
@@ -39,7 +64,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
 
       /**
        * Метод для удаления записи из источника данных
-       * @param {Number} id - идентификатор записи
+       * @param {Array | Number} id - идентификатор записи или массив идентификаторов
        */
       destroy: function (id) {
          /*Method must be implemented*/

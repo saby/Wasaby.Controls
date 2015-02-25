@@ -4,9 +4,8 @@
 define('js!SBIS3.CONTROLS.DataSourceBL', [
    'js!SBIS3.CONTROLS.IDataSource',
    'js!SBIS3.CONTROLS.Record',
-   'js!SBIS3.CONTROLS.DataSet',
-   'js!SBIS3.CONTROLS.DataStrategyBL'
-], function (IDataSource, Record, DataSet, DataStrategyBL) {
+   'js!SBIS3.CONTROLS.DataSet'
+], function (IDataSource, Record, DataSet) {
    'use strict';
 
    /**
@@ -16,6 +15,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
    return IDataSource.extend({
       $protected: {
          _options: {
+            strategyName: 'DataStrategyBL',
             /**
              * сопоставление CRUD операций и методов БЛ
              */
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
          var self = this,
             def = new $ws.proto.Deferred();
          self._BL.call(self._options.crateMethodName, {'Фильтр': null, 'ИмяМетода': null}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
-            var record = new Record(new DataStrategyBL());
+            var record = new Record(self.getStrategy());
             record.setRaw(res);
             def.callback(record);
          });
@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
             def = new $ws.proto.Deferred();
          self._BL.call(self._options.readMethodName, {'ИдО': id, 'ИмяМетода': 'Список'}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
             //TODO: переделать установку стратегии стратегию
-            var record = new Record(new DataStrategyBL());
+            var record = new Record(self.getStrategy());
             record.setRaw(res);
             def.callback(record);
          });
@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
        */
       update: function (record) {
          var self = this,
-            strategy = new DataStrategyBL(),
+            strategy = this.getStrategy(),
             def = new $ws.proto.Deferred(),
             rec = strategy.prepareRecordForUpdate(record);
 
@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
 
       /**
        * Метод для удаления записи из БЛ
-       * @param {Number} id - идентификатор записи
+       * @param {Array | Number} id - идентификатор записи или массив идентификаторов
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет Boolean - результат успешности выполнения операции
        */
       destroy: function (id) {
@@ -112,7 +112,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
       query: function (filter, sorting, offset, limit) {
 
          var self = this,
-            strategy = new DataStrategyBL(),
+            strategy = this.getStrategy(),
             def = new $ws.proto.Deferred();
 
          filter = filter || [];
@@ -123,7 +123,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
          self._BL.call(self._options.queryMethodName, {'ДопПоля': [], 'Фильтр': filterParam, 'Сортировка': sortingParam, 'Навигация': null}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
 
             var DS = new DataSet({
-               strategy: 'DataStrategyBL',
+               strategyName: self._options.strategyName,
                data: res
             });
 

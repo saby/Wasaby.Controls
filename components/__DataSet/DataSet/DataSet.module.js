@@ -3,9 +3,8 @@
  */
 define('js!SBIS3.CONTROLS.DataSet', [
    'js!SBIS3.CONTROLS.Record',
-   'js!SBIS3.CONTROLS.DataStrategyArray',
-   'js!SBIS3.CONTROLS.DataStrategyBL'
-], function (Record, DataStrategyArray, DataStrategyBL) {
+   'js!SBIS3.CONTROLS.StrategyHelper'
+], function (Record, StrategyHelper) {
    'use strict';
 
    /**
@@ -29,13 +28,13 @@ define('js!SBIS3.CONTROLS.DataSet', [
          _options: {
             data: undefined,
             /**
-             * @cfg {String} название поля-идентификатора записи
+             * @cfg {String} название поля-идентификатора записи, при работе с БЛ проставляется автоматически
              */
             keyField: '',
             /**
              * @cfg {String} назвение класса, реализующего интерфейс IDataStrategy
              */
-            strategy: 'DataStrategyBL' // пока по дефолту оставим так
+            strategyName: '' //FixME: что по умолчанию?
          }
       },
       $constructor: function () {
@@ -44,19 +43,15 @@ define('js!SBIS3.CONTROLS.DataSet', [
             this._prepareData(this._options.data);
          }
 
-         //FixME: сделаем глобальный объект со всеми стратегиями и свитч будет не нужен?
-         // создаем объект, реализующий интерфейс IDataStrategy, чтобы DataSet мог работать с "сырыми" данными
-         switch (this._options.strategy) {
-            case 'DataStrategyBL':
-               this._strategy = new DataStrategyBL();
-               this._keyField = this._strategy.getKey(this._rawData);
-               break;
-            case 'DataStrategyArray':
-               this._strategy = new DataStrategyArray();
-               if (this._options.keyField) {
-                  this._keyField = this._options.keyField;
-               }
-               break;
+
+         if (this._options.strategyName) {
+            this._strategy = StrategyHelper.getStrategyObjectByName(this._options.strategyName);
+         }
+
+         if (this._options.keyField) {
+            this._keyField = this._options.keyField;
+         } else {
+            this._keyField = this._strategy.getKey(this._rawData);
          }
 
       },
