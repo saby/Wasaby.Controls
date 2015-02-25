@@ -28,7 +28,12 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
 
          //TODO совместимость
          if (this._options.items) {
-            this._options.dataSource = this._options.items;
+            if (this._options.items instanceof Array) {
+               this._options.dataSource = this._options.items;
+            }
+            else {
+               this._options.dataSource = this._options.items;
+            }
             if (typeof(window) != 'undefined'){
                console['log']('Опция items устарела. Она прекратит работу в версии 3.7.2');
             }
@@ -59,6 +64,25 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
             self._drawItems();
          })
 
+      },
+
+
+      setItems: function(items) {
+         var
+            item = items[0],
+            keyField;
+         if (item && Object.prototype.toString.call(item) === '[object Object]') {
+            keyField = Object.keys(item)[0];
+         }
+         this._dataSource = new DataSourceMemory({
+            data: items,
+            keyField: keyField
+         });
+         this._drawItems();
+         //TODO совместимость
+         if (typeof(window) != 'undefined') {
+            console['log']('Метод setItems устарел. Он прекратит работу в версии 3.7.2');
+         }
       },
 
       getDataSet: function () {
