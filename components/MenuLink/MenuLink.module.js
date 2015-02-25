@@ -7,8 +7,25 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
     * @class SBIS3.Engine.MenuLink
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.MenuLink'>
+    *    <option name='caption' value='Ссылка с меню'></option>
+    *    <options name="items" type="array">
+    *        <options>
+    *            <option name="id">1</option>
+    *            <option name="title">Пункт1</option>
+    *         </options>
+    *         <options>
+    *            <option name="id">2</option>
+    *            <option name="title">Пункт2</option>
+    *         </options>
+    *      </options>
+    * </component>
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
+    * @public
+    * @category Buttons
+    * @ignoreOptions validators, independentContext, contextRestriction, allowChangeEnable, extendedTooltip
     */
 
    var MenuLink = Link.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.Engine.Link.prototype */ {
