@@ -8,10 +8,11 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
     * Интерфейс предназначен для работы с источником данных
     */
 
-   return $ws.core.extend({}, {
+   return $ws.proto.Abstract.extend({
       $protected: {
       },
       $constructor: function () {
+         this._publish('onCreate', 'onRead', 'onUpdate', 'onDestroy', 'onQuery', 'onDataChange');
       },
 
       /**
@@ -31,7 +32,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
 
       /**
        * Метод для обновлениязаписи в источнике данных
-       * @param (js!SBIS3.CONTROLS.Record) record - измененная запись
+       * @param (SBIS3.CONTROLS.Record) record - измененная запись
        */
       update: function (record) {
          /*Method must be implemented*/

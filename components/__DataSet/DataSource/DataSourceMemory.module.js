@@ -40,6 +40,12 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
             record = new Record(strategy);
          strategy.addRawRecord(this._options.data,this._options.keyField,record);
          def.callback(record);
+         var self = this;
+         def.addCallback(function(record){
+            self._notify('onCreate');
+            self._notify('onDataChange');
+            return record;
+         });
          return def;
       },
 
@@ -56,12 +62,18 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
          // установка "сырых" данных для записи
          record.setRaw(strategy.findRawRecordByKey(this._options.data, this._options.keyField, id));
          def.callback(record);
+         var self = this;
+         def.addCallback(function(record){
+            self._notify('onRead');
+            self._notify('onDataChange');
+            return record;
+         });
          return def;
       },
 
       /**
        * Метод для обновления записи в источнике данных
-       * @param (js!SBIS3.CONTROLS.Record) record - измененная запись
+       * @param (SBIS3.CONTROLS.Record) record - измененная запись
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет Boolean - результат успешности выполнения операции
        */
       update: function (record) {
@@ -70,6 +82,12 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
             strategy = new DataStrategyArray();
          strategy.updateRawRecordByKey(this._options.data, this._options.keyField, record);
          def.callback(true);
+         var self = this;
+         def.addCallback(function(res){
+            self._notify('onUpdate');
+            self._notify('onDataChange');
+            return res;
+         });
          return def;
       },
 
@@ -83,6 +101,12 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
             strategy = new DataStrategyArray();
          strategy.destroy(this._options.data, this._options.keyField, id);
          def.callback(true);
+         var self = this;
+         def.addCallback(function(res){
+            self._notify('onDestroy');
+            self._notify('onDataChange');
+            return res;
+         });
          return def;
       },
 
@@ -106,6 +130,11 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
             keyField: this._options.keyField
          });
          def.callback(DS);
+         var self = this;
+         def.addCallback(function(res){
+            self._notify('onDelete');
+            return res;
+         });
          return def;
       }
 

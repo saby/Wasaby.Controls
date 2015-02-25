@@ -54,6 +54,11 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
             this._dataSource = this._options.dataSource;
          }
 
+         var self = this;
+         this._dataSource.subscribe('onDataChange', function(){
+            self._drawItems();
+         })
+
       },
 
       getDataSet: function () {
