@@ -399,11 +399,13 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
+  background: transparent;
 }
 .controls-TabButton:hover {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
+  background: transparent;
 }
 .controls-TabButton:hover .controls-TabButton__inner .controls-TabButton__caption {
   color: #000000;
@@ -412,6 +414,7 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
+  background: transparent;
 }
 .controls-TabButton.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__caption {
   color: #000000;
@@ -420,6 +423,7 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
+  background: transparent;
 }
 .controls-TabButton.controls-Checked__checked:hover .controls-TabButton__inner .controls-TabButton__caption {
   color: #000000;
@@ -456,6 +460,7 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
+  background: transparent;
 }
 .controls-TabButton.ws-disabled .controls-TabButton__inner .controls-TabButton__caption {
   color: #999999;
@@ -464,6 +469,7 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
+  background: transparent;
 }
 .controls-TabButton.ws-disabled.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__caption {
   color: #999999;

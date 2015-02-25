@@ -619,6 +619,7 @@
          'js!SBIS3.CONTROLS.FormattedTextBox',
          'js!SBIS3.CONTROLS.DatePicker',
          'js!SBIS3.CONTROLS.NumberTextBox',
+         'js!SBIS3.Genie.UnitEditor',
          'js!SBIS3.CONTROLS.ComboBox',
          'js!SBIS3.CONTROLS.TextArea',
          'js!SBIS3.CORE.AreaAbstract',
@@ -630,6 +631,7 @@
          FormattedTextBox,
          DatePicker,
          NumberTextBox,
+         UnitEditor,
          ComboBox,
          TextArea,
          AreaAbstract,
@@ -709,6 +711,10 @@
             text: '123',
             enabled: false,
             enableArrows: true
+         });
+
+         new UnitEditor({
+            element: 'unitEditor'
          });
 
          var comboItems = [
@@ -942,17 +948,14 @@
 
    function initThemeSelector() {
       var themes =[{
-         key: 'genie-new',
-         title: 'Genie new'
-      }, {
-         key: 'default',
-         title: 'Default'
-      }, {
-         key: 'online',
-         title: 'Online'
+         key: 'demo-new',
+         title: 'Demo'
       }, {
          key: 'genie',
          title: 'Genie'
+      }, {
+         key: 'online',
+         title: 'Online'
       }, {
          key: 'presto',
          title: 'Presto'
@@ -961,39 +964,57 @@
       require([
          'js!SBIS3.CONTROLS.ComboBox'
       ], function(ComboBox) {
-         new ComboBox({
+         var selectedTheme = 'genie';
+         var themeIdMatch = location.search.match(/(\?|&)id=([a-z0-9-]+)(&.+)?$/);
+         if (themeIdMatch) {
+            for (var i = 0; i < themes.length; i += 1) {
+               if (themes[i].key === themeIdMatch[2]) {
+                  selectedTheme = themeIdMatch[2];
+                  break;
+               }
+            }
+         }
+
+         var loadTheme = function(themeName) {
+            var that = this;
+            var url = themeName + '/' + themeName + '.css';
+            $.ajax({
+               url: url,
+               beforeSend: function() {
+                  that.setEnabled(false);
+               }
+            }).then(function(data) {
+               var head = $('head');
+               var themeCssLink = head.find('link.theme-css');
+               if (themeCssLink.length === 0) {
+                  themeCssLink = $('<link />')
+                     .attr('rel', 'stylesheet')
+                     .attr('type', 'text/css')
+                     .attr('href', url)
+                     .addClass('theme-css');
+                  themeCssLink.appendTo(head);
+               }
+               else {
+                  themeCssLink.attr('href', url);
+               }
+            }).always(function() {
+               that.setEnabled(true);
+            });
+         };
+
+         var themeSelector = new ComboBox({
             element: 'themeSelector',
             items: themes,
             editable: false,
-            selectedItem: 'genie-new',
+            selectedItem: selectedTheme,
             handlers: {
                onSelectedItemChange: function(e, themeName) {
-                  var that = this;
-                  var url = themeName + '/' + themeName + '.css';
-                  $.ajax({
-                     url: url,
-                     beforeSend: function() {
-                        that.setEnabled(false);
-                     }
-                  }).then(function(data) {
-                     var themeCssLink = $('head').find('link.theme-css');
-                     if (themeCssLink.length === 0) {
-                        themeCssLink = $('<link />')
-                           .attr('rel', 'stylesheet')
-                           .attr('type', 'text/css')
-                           .attr('href', url)
-                           .addClass('theme-css');
-                        themeCssLink.appendTo($('head'));
-                     }
-                     else {
-                        themeCssLink.attr('href', url);
-                     }
-                  }).always(function() {
-                     that.setEnabled(true);
-                  });
+                  loadTheme.bind(this)(themeName);
                }
             }
          });
+
+         loadTheme.bind(themeSelector)(selectedTheme);
       });
    }
 

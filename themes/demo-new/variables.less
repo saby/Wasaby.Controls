@@ -1,12 +1,12 @@
 @white-color:                             #fff;
-@black-color:                             #000;
+@black-color:                             #333;
 
-@gray-dark-color:                         #666;
-@gray-color:                              #999;
-@gray-light-color:                        #ccc;
+@gray-dark-color:                         #868686;
+@gray-color:                              #c7c7c7;
+@gray-light-color:                        #e6e6e6;
 
-@default-color:                           transparent;
-@primary-color:                           transparent;
+@default-color:                           #f6f9fb;
+@primary-color:                           #ff8646;
 
 @font-basic-name:                         Tahoma, Geneva, sans-serif;
 @font-basic-size:                         13px;
@@ -18,13 +18,13 @@
 // ---- //
 
 @link-cursor:                             pointer;
-@link-text-color:                         #05b;
+@link-text-color:                         darken(@default-color, 35%);
 @link-text-decoration:                    none;
 @link-text-alignment:                     center;
 @link-line-height:                        normal;
 @link-padding:                            0;
 
-@link-hover-text-color:                   #ff7033;
+@link-hover-text-color:                   @primary-color;
 @link-hover-text-decoration:              underline;
 
 @link-active-text-color:                  @link-hover-text-color;
@@ -48,104 +48,104 @@
 @button-min-width:                        24px;
 @button-height:                           24px;
 @button-line-height:                      22px;
-@button-padding:                          0 12px;
+@button-padding:                          0 10px;
 @button-margin:                           auto;
-@button-border-radius:                    16px;
-@button-icon-top-offset:                  1px;                      // top offset of 16x16 icon
+@button-border-radius:                    4px;
+@button-icon-top-offset:                  0px;                      // top offset of 16x16 icon
 @button-icon-text-margin:                 0 0 0 20px;               // margin of text following 16x16 icon
-@button-icon-big-top-offset:              -3px;                     // top offset of 24x24 icon
+@button-icon-big-top-offset:              -4px;                     // top offset of 24x24 icon
 @button-icon-big-text-margin:             0 0 0 28px;               // margin of text following 24x24 icon
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
 
 // Normal default button
 @button-text-color:                       @black-color;
-@button-border:                           1px transparent;
-@button-shadow:                           inset 0 -1px 1px #afacab;
-@button-bg:                               url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXB2xKCIABAwfP/X+ekhWAYiXhjYGAwtTd3+V8/zqNw7Jm9JEqO5BRI0RPDSvALfpvYFsc6W2Y3MFnDOPRYo/l+OoxW9O8WrQSdfKJEjXw9EE11A2vvQIELisuiAAAAAElFTkSuQmCC');
+@button-border:                           1px solid darken(@default-color, 20%);
+@button-shadow:                           none;
+@button-bg:                               @default-color;
 
 @button-hover-text-color:                 @button-text-color;
 @button-hover-border:                     @button-border;
-@button-hover-shadow:                     inset 0 -1px 1px #919090;
-@button-hover-bg:                         url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAVElEQVQYVwXB2RJAIABA0fv/n2hNEi0oqonx4By+WnlL4cmZmhLlvsgxkkLgOk/isRO853CO3Rq82bDritGabVFoNbNIiZoEUoxM44DoO4aupW+bH5+uQdm94t5JAAAAAElFTkSuQmCC');
+@button-hover-shadow:                     @button-shadow;
+@button-hover-bg:                         darken(@default-color, 5%);
 
-@button-active-text-color:                @button-text-color;
+@button-active-text-color:                darken(@default-color, 35%);
 @button-active-border:                    @button-border;
-@button-active-shadow:                    inset 0 1px 1px #939292;
-@button-active-bg:                        url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXBWQ6DIABAwXf/sxlj3UUJhIqKogSX+tsZ3t/Fc0fuM3DGgxg8YV85vMOvM5uzuHlksYZp1Fij+GqJUT1aCtTQIkXN0FaIpqCrPjRFRp2nlFnyB0tqP75XY7RKAAAAAElFTkSuQmCC');
+@button-active-shadow:                    @button-shadow;
+@button-active-bg:                        darken(@default-color, 10%);
 
 // Normal primary button
 @button-primary-text-color:               @white-color;
-@button-primary-border:                   1px transparent;
-@button-primary-shadow:                   inset 0 -1px 1px #c0401e;
-@button-primary-bg:                       url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAGtJREFUGFcBYACf/wD9sn8A/K57APupdwD6pXMA+qFvAPmdawD4mWgA+JRkAPeQYAD2jFwA9YhYAPWEVQD0gFEA83tNAPN3SQDyc0UA8W9BAPFrPgDwZzoA72M2AO5eMgDuWi4A7VYqAOxSJrQMKtPRuIzAAAAAAElFTkSuQmCC');
+@button-primary-border:                   1px solid @primary-color;
+@button-primary-shadow:                   @button-shadow;
+@button-primary-bg:                       @primary-color;
 
 @button-primary-hover-text-color:         @button-primary-text-color;
-@button-primary-hover-border:             @button-primary-border;
-@button-primary-hover-shadow:             inset 0 -1px 1px #a15823;
-@button-primary-hover-bg:                 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAGtJREFUGFcBYACf/wD8wYIA+7x9APq3eAD5s3QA+K5vAPeqagD2pWUA9aFgAPScXADzmFcA8pNSAPGOTgDwikkA74VEAO6BPwDtfDoA7Hc2AOtzMQDqbiwA6WooAOhlIwDnYB4A5lwZAOVXFMyDKrhOhVNDAAAAAElFTkSuQmCC');
+@button-primary-hover-border:             1px solid darken(@primary-color, 7.5%);
+@button-primary-hover-shadow:             @button-shadow;
+@button-primary-hover-bg:                 darken(@primary-color, 7.5%);
 
 @button-primary-active-text-color:        @button-primary-text-color;
-@button-primary-active-border:            @button-primary-border;
-@button-primary-active-shadow:            inset 0 1px 1px #8e5f42;
-@button-primary-active-bg:                url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAGtJREFUGFcBYACf/wD+om4A/J5qAPuZZgD6lWIA+ZFeAPiNWgD3iVYA9oVSAPWBTgD0fUoA83hGAPJ0QwDxcD8A72w7AO5oNwDtZDMA7GAvAOtcKwDqVycA6VMjAOhPHwDnSxsA5kcYAOVDFBcJJ2BPy3aDAAAAAElFTkSuQmCC');
+@button-primary-active-border:            1px solid darken(@primary-color, 15%);
+@button-primary-active-shadow:            @button-shadow;
+@button-primary-active-bg:                darken(@primary-color, 15%);
 
 // Normal disabled button
-@button-disabled-text-color:              @gray-light-color;
-@button-disabled-border:                  @button-border;
-@button-disabled-shadow:                  inset 0 -1px 1px #bbbbba;
-@button-disabled-bg:                      url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAARUlEQVQYVxXDCRIAEQwAwfn/Y9cRQcSxdFVzzmHvzVrrnsx5u+M+GOM2w6xjvdHbW2lVqfoWtAgqQpGM5ISkSH5jIIXvByxNRX+NbFFRAAAAAElFTkSuQmCC');
+@button-disabled-text-color:              @gray-color;
+@button-disabled-border:                  1px solid @gray-color;
+@button-disabled-shadow:                  @button-shadow;
+@button-disabled-bg:                      @gray-light-color;
 
 // Normal light button
-@button-light-text-color:                 @black-color;
-@button-light-border:                     1px solid #587ab0;
-@button-light-shadow:                     none;
+@button-light-text-color:                 @button-text-color;
+@button-light-border:                     @button-border;
+@button-light-shadow:                     @button-shadow;
 @button-light-bg:                         @white-color;
 
-@button-light-hover-text-color:           @button-light-text-color;
-@button-light-hover-border:               @button-light-border;
-@button-light-hover-shadow:               @button-light-shadow;
-@button-light-hover-bg:                   #e4e9f1;
+@button-light-hover-text-color:           @button-hover-text-color;
+@button-light-hover-border:               @button-hover-border;
+@button-light-hover-shadow:               @button-hover-shadow;
+@button-light-hover-bg:                   @button-hover-bg;
 
-@button-light-active-text-color:          @button-light-text-color;
-@button-light-active-border:              @button-light-border;
-@button-light-active-shadow:              @button-light-shadow;
-@button-light-active-bg:                  #cbd5e5;
+@button-light-active-text-color:          @button-active-text-color;
+@button-light-active-border:              @button-active-border;
+@button-light-active-shadow:              @button-active-shadow;
+@button-light-active-bg:                  @button-active-bg;
 
 // Normal light primary button
 @button-light-primary-text-color:         @button-light-text-color;
-@button-light-primary-border:             1px solid @link-hover-text-color;
-@button-light-primary-shadow:             @button-light-shadow;
-@button-light-primary-bg:                 @button-light-bg;
+@button-light-primary-border:             @button-primary-border;
+@button-light-primary-shadow:             @button-primary-shadow;
+@button-light-primary-bg:                 @white-color;
 
-@button-light-primary-hover-text-color:   @button-light-primary-text-color;
-@button-light-primary-hover-border:       @button-light-primary-border;
-@button-light-primary-hover-shadow:       @button-light-primary-shadow;
-@button-light-primary-hover-bg:           #fdecd9;
+@button-light-primary-hover-text-color:   @button-primary-hover-text-color;
+@button-light-primary-hover-border:       @button-primary-hover-border;
+@button-light-primary-hover-shadow:       @button-primary-hover-shadow;
+@button-light-primary-hover-bg:           @button-primary-hover-bg;
 
-@button-light-primary-active-text-color:  @button-light-primary-text-color;
-@button-light-primary-active-border:      @button-light-primary-border;
-@button-light-primary-active-shadow:      @button-light-primary-shadow;
-@button-light-primary-active-bg:          #fdd2c0;
+@button-light-primary-active-text-color:  @button-primary-active-text-color;
+@button-light-primary-active-border:      @button-primary-active-border;
+@button-light-primary-active-shadow:      @button-primary-active-shadow;
+@button-light-primary-active-bg:          @button-primary-active-bg;
 
 // Normal light disabled button
 @button-light-disabled-text-color:        @button-disabled-text-color;
 @button-light-disabled-border:            1px solid @button-light-disabled-text-color;
 @button-light-disabled-shadow:            @button-light-shadow;
-@button-light-disabled-bg:                @white-color !important;
+@button-light-disabled-bg:                @white-color;
 
 // Big button
-@button-big-font:                         italic normal 18px 'Cambria', Georgia, serif;
+@button-big-font:                         (@font-basic-size * 1.2) @font-basic-name;
 @button-big-text-alignment:               @button-text-alignment;
 @button-big-min-width:                    @button-min-width;
-@button-big-height:                       48px;
-@button-big-line-height:                  18px;
-@button-big-padding:                      15px 24px;
+@button-big-height:                       42px;
+@button-big-line-height:                  28px;
+@button-big-padding:                      6px 12px;
 @button-big-margin:                       @button-margin;
-@button-big-border-radius:                24px;
-@button-big-icon-top-offset:              2px;                              // top offset of 16x16 icon
+@button-big-border-radius:                7px;
+@button-big-icon-top-offset:              1px;                              // top offset of 16x16 icon
 @button-big-icon-text-margin:             @button-icon-text-margin;         // margin of text following 16x16 icon
-@button-big-icon-big-top-offset:          -1px;                             // top offset of 24x24 icon
+@button-big-icon-big-top-offset:          -2px;                             // top offset of 24x24 icon
 @button-big-icon-big-text-margin:         @button-icon-big-text-margin;     // margin of text following 24x24 icon
 @button-big-text-padding:                 11px 0 0;
 @button-big-empty-text-margin:            @button-empty-text-margin;
@@ -153,39 +153,39 @@
 @button-big-text-color:                   @button-text-color;
 @button-big-border:                       @button-border;
 @button-big-shadow:                       @button-shadow;
-@button-big-bg:                           url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAjklEQVQYVx3DVxKDIABAwXf/26WoKDasKCh2zV9Mdmb5XDvXuXEeK8e+/O/bzLZObItjvS/zyDINzM4yOYMb70PPaDsGqxmMxvYtpm8wXU2va7q2Qrcluilo64KmUvecusyoirtKKVVCkceoTKJSSZ5GZElIFgtSKUhkQBL5xKGHFB6ReBMFL0L/ifj1Hl+0S4EyIQKdsQAAAABJRU5ErkJggg==');
+@button-big-bg:                           @button-bg;
 
 @button-big-hover-text-color:             @button-big-text-color;
 @button-big-hover-border:                 @button-big-border;
 @button-big-hover-shadow:                 @button-hover-shadow;
-@button-big-hover-bg:                     url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAINJREFUGFcdw1cSgyAAQMF3/xvGiojYkWZJ+Qi6M8vvuvieJ5/jeL73nSvG5xkCR/Ac3rM7R3SWaC1h2/B3Y3Bmxa7psrAtM2ZOp4l1GlnG+8A89Ez9XTNqzdB1qaJXCq1adCvppETJBtUIWiGQokbWFU0qqhJRFtRpVeRUeUaZFtnrD2rdg354PlYsAAAAAElFTkSuQmCC');
+@button-big-hover-bg:                     @button-hover-bg;
 
 @button-big-active-text-color:            @button-big-text-color;
 @button-big-active-border:                @button-big-border;
 @button-big-active-shadow:                @button-active-shadow;
-@button-big-active-bg:                    url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAJNJREFUGFcNw1USgzAAQMF3/6tVcAiugWDB6W/ZmeV3H9zXznVunMfKuS8cu2bfNNs6sy0Tqx5Z5gE99+ipZx4V09Ax9u1TMqiGvmtQbY2SFZ0saZsCWefIKqcpM+oipSoSqjymzCKKNCJPwqcgiwPSyCcJPRLhEQuXKHAIfZvQsxCuSeCY+I6Bb3/xrA+u+cYxXn8Tm385Ml6/+QAAAABJRU5ErkJggg==');
+@button-big-active-bg:                    @button-active-bg;
 
 // Big primary button
 @button-big-primary-text-color:           @button-primary-text-color;
-@button-big-primary-border:               @button-big-border;
+@button-big-primary-border:               @button-primary-border;
 @button-big-primary-shadow:               @button-primary-shadow;
-@button-big-primary-bg:                   url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMZJREFUGFcFwQ1HAwEAgOH3zzTJTJLMZDOTJGmbmplzpvV9ambmnNlKkmRmbCKTJEkk6Xftvu92H7ux52H+f0P01yH6bRP9KMy+ZWZfLcLPJuFHg/C9TvB2TfAqEYwv8V/O8Z9P8UfHeMMjvEEVry8y7QlMnyq4j2XchxLu/SHOXRHntoDT3cdu72Eru9jyDlZrG6u5hdXIYdazmFcZTCmNcbGJcZZCP0mi1zbQq+to4hqasIpWSaCW46ilFdSDZSbFGJP80gKLzlU+l/UpHgAAAABJRU5ErkJggg==');
+@button-big-primary-bg:                   @button-primary-bg;
 
-@button-big-primary-hover-text-color:     @button-big-primary-text-color;
-@button-big-primary-hover-border:         @button-big-primary-border;
-@button-big-primary-hover-shadow:         @button-big-primary-shadow;
-@button-big-primary-hover-bg:             url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMtJREFUGFcBwAA//wD8wYIA+75/APu8fQD6unsA+rd4APm1dgD5s3QA+LFxAPiubwD3rGwA96pqAPanaAD2pWUA9aNjAPWhYAD0nl4A9JxcAPOaWQDzmFcA8pVVAPKTUgDxkVAA8Y5OAPCMSwDwikkA74hGAO+FRADug0IA7oE/AO1+PQDtfDoA7Ho4AOx3NgDrdTMA63MxAOpxLwDqbiwA6WwqAOlqKADoZyUA6GUjAOdjIADnYB4A5l4cAOZcGQDlWRcA5VcUAORVEuAhVOdbDqsIAAAAAElFTkSuQmCC');
+@button-big-primary-hover-text-color:     @button-primary-hover-text-color;
+@button-big-primary-hover-border:         @button-primary-hover-border;
+@button-big-primary-hover-shadow:         @button-primary-hover-shadow;
+@button-big-primary-hover-bg:             @button-primary-hover-bg;
 
-@button-big-primary-active-text-color:    @button-big-primary-text-color;
-@button-big-primary-active-border:        @button-big-primary-border;
-@button-big-primary-active-shadow:        @button-active-shadow;
-@button-big-primary-active-bg:            url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMlJREFUGFcFwYtmQgEAgOH/GVKUWJKZSWYmmSRJpbWttmqbHEmSJEkmkcxMMpNMJmNm9myd7vdO95p9H3+/afY/KXbfSXZfCbafcbb1GJuPKJtahPV7mHVVYFUJsXp7YPl6x6IcYFG6Zf7iY/58jfR0iVS8YFZwM8s7meYcTB/tTLI2Jhkr47SFUcrMKHnOMGFiGDcyiJ0xiJ7Sj5zQDxvoCXp6oWO690d0g4d0/DraN1raXg2tqwNaHjVNt4qmS4noUCDa5TRssn8T6U5Ugnh02QAAAABJRU5ErkJggg==');
+@button-big-primary-active-text-color:    @button-primary-active-text-color;
+@button-big-primary-active-border:        @button-primary-active-border;
+@button-big-primary-active-shadow:        @button-primary-active-shadow;
+@button-big-primary-active-bg:            @button-primary-active-bg;
 
 // Big disabled button
 @button-big-disabled-text-color:          @button-disabled-text-color;
 @button-big-disabled-border:              @button-disabled-border;
 @button-big-disabled-shadow:              @button-disabled-shadow;
-@button-big-disabled-bg:                  url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAFVJREFUGFc9wwkOgDAIBMD9/2OtLb2AHgaqTjLYe2Ot9Z9zvgfG+CqGKtQLVATiGcIncwd329Bts9W3aouvxWZfsqWTCJnSmSLoG2+f7B18tOFCDNcDpuCK5d42KGsAAAAASUVORK5CYII=');
+@button-big-disabled-bg:                  @button-disabled-bg;
 
 
 
@@ -203,7 +203,7 @@
 // ------------- //
 
 // Normal default button
-@button-checked-text-color:               #c00;
+@button-checked-text-color:               @button-active-text-color;
 @button-checked-border:                   @button-active-border;
 @button-checked-shadow:                   @button-active-shadow;
 @button-checked-bg:                       @button-active-bg;
@@ -235,20 +235,20 @@
 @tab-button-cursor:                             pointer;
 @tab-button-disabled-cursor:                    default;
 
-@tab-button-font:                               italic bold 18px Cambria, sans-serif;
-@tab-button-height:                             29px;
+@tab-button-font:                               inherit;
+@tab-button-height:                             26px;
 @tab-button-side-display:                       inline-block;
-@tab-button-side-width:                         19px;
+@tab-button-side-width:                         0;
 @tab-button-side-height:                        @tab-button-height;
 @tab-button-inner-height:                       @tab-button-height;
-@tab-button-text-padding:                       3px 0 0;
-@tab-button-border-radius:                      0;
+@tab-button-text-padding:                       4px 8px;
+@tab-button-border-radius:                      4px 4px 0 0;
 
 @tab-button-text-color:                         @black-color;
-@tab-button-border-width:                       0;
+@tab-button-border-width:                       1px;
 @tab-button-border-style:                       solid;
-@tab-button-border-color:                       transparent;
-@tab-button-bg:                                 transparent;
+@tab-button-border-color:                       @gray-color;
+@tab-button-bg:                                 @gray-light-color;
 
 @tab-button-hover-text-color:                   @tab-button-text-color;
 @tab-button-hover-border-width:                 @tab-button-border-width;
@@ -257,16 +257,16 @@
 @tab-button-hover-bg:                           @tab-button-bg;
 
 @tab-button-checked-text-color:                 @tab-button-text-color;
-@tab-button-checked-border-width:               @tab-button-border-width;
+@tab-button-checked-border-width:               1px 1px 0 1px;
 @tab-button-checked-border-style:               @tab-button-border-style;
 @tab-button-checked-border-color:               @tab-button-border-color;
-@tab-button-checked-bg:                         @tab-button-bg;
+@tab-button-checked-bg:                         @white-color;
 
 @tab-button-checked-hover-text-color:           @tab-button-hover-text-color;
-@tab-button-checked-hover-border-width:         @tab-button-border-width;
+@tab-button-checked-hover-border-width:         @tab-button-checked-border-width;
 @tab-button-checked-hover-border-style:         @tab-button-border-style;
 @tab-button-checked-hover-border-color:         @tab-button-border-color;
-@tab-button-checked-hover-bg:                   @tab-button-bg;
+@tab-button-checked-hover-bg:                   @tab-button-checked-bg;
 
 @tab-button-disabled-text-color:                @gray-color;
 @tab-button-disabled-border-width:              @tab-button-border-width;
@@ -275,18 +275,18 @@
 @tab-button-disabled-bg:                        @tab-button-bg;
 
 @tab-button-disabled-checked-text-color:        @tab-button-disabled-text-color;
-@tab-button-disabled-checked-border-width:      @tab-button-disabled-border-width;
+@tab-button-disabled-checked-border-width:      @tab-button-checked-border-width;
 @tab-button-disabled-checked-border-style:      @tab-button-disabled-border-style;
 @tab-button-disabled-checked-border-color:      @tab-button-disabled-border-color;
 @tab-button-disabled-checked-bg:                @tab-button-bg;
 
-@tab-button-left-side-margin:                   0 -4px 0 0;
-@tab-button-left-side-bg:                       url('img/tabButtonLeft.png') no-repeat;
+@tab-button-left-side-margin:                   0;
+@tab-button-left-side-bg:                       none;
 
-@tab-button-right-side-margin:                  0 0 0 -4px;
-@tab-button-right-side-bg:                      url('img/tabButtonRight.png') no-repeat;
+@tab-button-right-side-margin:                  0;
+@tab-button-right-side-bg:                      none;
 
-@tab-button-inner-bg:                           url('img/tabButtonInner.png');
+@tab-button-inner-bg:                           none;
 
 
 
@@ -294,7 +294,7 @@
 // Radio button //
 // ------------ //
 
-@radio-button-text-margin:                      0;
+@radio-button-text-margin:                      0 4px;
 
 @radio-button-text-color:                       @gray-color;
 @radio-button-hover-text-color:                 @black-color;
@@ -305,16 +305,16 @@
 @radio-button-disabled-text-color:              @gray-light-color;
 @radio-button-disabled-hover-text-color:        @radio-button-disabled-text-color;
 
-@radio-button-icon-width:                       24px;
-@radio-button-icon-height:                      17px;
-@radio-button-icon-line-height:                 normal;
+@radio-button-icon-width:                       16px;
+@radio-button-icon-height:                      14px;
+@radio-button-icon-line-height:                 12px;
 
-@radio-button-icon-spritesheet:                 'img/RadioButton-sprite.png';
+@radio-button-icon-spritesheet:                 'img/RadioButton.png';
 
-@radio-button-icon-bg:                          url(@radio-button-icon-spritesheet) 0 -4px;
-@radio-button-icon-hover-bg:                    url(@radio-button-icon-spritesheet) 0 -100px;
+@radio-button-icon-bg:                          url(@radio-button-icon-spritesheet) 0 0;
+@radio-button-icon-hover-bg:                    url(@radio-button-icon-spritesheet) 0 -28px;
 
-@radio-button-icon-checked-bg:                  url(@radio-button-icon-spritesheet) 0 -52px;
+@radio-button-icon-checked-bg:                  url(@radio-button-icon-spritesheet) 0 -14px;
 @radio-button-icon-checked-hover-bg:            @radio-button-icon-checked-bg;
 
 @radio-button-icon-disabled-bg:                 @radio-button-icon-bg;
@@ -672,13 +672,13 @@
 // -------- //
 
 @text-box-height:                         24px;
-@text-box-wrapper-padding:                0 4px;
+@text-box-wrapper-padding:                0 2px;
 @text-box-border-radius:                  0;
 
 @text-box-field-font:                     inherit;
 @text-box-field-text-alignment:           left;
 @text-box-field-min-height:               19px;
-@text-box-field-line-height:              20px !important;
+@text-box-field-line-height:              normal;
 @text-box-field-margin:                   0;
 @text-box-field-padding:                  1px 0;
 @text-box-field-border:                   none;
@@ -694,7 +694,7 @@
 
 @text-box-border-width:                   1px;
 @text-box-border-style:                   solid;
-@text-box-border-color:                   transparent transparent #eaeaea transparent;
+@text-box-border-color:                   @gray-light-color;
 @text-box-bg:                             @white-color;
 
 @text-box-focus-border-width:             @text-box-border-width;
@@ -747,7 +747,7 @@
 // --------------- //
 
 @number-text-box-field-text-alignment:                left;
-@number-text-box-wrapper-margin:                      0 14px 0 0;
+@number-text-box-wrapper-margin:                      0;
 
 @number-text-box-arrow-spritesheet:                   '';
 
@@ -809,8 +809,8 @@
 @combo-box-arrow-margin:                        -8px 0 0;
 @combo-box-arrow-top-offset:                    50%;
 @combo-box-arrow-right-offset:                  0;
-@combo-box-arrow-bg:                            @white-color url(@combo-box-arrow-spritesheet) -3px -4px no-repeat;
-@combo-box-arrow-hover-bg:                      @white-color url(@combo-box-arrow-spritesheet) -3px -28px no-repeat;
+@combo-box-arrow-bg:                            @white-color url(@combo-box-arrow-spritesheet) 0 0 no-repeat;
+@combo-box-arrow-hover-bg:                      @combo-box-arrow-bg;
 
 @combo-box-picker-border:                       1px solid @gray-light-color;
 @combo-box-picker-border-radius:                0;
