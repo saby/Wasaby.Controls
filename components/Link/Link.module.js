@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
               */
             href: '',
              /**
-              * @cfg {Boolean} В новой ли вкладке открыть ссылку
+              * @cfg {Boolean} Открывать ссылку в новой вкладке
               * @example
               * <pre>
               *     <option name="inNewTab">true</option>
