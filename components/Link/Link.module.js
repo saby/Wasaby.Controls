@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
       },
        /**
         * Установить ссылку.
-        * Метод установки либо замены ссылки, заданноё опцией {@link href}.
+        * Метод установки либо замены адреса, заданного опцией {@link href}.
         * @param href Сыылка.
         * @see href
         * @see inNewTab
