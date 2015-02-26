@@ -8,13 +8,24 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * @extends SBIS3.CONTROLS.ToggleButton
     * @control
     * @initial
-    * <component data-component='SBIS3.CONTROLS.Button'>
+    * <component data-component='SBIS3.CONTROLS.MenuButton'>
     *    <option name='caption' value='Кнопка с меню'></option>
+    *    <options name="items" type="array">
+    *        <options>
+    *            <option name="id">1</option>
+    *            <option name="title">Пункт1</option>
+    *         </options>
+    *         <options>
+    *            <option name="id">2</option>
+    *            <option name="title">Пункт2</option>
+    *         </options>
+    *      </options>
     * </component>
     * @public
     * @category Buttons
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.CollectionMixin
+    * @ignoreOptions validators, independentContext, contextRestriction, allowChangeEnable, extendedTooltip
     */
 
    var MenuButton = Button.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
@@ -73,7 +84,9 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             this._hasHeader = false;
          }
       },
-
+       /**
+        * Скрывает/показывает меню у кнопки
+        */
       togglePicker: function(){
          MenuButton.superclass.togglePicker.call(this);
          $('.controls-MenuButton__Menu-grayLine', this._picker._container).width(this._picker._container.outerWidth() - this._container.outerWidth() - 14); /*ширина части спрайта выезжающего за кнопку */

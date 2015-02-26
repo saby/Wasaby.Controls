@@ -16,6 +16,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.DataBindMixin
     * @mixes SBIS3.CONTROLS.IconMixin
+    * @ignoreOptions validators, independentContext, contextRestriction, allowChangeEnable, extendedTooltip
     */
 
    var ButtonBase = Control.extend([Clickable, FormWidgetMixin, DataBindMixin, IconMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
@@ -41,8 +42,6 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
              * </pre>
              * @see setCaption
              * @see getCaption
-             * @see setValue
-             * @see getValue
              */
             caption: ''
          }
@@ -71,8 +70,6 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
        * </pre>
        * @see caption
        * @see getCaption
-       * @see setValue
-       * @see getValue
        */
       setCaption: function(captionTxt) {
          this._options.caption = captionTxt || '';
@@ -89,8 +86,6 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
        * </pre>
        * @see caption
        * @see setCaption
-       * @see setValue
-       * @see getValue
        */
       getCaption: function() {
          return this._options.caption;
