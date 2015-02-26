@@ -1,29 +1,41 @@
 .controls-Switcher {
   display: inline-block;
+  cursor: @switcher-cursor;
   min-width: @switcher-min-width;
   height: @switcher-height;
   padding: @switcher-padding;
-  color: @switcher-text-color;
 
   .controls-Switcher__toggle {
     display: inline-block;
-    .box-sizing (border-box);
-    cursor: @switcher-cursor;
-    width: 100%;
-    height: @switcher-height;
-    color: @switcher-off-toggle-text-color;
+    .box-sizing (@switcher-toggle-box-sizing);
+    width: @switcher-toggle-width;
+    min-width: @switcher-toggle-min-width;
+    height: @switcher-toggle-height;
+    text-align: @switcher-off-toggle-text-alignment;
     padding: @switcher-off-toggle-padding;
+    .border-radius(@switcher-toggle-border-radius);
+    border-width: @switcher-toggle-border-width;
+    border-style: @switcher-toggle-border-style;
+    border-color: @switcher-toggle-border-color;
+    background: @switcher-toggle-bg;
 
     .controls-Switcher__position {
       position: relative;
       display: inline-block;
-      .box-sizing(content-box);
-      text-align: @switcher-text-alignment;
-      width: 100%;
+      .box-sizing(@switcher-toggle-position-box-sizing);
+      text-align: @switcher-toggle-position-text-alignment;
+      width: @switcher-toggle-position-width;
+      min-width: @switcher-toggle-position-min-width;
       height: @switcher-toggle-position-height;
+      min-height: @switcher-toggle-position-min-height;
       padding: @switcher-toggle-position-padding;
       margin: @switcher-off-toggle-position-margin;
-      background: @switcher-off-toggle-bg;
+      color: @switcher-off-toggle-position-text-color;
+      .border-radius(@switcher-toggle-position-border-radius);
+      border-width: @switcher-toggle-position-border-width;
+      border-style: @switcher-toggle-position-border-style;
+      border-color: @switcher-toggle-position-border-color;
+      background: @switcher-off-toggle-position-bg;
 
       &:before {
         content: '';
@@ -49,12 +61,13 @@
     }
 
     &.controls-Switcher__toggle__position-on {
-      color: @switcher-on-toggle-text-color;
+      text-align: @switcher-on-toggle-text-alignment;
       padding: @switcher-on-toggle-padding;
 
       .controls-Switcher__position {
         margin: @switcher-on-toggle-position-margin;
-        background: @switcher-on-toggle-bg;
+        color: @switcher-on-toggle-position-text-color;
+        background: @switcher-on-toggle-position-bg;
 
         &:before {
           width: @switcher-toggle-edge-width + @switcher-gap-width;
@@ -72,14 +85,17 @@
   }
 
   &.ws-disabled {
-    color: @switcher-disabled-text-color;
-    background: none !important;
+    cursor: @switcher-disabled-cursor;
 
     .controls-Switcher__toggle {
-      color: @switcher-off-disabled-toggle-text-color;
+      border-width: @switcher-disabled-toggle-border-width;
+      border-style: @switcher-disabled-toggle-border-style;
+      border-color: @switcher-disabled-toggle-border-color;
+      background: @switcher-disabled-toggle-bg;
 
       .controls-Switcher__position {
-        background: @switcher-off-disabled-toggle-bg;
+        color: @switcher-off-disabled-toggle-position-text-color;
+        background: @switcher-off-disabled-toggle-position-bg;
 
         &:before {
           background: @switcher-off-disabled-toggle-left-edge-bg;
@@ -91,10 +107,9 @@
       }
 
       &.controls-Switcher__toggle__position-on {
-        color: @switcher-on-disabled-toggle-text-color;
-
         .controls-Switcher__position {
-          background: @switcher-on-disabled-toggle-bg;
+          color: @switcher-on-disabled-toggle-position-text-color;
+          background: @switcher-on-disabled-toggle-position-bg;
 
           &:before {
             background: @switcher-on-disabled-toggle-left-edge-bg;

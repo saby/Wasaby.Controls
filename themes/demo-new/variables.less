@@ -391,44 +391,75 @@
 // Switcher //
 // -------- //
 
-@switcher-spritesheet:                          'img/switcher.png';
+@switcher-spritesheet:                                '';
 
-@switcher-toggle-edge-width:                    16px;
-@switcher-gap-width:                            16px;
+@switcher-cursor:                                     pointer;
+@switcher-min-width:                                  0;
+@switcher-height:                                     21px;
+@switcher-padding:                                    0 16px 0 0;
 
-@switcher-text-alignment:                       center;
-@switcher-cursor:                               pointer;
-@switcher-min-width:                            90px;
-@switcher-height:                               23px;
-@switcher-padding:                              0 16px 0 0;
+@switcher-toggle-width:                               100%;
+@switcher-toggle-min-width:                           100px;
+@switcher-toggle-height:                              @switcher-height;
+@switcher-toggle-box-sizing:                          border-box;
+@switcher-toggle-border-radius:                       10px;
+@switcher-toggle-border-width:                        0;
+@switcher-toggle-border-style:                        solid;
+@switcher-toggle-border-color:                        transparent;
+@switcher-toggle-bg:                                  @gray-dark-color;
 
-@switcher-toggle-position-height:               21px;
-@switcher-toggle-position-padding:              2px 0;
+@switcher-gap-width:                                  0;
+@switcher-toggle-edge-width:                          0;
 
-@switcher-text-color:                           @black-color;
-@switcher-disabled-text-color:                  @gray-color !important;
+@switcher-toggle-position-text-alignment:             center;
+@switcher-toggle-position-width:                      70%;
+@switcher-toggle-position-min-width:                  0;
+@switcher-toggle-position-height:                     auto;
+@switcher-toggle-position-min-height:                 17px;
+@switcher-toggle-position-box-sizing:                 content-box;
+@switcher-toggle-position-padding:                    0;
 
-@switcher-off-toggle-padding:                   2px 32px 2px 0;
-@switcher-off-toggle-position-margin:           0 0 0 16px;
-@switcher-off-toggle-text-color:                @gray-color;
-@switcher-off-toggle-bg:                        url(@switcher-spritesheet) 0 -96px;
-@switcher-off-toggle-left-edge-bg:              url(@switcher-spritesheet) 0 0;
-@switcher-off-toggle-right-edge-bg:             url(@switcher-spritesheet) 0 -24px;
-@switcher-off-disabled-toggle-text-color:       @gray-light-color;
-@switcher-off-disabled-toggle-bg:               none;
-@switcher-off-disabled-toggle-left-edge-bg:     none;
-@switcher-off-disabled-toggle-right-edge-bg:    none;
+@switcher-toggle-position-border-radius:              @switcher-toggle-border-radius;
+@switcher-toggle-position-border-width:               0;
+@switcher-toggle-position-border-style:               solid;
+@switcher-toggle-position-border-color:               transparent;
 
-@switcher-on-toggle-padding:                    2px 0 2px 32px;
-@switcher-on-toggle-position-margin:            0 16px 0 auto;
-@switcher-on-toggle-text-color:                 @black-color;
-@switcher-on-toggle-bg:                         @switcher-off-toggle-bg;
-@switcher-on-toggle-left-edge-bg:               url(@switcher-spritesheet) 0 -48px;
-@switcher-on-toggle-right-edge-bg:              url(@switcher-spritesheet) 0 -312px;
-@switcher-on-disabled-toggle-text-color:        @switcher-off-disabled-toggle-text-color;
-@switcher-on-disabled-toggle-bg:                none;
-@switcher-on-disabled-toggle-left-edge-bg:      none;
-@switcher-on-disabled-toggle-right-edge-bg:     none;
+@switcher-off-toggle-text-alignment:                  left;
+@switcher-off-toggle-padding:                         2px;
+@switcher-off-toggle-position-text-color:             @black-color;
+@switcher-off-toggle-position-margin:                 0;
+@switcher-off-toggle-position-bg:                     @default-color;
+@switcher-off-toggle-left-edge-bg:                    none;
+@switcher-off-toggle-right-edge-bg:                   none;
+
+@switcher-on-toggle-text-alignment:                   right;
+@switcher-on-toggle-padding:                          @switcher-off-toggle-padding;
+@switcher-on-toggle-position-text-color:              @switcher-off-toggle-position-text-color;
+@switcher-on-toggle-position-margin:                  @switcher-off-toggle-position-margin;
+@switcher-on-toggle-position-bg:                      @switcher-off-toggle-position-bg;
+@switcher-on-toggle-left-edge-bg:                     none;
+@switcher-on-toggle-right-edge-bg:                    none;
+
+@switcher-disabled-cursor:                            default;
+
+@switcher-disabled-toggle-border-width:               @switcher-toggle-border-width;
+@switcher-disabled-toggle-border-style:               @switcher-toggle-border-style;
+@switcher-disabled-toggle-border-color:               @switcher-toggle-border-color;
+@switcher-disabled-toggle-bg:                         @gray-light-color;
+
+@switcher-disabled-toggle-position-border-width:      @switcher-toggle-position-border-width;
+@switcher-disabled-toggle-position-border-style:      @switcher-toggle-position-border-style;
+@switcher-disabled-toggle-position-border-color:      @switcher-toggle-position-border-color;
+
+@switcher-off-disabled-toggle-position-text-color:    @gray-color;
+@switcher-off-disabled-toggle-position-bg:            @white-color;
+@switcher-off-disabled-toggle-left-edge-bg:           none;
+@switcher-off-disabled-toggle-right-edge-bg:          none;
+
+@switcher-on-disabled-toggle-position-text-color:     @switcher-off-disabled-toggle-position-text-color;
+@switcher-on-disabled-toggle-position-bg:             @switcher-off-disabled-toggle-position-bg;
+@switcher-on-disabled-toggle-left-edge-bg:            none;
+@switcher-on-disabled-toggle-right-edge-bg:           none;
 
 
 
@@ -672,13 +703,13 @@
 // -------- //
 
 @text-box-height:                         24px;
-@text-box-wrapper-padding:                0 2px;
+@text-box-wrapper-padding:                0 4px;
 @text-box-border-radius:                  0;
 
 @text-box-field-font:                     inherit;
 @text-box-field-text-alignment:           left;
 @text-box-field-min-height:               19px;
-@text-box-field-line-height:              normal;
+@text-box-field-line-height:              20px !important;
 @text-box-field-margin:                   0;
 @text-box-field-padding:                  1px 0;
 @text-box-field-border:                   none;
@@ -1019,7 +1050,7 @@
 @edit-at-place-field-disabled-cursor:           text;
 @edit-at-place-field-border-width:              0 0 1px 0;
 @edit-at-place-field-border-style:              dashed;
-@edit-at-place-field-border-color:              #868686;
+@edit-at-place-field-border-color:              @gray-dark-color;
 
 @edit-at-place-editor-border-width:             0;
 @edit-at-place-editor-border-style:             solid;
@@ -1032,8 +1063,8 @@
 @edit-at-place-editor-overlay-padding:          4px;
 @edit-at-place-editor-overlay-border:           none;
 @edit-at-place-editor-overlay-border-radius:    3px;
-@edit-at-place-editor-overlay-shadow:           0 0 3px #b2b2b2;
-@edit-at-place-editor-overlay-bg:               #f8f3f1 !important;
+@edit-at-place-editor-overlay-shadow:           0 0 3px @gray-color;
+@edit-at-place-editor-overlay-bg:               @default-color !important;
 
 @edit-at-place-control-margin:                  0 0 0 8px;
 @edit-at-place-group-control-margin:            4px;

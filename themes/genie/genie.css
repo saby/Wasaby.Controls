@@ -618,21 +618,31 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Switcher {
   display: inline-block;
-  min-width: 90px;
-  height: 23px;
+  cursor: pointer;
+  min-width: 0;
+  height: 21px;
   padding: 0 16px 0 0;
-  color: #353535;
 }
 .controls-Switcher .controls-Switcher__toggle {
   display: inline-block;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  cursor: pointer;
   width: 100%;
-  height: 23px;
-  color: #919191;
-  padding: 2px 32px 2px 0;
+  min-width: 100px;
+  height: 21px;
+  text-align: left;
+  padding: 1px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #00c795;
+  background: #f1f1f1;
 }
 .controls-Switcher .controls-Switcher__toggle .controls-Switcher__position {
   position: relative;
@@ -641,59 +651,75 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-sizing: content-box;
   box-sizing: content-box;
   text-align: center;
-  width: 100%;
-  height: 21px;
-  padding: 2px 0;
-  margin: 0 0 0 16px;
-  background: none;
+  width: 70%;
+  min-width: 0;
+  height: auto;
+  min-height: 17px;
+  padding: 0;
+  margin: 0;
+  color: #ffffff;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: #00c795;
 }
 .controls-Switcher .controls-Switcher__toggle .controls-Switcher__position:before {
   content: '';
   position: absolute;
-  width: 16px;
-  height: 23px;
+  width: 0;
+  height: 21px;
   display: block;
   top: 0;
-  left: -16px;
+  left: 0;
   background: none;
 }
 .controls-Switcher .controls-Switcher__toggle .controls-Switcher__position:after {
   content: '';
   position: absolute;
-  width: 32px;
-  height: 23px;
+  width: 0;
+  height: 21px;
   display: block;
   top: 0;
-  right: -32px;
+  right: 0;
   background: none;
 }
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on {
-  color: #353535;
-  padding: 2px 0 2px 32px;
+  text-align: right;
+  padding: 1px;
 }
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position {
-  margin: 0 16px 0 auto;
-  background: none;
+  margin: 0;
+  color: #ffffff;
+  background: #00c795;
 }
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:before {
-  width: 32px;
-  left: -32px;
-  background: url('') 0 -48px;
+  width: 0;
+  left: 0;
+  background: none;
 }
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:after {
-  width: 16px;
-  right: -16px;
-  background: url('') 0 -312px;
+  width: 0;
+  right: 0;
+  background: none;
 }
 .controls-Switcher.ws-disabled {
-  color: #919191 !important;
-  background: none !important;
+  cursor: default;
 }
 .controls-Switcher.ws-disabled .controls-Switcher__toggle {
-  color: #d1d1d1;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d1d1d1;
+  background: #d1d1d1;
 }
 .controls-Switcher.ws-disabled .controls-Switcher__toggle .controls-Switcher__position {
-  background: none;
+  color: #d1d1d1;
+  background: #ffffff;
 }
 .controls-Switcher.ws-disabled .controls-Switcher__toggle .controls-Switcher__position:before {
   background: none;
@@ -701,11 +727,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Switcher.ws-disabled .controls-Switcher__toggle .controls-Switcher__position:after {
   background: none;
 }
-.controls-Switcher.ws-disabled .controls-Switcher__toggle.controls-Switcher__toggle__position-on {
-  color: #d1d1d1;
-}
 .controls-Switcher.ws-disabled .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position {
-  background: none;
+  color: #d1d1d1;
+  background: #ffffff;
 }
 .controls-Switcher.ws-disabled .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:before {
   background: none;
@@ -1174,7 +1198,7 @@ input[type="reset"]::-moz-focus-inner {
   white-space: pre;
 }
 .controls-NumberTextBox .controls-TextBox__fieldWrapper {
-  margin: 0 14px 0 0;
+  margin: 0;
   height: 100%;
 }
 .controls-NumberTextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {

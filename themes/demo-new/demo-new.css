@@ -618,21 +618,31 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Switcher {
   display: inline-block;
-  min-width: 90px;
-  height: 23px;
+  cursor: pointer;
+  min-width: 0;
+  height: 21px;
   padding: 0 16px 0 0;
-  color: #333333;
 }
 .controls-Switcher .controls-Switcher__toggle {
   display: inline-block;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  cursor: pointer;
   width: 100%;
-  height: 23px;
-  color: #c7c7c7;
-  padding: 2px 32px 2px 0;
+  min-width: 100px;
+  height: 21px;
+  text-align: left;
+  padding: 2px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: #868686;
 }
 .controls-Switcher .controls-Switcher__toggle .controls-Switcher__position {
   position: relative;
@@ -641,59 +651,75 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-sizing: content-box;
   box-sizing: content-box;
   text-align: center;
-  width: 100%;
-  height: 21px;
-  padding: 2px 0;
-  margin: 0 0 0 16px;
-  background: url('img/switcher.png') 0 -96px;
+  width: 70%;
+  min-width: 0;
+  height: auto;
+  min-height: 17px;
+  padding: 0;
+  margin: 0;
+  color: #333333;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: #f6f9fb;
 }
 .controls-Switcher .controls-Switcher__toggle .controls-Switcher__position:before {
   content: '';
   position: absolute;
-  width: 16px;
-  height: 23px;
+  width: 0;
+  height: 21px;
   display: block;
   top: 0;
-  left: -16px;
-  background: url('img/switcher.png') 0 0;
+  left: 0;
+  background: none;
 }
 .controls-Switcher .controls-Switcher__toggle .controls-Switcher__position:after {
   content: '';
   position: absolute;
-  width: 32px;
-  height: 23px;
+  width: 0;
+  height: 21px;
   display: block;
   top: 0;
-  right: -32px;
-  background: url('img/switcher.png') 0 -24px;
+  right: 0;
+  background: none;
 }
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on {
-  color: #333333;
-  padding: 2px 0 2px 32px;
+  text-align: right;
+  padding: 2px;
 }
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position {
-  margin: 0 16px 0 auto;
-  background: url('img/switcher.png') 0 -96px;
+  margin: 0;
+  color: #333333;
+  background: #f6f9fb;
 }
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:before {
-  width: 32px;
-  left: -32px;
-  background: url('img/switcher.png') 0 -48px;
+  width: 0;
+  left: 0;
+  background: none;
 }
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:after {
-  width: 16px;
-  right: -16px;
-  background: url('img/switcher.png') 0 -312px;
+  width: 0;
+  right: 0;
+  background: none;
 }
 .controls-Switcher.ws-disabled {
-  color: #c7c7c7 !important;
-  background: none !important;
+  cursor: default;
 }
 .controls-Switcher.ws-disabled .controls-Switcher__toggle {
-  color: #e6e6e6;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: #e6e6e6;
 }
 .controls-Switcher.ws-disabled .controls-Switcher__toggle .controls-Switcher__position {
-  background: none;
+  color: #c7c7c7;
+  background: #ffffff;
 }
 .controls-Switcher.ws-disabled .controls-Switcher__toggle .controls-Switcher__position:before {
   background: none;
@@ -701,11 +727,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Switcher.ws-disabled .controls-Switcher__toggle .controls-Switcher__position:after {
   background: none;
 }
-.controls-Switcher.ws-disabled .controls-Switcher__toggle.controls-Switcher__toggle__position-on {
-  color: #e6e6e6;
-}
 .controls-Switcher.ws-disabled .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position {
-  background: none;
+  color: #c7c7c7;
+  background: #ffffff;
 }
 .controls-Switcher.ws-disabled .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:before {
   background: none;
@@ -1101,7 +1125,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox .controls-TextBox__fieldWrapper {
   position: relative;
-  padding: 0 2px;
+  padding: 0 4px;
   height: 100%;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
@@ -1114,7 +1138,7 @@ input[type="reset"]::-moz-focus-inner {
   color: inherit;
   text-align: left;
   min-height: 19px;
-  line-height: normal;
+  line-height: 20px !important;
   margin: 0;
   padding: 1px 0;
   border: none;
@@ -1163,7 +1187,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper {
   min-height: 22px;
   height: 100%;
-  padding: 0 2px;
+  padding: 0 4px;
   background-color: #ffffff;
 }
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
@@ -1647,10 +1671,10 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
-  -webkit-box-shadow: 0 0 3px #b2b2b2;
-  -moz-box-shadow: 0 0 3px #b2b2b2;
-  box-shadow: 0 0 3px #b2b2b2;
-  background: #f8f3f1 !important;
+  -webkit-box-shadow: 0 0 3px #c7c7c7;
+  -moz-box-shadow: 0 0 3px #c7c7c7;
+  box-shadow: 0 0 3px #c7c7c7;
+  background: #f6f9fb !important;
 }
 .controls-EditAtPlace__editorOverlay .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
   font: 13px/20px Tahoma, Geneva, sans-serif;
