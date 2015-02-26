@@ -66,7 +66,24 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
       },
 
       /**
-       * Возвращает коллекцию
+       * Возвращает коллекцию, заданную либо опций {@link items}, либо методам {@link setItems}.
+       * @example
+       * <pre>
+       *     var
+       *        items = this.getItems(),
+       *        search = false;
+       *     for (var i = 0; i < items.length; i++) {
+       *        if (items.getValue(items[i], 'title') == 'Сотрудник') {
+       *           search = true;
+       *           break;
+       *        }
+       *     },
+       *     if (!search) {
+       *        console.log('Папка "Сотрудник" не найдена')
+       *     }
+       * </pre>
+       * @see items
+       * @see setItems
        */
       getItems : function() {
          return this._items;
@@ -94,8 +111,28 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
          }
       },
        /**
-        * Задать коллекцию
-        * @param items
+        * Метод установки либо замены коллекции элементов, заданной опцией {@link items}.
+        * @param {Object} items Набор исходных данных, по которому строится отображение.
+        * @example
+        * <pre>
+        *     setItems: [
+        *        {
+        *           id: 1,
+        *           title: 'Сообщения'
+        *        },{
+        *           id: 2,
+        *           title: 'Прочитанные',
+        *           parent: 1
+        *        },{
+        *           id: 3,
+        *           title: 'Непрочитанные',
+        *           parent: 1
+        *        }
+        *     ]
+        * </pre>
+        * @see items
+        * @see addItem
+        * @see getItems
         */
       setItems : function(items) {
          if (items instanceof Collection) {
@@ -109,8 +146,18 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
          this._drawItems();
       },
      /**
-      *
-      * @param item
+      * Добавление одного элемента коллекции
+      * @param {Array} item Элемент коллекции.
+      * @example
+      * <pre>
+      *     addItem: {
+      *        id: 1,
+      *        title: 'Звонки',
+      *        icon: 'sprite:icon-16 icon-Phone icon-primary'
+      *     }
+      * </pre>
+      * @see items
+      * @see setItems
       */
       addItem : function(item) {
          this._items.addItem(item);
