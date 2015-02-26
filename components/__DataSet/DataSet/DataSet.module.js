@@ -3,9 +3,8 @@
  */
 define('js!SBIS3.CONTROLS.DataSet', [
    'js!SBIS3.CONTROLS.Record',
-   'js!SBIS3.CONTROLS.DataStrategyArray',
-   'js!SBIS3.CONTROLS.DataStrategyBL'
-], function (Record, DataStrategyArray, DataStrategyBL) {
+   'js!SBIS3.CONTROLS.StrategyHelper'
+], function (Record, StrategyHelper) {
    'use strict';
 
    /**
@@ -14,6 +13,9 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
    return $ws.proto.Abstract.extend({
       $protected: {
+         _pkIndex: {},
+         _childRecordsMap: [],
+         _isFirstLoad: true,
          /**
           * @cfg {} реализация стратегии работы с данными
           */
@@ -29,13 +31,13 @@ define('js!SBIS3.CONTROLS.DataSet', [
          _options: {
             data: undefined,
             /**
-             * @cfg {String} название поля-идентификатора записи
+             * @cfg {String} название поля-идентификатора записи, при работе с БЛ проставляется автоматически
              */
             keyField: '',
             /**
              * @cfg {String} назвение класса, реализующего интерфейс IDataStrategy
              */
-            strategy: 'DataStrategyBL' // пока по дефолту оставим так
+            strategyName: '' //FixME: что по умолчанию?
          }
       },
       $constructor: function () {
@@ -44,19 +46,15 @@ define('js!SBIS3.CONTROLS.DataSet', [
             this._prepareData(this._options.data);
          }
 
-         //FixME: сделаем глобальный объект со всеми стратегиями и свитч будет не нужен?
-         // создаем объект, реализующий интерфейс IDataStrategy, чтобы DataSet мог работать с "сырыми" данными
-         switch (this._options.strategy) {
-            case 'DataStrategyBL':
-               this._strategy = new DataStrategyBL();
-               this._keyField = this._strategy.getKey(this._rawData);
-               break;
-            case 'DataStrategyArray':
-               this._strategy = new DataStrategyArray();
-               if (this._options.keyField) {
-                  this._keyField = this._options.keyField;
-               }
-               break;
+
+         if (this._options.strategyName) {
+            this._strategy = StrategyHelper.getStrategyObjectByName(this._options.strategyName);
+         }
+
+         if (this._options.keyField) {
+            this._keyField = this._options.keyField;
+         } else {
+            this._keyField = this._strategy.getKey(this._rawData);
          }
 
       },
@@ -67,8 +65,11 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @private
        */
       _prepareData: function (data) {
-         var self = this;
-         self._rawData = data;
+         this._rawData = data;
+      },
+
+      _rebuild: function () {
+         this._pkIndex = this._strategy.rebuild(this._rawData, this._keyField);
       },
 
       /**
@@ -79,6 +80,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return this._rawData;
       },
 
+      //FixMe: убрать его?
       /**
        * Метод получения значения идентификатора записи
        * @param {js!SBIS3.CONTROLS.Record} record
@@ -93,10 +95,33 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @param {Number} key
        * @returns {js!SBIS3.CONTROLS.Record}
        */
-      getRecord: function (key) {
-         var record = new Record(this._strategy);
-         record.setRaw(this._strategy.getByKey(this._rawData, this._keyField, key));
-         return record;
+      getRecordByPrimaryKey: function (primaryKey) {
+         if (this._isFirstLoad) {
+            this._rebuild();
+            this._isFirstLoad=false;
+         }
+         return this.at(this._pkIndex[primaryKey]);
+      },
+
+      at: function (index) {
+         if (this._childRecordsMap[index] === undefined) {
+            var data = this._strategy.at(this._rawData, index);
+            if (data) {
+               this._childRecordsMap[index] = new Record({
+                  'strategy': this._strategy,
+                  'raw': data
+               });
+            } else if (index < 0) {
+               return undefined;
+            } else {
+               throw new Error('No record at index ' + index);
+            }
+         }
+         return this._childRecordsMap[index];
+      },
+
+      createRecord:function(){
+
       },
 
       /**

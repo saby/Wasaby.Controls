@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _drawSelectedItem: function (key) {
          if (typeof(key) != 'undefined') {
-            var item = this._dataSet.getRecord(key);
+            var item = this._dataSet.getRecordByPrimaryKey(key);
             if (item) {
                ComboBox.superclass.setText.call(this, item.get(this._options.displayField));
                $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(item.get(this._options.displayField));

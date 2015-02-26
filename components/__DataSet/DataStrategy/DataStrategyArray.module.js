@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
     * Реализация интерфеса IDataStrategy для работы с массивами
     */
 
-   return IDataStrategy.extend({
+   var DataStrategyArray = IDataStrategy.extend({
       $protected: {
       },
       $constructor: function () {
@@ -46,6 +46,19 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
          return item;
       },
 
+      at: function (data, index) {
+         return data[index];
+      },
+
+      rebuild: function (data, keyField) {
+         var _pkIndex = {},
+            length = data.length;
+         for (var i = 0; i < length; i++) {
+            _pkIndex[data[i][keyField]] = i;
+         }
+         return _pkIndex;
+      },
+
       /**
        * Установить значение поля записи
        * @param {Array} data массив "сырых" данных
@@ -67,26 +80,6 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
        */
       value: function (data, field) {
          return data[field];
-      },
-
-      /**
-       * Найти запись в сырых данных по ее идентификатору
-       * @param {Array} data массив "сырых" данных
-       * @param {String} keyField название поля-идентификатора
-       * @param {Number} key идентификатор записи
-       * @returns {*}
-       */
-      findRawRecordByKey: function (data, keyField, key) {
-         var index;
-         //перебиаем массим исходных данных пока не найдем нужный элемент
-         //TODO: сделать ошибку если такой записи не нашлось
-         for (var i = 0; i < data.length; i++) {
-            if (data[i][keyField] == parseInt(key, 10)) {
-               index = i;
-               break;
-            }
-         }
-         return data[index];
       },
 
       /**
@@ -120,19 +113,26 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
        * Удалить элемент из массива
        * @param {Array} data массив "сырых" данных
        * @param {String} keyField название поля-идентификатора
-       * @param {Number} key идентификатор записи
+       * @param {Number | Array} key идентификатор записи или массив идентификаторов
        */
       destroy: function (data, keyField, key) {
-         var index;
-         // проходим по исходному массиву, пока не найдем позицию искомого элемента
-         for (var i = 0; i < data.length; i++) {
-            if (data[i][keyField] == parseInt(key, 10)) {
-               index = i;
-               break;
+         var length = data.length;
+         var compare = function (index, key) {
+            if (data[index][keyField] == parseInt(key, 10)) {
+               // удаляем эемент из исходного набора
+               Array.remove(data, index);
+            }
+         };
+         // проходим по исходному массиву, пока не найдем позицию искомых элементов
+         for (var i = length - 1; i >= 0; i--) {
+            if (key instanceof Array) {
+               $ws.helpers.forEach(key, function (value) {
+                  compare(i, value);
+               });
+            } else {
+               compare(i, key);
             }
          }
-         // удаляем эемент из исходного набора
-         Array.remove(data, index);
       },
 
       query: function (data, filter, sorting, offset, limit) {
@@ -200,4 +200,6 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
 
 
    });
+
+   return new DataStrategyArray();
 });
