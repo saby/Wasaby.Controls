@@ -908,6 +908,7 @@
 // --------- //
 
 @text-area-field-font:                          inherit;
+@text-area-field-line-height:                   @text-box-field-line-height;
 @text-area-border-radius:                       0;
 
 @text-area-field-text-color:                    inherit;
@@ -918,13 +919,13 @@
 
 @text-area-border-width:                        1px;
 @text-area-border-style:                        solid;
-@text-area-border-color:                        #eaeaea;
+@text-area-border-color:                        @gray-dark-color;
 @text-area-bg:                                  @text-box-bg;
 
 @text-area-focus-border-width:                  @text-area-border-width;
-@text-area-focus-border-style:                  @text-area-border-style;
-@text-area-focus-border-color:                  #eaeaea #eaeaea @gray-light-color #eaeaea;
-@text-area-focus-bg:                            @text-area-bg;
+@text-area-focus-border-style:                  @text-area-border-color;
+@text-area-focus-border-color:                  @gray-dark-color;
+@text-area-focus-bg:                            @text-box-focus-bg;
 
 @text-area-error-border-width:                  @text-area-border-width;
 @text-area-error-border-style:                  @text-area-border-style;
@@ -941,7 +942,7 @@
 @text-area-disabled-border-color:               transparent;
 @text-area-disabled-bg:                         @text-area-bg;
 
-@text-area-field-padding:                       6px 7px;
+@text-area-field-padding:                       0 5px;
 
 
 
@@ -1085,8 +1086,8 @@
 // ------------- //
 
 @edit-at-place-wrapper-margin:                  0 0 2px 0;
-@edit-at-place-wrapper-text-area-padding:       5px 7px;
-@edit-at-place-wrapper-border-width:            2px 1px;
+@edit-at-place-wrapper-text-area-padding:       0 5px;
+@edit-at-place-wrapper-border-width:            1px;
 @edit-at-place-wrapper-border-style:            solid;
 @edit-at-place-wrapper-border-color:            transparent;
 
@@ -1103,12 +1104,12 @@
 @edit-at-place-text-box-editor-font:            @font-basic-size/@font-basic-line-height @font-basic-name;
 @edit-at-place-text-area-editor-font:           @edit-at-place-text-box-editor-font;
 
-@edit-at-place-editor-overlay-margin:           -4px 0 0 -4px;
-@edit-at-place-editor-overlay-padding:          4px;
+@edit-at-place-editor-overlay-margin:           -10px 0 0 -10px;
+@edit-at-place-editor-overlay-padding:          10px;
 @edit-at-place-editor-overlay-border:           none;
 @edit-at-place-editor-overlay-border-radius:    3px;
-@edit-at-place-editor-overlay-shadow:           0 0 3px #b2b2b2;
-@edit-at-place-editor-overlay-bg:               #f8f3f1 !important;
+@edit-at-place-editor-overlay-shadow:           none;
+@edit-at-place-editor-overlay-bg:               @default-color !important;
 
 @edit-at-place-control-margin:                  0 0 0 8px;
 @edit-at-place-group-control-margin:            4px;

@@ -908,6 +908,7 @@
 // --------- //
 
 @text-area-field-font:                          inherit;
+@text-area-field-line-height:                   normal;
 @text-area-border-radius:                       0;
 
 @text-area-field-text-color:                    inherit;
@@ -918,7 +919,7 @@
 
 @text-area-border-width:                        1px;
 @text-area-border-style:                        solid;
-@text-area-border-color:                        #eaeaea;
+@text-area-border-color:                        @text-box-border-color;
 @text-area-bg:                                  @text-box-bg;
 
 @text-area-focus-border-width:                  @text-area-border-width;
@@ -1107,8 +1108,8 @@
 @edit-at-place-editor-overlay-padding:          4px;
 @edit-at-place-editor-overlay-border:           none;
 @edit-at-place-editor-overlay-border-radius:    3px;
-@edit-at-place-editor-overlay-shadow:           0 0 3px #b2b2b2;
-@edit-at-place-editor-overlay-bg:               #f8f3f1 !important;
+@edit-at-place-editor-overlay-shadow:           none;
+@edit-at-place-editor-overlay-bg:               @default-color;
 
 @edit-at-place-control-margin:                  0 0 0 8px;
 @edit-at-place-group-control-margin:            4px;

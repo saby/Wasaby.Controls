@@ -1400,8 +1400,23 @@ input[type="reset"]::-moz-focus-inner {
   background-clip: padding-box;
   border-width: 1px;
   border-style: solid;
-  border-color: #eaeaea;
+  border-color: #d1d1d1;
   background: #ffffff;
+}
+.controls-TextArea .controls-TextArea__inputField {
+  font: inherit;
+  color: inherit;
+  display: block;
+  width: 100%;
+  height: 100%;
+  line-height: normal;
+  padding: 6px 7px;
+  resize: none;
+  border: none;
+  background: transparent;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .controls-TextArea.ws-has-focus {
   border-width: 1px;
@@ -1439,20 +1454,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextArea.ws-disabled .controls-TextArea__inputField {
   color: inherit;
   overflow-y: hidden;
-}
-.controls-TextArea .controls-TextArea__inputField {
-  font: inherit;
-  color: inherit;
-  display: block;
-  width: 100%;
-  height: 100%;
-  padding: 6px 7px;
-  resize: none;
-  border: none;
-  background: transparent;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
 }
 .controls-TextArea.controls-TextArea__autoheight {
   height: auto !important;
@@ -1726,10 +1727,10 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
-  -webkit-box-shadow: 0 0 3px #b2b2b2;
-  -moz-box-shadow: 0 0 3px #b2b2b2;
-  box-shadow: 0 0 3px #b2b2b2;
-  background: #f8f3f1 !important;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #f1f1f1;
 }
 .controls-EditAtPlace__editorOverlay .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
   font: 13px/20px Tahoma, Geneva, sans-serif;
