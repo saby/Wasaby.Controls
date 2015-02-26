@@ -955,9 +955,6 @@
       }, {
          key: 'presto',
          title: 'Presto'
-      }, {
-         key: 'presto-new',
-         title: 'Presto new'
       }];
 
       require([
