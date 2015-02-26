@@ -621,6 +621,7 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   background: #FFFFFF;
   text-align: center;
+  width: 215px;
 }
 .controls-Calendar__monthPicker {
   width: 148px;
@@ -734,6 +735,12 @@ input[type="reset"]::-moz-focus-inner {
   vertical-align: top;
   background-color: transparent;
   line-height: normal;
+}
+.ws-validation-error > .controls-DatePicker__fieldWrapper {
+  background-color: #fadadd;
+  outline: 1px solid #ff302b !important;
+  outline-offset: -1px;
+  border: 1px solid #ff302b !important;
 }
 .ws-disabled .controls-FormattedTextBox__fieldWrapper {
   cursor: default;
