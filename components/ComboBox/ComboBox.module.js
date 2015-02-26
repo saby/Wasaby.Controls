@@ -267,6 +267,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                this._inputField.removeAttr('readonly');
             }
          }
+      },
+
+      //TODO заглушка
+      reviveComponents : function() {
+         var def = new $ws.proto.Deferred();
+         def.callback();
+         return def;
       }
    });
 
