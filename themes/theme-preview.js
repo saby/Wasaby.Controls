@@ -659,7 +659,7 @@
             element: 'passwordTextBox2',
             placeholder: 'This is password textbox',
             text: 'Password',
-            checked: false
+            enabled: false
          });
 
          new FormattedTextBox({
