@@ -60,6 +60,23 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
          return {d: item, s: s};
       },
 
+      at: function (data, index) {
+         var d = data.d,
+            s = data.s;
+         return {d: d[index], s: s};
+      },
+
+      rebuild: function (data, keyField) {
+         var _pkIndex = {},
+            d = data.d,
+            length = d.length;
+         for (var i = 0; i < length; i++) {
+            //FixMe: допущение что ключ на первой позиции + там почему-то массив приходит оО
+            _pkIndex[d[i][0][0]] = i;
+         }
+         return _pkIndex;
+      },
+
       /**
        * Установить значение поля записи
        * @param {Object} data массив "сырых" данных

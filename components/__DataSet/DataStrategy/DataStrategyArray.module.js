@@ -46,6 +46,19 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
          return item;
       },
 
+      at: function (data, index) {
+         return data[index];
+      },
+
+      rebuild: function (data, keyField) {
+         var _pkIndex = {},
+            length = data.length;
+         for (var i = 0; i < length; i++) {
+            _pkIndex[data[i][keyField]] = i;
+         }
+         return _pkIndex;
+      },
+
       /**
        * Установить значение поля записи
        * @param {Array} data массив "сырых" данных
@@ -67,26 +80,6 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
        */
       value: function (data, field) {
          return data[field];
-      },
-
-      /**
-       * Найти запись в сырых данных по ее идентификатору
-       * @param {Array} data массив "сырых" данных
-       * @param {String} keyField название поля-идентификатора
-       * @param {Number} key идентификатор записи
-       * @returns {*}
-       */
-      findRawRecordByKey: function (data, keyField, key) {
-         var index;
-         //перебиаем массим исходных данных пока не найдем нужный элемент
-         //TODO: сделать ошибку если такой записи не нашлось
-         for (var i = 0; i < data.length; i++) {
-            if (data[i][keyField] == parseInt(key, 10)) {
-               index = i;
-               break;
-            }
-         }
-         return data[index];
       },
 
       /**

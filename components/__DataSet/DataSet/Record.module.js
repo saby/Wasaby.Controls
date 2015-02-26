@@ -13,16 +13,9 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
          _raw: undefined,
          _strategy: undefined
       },
-      $constructor: function (strategy) {
-         this._strategy = strategy;
-      },
-
-      /**
-       * установить "сырые" данные
-       * @param {Object} raw
-       */
-      setRaw: function (raw) {
-         this._raw = raw;
+      $constructor: function (cfg) {
+         this._strategy = cfg.strategy;
+         this._raw = cfg.raw;
       },
 
       /**

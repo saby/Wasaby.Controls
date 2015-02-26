@@ -42,8 +42,10 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
          var self = this,
             def = new $ws.proto.Deferred();
          self._BL.call(self._options.crateMethodName, {'Фильтр': null, 'ИмяМетода': null}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
-            var record = new Record(self.getStrategy());
-            record.setRaw(res);
+            var record = new Record({
+               'strategy': self.getStrategy(),
+               'raw': res
+            });
             def.callback(record);
          });
          return def;
@@ -59,8 +61,10 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
             def = new $ws.proto.Deferred();
          self._BL.call(self._options.readMethodName, {'ИдО': id, 'ИмяМетода': 'Список'}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
             //TODO: переделать установку стратегии стратегию
-            var record = new Record(self.getStrategy());
-            record.setRaw(res);
+            var record = new Record({
+               'strategy': self.getStrategy(),
+               'raw': res
+            });
             def.callback(record);
          });
          return def;

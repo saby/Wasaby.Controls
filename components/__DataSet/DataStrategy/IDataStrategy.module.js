@@ -25,6 +25,15 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
       value: function () {
          /*Method must be implemented*/
       },
+
+      at:function(){
+         /*Method must be implemented*/
+      },
+
+      rebuild:function(){
+         /*Method must be implemented*/
+      },
+
       /**
        * Установить значение поля записи
        */

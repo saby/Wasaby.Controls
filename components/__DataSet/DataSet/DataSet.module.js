@@ -13,6 +13,9 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
    return $ws.proto.Abstract.extend({
       $protected: {
+         _pkIndex: {},
+         _childRecordsMap: [],
+         _isFirstLoad: true,
          /**
           * @cfg {} реализация стратегии работы с данными
           */
@@ -62,8 +65,11 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @private
        */
       _prepareData: function (data) {
-         var self = this;
-         self._rawData = data;
+         this._rawData = data;
+      },
+
+      _rebuild: function () {
+         this._pkIndex = this._strategy.rebuild(this._rawData, this._keyField);
       },
 
       /**
@@ -74,6 +80,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return this._rawData;
       },
 
+      //FixMe: убрать его?
       /**
        * Метод получения значения идентификатора записи
        * @param {js!SBIS3.CONTROLS.Record} record
@@ -88,10 +95,33 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @param {Number} key
        * @returns {js!SBIS3.CONTROLS.Record}
        */
-      getRecord: function (key) {
-         var record = new Record(this._strategy);
-         record.setRaw(this._strategy.getByKey(this._rawData, this._keyField, key));
-         return record;
+      getRecordByPrimaryKey: function (primaryKey) {
+         if (this._isFirstLoad) {
+            this._rebuild();
+            this._isFirstLoad=false;
+         }
+         return this.at(this._pkIndex[primaryKey]);
+      },
+
+      at: function (index) {
+         if (this._childRecordsMap[index] === undefined) {
+            var data = this._strategy.at(this._rawData, index);
+            if (data) {
+               this._childRecordsMap[index] = new Record({
+                  'strategy': this._strategy,
+                  'raw': data
+               });
+            } else if (index < 0) {
+               return undefined;
+            } else {
+               throw new Error('No record at index ' + index);
+            }
+         }
+         return this._childRecordsMap[index];
+      },
+
+      createRecord:function(){
+
       },
 
       /**

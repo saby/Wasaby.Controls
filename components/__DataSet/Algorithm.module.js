@@ -17,11 +17,12 @@ define('js!SBIS3.CONTROLS.Algorithm', ['js!SBIS3.CONTROLS.Record'], function (Re
        * @param context контекст
        */
       each: function (object, iterateCallback, context) {
-         // для быстроты создаем запись только один раз
-         var record = new Record(object.getStrategy());
          object.getStrategy().each(object.getRawData(), function (rawRow) {
-            // устанавливаем разные исходные данные
-            record.setRaw(rawRow);
+            //FixMe:до этого для быстроты создавали запись только один раз, но делать setRaw не круто
+            var record = new Record({
+               'strategy': object.getStrategy(),
+               'raw': rawRow
+            });
             iterateCallback.call(context, record);
          });
       }

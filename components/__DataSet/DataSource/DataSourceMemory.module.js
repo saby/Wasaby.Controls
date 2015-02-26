@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
 
    return IDataSource.extend({
       $protected: {
+         _initialDataSet: undefined,
          _options: {
             /**
              * @cfg {Array} Исходный массив данных, с которым работает DataSourceMemory
@@ -25,8 +26,13 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
             keyField: ''
          }
       },
-      $constructor: function () {
-
+      $constructor: function (cfg) {
+         // неявно создадим начальный датасет, с которым будем работать дальше
+         this._initialDataSet = new DataSet({
+            strategyName: this._options.strategyName,
+            data: cfg.data,
+            keyField: this._options.keyField
+         });
       },
 
       /**
@@ -36,8 +42,14 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
       create: function () {
          var def = new $ws.proto.Deferred(),
             strategy = this.getStrategy(),
-            record = new Record(strategy);
+
+
+            record = new Record({
+               'strategy':strategy
+            });
+         //TODO: убрать этот метод
          strategy.addRawRecord(this._options.data, this._options.keyField, record);
+
          def.callback(record);
          return def;
       },
@@ -48,13 +60,8 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record
        */
       read: function (id) {
-         var def = new $ws.proto.Deferred(),
-         //TODO: переделать установку стратегии
-            strategy = this.getStrategy();
-         var record = new Record(strategy);
-         // установка "сырых" данных для записи
-         record.setRaw(strategy.findRawRecordByKey(this._options.data, this._options.keyField, id));
-         def.callback(record);
+         var def = new $ws.proto.Deferred();
+         def.callback(this._initialDataSet.getRecordByPrimaryKey(id));
          return def;
       },
 
