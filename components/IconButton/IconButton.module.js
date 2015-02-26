@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTR
     * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.IconButton'>
-    *    <option name='icon' value='sprite:icon-16 icon-AddButton icon-primary'></option>
+    *    <option name="icon">sprite:icon-16 icon-AddButton icon-primary</option>
     * </component>
     * @public
     * @category Buttons
