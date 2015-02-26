@@ -63,7 +63,7 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 57px;
   padding: 0 16px;
   margin: auto;
-  border: 1px solid #f2f2f2;
+  border: 1px solid #e2effb;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
@@ -73,7 +73,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #f2f2f2;
+  background: #e2effb;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .controls-Button {
@@ -154,7 +154,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-Button__primary.ws-disabled {
   color: #aaaaaa;
-  border: 1px solid #f2f2f2;
+  border: 1px solid #e2effb;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
@@ -194,7 +194,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-Button__light.controls-Button__primary:hover {
   color: #333333;
-  border: 1px solid #ffcc99;
+  border: 1px solid #ffb366;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
@@ -210,7 +210,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-Button__light.controls-Button__primary.ws-disabled {
   color: #aaaaaa;
-  border: 1px solid #f2f2f2;
+  border: 1px solid #e2effb;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
@@ -218,7 +218,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-Button__light.ws-disabled {
   color: #aaaaaa;
-  border: 1px solid #f2f2f2;
+  border: 1px solid #e2effb;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
@@ -233,7 +233,7 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 56px;
   padding: 0 16px;
   margin: auto;
-  border: 1px solid #f2f2f2;
+  border: 1px solid #e2effb;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
@@ -243,7 +243,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #f2f2f2;
+  background: #e2effb;
 }
 .controls-Button.controls-Button__big:hover {
   color: #333333;
@@ -316,7 +316,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-Button__big.controls-Button__primary.ws-disabled {
   color: #aaaaaa;
-  border: 1px solid #f2f2f2;
+  border: 1px solid #e2effb;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
@@ -324,7 +324,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-Button__big.ws-disabled {
   color: #aaaaaa;
-  border: 1px solid #f2f2f2;
+  border: 1px solid #e2effb;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
@@ -338,7 +338,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Button.ws-disabled {
   cursor: default;
   color: #aaaaaa;
-  border: 1px solid #f2f2f2;
+  border: 1px solid #e2effb;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
@@ -350,7 +350,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ButtonGroup.controls-ButtonGroup__vertical .controls-ListView__item {
   display: block;
-  margin: 0 0 8px 0;
+  margin: 0 0 16px 0;
 }
 .controls-Button.controls-Checked__checked.controls-Button {
   color: #4e5762;
@@ -493,46 +493,46 @@ input[type="reset"]::-moz-focus-inner {
   width: 16px;
   height: 16px;
   line-height: normal;
-  background: url('img/RadioButton-sprite.png') 0 0;
+  background: none;
 }
 .controls-RadioButton:hover .controls-RadioButton__caption {
   color: #ffcc99;
 }
 .controls-RadioButton:hover .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -32px;
+  background: none;
 }
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__caption {
   color: #ffffff;
 }
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -16px;
+  background: none;
 }
 .controls-RadioButton.controls-Checked__checked:hover .controls-RadioButton__caption {
   color: #ffcc99;
 }
 .controls-RadioButton.controls-Checked__checked:hover .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -16px;
+  background: none;
 }
 .controls-RadioButton.controls-Checked__checked.ws-disabled .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -48px;
+  background: none;
 }
 .controls-RadioButton.controls-Checked__checked.ws-disabled:hover .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -48px;
+  background: none;
 }
 .controls-RadioButton.ws-disabled {
   cursor: default;
 }
 .controls-RadioButton.ws-disabled .controls-RadioButton__caption {
-  color: #eeeeee;
+  color: #aaaaaa;
 }
 .controls-RadioButton.ws-disabled .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 0;
+  background: none;
 }
 .controls-RadioButton.ws-disabled:hover .controls-RadioButton__caption {
-  color: #eeeeee;
+  color: #aaaaaa;
 }
 .controls-RadioButton.ws-disabled:hover .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 0;
+  background: none;
 }
 .controls-RadioGroup .controls-ListView__item {
   display: inline-block;
@@ -540,7 +540,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-RadioGroup.controls-ButtonGroup__vertical .controls-ListView__item {
   display: block;
-  margin: 0 0 8px 0;
+  margin: 0 0 16px 0;
 }
 .controls-CheckBox {
   cursor: pointer;
@@ -552,67 +552,72 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CheckBox .controls-CheckBox__icon {
   display: inline-block;
-  width: 16px;
-  height: 16px;
-  line-height: normal;
-  background: url('img/CheckBox-sprite.png') 0 0px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  border: 1px solid #ffcc99;
+  background: transparent;
 }
 .controls-CheckBox:hover .controls-CheckBox__caption {
   color: #ffcc99;
 }
 .controls-CheckBox:hover .controls-CheckBox__icon {
-  background: url('img/CheckBox-sprite.png') 0 -16px;
+  border: 1px solid #ffcc99;
+  background: transparent;
 }
 .controls-CheckBox.controls-Checked__checked .controls-CheckBox__caption {
   color: #ffffff;
 }
 .controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon {
-  background: url('img/CheckBox-sprite.png') 0 -32px;
+  border: 1px solid #ffcc99;
+  background: transparent url('img/checkbox.png') -2px -5px;
 }
 .controls-CheckBox.controls-Checked__checked:hover .controls-CheckBox__caption {
   color: #ffcc99;
 }
 .controls-CheckBox.controls-Checked__checked:hover .controls-CheckBox__icon {
-  background: url('img/CheckBox-sprite.png') 0 -32px;
+  border: 1px solid #ffcc99;
+  background: transparent url('img/checkbox.png') -2px -5px;
 }
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__caption {
   color: #ffffff;
 }
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
-  background: url('img/CheckBox-sprite.png') 0 -48px;
+  border: 1px solid #ffcc99;
+  background: #65707e url('img/checkbox.png') -2px -5px;
 }
 .controls-CheckBox.controls-ToggleButton__null:hover .controls-CheckBox__caption {
   color: #ffcc99;
 }
 .controls-CheckBox.controls-ToggleButton__null:hover .controls-CheckBox__icon {
-  background: url('img/CheckBox-sprite.png') 0 -48px;
+  border: 1px solid #ffcc99;
+  background: #65707e url('img/checkbox.png') -2px -5px;
 }
 .controls-CheckBox.controls-ToggleButton__null.ws-disabled .controls-CheckBox__icon {
-  background: url('img/CheckBox-sprite.png') 0 -80px;
+  background: #65707e url('img/checkbox.png') -2px -5px;
 }
 .controls-CheckBox.controls-ToggleButton__null.ws-disabled:hover .controls-CheckBox__icon {
-  background: url('img/CheckBox-sprite.png') 0 -80px;
+  background: #65707e url('img/checkbox.png') -2px -5px;
 }
 .controls-CheckBox.ws-disabled {
   cursor: default;
 }
 .controls-CheckBox.ws-disabled .controls-CheckBox__caption {
-  color: #eeeeee;
+  color: #aaaaaa;
 }
 .controls-CheckBox.ws-disabled .controls-CheckBox__icon {
-  background: url('img/CheckBox-sprite.png') 0 0;
+  border: 1px solid #aaaaaa;
+  background: transparent;
 }
 .controls-CheckBox.ws-disabled:hover .controls-CheckBox__caption {
-  color: #eeeeee;
+  color: #aaaaaa;
 }
 .controls-CheckBox.ws-disabled:hover .controls-CheckBox__icon {
-  background: url('img/CheckBox-sprite.png') 0 0;
+  border: 1px solid #aaaaaa;
 }
 .controls-CheckBox.ws-disabled.controls-Checked__checked .controls-CheckBox__icon {
-  background: url('img/CheckBox-sprite.png') 0 -64px;
-}
-.controls-CheckBox.ws-disabled.controls-Checked__checked:hover .controls-CheckBox__icon {
-  background: url('img/CheckBox-sprite.png') 0 -64px;
+  border: 1px solid #aaaaaa;
+  background: transparent url('img/checkbox.png') -2px -5px;
 }
 .controls-CheckBoxGroup .controls-ListView__item {
   display: inline-block;
@@ -620,13 +625,13 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CheckBoxGroup.controls-ButtonGroup__vertical .controls-ListView__item {
   display: block;
-  margin: 0 0 8px 0;
+  margin: 0 0 16px 0;
 }
 .controls-Switcher {
   display: inline-block;
   cursor: pointer;
   min-width: 0;
-  height: 21px;
+  height: 31px;
   padding: 0 16px 0 0;
 }
 .controls-Switcher .controls-Switcher__toggle {
@@ -636,37 +641,37 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
   width: 100%;
   min-width: 100px;
-  height: 21px;
+  height: 31px;
   text-align: left;
-  padding: 1px;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  border-radius: 6px;
+  padding: 4px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
-  border-width: 1px;
+  border-width: 0;
   border-style: solid;
-  border-color: #ffcc99;
-  background: #f2f2f2;
+  border-color: transparent;
+  background: #e2effb;
 }
 .controls-Switcher .controls-Switcher__toggle .controls-Switcher__position {
   position: relative;
   display: inline-block;
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   text-align: center;
   width: 70%;
   min-width: 0;
   height: auto;
-  min-height: 17px;
-  padding: 0;
+  min-height: 23px;
+  padding: 3px 0 0;
   margin: 0;
-  color: #ffffff;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  border-radius: 6px;
+  color: #333333;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
@@ -679,7 +684,7 @@ input[type="reset"]::-moz-focus-inner {
   content: '';
   position: absolute;
   width: 0;
-  height: 21px;
+  height: 31px;
   display: block;
   top: 0;
   left: 0;
@@ -689,7 +694,7 @@ input[type="reset"]::-moz-focus-inner {
   content: '';
   position: absolute;
   width: 0;
-  height: 21px;
+  height: 31px;
   display: block;
   top: 0;
   right: 0;
@@ -697,11 +702,11 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on {
   text-align: right;
-  padding: 1px;
+  padding: 4px;
 }
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position {
   margin: 0;
-  color: #ffffff;
+  color: #333333;
   background: #ffcc99;
 }
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:before {
@@ -718,13 +723,13 @@ input[type="reset"]::-moz-focus-inner {
   cursor: default;
 }
 .controls-Switcher.ws-disabled .controls-Switcher__toggle {
-  border-width: 1px;
+  border-width: 0;
   border-style: solid;
-  border-color: #eeeeee;
-  background: #eeeeee;
+  border-color: #aaaaaa;
+  background: #aaaaaa;
 }
 .controls-Switcher.ws-disabled .controls-Switcher__toggle .controls-Switcher__position {
-  color: #eeeeee;
+  color: #aaaaaa;
   background: #ffffff;
 }
 .controls-Switcher.ws-disabled .controls-Switcher__toggle .controls-Switcher__position:before {
@@ -734,7 +739,7 @@ input[type="reset"]::-moz-focus-inner {
   background: none;
 }
 .controls-Switcher.ws-disabled .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position {
-  color: #eeeeee;
+  color: #aaaaaa;
   background: #ffffff;
 }
 .controls-Switcher.ws-disabled .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:before {
@@ -824,7 +829,7 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   margin: -1px 0 0;
-  border: 1px solid #eeeeee;
+  border: 1px solid #e2effb;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
@@ -853,11 +858,11 @@ input[type="reset"]::-moz-focus-inner {
   height: 56px;
   line-height: 56px;
   padding: 0 32px 0 16px;
-  color: #ffffff;
-  background: #4e5762;
+  color: #333333;
+  background: #e2effb;
 }
 .controls-MenuItem:hover {
-  color: 0 0 0 22px;
+  color: #333333;
   background: #ffcc99;
 }
 .controls-MenuItem .controls-MenuItem__content {
@@ -865,7 +870,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
   position: absolute;
-  top: -2px;
+  top: 0px;
   left: -2px;
 }
 .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__text {
@@ -873,7 +878,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-MenuButton {
   position: relative;
-  padding: 0 30px 0 12px;
+  padding: 0 36px 0 12px;
 }
 .controls-Button.controls-MenuButton.controls-MenuButton__withoutMenu {
   padding: 0 16px;
@@ -884,59 +889,59 @@ input[type="reset"]::-moz-focus-inner {
   width: 10px;
   height: 5px;
   right: 12px;
-  top: 13px;
+  top: 24px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  border-width: 5px 5px 0 5px;
+  border-width: 8px 8px 0 8px;
   border-style: solid;
-  border-color: #aaaaaa transparent transparent transparent;
+  border-color: #ffcc99 transparent transparent transparent;
   background: transparent;
 }
 .controls-Button.controls-MenuButton:hover .controls-MenuButton__arrowDown {
-  border-width: 5px 5px 0 5px;
+  border-width: 8px 8px 0 8px;
   border-style: solid;
   border-color: #ffffff transparent transparent transparent;
   background: transparent;
 }
 .controls-Button.controls-MenuButton.controls-Checked__checked .controls-MenuButton__arrowDown,
 .controls-Button.controls-MenuButton.controls-Click__active .controls-MenuButton__arrowDown {
-  border-width: 5px 5px 0 5px;
+  border-width: 8px 8px 0 8px;
   border-style: solid;
-  border-color: #aaaaaa transparent transparent transparent;
+  border-color: #ffcc99 transparent transparent transparent;
 }
 .controls-Button.controls-MenuButton.controls-Checked__checked:hover .controls-MenuButton__arrowDown,
 .controls-Button.controls-MenuButton.controls-Click__active:hover .controls-MenuButton__arrowDown {
-  border-width: 5px 5px 0 5px;
+  border-width: 8px 8px 0 8px;
   border-style: solid;
-  border-color: #aaaaaa transparent transparent transparent;
+  border-color: #ffcc99 transparent transparent transparent;
 }
 .controls-Button.controls-MenuButton.controls-Button__primary .controls-MenuButton__arrowDown {
-  border-width: 5px 5px 0 5px;
+  border-width: 8px 8px 0 8px;
   border-style: solid;
   border-color: #ffffff transparent transparent transparent;
   background: transparent url('') 0 0;
 }
 .controls-Button.controls-MenuButton.controls-Button__primary:hover .controls-MenuButton__arrowDown {
-  border-width: 5px 5px 0 5px;
+  border-width: 8px 8px 0 8px;
   border-style: solid;
   border-color: #ffcc99 transparent transparent transparent;
   background: transparent url('') 0 0;
 }
 .controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked .controls-MenuButton__arrowDown,
 .controls-Button.controls-MenuButton.controls-Button__primary.controls-Click__active .controls-MenuButton__arrowDown {
-  border-width: 5px 5px 0 5px;
+  border-width: 8px 8px 0 8px;
   border-style: solid;
   border-color: #ffcc99 transparent transparent transparent;
 }
 .controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked:hover .controls-MenuButton__arrowDown,
 .controls-Button.controls-MenuButton.controls-Button__primary.controls-Click__active:hover .controls-MenuButton__arrowDown {
-  border-width: 5px 5px 0 5px;
+  border-width: 8px 8px 0 8px;
   border-style: solid;
   border-color: #ffcc99 transparent transparent transparent;
 }
 .controls-Button.controls-MenuButton.ws-disabled .controls-MenuButton__arrowDown {
-  border-width: 5px 5px 0 5px;
+  border-width: 8px 8px 0 8px;
   border-style: solid;
   border-color: #aaaaaa transparent transparent transparent;
   background: transparent;
@@ -1027,11 +1032,11 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuLink__Menu .controls-MenuLink__header .controls-Link {
   margin: 3px 0 0;
-  color: #ffcc99;
+  color: #4e5762;
   text-decoration: none;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header .controls-Link:hover {
-  color: #ffcc99;
+  color: #4e5762;
   text-decoration: none;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header .controls-MenuLink__arrowDown {
@@ -1124,7 +1129,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DatePicker .controls-TextBox__afterFieldWrapper {
   position: relative;
   float: right;
-  width: 16px;
+  width: 20px;
   min-height: 38px;
   margin: 0 2px 0 0;
   height: 100%;
@@ -1222,40 +1227,36 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
 }
 .controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp {
-  width: 12px;
-  height: 12px;
-  margin: -1px 0 0;
+  width: 16px;
+  height: 8px;
+  margin: 8px 0 0;
   border-radius: 0;
-  border-width: 1px 0 0 0;
+  border-width: 0 8px 8px 8px;
   border-style: solid;
-  border-color: transparent transparent #666666 transparent;
-  background: url('img/NumberTextBox-arrow.png') 0 0 no-repeat;
+  border-color: transparent transparent #ffcc99 transparent;
+  background: transparent;
 }
 .controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp:hover {
-  background: url('img/NumberTextBox-arrow.png') 0 -24px no-repeat;
+  border-width: 0 8px 8px 8px;
+  border-style: solid;
+  border-color: transparent transparent #ffb366 transparent;
+  background: transparent;
 }
 .controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown {
-  width: 12px;
-  height: 12px;
-  margin: 0;
+  width: 16px;
+  height: 8px;
+  margin: 6px 0 0;
   border-radius: 0;
-  border-width: 0 0 1px 0;
+  border-width: 8px 8px 0 8px;
   border-style: solid;
-  border-color: transparent transparent #666666 transparent;
-  background: url('img/NumberTextBox-arrow.png') 0 -12px no-repeat;
+  border-color: #ffcc99 transparent transparent transparent;
+  background: transparent;
 }
 .controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown:hover {
-  background: url('img/NumberTextBox-arrow.png') 0 -36px no-repeat;
-}
-.controls-NumberTextBox:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp {
-  border-width: 1px 0 0 0;
+  border-width: 8px 8px 0 8px;
   border-style: solid;
-  border-color: #666666;
-}
-.controls-NumberTextBox:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown {
-  border-width: 0 0 1px 0;
-  border-style: solid;
-  border-color: #666666;
+  border-color: #ffb366 transparent transparent transparent;
+  background: transparent;
 }
 .controls-NumberTextBox.ws-disabled .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow,
 .controls-NumberTextBox.ws-disabled:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow {
@@ -1266,14 +1267,14 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
-  background: url('img/NumberTextBox-arrow.png') 0 0 no-repeat;
+  background: transparent;
 }
 .controls-NumberTextBox.ws-disabled .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown,
 .controls-NumberTextBox.ws-disabled:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
-  background: url('img/NumberTextBox-arrow.png') 0 -12px no-repeat;
+  background: transparent;
 }
 .controls-PasswordTextField .controls-TextBox__field__fixIE {
   font-size: 12px;
@@ -1293,15 +1294,24 @@ input[type="reset"]::-moz-focus-inner {
   text-decoration: none;
   display: inline-block;
   width: 16px;
-  height: 16px;
+  height: 8px;
   top: 50%;
-  right: 0;
-  margin: -8px 0 0;
-  background: #ffffff url('img/ComboBox.png') 0 0 no-repeat;
+  right: 4px;
+  margin: -2px 0 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-width: 8px 8px 0 8px;
+  border-style: solid;
+  border-color: #ffcc99 transparent transparent transparent;
+  background: transparent;
 }
 .controls-ComboBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown:hover {
   text-decoration: none;
-  background: #ffffff url('img/ComboBox.png') 0 -16px no-repeat;
+  border-width: 8px 8px 0 8px;
+  border-style: solid;
+  border-color: #ffb366 transparent transparent transparent;
+  background: transparent;
 }
 .controls-ComboBox.controls-ComboBox__editable-false {
   cursor: pointer;
@@ -1317,32 +1327,54 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox.controls-ComboBox__editable-false:hover .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
   text-decoration: none;
-  background: #ffffff url('img/ComboBox.png') 0 -16px no-repeat;
+  border-width: 8px 8px 0 8px;
+  border-style: solid;
+  border-color: #ffb366 transparent transparent transparent;
+  background: transparent;
+}
+.controls-ComboBox.controls-Picker__show .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
+  border-width: 0 8px 8px 8px;
+  border-style: solid;
+  border-color: transparent transparent #ffcc99 transparent;
+  background: transparent;
+}
+.controls-ComboBox.controls-Picker__show:hover .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
+  border-width: 0 8px 8px 8px;
+  border-style: solid;
+  border-color: transparent transparent #ffb366 transparent;
+  background: transparent;
+}
+.controls-ComboBox.ws-disabled .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown,
+.controls-ComboBox.ws-disabled:hover .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: transparent;
 }
 .controls-ComboBox__picker {
-  border: 1px solid #eeeeee;
-  -webkit-border-radius: 0 0 2px 2px;
-  -moz-border-radius: 0 0 2px 2px;
-  border-radius: 0 0 2px 2px;
+  border: 1px solid #666666;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
-  margin: -2px 0 0;
+  margin: -1px 0 0;
 }
 .controls-ComboBox__picker .controls-ComboBox__itemRow {
   cursor: pointer;
-  padding: 4px 7px;
+  padding: 11px 5px;
   font: inherit;
   color: inherit;
-  background: #ffffff;
-}
-.controls-ComboBox__picker .controls-ComboBox__itemRow:hover {
-  color: #ffffff;
-  background: #ffcc99;
+  background: #434a54;
 }
 .controls-ComboBox__picker .controls-ComboBox__itemRow.controls-ComboBox__itemRow__selected {
-  color: #aaaaaa;
-  background: #ffffff;
+  color: inherit;
+  background: #434a54;
+}
+.controls-ComboBox__picker .controls-ComboBox__itemRow:hover {
+  color: #333333;
+  background: #e2effb;
 }
 .controls-ComboBox__inputWrapper {
   height: 100%;
@@ -1505,7 +1537,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement {
   cursor: pointer;
   color: #ffffff;
-  background: #f2f2f2;
+  background: #e2effb;
 }
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement:hover {
   color: #ffcc99;
@@ -1598,7 +1630,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement.controls-MonthPicker__dropdownElementActive {
   color: #ffffff;
-  background: #f2f2f2;
+  background: #e2effb;
 }
 .controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement.controls-MonthPicker__dropdownElementMonth {
   text-align: left;
@@ -1851,4 +1883,12 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:hover {
   color: inherit;
   background: transparent;
+}
+.controls-ComboBox.controls-Picker__show {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #666666;
+}
+.controls-ComboBox__picker .controls-ComboBox__itemRow.controls-ComboBox__itemRow__selected {
+  font-weight: bold;
 }

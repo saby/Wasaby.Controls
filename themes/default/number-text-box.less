@@ -25,6 +25,9 @@
         background: @number-text-box-arrow-up-bg;
 
         &:hover {
+          border-width: @number-text-box-arrow-up-hover-border-width;
+          border-style: @number-text-box-arrow-up-hover-border-style;
+          border-color: @number-text-box-arrow-up-hover-border-color;
           background: @number-text-box-arrow-up-hover-bg;
         }
       }
@@ -40,25 +43,10 @@
         background: @number-text-box-arrow-down-bg;
 
         &:hover {
-          background: @number-text-box-arrow-down-hover-bg;
-        }
-      }
-    }
-  }
-
-  &:hover {
-    .controls-TextBox__afterFieldWrapper {
-      .controls-NumberTextBox__arrow {
-        &.controls-NumberTextBox__arrowUp {
-          border-width: @number-text-box-arrow-up-hover-border-width;
-          border-style: @number-text-box-arrow-up-hover-border-style;
-          border-color: @number-text-box-arrow-up-hover-border-color;
-        }
-
-        &.controls-NumberTextBox__arrowDown {
           border-width: @number-text-box-arrow-down-hover-border-width;
           border-style: @number-text-box-arrow-down-hover-border-style;
           border-color: @number-text-box-arrow-down-hover-border-color;
+          background: @number-text-box-arrow-down-hover-bg;
         }
       }
     }

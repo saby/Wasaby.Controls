@@ -5,7 +5,7 @@
 @gray-color:                              #aaa;
 @gray-light-color:                        #eee;
 
-@default-color:                           #f2f2f2;
+@default-color:                           #e2effb;
 @primary-color:                           #ffcc99;
 @secondary-color:                         #4e5762;
 
@@ -122,15 +122,15 @@
 @button-light-primary-shadow:             @button-light-shadow;
 @button-light-primary-bg:                 @button-light-bg;
 
-@button-light-primary-hover-text-color:   @button-light-primary-text-color;
-@button-light-primary-hover-border:       @button-light-primary-border;
-@button-light-primary-hover-shadow:       @button-light-primary-shadow;
-@button-light-primary-hover-bg:           @button-light-hover-bg;
+@button-light-primary-hover-text-color:   @button-primary-text-color;
+@button-light-primary-hover-border:       @button-primary-hover-border;
+@button-light-primary-hover-shadow:       @button-primary-shadow;
+@button-light-primary-hover-bg:           @button-primary-hover-bg;
 
-@button-light-primary-active-text-color:  @button-light-active-text-color;
-@button-light-primary-active-border:      @button-light-active-border;
-@button-light-primary-active-shadow:      @button-light-active-shadow;
-@button-light-primary-active-bg:          @button-light-active-bg;
+@button-light-primary-active-text-color:  @button-primary-active-text-color;
+@button-light-primary-active-border:      @button-primary-active-border;
+@button-light-primary-active-shadow:      @button-primary-active-shadow;
+@button-light-primary-active-bg:          @button-primary-active-bg;
 
 // Normal light disabled button
 @button-light-disabled-text-color:        @button-disabled-text-color;
@@ -198,7 +198,7 @@
 // ------------ //
 
 @button-group-horizontal-item-margin:     0 16px 0 0;
-@button-group-vertical-item-margin:       0 0 8px 0;
+@button-group-vertical-item-margin:       0 0 16px 0;
 
 
 
@@ -306,25 +306,25 @@
 @radio-button-checked-text-color:               @radio-button-text-color;
 @radio-button-checked-hover-text-color:         @radio-button-hover-text-color;
 
-@radio-button-disabled-text-color:              @gray-light-color;
+@radio-button-disabled-text-color:              @gray-color;
 @radio-button-disabled-hover-text-color:        @radio-button-disabled-text-color;
 
 @radio-button-icon-width:                       16px;
 @radio-button-icon-height:                      16px;
 @radio-button-icon-line-height:                 normal;
 
-@radio-button-icon-spritesheet:                 'img/RadioButton-sprite.png';
+@radio-button-icon-spritesheet:                 '';
 
-@radio-button-icon-bg:                          url(@radio-button-icon-spritesheet) 0 0;
-@radio-button-icon-hover-bg:                    url(@radio-button-icon-spritesheet) 0 -32px;
+@radio-button-icon-bg:                          none;
+@radio-button-icon-hover-bg:                    @radio-button-icon-bg;
 
-@radio-button-icon-checked-bg:                  url(@radio-button-icon-spritesheet) 0 -16px;
-@radio-button-icon-checked-hover-bg:            url(@radio-button-icon-spritesheet) 0 -16px;
+@radio-button-icon-checked-bg:                  @radio-button-icon-bg;
+@radio-button-icon-checked-hover-bg:            @radio-button-icon-checked-bg;
 
-@radio-button-icon-disabled-bg:                 url(@radio-button-icon-spritesheet) 0 0;
+@radio-button-icon-disabled-bg:                 @radio-button-icon-bg;
 @radio-button-icon-disabled-hover-bg:           @radio-button-icon-disabled-bg;
 
-@radio-button-icon-disabled-checked-bg:         url(@radio-button-icon-spritesheet) 0 -48px;
+@radio-button-icon-disabled-checked-bg:         @radio-button-icon-bg;
 @radio-button-icon-disabled-checked-hover-bg:   @radio-button-icon-disabled-checked-bg;
 
 
@@ -353,32 +353,37 @@
 @check-box-third-state-text-color:              @check-box-text-color;
 @check-box-third-state-hover-text-color:        @check-box-hover-text-color;
 
-@check-box-disabled-text-color:                 @gray-light-color;
+@check-box-disabled-text-color:                 @gray-color;
 @check-box-disabled-hover-text-color:           @check-box-disabled-text-color;
 
-@check-box-icon-width:                          16px;
-@check-box-icon-height:                         16px;
-@check-box-icon-line-height:                    normal;
+@check-box-icon-width:                          18px;
+@check-box-icon-height:                         18px;
+@check-box-icon-line-height:                    18px;
 
-@check-box-icon-spritesheet:                    'img/CheckBox-sprite.png';
+@check-box-icon-spritesheet:                    'img/checkbox.png';
 
-@check-box-icon-bg:                             url(@check-box-icon-spritesheet) 0 0px;
-@check-box-icon-hover-bg:                       url(@check-box-icon-spritesheet) 0 -16px;
+@check-box-icon-border:                         1px solid @primary-color;
+@check-box-icon-bg:                             transparent;
 
-@check-box-icon-checked-bg:                     url(@check-box-icon-spritesheet) 0 -32px;
-@check-box-icon-checked-hover-bg:               url(@check-box-icon-spritesheet) 0 -32px;
+@check-box-icon-hover-border:                   @check-box-icon-border;
+@check-box-icon-hover-bg:                       transparent;
 
-@check-box-icon-third-state-bg:                 url(@check-box-icon-spritesheet) 0 -48px;
-@check-box-icon-third-state-hover-bg:           url(@check-box-icon-spritesheet) 0 -48px;
+@check-box-icon-checked-border:                 @check-box-icon-border;
+@check-box-icon-checked-bg:                     transparent url(@check-box-icon-spritesheet) -2px -5px;
 
-@check-box-icon-disabled-bg:                    url(@check-box-icon-spritesheet) 0 0;
-@check-box-icon-disabled-hover-bg:              @check-box-icon-disabled-bg;
+@check-box-icon-checked-hover-border:           @check-box-icon-border;
+@check-box-icon-checked-hover-bg:               @check-box-icon-checked-bg;
 
-@check-box-icon-disabled-checked-bg:            url(@check-box-icon-spritesheet) 0 -64px;
-@check-box-icon-disabled-checked-hover-bg:      @check-box-icon-disabled-checked-bg;
+@check-box-icon-third-state-border:             @check-box-icon-border;;
+@check-box-icon-third-state-bg:                 lighten(@secondary-color, 10%) url(@check-box-icon-spritesheet) -2px -5px;
 
-@check-box-icon-disabled-third-state-bg:        url(@check-box-icon-spritesheet) 0 -80px;
-@check-box-icon-disabled-third-state-hover-bg:  @check-box-icon-disabled-third-state-bg;
+@check-box-icon-third-state-hover-border:       @check-box-icon-border;
+@check-box-icon-third-state-hover-bg:           @check-box-icon-third-state-bg;
+
+@check-box-icon-disabled-border:                1px solid @gray-color;
+@check-box-icon-disabled-bg:                    transparent;
+@check-box-icon-disabled-checked-bg:            transparent url(@check-box-icon-spritesheet) -2px -5px;
+@check-box-icon-disabled-third-state-bg:        lighten(@secondary-color, 10%) url(@check-box-icon-spritesheet) -2px -5px;
 
 
 
@@ -399,17 +404,17 @@
 
 @switcher-cursor:                                     pointer;
 @switcher-min-width:                                  0;
-@switcher-height:                                     21px;
+@switcher-height:                                     31px;
 @switcher-padding:                                    0 16px 0 0;
 
 @switcher-toggle-width:                               100%;
 @switcher-toggle-min-width:                           100px;
 @switcher-toggle-height:                              @switcher-height;
 @switcher-toggle-box-sizing:                          border-box;
-@switcher-toggle-border-radius:                       6px;
-@switcher-toggle-border-width:                        1px;
+@switcher-toggle-border-radius:                       0;
+@switcher-toggle-border-width:                        0;
 @switcher-toggle-border-style:                        solid;
-@switcher-toggle-border-color:                        @primary-color;
+@switcher-toggle-border-color:                        transparent;
 @switcher-toggle-bg:                                  @default-color;
 
 @switcher-gap-width:                                  0;
@@ -419,9 +424,9 @@
 @switcher-toggle-position-width:                      70%;
 @switcher-toggle-position-min-width:                  0;
 @switcher-toggle-position-height:                     auto;
-@switcher-toggle-position-min-height:                 17px;
-@switcher-toggle-position-box-sizing:                 content-box;
-@switcher-toggle-position-padding:                    0;
+@switcher-toggle-position-min-height:                 23px;
+@switcher-toggle-position-box-sizing:                 border-box;
+@switcher-toggle-position-padding:                    3px 0 0;
 
 @switcher-toggle-position-border-radius:              @switcher-toggle-border-radius;
 @switcher-toggle-position-border-width:               0;
@@ -429,8 +434,8 @@
 @switcher-toggle-position-border-color:               transparent;
 
 @switcher-off-toggle-text-alignment:                  left;
-@switcher-off-toggle-padding:                         1px;
-@switcher-off-toggle-position-text-color:             @white-color;
+@switcher-off-toggle-padding:                         4px;
+@switcher-off-toggle-position-text-color:             @black-color;
 @switcher-off-toggle-position-margin:                 0;
 @switcher-off-toggle-position-bg:                     @primary-color;
 @switcher-off-toggle-left-edge-bg:                    none;
@@ -448,14 +453,14 @@
 
 @switcher-disabled-toggle-border-width:               @switcher-toggle-border-width;
 @switcher-disabled-toggle-border-style:               @switcher-toggle-border-style;
-@switcher-disabled-toggle-border-color:               @gray-light-color;
-@switcher-disabled-toggle-bg:                         @gray-light-color;
+@switcher-disabled-toggle-border-color:               @gray-color;
+@switcher-disabled-toggle-bg:                         @gray-color;
 
 @switcher-disabled-toggle-position-border-width:      @switcher-toggle-position-border-width;
 @switcher-disabled-toggle-position-border-style:      @switcher-toggle-position-border-style;
 @switcher-disabled-toggle-position-border-color:      @switcher-toggle-position-border-color;
 
-@switcher-off-disabled-toggle-position-text-color:    @gray-light-color;
+@switcher-off-disabled-toggle-position-text-color:    @gray-color;
 @switcher-off-disabled-toggle-position-bg:            @white-color;
 @switcher-off-disabled-toggle-left-edge-bg:           none;
 @switcher-off-disabled-toggle-right-edge-bg:          none;
@@ -511,7 +516,7 @@
 // ---- //
 
 @menu-margin:                             -1px 0 0;
-@menu-border:                             1px solid @gray-light-color;
+@menu-border:                             1px solid @default-color;
 @menu-shadow:                             none;
 
 @menu-expand-width:                       16px;
@@ -533,13 +538,13 @@
 @menu-item-line-height:                   @menu-item-height;
 @menu-item-padding:                       0 32px 0 16px;
 
-@menu-item-text-color:                    @text-color;
-@menu-item-bg:                            @bg;
+@menu-item-text-color:                    @black-color;
+@menu-item-bg:                            @default-color;
 
-@menu-item-hover-text-color:              @menu-item-text-margin;
+@menu-item-hover-text-color:              @menu-item-text-color;
 @menu-item-hover-bg:                      @primary-color;
 
-@menu-item-icon-top-offset:               -2px;
+@menu-item-icon-top-offset:               0px;
 @menu-item-icon-left-offset:              -2px;
 
 @menu-item-text-margin:                   0 0 0 22px;
@@ -553,17 +558,17 @@
 @menu-button-arrow-width:                       10px;
 @menu-button-arrow-height:                      5px;
 @menu-button-arrow-right-offset:                12px;
-@menu-button-arrow-top-offset:                  13px;
+@menu-button-arrow-top-offset:                  24px;
 
-@menu-button-arrow-padding:                     0 30px 0 12px;          // padding for menu button containing dropdown arrow
+@menu-button-arrow-padding:                     0 36px 0 12px;          // padding for menu button containing dropdown arrow
 @menu-button-no-arrow-padding:                  @button-padding;        // padding for menu button when dropdown arrow is missed
 
 // Default menu button
 @menu-button-arrow-spritesheet:                 '';
 
-@menu-button-arrow-border-width:                5px 5px 0 5px;
+@menu-button-arrow-border-width:                8px 8px 0 8px;
 @menu-button-arrow-border-style:                solid;
-@menu-button-arrow-border-color:                @gray-color transparent transparent transparent;
+@menu-button-arrow-border-color:                @primary-color transparent transparent transparent;
 @menu-button-arrow-bg:                          transparent;
 
 @menu-button-arrow-hover-border-width:          @menu-button-arrow-border-width;
@@ -653,7 +658,7 @@
 @menu-link-hover-text-decoration:         @link-hover-text-decoration;
 @menu-link-hover-arrow-bg:                @menu-button-arrow-hover-bg;
 
-@menu-link-checked-text-color:            @menu-link-hover-text-color;
+@menu-link-checked-text-color:            @secondary-color;
 @menu-link-checked-text-decoration:       none;
 
 @menu-link-checked-hover-text-color:      @menu-link-checked-text-color;
@@ -752,7 +757,7 @@
 @text-box-disabled-border-color:          transparent;
 @text-box-disabled-bg:                    @text-box-bg;
 
-@text-box-after-width:                    16px;
+@text-box-after-width:                    20px;
 @text-box-after-min-height:               @text-box-field-min-height;
 @text-box-after-margin:                   0 2px 0 0;
 
@@ -784,23 +789,23 @@
 @number-text-box-field-text-alignment:                left;
 @number-text-box-wrapper-margin:                      0;
 
-@number-text-box-arrow-spritesheet:                   'img/NumberTextBox-arrow.png';
+@number-text-box-arrow-spritesheet:                   '';
 
-@number-text-box-arrow-up-width:                      12px;
-@number-text-box-arrow-up-height:                     12px;
-@number-text-box-arrow-up-margin:                     -1px 0 0;
+@number-text-box-arrow-up-width:                      16px;
+@number-text-box-arrow-up-height:                     8px;
+@number-text-box-arrow-up-margin:                     8px 0 0;
 
 @number-text-box-arrow-up-border-radius:              0;
 
-@number-text-box-arrow-up-bg:                         url(@number-text-box-arrow-spritesheet) 0 0 no-repeat;
-@number-text-box-arrow-up-border-width:               1px 0 0 0;
-@number-text-box-arrow-up-border-style:               @text-box-border-style;
-@number-text-box-arrow-up-border-color:               @text-box-border-color;
+@number-text-box-arrow-up-bg:                         transparent;
+@number-text-box-arrow-up-border-width:               0 8px 8px 8px;
+@number-text-box-arrow-up-border-style:               solid;
+@number-text-box-arrow-up-border-color:               transparent transparent @primary-color transparent;
 
-@number-text-box-arrow-up-hover-bg:                   url(@number-text-box-arrow-spritesheet) 0 -24px no-repeat;
+@number-text-box-arrow-up-hover-bg:                   @number-text-box-arrow-up-bg;
 @number-text-box-arrow-up-hover-border-width:         @number-text-box-arrow-up-border-width;
 @number-text-box-arrow-up-hover-border-style:         @number-text-box-arrow-up-border-style;
-@number-text-box-arrow-up-hover-border-color:         @text-box-hover-border-color;
+@number-text-box-arrow-up-hover-border-color:         transparent transparent darken(@primary-color, 10%) transparent;
 
 @number-text-box-arrow-up-disabled-bg:                @number-text-box-arrow-up-bg;
 @number-text-box-arrow-up-disabled-border-width:      0;
@@ -809,19 +814,19 @@
 
 @number-text-box-arrow-down-width:                    @number-text-box-arrow-up-width;
 @number-text-box-arrow-down-height:                   @number-text-box-arrow-up-height;
-@number-text-box-arrow-down-margin:                   0;
+@number-text-box-arrow-down-margin:                   6px 0 0;
 
 @number-text-box-arrow-down-border-radius:            0;
 
-@number-text-box-arrow-down-bg:                       url(@number-text-box-arrow-spritesheet) 0 -12px no-repeat;
-@number-text-box-arrow-down-border-width:             0 0 1px 0;
-@number-text-box-arrow-down-border-style:             @text-box-border-style;
-@number-text-box-arrow-down-border-color:             @text-box-border-color;
+@number-text-box-arrow-down-bg:                       transparent;
+@number-text-box-arrow-down-border-width:             8px 8px 0 8px;
+@number-text-box-arrow-down-border-style:             solid;
+@number-text-box-arrow-down-border-color:             @primary-color transparent transparent transparent;
 
-@number-text-box-arrow-down-hover-bg:                 url(@number-text-box-arrow-spritesheet) 0 -36px no-repeat;
+@number-text-box-arrow-down-hover-bg:                 @number-text-box-arrow-down-bg;
 @number-text-box-arrow-down-hover-border-width:       @number-text-box-arrow-down-border-width;
 @number-text-box-arrow-down-hover-border-style:       @number-text-box-arrow-down-border-style;
-@number-text-box-arrow-down-hover-border-color:       @text-box-hover-border-color;
+@number-text-box-arrow-down-hover-border-color:       darken(@primary-color, 10%) transparent transparent transparent;
 
 @number-text-box-arrow-down-disabled-bg:              @number-text-box-arrow-down-bg;
 @number-text-box-arrow-down-disabled-border-width:    0;
@@ -834,33 +839,56 @@
 // Combo box //
 // --------- //
 
-@combo-box-arrow-spritesheet:                   'img/ComboBox.png';
+@combo-box-arrow-spritesheet:                   '';
 
 @combo-box-field-font:                          inherit;
 @combo-box-field-text-color:                    inherit;
 
 @combo-box-arrow-width:                         16px;
-@combo-box-arrow-height:                        16px;
-@combo-box-arrow-margin:                        -8px 0 0;
+@combo-box-arrow-height:                        8px;
+@combo-box-arrow-margin:                        -2px 0 0;
 @combo-box-arrow-top-offset:                    50%;
-@combo-box-arrow-right-offset:                  0;
-@combo-box-arrow-bg:                            @white-color url(@combo-box-arrow-spritesheet) 0 0 no-repeat;
-@combo-box-arrow-hover-bg:                      @white-color url(@combo-box-arrow-spritesheet) 0 -16px no-repeat;
+@combo-box-arrow-right-offset:                  4px;
 
-@combo-box-picker-border:                       1px solid @gray-light-color;
-@combo-box-picker-border-radius:                0 0 2px 2px;
-@combo-box-picker-margin:                       -2px 0 0;
-@combo-box-picker-item-padding:                 4px 7px;
+@combo-box-arrow-border-width:                  8px 8px 0 8px;
+@combo-box-arrow-border-style:                  solid;
+@combo-box-arrow-border-color:                  @primary-color transparent transparent transparent;
+@combo-box-arrow-bg:                            transparent;
+
+@combo-box-arrow-hover-border-width:            @combo-box-arrow-border-width;
+@combo-box-arrow-hover-border-style:            @combo-box-arrow-border-style;
+@combo-box-arrow-hover-border-color:            darken(@primary-color, 10%) transparent transparent transparent;
+@combo-box-arrow-hover-bg:                      @combo-box-arrow-bg;
+
+@combo-box-arrow-active-border-width:           0 8px 8px 8px;
+@combo-box-arrow-active-border-style:           @combo-box-arrow-border-style;
+@combo-box-arrow-active-border-color:           transparent transparent @primary-color transparent;
+@combo-box-arrow-active-bg:                     @combo-box-arrow-bg;
+
+@combo-box-arrow-active-hover-border-width:     @combo-box-arrow-active-border-width;
+@combo-box-arrow-active-hover-border-style:     @combo-box-arrow-active-border-style;
+@combo-box-arrow-active-hover-border-color:     transparent transparent darken(@primary-color, 10%) transparent;
+@combo-box-arrow-active-hover-bg:               @combo-box-arrow-active-bg;
+
+@combo-box-arrow-disabled-border-width:         0;
+@combo-box-arrow-disabled-border-style:         @combo-box-arrow-border-style;
+@combo-box-arrow-disabled-border-color:         transparent;
+@combo-box-arrow-disabled-bg:                   @combo-box-arrow-bg;
+
+@combo-box-picker-border:                       1px solid @gray-dark-color;
+@combo-box-picker-border-radius:                0;
+@combo-box-picker-margin:                       -1px 0 0;
+@combo-box-picker-item-padding:                 11px 5px;
 @combo-box-picker-item-font:                    inherit;
 
 @combo-box-picker-item-text-color:              @combo-box-field-text-color;
-@combo-box-picker-item-bg:                      @white-color;
+@combo-box-picker-item-bg:                      @text-box-focus-bg;
 
-@combo-box-picker-item-hover-text-color:        @white-color;
-@combo-box-picker-item-hover-bg:                @primary-color;
+@combo-box-picker-item-hover-text-color:        @black-color;
+@combo-box-picker-item-hover-bg:                @default-color;
 
-@combo-box-picker-item-selected-text-color:     @gray-color;
-@combo-box-picker-item-selected-bg:             @white-color;
+@combo-box-picker-item-selected-text-color:     @combo-box-picker-item-text-color;
+@combo-box-picker-item-selected-bg:             @combo-box-picker-item-bg;
 
 // TODO: check whether it's required
 @combo-box-input-wrapper-right-offset:          18px;

@@ -12,6 +12,7 @@
     width: @check-box-icon-width;
     height: @check-box-icon-height;
     line-height: @check-box-icon-line-height;
+    border: @check-box-icon-border;
     background: @check-box-icon-bg;
   }
 
@@ -21,6 +22,7 @@
     }
 
     .controls-CheckBox__icon {
+      border: @check-box-icon-hover-border;
       background: @check-box-icon-hover-bg;
     }
   }
@@ -31,6 +33,7 @@
     }
 
     .controls-CheckBox__icon {
+      border: @check-box-icon-checked-border;
       background: @check-box-icon-checked-bg;
     }
 
@@ -40,6 +43,7 @@
       }
 
       .controls-CheckBox__icon {
+        border: @check-box-icon-checked-hover-border;
         background: @check-box-icon-checked-hover-bg
       }
     }
@@ -51,6 +55,7 @@
     }
 
     .controls-CheckBox__icon {
+      border: @check-box-icon-third-state-border;
       background: @check-box-icon-third-state-bg;
     }
 
@@ -60,6 +65,7 @@
       }
 
       .controls-CheckBox__icon {
+        border: @check-box-icon-third-state-hover-border;
         background: @check-box-icon-third-state-hover-bg;
       }
     }
@@ -85,6 +91,7 @@
     }
 
     .controls-CheckBox__icon {
+      border: @check-box-icon-disabled-border;
       background: @check-box-icon-disabled-bg;
     }
 
@@ -94,19 +101,14 @@
       }
 
       .controls-CheckBox__icon {
-        background: @check-box-icon-disabled-hover-bg;
+        border: @check-box-icon-disabled-border;
       }
     }
 
     &.controls-Checked__checked {
       .controls-CheckBox__icon {
+        border: @check-box-icon-disabled-border;
         background: @check-box-icon-disabled-checked-bg;
-      }
-
-      &:hover {
-        .controls-CheckBox__icon {
-          background: @check-box-icon-disabled-checked-hover-bg;
-        }
       }
     }
   }

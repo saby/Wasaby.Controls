@@ -614,7 +614,6 @@
          'js!SBIS3.CONTROLS.FormattedTextBox',
          'js!SBIS3.CONTROLS.DatePicker',
          'js!SBIS3.CONTROLS.NumberTextBox',
-         'js!SBIS3.Genie.UnitEditor',
          'js!SBIS3.CONTROLS.ComboBox',
          'js!SBIS3.CONTROLS.TextArea',
          'js!SBIS3.CORE.AreaAbstract',
@@ -626,7 +625,6 @@
          FormattedTextBox,
          DatePicker,
          NumberTextBox,
-         UnitEditor,
          ComboBox,
          TextArea,
          AreaAbstract,
@@ -708,22 +706,18 @@
             enableArrows: true
          });
 
-         new UnitEditor({
-            element: 'unitEditor'
-         });
-
          var comboItems = [
             {
                key : 1,
-               title: 'Первый'
+               title: 'First'
             },
             {
                key : 2,
-               title: 'Второй'
+               title: 'Second'
             },
             {
                key: 3,
-               title: 'Третий'
+               title: 'Third'
             }
          ];
 
@@ -737,6 +731,13 @@
             element: 'comboBox2',
             editable: true,
             items: comboItems
+         });
+
+         new ComboBox({
+            element: 'comboBox3',
+            editable: false,
+            items: comboItems,
+            enabled: false
          });
 
          new TextArea({

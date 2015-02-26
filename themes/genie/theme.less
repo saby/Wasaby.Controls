@@ -13,8 +13,20 @@
 }
 
 .controls-NumberTextBox {
-  .controls-TextBox__afterFieldWrapper + {
+  .controls-TextBox__afterFieldWrapper {
     margin: 0 -4px 0 0;
+  }
+
+  &:hover {
+    .controls-TextBox__afterFieldWrapper {
+      .controls-NumberTextBox__arrowUp {
+        border-top: 1px solid @primary-color;
+      }
+
+      .controls-NumberTextBox__arrowDown {
+        border-bottom: 1px solid @primary-color;
+      }
+    }
   }
 }
 

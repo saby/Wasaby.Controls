@@ -555,36 +555,42 @@ input[type="reset"]::-moz-focus-inner {
   width: 16px;
   height: 16px;
   line-height: normal;
+  border: none;
   background: url('img/CheckBox-sprite.png') 0 0px;
 }
 .controls-CheckBox:hover .controls-CheckBox__caption {
   color: #00c795;
 }
 .controls-CheckBox:hover .controls-CheckBox__icon {
+  border: none;
   background: url('img/CheckBox-sprite.png') 0 -16px;
 }
 .controls-CheckBox.controls-Checked__checked .controls-CheckBox__caption {
   color: #353535;
 }
 .controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon {
+  border: none;
   background: url('img/CheckBox-sprite.png') 0 -32px;
 }
 .controls-CheckBox.controls-Checked__checked:hover .controls-CheckBox__caption {
   color: #00c795;
 }
 .controls-CheckBox.controls-Checked__checked:hover .controls-CheckBox__icon {
+  border: none;
   background: url('img/CheckBox-sprite.png') 0 -32px;
 }
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__caption {
   color: #353535;
 }
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
+  border: none;
   background: url('img/CheckBox-sprite.png') 0 -48px;
 }
 .controls-CheckBox.controls-ToggleButton__null:hover .controls-CheckBox__caption {
   color: #00c795;
 }
 .controls-CheckBox.controls-ToggleButton__null:hover .controls-CheckBox__icon {
+  border: none;
   background: url('img/CheckBox-sprite.png') 0 -48px;
 }
 .controls-CheckBox.controls-ToggleButton__null.ws-disabled .controls-CheckBox__icon {
@@ -600,18 +606,17 @@ input[type="reset"]::-moz-focus-inner {
   color: #d1d1d1;
 }
 .controls-CheckBox.ws-disabled .controls-CheckBox__icon {
+  border: none;
   background: url('img/CheckBox-sprite.png') 0 0;
 }
 .controls-CheckBox.ws-disabled:hover .controls-CheckBox__caption {
   color: #d1d1d1;
 }
 .controls-CheckBox.ws-disabled:hover .controls-CheckBox__icon {
-  background: url('img/CheckBox-sprite.png') 0 0;
+  border: none;
 }
 .controls-CheckBox.ws-disabled.controls-Checked__checked .controls-CheckBox__icon {
-  background: url('img/CheckBox-sprite.png') 0 -64px;
-}
-.controls-CheckBox.ws-disabled.controls-Checked__checked:hover .controls-CheckBox__icon {
+  border: none;
   background: url('img/CheckBox-sprite.png') 0 -64px;
 }
 .controls-CheckBoxGroup .controls-ListView__item {
@@ -1232,6 +1237,9 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/NumberTextBox-arrow.png') 0 0 no-repeat;
 }
 .controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp:hover {
+  border-width: 1px 0 0 0;
+  border-style: solid;
+  border-color: #00c795;
   background: url('img/NumberTextBox-arrow.png') 0 -24px no-repeat;
 }
 .controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown {
@@ -1245,17 +1253,10 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/NumberTextBox-arrow.png') 0 -12px no-repeat;
 }
 .controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown:hover {
-  background: url('img/NumberTextBox-arrow.png') 0 -36px no-repeat;
-}
-.controls-NumberTextBox:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp {
-  border-width: 1px 0 0 0;
-  border-style: solid;
-  border-color: #00c795;
-}
-.controls-NumberTextBox:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown {
   border-width: 0 0 1px 0;
   border-style: solid;
   border-color: #00c795;
+  background: url('img/NumberTextBox-arrow.png') 0 -36px no-repeat;
 }
 .controls-NumberTextBox.ws-disabled .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow,
 .controls-NumberTextBox.ws-disabled:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow {
@@ -1297,10 +1298,19 @@ input[type="reset"]::-moz-focus-inner {
   top: 50%;
   right: 0;
   margin: -8px 0 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
   background: #ffffff url('img/ComboBox.png') 0 0 no-repeat;
 }
 .controls-ComboBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown:hover {
   text-decoration: none;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
   background: #ffffff url('img/ComboBox.png') 0 -16px no-repeat;
 }
 .controls-ComboBox.controls-ComboBox__editable-false {
@@ -1317,7 +1327,29 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox.controls-ComboBox__editable-false:hover .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
   text-decoration: none;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
   background: #ffffff url('img/ComboBox.png') 0 -16px no-repeat;
+}
+.controls-ComboBox.controls-Picker__show .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: #ffffff url('img/ComboBox.png') 0 0 no-repeat;
+}
+.controls-ComboBox.controls-Picker__show:hover .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: #ffffff url('img/ComboBox.png') 0 -16px no-repeat;
+}
+.controls-ComboBox.ws-disabled .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown,
+.controls-ComboBox.ws-disabled:hover .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: #ffffff url('img/ComboBox.png') 0 0 no-repeat;
 }
 .controls-ComboBox__picker {
   border: 1px solid #d1d1d1;
@@ -1336,13 +1368,13 @@ input[type="reset"]::-moz-focus-inner {
   color: inherit;
   background: #ffffff;
 }
-.controls-ComboBox__picker .controls-ComboBox__itemRow:hover {
-  color: #ffffff;
-  background: #00c795;
-}
 .controls-ComboBox__picker .controls-ComboBox__itemRow.controls-ComboBox__itemRow__selected {
   color: #919191;
   background: #ffffff;
+}
+.controls-ComboBox__picker .controls-ComboBox__itemRow:hover {
+  color: #ffffff;
+  background: #00c795;
 }
 .controls-ComboBox__inputWrapper {
   height: 100%;
@@ -1860,6 +1892,12 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-NumberTextBox .controls-TextBox__afterFieldWrapper {
   margin: 0 -4px 0 0;
+}
+.controls-NumberTextBox:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrowUp {
+  border-top: 1px solid #00c795;
+}
+.controls-NumberTextBox:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrowDown {
+  border-bottom: 1px solid #00c795;
 }
 .controls-DataGrid.controls-DataGrid__itemSelect .controls-ListView__item__selected .controls-DataGrid__td:first-child {
   background-image: url('img/rowSelect.png');

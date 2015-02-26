@@ -362,23 +362,28 @@
 
 @check-box-icon-spritesheet:                    'img/CheckBox.png';
 
+@check-box-icon-border:                         none;
 @check-box-icon-bg:                             url(@check-box-icon-spritesheet) 0 1px;
+
+@check-box-icon-hover-border:                   @check-box-icon-border;
 @check-box-icon-hover-bg:                       url(@check-box-icon-spritesheet) 0 17px;
 
+@check-box-icon-checked-border:                 @check-box-icon-border;
 @check-box-icon-checked-bg:                     url(@check-box-icon-spritesheet) 0 49px;
+
+@check-box-icon-checked-hover-border:           @check-box-icon-border;
 @check-box-icon-checked-hover-bg:               @check-box-icon-checked-bg;
 
+@check-box-icon-third-state-border:             @check-box-icon-border;
 @check-box-icon-third-state-bg:                 url(@check-box-icon-spritesheet) 0 33px;
+
+@check-box-icon-third-state-hover-border:       @check-box-icon-border;
 @check-box-icon-third-state-hover-bg:           @check-box-icon-third-state-bg;
 
+@check-box-icon-disabled-border:                @check-box-icon-border;
 @check-box-icon-disabled-bg:                    url(@check-box-icon-spritesheet) 16px 1px;
-@check-box-icon-disabled-hover-bg:              @check-box-icon-disabled-bg;
-
 @check-box-icon-disabled-checked-bg:            url(@check-box-icon-spritesheet) 16px 49px;
-@check-box-icon-disabled-checked-hover-bg:      @check-box-icon-disabled-checked-bg;
-
 @check-box-icon-disabled-third-state-bg:        url(@check-box-icon-spritesheet) 16px 33px;
-@check-box-icon-disabled-third-state-hover-bg:  @check-box-icon-disabled-third-state-bg;
 
 
 
@@ -844,8 +849,31 @@
 @combo-box-arrow-margin:                        -8px 0 0;
 @combo-box-arrow-top-offset:                    50%;
 @combo-box-arrow-right-offset:                  0;
+
+@combo-box-arrow-border-width:                  0;
+@combo-box-arrow-border-style:                  solid;
+@combo-box-arrow-border-color:                  transparent;
 @combo-box-arrow-bg:                            @white-color url(@combo-box-arrow-spritesheet) -3px -4px no-repeat;
+
+@combo-box-arrow-hover-border-width:            @combo-box-arrow-border-width;
+@combo-box-arrow-hover-border-style:            @combo-box-arrow-border-style;
+@combo-box-arrow-hover-border-color:            @combo-box-arrow-border-color;
 @combo-box-arrow-hover-bg:                      @white-color url(@combo-box-arrow-spritesheet) -3px -28px no-repeat;
+
+@combo-box-arrow-active-border-width:           @combo-box-arrow-border-width;
+@combo-box-arrow-active-border-style:           @combo-box-arrow-border-style;
+@combo-box-arrow-active-border-color:           @combo-box-arrow-border-color;
+@combo-box-arrow-active-bg:                     @combo-box-arrow-bg;
+
+@combo-box-arrow-active-hover-border-width:     @combo-box-arrow-hover-border-width;
+@combo-box-arrow-active-hover-border-style:     @combo-box-arrow-hover-border-style;
+@combo-box-arrow-active-hover-border-color:     @combo-box-arrow-hover-border-color;
+@combo-box-arrow-active-hover-bg:               @combo-box-arrow-hover-bg;
+
+@combo-box-arrow-disabled-border-width:         @combo-box-arrow-border-width;
+@combo-box-arrow-disabled-border-style:         @combo-box-arrow-border-style;
+@combo-box-arrow-disabled-border-color:         @combo-box-arrow-border-color;
+@combo-box-arrow-disabled-bg:                   @combo-box-arrow-bg;
 
 @combo-box-picker-border:                       1px solid @gray-light-color;
 @combo-box-picker-border-radius:                0;
