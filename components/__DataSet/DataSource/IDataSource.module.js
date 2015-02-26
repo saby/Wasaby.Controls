@@ -27,13 +27,6 @@ define('js!SBIS3.CONTROLS.IDataSource', [
          }
       },
       /**
-       * Установить объект стратегии работы с данными
-       * @param {Object} strategyObject
-       */
-      setStrategy: function (strategyObject) {
-         this._strategy = strategyObject;
-      },
-      /**
        * Получить объект стратегии работы с данными
        * @returns {Object}
        */

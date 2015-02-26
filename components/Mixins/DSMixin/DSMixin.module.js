@@ -25,14 +25,15 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
       $constructor: function () {
          this._publish('onDrawItems');
          //Для совместимости пока делаем Array
-         
+
          //TODO совместимость
          if (this._options.items) {
             if (this._options.items instanceof Array) {
                this._options.dataSource = this._options.items;
             }
             else {
-               throw new Error('Опция items должна быть массивом');
+               //TODO: как-то надо по другому
+               this._options.dataSource = this._options.items;
             }
             if (typeof(window) != 'undefined') {
                console['log']('Опция items устарела. Она прекратит работу в версии 3.7.2');

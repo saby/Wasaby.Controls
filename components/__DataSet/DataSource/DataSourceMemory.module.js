@@ -54,7 +54,6 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
          var self = this;
          def.addCallback(function (record) {
             self._notify('onCreate');
-            self._notify('onDataChange');
             return record;
          });
          return def;
@@ -71,7 +70,6 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
          def.callback(this._initialDataSet.getRecordByPrimaryKey(id));
          def.addCallback(function (record) {
             self._notify('onRead');
-            self._notify('onDataChange');
             return record;
          });
          return def;
@@ -84,7 +82,6 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
        */
       update: function (record) {
          var def = new $ws.proto.Deferred(),
-         //TODO: переделать установку стратегии
             strategy = this.getStrategy();
          strategy.updateRawRecordByKey(this._options.data, this._options.keyField, record);
          def.callback(true);
