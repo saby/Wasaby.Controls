@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
          _dataSet: null,
          _dotItemTpl: null,
          _options: {
-            items : undefined,
+            items: undefined,
             /**
              * @cfg {DataSource} Набор исходных данных по которому строится отображение
              */
@@ -25,16 +25,16 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
       $constructor: function () {
          this._publish('onDrawItems');
          //Для совместимости пока делаем Array
-
+         
          //TODO совместимость
          if (this._options.items) {
             if (this._options.items instanceof Array) {
                this._options.dataSource = this._options.items;
             }
             else {
-               this._options.dataSource = this._options.items;
+               throw new Error('Опция items должна быть массивом');
             }
-            if (typeof(window) != 'undefined'){
+            if (typeof(window) != 'undefined') {
                console['log']('Опция items устарела. Она прекратит работу в версии 3.7.2');
             }
          }
@@ -49,9 +49,10 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
             }
             this._dataSource = new DataSourceMemory({
                data: this._options.dataSource,
+               strategyName: 'DataStrategyArray',
                keyField: keyField
             });
-            if (typeof(window) != 'undefined'){
+            if (typeof(window) != 'undefined') {
                console['log']('В опции dataSource надо передавать экземпляр класса DataSource. Array прекратит работу в версии 3.7.2');
             }
          }
@@ -60,14 +61,14 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
          }
 
          var self = this;
-         this._dataSource.subscribe('onDataChange', function(){
+         this._dataSource.subscribe('onDataChange', function () {
             self._drawItems();
-         })
+         });
 
       },
 
 
-      setItems: function(items) {
+      setItems: function (items) {
          var
             item = items[0],
             keyField;
@@ -162,7 +163,7 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
                   self._drawItem(item, targetContainer, key, i, parItem, lvl);
                });
 
-               self.reviveComponents().addCallback(function() {
+               self.reviveComponents().addCallback(function () {
                   self._notify('onDrawItems');
                   self._drawItemsCallback();
                });
@@ -203,7 +204,7 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
             container, dotTemplate;
 
          if (typeof itemTpl == 'string') {
-            dotTemplate = itemTpl
+            dotTemplate = itemTpl;
          }
          else if (itemTpl instanceof Function) {
             dotTemplate = itemTpl(item);
@@ -219,7 +220,7 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
          }
       },
 
-      _fillItemInstances : function() {
+      _fillItemInstances: function () {
          var childControls = this.getChildControls();
          for (var i = 0; i < childControls.length; i++) {
             if (childControls[i].getContainer().hasClass('controls-ListView__item')) {
@@ -230,14 +231,14 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
 
       },
 
-      getItemsInstances : function() {
+      getItemsInstances: function () {
          if (Object.isEmpty(this._itemsInstances)) {
             this._fillItemInstances();
          }
          return this._itemsInstances;
       },
 
-      getItemInstance : function(id) {
+      getItemInstance: function (id) {
          var instances = this.getItemsInstances();
          return instances[id];
       }
