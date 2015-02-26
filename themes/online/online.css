@@ -1,3 +1,9 @@
+body,
+html {
+  font: 13px Tahoma, Geneva, sans-serif;
+  color: #000000;
+  background: transparent;
+}
 button::-moz-focus-inner,
 input[type="button"]::-moz-focus-inner,
 input[type="submit"]::-moz-focus-inner,
@@ -1192,7 +1198,7 @@ input[type="reset"]::-moz-focus-inner {
   min-height: 22px;
   height: 100%;
   padding: 0 4px;
-  background-color: #ffffff;
+  background: #ffffff;
 }
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
   padding: 3px 0 0;
@@ -1426,22 +1432,26 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px;
   border-style: solid;
   border-color: transparent transparent #eaeaea transparent;
+  background: #ffffff;
 }
 .controls-DatePicker.ws-has-focus .controls-FormattedTextBox__fieldWrapper {
   border-width: 1px;
   border-style: solid;
   border-color: #eaeaea #eaeaea #cccccc;
+  background: #ffffff;
 }
 .controls-DatePicker:hover .controls-FormattedTextBox__fieldWrapper {
   border-width: 1px;
   border-style: solid;
   border-color: #eaeaea #eaeaea #cccccc;
+  background: #ffffff;
 }
 .controls-DatePicker.ws-disabled .controls-FormattedTextBox__fieldWrapper {
   cursor: default;
   border-width: 1px;
   border-style: solid;
   border-color: transparent;
+  background: #ffffff;
 }
 .controls-DatePicker .controls-DatePicker__calendarIcon {
   position: absolute;
