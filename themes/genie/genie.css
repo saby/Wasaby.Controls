@@ -893,12 +893,14 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #ffffff transparent transparent transparent;
   background: transparent;
 }
-.controls-Button.controls-MenuButton.controls-Checked__checked .controls-MenuButton__arrowDown {
+.controls-Button.controls-MenuButton.controls-Checked__checked .controls-MenuButton__arrowDown,
+.controls-Button.controls-MenuButton.controls-Click__active .controls-MenuButton__arrowDown {
   border-width: 5px 5px 0 5px;
   border-style: solid;
   border-color: #919191 transparent transparent transparent;
 }
-.controls-Button.controls-MenuButton.controls-Checked__checked:hover .controls-MenuButton__arrowDown {
+.controls-Button.controls-MenuButton.controls-Checked__checked:hover .controls-MenuButton__arrowDown,
+.controls-Button.controls-MenuButton.controls-Click__active:hover .controls-MenuButton__arrowDown {
   border-width: 5px 5px 0 5px;
   border-style: solid;
   border-color: #919191 transparent transparent transparent;
@@ -915,12 +917,14 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #00c795 transparent transparent transparent;
   background: transparent url('') 0 0;
 }
-.controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked .controls-MenuButton__arrowDown {
+.controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked .controls-MenuButton__arrowDown,
+.controls-Button.controls-MenuButton.controls-Button__primary.controls-Click__active .controls-MenuButton__arrowDown {
   border-width: 5px 5px 0 5px;
   border-style: solid;
   border-color: #00c795 transparent transparent transparent;
 }
-.controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked:hover .controls-MenuButton__arrowDown {
+.controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked:hover .controls-MenuButton__arrowDown,
+.controls-Button.controls-MenuButton.controls-Button__primary.controls-Click__active:hover .controls-MenuButton__arrowDown {
   border-width: 5px 5px 0 5px;
   border-style: solid;
   border-color: #00c795 transparent transparent transparent;

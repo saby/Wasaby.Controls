@@ -241,12 +241,7 @@
          });
 
          new IconButton({
-            element: 'iconButton1',
-            icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
-         });
-
-         new IconButton({
-            element: 'iconButton2',
+            element: 'iconButton',
             icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
          });
 
@@ -948,14 +943,14 @@
 
    function initThemeSelector() {
       var themes =[{
-         key: 'demo-new',
+         key: 'online',
+         title: 'Online'
+      }, {
+         key: 'demo',
          title: 'Demo'
       }, {
          key: 'genie',
          title: 'Genie'
-      }, {
-         key: 'online',
-         title: 'Online'
       }, {
          key: 'presto',
          title: 'Presto'
@@ -964,7 +959,7 @@
       require([
          'js!SBIS3.CONTROLS.ComboBox'
       ], function(ComboBox) {
-         var selectedTheme = 'genie';
+         var selectedTheme = 'online';
          var themeIdMatch = location.search.match(/(\?|&)id=([a-z0-9-]+)(&.+)?$/);
          if (themeIdMatch) {
             for (var i = 0; i < themes.length; i += 1) {

@@ -893,12 +893,14 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent;
   background: transparent url('img/MenuButton-arrowDown.png') 0 6px;
 }
-.controls-Button.controls-MenuButton.controls-Checked__checked .controls-MenuButton__arrowDown {
+.controls-Button.controls-MenuButton.controls-Checked__checked .controls-MenuButton__arrowDown,
+.controls-Button.controls-MenuButton.controls-Click__active .controls-MenuButton__arrowDown {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
 }
-.controls-Button.controls-MenuButton.controls-Checked__checked:hover .controls-MenuButton__arrowDown {
+.controls-Button.controls-MenuButton.controls-Checked__checked:hover .controls-MenuButton__arrowDown,
+.controls-Button.controls-MenuButton.controls-Click__active:hover .controls-MenuButton__arrowDown {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
@@ -915,12 +917,14 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent;
   background: transparent url('img/MenuButton-arrowDown__primary.png') 0 0;
 }
-.controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked .controls-MenuButton__arrowDown {
+.controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked .controls-MenuButton__arrowDown,
+.controls-Button.controls-MenuButton.controls-Button__primary.controls-Click__active .controls-MenuButton__arrowDown {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
 }
-.controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked:hover .controls-MenuButton__arrowDown {
+.controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked:hover .controls-MenuButton__arrowDown,
+.controls-Button.controls-MenuButton.controls-Button__primary.controls-Click__active:hover .controls-MenuButton__arrowDown {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
