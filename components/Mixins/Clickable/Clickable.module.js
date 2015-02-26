@@ -12,6 +12,16 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
     */
 
    var Clickable = /**@lends SBIS3.CONTROLS.Clickable.prototype  */{
+      /**
+       * @event onActivated При активации кнопки (клик мышкой, кнопки клавиатуры)
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @example
+       * <pre>
+       *    onActivated: function(event){
+       *       $ws.helpers.question('Продолжить?');
+       *    }
+       * </pre>
+       */
       $protected: {
          _options: {
 
