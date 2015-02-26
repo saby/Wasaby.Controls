@@ -12,10 +12,17 @@
       right: @menu-expand-right-offset;
       width: @menu-expand-width;
       height: @menu-expand-height;
+      .box-sizing(border-box);
+      border-width: @menu-expand-border-width;
+      border-style: @menu-expand-border-style;
+      border-color: @menu-expand-border-color;
       background: @menu-expand-bg;
     }
 
     &:hover:after {
+      border-width: @menu-expand-hover-border-width;
+      border-style: @menu-expand-hover-border-style;
+      border-color: @menu-expand-hover-border-color;
       background: @menu-expand-hover-bg;
     }
   }

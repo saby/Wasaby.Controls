@@ -841,9 +841,18 @@ input[type="reset"]::-moz-focus-inner {
   right: 0;
   width: 16px;
   height: 16px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
   background: url('img/MenuExpand.png') 0 0 no-repeat;
 }
 .controls-Menu__Popup .controls-Menu__hasChild:hover:after {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
   background: url('img/MenuExpand.png') 0 -16px no-repeat;
 }
 .controls-MenuItem {
@@ -1539,10 +1548,6 @@ input[type="reset"]::-moz-focus-inner {
   color: #353535;
   background: #f1f1f1;
 }
-.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement:hover {
-  color: #00c795;
-  background: #ffffff;
-}
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement.controls-Calendar__tableBodyElement__active {
   color: #ffffff;
   background: #00c795;
@@ -1550,6 +1555,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement.controls-Calendar__tableBodyElement__active:hover {
   color: #ffffff;
   background: #00c795;
+}
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement:hover {
+  color: #00c795;
+  background: #ffffff;
 }
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableElementFog {
   cursor: default;
@@ -1624,10 +1633,6 @@ input[type="reset"]::-moz-focus-inner {
   color: #353535;
   background: #ffffff;
 }
-.controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement:hover {
-  color: #ffffff;
-  background: #00c795;
-}
 .controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement.controls-MonthPicker__dropdownElementActive {
   color: #353535;
   background: #f1f1f1;
@@ -1639,6 +1644,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement.controls-MonthPicker__dropdownElementYear {
   text-align: center;
   padding: 2px;
+}
+.controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement:hover {
+  color: #ffffff;
+  background: #00c795;
 }
 .controls-EditAtPlace {
   border: none;

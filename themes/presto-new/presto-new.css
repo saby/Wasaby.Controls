@@ -829,7 +829,7 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   margin: -1px 0 0;
-  border: 1px solid #e2effb;
+  border: 1px solid #aaaaaa;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
@@ -837,14 +837,23 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Menu__Popup .controls-Menu__hasChild:after {
   content: ' ';
   position: absolute;
-  top: 3px;
-  right: 0;
-  width: 16px;
+  top: 20px;
+  right: 12px;
+  width: 8px;
   height: 16px;
-  background: url('img/MenuExpand.png') 0 0 no-repeat;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-width: 8px 0 8px 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent #ffcc99;
+  background: transparent;
 }
 .controls-Menu__Popup .controls-Menu__hasChild:hover:after {
-  background: url('img/MenuExpand.png') 0 -16px no-repeat;
+  border-width: 8px 0 8px 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent #4e5762;
+  background: transparent;
 }
 .controls-MenuItem {
   position: relative;
@@ -858,12 +867,12 @@ input[type="reset"]::-moz-focus-inner {
   height: 56px;
   line-height: 56px;
   padding: 0 32px 0 16px;
-  color: #333333;
-  background: #e2effb;
+  color: #ffffff;
+  background: #434a54;
 }
 .controls-MenuItem:hover {
-  color: #333333;
-  background: #ffcc99;
+  color: #4e5762;
+  background: #e2effb;
 }
 .controls-MenuItem .controls-MenuItem__content {
   position: relative;
@@ -895,7 +904,7 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
   border-width: 8px 8px 0 8px;
   border-style: solid;
-  border-color: #ffcc99 transparent transparent transparent;
+  border-color: #4e5762 transparent transparent transparent;
   background: transparent;
 }
 .controls-Button.controls-MenuButton:hover .controls-MenuButton__arrowDown {
@@ -908,13 +917,13 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Button.controls-MenuButton.controls-Click__active .controls-MenuButton__arrowDown {
   border-width: 8px 8px 0 8px;
   border-style: solid;
-  border-color: #ffcc99 transparent transparent transparent;
+  border-color: #4e5762 transparent transparent transparent;
 }
 .controls-Button.controls-MenuButton.controls-Checked__checked:hover .controls-MenuButton__arrowDown,
 .controls-Button.controls-MenuButton.controls-Click__active:hover .controls-MenuButton__arrowDown {
   border-width: 8px 8px 0 8px;
   border-style: solid;
-  border-color: #ffcc99 transparent transparent transparent;
+  border-color: #4e5762 transparent transparent transparent;
 }
 .controls-Button.controls-MenuButton.controls-Button__primary .controls-MenuButton__arrowDown {
   border-width: 8px 8px 0 8px;
@@ -925,20 +934,20 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Button.controls-MenuButton.controls-Button__primary:hover .controls-MenuButton__arrowDown {
   border-width: 8px 8px 0 8px;
   border-style: solid;
-  border-color: #ffcc99 transparent transparent transparent;
+  border-color: #e2effb transparent transparent transparent;
   background: transparent url('') 0 0;
 }
 .controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked .controls-MenuButton__arrowDown,
 .controls-Button.controls-MenuButton.controls-Button__primary.controls-Click__active .controls-MenuButton__arrowDown {
   border-width: 8px 8px 0 8px;
   border-style: solid;
-  border-color: #ffcc99 transparent transparent transparent;
+  border-color: #4e5762 transparent transparent transparent;
 }
 .controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked:hover .controls-MenuButton__arrowDown,
 .controls-Button.controls-MenuButton.controls-Button__primary.controls-Click__active:hover .controls-MenuButton__arrowDown {
   border-width: 8px 8px 0 8px;
   border-style: solid;
-  border-color: #ffcc99 transparent transparent transparent;
+  border-color: #4e5762 transparent transparent transparent;
 }
 .controls-Button.controls-MenuButton.ws-disabled .controls-MenuButton__arrowDown {
   border-width: 8px 8px 0 8px;
@@ -1491,8 +1500,8 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   width: 16px;
   height: 16px;
-  top: 4px;
-  left: 1px;
+  top: 15px;
+  left: 4px;
   background: url('img/DatePicker-calendar.png') -1px 0 no-repeat;
 }
 .controls-DatePicker .controls-DatePicker__calendarIcon:hover {
@@ -1537,19 +1546,19 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement {
   cursor: pointer;
   color: #ffffff;
-  background: #e2effb;
-}
-.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement:hover {
-  color: #ffcc99;
-  background: #ffffff;
+  background: #4e5762;
 }
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement.controls-Calendar__tableBodyElement__active {
-  color: #ffffff;
+  color: #4e5762;
   background: #ffcc99;
 }
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement.controls-Calendar__tableBodyElement__active:hover {
-  color: #ffffff;
-  background: #ffcc99;
+  color: #333333;
+  background: #e2effb;
+}
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement:hover {
+  color: #333333;
+  background: #e2effb;
 }
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableElementFog {
   cursor: default;
@@ -1614,23 +1623,19 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/MonthPicker-arrows.png') 0 -32px no-repeat;
 }
 .controls-MonthPicker__dropdownWrapper {
-  border: 1px solid #ffffff;
-  background: #ffffff;
+  border: 1px solid #aaaaaa;
+  background: #434a54;
 }
 .controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement {
   cursor: pointer;
   height: 22px;
   line-height: 22px;
   color: #ffffff;
-  background: #ffffff;
-}
-.controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement:hover {
-  color: #ffffff;
-  background: #ffcc99;
+  background: #434a54;
 }
 .controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement.controls-MonthPicker__dropdownElementActive {
-  color: #ffffff;
-  background: #e2effb;
+  color: #4e5762;
+  background: #ffcc99;
 }
 .controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement.controls-MonthPicker__dropdownElementMonth {
   text-align: left;
@@ -1639,6 +1644,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement.controls-MonthPicker__dropdownElementYear {
   text-align: center;
   padding: 2px;
+}
+.controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement:hover {
+  color: #333333;
+  background: #e2effb;
 }
 .controls-EditAtPlace {
   border: none;

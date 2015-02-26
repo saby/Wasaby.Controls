@@ -73,11 +73,6 @@
     color: @month-picker-item-text-color;
     background: @month-picker-item-bg;
 
-    &:hover {
-      color: @month-picker-item-hover-text-color;
-      background: @month-picker-item-hover-bg;
-    }
-
     &.controls-MonthPicker__dropdownElementActive {
       color: @month-picker-item-active-text-color;
       background: @month-picker-item-active-bg;
@@ -91,6 +86,11 @@
     &.controls-MonthPicker__dropdownElementYear {
       text-align: @month-picker-item-year-text-alignment;
       padding: @month-picker-item-year-padding
+    }
+
+    &:hover {
+      color: @month-picker-item-hover-text-color;
+      background: @month-picker-item-hover-bg;
     }
   }
 }

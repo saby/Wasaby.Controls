@@ -516,16 +516,24 @@
 // ---- //
 
 @menu-margin:                             -1px 0 0;
-@menu-border:                             1px solid @default-color;
+@menu-border:                             1px solid @gray-color;
 @menu-shadow:                             none;
 
-@menu-expand-width:                       16px;
+@menu-expand-width:                       8px;
 @menu-expand-height:                      16px;
-@menu-expand-top-offset:                  3px;
-@menu-expand-right-offset:                0;
-@menu-expand-spritesheet:                'img/MenuExpand.png';
-@menu-expand-bg:                          url(@menu-expand-spritesheet) 0 0 no-repeat;
-@menu-expand-hover-bg:                    url(@menu-expand-spritesheet) 0 -16px no-repeat;
+@menu-expand-top-offset:                  20px;
+@menu-expand-right-offset:                12px;
+@menu-expand-spritesheet:                 '';
+
+@menu-expand-border-width:                8px 0 8px 8px;
+@menu-expand-border-style:                solid;
+@menu-expand-border-color:                transparent transparent transparent @primary-color;
+@menu-expand-bg:                          transparent;
+
+@menu-expand-hover-border-width:          @menu-expand-border-width;
+@menu-expand-hover-border-style:          @menu-expand-border-style;
+@menu-expand-hover-border-color:          transparent transparent transparent @secondary-color;
+@menu-expand-hover-bg:                    @menu-expand-bg;
 
 
 
@@ -538,11 +546,11 @@
 @menu-item-line-height:                   @menu-item-height;
 @menu-item-padding:                       0 32px 0 16px;
 
-@menu-item-text-color:                    @black-color;
-@menu-item-bg:                            @default-color;
+@menu-item-text-color:                    @text-color;
+@menu-item-bg:                            @text-box-focus-bg;
 
-@menu-item-hover-text-color:              @menu-item-text-color;
-@menu-item-hover-bg:                      @primary-color;
+@menu-item-hover-text-color:              @secondary-color;
+@menu-item-hover-bg:                      @default-color;
 
 @menu-item-icon-top-offset:               0px;
 @menu-item-icon-left-offset:              -2px;
@@ -568,7 +576,7 @@
 
 @menu-button-arrow-border-width:                8px 8px 0 8px;
 @menu-button-arrow-border-style:                solid;
-@menu-button-arrow-border-color:                @primary-color transparent transparent transparent;
+@menu-button-arrow-border-color:                @secondary-color transparent transparent transparent;
 @menu-button-arrow-bg:                          transparent;
 
 @menu-button-arrow-hover-border-width:          @menu-button-arrow-border-width;
@@ -594,16 +602,16 @@
 
 @menu-button-primary-arrow-hover-border-width:          @menu-button-primary-arrow-border-width;
 @menu-button-primary-arrow-hover-border-style:          @menu-button-primary-arrow-border-style;
-@menu-button-primary-arrow-hover-border-color:          @primary-color transparent transparent transparent;
+@menu-button-primary-arrow-hover-border-color:          @default-color transparent transparent transparent;
 @menu-button-primary-arrow-hover-bg:                    @menu-button-primary-arrow-bg;
 
 @menu-button-primary-arrow-checked-border-width:        @menu-button-primary-arrow-border-width;
 @menu-button-primary-arrow-checked-border-style:        @menu-button-primary-arrow-border-style;
-@menu-button-primary-arrow-checked-border-color:        @menu-button-primary-arrow-hover-border-color;
+@menu-button-primary-arrow-checked-border-color:        @secondary-color transparent transparent transparent;
 
 @menu-button-primary-arrow-checked-hover-border-width:  @menu-button-primary-arrow-checked-border-width;
 @menu-button-primary-arrow-checked-hover-border-style:  @menu-button-primary-arrow-checked-border-style;
-@menu-button-primary-arrow-checked-hover-border-color:  @menu-button-primary-arrow-hover-border-color;
+@menu-button-primary-arrow-checked-hover-border-color:  @menu-button-primary-arrow-checked-border-color;
 
 // Disabled menu button
 @menu-button-arrow-disabled-border-width:       @menu-button-arrow-border-width;
@@ -946,8 +954,8 @@
 @date-picker-calendar-icon-cursor:              pointer;
 @date-picker-calendar-icon-width:               16px;
 @date-picker-calendar-icon-height:              16px;
-@date-picker-calendar-icon-top-offset:          4px;
-@date-picker-calendar-icon-left-offset:         1px;
+@date-picker-calendar-icon-top-offset:          15px;
+@date-picker-calendar-icon-left-offset:         4px;
 @date-picker-calendar-icon-bg:                  url(@date-picker-calendar-spritesheet) -1px 0 no-repeat;
 @date-picker-calendar-icon-hover-bg:            url(@date-picker-calendar-spritesheet) -18px 0 no-repeat;
 @date-picker-calendar-icon-disabled-bg:         url(@date-picker-calendar-spritesheet) -35px 0 no-repeat !important;
@@ -1003,13 +1011,13 @@
 
 @calendar-day-cell-cursor:                      pointer;
 @calendar-day-cell-text-color:                  @text-color;
-@calendar-day-cell-bg:                          @default-color;
-@calendar-day-cell-hover-text-color:            @primary-color;
-@calendar-day-cell-hover-bg:                    @white-color;
-@calendar-day-cell-active-text-color:           @white-color;
+@calendar-day-cell-bg:                          @secondary-color;
+@calendar-day-cell-hover-text-color:            @black-color;
+@calendar-day-cell-hover-bg:                    @default-color;
+@calendar-day-cell-active-text-color:           @secondary-color;
 @calendar-day-cell-active-bg:                   @primary-color;
-@calendar-day-cell-active-hover-text-color:     @calendar-day-cell-active-text-color;
-@calendar-day-cell-active-hover-bg:             @calendar-day-cell-active-bg;
+@calendar-day-cell-active-hover-text-color:     @calendar-day-cell-hover-text-color;
+@calendar-day-cell-active-hover-bg:             @calendar-day-cell-hover-bg;
 
 @calendar-day-fog-cell-cursor:                  default;
 @calendar-day-fog-cell-text-color:              @gray-color;
@@ -1048,8 +1056,8 @@
 @month-picker-right-arrow-bg:                   url(@month-picker-arrow-spritesheet) -32px -32px no-repeat;
 @month-picker-right-arrow-hover-bg:             url(@month-picker-arrow-spritesheet) 0 -32px no-repeat;
 
-@month-picker-wrapper-border:                   1px solid @white-color;
-@month-picker-wrapper-bg:                       @white-color;
+@month-picker-wrapper-border:                   1px solid @gray-color;
+@month-picker-wrapper-bg:                       @text-box-focus-bg;
 
 @month-picker-item-cursor:                      pointer;
 @month-picker-item-height:                      22px;
@@ -1058,11 +1066,11 @@
 @month-picker-item-text-color:                  @text-color;
 @month-picker-item-bg:                          @month-picker-wrapper-bg;
 
-@month-picker-item-hover-text-color:            @white-color;
-@month-picker-item-hover-bg:                    @primary-color;
+@month-picker-item-hover-text-color:            @black-color;
+@month-picker-item-hover-bg:                    @default-color;
 
-@month-picker-item-active-text-color:           @month-picker-item-text-color;
-@month-picker-item-active-bg:                   @default-color;
+@month-picker-item-active-text-color:           @secondary-color;
+@month-picker-item-active-bg:                   @primary-color;
 
 @month-picker-item-month-text-alignment:        left;
 @month-picker-item-month-padding:               2px 2px 2px 24px;

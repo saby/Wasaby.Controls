@@ -34,11 +34,6 @@
         color: @calendar-day-cell-text-color;
         background: @calendar-day-cell-bg;
 
-        &:hover {
-          color: @calendar-day-cell-hover-text-color;
-          background: @calendar-day-cell-hover-bg;
-        }
-
         &.controls-Calendar__tableBodyElement__active {
           color: @calendar-day-cell-active-text-color;
           background: @calendar-day-cell-active-bg;
@@ -47,6 +42,11 @@
             color: @calendar-day-cell-active-hover-text-color;
             background: @calendar-day-cell-active-hover-bg;
           }
+        }
+
+        &:hover {
+          color: @calendar-day-cell-hover-text-color;
+          background: @calendar-day-cell-hover-bg;
         }
       }
 
