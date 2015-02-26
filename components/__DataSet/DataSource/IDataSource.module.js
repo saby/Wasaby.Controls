@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [
     * Интерфейс предназначен для работы с источником данных
     */
 
-   return $ws.core.extend({}, {
+   return $ws.proto.Abstract.extend({
       $protected: {
          /**
           * Объект стратегии работы с данными
@@ -21,6 +21,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [
          }
       },
       $constructor: function () {
+         this._publish('onCreate', 'onRead', 'onUpdate', 'onDestroy', 'onQuery', 'onDataChange');
          if (this._options.strategyName) {
             this._strategy = StrategyHelper.getStrategyObjectByName(this._options.strategyName);
          }
@@ -56,7 +57,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [
 
       /**
        * Метод для обновлениязаписи в источнике данных
-       * @param (js!SBIS3.CONTROLS.Record) record - измененная запись
+       * @param (SBIS3.CONTROLS.Record) record - измененная запись
        */
       update: function (record) {
          /*Method must be implemented*/

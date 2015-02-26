@@ -25,8 +25,10 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
 
       },
 
-      _getItemClass : function() {
-         return 'js!SBIS3.CONTROLS.CheckBox';
+      _getItemTemplate : function() {
+         return '<component data-component="SBIS3.CONTROLS.CheckBox">' +
+                  '<option name="caption">{{=it.get("title")}}</option>'+
+                '</component>';
       }
    });
 

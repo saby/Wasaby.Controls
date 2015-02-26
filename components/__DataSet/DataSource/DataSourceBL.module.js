@@ -48,6 +48,11 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
             });
             def.callback(record);
          });
+         def.addCallback(function(res){
+            self._notify('onCreate');
+            self._notify('onDataChange');
+            return res;
+         });
          return def;
       },
 
@@ -66,13 +71,18 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
                'raw': res
             });
             def.callback(record);
+            def.addCallback(function(res){
+               self._notify('onRead');
+               self._notify('onDataChange');
+               return res;
+            });
          });
          return def;
       },
 
       /**
        * Метод для обновления записи на БЛ
-       * @param (js!SBIS3.CONTROLS.Record) record - измененная запись
+       * @param (SBIS3.CONTROLS.Record) record - измененная запись
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет Boolean - результат успешности выполнения операции
        */
       update: function (record) {
@@ -83,6 +93,11 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
 
          self._BL.call(self._options.updateMethodName, {'Запись': rec}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
             def.callback(true);
+            def.addCallback(function(res){
+               self._notify('onUpdate');
+               self._notify('onDataChange');
+               return res;
+            });
          });
 
          return def;
@@ -99,6 +114,11 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
 
          self._BL.call(self._options.destroyMethodName, {'ИдО': id}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
             def.callback(true);
+            def.addCallback(function(res){
+               self._notify('onDestroy');
+               self._notify('onDataChange');
+               return res;
+            });
          });
 
          return def;

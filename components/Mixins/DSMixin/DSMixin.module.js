@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CONTROLS.DataSourceMemory'], function (_, DataSourceMemory) {
+define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CONTROLS.DataSourceMemory', 'js!SBIS3.CORE.MarkupTransformer'], function (_, DataSourceMemory, MarkupTransformer) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -28,7 +28,12 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
 
          //TODO совместимость
          if (this._options.items) {
-            this._options.dataSource = this._options.items;
+            if (this._options.items instanceof Array) {
+               this._options.dataSource = this._options.items;
+            }
+            else {
+               this._options.dataSource = this._options.items;
+            }
             if (typeof(window) != 'undefined'){
                console['log']('Опция items устарела. Она прекратит работу в версии 3.7.2');
             }
@@ -54,6 +59,30 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
             this._dataSource = this._options.dataSource;
          }
 
+         var self = this;
+         this._dataSource.subscribe('onDataChange', function(){
+            self._drawItems();
+         })
+
+      },
+
+
+      setItems: function(items) {
+         var
+            item = items[0],
+            keyField;
+         if (item && Object.prototype.toString.call(item) === '[object Object]') {
+            keyField = Object.keys(item)[0];
+         }
+         this._dataSource = new DataSourceMemory({
+            data: items,
+            keyField: keyField
+         });
+         this._drawItems();
+         //TODO совместимость
+         if (typeof(window) != 'undefined') {
+            console['log']('Метод setItems устарел. Он прекратит работу в версии 3.7.2');
+         }
       },
 
       getDataSet: function () {
@@ -119,7 +148,6 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
          this._dataSource.query(self._filter, self._sorting, offset, limit).addCallback(
             function (DS) {
                var
-                  itemsReadyDef = new $ws.proto.ParallelDeferred(),
                   itemsContainer = self._getItemsContainer();
 
                self.setDataSet(DS);
@@ -131,11 +159,10 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
                   var
                      targetContainer = self._getTargetContainer(item, key, parItem, lvl);
 
-                  itemsReadyDef.push(self._drawItem(item, targetContainer, key, i, parItem, lvl));
-
+                  self._drawItem(item, targetContainer, key, i, parItem, lvl);
                });
 
-               itemsReadyDef.done().getResult().addCallback(function () {
+               self.reviveComponents().addCallback(function() {
                   self._notify('onDrawItems');
                   self._drawItemsCallback();
                });
@@ -157,12 +184,8 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
       },
 
       _drawItem: function (item, targetContainer) {
-         var
-            key = this._dataSet.getKey(item),
-            self = this;
-         return this._createItemInstance(item, targetContainer).addCallback(function (container) {
-            self._addItemClasses(container, key);
-         });
+
+         this._createItemInstance(item, targetContainer);
       },
 
       _getItemTemplate: function () {
@@ -173,46 +196,50 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
          container.attr('data-id', key).addClass('controls-ListView__item');
       },
 
-      _createItemInstance: function (item, resContainer) {
+      _createItemInstance: function (item, targetContainer) {
          var
+            key = this._dataSet.getKey(item),
             itemTpl = this._getItemTemplate(item),
-            def = new $ws.proto.Deferred();
-
-         function drawItemFromTpl(tplConfig, resContainer) {
-            var container = $(tplConfig);
-            resContainer.append(container);
-            def.callback(container);
-         }
+            container, dotTemplate;
 
          if (typeof itemTpl == 'string') {
-            drawItemFromTpl.call(this, doT.template(itemTpl)(item), resContainer);
+            dotTemplate = itemTpl
          }
-         else if (typeof itemTpl == 'function') {
-            var self = this;
-            var tplConfig = itemTpl.call(this, item);
-            //Может быть DotTepmlate
-            if (typeof tplConfig == 'string') {
-               drawItemFromTpl.call(this, tplConfig, resContainer);
-            }
-            //иначе функция выбиратор
-            else if (tplConfig.componentType && tplConfig.componentType.indexOf('js!') == 0) {
-               //если передали имя класса то реквайрим его и создаем
-               require([tplConfig.componentType], function (Ctor) {
-                  var
-                     config = tplConfig.config;
-                  config.element = $('<div></div>').appendTo(resContainer);
-                  config.parent = self;
-                  var ctrl = new Ctor(config);
-                  self._itemsInstances[self._dataSet.getKey()] = ctrl;
-                  def.callback(ctrl.getContainer());
-               });
-            }
-            else {
-               //и также можно передать dot шаблон
-               drawItemFromTpl.call(this, doT.template(tplConfig.componentType)(tplConfig.config), resContainer);
+         else if (itemTpl instanceof Function) {
+            dotTemplate = itemTpl(item);
+         }
+
+         if (typeof dotTemplate == 'string') {
+            container = $(MarkupTransformer(doT.template(dotTemplate)(item)));
+            this._addItemClasses(container, key);
+            targetContainer.append(container);
+         }
+         else {
+            throw new Error('Шаблон должен быть строкой');
+         }
+      },
+
+      _fillItemInstances : function() {
+         var childControls = this.getChildControls();
+         for (var i = 0; i < childControls.length; i++) {
+            if (childControls[i].getContainer().hasClass('controls-ListView__item')) {
+               var id = childControls[i].getContainer().attr('data-id');
+               this._itemsInstances[id] = childControls[i];
             }
          }
-         return def;
+
+      },
+
+      getItemsInstances : function() {
+         if (Object.isEmpty(this._itemsInstances)) {
+            this._fillItemInstances();
+         }
+         return this._itemsInstances;
+      },
+
+      getItemInstance : function(id) {
+         var instances = this.getItemsInstances();
+         return instances[id];
       }
 
    };
