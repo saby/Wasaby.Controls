@@ -41,20 +41,32 @@
       height: @month-picker-arrow-height;
       top: @month-picker-arrow-top-offset;
       right: @month-picker-arrow-right-offset;
-      background: @month-picker-arrow-bg;
+      .box-sizing(border-box);
 
       &.controls-MonthPicker__arrowLeft {
+        border-width: @month-picker-left-arrow-border-width;
+        border-style: @month-picker-left-arrow-border-style;
+        border-color: @month-picker-left-arrow-border-color;
         background: @month-picker-left-arrow-bg;
 
         &:hover {
+          border-width: @month-picker-left-arrow-hover-border-width;
+          border-style: @month-picker-left-arrow-hover-border-style;
+          border-color: @month-picker-left-arrow-hover-border-color;
           background: @month-picker-left-arrow-hover-bg;
         }
       }
 
       &.controls-MonthPicker__arrowRight {
+        border-width: @month-picker-right-arrow-border-width;
+        border-style: @month-picker-right-arrow-border-style;
+        border-color: @month-picker-right-arrow-border-color;
         background: @month-picker-right-arrow-bg;
 
         &:hover {
+          border-width: @month-picker-right-arrow-hover-border-width;
+          border-style: @month-picker-right-arrow-hover-border-style;
+          border-color: @month-picker-right-arrow-hover-border-color;
           background: @month-picker-right-arrow-hover-bg;
         }
       }

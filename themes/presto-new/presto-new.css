@@ -555,42 +555,42 @@ input[type="reset"]::-moz-focus-inner {
   width: 18px;
   height: 18px;
   line-height: 18px;
-  border: 1px solid #ffcc99;
+  border: 1px solid #e2effb;
   background: transparent;
 }
 .controls-CheckBox:hover .controls-CheckBox__caption {
   color: #ffcc99;
 }
 .controls-CheckBox:hover .controls-CheckBox__icon {
-  border: 1px solid #ffcc99;
+  border: 1px solid #e2effb;
   background: transparent;
 }
 .controls-CheckBox.controls-Checked__checked .controls-CheckBox__caption {
   color: #ffffff;
 }
 .controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon {
-  border: 1px solid #ffcc99;
+  border: 1px solid #e2effb;
   background: transparent url('img/checkbox.png') -2px -5px;
 }
 .controls-CheckBox.controls-Checked__checked:hover .controls-CheckBox__caption {
   color: #ffcc99;
 }
 .controls-CheckBox.controls-Checked__checked:hover .controls-CheckBox__icon {
-  border: 1px solid #ffcc99;
+  border: 1px solid #e2effb;
   background: transparent url('img/checkbox.png') -2px -5px;
 }
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__caption {
   color: #ffffff;
 }
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
-  border: 1px solid #ffcc99;
+  border: 1px solid #e2effb;
   background: #65707e url('img/checkbox.png') -2px -5px;
 }
 .controls-CheckBox.controls-ToggleButton__null:hover .controls-CheckBox__caption {
   color: #ffcc99;
 }
 .controls-CheckBox.controls-ToggleButton__null:hover .controls-CheckBox__icon {
-  border: 1px solid #ffcc99;
+  border: 1px solid #e2effb;
   background: #65707e url('img/checkbox.png') -2px -5px;
 }
 .controls-CheckBox.controls-ToggleButton__null.ws-disabled .controls-CheckBox__icon {
@@ -1514,16 +1514,16 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/DatePicker-calendar.png') -35px 0 no-repeat !important;
 }
 .controls-DatePicker__calendar {
-  -webkit-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
 }
 .controls-Calendar {
   display: inline-block;
   text-align: center;
   font: inherit;
   padding: 8px 0 0;
-  background: #ffffff;
+  background: #434a54;
 }
 .controls-Calendar .controls-Calendar__monthPicker {
   width: 148px;
@@ -1579,7 +1579,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MonthPicker .controls-MonthPicker__field {
   white-space: nowrap;
   cursor: pointer;
-  height: 16px;
+  height: 24px;
   margin: 0 16px;
   font: 700 14px/16px Exo2, sans-serif;
   color: #ffcc99;
@@ -1592,7 +1592,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MonthPicker .controls-MonthPicker__arrowWrapper {
   position: relative;
   display: inline-block;
-  width: 16px;
+  width: 8px;
   min-height: 16px;
   height: 100%;
 }
@@ -1607,23 +1607,37 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   text-decoration: none;
   cursor: pointer;
-  width: 16px;
+  width: 8px;
   height: 16px;
   top: 0;
   right: 0;
-  background: #ffffff;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .controls-MonthPicker .controls-MonthPicker__arrowWrapper .controls-MonthPicker__arrow.controls-MonthPicker__arrowLeft {
-  background: url('img/MonthPicker-arrows.png') -32px 0 no-repeat;
+  border-width: 8px 8px 8px 0;
+  border-style: solid;
+  border-color: transparent #ffcc99 transparent transparent;
+  background: transparent;
 }
 .controls-MonthPicker .controls-MonthPicker__arrowWrapper .controls-MonthPicker__arrow.controls-MonthPicker__arrowLeft:hover {
-  background: url('img/MonthPicker-arrows.png') 0 0 no-repeat;
+  border-width: 8px 8px 8px 0;
+  border-style: solid;
+  border-color: transparent #ffb366 transparent transparent;
+  background: transparent;
 }
 .controls-MonthPicker .controls-MonthPicker__arrowWrapper .controls-MonthPicker__arrow.controls-MonthPicker__arrowRight {
-  background: url('img/MonthPicker-arrows.png') -32px -32px no-repeat;
+  border-width: 8px 0 8px 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent #ffcc99;
+  background: transparent;
 }
 .controls-MonthPicker .controls-MonthPicker__arrowWrapper .controls-MonthPicker__arrow.controls-MonthPicker__arrowRight:hover {
-  background: url('img/MonthPicker-arrows.png') 0 -32px no-repeat;
+  border-width: 8px 0 8px 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent #ffb366;
+  background: transparent;
 }
 .controls-MonthPicker__dropdownWrapper {
   border: 1px solid #aaaaaa;
@@ -1732,7 +1746,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #373e46 !important;
+  background: #434a54 !important;
 }
 .controls-EditAtPlace__editorOverlay .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
   font: 14px/20px Exo2, sans-serif;

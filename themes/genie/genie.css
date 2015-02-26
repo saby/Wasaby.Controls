@@ -1611,18 +1611,32 @@ input[type="reset"]::-moz-focus-inner {
   height: 16px;
   top: 0;
   right: 0;
-  background: #ffffff;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .controls-MonthPicker .controls-MonthPicker__arrowWrapper .controls-MonthPicker__arrow.controls-MonthPicker__arrowLeft {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
   background: url('img/MonthPicker-arrows.png') -32px 0 no-repeat;
 }
 .controls-MonthPicker .controls-MonthPicker__arrowWrapper .controls-MonthPicker__arrow.controls-MonthPicker__arrowLeft:hover {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
   background: url('img/MonthPicker-arrows.png') 0 0 no-repeat;
 }
 .controls-MonthPicker .controls-MonthPicker__arrowWrapper .controls-MonthPicker__arrow.controls-MonthPicker__arrowRight {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
   background: url('img/MonthPicker-arrows.png') -32px -32px no-repeat;
 }
 .controls-MonthPicker .controls-MonthPicker__arrowWrapper .controls-MonthPicker__arrow.controls-MonthPicker__arrowRight:hover {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
   background: url('img/MonthPicker-arrows.png') 0 -32px no-repeat;
 }
 .controls-MonthPicker__dropdownWrapper {
