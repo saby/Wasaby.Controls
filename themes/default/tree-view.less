@@ -20,6 +20,13 @@
       border-color: @tree-view-expand-border-color;
       background: @tree-view-expand-bg;
 
+      &:hover {
+        border-width: @tree-view-expand-hover-border-width;
+        border-style: @tree-view-expand-hover-border-style;
+        border-color: @tree-view-expand-hover-border-color;
+        background: @tree-view-expand-hover-bg;
+      }
+
       &.controls-TreeView__expand__open {
         width: @tree-view-expand-open-width;
         height: @tree-view-expand-open-height;
@@ -28,6 +35,13 @@
         border-style: @tree-view-expand-open-border-style;
         border-color: @tree-view-expand-open-border-color;
         background: @tree-view-expand-open-bg;
+
+        &:hover {
+          border-width: @tree-view-expand-open-hover-border-width;
+          border-style: @tree-view-expand-open-hover-border-style;
+          border-color: @tree-view-expand-open-hover-border-color;
+          background: @tree-view-expand-open-hover-bg;
+        }
       }
 
       & + .controls-TreeView__itemContent {

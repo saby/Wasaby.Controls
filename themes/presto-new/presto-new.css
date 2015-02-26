@@ -1805,22 +1805,34 @@ input[type="reset"]::-moz-focus-inner {
   width: auto;
   height: auto;
   margin: 3px 0 0 3px;
-  border-width: 6px 0 6px 6px;
+  border-width: 8px 0 8px 8px;
   border-style: solid;
   border-color: transparent transparent transparent #ffcc99;
+  background: transparent;
+}
+.controls-ListView .controls-TreeView__item .controls-TreeView__expand:hover {
+  border-width: 8px 0 8px 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent #ffb366;
   background: transparent;
 }
 .controls-ListView .controls-TreeView__item .controls-TreeView__expand.controls-TreeView__expand__open {
   width: auto;
   height: auto;
-  margin: 7px 0 0 0;
-  border-width: 6px 6px 0 6px;
+  margin: 8px 0 0;
+  border-width: 8px 8px 0 8px;
   border-style: solid;
   border-color: #ffcc99 transparent transparent transparent;
   background: transparent;
 }
+.controls-ListView .controls-TreeView__item .controls-TreeView__expand.controls-TreeView__expand__open:hover {
+  border-width: 8px 8px 0 8px;
+  border-style: solid;
+  border-color: #ffb366 transparent transparent transparent;
+  background: transparent;
+}
 .controls-ListView .controls-TreeView__item .controls-TreeView__expand + .controls-TreeView__itemContent {
-  margin: 0 0 0 15px;
+  margin: 0 0 0 20px;
 }
 .controls-ListView .controls-TreeView__item.controls-TreeView__hasChild > .controls-TreeView__expand {
   visibility: visible;
@@ -1828,7 +1840,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ListView .controls-TreeView__childContainer {
   display: none;
   list-style: none;
-  padding: 0 0 0 15px;
+  padding: 0 0 0 20px;
 }
 .controls-DataGrid .controls-DataGrid__table {
   width: 100%;
@@ -1837,21 +1849,21 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
-  background: #ffffff;
+  background: #434a54;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr {
   background: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover {
-  background: #ffcc99;
+  background: #e2effb;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover .controls-DataGrid__th {
   color: inherit;
-  background: #ffcc99;
+  background: #e2effb;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover .controls-DataGrid__td {
-  color: #ffffff;
-  background: #ffcc99;
+  color: #333333;
+  background: #e2effb;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected {
   background: transparent;

@@ -1810,10 +1810,22 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent transparent transparent #00c795;
   background: transparent;
 }
+.controls-ListView .controls-TreeView__item .controls-TreeView__expand:hover {
+  border-width: 6px 0 6px 6px;
+  border-style: solid;
+  border-color: transparent transparent transparent #00c795;
+  background: transparent;
+}
 .controls-ListView .controls-TreeView__item .controls-TreeView__expand.controls-TreeView__expand__open {
   width: auto;
   height: auto;
   margin: 7px 0 0 0;
+  border-width: 6px 6px 0 6px;
+  border-style: solid;
+  border-color: #00c795 transparent transparent transparent;
+  background: transparent;
+}
+.controls-ListView .controls-TreeView__item .controls-TreeView__expand.controls-TreeView__expand__open:hover {
   border-width: 6px 6px 0 6px;
   border-style: solid;
   border-color: #00c795 transparent transparent transparent;

@@ -1810,10 +1810,22 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent;
   background: url('img/Tree_expand.png') 0 0 no-repeat;
 }
+.controls-ListView .controls-TreeView__item .controls-TreeView__expand:hover {
+  border-width: 0;
+  border-style: none;
+  border-color: transparent;
+  background: url('img/Tree_expand.png') 0 0 no-repeat;
+}
 .controls-ListView .controls-TreeView__item .controls-TreeView__expand.controls-TreeView__expand__open {
   width: 16px;
   height: 16px;
   margin: 0;
+  border-width: 0;
+  border-style: none;
+  border-color: transparent;
+  background: url('img/Tree_expand.png') 0 -16px no-repeat;
+}
+.controls-ListView .controls-TreeView__item .controls-TreeView__expand.controls-TreeView__expand__open:hover {
   border-width: 0;
   border-style: none;
   border-color: transparent;

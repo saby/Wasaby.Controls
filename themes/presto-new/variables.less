@@ -1150,22 +1150,34 @@
 @tree-view-expand-width:                        auto;
 @tree-view-expand-height:                       auto;
 @tree-view-expand-margin:                       3px 0 0 3px;
-@tree-view-expand-border-width:                 6px 0 6px 6px;
+
+@tree-view-expand-border-width:                 8px 0 8px 8px;
 @tree-view-expand-border-style:                 solid;
 @tree-view-expand-border-color:                 transparent transparent transparent @primary-color;
 @tree-view-expand-bg:                           transparent;
 
+@tree-view-expand-hover-border-width:           @tree-view-expand-border-width;
+@tree-view-expand-hover-border-style:           @tree-view-expand-border-style;
+@tree-view-expand-hover-border-color:           transparent transparent transparent darken(@primary-color, 10%);
+@tree-view-expand-hover-bg:                     @tree-view-expand-bg;
+
 @tree-view-expand-open-width:                   @tree-view-expand-width;
 @tree-view-expand-open-height:                  @tree-view-expand-height;
-@tree-view-expand-open-margin:                  7px 0 0 0;
-@tree-view-expand-open-border-width:            6px 6px 0 6px;
+@tree-view-expand-open-margin:                  8px 0 0;
+
+@tree-view-expand-open-border-width:            8px 8px 0 8px;
 @tree-view-expand-open-border-style:            @tree-view-expand-border-style;
 @tree-view-expand-open-border-color:            @primary-color transparent transparent transparent;
 @tree-view-expand-open-bg:                      transparent;
 
-@tree-view-item-content-margin:                 0 0 0 15px;
+@tree-view-expand-open-hover-border-width:      @tree-view-expand-open-border-width;
+@tree-view-expand-open-hover-border-style:      @tree-view-expand-open-border-style;
+@tree-view-expand-open-hover-border-color:      darken(@primary-color, 10%) transparent transparent transparent;
+@tree-view-expand-open-hover-bg:                @tree-view-expand-open-bg;
 
-@tree-view-child-container-padding:             0 0 0 15px;
+@tree-view-item-content-margin:                 0 0 0 20px;
+
+@tree-view-child-container-padding:             0 0 0 20px;
 
 
 
@@ -1173,7 +1185,7 @@
 // Data grid //
 // --------- //
 
-@data-grid-bg:                                  @white-color;
+@data-grid-bg:                                  @text-box-focus-bg;
 @data-grid-border-spacing:                      0;
 @data-grid-border-collapse:                     collapse;
 @data-grid-border-width:                        0;
@@ -1181,13 +1193,13 @@
 @data-grid-border-color:                        transparent;
 
 @data-grid-row-bg:                              transparent;
-@data-grid-row-hover-bg:                        @primary-color;
+@data-grid-row-hover-bg:                        @default-color;
 @data-grid-row-selected-bg:                     @data-grid-row-bg;
 
 @data-grid-row-hover-header-cell-text-color:    inherit;
 @data-grid-row-hover-header-cell-bg:            @data-grid-row-hover-bg;
 
-@data-grid-row-hover-cell-text-color:           @white-color;
+@data-grid-row-hover-cell-text-color:           @black-color;
 @data-grid-row-hover-cell-bg:                   @data-grid-row-hover-bg;
 
 @data-grid-row-selected-cell-text-color:        inherit;
