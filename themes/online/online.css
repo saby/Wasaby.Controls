@@ -1489,11 +1489,13 @@ input[type="reset"]::-moz-focus-inner {
   background: #ffffff;
 }
 .controls-DatePicker.ws-disabled .controls-FormattedTextBox__fieldWrapper {
-  cursor: default;
   border-width: 1px;
   border-style: solid;
   border-color: transparent;
   background: #ffffff;
+}
+.controls-DatePicker.ws-disabled .controls-DatePicker__calendarIcon {
+  cursor: default;
 }
 .controls-DatePicker .controls-DatePicker__calendarIcon {
   position: absolute;

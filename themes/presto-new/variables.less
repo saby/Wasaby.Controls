@@ -240,49 +240,49 @@
 @tab-button-disabled-cursor:                    default;
 
 @tab-button-font:                               inherit;
-@tab-button-height:                             21px;
-@tab-button-side-display:                       none;
+@tab-button-height:                             40px;
+@tab-button-side-display:                       inline-block;
 @tab-button-side-width:                         0;
 @tab-button-side-height:                        @tab-button-height;
 @tab-button-inner-height:                       @tab-button-height;
-@tab-button-text-padding:                       0 16px;
-@tab-button-border-radius:                      0;
+@tab-button-text-padding:                       12px 20px;
+@tab-button-border-radius:                      6px 6px 0 0;
 
-@tab-button-text-color:                         @text-color;
-@tab-button-border-width:                       0 0 3px 0;
+@tab-button-text-color:                         @black-color;
+@tab-button-border-width:                       1px;
 @tab-button-border-style:                       solid;
-@tab-button-border-color:                       transparent;
-@tab-button-bg:                                 transparent;
+@tab-button-border-color:                       @gray-color;
+@tab-button-bg:                                 @default-color;
 
-@tab-button-hover-text-color:                   @primary-color;
+@tab-button-hover-text-color:                   @tab-button-text-color;
 @tab-button-hover-border-width:                 @tab-button-border-width;
 @tab-button-hover-border-style:                 @tab-button-border-style;
 @tab-button-hover-border-color:                 @tab-button-border-color;
 @tab-button-hover-bg:                           @tab-button-bg;
 
-@tab-button-checked-text-color:                 @tab-button-text-color;
-@tab-button-checked-border-width:               @tab-button-border-width;
+@tab-button-checked-text-color:                 @text-color;
+@tab-button-checked-border-width:               1px 1px 0 1px;
 @tab-button-checked-border-style:               @tab-button-border-style;
-@tab-button-checked-border-color:               @primary-color;
-@tab-button-checked-bg:                         @tab-button-bg;
+@tab-button-checked-border-color:               @tab-button-border-color;
+@tab-button-checked-bg:                         @secondary-color;
 
-@tab-button-checked-hover-text-color:           @tab-button-hover-text-color;
+@tab-button-checked-hover-text-color:           @tab-button-checked-text-color;
 @tab-button-checked-hover-border-width:         @tab-button-checked-border-width;
-@tab-button-checked-hover-border-style:         @tab-button-checked-border-style;
-@tab-button-checked-hover-border-color:         @tab-button-checked-border-color;
-@tab-button-checked-hover-bg:                   @tab-button-bg;
+@tab-button-checked-hover-border-style:         @tab-button-border-style;
+@tab-button-checked-hover-border-color:         @tab-button-border-color;
+@tab-button-checked-hover-bg:                   @tab-button-checked-bg;
 
 @tab-button-disabled-text-color:                @gray-color;
 @tab-button-disabled-border-width:              @tab-button-border-width;
 @tab-button-disabled-border-style:              @tab-button-border-style;
 @tab-button-disabled-border-color:              @tab-button-border-color;
-@tab-button-disabled-bg:                        @tab-button-bg;
+@tab-button-disabled-bg:                        @gray-light-color;
 
 @tab-button-disabled-checked-text-color:        @tab-button-disabled-text-color;
-@tab-button-disabled-checked-border-width:      @tab-button-disabled-border-width;
+@tab-button-disabled-checked-border-width:      @tab-button-checked-border-width;
 @tab-button-disabled-checked-border-style:      @tab-button-disabled-border-style;
-@tab-button-disabled-checked-border-color:      @gray-color;
-@tab-button-disabled-checked-bg:                @tab-button-bg;
+@tab-button-disabled-checked-border-color:      @tab-button-disabled-border-color;
+@tab-button-disabled-checked-bg:                @tab-button-disabled-bg;
 
 @tab-button-left-side-margin:                   0;
 @tab-button-left-side-bg:                       none;
@@ -290,8 +290,7 @@
 @tab-button-right-side-margin:                  0;
 @tab-button-right-side-bg:                      none;
 
-@tab-button-inner-bg:                           @white-color;
-
+@tab-button-inner-bg:                           none;
 
 
 // ------------ //
@@ -415,7 +414,7 @@
 @switcher-toggle-border-width:                        0;
 @switcher-toggle-border-style:                        solid;
 @switcher-toggle-border-color:                        transparent;
-@switcher-toggle-bg:                                  @default-color;
+@switcher-toggle-bg:                                  darken(@secondary-color, 5%);
 
 @switcher-gap-width:                                  0;
 @switcher-toggle-edge-width:                          0;
@@ -437,7 +436,7 @@
 @switcher-off-toggle-padding:                         4px;
 @switcher-off-toggle-position-text-color:             @black-color;
 @switcher-off-toggle-position-margin:                 0;
-@switcher-off-toggle-position-bg:                     @primary-color;
+@switcher-off-toggle-position-bg:                     @default-color;
 @switcher-off-toggle-left-edge-bg:                    none;
 @switcher-off-toggle-right-edge-bg:                   none;
 
@@ -1109,7 +1108,7 @@
 @edit-at-place-editor-overlay-border:           none;
 @edit-at-place-editor-overlay-border-radius:    3px;
 @edit-at-place-editor-overlay-shadow:           none;
-@edit-at-place-editor-overlay-bg:               @default-color !important;
+@edit-at-place-editor-overlay-bg:               darken(@secondary-color, 5%) !important;
 
 @edit-at-place-control-margin:                  0 0 0 8px;
 @edit-at-place-group-control-margin:            4px;

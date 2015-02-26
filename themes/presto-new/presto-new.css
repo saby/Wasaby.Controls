@@ -395,50 +395,50 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TabButton {
   display: inline-block;
   cursor: pointer;
-  height: 21px;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
+  height: 40px;
+  -webkit-border-radius: 6px 6px 0 0;
+  -moz-border-radius: 6px 6px 0 0;
+  border-radius: 6px 6px 0 0;
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
-  border-width: 0 0 3px 0;
+  border-width: 1px;
   border-style: solid;
-  border-color: transparent;
-  background: transparent;
+  border-color: #aaaaaa;
+  background: #e2effb;
 }
 .controls-TabButton:hover {
-  border-width: 0 0 3px 0;
+  border-width: 1px;
   border-style: solid;
-  border-color: transparent;
-  background: transparent;
+  border-color: #aaaaaa;
+  background: #e2effb;
 }
 .controls-TabButton:hover .controls-TabButton__inner .controls-TabButton__caption {
-  color: #ffcc99;
+  color: #333333;
 }
 .controls-TabButton.controls-Checked__checked {
-  border-width: 0 0 3px 0;
+  border-width: 1px 1px 0 1px;
   border-style: solid;
-  border-color: #ffcc99;
-  background: transparent;
+  border-color: #aaaaaa;
+  background: #4e5762;
 }
 .controls-TabButton.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__caption {
   color: #ffffff;
 }
 .controls-TabButton.controls-Checked__checked:hover {
-  border-width: 0 0 3px 0;
+  border-width: 1px 1px 0 1px;
   border-style: solid;
-  border-color: #ffcc99;
-  background: transparent;
+  border-color: #aaaaaa;
+  background: #4e5762;
 }
 .controls-TabButton.controls-Checked__checked:hover .controls-TabButton__inner .controls-TabButton__caption {
-  color: #ffcc99;
+  color: #ffffff;
 }
 .controls-TabButton .controls-TabButton__side {
   vertical-align: top;
-  display: none;
+  display: inline-block;
   width: 0;
-  height: 21px;
+  height: 40px;
 }
 .controls-TabButton .controls-TabButton__side.controls-TabButton__left {
   margin: 0;
@@ -450,32 +450,32 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TabButton .controls-TabButton__inner {
   font: inherit;
-  color: #ffffff;
+  color: #333333;
   display: inline-block;
-  height: 21px;
-  background: #ffffff;
+  height: 40px;
+  background: none;
 }
 .controls-TabButton .controls-TabButton__inner .controls-TabButton__caption {
   display: inline-block;
   height: auto;
   vertical-align: bottom;
-  padding: 0 16px;
+  padding: 12px 20px;
 }
 .controls-TabButton.ws-disabled {
   cursor: default;
-  border-width: 0 0 3px 0;
+  border-width: 1px;
   border-style: solid;
-  border-color: transparent;
-  background: transparent;
+  border-color: #aaaaaa;
+  background: #eeeeee;
 }
 .controls-TabButton.ws-disabled .controls-TabButton__inner .controls-TabButton__caption {
   color: #aaaaaa;
 }
 .controls-TabButton.ws-disabled.controls-Checked__checked {
-  border-width: 0 0 3px 0;
+  border-width: 1px 1px 0 1px;
   border-style: solid;
   border-color: #aaaaaa;
-  background: transparent;
+  background: #eeeeee;
 }
 .controls-TabButton.ws-disabled.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__caption {
   color: #aaaaaa;
@@ -653,7 +653,7 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
-  background: #e2effb;
+  background: #434a54;
 }
 .controls-Switcher .controls-Switcher__toggle .controls-Switcher__position {
   position: relative;
@@ -678,7 +678,7 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
-  background: #ffcc99;
+  background: #e2effb;
 }
 .controls-Switcher .controls-Switcher__toggle .controls-Switcher__position:before {
   content: '';
@@ -707,7 +707,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position {
   margin: 0;
   color: #333333;
-  background: #ffcc99;
+  background: #e2effb;
 }
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:before {
   width: 0;
@@ -1489,11 +1489,13 @@ input[type="reset"]::-moz-focus-inner {
   background: #4e5762;
 }
 .controls-DatePicker.ws-disabled .controls-FormattedTextBox__fieldWrapper {
-  cursor: default;
   border-width: 1px;
   border-style: solid;
   border-color: transparent;
   background: #4e5762;
+}
+.controls-DatePicker.ws-disabled .controls-DatePicker__calendarIcon {
+  cursor: default;
 }
 .controls-DatePicker .controls-DatePicker__calendarIcon {
   position: absolute;
@@ -1730,7 +1732,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #e2effb !important;
+  background: #373e46 !important;
 }
 .controls-EditAtPlace__editorOverlay .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
   font: 14px/20px Exo2, sans-serif;
