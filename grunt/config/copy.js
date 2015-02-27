@@ -20,7 +20,8 @@ module.exports = function() {
             src: [
                '**/*',
                '!**/*.less',
-               '!**/*.html'
+               '!**/*.html',
+               '!**/*.js'
             ],
             dest: 'SBIS3.CONTROLS/themes'
          }]

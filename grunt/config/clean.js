@@ -12,7 +12,8 @@ module.exports = function() {
          'SBIS3.CONTROLS/themes'
       ],
       themes: [
-         'themes/**/*.css'
+         'themes/**/*.css',
+         '!themes/*.css'
       ]
    };
 };
