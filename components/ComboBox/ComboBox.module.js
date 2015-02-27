@@ -103,21 +103,40 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawSelectedItem: function (key) {
-         if (typeof(key) != 'undefined') {
-            var item = this._dataSet.getRecordByPrimaryKey(key);
-            if (item) {
-               ComboBox.superclass.setText.call(this, item.get(this._options.displayField));
-               $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(item.get(this._options.displayField));
+         if (typeof(key) != 'undefined' && key != null) {
+            var item, def;
+            def = new $ws.proto.Deferred();
+            if (this._dataSet) {
+               item = this._dataSet.getRecordByPrimaryKey(key);
+               def.callback(item);
             }
             else {
-               ComboBox.superclass.setText.call(this, '');
-               $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text('');
+               this._dataSource.read(key).addCallback(function(item){
+                  def.callback(item);
+               });
             }
+            var self = this;
+            def.addCallback(function(item){
+               if (item) {
+                  ComboBox.superclass.setText.call(self, item.get(self._options.displayField));
+                  $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(item.get(self._options.displayField));
+               }
+               else {
+                  ComboBox.superclass.setText.call(self, '');
+                  $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text('');
+               }
+               if (self._picker) {
+                  $('.controls-ComboBox__itemRow__selected', self._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
+                  $('.controls-ComboBox__itemRow[data-key=\'' + key + '\']', self._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
+               }
+            });
+
          }
-         if (this._picker) {
-            $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
-            $('.controls-ComboBox__itemRow[data-key=\'' + key + '\']', this._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
-         }
+
+      },
+
+      _drawItemsCallback : function() {
+         this._drawSelectedItem(this._options.selectedItem);
       },
 
       //TODO от этого надо избавиться. Пользуется Саня Кузьмин
@@ -166,11 +185,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _getItemTemplate: function (item) {
-         var
-            key = this._dataSet.getKey(item),
-            title = item.get(this._options.displayField),
-            selected = (this._options.selectedItem == key);
-         return this._itemTpl({key: key, title: title, selected: selected});
+         return '<div data-key="{{=it.get("id")}}" class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow">{{=it.get("title")}}</div>';
       },
 
       _keyDownBind: function (e) {
