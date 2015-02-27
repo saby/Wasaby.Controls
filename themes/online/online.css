@@ -60,7 +60,7 @@ input[type="reset"]::-moz-focus-inner {
   text-align: center;
   min-width: 24px;
   height: 24px;
-  line-height: 23px;
+  line-height: 22px;
   padding: 0 12px;
   margin: auto;
   border: 1px transparent;
@@ -74,11 +74,6 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-shadow: inset 0 -1px 1px #afacab;
   box-shadow: inset 0 -1px 1px #afacab;
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXB2xKCIABAwfP/X+ekhWAYiXhjYGAwtTd3+V8/zqNw7Jm9JEqO5BRI0RPDSvALfpvYFsc6W2Y3MFnDOPRYo/l+OoxW9O8WrQSdfKJEjXw9EE11A2vvQIELisuiAAAAAElFTkSuQmCC');
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button {
-    line-height: 22px;
-  }
 }
 .controls-Button:hover {
   color: #000000;
@@ -107,23 +102,13 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button .controls-Button__icon {
   position: absolute;
-  top: 0px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button .controls-Button__icon {
-    top: 1px;
-  }
+  top: 1px;
 }
 .controls-Button .controls-Button__icon + .controls-Button__text {
   margin: 0 0 0 20px;
 }
 .controls-Button .controls-Button__icon.icon-24 {
-  top: -4px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button .controls-Button__icon.icon-24 {
-    top: -3px;
-  }
+  top: -3px;
 }
 .controls-Button .controls-Button__icon.icon-24 + .controls-Button__text {
   margin: 0 0 0 28px;
@@ -269,23 +254,13 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-Button__big .controls-Button__icon {
   position: absolute;
-  top: 1px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button.controls-Button__big .controls-Button__icon {
-    top: 2px;
-  }
+  top: 2px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon + .controls-Button__text {
   margin: 0 0 0 20px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-  top: -2px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-    top: -1px;
-  }
+  top: -1px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 + .controls-Button__text {
   margin: 0 0 0 28px;
@@ -1019,14 +994,9 @@ input[type="reset"]::-moz-focus-inner {
   background: transparent url('img/MenuButton-arrowDown.png') 0 0;
 }
 .controls-MenuLink__Menu {
-  margin-top: -21px;
+  margin-top: -20px;
   margin-left: -9px;
   background: #ffffff;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-MenuLink__Menu {
-    margin-top: -20px;
-  }
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
   display: inline-block;
@@ -1050,6 +1020,11 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuLink__Menu .controls-MenuLink__header .controls-MenuLink__arrowDown {
   display: none;
+}
+@-moz-document url-prefix() {
+  .controls-MenuLink__Menu {
+    margin-top: -19px;
+  }
 }
 .controls-MenuIcon {
   position: relative;

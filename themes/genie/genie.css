@@ -60,7 +60,7 @@ input[type="reset"]::-moz-focus-inner {
   text-align: center;
   min-width: 24px;
   height: 30px;
-  line-height: 29px;
+  line-height: 28px;
   padding: 0 8px;
   margin: auto;
   border: 1px solid #d1d1d1;
@@ -74,11 +74,6 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-shadow: none;
   box-shadow: none;
   background: #f1f1f1;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button {
-    line-height: 28px;
-  }
 }
 .controls-Button:hover {
   color: #ffffff;
@@ -107,23 +102,13 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button .controls-Button__icon {
   position: absolute;
-  top: -1px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button .controls-Button__icon {
-    top: 0px;
-  }
+  top: 0px;
 }
 .controls-Button .controls-Button__icon + .controls-Button__text {
   margin: 0 0 0 20px;
 }
 .controls-Button .controls-Button__icon.icon-24 {
-  top: -6px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button .controls-Button__icon.icon-24 {
-    top: -5px;
-  }
+  top: -5px;
 }
 .controls-Button .controls-Button__icon.icon-24 + .controls-Button__text {
   margin: 0 0 0 28px;
@@ -269,23 +254,13 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-Button__big .controls-Button__icon {
   position: absolute;
-  top: 0px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button.controls-Button__big .controls-Button__icon {
-    top: 1px;
-  }
+  top: 1px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon + .controls-Button__text {
   margin: 0 0 0 20px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-  top: -3px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-    top: -2px;
-  }
+  top: -2px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 + .controls-Button__text {
   margin: 0 0 0 28px;
@@ -1019,14 +994,9 @@ input[type="reset"]::-moz-focus-inner {
   background: transparent;
 }
 .controls-MenuLink__Menu {
-  margin-top: -21px;
+  margin-top: -20px;
   margin-left: -9px;
   background: #ffffff;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-MenuLink__Menu {
-    margin-top: -20px;
-  }
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
   display: inline-block;
@@ -1050,6 +1020,11 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuLink__Menu .controls-MenuLink__header .controls-MenuLink__arrowDown {
   display: none;
+}
+@-moz-document url-prefix() {
+  .controls-MenuLink__Menu {
+    margin-top: -19px;
+  }
 }
 .controls-MenuIcon {
   position: relative;

@@ -30,10 +30,7 @@
 
 // Menu
 .controls-MenuLink__Menu {
-  margin-top: @menu-link-menu-top-margin - 1px;
-  @media screen and (-webkit-min-device-pixel-ratio: 0) {
-    margin-top: @menu-link-menu-top-margin;
-  }
+  margin-top: @menu-link-menu-top-margin;
   margin-left: @menu-link-menu-left-margin;
   background: @menu-link-menu-bg;
 
@@ -60,5 +57,11 @@
     .controls-MenuLink__arrowDown {
       display: none;
     }
+  }
+}
+
+@-moz-document url-prefix() {
+  .controls-MenuLink__Menu {
+    margin-top: @menu-link-menu-top-margin + 1px;         // vertical alignment fix for Firefox
   }
 }

@@ -13,10 +13,7 @@
   text-align: @button-text-alignment;
   min-width: @button-min-width;
   height: @button-height;
-  line-height: @button-line-height + 1px;
-  @media screen and (-webkit-min-device-pixel-ratio: 0) {
-    line-height: @button-line-height;
-  }
+  line-height: @button-line-height;
   padding: @button-padding;
   margin: @button-margin;
   border: @button-border;
@@ -53,20 +50,14 @@
   // Button's icon
   .controls-Button__icon {
     position: absolute;
-    top: @button-icon-top-offset - 1px;
-    @media screen and (-webkit-min-device-pixel-ratio: 0) {
-      top: @button-icon-top-offset;
-    }
+    top: @button-icon-top-offset;
 
     & + .controls-Button__text {
       margin: @button-icon-text-margin;
     }
 
     &.icon-24 {
-      top: @button-icon-big-top-offset - 1px;
-      @media screen and (-webkit-min-device-pixel-ratio: 0) {
-        top: @button-icon-big-top-offset;
-      }
+      top: @button-icon-big-top-offset;
 
       & + .controls-Button__text {
         margin: @button-icon-big-text-margin;
@@ -201,20 +192,14 @@
     // Button's icon
     .controls-Button__icon {
       position: absolute;
-      top: @button-big-icon-top-offset - 1px;
-      @media screen and (-webkit-min-device-pixel-ratio: 0) {
-        top: @button-big-icon-top-offset;
-      }
+      top: @button-big-icon-top-offset;
 
       & + .controls-Button__text {
         margin: @button-big-icon-text-margin;
       }
 
       &.icon-24 {
-        top: @button-big-icon-big-top-offset - 1px;
-        @media screen and (-webkit-min-device-pixel-ratio: 0) {
-          top: @button-big-icon-big-top-offset;
-        }
+        top: @button-big-icon-big-top-offset;
 
         & + .controls-Button__text {
           margin: @button-big-icon-big-text-margin;
