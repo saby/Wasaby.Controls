@@ -59,12 +59,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          this.subscribe('onActivated', this._activatedHandler);
 
          if (this.getItems().getItemsCount() > 1) {
-            var arrow = $('.js-controls-MenuButton__arrowDown', this._container);
-            if (!arrow.length){
-               this._container.append('<i class="controls-MenuButton__arrowDown js-controls-MenuButton__arrowDown"></i>');
-            } else {
-               arrow.show();
-            }
+            $('.js-controls-MenuButton__arrowDown', this._container).show();
+
             this._container.removeClass('controls-MenuButton__withoutMenu');
             if (!this._hasHeader) {
                var header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
@@ -81,7 +77,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
                this._hasHeader = true;
             }
          } else {
-            $('.js-controls-MenuButton__arrowDown', this._container).remove();
+            $('.js-controls-MenuButton__arrowDown', this._container).hide();
             this._container.addClass('controls-MenuButton__withoutMenu');
             this._container.removeClass('controls-Picker__show');
             $('.controls-MenuButton__header', this._container).remove();
