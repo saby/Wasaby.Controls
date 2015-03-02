@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
     * @class SBIS3.CONTROLS.Button
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
-	* @demo SBIS3.DemoCode.MyButton Пример кнопки
+	* @demo SBIS3.Demo.Control.MyButton Пример кнопки
     * @initial
     * <component data-component='SBIS3.CONTROLS.Button'>
     *    <option name='caption' value='Кнопка'></option>

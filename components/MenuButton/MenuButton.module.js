@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
    /**
     * Кнопка с выпадающим меню
     * @class SBIS3.CONTROLS.MenuButton
-	* @demo SBIS3.DemoCode.MyMenuButton Пример кнопки с выпадающим меню
+	* @demo SBIS3.Demo.Control.MyMenuButton Пример кнопки с выпадающим меню
     * @extends SBIS3.CONTROLS.ToggleButton
     * @control
     * @initial

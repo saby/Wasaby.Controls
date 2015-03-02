@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
    /**
     * Кнопка с выпадающим меню
     * @class SBIS3.CONTROLS.MenuIcon
-	* @demo SBIS3.DemoCode.MyMenuIcon Пример кнопки с выпадающим меню
+	* @demo SBIS3.Demo.Control.MyMenuIcon Пример кнопки с выпадающим меню
     * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuIcon'>
