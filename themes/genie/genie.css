@@ -1735,9 +1735,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-EditAtPlace.controls-EditAtPlace__editorHidden .controls-EditAtPlace__editor {
   display: none;
 }
-.controls-EditAtPlaceGroup .controls-EditAtPlace .controls-EditAtPlace__fieldWrapper.controls-EditAtPlace__textAreaWrapper {
-  padding: 4px 4px;
-}
 .controls-EditAtPlace__editorOverlay,
 .controls-EditAtPlaceGroup__editorOverlay {
   margin: -4px 0 0 -4px;
@@ -1778,6 +1775,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-EditAtPlace__controlPanel .controls-EditAtPlace__cancel:hover,
 .controls-EditAtPlaceGroup__controlPanel .controls-EditAtPlace__cancel:hover {
   background: url('img/cancelIcon-sprite.png') 0 -16px no-repeat;
+}
+.controls-EditAtPlaceGroup .controls-EditAtPlace .controls-EditAtPlace__fieldWrapper.controls-EditAtPlace__textAreaWrapper {
+  padding: 4px 4px;
 }
 .controls-EditAtPlaceGroup__controlPanel {
   float: right;

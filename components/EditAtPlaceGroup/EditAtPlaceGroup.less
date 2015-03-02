@@ -1,0 +1,23 @@
+// TODO: inspect and define in variables
+.controls-EditAtPlaceGroup {
+  .controls-EditAtPlace {
+    .controls-EditAtPlace__fieldWrapper {
+      &.controls-EditAtPlace__textAreaWrapper {
+        padding: 4px 4px;
+      }
+    }
+  }
+}
+
+.controls-EditAtPlaceGroup__editorOverlay {
+  &:extend(.controls-EditAtPlace__editorOverlay);
+}
+
+.controls-EditAtPlaceGroup__controlPanel {
+  float: right;
+  margin: @edit-at-place-group-control-margin;
+
+  .controls-EditAtPlace__cancel {
+    &:extend(.controls-EditAtPlace__controlPanel .controls-EditAtPlace__cancel all);
+  }
+}

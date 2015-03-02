@@ -82,17 +82,6 @@
   }
 }
 
-// TODO: inspect and define in variables
-.controls-EditAtPlaceGroup {
-  .controls-EditAtPlace {
-    .controls-EditAtPlace__fieldWrapper {
-      &.controls-EditAtPlace__textAreaWrapper {
-        padding: 4px 4px;
-      }
-    }
-  }
-}
-
 .controls-EditAtPlace__editorOverlay {
   margin: @edit-at-place-editor-overlay-margin;
   padding: @edit-at-place-editor-overlay-padding;
@@ -116,10 +105,6 @@
   }
 }
 
-.controls-EditAtPlaceGroup__editorOverlay {
-  &:extend(.controls-EditAtPlace__editorOverlay);
-}
-
 .controls-EditAtPlace__controlPanel {
   display: inline-block;
   vertical-align: top;
@@ -137,14 +122,5 @@
     &:hover{
       background: @edit-at-place-cancel-button-hover-bg;
     }
-  }
-}
-
-.controls-EditAtPlaceGroup__controlPanel {
-  float: right;
-  margin: @edit-at-place-group-control-margin;
-
-  .controls-EditAtPlace__cancel {
-    &:extend(.controls-EditAtPlace__controlPanel .controls-EditAtPlace__cancel all);
   }
 }
