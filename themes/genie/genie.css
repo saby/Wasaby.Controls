@@ -1187,7 +1187,7 @@ input[type="reset"]::-moz-focus-inner {
   min-height: 22px;
   height: 100%;
   padding: 0 7px;
-  background: #ffffff;
+  background: transparent;
 }
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
   padding: 3px 0 0;
@@ -1195,6 +1195,15 @@ input[type="reset"]::-moz-focus-inner {
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
   font-style: normal;
   white-space: pre;
+}
+.controls-FormattedTextBox.ws-validation-error {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ff302b !important;
+  background: #fadadd !important;
+}
+.controls-FormattedTextBox.ws-validation-error .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
+  color: inherit;
 }
 .controls-NumberTextBox .controls-TextBox__fieldWrapper {
   margin: 0;

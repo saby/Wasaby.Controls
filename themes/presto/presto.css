@@ -1196,6 +1196,15 @@ input[type="reset"]::-moz-focus-inner {
   font-style: normal;
   white-space: pre;
 }
+.controls-FormattedTextBox.ws-validation-error {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ff302b !important;
+  background: #fadadd !important;
+}
+.controls-FormattedTextBox.ws-validation-error .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
+  color: inherit;
+}
 .controls-NumberTextBox .controls-TextBox__fieldWrapper {
   margin: 0;
   height: 100%;
