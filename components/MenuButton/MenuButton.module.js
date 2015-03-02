@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
    /**
     * Кнопка с выпадающим меню
     * @class SBIS3.CONTROLS.MenuButton
-    * @extends SBIS3.CONTROLS.ToggleButton
+    * @extends SBIS3.CONTROLS.Button
     * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuButton'>
@@ -25,7 +25,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * @category Buttons
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.CollectionMixin
-    * @ignoreOptions validators, independentContext, contextRestriction, allowChangeEnable, extendedTooltip
     */
 
    var MenuButton = Button.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
@@ -60,7 +59,12 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          this.subscribe('onActivated', this._activatedHandler);
 
          if (this.getItems().getItemsCount() > 1) {
-            $('.js-controls-MenuButton__arrowDown', this._container).show();
+            var arrow = $('.js-controls-MenuButton__arrowDown', this._container);
+            if (!arrow.length){
+               this._container.append('<i class="controls-MenuButton__arrowDown js-controls-MenuButton__arrowDown"></i>');
+            } else {
+               arrow.show();
+            }
             this._container.removeClass('controls-MenuButton__withoutMenu');
             if (!this._hasHeader) {
                var header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
@@ -77,7 +81,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
                this._hasHeader = true;
             }
          } else {
-            $('.js-controls-MenuButton__arrowDown', this._container).hide();
+            $('.js-controls-MenuButton__arrowDown', this._container).remove();
             this._container.addClass('controls-MenuButton__withoutMenu');
             this._container.removeClass('controls-Picker__show');
             $('.controls-MenuButton__header', this._container).remove();

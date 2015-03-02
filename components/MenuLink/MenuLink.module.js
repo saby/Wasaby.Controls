@@ -50,10 +50,15 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
          this.unsubscribe('onActivated', this._activatedHandler);
          this.subscribe('onActivated', this._activatedHandler);
          if (this.getItems().getItemsCount() > 1) {
-            $('.js-controls-MenuLink__arrowDown', this._container).show();
+            var arrow = $('.js-controls-MenuLink__arrowDown', this._container);
+            if (!arrow.length){
+               this._container.append('<i class="controls-MenuLink__arrowDown js-controls-MenuLink__arrowDown"></i>');
+            } else {
+               arrow.show();
+            }
             this._container.removeClass('controls-MenuLink__withoutMenu');
          } else {
-            $('.js-controls-MenuLink__arrowDown', this._container).hide();
+            $('.js-controls-MenuLink__arrowDown', this._container).remove();
             this._container.addClass('controls-MenuLink__withoutMenu');
          }
       },
