@@ -1272,6 +1272,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-PasswordTextField .controls-TextBox__field__fixIE {
   font-size: 12px;
 }
+.controls-ComboBox {
+  cursor: pointer;
+}
 .controls-ComboBox .controls-TextBox__fieldWrapper {
   position: relative;
 }
@@ -1306,9 +1309,6 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent;
   background: #ffffff url('img/ComboBox.png') 0 -16px no-repeat;
 }
-.controls-ComboBox.controls-ComboBox__editable-false {
-  cursor: pointer;
-}
 .controls-ComboBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__field {
   visibility: hidden;
   position: absolute;
@@ -1336,6 +1336,10 @@ input[type="reset"]::-moz-focus-inner {
   border-style: solid;
   border-color: transparent;
   background: #ffffff url('img/ComboBox.png') 0 -16px no-repeat;
+}
+.controls-ComboBox.ws-disabled,
+.controls-ComboBox.ws-disabled:hover {
+  cursor: default;
 }
 .controls-ComboBox.ws-disabled .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown,
 .controls-ComboBox.ws-disabled:hover .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {

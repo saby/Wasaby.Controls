@@ -1,4 +1,6 @@
 .controls-ComboBox {
+  cursor: @combo-box-cursor;
+
   .controls-TextBox__fieldWrapper {
     position: relative;
 
@@ -41,8 +43,6 @@
   }
 
   &.controls-ComboBox__editable-false {
-    cursor: pointer;
-
     .controls-TextBox__fieldWrapper {
       .controls-TextBox__field {
         &.controls-ComboBox__field {
@@ -95,6 +95,8 @@
 
   &.ws-disabled,
   &.ws-disabled:hover {
+    cursor: @combo-box-disabled-cursor;
+
     .controls-TextBox__afterFieldWrapper {
       .controls-ComboBox__arrowDown {
         border-width: @combo-box-arrow-disabled-border-width;
@@ -112,7 +114,7 @@
   margin: @combo-box-picker-margin;
 
   .controls-ComboBox__itemRow {
-    cursor: pointer;
+    cursor: @combo-box-cursor;
     padding: @combo-box-picker-item-padding;
     font: @combo-box-picker-item-font;
     color: @combo-box-picker-item-text-color;
