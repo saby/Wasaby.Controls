@@ -9,6 +9,14 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
       /**
        * @event onDrawItems После отрисовки всех элементов
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @example
+       * <pre>
+       *     Menu.subscribe('onDrawItems', function(){
+       *        if (Menu.getItemsInstance(2).getCaption() == 'Входящие'){
+       *           Menu.getItemsInstance(2).destroy();
+       *        }
+       *     });
+       * </pre>
        */
       $protected: {
          _items : null,
