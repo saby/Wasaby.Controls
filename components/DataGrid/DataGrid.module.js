@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListView', 'html!SBIS3.CONTROLS.DataGrid', 'html!SBIS3.CONTROLS.DataGrid/resources/rowTpl'], function(ListView, dotTplFn, rowTpl, colGroup) {
+define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS3.CONTROLS.DataGrid', 'html!SBIS3.CONTROLS.DataGrid/resources/rowTpl'], function(ListView, dotTplFn, rowTpl, colGroup) {
    'use strict';
    /**
     * Контрол отображающий набор данных в виде в таблицы с несколькими колонками.
@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListView', 'html!SBIS3.
             var rowData = {columns : []};
             rowData.columns = $ws.core.clone(this._options.columns);
             for (var i = 0; i < rowData.columns.length; i++) {
-               rowData.columns[i].value = this._items.getValue(item, rowData.columns[i].field);
+               rowData.columns[i].value = item.get(rowData.columns[i].field);
             }
             return rowTpl(rowData)
          }

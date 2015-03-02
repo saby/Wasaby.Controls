@@ -7,10 +7,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CONTROLS.DataBindMixin',
    'js!SBIS3.CONTROLS.Algorithm',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown',
-   'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxItemTpl',
    'css!SBIS3.CONTROLS.ComboBox'
 
-], function (TextBox, dotTplFn, PickerMixin, DSMixin, Selectable, DataBindMixin, _, arrowTpl, itemTpl) {
+], function (TextBox, dotTplFn, PickerMixin, DSMixin, Selectable, DataBindMixin, _, arrowTpl) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора. Есть настройка которая позволяет также  вручную вводить значения.
@@ -31,8 +30,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    var ComboBox = TextBox.extend([PickerMixin, DSMixin, Selectable, DataBindMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
-
-         _itemTpl: itemTpl,
          _options: {
 
             afterFieldWrapper: arrowTpl,
@@ -63,9 +60,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          if (!this._options.displayField) {
             //TODO по умолчанию поле title???
             this._options.displayField = 'title';
-         }
-         if (this._options.itemTemplate) {
-            this._itemTpl = this._options.itemTemplate;
          }
 
          /*устанавливаем первое значение TODO по идее переписан метод setSelectedItem для того чтобы не срабатывало событие при первой установке*/
