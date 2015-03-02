@@ -1517,6 +1517,7 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   text-align: center;
   font: inherit;
+  width: 215px;
   padding: 8px 0 0;
   background: #ffffff;
 }
