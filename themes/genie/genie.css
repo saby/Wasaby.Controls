@@ -1,3 +1,22 @@
+/*
+.placeholder(@rules) {
+  &::-webkit-input-placeholder {
+    @rules();
+  }
+
+  &:-moz-placeholder {
+    @rules();
+  }
+
+  &::-moz-placeholder {
+    @rules();
+  }
+
+  &:-ms-input-placeholder {
+    @rules();
+  }
+}
+*/
 body,
 html {
   font: 13px Tahoma, Geneva, sans-serif;
@@ -1149,6 +1168,11 @@ input[type="reset"]::-moz-focus-inner {
   border: none;
   outline: none;
   background: transparent;
+  /*
+      .placeholder({
+        color: @text-box-placeholder-color;
+      });
+      */
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-webkit-input-placeholder {
   color: #d1d1d1 !important;
@@ -1928,26 +1952,6 @@ input[type="reset"]::-moz-focus-inner {
   color: inherit;
   background: transparent;
 }
-.controls-ComboBox__picker.controls-Picker__owner__hover {
-  border-top-color: #00c795;
-}
-.controls-Menu.controls-Menu__Popup .controls-MenuButton__Menu-whiteLine {
-  background: transparent !important;
-}
-.controls-NumberTextBox .controls-TextBox__afterFieldWrapper {
-  margin: 0 -4px 0 0;
-}
-.controls-NumberTextBox:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrowUp {
-  border-top: 1px solid #00c795;
-}
-.controls-NumberTextBox:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrowDown {
-  border-bottom: 1px solid #00c795;
-}
-.controls-DataGrid.controls-DataGrid__itemSelect .controls-ListView__item__selected .controls-DataGrid__td:first-child {
-  background-image: url('img/rowSelect.png');
-  background-position: left top;
-  background-repeat: repeat-y;
-}
 .controls-UnitEditor__fieldWrapper {
   margin-right: 34px;
 }
@@ -2002,4 +2006,24 @@ input[type="reset"]::-moz-focus-inner {
   right: 0;
   height: 1px;
   background: white;
+}
+.controls-ComboBox__picker.controls-Picker__owner__hover {
+  border-top-color: #00c795;
+}
+.controls-Menu.controls-Menu__Popup .controls-MenuButton__Menu-whiteLine {
+  background: transparent !important;
+}
+.controls-NumberTextBox .controls-TextBox__afterFieldWrapper {
+  margin: 0 -4px 0 0;
+}
+.controls-NumberTextBox:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrowUp {
+  border-top: 1px solid #00c795;
+}
+.controls-NumberTextBox:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrowDown {
+  border-bottom: 1px solid #00c795;
+}
+.controls-DataGrid.controls-DataGrid__itemSelect .controls-ListView__item__selected .controls-DataGrid__td:first-child {
+  background-image: url('img/rowSelect.png');
+  background-position: left top;
+  background-repeat: repeat-y;
 }

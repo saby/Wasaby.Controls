@@ -94,9 +94,27 @@
       outline: @text-box-field-outline;
       background: @text-box-field-bg;
 
+      // TODO: use placeholder mixin with a newer version of LESS
+      &::-webkit-input-placeholder {
+        color: @text-box-placeholder-color;
+      }
+
+      &:-moz-placeholder {
+        color: @text-box-placeholder-color;
+      }
+
+      &::-moz-placeholder {
+        color: @text-box-placeholder-color;
+      }
+
+      &:-ms-input-placeholder {
+        color: @text-box-placeholder-color;
+      }
+      /*
       .placeholder({
         color: @text-box-placeholder-color;
       });
+      */
 
       &::-ms-clear {
         display: none;

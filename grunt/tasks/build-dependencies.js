@@ -3,8 +3,6 @@ module.exports = function(grunt) {
    'use strict';
 
    grunt.registerTask('build-dependencies', function() {
-      // TODO: implement dependencyCollector.js as Grunt task here
-
       if ([
          'components/contents.js',
          'components/contents.json'
@@ -15,6 +13,7 @@ module.exports = function(grunt) {
          return;
       }
 
+      // TODO: implement dependencyCollector.js as Grunt task here
       var done = this.async();
       grunt.util.spawn({
          cmd: 'node',
