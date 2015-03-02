@@ -1,22 +1,3 @@
-/*
-.placeholder(@rules) {
-  &::-webkit-input-placeholder {
-    @rules();
-  }
-
-  &:-moz-placeholder {
-    @rules();
-  }
-
-  &::-moz-placeholder {
-    @rules();
-  }
-
-  &:-ms-input-placeholder {
-    @rules();
-  }
-}
-*/
 body,
 html {
   font: 13px Tahoma, Geneva, sans-serif;
@@ -1168,11 +1149,6 @@ input[type="reset"]::-moz-focus-inner {
   border: none;
   outline: none;
   background: transparent;
-  /*
-      .placeholder({
-        color: @text-box-placeholder-color;
-      });
-      */
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-webkit-input-placeholder {
   color: #d1d1d1 !important;
