@@ -1443,7 +1443,8 @@ input[type="reset"]::-moz-focus-inner {
   height: auto !important;
 }
 .controls-DatePicker {
-  border: none;
+  border: none !important;
+  background: transparent !important;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -1465,6 +1466,16 @@ input[type="reset"]::-moz-focus-inner {
   border-style: solid;
   border-color: transparent transparent #666666 transparent;
   background: #434a54;
+}
+.controls-DatePicker.ws-validation-error {
+  border: none !important;
+  background: transparent !important;
+}
+.controls-DatePicker.ws-validation-error > .controls-DatePicker__fieldWrapper {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ff302b !important;
+  background: #fadadd !important;
 }
 .controls-DatePicker:hover .controls-FormattedTextBox__fieldWrapper {
   border-width: 1px;

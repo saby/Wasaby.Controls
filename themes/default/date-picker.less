@@ -1,6 +1,8 @@
 .controls-DatePicker {
-   border: none;
-   .box-sizing(border-box);
+  border: none !important;
+  background: transparent !important;
+
+  .box-sizing(border-box);
 
   .controls-TextBox__afterFieldWrapper {
     &:extend(.controls-TextBox .controls-TextBox__afterFieldWrapper);
@@ -24,6 +26,18 @@
       border-style: @date-picker-wrapper-focus-border-style;
       border-color: @date-picker-wrapper-focus-border-color;
       background: @date-picker-wrapper-focus-bg;
+    }
+  }
+
+  &.ws-validation-error {
+    border: none !important;
+    background: transparent !important;
+
+    & > .controls-DatePicker__fieldWrapper {
+      border-width: @date-picker-wrapper-error-border-width;
+      border-style: @date-picker-wrapper-error-border-style;
+      border-color: @date-picker-wrapper-error-border-color;
+      background: @date-picker-wrapper-error-bg;
     }
   }
 
