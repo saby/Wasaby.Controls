@@ -6,6 +6,21 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
     * Кнопка с выпадающим меню
     * @class SBIS3.CONTROLS.MenuIcon
 	* @demo SBIS3.DemoCode.MyMenuIcon Пример кнопки с выпадающим меню
+    * @control
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.MenuIcon'>
+    *    <option name="icon">sprite:icon-16 icon-AddButton icon-primary</option>
+    *    <options name="items" type="array">
+    *        <options>
+    *            <option name="id">1</option>
+    *            <option name="title">Пункт1</option>
+    *         </options>
+    *         <options>
+    *            <option name="id">2</option>
+    *            <option name="title">Пункт2</option>
+    *         </options>
+    *      </options>
+    * </component>
     * @extends SBIS3.CONTROLS.ToggleButton
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.CollectionMixin
