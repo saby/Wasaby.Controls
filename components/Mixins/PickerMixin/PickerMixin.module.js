@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
          _picker : null,
          _border : 0,
          _options: {
-
+            pickerClassName : ''
          }
       },
 
@@ -21,6 +21,10 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
             self = this,
             pickerContainer = $('<div></div>'),
             container = self._container;
+
+         if (this._options.pickerClassName) {
+            pickerContainer.addClass(this._options.pickerClassName);
+         }
 
          // чтобы не нарушать выравнивание по базовой линии
          $('body').append(pickerContainer);
