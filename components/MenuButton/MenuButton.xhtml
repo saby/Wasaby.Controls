@@ -6,5 +6,5 @@
    {{??}}
    {{?it.caption}}{{=it.caption}}{{?}}
    {{?}}
-   <i class="controls-MenuButton__arrowDown js-controls-MenuButton__arrowDown" >{{?it.items.length > 1}}style="display:none;"{{?}}</i>
+   <i class="controls-MenuButton__arrowDown js-controls-MenuButton__arrowDown"{{?(it.items && it.items.length > 1)}} style="display:none;"{{?}}></i>
 </span>
