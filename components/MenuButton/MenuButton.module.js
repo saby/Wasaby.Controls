@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
    /**
     * Кнопка с выпадающим меню
     * @class SBIS3.CONTROLS.MenuButton
-    * @extends SBIS3.CONTROLS.ToggleButton
+    * @extends SBIS3.CONTROLS.Button
     * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuButton'>
@@ -61,6 +61,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
 
          if (this.getItems().getItemsCount() > 1) {
             $('.js-controls-MenuButton__arrowDown', this._container).show();
+
             this._container.removeClass('controls-MenuButton__withoutMenu');
             if (!this._hasHeader) {
                var header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
