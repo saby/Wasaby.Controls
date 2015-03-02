@@ -271,16 +271,31 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
          return def;
       },
      /**
-      *
+      * Метод получения элементов коллекции
       * @returns {*}
+      * @example
+      * <pre>
+      *     var ItemsInstances = Menu.getItemsInstances();
+      *     for (var i = 0; i < ItemsInstances.length; i++){
+      *        ItemsInstances[i].setCaption('Это пункт меню №' + ItemsInstances[i].attr('data-id'));
+      *     }
+      * </pre>
       */
       getItemsInstances : function() {
          return this._itemsInstances;
       },
      /**
-      *
-      * @param id
-      * @returns {*}
+      * Метод получения элемента коллекции.
+      * @param id Идентификатор элемента коллекции.
+      * @returns {*} Возвращает элемент коллекции по указанному идентификатору.
+      * @example
+      * <pre>
+      *     Menu.getItemsInstance(3).setCaption('SomeNewCaption');
+      * </pre>
+      * @see getItems
+      * @see setItems
+      * @see items
+      * @see getItemInstances
       */
       getItemInstance : function(id) {
          return this._itemsInstances[id];

@@ -17,7 +17,7 @@ define('js!SBIS3.DemoCode.MyIconButton', ['js!SBIS3.CORE.CompoundControl', 'html
 
       init: function() {
          moduleClass.superclass.init.call(this);
-         this.getChildControlByName("Button 1").subscribe("onActivated", function() {
+         this.getChildControlByName("IconButton").subscribe("onActivated", function() {
             $ws.helpers.question("Действительно хотите в отпуск?"); 
          });
       }
