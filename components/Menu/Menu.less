@@ -1,7 +1,7 @@
 .controls-Menu__Popup {
-   .box-sizing(border-box);
-   margin: @menu-margin;
-   border: @menu-border;
+  .box-sizing(border-box);
+  margin: @menu-margin;
+  border: @menu-border;
   .box-shadow(@menu-shadow);
 
   .controls-Menu__hasChild {
@@ -26,4 +26,12 @@
       background: @menu-expand-hover-bg;
     }
   }
+
+  .controls-Menu__submenu {
+    display: block;
+  }
+}
+
+.controls-Menu__submenu {
+  display: none;
 }

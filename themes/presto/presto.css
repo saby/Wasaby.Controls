@@ -830,6 +830,12 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent transparent transparent #4e5762;
   background: transparent;
 }
+.controls-Menu__Popup .controls-Menu__submenu {
+  display: block;
+}
+.controls-Menu__submenu {
+  display: none;
+}
 .controls-MenuItem {
   position: relative;
   display: block;
