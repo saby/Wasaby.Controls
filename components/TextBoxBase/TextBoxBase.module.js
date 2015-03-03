@@ -81,15 +81,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
          this._options.maxLength = num;
       },
 
-      /**
-       * Установить подсказку, отображаемую внутри поля.
-       * Метод установки или замены текста подсказки, заданного опцией {@link placeholder}.
-       * @param {String} text Текст подсказки.
-       * @see placeholder
-       */
-      setPlaceholder: function(text) {
-         this._options.placeholder = text || '';
-      },
+      
       /**
        * Изменяет текст в поле ввода.
        * @param value Текст для установки в поле ввода.
