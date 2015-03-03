@@ -44,7 +44,13 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              *    <li>false - не выделять.</li>
              * </ul>
              */
-            selectOnClick: false
+            selectOnClick: false,
+            /**
+             * @cfg {String} Текст подсказки внутри поля ввода
+             * Данный текст отображается внутри поля до момента получения фокуса.
+             * @see setPlaceholder
+             */
+            placeholder: ''
          }
       },
 

@@ -34,13 +34,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
              * @cfg {Number} Максимальное количество символов, которое возможно ввести
              * @see setMaxLength
              */
-            maxLength: null,
-            /**
-             * @cfg {String} Текст подсказки внутри поля ввода
-             * Данный текст отображается внутри поля до момента получения фокуса.
-             * @see setPlaceholder
-             */
-            placeholder: ''
+            maxLength: null
+
          }
       },
 
