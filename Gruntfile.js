@@ -14,7 +14,7 @@ module.exports = function(grunt) {
    grunt.loadTasks('grunt/tasks');
 
    grunt.registerTask('css', [
-      'less'
+      'less:normal'
    ]);
 
    grunt.registerTask('js', [

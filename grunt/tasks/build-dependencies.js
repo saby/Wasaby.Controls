@@ -15,7 +15,7 @@ module.exports = function(grunt) {
          // All files are built, no need to rebuild them
          return;
       }
-      
+
       var
          newPath,
          jsModules = {},
