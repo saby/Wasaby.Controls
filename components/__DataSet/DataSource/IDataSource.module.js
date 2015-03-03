@@ -1,9 +1,7 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.IDataSource', [
-   'js!SBIS3.CONTROLS.StrategyHelper'
-], function (StrategyHelper) {
+define('js!SBIS3.CONTROLS.IDataSource', [], function () {
    'use strict';
 
    /**
@@ -12,26 +10,19 @@ define('js!SBIS3.CONTROLS.IDataSource', [
 
    return $ws.proto.Abstract.extend({
       $protected: {
-         /**
-          * Объект стратегии работы с данными
-          */
-         _strategy: undefined,
          _options: {
-            strategyName: ''
+            strategy: null
          }
       },
       $constructor: function () {
          this._publish('onCreate', 'onRead', 'onUpdate', 'onDestroy', 'onQuery', 'onDataChange');
-         if (this._options.strategyName) {
-            this._strategy = StrategyHelper.getStrategyObjectByName(this._options.strategyName);
-         }
       },
       /**
        * Получить объект стратегии работы с данными
        * @returns {Object}
        */
       getStrategy: function () {
-         return this._strategy;
+         return this._options.strategy;
       },
       /**
        * Метод создает запись в источнике данных

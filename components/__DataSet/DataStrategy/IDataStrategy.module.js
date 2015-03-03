@@ -26,11 +26,11 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
          /*Method must be implemented*/
       },
 
-      at:function(){
+      at: function () {
          /*Method must be implemented*/
       },
 
-      rebuild:function(){
+      rebuild: function () {
          /*Method must be implemented*/
       },
 

@@ -5,12 +5,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CONTROLS.DSMixin',
    'js!SBIS3.CONTROLS.Selectable',
    'js!SBIS3.CONTROLS.DataBindMixin',
-   'js!SBIS3.CONTROLS.Algorithm',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxItemTpl',
    'css!SBIS3.CONTROLS.ComboBox'
 
-], function (TextBox, dotTplFn, PickerMixin, DSMixin, Selectable, DataBindMixin, _, arrowTpl, itemTpl) {
+], function (TextBox, dotTplFn, PickerMixin, DSMixin, Selectable, DataBindMixin, arrowTpl, itemTpl) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора. Есть настройка которая позволяет также  вручную вводить значения.
@@ -104,7 +103,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _drawSelectedItem: function (key) {
          if (typeof(key) != 'undefined') {
-            var item = this._dataSet.getRecordByPrimaryKey(key);
+            var item = this._dataSet.getRecordByKey(key);
             if (item) {
                ComboBox.superclass.setText.call(this, item.get(this._options.displayField));
                $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(item.get(this._options.displayField));
@@ -221,8 +220,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          filter.push(filterFieldObj);
 
          self._dataSource.query(filter).addCallback(function (DataSet) {
-            _.each(DataSet, function (item) {
-               selKey = DataSet.getKey(item);
+            DataSet.each(function (item) {
+               selKey = item.getKey();
             });
          });
 

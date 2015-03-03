@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
       $constructor: function (cfg) {
          // неявно создадим начальный датасет, с которым будем работать дальше
          this._initialDataSet = new DataSet({
-            strategyName: this._options.strategyName,
+            strategy: this.getStrategy(),
             data: cfg.data,
             keyField: this._options.keyField
          });
@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
       read: function (id) {
          var self = this,
             def = new $ws.proto.Deferred();
-         def.callback(this._initialDataSet.getRecordByPrimaryKey(id));
+         def.callback(this._initialDataSet.getRecordByKey(id));
          def.addCallback(function (record) {
             self._notify('onRead');
             return record;
@@ -123,12 +123,14 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.DataSet - набор отобранных элементов
        */
       query: function (filter, sorting, offset, limit) {
+
          var def = new $ws.proto.Deferred(),
          //TODO: переделать установку стратегии
             strategy = this.getStrategy(),
             data = strategy.query(this._options.data, filter, sorting, offset, limit);
+
          var DS = new DataSet({
-            strategyName: this._options.strategyName,
+            strategy: this.getStrategy(),
             data: data,
             keyField: this._options.keyField
          });

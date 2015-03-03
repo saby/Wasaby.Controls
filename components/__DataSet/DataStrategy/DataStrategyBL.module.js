@@ -193,5 +193,5 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
 
    });
 
-   return new DataStrategyBL();
+   return DataStrategyBL;
 });

@@ -201,5 +201,5 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
 
    });
 
-   return new DataStrategyArray();
+   return DataStrategyArray;
 });

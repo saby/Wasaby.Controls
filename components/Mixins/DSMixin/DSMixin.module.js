@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CONTROLS.DataSourceMemory', 'js!SBIS3.CORE.MarkupTransformer'], function (_, DataSourceMemory, MarkupTransformer) {
+define('js!SBIS3.CONTROLS.DSMixin', [ 'js!SBIS3.CONTROLS.DataSourceMemory', 'js!SBIS3.CORE.MarkupTransformer'], function (DataSourceMemory, MarkupTransformer) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -148,15 +148,14 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
             self._sorting = sorting;
          }
          this._dataSource.query(self._filter, self._sorting, offset, limit).addCallback(
-            function (DS) {
+            function (DataSet) {
                var
                   itemsContainer = self._getItemsContainer();
-
-               self.setDataSet(DS);
+               self.setDataSet(DataSet);
                self._itemsInstances = {};
                itemsContainer.empty();
 
-               _.each(DS, function (item, key, i, parItem, lvl) {
+               DataSet.each(function (item, key, i, parItem, lvl) {
 
                   var
                      targetContainer = self._getTargetContainer(item, key, parItem, lvl);
@@ -200,7 +199,7 @@ define('js!SBIS3.CONTROLS.DSMixin', ['js!SBIS3.CONTROLS.Algorithm', 'js!SBIS3.CO
 
       _createItemInstance: function (item, targetContainer) {
          var
-            key = this._dataSet.getKey(item),
+            key = item.getKey(),
             itemTpl = this._getItemTemplate(item),
             container, dotTemplate;
 
