@@ -38,28 +38,11 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       },
 
       init: function(){
-         var self = this;
          MenuButton.superclass.init.call(this);
          this._initMenu();
       },
 
-      _activatedHandler: function () {
-         if (this.getItems().getItemsCount() > 1) {
-            this._container.addClass('controls-Checked__checked');
-            $('.controls-MenuButton__header', this._container).toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
-            this.togglePicker();
-         } else {
-            if (this.getItems().getItemsCount() == 1) {
-               var id = this.getItems().getKey(this.getItems().getNextItem());
-               this._notify('onMenuItemActivate', id);
-            }
-         }
-      },
-
       _initMenu: function(){
-         this.unsubscribe('onActivated', this._activatedHandler);
-         this.subscribe('onActivated', this._activatedHandler);
-
          if (this.getItems().getItemsCount() > 1) {
             $('.js-controls-MenuButton__arrowDown', this._container).show();
 
@@ -84,6 +67,19 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             this._container.removeClass('controls-Picker__show');
             $('.controls-MenuButton__header', this._container).remove();
             this._hasHeader = false;
+         }
+      },
+
+      _clickHandler: function(){
+         if (this.getItems().getItemsCount() > 1) {
+            this._container.addClass('controls-Checked__checked');
+            $('.controls-MenuButton__header', this._container).toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
+            this.togglePicker();
+         } else {
+            if (this.getItems().getItemsCount() == 1) {
+               var id = this.getItems().getKey(this.getItems().getNextItem());
+               this._notify('onMenuItemActivate', id);
+            }
          }
       },
        /**
