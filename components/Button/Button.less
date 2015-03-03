@@ -50,14 +50,20 @@
   // Button's icon
   .controls-Button__icon {
     position: absolute;
-    top: @button-icon-top-offset;
+    top: @button-icon-top-offset - 1px;         // this rule is for IE, see normal overrides for Chrome and Firefox below
+    @media screen and (-webkit-min-device-pixel-ratio: 0) {
+      top: @button-icon-top-offset;             // normal override for Chrome
+    }
 
     & + .controls-Button__text {
       margin: @button-icon-text-margin;
     }
 
     &.icon-24 {
-      top: @button-icon-big-top-offset;
+      top: @button-icon-big-top-offset - 1px;   // this rule is for IE, see normal overrides for Chrome and Firefox below
+      @media screen and (-webkit-min-device-pixel-ratio: 0) {
+        top: @button-icon-big-top-offset;       // normal override for Chrome
+      }
 
       & + .controls-Button__text {
         margin: @button-icon-big-text-margin;
@@ -192,14 +198,20 @@
     // Button's icon
     .controls-Button__icon {
       position: absolute;
-      top: @button-big-icon-top-offset;
+      top: @button-big-icon-top-offset - 1px;         // this rule is for IE, see normal overrides for Chrome and Firefox below
+      @media screen and (-webkit-min-device-pixel-ratio: 0) {
+        top: @button-big-icon-top-offset;             // normal override for Chrome
+      }
 
       & + .controls-Button__text {
         margin: @button-big-icon-text-margin;
       }
 
       &.icon-24 {
-        top: @button-big-icon-big-top-offset;
+        top: @button-big-icon-big-top-offset - 1px;   // this rule is for IE, see normal overrides for Chrome and Firefox below
+        @media screen and (-webkit-min-device-pixel-ratio: 0) {
+          top: @button-big-icon-big-top-offset;       // normal override for Chrome
+        }
 
         & + .controls-Button__text {
           margin: @button-big-icon-big-text-margin;
@@ -257,5 +269,28 @@
     border: @button-disabled-border;
     .box-shadow(@button-disabled-shadow);
     background: @button-disabled-bg;
+  }
+}
+
+// Normal offsets' override for Firefox
+@-moz-document url-prefix() {
+  .controls-Button {
+    .controls-Button__icon {
+      top: @button-icon-top-offset;
+
+      &.icon-24 {
+        top: @button-icon-big-top-offset;
+      }
+    }
+
+    &.controls-Button__big {
+      .controls-Button__icon {
+        top: @button-big-icon-top-offset;
+
+        &.icon-24 {
+          top: @button-big-icon-big-top-offset;
+        }
+      }
+    }
   }
 }

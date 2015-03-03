@@ -102,13 +102,23 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button .controls-Button__icon {
   position: absolute;
-  top: 1px;
+  top: 0px;
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .controls-Button .controls-Button__icon {
+    top: 1px;
+  }
 }
 .controls-Button .controls-Button__icon + .controls-Button__text {
   margin: 0 0 0 20px;
 }
 .controls-Button .controls-Button__icon.icon-24 {
-  top: -3px;
+  top: -4px;
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .controls-Button .controls-Button__icon.icon-24 {
+    top: -3px;
+  }
 }
 .controls-Button .controls-Button__icon.icon-24 + .controls-Button__text {
   margin: 0 0 0 28px;
@@ -254,13 +264,23 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-Button__big .controls-Button__icon {
   position: absolute;
-  top: 2px;
+  top: 1px;
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .controls-Button.controls-Button__big .controls-Button__icon {
+    top: 2px;
+  }
 }
 .controls-Button.controls-Button__big .controls-Button__icon + .controls-Button__text {
   margin: 0 0 0 20px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-  top: -1px;
+  top: -2px;
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
+    top: -1px;
+  }
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 + .controls-Button__text {
   margin: 0 0 0 28px;
@@ -305,7 +325,8 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: inset 0 -1px 1px #bbbbba;
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAFVJREFUGFc9wwkOgDAIBMD9/2OtLb2AHgaqTjLYe2Ot9Z9zvgfG+CqGKtQLVATiGcIncwd329Bts9W3aouvxWZfsqWTCJnSmSLoG2+f7B18tOFCDNcDpuCK5d42KGsAAAAASUVORK5CYII=');
 }
-.controls-Button.controls-Button__ellispis {
+.controls-Button.controls-Button__ellispis,
+.controls-Link.controls-Button__ellispis {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -318,6 +339,20 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-shadow: inset 0 -1px 1px #bbbbba;
   box-shadow: inset 0 -1px 1px #bbbbba;
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAARUlEQVQYVxXDCRIAEQwAwfn/Y9cRQcSxdFVzzmHvzVrrnsx5u+M+GOM2w6xjvdHbW2lVqfoWtAgqQpGM5ISkSH5jIIXvByxNRX+NbFFRAAAAAElFTkSuQmCC');
+}
+@-moz-document url-prefix() {
+  .controls-Button .controls-Button__icon {
+    top: 1px;
+  }
+  .controls-Button .controls-Button__icon.icon-24 {
+    top: -3px;
+  }
+  .controls-Button.controls-Button__big .controls-Button__icon {
+    top: 2px;
+  }
+  .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
+    top: -1px;
+  }
 }
 .controls-ButtonGroup .controls-ListView__item {
   display: inline-block;
