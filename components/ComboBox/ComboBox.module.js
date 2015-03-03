@@ -6,10 +6,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CONTROLS.Selectable',
    'js!SBIS3.CONTROLS.DataBindMixin',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown',
-   'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxItemTpl',
    'css!SBIS3.CONTROLS.ComboBox'
-
-], function (TextBox, dotTplFn, PickerMixin, DSMixin, Selectable, DataBindMixin, arrowTpl, itemTpl) {
+], function (TextBox, dotTplFn, PickerMixin, DSMixin, Selectable, DataBindMixin, arrowTpl) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора. Есть настройка которая позволяет также  вручную вводить значения.
@@ -30,8 +28,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    var ComboBox = TextBox.extend([PickerMixin, DSMixin, Selectable, DataBindMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
-
-         _itemTpl: itemTpl,
          _options: {
 
             afterFieldWrapper: arrowTpl,
@@ -62,9 +58,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          if (!this._options.displayField) {
             //TODO по умолчанию поле title???
             this._options.displayField = 'title';
-         }
-         if (this._options.itemTemplate) {
-            this._itemTpl = this._options.itemTemplate;
          }
 
          /*устанавливаем первое значение TODO по идее переписан метод setSelectedItem для того чтобы не срабатывало событие при первой установке*/
@@ -102,21 +95,40 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawSelectedItem: function (key) {
-         if (typeof(key) != 'undefined') {
-            var item = this._dataSet.getRecordByKey(key);
-            if (item) {
-               ComboBox.superclass.setText.call(this, item.get(this._options.displayField));
-               $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(item.get(this._options.displayField));
+         if (typeof(key) != 'undefined' && key != null) {
+            var item, def;
+            def = new $ws.proto.Deferred();
+            if (this._dataSet) {
+               item = this._dataSet.getRecordByKey(key);
+               def.callback(item);
             }
             else {
-               ComboBox.superclass.setText.call(this, '');
-               $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text('');
+               this._dataSource.read(key).addCallback(function(item){
+                  def.callback(item);
+               });
             }
+            var self = this;
+            def.addCallback(function(item){
+               if (item) {
+                  ComboBox.superclass.setText.call(self, item.get(self._options.displayField));
+                  $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(item.get(self._options.displayField));
+               }
+               else {
+                  ComboBox.superclass.setText.call(self, '');
+                  $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text('');
+               }
+               if (self._picker) {
+                  $('.controls-ComboBox__itemRow__selected', self._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
+                  $('.controls-ComboBox__itemRow[data-key=\'' + key + '\']', self._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
+               }
+            });
+
          }
-         if (this._picker) {
-            $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
-            $('.controls-ComboBox__itemRow[data-key=\'' + key + '\']', this._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
-         }
+
+      },
+
+      _drawItemsCallback : function() {
+         this._drawSelectedItem(this._options.selectedItem);
       },
 
       //TODO от этого надо избавиться. Пользуется Саня Кузьмин
@@ -165,11 +177,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _getItemTemplate: function (item) {
-         var
-            key = this._dataSet.getKey(item),
-            title = item.get(this._options.displayField),
-            selected = (this._options.selectedItem == key);
-         return this._itemTpl({key: key, title: title, selected: selected});
+         var title = item.get(this._options.displayField);
+         return '<div data-key="{{=it.getKey()}}" class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow">' + title + '</div>';
       },
 
       _keyDownBind: function (e) {
