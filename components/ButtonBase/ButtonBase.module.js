@@ -20,17 +20,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
     */
 
    var ButtonBase = Control.extend([Clickable, FormWidgetMixin, DataBindMixin, IconMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
-      /**
-       * @event onActivated При активации кнопки (клик мышкой, кнопки клавиатуры)
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @example
-       * <pre>
-       *    onActivated: function(event){
-       *       var list = this.getChildControlByName('listOfPersons');
-       *       list.sendCommand('newItem');
-       *    }
-       * </pre>
-       */
+
       $protected: {
          _options: {
             /**
