@@ -118,8 +118,13 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          this._inputField.attr('maxlength',num);
       },
 
+      /**
+       * Установить подсказку, отображаемую внутри поля.
+       * Метод установки или замены текста подсказки, заданного опцией {@link placeholder}.
+       * @param {String} text Текст подсказки.
+       * @see placeholder
+       */
       setPlaceholder: function(text){
-         TextBox.superclass.setPlaceholder.call(this, text);
          if ($ws._const.compatibility.placeholder) {
             if (this._compatPlaceholder) {
                this._compatPlaceholder.text(text || '');
