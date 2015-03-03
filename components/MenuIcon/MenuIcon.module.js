@@ -24,21 +24,7 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
          this._initMenu();
       },
 
-      _activatedHandler: function () {
-         if (this.getItems().getItemsCount() > 1) {
-            $('.controls-MenuIcon__header', this._container).toggleClass('controls-MenuIcon__header-hidden', this._container.hasClass('controls-Picker__show'));
-            this.togglePicker();
-         } else {
-            if (this.getItems().getItemsCount() == 1) {
-               var id = this.getItems().getKey(this.getItems().getNextItem());
-               this._notify('onMenuItemActivate', id);
-            }
-         }
-      },
-
       _initMenu: function(){
-         this.unsubscribe('onActivated', this._activatedHandler);
-         this.subscribe('onActivated', this._activatedHandler);
          if (this.getItems().getItemsCount() > 1) {
             if (!this._hasHeader) {
                var header = $('<span class="controls-MenuIcon__header controls-MenuIcon__header-hidden">\
@@ -52,6 +38,18 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
             $('.controls-MenuIcon__header', this._container).remove();
             this._container.removeClass('controls-Picker__show');
             this._hasHeader = false;
+         }
+      },
+
+      _clickHandler: function () {
+         if (this.getItems().getItemsCount() > 1) {
+            $('.controls-MenuIcon__header', this._container).toggleClass('controls-MenuIcon__header-hidden', this._container.hasClass('controls-Picker__show'));
+            this.togglePicker();
+         } else {
+            if (this.getItems().getItemsCount() == 1) {
+               var id = this.getItems().getKey(this.getItems().getNextItem());
+               this._notify('onMenuItemActivate', id);
+            }
          }
       },
 
