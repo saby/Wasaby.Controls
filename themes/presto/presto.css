@@ -804,7 +804,9 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   margin: -1px 0 0;
-  border: 1px solid #aaaaaa;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #aaaaaa;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;

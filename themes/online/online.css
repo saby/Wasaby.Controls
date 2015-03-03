@@ -804,7 +804,9 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   margin: -1px 0 0;
-  border: 1px solid #cccccc;
+  border-width: 0 1px 1px;
+  border-style: solid;
+  border-color: #cccccc;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
@@ -970,7 +972,7 @@ input[type="reset"]::-moz-focus-inner {
   background: transparent url('img/MenuButton-header.png') 0 0;
 }
 .controls-MenuButton__Menu {
-  margin-top: 3px;
+  margin-top: 4px;
   margin-left: 0;
   background: #ffffff;
 }
