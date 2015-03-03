@@ -48,8 +48,6 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
       },
 
       _initMenu: function(){
-         this.unsubscribe('onActivated', this._activatedHandler);
-         this.subscribe('onActivated', this._activatedHandler);
          if (this.getItems().getItemsCount() > 1) {
             $('.js-controls-MenuLink__arrowDown', this._container).show();
             this._container.removeClass('controls-MenuLink__withoutMenu');
@@ -59,7 +57,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
          }
       },
 
-      _activatedHandler: function(){
+      _clickHandler: function(){
          if (this.getItems().getItemsCount() > 1) {
             this._container.addClass('controls-Checked__checked');
             this.togglePicker();
