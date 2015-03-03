@@ -61,7 +61,11 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
       },
 
       getKey: function () {
-         return this.get(this._keyField);
+         var key = this.get(this._keyField);
+         if (key instanceof Array) {
+            return key[0];
+         }
+         return key;
       },
 
       /**
