@@ -1,0 +1,36 @@
+.controls-MenuIcon {
+  position: relative;
+
+  .controls-MenuIcon__header {
+    background: @menu-icon-header-bg;
+
+    &.controls-MenuIcon__header-hidden {
+      display: none;
+    }
+
+    .controls-MenuIcon__headerLeft {
+      position: absolute;
+      width: @menu-icon-header-left-width;
+      height: @menu-icon-header-left-height;
+      top: @menu-icon-header-left-top-offset;
+      left: @menu-icon-header-left-left-offset;
+      background: @menu-icon-header-left-bg;
+    }
+
+    .controls-MenuIcon__headerRight {
+      position: absolute;
+      width: @menu-icon-header-right-width;
+      height: @menu-icon-header-right-height;
+      top: @menu-icon-header-right-top-offset;
+      left: @menu-icon-header-right-left-offset;
+      background: @menu-icon-header-right-bg;
+    }
+  }
+}
+
+// Menu
+.controls-MenuIcon__Menu {
+  margin-top: @menu-icon-menu-top-margin;
+  margin-left: @menu-icon-menu-left-margin;
+  background: @menu-icon-menu-bg;
+}

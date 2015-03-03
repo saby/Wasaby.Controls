@@ -1,0 +1,66 @@
+.controls-Calendar {
+  display: inline-block;
+  text-align: center;
+  font: @calendar-font;
+  width: @calendar-width;
+  padding: @calendar-padding;
+  background: @calendar-bg;
+
+  .controls-Calendar__monthPicker {
+    width: @calendar-month-picker-width;
+  }
+
+  .controls-Calendar__dayTable {
+    vertical-align: middle;
+    width: 100%;
+    border-spacing: @calendar-day-border-spacing;
+
+    .controls-Calendar__tableHead {
+      font: @calendar-day-header-font;
+      text-align: @calendar-day-header-text-alignment;
+    }
+
+    .controls-Calendar__tableBody {
+      font: @calendar-day-body-font;
+      text-align: @calendar-day-body-text-alignment;
+    }
+
+    .controls-Calendar__tableElement {
+      width: @calendar-day-cell-width;
+      height: @calendar-day-table-cell-height;
+      padding: @calendar-day-table-cell-padding;
+
+      &.controls-Calendar__tableBodyElement {
+        cursor: @calendar-day-cell-cursor;
+        color: @calendar-day-cell-text-color;
+        background: @calendar-day-cell-bg;
+
+        &.controls-Calendar__tableBodyElement__active {
+          color: @calendar-day-cell-active-text-color;
+          background: @calendar-day-cell-active-bg;
+
+          &:hover {
+            color: @calendar-day-cell-active-hover-text-color;
+            background: @calendar-day-cell-active-hover-bg;
+          }
+        }
+
+        &:hover {
+          color: @calendar-day-cell-hover-text-color;
+          background: @calendar-day-cell-hover-bg;
+        }
+      }
+
+      &.controls-Calendar__tableElementFog {
+        cursor: @calendar-day-fog-cell-cursor;
+        color: @calendar-day-fog-cell-text-color;
+        background: @calendar-day-fog-cell-bg;
+
+        &:hover {
+          color: @calendar-day-fog-cell-hover-text-color;
+          background: @calendar-day-fog-cell-hover-bg;
+        }
+      }
+    }
+  }
+}

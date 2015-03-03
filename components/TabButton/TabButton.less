@@ -1,0 +1,110 @@
+.controls-TabButton {
+  display: inline-block;
+  cursor: @tab-button-cursor;
+  height: @tab-button-height;
+
+  .border-radius(@tab-button-border-radius);
+  border-width: @tab-button-border-width;
+  border-style: @tab-button-border-style;
+  border-color: @tab-button-border-color;
+  background: @tab-button-bg;
+
+  &:hover {
+    border-width: @tab-button-hover-border-width;
+    border-style: @tab-button-hover-border-style;
+    border-color: @tab-button-hover-border-color;
+    background: @tab-button-hover-bg;
+
+    .controls-TabButton__inner {
+      .controls-TabButton__caption {
+        color: @tab-button-hover-text-color;
+      }
+    }
+  }
+
+  &.controls-Checked__checked {
+    border-width: @tab-button-checked-border-width;
+    border-style: @tab-button-checked-border-style;
+    border-color: @tab-button-checked-border-color;
+    background: @tab-button-checked-bg;
+
+    .controls-TabButton__inner {
+      .controls-TabButton__caption {
+        color: @tab-button-checked-text-color;
+      }
+    }
+
+    &:hover {
+      border-width: @tab-button-checked-hover-border-width;
+      border-style: @tab-button-checked-hover-border-style;
+      border-color: @tab-button-checked-hover-border-color;
+      background: @tab-button-checked-hover-bg;
+
+      .controls-TabButton__inner {
+        .controls-TabButton__caption {
+          color: @tab-button-checked-hover-text-color;
+        }
+      }
+    }
+  }
+
+  .controls-TabButton__side {
+    vertical-align: top;
+
+    display: @tab-button-side-display;
+    width: @tab-button-side-width;
+    height: @tab-button-side-height;
+
+    &.controls-TabButton__left {
+      margin: @tab-button-left-side-margin;
+      background: @tab-button-left-side-bg;
+    }
+
+    &.controls-TabButton__right {
+      margin: @tab-button-right-side-margin;
+      background: @tab-button-right-side-bg;
+    }
+  }
+
+  .controls-TabButton__inner {
+    font: @tab-button-font;
+    color: @tab-button-text-color;
+    display: inline-block;
+    height: @tab-button-inner-height;
+    background: @tab-button-inner-bg;
+
+    .controls-TabButton__caption {
+      display: inline-block;
+      height: auto;
+      vertical-align: bottom;
+      padding: @tab-button-text-padding;
+    }
+  }
+
+  &.ws-disabled {
+    cursor: @tab-button-disabled-cursor;
+    border-width: @tab-button-disabled-border-width;
+    border-style: @tab-button-disabled-border-style;
+    border-color: @tab-button-disabled-border-color;
+    background: @tab-button-disabled-bg;
+
+    .controls-TabButton__inner {
+      .controls-TabButton__caption {
+        color: @tab-button-disabled-text-color;
+      }
+    }
+
+    &.controls-Checked__checked {
+      border-width: @tab-button-disabled-checked-border-width;
+      border-style: @tab-button-disabled-checked-border-style;
+      border-color: @tab-button-disabled-checked-border-color;
+      background: @tab-button-disabled-checked-bg;
+
+      .controls-TabButton__inner {
+        .controls-TabButton__caption {
+          color: @tab-button-disabled-checked-text-color;
+        }
+      }
+    }
+  }
+}
