@@ -1,9 +1,3 @@
-body,
-html {
-  font: 13px Tahoma, Geneva, sans-serif;
-  color: #000000;
-  background: transparent;
-}
 button::-moz-focus-inner,
 input[type="button"]::-moz-focus-inner,
 input[type="submit"]::-moz-focus-inner,

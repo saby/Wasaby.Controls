@@ -1,9 +1,3 @@
-body,
-html {
-  font: 14px Exo2, sans-serif;
-  color: #ffffff;
-  background: #4e5762;
-}
 button::-moz-focus-inner,
 input[type="button"]::-moz-focus-inner,
 input[type="submit"]::-moz-focus-inner,
