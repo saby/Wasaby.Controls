@@ -1,11 +1,11 @@
-define('js!SBIS3.Demo.Control.MyIconButton', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.Demo.Control.MyIconButton', 'css!SBIS3.Demo.Control.MyIconButton', 'js!SBIS3.CONTROLS.IconButton'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.DemoCode.MyIconButton', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.DemoCode.MyIconButton', 'css!SBIS3.DemoCode.MyIconButton', 'js!SBIS3.CONTROLS.IconButton'], function(CompoundControl, dotTplFn) {
    /**
-    * SBIS3.Demo.Control.MyIconButton
-    * @class SBIS3.Demo.Control.MyIconButton
+    * SBIS3.DemoCode.MyIconButton
+    * @class SBIS3.DemoCode.MyIconButton
     * @extends $ws.proto.CompoundControl
     * @control
     */
-   var moduleClass = CompoundControl.extend(/** @lends SBIS3.Demo.Control.MyIconButton.prototype */{
+   var moduleClass = CompoundControl.extend(/** @lends SBIS3.DemoCode.MyIconButton.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -17,7 +17,7 @@ define('js!SBIS3.Demo.Control.MyIconButton', ['js!SBIS3.CORE.CompoundControl', '
 
       init: function() {
          moduleClass.superclass.init.call(this);
-         this.getChildControlByName("IconButton").subscribe("onActivated", function() {
+         this.getChildControlByName("Button 1").subscribe("onActivated", function() {
             $ws.helpers.question("Действительно хотите в отпуск?"); 
          });
       }
