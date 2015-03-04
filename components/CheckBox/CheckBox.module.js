@@ -1,8 +1,4 @@
-/**
- * Модуль 'Компонент кнопка'.
- *
- * @description
- */
+
 define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.Checkable', 'html!SBIS3.CONTROLS.CheckBox'], function(ButtonBase, Checkable, dotTplFn) {
 
    'use strict';
@@ -10,9 +6,8 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
    /**
     * Контрол, отображающий стандартный чекбокс.
     * @class SBIS3.CONTROLS.CheckBox
-    * @extends SBIS3.CONTROLS.ButtonBase
-    * @mixes SBIS3.CONTROLS.FormWidgetMixin
-    * @mixes js!SBIS3.CONTROLS.Checkable
+    * @extends SBIS3.CONTROLS.ButtonBase    
+    * @mixin SBIS3.CONTROLS.Checkable
     * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.Checkbox'>
