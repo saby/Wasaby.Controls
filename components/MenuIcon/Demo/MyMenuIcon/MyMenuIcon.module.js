@@ -1,4 +1,9 @@
-define('js!SBIS3.DemoCode.MyMenuIcon', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.DemoCode.MyMenuIcon', 'css!SBIS3.DemoCode.MyMenuIcon', 'js!SBIS3.CONTROLS.MenuIcon'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.DemoCode.MyMenuIcon',
+    ['js!SBIS3.CORE.CompoundControl',
+     'html!SBIS3.DemoCode.MyMenuIcon',
+     'css!SBIS3.DemoCode.MyMenuIcon',
+     'js!SBIS3.CONTROLS.MenuIcon'],
+    function(CompoundControl, dotTplFn) {
    /**
     * SBIS3.DemoCode.MyMenuIcon
     * @class SBIS3.DemoCode.MyMenuIcon

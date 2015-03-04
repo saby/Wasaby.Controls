@@ -1,4 +1,10 @@
-define('js!SBIS3.DemoCode.MyMenuButton', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.DemoCode.MyMenuButton', 'css!SBIS3.DemoCode.MyMenuButton', 'js!SBIS3.CONTROLS.MenuButton', 'js!SBIS3.CONTROLS.MenuLink'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.DemoCode.MyMenuButton',
+    ['js!SBIS3.CORE.CompoundControl',
+     'html!SBIS3.DemoCode.MyMenuButton',
+     'css!SBIS3.DemoCode.MyMenuButton',
+     'js!SBIS3.CONTROLS.MenuButton',
+     'js!SBIS3.CONTROLS.MenuLink'],
+    function(CompoundControl, dotTplFn) {
    /**
     * SBIS3.DemoCode.MyMenuButton
     * @class SBIS3.DemoCode.MyMenuButton

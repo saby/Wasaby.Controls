@@ -1,4 +1,9 @@
-define('js!SBIS3.DemoCode.MyButton', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.DemoCode.MyButton', 'css!SBIS3.DemoCode.MyButton', 'js!SBIS3.CONTROLS.Button'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.DemoCode.MyButton',
+    ['js!SBIS3.CORE.CompoundControl',
+     'html!SBIS3.DemoCode.MyButton',
+     'css!SBIS3.DemoCode.MyButton',
+     'js!SBIS3.CONTROLS.Button'],
+    function(CompoundControl, dotTplFn) {
    /**
     * SBIS3.DemoCode.MyButton
     * @class SBIS3.DemoCode.MyButton
