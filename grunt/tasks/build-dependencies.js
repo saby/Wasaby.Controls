@@ -1,4 +1,4 @@
-/* global global: false, module: false */
+/* global module: false, global: false, JSON: false */
 module.exports = function(grunt) {
    'use strict';
 
