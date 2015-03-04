@@ -73,8 +73,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          return this._inputField;
       },
 
-      setEnabled: function(state){
-         TextArea.superclass.setEnabled.call(this, state);
+      _setEnabled: function(state){
          if (!state){
             this._inputField.attr('readonly', 'readonly')
          } else {
