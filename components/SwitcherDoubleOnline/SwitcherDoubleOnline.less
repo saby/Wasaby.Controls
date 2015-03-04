@@ -1,0 +1,100 @@
+.controls-SwitcherDoubleOnline {
+  display: inline-block;
+  margin: @switcher-do-margin;
+
+  .controls-SwitcherDoubleOnline_toggle {
+    display: inline-block;
+    cursor: @switcher-do-toggle-cursor;
+    width: @switcher-do-horizontal-toggle-width;
+    height: @switcher-do-horizontal-toggle-height;
+    margin: @switcher-do-horizontal-toggle-margin;
+
+    &.controls-SwitcherDoubleOnline-off-toggled {
+      background: @switcher-do-horizontal-off-toggle-bg;
+    }
+
+    &.controls-SwitcherDoubleOnline-on-toggled {
+      background: @switcher-do-horizontal-on-toggle-bg;
+    }
+  }
+
+  .controls-SwitcherDoubleOnline__text {
+    display: inline-block;
+    cursor: @switcher-do-text-cursor;
+    color: @switcher-do-text-color;
+    text-decoration: @switcher-do-decoration;
+
+    &.controls-SwitcherDoubleOnline__unselected {
+      cursor: @switcher-do-unselected-text-cursor;
+      color: @switcher-do-unselected-text-color;
+      text-decoration: @switcher-do-unselected-text-decoration;
+
+      &:hover {
+        color: @switcher-do-unselected-text-color;
+        text-decoration: @switcher-do-unselected-text-decoration;
+      }
+    }
+  }
+
+  &.controls-SwitcherDoubleOnline-vertical {
+    vertical-align: top;
+
+    .controls-SwitcherDoubleOnline_toggle {
+      display: inline-block;
+      vertical-align: top;
+      cursor: @switcher-do-toggle-cursor;
+      width: @switcher-do-vertical-toggle-width;
+      height: @switcher-do-vertical-toggle-height;
+      margin: @switcher-do-vertical-toggle-margin;
+
+      &.controls-SwitcherDoubleOnline-off-toggled {
+        background: @switcher-do-vertical-off-toggle-bg;
+      }
+
+      &.controls-SwitcherDoubleOnline-on-toggled {
+        background: @switcher-do-vertical-on-toggle-bg;
+      }
+    }
+
+    &.ws-disabled {
+      .controls-SwitcherDoubleOnline_toggle {
+        &.controls-SwitcherDoubleOnline-off-toggled {
+          background: @switcher-do-vertical-off-disabled-toggle-bg;
+        }
+
+        &.controls-SwitcherDoubleOnline-on-toggled {
+          background: @switcher-do-vertical-on-disabled-toggle-bg;
+        }
+      }
+    }
+
+    .controls-SwitcherDoubleOnline__text-block {
+      display: inline-block;
+      height: 100%;
+
+      .controls-SwitcherDoubleOnline__text {
+        display: block;
+      }
+    }
+  }
+
+  &.ws-disabled {
+    .controls-SwitcherDoubleOnline_toggle {
+      cursor: @switcher-do-disabled-toggle-cursor;
+
+      &.controls-SwitcherDoubleOnline-off-toggled {
+        background: @switcher-do-horizontal-off-disabled-toggle-bg;
+      }
+
+      &.controls-SwitcherDoubleOnline-on-toggled {
+        background: @switcher-do-horizontal-on-disabled-toggle-bg;
+      }
+    }
+
+    .controls-SwitcherDoubleOnline__text {
+      cursor: @switcher-do-disabled-text-cursor;
+      color: @switcher-do-disabled-text-color;
+      text-decoration: @switcher-do-disabled-text-decoration;
+    }
+  }
+}

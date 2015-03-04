@@ -6,8 +6,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CONTROLS.Selectable',
    'js!SBIS3.CONTROLS.DataBindMixin',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown',
-   'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxItemTpl',
-   'css!SBIS3.CONTROLS.ComboBox'
+   'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxItemTpl'
 
 ], function(TextBox, dotTplFn, PickerMixin, CollectionMixin, Selectable, DataBindMixin, arrowTpl, itemTpl) {
    'use strict';
@@ -102,6 +101,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   self.togglePicker();
                }
             }
+         }).mousedown(function(e){
+            e.stopPropagation();
          })
 
       },
@@ -110,7 +111,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          ComboBox.superclass.setText.call(this, text);
          $(".js-controls-ComboBox__fieldNotEditable", this._container.get(0)).text(text);
          this._setKeyByText();
-         this.hidePicker();
       },
 
       _drawSelectedItem : function(key) {
