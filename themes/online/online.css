@@ -1915,18 +1915,18 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover .controls-DataGrid__th {
   color: inherit;
-  background: #f3f3f3;
+  background-color: #f3f3f3;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover .controls-DataGrid__td {
   color: inherit;
-  background: #f3f3f3;
+  background-color: #f3f3f3;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected {
-  background: transparent;
+  background-color: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected .controls-DataGrid__td {
   color: inherit;
-  background: transparent;
+  background-color: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th {
   position: relative;
@@ -1937,7 +1937,7 @@ input[type="reset"]::-moz-focus-inner {
   padding: 4px 6px;
   color: #999999;
   font-size: 11px;
-  background: transparent;
+  background-color: transparent;
   border-collapse: collapse;
   border-width: 1px 1px 0 1px;
   border-style: solid;
@@ -1947,6 +1947,12 @@ input[type="reset"]::-moz-focus-inner {
   color: #999999;
   background: transparent;
 }
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
+  padding-left: 12px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:last-child {
+  padding-left: 12px;
+}
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
   cursor: pointer;
@@ -1954,7 +1960,7 @@ input[type="reset"]::-moz-focus-inner {
   height: 16px;
   padding: 6px 6px;
   color: inherit;
-  background: transparent;
+  background-color: transparent;
   border-collapse: collapse;
   border-width: 1px 0 0;
   border-style: solid;
@@ -1963,4 +1969,15 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:hover {
   color: inherit;
   background: transparent;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:first-child {
+  padding-left: 12px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:last-child {
+  padding-left: 12px;
+}
+.controls-DataGrid .controls-ListView__item__selected .controls-DataGrid__td:first-child {
+  background-image: url('img/rowSelect.png');
+  background-position: left top;
+  background-repeat: repeat-y;
 }
