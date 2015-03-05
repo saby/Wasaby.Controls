@@ -11,8 +11,14 @@ module.exports = function(grunt) {
    });
 
    var fileOptions;
-   var devFiles = [];
-   var prodFiles = [];
+   var normalFiles = [];
+   var compressedFiles = [];
+
+   var theme = grunt.option('theme');
+   if (theme) {
+      themes = [theme];
+   }
+
    themes.forEach(function(theme) {
       fileOptions = {
          expand: true,
@@ -20,10 +26,10 @@ module.exports = function(grunt) {
          src: theme + '.less',
          dest: themesDir + '/' + theme
       };
-      devFiles.push(merge({}, fileOptions, {
+      normalFiles.push(merge({}, fileOptions, {
          ext: '.css'
       }));
-      prodFiles.push(merge({}, fileOptions, {
+      compressedFiles.push(merge({}, fileOptions, {
          ext: '.min.css'
       }));
    });
@@ -33,17 +39,17 @@ module.exports = function(grunt) {
          cleancss: true,
          strictImports: true
       },
-      development: {
+      normal: {
          options: {
             compress: false
          },
-         files: devFiles
+         files: normalFiles
       },
-      production: {
+      compress: {
          options: {
             compress: true
          },
-         files: prodFiles
+         files: compressedFiles
       }
    };
 };
