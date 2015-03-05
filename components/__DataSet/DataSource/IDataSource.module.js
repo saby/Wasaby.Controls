@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
       },
 
       //TODO: учесть, что тут может быть много изменений и надо стрелять событием только раз
-      sync:function(dataSet){
+      sync: function (dataSet) {
 
       },
 

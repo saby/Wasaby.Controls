@@ -68,7 +68,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var self = this;
 
          this._dataSource.subscribe('onDataSync', function () {
-            console.log('onDataSync');
             self.reload();
          });
 

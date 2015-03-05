@@ -63,12 +63,12 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
          return data[field];
       },
 
-      addRecord:function(data, record){
+      addRecord: function (data, record) {
          var rawData = record.getRaw();
          data.push(rawData);
       },
 
-      getLength:function(data){
+      getLength: function (data) {
          return data.length;
       },
 
