@@ -67,10 +67,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          var self = this;
 
-         this._dataSource.subscribe('onDataChange', function () {
-            console.log('onDataChange');
-            console.log(self._dataSet);
-            self._drawItems();
+         this._dataSource.subscribe('onDataSync', function () {
+            console.log('onDataSync');
+            self.reload();
          });
 
       },

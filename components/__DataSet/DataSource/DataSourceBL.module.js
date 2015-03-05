@@ -46,6 +46,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
                self.destroy(record.getKey());
             }
          }, 'all');
+         self._notify('onDataSync');
          //TODO: нотификация о завершении синхронизации
       },
 

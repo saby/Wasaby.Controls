@@ -127,10 +127,15 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       addRecord: function (record) {
+         record._keyField = this._keyField;
          this.getStrategy().addRecord(this._rawData, record);
          var index = this.getStrategy().getLength(this._rawData);
-         this._childRecordsMap[index-1] = record;
-         this._pkIndex[record._cid]=index-1;
+         // не меняем условие потому что с БЛ приходит null
+         if (record.getKey() === undefined) {
+            record.set(this._keyField, record._cid);
+         }
+         this._childRecordsMap[index - 1] = record;
+         this._pkIndex[record._cid] = index - 1;
       },
 
       /**
