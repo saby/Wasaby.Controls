@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Модуль 'Компонент кнопка'.
  *
  * @description
@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.ToggleButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.
     * @class SBIS3.CONTROLS.ToggleButton
     * @extends SBIS3.CONTROLS.Button
     * @control
+    * @demo SBIS3.Demo.Control.MyToggleButton
     * @public
     * @category Buttons
     * @initial
