@@ -63,30 +63,12 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
          return data[field];
       },
 
-      /**
-       * Обновить запись в сырых данных
-       * @param {Array} data массив "сырых" данных
-       * @param {String} keyField название поля-идентификатора
-       * @param {js!SBIS3.CONTROLS.Record} record обновленная запись
-       */
-      updateRawRecordByKey: function (data, keyField, record) {
-         var newRawData = record.getRaw(),
-            key = newRawData[keyField];
-         // проходим по исходному массиву, когда находим нужных элемент - заменяем
-         for (var i = 0; i < data.length; i++) {
-            if (data[i][keyField] == key) {
-               data[i] = newRawData;
-               break;
-            }
-         }
-      },
-
-      addRecord:function(data, record){
+      addRecord: function (data, record) {
          var rawData = record.getRaw();
          data.push(rawData);
       },
 
-      getLength:function(data){
+      getLength: function (data) {
          return data.length;
       },
 

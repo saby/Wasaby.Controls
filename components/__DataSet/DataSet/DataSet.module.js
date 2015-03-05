@@ -147,31 +147,32 @@ define('js!SBIS3.CONTROLS.DataSet', [
          if (this._pkIndex === null) {
             this._rebuild();
          }
-         for (var key in this._pkIndex) {
-            if (this._pkIndex.hasOwnProperty(key)) {
-               var record = this.getRecordByKey(key);
-               switch (status) {
-                  case 'all':
-                     iterateCallback.call(this, record);
-                     break;
-                  case 'deleted':
-                     if (record.getMarkStatus() == 'deleted') {
-                        iterateCallback.call(this, record);
-                     }
-                     break;
-                  case 'changed':
-                     if (record.getMarkStatus() == 'changed') {
-                        iterateCallback.call(this, record);
-                     }
-                     break;
-                  default :
-                     if (record.getMarkStatus() !== 'deleted') {
-                        iterateCallback.call(this, record);
-                     }
-               }
 
+         var length = this.getStrategy().getLength(this._rawData);
+
+         for (var i = 0; i < length; i++) {
+            var record = this.at(i);
+            switch (status) {
+               case 'all':
+                  iterateCallback.call(this, record);
+                  break;
+               case 'deleted':
+                  if (record.getMarkStatus() == 'deleted') {
+                     iterateCallback.call(this, record);
+                  }
+                  break;
+               case 'changed':
+                  if (record.getMarkStatus() == 'changed') {
+                     iterateCallback.call(this, record);
+                  }
+                  break;
+               default :
+                  if (record.getMarkStatus() !== 'deleted') {
+                     iterateCallback.call(this, record);
+                  }
             }
          }
+
       }
 
    });

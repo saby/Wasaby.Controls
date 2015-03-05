@@ -91,9 +91,7 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет Boolean - результат успешности выполнения операции
        */
       update: function (record) {
-         var def = new $ws.proto.Deferred(),
-            strategy = this.getStrategy();
-         strategy.updateRawRecordByKey(this._options.data, this._options.keyField, record);
+         var def = new $ws.proto.Deferred();
          def.callback(true);
          var self = this;
          def.addCallback(function (res) {
