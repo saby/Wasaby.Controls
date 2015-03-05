@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
           */
          _keyField: undefined,
          _options: {
+            strategy: null,
             data: undefined,
             /**
              * @cfg {String} название поля-идентификатора записи, при работе с БЛ проставляется автоматически
@@ -81,23 +82,15 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       /**
-       * Получить исходные "сырые" данные
-       * @returns {Object} исходные "сырые" данные
-       */
-      /*getData: function () {
-       return this._rawData;
-       },*/
-
-      /**
-       * Метод получения записи по ее идентификатору
+       * Возвращает рекорд по его идентификатору
        * @param {Number} key
        * @returns {js!SBIS3.CONTROLS.Record}
        */
-      getRecordByKey: function (primaryKey) {
+      getRecordByKey: function (key) {
          if (this._pkIndex === null) {
             this._rebuild();
          }
-         return this.at(this._pkIndex[primaryKey]);
+         return this.at(this._pkIndex[key]);
       },
 
       at: function (index) {
@@ -132,6 +125,19 @@ define('js!SBIS3.CONTROLS.DataSet', [
       getStrategy: function () {
          return this._options.strategy;
       },
+
+      addRecord: function (record) {
+         record._keyField = this._keyField;
+         this.getStrategy().addRecord(this._rawData, record);
+         var index = this.getStrategy().getLength(this._rawData);
+         // не меняем условие потому что с БЛ приходит null
+         if (record.getKey() === undefined) {
+            record.set(this._keyField, record._cid);
+         }
+         this._childRecordsMap[index - 1] = record;
+         this._pkIndex[record._cid] = index - 1;
+      },
+
       /**
        *
        * @param iterateCallback
@@ -144,7 +150,6 @@ define('js!SBIS3.CONTROLS.DataSet', [
          for (var key in this._pkIndex) {
             if (this._pkIndex.hasOwnProperty(key)) {
                var record = this.getRecordByKey(key);
-
                switch (status) {
                   case 'all':
                      iterateCallback.call(this, record);
@@ -170,4 +175,5 @@ define('js!SBIS3.CONTROLS.DataSet', [
       }
 
    });
-});
+})
+;

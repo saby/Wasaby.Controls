@@ -67,10 +67,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          var self = this;
 
-         this._dataSource.subscribe('onDataChange', function () {
-            console.log('onDataChange');
-            console.log(self._dataSet);
-            self._drawItems();
+         this._dataSource.subscribe('onDataSync', function () {
+            console.log('onDataSync');
+            self.reload();
          });
 
       },
@@ -105,33 +104,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _drawItemsCallback: function () {
 
       },
-      /*
-       create: function () {
-       var def = new $ws.proto.Deferred();
-       this._dataSource.create().addCallback(function (rec) {
-       def.callback(rec);
-       });
-       return def;
-       },
-
-       read: function (id) {
-       this._dataSource.read(id);
-       },
-
-       update: function (data) {
-       var self = this;
-       this._dataSource.update(data).addCallback(function () {
-       self._drawItems();
-       });
-       },
-
-       destroy: function (id) {
-       var self = this;
-       this._dataSource.destroy(id).addCallback(function () {
-       self._drawItems();
-       });
-       },
-       */
 
       _drawItems: function () {
          var self = this,

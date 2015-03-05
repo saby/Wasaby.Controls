@@ -40,26 +40,6 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
          }
       },
 
-      /**
-       * Получить сырые данные для записи по ключевому полю
-       * @param {Object} data массив "сырых" данных
-       * @param {String} keyField название поля-идентификатора
-       * @param {Number} key искомый идентификатор
-       * @returns {Object} соответствующие "сырые" данные для записи
-       */
-      getByKey: function (data, keyField, key) {
-         var d = data.d,
-            s = data.s,
-            item,
-            length = d.length;
-         for (var i = 0; i < length; i++) {
-            if (d[i][0][0] == parseInt(key, 10)) {
-               item = d[i];
-            }
-         }
-         return {d: item, s: s};
-      },
-
       at: function (data, index) {
          var d = data.d,
             s = data.s;
@@ -75,6 +55,15 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
             _pkIndex[d[i][0][0]] = i;
          }
          return _pkIndex;
+      },
+
+      addRecord:function(data, record){
+         var rawData = record.getRaw();
+         data['d'].push(rawData['d']);
+      },
+
+      getLength:function(data){
+         return data['d'].length;
       },
 
       /**

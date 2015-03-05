@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
 
    return $ws.core.extend({}, {
       $protected: {
+         _cid: null, //клиентский идентификатор
          _isDeleted: false,
          _isChanged: false,
          _keyField: null,
@@ -20,6 +21,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
          this._strategy = cfg.strategy;
          this._raw = cfg.raw;
          this._keyField = cfg.keyField || null;
+         this._cid = $ws.helpers.randomId('c');
       },
 
       /**

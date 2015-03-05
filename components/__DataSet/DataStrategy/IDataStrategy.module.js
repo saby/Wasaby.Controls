@@ -30,6 +30,10 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
          /*Method must be implemented*/
       },
 
+      addRecord: function(){
+         /*Method must be implemented*/
+      },
+
       rebuild: function () {
          /*Method must be implemented*/
       },
@@ -39,13 +43,8 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
        */
       setValue: function () {
          /*Method must be implemented*/
-      },
-      /**
-       * Получить сырые данные для записи по ключевому полю
-       */
-      getByKey: function () {
-         /*Method must be implemented*/
       }
+
 
    });
 });

@@ -27,25 +27,6 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
          }
       },
 
-      /**
-       * Получить сырые данные для записи по ключевому полю
-       * @param {Array} data массив "сырых" данных
-       * @param {String} keyField название поля-идентификатора
-       * @param {Number} key искомый идентификатор
-       * @returns {*} соответствующие "сырые" данные для записи
-       */
-      getByKey: function (data, keyField, key) {
-         var item,
-            length = data.length;
-         // ищем простым перебором
-         for (var i = 0; i < length; i++) {
-            if (data[i][keyField] == parseInt(key, 10)) {
-               item = data[i];
-            }
-         }
-         return item;
-      },
-
       at: function (data, index) {
          return data[index];
       },
@@ -100,13 +81,13 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
          }
       },
 
-      addRawRecord: function (data, keyField, record) {
-         //TODO: просчет идентификатора
-         // идентификатор берем на 1 больше, чем у последней записи
-         //var newKey = data[data.length - 1][keyField] + 1;
-         var newKey = data.length + 10;
-         record.set(keyField, newKey);
-         data.push(record.getRaw());
+      addRecord:function(data, record){
+         var rawData = record.getRaw();
+         data.push(rawData);
+      },
+
+      getLength:function(data){
+         return data.length;
       },
 
       /**
@@ -118,7 +99,7 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
       destroy: function (data, keyField, key) {
          var length = data.length;
          var compare = function (index, key) {
-            if (data[index][keyField] == parseInt(key, 10)) {
+            if (data[index][keyField] == key) {
                // удаляем эемент из исходного набора
                Array.remove(data, index);
             }
