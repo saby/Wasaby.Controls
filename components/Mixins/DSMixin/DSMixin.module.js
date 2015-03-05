@@ -68,19 +68,20 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var self = this;
 
          this._dataSource.subscribe('onDataChange', function () {
-            console.log('onDataChange')
-            console.log(self._dataSet)
-            self._drawItems();
-         });
-
-         this._dataSource.subscribe('onQuery', function (event, DataSet) {
-            console.log('onQuery')
-            self._dataSet = DataSet;
+            console.log('onDataChange');
+            console.log(self._dataSet);
             self._drawItems();
          });
 
       },
 
+      reload: function() {
+         var self = this;
+         this._dataSource.query().addCallback(function(DataSet){
+            self._dataSet = DataSet;
+            self._drawItems();
+         })
+      },
 
       setItems: function (items) {
          var

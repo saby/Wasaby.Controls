@@ -5,8 +5,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CONTROLS.DSMixin',
    'js!SBIS3.CONTROLS.Selectable',
    'js!SBIS3.CONTROLS.DataBindMixin',
-   'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown',
-   'css!SBIS3.CONTROLS.ComboBox'
+   'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown'
 ], function (TextBox, dotTplFn, PickerMixin, DSMixin, Selectable, DataBindMixin, arrowTpl) {
    'use strict';
    /**
@@ -80,9 +79,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._container.mouseup(function (e) {
             if ($(e.target).hasClass('js-controls-ComboBox__arrowDown')) {
                if (self.isEnabled()) {
-                  $('.controls-ComboBox__itemRow__selected').removeClass('controls-ComboBox__itemRow__selected');
-                  var key = self.getSelectedItem();
-                  $('.controls-ComboBox__itemRow[data-key=\'' + key + '\']').addClass('controls-ComboBox__itemRow__selected');
                   self.togglePicker();
                }
             }
@@ -116,14 +112,19 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                if (item) {
                   ComboBox.superclass.setText.call(self, item.get(self._options.displayField));
                   $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(item.get(self._options.displayField));
+                  /*if (self._picker) {
+                     var key = item.getKey();
+                     $('.controls-ListView__item[data-id="'+key+'"]', self._picker.get(0)).addClass('controls-ComboBox__itemRow__selected');
+                  }*/
                }
                else {
                   ComboBox.superclass.setText.call(self, '');
                   $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text('');
+                  /*$('.controls-ComboBox__itemRow__selected', self._picker.get(0)).removeClass('controls-ComboBox__itemRow__selected');*/
                }
                if (self._picker) {
                   $('.controls-ComboBox__itemRow__selected', self._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
-                  $('.controls-ComboBox__itemRow[data-key=\'' + key + '\']', self._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
+                  $('.controls-ComboBox__itemRow[data-id=\'' + key + '\']', self._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
                }
             });
 
@@ -135,6 +136,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._drawSelectedItem(this._options.selectedItem);
       },
 
+      _addItemClasses : function(container, key) {
+         ComboBox.superclass._addItemClasses.call(this, container, key);
+         container.addClass('controls-ComboBox__itemRow').addClass('js-controls-ComboBox__itemRow');
+      },
+
       //TODO от этого надо избавиться. Пользуется Саня Кузьмин
       _notifySelectedItem: function (key) {
          var text = this.getText();
@@ -143,9 +149,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _setPickerContent: function () {
          var self = this;
-         this._dataSource.query().addCallback(function (DataSet) {
-            self._dataSet = DataSet;
-         });
+         this.reload();
          this._drawItems();
          //TODO придумать что то нормальное и выпилить
          this._picker.getContainer().mousedown(function (e) {
@@ -157,7 +161,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._picker.getContainer().mouseup(function (e) {
             var row = $(e.target).closest('.js-controls-ComboBox__itemRow');
             if (row.length) {
-               self.setSelectedItem($(row).attr('data-key'));
+               self.setSelectedItem($(row).attr('data-id'));
                self.hidePicker();
             }
          });
@@ -189,7 +193,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             return doT.template(this._options.itemTemplate)({item : item, displayField : title})
          }
          else {
-            return '<div data-key="{{=it.getKey()}}" class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow">' + title + '</div>';
+            return '<div class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow">' + title + '</div>';
          }
       },
 
