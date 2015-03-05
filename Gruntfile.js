@@ -14,17 +14,17 @@ module.exports = function(grunt) {
    grunt.loadTasks('grunt/tasks');
 
    grunt.registerTask('css', [
-      'less'
+      'less:normal'
    ]);
 
    grunt.registerTask('js', [
-      'jshint:gruntfile'
+      'jshint:gruntfile',
       // TODO: fix warnings in components
-      /*'jshint:components'*/
+      /*'jshint:components',*/
+      'build-dependencies'
    ]);
 
    grunt.registerTask('build', [
-      'build-dependencies',
       'js',
       'css',
       'copy'
