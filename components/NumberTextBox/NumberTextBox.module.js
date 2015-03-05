@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     * @control
     * @public
     * @demo SBIS3.Demo.Control.MyNumberTextBox
-    * @ignoreOptions text, validators, independentContext, contextRestriction, allowChangeEnable
+    * @ignoreOptions independentContext, contextRestriction
     */
 
    var NumberTextBox;

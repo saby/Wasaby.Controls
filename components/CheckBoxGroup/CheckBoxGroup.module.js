@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
     *    <options name="items" type="array">
     *       <options>
     *          <option name="id">1</option>
-    *          option name="title">CheckBox 1</option>
+    *          <option name="title">CheckBox 1</option>
     *       </options>
     *       <options>
     *          <option name="id">2</option>

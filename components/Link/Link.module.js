@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
     * </component>
     * @public
     * @category Buttons
-    * @ignoreOptions validators, independentContext, contextRestriction, allowChangeEnable, extendedTooltip
+    * @ignoreOptions validators, independentContext, contextRestriction, extendedTooltip
     */
 
    var Link = ButtonBase.extend( /** @lends SBIS3.Engine.Link.prototype */ {

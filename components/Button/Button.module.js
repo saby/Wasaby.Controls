@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
     * </component>
     * @public
     * @category Buttons
-    * @ignoreOptions validators, independentContext, contextRestriction, allowChangeEnable, extendedTooltip
+    * @ignoreOptions validators, independentContext, contextRestriction, extendedTooltip
     */
 
    var Button = ButtonBase.extend( /** @lends SBIS3.CONTROLS.Button.prototype */ {
