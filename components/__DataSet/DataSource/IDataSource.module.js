@@ -24,10 +24,16 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
       getStrategy: function () {
          return this._options.strategy;
       },
+
+      //TODO: учесть, что тут может быть много изменений и надо стрелять событием только раз
+      sync:function(dataSet){
+
+      },
+
       /**
        * Метод создает запись в источнике данных
        */
-      create: function () {
+      _create: function () {
          /*Method must be implemented*/
       },
 
@@ -35,7 +41,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
        * Метод для чтения записи из источника данных по ее идентификатору
        * @param {Number} id - идентификатор записи
        */
-      read: function (id) {
+      _read: function (id) {
          /*Method must be implemented*/
       },
 
@@ -43,7 +49,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
        * Метод для обновлениязаписи в источнике данных
        * @param (SBIS3.CONTROLS.Record) record - измененная запись
        */
-      update: function (record) {
+      _update: function (record) {
          /*Method must be implemented*/
       },
 
@@ -51,7 +57,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
        * Метод для удаления записи из источника данных
        * @param {Array | Number} id - идентификатор записи или массив идентификаторов
        */
-      destroy: function (id) {
+      _destroy: function (id) {
          /*Method must be implemented*/
       },
       /**

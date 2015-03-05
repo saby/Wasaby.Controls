@@ -138,8 +138,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _setPickerContent: function () {
-         this._drawItems();
          var self = this;
+         this._dataSource.query().addCallback(function (DataSet) {
+            self._dataSet = DataSet;
+         });
+         this._drawItems();
          //TODO придумать что то нормальное и выпилить
          this._picker.getContainer().mousedown(function (e) {
             e.stopPropagation();

@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
    return $ws.core.extend({}, {
       $protected: {
          _isDeleted: false,
-         _isUpdated: false,
+         _isChanged: false,
          _keyField: null,
          _raw: null,
          _strategy: null
@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
       set: function (field, value) {
          // с данными можем работать только через стратегию
          this._raw = this._strategy.setValue(this._raw, field, value);
-         this._isUpdated = true;
+         this._isChanged = true;
       },
 
       toggleStateDeleted: function () {
@@ -56,12 +56,23 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
          return this._isDeleted;
       },
 
-      getMarkUpdated: function () {
-         return this._isUpdated;
+      getMarkChanged: function () {
+         return this._isChanged;
+      },
+
+      getMarkStatus: function () {
+         if (this._isDeleted) {
+            return 'deleted';
+         }
+         if (this._isChanged) {
+            return 'changed';
+         }
+         return 'normal';
       },
 
       getKey: function () {
          var key = this.get(this._keyField);
+         // потому что БЛ возвращает массив для идентификатора
          if (key instanceof Array) {
             return key[0];
          }

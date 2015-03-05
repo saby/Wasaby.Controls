@@ -35,6 +35,20 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
          this._BL = new $ws.proto.ClientBLObject(cfg.service);
          this._options.strategy = cfg.strategy || new DataStrategyBL();
       },
+
+      sync: function (dataSet) {
+         var self = this;
+         dataSet.each(function (record) {
+            if (record.getMarkStatus() == 'changed') {
+               self._update(record);
+            }
+            if (record.getMarkStatus() == 'deleted') {
+               self._destroy(record.getKey());
+            }
+         }, 'all');
+         //TODO: нотификация о завершении синхронизации
+      },
+
       /**
        * Метод создает запись в источнике данных
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record
@@ -44,8 +58,9 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
             def = new $ws.proto.Deferred();
          self._BL.call(self._options.crateMethodName, {'Фильтр': null, 'ИмяМетода': null}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
             var record = new Record({
-               'strategy': self.getStrategy(),
-               'raw': res
+               strategy: self.getStrategy(),
+               raw: res,
+               keyField: self._keyField
             });
             def.callback(record);
          });
@@ -62,7 +77,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
        * @param {Number} id - идентификатор записи
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record
        */
-      read: function (id) {
+      _read: function (id) {
          var self = this,
             def = new $ws.proto.Deferred();
          self._BL.call(self._options.readMethodName, {'ИдО': id, 'ИмяМетода': 'Список'}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
@@ -109,7 +124,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
        * @param {Array | Number} id - идентификатор записи или массив идентификаторов
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет Boolean - результат успешности выполнения операции
        */
-      destroy: function (id) {
+      _destroy: function (id) {
          var self = this,
             def = new $ws.proto.Deferred();
 
@@ -153,6 +168,10 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
             });
 
             def.callback(DS);
+            def.addCallback(function (res) {
+               self._notify('onQuery', res);
+               return res;
+            });
 
          });
 

@@ -1,4 +1,8 @@
-define('js!SBIS3.CONTROLS.DSMixin', [ 'js!SBIS3.CONTROLS.DataSourceMemory', 'js!SBIS3.CORE.MarkupTransformer'], function (DataSourceMemory, MarkupTransformer) {
+define('js!SBIS3.CONTROLS.DSMixin', [
+   'js!SBIS3.CONTROLS.DataSourceMemory',
+   'js!SBIS3.CONTROLS.DataStrategyArray',
+   'js!SBIS3.CORE.MarkupTransformer'
+], function (DataSourceMemory, DataStrategyArray, MarkupTransformer) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -50,7 +54,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [ 'js!SBIS3.CONTROLS.DataSourceMemory', 'js!
             }
             this._dataSource = new DataSourceMemory({
                data: this._options.dataSource,
-               strategyName: 'DataStrategyArray',
+               strategy: new DataStrategyArray(),
                keyField: keyField
             });
             if (typeof(window) != 'undefined') {
@@ -62,7 +66,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [ 'js!SBIS3.CONTROLS.DataSourceMemory', 'js!
          }
 
          var self = this;
+
          this._dataSource.subscribe('onDataChange', function () {
+            console.log('onDataChange')
+            console.log(self._dataSet)
+            self._drawItems();
+         });
+
+         this._dataSource.subscribe('onQuery', function (event, DataSet) {
+            console.log('onQuery')
+            self._dataSet = DataSet;
             self._drawItems();
          });
 
@@ -78,6 +91,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [ 'js!SBIS3.CONTROLS.DataSourceMemory', 'js!
          }
          this._dataSource = new DataSourceMemory({
             data: items,
+            strategy: new DataStrategyArray(),
             keyField: keyField
          });
          this._drawItems();
@@ -87,89 +101,60 @@ define('js!SBIS3.CONTROLS.DSMixin', [ 'js!SBIS3.CONTROLS.DataSourceMemory', 'js!
          }
       },
 
-      getDataSet: function () {
-         return this._dataSet;
-      },
-
-      setDataSet: function (DS) {
-         //TODO: проверка что действительно DataSet.
-         this._dataSet = DS;
-      },
-
-      _drawItems: function () {
-         this.query();
-      },
-
       _drawItemsCallback: function () {
 
       },
+      /*
+       create: function () {
+       var def = new $ws.proto.Deferred();
+       this._dataSource.create().addCallback(function (rec) {
+       def.callback(rec);
+       });
+       return def;
+       },
 
-      create: function () {
-         var def = new $ws.proto.Deferred();
-         this._dataSource.create().addCallback(function (rec) {
-            def.callback(rec);
-         });
-         return def;
-      },
+       read: function (id) {
+       this._dataSource.read(id);
+       },
 
-      read: function (id) {
-         this._dataSource.read(id);
-      },
+       update: function (data) {
+       var self = this;
+       this._dataSource.update(data).addCallback(function () {
+       self._drawItems();
+       });
+       },
 
-      update: function (data) {
-         var self = this;
-         this._dataSource.update(data).addCallback(function () {
-            self._drawItems();
-         });
-      },
+       destroy: function (id) {
+       var self = this;
+       this._dataSource.destroy(id).addCallback(function () {
+       self._drawItems();
+       });
+       },
+       */
 
-      destroy: function (id) {
-         var self = this;
-         this._dataSource.destroy(id).addCallback(function () {
-            self._drawItems();
-         });
-      },
-
-      setFilter: function (filter) {
-         this._filter = filter;
-      },
-
-      setSorting: function (sorting) {
-         this._sorting = sorting;
-      },
-
-      query: function (filter, sorting, offset, limit) {
+      _drawItems: function () {
          var self = this,
+            DataSet = this._dataSet,
             def = new $ws.proto.Deferred();
-         if (filter) {
-            self._filter = filter;
-         }
-         if (sorting) {
-            self._sorting = sorting;
-         }
-         this._dataSource.query(self._filter, self._sorting, offset, limit).addCallback(
-            function (DataSet) {
-               var
-                  itemsContainer = self._getItemsContainer();
-               self.setDataSet(DataSet);
-               self._itemsInstances = {};
-               itemsContainer.empty();
 
-               DataSet.each(function (item, key, i, parItem, lvl) {
+         var
+            itemsContainer = self._getItemsContainer();
+         self._itemsInstances = {};
+         itemsContainer.empty();
 
-                  var
-                     targetContainer = self._getTargetContainer(item, key, parItem, lvl);
+         DataSet.each(function (item, key, i, parItem, lvl) {
 
-                  self._drawItem(item, targetContainer, key, i, parItem, lvl);
-               });
+            var
+               targetContainer = self._getTargetContainer(item, key, parItem, lvl);
 
-               self.reviveComponents().addCallback(function () {
-                  self._notify('onDrawItems');
-                  self._drawItemsCallback();
-               });
+            self._drawItem(item, targetContainer, key, i, parItem, lvl);
+         });
 
-            }
-         );
+         self.reviveComponents().addCallback(function () {
+            self._notify('onDrawItems');
+            self._drawItemsCallback();
+         });
+
          return def;
       },
 
