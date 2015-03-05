@@ -39,10 +39,10 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
          var self = this;
          dataSet.each(function (record) {
             if (record.getMarkStatus() == 'changed') {
-               self._update(record);
+               self.update(record);
             }
             if (record.getMarkStatus() == 'deleted') {
-               self._destroy(record.getKey());
+               self.destroy(record.getKey());
             }
          }, 'all');
          //TODO: нотификация о завершении синхронизации
@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
        * @param {Number} id - идентификатор записи
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record
        */
-      _read: function (id) {
+      read: function (id) {
          var self = this,
             def = new $ws.proto.Deferred();
          def.callback(this._initialDataSet.getRecordByKey(id));
@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
        * @param (SBIS3.CONTROLS.Record) record - измененная запись
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет Boolean - результат успешности выполнения операции
        */
-      _update: function (record) {
+      update: function (record) {
          var def = new $ws.proto.Deferred(),
             strategy = this.getStrategy();
          strategy.updateRawRecordByKey(this._options.data, this._options.keyField, record);
@@ -108,7 +108,7 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
        * @param {Array | Number} id - идентификатор записи или массив идентификаторов
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет Boolean - результат успешности выполнения операции
        */
-      _destroy: function (id) {
+      destroy: function (id) {
          var def = new $ws.proto.Deferred(),
             strategy = this.getStrategy();
          strategy.destroy(this._options.data, this._options.keyField, id);

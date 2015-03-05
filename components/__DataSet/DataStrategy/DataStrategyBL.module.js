@@ -77,6 +77,15 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
          return _pkIndex;
       },
 
+      addRecord:function(data, record){
+         var rawData = record.getRaw();
+         data['d'].push(rawData['d']);
+      },
+
+      getLength:function(data){
+         return data['d'].length;
+      },
+
       /**
        * Установить значение поля записи
        * @param {Object} data массив "сырых" данных

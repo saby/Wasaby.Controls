@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
       /**
        * Метод создает запись в источнике данных
        */
-      _create: function () {
+      create: function () {
          /*Method must be implemented*/
       },
 
@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
        * Метод для чтения записи из источника данных по ее идентификатору
        * @param {Number} id - идентификатор записи
        */
-      _read: function (id) {
+      read: function (id) {
          /*Method must be implemented*/
       },
 
@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
        * Метод для обновлениязаписи в источнике данных
        * @param (SBIS3.CONTROLS.Record) record - измененная запись
        */
-      _update: function (record) {
+      update: function (record) {
          /*Method must be implemented*/
       },
 
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
        * Метод для удаления записи из источника данных
        * @param {Array | Number} id - идентификатор записи или массив идентификаторов
        */
-      _destroy: function (id) {
+      destroy: function (id) {
          /*Method must be implemented*/
       },
       /**

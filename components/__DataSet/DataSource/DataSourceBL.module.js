@@ -40,10 +40,10 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
          var self = this;
          dataSet.each(function (record) {
             if (record.getMarkStatus() == 'changed') {
-               self._update(record);
+               self.update(record);
             }
             if (record.getMarkStatus() == 'deleted') {
-               self._destroy(record.getKey());
+               self.destroy(record.getKey());
             }
          }, 'all');
          //TODO: нотификация о завершении синхронизации
@@ -77,7 +77,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
        * @param {Number} id - идентификатор записи
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record
        */
-      _read: function (id) {
+      read: function (id) {
          var self = this,
             def = new $ws.proto.Deferred();
          self._BL.call(self._options.readMethodName, {'ИдО': id, 'ИмяМетода': 'Список'}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
@@ -124,7 +124,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
        * @param {Array | Number} id - идентификатор записи или массив идентификаторов
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет Boolean - результат успешности выполнения операции
        */
-      _destroy: function (id) {
+      destroy: function (id) {
          var self = this,
             def = new $ws.proto.Deferred();
 
