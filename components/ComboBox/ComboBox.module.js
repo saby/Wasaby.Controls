@@ -86,7 +86,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   self.togglePicker();
                }
             }
-         });
+         }).mousedown(function(e){
+            e.stopPropagation();
+         })
 
       },
 
@@ -94,7 +96,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          ComboBox.superclass.setText.call(this, text);
          $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text);
          this._setKeyByText();
-         this.hidePicker();
       },
 
       _drawSelectedItem: function (key) {
@@ -141,8 +142,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _setPickerContent: function () {
-         this._drawItems();
          var self = this;
+         this._dataSource.query().addCallback(function (DataSet) {
+            self._dataSet = DataSet;
+         });
+         this._drawItems();
          //TODO придумать что то нормальное и выпилить
          this._picker.getContainer().mousedown(function (e) {
             e.stopPropagation();

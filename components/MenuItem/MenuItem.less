@@ -1,0 +1,32 @@
+.controls-MenuItem {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  .box-sizing(border-box);
+  cursor: @menu-item-cursor;
+  width: @menu-item-width;
+  height: @menu-item-height;
+  line-height: @menu-item-line-height;
+  padding: @menu-item-padding;
+  color: @menu-item-text-color;
+  background: @menu-item-bg;
+
+  &:hover {
+    color: @menu-item-hover-text-color;
+    background: @menu-item-hover-bg;
+  }
+
+  .controls-MenuItem__content {
+    position: relative;
+
+    .controls-MenuItem__icon {
+      position: absolute;
+      top: @menu-item-icon-top-offset;
+      left: @menu-item-icon-left-offset;
+    }
+
+    .controls-MenuItem__text {
+      margin: @menu-item-text-margin;
+    }
+  }
+}

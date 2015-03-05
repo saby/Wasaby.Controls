@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.CollectionMixin',   'js!SBIS3.CONTROLS.DataBindMixin', 'css!SBIS3.CONTROLS.ButtonGroupBase'], function(CompoundControl, CollectionMixin, DataBindMixin) {
+define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.CollectionMixin',   'js!SBIS3.CONTROLS.DataBindMixin'], function(CompoundControl, CollectionMixin, DataBindMixin) {
 
    'use strict';
 
@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
     * @class SBIS3.CONTROLS.ButtonGroupBase
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @mixes SBIS3.CONTROLS.Selectable
-    * @extends SBIS3.CORE.CompoundControl
+    * @extends $ws.proto.CompoundControl
     */
 
    var ButtonGroupBase = CompoundControl.extend([CollectionMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBase.prototype */ {

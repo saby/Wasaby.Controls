@@ -8,7 +8,6 @@ define('js!SBIS3.CONTROLS.Menu', [
    'js!SBIS3.CONTROLS.TreeMixin',
    'js!SBIS3.CONTROLS.FloatArea',
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
-   'css!SBIS3.CONTROLS.Menu',
    'js!SBIS3.CONTROLS.MenuItem'
 
 ], function(ButtonGroupBase, dot, TreeMixin, FloatArea, ControlHierarchyManager) {
@@ -16,13 +15,25 @@ define('js!SBIS3.CONTROLS.Menu', [
    'use strict';
 
    /**
-    * Контрол, отображающий меню всплывающее в определенном месте страницы
+    * Контрол, отображающий меню, всплывающее в определенном месте страницы
     * @class SBIS3.CONTROLS.Menu
     * @extends SBIS3.CONTROLS.ButtonGroupBase
     * @mixes SBIS3.CONTROLS.TreeMixin
     */
 
    var Menu = ButtonGroupBase.extend([TreeMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
+      /**
+       * @event onMenuItemActivate При активации пункта меню
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String} ID Идентификатор нажатого пункта.
+       * @example
+       * При выборе пункта меню данный ключ ставится в значение комбобокса
+       * <pre>
+       *     menu.subscribe('onMenuItemActivate', function (event, id) {
+       *        comboBox.setSelectedItem(id);
+       *     }); 
+       * </pre>
+       */
       _dotTplFn : dot,
       $protected: {
          _subContainers : {},
@@ -30,10 +41,12 @@ define('js!SBIS3.CONTROLS.Menu', [
          _options: {
             /**
              * @cfg {Number} Задержка перед открытием
+             * @noShow
              */
             showDelay: null,
             /**
              * @cfg {Number} Задержка перед закрытием
+             * @noShow
              */
             hideDelay: null
          }
@@ -53,10 +66,7 @@ define('js!SBIS3.CONTROLS.Menu', [
       _getAddOptions : function(item) {
          return {
             caption : item.title,
-            icon : item.icon,
-            handlers : {
-               onActivated : item.handler || function(){}
-            }
+            icon : item.icon
          }
       },
 

@@ -1,0 +1,39 @@
+.controls-Menu__Popup {
+  .box-sizing(border-box);
+  margin: @menu-margin;
+  border-width: @menu-border-width;
+  border-style: @menu-border-style;
+  border-color: @menu-border-color;
+  .box-shadow(@menu-shadow);
+
+  .controls-Menu__hasChild {
+    &:after {
+      content: ' ';
+      position: absolute;
+      top: @menu-expand-top-offset;
+      right: @menu-expand-right-offset;
+      width: @menu-expand-width;
+      height: @menu-expand-height;
+      .box-sizing(border-box);
+      border-width: @menu-expand-border-width;
+      border-style: @menu-expand-border-style;
+      border-color: @menu-expand-border-color;
+      background: @menu-expand-bg;
+    }
+
+    &:hover:after {
+      border-width: @menu-expand-hover-border-width;
+      border-style: @menu-expand-hover-border-style;
+      border-color: @menu-expand-hover-border-color;
+      background: @menu-expand-hover-bg;
+    }
+  }
+
+  .controls-Menu__submenu {
+    display: block;
+  }
+}
+
+.controls-Menu__submenu {
+  display: none;
+}

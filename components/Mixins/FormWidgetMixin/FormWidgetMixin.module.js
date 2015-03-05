@@ -394,8 +394,6 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
          }
       },
       /**
-
-      /**
        * Установить значение
        * @param val значение
        */

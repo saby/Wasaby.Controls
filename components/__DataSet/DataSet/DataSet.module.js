@@ -12,8 +12,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
    return $ws.proto.Abstract.extend({
       $protected: {
-         _pkIndex: undefined,
-         _childRecordsMap: [],
+         _pkIndex: null,
+         _childRecordsMap: {},
          /**
           * @cfg {Object} исходные данные для посторения
           */
@@ -45,18 +45,15 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
       },
 
-      addRecord: function (record) {
-
-      },
-
       /**
-       * Удалить элемент из массива
+       * Удалить запись
        * @param {Number | Array} key идентификатор записи или массив идентификаторов
        */
       removeRecord: function (key) {
          var self = this;
          var mark = function (key) {
-            var record = self.getRecordByKey(key);
+            var record = self.getRecordByKey(key),
+               index = self.getRecordIndexByKey(key);
             record.toggleStateDeleted(true);
          };
 
@@ -87,9 +84,9 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * Получить исходные "сырые" данные
        * @returns {Object} исходные "сырые" данные
        */
-      getData: function () {
-         return this._rawData;
-      },
+      /*getData: function () {
+       return this._rawData;
+       },*/
 
       /**
        * Метод получения записи по ее идентификатору
@@ -97,7 +94,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @returns {js!SBIS3.CONTROLS.Record}
        */
       getRecordByKey: function (primaryKey) {
-         if (this._pkIndex === undefined) {
+         if (this._pkIndex === null) {
             this._rebuild();
          }
          return this.at(this._pkIndex[primaryKey]);
@@ -122,7 +119,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       getRecordIndexByKey: function (key) {
-         if (this._pkIndex === undefined) {
+         if (this._pkIndex === null) {
             this._rebuild();
          }
          return this._pkIndex[key];
@@ -135,14 +132,39 @@ define('js!SBIS3.CONTROLS.DataSet', [
       getStrategy: function () {
          return this._options.strategy;
       },
-
-      each: function (iterateCallback, context) {
-         if (this._pkIndex === undefined) {
+      /**
+       *
+       * @param iterateCallback
+       * @param status {'all'|'deleted'|'changed'} по умолчанию все, кроме удаленных
+       */
+      each: function (iterateCallback, status) {
+         if (this._pkIndex === null) {
             this._rebuild();
          }
          for (var key in this._pkIndex) {
             if (this._pkIndex.hasOwnProperty(key)) {
-               iterateCallback.call(context, this.getRecordByKey(key));
+               var record = this.getRecordByKey(key);
+
+               switch (status) {
+                  case 'all':
+                     iterateCallback.call(this, record);
+                     break;
+                  case 'deleted':
+                     if (record.getMarkStatus() == 'deleted') {
+                        iterateCallback.call(this, record);
+                     }
+                     break;
+                  case 'changed':
+                     if (record.getMarkStatus() == 'changed') {
+                        iterateCallback.call(this, record);
+                     }
+                     break;
+                  default :
+                     if (record.getMarkStatus() !== 'deleted') {
+                        iterateCallback.call(this, record);
+                     }
+               }
+
             }
          }
       }

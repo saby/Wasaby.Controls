@@ -24,6 +24,12 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
       getStrategy: function () {
          return this._options.strategy;
       },
+
+      //TODO: учесть, что тут может быть много изменений и надо стрелять событием только раз
+      sync:function(dataSet){
+
+      },
+
       /**
        * Метод создает запись в источнике данных
        */

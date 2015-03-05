@@ -6,6 +6,18 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
     */
 
    var CollectionMixin = /**@lends SBIS3.CONTROLS.CollectionMixin.prototype  */{
+      /**
+       * @event onDrawItems После отрисовки всех элементов
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @example
+       * <pre>
+       *     Menu.subscribe('onDrawItems', function(){
+       *        if (Menu.getItemsInstance(2).getCaption() == 'Входящие'){
+       *           Menu.getItemsInstance(2).destroy();
+       *        }
+       *     });
+       * </pre>
+       */
       $protected: {
          _items : null,
          _itemsInstances : {},
@@ -14,10 +26,43 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
          _options: {
             /**
              * @cfg {String} Поле элемента коллекции, которое является ключом
-             * */
+             * @example
+             * <pre>
+             *     <option name="keyField">Идентификатор</option>
+             * </pre>
+             * @see items
+             */
             keyField : null,
+             /**
+              * @typedef {Object} Items
+              * @property {String} id Идентификатор.
+              * @property {String} title Текст пункта меню.
+              * @property {String} icon Иконка пункта меню.
+              * @property {String} parent Идентификатор родительского пункта меню. Опция задаётся для подменю.
+              * @editor icon ImageEditor
+              */
             /**
-             * @cfg {Array} Набор исходных данных по которому строится отображение
+             * @cfg {Items[]} Набор исходных данных, по которому строится отображение
+             * @example
+             * <pre>
+             *     <options name="items" type="array">
+             *        <options>
+             *            <option name="id">1</option>
+             *            <option name="title">Пункт1</option>
+             *         </options>
+             *         <options>
+             *            <option name="id">2</option>
+             *            <option name="title">Пункт2</option>
+             *         </options>
+             *         <options>
+             *            <option name="id">3</option>
+             *            <option name="title">ПунктПодменю</option>
+             *            <option name="parent">2</option>
+             *            <option name="icon">sprite:icon-16 icon-Birthday icon-primary</option>
+             *         </options>
+             *      </options>
+             * </pre>
+             * @see keyField
              */
             items: undefined
          }
@@ -29,7 +74,24 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
       },
 
       /**
-       * Возвращает коллекцию
+       * Возвращает коллекцию, заданную либо опций {@link items}, либо методам {@link setItems}.
+       * @example
+       * <pre>
+       *     var
+       *        items = this.getItems(),
+       *        search = false;
+       *     for (var i = 0; i < items.length; i++) {
+       *        if (items.getValue(items[i], 'title') == 'Сотрудник') {
+       *           search = true;
+       *           break;
+       *        }
+       *     },
+       *     if (!search) {
+       *        console.log('Папка "Сотрудник" не найдена')
+       *     }
+       * </pre>
+       * @see items
+       * @see setItems
        */
       getItems : function() {
          return this._items;
@@ -56,7 +118,30 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
             });
          }
       },
-
+       /**
+        * Метод установки либо замены коллекции элементов, заданной опцией {@link items}.
+        * @param {Object} items Набор исходных данных, по которому строится отображение.
+        * @example
+        * <pre>
+        *     setItems: [
+        *        {
+        *           id: 1,
+        *           title: 'Сообщения'
+        *        },{
+        *           id: 2,
+        *           title: 'Прочитанные',
+        *           parent: 1
+        *        },{
+        *           id: 3,
+        *           title: 'Непрочитанные',
+        *           parent: 1
+        *        }
+        *     ]
+        * </pre>
+        * @see items
+        * @see addItem
+        * @see getItems
+        */
       setItems : function(items) {
          if (items instanceof Collection) {
             this._items = items;
@@ -68,7 +153,20 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
          }
          this._drawItems();
       },
-
+     /**
+      * Добавление одного элемента коллекции
+      * @param {Array} item Элемент коллекции.
+      * @example
+      * <pre>
+      *     addItem: {
+      *        id: 1,
+      *        title: 'Звонки',
+      *        icon: 'sprite:icon-16 icon-Phone icon-primary'
+      *     }
+      * </pre>
+      * @see items
+      * @see setItems
+      */
       addItem : function(item) {
          this._items.addItem(item);
          this._drawItems();
@@ -180,10 +278,33 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
          }
          return def;
       },
-
+     /**
+      * Метод получения элементов коллекции
+      * @returns {*}
+      * @example
+      * <pre>
+      *     var ItemsInstances = Menu.getItemsInstances();
+      *     for (var i = 0; i < ItemsInstances.length; i++){
+      *        ItemsInstances[i].setCaption('Это пункт меню №' + ItemsInstances[i].attr('data-id'));
+      *     }
+      * </pre>
+      */
       getItemsInstances : function() {
          return this._itemsInstances;
       },
+     /**
+      * Метод получения элемента коллекции.
+      * @param id Идентификатор элемента коллекции.
+      * @returns {*} Возвращает элемент коллекции по указанному идентификатору.
+      * @example
+      * <pre>
+      *     Menu.getItemsInstance(3).setCaption('SomeNewCaption');
+      * </pre>
+      * @see getItems
+      * @see setItems
+      * @see items
+      * @see getItemInstances
+      */
       getItemInstance : function(id) {
          return this._itemsInstances[id];
       }
