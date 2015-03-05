@@ -1,4 +1,9 @@
-define('js!SBIS3.Demo.Control.MyLink', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.Demo.Control.MyLink', 'css!SBIS3.Demo.Control.MyLink', 'js!SBIS3.CONTROLS.Link'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.Demo.Control.MyLink',
+    ['js!SBIS3.CORE.CompoundControl',
+     'html!SBIS3.Demo.Control.MyLink',
+     'css!SBIS3.Demo.Control.MyLink',
+     'js!SBIS3.CONTROLS.Link'],
+    function(CompoundControl, dotTplFn) {
    /**
     * SBIS3.Demo.Control.MyLink
     * @class SBIS3.Demo.Control.MyLink
