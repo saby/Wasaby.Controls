@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DSMixin', [ 'js!SBIS3.CONTROLS.DataSourceMemory', 'js!SBIS3.CORE.MarkupTransformer'], function (DataSourceMemory, MarkupTransformer) {
+define('js!SBIS3.CONTROLS.DSMixin', [ 'js!SBIS3.CONTROLS.DataSourceMemory', 'js!SBIS3.CONTROLS.DataStrategyArray', 'js!SBIS3.CORE.MarkupTransformer'], function (DataSourceMemory, DataStrategyArray, MarkupTransformer) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [ 'js!SBIS3.CONTROLS.DataSourceMemory', 'js!
             }
             this._dataSource = new DataSourceMemory({
                data: this._options.dataSource,
-               strategyName: 'DataStrategyArray',
+               strategy: new DataStrategyArray(),
                keyField: keyField
             });
             if (typeof(window) != 'undefined') {

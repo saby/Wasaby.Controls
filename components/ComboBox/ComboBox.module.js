@@ -29,7 +29,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
-
+            /**
+             * @cfg {} Шаблон отображения каждого элемента коллекции
+             */
+            itemTemplate: '',
             afterFieldWrapper: arrowTpl,
             /**
              * @cfg {Boolean} Возможен ли ручной ввод текста
@@ -178,7 +181,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _getItemTemplate: function (item) {
          var title = item.get(this._options.displayField);
-         return '<div data-key="{{=it.getKey()}}" class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow">' + title + '</div>';
+         if (this._options.itemTemplate) {
+            return doT.template(this._options.itemTemplate)({item : item, displayField : title})
+         }
+         else {
+            return '<div data-key="{{=it.getKey()}}" class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow">' + title + '</div>';
+         }
       },
 
       _keyDownBind: function (e) {
