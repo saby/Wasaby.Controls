@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
 
       init : function() {
          ButtonGroupBase.superclass.init.call(this);
-         this._drawItems();
+         this.reload();
       },
 
       _drawItemsCallback : function(){
