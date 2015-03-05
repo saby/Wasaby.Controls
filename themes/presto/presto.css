@@ -1927,11 +1927,13 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th {
   position: relative;
+  font-weight: normal;
   cursor: pointer;
   text-align: left;
   height: 32px;
   padding: 0 10px;
   color: #aaaaaa;
+  font-size: 11px;
   background: transparent;
   border-collapse: collapse;
   border-width: 1px 1px 0 1px;
@@ -1953,7 +1955,7 @@ input[type="reset"]::-moz-focus-inner {
   border-collapse: collapse;
   border-width: 1px 0 0;
   border-style: solid;
-  border-color: #eeeeee;
+  border-color: #F5F5F5;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:hover {
   color: inherit;
