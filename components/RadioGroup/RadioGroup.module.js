@@ -22,9 +22,10 @@ function(RadioGroupBase, dotTpl) {
          }
       },
 
-      _getItemTemplate : function() {
+      _getItemTemplate : function(item) {
+         var caption = item.get(this._options.captionField);
          return '<component data-component="SBIS3.CONTROLS.RadioButton">' +
-               '<option name="caption">{{=it.get("title")}}</option>'+
+               '<option name="caption">'+caption+'</option>'+
             '</component>';
       }
    });
