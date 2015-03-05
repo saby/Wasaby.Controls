@@ -60,8 +60,8 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
          self._BL.call(self._options.crateMethodName, {'Фильтр': null, 'ИмяМетода': null}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
             var record = new Record({
                strategy: self.getStrategy(),
-               raw: res,
-               keyField: self._keyField
+               raw: res
+               //keyField: self.getStrategy().getKey(res)
             });
             def.callback(record);
          });

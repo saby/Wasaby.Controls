@@ -150,7 +150,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _setPickerContent: function () {
          var self = this;
          this.reload();
-         this._drawItems();
          //TODO придумать что то нормальное и выпилить
          this._picker.getContainer().mousedown(function (e) {
             e.stopPropagation();
