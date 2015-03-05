@@ -1,747 +1,2036 @@
-.mixin_gray_border {
-  border: 1px solid #d1d1d4;
+button::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner,
+input[type="reset"]::-moz-focus-inner {
+  padding: 0 !important;
+  border: 0 none !important;
 }
-.mixin_gray_border:hover {
-  border-color: #00c795;
+.controls-Link {
+  display: inline-block;
+  cursor: pointer;
+  color: #00c795;
+  text-decoration: none;
+  text-align: center;
+  line-height: normal;
+  padding: 0;
+}
+.controls-Link:hover {
+  cursor: pointer;
+  color: #00c795;
+  text-decoration: underline;
+}
+.controls-Link.controls-Click__active {
+  cursor: pointer;
+  color: #00c795;
+  text-decoration: none;
+}
+.controls-Link .controls-Link__icon {
+  vertical-align: middle;
+  margin: -2px 0 0;
+}
+.controls-Link .controls-Link__field {
+  margin: 0;
+}
+.controls-Link .controls-Link__icon + .controls-Link__field {
+  margin: 0 0 0 4px;
 }
 .controls-Button {
   cursor: pointer;
-  text-align: center;
   display: inline-block;
-  height: 30px;
-  line-height: 28px;
-  border: 1px solid #d1d1d4;
-  border-radius: 2px;
-  background-color: #f1f1f2;
-  color: #919197;
-  padding: 0 8px;
+  outline: none;
+  background-size: contain;
+  white-space: nowrap;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
-}
-.controls-Button:hover {
-  border-color: #00c795;
-}
-.controls-Button.controls-Button__primary {
-  border: 1px solid #00c795;
-  color: #00c795;
-}
-.controls-Button:hover {
-  color: #ffffff;
-  background-color: #00c795;
-}
-.controls-Button.controls-Button__addButton {
-  width: 24px;
-  height: 24px;
-  padding: 0;
-}
-.controls-Button {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  font: 13px Tahoma, Geneva, sans-serif;
+  color: #919191;
+  text-align: center;
+  min-width: 24px;
+  height: 30px;
+  line-height: 28px;
+  padding: 0 8px;
+  margin: auto;
+  border: 1px solid #d1d1d1;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #f1f1f1;
 }
-.controls-Button.controls-Checked__checked {
-  background-color: #d1d1d4;
+.controls-Button:hover {
   color: #ffffff;
-  border-color: #d1d1d4;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #00c795;
 }
-.controls-Button.controls-Checked__checked:hover {
-  border-color: #d1d1d4;
+.controls-Button.controls-Click__active {
+  color: #00c795;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #ffffff;
+}
+.controls-Button .controls-Button__content {
+  position: relative;
+}
+.controls-Button .controls-Button__text {
+  padding: 0;
+}
+.controls-Button .controls-Button__text.controls-Button__emptyCaption {
+  margin: 0 0 0 13px !important;
+}
+.controls-Button .controls-Button__icon {
+  position: absolute;
+  top: -1px;
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .controls-Button .controls-Button__icon {
+    top: 0px;
+  }
+}
+.controls-Button .controls-Button__icon + .controls-Button__text {
+  margin: 0 0 0 20px;
+}
+.controls-Button .controls-Button__icon.icon-24 {
+  top: -6px;
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .controls-Button .controls-Button__icon.icon-24 {
+    top: -5px;
+  }
+}
+.controls-Button .controls-Button__icon.icon-24 + .controls-Button__text {
+  margin: 0 0 0 28px;
+}
+.controls-Button.controls-Button__primary {
+  color: #ffffff;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #00c795;
+}
+.controls-Button.controls-Button__primary:hover {
+  color: #00c795;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #e1fff7;
+}
+.controls-Button.controls-Button__primary.controls-Click__active {
+  color: #00c795;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #ffffff;
+}
+.controls-Button.controls-Button__primary.ws-disabled {
+  color: #919191;
+  border: 1px solid #d1d1d1;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #d1d1d1;
+}
+.controls-Button.controls-Button__light {
+  color: #353535;
+  border: 1px solid #d1d1d1;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #ffffff;
+}
+.controls-Button.controls-Button__light:hover {
+  color: #00c795;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #e1fff7;
+}
+.controls-Button.controls-Button__light.controls-Click__active {
+  color: #00c795;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #ffffff;
+}
+.controls-Button.controls-Button__light.controls-Button__primary {
+  color: #353535;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #ffffff;
+}
+.controls-Button.controls-Button__light.controls-Button__primary:hover {
+  color: #353535;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #e1fff7;
+}
+.controls-Button.controls-Button__light.controls-Button__primary.controls-Click__active {
+  color: #00c795;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #ffffff;
+}
+.controls-Button.controls-Button__light.controls-Button__primary.ws-disabled {
+  color: #919191;
+  border: 1px solid #d1d1d1;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #d1d1d1;
+}
+.controls-Button.controls-Button__light.ws-disabled {
+  color: #919191;
+  border: 1px solid #d1d1d1;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #d1d1d1;
+}
+.controls-Button.controls-Button__big {
+  font: 15.6px Tahoma, Geneva, sans-serif;
+  color: #919191;
+  text-align: center;
+  min-width: 24px;
+  height: 54px;
+  line-height: 24px;
+  padding: 15px 20px;
+  margin: auto;
+  border: 1px solid #d1d1d1;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #f1f1f1;
+}
+.controls-Button.controls-Button__big:hover {
+  color: #ffffff;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #00c795;
+}
+.controls-Button.controls-Button__big.controls-Click__active {
+  color: #00c795;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #ffffff;
+}
+.controls-Button.controls-Button__big .controls-Button__text {
+  padding: 11px 0 0;
+}
+.controls-Button.controls-Button__big .controls-Button__text.controls-Button__emptyCaption {
+  margin: 0 0 0 13px !important;
+}
+.controls-Button.controls-Button__big .controls-Button__icon {
+  position: absolute;
+  top: 0px;
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .controls-Button.controls-Button__big .controls-Button__icon {
+    top: 1px;
+  }
+}
+.controls-Button.controls-Button__big .controls-Button__icon + .controls-Button__text {
+  margin: 0 0 0 20px;
+}
+.controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
+  top: -3px;
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
+    top: -2px;
+  }
+}
+.controls-Button.controls-Button__big .controls-Button__icon.icon-24 + .controls-Button__text {
+  margin: 0 0 0 28px;
+}
+.controls-Button.controls-Button__big.controls-Button__primary {
+  color: #ffffff;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #00c795;
+}
+.controls-Button.controls-Button__big.controls-Button__primary:hover {
+  color: #00c795;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #e1fff7;
+}
+.controls-Button.controls-Button__big.controls-Button__primary.controls-Click__active {
+  color: #00c795;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #ffffff;
+}
+.controls-Button.controls-Button__big.controls-Button__primary.ws-disabled {
+  color: #919191;
+  border: 1px solid #d1d1d1;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #d1d1d1;
+}
+.controls-Button.controls-Button__big.ws-disabled {
+  color: #919191;
+  border: 1px solid #d1d1d1;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #d1d1d1;
+}
+.controls-Button.controls-Button__ellispis,
+.controls-Link.controls-Button__ellispis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.controls-Button.ws-disabled {
+  cursor: default;
+  color: #919191;
+  border: 1px solid #d1d1d1;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #d1d1d1;
+}
+@-moz-document url-prefix() {
+  .controls-Button .controls-Button__icon {
+    top: 0px;
+  }
+  .controls-Button .controls-Button__icon.icon-24 {
+    top: -5px;
+  }
+  .controls-Button.controls-Button__big .controls-Button__icon {
+    top: 1px;
+  }
+  .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
+    top: -2px;
+  }
+}
+.controls-ButtonGroup .controls-ListView__item {
+  display: inline-block;
+  margin: 0 16px 0 0;
+}
+.controls-ButtonGroup.controls-ButtonGroup__vertical .controls-ListView__item {
+  display: block;
+  margin: 0 0 8px 0;
+}
+.controls-Button.controls-Checked__checked.controls-Button {
+  color: #00c795;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #ffffff;
+}
+.controls-Button.controls-Checked__checked.controls-Button__primary {
+  color: #00c795;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #ffffff;
+}
+.controls-Button.controls-Checked__checked.controls-Button__big {
+  color: #00c795;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #ffffff;
+}
+.controls-Button.controls-Checked__checked.controls-Button__big.controls-Button__primary {
+  color: #00c795;
+  border: 1px solid #00c795;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #ffffff;
+}
+.controls-IconButton {
+  cursor: pointer;
+  vertical-align: middle;
+}
+.controls-IconButton.controls-Button {
+  padding: 0;
+  cursor: pointer;
+}
+.controls-TabButton {
+  display: inline-block;
+  cursor: pointer;
+  height: 21px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border-width: 0 0 3px 0;
+  border-style: solid;
+  border-color: transparent;
+  background: transparent;
+}
+.controls-TabButton:hover {
+  border-width: 0 0 3px 0;
+  border-style: solid;
+  border-color: transparent;
+  background: transparent;
+}
+.controls-TabButton:hover .controls-TabButton__inner .controls-TabButton__caption {
+  color: #00c795;
+}
+.controls-TabButton.controls-Checked__checked {
+  border-width: 0 0 3px 0;
+  border-style: solid;
+  border-color: #00c795;
+  background: transparent;
+}
+.controls-TabButton.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__caption {
+  color: #353535;
+}
+.controls-TabButton.controls-Checked__checked:hover {
+  border-width: 0 0 3px 0;
+  border-style: solid;
+  border-color: #00c795;
+  background: transparent;
+}
+.controls-TabButton.controls-Checked__checked:hover .controls-TabButton__inner .controls-TabButton__caption {
+  color: #00c795;
+}
+.controls-TabButton .controls-TabButton__side {
+  vertical-align: top;
+  display: none;
+  width: 0;
+  height: 21px;
+}
+.controls-TabButton .controls-TabButton__side.controls-TabButton__left {
+  margin: 0;
+  background: none;
+}
+.controls-TabButton .controls-TabButton__side.controls-TabButton__right {
+  margin: 0;
+  background: none;
+}
+.controls-TabButton .controls-TabButton__inner {
+  font: inherit;
+  color: #353535;
+  display: inline-block;
+  height: 21px;
+  background: #ffffff;
+}
+.controls-TabButton .controls-TabButton__inner .controls-TabButton__caption {
+  display: inline-block;
+  height: auto;
+  vertical-align: bottom;
+  padding: 0 16px;
+}
+.controls-TabButton.ws-disabled {
+  cursor: default;
+  border-width: 0 0 3px 0;
+  border-style: solid;
+  border-color: transparent;
+  background: transparent;
+}
+.controls-TabButton.ws-disabled .controls-TabButton__inner .controls-TabButton__caption {
+  color: #919191;
+}
+.controls-TabButton.ws-disabled.controls-Checked__checked {
+  border-width: 0 0 3px 0;
+  border-style: solid;
+  border-color: #919191;
+  background: transparent;
+}
+.controls-TabButton.ws-disabled.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__caption {
+  color: #919191;
 }
 .controls-RadioButton {
   cursor: pointer;
   display: inline-block;
 }
-.controls-RadioButton__icon {
-  margin-right: 8px;
+.controls-RadioButton .controls-RadioButton__caption {
+  margin: 0 8px;
+  color: #353535;
+}
+.controls-RadioButton .controls-RadioButton__icon {
+  display: inline-block;
   width: 16px;
   height: 16px;
-  background: url('./img/RadioButton-sprite.png') 0 0px;
-  display: inline-block;
+  line-height: normal;
+  background: url('img/RadioButton-sprite.png') 0 0;
 }
 .controls-RadioButton:hover .controls-RadioButton__caption {
   color: #00c795;
 }
 .controls-RadioButton:hover .controls-RadioButton__icon {
-  background-position: 0 -32px;
+  background: url('img/RadioButton-sprite.png') 0 -32px;
+}
+.controls-RadioButton.controls-Checked__checked .controls-RadioButton__caption {
+  color: #353535;
 }
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__icon {
-  background-position: 0 -16px;
+  background: url('img/RadioButton-sprite.png') 0 -16px;
+}
+.controls-RadioButton.controls-Checked__checked:hover .controls-RadioButton__caption {
+  color: #00c795;
+}
+.controls-RadioButton.controls-Checked__checked:hover .controls-RadioButton__icon {
+  background: url('img/RadioButton-sprite.png') 0 -16px;
+}
+.controls-RadioButton.controls-Checked__checked.ws-disabled .controls-RadioButton__icon {
+  background: url('img/RadioButton-sprite.png') 0 -48px;
+}
+.controls-RadioButton.controls-Checked__checked.ws-disabled:hover .controls-RadioButton__icon {
+  background: url('img/RadioButton-sprite.png') 0 -48px;
 }
 .controls-RadioButton.ws-disabled {
   cursor: default;
 }
-.controls-RadioButton.ws-disabled .controls-RadioButton__icon {
-  background-position: 0 0px;
-}
-.controls-RadioButton.controls-Checked__checked.ws-disabled .controls-RadioButton__icon {
-  background-position: 0 -48px;
-}
 .controls-RadioButton.ws-disabled .controls-RadioButton__caption {
-  color: #d1d1d4;
+  color: #d1d1d1;
 }
-.controls-TextBox {
+.controls-RadioButton.ws-disabled .controls-RadioButton__icon {
+  background: url('img/RadioButton-sprite.png') 0 0;
+}
+.controls-RadioButton.ws-disabled:hover .controls-RadioButton__caption {
+  color: #d1d1d1;
+}
+.controls-RadioButton.ws-disabled:hover .controls-RadioButton__icon {
+  background: url('img/RadioButton-sprite.png') 0 0;
+}
+.controls-RadioGroup .controls-ListView__item {
   display: inline-block;
-  background: #ffffff;
-  border: 1px solid #d1d1d4;
-  height: 22px;
-  border-radius: 2px;
+  margin: 0 16px 0 0;
 }
-.controls-TextBox:hover {
-  border-color: #00c795;
-}
-.controls-TextBox__fieldWrapper {
-  height: 100%;
-}
-.controls-TextBox__afterFieldWrapper {
-  float: right;
-  width: 16px;
-  min-height: 19px;
-  height: 100%;
-  position: relative;
-  margin-right: 4px;
-}
-.controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
-  margin-right: 21px;
-}
-.controls-TextBox__field {
-  border: none;
-  min-height: 19px;
-  height: 99%;
-  width: 100%;
-  margin: 0;
-  padding: 0 7px;
-  box-sizing: border-box;
-  line-height: 100%;
-  outline: none;
-  background: transparent;
-  font: inherit;
-}
-.controls-TextBox__field-uppercase {
-  text-transform: uppercase;
-}
-.controls-TextBox__field-lowercase {
-  text-transform: lowercase;
-}
-.controls-TextBox__placeholder {
-  display: none;
-}
-.controls-TextBox.controls-NumberTextBox {
-  text-align: right;
-}
-.controls-TextBox.controls-NumberTextBox .controls-TextBox__afterFieldWrapper {
-  margin-right: 0;
-  width: 23px;
-}
-.controls-TextBox.controls-NumberTextBox .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper {
-  margin-right: 23px;
-}
-.controls-NumberTextBox__arrow {
-  background-repeat: no-repeat;
-  text-decoration: none;
+.controls-RadioGroup.controls-ButtonGroup__vertical .controls-ListView__item {
   display: block;
-  width: 100%;
-  min-height: 11px;
-  border-left: 1px solid #d1d1d4;
-  box-sizing: border-box;
-  background-image: url('img/NumberTextBox-arrow.png');
-  background-color: #f1f1f2;
-}
-.controls-NumberTextBox__arrow:hover {
-  background-color: #00c795;
-  border-left-color: #00c795;
-}
-.controls-NumberTextBox__arrowDown {
-  background-position: center -12px;
-}
-.controls-NumberTextBox__arrowUp {
-  background-position: center 0;
-}
-.controls-NumberTextBox__arrowDown:hover {
-  background-position: center -36px;
-}
-.controls-NumberTextBox__arrowUp:hover {
-  background-position: center -24px;
+  margin: 0 0 8px 0;
 }
 .controls-CheckBox {
   cursor: pointer;
   display: inline-block;
 }
+.controls-CheckBox .controls-CheckBox__caption {
+  margin: 0 8px;
+  color: #353535;
+}
+.controls-CheckBox .controls-CheckBox__icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  line-height: normal;
+  border: none;
+  background: url('img/CheckBox-sprite.png') 0 0px;
+}
 .controls-CheckBox:hover .controls-CheckBox__caption {
   color: #00c795;
 }
-.controls-CheckBox__icon {
-  width: 16px;
-  height: 16px;
-  background: url('./img/CheckBox-sprite.png') 0 0px;
-  display: inline-block;
-}
 .controls-CheckBox:hover .controls-CheckBox__icon {
-  background-position: 0 -16px;
+  border: none;
+  background: url('img/CheckBox-sprite.png') 0 -16px;
+}
+.controls-CheckBox.controls-Checked__checked .controls-CheckBox__caption {
+  color: #353535;
 }
 .controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon {
-  background-position: 0 -32px;
+  border: none;
+  background: url('img/CheckBox-sprite.png') 0 -32px;
+}
+.controls-CheckBox.controls-Checked__checked:hover .controls-CheckBox__caption {
+  color: #00c795;
+}
+.controls-CheckBox.controls-Checked__checked:hover .controls-CheckBox__icon {
+  border: none;
+  background: url('img/CheckBox-sprite.png') 0 -32px;
+}
+.controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__caption {
+  color: #353535;
 }
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
-  background-position: 0 -48px;
+  border: none;
+  background: url('img/CheckBox-sprite.png') 0 -48px;
 }
-.controls-CheckBox__caption {
-  margin-left: 8px;
+.controls-CheckBox.controls-ToggleButton__null:hover .controls-CheckBox__caption {
+  color: #00c795;
+}
+.controls-CheckBox.controls-ToggleButton__null:hover .controls-CheckBox__icon {
+  border: none;
+  background: url('img/CheckBox-sprite.png') 0 -48px;
+}
+.controls-CheckBox.controls-ToggleButton__null.ws-disabled .controls-CheckBox__icon {
+  background: url('img/CheckBox-sprite.png') 0 -80px;
+}
+.controls-CheckBox.controls-ToggleButton__null.ws-disabled:hover .controls-CheckBox__icon {
+  background: url('img/CheckBox-sprite.png') 0 -80px;
 }
 .controls-CheckBox.ws-disabled {
   cursor: default;
 }
 .controls-CheckBox.ws-disabled .controls-CheckBox__caption {
-  color: #d1d1d4;
+  color: #d1d1d1;
 }
 .controls-CheckBox.ws-disabled .controls-CheckBox__icon {
-  background-position: 0 0px;
+  border: none;
+  background: url('img/CheckBox-sprite.png') 0 0;
 }
-.controls-CheckBox.controls-Checked__checked.ws-disabled .controls-CheckBox__icon {
-  background-position: 0 -64px;
+.controls-CheckBox.ws-disabled:hover .controls-CheckBox__caption {
+  color: #d1d1d1;
 }
-.controls-CheckBox.controls-ToggleButton__null.ws-disabled .controls-CheckBox__icon {
-  background-position: 0 -80px;
+.controls-CheckBox.ws-disabled:hover .controls-CheckBox__icon {
+  border: none;
 }
-.controls-ComboBox__arrowDown {
-  background-image: url('./img/ComboBox.png');
-  background-color: #ffffff;
-  text-decoration: none;
-  position: absolute;
-  right: 0;
-  top: 50%;
-  margin-top: -8px;
+.controls-CheckBox.ws-disabled.controls-Checked__checked .controls-CheckBox__icon {
+  border: none;
+  background: url('img/CheckBox-sprite.png') 0 -64px;
+}
+.controls-CheckBoxGroup .controls-ListView__item {
   display: inline-block;
-  width: 16px;
-  height: 16px;
+  margin: 0 16px 0 0;
 }
-.controls-ComboBox__arrowDown:hover,
-.controls-ComboBox__editable-false:hover .controls-ComboBox__arrowDown {
-  text-decoration: none;
-  background-position: 0 -16px;
+.controls-CheckBoxGroup.controls-ButtonGroup__vertical .controls-ListView__item {
+  display: block;
+  margin: 0 0 8px 0;
 }
-.controls-ComboBox__itemRow {
-  padding: 4px 4px 4px 7px;
+.controls-Switcher {
+  display: inline-block;
   cursor: pointer;
+  min-width: 0;
+  height: 21px;
+  padding: 0 16px 0 0;
 }
-.controls-ComboBox__itemRow:hover {
-  color: #ffffff;
-  background-color: #00c795;
+.controls-Switcher .controls-Switcher__toggle {
+  display: inline-block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 100px;
+  height: 21px;
+  text-align: left;
+  padding: 1px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #00c795;
+  background: #f1f1f1;
 }
-.controls-ComboBox__itemRow__selected,
-.controls-ComboBox__itemRow__selected:hover {
-  color: #999999;
-  background-color: #ffffff;
-}
-.controls-ComboBox__editable-false,
-.controls-ComboBox__editable-false .controls-TextBox__field {
-  cursor: pointer;
-}
-.controls-ComboBox__editable-false.controls-Picker__show .controls-ComboBox__field {
-  color: #919197;
-}
-.controls-ComboBox__editable-false:hover .controls-ComboBox__field {
-  color: #00c795;
-}
-.controls-ComboBox__inputWrapper {
-  margin-right: 18px;
-  height: 100%;
-}
-.controls-ComboBox__picker {
-  border: 1px solid #d1d1d4;
-  margin-top: -2px;
-  border-radius: 0 0 2px 2px;
-}
-.controls-ComboBox__picker.controls-Picker__owner__hover {
-  border-top-color: #00c795;
-  margin-top: -2px;
-}
-.controls-ComboBox__fieldNotEditable {
-  line-height: 22px;
-}
-.controls-ListView__item {
-  overflow: hidden;
+.controls-Switcher .controls-Switcher__toggle .controls-Switcher__position {
   position: relative;
-}
-.controls-ListView__itemActions {
-  position: absolute;
-  height: 16px;
-  right: 0;
-  top: 50%;
-  margin-top: -8px;
-  z-index: 10;
-  display: none;
+  display: inline-block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  text-align: center;
+  width: 70%;
+  min-width: 0;
+  height: auto;
+  min-height: 17px;
+  padding: 0;
+  margin: 0;
+  color: #ffffff;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
   background: #00c795;
 }
-.controls-ListView__action {
-  margin-right: 16px;
-  display: inline;
-}
-.controls-ListView > .controls-TreeView__childContainer {
+.controls-Switcher .controls-Switcher__toggle .controls-Switcher__position:before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 21px;
   display: block;
+  top: 0;
+  left: 0;
+  background: none;
 }
-.controls-TreeView__childContainer {
-  list-style: none;
-  padding-left: 10px;
-  display: none;
-}
-.controls-TreeView__expand {
-  float: left;
-  height: 16px;
-  width: 16px;
-  cursor: pointer;
-  background-image: url('./img/Tree_expand.png');
-  visibility: hidden;
-}
-.controls-TreeView__hasChild > .controls-TreeView__expand {
-  visibility: visible;
-}
-.controls-TreeView__expand__open {
-  background-position: 0 -16px;
-}
-.controls-TreeView__item {
-  overflow: hidden;
-}
-.controls-TextArea__inputField {
-  resize: none;
-  border: none;
+.controls-Switcher .controls-Switcher__toggle .controls-Switcher__position:after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 21px;
   display: block;
-  font: inherit;
-  width: 100%;
-  height: 100%;
-  padding: 6px 7px;
-  box-sizing: border-box;
+  top: 0;
+  right: 0;
+  background: none;
 }
-.controls-TextArea__autoheight {
-  height: auto !important;
+.controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on {
+  text-align: right;
+  padding: 1px;
 }
-.controls-TextArea {
+.controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position {
+  margin: 0;
+  color: #ffffff;
+  background: #00c795;
+}
+.controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:before {
+  width: 0;
+  left: 0;
+  background: none;
+}
+.controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:after {
+  width: 0;
+  right: 0;
+  background: none;
+}
+.controls-Switcher.ws-disabled {
+  cursor: default;
+}
+.controls-Switcher.ws-disabled .controls-Switcher__toggle {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d1d1d1;
+  background: #d1d1d1;
+}
+.controls-Switcher.ws-disabled .controls-Switcher__toggle .controls-Switcher__position {
+  color: #d1d1d1;
+  background: #ffffff;
+}
+.controls-Switcher.ws-disabled .controls-Switcher__toggle .controls-Switcher__position:before {
+  background: none;
+}
+.controls-Switcher.ws-disabled .controls-Switcher__toggle .controls-Switcher__position:after {
+  background: none;
+}
+.controls-Switcher.ws-disabled .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position {
+  color: #d1d1d1;
+  background: #ffffff;
+}
+.controls-Switcher.ws-disabled .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:before {
+  background: none;
+}
+.controls-Switcher.ws-disabled .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:after {
+  background: none;
+}
+.controls-SwitcherDoubleOnline {
   display: inline-block;
-  border: 1px solid #d1d1d4;
+  margin: 0 0 0 8px;
+}
+.controls-SwitcherDoubleOnline .controls-SwitcherDoubleOnline_toggle {
+  display: inline-block;
+  cursor: pointer;
+  width: 30px;
+  height: 16px;
+  margin: 0 4px;
+}
+.controls-SwitcherDoubleOnline .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-off-toggled {
+  background: transparent;
+}
+.controls-SwitcherDoubleOnline .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-on-toggled {
+  background: transparent;
+}
+.controls-SwitcherDoubleOnline .controls-SwitcherDoubleOnline__text {
+  display: inline-block;
+  cursor: pointer;
+  color: #353535;
+  text-decoration: none;
+}
+.controls-SwitcherDoubleOnline .controls-SwitcherDoubleOnline__text.controls-SwitcherDoubleOnline__unselected {
+  cursor: pointer;
+  color: #919191;
+  text-decoration: none;
+}
+.controls-SwitcherDoubleOnline .controls-SwitcherDoubleOnline__text.controls-SwitcherDoubleOnline__unselected:hover {
+  color: #919191;
+  text-decoration: none;
+}
+.controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical {
   vertical-align: top;
 }
-.controls-TextArea:hover {
+.controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline_toggle {
+  display: inline-block;
+  vertical-align: top;
+  cursor: pointer;
+  width: 16px;
+  height: 32px;
+  margin: 0 2px 0 0;
+}
+.controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-off-toggled {
+  background: transparent;
+}
+.controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-on-toggled {
+  background: transparent;
+}
+.controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical.ws-disabled .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-off-toggled {
+  background: transparent;
+}
+.controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical.ws-disabled .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-on-toggled {
+  background: transparent;
+}
+.controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline__text-block {
+  display: inline-block;
+  height: 100%;
+}
+.controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline__text-block .controls-SwitcherDoubleOnline__text {
+  display: block;
+}
+.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline_toggle {
+  cursor: default;
+}
+.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-off-toggled {
+  background: transparent;
+}
+.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-on-toggled {
+  background: transparent;
+}
+.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline__text {
+  cursor: default;
+  color: #919191;
+  text-decoration: none;
+}
+.controls-Menu__Popup {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: -1px 0 0;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d1d1d1;
+  -webkit-box-shadow: 0 0 8px 1px #aaaaaa;
+  -moz-box-shadow: 0 0 8px 1px #aaaaaa;
+  box-shadow: 0 0 8px 1px #aaaaaa;
+}
+.controls-Menu__Popup .controls-Menu__hasChild:after {
+  content: ' ';
+  position: absolute;
+  top: 3px;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: url('img/MenuExpand.png') 0 0 no-repeat;
+}
+.controls-Menu__Popup .controls-Menu__hasChild:hover:after {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: url('img/MenuExpand.png') 0 -16px no-repeat;
+}
+.controls-Menu__Popup .controls-Menu__submenu {
+  display: block;
+}
+.controls-Menu__submenu {
+  display: none;
+}
+.controls-MenuItem {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  cursor: pointer;
+  width: auto;
+  height: 24px;
+  line-height: 24px;
+  padding: 0 16px 0 8px;
+  color: #353535;
+  background: #ffffff;
+}
+.controls-MenuItem:hover {
+  color: #ffffff;
+  background: #00c795;
+}
+.controls-MenuItem .controls-MenuItem__content {
+  position: relative;
+}
+.controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+}
+.controls-MenuItem .controls-MenuItem__content .controls-MenuItem__text {
+  margin: 0 0 0 22px;
+}
+.controls-Button.controls-MenuButton {
+  position: relative;
+  padding: 0 30px 0 12px;
+}
+.controls-Button.controls-MenuButton.controls-MenuButton__withoutMenu {
+  padding: 0 8px;
+}
+.controls-Button.controls-MenuButton .controls-MenuButton__arrowDown {
+  position: absolute;
+  display: inline-block;
+  width: 10px;
+  height: 5px;
+  right: 12px;
+  top: 13px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-width: 5px 5px 0 5px;
+  border-style: solid;
+  border-color: #919191 transparent transparent transparent;
+  background: transparent;
+}
+.controls-Button.controls-MenuButton:hover .controls-MenuButton__arrowDown {
+  border-width: 5px 5px 0 5px;
+  border-style: solid;
+  border-color: #ffffff transparent transparent transparent;
+  background: transparent;
+}
+.controls-Button.controls-MenuButton.controls-Checked__checked .controls-MenuButton__arrowDown,
+.controls-Button.controls-MenuButton.controls-Click__active .controls-MenuButton__arrowDown {
+  border-width: 5px 5px 0 5px;
+  border-style: solid;
+  border-color: #919191 transparent transparent transparent;
+}
+.controls-Button.controls-MenuButton.controls-Checked__checked:hover .controls-MenuButton__arrowDown,
+.controls-Button.controls-MenuButton.controls-Click__active:hover .controls-MenuButton__arrowDown {
+  border-width: 5px 5px 0 5px;
+  border-style: solid;
+  border-color: #919191 transparent transparent transparent;
+}
+.controls-Button.controls-MenuButton.controls-Button__primary .controls-MenuButton__arrowDown {
+  border-width: 5px 5px 0 5px;
+  border-style: solid;
+  border-color: #ffffff transparent transparent transparent;
+  background: transparent;
+}
+.controls-Button.controls-MenuButton.controls-Button__primary:hover .controls-MenuButton__arrowDown {
+  border-width: 5px 5px 0 5px;
+  border-style: solid;
+  border-color: #00c795 transparent transparent transparent;
+  background: transparent;
+}
+.controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked .controls-MenuButton__arrowDown,
+.controls-Button.controls-MenuButton.controls-Button__primary.controls-Click__active .controls-MenuButton__arrowDown {
+  border-width: 5px 5px 0 5px;
+  border-style: solid;
+  border-color: #00c795 transparent transparent transparent;
+}
+.controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked:hover .controls-MenuButton__arrowDown,
+.controls-Button.controls-MenuButton.controls-Button__primary.controls-Click__active:hover .controls-MenuButton__arrowDown {
+  border-width: 5px 5px 0 5px;
+  border-style: solid;
+  border-color: #00c795 transparent transparent transparent;
+}
+.controls-Button.controls-MenuButton.ws-disabled .controls-MenuButton__arrowDown {
+  border-width: 5px 5px 0 5px;
+  border-style: solid;
+  border-color: #919191 transparent transparent transparent;
+  background: transparent;
+}
+.controls-Button.controls-MenuButton .controls-MenuButton__header {
+  display: inline-block;
+  position: absolute;
+  border: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+.controls-Button.controls-MenuButton .controls-MenuButton__header.controls-MenuButton__header-hidden {
+  display: none;
+}
+.controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerLeft {
+  float: left;
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin: 0;
+  background: transparent;
+}
+.controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerCenter {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin: 0;
+  background: transparent;
+}
+.controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerRight {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin: 0;
+  background: transparent;
+}
+.controls-MenuButton__Menu {
+  margin-top: 3px;
+  margin-left: 0;
+  background: #ffffff;
+}
+.controls-MenuLink {
+  position: relative;
+  color: #00c795;
+  text-decoration: none;
+  padding: 0 12px 0 0;
+}
+.controls-MenuLink.controls-MenuLink__withoutMenu {
+  padding: 0;
+}
+.controls-MenuLink:hover {
+  color: #00c795;
+  text-decoration: underline;
+}
+.controls-MenuLink:hover .controls-MenuLink__arrowDown {
+  background: transparent;
+}
+.controls-MenuLink .controls-MenuLink__arrowDown {
+  position: absolute;
+  display: inline-block;
+  width: 8px;
+  height: 6px;
+  right: 0;
+  top: 7px;
+  background: transparent;
+}
+.controls-MenuLink__Menu {
+  margin-top: -20px;
+  margin-left: -9px;
+  background: #ffffff;
+}
+.controls-MenuLink__Menu .controls-MenuLink__header {
+  display: inline-block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  height: 24px;
+  padding: 0 8px;
+  border-bottom: 1px solid #ededed;
+  background: #ffffff;
+}
+.controls-MenuLink__Menu .controls-MenuLink__header .controls-Link {
+  margin: 3px 0 0;
+  color: #00c795;
+  text-decoration: none;
+}
+.controls-MenuLink__Menu .controls-MenuLink__header .controls-Link:hover {
+  color: #00c795;
+  text-decoration: none;
+}
+.controls-MenuLink__Menu .controls-MenuLink__header .controls-MenuLink__arrowDown {
+  display: none;
+}
+@-moz-document url-prefix() {
+  .controls-MenuLink__Menu {
+    margin-top: -19px;
+  }
+}
+.controls-MenuIcon {
+  position: relative;
+}
+.controls-MenuIcon .controls-MenuIcon__header {
+  background: #ffffff;
+}
+.controls-MenuIcon .controls-MenuIcon__header.controls-MenuIcon__header-hidden {
+  display: none;
+}
+.controls-MenuIcon .controls-MenuIcon__header .controls-MenuIcon__headerLeft {
+  position: absolute;
+  width: 12px;
+  height: 28px;
+  top: 0;
+  left: 2px;
+  background: transparent url('') 0 0;
+}
+.controls-MenuIcon .controls-MenuIcon__header .controls-MenuIcon__headerRight {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  top: 0;
+  left: 6px;
+  background: transparent url('') 0 -30px;
+}
+.controls-MenuIcon__Menu {
+  margin-top: 3px;
+  margin-left: 2px;
+  background: #ffffff;
+}
+.controls-TextBox {
+  display: inline-block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  height: 24px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d1d1d1;
+  background: #ffffff;
+}
+.controls-TextBox.ws-has-focus {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d1d1d1;
+  background: #ffffff;
+}
+.controls-TextBox.ws-has-focus .controls-TextBox__fieldWrapper .controls-TextBox__field {
+  color: inherit;
+}
+.controls-TextBox.ws-validation-error {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ff302b !important;
+  background: #fadadd !important;
+}
+.controls-TextBox.ws-validation-error .controls-TextBox__fieldWrapper .controls-TextBox__field {
+  color: inherit;
+}
+.controls-TextBox:hover {
+  border-width: 1px;
+  border-style: solid;
   border-color: #00c795;
+  background: #ffffff;
+}
+.controls-TextBox:hover .controls-TextBox__fieldWrapper .controls-TextBox__field {
+  color: inherit;
+}
+.controls-TextBox.ws-disabled {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #f1f1f1;
+  background: #ffffff;
+}
+.controls-TextBox.ws-disabled .controls-TextBox__fieldWrapper .controls-TextBox__field {
+  color: inherit;
+}
+.controls-TextBox .controls-TextBox__afterFieldWrapper,
+.controls-DatePicker .controls-TextBox__afterFieldWrapper {
+  position: relative;
+  float: right;
+  width: 16px;
+  min-height: 19px;
+  margin: 0 2px 0 0;
+  height: 100%;
+}
+.controls-TextBox .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper,
+.controls-DatePicker .controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
+  margin: 0 21px 0 0;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper {
+  position: relative;
+  padding: 0 7px;
+  height: 100%;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  min-height: 19px;
+  line-height: 20px !important;
+  margin: 0;
+  padding: 1px 0;
+  border: none;
+  outline: none;
+  background: transparent;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-webkit-input-placeholder {
+  color: #d1d1d1 !important;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field:-moz-placeholder {
+  color: #d1d1d1 !important;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-moz-placeholder {
+  color: #d1d1d1 !important;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field:-ms-input-placeholder {
+  color: #d1d1d1 !important;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-ms-clear {
+  display: none;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-TextBox__field-uppercase {
+  text-transform: uppercase;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-TextBox__field-lowercase {
+  text-transform: lowercase;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__placeholder {
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #d1d1d1 !important;
+  font: inherit;
+  padding: 3px 0 0;
+  text-align: inherit;
 }
 .controls-FormattedTextBox {
   display: inline-block;
   vertical-align: top;
-  background-color: white;
-  height: 22px;
-  min-height: 22px;
   line-height: normal;
+  background: transparent;
 }
-.controls-FormattedTextBox__fieldWrapper {
+.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper {
+  min-height: 22px;
   height: 100%;
-  margin: 0 7px;
+  padding: 0 7px;
+  background: transparent;
 }
-.controls-FormattedTextBox__field {
-  padding-top: 3px;
+.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
+  padding: 3px 0 0;
 }
-.controls-FormattedTextBox__field-symbol {
+.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
   font-style: normal;
   white-space: pre;
 }
-.controls-TabButton {
-  cursor: pointer;
-  display: inline-block;
+.controls-FormattedTextBox.ws-validation-error {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ff302b !important;
+  background: #fadadd !important;
+}
+.controls-FormattedTextBox.ws-validation-error .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
+  color: inherit;
+}
+.controls-NumberTextBox .controls-TextBox__fieldWrapper {
+  margin: 0;
+  height: 100%;
+}
+.controls-NumberTextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
+  text-align: left;
+}
+.controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow {
+  display: block;
+  text-decoration: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
-  padding: 0 16px;
-  border-bottom: 3px solid transparent;
-  height: 24px;
 }
-.controls-TabButton:hover {
-  color: #00c795;
+.controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp {
+  width: 12px;
+  height: 12px;
+  margin: -1px 0 0;
+  border-radius: 0;
+  border-width: 1px 0 0 0;
+  border-style: solid;
+  border-color: #d1d1d1;
+  background: url('img/NumberTextBox-arrow.png') 0 0 no-repeat;
 }
-.controls-TabButton.controls-Checked__checked {
-  border-bottom-color: #00c795;
+.controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp:hover {
+  border-width: 1px 0 0 0;
+  border-style: solid;
+  border-color: #00c795;
+  background: url('img/NumberTextBox-arrow.png') 0 -24px no-repeat;
+}
+.controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown {
+  width: 12px;
+  height: 12px;
+  margin: 0;
+  border-radius: 0;
+  border-width: 0 0 1px 0;
+  border-style: solid;
+  border-color: #d1d1d1;
+  background: url('img/NumberTextBox-arrow.png') 0 -12px no-repeat;
+}
+.controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown:hover {
+  border-width: 0 0 1px 0;
+  border-style: solid;
+  border-color: #00c795;
+  background: url('img/NumberTextBox-arrow.png') 0 -36px no-repeat;
+}
+.controls-NumberTextBox.ws-disabled .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow,
+.controls-NumberTextBox.ws-disabled:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow {
+  cursor: default;
+}
+.controls-NumberTextBox.ws-disabled .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp,
+.controls-NumberTextBox.ws-disabled:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowUp {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: url('img/NumberTextBox-arrow.png') 0 0 no-repeat;
+}
+.controls-NumberTextBox.ws-disabled .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown,
+.controls-NumberTextBox.ws-disabled:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow.controls-NumberTextBox__arrowDown {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: url('img/NumberTextBox-arrow.png') 0 -12px no-repeat;
+}
+.controls-PasswordTextField .controls-TextBox__field__fixIE {
+  font-size: 12px;
+}
+.controls-ComboBox {
+  cursor: pointer;
+}
+.controls-ComboBox .controls-TextBox__fieldWrapper {
+  position: relative;
+}
+.controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__field {
+  font: inherit;
+  color: inherit;
+}
+.controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
+  display: none;
+}
+.controls-ComboBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
+  position: absolute;
+  text-decoration: none;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  right: 0;
+  margin: -8px 0 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: #ffffff url('img/ComboBox.png') 0 0 no-repeat;
+}
+.controls-ComboBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown:hover {
+  text-decoration: none;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: #ffffff url('img/ComboBox.png') 0 -16px no-repeat;
+}
+.controls-ComboBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__field {
+  visibility: hidden;
+  position: absolute;
+}
+.controls-ComboBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
+  display: inline-block;
+  font: inherit;
+  color: inherit;
+}
+.controls-ComboBox.controls-ComboBox__editable-false:hover .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
+  text-decoration: none;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: #ffffff url('img/ComboBox.png') 0 -16px no-repeat;
+}
+.controls-ComboBox.controls-Picker__show .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: #ffffff url('img/ComboBox.png') 0 0 no-repeat;
+}
+.controls-ComboBox.controls-Picker__show:hover .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: #ffffff url('img/ComboBox.png') 0 -16px no-repeat;
+}
+.controls-ComboBox.ws-disabled,
+.controls-ComboBox.ws-disabled:hover {
+  cursor: default;
+}
+.controls-ComboBox.ws-disabled .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown,
+.controls-ComboBox.ws-disabled:hover .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: #ffffff url('img/ComboBox.png') 0 0 no-repeat;
+}
+.controls-ComboBox__picker {
+  border: 1px solid #d1d1d1;
+  -webkit-border-radius: 0 0 2px 2px;
+  -moz-border-radius: 0 0 2px 2px;
+  border-radius: 0 0 2px 2px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  margin: -2px 0 0;
+}
+.controls-ComboBox__picker .controls-ComboBox__itemRow {
+  cursor: pointer;
+  padding: 4px 7px;
+  font: inherit;
+  color: inherit;
+  background: #ffffff;
+}
+.controls-ComboBox__picker .controls-ComboBox__itemRow.controls-ComboBox__itemRow__selected {
+  color: #919191;
+  background: #ffffff;
+}
+.controls-ComboBox__picker .controls-ComboBox__itemRow:hover {
+  color: #ffffff;
+  background: #00c795;
+}
+.controls-ComboBox__inputWrapper {
+  height: 100%;
+  margin-right: 18px;
+}
+.controls-TextArea {
+  display: inline-block;
+  vertical-align: top;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d1d1d1;
+  background: #ffffff;
+}
+.controls-TextArea .controls-TextArea__inputField {
+  font: inherit;
+  color: inherit;
+  display: block;
+  width: 100%;
+  height: 100%;
+  line-height: normal;
+  padding: 6px 7px;
+  resize: none;
+  border: none;
+  background: transparent;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.controls-TextArea.ws-has-focus {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #eaeaea #eaeaea #d1d1d1 #eaeaea;
+  background: #ffffff;
+}
+.controls-TextArea.ws-has-focus .controls-TextArea__inputField {
+  color: inherit;
+}
+.controls-TextArea.ws-validation-error {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ff302b !important;
+  background: #fadadd !important;
+}
+.controls-TextArea.ws-validation-error .controls-TextArea__inputField {
+  color: inherit;
+}
+.controls-TextArea:hover {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #eaeaea #eaeaea #d1d1d1 #eaeaea;
+  background: #ffffff;
+}
+.controls-TextArea:hover .controls-TextArea__inputField {
+  color: inherit;
+}
+.controls-TextArea.ws-disabled {
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  background: #ffffff;
+}
+.controls-TextArea.ws-disabled .controls-TextArea__inputField {
+  color: inherit;
+  overflow-y: hidden;
+}
+.controls-TextArea.controls-TextArea__autoheight {
+  height: auto !important;
+}
+.controls-DatePicker {
+  border: none !important;
+  background: transparent !important;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.controls-DatePicker .controls-FormattedTextBox__fieldWrapper {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d1d1d1;
+  background: #ffffff;
+}
+.controls-DatePicker.ws-has-focus .controls-FormattedTextBox__fieldWrapper {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d1d1d1;
+  background: #ffffff;
+}
+.controls-DatePicker.ws-validation-error {
+  border: none !important;
+  background: transparent !important;
+}
+.controls-DatePicker.ws-validation-error > .controls-DatePicker__fieldWrapper {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ff302b !important;
+  background: #fadadd !important;
+}
+.controls-DatePicker:hover .controls-FormattedTextBox__fieldWrapper {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #00c795;
+  background: #ffffff;
+}
+.controls-DatePicker.ws-disabled .controls-FormattedTextBox__fieldWrapper {
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  background: #ffffff;
+}
+.controls-DatePicker.ws-disabled .controls-DatePicker__calendarIcon {
+  cursor: default;
+}
+.controls-DatePicker .controls-DatePicker__calendarIcon {
+  position: absolute;
+  text-decoration: none;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  top: 4px;
+  left: 1px;
+  background: url('img/DatePicker-calendar.png') -1px 0 no-repeat;
+}
+.controls-DatePicker .controls-DatePicker__calendarIcon:hover {
+  background: url('img/DatePicker-calendar.png') -18px 0 no-repeat;
+}
+.controls-DatePicker .controls-DatePicker__calendarIcon.calendar-disabled {
+  background: url('img/DatePicker-calendar.png') -35px 0 no-repeat !important;
+}
+.controls-DatePicker__calendar {
+  -webkit-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 .controls-Calendar {
-  padding-top: 8px;
   display: inline-block;
-  background: #FFFFFF;
   text-align: center;
+  font: inherit;
+  width: auto;
+  padding: 8px 0 0;
+  background: #ffffff;
 }
-.controls-Calendar__monthPicker {
+.controls-Calendar .controls-Calendar__monthPicker {
   width: 148px;
 }
-.controls-Calendar__dayTable {
+.controls-Calendar .controls-Calendar__dayTable {
   vertical-align: middle;
   width: 100%;
   border-spacing: 1px;
 }
-.controls-Calendar__tableHead {
-  font-size: 11px;
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableHead {
+  font: 11px Tahoma, Geneva, sans-serif;
+  text-align: center;
 }
-.controls-Calendar__tableBody {
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableBody {
+  font: inherit;
   text-align: left;
 }
-.controls-Calendar__tableElement {
-  padding-left: 8px;
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement {
   width: 56px;
   height: 24px;
+  padding: 0 0 0 8px;
 }
-.controls-Calendar__tableBodyElement {
-  background: #F2F2F2;
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement {
   cursor: pointer;
+  color: #353535;
+  background: #f1f1f1;
 }
-.controls-Calendar__tableBodyElement:hover {
-  background: #E5ECF4;
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement.controls-Calendar__tableBodyElement__active {
+  color: #ffffff;
+  background: #00c795;
 }
-.controls-Calendar__tableBodyElement__active,
-.controls-Calendar__tableBodyElement__active:hover {
-  background: #ffc37e;
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement.controls-Calendar__tableBodyElement__active:hover {
+  color: #ffffff;
+  background: #00c795;
 }
-.controls-Calendar__tableElementFog {
-  color: #999999;
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement:hover {
+  color: #00c795;
+  background: #ffffff;
+}
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableElementFog {
   cursor: default;
+  color: #919191;
+  background: transparent;
+}
+.controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableElementFog:hover {
+  color: #919191;
+  background: transparent;
 }
 .controls-MonthPicker {
   text-align: center;
   display: inline-block;
 }
-.controls-MonthPicker__field {
-  color: #0055BB;
+.controls-MonthPicker .controls-MonthPicker__field {
   white-space: nowrap;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 700;
   height: 16px;
-  line-height: 16px;
   margin: 0 16px;
+  font: 700 14px/16px Tahoma, Geneva, sans-serif;
+  color: #00c795;
+  text-decoration: none;
 }
-.controls-MonthPicker__field:hover {
+.controls-MonthPicker .controls-MonthPicker__field:hover {
+  color: #00c795;
   text-decoration: underline;
-  color: #FF7033;
 }
-.controls-MonthPicker__arrowWrapper {
+.controls-MonthPicker .controls-MonthPicker__arrowWrapper {
+  position: relative;
+  display: inline-block;
   width: 16px;
   min-height: 16px;
   height: 100%;
-  position: relative;
-  display: inline-block;
 }
-.controls-MonthPicker__arrowLeftWrapper {
+.controls-MonthPicker .controls-MonthPicker__arrowWrapper.controls-MonthPicker__arrowLeftWrapper {
   float: left;
-  display: inline-block;
 }
-.controls-MonthPicker__arrowRightWrapper {
+.controls-MonthPicker .controls-MonthPicker__arrowWrapper.controls-MonthPicker__arrowRightWrapper {
   float: right;
 }
-.controls-MonthPicker__arrow {
+.controls-MonthPicker .controls-MonthPicker__arrowWrapper .controls-MonthPicker__arrow {
   position: absolute;
   display: inline-block;
-  background: #FFFFFF;
-  background: url("img/MonthPicker-arrows.png");
+  text-decoration: none;
+  cursor: pointer;
   width: 16px;
   height: 16px;
-  cursor: pointer;
   top: 0;
   right: 0;
-  text-decoration: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
-.controls-MonthPicker__arrowLeft {
-  background-position: 32px 0px;
+.controls-MonthPicker .controls-MonthPicker__arrowWrapper .controls-MonthPicker__arrow.controls-MonthPicker__arrowLeft {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: url('img/MonthPicker-arrows.png') -32px 0 no-repeat;
 }
-.controls-MonthPicker__arrowLeft:hover {
-  background-position: 0px 0px;
+.controls-MonthPicker .controls-MonthPicker__arrowWrapper .controls-MonthPicker__arrow.controls-MonthPicker__arrowLeft:hover {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: url('img/MonthPicker-arrows.png') 0 0 no-repeat;
 }
-.controls-MonthPicker__arrowRight {
-  background-position: -32px -32px;
+.controls-MonthPicker .controls-MonthPicker__arrowWrapper .controls-MonthPicker__arrow.controls-MonthPicker__arrowRight {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: url('img/MonthPicker-arrows.png') -32px -32px no-repeat;
 }
-.controls-MonthPicker__arrowRight:hover {
-  background-position: 0px -32px;
+.controls-MonthPicker .controls-MonthPicker__arrowWrapper .controls-MonthPicker__arrow.controls-MonthPicker__arrowRight:hover {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: url('img/MonthPicker-arrows.png') 0 -32px no-repeat;
 }
 .controls-MonthPicker__dropdownWrapper {
-  border: 1px solid #FFFFFF;
-  background: #FFFFFF;
+  border: 1px solid #ffffff;
+  background: #ffffff;
 }
-.controls-MonthPicker__dropdownElement {
-  padding: 2px;
+.controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement {
+  cursor: pointer;
   height: 22px;
   line-height: 22px;
-  cursor: pointer;
-  color: #333;
+  color: #353535;
+  background: #ffffff;
 }
-.controls-MonthPicker__dropdownElement:hover {
-  background: #E5ECF4;
+.controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement.controls-MonthPicker__dropdownElementActive {
+  color: #353535;
+  background: #f1f1f1;
 }
-.controls-MonthPicker__dropdownElementActive {
-  background: #F2F2F2;
+.controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement.controls-MonthPicker__dropdownElementMonth {
+  text-align: left;
+  padding: 2px 2px 2px 24px;
 }
-.controls-MonthPicker__dropdownElementMonth {
-  padding-left: 24px;
-}
-.controls-MonthPicker__dropdownElementYear {
+.controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement.controls-MonthPicker__dropdownElementYear {
   text-align: center;
+  padding: 2px;
 }
-.controls-DatePicker {
+.controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement:hover {
+  color: #ffffff;
+  background: #00c795;
+}
+.controls-EditAtPlace {
   border: none;
+}
+.controls-EditAtPlace:hover,
+.controls-EditAtPlace.ws-disabled {
+  border: none;
+}
+.controls-EditAtPlace.ws-disabled .controls-EditAtPlace__fieldWrapper .controls-EditAtPlace__textField {
+  cursor: text;
+}
+.controls-EditAtPlace.controls-EditAtPlace__multiline {
+  display: inline;
+  text-indent: 0;
+  white-space: pre-wrap;
+  /* css-3 */
+  white-space: -moz-pre-wrap;
+  /* Mozilla, since 1999 */
+  word-wrap: break-word;
+  /* Internet Explorer 5.5+ */
+}
+.controls-EditAtPlace.controls-EditAtPlace__autoHeight {
+  height: auto;
+}
+.controls-EditAtPlace .controls-EditAtPlace__fieldWrapper {
+  margin: 0 0 2px 0;
+  border-width: 2px 1px;
+  border-style: solid;
+  border-color: transparent;
+}
+.controls-EditAtPlace .controls-EditAtPlace__fieldWrapper.controls-EditAtPlace__textAreaWrapper {
+  display: block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
-  background-color: transparent;
+  padding: 5px 7px;
 }
-.controls-DatePicker__fieldWrapper {
-  margin-right: 16px;
-  background-color: white;
-  padding: 0 7px;
-  border: 1px solid #d1d1d4;
-  border-radius: 2px;
+.controls-EditAtPlace .controls-EditAtPlace__fieldWrapper .controls-EditAtPlace__textField {
+  display: inline-block;
+  font: inherit;
+  width: auto;
+  cursor: pointer;
+  border-width: 0 0 1px 0;
+  border-style: dashed;
+  border-color: #868686;
 }
-.controls-DatePicker__fieldWrapper:hover {
-  border-color: #00c795;
+.controls-EditAtPlace .controls-EditAtPlace__editor {
+  width: 100%;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
 }
-.controls-DatePicker .controls-FormattedTextBox__fieldWrapper {
+.controls-EditAtPlace .controls-EditAtPlace__editor .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
+  font: 13px/20px Tahoma, Geneva, sans-serif;
+}
+.controls-EditAtPlace .controls-EditAtPlace__editor .controls-TextArea .controls-TextArea__inputField {
+  font: 13px/20px Tahoma, Geneva, sans-serif;
+}
+.controls-EditAtPlace.controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace__fieldWrapper {
+  display: none;
+}
+.controls-EditAtPlace.controls-EditAtPlace__editorHidden .controls-EditAtPlace__editor {
+  display: none;
+}
+.controls-EditAtPlace__editorOverlay,
+.controls-EditAtPlaceGroup__editorOverlay {
+  margin: -4px 0 0 -4px;
+  padding: 4px;
+  border: none;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #f1f1f1;
+}
+.controls-EditAtPlace__editorOverlay .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
+  font: 13px/20px Tahoma, Geneva, sans-serif;
+}
+.controls-EditAtPlace__editorOverlay .controls-TextArea .controls-TextArea__inputField {
+  font: 13px/20px Tahoma, Geneva, sans-serif;
+}
+.controls-EditAtPlace__controlPanel {
+  display: inline-block;
+  vertical-align: top;
+  margin: 0 0 0 8px;
+}
+.controls-EditAtPlace__controlPanel .controls-EditAtPlace__cancel,
+.controls-EditAtPlaceGroup__controlPanel .controls-EditAtPlace__cancel {
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  margin: 0 0 0 4px;
+  background: url('img/cancelIcon-sprite.png') 0 -32px no-repeat;
+}
+.controls-EditAtPlace__controlPanel .controls-EditAtPlace__cancel:hover,
+.controls-EditAtPlaceGroup__controlPanel .controls-EditAtPlace__cancel:hover {
+  background: url('img/cancelIcon-sprite.png') 0 -16px no-repeat;
+}
+.controls-EditAtPlaceGroup .controls-EditAtPlace .controls-EditAtPlace__fieldWrapper.controls-EditAtPlace__textAreaWrapper {
+  padding: 4px 4px;
+}
+.controls-EditAtPlaceGroup__controlPanel {
+  float: right;
+  margin: 4px;
+}
+.controls-ListView .controls-ListView__item,
+.controls-DataGrid .controls-ListView__item {
+  overflow: hidden;
+  position: relative;
+}
+.controls-ListView .controls-ListView__item .controls-ListView__itemActions,
+.controls-DataGrid .controls-ListView__item .controls-ListView__itemActions {
+  position: absolute;
+  display: none;
+  height: 16px;
+  top: 50%;
+  right: 8px;
+  margin: -8px 0 0;
+  padding: 0;
+  z-index: 10;
+  background: transparent;
+}
+.controls-ListView .controls-ListView__item .controls-ListView__itemActions .controls-ListView__action,
+.controls-DataGrid .controls-ListView__item .controls-ListView__itemActions .controls-ListView__action {
+  display: inline;
+  cursor: pointer;
+  margin: 0 16px 0 0;
+}
+.controls-ListView .controls-ListView__item .controls-ListView__itemActions .controls-ListView__action:last-child,
+.controls-DataGrid .controls-ListView__item .controls-ListView__itemActions .controls-ListView__action:last-child {
   margin: 0;
 }
-.controls-DatePicker__calendarIconWrapper {
-  width: 16px;
-  min-height: 22px;
-  height: 100%;
-  box-sizing: border-box;
+.controls-ListView > .controls-TreeView__childContainer {
+  display: block;
+}
+.controls-ListView .controls-TreeView__item {
+  overflow: hidden;
   position: relative;
-  float: right;
-  margin-left: 2px;
 }
-.controls-DatePicker__calendarIcon {
-  background: url("img/DatePicker-calendar.png") no-repeat 0 0;
-  display: inline-block;
-  position: absolute;
-  min-height: 16px;
-  top: 50%;
-  margin-left: 1px;
-  margin-top: -7px;
-  width: 16px;
+.controls-ListView .controls-TreeView__item .controls-TreeView__expand {
+  visibility: hidden;
+  float: left;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   cursor: pointer;
-  text-decoration: none;
-}
-.controls-DatePicker__calendarIcon:hover {
-  background-position: -17px 0;
-}
-.controls-DatePicker__calendar {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-}
-.controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
-  margin-right: 23px;
-}
-.controls-ButtonGroup__vertical .controls-ListView__item {
-  margin-right: 0;
-  margin-bottom: 8px;
-}
-.controls-RadioGroup .controls-ListView__item {
-  margin-right: 16px;
-}
-.controls-CheckBoxGroup .controls-ListView__item {
-  margin-right: 16px;
-}
-.controls-IconButton {
-  cursor: pointer;
-}
-.controls-IconButton.controls-Button {
-  padding: 0;
-  cursor: pointer;
+  width: auto;
   height: auto;
-  box-sizing: content-box;
+  margin: 3px 0 0 3px;
+  border-width: 6px 0 6px 6px;
+  border-style: solid;
+  border-color: transparent transparent transparent #00c795;
+  background: transparent;
 }
-.controls-DataGrid__table {
+.controls-ListView .controls-TreeView__item .controls-TreeView__expand:hover {
+  border-width: 6px 0 6px 6px;
+  border-style: solid;
+  border-color: transparent transparent transparent #00c795;
+  background: transparent;
+}
+.controls-ListView .controls-TreeView__item .controls-TreeView__expand.controls-TreeView__expand__open {
+  width: auto;
+  height: auto;
+  margin: 7px 0 0 0;
+  border-width: 6px 6px 0 6px;
+  border-style: solid;
+  border-color: #00c795 transparent transparent transparent;
+  background: transparent;
+}
+.controls-ListView .controls-TreeView__item .controls-TreeView__expand.controls-TreeView__expand__open:hover {
+  border-width: 6px 6px 0 6px;
+  border-style: solid;
+  border-color: #00c795 transparent transparent transparent;
+  background: transparent;
+}
+.controls-ListView .controls-TreeView__item .controls-TreeView__expand + .controls-TreeView__itemContent {
+  margin: 0 0 0 15px;
+}
+.controls-ListView .controls-TreeView__item.controls-TreeView__hasChild > .controls-TreeView__expand {
+  visibility: visible;
+}
+.controls-ListView .controls-TreeView__childContainer {
+  display: none;
+  list-style: none;
+  padding: 0 0 0 15px;
+}
+.controls-DataGrid .controls-DataGrid__table {
   width: 100%;
+  border-spacing: 0;
+  border-collapse: collapse;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: #ffffff;
 }
-.controls-DataGrid__tr {
-  cursor: pointer;
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr {
+  background: transparent;
 }
-.controls-DataGrid__tr:hover .controls-DataGrid__td {
-  background-color: #00c795;
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover {
+  background: #00c795;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover .controls-DataGrid__th {
+  color: inherit;
+  background: #00c795;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover .controls-DataGrid__td {
   color: #ffffff;
+  background: #00c795;
 }
-.controls-DataGrid__th,
-.controls-DataGrid__td {
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected {
+  background: transparent;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected .controls-DataGrid__td {
+  color: inherit;
+  background: transparent;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th {
+  position: relative;
+  cursor: pointer;
   text-align: left;
   height: 32px;
   padding: 0 10px;
+  color: #919191;
+  background: transparent;
+  border-collapse: collapse;
+  border-width: 1px 1px 0 1px;
+  border-style: solid;
+  border-color: transparent;
 }
-.controls-DataGrid__td {
-  border-top: 1px solid #d1d1d4;
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:hover {
+  color: #919191;
+  background: transparent;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
+  cursor: pointer;
+  text-align: left;
+  height: 32px;
+  padding: 0 10px;
+  color: inherit;
+  background: transparent;
+  border-collapse: collapse;
+  border-width: 1px 0 0;
+  border-style: solid;
+  border-color: #d1d1d1;
 }
-.controls-DataGrid__th {
-  color: #919197;
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:hover {
+  color: inherit;
+  background: transparent;
 }
-.controls-DataGrid__itemSelect .controls-ListView__item__selected .controls-DataGrid__td:first-child {
+.controls-UnitEditor__fieldWrapper {
+  margin-right: 34px;
+}
+.controls-UnitEditor__unitSelector {
+  min-width: 22px;
+  min-height: 18px;
+  height: 100%;
+  float: right;
+  cursor: pointer;
+  text-align: center;
+}
+.controls-UnitEditor__unitSelector__untoggled {
+  margin-right: 16px;
+}
+.controls-UnitEditor__unitSelector:hover {
+  background: #00c795;
+}
+.controls-UnitEditor__unitSelector__toggled {
+  border: 1px solid #919191;
+  border-top-left-radius: 5px;
+  margin-top: -1px;
+  margin-right: 15px;
+}
+.controls-UnitEditor__unitSelector__toggled:hover {
+  background: #ffffff;
+}
+.controls-UnitEditor__unit {
+  padding: 4px;
+  text-align: left;
+}
+.js-controls-UnitEditor__unitText {
+  display: inline-block;
+  padding-top: 3px;
+}
+.controls-UnitEditor__unit:hover {
+  background: #00c795;
+  cursor: pointer;
+}
+.controls-UnitEditor__units {
+  margin-top: -2px;
+  width: 70px!important;
+  border: 1px solid #919191;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background: #FFFFFF;
+}
+.controls-UnitEditor__whiteBorder {
+  position: absolute;
+  top: -1px;
+  width: 22px;
+  right: 0;
+  height: 1px;
+  background: white;
+}
+.controls-ComboBox__picker.controls-Picker__owner__hover {
+  border-top-color: #00c795;
+}
+.controls-Menu.controls-Menu__Popup .controls-MenuButton__Menu-whiteLine {
+  background: transparent !important;
+}
+.controls-NumberTextBox .controls-TextBox__afterFieldWrapper {
+  margin: 0 -4px 0 0;
+}
+.controls-NumberTextBox:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrowUp {
+  border-top: 1px solid #00c795;
+}
+.controls-NumberTextBox:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrowDown {
+  border-bottom: 1px solid #00c795;
+}
+.controls-DataGrid.controls-DataGrid__itemSelect .controls-ListView__item__selected .controls-DataGrid__td:first-child {
   background-image: url('img/rowSelect.png');
   background-position: left top;
   background-repeat: repeat-y;
-}
-.controls-MenuItem {
-  display: block;
-  height: 24px;
-  box-sizing: border-box;
-  padding: 0 16px;
-  line-height: 24px;
-  cursor: pointer;
-  background-color: #ffffff;
-  font-size: 11px;
-  position: relative;
-}
-.controls-MenuItem:hover {
-  background-color: #00c795;
-  color: #ffffff;
-}
-.controls-MenuItem__content {
-  position: relative;
-}
-.controls-MenuItem__icon {
-  position: absolute;
-  left: -2px;
-  top: -2px;
-}
-.controls-MenuItem__text {
-  margin-left: 22px;
-}
-.controls-Menu__Popup {
-  box-shadow: 0 0 8px 1px #aaaaaa;
-  box-sizing: border-box;
-}
-.controls-Menu__Popup .controls-Menu__hasChild:hover:after {
-  background-position: 0 -16px;
-}
-.controls-Menu__Popup .controls-Menu__hasChild:after {
-  content: ' ';
-  background: url('img/MenuExpand.png') 0 0 no-repeat;
-  position: absolute;
-  right: 0;
-  top: 2px;
-  width: 16px;
-  height: 16px;
-}
-.controls-Link {
-  display: inline-block;
-}
-.controls-Link__icon {
-  cursor: pointer;
-  vertical-align: middle;
-}
-.controls-EditAtPlace {
-  border: 1px solid transparent;
-}
-.controls-EditAtPlace:hover,
-.controls-EditAtPlace.ws-has-focus {
-  border: none;
-}
-.controls-EditAtPlace__editorHidden.controls-EditAtPlace:hover,
-.controls-EditAtPlace.ws-has-focus {
-  border: 1px solid transparent;
-}
-.controls-TabButton .controls-EditAtPlace__editor {
-  margin-top: -3px;
-}
-.controls-EditAtPlace__textField {
-  padding-top: 1px;
-  cursor: pointer;
-  border-bottom: dashed 1px #868686;
-  font-family: inherit;
-  width: auto;
-  display: inline-block;
-}
-.ws-disabled .controls-EditAtPlace__textField {
-  border-bottom: none;
-  cursor: text;
-}
-.controls-EditAtPlace__textAreaWrapper {
-  border: none;
-  display: block;
-  padding: 6px 7px;
-  box-sizing: border-box;
-  line-height: 20px;
-}
-.controls-EditAtPlaceGroup .controls-EditAtPlace__textAreaWrapper {
-  padding: 6px 7px;
-}
-.controls-EditAtPlace__textAreaWrapper .controls-TextBox__field {
-  padding: 0;
-}
-.controls-EditAtPlaceGroup__editorOverlay .controls-EditAtPlace {
-  border: none;
-}
-.controls-EditAtPlace__fieldWrapperHidden {
-  border: none;
-}
-.controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace:hover {
-  border: none;
-}
-.controls-EditAtPlace__editorOverlay .controls-TextArea__inputField {
-  line-height: 20px;
-  font-size: inherit;
-}
-.controls-EditAtPlace__fieldWrapperHidden .controls-TextArea__inputField {
-  line-height: 20px;
-  font-size: inherit;
-}
-.controls-EditAtPlaceGroup__editorOverlay .controls-TextArea__inputField {
-  line-height: 20px;
-  font-size: inherit;
-}
-.controls-EditAtPlace__textAreaField {
-  margin: 0;
-}
-.controls-EditAtPlace__multiline {
-  white-space: pre-wrap;
-  /* css-3 */
-
-  white-space: -moz-pre-wrap;
-  /* Mozilla, since 1999 */
-
-  word-wrap: break-word;
-  /* Internet Explorer 5.5+ */
-
-  display: inline;
-  text-indent: 0;
-}
-.controls-EditAtPlace__autoHeight {
-  height: auto;
-}
-.controls-EditAtPlace__controlPanel {
-  margin-left: 8px;
-  vertical-align: middle;
-  display: inline-block;
-}
-.controls-EditAtPlaceGroup__controlPanel {
-  margin: 4px;
-  float: right;
-  height: 24px;
-}
-.controls-EditAtPlace__cancel {
-  width: 16px;
-  height: 16px;
-  margin-left: 4px;
-  margin-top: -13px;
-  display: inline-block;
-  background: url("img/cancelIcon-sprite.png") top left no-repeat;
-  background-position: 0 -32px;
-  cursor: pointer;
-  vertical-align: middle;
-}
-.controls-EditAtPlace__cancel:hover {
-  background-position: 0 -16px;
-}
-.controls-EditAtPlace__editorOverlay {
-  padding: 4px;
-  background: #f8f3f1!important;
-  box-shadow: 0 0 3px #b2b2b2;
-  border-radius: 3px;
-  margin-top: 1px;
-  margin-left: -4px;
-}
-.controls-EditAtPlaceGroup__editorOverlay {
-  background: #f8f3f1!important;
-  box-shadow: 0 0 3px #b2b2b2;
-  border-radius: 3px;
-}
-.controls-EditAtPlace__editorHidden .controls-EditAtPlace__editor {
-  display: none;
-}
-.controls-EditAtPlace__editor {
-  width: 100%;
-}
-.controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace__fieldWrapper {
-  display: none;
 }

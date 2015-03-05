@@ -5,10 +5,28 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
    /**
     * Контрол, отображающий кнопку в виде ссылки и выпадающее из нее меню
     * @class SBIS3.Engine.MenuLink
+	* @demo SBIS3.Demo.Control.MyMenuLink Пример ссылки с выпадающим меню
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.MenuLink'>
+    *    <option name='caption' value='Ссылка с меню'></option>
+    *    <options name="items" type="array">
+    *        <options>
+    *            <option name="id">1</option>
+    *            <option name="title">Пункт1</option>
+    *         </options>
+    *         <options>
+    *            <option name="id">2</option>
+    *            <option name="title">Пункт2</option>
+    *         </options>
+    *      </options>
+    * </component>
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
+    * @public
+    * @category Buttons
+    * @ignoreOptions validators, independentContext, contextRestriction, allowChangeEnable, extendedTooltip
     */
 
    var MenuLink = Link.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.Engine.Link.prototype */ {
@@ -23,26 +41,32 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
          this._initMenu();
       },
 
-      _initMenu: function(){
-         this.unsubscribe('onActivated', this._activatedHandler);
-         this.subscribe('onActivated', this._activatedHandler);
+
+      setCaption: function(caption){
+         Link.superclass.setCaption.call(this, caption);
+         $('.controls-Link__field', this._container).html(caption);
       },
 
-      _activatedHandler: function(){
+      _initMenu: function(){
+         if (this.getItems().getItemsCount() > 1) {
+            $('.js-controls-MenuLink__arrowDown', this._container).show();
+            this._container.removeClass('controls-MenuLink__withoutMenu');
+         } else {
+            $('.js-controls-MenuLink__arrowDown', this._container).hide();
+            this._container.addClass('controls-MenuLink__withoutMenu');
+         }
+      },
+
+      _clickHandler: function(){
          if (this.getItems().getItemsCount() > 1) {
             this._container.addClass('controls-Checked__checked');
             this.togglePicker();
          } else {
             if (this.getItems().getItemsCount() == 1) {
-               if (this.getItems().getNextItem().handler instanceof Function)
-                  this.getItems().getNextItem().handler();
-
+               var id = this.getItems().getKey(this.getItems().getNextItem());
+               this._notify('onMenuItemActivate', id);
             }
          }
-      },
-
-      _createPicker: function(){
-         return new ContextMenu(this._setPickerConfig());
       },
 
       _setPickerContent: function(){
