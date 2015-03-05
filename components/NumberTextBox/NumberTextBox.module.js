@@ -6,11 +6,21 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
    'use strict';
    /**
-    * Поле ввода, куда можно вводить только числовые значения
+    * Поле ввода числа
+    * Можно настроить:
+    * <ol>
+    *    <li>{@link integers количество знаков в целой части};</li>
+    *    <li>{@link decimals количество знаков после запятой};</li>
+    *    <li>{@link hideEmptyDecimals прятать ли пустую дробную часть};</li>
+    *    <li>{@link onlyPositive запрещение ввода отрицательных чисел};</li>
+    *    <li>{@link onlyIntegers запрещение ввода дробных чисел};</li>
+    *    <li>{@link enabledArrows отображать ли стрелки для увеличения/уменьшения числа};</li>
+    * </ol>
     * @class SBIS3.CONTROLS.NumberTextBox
     * @extends SBIS3.CONTROLS.TextBox
     * @control
     * @public
+    * @demo SBIS3.Demo.Control.MyNumberTextBox
     * @ignoreOptions text, validators, independentContext, contextRestriction, allowChangeEnable
     */
 
@@ -73,8 +83,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
              */
             integers: 16,
             /**
-             * @cfg {Boolean} Прятать пустые копейки
-             * Опция позволяет скрыт нулевую дробную часть.
+             * @cfg {Boolean} Прятать нулевую дробную часть
+             * Опция позволяет скрыть нулевую дробную часть.
              * @example
              * <pre>
              *     <option name="hideEmtyDecimals">true</option>
@@ -84,6 +94,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             hideEmptyDecimals: false,
             /**
              * @cfg {Boolean} Показать стрелки
+             * С помощью стрелок можно увеличивать/уменьшать целую часть числа на 1.
              * @example
              * <pre>
              *     <option name="enableArrows"></option>
@@ -111,16 +122,33 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          this._options.text = this._formatValue(this._options.text)
          this._inputField.val(this._options.text);
       },
-
+       /**
+        * Метод установки значения.
+        * При вводе числа с бОльшим количеством знаков после запятой, чем установлено в опции {@link decimals}, будет
+        * произведено математическое округление.
+        * @param text Значение
+        * @example
+        * <pre>
+        *     NumberTextBox.setText('12365,4565');
+        * </pre>
+        * @see integers
+        * @see decimals
+        */
       setText: function (text) {
          text = this._formatValue(text);
          NumberTextBox.superclass.setText.call(this, text);
       },
-
+       /**
+        * Метод получения значения поля ввода числа.
+        * @returns
+        */
       getText: function(){
          return this._options.text;
       },
-
+       /**
+        * Возвращает значение числом.
+        * @returns {null}
+        */
       getNumberValue: function(){
          var val;
          if (this._options.onlyInteger) {
