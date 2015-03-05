@@ -11,6 +11,22 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
     * @class SBIS3.CONTROLS.CheckBoxGroup
     * @extends SBIS3.CONTROLS.CheckBoxGroupBase
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    * @control
+    * @demo SBIS3.Demo.Control.MyCheckBoxGroup
+    * @public
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.CheckBoxGroup'>
+    *    <options name="items" type="array">
+    *       <options>
+    *          <option name="id">1</option>
+    *          option name="title">CheckBox 1</option>
+    *       </options>
+    *       <options>
+    *          <option name="id">2</option>
+    *          <option name="title">CheckBox 2</option>
+    *       </options>
+    *    </options>
+    * </component>
     */
 
    var CheckBoxGroup = CheckBoxGroupBase.extend( /** @lends SBIS3.CONTROLS.CheckBoxGroup.prototype */ {
