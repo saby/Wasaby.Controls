@@ -1,4 +1,4 @@
-/* global global: false, module: false */
+/* global module: false, global: false, JSON: false */
 module.exports = function(grunt) {
    'use strict';
 
@@ -13,9 +13,10 @@ module.exports = function(grunt) {
          return grunt.file.exists(file) && grunt.file.isFile(file);
       })) {
          // All files are built, no need to rebuild them
+         grunt.log.writeln('Contents files already exist so there is no need to build them.');
          return;
       }
-      
+
       var
          newPath,
          jsModules = {},
@@ -47,5 +48,6 @@ module.exports = function(grunt) {
       var jsModulesJsonString = JSON.stringify({jsModules: jsModules}, null, 3);
       fs.writeFileSync(path.join(gruntFilePath, 'components/contents.json'), jsModulesJsonString);
       fs.writeFileSync(path.join(gruntFilePath, 'components/contents.js'), 'contents = ' + jsModulesJsonString + ';');
+      grunt.log.writeln('Contents files are built.');
    });
 };

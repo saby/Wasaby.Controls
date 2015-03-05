@@ -1003,6 +1003,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuButton__Menu {
   margin-top: 3px;
   margin-left: 0;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d1d1d1;
   background: #ffffff;
 }
 .controls-MenuLink {
