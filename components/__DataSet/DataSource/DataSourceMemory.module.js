@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
             record = new Record({
                strategy: this.getStrategy(),
                raw: {},
-               keyField: this._keyField
+               keyField: this._options.keyField
             });
          def.callback(record);
          var self = this;
