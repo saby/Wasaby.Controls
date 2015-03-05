@@ -74,12 +74,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       },
 
-      reload: function() {
+      reload: function(filter, sorting, offset, limit) {
          var self = this;
-         this._dataSource.query().addCallback(function(DataSet){
+         this._dataSource.query(filter, sorting, offset, limit).addCallback(function(DataSet){
             self._dataSet = DataSet;
             self._drawItems();
-         })
+         });
       },
 
       setItems: function (items) {
