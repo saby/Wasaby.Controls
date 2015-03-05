@@ -20,21 +20,21 @@
 
         .controls-DataGrid__th {
           color: @data-grid-row-hover-header-cell-text-color;
-          background: @data-grid-row-hover-header-cell-bg;
+          background-color: @data-grid-row-hover-header-cell-bg;
         }
 
         .controls-DataGrid__td {
           color: @data-grid-row-hover-cell-text-color;
-          background: @data-grid-row-hover-cell-bg;
+          background-color: @data-grid-row-hover-cell-bg;
         }
       }
 
       &.controls-ListView__item__selected {
-        background: @data-grid-row-selected-bg;
+        background-color: @data-grid-row-selected-bg;
 
         .controls-DataGrid__td {
           color: @data-grid-row-selected-cell-text-color;
-          background: @data-grid-row-selected-cell-bg;
+          background-color: @data-grid-row-selected-cell-bg;
         }
       }
     }
@@ -48,7 +48,7 @@
       padding: @data-grid-header-cell-padding;
       color: @data-grid-header-cell-text-color;
       font-size: @data-grid-header-cell-font-size;
-      background: @data-grid-header-cell-bg;
+      background-color: @data-grid-header-cell-bg;
 
       border-collapse: @data-grid-border-collapse;
       border-width: @data-grid-header-cell-border-width;
@@ -60,7 +60,12 @@
         background: @data-grid-header-cell-hover-bg;
       }
     }
-
+     .controls-DataGrid__th:first-child {
+        padding-left: 12px;
+     }
+     .controls-DataGrid__th:last-child {
+        padding-left: 12px;
+     }
     .controls-DataGrid__td {
       position: relative;
       cursor: @data-grid-cell-cursor;
@@ -68,7 +73,7 @@
       height: @data-grid-cell-height;
       padding: @data-grid-cell-padding;
       color: @data-grid-cell-text-color;
-      background: @data-grid-cell-bg;
+      background-color: @data-grid-cell-bg;
 
       border-collapse: @data-grid-border-collapse;
       border-width: @data-grid-cell-border-width;
@@ -79,6 +84,12 @@
         color: @data-grid-cell-hover-text-color;
         background: @data-grid-cell-hover-bg;
       }
+    }
+    .controls-DataGrid__td:first-child {
+       padding-left: 12px;
+    }
+    .controls-DataGrid__td:last-child {
+        padding-left: 12px;
     }
   }
 }
