@@ -144,11 +144,6 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
             keyField: this._options.keyField
          });
          def.callback(DS);
-         var self = this;
-         def.addCallback(function (res) {
-            self._notify('onQuery', res);
-            return res;
-         });
          return def;
       }
 

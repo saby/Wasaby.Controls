@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          init: function () {
             var self = this;
             // запросим данные из источника
-            this._dataSource.query();
+            this.reload();
          },
 
          /**

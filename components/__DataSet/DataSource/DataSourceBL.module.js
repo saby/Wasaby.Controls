@@ -168,11 +168,6 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
             });
 
             def.callback(DS);
-            def.addCallback(function (res) {
-               self._notify('onQuery', res);
-               return res;
-            });
-
          });
 
          return def;
