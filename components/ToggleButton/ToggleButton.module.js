@@ -19,6 +19,7 @@ define('js!SBIS3.CONTROLS.ToggleButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.
     * <component data-component='SBIS3.CONTROLS.ToggleButton'>
     *    <option name='caption' value='Кнопка с залипанием'></option>
     * </component>
+    * @ignoreOptions validators, independentContext, contextRestriction, allowChangeEnable, extendedTooltip
     */
 
    var ToggleButton = Button.extend([Checkable], /** @lends SBIS3.CONTROLS.ToggleButton.prototype */ {

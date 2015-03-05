@@ -8,6 +8,11 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
     * @class SBIS3.CONTROLS.FormattedTextBox
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
     * @control
+    * @public
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.FormattedTextBox' style="width:150px;">
+    * </component>
+    * @category Inputs
     */
 
    var FormattedTextBox = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS.FormattedTextBox.prototype */{
