@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @public
     * @category Buttons
-    * @ignoreOptions validators, independentContext, contextRestriction, extendedTooltip
+    * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     */
 
    var MenuLink = Link.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.Engine.Link.prototype */ {
