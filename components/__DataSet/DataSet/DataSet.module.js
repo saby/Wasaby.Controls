@@ -90,7 +90,11 @@ define('js!SBIS3.CONTROLS.DataSet', [
          if (this._pkIndex === null) {
             this._rebuild();
          }
-         return this.at(this._pkIndex[key]);
+         var index = this.getRecordIndexByKey(key);
+         if (index !== undefined) {
+            return this.at(this._pkIndex[key]);
+         }
+         return undefined;
       },
 
       at: function (index) {

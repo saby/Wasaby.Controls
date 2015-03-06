@@ -9,12 +9,17 @@ define('js!SBIS3.CONTROLS.DSMixin', [
     * @mixin SBIS3.CONTROLS.DSMixin
     */
 
+   var setDataSourceCB = function () {
+      this.reload();
+   };
+
    var DSMixin = /**@lends SBIS3.CONTROLS.DSMixin.prototype  */{
       $protected: {
          _itemsInstances: {},
          _filter: undefined,
          _sorting: undefined,
          _dataSource: undefined,
+         _setDataSourceCB: null, //чтобы подписки отрабатывали всегда
          _dataSet: null,
          _dotItemTpl: null,
          _options: {
@@ -65,17 +70,21 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._dataSource = this._options.dataSource;
          }
 
-         var self = this;
-
-         this._dataSource.subscribe('onDataSync', function () {
-            self.reload();
-         });
+         this._setDataSourceCB = setDataSourceCB.bind(this);
+         this._dataSource.subscribe('onDataSync', this._setDataSourceCB);
 
       },
 
-      reload: function(filter, sorting, offset, limit) {
+      setDataSource: function (ds) {
+         this._dataSource.unsubscribe('onDataSync', this._setDataSourceCB);
+         this._dataSource = ds;
+         this.reload();
+         this._dataSource.subscribe('onDataSync', this._setDataSourceCB);
+      },
+
+      reload: function (filter, sorting, offset, limit) {
          var self = this;
-         this._dataSource.query(filter, sorting, offset, limit).addCallback(function(DataSet){
+         this._dataSource.query(filter, sorting, offset, limit).addCallback(function (DataSet) {
             self._dataSet = DataSet;
             self._drawItems();
          });
