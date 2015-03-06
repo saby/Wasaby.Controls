@@ -112,15 +112,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                if (item) {
                   ComboBox.superclass.setText.call(self, item.get(self._options.displayField));
                   $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(item.get(self._options.displayField));
-                  /*if (self._picker) {
-                     var key = item.getKey();
-                     $('.controls-ListView__item[data-id="'+key+'"]', self._picker.get(0)).addClass('controls-ComboBox__itemRow__selected');
-                  }*/
                }
                else {
                   ComboBox.superclass.setText.call(self, '');
                   $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text('');
-                  /*$('.controls-ComboBox__itemRow__selected', self._picker.get(0)).removeClass('controls-ComboBox__itemRow__selected');*/
                }
                if (self._picker) {
                   $('.controls-ComboBox__itemRow__selected', self._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
