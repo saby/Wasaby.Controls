@@ -5,14 +5,34 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
    /**
     * Кнопка с выпадающим меню
     * @class SBIS3.CONTROLS.MenuButton
-    * @extends SBIS3.CONTROLS.ToggleButton
+    * @extends SBIS3.CONTROLS.Button
+	* @demo SBIS3.Demo.Control.MyMenuButton Пример кнопки с выпадающим меню    
+    * @control
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.MenuButton'>
+    *    <option name='caption' value='Кнопка с меню'></option>
+    *    <options name="items" type="array">
+    *        <options>
+    *            <option name="id">1</option>
+    *            <option name="title">Пункт1</option>
+    *         </options>
+    *         <options>
+    *            <option name="id">2</option>
+    *            <option name="title">Пункт2</option>
+    *         </options>
+    *      </options>
+    * </component>
+    * @public
+    * @category Buttons
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.CollectionMixin
+    * @ignoreOptions validators, independentContext, contextRestriction, allowChangeEnable, extendedTooltip
     */
 
    var MenuButton = Button.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
+         _hasHeader: false,
          _options: {
          }
       },
@@ -22,58 +42,59 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          this._initMenu();
       },
 
-      _activatedHandler: function () {
+      _initMenu: function(){
+         if (this.getItems().getItemsCount() > 1) {
+            $('.js-controls-MenuButton__arrowDown', this._container).show();
+
+            this._container.removeClass('controls-MenuButton__withoutMenu');
+            if (!this._hasHeader) {
+               var header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
+                                  <i class="controls-MenuButton__headerLeft"></i>\
+                                  <i class="controls-MenuButton__headerCenter"></i>\
+                                  <i class="controls-MenuButton__headerRight"></i>\
+                               </span>');
+               $('.controls-MenuButton__headerCenter', header).width(this._container.width() + 4);
+               this.getContainer().append(header);
+               $('.controls-MenuButton__header', this._container.get(0)).css({
+                  width: this._container.outerWidth(),
+                  height: this._container.outerHeight()
+               });
+               this._hasHeader = true;
+            }
+         } else {
+            $('.js-controls-MenuButton__arrowDown', this._container).hide();
+            this._container.addClass('controls-MenuButton__withoutMenu');
+            this._container.removeClass('controls-Picker__show');
+            $('.controls-MenuButton__header', this._container).remove();
+            this._hasHeader = false;
+         }
+      },
+
+      _clickHandler: function(){
          if (this.getItems().getItemsCount() > 1) {
             this._container.addClass('controls-Checked__checked');
             $('.controls-MenuButton__header', this._container).toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
             this.togglePicker();
          } else {
             if (this.getItems().getItemsCount() == 1) {
-               if (this.getItems().getNextItem().handler instanceof Function)
-                  this.getItems().getNextItem().handler();
+               var id = this.getItems().getKey(this.getItems().getNextItem());
+               this._notify('onMenuItemActivate', id);
             }
          }
       },
-
-      _initMenu: function(){
-         var self = this;
-
-         this.unsubscribe('onActivated', this._activatedHandler);
-         this.subscribe('onActivated', this._activatedHandler);
-
-         if (this.getItems().getItemsCount() > 1) {
-            $('.js-controls-MenuButton__arrowDown', self._container).show();
-         } else {
-            $('.js-controls-MenuButton__arrowDown', self._container).hide();
-         }
-
-         var header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
-                            <i class="controls-MenuButton__headerLeft"></i>\
-                            <i class="controls-MenuButton__headerCenter"></i>\
-                            <i class="controls-MenuButton__headerRight"></i>\
-                         </span>');
-         $('.controls-MenuButton__headerCenter', header).width(this._container.width());
-         this.getContainer().css('z-index', 'auto').append(header);
-         $('.controls-MenuButton__header', this._container.get(0)).css({
-            width: this._container.outerWidth(),
-            height: this._container.outerHeight(),
-            'z-index':  -1
-         });
-      },
-
+       /**
+        * Скрывает/показывает меню у кнопки
+        */
       togglePicker: function(){
          MenuButton.superclass.togglePicker.call(this);
-         $('.controls-MenuButton__Menu-whiteLine', this._picker.container).width(this._container.outerWidth() + 8);
-      },
-
-      _createPicker: function(){
-         return new ContextMenu(this._setPickerConfig());
+         $('.controls-MenuButton__Menu-grayLine', this._picker._container).width(this._picker._container.outerWidth() - this._container.outerWidth() - 14); /*ширина части спрайта выезжающего за кнопку */
+         $('.controls-MenuButton__headerCenter', this._container).width(this._container.width() + 11);
       },
 
       _setWidth: function(){
          var self = this;
          this._picker.getContainer().css({
-            'min-width': self._container.outerWidth() - this._border + 15
+            'min-width': self._container.outerWidth() - this._border + 18 //ширина выступающей части обводки
          });
       },
 
@@ -83,13 +104,16 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             self._closeHandler();
          });
          this._picker._container.addClass('controls-MenuButton__Menu');
-         var whiteLine = $('<span class="controls-MenuButton__Menu-whiteLine" style="height: 1px; background: #ffffff; position: absolute; top: -1px;"></span>').width(this._container.outerWidth() + 8);
-         this._picker.getContainer().append(whiteLine);
+         var grayLine = $('<span class="controls-MenuButton__Menu-grayLine" style="height: 1px; background: #cccccc; position: absolute; top: -1px; right: -1px;"></span>');
+         this._picker.getContainer().append(grayLine);
+         this._picker.subscribe('onDrawItems', function(){
+            $('.controls-MenuButton__Menu-grayLine', self._picker._container).width(self._picker._container.outerWidth() - self._container.outerWidth() - 14); /*ширина части спрайта выезжающего за кнопку */
+         });
       },
 
       _closeHandler: function(){
          this._container.removeClass('controls-Checked__checked');
-         $('.controls-MenuButton__header', self._container).addClass('controls-MenuButton__header-hidden');
+         $('.controls-MenuButton__header', this._container).addClass('controls-MenuButton__header-hidden');
       }
    });
 

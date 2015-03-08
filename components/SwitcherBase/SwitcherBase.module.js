@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS.ClickMixin', 'js!SBIS3.CONTROLS.FormWidgetMixin'], function(Control, ClickMixin, FormWidgetMixin) {
+define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS.Clickable', 'js!SBIS3.CONTROLS.FormWidgetMixin'], function(Control, Clickable, FormWidgetMixin) {
 
    'use strict';
 
@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CON
     * @extends $ws.proto.Control
     */
 
-   var SwitcherBase = Control.Control.extend( [ClickMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.SwitcherBase.prototype */ {
+   var SwitcherBase = Control.Control.extend( [Clickable, FormWidgetMixin], /** @lends SBIS3.CONTROLS.SwitcherBase.prototype */ {
       $protected: {
          _switcher : null,
          _position : null,

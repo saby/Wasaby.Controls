@@ -73,6 +73,13 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          return this._inputField;
       },
 
+      _setEnabled: function(state){
+         if (!state){
+            this._inputField.attr('readonly', 'readonly')
+         } else {
+            this._inputField.removeAttr('readonly');
+         }
+      },
 
       _keyUpBind: function() {
          var newText = this._inputField.val();

@@ -1,6 +1,9 @@
 define('js!SBIS3.CONTROLS.DataBindMixin', ['js!SBIS3.CORE.AttributeCfgParser'], function(attributeCfgParser){
    'use strict';
-   return {
+    /**
+     * @mixin SBIS3.CONTROLS.DataBindMixin
+     */
+    var DataBindMixin = /**@lends SBIS3.CONTROLS.DataBindMixin.prototype  */{
       $protected : {
          _dataBind : {}
       },
@@ -71,4 +74,5 @@ define('js!SBIS3.CONTROLS.DataBindMixin', ['js!SBIS3.CORE.AttributeCfgParser'], 
          }
       }
    };
+   return DataBindMixin;
 });

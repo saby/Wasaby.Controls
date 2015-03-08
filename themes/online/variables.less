@@ -1,0 +1,1270 @@
+@white-color:                             #fff;
+@black-color:                             #000;
+
+@gray-dark-color:                         #666;
+@gray-color:                              #999;
+@gray-light-color:                        #ccc;
+
+@default-color:                           transparent;
+@primary-color:                           transparent;
+@secondary-color:                         transparent;
+
+@bg:                                      transparent;
+@text-color:                              @black-color;
+
+@font-basic-name:                         Tahoma, Geneva, sans-serif;
+@font-basic-size:                         13px;
+@font-basic-line-height:                  20px;
+
+
+// ---- //
+// Link //
+// ---- //
+
+@link-cursor:                             pointer;
+@link-text-color:                         #05b;
+@link-text-decoration:                    none;
+@link-text-alignment:                     center;
+@link-line-height:                        normal;
+@link-padding:                            0;
+
+@link-hover-text-color:                   #ff7033;
+@link-hover-text-decoration:              underline;
+
+@link-active-text-color:                  @link-hover-text-color;
+@link-active-text-decoration:             none;
+
+@link-icon-vertical-alignment:            middle;
+@link-icon-margin:                        -2px 0 0;
+
+@link-field-margin:                       0;
+@link-icon-field-margin:                  0 0 0 4px;
+
+
+
+// ------ //
+// Button //
+// ------ //
+
+// Normal button
+@button-font:                             @font-basic-size @font-basic-name;
+@button-text-alignment:                   center;
+@button-min-width:                        24px;
+@button-height:                           24px;
+@button-line-height:                      22px;
+@button-padding:                          0 12px;
+@button-margin:                           auto;
+@button-border-radius:                    16px;
+@button-icon-top-offset:                  1px;                      // top offset of 16x16 icon
+@button-icon-text-margin:                 0 0 0 20px;               // margin of text following 16x16 icon
+@button-icon-big-top-offset:              -3px;                     // top offset of 24x24 icon
+@button-icon-big-text-margin:             0 0 0 28px;               // margin of text following 24x24 icon
+@button-text-padding:                     0;                        // padding of text
+@button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
+
+// Normal default button
+@button-text-color:                       @black-color;
+@button-border:                           1px transparent;
+@button-shadow:                           inset 0 -1px 1px #afacab;
+@button-bg:                               url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXB2xKCIABAwfP/X+ekhWAYiXhjYGAwtTd3+V8/zqNw7Jm9JEqO5BRI0RPDSvALfpvYFsc6W2Y3MFnDOPRYo/l+OoxW9O8WrQSdfKJEjXw9EE11A2vvQIELisuiAAAAAElFTkSuQmCC');
+
+@button-hover-text-color:                 @button-text-color;
+@button-hover-border:                     @button-border;
+@button-hover-shadow:                     inset 0 -1px 1px #919090;
+@button-hover-bg:                         url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAVElEQVQYVwXB2RJAIABA0fv/n2hNEi0oqonx4By+WnlL4cmZmhLlvsgxkkLgOk/isRO853CO3Rq82bDritGabVFoNbNIiZoEUoxM44DoO4aupW+bH5+uQdm94t5JAAAAAElFTkSuQmCC');
+
+@button-active-text-color:                @button-text-color;
+@button-active-border:                    @button-border;
+@button-active-shadow:                    inset 0 1px 1px #939292;
+@button-active-bg:                        url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXBWQ6DIABAwXf/sxlj3UUJhIqKogSX+tsZ3t/Fc0fuM3DGgxg8YV85vMOvM5uzuHlksYZp1Fij+GqJUT1aCtTQIkXN0FaIpqCrPjRFRp2nlFnyB0tqP75XY7RKAAAAAElFTkSuQmCC');
+
+// Normal primary button
+@button-primary-text-color:               @white-color;
+@button-primary-border:                   1px transparent;
+@button-primary-shadow:                   inset 0 -1px 1px #c0401e;
+@button-primary-bg:                       url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAGtJREFUGFcBYACf/wD9sn8A/K57APupdwD6pXMA+qFvAPmdawD4mWgA+JRkAPeQYAD2jFwA9YhYAPWEVQD0gFEA83tNAPN3SQDyc0UA8W9BAPFrPgDwZzoA72M2AO5eMgDuWi4A7VYqAOxSJrQMKtPRuIzAAAAAAElFTkSuQmCC');
+
+@button-primary-hover-text-color:         @button-primary-text-color;
+@button-primary-hover-border:             @button-primary-border;
+@button-primary-hover-shadow:             inset 0 -1px 1px #a15823;
+@button-primary-hover-bg:                 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAGtJREFUGFcBYACf/wD8wYIA+7x9APq3eAD5s3QA+K5vAPeqagD2pWUA9aFgAPScXADzmFcA8pNSAPGOTgDwikkA74VEAO6BPwDtfDoA7Hc2AOtzMQDqbiwA6WooAOhlIwDnYB4A5lwZAOVXFMyDKrhOhVNDAAAAAElFTkSuQmCC');
+
+@button-primary-active-text-color:        @button-primary-text-color;
+@button-primary-active-border:            @button-primary-border;
+@button-primary-active-shadow:            inset 0 1px 1px #8e5f42;
+@button-primary-active-bg:                url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAGtJREFUGFcBYACf/wD+om4A/J5qAPuZZgD6lWIA+ZFeAPiNWgD3iVYA9oVSAPWBTgD0fUoA83hGAPJ0QwDxcD8A72w7AO5oNwDtZDMA7GAvAOtcKwDqVycA6VMjAOhPHwDnSxsA5kcYAOVDFBcJJ2BPy3aDAAAAAElFTkSuQmCC');
+
+// Normal disabled button
+@button-disabled-text-color:              @gray-light-color;
+@button-disabled-border:                  @button-border;
+@button-disabled-shadow:                  inset 0 -1px 1px #bbbbba;
+@button-disabled-bg:                      url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAARUlEQVQYVxXDCRIAEQwAwfn/Y9cRQcSxdFVzzmHvzVrrnsx5u+M+GOM2w6xjvdHbW2lVqfoWtAgqQpGM5ISkSH5jIIXvByxNRX+NbFFRAAAAAElFTkSuQmCC');
+
+// Normal light button
+@button-light-text-color:                 @black-color;
+@button-light-border:                     1px solid #587ab0;
+@button-light-shadow:                     none;
+@button-light-bg:                         @white-color;
+
+@button-light-hover-text-color:           @button-light-text-color;
+@button-light-hover-border:               @button-light-border;
+@button-light-hover-shadow:               @button-light-shadow;
+@button-light-hover-bg:                   #e4e9f1;
+
+@button-light-active-text-color:          @button-light-text-color;
+@button-light-active-border:              @button-light-border;
+@button-light-active-shadow:              @button-light-shadow;
+@button-light-active-bg:                  #cbd5e5;
+
+// Normal light primary button
+@button-light-primary-text-color:         @button-light-text-color;
+@button-light-primary-border:             1px solid @link-hover-text-color;
+@button-light-primary-shadow:             @button-light-shadow;
+@button-light-primary-bg:                 @button-light-bg;
+
+@button-light-primary-hover-text-color:   @button-light-primary-text-color;
+@button-light-primary-hover-border:       @button-light-primary-border;
+@button-light-primary-hover-shadow:       @button-light-primary-shadow;
+@button-light-primary-hover-bg:           #fdecd9;
+
+@button-light-primary-active-text-color:  @button-light-primary-text-color;
+@button-light-primary-active-border:      @button-light-primary-border;
+@button-light-primary-active-shadow:      @button-light-primary-shadow;
+@button-light-primary-active-bg:          #fdd2c0;
+
+// Normal light disabled button
+@button-light-disabled-text-color:        @button-disabled-text-color;
+@button-light-disabled-border:            1px solid @button-light-disabled-text-color;
+@button-light-disabled-shadow:            @button-light-shadow;
+@button-light-disabled-bg:                @white-color !important;
+
+// Big button
+@button-big-font:                         italic normal 18px 'Cambria', Georgia, serif;
+@button-big-text-alignment:               @button-text-alignment;
+@button-big-min-width:                    @button-min-width;
+@button-big-height:                       48px;
+@button-big-line-height:                  18px;
+@button-big-padding:                      15px 24px;
+@button-big-margin:                       @button-margin;
+@button-big-border-radius:                24px;
+@button-big-icon-top-offset:              2px;                              // top offset of 16x16 icon
+@button-big-icon-text-margin:             @button-icon-text-margin;         // margin of text following 16x16 icon
+@button-big-icon-big-top-offset:          -1px;                             // top offset of 24x24 icon
+@button-big-icon-big-text-margin:         @button-icon-big-text-margin;     // margin of text following 24x24 icon
+@button-big-text-padding:                 11px 0 0;
+@button-big-empty-text-margin:            @button-empty-text-margin;
+
+@button-big-text-color:                   @button-text-color;
+@button-big-border:                       @button-border;
+@button-big-shadow:                       @button-shadow;
+@button-big-bg:                           url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAjklEQVQYVx3DVxKDIABAwXf/26WoKDasKCh2zV9Mdmb5XDvXuXEeK8e+/O/bzLZObItjvS/zyDINzM4yOYMb70PPaDsGqxmMxvYtpm8wXU2va7q2Qrcluilo64KmUvecusyoirtKKVVCkceoTKJSSZ5GZElIFgtSKUhkQBL5xKGHFB6ReBMFL0L/ifj1Hl+0S4EyIQKdsQAAAABJRU5ErkJggg==');
+
+@button-big-hover-text-color:             @button-big-text-color;
+@button-big-hover-border:                 @button-big-border;
+@button-big-hover-shadow:                 @button-hover-shadow;
+@button-big-hover-bg:                     url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAINJREFUGFcdw1cSgyAAQMF3/xvGiojYkWZJ+Qi6M8vvuvieJ5/jeL73nSvG5xkCR/Ac3rM7R3SWaC1h2/B3Y3Bmxa7psrAtM2ZOp4l1GlnG+8A89Ez9XTNqzdB1qaJXCq1adCvppETJBtUIWiGQokbWFU0qqhJRFtRpVeRUeUaZFtnrD2rdg354PlYsAAAAAElFTkSuQmCC');
+
+@button-big-active-text-color:            @button-big-text-color;
+@button-big-active-border:                @button-big-border;
+@button-big-active-shadow:                @button-active-shadow;
+@button-big-active-bg:                    url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAJNJREFUGFcNw1USgzAAQMF3/6tVcAiugWDB6W/ZmeV3H9zXznVunMfKuS8cu2bfNNs6sy0Tqx5Z5gE99+ipZx4V09Ax9u1TMqiGvmtQbY2SFZ0saZsCWefIKqcpM+oipSoSqjymzCKKNCJPwqcgiwPSyCcJPRLhEQuXKHAIfZvQsxCuSeCY+I6Bb3/xrA+u+cYxXn8Tm385Ml6/+QAAAABJRU5ErkJggg==');
+
+// Big primary button
+@button-big-primary-text-color:           @button-primary-text-color;
+@button-big-primary-border:               @button-big-border;
+@button-big-primary-shadow:               @button-primary-shadow;
+@button-big-primary-bg:                   url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMZJREFUGFcFwQ1HAwEAgOH3zzTJTJLMZDOTJGmbmplzpvV9ambmnNlKkmRmbCKTJEkk6Xftvu92H7ux52H+f0P01yH6bRP9KMy+ZWZfLcLPJuFHg/C9TvB2TfAqEYwv8V/O8Z9P8UfHeMMjvEEVry8y7QlMnyq4j2XchxLu/SHOXRHntoDT3cdu72Eru9jyDlZrG6u5hdXIYdazmFcZTCmNcbGJcZZCP0mi1zbQq+to4hqasIpWSaCW46ilFdSDZSbFGJP80gKLzlU+l/UpHgAAAABJRU5ErkJggg==');
+
+@button-big-primary-hover-text-color:     @button-big-primary-text-color;
+@button-big-primary-hover-border:         @button-big-primary-border;
+@button-big-primary-hover-shadow:         @button-big-primary-shadow;
+@button-big-primary-hover-bg:             url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMtJREFUGFcBwAA//wD8wYIA+75/APu8fQD6unsA+rd4APm1dgD5s3QA+LFxAPiubwD3rGwA96pqAPanaAD2pWUA9aNjAPWhYAD0nl4A9JxcAPOaWQDzmFcA8pVVAPKTUgDxkVAA8Y5OAPCMSwDwikkA74hGAO+FRADug0IA7oE/AO1+PQDtfDoA7Ho4AOx3NgDrdTMA63MxAOpxLwDqbiwA6WwqAOlqKADoZyUA6GUjAOdjIADnYB4A5l4cAOZcGQDlWRcA5VcUAORVEuAhVOdbDqsIAAAAAElFTkSuQmCC');
+
+@button-big-primary-active-text-color:    @button-big-primary-text-color;
+@button-big-primary-active-border:        @button-big-primary-border;
+@button-big-primary-active-shadow:        @button-active-shadow;
+@button-big-primary-active-bg:            url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMlJREFUGFcFwYtmQgEAgOH/GVKUWJKZSWYmmSRJpbWttmqbHEmSJEkmkcxMMpNMJmNm9myd7vdO95p9H3+/afY/KXbfSXZfCbafcbb1GJuPKJtahPV7mHVVYFUJsXp7YPl6x6IcYFG6Zf7iY/58jfR0iVS8YFZwM8s7meYcTB/tTLI2Jhkr47SFUcrMKHnOMGFiGDcyiJ0xiJ7Sj5zQDxvoCXp6oWO690d0g4d0/DraN1raXg2tqwNaHjVNt4qmS4noUCDa5TRssn8T6U5Ugnh02QAAAABJRU5ErkJggg==');
+
+// Big disabled button
+@button-big-disabled-text-color:          @button-disabled-text-color;
+@button-big-disabled-border:              @button-disabled-border;
+@button-big-disabled-shadow:              @button-disabled-shadow;
+@button-big-disabled-bg:                  url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAFVJREFUGFc9wwkOgDAIBMD9/2OtLb2AHgaqTjLYe2Ot9Z9zvgfG+CqGKtQLVATiGcIncwd329Bts9W3aouvxWZfsqWTCJnSmSLoG2+f7B18tOFCDNcDpuCK5d42KGsAAAAASUVORK5CYII=');
+
+
+
+// ------------ //
+// Button group //
+// ------------ //
+
+@button-group-horizontal-item-margin:     0 8px 0 0;
+@button-group-vertical-item-margin:       0 0 8px 0;
+
+
+
+// ------------- //
+// Toggle button //
+// ------------- //
+
+// Normal default button
+@button-checked-text-color:               #c00;
+@button-checked-border:                   @button-active-border;
+@button-checked-shadow:                   @button-active-shadow;
+@button-checked-bg:                       @button-active-bg;
+
+// Normal primary button
+@button-primary-checked-text-color:       @button-primary-active-text-color;
+@button-primary-checked-border:           @button-primary-active-border;
+@button-primary-checked-shadow:           @button-primary-active-shadow;
+@button-primary-checked-bg:               @button-primary-active-bg;
+
+// Big default button
+@button-big-checked-text-color:           @button-checked-text-color;
+@button-big-checked-border:               @button-big-active-border;
+@button-big-checked-shadow:               @button-big-active-shadow;
+@button-big-checked-bg:                   @button-big-active-bg;
+
+// Big primary button
+@button-big-primary-checked-text-color:   @button-big-primary-active-text-color;
+@button-big-primary-checked-border:       @button-big-primary-active-border;
+@button-big-primary-checked-shadow:       @button-big-primary-active-shadow;
+@button-big-primary-checked-bg:           @button-big-primary-active-bg;
+
+
+
+// ---------- //
+// Tab button //
+// ---------- //
+
+@tab-button-cursor:                             pointer;
+@tab-button-disabled-cursor:                    default;
+
+@tab-button-font:                               italic bold 18px Cambria, sans-serif;
+@tab-button-height:                             29px;
+@tab-button-side-display:                       inline-block;
+@tab-button-side-width:                         19px;
+@tab-button-side-height:                        @tab-button-height;
+@tab-button-inner-height:                       @tab-button-height;
+@tab-button-text-padding:                       3px 0 0;
+@tab-button-border-radius:                      0;
+
+@tab-button-text-color:                         @black-color;
+@tab-button-border-width:                       0;
+@tab-button-border-style:                       solid;
+@tab-button-border-color:                       transparent;
+@tab-button-bg:                                 transparent;
+
+@tab-button-hover-text-color:                   @tab-button-text-color;
+@tab-button-hover-border-width:                 @tab-button-border-width;
+@tab-button-hover-border-style:                 @tab-button-border-style;
+@tab-button-hover-border-color:                 @tab-button-border-color;
+@tab-button-hover-bg:                           @tab-button-bg;
+
+@tab-button-checked-text-color:                 @tab-button-text-color;
+@tab-button-checked-border-width:               @tab-button-border-width;
+@tab-button-checked-border-style:               @tab-button-border-style;
+@tab-button-checked-border-color:               @tab-button-border-color;
+@tab-button-checked-bg:                         @tab-button-bg;
+
+@tab-button-checked-hover-text-color:           @tab-button-hover-text-color;
+@tab-button-checked-hover-border-width:         @tab-button-border-width;
+@tab-button-checked-hover-border-style:         @tab-button-border-style;
+@tab-button-checked-hover-border-color:         @tab-button-border-color;
+@tab-button-checked-hover-bg:                   @tab-button-bg;
+
+@tab-button-disabled-text-color:                @gray-color;
+@tab-button-disabled-border-width:              @tab-button-border-width;
+@tab-button-disabled-border-style:              @tab-button-border-style;
+@tab-button-disabled-border-color:              @tab-button-border-color;
+@tab-button-disabled-bg:                        @tab-button-bg;
+
+@tab-button-disabled-checked-text-color:        @tab-button-disabled-text-color;
+@tab-button-disabled-checked-border-width:      @tab-button-disabled-border-width;
+@tab-button-disabled-checked-border-style:      @tab-button-disabled-border-style;
+@tab-button-disabled-checked-border-color:      @tab-button-disabled-border-color;
+@tab-button-disabled-checked-bg:                @tab-button-bg;
+
+@tab-button-left-side-margin:                   0 -4px 0 0;
+@tab-button-left-side-bg:                       url('img/tabButtonLeft.png') no-repeat;
+
+@tab-button-right-side-margin:                  0 0 0 -4px;
+@tab-button-right-side-bg:                      url('img/tabButtonRight.png') no-repeat;
+
+@tab-button-inner-bg:                           url('img/tabButtonInner.png');
+
+
+
+// ------------ //
+// Radio button //
+// ------------ //
+
+@radio-button-text-margin:                      0;
+
+@radio-button-text-color:                       @gray-color;
+@radio-button-hover-text-color:                 @black-color;
+
+@radio-button-checked-text-color:               @radio-button-hover-text-color;
+@radio-button-checked-hover-text-color:         @radio-button-hover-text-color;
+
+@radio-button-disabled-text-color:              @gray-light-color;
+@radio-button-disabled-hover-text-color:        @radio-button-disabled-text-color;
+
+@radio-button-icon-width:                       24px;
+@radio-button-icon-height:                      17px;
+@radio-button-icon-line-height:                 normal;
+
+@radio-button-icon-spritesheet:                 'img/RadioButton-sprite.png';
+
+@radio-button-icon-bg:                          url(@radio-button-icon-spritesheet) 0 -4px;
+@radio-button-icon-hover-bg:                    url(@radio-button-icon-spritesheet) 0 -100px;
+
+@radio-button-icon-checked-bg:                  url(@radio-button-icon-spritesheet) 0 -52px;
+@radio-button-icon-checked-hover-bg:            @radio-button-icon-checked-bg;
+
+@radio-button-icon-disabled-bg:                 @radio-button-icon-bg;
+@radio-button-icon-disabled-hover-bg:           @radio-button-icon-disabled-bg;
+
+@radio-button-icon-disabled-checked-bg:         @radio-button-icon-disabled-bg;
+@radio-button-icon-disabled-checked-hover-bg:   @radio-button-icon-disabled-hover-bg;
+
+
+
+// ----------- //
+// Radio group //
+// ----------- //
+
+@radio-group-horizontal-item-margin:            @button-group-horizontal-item-margin;
+@radio-group-vertical-item-margin:              @button-group-vertical-item-margin;
+
+
+
+// -------- //
+// Checkbox //
+// -------- //
+
+@check-box-text-margin:                         0 4px;
+
+@check-box-text-color:                          @black-color;
+@check-box-hover-text-color:                    @check-box-text-color;
+
+@check-box-checked-text-color:                  @check-box-text-color;
+@check-box-checked-hover-text-color:            @check-box-hover-text-color;
+
+@check-box-third-state-text-color:              @check-box-text-color;
+@check-box-third-state-hover-text-color:        @check-box-hover-text-color;
+
+@check-box-disabled-text-color:                 @gray-color;
+@check-box-disabled-hover-text-color:           @check-box-disabled-text-color;
+
+@check-box-icon-width:                          16px;
+@check-box-icon-height:                         16px;
+@check-box-icon-line-height:                    19px;
+
+@check-box-icon-spritesheet:                    'img/CheckBox.png';
+
+@check-box-icon-border:                         none;
+@check-box-icon-bg:                             url(@check-box-icon-spritesheet) 0 1px;
+
+@check-box-icon-hover-border:                   @check-box-icon-border;
+@check-box-icon-hover-bg:                       url(@check-box-icon-spritesheet) 0 17px;
+
+@check-box-icon-checked-border:                 @check-box-icon-border;
+@check-box-icon-checked-bg:                     url(@check-box-icon-spritesheet) 0 49px;
+
+@check-box-icon-checked-hover-border:           @check-box-icon-border;
+@check-box-icon-checked-hover-bg:               @check-box-icon-checked-bg;
+
+@check-box-icon-third-state-border:             @check-box-icon-border;
+@check-box-icon-third-state-bg:                 url(@check-box-icon-spritesheet) 0 33px;
+
+@check-box-icon-third-state-hover-border:       @check-box-icon-border;
+@check-box-icon-third-state-hover-bg:           @check-box-icon-third-state-bg;
+
+@check-box-icon-disabled-border:                @check-box-icon-border;
+@check-box-icon-disabled-bg:                    url(@check-box-icon-spritesheet) 16px 1px;
+@check-box-icon-disabled-checked-bg:            url(@check-box-icon-spritesheet) 16px 49px;
+@check-box-icon-disabled-third-state-bg:        url(@check-box-icon-spritesheet) 16px 33px;
+
+
+
+// -------------- //
+// Checkbox group //
+// -------------- //
+
+@check-box-group-horizontal-item-margin:        @button-group-horizontal-item-margin;
+@check-box-group-vertical-item-margin:          @button-group-vertical-item-margin;
+
+
+
+// -------- //
+// Switcher //
+// -------- //
+
+@switcher-spritesheet:                                'img/switcher.png';
+
+@switcher-cursor:                                     pointer;
+@switcher-min-width:                                  90px;
+@switcher-height:                                     23px;
+@switcher-padding:                                    0 16px 0 0;
+
+@switcher-toggle-width:                               auto;
+@switcher-toggle-min-width:                           0;
+@switcher-toggle-height:                              auto;
+@switcher-toggle-box-sizing:                          border-box;
+@switcher-toggle-border-radius:                       0;
+@switcher-toggle-border-width:                        0;
+@switcher-toggle-border-style:                        solid;
+@switcher-toggle-border-color:                        transparent;
+@switcher-toggle-bg:                                  transparent;
+
+@switcher-gap-width:                                  16px;
+@switcher-toggle-edge-width:                          16px;
+
+@switcher-toggle-position-text-alignment:             center;
+@switcher-toggle-position-width:                      100%;
+@switcher-toggle-position-min-width:                  0;
+@switcher-toggle-position-height:                     21px;
+@switcher-toggle-position-min-height:                 0;
+@switcher-toggle-position-box-sizing:                 content-box;
+@switcher-toggle-position-padding:                    3px 0 1px;
+
+@switcher-toggle-position-border-radius:              0;
+@switcher-toggle-position-border-width:               0;
+@switcher-toggle-position-border-style:               solid;
+@switcher-toggle-position-border-color:               transparent;
+
+@switcher-off-toggle-text-alignment:                  left;
+@switcher-off-toggle-padding:                         2px 32px 2px 0;
+@switcher-off-toggle-position-text-color:             @gray-color;
+@switcher-off-toggle-position-margin:                 0 0 0 16px;
+@switcher-off-toggle-position-bg:                     url(@switcher-spritesheet) 0 -96px;
+@switcher-off-toggle-left-edge-bg:                    url(@switcher-spritesheet) 0 0;
+@switcher-off-toggle-right-edge-bg:                   url(@switcher-spritesheet) 0 -24px;
+
+@switcher-on-toggle-text-alignment:                   right;
+@switcher-on-toggle-padding:                          2px 0 2px 32px;
+@switcher-on-toggle-position-text-color:              @black-color;
+@switcher-on-toggle-position-margin:                  0 16px 0 auto;
+@switcher-on-toggle-position-bg:                      @switcher-off-toggle-position-bg;
+@switcher-on-toggle-left-edge-bg:                     url(@switcher-spritesheet) 0 -48px;
+@switcher-on-toggle-right-edge-bg:                    url(@switcher-spritesheet) 0 -312px;
+
+@switcher-disabled-cursor:                            default;
+
+@switcher-disabled-toggle-border-width:               @switcher-toggle-border-width;
+@switcher-disabled-toggle-border-style:               @switcher-toggle-border-style;
+@switcher-disabled-toggle-border-color:               @switcher-toggle-border-color;
+@switcher-disabled-toggle-bg:                         @switcher-toggle-bg;
+
+@switcher-disabled-toggle-position-border-width:      @switcher-toggle-position-border-width;
+@switcher-disabled-toggle-position-border-style:      @switcher-toggle-position-border-style;
+@switcher-disabled-toggle-position-border-color:      @switcher-toggle-position-border-color;
+
+@switcher-off-disabled-toggle-position-text-color:    @gray-light-color;
+@switcher-off-disabled-toggle-position-bg:            none;
+@switcher-off-disabled-toggle-left-edge-bg:           none;
+@switcher-off-disabled-toggle-right-edge-bg:          none;
+
+@switcher-on-disabled-toggle-position-text-color:     @switcher-off-disabled-toggle-position-text-color;
+@switcher-on-disabled-toggle-position-bg:             none;
+@switcher-on-disabled-toggle-left-edge-bg:            none;
+@switcher-on-disabled-toggle-right-edge-bg:           none;
+
+
+
+// ---------------------- //
+// Double online switcher //
+// ---------------------- //
+
+@switcher-do-margin:                            0 0 0 8px;
+
+@switcher-do-toggle-cursor:                     pointer;
+@switcher-do-text-cursor:                       @switcher-do-toggle-cursor;
+@switcher-do-text-color:                        @black-color;
+@switcher-do-decoration:                        none;
+@switcher-do-unselected-text-cursor:            @switcher-do-text-cursor;
+@switcher-do-unselected-text-color:             @gray-color;
+@switcher-do-unselected-text-decoration:        none;
+
+@switcher-do-disabled-toggle-cursor:            default;
+@switcher-do-disabled-text-cursor:              @switcher-do-disabled-toggle-cursor;
+@switcher-do-disabled-text-color:               @gray-color;
+@switcher-do-disabled-text-decoration:          none;
+
+@switcher-do-horizontal-spritesheet:            'img/SwitcherDoubleOnline-sprite.png';
+@switcher-do-horizontal-toggle-width:           30px;
+@switcher-do-horizontal-toggle-height:          16px;
+@switcher-do-horizontal-toggle-margin:          0 4px;
+@switcher-do-horizontal-off-toggle-bg:          transparent url(@switcher-do-horizontal-spritesheet) 0 -4px no-repeat;
+@switcher-do-horizontal-on-toggle-bg:           transparent url(@switcher-do-horizontal-spritesheet) 0 -28px no-repeat;
+@switcher-do-horizontal-off-disabled-toggle-bg: transparent url(@switcher-do-horizontal-spritesheet) 0 -52px no-repeat;
+@switcher-do-horizontal-on-disabled-toggle-bg:  transparent url(@switcher-do-horizontal-spritesheet) 0 -76px no-repeat;
+
+@switcher-do-vertical-spritesheet:              'img/SwitcherDoubleOnline-sprite-double.png';
+@switcher-do-vertical-toggle-width:             16px;
+@switcher-do-vertical-toggle-height:            32px;
+@switcher-do-vertical-toggle-margin:            0 2px 0 0;
+@switcher-do-vertical-off-toggle-bg:            transparent url(@switcher-do-vertical-spritesheet) -16px 0 no-repeat;
+@switcher-do-vertical-on-toggle-bg:             transparent url(@switcher-do-vertical-spritesheet) 0 0 no-repeat;
+@switcher-do-vertical-off-disabled-toggle-bg:   transparent url(@switcher-do-vertical-spritesheet) -48px 0 no-repeat;
+@switcher-do-vertical-on-disabled-toggle-bg:    transparent url(@switcher-do-vertical-spritesheet) -32px 0 no-repeat;
+
+
+
+// ---- //
+// Menu //
+// ---- //
+
+@menu-margin:                             -1px 0 0;
+@menu-border-width:                       1px;
+@menu-border-style:                       solid;
+@menu-border-color:                       @gray-light-color;
+@menu-shadow:                             none;
+
+@menu-expand-width:                       16px;
+@menu-expand-height:                      16px;
+@menu-expand-top-offset:                  3px;
+@menu-expand-right-offset:                0;
+@menu-expand-spritesheet:                'img/MenuExpand.png';
+
+@menu-expand-border-width:                0;
+@menu-expand-border-style:                solid;
+@menu-expand-border-color:                transparent;
+@menu-expand-bg:                          url(@menu-expand-spritesheet) 0 0 no-repeat;
+
+@menu-expand-hover-border-width:          @menu-expand-border-width;
+@menu-expand-hover-border-style:          @menu-expand-border-style;
+@menu-expand-hover-border-color:          @menu-expand-border-color;
+@menu-expand-hover-bg:                    url(@menu-expand-spritesheet) 0 -16px no-repeat;
+
+
+
+// --------- //
+// Menu item //
+// --------- //
+@menu-item-cursor:                        pointer;
+@menu-item-width:                         auto;
+@menu-item-height:                        24px;
+@menu-item-line-height:                   @menu-item-height;
+@menu-item-padding:                       0 16px 0 8px;
+
+@menu-item-text-color:                    @black-color;
+@menu-item-bg:                            @white-color;
+
+@menu-item-hover-text-color:              @menu-item-text-color;
+@menu-item-hover-bg:                      #e7f0f9;
+
+@menu-item-icon-top-offset:               -2px;
+@menu-item-icon-left-offset:              -2px;
+
+@menu-item-text-margin:                   0 0 0 22px;
+
+
+
+// ----------- //
+// Menu button //
+// ----------- //
+
+@menu-button-arrow-width:                               8px;
+@menu-button-arrow-height:                              6px;
+@menu-button-arrow-right-offset:                        10px;
+@menu-button-arrow-top-offset:                          11px;
+
+@menu-button-arrow-padding:                             0 23px 0 12px;          // padding for menu button containing dropdown arrow
+@menu-button-no-arrow-padding:                          @button-padding;        // padding for menu button when dropdown arrow is missed
+
+// Default menu button
+@menu-button-arrow-spritesheet:                         'img/MenuButton-arrowDown.png';
+
+@menu-button-arrow-border-width:                        0;
+@menu-button-arrow-border-style:                        solid;
+@menu-button-arrow-border-color:                        transparent;
+@menu-button-arrow-bg:                                  transparent url(@menu-button-arrow-spritesheet) 0 0;
+
+@menu-button-arrow-hover-border-width:                  @menu-button-arrow-border-width;
+@menu-button-arrow-hover-border-style:                  @menu-button-arrow-border-style;
+@menu-button-arrow-hover-border-color:                  @menu-button-arrow-border-color;
+@menu-button-arrow-hover-bg:                            transparent url(@menu-button-arrow-spritesheet) 0 6px;
+
+@menu-button-arrow-checked-border-width:                @menu-button-arrow-border-width;
+@menu-button-arrow-checked-border-style:                @menu-button-arrow-border-style;
+@menu-button-arrow-checked-border-color:                @menu-button-arrow-border-color;
+
+@menu-button-arrow-checked-hover-border-width:          @menu-button-arrow-checked-border-width;
+@menu-button-arrow-checked-hover-border-style:          @menu-button-arrow-checked-border-style;
+@menu-button-arrow-checked-hover-border-color:          @menu-button-arrow-checked-border-color;
+
+// Primary menu button
+@menu-button-primary-arrow-spritesheet:                 'img/MenuButton-arrowDown__primary.png';
+
+@menu-button-primary-arrow-border-width:                @menu-button-arrow-border-width;
+@menu-button-primary-arrow-border-style:                @menu-button-arrow-border-style;
+@menu-button-primary-arrow-border-color:                @menu-button-arrow-border-color;
+@menu-button-primary-arrow-bg:                          transparent url(@menu-button-primary-arrow-spritesheet) 0 0;
+
+@menu-button-primary-arrow-hover-border-width:          @menu-button-primary-arrow-border-width;
+@menu-button-primary-arrow-hover-border-style:          @menu-button-primary-arrow-border-style;
+@menu-button-primary-arrow-hover-border-color:          @menu-button-primary-arrow-border-color;
+@menu-button-primary-arrow-hover-bg:                    @menu-button-primary-arrow-bg;
+
+@menu-button-primary-arrow-checked-border-width:        @menu-button-primary-arrow-border-width;
+@menu-button-primary-arrow-checked-border-style:        @menu-button-primary-arrow-border-style;
+@menu-button-primary-arrow-checked-border-color:        @menu-button-primary-arrow-border-color;
+
+@menu-button-primary-arrow-checked-hover-border-width:  @menu-button-primary-arrow-checked-border-width;
+@menu-button-primary-arrow-checked-hover-border-style:  @menu-button-primary-arrow-checked-border-style;
+@menu-button-primary-arrow-checked-hover-border-color:  @menu-button-primary-arrow-checked-border-color;
+
+// Disabled menu button
+@menu-button-arrow-disabled-border-width:               @menu-button-arrow-border-width;
+@menu-button-arrow-disabled-border-style:               @menu-button-arrow-border-style;
+@menu-button-arrow-disabled-border-color:               @menu-button-arrow-border-color;
+@menu-button-arrow-disabled-bg:                         @menu-button-arrow-bg;
+
+// Menu
+@menu-button-menu-top-margin:                           4px;
+@menu-button-menu-left-margin:                          0;
+@menu-button-menu-border-width:                         0 1px 1px;
+@menu-button-menu-border-style:                         @menu-border-style;
+@menu-button-menu-border-color:                         @menu-border-color;
+@menu-button-menu-bg:                                   @white-color;
+
+// Menu header
+@menu-button-header-spritesheet:                        'img/MenuButton-header.png';
+
+@menu-button-header-left-width:                         12px;
+@menu-button-header-left-height:                        28px;
+@menu-button-header-left-margin:                        0;
+@menu-button-header-left-bg:                            transparent url(@menu-button-header-spritesheet) 0 28px;
+
+@menu-button-header-center-width:                       auto;
+@menu-button-header-center-height:                      4px;
+@menu-button-header-center-margin:                      0;
+@menu-button-header-center-bg:                          @white-color;
+
+@menu-button-header-right-width:                        28px;
+@menu-button-header-right-height:                       28px;
+@menu-button-header-right-margin:                       0 0 0 -5px;
+@menu-button-header-right-bg:                           transparent url(@menu-button-header-spritesheet) 0 0;
+
+
+
+// --------- //
+// Menu link //
+// --------- //
+
+@menu-link-arrow-spritesheet:             @menu-button-arrow-spritesheet;
+
+@menu-link-arrow-width:                   8px;
+@menu-link-arrow-height:                  6px;
+@menu-link-arrow-right-offset:            0;
+@menu-link-arrow-top-offset:              7px;
+
+@menu-link-arrow-padding:                 0 12px 0 0;
+@menu-link-no-arrow-padding:              0;
+
+@menu-link-text-color:                    @link-text-color;
+@menu-link-text-decoration:               @link-text-decoration;
+@menu-link-arrow-bg:                      @menu-button-arrow-bg;
+
+@menu-link-hover-text-color:              @link-hover-text-color;
+@menu-link-hover-text-decoration:         @link-hover-text-decoration;
+@menu-link-hover-arrow-bg:                @menu-button-arrow-hover-bg;
+
+@menu-link-checked-text-color:            @menu-link-hover-text-color;
+@menu-link-checked-text-decoration:       none;
+
+@menu-link-checked-hover-text-color:      @menu-link-checked-text-color;
+@menu-link-checked-hover-text-decoration: @menu-link-checked-text-decoration;
+
+// Menu
+@menu-link-menu-top-margin:               -20px;
+@menu-link-menu-left-margin:              -9px;
+@menu-link-menu-bg:                       @menu-button-menu-bg;
+
+// Menu header
+@menu-link-header-width:                  100%;
+@menu-link-header-height:                 24px;
+@menu-link-header-padding:                0 8px;
+@menu-link-header-bottom-border:          1px solid #ededed;
+@menu-link-header-link-margin:            3px 0 0;
+@menu-link-header-bg:                     @menu-link-menu-bg;
+
+
+
+// --------- //
+// Menu icon //
+// --------- //
+
+// Menu
+@menu-icon-menu-top-margin:               3px;
+@menu-icon-menu-left-margin:              2px;
+@menu-icon-menu-bg:                       @menu-button-menu-bg;
+
+// Menu header
+@menu-icon-header-spritesheet:            @menu-button-header-spritesheet;
+
+@menu-icon-header-left-width:             12px;
+@menu-icon-header-left-height:            28px;
+@menu-icon-header-left-top-offset:        0;            // top offset of icon's left header part
+@menu-icon-header-left-left-offset:       2px;          // left offset of icon's left header part
+@menu-icon-header-left-bg:                transparent url(@menu-icon-header-spritesheet) 0 0;
+
+@menu-icon-header-right-width:            28px;
+@menu-icon-header-right-height:           28px;
+@menu-icon-header-right-top-offset:       0;            // top offset of icon's right header part
+@menu-icon-header-right-left-offset:      6px;          // left offset of icon's right header part
+@menu-icon-header-right-bg:               transparent url(@menu-icon-header-spritesheet) 0 -30px;
+
+@menu-icon-header-bg:                     @menu-icon-menu-bg;
+
+
+
+// -------- //
+// Text box //
+// -------- //
+
+@text-box-height:                         24px;
+@text-box-wrapper-padding:                0 4px;
+@text-box-border-radius:                  0;
+
+@text-box-field-font:                     inherit;
+@text-box-field-text-alignment:           left;
+@text-box-field-min-height:               19px;
+@text-box-field-line-height:              20px !important;
+@text-box-field-margin:                   0;
+@text-box-field-padding:                  1px 0;
+@text-box-field-border:                   none;
+@text-box-field-outline:                  none;
+@text-box-field-bg:                       transparent;
+@text-box-field-after-margin:             0 19px 0 0;
+
+@text-box-field-text-color:               inherit;
+@text-box-field-focus-text-color:         @text-box-field-text-color;
+@text-box-field-error-text-color:         @text-box-field-text-color;
+@text-box-field-hover-text-color:         @text-box-field-text-color;
+@text-box-field-disabled-text-color:      @text-box-field-text-color;
+
+@text-box-border-width:                   1px;
+@text-box-border-style:                   solid;
+@text-box-border-color:                   transparent transparent #eaeaea transparent;
+@text-box-bg:                             @white-color;
+
+@text-box-focus-border-width:             @text-box-border-width;
+@text-box-focus-border-style:             @text-box-border-style;
+@text-box-focus-border-color:             #eaeaea #eaeaea @gray-light-color;
+@text-box-focus-bg:                       @text-box-bg;
+
+@text-box-error-border-width:             @text-box-border-width;
+@text-box-error-border-style:             @text-box-border-style;
+@text-box-error-border-color:             #ff302b !important;
+@text-box-error-bg:                       #fadadd !important;
+
+@text-box-hover-border-width: @text-box-focus-border-width;
+@text-box-hover-border-style:             @text-box-focus-border-style;
+@text-box-hover-border-color:             @text-box-focus-border-color;
+@text-box-hover-bg:                       @text-box-bg;
+
+@text-box-disabled-border-width:          @text-box-border-width;
+@text-box-disabled-border-style:          @text-box-border-style;
+@text-box-disabled-border-color:          transparent;
+@text-box-disabled-bg:                    @text-box-bg;
+
+@text-box-after-width:                    16px;
+@text-box-after-min-height:               @text-box-field-min-height;
+@text-box-after-margin:                   0;
+
+@text-box-placeholder-color:              @gray-light-color !important;
+@text-box-compat-placeholder-font:        inherit;
+@text-box-compat-placeholder-padding:     3px 0 0;
+@text-box-compat-placeholder-alignment:   inherit;
+
+
+
+// ------------------ //
+// Formatted text box //
+// ------------------ //
+
+@formatted-text-box-line-height:                normal;
+
+@formatted-text-box-wrapper-min-height:         22px;
+@formatted-text-box-wrapper-padding:            @text-box-wrapper-padding;
+@formatted-text-box-wrapper-bg:                 transparent;
+
+@formatted-text-box-field-padding:              3px 0 0;
+@formatted-text-box-field-error-text-color:     @text-box-field-error-text-color;
+
+@formatted-text-box-error-border-width:         @text-box-error-border-width;
+@formatted-text-box-error-border-style:         @text-box-error-border-style;
+@formatted-text-box-error-border-color:         @text-box-error-border-color;
+@formatted-text-box-error-bg:                   @text-box-error-bg;
+
+
+
+// --------------- //
+// Number text box //
+// --------------- //
+
+@number-text-box-field-text-alignment:                left;
+@number-text-box-wrapper-margin:                      0 14px 0 0;
+
+@number-text-box-arrow-spritesheet:                   '';
+
+@number-text-box-arrow-up-width:                      16px;
+@number-text-box-arrow-up-height:                     11px;
+@number-text-box-arrow-up-margin:                     0;
+
+@number-text-box-arrow-up-border-radius:              0;
+
+@number-text-box-arrow-up-bg:                         url('img/NumberTextBox-arrowup.png') left bottom no-repeat;
+@number-text-box-arrow-up-border-width:               1px;
+@number-text-box-arrow-up-border-style:               solid;
+@number-text-box-arrow-up-border-color:               transparent;
+
+@number-text-box-arrow-up-hover-bg:                   @number-text-box-arrow-up-bg;
+@number-text-box-arrow-up-hover-border-width:         @number-text-box-arrow-up-border-width;
+@number-text-box-arrow-up-hover-border-style:         @number-text-box-arrow-up-border-style;
+@number-text-box-arrow-up-hover-border-color:         @number-text-box-arrow-up-border-color;
+
+@number-text-box-arrow-up-disabled-bg:                none;
+@number-text-box-arrow-up-disabled-border-width:      @number-text-box-arrow-up-border-width;
+@number-text-box-arrow-up-disabled-border-style:      @number-text-box-arrow-up-border-style;
+@number-text-box-arrow-up-disabled-border-color:      @number-text-box-arrow-up-border-color;
+
+@number-text-box-arrow-down-width:                    @number-text-box-arrow-up-width;
+@number-text-box-arrow-down-height:                   @number-text-box-arrow-up-height;
+@number-text-box-arrow-down-margin:                   1px 0 0;
+
+@number-text-box-arrow-down-border-radius:            0;
+
+@number-text-box-arrow-down-bg:                       url('img/NumberTextBox-arrowdown.png') left top no-repeat;
+@number-text-box-arrow-down-border-width:             1px;
+@number-text-box-arrow-down-border-style:             solid;
+@number-text-box-arrow-down-border-color:             transparent;
+
+@number-text-box-arrow-down-hover-bg:                 @number-text-box-arrow-down-bg;
+@number-text-box-arrow-down-hover-border-width:       @number-text-box-arrow-down-border-width;
+@number-text-box-arrow-down-hover-border-style:       @number-text-box-arrow-down-border-style;
+@number-text-box-arrow-down-hover-border-color:       @number-text-box-arrow-down-border-color;
+
+@number-text-box-arrow-down-disabled-bg:              none;
+@number-text-box-arrow-down-disabled-border-width:    @number-text-box-arrow-down-border-width;
+@number-text-box-arrow-down-disabled-border-style:    @number-text-box-arrow-down-border-style;
+@number-text-box-arrow-down-disabled-border-color:    @number-text-box-arrow-down-border-color;
+
+
+
+// --------- //
+// Combo box //
+// --------- //
+
+@combo-box-arrow-spritesheet:                   'img/ComboBox.png';
+
+@combo-box-cursor:                              pointer;
+@combo-box-disabled-cursor:                     default;
+
+@combo-box-field-font:                          inherit;
+@combo-box-field-text-color:                    inherit;
+
+@combo-box-arrow-width:                         16px;
+@combo-box-arrow-height:                        16px;
+@combo-box-arrow-margin:                        -8px 0 0;
+@combo-box-arrow-top-offset:                    50%;
+@combo-box-arrow-right-offset:                  0;
+
+@combo-box-arrow-border-width:                  0;
+@combo-box-arrow-border-style:                  solid;
+@combo-box-arrow-border-color:                  transparent;
+@combo-box-arrow-bg:                            @white-color url(@combo-box-arrow-spritesheet) -3px -4px no-repeat;
+
+@combo-box-arrow-hover-border-width:            @combo-box-arrow-border-width;
+@combo-box-arrow-hover-border-style:            @combo-box-arrow-border-style;
+@combo-box-arrow-hover-border-color:            @combo-box-arrow-border-color;
+@combo-box-arrow-hover-bg:                      @white-color url(@combo-box-arrow-spritesheet) -3px -28px no-repeat;
+
+@combo-box-arrow-active-border-width:           @combo-box-arrow-border-width;
+@combo-box-arrow-active-border-style:           @combo-box-arrow-border-style;
+@combo-box-arrow-active-border-color:           @combo-box-arrow-border-color;
+@combo-box-arrow-active-bg:                     @combo-box-arrow-bg;
+
+@combo-box-arrow-active-hover-border-width:     @combo-box-arrow-hover-border-width;
+@combo-box-arrow-active-hover-border-style:     @combo-box-arrow-hover-border-style;
+@combo-box-arrow-active-hover-border-color:     @combo-box-arrow-hover-border-color;
+@combo-box-arrow-active-hover-bg:               @combo-box-arrow-hover-bg;
+
+@combo-box-arrow-disabled-border-width:         @combo-box-arrow-border-width;
+@combo-box-arrow-disabled-border-style:         @combo-box-arrow-border-style;
+@combo-box-arrow-disabled-border-color:         @combo-box-arrow-border-color;
+@combo-box-arrow-disabled-bg:                   @combo-box-arrow-bg;
+
+@combo-box-picker-border:                       1px solid @gray-light-color;
+@combo-box-picker-border-radius:                0;
+@combo-box-picker-margin:                       -1px 0 0;
+@combo-box-picker-item-padding:                 4px;
+@combo-box-picker-item-font:                    inherit;
+
+@combo-box-picker-item-text-color:              @combo-box-field-text-color;
+@combo-box-picker-item-bg:                      @white-color;
+
+@combo-box-picker-item-hover-text-color:        @combo-box-picker-item-text-color;
+@combo-box-picker-item-hover-bg:                #e7f0f9;
+
+@combo-box-picker-item-selected-text-color:     @combo-box-picker-item-text-color;
+@combo-box-picker-item-selected-bg:             darken(@combo-box-picker-item-hover-bg, 5%);
+
+// TODO: check whether it's required
+@combo-box-input-wrapper-right-offset:          18px;
+
+
+
+// --------- //
+// Text area //
+// --------- //
+
+@text-area-field-font:                          inherit;
+@text-area-field-line-height:                   normal;
+@text-area-border-radius:                       0;
+
+@text-area-field-text-color:                    inherit;
+@text-area-field-focus-text-color:              @text-area-field-text-color;
+@text-area-field-error-text-color:              @text-box-field-error-text-color;
+@text-area-field-hover-text-color:              @text-area-field-text-color;
+@text-area-field-disabled-text-color:           @text-area-field-text-color;
+
+@text-area-border-width:                        1px;
+@text-area-border-style:                        solid;
+@text-area-border-color:                        #eaeaea;
+@text-area-bg:                                  @text-box-bg;
+
+@text-area-focus-border-width:                  @text-area-border-width;
+@text-area-focus-border-style:                  @text-area-border-style;
+@text-area-focus-border-color:                  #eaeaea #eaeaea @gray-light-color #eaeaea;
+@text-area-focus-bg:                            @text-area-bg;
+
+@text-area-error-border-width:                  @text-area-border-width;
+@text-area-error-border-style:                  @text-area-border-style;
+@text-area-error-border-color:                  @text-box-error-border-color;
+@text-area-error-bg:                            @text-box-error-bg;
+
+@text-area-hover-border-width:                  @text-area-focus-border-width;
+@text-area-hover-border-style:                  @text-area-focus-border-style;
+@text-area-hover-border-color:                  @text-area-focus-border-color;
+@text-area-hover-bg:                            @text-area-focus-bg;
+
+@text-area-disabled-border-width:               @text-area-border-width;
+@text-area-disabled-border-style:               @text-area-border-style;
+@text-area-disabled-border-color:               transparent;
+@text-area-disabled-bg:                         @text-area-bg;
+
+@text-area-field-padding:                       4px;
+
+
+
+// ----------- //
+// Date picker //
+// ----------- //
+
+@date-picker-calendar-spritesheet:              'img/DatePicker-calendar.png';
+
+@date-picker-calendar-icon-cursor:              pointer;
+@date-picker-calendar-icon-width:               16px;
+@date-picker-calendar-icon-height:              16px;
+@date-picker-calendar-icon-top-offset:          4px;
+@date-picker-calendar-icon-left-offset:         1px;
+@date-picker-calendar-icon-bg:                  url(@date-picker-calendar-spritesheet) -1px 0 no-repeat;
+@date-picker-calendar-icon-hover-bg:            url(@date-picker-calendar-spritesheet) -18px 0 no-repeat;
+@date-picker-calendar-icon-disabled-bg:         url(@date-picker-calendar-spritesheet) -35px 0 no-repeat !important;
+
+@date-picker-calendar-shadow:                   0 4px 10px rgba(0, 0, 0, 0.5);
+
+@date-picker-wrapper-border-radius:             @text-box-border-radius;
+
+@date-picker-wrapper-border-width:              @text-box-border-width;
+@date-picker-wrapper-border-style:              @text-box-border-style;
+@date-picker-wrapper-border-color:              @text-box-border-color;
+@date-picker-wrapper-bg:                        @text-box-bg;
+
+@date-picker-wrapper-focus-border-width:        @date-picker-wrapper-border-width;
+@date-picker-wrapper-focus-border-style:        @date-picker-wrapper-border-style;
+@date-picker-wrapper-focus-border-color:        @text-box-focus-border-color;
+@date-picker-wrapper-focus-bg:                  @text-box-focus-bg;
+
+@date-picker-wrapper-error-border-width:        @text-box-error-border-width;
+@date-picker-wrapper-error-border-style:        @text-box-error-border-style;
+@date-picker-wrapper-error-border-color:        @text-box-error-border-color;
+@date-picker-wrapper-error-bg:                  @text-box-error-bg;
+
+@date-picker-wrapper-hover-border-width:        @date-picker-wrapper-border-width;
+@date-picker-wrapper-hover-border-style:        @date-picker-wrapper-border-style;
+@date-picker-wrapper-hover-border-color:        @text-box-hover-border-color;
+@date-picker-wrapper-hover-bg:                  @text-box-hover-bg;
+
+@date-picker-wrapper-disabled-cursor:           default;
+@date-picker-wrapper-disabled-border-width:     @date-picker-wrapper-border-width;
+@date-picker-wrapper-disabled-border-style:     @date-picker-wrapper-border-style;
+@date-picker-wrapper-disabled-border-color:     transparent;
+@date-picker-wrapper-disabled-bg:               @text-box-disabled-bg;
+
+
+
+// -------- //
+// Calendar //
+// -------- //
+
+@calendar-font:                                 inherit;
+@calendar-width:                                215px;
+@calendar-padding:                              8px 0 0;
+@calendar-bg:                                   @white-color;
+
+@calendar-month-picker-width:                   148px;
+
+@calendar-day-border-spacing:                   1px;
+
+@calendar-day-header-font:                      11px @font-basic-name;
+@calendar-day-header-text-alignment:            center;
+
+@calendar-day-body-font:                        @calendar-font;
+@calendar-day-body-text-alignment:              left;
+
+@calendar-day-cell-width:                       56px;
+@calendar-day-table-cell-height:                24px;
+@calendar-day-table-cell-padding:               0 0 0 8px;
+
+@calendar-day-cell-cursor:                      pointer;
+@calendar-day-cell-text-color:                  inherit;
+@calendar-day-cell-bg:                          #f2f2f2;
+@calendar-day-cell-hover-text-color:            @calendar-day-cell-text-color;
+@calendar-day-cell-hover-bg:                    #e5ecf4;
+@calendar-day-cell-active-text-color:           @calendar-day-cell-text-color;
+@calendar-day-cell-active-bg:                   #ffc37e;
+@calendar-day-cell-active-hover-text-color:     @calendar-day-cell-active-text-color;
+@calendar-day-cell-active-hover-bg:             @calendar-day-cell-active-bg;
+
+@calendar-day-fog-cell-cursor:                  default;
+@calendar-day-fog-cell-text-color:              @gray-color;
+@calendar-day-fog-cell-bg:                      transparent;
+@calendar-day-fog-cell-hover-text-color:        @calendar-day-fog-cell-text-color;
+@calendar-day-fog-cell-hover-bg:                @calendar-day-fog-cell-bg;
+
+
+
+// ------------ //
+// Month picker //
+// ------------ //
+
+@month-picker-field-cursor:                     pointer;
+@month-picker-field-height:                     16px;
+@month-picker-field-margin:                     0 16px;
+@month-picker-field-font:                       700 14px/16px @font-basic-name;
+
+@month-picker-field-text-color:                 @link-text-color;
+@month-picker-field-text-decoration:            none;
+
+@month-picker-field-hover-text-color:           @link-hover-text-color;
+@month-picker-field-hover-text-decoration:      underline;
+
+@month-picker-arrow-spritesheet:                'img/MonthPicker-arrows.png';
+
+@month-picker-arrow-cursor:                     pointer;
+@month-picker-arrow-width:                      16px;
+@month-picker-arrow-height:                     16px;
+@month-picker-arrow-top-offset:                 0;
+@month-picker-arrow-right-offset:               0;
+
+@month-picker-left-arrow-border-width:          0;
+@month-picker-left-arrow-border-style:          solid;
+@month-picker-left-arrow-border-color:          transparent;
+@month-picker-left-arrow-bg:                    url(@month-picker-arrow-spritesheet) -32px 0 no-repeat;
+
+@month-picker-left-arrow-hover-border-width:    @month-picker-left-arrow-border-width;
+@month-picker-left-arrow-hover-border-style:    @month-picker-left-arrow-border-style;
+@month-picker-left-arrow-hover-border-color:    @month-picker-left-arrow-border-color;
+@month-picker-left-arrow-hover-bg:              url(@month-picker-arrow-spritesheet) 0 0 no-repeat;
+
+@month-picker-right-arrow-border-width:         0;
+@month-picker-right-arrow-border-style:         solid;
+@month-picker-right-arrow-border-color:         transparent;
+@month-picker-right-arrow-bg:                   url(@month-picker-arrow-spritesheet) -32px -32px no-repeat;
+
+@month-picker-right-arrow-hover-border-width:   @month-picker-right-arrow-border-width;
+@month-picker-right-arrow-hover-border-style:   @month-picker-right-arrow-border-style;
+@month-picker-right-arrow-hover-border-color:   @month-picker-right-arrow-border-color;
+@month-picker-right-arrow-hover-bg:             url(@month-picker-arrow-spritesheet) 0 -32px no-repeat;
+
+@month-picker-wrapper-border:                   1px solid @white-color;
+@month-picker-wrapper-bg:                       @white-color;
+
+@month-picker-item-cursor:                      pointer;
+@month-picker-item-height:                      22px;
+@month-picker-item-line-height:                 @month-picker-item-height;
+
+@month-picker-item-text-color:                  #333;
+@month-picker-item-bg:                          @month-picker-wrapper-bg;
+
+@month-picker-item-hover-text-color:            @month-picker-item-text-color;
+@month-picker-item-hover-bg:                    @calendar-day-cell-hover-bg;
+
+@month-picker-item-active-text-color:           @month-picker-item-text-color;
+@month-picker-item-active-bg:                   @calendar-day-cell-bg;
+
+@month-picker-item-month-text-alignment:        left;
+@month-picker-item-month-padding:               2px 2px 2px 24px;
+
+@month-picker-item-year-text-alignment:         center;
+@month-picker-item-year-padding:                2px;
+
+
+
+// ------------- //
+// Edit at place //
+// ------------- //
+
+@edit-at-place-wrapper-margin:                  0 0 2px 0;
+@edit-at-place-wrapper-text-area-padding:       3px 4px;
+@edit-at-place-wrapper-border-width:            2px 1px;
+@edit-at-place-wrapper-border-style:            solid;
+@edit-at-place-wrapper-border-color:            transparent;
+
+@edit-at-place-field-cursor:                    pointer;
+@edit-at-place-field-disabled-cursor:           text;
+@edit-at-place-field-border-width:              0 0 1px 0;
+@edit-at-place-field-border-style:              dashed;
+@edit-at-place-field-border-color:              #868686;
+
+@edit-at-place-editor-border-width:             0;
+@edit-at-place-editor-border-style:             solid;
+@edit-at-place-editor-border-color:             transparent;
+
+@edit-at-place-text-box-editor-font:            @font-basic-size/@font-basic-line-height @font-basic-name;
+@edit-at-place-text-area-editor-font:           @edit-at-place-text-box-editor-font;
+
+@edit-at-place-editor-overlay-margin:           -4px 0 0 -4px;
+@edit-at-place-editor-overlay-padding:          4px;
+@edit-at-place-editor-overlay-border:           none;
+@edit-at-place-editor-overlay-border-radius:    3px;
+@edit-at-place-editor-overlay-shadow:           0 0 3px #b2b2b2;
+@edit-at-place-editor-overlay-bg:               #f8f3f1 !important;
+
+@edit-at-place-control-margin:                  0 0 0 8px;
+@edit-at-place-group-control-margin:            4px;
+
+@edit-at-place-cancel-button-width:             16px;
+@edit-at-place-cancel-button-height:            16px;
+@edit-at-place-cancel-button-margin:            0 0 0 4px;
+@edit-at-place-cancel-button-spritesheet:       'img/cancelIcon-sprite.png';
+@edit-at-place-cancel-button-bg:                url(@edit-at-place-cancel-button-spritesheet) 0 -32px no-repeat;
+@edit-at-place-cancel-button-hover-bg:          url(@edit-at-place-cancel-button-spritesheet) 0 -16px no-repeat;
+
+
+
+// --------- //
+// List view //
+// --------- //
+
+@list-view-actions-cursor:                      pointer;
+@list-view-actions-height:                      16px;
+@list-view-actions-top-offset:                  50%;
+@list-view-actions-right-offset:                0;
+@list-view-actions-margin:                      -8px 0 0;
+@list-view-actions-padding:                     0;
+@list-view-actions-gap:                         16px;
+@list-view-actions-zindex:                      10;
+@list-view-actions-bg:                          transparent;
+
+
+
+// --------- //
+// Tree view //
+// --------- //
+
+@tree-view-expand-spritesheet:                  'img/Tree_expand.png';
+
+@tree-view-expand-cursor:                       pointer;
+
+@tree-view-expand-width:                        16px;
+@tree-view-expand-height:                       16px;
+@tree-view-expand-margin:                       0;
+
+@tree-view-expand-border-width:                 0;
+@tree-view-expand-border-style:                 none;
+@tree-view-expand-border-color:                 transparent;
+@tree-view-expand-bg:                           url(@tree-view-expand-spritesheet) 0 0 no-repeat;
+
+@tree-view-expand-hover-border-width:           @tree-view-expand-border-width;
+@tree-view-expand-hover-border-style:           @tree-view-expand-border-style;
+@tree-view-expand-hover-border-color:           @tree-view-expand-border-color;
+@tree-view-expand-hover-bg:                     @tree-view-expand-bg;
+
+@tree-view-expand-open-width:                   @tree-view-expand-width;
+@tree-view-expand-open-height:                  @tree-view-expand-height;
+@tree-view-expand-open-margin:                  @tree-view-expand-margin;
+
+@tree-view-expand-open-border-width:            @tree-view-expand-border-width;
+@tree-view-expand-open-border-style:            @tree-view-expand-border-style;
+@tree-view-expand-open-border-color:            @tree-view-expand-border-color;
+@tree-view-expand-open-bg:                      url(@tree-view-expand-spritesheet) 0 -16px no-repeat;
+
+@tree-view-expand-open-hover-border-width:      @tree-view-expand-open-border-width;
+@tree-view-expand-open-hover-border-style:      @tree-view-expand-open-border-style;
+@tree-view-expand-open-hover-border-color:      @tree-view-expand-open-border-color;
+@tree-view-expand-open-hover-bg:                @tree-view-expand-open-bg;
+
+@tree-view-item-content-margin:                 0 0 0 15px;
+
+@tree-view-child-container-padding:             0 0 0 10px;
+
+
+
+// --------- //
+// Data grid //
+// --------- //
+
+@data-grid-bg:                                  @white-color;
+@data-grid-border-spacing:                      0;
+@data-grid-border-collapse:                     collapse;
+@data-grid-border-width:                        0;
+@data-grid-border-style:                        solid;
+@data-grid-border-color:                        transparent;
+
+@data-grid-row-bg:                              transparent;
+@data-grid-row-hover-bg:                        @data-grid-row-bg;
+@data-grid-row-selected-bg:                     @data-grid-row-bg;
+
+@data-grid-row-hover-header-cell-text-color:    inherit;
+@data-grid-row-hover-header-cell-bg:            @data-grid-row-hover-bg;
+
+@data-grid-row-hover-cell-text-color:           inherit;
+@data-grid-row-hover-cell-bg:                   @data-grid-row-hover-bg;
+
+@data-grid-row-selected-cell-text-color:        inherit;
+@data-grid-row-selected-cell-bg:                @data-grid-row-selected-bg;
+
+@data-grid-header-cell-cursor:                  pointer;
+@data-grid-header-cell-text-alignment:          left;
+@data-grid-header-cell-height:                  auto;
+@data-grid-header-cell-padding:                 6px;
+
+@data-grid-header-cell-border-width:            1px 1px 0 1px;
+@data-grid-header-cell-border-style:            solid;
+@data-grid-header-cell-border-color:            transparent;
+
+@data-grid-header-cell-text-color:              inherit;
+@data-grid-header-cell-bg:                      transparent;
+
+@data-grid-header-cell-hover-text-color:        @data-grid-header-cell-text-color;
+@data-grid-header-cell-hover-bg:                @data-grid-header-cell-bg;
+
+@data-grid-cell-cursor:                         @data-grid-header-cell-cursor;
+@data-grid-cell-text-alignment:                 @data-grid-header-cell-text-alignment;
+@data-grid-cell-height:                         @data-grid-header-cell-height;
+@data-grid-cell-padding:                        @data-grid-header-cell-padding;
+
+@data-grid-cell-border-width:                   1px 0 0;
+@data-grid-cell-border-style:                   solid;
+@data-grid-cell-border-color:                   @gray-light-color;
+
+@data-grid-cell-text-color:                     inherit;
+@data-grid-cell-bg:                             transparent;
+
+@data-grid-cell-hover-text-color:               @data-grid-cell-text-color;
+@data-grid-cell-hover-bg:                       @data-grid-cell-bg;

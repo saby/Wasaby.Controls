@@ -6,7 +6,7 @@ define('js!SBIS3.Engine.FieldLink', ['js!SBIS3.CORE.Control'], function(Control)
     * Поле связи. Можно выбирать значение из списка, можно из автодополнения
     * @class SBIS3.Engine.FieldLink
     * @extends $ws.proto.Control
-    * @mixes SBIS3.CONTROLS.MultiSelectorMixin
+    * @mixes SBIS3.CONTROLS.MultiSelectable
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @control

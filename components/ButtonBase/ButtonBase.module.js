@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.ClickMixin', 'js!SBIS3.CONTROLS.FormWidgetMixin', 'js!SBIS3.CONTROLS.DataBindMixin', 'js!SBIS3.CONTROLS.IconMixin'], function(Control, ClickMixin, FormWidgetMixin, DataBindMixin, IconMixin) {
+define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.Clickable', 'js!SBIS3.CONTROLS.FormWidgetMixin', 'js!SBIS3.CONTROLS.DataBindMixin', 'js!SBIS3.CONTROLS.IconMixin'], function(Control, Clickable, FormWidgetMixin, DataBindMixin, IconMixin) {
 
    'use strict';
 
@@ -11,34 +11,27 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
     * Поведенческий класс, задающий базовое поведение кнопки. Основное предназначение - обрабатывать клик.
     * Все контролы-кнопки должны наследоваться от этого класса. Отображение и вёрстка задаются именно в унаследованных классах.
     * @class SBIS3.CONTROLS.ButtonBase
-    * @extends SBIS3.CONTROLS.CompoundControl
-    * @mixes SBIS3.CONTROLS.ClickMixin
+    * @extends $ws.proto.CompoundControl
+    * @mixes SBIS3.CONTROLS.Clickable
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.DataBindMixin
     * @mixes SBIS3.CONTROLS.IconMixin
+    * @ignoreOptions validators, independentContext, contextRestriction, allowChangeEnable, extendedTooltip
     */
 
-   var ButtonBase = Control.extend([ClickMixin, FormWidgetMixin, DataBindMixin, IconMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
-      /**
-       * @event onActivated Происходит при активации кнопки (клик мышкой, кнопки клавиатуры)
-       * @param {$ws.proto.EventObject} eventObject дескриптор события
-       * @param {Boolean} pressed Нажата ли кнопки (при использовании опции press)
-       * <pre>
-       *    onButtonClick: function(event){
-       *       var list = $ws.single.ControlStorage.getByName('listOfPersons');
-       *       list.sendCommand('newItem');
-       *    }
-       * </pre>
-       */
+   var ButtonBase = Control.extend([Clickable, FormWidgetMixin, DataBindMixin, IconMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
+
       $protected: {
          _options: {
             /**
              * @cfg {String}  Текст на кнопке
              * Данный текст должен отображать смысл действия клика по кнопке или побуждать к действию.
+             * @example
+             * <pre>
+             *     <option name="caption">Сохранить</option>
+             * </pre>
              * @see setCaption
              * @see getCaption
-             * @see setValue
-             * @see getValue
              */
             caption: ''
          }
@@ -67,8 +60,6 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
        * </pre>
        * @see caption
        * @see getCaption
-       * @see setValue
-       * @see getValue
        */
       setCaption: function(captionTxt) {
          this._options.caption = captionTxt || '';
@@ -85,8 +76,6 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
        * </pre>
        * @see caption
        * @see setCaption
-       * @see setValue
-       * @see getValue
        */
       getCaption: function() {
          return this._options.caption;

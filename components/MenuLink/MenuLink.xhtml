@@ -1,8 +1,4 @@
-<a class="controls-MenuLink controls-Link ws-hover-target" href="{{?it.href}}{{=it.href}}{{??}}javascript:void(0);{{?}}"{{?it.inNewTab}}target="_blank"{{?}}>
-      {{?it.icon}}<i class="controls-Link__icon {{=it.iconTemplate(it)}}" ></i>
-         {{?it.caption}}<span class="controls-Link__field">{{=it.caption}}</span>{{?}}
-      {{??}}
-         {{?it.caption}}{{=it.caption}}{{?}}
-      {{?}}
-      <i class="controls-MenuLink__arrowDown js-controls-MenuLink__arrowDown"></i>
+<a class="controls-MenuLink controls-Link ws-hover-target {{?(it.items && it.items.length <= 1)}} controls-MenuLink__withoutMenu{{?}}" href="{{?it.href}}{{=it.href}}{{??}}javascript:void(0);{{?}}"{{?it.inNewTab}}target="_blank"{{?}}>
+      {{?it.icon}}<i class="controls-Link__icon {{=it.iconTemplate(it)}}"></i>{{?}}{{?it.caption}}<span class="controls-Link__field">{{=it.caption}}</span>{{?}}
+      <i class="controls-MenuLink__arrowDown js-controls-MenuLink__arrowDown"{{?(it.items && it.items.length > 1)}} style="display:none;"{{?}}></i>
 </a>

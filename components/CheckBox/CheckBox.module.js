@@ -1,23 +1,25 @@
-/**
- * Модуль 'Компонент кнопка'.
- *
- * @description
- */
-define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.CheckedMixin', 'html!SBIS3.CONTROLS.CheckBox'], function(ButtonBase, CheckedMixin, dotTplFn) {
+
+define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.Checkable', 'html!SBIS3.CONTROLS.CheckBox'], function(ButtonBase, Checkable, dotTplFn) {
 
    'use strict';
 
    /**
     * Контрол, отображающий стандартный чекбокс.
     * @class SBIS3.CONTROLS.CheckBox
-    * @extends SBIS3.CONTROLS.ToggleButtonBase
-    * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    * @extends SBIS3.CONTROLS.ButtonBase
+    * @mixes SBIS3.CONTROLS.Checkable
     * @control
+    * @demo SBIS3.Demo.Control.MyCheckbox
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.CheckBox'>
+    *     <option name="caption">CheckBox</option>
+    * </component>
     * @public
     * @category Inputs
+    * @ignoreOptions validators, independentContext, contextRestriction, allowChangeEnable, extendedTooltip, icon
     */
 
-   var CheckBox = ButtonBase.extend([CheckedMixin], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
+   var CheckBox = ButtonBase.extend([Checkable], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
       $protected: {
          _dotTplFn : dotTplFn,
          _checkBoxCaption: null,
@@ -67,12 +69,13 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
 
       /**
        * Устанавливает состояние кнопки.
-       * @param {Boolean} flag Признак состояния кнопки true/false.
+       * @param {Boolean} flag Признак состояния кнопки: true/false, и возможно null при включённой опции {@link threeState}.
        * @example
        * <pre>
        *     var btn = this.getChildControlByName(("myButton");
        *        btn.setChecked(true);
        * </pre>
+       * @see threeState
        * @see checked
        * @see isChecked
        * @see setValue

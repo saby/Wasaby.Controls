@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.SwitchableArea', ['js!SBIS3.CORE.Control'], function(C
     * @class SBIS3.CONTROLS.SwitchableArea
     * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS.CollectionMixin
-    * @mixes SBIS3.CONTROLS.SelectorMixin
+    * @mixes SBIS3.CONTROLS.Selectable
     */
 
    var SwitchableArea = Control.Control.extend( /** @lends SBIS3.CONTROLS.SwitchableArea.prototype */ {

@@ -1,4 +1,5 @@
 .idea
+*.log
 /components/contents.json
 /components/contents.js
 /sbis3-ws

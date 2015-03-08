@@ -6,8 +6,7 @@ define('js!SBIS3.Genie.UnitEditor',
      ['js!SBIS3.CONTROLS.NumberTextBox',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.FloatArea',
-      'html!SBIS3.Genie.UnitEditor',
-      'css!SBIS3.Genie.UnitEditor'], function (NumberTextBox, PickerMixin, FloatArea, dotTplFn) {
+      'html!SBIS3.Genie.UnitEditor'], function (NumberTextBox, PickerMixin, FloatArea, dotTplFn) {
 
       'use strict';
 

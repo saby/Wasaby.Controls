@@ -1,0 +1,67 @@
+.controls-MenuLink {
+  position: relative;
+  color: @menu-link-text-color;
+  text-decoration: @menu-link-text-decoration;
+  padding: @menu-link-arrow-padding;
+
+  &.controls-MenuLink__withoutMenu {
+    padding: @menu-link-no-arrow-padding;
+  }
+
+  &:hover {
+    color: @menu-link-hover-text-color;
+    text-decoration: @menu-link-hover-text-decoration;
+
+    .controls-MenuLink__arrowDown {
+      background: @menu-link-hover-arrow-bg;
+    }
+  }
+
+  .controls-MenuLink__arrowDown {
+    position: absolute;
+    display: inline-block;
+    width: @menu-link-arrow-width;
+    height: @menu-link-arrow-height;
+    right: @menu-link-arrow-right-offset;
+    top: @menu-link-arrow-top-offset;
+    background: @menu-link-arrow-bg;
+  }
+}
+
+// Menu
+.controls-MenuLink__Menu {
+  margin-top: @menu-link-menu-top-margin;
+  margin-left: @menu-link-menu-left-margin;
+  background: @menu-link-menu-bg;
+
+  .controls-MenuLink__header {
+    display: inline-block;
+    .box-sizing(border-box);
+    width: @menu-link-header-width;
+    height: @menu-link-header-height;
+    padding: @menu-link-header-padding;
+    border-bottom: @menu-link-header-bottom-border;
+    background: @menu-link-header-bg;
+
+    .controls-Link {
+      margin: @menu-link-header-link-margin;
+      color: @menu-link-checked-text-color;
+      text-decoration: @menu-link-checked-text-decoration;
+
+      &:hover {
+        color: @menu-link-checked-hover-text-color;
+        text-decoration: @menu-link-checked-hover-text-decoration;
+      }
+    }
+
+    .controls-MenuLink__arrowDown {
+      display: none;
+    }
+  }
+}
+
+@-moz-document url-prefix() {
+  .controls-MenuLink__Menu {
+    margin-top: @menu-link-menu-top-margin + 1px;         // vertical alignment fix for Firefox
+  }
+}

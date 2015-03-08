@@ -3,26 +3,28 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS.ClickMixin', 'js!SBIS3.CONTROLS.IconMixin', 'html!SBIS3.CONTROLS.IconButton'], function(Control, ClickMixin, IconMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS.Clickable', 'js!SBIS3.CONTROLS.IconMixin', 'html!SBIS3.CONTROLS.IconButton'], function(Control, Clickable, IconMixin, dotTplFn) {
 
    'use strict';
 
    /**
     * Контрол, отображающий обычную кнопку
     * @class SBIS3.CONTROLS.IconButton
-    * @extends SBIS3.CORE.Control
+	* @demo SBIS3.Demo.Control.MyIconButton Пример кнопки с иконкой
+    * @extends $ws.proto.Control
     * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.IconButton'>
-    *    <option name='icon' value='sprite:icon-16 icon-AddButton icon-primary'></option>
+    *    <option name="icon">sprite:icon-16 icon-AddButton icon-primary</option>
     * </component>
     * @public
     * @category Buttons
     * @mixes SBIS3.CONTROLS.IconMixin
-    * @mixes SBIS3.CONTROLS.ClickMixin
+    * @mixes SBIS3.CONTROLS.Clickable
+    * @ignoreOptions validators, independentContext, contextRestriction, allowChangeEnable, extendedTooltip
     */
 
-   var IconButton = Control.Control.extend([ClickMixin, IconMixin], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
+   var IconButton = Control.Control.extend([Clickable, IconMixin], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {
