@@ -50,7 +50,14 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              * Данный текст отображается внутри поля до момента получения фокуса.
              * @see setPlaceholder
              */
-            placeholder: ''
+            placeholder: '',
+            /**
+             * @cfg {String} Фильтр ввода
+             * <wiTag group="Управление">
+             * Каждый вводимый символ будет проверяться на соответсвие указанному в этой опции регулярному выражению.
+             * Несоответсвующие символы невозможно напечатать.
+             */
+            inputRegExp : ''
          }
       },
 
@@ -159,7 +166,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _focusOutHandler: function(){
-         self.setText(self.getText());
+         this.setText(this.getText());
       },
 
       _keyUpBind: function() {
@@ -172,8 +179,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          }
       },
 
-      _keyDownBind: function() {
-
+      _keyDownBind: function(event) {
+         if (this._options.inputRegExp !== '' && this._inputRegExp(event, new RegExp(this._options.inputRegExp))){
+            event.preventDefault();
+         }
       },
 
       _keyPressBind: function() {
@@ -196,6 +205,14 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          else {
             this._inputField.removeAttr('readonly');
          }
+      },
+
+      _inputRegExp: function (e, regexp) {
+         var code = e.which;
+         if (code < 32 || e.ctrlKey || e.altKey) {
+            return true;
+         }
+         return (!regexp.test(String.fromCharCode(code)));
       },
 
       _createCompatPlaceholder : function() {
