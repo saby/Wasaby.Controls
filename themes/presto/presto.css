@@ -1915,27 +1915,29 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover .controls-DataGrid__th {
   color: inherit;
-  background: #e2effb;
+  background-color: #e2effb;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover .controls-DataGrid__td {
   color: #333333;
-  background: #e2effb;
+  background-color: #e2effb;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected {
-  background: transparent;
+  background-color: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected .controls-DataGrid__td {
   color: inherit;
-  background: transparent;
+  background-color: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th {
   position: relative;
+  font-weight: normal;
   cursor: pointer;
   text-align: left;
   height: 32px;
   padding: 0 10px;
   color: #aaaaaa;
-  background: transparent;
+  font-size: 11px;
+  background-color: transparent;
   border-collapse: collapse;
   border-width: 1px 1px 0 1px;
   border-style: solid;
@@ -1945,6 +1947,12 @@ input[type="reset"]::-moz-focus-inner {
   color: #aaaaaa;
   background: transparent;
 }
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
+  padding-left: 12px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:last-child {
+  padding-left: 12px;
+}
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
   cursor: pointer;
@@ -1952,15 +1960,21 @@ input[type="reset"]::-moz-focus-inner {
   height: 32px;
   padding: 0 10px;
   color: inherit;
-  background: transparent;
+  background-color: transparent;
   border-collapse: collapse;
   border-width: 1px 0 0;
   border-style: solid;
-  border-color: #eeeeee;
+  border-color: #F5F5F5;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:hover {
   color: inherit;
   background: transparent;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:first-child {
+  padding-left: 12px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:last-child {
+  padding-left: 12px;
 }
 .controls-ComboBox.controls-Picker__show {
   border-width: 1px;
