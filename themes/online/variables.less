@@ -706,15 +706,15 @@
 
 @menu-icon-header-left-width:             12px;
 @menu-icon-header-left-height:            28px;
-@menu-icon-header-left-top-offset:        0;            // top offset of icon's left header part
+@menu-icon-header-left-top-offset:        1px;            // top offset of icon's left header part
 @menu-icon-header-left-left-offset:       2px;          // left offset of icon's left header part
-@menu-icon-header-left-bg:                transparent url(@menu-icon-header-spritesheet) 0 0;
+@menu-icon-header-left-bg:                transparent url(@menu-icon-header-spritesheet) 0 -30px;
 
 @menu-icon-header-right-width:            28px;
 @menu-icon-header-right-height:           28px;
-@menu-icon-header-right-top-offset:       0;            // top offset of icon's right header part
-@menu-icon-header-right-left-offset:      6px;          // left offset of icon's right header part
-@menu-icon-header-right-bg:               transparent url(@menu-icon-header-spritesheet) 0 -30px;
+@menu-icon-header-right-top-offset:       1px;            // top offset of icon's right header part
+@menu-icon-header-right-left-offset:      10px;          // left offset of icon's right header part
+@menu-icon-header-right-bg:               transparent url(@menu-icon-header-spritesheet);
 
 @menu-icon-header-bg:                     @menu-icon-menu-bg;
 
@@ -1227,7 +1227,7 @@
 @data-grid-border-color:                        transparent;
 
 @data-grid-row-bg:                              transparent;
-@data-grid-row-hover-bg:                        @data-grid-row-bg;
+@data-grid-row-hover-bg:                        #F3F3F3;
 @data-grid-row-selected-bg:                     @data-grid-row-bg;
 
 @data-grid-row-hover-header-cell-text-color:    inherit;
@@ -1241,14 +1241,15 @@
 
 @data-grid-header-cell-cursor:                  pointer;
 @data-grid-header-cell-text-alignment:          left;
-@data-grid-header-cell-height:                  auto;
-@data-grid-header-cell-padding:                 6px;
+@data-grid-header-cell-height:                  14px;
+@data-grid-header-cell-padding:                 4px 6px;
+@data-grid-header-cell-font-size:               11px;
 
 @data-grid-header-cell-border-width:            1px 1px 0 1px;
 @data-grid-header-cell-border-style:            solid;
 @data-grid-header-cell-border-color:            transparent;
 
-@data-grid-header-cell-text-color:              inherit;
+@data-grid-header-cell-text-color:              @gray-color;
 @data-grid-header-cell-bg:                      transparent;
 
 @data-grid-header-cell-hover-text-color:        @data-grid-header-cell-text-color;
@@ -1256,8 +1257,8 @@
 
 @data-grid-cell-cursor:                         @data-grid-header-cell-cursor;
 @data-grid-cell-text-alignment:                 @data-grid-header-cell-text-alignment;
-@data-grid-cell-height:                         @data-grid-header-cell-height;
-@data-grid-cell-padding:                        @data-grid-header-cell-padding;
+@data-grid-cell-height:                         16px;
+@data-grid-cell-padding:                        6px 6px;
 
 @data-grid-cell-border-width:                   1px 0 0;
 @data-grid-cell-border-style:                   solid;
