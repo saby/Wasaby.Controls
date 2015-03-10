@@ -52,7 +52,7 @@
 @button-min-width:                        24px;
 @button-height:                           58px;
 @button-line-height:                      56px;
-@button-padding:                          0 16px;
+@button-padding:                          0 8px;
 @button-margin:                           auto;
 @button-border-radius:                    0;
 @button-icon-top-offset:                  0px;                      // top offset of 16x16 icon
@@ -64,30 +64,30 @@
 
 // Normal default button
 @button-text-color:                       @black-color;
-@button-border:                           1px solid @default-color;
+@button-border:                           0 none;
 @button-shadow:                           none;
 @button-bg:                               @default-color;
 
 @button-hover-text-color:                 @button-text-color;
-@button-hover-border:                     1px solid darken(@primary-color, 10%);
+@button-hover-border:                     0 none;
 @button-hover-shadow:                     @button-shadow;
-@button-hover-bg:                         darken(@primary-color, 10%);
+@button-hover-bg:                         @default-color;
 
 @button-active-text-color:                @secondary-color;
-@button-active-border:                    1px solid lighten(@primary-color, 10%);
+@button-active-border:                    0 none;
 @button-active-shadow:                    @button-shadow;
 @button-active-bg:                        lighten(@primary-color, 10%);
 
 // Normal primary button
 @button-primary-text-color:               @black-color;
-@button-primary-border:                   1px solid @primary-color;
+@button-primary-border:                   0 none;
 @button-primary-shadow:                   @button-shadow;
 @button-primary-bg:                       @primary-color;
 
 @button-primary-hover-text-color:         @button-primary-text-color;
-@button-primary-hover-border:             1px solid darken(@primary-color, 10%);
+@button-primary-hover-border:             0 none;
 @button-primary-hover-shadow:             @button-shadow;
-@button-primary-hover-bg:                 darken(@primary-color, 10%);
+@button-primary-hover-bg:                 @primary-color;
 
 @button-primary-active-text-color:        @button-active-text-color;
 @button-primary-active-border:            @button-active-border;
@@ -102,7 +102,7 @@
 
 // Normal light button
 @button-light-text-color:                 @black-color;
-@button-light-border:                     1px solid @white-color;
+@button-light-border:                     0 none;
 @button-light-shadow:                     @button-shadow;
 @button-light-bg:                         @white-color;
 
@@ -118,7 +118,7 @@
 
 // Normal light primary button
 @button-light-primary-text-color:         @button-light-text-color;
-@button-light-primary-border:             1px solid @primary-color;
+@button-light-primary-border:             0 none;
 @button-light-primary-shadow:             @button-light-shadow;
 @button-light-primary-bg:                 @button-light-bg;
 
@@ -1243,6 +1243,7 @@
 @data-grid-header-cell-text-alignment:          left;
 @data-grid-header-cell-height:                  32px;
 @data-grid-header-cell-padding:                 0 10px;
+@data-grid-header-cell-font-size:               11px;
 
 @data-grid-header-cell-border-width:            1px 1px 0 1px;
 @data-grid-header-cell-border-style:            solid;
