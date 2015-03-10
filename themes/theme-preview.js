@@ -858,8 +858,7 @@
          DataGrid
       ) {
 
-         var items = new Collection({
-            data: [{
+         var items = [{
                id: 1,
                title: 'Title 1',
                flag: true,
@@ -879,10 +878,7 @@
                title: 'Title 4',
                flag: true,
                par: 3
-            }],
-            keyField: 'id',
-            adapter: new AdapterJSON()
-         });
+            }];
 
          var listItemTemplate = '\
             <div class="list-view-item">\
