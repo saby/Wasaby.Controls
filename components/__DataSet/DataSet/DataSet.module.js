@@ -90,7 +90,11 @@ define('js!SBIS3.CONTROLS.DataSet', [
          if (this._pkIndex === null) {
             this._rebuild();
          }
-         return this.at(this._pkIndex[key]);
+         var index = this.getRecordIndexByKey(key);
+         if (index !== undefined) {
+            return this.at(this._pkIndex[key]);
+         }
+         return undefined;
       },
 
       at: function (index) {
@@ -127,10 +131,11 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       addRecord: function (record) {
+         //FixME: потому что метод создать не возвращает тип поля "идентификатор"
          record._keyField = this._keyField;
          this.getStrategy().addRecord(this._rawData, record);
          var index = this.getStrategy().getLength(this._rawData);
-         // не меняем условие потому что с БЛ приходит null
+         // не менять условие! с БЛ идентификатор приходит как null
          if (record.getKey() === undefined) {
             record.set(this._keyField, record._cid);
          }

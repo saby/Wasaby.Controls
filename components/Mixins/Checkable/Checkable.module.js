@@ -15,6 +15,10 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
              *    <li>true - кнопка нажата/ чекбокс с галочкой/ радиокнопка выбрана;</li>
              *    <li>false - кнопка не нажата/ чекбокс пустой/ радиокнопка пустая.</li>
              * </ul>
+             * @example
+             * <pre>
+             *     <option name="checked">true</option>
+             * </pre>
              * @see setChecked
              */
             checked: false
@@ -77,7 +81,7 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
 
       /**
        * Возвращает текущее состояние кнопки.
-       * @returns {Boolean}
+       * @returns {Boolean} Признак текущего состояния кнопки: true/false.
        * @example
        * <pre>
        *     var btn = this.getChildControlByName("myButton");
