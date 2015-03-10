@@ -1984,3 +1984,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ComboBox__picker .controls-ComboBox__itemRow.controls-ComboBox__itemRow__selected {
   font-weight: bold;
 }
+.controls-Button.controls-Button__secondRow {
+  white-space: normal;
+  line-height: 26px;
+}
