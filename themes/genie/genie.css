@@ -1112,15 +1112,7 @@ input[type="reset"]::-moz-focus-inner {
   border-style: solid;
   border-color: #d1d1d1;
   background: #ffffff;
-}
-.controls-TextBox.ws-has-focus {
-  border-width: 1px;
-  border-style: solid;
-  border-color: #d1d1d1;
-  background: #ffffff;
-}
-.controls-TextBox.ws-has-focus .controls-TextBox__fieldWrapper .controls-TextBox__field {
-  color: inherit;
+  color: #353535;
 }
 .controls-TextBox.ws-validation-error {
   border-width: 1px;
@@ -1138,6 +1130,15 @@ input[type="reset"]::-moz-focus-inner {
   background: #ffffff;
 }
 .controls-TextBox:hover .controls-TextBox__fieldWrapper .controls-TextBox__field {
+  color: inherit;
+}
+.controls-TextBox.ws-has-focus {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d1d1d1;
+  background: #ffffff;
+}
+.controls-TextBox.ws-has-focus .controls-TextBox__fieldWrapper .controls-TextBox__field {
   color: inherit;
 }
 .controls-TextBox.ws-disabled {

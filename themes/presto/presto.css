@@ -880,7 +880,7 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 56px;
   padding: 0 32px 0 16px;
   color: #ffffff;
-  background: #434a54;
+  background: #4e5762;
 }
 .controls-MenuItem:hover {
   color: #4e5762;
@@ -1111,16 +1111,8 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px;
   border-style: solid;
   border-color: transparent transparent #666666 transparent;
-  background: #4e5762;
-}
-.controls-TextBox.ws-has-focus {
-  border-width: 1px;
-  border-style: solid;
-  border-color: transparent transparent #666666 transparent;
-  background: #434a54;
-}
-.controls-TextBox.ws-has-focus .controls-TextBox__fieldWrapper .controls-TextBox__field {
-  color: inherit;
+  background: transparent;
+  color: #ffffff;
 }
 .controls-TextBox.ws-validation-error {
   border-width: 1px;
@@ -1135,16 +1127,25 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px;
   border-style: solid;
   border-color: #666666;
-  background: #4e5762;
+  background: transparent;
 }
 .controls-TextBox:hover .controls-TextBox__fieldWrapper .controls-TextBox__field {
+  color: inherit;
+}
+.controls-TextBox.ws-has-focus {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #333333;
+  background: #4e5762;
+}
+.controls-TextBox.ws-has-focus .controls-TextBox__fieldWrapper .controls-TextBox__field {
   color: inherit;
 }
 .controls-TextBox.ws-disabled {
   border-width: 1px;
   border-style: solid;
   border-color: transparent;
-  background: #4e5762;
+  background: transparent;
 }
 .controls-TextBox.ws-disabled .controls-TextBox__fieldWrapper .controls-TextBox__field {
   color: inherit;
@@ -1403,11 +1404,11 @@ input[type="reset"]::-moz-focus-inner {
   padding: 11px 5px;
   font: inherit;
   color: inherit;
-  background: #434a54;
+  background: #4e5762;
 }
 .controls-ComboBox__picker .controls-ComboBox__itemRow.controls-ComboBox__itemRow__selected {
   color: inherit;
-  background: #434a54;
+  background: #4e5762;
 }
 .controls-ComboBox__picker .controls-ComboBox__itemRow:hover {
   color: #333333;
@@ -1429,7 +1430,7 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px;
   border-style: solid;
   border-color: #666666;
-  background: #4e5762;
+  background: transparent;
 }
 .controls-TextArea .controls-TextArea__inputField {
   font: inherit;
@@ -1450,7 +1451,7 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px;
   border-style: #666666;
   border-color: #666666;
-  background: #434a54;
+  background: #4e5762;
 }
 .controls-TextArea.ws-has-focus .controls-TextArea__inputField {
   color: inherit;
@@ -1468,7 +1469,7 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px;
   border-style: #666666;
   border-color: #666666;
-  background: #434a54;
+  background: #4e5762;
 }
 .controls-TextArea:hover .controls-TextArea__inputField {
   color: inherit;
@@ -1477,7 +1478,7 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px;
   border-style: solid;
   border-color: transparent;
-  background: #4e5762;
+  background: transparent;
 }
 .controls-TextArea.ws-disabled .controls-TextArea__inputField {
   color: inherit;
@@ -1503,13 +1504,13 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px;
   border-style: solid;
   border-color: transparent transparent #666666 transparent;
-  background: #4e5762;
+  background: transparent;
 }
 .controls-DatePicker.ws-has-focus .controls-FormattedTextBox__fieldWrapper {
   border-width: 1px;
   border-style: solid;
-  border-color: transparent transparent #666666 transparent;
-  background: #434a54;
+  border-color: #333333;
+  background: #4e5762;
 }
 .controls-DatePicker.ws-validation-error {
   border: none !important;
@@ -1525,13 +1526,13 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px;
   border-style: solid;
   border-color: #666666;
-  background: #4e5762;
+  background: transparent;
 }
 .controls-DatePicker.ws-disabled .controls-FormattedTextBox__fieldWrapper {
   border-width: 1px;
   border-style: solid;
   border-color: transparent;
-  background: #4e5762;
+  background: transparent;
 }
 .controls-DatePicker.ws-disabled .controls-DatePicker__calendarIcon {
   cursor: default;
@@ -1681,14 +1682,14 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MonthPicker__dropdownWrapper {
   border: 1px solid #aaaaaa;
-  background: #434a54;
+  background: #4e5762;
 }
 .controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement {
   cursor: pointer;
   height: 22px;
   line-height: 22px;
   color: #ffffff;
-  background: #434a54;
+  background: #4e5762;
 }
 .controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement.controls-MonthPicker__dropdownElementActive {
   color: #4e5762;
@@ -1905,7 +1906,7 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
-  background: #434a54;
+  background: #4e5762;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr {
   background: transparent;
@@ -1987,4 +1988,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Button.controls-Button__secondRow {
   white-space: normal;
   line-height: 26px;
+}
+body {
+  background-color: #373944;
 }
