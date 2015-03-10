@@ -75,6 +75,11 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
       _setPickerContent: function(){
          var self = this;
          this._picker._container.addClass('controls-MenuLink__Menu');
+         if (this._container.hasClass('controls-MenuLink-32px')){
+            this._picker._container.addClass('controls-MenuLink-32px');
+         } else {
+            this._picker._container.addClass('controls-MenuLink-24px');
+         }
          var header= $('<div class="controls-MenuLink__header"></div>');
          header.append(this._container.clone().removeAttr('style'));
          this._picker.getContainer().prepend(header);
