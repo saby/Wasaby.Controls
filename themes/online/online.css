@@ -1079,17 +1079,17 @@ input[type="reset"]::-moz-focus-inner {
   position: absolute;
   width: 12px;
   height: 28px;
-  top: 0;
+  top: 1px;
   left: 2px;
-  background: transparent url('img/MenuButton-header.png') 0 0;
+  background: transparent url('img/MenuButton-header.png') 0 -30px;
 }
 .controls-MenuIcon .controls-MenuIcon__header .controls-MenuIcon__headerRight {
   position: absolute;
   width: 28px;
   height: 28px;
-  top: 0;
-  left: 6px;
-  background: transparent url('img/MenuButton-header.png') 0 -30px;
+  top: 1px;
+  left: 10px;
+  background: transparent url('img/MenuButton-header.png');
 }
 .controls-MenuIcon__Menu {
   margin-top: 3px;
