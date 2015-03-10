@@ -1036,35 +1036,33 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuLink__Menu {
   margin-left: -9px;
   background: #ffffff;
-}
-.controls-MenuLink__Menu.controls-MenuLink-24px {
   margin-top: -20px;
 }
-.controls-MenuLink__Menu.controls-MenuLink-24px .controls-MenuLink__header {
+.controls-MenuLink__Menu .controls-MenuLink__header {
   height: 24px;
 }
-.controls-MenuLink__Menu.controls-MenuLink-24px .controls-MenuLink__header .controls-Link {
+.controls-MenuLink__Menu .controls-MenuLink__header .controls-Link {
   margin: 3px 0 0;
 }
-.controls-MenuLink__Menu.controls-MenuLink-24px .controls-MenuItem {
+.controls-MenuLink__Menu .controls-MenuItem {
   height: 24px;
 }
-.controls-MenuLink__Menu.controls-MenuLink-32px {
+.controls-MenuLink__Menu.controls-MenuLink__32px {
   margin-top: -25px;
 }
-.controls-MenuLink__Menu.controls-MenuLink-32px .controls-MenuLink__header {
+.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuLink__header {
   height: 32px;
 }
-.controls-MenuLink__Menu.controls-MenuLink-32px .controls-MenuLink__header .controls-Link {
+.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuLink__header .controls-Link {
   margin: 8px 0 0;
 }
-.controls-MenuLink__Menu.controls-MenuLink-32px .controls-MenuItem {
+.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuItem {
   height: 32px;
 }
-.controls-MenuLink__Menu.controls-MenuLink-32px .controls-MenuItem .controls-MenuItem__content {
+.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuItem .controls-MenuItem__content {
   top: 4px;
 }
-.controls-MenuLink__Menu.controls-MenuLink-32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
+.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
   top: 0px;
   left: 0px;
 }
