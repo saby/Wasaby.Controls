@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
              * @cfg {Number} Количество знаков после запятой
              * <wiTag group='Управление'>
              */
-            decimals: 0,
+            decimals: -1,
             /**
              * @cfg {Number} Количество знаков до запятой
              * <wiTag group='Управление'>
@@ -58,7 +58,11 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             /**
              * @cfg {Boolean} Показать стрелки
              */
-            enableArrows: false
+            enableArrows: false,
+            /**
+             * @cfg {Boolean} Показать разделители триад
+             */
+            delimiters: false
          }
       },
 
@@ -67,73 +71,76 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          this.getContainer().addClass('controls-NumberTextBox');
          $('.js-controls-NumberTextBox__arrowDown', this.getContainer().get(0)).click(function () {
             if (self.isEnabled()) {
-               self._arrowUpClick();
+               self._arrowDownClick();
             }
          });
 
          $('.js-controls-NumberTextBox__arrowUp', this.getContainer().get(0)).click(function () {
             if (self.isEnabled()) {
-               self._arrowDownClick();
+               self._arrowUpClick();
             }
          });
 
-         this._options.text = this._formatValue(this._options.text)
+         this._options.text = this._formatValue(this._options.text);
          this._inputField.val(this._options.text);
       },
 
-      setText: function (text) {
+      _setText: function(text){
          text = this._formatValue(text);
-         NumberTextBox.superclass.setText.call(this, text);
+         this._inputField.val(text);
+         this._setCaretPosition(this._caretPosition[0], this._caretPosition[1])
       },
 
-      getText: function(){
-         return this._options.text;
-      },
-
-      getNumberValue: function(){
-         var val;
+      getNumericValue: function(){
+         var val = this._options.text.replace(/\s/g, '');
          if (this._options.onlyInteger) {
-            val = parseInt(this._options.text, 10);
+            val = parseInt(val);
          } else {
-            val = parseFloat(this._options.text);
+            val = parseFloat(val);
          }
         return (isNaN(val)) ? null : val
       },
 
-      _formatValue: function(value){
-         value = value.toString();
-         value = String.trim(value);
-         if (this._options.onlyInteger) {
-            value = parseInt(value, 10).toString() || '0';
-         } else {
-            value = parseFloat(value).toString() || '0';
-            if (this._options.decimals) {
-               value = value.toFixed(this._options.decimals);
-            }
-            if (isNaN(value)){
-               value = '';
+      _formatValue: function(value, fromFocusOut){
+         var decimals = (this._options.onlyInteger) ? 0 : this._options.decimals;
+         value = $ws.render.defaultColumn.numeric(
+            value,
+            this._options.integers,
+            this._options.delimiters,
+            decimals,
+            this._options.onlyPositive,
+            this._options.maxLength
+         );
+         if (this._options.hideEmptyDecimals && !(value.indexOf('.') == -1) && fromFocusOut ){
+            while (value[value.length - 1] == '0'){
+               value = value.substr(0, value.length - 1);
             }
          }
-         if (this._options.onlyInteger && value.indexOf('.') != -1){
-            value = value.substr(0, value.indexOf('.'));
-         }
-         return value;
+         return value || '';
+      },
+
+      _focusOutHandler: function(){
+         var text = this.getText();
+         text = this._formatValue(text, true);
+         this._inputField.val(text);
       },
 
       _arrowUpClick: function(){
-         this.setText(this._getSibling(this.getText(), -1));
+         this.setText(this._getSibling(1));
       },
 
       _arrowDownClick: function(){
-         this.setText(this._getSibling(this.getText(), 1));
+         if (!(this._options.onlyPositive && this.getNumericValue() < 1)) {
+            this.setText(this._getSibling(-1));
+         }
       },
 
       _keyDownBind: function (event) {
          this._caretPosition = this._getCaretPosition();
-         if (event.which == 16){
+         if (event.shiftKey){
             this._SHIFT_KEY = true;
          }
-         if (event.which == 17){
+         if (event.ctrlKey){
             this._CTRL_KEY = true;
          }
          if (event.which == $ws._const.key.f5   || // F5, не отменяем действие по-умолчанию
@@ -145,30 +152,26 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          ) {
             return true;
          }
-
          var symbol = String.fromCharCode(event.which);
-
-         if(event.which == 190 && !this._options.onlyInteger){
+         if(event.which == 190 /*точка*/){
             this._dotHandler(event);
             return;
          }
-         if(event.which == 189 && !this._options.onlyPositive){
+         if(event.which == 189 /*минус*/){
             this._toggleMinus();
             event.preventDefault();
          }
          if (/[0-9]/.test(symbol)){
             this._numberPressHandler(event);
             return true;
-         } else if (event.which == 46){
+         } else if (event.which == 46 /*Delete*/){
             this._deleteHandler();
-         } else if (event.which == 8){
+         } else if (event.which == 8 /*Backspace*/){
             this._backspaceHandler();
          }
          if (this._inputField.val().indexOf('.') == 0){
-            this._inputField.val('0' + this._inputField.val());
+            this._setText('0' + this._inputField.val());
             this._setCaretPosition(1)
-         } else if (this._inputField.val().indexOf('.') == this._inputField.val().length - 1){
-            this._inputField.val(this._inputField.val().substr(0, this._inputField.val().length - 1));
          }
          if (this._CTRL_KEY){
             return true;
@@ -176,91 +179,141 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          event.preventDefault();
       },
 
+      _numberPressHandler: function (event) {
+         var b = this._caretPosition[0], //начало выделения
+            e = this._caretPosition[1],  //конец выделения
+            currentVal = this._inputField.val(),
+            dotPosition = currentVal.indexOf('.'),
+            symbol = String.fromCharCode(event.which),
+            spaceCount = currentVal.split(' ').length - 1,
+            newCaretPosition = b;
+         event.preventDefault();
+         if (currentVal[0] == 0 && b == e && b == 1){ // заменяем первый ноль если курсор после него
+            newCaretPosition--;
+         }
+         if ((b <= dotPosition && e <= dotPosition) || dotPosition == -1) { //до точки
+            if (b == e) {
+               if (dotPosition == this._options.integers + spaceCount || (dotPosition == -1 && currentVal.length - spaceCount == this._options.integers)){
+                  return;
+               }
+               (this._options.delimiters && this._getIntegersCount(currentVal) % 3 == 0) ? newCaretPosition+=2 : newCaretPosition++;
+               currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);
+            } else {
+               currentVal = currentVal.substr(0, b - 1) + symbol + currentVal.substr(e);
+               newCaretPosition++;
+            }
+         } else
+         if (b > dotPosition && e > dotPosition){ // после точки
+            if (b == e){
+               currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e + ((this._options.decimals > 0) ? 1 : 0));
+            } else {
+               currentVal = currentVal.substr(0, b) + symbol + ((this._options.decimals > 0) ? this._getZeroString(e - b - 1) : '') + currentVal.substr(e);
+            }
+            newCaretPosition++;
+         } else { // точка в выделении
+            currentVal = currentVal.substr(0, b) + symbol + '.' + ((this._options.decimals > 0) ? this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
+            newCaretPosition = currentVal.indexOf('.') - 1;
+         }
+         currentVal = currentVal.replace(/\s/g, '');
+         this._setText(currentVal);
+         this._setCaretPosition(newCaretPosition);
+      },
+
       _deleteHandler: function(){
          var b = this._caretPosition[0], //начало выделения
             e = this._caretPosition[1],  //конец выделения
             currentVal = this._inputField.val(),
-            dotPosition = currentVal.indexOf('.'), buff;
-         // не удаляем точку
-         if (b == e && b == dotPosition){
-            this._setCaretPosition(b + 1);
-            return;
-         }
-         // заменяем нулями дробную часть при удалении
-         if (!this._options.onlyInteger && this._options.decimals && dotPosition < b) {
-            if (e == b && b != currentVal.length ) {
-               buff = currentVal.substr(0, b) + this._getZeroString(e - b + 1) + currentVal.substr(e + 1);
-               this._inputField.val(buff);
-               this._setCaretPosition(e + 1);
+            dotPosition = currentVal.indexOf('.'),
+            newCaretPosition = e, step;
+         (currentVal[b] == ' ') ? step = 2 : step = 1;
+         if ((b <= dotPosition && e <= dotPosition) || dotPosition == -1) { //до точки
+            if (b == e) {
+               if (b == dotPosition){
+                  newCaretPosition++;
+               }
+               if (!(this._options.decimals > 0) || (this._options.decimals && b != dotPosition)) {
+                  currentVal = currentVal.substr(0, b) + currentVal.substr(e + step);
+               }
             } else {
-               buff = currentVal.substr(0, b) + this._getZeroString(e - b) + currentVal.substr(e);
-               this._inputField.val(buff);
-               this._setCaretPosition(e);
+               currentVal = currentVal.substr(0, b) + currentVal.substr(e);
+            }
+            if (this._options.delimiters && this._getIntegersCount(currentVal) % 3 == 0){
+               newCaretPosition--;
             }
          } else
-         if (dotPosition >= b && dotPosition < e) {
-            buff = currentVal.substr(0, b) + '.' + this._getZeroString(e - dotPosition - 1) + currentVal.substr(e);
-            this._inputField.val(buff);
-            this._setCaretPosition(b);
-         } else {
-            if (b == e) {
-               buff = currentVal.substr(0, b) + currentVal.substr(e + 1);
+         if (b > dotPosition && e > dotPosition){ // после точки
+            if (b == e){
+               currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? '0' : '') + currentVal.substr(e + 1);
+               (this._options.decimals > 0) ? newCaretPosition++ : newCaretPosition;
             } else {
-               buff = currentVal.substr(0, b) + currentVal.substr(e);
+               currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? this._getZeroString(e - b) : '') + currentVal.substr(e);
             }
-            this._inputField.val(buff);
-            this._setCaretPosition(b);
+         } else { // точка в выделении
+            currentVal = currentVal.substr(0, b) + '.' + (this._options.decimals > 0 ? this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
+            newCaretPosition = currentVal.indexOf('.') - 1;
          }
+         currentVal = currentVal.replace(/\s/g, '');
+         this._setText(currentVal);
+         if (newCaretPosition == -1 && this._getIntegersCount(currentVal) == 0){ // если первый 0 перемещаем через него каретку
+            newCaretPosition+=2;
+         }
+         this._setCaretPosition(newCaretPosition + step - 1);
       },
 
       _backspaceHandler: function(){
          var b = this._caretPosition[0], //начало выделения
             e = this._caretPosition[1],  //конец выделения
             currentVal = this._inputField.val(),
-            dotPosition = currentVal.indexOf('.'), buff;
-         // не удаляем точку
-         if (b == e && b == dotPosition + 1){
-            this._setCaretPosition(b - 1);
-            return;
-         }
-         // заменяем нулями дробную часть при удалении
-         if (!this._options.onlyInteger && this._options.decimals && dotPosition + 1 < b) {
-            if (e == b) {
-               buff = currentVal.substr(0, b - 1) + this._getZeroString(e - b + 1) + currentVal.substr(e);
-               this._inputField.val(buff);
-               this._setCaretPosition(b - 1);
+            dotPosition = currentVal.indexOf('.'),
+            newCaretPosition = b, step;
+         (currentVal[b - 1] == ' ') ? step = 2 : step = 1;
+         if ((b <= dotPosition && e <= dotPosition) || dotPosition == -1) { //до точки
+            if (b == e) {
+               currentVal = currentVal.substr(0, b - step) + currentVal.substr(e);
             } else {
-               buff = currentVal.substr(0, b) + this._getZeroString(e - b) + currentVal.substr(e);
-               this._inputField.val(buff);
-               this._setCaretPosition(b);
+               currentVal = currentVal.substr(0, b) + currentVal.substr(e);
             }
+            (this._options.delimiters && this._getIntegersCount(currentVal) % 3 == 0) ? newCaretPosition-=2 : newCaretPosition--;
          } else
-         if (dotPosition > b && dotPosition < e) {
-            buff = currentVal.substr(0, b) + '.' + this._getZeroString(e - dotPosition - 1) + currentVal.substr(e);
-            this._inputField.val(buff);
-            this._setCaretPosition(b);
-         } else if (((dotPosition > b && dotPosition >= e) || this._options.onlyInteger) && b != e) {
-            buff = currentVal.substr(0, b) + currentVal.substr(e);
-            this._inputField.val(buff);
-            this._setCaretPosition(b);
-         } else
-         if (b == e){
-            buff = currentVal.substr(0, b - 1) + currentVal.substr(e);
-            this._inputField.val(buff);
-            this._setCaretPosition(b - 1);
+         if (b > dotPosition && e > dotPosition){ // после точки
+            if (b == e){
+               if (b != dotPosition + 1) {
+                  currentVal = currentVal.substr(0, b - 1) + (this._options.decimals > 0 ? '0' : '') + currentVal.substr(e);
+               }
+               newCaretPosition--;
+            } else {
+               currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? this._getZeroString(e - b) : '') + currentVal.substr(e);
+            }
+         } else { // точка в выделении
+            currentVal = currentVal.substr(0, b) + '.' + (this._options.decimals > 0 ? this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
+            newCaretPosition = currentVal.indexOf('.') - 1;
          }
+         currentVal = currentVal.replace(/\s/g, '');
+         this._setText(currentVal);
+         this._setCaretPosition(newCaretPosition - (step - 1));
       },
 
       _getZeroString: function(length){
          return '000000000000000000000000000000000'.substr(0, length);
       },
 
+      _getIntegersCount: function(value){
+        var dotPosition = (value.indexOf('.') != -1) ? value.indexOf('.') : value.length;
+         return value.substr(0, dotPosition).replace(/\s/g, '').length;
+      },
+
       _dotHandler: function(event){
-         var dotPosition = this._inputField.val().indexOf('.');
-         if (dotPosition != -1) {
-            this._setCaretPosition(dotPosition + 1);
-            event.preventDefault();
+         if (!this._options.onlyInteger) {
+            var currentVal = this._inputField.val(),
+               dotPosition = currentVal.indexOf('.');
+            if (dotPosition != -1) {
+               this._setCaretPosition(dotPosition + 1);
+            } else {
+               currentVal = currentVal.substr(0, this._caretPosition[0]) + '.' + currentVal.substr(this._caretPosition[1]);
+               this._setText(currentVal);
+            }
          }
+         event.preventDefault();
       },
 
       _keyUpBind: function(e){
@@ -273,99 +326,21 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          }
       },
 
-      _numberPressHandler: function(event){
-         var b = this._caretPosition[0], //начало выделения
-            e = this._caretPosition[1],  //конец выделения
-            currentVal = this._inputField.val(),
-            dotPosition = currentVal.indexOf('.'), buff;
-
-         if (!this._options.onlyInteger) {
-            // добаляем нули в пустое поле
-            if (currentVal == '' && this._options.decimals){
-               this._inputField.val('.' + this._getZeroString(this._options.decimals));
-               this._setCaretPosition(0);
-               return true;
-            }
-
-            // если точка в выделении
-            if (dotPosition >= b && dotPosition < e && this._options.decimals) {
-               buff = currentVal.substr(0, b) + '.' + this._getZeroString(e - dotPosition - 1) + currentVal.substr(e);
-               if (dotPosition == b) {
-                  event.preventDefault();
-               }
-               this._inputField.val(buff);
-               this._setCaretPosition(b);
-            } else
-
-            // если выделение после точки
-            if (this._options.decimals && dotPosition < b) {
-               if (b !== e) {
-                  buff = currentVal.substr(0, b) + this._getZeroString(e - b - 1) + currentVal.substr(e);
-                  this._inputField.val(buff);
-                  this._setCaretPosition(b);
-               } else if (b != currentVal.length) {
-                  buff = currentVal.substr(0, b) +
-                  currentVal.substr(b + 1, currentVal.length);
-                  this._inputField.val(buff);
-                  this._setCaretPosition(b);
-               } else {
-                  // если установлено количество знаков после запятой, не даем вводить больше
-                  if (this._options.decimals) {
-                     event.preventDefault();
-                  }
-               }
-            } else
-
-            // если выделение до точки
-            if (dotPosition >= e) {
-               if (dotPosition >= this._options.integers && b == e) {
-                  event.preventDefault();
-               }
-            }
-         } else {
-            if (this._options.integers && currentVal.length - (e - b) >= this._options.integers){
-               event.preventDefault();
-            }
-         }
-         // не даем вводить нули в начало
-         if (((b == e && b == 0) || (this._inputField.val().indexOf('0') == 0 && b == e && b == 1)) && event.which == 48){
-            event.preventDefault();
-         }
-         // заменяем первый ноль
-         if (this._inputField.val().indexOf('0') == 0 && b == e && b == 1){
-            this._inputField.val(this._inputField.val().substr(1));
-            this._setCaretPosition(0);
-         }
-      },
-
       _toggleMinus: function(){
-         if (this._options.text.indexOf('-') == -1){
-            this._inputField.val('-' + this._inputField.val());
-            this._setCaretPosition(this._caretPosition[0] + 1, this._caretPosition[1] + 1);
-         } else {
-            this._inputField.val(this._inputField.val().substr(1));
-            this._setCaretPosition(this._caretPosition[0] - 1, this._caretPosition[1] - 1);
+         if (!this._options.onlyPositive) {
+            if (this._options.text.indexOf('-') == -1) {
+               this._setText('-' + this._inputField.val());
+               this._setCaretPosition(this._caretPosition[0] + 1, this._caretPosition[1] + 1);
+            } else {
+               this._setText(this._inputField.val().substr(1));
+               this._setCaretPosition(this._caretPosition[0] - 1, this._caretPosition[1] - 1);
+            }
+            TextBox.superclass.setText.call(this, this._inputField.val());
          }
-         TextBox.superclass.setText.call(this, this._inputField.val());
       },
 
-      _getSibling: function ( val, a) {
-         var self = this,
-             value = val;
-         if (value === '') {
-            value = '0';
-         }
-         if (a == 1) {
-            value = parseFloat(value) + 1;
-         }
-         if (a == -1 && !(self._options.onlyPositive && parseFloat(value) < 1 )) {
-            value = parseFloat(value) - 1;
-         }
-         if (self._options.decimals && !self._options.onlyInteger) {
-            return(parseFloat(value).toFixed(self._options.decimals));
-         } else {
-            return(value.toString());
-         }
+      _getSibling: function (a) {
+         return this.getNumericValue() + a;
       },
 
       /**
