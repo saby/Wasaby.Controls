@@ -140,6 +140,8 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
          return filterParam;
       },
 
+
+      //TODO нужны ли эти методы в стратегии
       prepareSortingParam: function (sorting) {
          // настройка сортировки
          var sortingParam = null;
@@ -167,6 +169,26 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
          }
          return sortingParam;
       },
+
+      preparePagingParam: function (limit, offset) {
+         var pagingParam = null;
+         if (limit && offset) {
+            pagingParam = {
+               'd': [
+                  offset,
+                  limit,
+                  true
+               ],
+               's': [
+                  {'n': 'Страница', 't': 'Число целое'},
+                  {'n': 'РазмерСтраницы', 't': 'Число целое'},
+                  {'n': 'ЕстьЕще', 't': 'Логическое'}
+               ]
+            };
+         }
+         return pagingParam;
+      },
+
 
       prepareRecordForUpdate: function (record) {
          // поддержим формат запросов к БЛ

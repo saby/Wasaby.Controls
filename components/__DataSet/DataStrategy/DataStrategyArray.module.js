@@ -158,7 +158,21 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
             });
          }
 
-         return newData;
+         var pagingData = newData;
+         if (typeof(offset) != 'undefined' && offset != null && typeof(limit) != 'undefined' && limit != null) {
+            pagingData = [];
+            var
+               firstIdx = offset*limit,
+               length = newData.length;
+            for (var i = firstIdx; i < firstIdx + limit; i++) {
+               if (i >= length) {
+                  break;
+               }
+               pagingData.push(newData[i]);
+            }
+         }
+
+         return pagingData;
       }
 
 
