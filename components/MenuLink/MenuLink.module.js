@@ -45,6 +45,9 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
       setCaption: function(caption){
          Link.superclass.setCaption.call(this, caption);
          $('.controls-Link__field', this._container).html(caption);
+         if (this._picker){
+            $('.controls-Link__field', this._picker._container).html(caption);
+         }
       },
 
       _initMenu: function(){
@@ -72,8 +75,11 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
       _setPickerContent: function(){
          var self = this;
          this._picker._container.addClass('controls-MenuLink__Menu');
+         if (this._container.hasClass('controls-MenuLink__32px')){
+            this._picker._container.addClass('controls-MenuLink__32px');
+         }
          var header= $('<div class="controls-MenuLink__header"></div>');
-         header.append(this._container.clone());
+         header.append(this._container.clone().removeAttr('style'));
          this._picker.getContainer().prepend(header);
          $(".controls-Link__icon", header.get(0)).addClass('icon-hover');
          $('.controls-MenuLink__header', this._picker._container).bind('click', function(){

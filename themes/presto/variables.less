@@ -52,7 +52,7 @@
 @button-min-width:                        24px;
 @button-height:                           58px;
 @button-line-height:                      56px;
-@button-padding:                          0 16px;
+@button-padding:                          0 8px;
 @button-margin:                           auto;
 @button-border-radius:                    0;
 @button-icon-top-offset:                  0px;                      // top offset of 16x16 icon
@@ -64,30 +64,30 @@
 
 // Normal default button
 @button-text-color:                       @black-color;
-@button-border:                           1px solid @default-color;
+@button-border:                           0 none;
 @button-shadow:                           none;
 @button-bg:                               @default-color;
 
 @button-hover-text-color:                 @button-text-color;
-@button-hover-border:                     1px solid darken(@primary-color, 10%);
+@button-hover-border:                     0 none;
 @button-hover-shadow:                     @button-shadow;
-@button-hover-bg:                         darken(@primary-color, 10%);
+@button-hover-bg:                         @default-color;
 
 @button-active-text-color:                @secondary-color;
-@button-active-border:                    1px solid lighten(@primary-color, 10%);
+@button-active-border:                    0 none;
 @button-active-shadow:                    @button-shadow;
 @button-active-bg:                        lighten(@primary-color, 10%);
 
 // Normal primary button
 @button-primary-text-color:               @black-color;
-@button-primary-border:                   1px solid @primary-color;
+@button-primary-border:                   0 none;
 @button-primary-shadow:                   @button-shadow;
 @button-primary-bg:                       @primary-color;
 
 @button-primary-hover-text-color:         @button-primary-text-color;
-@button-primary-hover-border:             1px solid darken(@primary-color, 10%);
+@button-primary-hover-border:             0 none;
 @button-primary-hover-shadow:             @button-shadow;
-@button-primary-hover-bg:                 darken(@primary-color, 10%);
+@button-primary-hover-bg:                 @primary-color;
 
 @button-primary-active-text-color:        @button-active-text-color;
 @button-primary-active-border:            @button-active-border;
@@ -102,7 +102,7 @@
 
 // Normal light button
 @button-light-text-color:                 @black-color;
-@button-light-border:                     1px solid @white-color;
+@button-light-border:                     0 none;
 @button-light-shadow:                     @button-shadow;
 @button-light-bg:                         @white-color;
 
@@ -118,7 +118,7 @@
 
 // Normal light primary button
 @button-light-primary-text-color:         @button-light-text-color;
-@button-light-primary-border:             1px solid @primary-color;
+@button-light-primary-border:             0 none;
 @button-light-primary-shadow:             @button-light-shadow;
 @button-light-primary-bg:                 @button-light-bg;
 
@@ -555,9 +555,13 @@
 @menu-item-hover-bg:                      @default-color;
 
 @menu-item-icon-top-offset:               0px;
+@menu-item-icon-top-offset-big:           0px;
 @menu-item-icon-left-offset:              -2px;
+@menu-item-icon-left-offset-big:           0px;
 
 @menu-item-text-margin:                   0 0 0 22px;
+
+@menu-item-big-content-top:                   4px;
 
 
 
@@ -679,15 +683,18 @@
 
 // Menu
 @menu-link-menu-top-margin:               -20px;
+@menu-link-menu-top-margin-big:           -25px;
 @menu-link-menu-left-margin:              -9px;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
 
 // Menu header
 @menu-link-header-width:                  100%;
 @menu-link-header-height:                 24px;
+@menu-link-header-height-big:             32px;
 @menu-link-header-padding:                0 8px;
 @menu-link-header-bottom-border:          1px solid #ededed;
 @menu-link-header-link-margin:            3px 0 0;
+@menu-link-header-link-margin-big:        8px 0 0;
 @menu-link-header-bg:                     @menu-link-menu-bg;
 
 
@@ -748,12 +755,12 @@
 @text-box-border-width:                   1px;
 @text-box-border-style:                   solid;
 @text-box-border-color:                   transparent transparent @gray-dark-color transparent;
-@text-box-bg:                             @bg;
+@text-box-bg:                             transparent;
 
 @text-box-focus-border-width:             @text-box-border-width;
 @text-box-focus-border-style:             @text-box-border-style;
-@text-box-focus-border-color:             @text-box-border-color;
-@text-box-focus-bg:                       darken(@secondary-color, 5%);
+@text-box-focus-border-color:             @black-color;
+@text-box-focus-bg:                       @secondary-color;
 
 @text-box-error-border-width:             @text-box-border-width;
 @text-box-error-border-style:             @text-box-border-style;

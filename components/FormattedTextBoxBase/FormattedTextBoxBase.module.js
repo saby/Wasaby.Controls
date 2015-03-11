@@ -141,7 +141,7 @@ define(
             this.setText(this._options.text);
          }
 
-         this._inputField.bind('focusin', function () {
+         this._container.bind('focusin', function () {
             self._focusHandler();
          });
          this._inputField.keypress(function (event) {
