@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListView', 'html!SBIS3.CONTROLS.DataGrid', 'html!SBIS3.CONTROLS.DataGrid/resources/rowTpl'], function(ListView, dotTplFn, rowTpl, colGroup) {
+define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS3.CONTROLS.DataGrid', 'html!SBIS3.CONTROLS.DataGrid/resources/rowTpl', 'js!SBIS3.CORE.MarkupTransformer'], function(ListView, dotTplFn, rowTpl, MarkupTransformer) {
    'use strict';
    /**
     * Контрол отображающий набор данных в виде в таблицы с несколькими колонками.
@@ -70,7 +70,15 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListView', 'html!SBIS3.
             var rowData = {columns : []};
             rowData.columns = $ws.core.clone(this._options.columns);
             for (var i = 0; i < rowData.columns.length; i++) {
-               rowData.columns[i].value = this._items.getValue(item, rowData.columns[i].field);
+               var value;
+               if (rowData.columns[i].cellTemplate) {
+                  var cellTpl = rowData.columns[i].cellTemplate;
+                  value = MarkupTransformer(doT.template(cellTpl)({item : item, field : rowData.columns[i].field}));
+               }
+               else {
+                  value = item.get(rowData.columns[i].field)
+               }
+               rowData.columns[i].value = value;
             }
             return rowTpl(rowData)
          }

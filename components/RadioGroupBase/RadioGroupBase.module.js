@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS.Selectable'], function(ButtonGroupBase, Selectable) {
+define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBaseDS', 'js!SBIS3.CONTROLS.Selectable'], function(ButtonGroupBase, Selectable) {
 
    'use strict';
 
@@ -21,29 +21,14 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
          }
       },
 
-      $constructor: function() {
-         if (this._items.getItemsCount()) {
-            this._drawItems();
+      _drawItemsCallback : function() {
+         RadioGroupBase.superclass._drawItemsCallback.call(this);
+         if (this._options.selectedItem) {
+            this._drawSelectedItem(this._options.selectedItem);
          }
       },
 
-      _getAddOptions : function(item) {
-         var
-            key = this._items.getKey(item),
-            caption = this._items.getValue(item, 'title'),
-            resObj = {
-               caption : caption
-            };
-
-
-         if (key == this._options.selectedItem) {
-            resObj.checked = true;
-         }
-         return resObj;
-      },
-
-      _itemActivatedHandler : function(activatedControl) {
-         var key = activatedControl.getContainer().data('id');
+      _itemActivatedHandler : function(key) {
          this.setSelectedItem(key);
       },
 

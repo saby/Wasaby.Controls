@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS.MultiSelectable'], function(ButtonGroupBase, MultiSelectable) {
+define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBaseDS', 'js!SBIS3.CONTROLS.MultiSelectable'], function(ButtonGroupBase, MultiSelectable) {
 
    'use strict';
 
@@ -22,42 +22,18 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
       },
 
       $constructor: function() {
-         if (this._items.getItemsCount()) {
-            this._drawItems();
-         }
+
       },
 
-      _itemActivatedHandler : function(activatedControl) {
-         var key = activatedControl.getContainer().data('id');
+      _itemActivatedHandler : function(key) {
          this.toggleItemsSelection([key]);
       },
 
-      _drawItems : function() {
-         CheckBoxGroupBase.superclass._drawItems.call(this);
+      _drawItemsCallback : function() {
+         CheckBoxGroupBase.superclass._drawItemsCallback.call(this);
          if (this._options.selectedItems && this._options.selectedItems.length) {
             this._drawSelectedItems(this._options.selectedItems);
          }
-      },
-
-      _getAddOptions : function(item) {
-         var
-            key = this._items.getKey(item),
-            caption = this._items.getValue(item, 'title'),
-            resObj = {
-               caption : caption
-            };
-
-         var success = false;
-         for (var i = 0; i < this._options.selectedItems.length; i++) {
-            if (key == this._options.selectedItems[i]) {
-               success = true;
-               break;
-            }
-         }
-         if (success) {
-            resObj.checked = true;
-         }
-         return resObj;
       },
 
       _drawSelectedItems : function(idArray) {
