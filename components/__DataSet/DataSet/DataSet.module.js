@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return this._options.strategy;
       },
 
-      // полная установка
+      // полная установка рекордов в DataSet
       setRecords: function (records, options) {
          options || (options = {});
          options = $ws.core.merge(options, setOptions, {preferSource: true});
@@ -194,7 +194,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return singular ? records[0] : records;
       },
 
-      // добавляет рекорд (массив рекордов) в коллекцию. Если рекорд уже представлен в коллекции, то
+      // добавляет рекорд (массив рекордов) в DataSet. Если рекорд уже представлен в DataSet, то
       // рекорд будет пропущен, только если не передана опция {merge: true}, в этом случае атрибуты
       // будут совмещены в существующий рекорд
       addRecords: function (records, options) {
