@@ -1,0 +1,57 @@
+.controls-ListView {
+  .controls-ListView__item {
+    overflow: hidden;
+    position: relative;
+
+    .controls-ListView__itemActions {
+      position: absolute;
+      display: none;
+      height: @list-view-actions-height;
+      top: @list-view-actions-top-offset;
+      right: @list-view-actions-right-offset;
+      margin: @list-view-actions-margin;
+      padding: @list-view-actions-padding;
+      z-index: @list-view-actions-zindex;
+      background: @list-view-actions-bg;
+
+      .controls-ListView__action {
+        display: inline;
+        cursor: @list-view-actions-cursor;
+        margin: 0 @list-view-actions-gap 0 0;
+
+        &:last-child {
+          margin: 0;
+        }
+      }
+    }
+     &:hover{
+        .controls-ListView__itemCheckBox {
+           background: @check-box-icon-hover-bg;
+        }
+     }
+  }
+
+}
+
+.controls-ListView {
+   &.controls-ListView__multiselect {
+      .controls-ListView__item {
+         padding-left: 20px;
+      }
+      .controls-ListView__item__selected{
+         .controls-ListView__itemCheckBox {
+            background: @check-box-icon-checked-bg;
+         }
+      }
+   }
+}
+
+.controls-ListView__itemCheckBox {
+   position: absolute;
+   width: 16px;
+   height: 16px;
+   background: none;
+   top: 5px;
+   left: 2px;
+   cursor: pointer;
+}

@@ -92,4 +92,30 @@
         padding-left: 12px;
     }
   }
+
+   .controls-ListView__item__selected {
+      .controls-DataGrid__td:first-child {
+         background-image: url('img/rowSelect.png');
+         background-position: left top;
+         background-repeat: repeat-y;
+      }
+   }
+
+
+
+   &.controls-DataGrid__multiselect {
+      .controls-DataGrid__td:first-child {
+         padding-left: 32px;
+         background: none;
+      }
+      .controls-DataGrid__th:first-child {
+         padding-left: 32px;
+      }
+      .controls-ListView__item__selected{
+         .controls-ListView__itemCheckBox {
+            background: @check-box-icon-checked-bg;
+         }
+      }
+   }
+
 }

@@ -111,6 +111,10 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
          }
 
          this._drawItems();
+      },
+
+      _getLeftOfItemContainer : function(container) {
+         return $(".controls-DataGrid__td", container.get(0)).first();
       }
 
    });

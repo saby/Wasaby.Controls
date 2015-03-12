@@ -2003,6 +2003,21 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:last-child {
   padding-left: 12px;
 }
+.controls-DataGrid .controls-ListView__item__selected .controls-DataGrid__td:first-child {
+  background-image: url('img/rowSelect.png');
+  background-position: left top;
+  background-repeat: repeat-y;
+}
+.controls-DataGrid.controls-DataGrid__multiselect .controls-DataGrid__td:first-child {
+  padding-left: 32px;
+  background: none;
+}
+.controls-DataGrid.controls-DataGrid__multiselect .controls-DataGrid__th:first-child {
+  padding-left: 32px;
+}
+.controls-DataGrid.controls-DataGrid__multiselect .controls-ListView__item__selected .controls-ListView__itemCheckBox {
+  background: transparent url('img/checkbox.png') -2px -5px;
+}
 .controls-ComboBox.controls-Picker__show {
   border-width: 1px;
   border-style: solid;
