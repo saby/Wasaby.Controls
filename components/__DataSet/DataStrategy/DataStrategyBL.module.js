@@ -46,6 +46,10 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
          return {d: d[index], s: s};
       },
 
+      replaceAt: function (data, index, newRaw) {
+         data.d[index] = newRaw;
+      },
+
       rebuild: function (data, keyField) {
          var _pkIndex = {},
             d = data.d,
