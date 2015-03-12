@@ -139,26 +139,26 @@ define('js!SBIS3.CONTROLS.DataSet', [
          options = $ws.core.merge(options, setOptions, {preferSource: true});
          var singular = !(records instanceof Array);
          records = singular ? (records ? [records] : []) : $ws.core.clone(records);
-         var i, l, id, record, existing;
+         var i, l, key, record, existing;
          var toAdd = [], toRemove = [], recordMap = {};
          var add = options.add, merge = options.merge, remove = options.remove;
 
          for (i = 0, l = records.length; i < l; i++) {
             record = records[i];
-            id = record.getKey();
+            key = record.getKey();
 
             // если уже есть такой элемент, предотвратит его добавление и
             // если проставлена опция, то смержит свойства в текущий рекорд
 
-            if (existing = this.getRecordByKey(id)) {
+            if (existing = this.getRecordByKey(key)) {
                if (remove) {
-                  recordMap[existing._cid] = true;
+                  recordMap[key] = true;
                }
 
                if (merge) {
                   //FixME: надо смержить свойства как то в existing.... + отслеживать состояние
                   // заменить сырые данные
-                  this.getStrategy().replaceAt(this._rawData, this.getRecordIndexByKey(id), record.getRaw());
+                  this.getStrategy().replaceAt(this._rawData, this.getRecordIndexByKey(key), record.getRaw());
                }
 
                records[i] = existing;
@@ -169,13 +169,14 @@ define('js!SBIS3.CONTROLS.DataSet', [
             }
 
             record = existing || record;
-            recordMap[record._cid] = true;
+            recordMap[key] = true;
          }
 
          if (remove) {
             this.each(function (rec) {
-               if (!recordMap[rec._cid]) {
-                  toRemove.push(rec._cid);
+               var key = rec.getKey();
+               if (!recordMap[key]) {
+                  toRemove.push(key);
                }
             }, 'all');
 
