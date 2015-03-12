@@ -151,17 +151,16 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.DataSet - набор отобранных элементов
        */
       query: function (filter, sorting, offset, limit) {
-
-         var self = this,
+         filter = filter || {};
+         var
+            self = this,
             strategy = this.getStrategy(),
-            def = new $ws.proto.Deferred();
+            def = new $ws.proto.Deferred(),
+            filterParam = strategy.prepareFilterParam(filter),
+            sortingParam = strategy.prepareSortingParam(sorting),
+            pagingParam = strategy.preparePagingParam(offset, limit);
 
-         filter = filter || [];
-
-         var filterParam = strategy.prepareFilterParam(filter);
-         var sortingParam = strategy.prepareSortingParam(sorting);
-
-         self._BL.call(self._options.queryMethodName, {'ДопПоля': [], 'Фильтр': filterParam, 'Сортировка': sortingParam, 'Навигация': null}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+         self._BL.call(self._options.queryMethodName, {'ДопПоля': [], 'Фильтр': filterParam, 'Сортировка': sortingParam, 'Навигация': pagingParam}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
 
             var DS = new DataSet({
                strategy: strategy,
