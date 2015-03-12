@@ -114,20 +114,29 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _drawItems: function () {
-         var self = this,
-            DataSet = this._dataSet,
-            def = new $ws.proto.Deferred();
+         if (!Object.isEmpty(this._itemsInstances)) {
+            for (var i in this._itemsInstances) {
+               if (this._itemsInstances.hasOwnProperty(i)) {
+                  this._itemsInstances[i].destroy();
+               }
+            }
+         }
+         this._itemsInstances = {};
+
 
          var
-            itemsContainer = self._getItemsContainer();
-         self._itemsInstances = {};
-         itemsContainer.empty();
+            self = this,
+            DataSet = this._dataSet,
+            targetContainersList = [];
 
          DataSet.each(function (item, key, i, parItem, lvl) {
-
             var
                targetContainer = self._getTargetContainer(item, key, parItem, lvl);
-
+            
+            if (Array.indexOf(targetContainersList, targetContainer.get(0)) < 0) {
+               targetContainer.empty();
+               targetContainersList.push(targetContainer.get(0));
+            }
             self._drawItem(item, targetContainer, key, i, parItem, lvl);
          });
 
@@ -135,8 +144,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             self._notify('onDrawItems');
             self._drawItemsCallback();
          });
-
-         return def;
       },
 
       //метод определяющий в какой контейнер разместить определенный элемент
