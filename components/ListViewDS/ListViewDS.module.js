@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
       var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
          $protected: {
+            _floatCheckBox : null,
             _dotTplFn: dotTplFn,
             _dotItemTpl: null,
             _itemsContainer: null,
@@ -48,8 +49,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 * @cfg {Function} Обработчик клика на элемент
                 */
                elemClickHandler: null,
-               multiselect: false,
-               itemSelect: false
+               multiselect: false
             }
          },
 
@@ -88,9 +88,22 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          /* +++++++++++++++++++++++++++ */
 
          _elemClickHandler: function (id, data, target) {
-            this.setSelectedItems([id]);
-            if (this._options.elemClickHandler) {
-               this._options.elemClickHandler.call(this, id, data, target);
+            if (this._options.multiselect) {
+               if ($(target).hasClass('controls-ListView__itemCheckBox')) {
+                  var key = $(target).closest('.controls-ListView__item').attr('data-id');
+                  this.toggleItemsSelection([key]);
+               }
+               else {
+                  if (this._options.elemClickHandler) {
+                     this._options.elemClickHandler.call(this, id, data, target);
+                  }
+               }
+            }
+            else {
+               this.setSelectedItems([id]);
+               if (this._options.elemClickHandler) {
+                  this._options.elemClickHandler.call(this, id, data, target);
+               }
             }
          },
 
@@ -123,7 +136,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
          _drawSelectedItems: function (idArray) {
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
-            $(".controls-ListView__item[data-id='" + idArray[0] + "']", this._container).addClass('controls-ListView__item__selected');
+            for (var i = 0; i < idArray.length; i++) {
+               $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).addClass('controls-ListView__item__selected');
+            }
          },
 
          setElemClickHandler: function (method) {
@@ -170,6 +185,17 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          _drawItemsCallback: function () {
             this._drawItemsActions(this._options.itemsActions);
+            if (this._options.multiselect) {
+               var itemContainers = $(".controls-ListView__item", this._container);
+               for (var i = 0; i < itemContainers.length; i++) {
+                  var checkBoxContainer = this._getLeftOfItemContainer($(itemContainers[i]));
+                  $('<div></div>').addClass('controls-ListView__itemCheckBox').appendTo(checkBoxContainer);
+               }
+            }
+         },
+
+         _getLeftOfItemContainer : function(container) {
+            return container;
          }
 
       });

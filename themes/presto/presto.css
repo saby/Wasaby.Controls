@@ -67,7 +67,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #e2effb;
+  background: #f2f2f2;
 }
 .controls-Button:hover {
   color: #333333;
@@ -75,7 +75,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #e2effb;
+  background: #f2f2f2;
 }
 .controls-Button.controls-Click__active {
   color: #4e5762;
@@ -163,7 +163,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #e2effb;
+  background: #f2f2f2;
 }
 .controls-Button.controls-Button__light.controls-Click__active {
   color: #4e5762;
@@ -232,7 +232,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #e2effb;
+  background: #f2f2f2;
 }
 .controls-Button.controls-Button__big:hover {
   color: #333333;
@@ -240,7 +240,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #e2effb;
+  background: #f2f2f2;
 }
 .controls-Button.controls-Button__big.controls-Click__active {
   color: #4e5762;
@@ -409,13 +409,13 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px;
   border-style: solid;
   border-color: #aaaaaa;
-  background: #e2effb;
+  background: #f2f2f2;
 }
 .controls-TabButton:hover {
   border-width: 1px;
   border-style: solid;
   border-color: #aaaaaa;
-  background: #e2effb;
+  background: #f2f2f2;
 }
 .controls-TabButton:hover .controls-TabButton__inner .controls-TabButton__caption {
   color: #333333;
@@ -559,42 +559,42 @@ input[type="reset"]::-moz-focus-inner {
   width: 18px;
   height: 18px;
   line-height: 18px;
-  border: 1px solid #e2effb;
+  border: 1px solid #f2f2f2;
   background: transparent;
 }
 .controls-CheckBox:hover .controls-CheckBox__caption {
   color: #ffcc99;
 }
 .controls-CheckBox:hover .controls-CheckBox__icon {
-  border: 1px solid #e2effb;
+  border: 1px solid #f2f2f2;
   background: transparent;
 }
 .controls-CheckBox.controls-Checked__checked .controls-CheckBox__caption {
   color: #ffffff;
 }
 .controls-CheckBox.controls-Checked__checked .controls-CheckBox__icon {
-  border: 1px solid #e2effb;
+  border: 1px solid #f2f2f2;
   background: transparent url('img/checkbox.png') -2px -5px;
 }
 .controls-CheckBox.controls-Checked__checked:hover .controls-CheckBox__caption {
   color: #ffcc99;
 }
 .controls-CheckBox.controls-Checked__checked:hover .controls-CheckBox__icon {
-  border: 1px solid #e2effb;
+  border: 1px solid #f2f2f2;
   background: transparent url('img/checkbox.png') -2px -5px;
 }
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__caption {
   color: #ffffff;
 }
 .controls-CheckBox.controls-ToggleButton__null .controls-CheckBox__icon {
-  border: 1px solid #e2effb;
+  border: 1px solid #f2f2f2;
   background: #65707e url('img/checkbox.png') -2px -5px;
 }
 .controls-CheckBox.controls-ToggleButton__null:hover .controls-CheckBox__caption {
   color: #ffcc99;
 }
 .controls-CheckBox.controls-ToggleButton__null:hover .controls-CheckBox__icon {
-  border: 1px solid #e2effb;
+  border: 1px solid #f2f2f2;
   background: #65707e url('img/checkbox.png') -2px -5px;
 }
 .controls-CheckBox.controls-ToggleButton__null.ws-disabled .controls-CheckBox__icon {
@@ -682,7 +682,7 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
-  background: #e2effb;
+  background: #f2f2f2;
 }
 .controls-Switcher .controls-Switcher__toggle .controls-Switcher__position:before {
   content: '';
@@ -711,7 +711,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position {
   margin: 0;
   color: #333333;
-  background: #e2effb;
+  background: #f2f2f2;
 }
 .controls-Switcher .controls-Switcher__toggle.controls-Switcher__toggle__position-on .controls-Switcher__position:before {
   width: 0;
@@ -884,7 +884,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuItem:hover {
   color: #4e5762;
-  background: #e2effb;
+  background: #f2f2f2;
 }
 .controls-MenuItem .controls-MenuItem__content {
   position: relative;
@@ -946,7 +946,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Button.controls-MenuButton.controls-Button__primary:hover .controls-MenuButton__arrowDown {
   border-width: 8px 8px 0 8px;
   border-style: solid;
-  border-color: #e2effb transparent transparent transparent;
+  border-color: #f2f2f2 transparent transparent transparent;
   background: transparent;
 }
 .controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked .controls-MenuButton__arrowDown,
@@ -1438,7 +1438,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox__picker .controls-ComboBox__itemRow:hover {
   color: #333333;
-  background: #e2effb;
+  background: #f2f2f2;
 }
 .controls-ComboBox__inputWrapper {
   height: 100%;
@@ -1624,11 +1624,11 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement.controls-Calendar__tableBodyElement__active:hover {
   color: #333333;
-  background: #e2effb;
+  background: #f2f2f2;
 }
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableBodyElement:hover {
   color: #333333;
-  background: #e2effb;
+  background: #f2f2f2;
 }
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableElement.controls-Calendar__tableElementFog {
   cursor: default;
@@ -1731,7 +1731,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MonthPicker__dropdownWrapper .controls-MonthPicker__dropdownElement:hover {
   color: #333333;
-  background: #e2effb;
+  background: #f2f2f2;
 }
 .controls-EditAtPlace {
   border: none;
@@ -1938,15 +1938,15 @@ input[type="reset"]::-moz-focus-inner {
   background: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover {
-  background: #e2effb;
+  background: #f2f2f2;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover .controls-DataGrid__th {
   color: inherit;
-  background-color: #e2effb;
+  background-color: #f2f2f2;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover .controls-DataGrid__td {
   color: #333333;
-  background-color: #e2effb;
+  background-color: #f2f2f2;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected {
   background-color: transparent;
@@ -2003,6 +2003,21 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:last-child {
   padding-left: 12px;
 }
+.controls-DataGrid .controls-ListView__item__selected .controls-DataGrid__td:first-child {
+  background-image: url('img/rowSelect.png');
+  background-position: left top;
+  background-repeat: repeat-y;
+}
+.controls-DataGrid.controls-DataGrid__multiselect .controls-DataGrid__td:first-child {
+  padding-left: 32px;
+  background: none;
+}
+.controls-DataGrid.controls-DataGrid__multiselect .controls-DataGrid__th:first-child {
+  padding-left: 32px;
+}
+.controls-DataGrid.controls-DataGrid__multiselect .controls-ListView__item__selected .controls-ListView__itemCheckBox {
+  background: transparent url('img/checkbox.png') -2px -5px;
+}
 .controls-ComboBox.controls-Picker__show {
   border-width: 1px;
   border-style: solid;
@@ -2013,7 +2028,8 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-Button__secondRow {
   white-space: normal;
-  line-height: 26px;
+  line-height: 21px;
+  padding-top: 8px;
 }
 body {
   background-color: #373944;

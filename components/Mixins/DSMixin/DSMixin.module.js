@@ -18,6 +18,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          _itemsInstances: {},
          _filter: undefined,
          _sorting: undefined,
+         _offset: undefined,
+         _limit: undefined,
          _dataSource: undefined,
          _setDataSourceCB: null, //чтобы подписки отрабатывали всегда
          _dataSet: null,
@@ -84,7 +86,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       reload: function (filter, sorting, offset, limit) {
          var self = this;
-         this._dataSource.query(filter, sorting, offset, limit).addCallback(function (DataSet) {
+         this._filter = typeof(filter) != 'undefined' ? filter : this._filter;
+         this._sorting = typeof(sorting) != 'undefined' ? sorting : this._sorting;
+         this._offset = typeof(offset) != 'undefined' ? offset : this._offset;
+         this._limit = typeof(filter) != 'undefined' ? limit : this._limit;
+         this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (DataSet) {
             self._dataSet = DataSet;
             self._drawItems();
          });
@@ -102,7 +108,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             strategy: new DataStrategyArray(),
             keyField: keyField
          });
-         this._drawItems();
+         this.reload();
          //TODO совместимость
          if (typeof(window) != 'undefined') {
             console['log']('Метод setItems устарел. Он прекратит работу в версии 3.7.2');
@@ -114,20 +120,29 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _drawItems: function () {
-         var self = this,
-            DataSet = this._dataSet,
-            def = new $ws.proto.Deferred();
+         if (!Object.isEmpty(this._itemsInstances)) {
+            for (var i in this._itemsInstances) {
+               if (this._itemsInstances.hasOwnProperty(i)) {
+                  this._itemsInstances[i].destroy();
+               }
+            }
+         }
+         this._itemsInstances = {};
+
 
          var
-            itemsContainer = self._getItemsContainer();
-         self._itemsInstances = {};
-         itemsContainer.empty();
+            self = this,
+            DataSet = this._dataSet,
+            targetContainersList = [];
 
          DataSet.each(function (item, key, i, parItem, lvl) {
-
             var
                targetContainer = self._getTargetContainer(item, key, parItem, lvl);
 
+            if (Array.indexOf(targetContainersList, targetContainer.get(0)) < 0) {
+               targetContainer.empty();
+               targetContainersList.push(targetContainer.get(0));
+            }
             self._drawItem(item, targetContainer, key, i, parItem, lvl);
          });
 
@@ -135,8 +150,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             self._notify('onDrawItems');
             self._drawItemsCallback();
          });
-
-         return def;
       },
 
       //метод определяющий в какой контейнер разместить определенный элемент
