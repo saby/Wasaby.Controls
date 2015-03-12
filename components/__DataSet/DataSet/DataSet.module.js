@@ -10,7 +10,6 @@ define('js!SBIS3.CONTROLS.DataSet', [
     * Класс "Набор данных"
     */
 
-   // Default options for `SBIS3.CONTROLS.DataSet#set`.
    var setOptions = {add: true, remove: true, merge: true};
    var addOptions = {add: true, remove: false};
 
@@ -212,7 +211,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          }
          var index = this.getStrategy().getLength(this._rawData);
          this._childRecordsMap[index - 1] = record;
-         this._pkIndex[record._cid] = index - 1;
+         this._pkIndex[record.getKey()] = index - 1;
       },
 
       /**
