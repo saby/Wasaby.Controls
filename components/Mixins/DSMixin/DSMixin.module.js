@@ -18,6 +18,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          _itemsInstances: {},
          _filter: undefined,
          _sorting: undefined,
+         _offset: undefined,
+         _limit: undefined,
          _dataSource: undefined,
          _setDataSourceCB: null, //чтобы подписки отрабатывали всегда
          _dataSet: null,
@@ -84,7 +86,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       reload: function (filter, sorting, offset, limit) {
          var self = this;
-         this._dataSource.query(filter, sorting, offset, limit).addCallback(function (DataSet) {
+         this._filter = typeof(filter) != 'undefined' ? filter : this._filter;
+         this._sorting = typeof(sorting) != 'undefined' ? sorting : this._sorting;
+         this._offset = typeof(offset) != 'undefined' ? offset : this._offset;
+         this._limit = typeof(filter) != 'undefined' ? limit : this._limit;
+         this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (DataSet) {
             self._dataSet = DataSet;
             self._drawItems();
          });
@@ -132,7 +138,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          DataSet.each(function (item, key, i, parItem, lvl) {
             var
                targetContainer = self._getTargetContainer(item, key, parItem, lvl);
-            
+
             if (Array.indexOf(targetContainersList, targetContainer.get(0)) < 0) {
                targetContainer.empty();
                targetContainersList.push(targetContainer.get(0));

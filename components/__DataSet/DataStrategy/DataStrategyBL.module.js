@@ -113,27 +113,21 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
             s: []
          };
 
-         if (filter.length) {
-            $ws.helpers.forEach(filter, function (value) {
-               if (!Object.isEmpty(value)) {
-                  for (var j in value) {
-                     if (value.hasOwnProperty(j)) {
-                        if (typeof value[j] == 'boolean') {
-                           filterParam.s.push({
-                              n: j,
-                              t: 'Логическое'
-                           });
-                        }
-                        else {
-                           filterParam.s.push({
-                              n: j,
-                              t: 'Строка'
-                           });
-                        }
-                        filterParam.d.push(value[j]);
-                     }
-                  }
+         if (!Object.isEmpty(filter)) {
+            $ws.helpers.forEach(filter, function (value, index) {
+               if (typeof value == 'boolean') {
+                  filterParam.s.push({
+                     n: index,
+                     t: 'Логическое'
+                  });
                }
+               else {
+                  filterParam.s.push({
+                     n: index,
+                     t: 'Строка'
+                  });
+               }
+               filterParam.d.push(value);
             });
          }
 

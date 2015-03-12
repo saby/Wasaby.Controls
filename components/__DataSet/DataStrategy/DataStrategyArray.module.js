@@ -100,28 +100,19 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
 
       query: function (data, filter, sorting, offset, limit) {
          var newData = data;
-         filter = filter || [];
+         filter = filter || {};
          sorting = sorting || [];
 
-         if (filter.length) {
+         if (!Object.isEmpty(filter)) {
             newData = [];
-            $ws.helpers.forEach(filter, function (value) {
-               if (!Object.isEmpty(value)) {
-                  for (var i = 0; i < data.length; i++) {
-                     var equal = true;
-                     for (var j in value) {
-                        if (value.hasOwnProperty(j)) {
-                           if (data[i][j] != value[j]) {
-                              equal = false;
-                              break;
-                           }
-                        }
-                     }
-                     if (equal) {
-                        newData.push(data[i]);
-                     }
+            $ws.helpers.forEach(filter, function (value, index) {
+
+               for (var i = 0; i < data.length; i++) {
+                  if (data[i][index] == value) {
+                     newData.push(data[i]);
                   }
                }
+
 
             });
          }
@@ -139,11 +130,11 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
                         newData.sort(function (a, b) {
 
                            if (a[j] > b[j]) {
-                              return (value[j] == 'ASC') ? -1 : 1;
+                              return (value[j] == 'DESC') ? -1 : 1;
                            }
 
                            if (a[j] < b[j]) {
-                              return (value[j] == 'ASC') ? 1 : -1;
+                              return (value[j] == 'DESC') ? 1 : -1;
                            }
 
                            return 0;
