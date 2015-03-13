@@ -1983,6 +1983,13 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr {
   background: transparent;
 }
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected {
+  background-color: transparent;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected .controls-DataGrid__td {
+  color: inherit;
+  background-color: transparent;
+}
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover {
   background: #00c795;
 }
@@ -1993,13 +2000,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover .controls-DataGrid__td {
   color: #ffffff;
   background-color: #00c795;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected {
-  background-color: transparent;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected .controls-DataGrid__td {
-  color: inherit;
-  background-color: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th {
   position: relative;
