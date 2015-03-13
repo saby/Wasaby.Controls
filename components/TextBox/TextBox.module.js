@@ -51,7 +51,14 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              * Данный текст отображается внутри поля до момента получения фокуса.
              * @see setPlaceholder
              */
-            placeholder: ''
+            placeholder: '',
+            /**
+             * @cfg {String} Фильтр ввода
+             * <wiTag group="Управление">
+             * Каждый вводимый символ будет проверяться на соответсвие указанному в этой опции регулярному выражению.
+             * Несоответсвующие символы невозможно напечатать.
+             */
+            inputRegExp : ''
          }
       },
 
@@ -82,7 +89,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
          this._inputField.bind('focusout', function () {
-            self.setText(self.getText());
+            self._focusOutHandler();
          });
 
          this._inputField.bind('focusin', function () {
@@ -159,6 +166,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          }
       },
 
+      _focusOutHandler: function(){
+         this.setText(this.getText());
+      },
+
       _keyUpBind: function() {
          var newText = this._inputField.val();
          if (newText != this._options.text) {
@@ -169,8 +180,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          }
       },
 
-      _keyDownBind: function() {
-
+      _keyDownBind: function(event) {
+         if (this._options.inputRegExp !== '' && this._inputRegExp(event, new RegExp(this._options.inputRegExp))){
+            event.preventDefault();
+         }
       },
 
       _keyPressBind: function() {
@@ -193,6 +206,14 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          else {
             this._inputField.removeAttr('readonly');
          }
+      },
+
+      _inputRegExp: function (e, regexp) {
+         var code = e.which;
+         if (code < 32 || e.ctrlKey || e.altKey) {
+            return true;
+         }
+         return (!regexp.test(String.fromCharCode(code)));
       },
 
       _createCompatPlaceholder : function() {

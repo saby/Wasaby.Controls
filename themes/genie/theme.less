@@ -1,0 +1,31 @@
+.controls-ComboBox__picker {
+  &.controls-Picker__owner__hover {
+    border-top-color: @primary-color;
+  }
+}
+
+.controls-Menu {
+  &.controls-Menu__Popup {
+    .controls-MenuButton__Menu-whiteLine {
+      background: transparent !important;
+    }
+  }
+}
+
+.controls-NumberTextBox {
+  .controls-TextBox__afterFieldWrapper {
+    margin: 0 -4px 0 0;
+  }
+
+  &:hover {
+    .controls-TextBox__afterFieldWrapper {
+      .controls-NumberTextBox__arrowUp {
+        border-top: 1px solid @primary-color;
+      }
+
+      .controls-NumberTextBox__arrowDown {
+        border-bottom: 1px solid @primary-color;
+      }
+    }
+  }
+}

@@ -1,0 +1,108 @@
+.controls-MonthPicker {
+  text-align: center;
+  display: inline-block;
+
+  .controls-MonthPicker__field {
+    white-space: nowrap;
+    cursor: @month-picker-field-cursor;
+    height: @month-picker-field-height;
+    margin: @month-picker-field-margin;
+    font: @month-picker-field-font;
+    color: @month-picker-field-text-color;
+    text-decoration: @month-picker-field-text-decoration;
+
+    &:hover {
+      color: @month-picker-field-hover-text-color;
+      text-decoration: @month-picker-field-hover-text-decoration;
+    }
+  }
+
+  .controls-MonthPicker__arrowWrapper {
+    position: relative;
+    display: inline-block;
+    width: @month-picker-arrow-width;
+    min-height: @month-picker-arrow-height;
+    height: 100%;
+
+    &.controls-MonthPicker__arrowLeftWrapper {
+      float: left;
+    }
+
+    &.controls-MonthPicker__arrowRightWrapper {
+      float: right;
+    }
+
+    .controls-MonthPicker__arrow {
+      position: absolute;
+      display: inline-block;
+      text-decoration: none;
+      cursor: @month-picker-arrow-cursor;
+      width: @month-picker-arrow-width;
+      height: @month-picker-arrow-height;
+      top: @month-picker-arrow-top-offset;
+      right: @month-picker-arrow-right-offset;
+      .box-sizing(border-box);
+
+      &.controls-MonthPicker__arrowLeft {
+        border-width: @month-picker-left-arrow-border-width;
+        border-style: @month-picker-left-arrow-border-style;
+        border-color: @month-picker-left-arrow-border-color;
+        background: @month-picker-left-arrow-bg;
+
+        &:hover {
+          border-width: @month-picker-left-arrow-hover-border-width;
+          border-style: @month-picker-left-arrow-hover-border-style;
+          border-color: @month-picker-left-arrow-hover-border-color;
+          background: @month-picker-left-arrow-hover-bg;
+        }
+      }
+
+      &.controls-MonthPicker__arrowRight {
+        border-width: @month-picker-right-arrow-border-width;
+        border-style: @month-picker-right-arrow-border-style;
+        border-color: @month-picker-right-arrow-border-color;
+        background: @month-picker-right-arrow-bg;
+
+        &:hover {
+          border-width: @month-picker-right-arrow-hover-border-width;
+          border-style: @month-picker-right-arrow-hover-border-style;
+          border-color: @month-picker-right-arrow-hover-border-color;
+          background: @month-picker-right-arrow-hover-bg;
+        }
+      }
+    }
+  }
+}
+
+.controls-MonthPicker__dropdownWrapper {
+  border: @month-picker-wrapper-border;
+  background: @month-picker-wrapper-bg;
+
+  .controls-MonthPicker__dropdownElement {
+    cursor: @month-picker-item-cursor;
+    height: @month-picker-item-height;
+    line-height: @month-picker-item-line-height;
+    color: @month-picker-item-text-color;
+    background: @month-picker-item-bg;
+
+    &.controls-MonthPicker__dropdownElementActive {
+      color: @month-picker-item-active-text-color;
+      background: @month-picker-item-active-bg;
+    }
+
+    &.controls-MonthPicker__dropdownElementMonth {
+      text-align: @month-picker-item-month-text-alignment;
+      padding: @month-picker-item-month-padding;
+    }
+
+    &.controls-MonthPicker__dropdownElementYear {
+      text-align: @month-picker-item-year-text-alignment;
+      padding: @month-picker-item-year-padding
+    }
+
+    &:hover {
+      color: @month-picker-item-hover-text-color;
+      background: @month-picker-item-hover-bg;
+    }
+  }
+}

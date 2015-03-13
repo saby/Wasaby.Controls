@@ -151,30 +151,34 @@
 
          require(["js!SBIS3.CONTROLS.ComboBox"], function (r) {
             new r({
-               pickerClassName : 'lalala',
                element: "ComboBox",
+               editable: true,
                items : [
                   {
                      key : 1,
+                     color : 'red',
                      title : 'Первый'
                   },
                   {
                      key : 2,
+                     color : 'green',
                      title : 'Второй'
                   },
                   {
-                     key : '',
+                     key : 3,
+                     color : 'blue',
                      title : 'Третий'
                   }
                ],
-               selectedItem : 2
+               selectedItem : 2,
+               itemTemplate : '<div style="color:{{=it.item.get("color")}}">{{=it.displayField}}</div>'
             })
          });
 
          require(["js!SBIS3.CONTROLS.ComboBox"], function (r) {
             new r({
                element: "ComboBox2",
-               editable: false,
+               editable: true,
                items : [
                   {
                      key : 1,

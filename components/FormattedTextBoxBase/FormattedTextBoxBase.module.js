@@ -141,7 +141,7 @@ define(
             this.setText(this._options.text);
          }
 
-         this._inputField.focus(function () {
+         this._container.bind('focusin', function () {
             self._focusHandler();
          });
          this._inputField.keypress(function (event) {
@@ -217,15 +217,11 @@ define(
        * @protected
        */
       _focusHandler: function(){
-         // Если в поле еще не введено ни единого символа -- установить курсор в начало поля
-         if ( $(this._inputField.get(0)).text() == this._clearMask ){
-            var
-               child = this._isSeparatorContainerFirst ? 1 : 0,
-               startContainer = this._inputField.get(0).childNodes[child].childNodes[0],
-               startPosition = 0;
-
-            this._moveCursor(startContainer, startPosition);
-         }
+         var
+            child = this._isSeparatorContainerFirst ? 1 : 0,
+            startContainer = this._inputField.get(0).childNodes[child].childNodes[0],
+            startPosition = 0;
+         this._moveCursor(startContainer, startPosition);
       },
 
       /**

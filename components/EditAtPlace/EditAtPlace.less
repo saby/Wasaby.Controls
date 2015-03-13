@@ -1,0 +1,126 @@
+.controls-EditAtPlace {
+  border: none;
+  &:hover,
+  &.ws-disabled {
+    border: none;
+  }
+
+  &.ws-disabled {
+    .controls-EditAtPlace__fieldWrapper {
+      .controls-EditAtPlace__textField {
+        cursor: @edit-at-place-field-disabled-cursor;
+      }
+    }
+  }
+
+  &.controls-EditAtPlace__multiline {
+    display: inline;
+    text-indent: 0;
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+  }
+
+  &.controls-EditAtPlace__autoHeight {
+    height: auto;
+  }
+
+  .controls-EditAtPlace__fieldWrapper {
+    margin: @edit-at-place-wrapper-margin;
+    border-width: @edit-at-place-wrapper-border-width;
+    border-style: @edit-at-place-wrapper-border-style;
+    border-color: @edit-at-place-wrapper-border-color;
+
+    &.controls-EditAtPlace__textAreaWrapper {
+      display: block;
+      .box-sizing(border-box);
+      padding: @edit-at-place-wrapper-text-area-padding;
+    }
+
+    .controls-EditAtPlace__textField {
+      display: inline-block;
+      font: inherit;
+      width: auto;
+      cursor: @edit-at-place-field-cursor;
+      border-width: @edit-at-place-field-border-width;
+      border-style: @edit-at-place-field-border-style;
+      border-color: @edit-at-place-field-border-color;
+    }
+  }
+
+  .controls-EditAtPlace__editor {
+    width: 100%;
+    border-width: @edit-at-place-editor-border-width;
+    border-style: @edit-at-place-editor-border-style;
+    border-color: @edit-at-place-editor-border-color;
+
+    .controls-TextBox {
+      .controls-TextBox__fieldWrapper {
+        .controls-TextBox__field {
+          font: @edit-at-place-text-box-editor-font;
+        }
+      }
+    }
+
+    .controls-TextArea {
+      .controls-TextArea__inputField {
+        font: @edit-at-place-text-area-editor-font;
+      }
+    }
+  }
+
+  &.controls-EditAtPlace__fieldWrapperHidden {
+    .controls-EditAtPlace__fieldWrapper {
+      display: none;
+    }
+  }
+
+  &.controls-EditAtPlace__editorHidden {
+    .controls-EditAtPlace__editor {
+      display: none;
+    }
+  }
+}
+
+.controls-EditAtPlace__editorOverlay {
+  margin: @edit-at-place-editor-overlay-margin;
+  padding: @edit-at-place-editor-overlay-padding;
+  border: @edit-at-place-editor-overlay-border;
+  .border-radius(@edit-at-place-editor-overlay-border-radius);
+  .box-shadow(@edit-at-place-editor-overlay-shadow);
+  background: @edit-at-place-editor-overlay-bg;
+
+  .controls-TextBox {
+    .controls-TextBox__fieldWrapper {
+      .controls-TextBox__field {
+        font: @edit-at-place-text-box-editor-font;
+      }
+    }
+  }
+
+  .controls-TextArea {
+    .controls-TextArea__inputField {
+      font: @edit-at-place-text-area-editor-font;
+    }
+  }
+}
+
+.controls-EditAtPlace__controlPanel {
+  display: inline-block;
+  vertical-align: top;
+  margin: @edit-at-place-control-margin;
+
+  .controls-EditAtPlace__cancel {
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+    width: @edit-at-place-cancel-button-width;
+    height: @edit-at-place-cancel-button-height;
+    margin: @edit-at-place-cancel-button-margin;
+    background: @edit-at-place-cancel-button-bg;
+
+    &:hover{
+      background: @edit-at-place-cancel-button-hover-bg;
+    }
+  }
+}

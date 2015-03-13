@@ -1,0 +1,122 @@
+.controls-DataGrid {
+  .controls-ListView__item {
+    &:extend(.controls-ListView .controls-ListView__item all);
+  }
+
+  .controls-DataGrid__table {
+    width: 100%;
+    border-spacing: @data-grid-border-spacing;
+    border-collapse: @data-grid-border-collapse;
+    border-width: @data-grid-border-width;
+    border-style: @data-grid-border-style;
+    border-color: @data-grid-border-color;
+    background: @data-grid-bg;
+
+    .controls-DataGrid__tr {
+      background: @data-grid-row-bg;
+
+
+
+      &.controls-ListView__item__selected {
+        background-color: @data-grid-row-selected-bg;
+
+        .controls-DataGrid__td {
+          color: @data-grid-row-selected-cell-text-color;
+          background-color: @data-grid-row-selected-cell-bg;
+        }
+      }
+       &:hover {
+          background: @data-grid-row-hover-bg;
+
+          .controls-DataGrid__th {
+             color: @data-grid-row-hover-header-cell-text-color;
+             background-color: @data-grid-row-hover-header-cell-bg;
+          }
+
+          .controls-DataGrid__td {
+             color: @data-grid-row-hover-cell-text-color;
+             background-color: @data-grid-row-hover-cell-bg;
+          }
+       }
+    }
+
+    .controls-DataGrid__th {
+      position: relative;
+      font-weight: normal;
+      cursor: @data-grid-header-cell-cursor;
+      text-align: @data-grid-header-cell-text-alignment;
+      height: @data-grid-header-cell-height;
+      padding: @data-grid-header-cell-padding;
+      color: @data-grid-header-cell-text-color;
+      font-size: @data-grid-header-cell-font-size;
+      background-color: @data-grid-header-cell-bg;
+
+      border-collapse: @data-grid-border-collapse;
+      border-width: @data-grid-header-cell-border-width;
+      border-style: @data-grid-header-cell-border-style;
+      border-color: @data-grid-header-cell-border-color;
+
+      &:hover {
+        color: @data-grid-header-cell-hover-text-color;
+        background: @data-grid-header-cell-hover-bg;
+      }
+    }
+     .controls-DataGrid__th:first-child {
+        padding-left: 12px;
+     }
+     .controls-DataGrid__th:last-child {
+        padding-left: 12px;
+     }
+    .controls-DataGrid__td {
+      position: relative;
+      cursor: @data-grid-cell-cursor;
+      text-align: @data-grid-cell-text-alignment;
+      height: @data-grid-cell-height;
+      padding: @data-grid-cell-padding;
+      color: @data-grid-cell-text-color;
+      background-color: @data-grid-cell-bg;
+
+      border-collapse: @data-grid-border-collapse;
+      border-width: @data-grid-cell-border-width;
+      border-style: @data-grid-cell-border-style;
+      border-color: #F5F5F5;
+
+      &:hover {
+        color: @data-grid-cell-hover-text-color;
+        background: @data-grid-cell-hover-bg;
+      }
+    }
+    .controls-DataGrid__td:first-child {
+       padding-left: 12px;
+    }
+    .controls-DataGrid__td:last-child {
+        padding-left: 12px;
+    }
+  }
+
+   .controls-ListView__item__selected {
+      .controls-DataGrid__td:first-child {
+         background-image: url('img/rowSelect.png');
+         background-position: left top;
+         background-repeat: repeat-y;
+      }
+   }
+
+
+
+   &.controls-DataGrid__multiselect {
+      .controls-DataGrid__td:first-child {
+         padding-left: 32px;
+         background: none;
+      }
+      .controls-DataGrid__th:first-child {
+         padding-left: 32px;
+      }
+      .controls-ListView__item__selected{
+         .controls-ListView__itemCheckBox {
+            background: @check-box-icon-checked-bg;
+         }
+      }
+   }
+
+}

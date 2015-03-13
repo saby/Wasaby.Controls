@@ -8,7 +8,6 @@ define('js!SBIS3.CONTROLS.Menu', [
    'js!SBIS3.CONTROLS.TreeMixin',
    'js!SBIS3.CONTROLS.FloatArea',
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
-   'css!SBIS3.CONTROLS.Menu',
    'js!SBIS3.CONTROLS.MenuItem'
 
 ], function(ButtonGroupBase, dot, TreeMixin, FloatArea, ControlHierarchyManager) {
