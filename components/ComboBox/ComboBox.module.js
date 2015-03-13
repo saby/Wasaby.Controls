@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @control
     * @public
     * @initial
-    * <component data-component='SBIS3.CONTROLS.ComboBox' style='width: 100px'>    *
+    * <component data-component='SBIS3.CONTROLS.ComboBox'>
     * </component>
     * @category Inputs
     * @mixes SBIS3.CONTROLS.PickerMixin
