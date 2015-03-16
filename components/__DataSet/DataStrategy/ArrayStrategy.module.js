@@ -1,14 +1,14 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'], function (IDataStrategy) {
+define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], function (IDataStrategy) {
    'use strict';
 
    /**
     * Реализация интерфеса IDataStrategy для работы с массивами
     */
 
-   var DataStrategyArray = IDataStrategy.extend({
+   var ArrayStrategy = IDataStrategy.extend({
       $protected: {
       },
       $constructor: function () {
@@ -173,5 +173,5 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
 
    });
 
-   return DataStrategyArray;
+   return ArrayStrategy;
 });

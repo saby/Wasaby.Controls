@@ -1,9 +1,9 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], function (IDataStrategy) {
+define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], function (IDataStrategy) {
    'use strict';
-   var DataStrategyBL = IDataStrategy.extend({
+   var SbisJSONStrategy = IDataStrategy.extend({
       $protected: {
       },
       $constructor: function () {
@@ -202,5 +202,5 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
 
    });
 
-   return DataStrategyBL;
+   return SbisJSONStrategy;
 });
