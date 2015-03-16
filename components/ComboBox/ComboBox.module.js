@@ -70,7 +70,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             itemTemplate: '',
             afterFieldWrapper: arrowTpl,
             /**
-             * @cfg {Boolean} Возможен ли ручной ввод текста
+             * @cfg {Boolean} Возможность ручного ввода текста
+             * @example
+             * <pre>
+             *     <option name="editable">false</option>
+             * </pre>
+             * @see isEditable
+             * @see setEditable
              */
             editable: true,
             /**
@@ -296,12 +302,22 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._drawSelectedItem(this._options.selectedItem);
          }
       },
-
+       /**
+        * Метод установки/изменения возможности ручного ввода.
+        * @param editable Возможность ручного ввода.
+        * @see isEditable
+        * @see editable
+        */
       setEditable: function (editable) {
          this._options.editable = editable;
          this._container.toggleClass('controls-ComboBox__editable-false', editable === false);
       },
-
+       /**
+        * Признак возможности ручного ввода.
+        * @returns {Boolean} Возможен ли ручной ввод.
+        * @see editable
+        * @see setEditable
+        */
       isEditable: function () {
          return this._options.editable;
       },
