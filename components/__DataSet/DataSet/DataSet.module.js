@@ -63,8 +63,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
       removeRecord: function (key) {
          var self = this;
          var mark = function (key) {
-            var record = self.getRecordByKey(key),
-               index = self.getRecordIndexByKey(key);
+            var record = self.getRecordByKey(key);
             record.toggleStateDeleted(true);
          };
 
