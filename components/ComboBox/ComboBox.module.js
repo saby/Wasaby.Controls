@@ -16,16 +16,52 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @public
     * @initial
     * <component data-component='SBIS3.CONTROLS.ComboBox'>
+    *     <options name="items" type="array">
+    *        <options>
+    *            <option name="key">1</option>
+    *            <option name="title">Пункт1</option>
+    *         </options>
+    *         <options>
+    *            <option name="key">2</option>
+    *            <option name="title">Пункт2</option>
+    *         </options>
+    *      </options>
     * </component>
     * @category Inputs
+    * @demo SBIS3.Demo.Control.MyComboBox
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.Selectable
+    * @ignoreOptions text
     */
 
    var ComboBox = TextBox.extend([PickerMixin, DSMixin, Selectable, DataBindMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       _dotTplFn: dotTplFn,
+      /**
+       * @typedef {Object} ItemsComboBox
+       * @property {String} title Текст пункта меню.
+       * @property {String} key Ключ пункта меню.
+       */
+      /**
+       * @cfg {ItemsComboBox[]} Набор исходных данных, по которому строится отображение
+       * @name SBIS3.CONTROLS.ComboBox#items
+       * @description
+       * @example
+       * <pre>
+       *     <options name="items" type="array">
+       *        <options>
+       *            <option name="key">1</option>
+       *            <option name="title">Пункт1</option>
+       *         </options>
+       *         <options>
+       *            <option name="key">2</option>
+       *            <option name="title">Пункт2</option>
+       *         </options>
+       *      </options>
+       * </pre>
+       */
+
       $protected: {
          _options: {
             /**
@@ -48,7 +84,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              */
             valueFormat: '',
             /**
-             * @cfg {String} название поля для отображения
+             * @cfg {String} Название поля для отображения
              */
             displayField: ''
          }
