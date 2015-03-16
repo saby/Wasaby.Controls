@@ -293,6 +293,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
+      _clearItems : function() {
+         if (this._picker) {
+            ComboBox.superclass._clearItems.call(this, this._picker.getContainer());
+         }
+      },
+
       _drawItems: function () {
          if (this._picker) {
             ComboBox.superclass._drawItems.call(this);
