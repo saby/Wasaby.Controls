@@ -10,6 +10,16 @@ define('js!SBIS3.CONTROLS.DataSet', [
     * Класс "Набор данных"
     */
 
+   /**
+    * Дефолтный набор опций при установке рекордов в датасет
+    * add - нужно ли добавлять новые рекорды
+    * remove - нужно ли удалять рекорды, которые были в датасете, но не входят в новый список рекордов
+    * merge - если рекорд уже находится в датасете, необходимо ли перезаписывать его свойства
+    */
+   var setOptions = {add: true, remove: true, merge: true};
+   // Дефолтный набор опций при добавлении рекордов в датасет
+   var addOptions = {add: true, remove: false};
+
    return $ws.proto.Abstract.extend({
       $protected: {
          _pkIndex: null,
@@ -130,17 +140,86 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return this._options.strategy;
       },
 
-      addRecord: function (record) {
+      // полная установка рекордов в DataSet
+      setRecords: function (records, options) {
+         options || (options = {});
+         options = $ws.core.merge(options, setOptions, {preferSource: true});
+         var singular = !(records instanceof Array);
+         records = singular ? (records ? [records] : []) : $ws.core.clone(records);
+         var i, l, key, record, existing;
+         var toAdd = [], toRemove = [], recordMap = {};
+         var add = options.add, merge = options.merge, remove = options.remove;
+
+         for (i = 0, l = records.length; i < l; i++) {
+            record = records[i];
+            key = record.getKey();
+
+            // если уже есть такой элемент, предотвратит его добавление и
+            // если проставлена опция, то смержит свойства в текущий рекорд
+
+            if (existing = this.getRecordByKey(key)) {
+               if (remove) {
+                  recordMap[key] = true;
+               }
+
+               if (merge) {
+                  //FixME: надо смержить свойства как то в existing.... + отслеживать состояние
+                  // заменить сырые данные
+                  this.getStrategy().replaceAt(this._rawData, this.getRecordIndexByKey(key), record.getRaw());
+               }
+
+               records[i] = existing;
+
+               // если это новый рекорд, добавим его в 'toAdd'
+            } else if (add) {
+               toAdd.push(record);
+            }
+
+            record = existing || record;
+            recordMap[key] = true;
+         }
+
+         if (remove) {
+            this.each(function (rec) {
+               var key = rec.getKey();
+               if (!recordMap[key]) {
+                  toRemove.push(key);
+               }
+            }, 'all');
+
+            if (toRemove.length) {
+               this.removeRecord(toRemove);
+            }
+         }
+
+         if (toAdd.length) {
+            for (i = 0, l = toAdd.length; i < l; i++) {
+               this._addReference(toAdd[i], options);
+            }
+         }
+
+         // вернем добавленный (или смерженный) рекорд (или массив рекордов)
+         return singular ? records[0] : records;
+      },
+
+      // добавляет рекорд (массив рекордов) в DataSet. Если рекорд уже представлен в DataSet, то
+      // рекорд будет пропущен, только если не передана опция {merge: true}, в этом случае атрибуты
+      // будут совмещены в существующий рекорд
+      addRecords: function (records, options) {
+         this.setRecords(records, $ws.core.merge($ws.core.merge({merge: false}, options), addOptions));
+      },
+
+      _addReference: function (record, options) {
          //FixME: потому что метод создать не возвращает тип поля "идентификатор"
          record._keyField = this._keyField;
          this.getStrategy().addRecord(this._rawData, record);
-         var index = this.getStrategy().getLength(this._rawData);
          // не менять условие! с БЛ идентификатор приходит как null
          if (record.getKey() === undefined) {
             record.set(this._keyField, record._cid);
          }
+         var index = this.getStrategy().getLength(this._rawData);
          this._childRecordsMap[index - 1] = record;
-         this._pkIndex[record._cid] = index - 1;
+         this._pkIndex[record.getKey()] = index - 1;
       },
 
       /**
