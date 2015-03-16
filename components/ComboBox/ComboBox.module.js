@@ -33,7 +33,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.Selectable
-    * @ignoreOptions text
     */
 
    var ComboBox = TextBox.extend([PickerMixin, DSMixin, Selectable, DataBindMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
