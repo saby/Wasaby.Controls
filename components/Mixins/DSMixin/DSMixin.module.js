@@ -52,6 +52,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
 
          //TODO совместимость
+         this._options.dataSource = this._options.dataSource || [];
          if (this._options.dataSource instanceof Array) {
             var
                item = this._options.dataSource[0],
@@ -74,7 +75,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          this._setDataSourceCB = setDataSourceCB.bind(this);
          this._dataSource.subscribe('onDataSync', this._setDataSourceCB);
-
       },
 
       setDataSource: function (ds) {
