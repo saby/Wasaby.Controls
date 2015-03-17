@@ -193,11 +193,13 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
             var
                targetContainer = self._getTargetContainer(item, key, parItem, lvl);
 
-            if (Array.indexOf(targetContainersList, targetContainer.get(0)) < 0) {
-               targetContainer.empty();
-               targetContainersList.push(targetContainer.get(0));
+            if (targetContainer) {
+               if (Array.indexOf(targetContainersList, targetContainer.get(0)) < 0) {
+                  targetContainer.empty();
+                  targetContainersList.push(targetContainer.get(0));
+               }
+               itemsReadyDef.push(self._drawItem(item, targetContainer, key, i, parItem, lvl));
             }
-            itemsReadyDef.push(self._drawItem(item, targetContainer, key, i, parItem, lvl));
 
          });
          itemsReadyDef.done().getResult().addCallback(function(){
