@@ -52,6 +52,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
 
          //TODO совместимость
+         this._options.dataSource = this._options.dataSource || [];
          if (this._options.dataSource instanceof Array) {
             var
                item = this._options.dataSource[0],
@@ -74,7 +75,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          this._setDataSourceCB = setDataSourceCB.bind(this);
          this._dataSource.subscribe('onDataSync', this._setDataSourceCB);
-
       },
 
       setDataSource: function (ds) {
@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._filter = typeof(filter) != 'undefined' ? filter : this._filter;
          this._sorting = typeof(sorting) != 'undefined' ? sorting : this._sorting;
          this._offset = typeof(offset) != 'undefined' ? offset : this._offset;
-         this._limit = typeof(filter) != 'undefined' ? limit : this._limit;
+         this._limit = typeof(limit) != 'undefined' ? limit : this._limit;
          this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (DataSet) {
             self._dataSet = DataSet;
             self._drawItems();
@@ -116,10 +116,32 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _drawItemsCallback: function () {
-
+         $()
       },
 
       _drawItems: function () {
+         this._clearItems();
+
+         var
+            self = this,
+            DataSet = this._dataSet;
+
+         DataSet.each(function (item, key, i, parItem, lvl) {
+            var
+               targetContainer = self._getTargetContainer(item, key, parItem, lvl);
+            self._drawItem(item, targetContainer, key, i, parItem, lvl);
+         });
+
+         self.reviveComponents().addCallback(function () {
+            self._notify('onDrawItems');
+            self._drawItemsCallback();
+         });
+      },
+
+
+      _clearItems : function(container) {
+         container = container || this._container;
+         /*Удаляем компоненты-инстансы элементов*/
          if (!Object.isEmpty(this._itemsInstances)) {
             for (var i in this._itemsInstances) {
                if (this._itemsInstances.hasOwnProperty(i)) {
@@ -129,27 +151,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
          this._itemsInstances = {};
 
-
-         var
-            self = this,
-            DataSet = this._dataSet,
-            targetContainersList = [];
-
-         DataSet.each(function (item, key, i, parItem, lvl) {
-            var
-               targetContainer = self._getTargetContainer(item, key, parItem, lvl);
-
-            if (Array.indexOf(targetContainersList, targetContainer.get(0)) < 0) {
-               targetContainer.empty();
-               targetContainersList.push(targetContainer.get(0));
-            }
-            self._drawItem(item, targetContainer, key, i, parItem, lvl);
+         var itemsContainers = $(".controls-ListView__item", container.get(0));
+         /*Удаляем вложенные компоненты*/
+         $('[data-component]', itemsContainers).each(function(i, item) {
+            var inst = $(item).wsControl();
+            inst.destroy();
          });
 
-         self.reviveComponents().addCallback(function () {
-            self._notify('onDrawItems');
-            self._drawItemsCallback();
-         });
+         /*Удаляем сами items*/
+         itemsContainers.remove();
       },
 
       //метод определяющий в какой контейнер разместить определенный элемент

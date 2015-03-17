@@ -12,6 +12,16 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
       $protected: {
       },
       $constructor: function () {
+         var a = 5;
+      },
+      getKey : function(data) {
+         var
+            key,
+            keys = Object.keys(data);
+         if (keys) {
+            key = keys[0];
+         }
+         return key;
       },
       /**
        * Метод для обхода по сырым данным
