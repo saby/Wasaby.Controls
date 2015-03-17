@@ -185,13 +185,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          _drawItemsCallback: function () {
             this._drawItemsActions(this._options.itemsActions);
-            if (this._options.multiselect) {
-               var itemContainers = $(".controls-ListView__item", this._container);
-               for (var i = 0; i < itemContainers.length; i++) {
-                  var checkBoxContainer = this._getLeftOfItemContainer($(itemContainers[i]));
-                  $('<div></div>').addClass('controls-ListView__itemCheckBox').appendTo(checkBoxContainer);
-               }
-            }
          },
 
          _getLeftOfItemContainer : function(container) {

@@ -2008,15 +2008,20 @@ input[type="reset"]::-moz-focus-inner {
   background-position: left top;
   background-repeat: repeat-y;
 }
-.controls-DataGrid.controls-DataGrid__multiselect .controls-DataGrid__td:first-child {
+.controls-DataGrid.controls-ListView__multiselect .controls-DataGrid__td:first-child {
   padding-left: 32px;
   background: none;
 }
-.controls-DataGrid.controls-DataGrid__multiselect .controls-DataGrid__th:first-child {
+.controls-DataGrid.controls-ListView__multiselect .controls-DataGrid__th:first-child {
   padding-left: 32px;
 }
-.controls-DataGrid.controls-DataGrid__multiselect .controls-ListView__item__selected .controls-ListView__itemCheckBox {
+.controls-DataGrid.controls-ListView__multiselect .controls-ListView__item__selected .controls-ListView__itemCheckBox {
   background: transparent url('img/checkbox.png') -2px -5px;
+}
+.controls-DataGrid .controls-ListView__itemCheckBox {
+  position: absolute;
+  left: 4px;
+  top: 8px;
 }
 .controls-ComboBox.controls-Picker__show {
   border-width: 1px;

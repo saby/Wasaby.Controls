@@ -30,11 +30,17 @@
         }
      }
   }
-
-}
-
-.controls-ListView {
+   .controls-ListView__itemCheckBox {
+      width: 16px;
+      height: 16px;
+      background: none;
+      cursor: pointer;
+      display: none;
+   }
    &.controls-ListView__multiselect {
+      .controls-ListView__itemCheckBox {
+         display: inline-block;
+      }
       .controls-ListView__item {
          padding-left: 20px;
       }
@@ -44,14 +50,5 @@
          }
       }
    }
-}
 
-.controls-ListView__itemCheckBox {
-   position: absolute;
-   width: 16px;
-   height: 16px;
-   background: none;
-   top: 5px;
-   left: 2px;
-   cursor: pointer;
 }

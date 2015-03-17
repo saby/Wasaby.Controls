@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
       _getItemTemplate: function(item){
          if (!this._options.itemTemplate) {
 
-            var rowData = {columns : []};
+            var rowData = {columns : [], multiselect : this._options.multiselect};
             rowData.columns = $ws.core.clone(this._options.columns);
             for (var i = 0; i < rowData.columns.length; i++) {
                var value;
