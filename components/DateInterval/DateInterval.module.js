@@ -39,8 +39,11 @@ define(
              */
             _possibleMasks: [
                // I. Маски для отображения даты:
+               'DDD:HH:II',
                'DD:HH:II',
+               "DDD:HH",
                "DD:HH",
+               "HHH:II",
                "HH:II"
             ],
             /**
@@ -55,9 +58,9 @@ define(
                 * @variant 'DD:HH',
                 * @variant 'HH:II',
                 */
-               mask: '',
+               mask: 'DD:HH',
                /**
-                * Дата
+                * Интервал
                 */
                interval: null
             }
@@ -105,33 +108,26 @@ define(
          setText: function ( text ) {
             text = text ? text: '';
             DateInterval.superclass.setText.call( this, text );
-            this._options.interval = text == '' ? null : this._getDateByText( text );
+            this._options.interval = text == '' ? null : this._getIntervalByText( text );
             this._notify('onChange', this._options.interval);
          },
 
          /**
           * Установить дату. Публичный метод. Отличается от приватного метода тем, что генерирует событие.
-          * @param date
+          * @param interval
           */
-         setInterval: function ( date ) {
-            this._setInterval( date );
+         setInterval: function ( interval ) {
+            this._setInterval( interval );
             this._notify('onChange', this._options.interval);
          },
 
          /**
-          * Установить дату. Приватный метод
+          * Установить интервал. Приватный метод
           * @param interval новое значение интервала, объект типа Date
           */
-         _setInterval: function ( interval ) {
-            if ( true ) {
-               this._options.interval = interval;
-               this._options.text = this._getTextByDate( interval );
-            }
-            else {
-               this._options.interval = null;
-               this._options.text = '';
-            }
-
+         _setInterval: function (interval) {
+            this._options.interval = interval;
+            this._options.text = this._getTextByInterval(interval);
             this._drawDate();
          },
 
@@ -161,12 +157,95 @@ define(
             return this._options.interval;
          },
 
+         _getIntervalByText: function(text){
+            var regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
+               availCharsArray = this._primalMask.match(regexp),
+               interval = '';
+
+            for (var i = 0; i < availCharsArray.length; i++) {
+               switch ( availCharsArray[i] ) {
+                  case 'DDD' :
+                     interval = "P" + text.substr(0, 3) + "D";
+                     text = text.substr(4);  // отрезаем на один символ больше -- это разделяющий символ
+                     break;
+                  case 'DD' :
+                     interval += "P" + text.substr(0, 2) + "D";
+                     text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
+                     break;
+                  case 'HHH' :
+                     interval += "T" + text.substr(0, 3) + "H";
+                     text = text.substr(4);  // отрезаем на один символ больше -- это разделяющий символ
+                     break;
+                  case 'HH' :
+                     interval += "T" + text.substr(0, 2) + "H";
+                     text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
+                     break;
+                  case 'II' :
+                     interval += text.substr(0, 2) + "M";
+                     text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
+                     break;
+               }
+            }
+            return interval;
+         },
+
+         /**
+          * Получить _options.text из интервала
+          */
+         _getTextByInterval: function(interval){
+            var i = 0,
+               textObj = {},
+               text = this._primalMask,
+               availCharsArray = this._primalMask.split(':'),
+               manageChar,
+               num;
+
+            interval = interval.replace('P', '').replace('T', '');
+
+            while(interval[i]){
+               if (isFinite(interval[i])){
+                  num = 0;
+                  while (isFinite(interval[i])){
+                     num = num * 10 + parseInt(interval[i++]);
+                  }
+               } else{
+                  manageChar = interval[i++];
+                  switch (manageChar){
+                     case 'D':
+                        if (availCharsArray.indexOf('DDD') > -1)
+                           textObj['DDD'] =  ('00' + num).slice(-3);
+                        else if(availCharsArray.indexOf('DD') > -1)
+                           textObj['DD'] =  ('0' + num).slice(-2);
+                        break;
+                     case 'H' :
+                        if (availCharsArray.indexOf('HHH') > -1)
+                           textObj['HHH'] =  ('00' + num).slice(-3);
+                        else if(availCharsArray.indexOf('HH') > -1)
+                           textObj['HH'] =  ('0' + num).slice(-2);
+                        break;
+                     case 'M' :
+                        if (availCharsArray.indexOf('II') > -1)
+                           textObj['II'] =  ('0' + num).slice(-2);
+                        break;
+                  }
+               }
+            }
+
+            for (i in textObj) {
+               if (textObj.hasOwnProperty(i)) {
+                  text = text.replace(i, textObj[i])
+               }
+            }
+
+            return text;
+         },
+
          /**
           * Обновить поле даты по текущему значению даты в this._options.interval
           * @private
           */
          _drawDate: function(){
-            var newText = this._options.interval == null ? '' : this._getTextByDate( this._options.interval );
+            var newText = this._options.interval == null ? '' : this._getTextByInterval(this._options.interval);
             this._inputField.html( this._getHtmlMask(newText) );
          },
 
@@ -177,7 +256,6 @@ define(
           */
          _updateText: function(){
             var text = $(this._inputField.get(0)).text();
-
             // Запоминаем старую дату для последующего сравнения и генерации события
             var oldDate = this._options.interval;
 
@@ -188,8 +266,8 @@ define(
                this._options.interval = null;
             }
             else {
-               this._options.interval = this._getDateByText(text);
-               this._options.text = this._getTextByDate(this._options.interval);
+               this._options.interval = this._getIntervalByText(text);
+               this._options.text = this._getTextByInterval(this._options.interval);
             }
 
             // Если дата изменилась -- генерировать событие.
@@ -197,65 +275,6 @@ define(
             if ( oldDate !== this._options.interval ) {
                this._notify('onChange', this._options.interval);
             }
-         },
-
-         /**
-          * Получить дату в формате Date по строке
-          * @param text - дата в соответствии с маской
-          * @returns {Date} Дата в формата Date
-          * @private
-          */
-         _getDateByText: function(text) {
-            var date = new Date();
-            var
-               regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
-               availCharsArray = this._primalMask.match(regexp);
-
-            for (var i = 0; i < availCharsArray.length; i++) {
-               switch ( availCharsArray[i] ) {
-                  case 'DD' :
-                     text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
-                     break;
-                  case 'HH' :
-                     text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
-                     break;
-                  case 'II' :
-                     text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
-                     break;
-               }
-            }
-            return date;
-         },
-
-         /**
-          * Получить дату в формате строки по объекту Date. Строка соответсвует изначальной маске.
-          * Пример: если дата Wed Oct 25 2102 00:00:00 GMT+0400 и изначальная маска DD.MM.YYYY, то строка будет 25.10.2102
-          * @param date Дата
-          * @returns {string} Строка
-          * @private
-          */
-         _getTextByDate: function( date ) {
-            var
-               textObj = {},
-               regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
-               availCharsArray = this._primalMask.match(regexp);
-
-            for ( var i = 0; i < availCharsArray.length; i++ ){
-               switch ( availCharsArray[i] ){
-                  case 'DD'   : textObj.DD   = ( '0' + date.getDate()).slice(-2);            break;
-                  case 'HH'   : textObj.HH   = ( '0' + date.getHours()).slice(-2);           break;
-                  case 'II'   : textObj.II   = ( '0' + date.getMinutes()).slice(-2);         break;
-               }
-            }
-            var text = this._primalMask;
-
-            for (var i in textObj) {
-               if (textObj.hasOwnProperty(i)) {
-                  text = text.replace(i, textObj[i])
-               }
-            }
-
-            return text;
          }
       });
 
