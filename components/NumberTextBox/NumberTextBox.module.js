@@ -119,12 +119,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          return value || '';
       },
 
-      _focusOutHandler: function(){
-         var text = this.getText();
-         text = this._formatValue(text, true);
-         this._inputField.val(text);
-      },
-
       _arrowUpClick: function(){
          this.setText(this._getSibling(1));
       },

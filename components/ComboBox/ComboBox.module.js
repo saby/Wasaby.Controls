@@ -272,11 +272,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
-      /*TODO пока перебиваем метод текстбокса*/
-      _focusOutHandler : function() {
-
-      },
-
       setEditable: function (editable) {
          this._options.editable = editable;
          this._container.toggleClass('controls-ComboBox__editable-false', editable === false);
