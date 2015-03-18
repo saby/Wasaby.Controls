@@ -87,6 +87,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       _rebuild: function () {
+         this._childRecordsMap = {};
          this._pkIndex = this.getStrategy().rebuild(this._rawData, this._keyField);
       },
 
@@ -96,12 +97,18 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @returns {js!SBIS3.CONTROLS.Record}
        */
       getRecordByKey: function (key) {
+         if (key == null) {
+            return void 0;
+         }
+
          if (this._pkIndex === null) {
             this._rebuild();
          }
+
          var index = this.getRecordIndexByKey(key);
+
          if (index !== undefined) {
-            return this.at(this._pkIndex[key]);
+            return this.at(index);
          }
          return undefined;
       },
@@ -146,6 +153,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          var singular = !(records instanceof Array);
          records = singular ? (records ? [records] : []) : $ws.core.clone(records);
          var i, l, key, record, existing;
+         var at = options.at;
          var toAdd = [], toRemove = [], recordMap = {};
          var add = options.add, merge = options.merge, remove = options.remove;
 
@@ -171,6 +179,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
                // если это новый рекорд, добавим его в 'toAdd'
             } else if (add) {
+               //this._addReference(record);
                toAdd.push(record);
             }
 
@@ -192,10 +201,15 @@ define('js!SBIS3.CONTROLS.DataSet', [
          }
 
          if (toAdd.length) {
+
             for (i = 0, l = toAdd.length; i < l; i++) {
-               this._addReference(toAdd[i], options);
+               this._prepareRecordForAdd(toAdd[i]);
+               this.getStrategy().addRecord(this._rawData, toAdd[i], at);
             }
+
          }
+
+         this._rebuild();
 
          // вернем добавленный (или смерженный) рекорд (или массив рекордов)
          return singular ? records[0] : records;
@@ -208,17 +222,38 @@ define('js!SBIS3.CONTROLS.DataSet', [
          this.setRecords(records, $ws.core.merge($ws.core.merge({merge: false}, options), addOptions));
       },
 
+      _prepareRecordForAdd: function (record) {
+         //FixME: потому что метод создать не возвращает тип поля "идентификатор"
+         record._keyField = this._keyField;
+
+         var key = record.getKey();
+         // не менять условие if! с БЛ идентификатор приходит как null
+         if (key === undefined) {
+            record.set(this._keyField, key = record._cid);
+         }
+         return record;
+      },
+
       _addReference: function (record, options) {
          //FixME: потому что метод создать не возвращает тип поля "идентификатор"
          record._keyField = this._keyField;
-         this.getStrategy().addRecord(this._rawData, record);
-         // не менять условие! с БЛ идентификатор приходит как null
-         if (record.getKey() === undefined) {
-            record.set(this._keyField, record._cid);
+
+         var key = record.getKey();
+         // не менять условие if! с БЛ идентификатор приходит как null
+         if (key === undefined) {
+            record.set(this._keyField, key = record._cid);
          }
-         var index = this.getStrategy().getLength(this._rawData);
-         this._childRecordsMap[index - 1] = record;
-         this._pkIndex[record.getKey()] = index - 1;
+
+         /*
+          this.getStrategy().addRecord(this._rawData, record);
+          // не менять условие! с БЛ идентификатор приходит как null
+          if (record.getKey() === undefined) {
+          record.set(this._keyField, record._cid);
+          }
+          var index = this.getStrategy().getLength(this._rawData);
+          this._childRecordsMap[index - 1] = record;
+          this._pkIndex[record.getKey()] = index - 1;
+          */
       },
 
       /**

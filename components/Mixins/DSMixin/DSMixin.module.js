@@ -116,7 +116,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _drawItemsCallback: function () {
-         $()
       },
 
       _drawItems: function () {

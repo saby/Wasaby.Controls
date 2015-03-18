@@ -4,8 +4,7 @@
 define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], function (IDataStrategy) {
    'use strict';
    var SbisJSONStrategy = IDataStrategy.extend({
-      $protected: {
-      },
+      $protected: {},
       $constructor: function () {
       },
       /**
@@ -61,9 +60,14 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
          return _pkIndex;
       },
 
-      addRecord: function (data, record) {
+      addRecord: function (data, record, at) {
          var rawData = record.getRaw();
-         data['d'].push(rawData['d']);
+         var d = data['d'];
+         if (at) {
+            d.splice(at, 0, rawData['d']);
+         } else {
+            d.push(rawData['d']);
+         }
       },
 
       getLength: function (data) {

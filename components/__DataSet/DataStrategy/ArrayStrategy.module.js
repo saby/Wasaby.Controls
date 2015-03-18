@@ -9,12 +9,11 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
     */
 
    var ArrayStrategy = IDataStrategy.extend({
-      $protected: {
-      },
+      $protected: {},
       $constructor: function () {
          var a = 5;
       },
-      getKey : function(data) {
+      getKey: function (data) {
          var
             key,
             keys = Object.keys(data);
@@ -77,9 +76,13 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
          return data[field];
       },
 
-      addRecord: function (data, record) {
+      addRecord: function (data, record, at) {
          var rawData = record.getRaw();
-         data.push(rawData);
+         if (at) {
+            data.splice(at, 0, rawData);
+         } else {
+            data.push(rawData);
+         }
       },
 
       getLength: function (data) {
@@ -167,7 +170,7 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
          if (typeof(offset) != 'undefined' && offset != null && typeof(limit) != 'undefined' && limit != null) {
             pagingData = [];
             var
-               firstIdx = offset*limit,
+               firstIdx = offset * limit,
                length = newData.length;
             for (var i = firstIdx; i < firstIdx + limit; i++) {
                if (i >= length) {
