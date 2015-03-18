@@ -91,6 +91,19 @@ define(
             return this._options.mask;
          },
          /**
+          * Установить маску.
+          */
+         _setMask: function (mask) {
+            this._options.mask = mask;
+            if (mask.length < this._primalMask.length){
+               this._options.text = this._options.text.substr(1);
+               this._options.interval = this._getIntervalByText(this._options.text);
+            }
+            this._primalMask = mask;
+            this._clearMask = this._getClearMask();
+            this._drawDate();
+         },
+         /**
           * Проверить, является ли маска допустимой ( по массиву допустимых маск this._possibleMasks )
           * @private
           */
@@ -159,7 +172,7 @@ define(
 
          _getIntervalByText: function(text){
             var regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
-               availCharsArray = this._primalMask.match(regexp),
+               availCharsArray = this._options.mask.match(regexp),
                interval = '';
 
             for (var i = 0; i < availCharsArray.length; i++) {
@@ -195,8 +208,8 @@ define(
          _getTextByInterval: function(interval){
             var i = 0,
                textObj = {},
-               text = this._primalMask,
-               availCharsArray = this._primalMask.split(':'),
+               text = this._options.mask,
+               availCharsArray = this._options.mask.split(':'),
                manageChar,
                num;
 
@@ -213,13 +226,13 @@ define(
                   switch (manageChar){
                      case 'D':
                         if (availCharsArray.indexOf('DDD') > -1)
-                           textObj['DDD'] =  ('00' + num).slice(-3);
+                           textObj['DDD'] =  ('__' + num).slice(-3);
                         else if(availCharsArray.indexOf('DD') > -1)
                            textObj['DD'] =  ('0' + num).slice(-2);
                         break;
                      case 'H' :
                         if (availCharsArray.indexOf('HHH') > -1)
-                           textObj['HHH'] =  ('00' + num).slice(-3);
+                           textObj['HHH'] =  ('__' + num).slice(-3);
                         else if(availCharsArray.indexOf('HH') > -1)
                            textObj['HH'] =  ('0' + num).slice(-2);
                         break;
