@@ -22,6 +22,9 @@ define(
     * @class SBIS3.CONTROLS.MonthPicker
     * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS.PickerMixin
+    * @control
+    * @public
+    * @demo SBIS3.Demo.Control.MyMonthPicker
     */
 
    var MonthPicker = Control.Control.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.MonthPicker.prototype */{
