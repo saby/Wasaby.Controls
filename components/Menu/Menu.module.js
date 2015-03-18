@@ -35,6 +35,39 @@ define('js!SBIS3.CONTROLS.Menu', [
        * </pre>
        */
       _dotTplFn : dot,
+       /**
+        * @typedef {Object} ItemsMenu
+        * @property {String} id Идентификатор.
+        * @property {String} title Текст пункта меню.
+        * @property {String} icon Иконка пункта меню.
+        * @property {String} parent Идентификатор родительского пункта меню. Опция задаётся для подменю.
+        * @editor icon ImageEditor
+        */
+       /**
+        * @cfg {ItemsMenu[]} Набор исходных данных, по которому строится отображение
+        * @name SBIS3.CONTROLS.Menu#items
+        * @description
+        * @example
+        * <pre>
+        *     <options name="items" type="array">
+        *        <options>
+        *            <option name="id">1</option>
+        *            <option name="title">Пункт1</option>
+        *         </options>
+        *         <options>
+        *            <option name="id">2</option>
+        *            <option name="title">Пункт2</option>
+        *         </options>
+        *         <options>
+        *            <option name="id">3</option>
+        *            <option name="title">ПунктПодменю</option>
+        *            <option name="parent">2</option>
+        *            <option name="icon">sprite:icon-16 icon-Birthday icon-primary</option>
+        *         </options>
+        *      </options>
+        * </pre>
+        */
+
       $protected: {
          _subContainers : {},
          _subMenus : {},
