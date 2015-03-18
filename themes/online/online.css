@@ -1902,20 +1902,21 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-ListView__item:hover .controls-ListView__itemCheckBox {
   background: url('img/CheckBox.png') 0 17px;
 }
+.controls-ListView .controls-ListView__itemCheckBox {
+  width: 16px;
+  height: 16px;
+  background: none;
+  cursor: pointer;
+  display: none;
+}
+.controls-ListView.controls-ListView__multiselect .controls-ListView__itemCheckBox {
+  display: inline-block;
+}
 .controls-ListView.controls-ListView__multiselect .controls-ListView__item {
   padding-left: 20px;
 }
 .controls-ListView.controls-ListView__multiselect .controls-ListView__item__selected .controls-ListView__itemCheckBox {
   background: url('img/CheckBox.png') 0 49px;
-}
-.controls-ListView__itemCheckBox {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  background: none;
-  top: 5px;
-  left: 2px;
-  cursor: pointer;
 }
 .controls-ListView > .controls-TreeView__childContainer {
   display: block;
@@ -2054,13 +2055,18 @@ input[type="reset"]::-moz-focus-inner {
   background-position: left top;
   background-repeat: repeat-y;
 }
-.controls-DataGrid.controls-DataGrid__multiselect .controls-DataGrid__td:first-child {
+.controls-DataGrid.controls-ListView__multiselect .controls-DataGrid__td:first-child {
   padding-left: 32px;
   background: none;
 }
-.controls-DataGrid.controls-DataGrid__multiselect .controls-DataGrid__th:first-child {
+.controls-DataGrid.controls-ListView__multiselect .controls-DataGrid__th:first-child {
   padding-left: 32px;
 }
-.controls-DataGrid.controls-DataGrid__multiselect .controls-ListView__item__selected .controls-ListView__itemCheckBox {
+.controls-DataGrid.controls-ListView__multiselect .controls-ListView__item__selected .controls-ListView__itemCheckBox {
   background: url('img/CheckBox.png') 0 49px;
+}
+.controls-DataGrid .controls-ListView__itemCheckBox {
+  position: absolute;
+  left: 4px;
+  top: 8px;
 }

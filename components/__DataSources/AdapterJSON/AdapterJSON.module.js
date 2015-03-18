@@ -73,11 +73,16 @@ define('js!SBIS3.CONTROLS.AdapterJSON', ['js!SBIS3.CONTROLS.AdapterBase'], funct
          return result;
       },
 
-      getChildItems : function(data, id, key, hier) {
-         var child = [];
+      getChildItems : function(data, id, key, hier, rec) {
+         var
+            child = [],
+            parents = {};
+         parents[id] = 1;
+
          this._hierIterate(data, function(item, i){
-            if (item[hier] == id) {
+            if ((rec && parents[item[hier]]) || item[hier] == id) {
                child.push(item);
+               parents[item[key]] = 1;
             }
          }, key, hier);
          return child;

@@ -104,13 +104,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._options.displayField = 'title';
          }
 
-         /*устанавливаем первое значение TODO по идее переписан метод setSelectedItem для того чтобы не срабатывало событие при первой установке*/
          if (this._options.selectedItem) {
-            // надо прочитать запись по ключу и поставить ее значение
-            self._dataSource.read(this._options.selectedItem).addCallback(function (item) {
-               ComboBox.superclass.setText.call(self, item.get(self._options.displayField));
-               $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(item.get(self._options.displayField));
-            });
+            this._drawSelectedItem(this._options.selectedItem);
          } else {
             if (this._options.text) {
                this._setKeyByText();
@@ -151,9 +146,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
             var self = this;
             def.addCallback(function(item){
-               if (item) {
-                  ComboBox.superclass.setText.call(self, item.get(self._options.displayField));
-                  $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(item.get(self._options.displayField));
+               var newText = item.get(self._options.displayField);
+               if (item && (newText != self._options.text)) {
+                  ComboBox.superclass.setText.call(self, newText);
+                  $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(newText);
                }
                else {
                   ComboBox.superclass.setText.call(self, '');
@@ -274,23 +270,32 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             selKey,
             oldKey = this._options.selectedItem,
             self = this,
-            filterFieldObj = {},
-            filter = [];
+            filterFieldObj = {};
 
          filterFieldObj[this._options.displayField] = self._options.text;
-         filter.push(filterFieldObj);
 
-         self._dataSource.query(filter).addCallback(function (DataSet) {
+         self._dataSource.query(filterFieldObj).addCallback(function (DataSet) {
+            var noItems = true;
             DataSet.each(function (item) {
+               noItems = false;
                selKey = item.getKey();
+               self._options.selectedItem = selKey || null;
+               //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
+               if (oldKey !== self._options.selectedItem) { // при повторном индексе null не стреляет событием
+                  self._notifySelectedItem(self._options.selectedItem);
+                  self._drawSelectedItem(self._options.selectedItem);
+               }
             });
+
+            if (noItems) {
+               self._options.selectedItem = null;
+               self._notifySelectedItem(null);
+               self._drawSelectedItem(null);
+            }
+
          });
 
-         this._options.selectedItem = selKey || null;
-         //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
-         if (oldKey !== this._options.selectedItem) { // при повторном индексе null не стреляет событием
-            this._notifySelectedItem(this._options.selectedItem);
-         }
+
       },
 
       _clearItems : function() {
