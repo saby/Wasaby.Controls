@@ -22,8 +22,9 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
    return $ws.proto.Abstract.extend({
       $protected: {
-         _pkIndex: null,
-         _childRecordsMap: {},
+         _isLoaded: false,
+         _byId: {},
+         _indexId: [],
          /**
           * @cfg {Object} исходные данные для посторения
           */
@@ -86,14 +87,26 @@ define('js!SBIS3.CONTROLS.DataSet', [
          this._rawData = data;
       },
 
-      _rebuild: function () {
-         this._childRecordsMap = {};
-         this._pkIndex = this.getStrategy().rebuild(this._rawData, this._keyField);
+      _loadFromRaw: function () {
+         this._indexId = this.getStrategy().rebuild(this._rawData, this._keyField);
+         this._isLoaded = true;
+
+         var length = this.getStrategy().getLength(this._rawData);
+         var data;
+
+         for (var i = 0; i < length; i++) {
+            data = this.getStrategy().at(this._rawData, i);
+            this._byId[this.getRecordKeyByIndex(i)] = new Record({
+               strategy: this.getStrategy(),
+               raw: data,
+               keyField: this._keyField
+            });
+         }
+
       },
 
       /**
        * Возвращает рекорд по его идентификатору
-       * @param {Number} key
        * @returns {js!SBIS3.CONTROLS.Record}
        */
       getRecordByKey: function (key) {
@@ -101,41 +114,21 @@ define('js!SBIS3.CONTROLS.DataSet', [
             return void 0;
          }
 
-         if (this._pkIndex === null) {
-            this._rebuild();
+         if (!this._isLoaded) {
+            this._loadFromRaw();
          }
-
-         var index = this.getRecordIndexByKey(key);
-
-         if (index !== undefined) {
-            return this.at(index);
-         }
-         return undefined;
+         return this._byId[key];
       },
 
       at: function (index) {
-         if (this._childRecordsMap[index] === undefined) {
-            var data = this.getStrategy().at(this._rawData, index);
-            if (data) {
-               this._childRecordsMap[index] = new Record({
-                  strategy: this.getStrategy(),
-                  raw: data,
-                  keyField: this._keyField
-               });
-            } else if (index < 0 /* что если больше чем в наборе */) {
-               return undefined;
-            } else {
-               throw new Error('No record at index ' + index);
-            }
-         }
-         return this._childRecordsMap[index];
+         return this.getRecordByKey(this.getRecordKeyByIndex(index));
       },
 
-      getRecordIndexByKey: function (key) {
-         if (this._pkIndex === null) {
-            this._rebuild();
+      getRecordKeyByIndex: function (index) {
+         if (!this._isLoaded) {
+            this._loadFromRaw();
          }
-         return this._pkIndex[key];
+         return this._indexId[index];
       },
 
       /**
@@ -179,8 +172,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
                // если это новый рекорд, добавим его в 'toAdd'
             } else if (add) {
-               //this._addReference(record);
                toAdd.push(record);
+               this._addReference(record);
             }
 
             record = existing || record;
@@ -205,11 +198,15 @@ define('js!SBIS3.CONTROLS.DataSet', [
             for (i = 0, l = toAdd.length; i < l; i++) {
                this._prepareRecordForAdd(toAdd[i]);
                this.getStrategy().addRecord(this._rawData, toAdd[i], at);
+
+               if (at) {
+                  this._indexId.splice(at + i, 0, toAdd[i].getKey() || toAdd[i]._cid);
+               } else {
+                  this._indexId.push(toAdd[i].getKey() || toAdd[i]._cid);
+               }
             }
 
          }
-
-         this._rebuild();
 
          // вернем добавленный (или смерженный) рекорд (или массив рекордов)
          return singular ? records[0] : records;
@@ -244,16 +241,9 @@ define('js!SBIS3.CONTROLS.DataSet', [
             record.set(this._keyField, key = record._cid);
          }
 
-         /*
-          this.getStrategy().addRecord(this._rawData, record);
-          // не менять условие! с БЛ идентификатор приходит как null
-          if (record.getKey() === undefined) {
-          record.set(this._keyField, record._cid);
-          }
-          var index = this.getStrategy().getLength(this._rawData);
-          this._childRecordsMap[index - 1] = record;
-          this._pkIndex[record.getKey()] = index - 1;
-          */
+         this._byId[record._cid] = record;
+         this._byId[key] = record;
+
       },
 
       /**
@@ -262,8 +252,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @param status {'all'|'deleted'|'changed'} по умолчанию все, кроме удаленных
        */
       each: function (iterateCallback, status) {
-         if (this._pkIndex === null) {
-            this._rebuild();
+         if (!this._isLoaded) {
+            this._loadFromRaw();
          }
 
          var length = this.getStrategy().getLength(this._rawData);

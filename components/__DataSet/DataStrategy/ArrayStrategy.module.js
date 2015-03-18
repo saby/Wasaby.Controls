@@ -45,12 +45,12 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
       },
 
       rebuild: function (data, keyField) {
-         var _pkIndex = {},
+         var _indexId = [],
             length = data.length;
          for (var i = 0; i < length; i++) {
-            _pkIndex[data[i][keyField]] = i;
+            _indexId[i] = data[i][keyField];
          }
-         return _pkIndex;
+         return _indexId;
       },
 
       /**

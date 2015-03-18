@@ -50,14 +50,14 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
       },
 
       rebuild: function (data, keyField) {
-         var _pkIndex = {},
+         var _indexId = [],
             d = data.d,
             length = d.length;
          for (var i = 0; i < length; i++) {
-            //FixMe: допущение что ключ на первой позиции + там почему-то массив приходит оО
-            _pkIndex[d[i][0][0]] = i;
+            //FixMe: допущение что ключ на первой позиции + там массив приходит
+            _indexId[i] = d[i][0][0];
          }
-         return _pkIndex;
+         return _indexId;
       },
 
       addRecord: function (data, record, at) {
