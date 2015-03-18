@@ -69,7 +69,7 @@ define(
          $constructor: function () {
             var self = this;
 
-            this._publish('onChange');
+            this._publish('onChangeInterval');
 
             // Проверяем, является ли маска, с которой создается контролл, допустимой
             this._checkPossibleMask();
@@ -79,16 +79,6 @@ define(
                this._setInterval( this._options.interval );
             }
 
-         },
-         _setEnabled : function(enabled) {
-            DateInterval.superclass._setEnabled.call(this, enabled);
-         },
-
-         /**
-          * Получить маску. Переопределённый метод
-          */
-         _getMask: function () {
-            return this._options.mask;
          },
          /**
           * Установить маску.
@@ -122,7 +112,7 @@ define(
             text = text ? text: '';
             DateInterval.superclass.setText.call( this, text );
             this._options.interval = text == '' ? null : this._getIntervalByText( text );
-            this._notify('onChange', this._options.interval);
+            this._notify('onChangeInterval', this._options.interval);
          },
 
          /**
@@ -131,7 +121,7 @@ define(
           */
          setInterval: function ( interval ) {
             this._setInterval( interval );
-            this._notify('onChange', this._options.interval);
+            this._notify('onChangeInterval', this._options.interval);
          },
 
          /**
@@ -286,7 +276,7 @@ define(
             // Если дата изменилась -- генерировать событие.
             // Если использовать просто setInterval, то событие будет генерироваться даже если дата введена с клавиатуры не полностью, что неверно
             if ( oldDate !== this._options.interval ) {
-               this._notify('onChange', this._options.interval);
+               this._notify('onChangeInterval', this._options.interval);
             }
          }
       });
