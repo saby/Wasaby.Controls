@@ -25,6 +25,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          _dataSet: null,
          _dotItemTpl: null,
          _options: {
+            /**
+             * @cfg {String} Поле элемента коллекции, которое является ключом
+             * @example
+             * <pre>
+             *     <option name="keyField">Идентификатор</option>
+             * </pre>
+             * @see items
+             */
+            keyField : null,
             items: undefined,
             /**
              * @cfg {DataSource} Набор исходных данных по которому строится отображение
@@ -57,8 +66,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             var
                item = this._options.dataSource[0],
                keyField;
-            if (item && Object.prototype.toString.call(item) === '[object Object]') {
-               keyField = Object.keys(item)[0];
+            if (this._options.keyField) {
+               keyField = this._options.keyField;
+            }
+            else {
+               if (item && Object.prototype.toString.call(item) === '[object Object]') {
+                  keyField = Object.keys(item)[0];
+               }
             }
             this._dataSource = new DataSourceMemory({
                data: this._options.dataSource,
