@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
     *          <option name="title">CheckBox 2</option>
     *       </options>
     *    </options>
+    *    <option name="keyField">id</option>
     * </component>
     */
 
