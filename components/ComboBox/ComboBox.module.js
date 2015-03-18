@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     *            <option name="title">Пункт2</option>
     *         </options>
     *      </options>
+    *      <option name="keyField">key</option>
     * </component>
     * @category Inputs
     * @demo SBIS3.Demo.Control.MyComboBox
@@ -89,7 +90,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              */
             valueFormat: '',
             /**
-             * @cfg {String} Название поля для отображения
+             * @cfg {String} Название поля из набора, отображаемое в выпадающем списке
              */
             displayField: ''
          }
