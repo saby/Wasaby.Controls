@@ -133,25 +133,6 @@ define(
             this._options.text = this._getTextByInterval(interval);
             this._drawDate();
          },
-
-         /**
-          * Переопределенный метод из TextBoxBase
-          * @param value
-          */
-         setValue: function ( value ) {
-            value = value ? value : '';
-
-            if ( value instanceof Date ) {
-               this.setInterval(value);
-            }
-            else if ( typeof value == 'string' ) {
-               this.setText(value);
-            }
-            else {
-               throw new Error('Аргументом должна являться строка или дата');
-            }
-         },
-
          /**
           * Получить дату
           * @returns {Date|*|SBIS3.CONTROLS.DateInterval._options.interval}
