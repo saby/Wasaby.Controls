@@ -15,17 +15,54 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @control
     * @public
     * @initial
-    * <component data-component='SBIS3.CONTROLS.ComboBox' style='width: 100px'>    *
+    * <component data-component='SBIS3.CONTROLS.ComboBox'>
+    *     <options name="items" type="array">
+    *        <options>
+    *            <option name="key">1</option>
+    *            <option name="title">Пункт1</option>
+    *         </options>
+    *         <options>
+    *            <option name="key">2</option>
+    *            <option name="title">Пункт2</option>
+    *         </options>
+    *      </options>
+    *      <option name="keyField">key</option>
     * </component>
     * @category Inputs
+    * @demo SBIS3.Demo.Control.MyComboBox
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.Selectable
+    * @ignoreOptions independentContext contextRestriction extendedTooltip
     */
 
    var ComboBox = TextBox.extend([PickerMixin, DSMixin, Selectable, DataBindMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       _dotTplFn: dotTplFn,
+      /**
+       * @typedef {Object} ItemsComboBox
+       * @property {String} title Текст пункта меню.
+       * @property {String} key Ключ пункта меню.
+       */
+      /**
+       * @cfg {ItemsComboBox[]} Набор исходных данных, по которому строится отображение
+       * @name SBIS3.CONTROLS.ComboBox#items
+       * @description
+       * @example
+       * <pre>
+       *     <options name="items" type="array">
+       *        <options>
+       *            <option name="key">1</option>
+       *            <option name="title">Пункт1</option>
+       *         </options>
+       *         <options>
+       *            <option name="key">2</option>
+       *            <option name="title">Пункт2</option>
+       *         </options>
+       *      </options>
+       * </pre>
+       */
+
       $protected: {
          _options: {
             /**
@@ -34,7 +71,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             itemTemplate: '',
             afterFieldWrapper: arrowTpl,
             /**
-             * @cfg {Boolean} Возможен ли ручной ввод текста
+             * @cfg {Boolean} Возможность ручного ввода текста
+             * @example
+             * <pre>
+             *     <option name="editable">false</option>
+             * </pre>
+             * @see isEditable
+             * @see setEditable
              */
             editable: true,
             /**
@@ -48,7 +91,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              */
             valueFormat: '',
             /**
-             * @cfg {String} название поля для отображения
+             * @cfg {String} Название поля из набора, отображаемое в выпадающем списке
              */
             displayField: ''
          }
@@ -271,12 +314,22 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._drawSelectedItem(this._options.selectedItem);
          }
       },
-
+       /**
+        * Метод установки/изменения возможности ручного ввода.
+        * @param editable Возможность ручного ввода.
+        * @see isEditable
+        * @see editable
+        */
       setEditable: function (editable) {
          this._options.editable = editable;
          this._container.toggleClass('controls-ComboBox__editable-false', editable === false);
       },
-
+       /**
+        * Признак возможности ручного ввода.
+        * @returns {Boolean} Возможен ли ручной ввод.
+        * @see editable
+        * @see setEditable
+        */
       isEditable: function () {
          return this._options.editable;
       },

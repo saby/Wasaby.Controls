@@ -10,6 +10,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
          _options: {
             /**
              * @cfg {Boolean} Разрешить множественный выбор
+             * @example
+             * <pre>
+             *     <option name="multiselect">false</option>
+             * </pre>
              */
             multiselect : true,
             /**

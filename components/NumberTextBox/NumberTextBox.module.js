@@ -6,11 +6,22 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
    'use strict';
    /**
-    * Поле ввода, куда можно вводить только числовые значения
+    * Поле ввода числа
+    * Можно настроить:
+    * <ol>
+    *    <li>{@link integers количество знаков в целой части};</li>
+    *    <li>{@link decimals количество знаков после запятой};</li>
+    *    <li>{@link hideEmptyDecimals прятать ли пустую дробную часть};</li>
+    *    <li>{@link onlyPositive запрещение ввода отрицательных чисел};</li>
+    *    <li>{@link onlyInteger запрещение ввода дробных чисел};</li>
+    *    <li>{@link enableArrows отображать ли стрелки для увеличения/уменьшения числа};</li>
+    * </ol>
     * @class SBIS3.CONTROLS.NumberTextBox
     * @extends SBIS3.CONTROLS.TextBox
     * @control
     * @public
+    * @demo SBIS3.Demo.Control.MyNumberTextBox
+    * @ignoreOptions independentContext contextRestriction
     */
 
    var NumberTextBox;
@@ -23,40 +34,71 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          _options: {
             afterFieldWrapper: arrowTpl,
             /**
-             * @cfg {Boolean} Признак ввода только положительных чисел
+             * @cfg {Boolean} Ввод только положительных чисел
              * Возможные значения:
              * <ul>
              *    <li>true - ввод только положительных чисел;</li>
              *    <li>false - нет ограничения на знак вводимых чисел.</li>
              * </ul>
+             * @example
+             * <pre>
+             *     <option name="onlyPositive">true</option>
+             * </pre>
              */
             onlyPositive: false,
             /**
-             * @cfg {Boolean} Признак ввода только целых чисел
+             * @cfg {Boolean} Ввод только целых чисел
              * Возможные значения:
              * <ul>
              *    <li>true - ввод только целых чисел;</li>
              *    <li>false - возможен ввод дробных чисел.</li>
              * </ul>
+             * @example
+             * <pre>
+             *     <option name="onlyIntegers">true</option>
+             * </pre>
+             * @see decimals
+             * @see hideEmptyDecimals
              */
             onlyInteger: false,
             /**
              * @cfg {Number} Количество знаков после запятой
-             * <wiTag group='Управление'>
+             * Опция задаёт ограничение количества знаков дробной части числа.
+             * @example
+             * <pre>
+             *     <option name="decimals">3</option>
+             * </pre>
+             * @see integers
+             * @see hideEmptyDecimals
              */
             decimals: -1,
             /**
              * @cfg {Number} Количество знаков до запятой
-             * <wiTag group='Управление'>
+             * Опция задаёт ограничение количества знаков в целой части числа.
+             * @example
+             * <pre>
+             *     <option name="integers">4</option>
+             * </pre>
+             * @see decimals
              */
             integers: 16,
             /**
-             * @cfg {Boolean} Прятать пустые копейки
-             * <wiTag group='Управление'>
+             * @cfg {Boolean} Прятать нулевую дробную часть
+             * Опция позволяет скрыть нулевую дробную часть.
+             * @example
+             * <pre>
+             *     <option name="hideEmtyDecimals">true</option>
+             * <pre>
+             * @see decimals
              */
             hideEmptyDecimals: false,
             /**
              * @cfg {Boolean} Показать стрелки
+             * С помощью стрелок можно увеличивать/уменьшать целую часть числа на 1.
+             * @example
+             * <pre>
+             *     <option name="enableArrows"></option>
+             * </pre>
              */
             enableArrows: false,
             /**

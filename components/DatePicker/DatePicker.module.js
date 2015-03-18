@@ -17,6 +17,9 @@ define(
     * Можно вводить только значения особого формата даты.
     * @class SBIS3.CONTROLS.DatePicker
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
+    * @control
+    * @public
+    * @demo SBIS3.Demo.Control.MyDatePicker
     */
 
    var DatePicker = FormattedTextBoxBase.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
@@ -87,7 +90,6 @@ define(
             /**
              * @cfg {String} Формат отображения даты, на базе которой будет создана html-разметка и в соответствии с которой
              * будет определён весь функционал. Должна представлять собой одну из масок в массиве допустимых маск.
-             * <wiTag group="Отображение" page=1>
              * @variant 'DD.MM.YYYY',
              * @variant 'DD.MM.YY',
              * @variant 'DD.MM',
@@ -113,15 +115,27 @@ define(
              * @variant 'YY-MM-DD HH:II',
              * @variant 'YYYY',
              * @variant 'MM/YYYY'
+             * @see date
              */
             mask: 'DD.MM.YY',
             /**
-             * Дата
+             * @cfg {Date} Дата
+             * @example
+             * <pre>
+             *     <option name="date">2015-03-07T21:00:00.000Z</option>
+             * </pre>
+             * @mask
+             * @see isCalendarIconShow
              */
             date: null,
             /**
-             * Показана ли иконка календарика. По умолчанию -- true. Если маска представляет собой только время,
-             * то автоматически (точнее в методе _checkTypeOfMask ) становится false.
+             * @cfg {Boolean} Показана ли иконка календарика.
+             * По умолчанию true. Если маска представляет собой только время, то автоматически становится false.
+             * @example
+             * <pre>
+             *     <option name="isCalendarIconShown">false</option>
+             * </pre>
+             * @see date
              */
             isCalendarIconShown: true
          }

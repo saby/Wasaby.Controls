@@ -8,7 +8,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
     * @extends SBIS3.CONTROLS.TextBoxBase
     * @control
     * @public
+    * @demo SBIS3.Demo.Control.MyTextBox
     * @category Inputs
+    * @ignoreOptions independentContext contextRestriction extendedTooltip
     */
 
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.TextBox.prototype */ {
