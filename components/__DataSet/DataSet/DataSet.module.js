@@ -165,7 +165,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
                if (merge) {
                   //FixME: надо смержить свойства как то в existing.... + отслеживать состояние
                   // заменить сырые данные
-                  this.getStrategy().replaceAt(this._rawData, this.getRecordIndexByKey(key), record.getRaw());
+                  //this.getStrategy().replaceAt(this._rawData, this.getRecordIndexByKey(key), record.getRaw());
                }
 
                records[i] = existing;
