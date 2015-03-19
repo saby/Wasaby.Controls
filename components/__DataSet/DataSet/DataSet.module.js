@@ -87,11 +87,15 @@ define('js!SBIS3.CONTROLS.DataSet', [
          this._rawData = data;
       },
 
+      getCount: function () {
+         return this.getStrategy().getCount(this._rawData);
+      },
+
       _loadFromRaw: function () {
          this._indexId = this.getStrategy().rebuild(this._rawData, this._keyField);
          this._isLoaded = true;
 
-         var length = this.getStrategy().getLength(this._rawData);
+         var length = this.getCount();
          var data;
 
          for (var i = 0; i < length; i++) {
@@ -164,8 +168,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
                if (merge) {
                   //FixME: надо смержить свойства как то в existing.... + отслеживать состояние
-                  // заменить сырые данные
-                  //this.getStrategy().replaceAt(this._rawData, this.getRecordIndexByKey(key), record.getRaw());
+                  $ws.core.merge(existing.getRaw(), record.getRaw());
                }
 
                records[i] = existing;
@@ -256,7 +259,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
             this._loadFromRaw();
          }
 
-         var length = this.getStrategy().getLength(this._rawData);
+         var length = this.getCount();
 
          for (var i = 0; i < length; i++) {
             var record = this.at(i);

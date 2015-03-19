@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
          }
       },
 
-      getLength: function (data) {
+      getCount: function (data) {
          return data.length;
       },
 

@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
          }
       },
 
-      getLength: function (data) {
+      getCount: function (data) {
          return data['d'].length;
       },
 
