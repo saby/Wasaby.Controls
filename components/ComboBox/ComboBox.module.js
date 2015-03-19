@@ -148,9 +148,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             var self = this;
             def.addCallback(function(item){
                var newText = item.get(self._options.displayField);
-               if (item && (newText != self._options.text)) {
-                  ComboBox.superclass.setText.call(self, newText);
-                  $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(newText);
+               if (item) {
+                  if (newText != self._options.text) {
+                     ComboBox.superclass.setText.call(self, newText);
+                     $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(newText);
+                  }
                }
                else {
                   ComboBox.superclass.setText.call(self, '');
