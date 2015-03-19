@@ -81,6 +81,12 @@ define(
 
          },
          /**
+          * Получить маску. Переопределённый метод
+          */
+         _getMask: function () {
+            return this._options.mask;
+         },
+         /**
           * Установить маску.
           */
          _setMask: function (mask) {
