@@ -85,10 +85,7 @@ define(
           */
          _setMask: function (mask) {
             this._options.mask = mask;
-            if (mask.length < this._primalMask.length){
-               this._options.text = this._options.text.substr(1);
-               this._options.interval = this._getIntervalByText(this._options.text);
-            }
+            //TODO нужно доработать, не всегда правильно работает
             this._primalMask = mask;
             this._clearMask = this._getClearMask();
             this._drawDate();
