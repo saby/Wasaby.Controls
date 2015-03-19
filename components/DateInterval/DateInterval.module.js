@@ -90,9 +90,8 @@ define(
           * Установить маску.
           */
          _setMask: function (mask) {
-            this._options.mask = mask;
-            //TODO нужно доработать, не всегда правильно работает
-            this._primalMask = mask;
+            this._options.mask = this._primalMask = mask;
+            //TODO сделать
             this._clearMask = this._getClearMask();
             this._drawDate();
          },
