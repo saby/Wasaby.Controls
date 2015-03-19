@@ -163,7 +163,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
          }
          else {
-            $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
+            if (this._picker) {
+               $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
+            }
          }
 
       },
