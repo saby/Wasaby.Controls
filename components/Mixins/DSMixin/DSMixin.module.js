@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          _itemsInstances: {},
          _filter: undefined,
          _sorting: undefined,
-         _offset: undefined,
+         _offset: 0,
          _limit: undefined,
          _dataSource: undefined,
          _setDataSourceCB: null, //чтобы подписки отрабатывали всегда
@@ -38,7 +38,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             /**
              * @cfg {DataSource} Набор исходных данных по которому строится отображение
              */
-            dataSource: undefined
+            dataSource: undefined,
+            numItems : null
          }
       },
 
@@ -99,6 +100,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       reload: function (filter, sorting, offset, limit) {
+         if (this._options.numItems) {
+            this._limit = this._options.numItems;
+         }
          var self = this;
          this._filter = typeof(filter) != 'undefined' ? filter : this._filter;
          this._sorting = typeof(sorting) != 'undefined' ? sorting : this._sorting;
