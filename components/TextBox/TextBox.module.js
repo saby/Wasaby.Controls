@@ -8,7 +8,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
     * @extends SBIS3.CONTROLS.TextBoxBase
     * @control
     * @public
+    * @demo SBIS3.Demo.Control.MyTextBox
     * @category Inputs
+    * @ignoreOptions independentContext contextRestriction extendedTooltip
     */
 
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.TextBox.prototype */ {
@@ -85,10 +87,12 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
                }
             }, 100)
          });
-         // При потере фокуса делаем trim, если нужно
-         // TODO Переделать на платформенное событие потери фокуса
-         this._inputField.bind('focusout', function () {
-            self._focusOutHandler();
+
+         this._inputField.change(function(){
+            var newText = $(this).val();
+            if (newText != self._options.text) {
+               self.setText(self._options.text);
+            }
          });
 
          this._inputField.bind('focusin', function () {
@@ -163,10 +167,6 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
                this._inputField.removeClass('controls-TextBox__field-uppercase')
                   .removeClass('controls-TextBox__field-lowercase');
          }
-      },
-
-      _focusOutHandler: function(){
-         this.setText(this.getText());
       },
 
       _keyUpBind: function() {

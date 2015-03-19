@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
     * @extends SBIS3.CONTROLS.ToggleButton
     * @public
     * @category Buttons
-    * @ignoreOptions validators, independentContext, contextRestriction, allowChangeEnable, extendedTooltip
+    * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.CollectionMixin
     */
