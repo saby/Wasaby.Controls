@@ -47,25 +47,24 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._publish('onDrawItems');
          //Для совместимости пока делаем Array
 
-         //TODO совместимость
-         if (this._options.items) {
-            if (this._options.items instanceof Array) {
-               this._options.dataSource = this._options.items;
+         if (this._options._dataSource) {
+            this._dataSource = this._options.dataSource;
+         }
+         else {
+            var items;
+            if (this._options.items) {
+               if (this._options.items instanceof Array) {
+                  items = this._options.items;
+               }
+               else {
+                  throw new Error('Array expected')
+               }
             }
             else {
-               //TODO: как-то надо по другому
-               this._options.dataSource = this._options.items;
+               items = [];
             }
-            if (typeof(window) != 'undefined') {
-               console['log']('Опция items устарела. Она прекратит работу в версии 3.7.2');
-            }
-         }
-
-         //TODO совместимость
-         this._options.dataSource = this._options.dataSource || [];
-         if (this._options.dataSource instanceof Array) {
             var
-               item = this._options.dataSource[0],
+               item = items[0],
                keyField;
             if (this._options.keyField) {
                keyField = this._options.keyField;
@@ -76,17 +75,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                }
             }
             this._dataSource = new DataSourceMemory({
-               data: this._options.dataSource,
+               data: items,
                strategy: new DataStrategyArray(),
                keyField: keyField
             });
-            if (typeof(window) != 'undefined') {
-               console['log']('В опции dataSource надо передавать экземпляр класса DataSource. Array прекратит работу в версии 3.7.2');
-            }
          }
-         else {
-            this._dataSource = this._options.dataSource;
-         }
+
+
+
 
          this._setDataSourceCB = setDataSourceCB.bind(this);
          this._dataSource.subscribe('onDataSync', this._setDataSourceCB);
