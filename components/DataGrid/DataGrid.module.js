@@ -76,7 +76,8 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
                   value = MarkupTransformer(doT.template(cellTpl)({item : item, field : rowData.columns[i].field}));
                }
                else {
-                  value = item.get(rowData.columns[i].field)
+                  value = item.get(rowData.columns[i].field);
+                  value = ((value != undefined) && (value != null)) ? value : '';
                }
                rowData.columns[i].value = value;
             }

@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          _itemsInstances: {},
          _filter: undefined,
          _sorting: undefined,
-         _offset: undefined,
+         _offset: 0,
          _limit: undefined,
          _dataSource: undefined,
          _setDataSourceCB: null, //чтобы подписки отрабатывали всегда
@@ -38,7 +38,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             /**
              * @cfg {DataSource} Набор исходных данных по которому строится отображение
              */
-            dataSource: undefined
+            dataSource: undefined,
+            numItems : null
          }
       },
 
@@ -46,25 +47,24 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._publish('onDrawItems');
          //Для совместимости пока делаем Array
 
-         //TODO совместимость
-         if (this._options.items) {
-            if (this._options.items instanceof Array) {
-               this._options.dataSource = this._options.items;
+         if (this._options._dataSource) {
+            this._dataSource = this._options.dataSource;
+         }
+         else {
+            var items;
+            if (this._options.items) {
+               if (this._options.items instanceof Array) {
+                  items = this._options.items;
+               }
+               else {
+                  throw new Error('Array expected')
+               }
             }
             else {
-               //TODO: как-то надо по другому
-               this._options.dataSource = this._options.items;
+               items = [];
             }
-            if (typeof(window) != 'undefined') {
-               console['log']('Опция items устарела. Она прекратит работу в версии 3.7.2');
-            }
-         }
-
-         //TODO совместимость
-         this._options.dataSource = this._options.dataSource || [];
-         if (this._options.dataSource instanceof Array) {
             var
-               item = this._options.dataSource[0],
+               item = items[0],
                keyField;
             if (this._options.keyField) {
                keyField = this._options.keyField;
@@ -75,17 +75,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                }
             }
             this._dataSource = new StaticSource({
-               data: this._options.dataSource,
+               data: items,
                strategy: new ArrayStrategy(),
                keyField: keyField
             });
-            if (typeof(window) != 'undefined') {
-               console['log']('В опции dataSource надо передавать экземпляр класса DataSource. Array прекратит работу в версии 3.7.2');
-            }
          }
-         else {
-            this._dataSource = this._options.dataSource;
-         }
+
+
+
 
          this._setDataSourceCB = setDataSourceCB.bind(this);
          this._dataSource.subscribe('onDataSync', this._setDataSourceCB);
@@ -99,6 +96,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       reload: function (filter, sorting, offset, limit) {
+         if (this._options.numItems) {
+            this._limit = this._options.numItems;
+         }
          var self = this;
          this._filter = typeof(filter) != 'undefined' ? filter : this._filter;
          this._sorting = typeof(sorting) != 'undefined' ? sorting : this._sorting;
@@ -130,6 +130,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _drawItemsCallback: function () {
+         /*Method must be implemented*/
       },
 
       _drawItems: function () {
