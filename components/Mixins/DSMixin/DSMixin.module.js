@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._publish('onDrawItems');
          //Для совместимости пока делаем Array
 
-         if (this._options._dataSource) {
+         if (this._options.dataSource) {
             this._dataSource = this._options.dataSource;
          }
          else {
