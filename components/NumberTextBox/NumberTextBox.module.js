@@ -97,12 +97,19 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
              * С помощью стрелок можно увеличивать/уменьшать целую часть числа на 1.
              * @example
              * <pre>
-             *     <option name="enableArrows"></option>
+             *     <option name="enableArrows">true</option>
              * </pre>
              */
             enableArrows: false,
             /**
              * @cfg {Boolean} Показать разделители триад
+             * @example
+             * <pre>
+             *     <option name="delimiters">true</option>
+             * </pre>
+             * @see integers
+             * @see onlyInteger
+             * @see decimals
              */
             delimiters: false
          }
@@ -132,7 +139,16 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          this._inputField.val(text);
          this._setCaretPosition(this._caretPosition[0], this._caretPosition[1])
       },
-
+       /**
+        * Возвращает текущее числовое значение поля ввода.
+        * @returns {Number} Текущее значение поля ввода числа.
+        * @example
+        * <pre>
+        *     if (control.getNumericValue() == "0") {
+        *        control.setValue("1");
+        *     }
+        * </pre>
+        */
       getNumericValue: function(){
          var val = this._options.text.replace(/\s/g, '');
          if (this._options.onlyInteger) {
