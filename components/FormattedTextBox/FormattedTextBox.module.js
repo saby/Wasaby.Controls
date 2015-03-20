@@ -74,7 +74,17 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
             this._options.text = text;
          }
       },
-
+       /**
+        * Установить активность контрола, которая определяется свойством {@link $ws.proto.Control#enabled}.
+        * @param enabled Признак активности: true - контрол активен, false - не активен.
+        * @example
+        * Кнопка (btn) недоступна для клика до тех пор, пока поле ввода (textBox) не пройдёт валидацию.
+        * <pre>
+        *    textBox.subscribe('onValidate', function(event, validationResult) {
+        *       btn.setEnabled(validationResult);
+        *    });
+        * </pre>
+        */
       setEnabled: function(enabled){
          FormattedTextBoxBase.superclass.setEnabled.call(this, enabled);
          this._inputField.attr('contenteditable', enabled);
