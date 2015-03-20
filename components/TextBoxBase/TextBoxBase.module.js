@@ -10,6 +10,23 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
     */
 
    var TextBoxBase = Control.Control.extend([FormWidgetMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.TextBoxBase.prototype*/ {
+
+       /**
+        * @event onTextChange Срабатывает при изменении текста в поле ввода.
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {String} text Текст в поле ввода.
+        * @example
+        * <pre>
+        *     textBox.subscribe('onTextChange', function(event, text){
+        *        if (text == 'Воскресение') {
+        *           alert('Такого не может быть')
+        *        }
+        *     };
+        * </pre>
+        * @see setText
+        * @see setValue
+        */
+
       $protected: {
          _options: {
             /**
