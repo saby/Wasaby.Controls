@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _drawItemsCallback: function () {
-         $()
+         /*Method must be implemented*/
       },
 
       _drawItems: function () {
