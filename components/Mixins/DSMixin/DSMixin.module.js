@@ -114,13 +114,21 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _drawItems: function () {
+         if (!Object.isEmpty(this._itemsInstances)) {
+            for (var i in this._itemsInstances) {
+               if (this._itemsInstances.hasOwnProperty(i)) {
+                  this._itemsInstances[i].destroy();
+               }
+            }
+         }
+         this._itemsInstances = {};
          var self = this,
             DataSet = this._dataSet,
             def = new $ws.proto.Deferred();
 
          var
             itemsContainer = self._getItemsContainer();
-         self._itemsInstances = {};
+
          itemsContainer.empty();
 
          DataSet.each(function (item, key, i, parItem, lvl) {
