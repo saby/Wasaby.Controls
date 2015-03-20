@@ -23,19 +23,15 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
             /**
-             * @typedef {Object} TextTransformEnum
-             * @variant uppercase перевести в верхний регистр
-             * @variant lowercase перевести в нижний регистр
-             * @variant none оставить как есть
-             */
-            /**
-             * @cfg {TextTransformEnum} Форматирование текста
-             * Возможные значения:
-             * <ul>
-             *    <li>uppercase - все символы верхним регистром;</li>
-             *    <li>lowercase - все символы нижним регистром;</li>
-             *    <li>none - без изменений.</li>
-             * </ul>
+             * @cfg {String} Форматирование регистра текста
+             * @example
+             * <pre>
+             *     <option name="textTransform">uppercase</option>
+             * </pre>
+             * @variant uppercase Все символы верхним регистром.
+             * @variant lowercase Все символы нижним регистром.
+             * @variant none Без изменений.
+             *
              */
             textTransform: 'none',
             /**
@@ -45,11 +41,19 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              *    <li>true - выделять текст;</li>
              *    <li>false - не выделять.</li>
              * </ul>
+             * @example
+             * <pre>
+             *     <option name="selectOnClick">true</option>
+             * </pre>
              */
             selectOnClick: false,
             /**
              * @cfg {String} Текст подсказки внутри поля ввода
              * Данный текст отображается внутри поля до момента получения фокуса.
+             * @example
+             * <pre>
+             *     <option name="placeholder">Введите ФИО полностью</option>
+             * </pre>
              * @see setPlaceholder
              */
             placeholder: '',
@@ -58,6 +62,11 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              * <wiTag group="Управление">
              * Каждый вводимый символ будет проверяться на соответсвие указанному в этой опции регулярному выражению.
              * Несоответсвующие символы невозможно напечатать.
+             * @example
+             * Разрешим ввод только цифр:
+             * <pre>
+             *     <option name="inputRegExp">/^\d+$/</option>
+             * </pre>
              */
             inputRegExp : ''
          }
