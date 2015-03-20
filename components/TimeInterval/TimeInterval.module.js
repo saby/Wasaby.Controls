@@ -2,12 +2,12 @@
  * TODO Компонент пока тестировался только в Chrome
  */
 define(
-   'js!SBIS3.CONTROLS.DateInterval',
+   'js!SBIS3.CONTROLS.TimeInterval',
    [
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.Calendar',
-      'html!SBIS3.CONTROLS.DateInterval'
+      'html!SBIS3.CONTROLS.TimeInterval'
    ],
    function (FormattedTextBoxBase, PickerMixin, Calendar, dotTplFn) {
 
@@ -15,11 +15,11 @@ define(
 
       /**
        * Можно вводить только значения особого формата даты.
-       * @class SBIS3.CONTROLS.DateInterval
+       * @class SBIS3.CONTROLS.TimeInterval
        * @extends SBIS3.CONTROLS.FormattedTextBoxBase
        */
 
-      var DateInterval = FormattedTextBoxBase.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.DateInterval.prototype */{
+      var TimeInterval = FormattedTextBoxBase.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.TimeInterval.prototype */{
          $protected: {
             _dotTplFn: dotTplFn,
             /**
@@ -112,7 +112,7 @@ define(
           */
          setText: function ( text ) {
             text = text ? text: '';
-            DateInterval.superclass.setText.call( this, text );
+            TimeInterval.superclass.setText.call( this, text );
             this._options.interval = text == '' ? null : this._getIntervalByText( text );
             this._notify('onChangeInterval', this._options.interval);
          },
@@ -137,7 +137,7 @@ define(
          },
          /**
           * Получить дату
-          * @returns {Date|*|SBIS3.CONTROLS.DateInterval._options.interval}
+          * @returns {Date|*|SBIS3.CONTROLS.TimeInterval._options.interval}
           */
          getInterval: function(){
             return this._options.interval;
@@ -146,9 +146,15 @@ define(
          _getIntervalByText: function(text){
             var regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
                availCharsArray = this._options.mask.match(regexp),
-               interval = '';
+               interval = '',
+               substrText;
+
+            text = text.replace(new RegExp(this._placeholder,'g'), "");
 
             for (var i = 0; i < availCharsArray.length; i++) {
+               if (!text.substr(0, availCharsArray[i].length)){
+                  continue;
+               }
                switch ( availCharsArray[i] ) {
                   case 'DDD' :
                      interval = "P" + text.substr(0, 3) + "D";
@@ -256,6 +262,7 @@ define(
                this._options.text = this._getTextByInterval(this._options.interval);
             }
 
+            var z = text.split(':')[0];
             // Если дата изменилась -- генерировать событие.
             // Если использовать просто setInterval, то событие будет генерироваться даже если дата введена с клавиатуры не полностью, что неверно
             if ( oldDate !== this._options.interval ) {
@@ -264,5 +271,5 @@ define(
          }
       });
 
-      return DateInterval;
+      return TimeInterval;
    });
