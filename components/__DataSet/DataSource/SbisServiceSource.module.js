@@ -1,12 +1,12 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.DataSourceBL', [
+define('js!SBIS3.CONTROLS.SbisServiceSource', [
    'js!SBIS3.CONTROLS.IDataSource',
    'js!SBIS3.CONTROLS.Record',
    'js!SBIS3.CONTROLS.DataSet',
-   'js!SBIS3.CONTROLS.DataStrategyBL'
-], function (IDataSource, Record, DataSet, DataStrategyBL) {
+   'js!SBIS3.CONTROLS.SbisJSONStrategy'
+], function (IDataSource, Record, DataSet, SbisJSONStrategy) {
    'use strict';
 
    /**
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
       },
       $constructor: function (cfg) {
          this._BL = new $ws.proto.ClientBLObject(cfg.service);
-         this._options.strategy = cfg.strategy || new DataStrategyBL();
+         this._options.strategy = cfg.strategy || new SbisJSONStrategy();
       },
 
       sync: function (dataSet) {
@@ -144,7 +144,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
       /**
        * Вызов списочного метода БЛ
        * Возможно применене фильтрации, сортировки и выбора определенного количества записей с заданной позиции
-       * @param {Array} filter - [{property1: value},{property2: value}]
+       * @param {Object} filter - {property1: value, property2: value}
        * @param {Array} sorting - [{property1: 'ASC'},{property2: 'DESC'}]
        * @param {Number} offset смещение начала выборки
        * @param {Number} limit количество возвращаемых записей

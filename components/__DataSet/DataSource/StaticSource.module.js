@@ -1,7 +1,7 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.DataSourceMemory', [
+define('js!SBIS3.CONTROLS.StaticSource', [
    'js!SBIS3.CONTROLS.IDataSource',
    'js!SBIS3.CONTROLS.Record',
    'js!SBIS3.CONTROLS.DataSet'
@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
          _initialDataSet: undefined,
          _options: {
             /**
-             * @cfg {Array} Исходный массив данных, с которым работает DataSourceMemory
+             * @cfg {Array} Исходный массив данных, с которым работает StaticSource
              */
             data: [],
             /**
@@ -124,7 +124,7 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
       /**
        * Метод для получения набора записей из источника данных
        * Возможно применене фильтрации, сортировки и выбора определенного количества записей с заданной позиции
-       * @param {Array} filter - [{property1: value},{property2: value}]
+       * @param {Object} filter - {property1: value, property2: value}
        * @param {Array} sorting - [{property1: 'ASC'},{property2: 'DESC'}]
        * @param {Number} offset смещение начала выборки
        * @param {Number} limit количество возвращаемых записей
