@@ -37,17 +37,23 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       },
 
       sync: function (dataSet) {
-         var self = this;
+         var self = this,
+            syncCompleteDef = new $ws.proto.ParallelDeferred(),
+            changedRecords = [];
          dataSet.each(function (record) {
             if (record.getMarkStatus() == 'changed') {
-               self.update(record);
+               syncCompleteDef.push(self.update(record));
+               changedRecords.push(record);
             }
             if (record.getMarkStatus() == 'deleted') {
-               self.destroy(record.getKey());
+               syncCompleteDef.push(self.destroy(record.getKey()));
+               changedRecords.push(record);
             }
          }, 'all');
-         self._notify('onDataSync');
-         //TODO: нотификация о завершении синхронизации
+
+         syncCompleteDef.done().getResult().addCallback(function(){
+            self._notify('onDataSync', changedRecords);
+         });
       },
 
       /**
@@ -57,18 +63,16 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       create: function () {
          var self = this,
             def = new $ws.proto.Deferred();
-         self._BL.call(self._options.crateMethodName, {'Фильтр': null, 'ИмяМетода': null}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+         self._BL.call(self._options.crateMethodName, {
+            'Фильтр': null,
+            'ИмяМетода': null
+         }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
             var record = new Record({
                strategy: self.getStrategy(),
                raw: res
                //keyField: self.getStrategy().getKey(res)
             });
             def.callback(record);
-         });
-         def.addCallback(function (res) {
-            self._notify('onCreate');
-            self._notify('onDataChange');
-            return res;
          });
          return def;
       },
@@ -81,18 +85,16 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       read: function (id) {
          var self = this,
             def = new $ws.proto.Deferred();
-         self._BL.call(self._options.readMethodName, {'ИдО': id, 'ИмяМетода': 'Список'}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+         self._BL.call(self._options.readMethodName, {
+            'ИдО': id,
+            'ИмяМетода': 'Список'
+         }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
             //TODO: переделать установку стратегии стратегию
             var record = new Record({
                'strategy': self.getStrategy(),
                'raw': res
             });
             def.callback(record);
-            def.addCallback(function (res) {
-               self._notify('onRead');
-               self._notify('onDataChange');
-               return res;
-            });
          });
          return def;
       },
@@ -110,11 +112,6 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
 
          self._BL.call(self._options.updateMethodName, {'Запись': rec}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
             def.callback(true);
-            def.addCallback(function (res) {
-               self._notify('onUpdate');
-               self._notify('onDataChange');
-               return res;
-            });
          });
 
          return def;
@@ -131,11 +128,6 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
 
          self._BL.call(self._options.destroyMethodName, {'ИдО': id}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
             def.callback(true);
-            def.addCallback(function (res) {
-               self._notify('onDestroy');
-               self._notify('onDataChange');
-               return res;
-            });
          });
 
          return def;
@@ -160,7 +152,12 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             sortingParam = strategy.prepareSortingParam(sorting),
             pagingParam = strategy.preparePagingParam(offset, limit);
 
-         self._BL.call(self._options.queryMethodName, {'ДопПоля': [], 'Фильтр': filterParam, 'Сортировка': sortingParam, 'Навигация': pagingParam}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+         self._BL.call(self._options.queryMethodName, {
+            'ДопПоля': [],
+            'Фильтр': filterParam,
+            'Сортировка': sortingParam,
+            'Навигация': pagingParam
+         }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
 
             var DS = new DataSet({
                strategy: strategy,
