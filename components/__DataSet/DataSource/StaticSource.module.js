@@ -1,7 +1,7 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.DataSourceMemory', [
+define('js!SBIS3.CONTROLS.StaticSource', [
    'js!SBIS3.CONTROLS.IDataSource',
    'js!SBIS3.CONTROLS.Record',
    'js!SBIS3.CONTROLS.DataSet'
@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
          _initialDataSet: undefined,
          _options: {
             /**
-             * @cfg {Array} Исходный массив данных, с которым работает DataSourceMemory
+             * @cfg {Array} Исходный массив данных, с которым работает StaticSource
              */
             data: [],
             /**
@@ -36,17 +36,24 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
       },
 
       sync: function (dataSet) {
-         var self = this;
+         var self = this,
+            syncCompleteDef = new $ws.proto.ParallelDeferred(),
+            changedRecords = [];
          dataSet.each(function (record) {
             if (record.getMarkStatus() == 'changed') {
-               self.update(record);
+               syncCompleteDef.push(self.update(record));
+               changedRecords.push(record);
             }
             if (record.getMarkStatus() == 'deleted') {
-               self.destroy(record.getKey());
+               syncCompleteDef.push(self.destroy(record.getKey()));
+               changedRecords.push(record);
             }
          }, 'all');
-         self._notify('onDataSync');
-         //TODO: нотификация о завершении синхронизации
+
+         syncCompleteDef.done().getResult().addCallback(function(){
+            self._notify('onDataSync', changedRecords);
+         });
+
       },
 
       /**
@@ -61,11 +68,6 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
                keyField: this._options.keyField
             });
          def.callback(record);
-         var self = this;
-         def.addCallback(function (record) {
-            self._notify('onCreate');
-            return record;
-         });
          return def;
       },
 
@@ -78,10 +80,6 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
          var self = this,
             def = new $ws.proto.Deferred();
          def.callback(this._initialDataSet.getRecordByKey(id));
-         def.addCallback(function (record) {
-            self._notify('onRead');
-            return record;
-         });
          return def;
       },
 
@@ -93,12 +91,6 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
       update: function (record) {
          var def = new $ws.proto.Deferred();
          def.callback(true);
-         var self = this;
-         def.addCallback(function (res) {
-            self._notify('onUpdate');
-            self._notify('onDataChange');
-            return res;
-         });
          return def;
       },
 
@@ -112,19 +104,13 @@ define('js!SBIS3.CONTROLS.DataSourceMemory', [
             strategy = this.getStrategy();
          strategy.destroy(this._options.data, this._options.keyField, id);
          def.callback(true);
-         var self = this;
-         def.addCallback(function (res) {
-            self._notify('onDestroy');
-            self._notify('onDataChange');
-            return res;
-         });
          return def;
       },
 
       /**
        * Метод для получения набора записей из источника данных
        * Возможно применене фильтрации, сортировки и выбора определенного количества записей с заданной позиции
-       * @param {Array} filter - [{property1: value},{property2: value}]
+       * @param {Object} filter - {property1: value, property2: value}
        * @param {Array} sorting - [{property1: 'ASC'},{property2: 'DESC'}]
        * @param {Number} offset смещение начала выборки
        * @param {Number} limit количество возвращаемых записей

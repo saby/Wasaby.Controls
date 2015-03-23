@@ -60,7 +60,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                if (e.which == 1) {
                   var targ = $(e.target).hasClass('controls-ListView__item') ? e.target : $(e.target).closest('.controls-ListView__item');
                   if (targ.length) {
-                     var id = targ.attr('data-id');
+                     var id = targ.data('id');
                      self._elemClickHandler(id, self._dataSet.getRecordByKey(id), e.target);
                   }
                }
@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          _elemClickHandler: function (id, data, target) {
             if (this._options.multiselect) {
                if ($(target).hasClass('controls-ListView__itemCheckBox')) {
-                  var key = $(target).closest('.controls-ListView__item').attr('data-id');
+                  var key = $(target).closest('.controls-ListView__item').data('id');
                   this.toggleItemsSelection([key]);
                }
                else {
