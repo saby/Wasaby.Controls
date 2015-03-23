@@ -183,20 +183,18 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
          this._itemsInstances = {};
          var
             itemsReadyDef = new $ws.proto.ParallelDeferred(),
-            self = this,
-            targetContainersList = [];
+            self = this;
 
+         var
+            itemsContainer = self._getItemsContainer();
 
+         itemsContainer.empty();
 
          this._items.iterate(function (item, key, i, parItem, lvl) {
 
             var
                targetContainer = self._getTargetContainer(item, key, parItem, lvl);
 
-            if (Array.indexOf(targetContainersList, targetContainer.get(0)) < 0) {
-               targetContainer.empty();
-               targetContainersList.push(targetContainer.get(0));
-            }
             itemsReadyDef.push(self._drawItem(item, targetContainer, key, i, parItem, lvl));
 
          });
