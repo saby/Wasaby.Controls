@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
     * @class SBIS3.CONTROLS.Button
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
-	* @demo SBIS3.Demo.Control.MyButton Пример кнопки
+	* @demo SBIS3.Demo.Control.MyButton Здесь можно попробовать кнопку в действии, применяя свои настройки.
     * @initial
     * <component data-component='SBIS3.CONTROLS.Button'>
     *    <option name='caption' value='Кнопка'></option>
@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
     * @category Buttons
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
-    * @ignoreOptions subControl verticalAlignment
+    * @ignoreOptions subcontrol verticalAlignment
     */
 
    var Button = ButtonBase.extend( /** @lends SBIS3.CONTROLS.Button.prototype */ {
