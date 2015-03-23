@@ -16,7 +16,8 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
     * </component>
     * @public
     * @category Inputs
-    * @ignoreOptions independentContext contextRestriction icon extendedTooltip
+    * @ignoreOptions icon extendedTooltip independentContext contextRestriction isContainerInsideParent stateKey subcontrol
+    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment owner
     */
 
    var CheckBox = ButtonBase.extend([Checkable], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
