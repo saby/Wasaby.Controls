@@ -21,7 +21,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     * @control
     * @public
     * @demo SBIS3.Demo.Control.MyNumberTextBox
-    * @ignoreOptions independentContext contextRestriction
+    * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
+    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
     */
 
    var NumberTextBox;
