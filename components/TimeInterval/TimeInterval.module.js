@@ -145,7 +145,7 @@ define(
             availTextArray[0] = days;
             this._options.text = availTextArray.join(':');
             this._options.interval = this._getIntervalByText(this._options.text);
-            this._setInterval( this._options.interval );
+            this.setInterval( this._options.interval );
          },
 
          /**
@@ -170,7 +170,7 @@ define(
 
             this._options.text = availTextArray.join(':');
             this._options.interval = this._getIntervalByText(this._options.text);
-            this._setInterval( this._options.interval );
+            this.setInterval( this._options.interval );
          },
 
          /**
@@ -188,7 +188,7 @@ define(
             availTextArray[minutesIndex] = minutes;
             this._options.text = availTextArray.join(':');
             this._options.interval = this._getIntervalByText(this._options.text);
-            this._setInterval( this._options.interval );
+            this.setInterval( this._options.interval );
          },
 
          /**
@@ -357,8 +357,6 @@ define(
 
             this._options.interval = this._getIntervalByText(text);
             this._options.text = this._getTextByInterval(this._options.interval);
-
-
 
             if (this._options.mask.length < (minLengthMask + minutesLengthMask) && text.split(':')[0].indexOf('_') == -1) {
                this._options.text = this._placeholder + text;
