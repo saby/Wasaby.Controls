@@ -137,7 +137,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
       
       /**
        * Изменяет текст в поле ввода.
-       * @param value Текст для установки в поле ввода.
+       * @param {String} value Текст для установки в поле ввода.
        * @example
        * <pre>
        *     if (control.getValue() == "0") {
