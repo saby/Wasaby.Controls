@@ -96,7 +96,6 @@ define(
           */
          _setMask: function (mask) {
             this._options.mask = this._primalMask = mask;
-            //TODO сделать
             this._clearMask = this._getClearMask();
             this._drawDate();
          },
