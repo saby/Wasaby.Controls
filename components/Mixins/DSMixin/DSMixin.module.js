@@ -143,7 +143,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          DataSet.each(function (item, key, i, parItem, lvl) {
             var
                targetContainer = self._getTargetContainer(item, key, parItem, lvl);
-            self._drawItem(item, targetContainer, key, i, parItem, lvl);
+            if (targetContainer) {
+               self._drawItem(item, targetContainer, key, i, parItem, lvl);
+            }
          });
 
          self.reviveComponents().addCallback(function () {
@@ -154,7 +156,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
 
       _clearItems : function(container) {
-         container = container || this._container;
+         container = container || this._getItemsContainer();
          /*Удаляем компоненты-инстансы элементов*/
          if (!Object.isEmpty(this._itemsInstances)) {
             for (var i in this._itemsInstances) {

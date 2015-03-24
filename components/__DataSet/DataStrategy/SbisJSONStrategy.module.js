@@ -172,12 +172,13 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
          return sortingParam;
       },
 
-      preparePagingParam: function (limit, offset) {
+      preparePagingParam: function (offset, limit) {
          var pagingParam = null;
-         if (limit && offset) {
+         if (typeof(offset) != 'undefined' && offset != null && typeof(limit) != 'undefined' && limit != null) {
+            var numPage = Math.floor(offset/limit);
             pagingParam = {
                'd': [
-                  offset,
+                  numPage,
                   limit,
                   true
                ],

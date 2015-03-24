@@ -128,9 +128,18 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _setText: function(text){
-         text = this._formatValue(text);
+         if (text !== '-' && text !== '.' && text !== ''){
+            if (text.indexOf('.') === text.length - 1) {
+               text = this._formatValue(text) + '.';
+               this._inputField.val(text);
+               this._setCaretPosition(this._caretPosition[0] + 1, this._caretPosition[1] + 1);
+               return;
+            } else {
+               text = this._formatValue(text);
+            }
+         }
          this._inputField.val(text);
-         this._setCaretPosition(this._caretPosition[0], this._caretPosition[1])
+         this._setCaretPosition(this._caretPosition[0], this._caretPosition[1]);
       },
 
       getNumericValue: function(){
@@ -140,7 +149,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          } else {
             val = parseFloat(val);
          }
-        return (isNaN(val)) ? null : val
+        return (isNaN(val)) ? null : val;
       },
 
       _formatValue: function(value, fromFocusOut){
@@ -285,8 +294,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
                currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? this._getZeroString(e - b) : '') + currentVal.substr(e);
             }
          } else { // точка в выделении
-            currentVal = currentVal.substr(0, b) + '.' + (this._options.decimals > 0 ? this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
-            newCaretPosition = currentVal.indexOf('.') - 1;
+            currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ?  '.' + this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
+            newCaretPosition = (currentVal.indexOf('.') != -1) ? currentVal.indexOf('.') - 1 : currentVal.length;
          }
          currentVal = currentVal.replace(/\s/g, '');
          this._setText(currentVal);
@@ -313,7 +322,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          } else
          if (b > dotPosition && e > dotPosition){ // после точки
             if (b == e){
-               if (b != dotPosition + 1) {
+               if (!(b == dotPosition + 1 && this._options.decimals > 0)) {
                   currentVal = currentVal.substr(0, b - 1) + (this._options.decimals > 0 ? '0' : '') + currentVal.substr(e);
                }
                newCaretPosition--;
@@ -321,8 +330,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
                currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? this._getZeroString(e - b) : '') + currentVal.substr(e);
             }
          } else { // точка в выделении
-            currentVal = currentVal.substr(0, b) + '.' + (this._options.decimals > 0 ? this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
-            newCaretPosition = currentVal.indexOf('.') - 1;
+            currentVal = currentVal.substr(0, b) +  (this._options.decimals > 0 ? '.' + this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
+            newCaretPosition = (currentVal.indexOf('.') != -1) ? currentVal.indexOf('.') - 1 : currentVal.length;
          }
          currentVal = currentVal.replace(/\s/g, '');
          this._setText(currentVal);
