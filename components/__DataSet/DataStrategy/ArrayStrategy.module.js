@@ -170,7 +170,7 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
          if (typeof(offset) != 'undefined' && offset != null && typeof(limit) != 'undefined' && limit != null) {
             pagingData = [];
             var
-               firstIdx = offset * limit,
+               firstIdx = offset,
                length = newData.length;
             for (var i = firstIdx; i < firstIdx + limit; i++) {
                if (i >= length) {
