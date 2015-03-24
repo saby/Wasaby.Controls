@@ -145,8 +145,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
         * @returns {Number} Текущее значение поля ввода числа.
         * @example
         * <pre>
-        *     if (control.getNumericValue() == "0") {
-        *        control.setValue("1");
+        *     if (control.getNumericValue() < 19) {
+        *        control.setEnabled("false");
         *     }
         * </pre>
         */
