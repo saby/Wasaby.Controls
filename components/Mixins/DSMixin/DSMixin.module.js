@@ -156,7 +156,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
 
       _clearItems : function(container) {
-         container = container || this._container;
+         container = container || this._getItemsContainer();
          /*Удаляем компоненты-инстансы элементов*/
          if (!Object.isEmpty(this._itemsInstances)) {
             for (var i in this._itemsInstances) {
