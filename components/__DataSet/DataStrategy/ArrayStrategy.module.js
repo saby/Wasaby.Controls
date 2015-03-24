@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
    var ArrayStrategy = IDataStrategy.extend({
       $protected: {},
       $constructor: function () {
-         var a = 5;
       },
       getKey: function (data) {
          var
