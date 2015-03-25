@@ -16,6 +16,16 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
    var ButtonGroupBase = CompoundControl.extend([DSMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBase.prototype */ {
       $protected: {
          _options: {
+             /**
+              * @cfg {String} Поле заголовка кнопки
+              * Опция указывает имя подоции {@link SBIS3.CONTROLS.CollectionMixin#items}, откуда брать заголовок радионопки.
+              * @example
+              * <pre>
+              *     <option name="captionField">title</option>
+              * <pre>
+              * @see SBIS3.CONTROLS.CollectionMixin#items
+              * @see SBIS3.CONTROLS.CollectionMixin#keyField
+              */
             captionField : ''
          }
       },

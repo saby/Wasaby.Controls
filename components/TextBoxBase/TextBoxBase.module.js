@@ -7,6 +7,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
     * @class SBIS3.CONTROLS.TextBoxBase
     * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth extendedTooltip horizontalAlignment
+    * @ignoreOptions isContainerInsideParent owner stateKey subcontrol validators verticalAlignment
     */
 
    var TextBoxBase = Control.Control.extend([FormWidgetMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.TextBoxBase.prototype*/ {
@@ -136,35 +138,13 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
 
       
       /**
-       * Изменяет текст в поле ввода.
-       * @param value Текст для установки в поле ввода.
-       * @example
-       * <pre>
-       *     if (control.getValue() == "0") {
-       *        control.setValue("ноль");
-       *     }
-       * </pre>
-       * @see setText
-       * @see getText
-       * @see getValue
-       * @see text
+       * @noShow
        */
       setValue: function(value){
          this.setText(value);
       },
       /**
-       * Возвращает текущий текст поля ввода.
-       * @returns {String} Текст - значение поля ввода.
-       * @example
-       * <pre>
-       *     if (control.getValue() == "0") {
-       *        control.setValue("ноль");
-       *     }
-       * </pre>
-       * @see getText
-       * @see setText
-       * @see setValue
-       * @see text
+       * @noShow
        */
       getValue: function(){
          return this.getText();

@@ -21,21 +21,43 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CON
          _switcher : null,
          _position : null,
          _options: {
+
             /**
-             * @typedef {Object} StateEnum
-             * @variant on Включен
-             * @variant off Выключен
-             */
-            /**
-             * @cfg {StateEnum} Состояние по умолчанию (on/off)
+             * @cfg {String} Начальное состояние переключателя
+             * Опция задаёт состояние переключателя, с которым построится контрол.
+             * @example
+             * <pre>
+             *     <option name="state">on</option>
+             * </pre>
+             * @variant on Включен.
+             * @variant off Выключен.
+             * @see setState
+             * @see setStateOff
+             * @see setStateOn
              */
             state: 'off',
             /**
              * @cfg {String} Текст при включенном состоянии
+             * @example
+             * <pre>
+             *     <option name="stateOn">Скрыть</option>
+             * </pre>
+             * @see state
+             * @see setState
+             * @see setStateOff
+             * @see setStateOn
              */
             stateOn: '',
             /**
              * @cfg {String} Текст при выключенном состоянии
+             * @example
+             * <pre>
+             *     <option name="stateOff">Показать</option>
+             * </pre>
+             * @see state
+             * @see setState
+             * @see setStateOff
+             * @see setStateOn
              */
             stateOff: ''
          }
@@ -59,8 +81,21 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CON
          this._notify('onActivated', this._options.state);
       },
       /**
-       * Устанавливает состояние (on/off)
-       * @param {String} state
+       * Устанавливает состояние.
+       * Метод установки текущего состояния переключателя.
+       * @param {String} state Состояние переключателя: on/off.
+       * @example
+       * <pre>
+       *     if (NumberTextBox.getNumericValue() < 19) {
+       *        control.setState("off");
+       *     }
+       * </pre>
+       * @see state
+       * @see getState
+       * @see setStateoff
+       * @see setStateOn
+       * @see stateOff
+       * @see stateOn
        */
       setState: function(state) {
          if (state == 'on' || state == 'off'){
@@ -68,29 +103,67 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CON
          }
       },
       /**
-       * Получить состояние
+       * Получить состояние.
+       * Метод получения состояния, заданного либо опцией {@link state}, либо методом {@link setState}.
+       * @returns {String} Состояние переключателя: "on"/"off".
+       * @example
+       * <pre>
+       *     if (control.getState() == "on") {
+       *        textBox.setText("Задачи");
+       *     }
+       * </pre>
+       * @see state
+       * @see setState
        */
       getState: function() {
          return this._options.state;
       },
-
+      /**
+       * @noShow
+       */
       setValue: function(value){
          this.setState(value);
       },
-
+      /**
+       * @noShow
+       */
       getValue: function(){
          return this.getState();
       },
 	  /**
-       * Установить текст на выключенном состоянии
-       * @param text
+       * Устанавливает текст на выключенном состоянии.
+       * Метод установки текста переключателя в выключенном состоянии.
+       * @param text Текст переключателя.
+       * @example
+       * <pre>
+       *     if (a == "Задачи") {
+       *        control.setStateOff("Скрыть задачи");
+       *     }
+       * </pre>
+       * @see state
+       * @see setState
+       * @see stateOff
+       * @see stateOn
+       * @see setStateOn
        */
       setStateOff: function(text){
          this._options.stateOff = text;
       },
 	  /**
-       * Установить текст на включенном состоянии
-       * @param text
+       * Устанавливаеть текст на включенном состоянии.
+       * Метод установки текста переключателя во включённом состоянии.
+       * @param text Текст переключателя.
+       * @example
+       * <pre>
+       *     if (a == "Задачи") {
+       *        control.setStateOn("Показать задачи");
+       *     }
+       * </pre>
+       * @see state
+       * @see setState
+       * @see stateOff
+       * @see stateOn
+       * @see setStateOff
        */
       setStateOn: function(text){
          this._options.stateOn = text;

@@ -11,6 +11,8 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
     * @demo SBIS3.Demo.Control.MyTextBox
     * @category Inputs
     * @ignoreOptions independentContext contextRestriction extendedTooltip
+    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
+    * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment
     */
 
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.TextBox.prototype */ {
@@ -31,7 +33,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              * @variant uppercase Все символы верхним регистром.
              * @variant lowercase Все символы нижним регистром.
              * @variant none Без изменений.
-             *
+             * @see setTextTransform
              */
             textTransform: 'none',
             /**
@@ -142,6 +144,12 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
        * Установить подсказку, отображаемую внутри поля.
        * Метод установки или замены текста подсказки, заданного опцией {@link placeholder}.
        * @param {String} text Текст подсказки.
+       * @example
+       * <pre>
+       *     if (control.getText() == "") {
+       *        control.setPlaceholder("Введите ФИО полностью");
+       *     }
+       * </pre>
        * @see placeholder
        */
       setPlaceholder: function(text){
@@ -159,8 +167,20 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       /**
-       * Установить форматирование текста
-       * @param {TextTransformEnum} textTransform
+       * Установить форматирование текста.
+       * Метод установки или замены форматирования регистра текста, заданного опцией {@link textTransform}.
+       * @param {String} textTransform Необходимое форматирование регистра текста.
+       * Возможные значения:
+       * <ul>
+       *    <li>uppercase - все символы верхним регистром;</li>
+       *    <li>lowercase - все символы нижним регистром;</li>
+       *    <li>none - без изменений.</li>
+       * </ul>
+       * @example
+       * <pre>
+       *     control.setTextTransform("lowercase");
+       * </pre>
+       * @see textTransform
        */
       setTextTransform: function(textTransform){
          switch (textTransform) {
@@ -197,7 +217,16 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       _keyPressBind: function() {
 
       },
-
+       /**
+        * Переводит фокус на контрол.
+        * @param active Признак наличия фокуса.
+        * Возможные значения:
+        * <ol>
+        *    <li>true - перевести фокус на контрол. Если фокус ранее находился на другом элементе, то произойдёт событие {@link $ws.proto.Control#onFocusIn}.
+        *    Если фокус был на данном контроле, то откроется всплывающая подсказка.</li>
+        *    <li>false - убрать фокус с контрола. Произойдёт событие {@link $ws.proto.Control#onFocusOut}.</li>
+        * </ol>
+        */
       setActive: function(active){
          var firstSelect = this._isControlActive != active;
          TextBox.superclass.setActive.apply(this, arguments);
