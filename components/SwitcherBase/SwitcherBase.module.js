@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CON
        * @param {String} state Состояние переключателя: on/off.
        * @example
        * <pre>
-       *     if (control.getState() == "on") {
+       *     if (NumberTextBox.getNumericValue() < 19) {
        *        control.setState("off");
        *     }
        * </pre>
@@ -109,7 +109,7 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CON
        * @example
        * <pre>
        *     if (control.getState() == "on") {
-       *        control.setState("off");
+       *        textBox.setText("Задачи");
        *     }
        * </pre>
        * @see state
@@ -119,35 +119,13 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CON
          return this._options.state;
       },
       /**
-       * Изменяет текст в поле ввода.
-       * @param {String} value Состояние переключателя: on/off.
-       * @example
-       * <pre>
-       *     if (control.getValue() == "on") {
-       *        control.setValue("off");
-       *     }
-       * </pre>
-       * @see setText
-       * @see getText
-       * @see getValue
-       * @see text
+       * @noShow
        */
       setValue: function(value){
          this.setState(value);
       },
       /**
-       * Возвращает текущий текст поля ввода.
-       * @returns {String} Состояние переключателя: "on"/"off".
-       * @example
-       * <pre>
-       *     if (control.getValue() == "on") {
-       *        control.setValue("off");
-       *     }
-       * </pre>
-       * @see getText
-       * @see setText
-       * @see setValue
-       * @see text
+       * @noShow
        */
       getValue: function(){
          return this.getState();
@@ -158,8 +136,8 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CON
        * @param text Текст переключателя.
        * @example
        * <pre>
-       *     if (control.getState() == "on") {
-       *        control.setStateOff("Скрыть");
+       *     if (a == "Задачи") {
+       *        control.setStateOff("Скрыть задачи");
        *     }
        * </pre>
        * @see state
@@ -177,8 +155,8 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CON
        * @param text Текст переключателя.
        * @example
        * <pre>
-       *     if (control.getState() == "off") {
-       *        control.setStateOn("Показать");
+       *     if (a == "Задачи") {
+       *        control.setStateOn("Показать задачи");
        *     }
        * </pre>
        * @see state
