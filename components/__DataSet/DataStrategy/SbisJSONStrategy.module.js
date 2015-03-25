@@ -114,6 +114,12 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
          return d[index];
       },
 
+      getMetaData: function(data) {
+         return {
+            more : data.n
+         }
+      },
+
       prepareFilterParam: function (filter) {
          // настройка объекта фильтрации для отправки на БЛ
          var filterParam = {
