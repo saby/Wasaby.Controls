@@ -146,7 +146,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
         * @example
         * <pre>
         *     if (control.getNumericValue() < 19) {
-        *        control.setEnabled("false");
+        *        textBox.setEnabled("false");
         *     }
         * </pre>
         */
