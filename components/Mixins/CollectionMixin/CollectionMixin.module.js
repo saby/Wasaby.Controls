@@ -74,7 +74,7 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
       },
 
       /**
-       * Возвращает коллекцию, заданную либо опций {@link items}, либо методам {@link setItems}.
+       * Возвращает коллекцию, заданную либо опций {@link items}, либо методом {@link setItems}.
        * @example
        * <pre>
        *     var
@@ -295,7 +295,7 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
          return def;
       },
      /**
-      * Метод получения элементов коллекции
+      * Метод получения элементов коллекции.
       * @returns {*}
       * @example
       * <pre>
