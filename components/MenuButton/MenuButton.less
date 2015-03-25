@@ -92,45 +92,47 @@
         background: @menu-button-arrow-disabled-bg;
       }
     }
+  }
+}
 
-    // Header
-    .controls-MenuButton__header {
-      display: inline-block;
-      position: absolute;
-      border: none;
-      top: 0;
-      left: 0;
-      width: 100%;
 
-      &.controls-MenuButton__header-hidden {
-        display: none;
-      }
+// Header
+.controls-MenuButton__header {
+  display: inline-block;
+  position: absolute;
+  cursor: pointer;
+  border: none;
+  top: 0;
+  left: 0;
+  width: 100%;
 
-      .controls-MenuButton__headerLeft {
-        float: left;
-        display: inline-block;
-        width: @menu-button-header-left-width;
-        height: @menu-button-header-left-height;
-        margin: @menu-button-header-left-margin;
-        background: @menu-button-header-left-bg;
-      }
+  &.controls-MenuButton__header-hidden {
+    display: none;
+  }
 
-      .controls-MenuButton__headerCenter {
-        display: inline-block;
-        width: @menu-button-header-center-width;
-        height: @menu-button-header-center-height;
-        margin: @menu-button-header-center-margin;
-        background: @menu-button-header-center-bg;
-      }
+  .controls-MenuButton__headerLeft {
+    float: left;
+    display: inline-block;
+    width: @menu-button-header-left-width;
+    height: @menu-button-header-left-height;
+    margin: @menu-button-header-left-margin;
+    background: @menu-button-header-left-bg;
+  }
 
-      .controls-MenuButton__headerRight {
-        display: inline-block;
-        width: @menu-button-header-right-width;
-        height: @menu-button-header-right-height;
-        margin: @menu-button-header-right-margin;
-        background: @menu-button-header-right-bg;
-      }
-    }
+  .controls-MenuButton__headerCenter {
+    display: inline-block;
+    width: @menu-button-header-center-width;
+    height: @menu-button-header-center-height;
+    margin: @menu-button-header-center-margin;
+    background: @menu-button-header-center-bg;
+  }
+
+  .controls-MenuButton__headerRight {
+    display: inline-block;
+    width: @menu-button-header-right-width;
+    height: @menu-button-header-right-height;
+    margin: @menu-button-header-right-margin;
+    background: @menu-button-header-right-bg;
   }
 }
 
