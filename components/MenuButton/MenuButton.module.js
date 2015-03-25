@@ -26,13 +26,13 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * @category Buttons
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.CollectionMixin
-    * @ignoreOptions validators, independentContext, contextRestriction, allowChangeEnable, extendedTooltip
+    * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     */
 
    var MenuButton = Button.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
-         _hasHeader: false,
+         _header: null,
          _options: {
          }
       },
@@ -45,35 +45,32 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       _initMenu: function(){
          if (this.getItems().getItemsCount() > 1) {
             $('.js-controls-MenuButton__arrowDown', this._container).show();
-
             this._container.removeClass('controls-MenuButton__withoutMenu');
-            if (!this._hasHeader) {
-               var header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
+            if (!this._header) {
+               this._header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
                                   <i class="controls-MenuButton__headerLeft"></i>\
                                   <i class="controls-MenuButton__headerCenter"></i>\
                                   <i class="controls-MenuButton__headerRight"></i>\
                                </span>');
-               $('.controls-MenuButton__headerCenter', header).width(this._container.width() + 4);
-               this.getContainer().append(header);
-               $('.controls-MenuButton__header', this._container.get(0)).css({
-                  width: this._container.outerWidth(),
+               $('.controls-MenuButton__headerCenter', this._header).width(this._container.width() + 12);
+               this._header.css({
+                  width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
                   height: this._container.outerHeight()
                });
-               this._hasHeader = true;
+               $('body').append(this._header);
             }
          } else {
             $('.js-controls-MenuButton__arrowDown', this._container).hide();
             this._container.addClass('controls-MenuButton__withoutMenu');
             this._container.removeClass('controls-Picker__show');
             $('.controls-MenuButton__header', this._container).remove();
-            this._hasHeader = false;
          }
       },
 
       _clickHandler: function(){
          if (this.getItems().getItemsCount() > 1) {
             this._container.addClass('controls-Checked__checked');
-            $('.controls-MenuButton__header', this._container).toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
+            this._header.toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
             this.togglePicker();
          } else {
             if (this.getItems().getItemsCount() == 1) {
@@ -87,8 +84,12 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
         */
       togglePicker: function(){
          MenuButton.superclass.togglePicker.call(this);
-         $('.controls-MenuButton__Menu-grayLine', this._picker._container).width(this._picker._container.outerWidth() - this._container.outerWidth() - 14); /*ширина части спрайта выезжающего за кнопку */
-         $('.controls-MenuButton__headerCenter', this._container).width(this._container.width() + 11);
+         $('.controls-MenuButton__headerCenter', this._container).width(this._container.width() + 12);
+         this._header.css({
+            left: this._container.offset().left,
+            top: this._container.offset().top + 1,
+            'z-index': this._picker._container.css('z-index') + 1
+         });
       },
 
       _setWidth: function(){
@@ -104,16 +105,11 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             self._closeHandler();
          });
          this._picker._container.addClass('controls-MenuButton__Menu');
-         var grayLine = $('<span class="controls-MenuButton__Menu-grayLine" style="height: 1px; background: #cccccc; position: absolute; top: -1px; right: -1px;"></span>');
-         this._picker.getContainer().append(grayLine);
-         this._picker.subscribe('onDrawItems', function(){
-            $('.controls-MenuButton__Menu-grayLine', self._picker._container).width(self._picker._container.outerWidth() - self._container.outerWidth() - 14); /*ширина части спрайта выезжающего за кнопку */
-         });
       },
 
       _closeHandler: function(){
          this._container.removeClass('controls-Checked__checked');
-         $('.controls-MenuButton__header', this._container).addClass('controls-MenuButton__header-hidden');
+         this._header.addClass('controls-MenuButton__header-hidden');
       }
    });
 

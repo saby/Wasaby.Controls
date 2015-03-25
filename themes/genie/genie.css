@@ -967,18 +967,19 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #919191 transparent transparent transparent;
   background: transparent;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header {
+.controls-MenuButton__header {
   display: inline-block;
   position: absolute;
+  cursor: pointer;
   border: none;
   top: 0;
   left: 0;
   width: 100%;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header.controls-MenuButton__header-hidden {
+.controls-MenuButton__header.controls-MenuButton__header-hidden {
   display: none;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerLeft {
+.controls-MenuButton__header .controls-MenuButton__headerLeft {
   float: left;
   display: inline-block;
   width: 0;
@@ -986,14 +987,14 @@ input[type="reset"]::-moz-focus-inner {
   margin: 0;
   background: transparent;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerCenter {
+.controls-MenuButton__header .controls-MenuButton__headerCenter {
   display: inline-block;
   width: 0;
   height: 0;
   margin: 0;
   background: transparent;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerRight {
+.controls-MenuButton__header .controls-MenuButton__headerRight {
   display: inline-block;
   width: 0;
   height: 0;
