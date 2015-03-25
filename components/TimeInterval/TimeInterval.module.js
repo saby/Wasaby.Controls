@@ -138,6 +138,10 @@ define(
                return;
             }
 
+            if (days.toString().length > 4){
+               days = "9999";
+            }
+
             //Если количество дней не соответствует маске, то меняем маску
             while (days.toString().length > availMaskArray[0].length)
                availMaskArray[0] = "D" + availMaskArray[0];
@@ -160,6 +164,9 @@ define(
 
             //Если количество часов не соответствует маске, то меняем маску
             if (!this._hasMaskDays()) {
+               if (hours.toString().length > 4){
+                  hours = "9999";
+               }
                while (hours.toString().length > availMaskArray[0].length)
                   availMaskArray[0] = "H" + availMaskArray[0];
                this._setMask(availMaskArray.join(':'));
@@ -327,18 +334,64 @@ define(
           * @private
           */
          _checkBoundaryValues: function(text){
-            var availIntervalArray = text.replace(new RegExp("_",'g'), "0").split(":"),
+            return this._getHours() < 24 && this._getMinutes() < 60;
+         },
+
+         /**
+          * Увеличиваем/уменьшаем интервал на заданное кол-во минут
+          * @param incMinutes
+          * @private
+          */
+         incValue: function(incMinutes){
+            var allMinutes = (this._getDays() * 24 + this._getHours()) * 60 + this._getMinutes() + incMinutes,
+               minutes,
                hours,
-               minutes;
+               days;
+
+            if (typeof(incMinutes) !== "number"){
+               return;
+            }
+
+            if (allMinutes < 0){
+               this.setInterval("");
+               return;
+            }
+
             if (this._hasMaskDays()){
-               hours = parseInt(availIntervalArray[1]);
-               minutes = availIntervalArray[2] ? parseInt(availIntervalArray[2]) : 0;
-               return hours < 24 && minutes < 60;
+               days = allMinutes / (24 * 60) | 0;
+               allMinutes %= 24 * 60;
+               this.setDays(days);
+            }
+            hours = allMinutes / 60 | 0;
+            minutes = allMinutes % 60;
+
+            this.setMinutes(minutes);
+            this.setHours(hours);
+         },
+
+         _getMinutes: function(){
+            if (this._hasMaskDays()){
+               return parseInt(this._options.text.split(':')[2].replace(new RegExp(this._placeholder,'g'), "0"));
             }
             else{
-               minutes = parseInt(availIntervalArray[1]);
-               return minutes < 60;
+               return parseInt(this._options.text.split(':')[1].replace(new RegExp(this._placeholder,'g'), "0"));
             }
+         },
+
+         _getHours: function(){
+            if (this._hasMaskDays()){
+               return parseInt(this._options.text.split(':')[1].replace(new RegExp(this._placeholder,'g'), "0"));
+            }
+            else{
+               return parseInt(this._options.text.split(':')[0].replace(new RegExp(this._placeholder,'g'), "0"));
+            }
+         },
+
+         _getDays: function(){
+            if (this._hasMaskDays()){
+               return parseInt(this._options.text.split(':')[0].replace(new RegExp(this._placeholder,'g'), "0"));
+            }
+            return 0;
          },
 
          /**
@@ -352,12 +405,12 @@ define(
                 minLengthMask = 7,//Минимальная длина маски в символах
                 minutesLengthMask = (this._hasMaskMinutes() && this._hasMaskDays()) ? 3 : 0;//Если маска имеет дни и минуты, то увеличиваем minLengthMask на 3
 
-            if (!this._checkBoundaryValues(text)){
-               //TODO Красим в красный инпут
-            }
-
             this._options.interval = this._getIntervalByText(text);
             this._options.text = this._getTextByInterval(this._options.interval);
+
+            if (!this._checkBoundaryValues(text)){
+               this.incValue(0);
+            }
 
             if (this._options.mask.length < (minLengthMask + minutesLengthMask) && text.split(':')[0].indexOf('_') == -1) {
                this._options.text = this._placeholder + text;
