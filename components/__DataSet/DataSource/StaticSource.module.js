@@ -119,6 +119,7 @@ define('js!SBIS3.CONTROLS.StaticSource', [
 
          var def = new $ws.proto.Deferred(),
             strategy = this.getStrategy(),
+         /*TODO непонятно пока, кажется что метода query в стратегии быть не должно*/
             data = strategy.query(this._options.data, filter, sorting, offset, limit);
 
          var DS = new DataSet({
@@ -126,7 +127,8 @@ define('js!SBIS3.CONTROLS.StaticSource', [
             data: data,
             keyField: this._options.keyField
          });
-         def.callback(DS);
+         var meta = strategy.getMetaData(this._options.data);
+         def.callback(DS, meta);
          return def;
       }
 

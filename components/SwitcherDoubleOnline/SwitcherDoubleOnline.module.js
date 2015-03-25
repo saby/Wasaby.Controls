@@ -14,6 +14,9 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
     * @control
     * @demo SBIS3.Demo.Control.MySwitcherDoubleOnline
     * @public
+    * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers
+    * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner stateKey
+    * @ignoreOptions subcontrol verticalAlignment parent
     */
    var SwitcherDoubleOnline = SwitcherBase.extend( /** @lends SBIS3.Engine.SwitcherDoubleOnline.prototype */ {
       _dotTplFn: dotTplFn,

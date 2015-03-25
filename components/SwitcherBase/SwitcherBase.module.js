@@ -14,6 +14,9 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CON
     * Данный класс поведенческий.
     * @class SBIS3.CONTROLS.SwitcherBase
     * @extends $ws.proto.Control
+    * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers
+    * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner stateKey
+    * @ignoreOptions subcontrol verticalAlignment parent
     */
 
    var SwitcherBase = Control.Control.extend( [Clickable, FormWidgetMixin], /** @lends SBIS3.CONTROLS.SwitcherBase.prototype */ {
@@ -92,7 +95,7 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CON
        * </pre>
        * @see state
        * @see getState
-       * @see setStateoff
+       * @see setStateOff
        * @see setStateOn
        * @see stateOff
        * @see stateOn
@@ -150,7 +153,7 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CON
          this._options.stateOff = text;
       },
 	  /**
-       * Устанавливаеть текст на включенном состоянии.
+       * Устанавливает текст на включенном состоянии.
        * Метод установки текста переключателя во включённом состоянии.
        * @param text Текст переключателя.
        * @example

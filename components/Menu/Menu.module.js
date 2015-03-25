@@ -196,6 +196,9 @@ define('js!SBIS3.CONTROLS.Menu', [
          var config = this._getSubMenuConfig(isFirstLevel, item);
 
          config.element = $('<div class="controls-Menu__Popup"></div>');
+         if (this._container.hasClass('controls-Menu__32px')) {
+            config.element.addClass('controls-Menu__32px')
+         }
          config.parent = parent;
          config.target = target;
          return new FloatArea(config)

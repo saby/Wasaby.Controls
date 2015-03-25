@@ -114,6 +114,14 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
          }
       },
 
+      //TODO пустышка
+      getMetaData: function(data) {
+         return {
+            more : data.length
+         };
+      },
+
+
       query: function (data, filter, sorting, offset, limit) {
          var newData = data;
          filter = filter || {};
