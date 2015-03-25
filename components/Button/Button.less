@@ -15,9 +15,9 @@
   min-width: @button-min-width;
   height: @button-height;
   line-height: @button-line-height;
-  padding: 0;
+  padding: 0;         //FF ignore padding in button, therefore we use SPAN with margin
   margin: @button-margin;
-  overflow: hidden;
+  overflow: hidden;   //В FF у кнопки с фиксированной высотой и шириной текст выходит за пределы
   border: @button-border;
   .border-radius(@button-border-radius);
   .box-shadow(@button-shadow);
@@ -164,7 +164,7 @@
     min-width: @button-big-min-width;
     height: @button-big-height;
     line-height: @button-big-line-height;
-    padding: 0px;
+    padding: 0;   //FF ignore padding in button, therefore we use SPAN with margin
     margin: @button-big-margin;
     border: @button-big-border;
     .border-radius(@button-big-border-radius);
