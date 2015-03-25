@@ -163,9 +163,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                }
             }
 
+            var self = this;
             this.reviveComponents().addCallback(function () {
-               this._notify('onDrawItems');
-               this._drawItemsCallback();
+               self._notify('onDrawItems');
+               self._drawItemsCallback();
             });
          }
       },
