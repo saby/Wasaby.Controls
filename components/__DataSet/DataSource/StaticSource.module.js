@@ -77,8 +77,7 @@ define('js!SBIS3.CONTROLS.StaticSource', [
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record
        */
       read: function (id) {
-         var self = this,
-            def = new $ws.proto.Deferred();
+         var def = new $ws.proto.Deferred();
          def.callback(this._initialDataSet.getRecordByKey(id));
          return def;
       },
@@ -119,12 +118,11 @@ define('js!SBIS3.CONTROLS.StaticSource', [
       query: function (filter, sorting, offset, limit) {
 
          var def = new $ws.proto.Deferred(),
-         //TODO: переделать установку стратегии
             strategy = this.getStrategy(),
             data = strategy.query(this._options.data, filter, sorting, offset, limit);
 
          var DS = new DataSet({
-            strategy: this.getStrategy(),
+            strategy:strategy,
             data: data,
             keyField: this._options.keyField
          });
