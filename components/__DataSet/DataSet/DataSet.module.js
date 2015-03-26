@@ -221,7 +221,17 @@ define('js!SBIS3.CONTROLS.DataSet', [
       addRecords: function (records, options) {
          this.setRecords(records, $ws.core.merge($ws.core.merge({merge: false}, options), addOptions));
       },
-
+      /**
+       * Получить массив записей в текущем датасете
+       * @returns {Array}
+       */
+      getRecords: function(){
+         var records = [];
+         this.each(function(rec){
+            records.push(rec);
+         });
+         return records;
+      },
       _prepareRecordForAdd: function (record) {
          //FixME: потому что метод создать не возвращает тип поля "идентификатор"
          record._keyField = this._keyField;

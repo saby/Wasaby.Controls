@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
    function (CompoundControl, DSMixin, MultiSelectable, dotTplFn) {
 
       'use strict';
+      var MIN_ROW_HEIGHT = 32;
 
       /**
        * Контрол, отображающий внутри себя набор однотипных сущностей, умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать
@@ -49,8 +50,12 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 * @cfg {Function} Обработчик клика на элемент
                 */
                elemClickHandler: null,
-               multiselect: false
-            }
+               multiselect: false,
+
+               useScroll: false,
+               recordsPerPage : 10
+            },
+            _loadingIndicator: undefined
          },
 
          $constructor: function () {
@@ -66,6 +71,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                }
             });
             this._createItemsActions();
+            if (this.isScroll()) {
+               $(window).bind('scroll.wsUseScroll', this._onWindowScroll.bind(this));
+            }
          },
 
          init: function () {
@@ -189,12 +197,101 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          _drawItemsCallback: function () {
             this._drawItemsActions(this._options.itemsActions);
+            if (this.isScroll()) {
+               this._addLoadingIndicator();
+               this._loadBeforeScrollAppears();
+            }
          },
 
          _getLeftOfItemContainer : function(container) {
             return container;
-         }
+         },
+         destroy: function() {
+            if (this.isScroll()){
+               $(window).unbind('.wsUseScroll');
+            }
+         },
+         //-----------------------------------Scroll------------------------
+         isScroll : function(){
+            return this._options.useScroll;
+         },
+         _onWindowScroll: function(event){
+            if (this._isBottomOfPage()){
+               this._nextLoad();
+            }
+         },
+         _nextLoad: function(){
+            var self = this, records;
+            if (this._hasNextPage(this._dataSet.getMetaData().more)) { //Хорошо проверить по newdataSet.getCoount
+               this._addLoadingIndicator();
+               if (this._options.items) {
+                  this.setNumItems(this.getNumItems() + this._options.recordsPerPage);
+               } else {
+                  this._dataSource.query(this._filter, this._sorting, this._offset  + this._limit, this._limit).addCallback(function (dataSet) {
+                     if (dataSet.getCount() || self._hasNextPage(dataSet.getMetaData().more)) {//TODO лучше проверить
+                        records = dataSet.getRecords();
+                        self._dataSet.addRecords(records);
+                        self._drawItems(records);
+                        self._offset += self._limit;
+                     } else {
+                        self._removeLoadingIndicator();
+                     }
+                  });
+               }
 
+            } else {
+               self._removeLoadingIndicator();
+            }
+         },
+         _isBottomOfPage : function(target) {
+            var docBody = target || document.body,
+                  docElem = target || document.documentElement,
+                  clientHeigth = Math.min (docBody.clientHeight, docElem.clientHeight),
+                  scrollTop = Math.max (docBody.scrollTop, docElem.scrollTop),
+                  scrollHeight = Math.max (docBody.scrollHeight, docElem.scrollHeight),
+                  parent = this.getTopParent();
+            if (!clientHeigth) {
+               clientHeigth = Math.max (docBody.clientHeight, parent ? parent.getContainer().height() : 0);
+            }
+            return (clientHeigth + scrollTop >= scrollHeight - MIN_ROW_HEIGHT);
+         },
+         _loadBeforeScrollAppears: function(){
+            if (this._dataSet.getCount() <= parseInt(($(window).height() /  MIN_ROW_HEIGHT ) + 10 , 10)){
+               /*this._options.display.recordsPerPage*/
+               if (this._nextLoad()) {
+                  this._addLoadingIndicator();
+               } else {
+                  this._removeLoadingIndicator();
+               }
+            }
+            /*else {
+               if (!this._nowLoading) {
+                  this._removeLoadingIndicator();
+               }
+            }*/
+
+         },
+         _addLoadingIndicator: function(){
+            //Переделать
+            if (!this._loadingIndicator ) {
+               this._loadingIndicator = $('<img />', {
+                  'src': $ws.helpers.getImagePath('AreaAbstract|ajax-loader-indicator.gif'),
+                  'class': 'controls-ListView-scrollIndicator'
+               }).insertAfter(this._container.find('table'));
+               //}).appendTo(this._container.find('tbody'));
+            } else {
+               this._loadingIndicator.removeClass('ws-hidden');
+            }
+         },
+         /**
+          * Удаляет индикатор загрузки
+          * @private
+          */
+         _removeLoadingIndicator: function(){
+            if( this._loadingIndicator && !this._nowLoading){
+               this._loadingIndicator.addClass('ws-hidden');
+            }
+         }
       });
 
       return ListViewDS;

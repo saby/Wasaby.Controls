@@ -104,12 +104,18 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._sorting = typeof(sorting) != 'undefined' ? sorting : this._sorting;
          this._offset = typeof(offset) != 'undefined' ? offset : this._offset;
          this._limit = typeof(limit) != 'undefined' ? limit : this._limit;
-         this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (DataSet) {
-            self._dataSet = DataSet;
+         this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
+            self._dataSet = dataSet;
             self._redraw();
          });
       },
-
+      setNumItems: function(num){
+         this._options.numItems = num;
+         this.reload();
+      },
+      getNumItems: function(){
+         return  this._options.numItems;
+      },
       setItems: function (items) {
          var
             item = items[0],
@@ -154,6 +160,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _drawItems: function (records) {
+         var self = this;
          if (records && records.length > 0) {
             for (var i = 0; i < records.length; i++) {
                var
@@ -162,8 +169,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   this._drawItem(records[i], targetContainer,  records[i].getKey(), i);
                }
             }
-
-            var self = this;
             this.reviveComponents().addCallback(function () {
                self._notify('onDrawItems');
                self._drawItemsCallback();
@@ -263,6 +268,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       getItemInstance: function (id) {
          var instances = this.getItemsInstances();
          return instances[id];
+      },
+      _hasNextPage: function(hasMore){
+         //this._dataSource
+         //TODO Костыль! узнать про hasNextPage у dataset и проблемы со статическими данными
+         //return this._limit < this._options.items.length || this._dataSet.getCount();
+         return this._options.items ? this._limit < this._options.items.length :
+            typeof (hasMore) !== 'boolean' ? hasMore > this._offset : !!hasMore;/* - поменять когда будут сохранять n // this._limit < this._dataSet.getCount()*/;
+         //return this._limit < this._options.items.length;
       }
 
    };
