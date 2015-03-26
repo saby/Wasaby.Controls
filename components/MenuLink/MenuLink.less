@@ -3,6 +3,14 @@
   color: @menu-link-text-color;
   text-decoration: @menu-link-text-decoration;
   padding: @menu-link-arrow-padding;
+  line-height: @menu-link-line-height;
+
+  &.controls-MenuLink__32px{
+    line-height: 32px;
+    .controls-MenuLink__arrowDown{
+     top: @menu-link-arrow-top-offset-big;
+    }
+  }
 
   &.controls-MenuLink__withoutMenu {
     padding: @menu-link-no-arrow-padding;
@@ -35,21 +43,14 @@
 
   .controls-MenuLink__header {
     height: @menu-link-header-height;
-    .controls-Link{
-      margin: @menu-link-header-link-margin;
-    }
   }
   .controls-MenuItem{
     height: @menu-link-header-height;
   }
-  margin-top: @menu-link-menu-top-margin;
 
   &.controls-MenuLink__32px {
     .controls-MenuLink__header {
       height: @menu-link-header-height-big;
-      .controls-Link{
-        margin: @menu-link-header-link-margin-big;
-      }
     }
     .controls-MenuItem{
       height: @menu-link-header-height-big;
@@ -61,7 +62,6 @@
         }
       }
     }
-    margin-top: @menu-link-menu-top-margin-big;
   }
 
   .controls-MenuLink__header {
@@ -85,11 +85,5 @@
     .controls-MenuLink__arrowDown {
       display: none;
     }
-  }
-}
-
-@-moz-document url-prefix() {
-  .controls-MenuLink__Menu {
-    margin-top: @menu-link-menu-top-margin + 1px;         // vertical alignment fix for Firefox
   }
 }
