@@ -183,8 +183,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
                strategy: strategy,
                data: res
             });
-            var meta = strategy.getMetaData(res);
-            def.callback(DS, meta);
+            def.callback(DS);
          }, function (error) {
             if (typeof(window) != 'undefined') {
                console['log'](error);
