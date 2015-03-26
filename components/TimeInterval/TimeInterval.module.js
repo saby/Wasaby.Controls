@@ -65,7 +65,11 @@ define(
                /**
                 * Интервал
                 */
-               interval: null
+               interval: null,
+               /**
+                * Хранит последний window.getSelection()
+                */
+               lastSelection: null
             }
          },
 
@@ -125,49 +129,62 @@ define(
             return this._options.mask.indexOf('I') > -1;
          },
 
+         _addPlaceholder: function(element){
+            if (element.indexOf(this._placeholder) > - 1 || element.length > 3){
+               return element;
+            }
+            return this._placeholder + element;
+         },
+
          /**
           * Устанавливаем кол-во дней
           * @param days
-          * @private
           */
          setDays: function ( days ) {
             var availMaskArray = this._options.mask.split(':'),
                 availTextArray = this._options.text.split(':');
+            days = days.toString().replace(/[^\d]/g, '');
 
             if (!this._hasMaskDays()){
                return;
             }
 
-            if (days.toString().length > 4){
+            if (days.length > 4){
                days = "9999";
             }
 
             //Если количество дней не соответствует маске, то меняем маску
-            while (days.toString().length > availMaskArray[0].length)
+            while (days.length > availMaskArray[0].length)
                availMaskArray[0] = "D" + availMaskArray[0];
             this._setMask(availMaskArray.join(':'));
 
-            availTextArray[0] = days;
+            availTextArray[0] = this._addPlaceholder(days);
             this._options.text = availTextArray.join(':');
             this._options.interval = this._getIntervalByText(this._options.text);
-            this.setInterval( this._options.interval );
+            this.setInterval( this._options.interval, true );
          },
 
          /**
-          * Устанавливаем кол-во дней
+          * Устанавливаем кол-во часов
           * @param hours
-          * @private
           */
          setHours: function ( hours ) {
+            this._setHours(hours);
+            if (!this._checkBoundaryValues()){
+               this._correctInterval();
+            }
+         },
+         _setHours: function ( hours ) {
             var availMaskArray = this._options.mask.split(':'),
                availTextArray = this._options.text.split(':');
+            hours = hours.toString().replace(/[^\d]/g, '');
 
             //Если количество часов не соответствует маске, то меняем маску
             if (!this._hasMaskDays()) {
-               if (hours.toString().length > 4){
+               if (hours.length > 4){
                   hours = "9999";
                }
-               while (hours.toString().length > availMaskArray[0].length)
+               while (hours.length > availMaskArray[0].length)
                   availMaskArray[0] = "H" + availMaskArray[0];
                this._setMask(availMaskArray.join(':'));
                availTextArray[0] = hours;
@@ -178,17 +195,23 @@ define(
 
             this._options.text = availTextArray.join(':');
             this._options.interval = this._getIntervalByText(this._options.text);
-            this.setInterval( this._options.interval );
+            this.setInterval( this._options.interval,true );
          },
 
          /**
-          * Устанавливаем кол-во дней
+          * Устанавливаем кол-во минут
           * @param minutes
-          * @private
           */
          setMinutes: function ( minutes ) {
+            this._setMinutes(minutes);
+            if (!this._checkBoundaryValues()){
+               this._correctInterval();
+            }
+         },
+         _setMinutes: function ( minutes ) {
             var availTextArray = this._options.text.split(':'),
                minutesIndex = this._hasMaskDays() ? 2 : 1;
+            minutes = minutes.toString().replace(/[^\d]/g, '');
 
             if (!this._hasMaskMinutes()){
                return;
@@ -196,7 +219,7 @@ define(
             availTextArray[minutesIndex] = minutes;
             this._options.text = availTextArray.join(':');
             this._options.interval = this._getIntervalByText(this._options.text);
-            this.setInterval( this._options.interval );
+            this.setInterval( this._options.interval, true );
          },
 
          /**
@@ -207,6 +230,9 @@ define(
          setText: function ( text ) {
             text = text ? text: '';
             TimeInterval.superclass.setText.call( this, text );
+            if (!this._checkBoundaryValues()){
+               this._correctInterval();
+            }
             this._options.interval = text == '' ? null : this._getIntervalByText( text );
             this._notify('onChangeInterval', this._options.interval);
          },
@@ -215,8 +241,8 @@ define(
           * Установить дату. Публичный метод. Отличается от приватного метода тем, что генерирует событие.
           * @param interval
           */
-         setInterval: function ( interval ) {
-            this._setInterval( interval );
+         setInterval: function ( interval, dontCheck ) {
+            this._setInterval( interval, dontCheck );
             this._notify('onChangeInterval', this._options.interval);
          },
 
@@ -224,9 +250,14 @@ define(
           * Установить интервал. Приватный метод
           * @param interval новое значение интервала, объект типа Date
           */
-         _setInterval: function (interval) {
+         _setInterval: function (interval, dontCheck) {
             this._options.interval = interval;
             this._options.text = this._getTextByInterval(interval);
+            if (dontCheck !== true){
+               if (!this._checkBoundaryValues()){
+                  this._correctInterval();
+               }
+            }
             this._drawDate();
          },
          /**
@@ -337,54 +368,49 @@ define(
             return this._getHours() < 24 && this._getMinutes() < 60;
          },
 
+         //Устанавливаем часы и минуты в их диапазоне
+         _correctInterval: function(){
+            this.incValue(0);
+         },
          /**
           * Увеличиваем/уменьшаем интервал на заданное кол-во минут
           * @param incMinutes
           * @private
           */
          incValue: function(incMinutes){
-            var allMinutes = (this._getDays() * 24 + this._getHours()) * 60 + this._getMinutes() + incMinutes,
+            var allMinutes,
                minutes,
                hours,
                days;
-
-            if (typeof(incMinutes) !== "number"){
-               return;
-            }
-
+            allMinutes = (this._getDays() * 24 + this._getHours()) * 60 + this._getMinutes() + parseInt(incMinutes == "" ? 0 : incMinutes);
             if (allMinutes < 0){
-               this.setInterval("");
-               return;
+               days = hours = minutes = 0;
             }
-
-            if (this._hasMaskDays()){
-               days = allMinutes / (24 * 60) | 0;
-               allMinutes %= 24 * 60;
-               this.setDays(days);
+            else{
+               if (this._hasMaskDays()){
+                  days = allMinutes / (24 * 60) | 0;
+                  allMinutes %= 24 * 60;
+               }
+               hours = allMinutes / 60 | 0;
+               minutes = allMinutes % 60;
             }
-            hours = allMinutes / 60 | 0;
-            minutes = allMinutes % 60;
-
-            this.setMinutes(minutes);
-            this.setHours(hours);
+            this.setDays(days);
+            this._setMinutes(minutes);
+            this._setHours(hours);
          },
 
          _getMinutes: function(){
-            if (this._hasMaskDays()){
-               return parseInt(this._options.text.split(':')[2].replace(new RegExp(this._placeholder,'g'), "0"));
+            var minuteIndex;
+            if (this._hasMaskMinutes()){
+               minuteIndex = this._hasMaskDays() ? 2 : 1;
+               return parseInt(this._options.text.split(':')[minuteIndex].replace(new RegExp(this._placeholder,'g'), "0"));
             }
-            else{
-               return parseInt(this._options.text.split(':')[1].replace(new RegExp(this._placeholder,'g'), "0"));
-            }
+            return 0;
          },
 
          _getHours: function(){
-            if (this._hasMaskDays()){
-               return parseInt(this._options.text.split(':')[1].replace(new RegExp(this._placeholder,'g'), "0"));
-            }
-            else{
-               return parseInt(this._options.text.split(':')[0].replace(new RegExp(this._placeholder,'g'), "0"));
-            }
+            var hourIndex = this._hasMaskDays() ? 1 : 0;
+            return parseInt(this._options.text.split(':')[hourIndex].replace(new RegExp(this._placeholder,'g'), "0"));
          },
 
          _getDays: function(){
@@ -392,6 +418,23 @@ define(
                return parseInt(this._options.text.split(':')[0].replace(new RegExp(this._placeholder,'g'), "0"));
             }
             return 0;
+         },
+
+         //Переопределенный метод
+         _getCursor: function(position){
+            var selection;
+            selection = window.getSelection();
+            if (selection.type === "None"){
+               selection = this._options.lastSelection;
+            }
+            else{
+               selection = selection.getRangeAt(0);
+               this._options.lastSelection = selection;
+            }
+            return ( position ?
+               this._correctCursor(selection.startContainer, selection.startOffset) :
+               this._correctCursor(selection.endContainer, selection.endOffset)
+               );
          },
 
          /**
@@ -407,10 +450,6 @@ define(
 
             this._options.interval = this._getIntervalByText(text);
             this._options.text = this._getTextByInterval(this._options.interval);
-
-            if (!this._checkBoundaryValues(text)){
-               this.incValue(0);
-            }
 
             if (this._options.mask.length < (minLengthMask + minutesLengthMask) && text.split(':')[0].indexOf('_') == -1) {
                this._options.text = this._placeholder + text;
