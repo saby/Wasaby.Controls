@@ -46,19 +46,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          if (this.getItems().getItemsCount() > 1) {
             $('.js-controls-MenuButton__arrowDown', this._container).show();
             this._container.removeClass('controls-MenuButton__withoutMenu');
-            if (!this._header) {
-               this._header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
-                                  <i class="controls-MenuButton__headerLeft"></i>\
-                                  <i class="controls-MenuButton__headerCenter"></i>\
-                                  <i class="controls-MenuButton__headerRight"></i>\
-                               </span>');
-               $('.controls-MenuButton__headerCenter', this._header).width(this._container.width() + 12);
-               this._header.css({
-                  width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
-                  height: this._container.outerHeight()
-               });
-               $('body').append(this._header);
-            }
          } else {
             $('.js-controls-MenuButton__arrowDown', this._container).hide();
             this._container.addClass('controls-MenuButton__withoutMenu');
@@ -70,8 +57,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       _clickHandler: function(){
          if (this.getItems().getItemsCount() > 1) {
             this._container.addClass('controls-Checked__checked');
-            this._header.toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
             this.togglePicker();
+            this._header.toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
          } else {
             if (this.getItems().getItemsCount() == 1) {
                var id = this.getItems().getKey(this.getItems().getNextItem());
@@ -83,12 +70,25 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
         * Скрывает/показывает меню у кнопки
         */
       togglePicker: function(){
+          if (!this._header) {
+             this._header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
+                                  <i class="controls-MenuButton__headerLeft"></i>\
+                                  <i class="controls-MenuButton__headerCenter"></i>\
+                                  <i class="controls-MenuButton__headerRight"></i>\
+                               </span>');
+             $('.controls-MenuButton__headerCenter', this._header).width(this._container.width() + 12);
+             this._header.css({
+                width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
+                height: this._container.outerHeight()
+             });
+             $('body').append(this._header);
+          }
          MenuButton.superclass.togglePicker.call(this);
          $('.controls-MenuButton__headerCenter', this._container).width(this._container.width() + 12);
          this._header.css({
             left: this._container.offset().left,
             top: this._container.offset().top + 1,
-            'z-index': this._picker._container.css('z-index') + 1
+            'z-index': parseInt(this._picker._container.css('z-index'),10) + 1
          });
       },
 
