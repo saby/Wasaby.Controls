@@ -869,9 +869,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Menu__32px .controls-MenuItem {
   height: 32px;
-}
-.controls-Menu__32px .controls-MenuItem .controls-MenuItem__content {
-  top: 4px;
+  line-height: 32px;
 }
 .controls-Menu__32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
   top: 0px;
