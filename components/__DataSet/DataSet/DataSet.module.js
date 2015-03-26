@@ -344,6 +344,10 @@ define('js!SBIS3.CONTROLS.DataSet', [
             }
          } while (curParent);
 
+      },
+
+      getMetaData: function () {
+         return this.getStrategy().getMetaData(this._rawData);
       }
 
    });

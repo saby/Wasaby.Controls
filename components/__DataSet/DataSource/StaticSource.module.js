@@ -127,8 +127,7 @@ define('js!SBIS3.CONTROLS.StaticSource', [
             data: data,
             keyField: this._options.keyField
          });
-         var meta = strategy.getMetaData(this._options.data);
-         def.callback(DS, meta);
+         def.callback(DS);
          return def;
       }
 
