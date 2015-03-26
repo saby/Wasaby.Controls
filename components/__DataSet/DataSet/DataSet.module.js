@@ -39,7 +39,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
             /**
              * @cfg {String} название поля-идентификатора записи, при работе с БЛ проставляется автоматически
              */
-            keyField: ''
+            keyField: '',
+            hierField: null
 
          }
       },
@@ -283,6 +284,65 @@ define('js!SBIS3.CONTROLS.DataSet', [
                   }
             }
          }
+
+      },
+
+      setHierField: function (hierField) {
+         this._options.hierField = hierField;
+      },
+
+      getChildRecordsByKey: function (key) {
+
+         var child = [];
+
+         this.each(function (record) {
+            if (record.get(this._options.hierField) == key) {
+               child.push(record);
+            }
+         });
+
+         return child;
+      },
+
+      iterate: function (iterateCallback) {
+         if (this._options.hierField) {
+            this._hierIterate(iterateCallback);
+         } else {
+            this._simpleIterate(iterateCallback);
+         }
+      },
+
+      _simpleIterate: function (iterateCallback) {
+         var length = this.getCount();
+
+         for (var i = 0; i < length; i++) {
+            var record = this.at(i);
+            //FixME: статус будем отслеживать?
+            iterateCallback.call(this, record);
+         }
+      },
+
+      _hierIterate: function (iterateCallback) {
+
+         var curParent = null,
+            parents = [];
+         do {
+            this._simpleIterate(function (record) {
+               if ((record.get(this._options.hierField) || null) === (curParent ? curParent.getKey() : null)) {
+                  parents.push(record);
+                  //TODO: тут можно сделать кэш дерева
+                  iterateCallback.call(this, record);
+               }
+            });
+
+            if (parents.length) {
+               var a = Array.remove(parents, 0);
+               curParent = a[0];
+            }
+            else {
+               curParent = null;
+            }
+         } while (curParent);
 
       }
 
