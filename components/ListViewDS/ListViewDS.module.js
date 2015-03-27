@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
       var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
          $protected: {
+            _floatCheckBox : null,
             _dotTplFn: dotTplFn,
             _dotItemTpl: null,
             _itemsContainer: null,
@@ -48,8 +49,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 * @cfg {Function} Обработчик клика на элемент
                 */
                elemClickHandler: null,
-               multiselect: false,
-               itemSelect: false
+               multiselect: false
             }
          },
 
@@ -60,7 +60,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                if (e.which == 1) {
                   var targ = $(e.target).hasClass('controls-ListView__item') ? e.target : $(e.target).closest('.controls-ListView__item');
                   if (targ.length) {
-                     var id = targ.attr('data-id');
+                     var id = targ.data('id');
                      self._elemClickHandler(id, self._dataSet.getRecordByKey(id), e.target);
                   }
                }
@@ -85,12 +85,29 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             return this._options.itemTemplate;
          },
 
+         _getItemsContainer : function() {
+            return $(".controls-ListView__itemsContainer", this._container.get(0))
+         },
+
          /* +++++++++++++++++++++++++++ */
 
          _elemClickHandler: function (id, data, target) {
-            this.setSelectedItems([id]);
-            if (this._options.elemClickHandler) {
-               this._options.elemClickHandler.call(this, id, data, target);
+            if (this._options.multiselect) {
+               if ($(target).hasClass('controls-ListView__itemCheckBox')) {
+                  var key = $(target).closest('.controls-ListView__item').data('id');
+                  this.toggleItemsSelection([key]);
+               }
+               else {
+                  if (this._options.elemClickHandler) {
+                     this._options.elemClickHandler.call(this, id, data, target);
+                  }
+               }
+            }
+            else {
+               this.setSelectedItems([id]);
+               if (this._options.elemClickHandler) {
+                  this._options.elemClickHandler.call(this, id, data, target);
+               }
             }
          },
 
@@ -123,7 +140,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
          _drawSelectedItems: function (idArray) {
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
-            $(".controls-ListView__item[data-id='" + idArray[0] + "']", this._container).addClass('controls-ListView__item__selected');
+            for (var i = 0; i < idArray.length; i++) {
+               $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).addClass('controls-ListView__item__selected');
+            }
          },
 
          setElemClickHandler: function (method) {
@@ -170,6 +189,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          _drawItemsCallback: function () {
             this._drawItemsActions(this._options.itemsActions);
+         },
+
+         _getLeftOfItemContainer : function(container) {
+            return container;
          }
 
       });

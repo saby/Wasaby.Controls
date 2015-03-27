@@ -5,7 +5,7 @@
 @gray-color:                              #aaa;
 @gray-light-color:                        #eee;
 
-@default-color:                           #e2effb;
+@default-color:                           #f2f2f2;
 @primary-color:                           #ffcc99;
 @secondary-color:                         #4e5762;
 
@@ -524,6 +524,7 @@
 @menu-expand-width:                       8px;
 @menu-expand-height:                      16px;
 @menu-expand-top-offset:                  20px;
+@menu-expand-top-offset32:                20px;
 @menu-expand-right-offset:                12px;
 @menu-expand-spritesheet:                 '';
 
@@ -753,12 +754,12 @@
 @text-box-border-width:                   1px;
 @text-box-border-style:                   solid;
 @text-box-border-color:                   transparent transparent @gray-dark-color transparent;
-@text-box-bg:                             @bg;
+@text-box-bg:                             transparent;
 
 @text-box-focus-border-width:             @text-box-border-width;
 @text-box-focus-border-style:             @text-box-border-style;
-@text-box-focus-border-color:             @text-box-border-color;
-@text-box-focus-bg:                       darken(@secondary-color, 5%);
+@text-box-focus-border-color:             @black-color;
+@text-box-focus-bg:                       @secondary-color;
 
 @text-box-error-border-width:             @text-box-border-width;
 @text-box-error-border-style:             @text-box-border-style;

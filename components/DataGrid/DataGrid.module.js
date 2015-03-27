@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
       _getItemTemplate: function(item){
          if (!this._options.itemTemplate) {
 
-            var rowData = {columns : []};
+            var rowData = {columns : [], multiselect : this._options.multiselect};
             rowData.columns = $ws.core.clone(this._options.columns);
             for (var i = 0; i < rowData.columns.length; i++) {
                var value;
@@ -76,7 +76,8 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
                   value = MarkupTransformer(doT.template(cellTpl)({item : item, field : rowData.columns[i].field}));
                }
                else {
-                  value = item.get(rowData.columns[i].field)
+                  value = item.get(rowData.columns[i].field);
+                  value = ((value != undefined) && (value != null)) ? value : '';
                }
                rowData.columns[i].value = value;
             }
@@ -110,7 +111,11 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
             this._thead.append(th);
          }
 
-         this._drawItems();
+         this._redraw();
+      },
+
+      _getLeftOfItemContainer : function(container) {
+         return $(".controls-DataGrid__td", container.get(0)).first();
       }
 
    });

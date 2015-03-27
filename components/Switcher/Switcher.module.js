@@ -1,9 +1,5 @@
-/**
- * Модуль 'Компонент кнопка'.
- *
- * @description
- */
-define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SBIS3.CONTROLS.Switcher'], function(SwitcherBase, dotTplFn) {
+
+define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SBIS3.CONTROLS.Switcher', 'js!SBIS3.CONTROLS.Switcher'], function(SwitcherBase, dotTplFn) {
 
    'use strict';
 
@@ -12,6 +8,17 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SB
     * @class SBIS3.CONTROLS.Switcher
     * @extends SBIS3.CONTROLS.SwitcherBase
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    * @control
+    * @demo SBIS3.Demo.Control.MySwitcher
+    * @public
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.Switcher'>
+    *     <option name='stateOn'>Вкл</option>
+    *     <option name='stateOff'>Выкл</option>
+    * </component>
+    * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers
+    * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner stateKey
+    * @ignoreOptions subcontrol verticalAlignment parent
     */
 
    var Switcher = SwitcherBase.extend( /** @lends SBIS3.CONTROLS.Switcher.prototype */ {

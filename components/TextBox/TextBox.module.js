@@ -8,7 +8,11 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
     * @extends SBIS3.CONTROLS.TextBoxBase
     * @control
     * @public
+    * @demo SBIS3.Demo.Control.MyTextBox
     * @category Inputs
+    * @ignoreOptions independentContext contextRestriction extendedTooltip
+    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
+    * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment
     */
 
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.TextBox.prototype */ {
@@ -21,19 +25,15 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
             /**
-             * @typedef {Object} TextTransformEnum
-             * @variant uppercase перевести в верхний регистр
-             * @variant lowercase перевести в нижний регистр
-             * @variant none оставить как есть
-             */
-            /**
-             * @cfg {TextTransformEnum} Форматирование текста
-             * Возможные значения:
-             * <ul>
-             *    <li>uppercase - все символы верхним регистром;</li>
-             *    <li>lowercase - все символы нижним регистром;</li>
-             *    <li>none - без изменений.</li>
-             * </ul>
+             * @cfg {String} Форматирование регистра текста
+             * @example
+             * <pre>
+             *     <option name="textTransform">uppercase</option>
+             * </pre>
+             * @variant uppercase Все символы верхним регистром.
+             * @variant lowercase Все символы нижним регистром.
+             * @variant none Без изменений.
+             * @see setTextTransform
              */
             textTransform: 'none',
             /**
@@ -43,11 +43,19 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              *    <li>true - выделять текст;</li>
              *    <li>false - не выделять.</li>
              * </ul>
+             * @example
+             * <pre>
+             *     <option name="selectOnClick">true</option>
+             * </pre>
              */
             selectOnClick: false,
             /**
              * @cfg {String} Текст подсказки внутри поля ввода
              * Данный текст отображается внутри поля до момента получения фокуса.
+             * @example
+             * <pre>
+             *     <option name="placeholder">Введите ФИО полностью</option>
+             * </pre>
              * @see setPlaceholder
              */
             placeholder: '',
@@ -56,6 +64,11 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              * <wiTag group="Управление">
              * Каждый вводимый символ будет проверяться на соответсвие указанному в этой опции регулярному выражению.
              * Несоответсвующие символы невозможно напечатать.
+             * @example
+             * Разрешим ввод только цифр:
+             * <pre>
+             *     <option name="inputRegExp">/^\d+$/</option>
+             * </pre>
              */
             inputRegExp : ''
          }
@@ -85,10 +98,12 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
                }
             }, 100)
          });
-         // При потере фокуса делаем trim, если нужно
-         // TODO Переделать на платформенное событие потери фокуса
-         this._inputField.bind('focusout', function () {
-            self._focusOutHandler();
+
+         this._inputField.change(function(){
+            var newText = $(this).val();
+            if (newText != self._options.text) {
+               self.setText(self._options.text);
+            }
          });
 
          this._inputField.bind('focusin', function () {
@@ -129,6 +144,12 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
        * Установить подсказку, отображаемую внутри поля.
        * Метод установки или замены текста подсказки, заданного опцией {@link placeholder}.
        * @param {String} text Текст подсказки.
+       * @example
+       * <pre>
+       *     if (control.getText() == "") {
+       *        control.setPlaceholder("Введите ФИО полностью");
+       *     }
+       * </pre>
        * @see placeholder
        */
       setPlaceholder: function(text){
@@ -146,8 +167,20 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       /**
-       * Установить форматирование текста
-       * @param {TextTransformEnum} textTransform
+       * Установить форматирование текста.
+       * Метод установки или замены форматирования регистра текста, заданного опцией {@link textTransform}.
+       * @param {String} textTransform Необходимое форматирование регистра текста.
+       * Возможные значения:
+       * <ul>
+       *    <li>uppercase - все символы верхним регистром;</li>
+       *    <li>lowercase - все символы нижним регистром;</li>
+       *    <li>none - без изменений.</li>
+       * </ul>
+       * @example
+       * <pre>
+       *     control.setTextTransform("lowercase");
+       * </pre>
+       * @see textTransform
        */
       setTextTransform: function(textTransform){
          switch (textTransform) {
@@ -163,10 +196,6 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
                this._inputField.removeClass('controls-TextBox__field-uppercase')
                   .removeClass('controls-TextBox__field-lowercase');
          }
-      },
-
-      _focusOutHandler: function(){
-         this.setText(this.getText());
       },
 
       _keyUpBind: function() {
@@ -188,7 +217,16 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       _keyPressBind: function() {
 
       },
-
+       /**
+        * Переводит фокус на контрол.
+        * @param active Признак наличия фокуса.
+        * Возможные значения:
+        * <ol>
+        *    <li>true - перевести фокус на контрол. Если фокус ранее находился на другом элементе, то произойдёт событие {@link $ws.proto.Control#onFocusIn}.
+        *    Если фокус был на данном контроле, то откроется всплывающая подсказка.</li>
+        *    <li>false - убрать фокус с контрола. Произойдёт событие {@link $ws.proto.Control#onFocusOut}.</li>
+        * </ol>
+        */
       setActive: function(active){
          var firstSelect = this._isControlActive != active;
          TextBox.superclass.setActive.apply(this, arguments);

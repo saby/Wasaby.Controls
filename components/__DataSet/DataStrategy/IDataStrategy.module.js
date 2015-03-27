@@ -30,6 +30,10 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
          /*Method must be implemented*/
       },
 
+      replaceAt: function () {
+         /*Method must be implemented*/
+      },
+
       addRecord: function () {
          /*Method must be implemented*/
       },
@@ -43,8 +47,11 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
        */
       setValue: function () {
          /*Method must be implemented*/
-      }
+      },
 
+      getMetaData: function(data) {
+         return {};
+      }
 
    });
 });

@@ -8,19 +8,7 @@
   border-style: @text-box-border-style;
   border-color: @text-box-border-color;
   background: @text-box-bg;
-
-  &.ws-has-focus {
-    border-width: @text-box-focus-border-width;
-    border-style: @text-box-focus-border-style;
-    border-color: @text-box-focus-border-color;
-    background: @text-box-focus-bg;
-
-    .controls-TextBox__fieldWrapper {
-      .controls-TextBox__field {
-        color: @text-box-field-focus-text-color;
-      }
-    }
-  }
+  color: @text-color;
 
   &.ws-validation-error {
     border-width: @text-box-error-border-width;
@@ -44,6 +32,19 @@
     .controls-TextBox__fieldWrapper {
       .controls-TextBox__field {
         color: @text-box-field-hover-text-color;
+      }
+    }
+  }
+
+  &.ws-has-focus {
+    border-width: @text-box-focus-border-width;
+    border-style: @text-box-focus-border-style;
+    border-color: @text-box-focus-border-color;
+    background: @text-box-focus-bg;
+
+    .controls-TextBox__fieldWrapper {
+      .controls-TextBox__field {
+          color: @text-box-field-focus-text-color;
       }
     }
   }

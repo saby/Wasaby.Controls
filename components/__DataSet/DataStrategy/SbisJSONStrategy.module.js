@@ -1,11 +1,10 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], function (IDataStrategy) {
+define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], function (IDataStrategy) {
    'use strict';
-   var DataStrategyBL = IDataStrategy.extend({
-      $protected: {
-      },
+   var SbisJSONStrategy = IDataStrategy.extend({
+      $protected: {},
       $constructor: function () {
       },
       /**
@@ -46,23 +45,32 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
          return {d: d[index], s: s};
       },
 
+      replaceAt: function (data, index, newRaw) {
+         data.d[index] = newRaw;
+      },
+
       rebuild: function (data, keyField) {
-         var _pkIndex = {},
+         var _indexId = [],
             d = data.d,
             length = d.length;
          for (var i = 0; i < length; i++) {
-            //FixMe: допущение что ключ на первой позиции + там почему-то массив приходит оО
-            _pkIndex[d[i][0][0]] = i;
+            //FixMe: допущение что ключ на первой позиции + там массив приходит
+            _indexId[i] = d[i][0][0];
          }
-         return _pkIndex;
+         return _indexId;
       },
 
-      addRecord: function (data, record) {
+      addRecord: function (data, record, at) {
          var rawData = record.getRaw();
-         data['d'].push(rawData['d']);
+         var d = data['d'];
+         if (at) {
+            d.splice(at, 0, rawData['d']);
+         } else {
+            d.push(rawData['d']);
+         }
       },
 
-      getLength: function (data) {
+      getCount: function (data) {
          return data['d'].length;
       },
 
@@ -106,6 +114,12 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
          return d[index];
       },
 
+      getMetaData: function(data) {
+         return {
+            more : data.n
+         }
+      },
+
       prepareFilterParam: function (filter) {
          // настройка объекта фильтрации для отправки на БЛ
          var filterParam = {
@@ -113,33 +127,29 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
             s: []
          };
 
-         if (filter.length) {
-            $ws.helpers.forEach(filter, function (value) {
-               if (!Object.isEmpty(value)) {
-                  for (var j in value) {
-                     if (value.hasOwnProperty(j)) {
-                        if (typeof value[j] == 'boolean') {
-                           filterParam.s.push({
-                              n: j,
-                              t: 'Логическое'
-                           });
-                        }
-                        else {
-                           filterParam.s.push({
-                              n: j,
-                              t: 'Строка'
-                           });
-                        }
-                        filterParam.d.push(value[j]);
-                     }
-                  }
+         if (!Object.isEmpty(filter)) {
+            $ws.helpers.forEach(filter, function (value, index) {
+               if (typeof value == 'boolean') {
+                  filterParam.s.push({
+                     n: index,
+                     t: 'Логическое'
+                  });
                }
+               else {
+                  filterParam.s.push({
+                     n: index,
+                     t: 'Строка'
+                  });
+               }
+               filterParam.d.push(value);
             });
          }
 
          return filterParam;
       },
 
+
+      //TODO нужны ли эти методы в стратегии
       prepareSortingParam: function (sorting) {
          // настройка сортировки
          var sortingParam = null;
@@ -168,6 +178,27 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
          return sortingParam;
       },
 
+      preparePagingParam: function (offset, limit) {
+         var pagingParam = null;
+         if (typeof(offset) != 'undefined' && offset != null && typeof(limit) != 'undefined' && limit != null) {
+            var numPage = Math.floor(offset/limit);
+            pagingParam = {
+               'd': [
+                  numPage,
+                  limit,
+                  true
+               ],
+               's': [
+                  {'n': 'Страница', 't': 'Число целое'},
+                  {'n': 'РазмерСтраницы', 't': 'Число целое'},
+                  {'n': 'ЕстьЕще', 't': 'Логическое'}
+               ]
+            };
+         }
+         return pagingParam;
+      },
+
+
       prepareRecordForUpdate: function (record) {
          // поддержим формат запросов к БЛ
          var rawData = record.getRaw();
@@ -182,5 +213,5 @@ define('js!SBIS3.CONTROLS.DataStrategyBL', ['js!SBIS3.CONTROLS.IDataStrategy'], 
 
    });
 
-   return DataStrategyBL;
+   return SbisJSONStrategy;
 });

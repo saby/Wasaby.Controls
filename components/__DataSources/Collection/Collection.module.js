@@ -32,8 +32,8 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
          return this._options.adapter.hasChild(this._data, id, this._options.keyField, this._options.hierField);
       },
 
-      getChildItems : function(id) {
-         return this._options.adapter.getChildItems(this._data, id, this._options.keyField, this._options.hierField);
+      getChildItems : function(id, rec) {
+         return this._options.adapter.getChildItems(this._data, id, this._options.keyField, this._options.hierField, rec);
       },
 
       /**

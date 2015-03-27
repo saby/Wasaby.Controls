@@ -74,7 +74,7 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
       },
 
       /**
-       * Возвращает коллекцию, заданную либо опций {@link items}, либо методам {@link setItems}.
+       * Возвращает коллекцию, заданную либо опций {@link items}, либо методом {@link setItems}.
        * @example
        * <pre>
        *     var
@@ -173,14 +173,8 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
       },
 
       _drawItems: function(){
-         if (!Object.isEmpty(this._itemsInstances)) {
-            for (var i in this._itemsInstances) {
-               if (this._itemsInstances.hasOwnProperty(i)) {
-                  this._itemsInstances[i].destroy();
-               }
-            }
-         }
-         this._itemsInstances = {};
+         this._clearItems();
+
          var
             itemsReadyDef = new $ws.proto.ParallelDeferred(),
             self = this,
@@ -193,11 +187,9 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
             var
                targetContainer = self._getTargetContainer(item, key, parItem, lvl);
 
-            if (Array.indexOf(targetContainersList, targetContainer.get(0)) < 0) {
-               targetContainer.empty();
-               targetContainersList.push(targetContainer.get(0));
+            if (targetContainer) {
+               itemsReadyDef.push(self._drawItem(item, targetContainer, key, i, parItem, lvl));
             }
-            itemsReadyDef.push(self._drawItem(item, targetContainer, key, i, parItem, lvl));
 
          });
          itemsReadyDef.done().getResult().addCallback(function(){
@@ -205,6 +197,30 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
             self._drawItemsCallback();
          });
       },
+
+      _clearItems : function(container) {
+         container = container || this._container;
+         /*Удаляем компоненты-инстансы элементов*/
+         if (!Object.isEmpty(this._itemsInstances)) {
+            for (var i in this._itemsInstances) {
+               if (this._itemsInstances.hasOwnProperty(i)) {
+                  this._itemsInstances[i].destroy();
+               }
+            }
+         }
+         this._itemsInstances = {};
+
+         var itemsContainers = $(".controls-ListView__item", container.get(0));
+         /*Удаляем вложенные компоненты*/
+         $('[data-component]', itemsContainers).each(function(i, item) {
+            var inst = $(item).wsControl();
+            inst.destroy();
+         });
+
+         /*Удаляем сами items*/
+         itemsContainers.remove();
+      },
+
       _drawItemsCallback : function() {
 
       },
@@ -279,7 +295,7 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
          return def;
       },
      /**
-      * Метод получения элементов коллекции
+      * Метод получения элементов коллекции.
       * @returns {*}
       * @example
       * <pre>

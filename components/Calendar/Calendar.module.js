@@ -18,6 +18,9 @@ define(
        * Календарь
        * @class SBIS3.CONTROLS.Calendar
        * @extends SBIS3.CORE.CompoundControl
+       * @control
+       * @public
+       * @demo SBIS3.Demo.Control.MyCalendar
        */
 
       var Calendar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Calendar.prototype */{
@@ -33,7 +36,7 @@ define(
              */
             _options: {
                /**
-                * Значение даты в формате Date Object
+                * @cfg {Date} Значение даты в формате Date Object
                 */
                date: undefined
             }

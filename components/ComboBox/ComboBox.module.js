@@ -15,17 +15,54 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @control
     * @public
     * @initial
-    * <component data-component='SBIS3.CONTROLS.ComboBox' style='width: 100px'>    *
+    * <component data-component='SBIS3.CONTROLS.ComboBox'>
+    *     <options name="items" type="array">
+    *        <options>
+    *            <option name="key">1</option>
+    *            <option name="title">Пункт1</option>
+    *         </options>
+    *         <options>
+    *            <option name="key">2</option>
+    *            <option name="title">Пункт2</option>
+    *         </options>
+    *      </options>
+    *      <option name="keyField">key</option>
     * </component>
     * @category Inputs
+    * @demo SBIS3.Demo.Control.MyComboBox
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.Selectable
+    * @ignoreOptions independentContext contextRestriction extendedTooltip
     */
 
    var ComboBox = TextBox.extend([PickerMixin, DSMixin, Selectable, DataBindMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       _dotTplFn: dotTplFn,
+      /**
+       * @typedef {Object} ItemsComboBox
+       * @property {String} title Текст пункта меню.
+       * @property {String} key Ключ пункта меню.
+       */
+      /**
+       * @cfg {ItemsComboBox[]} Набор исходных данных, по которому строится отображение
+       * @name SBIS3.CONTROLS.ComboBox#items
+       * @description
+       * @example
+       * <pre>
+       *     <options name="items" type="array">
+       *        <options>
+       *            <option name="key">1</option>
+       *            <option name="title">Пункт1</option>
+       *         </options>
+       *         <options>
+       *            <option name="key">2</option>
+       *            <option name="title">Пункт2</option>
+       *         </options>
+       *      </options>
+       * </pre>
+       */
+
       $protected: {
          _options: {
             /**
@@ -34,7 +71,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             itemTemplate: '',
             afterFieldWrapper: arrowTpl,
             /**
-             * @cfg {Boolean} Возможен ли ручной ввод текста
+             * @cfg {Boolean} Возможность ручного ввода текста
+             * @example
+             * <pre>
+             *     <option name="editable">false</option>
+             * </pre>
+             * @see isEditable
+             * @see setEditable
              */
             editable: true,
             /**
@@ -48,7 +91,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              */
             valueFormat: '',
             /**
-             * @cfg {String} название поля для отображения
+             * @cfg {String} Название поля из набора, отображаемое в выпадающем списке
              */
             displayField: ''
          }
@@ -62,13 +105,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._options.displayField = 'title';
          }
 
-         /*устанавливаем первое значение TODO по идее переписан метод setSelectedItem для того чтобы не срабатывало событие при первой установке*/
          if (this._options.selectedItem) {
-            // надо прочитать запись по ключу и поставить ее значение
-            self._dataSource.read(this._options.selectedItem).addCallback(function (item) {
-               ComboBox.superclass.setText.call(self, item.get(self._options.displayField));
-               $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(item.get(self._options.displayField));
-            });
+            this._drawSelectedItem(this._options.selectedItem);
          } else {
             if (this._options.text) {
                this._setKeyByText();
@@ -82,10 +120,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   self.togglePicker();
                }
             }
-         }).mousedown(function(e){
-            e.stopPropagation();
          })
-
       },
 
       setText: function (text) {
@@ -109,9 +144,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
             var self = this;
             def.addCallback(function(item){
+               var newText = item.get(self._options.displayField);
                if (item) {
-                  ComboBox.superclass.setText.call(self, item.get(self._options.displayField));
-                  $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(item.get(self._options.displayField));
+                  if (newText != self._options.text) {
+                     ComboBox.superclass.setText.call(self, newText);
+                     $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(newText);
+                  }
                }
                else {
                   ComboBox.superclass.setText.call(self, '');
@@ -123,6 +161,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                }
             });
 
+         }
+         else {
+            if (this._picker) {
+               $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
+            }
          }
 
       },
@@ -232,40 +275,65 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             selKey,
             oldKey = this._options.selectedItem,
             self = this,
-            filterFieldObj = {},
-            filter = [];
+            filterFieldObj = {};
 
          filterFieldObj[this._options.displayField] = self._options.text;
-         filter.push(filterFieldObj);
 
-         self._dataSource.query(filter).addCallback(function (DataSet) {
+         self._dataSource.query(filterFieldObj).addCallback(function (DataSet) {
+            var noItems = true;
             DataSet.each(function (item) {
+               noItems = false;
                selKey = item.getKey();
+               self._options.selectedItem = selKey || null;
+               //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
+               if (oldKey !== self._options.selectedItem) { // при повторном индексе null не стреляет событием
+                  self._notifySelectedItem(self._options.selectedItem);
+                  self._drawSelectedItem(self._options.selectedItem);
+               }
             });
+
+            if (noItems) {
+               self._options.selectedItem = null;
+               self._notifySelectedItem(null);
+               self._drawSelectedItem(null);
+            }
+
          });
 
-         this._options.selectedItem = selKey || null;
-         //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
-         if (oldKey !== this._options.selectedItem) { // при повторном индексе null не стреляет событием
-            this._notifySelectedItem(this._options.selectedItem);
+
+      },
+
+      _clearItems : function() {
+         if (this._picker) {
+            ComboBox.superclass._clearItems.call(this, this._picker.getContainer());
          }
       },
 
-      _drawItems: function () {
+      _redraw: function () {
          if (this._picker) {
-            ComboBox.superclass._drawItems.call(this);
+            ComboBox.superclass._redraw.call(this);
             this._picker.recalcPosition();
          }
          else {
             this._drawSelectedItem(this._options.selectedItem);
          }
       },
-
+       /**
+        * Метод установки/изменения возможности ручного ввода.
+        * @param editable Возможность ручного ввода.
+        * @see isEditable
+        * @see editable
+        */
       setEditable: function (editable) {
          this._options.editable = editable;
          this._container.toggleClass('controls-ComboBox__editable-false', editable === false);
       },
-
+       /**
+        * Признак возможности ручного ввода.
+        * @returns {Boolean} Возможен ли ручной ввод.
+        * @see editable
+        * @see setEditable
+        */
       isEditable: function () {
          return this._options.editable;
       },
