@@ -1027,6 +1027,13 @@ input[type="reset"]::-moz-focus-inner {
   color: #00c795;
   text-decoration: none;
   padding: 0 12px 0 0;
+  line-height: 24px;
+}
+.controls-MenuLink.controls-MenuLink__32px {
+  line-height: 32px;
+}
+.controls-MenuLink.controls-MenuLink__32px .controls-MenuLink__arrowDown {
+  top: 14px;
 }
 .controls-MenuLink.controls-MenuLink__withoutMenu {
   padding: 0;
@@ -1044,28 +1051,24 @@ input[type="reset"]::-moz-focus-inner {
   width: 8px;
   height: 6px;
   right: 0;
-  top: 7px;
+  top: 10px;
   background: transparent;
 }
 .controls-MenuLink__Menu {
   margin-left: -9px;
   background: #ffffff;
-  margin-top: -20px;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
   height: 24px;
 }
-.controls-MenuLink__Menu .controls-MenuLink__header .controls-Link {
-  margin: 3px 0 0;
-}
-.controls-MenuLink__Menu.controls-Menu__32px {
-  margin-top: -25px;
+.controls-MenuLink__Menu .controls-MenuItem {
+  height: 24px;
 }
 .controls-MenuLink__Menu.controls-Menu__32px .controls-MenuLink__header {
   height: 32px;
 }
-.controls-MenuLink__Menu.controls-Menu__32px .controls-MenuLink__header .controls-Link {
-  margin: 8px 0 0;
+.controls-MenuLink__Menu.controls-Menu__32px .controls-MenuItem {
+  height: 32px;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
   display: inline-block;
@@ -1087,11 +1090,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuLink__Menu .controls-MenuLink__header .controls-MenuLink__arrowDown {
   display: none;
-}
-@-moz-document url-prefix() {
-  .controls-MenuLink__Menu {
-    margin-top: -19px;
-  }
 }
 .controls-MenuIcon {
   position: relative;
