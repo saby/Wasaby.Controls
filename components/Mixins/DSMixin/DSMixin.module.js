@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @cfg {DataSource} Набор исходных данных по которому строится отображение
              */
             dataSource: undefined,
-            numItems : null
+            pageSize : null
          }
       },
 
@@ -96,8 +96,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       reload: function (filter, sorting, offset, limit) {
-         if (this._options.numItems) {
-            this._limit = this._options.numItems;
+         if (this._options.pageSize) {
+            this._limit = this._options.pageSize;
          }
          var self = this;
          this._filter = typeof(filter) != 'undefined' ? filter : this._filter;

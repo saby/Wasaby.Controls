@@ -56,8 +56,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             },
             _loadingIndicator: undefined,
             _hasScrollMore : true,
-            _recordsPerPage : 10,
-            _autoLoadOffset: 0
+            _recordsPerPage : null,
+            _autoLoadOffset: null
          },
 
          $constructor: function () {
@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (this.isAutoLoad()) {
                $(window).bind('scroll.wsAutoLoad', this._onWindowScroll.bind(this));
                if (this._options.items) {
-                  this._recordsPerPage = this._options.numItems;
+                  this._recordsPerPage = this._options.pageSize;
                }
             }
          },
