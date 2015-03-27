@@ -52,10 +52,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                elemClickHandler: null,
                multiselect: false,
 
-               useScroll: false,
-               recordsPerPage : 10
+               useScroll: false
             },
-            _loadingIndicator: undefined
+            _loadingIndicator: undefined,
+            _hasScrollMore : true
          },
 
          $constructor: function () {
@@ -222,7 +222,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          _nextLoad: function(){
             var self = this, records;
-            if (this._hasNextPage(this._dataSet.getMetaData().more)) { //Хорошо проверить по newdataSet.getCoount
+            if (this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore) { //Хорошо проверить по newdataSet.getCoount
                this._addLoadingIndicator();
                if (this._options.items) {
                   this.setNumItems(this.getNumItems() + this._options.recordsPerPage);
@@ -231,9 +231,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                      if (dataSet.getCount() || self._hasNextPage(dataSet.getMetaData().more)) {//TODO лучше проверить
                         records = dataSet.getRecords();
                         self._dataSet.addRecords(records);
-                        self._drawItems(records);
                         self._offset += self._limit;
+                        self._drawItems(records);
                      } else {
+                        self._hasScrollMore = false;
                         self._removeLoadingIndicator();
                      }
                   });
@@ -272,23 +273,17 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
          },
          _addLoadingIndicator: function(){
-            //Переделать
             if (!this._loadingIndicator ) {
-               this._loadingIndicator = $('<img />', {
-                  'src': $ws.helpers.getImagePath('AreaAbstract|ajax-loader-indicator.gif'),
-                  'class': 'controls-ListView-scrollIndicator'
-               }).insertAfter(this._container.find('table'));
-               //}).appendTo(this._container.find('tbody'));
-            } else {
-               this._loadingIndicator.removeClass('ws-hidden');
+               this._loadingIndicator = this._container.find('.controls-ListView-scrollIndicator');
             }
+            this._loadingIndicator.removeClass('ws-hidden');
          },
          /**
           * Удаляет индикатор загрузки
           * @private
           */
          _removeLoadingIndicator: function(){
-            if( this._loadingIndicator && !this._nowLoading){
+            if( this._loadingIndicator){
                this._loadingIndicator.addClass('ws-hidden');
             }
          }
