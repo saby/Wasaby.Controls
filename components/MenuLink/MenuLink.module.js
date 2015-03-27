@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
    /**
     * Контрол, отображающий кнопку в виде ссылки и выпадающее из нее меню
     * @class SBIS3.Engine.MenuLink
-	* @demo SBIS3.Demo.Control.MyMenuLink Пример ссылки с выпадающим меню
+	* @demo SBIS3.Demo.Control.MyMenuLink
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
     * @initial
@@ -26,7 +26,9 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @public
     * @category Buttons
-    * @ignoreOptions validators independentContext contextRestriction extendedTooltip
+    * @ignoreOptions independentContext contextRestriction extendedTooltip validators
+    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
+    * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment
     */
 
    var MenuLink = Link.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.Engine.Link.prototype */ {
