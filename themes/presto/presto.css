@@ -871,11 +871,13 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Menu__32px .controls-MenuItem {
   height: 32px;
-}
-.controls-Menu__32px .controls-MenuItem .controls-MenuItem__content {
-  top: 4px;
+  line-height: 32px;
 }
 .controls-Menu__32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
+  top: 0px;
+  left: 0px;
+}
+.controls-Menu__32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon.icon-24 {
   top: 0px;
   left: 0px;
 }
@@ -906,6 +908,10 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
   position: absolute;
+  top: 0px;
+  left: -2px;
+}
+.controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon.icon-24 {
   top: 0px;
   left: -2px;
 }
