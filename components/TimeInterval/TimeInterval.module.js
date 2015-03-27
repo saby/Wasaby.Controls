@@ -88,6 +88,12 @@ define(
                this._options.text = this._clearMask;
             }
 
+            this.subscribe("onFocusOut", function(){
+               if (self._checkBoundaryValues){
+                  self._correctInterval();
+               }
+            });
+
          },
          /**
           * Получить маску. Переопределённый метод
@@ -143,11 +149,11 @@ define(
          setDays: function ( days ) {
             var availMaskArray = this._options.mask.split(':'),
                 availTextArray = this._options.text.split(':');
-            days = days.toString().replace(/[^\d]/g, '');
-
-            if (!this._hasMaskDays()){
+            if (!this._hasMaskDays() || days === undefined){
                return;
             }
+
+            days = days.toString().replace(/[^\d]/g, '');
 
             if (days.length > 4){
                days = "9999";
