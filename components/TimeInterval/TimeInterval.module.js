@@ -89,7 +89,7 @@ define(
             }
 
             this.subscribe("onFocusOut", function(){
-               if (self._checkBoundaryValues){
+               if (!self._checkBoundaryValues()){
                   self._correctInterval();
                }
             });
@@ -149,7 +149,7 @@ define(
          setDays: function ( days ) {
             var availMaskArray = this._options.mask.split(':'),
                 availTextArray = this._options.text.split(':');
-            if (!this._hasMaskDays() || days === undefined){
+            if (!this._hasMaskDays()){
                return;
             }
 
