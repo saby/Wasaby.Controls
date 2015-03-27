@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     *    <li>{@link onlyPositive запрещение ввода отрицательных чисел};</li>
     *    <li>{@link onlyInteger запрещение ввода дробных чисел};</li>
     *    <li>{@link enableArrows отображать ли стрелки для увеличения/уменьшения числа};</li>
+    *    <li>{@link text начальное значение}.</li>
     * </ol>
     * @class SBIS3.CONTROLS.NumberTextBox
     * @extends SBIS3.CONTROLS.TextBox
