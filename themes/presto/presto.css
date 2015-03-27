@@ -217,7 +217,7 @@ input[type="reset"]::-moz-focus-inner {
   min-width: 24px;
   height: 58px;
   line-height: 56px;
-  padding: 0px;
+  padding: 0;
   margin: auto;
   border: 0 none;
   -webkit-border-radius: 0;
@@ -2037,18 +2037,16 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 21px;
   padding-top: 8px;
 }
-<<<<<<< HEAD
+.controls-Button.controls-Button__thirdRow {
+  white-space: normal;
+  line-height: 18px;
+  padding-top: 2px;
+}
 .controls-Button {
   white-space: normal;
 }
 .controls-Button__text {
   line-height: 20px;
-=======
-.controls-Button.controls-Button__thirdRow {
-  white-space: normal;
-  line-height: 18px;
-  padding-top: 2px;
->>>>>>> origin
 }
 body {
   background-color: #373944;

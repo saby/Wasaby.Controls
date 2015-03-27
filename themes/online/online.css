@@ -217,7 +217,7 @@ input[type="reset"]::-moz-focus-inner {
   min-width: 24px;
   height: 48px;
   line-height: 18px;
-  padding: 0px;
+  padding: 0;
   margin: auto;
   border: 1px transparent;
   -webkit-border-radius: 24px;
