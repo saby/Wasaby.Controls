@@ -56,7 +56,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             },
             _loadingIndicator: undefined,
             _hasScrollMore : true,
-            _autoLoadOffset: null
+            _autoLoadOffset: null,
+            _nowLoading: false
          },
 
          $constructor: function () {
@@ -233,9 +234,11 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          _nextLoad: function(){
             var self = this, records;
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
-            if (this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore) {
+            if (this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._nowLoading) {
                this._addLoadingIndicator();
+               this._nowLoading = true;
                this._dataSource.query(this._filter, this._sorting, this._autoLoadOffset  + this._limit, this._limit).addCallback(function (dataSet) {
+                  self._nowLoading = false;
                   if (dataSet.getCount() || self._hasNextPage(dataSet.getMetaData().more)) {
                      records = dataSet.getRecords();
                      self._dataSet.addRecords(records);
@@ -276,7 +279,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @private
           */
          _removeLoadingIndicator: function(){
-            if( this._loadingIndicator){
+            if( this._loadingIndicator && !this._nowLoading){
                this._loadingIndicator.addClass('ws-hidden');
             }
          }
