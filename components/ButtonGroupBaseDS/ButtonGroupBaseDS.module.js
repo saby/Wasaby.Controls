@@ -10,13 +10,22 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
     * Контрол, реализующий поведение выбора одного из нескольких значений при помощи набора радиокнопок. Отображения не имеет.
     * @class SBIS3.CONTROLS.ButtonGroupBase
     * @mixes SBIS3.CONTROLS.CollectionMixin
-    * @mixes SBIS3.CONTROLS.Selectable
     * @extends $ws.proto.CompoundControl
     */
 
    var ButtonGroupBase = CompoundControl.extend([DSMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBase.prototype */ {
       $protected: {
          _options: {
+             /**
+              * @cfg {String} Поле заголовка кнопки
+              * Опция указывает имя подоции {@link SBIS3.CONTROLS.CollectionMixin#items}, откуда брать заголовок радионопки.
+              * @example
+              * <pre>
+              *     <option name="captionField">title</option>
+              * <pre>
+              * @see SBIS3.CONTROLS.CollectionMixin#items
+              * @see SBIS3.CONTROLS.CollectionMixin#keyField
+              */
             captionField : ''
          }
       },

@@ -1,12 +1,12 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.DataSourceBL', [
+define('js!SBIS3.CONTROLS.SbisServiceSource', [
    'js!SBIS3.CONTROLS.IDataSource',
    'js!SBIS3.CONTROLS.Record',
    'js!SBIS3.CONTROLS.DataSet',
-   'js!SBIS3.CONTROLS.DataStrategyBL'
-], function (IDataSource, Record, DataSet, DataStrategyBL) {
+   'js!SBIS3.CONTROLS.SbisJSONStrategy'
+], function (IDataSource, Record, DataSet, SbisJSONStrategy) {
    'use strict';
 
    /**
@@ -33,21 +33,27 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
       },
       $constructor: function (cfg) {
          this._BL = new $ws.proto.ClientBLObject(cfg.service);
-         this._options.strategy = cfg.strategy || new DataStrategyBL();
+         this._options.strategy = cfg.strategy || new SbisJSONStrategy();
       },
 
       sync: function (dataSet) {
-         var self = this;
+         var self = this,
+            syncCompleteDef = new $ws.proto.ParallelDeferred(),
+            changedRecords = [];
          dataSet.each(function (record) {
             if (record.getMarkStatus() == 'changed') {
-               self.update(record);
+               syncCompleteDef.push(self.update(record));
+               changedRecords.push(record);
             }
             if (record.getMarkStatus() == 'deleted') {
-               self.destroy(record.getKey());
+               syncCompleteDef.push(self.destroy(record.getKey()));
+               changedRecords.push(record);
             }
          }, 'all');
-         self._notify('onDataSync');
-         //TODO: нотификация о завершении синхронизации
+
+         syncCompleteDef.done().getResult().addCallback(function () {
+            self._notify('onDataSync', changedRecords);
+         });
       },
 
       /**
@@ -57,18 +63,22 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
       create: function () {
          var self = this,
             def = new $ws.proto.Deferred();
-         self._BL.call(self._options.crateMethodName, {'Фильтр': null, 'ИмяМетода': null}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+         self._BL.call(self._options.crateMethodName, {
+            'Фильтр': null,
+            'ИмяМетода': null
+         }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             var record = new Record({
                strategy: self.getStrategy(),
                raw: res
+               //TODO: на БЛ приходит не тип идентификатор, а целое число
                //keyField: self.getStrategy().getKey(res)
             });
             def.callback(record);
-         });
-         def.addCallback(function (res) {
-            self._notify('onCreate');
-            self._notify('onDataChange');
-            return res;
+         }, function (error) {
+            if (typeof(window) != 'undefined') {
+               console['log'](error);
+            }
+            throw new Error('Не удалось выпонить метод create');
          });
          return def;
       },
@@ -81,18 +91,20 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
       read: function (id) {
          var self = this,
             def = new $ws.proto.Deferred();
-         self._BL.call(self._options.readMethodName, {'ИдО': id, 'ИмяМетода': 'Список'}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
-            //TODO: переделать установку стратегии стратегию
+         self._BL.call(self._options.readMethodName, {
+            'ИдО': id,
+            'ИмяМетода': 'Список'
+         }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             var record = new Record({
                'strategy': self.getStrategy(),
                'raw': res
             });
             def.callback(record);
-            def.addCallback(function (res) {
-               self._notify('onRead');
-               self._notify('onDataChange');
-               return res;
-            });
+         }, function (error) {
+            if (typeof(window) != 'undefined') {
+               console['log'](error);
+            }
+            throw new Error('Не удалось выпонить метод read');
          });
          return def;
       },
@@ -108,13 +120,13 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
             def = new $ws.proto.Deferred(),
             rec = strategy.prepareRecordForUpdate(record);
 
-         self._BL.call(self._options.updateMethodName, {'Запись': rec}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+         self._BL.call(self._options.updateMethodName, {'Запись': rec}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             def.callback(true);
-            def.addCallback(function (res) {
-               self._notify('onUpdate');
-               self._notify('onDataChange');
-               return res;
-            });
+         }, function (error) {
+            if (typeof(window) != 'undefined') {
+               console['log'](error);
+            }
+            throw new Error('Не удалось выпонить метод update');
          });
 
          return def;
@@ -129,13 +141,13 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
          var self = this,
             def = new $ws.proto.Deferred();
 
-         self._BL.call(self._options.destroyMethodName, {'ИдО': id}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+         self._BL.call(self._options.destroyMethodName, {'ИдО': id}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             def.callback(true);
-            def.addCallback(function (res) {
-               self._notify('onDestroy');
-               self._notify('onDataChange');
-               return res;
-            });
+         }, function (error) {
+            if (typeof(window) != 'undefined') {
+               console['log'](error);
+            }
+            throw new Error('Не удалось выпонить метод destroy');
          });
 
          return def;
@@ -144,7 +156,7 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
       /**
        * Вызов списочного метода БЛ
        * Возможно применене фильтрации, сортировки и выбора определенного количества записей с заданной позиции
-       * @param {Array} filter - [{property1: value},{property2: value}]
+       * @param {Object} filter - {property1: value, property2: value}
        * @param {Array} sorting - [{property1: 'ASC'},{property2: 'DESC'}]
        * @param {Number} offset смещение начала выборки
        * @param {Number} limit количество возвращаемых записей
@@ -160,14 +172,23 @@ define('js!SBIS3.CONTROLS.DataSourceBL', [
             sortingParam = strategy.prepareSortingParam(sorting),
             pagingParam = strategy.preparePagingParam(offset, limit);
 
-         self._BL.call(self._options.queryMethodName, {'ДопПоля': [], 'Фильтр': filterParam, 'Сортировка': sortingParam, 'Навигация': pagingParam}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+         self._BL.call(self._options.queryMethodName, {
+            'ДопПоля': [],
+            'Фильтр': filterParam,
+            'Сортировка': sortingParam,
+            'Навигация': pagingParam
+         }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
 
             var DS = new DataSet({
                strategy: strategy,
                data: res
             });
-
             def.callback(DS);
+         }, function (error) {
+            if (typeof(window) != 'undefined') {
+               console['log'](error);
+            }
+            throw new Error('Не удалось выпонить метод query');
          });
 
          return def;

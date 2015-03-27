@@ -1,8 +1,3 @@
-/**
- * Модуль 'Компонент кнопка'.
- *
- * @description
- */
 define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SBIS3.Engine.SwitcherDoubleOnline'], function(SwitcherBase, dotTplFn) {
 
    'use strict';
@@ -11,7 +6,17 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
     * @class SBIS3.Engine.SwitcherDoubleOnline
     * @extends SBIS3.CONTROLS.SwitcherBase
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    * @initial
+    * <component data-component='SBIS3.Engine.SwitcherDoubleOnline'>
+    *    <option name="stateOff">Выкл</option>
+    *    <option name="stateOn">Вкл</option>
+    * </component>
     * @control
+    * @demo SBIS3.Demo.Control.MySwitcherDoubleOnline
+    * @public
+    * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers
+    * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner stateKey
+    * @ignoreOptions subcontrol verticalAlignment parent
     */
    var SwitcherDoubleOnline = SwitcherBase.extend( /** @lends SBIS3.Engine.SwitcherDoubleOnline.prototype */ {
       _dotTplFn: dotTplFn,

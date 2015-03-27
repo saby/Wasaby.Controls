@@ -10,6 +10,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
          _options: {
             /**
              * @cfg {Boolean} Разрешить множественный выбор
+             * @example
+             * <pre>
+             *     <option name="multiselect">false</option>
+             * </pre>
              */
             multiselect : true,
             /**
@@ -34,7 +38,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       /**
-       * Установить выбранные элементы
+       * Устанавливает выбранные элементы
        * @param idArray
        */
       setSelectedItems : function(idArray) {
@@ -59,7 +63,21 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       /**
-       * Получить выбранные элементы
+       * Устанавливает все элементы выбранными
+       */
+      setSelectedItemsAll : function() {
+         if (this._dataSet) {
+            var items = [];
+            this._dataSet.each(function(rec){
+               items.push(rec.getKey())
+            });
+            this.setSelectedItems(items);
+         }
+
+      },
+
+      /**
+       * Получает выбранные элементы
        */
       getSelectedItems : function() {
          return this._options.selectedItems;
@@ -93,7 +111,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       /**
-       * Удалить элементы из набора выбранных
+       * Удаляет элементы из набора выбранных
        * @param idArray
        */
       removeItemsSelection : function(idArray) {
@@ -113,7 +131,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       /**
-       * Поменять состояние элементов на противоположное
+       * Убрать все элементы из набора выбранных
+       */
+      removeItemsSelectionAll : function() {
+         this.setSelectedItems([]);
+      },
+
+      /**
+       * Меняет состояние элементов на противоположное
        * @param idArray
        */
       toggleItemsSelection : function(idArray) {
@@ -145,6 +170,20 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             throw new Error('Argument must be instance of Array');
          }
       },
+
+      /**
+       * Меняет состояние выбранности всех элементов на противоположное
+       */
+      toggleItemsSelectionAll : function() {
+         if (this._dataSet) {
+            var items = [];
+            this._dataSet.each(function(rec){
+               items.push(rec.getKey())
+            });
+            this.toggleItemsSelection(items);
+         }
+      },
+
 
       _drawSelectedItems : function() {
          /*Method must be implemented*/

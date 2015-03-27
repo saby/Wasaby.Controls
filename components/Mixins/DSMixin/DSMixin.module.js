@@ -1,8 +1,8 @@
 define('js!SBIS3.CONTROLS.DSMixin', [
-   'js!SBIS3.CONTROLS.DataSourceMemory',
-   'js!SBIS3.CONTROLS.DataStrategyArray',
+   'js!SBIS3.CONTROLS.StaticSource',
+   'js!SBIS3.CONTROLS.ArrayStrategy',
    'js!SBIS3.CORE.MarkupTransformer'
-], function (DataSourceMemory, DataStrategyArray, MarkupTransformer) {
+], function (StaticSource, ArrayStrategy, MarkupTransformer) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -18,18 +18,28 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          _itemsInstances: {},
          _filter: undefined,
          _sorting: undefined,
-         _offset: undefined,
+         _offset: 0,
          _limit: undefined,
          _dataSource: undefined,
          _setDataSourceCB: null, //чтобы подписки отрабатывали всегда
          _dataSet: null,
          _dotItemTpl: null,
          _options: {
+            /**
+             * @cfg {String} Поле элемента коллекции, которое является ключом
+             * @example
+             * <pre>
+             *     <option name="keyField">Идентификатор</option>
+             * </pre>
+             * @see items
+             */
+            keyField : null,
             items: undefined,
             /**
              * @cfg {DataSource} Набор исходных данных по которому строится отображение
              */
-            dataSource: undefined
+            dataSource: undefined,
+            numItems : null
          }
       },
 
@@ -37,41 +47,42 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._publish('onDrawItems');
          //Для совместимости пока делаем Array
 
-         //TODO совместимость
-         if (this._options.items) {
-            if (this._options.items instanceof Array) {
-               this._options.dataSource = this._options.items;
-            }
-            else {
-               //TODO: как-то надо по другому
-               this._options.dataSource = this._options.items;
-            }
-            if (typeof(window) != 'undefined') {
-               console['log']('Опция items устарела. Она прекратит работу в версии 3.7.2');
-            }
-         }
-
-         //TODO совместимость
-         this._options.dataSource = this._options.dataSource || [];
-         if (this._options.dataSource instanceof Array) {
-            var
-               item = this._options.dataSource[0],
-               keyField;
-            if (item && Object.prototype.toString.call(item) === '[object Object]') {
-               keyField = Object.keys(item)[0];
-            }
-            this._dataSource = new DataSourceMemory({
-               data: this._options.dataSource,
-               strategy: new DataStrategyArray(),
-               keyField: keyField
-            });
-            if (typeof(window) != 'undefined') {
-               console['log']('В опции dataSource надо передавать экземпляр класса DataSource. Array прекратит работу в версии 3.7.2');
-            }
-         }
-         else {
+         if (this._options.dataSource) {
             this._dataSource = this._options.dataSource;
          }
+         else {
+            var items;
+            if (this._options.items) {
+               if (this._options.items instanceof Array) {
+                  items = this._options.items;
+               }
+               else {
+                  throw new Error('Array expected')
+               }
+            }
+            else {
+               items = [];
+            }
+            var
+               item = items[0],
+               keyField;
+            if (this._options.keyField) {
+               keyField = this._options.keyField;
+            }
+            else {
+               if (item && Object.prototype.toString.call(item) === '[object Object]') {
+                  keyField = Object.keys(item)[0];
+               }
+            }
+            this._dataSource = new StaticSource({
+               data: items,
+               strategy: new ArrayStrategy(),
+               keyField: keyField
+            });
+         }
+
+
+
 
          this._setDataSourceCB = setDataSourceCB.bind(this);
          this._dataSource.subscribe('onDataSync', this._setDataSourceCB);
@@ -85,6 +96,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       reload: function (filter, sorting, offset, limit) {
+         if (this._options.numItems) {
+            this._limit = this._options.numItems;
+         }
          var self = this;
          this._filter = typeof(filter) != 'undefined' ? filter : this._filter;
          this._sorting = typeof(sorting) != 'undefined' ? sorting : this._sorting;
@@ -92,7 +106,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._limit = typeof(limit) != 'undefined' ? limit : this._limit;
          this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (DataSet) {
             self._dataSet = DataSet;
-            self._drawItems();
+            self._redraw();
          });
       },
 
@@ -103,9 +117,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (item && Object.prototype.toString.call(item) === '[object Object]') {
             keyField = Object.keys(item)[0];
          }
-         this._dataSource = new DataSourceMemory({
+         this._dataSource = new StaticSource({
             data: items,
-            strategy: new DataStrategyArray(),
+            strategy: new ArrayStrategy(),
             keyField: keyField
          });
          this.reload();
@@ -116,12 +130,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _drawItemsCallback: function () {
-         $()
+         /*Method must be implemented*/
       },
 
-      _drawItems: function () {
+      _redraw: function() {
          this._clearItems();
-
          var
             self = this,
             DataSet = this._dataSet;
@@ -129,7 +142,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          DataSet.each(function (item, key, i, parItem, lvl) {
             var
                targetContainer = self._getTargetContainer(item, key, parItem, lvl);
-            self._drawItem(item, targetContainer, key, i, parItem, lvl);
+            if (targetContainer) {
+               self._drawItem(item, targetContainer, key, i, parItem, lvl);
+            }
          });
 
          self.reviveComponents().addCallback(function () {
@@ -138,9 +153,27 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          });
       },
 
+      _drawItems: function (records) {
+         if (records && records.length > 0) {
+            for (var i = 0; i < records.length; i++) {
+               var
+                  targetContainer = this._getTargetContainer(records[i], records[i].getKey());
+               if (targetContainer) {
+                  this._drawItem(records[i], targetContainer,  records[i].getKey(), i);
+               }
+            }
+
+            var self = this;
+            this.reviveComponents().addCallback(function () {
+               self._notify('onDrawItems');
+               self._drawItemsCallback();
+            });
+         }
+      },
+
 
       _clearItems : function(container) {
-         container = container || this._container;
+         container = container || this._getItemsContainer();
          /*Удаляем компоненты-инстансы элементов*/
          if (!Object.isEmpty(this._itemsInstances)) {
             for (var i in this._itemsInstances) {

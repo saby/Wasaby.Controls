@@ -869,6 +869,19 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Menu__submenu {
   display: none;
 }
+.controls-Menu__32px .controls-MenuItem {
+  height: 32px;
+}
+.controls-Menu__32px .controls-MenuItem .controls-MenuItem__content {
+  top: 4px;
+}
+.controls-Menu__32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
+  top: 0px;
+  left: 0px;
+}
+.controls-Menu__32px .controls-MenuItem.controls-Menu__hasChild:after {
+  top: 20px;
+}
 .controls-MenuItem {
   position: relative;
   display: block;
@@ -969,18 +982,19 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #aaaaaa transparent transparent transparent;
   background: transparent;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header {
+.controls-MenuButton__header {
   display: inline-block;
   position: absolute;
+  cursor: pointer;
   border: none;
   top: 0;
   left: 0;
   width: 100%;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header.controls-MenuButton__header-hidden {
+.controls-MenuButton__header.controls-MenuButton__header-hidden {
   display: none;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerLeft {
+.controls-MenuButton__header .controls-MenuButton__headerLeft {
   float: left;
   display: inline-block;
   width: 0;
@@ -988,14 +1002,14 @@ input[type="reset"]::-moz-focus-inner {
   margin: 0;
   background: transparent;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerCenter {
+.controls-MenuButton__header .controls-MenuButton__headerCenter {
   display: inline-block;
   width: 0;
   height: 0;
   margin: 0;
   background: transparent;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerRight {
+.controls-MenuButton__header .controls-MenuButton__headerRight {
   display: inline-block;
   width: 0;
   height: 0;
@@ -1015,6 +1029,13 @@ input[type="reset"]::-moz-focus-inner {
   color: #ffcc99;
   text-decoration: none;
   padding: 0 12px 0 0;
+  line-height: 24px;
+}
+.controls-MenuLink.controls-MenuLink__32px {
+  line-height: 32px;
+}
+.controls-MenuLink.controls-MenuLink__32px .controls-MenuLink__arrowDown {
+  top: 14px;
 }
 .controls-MenuLink.controls-MenuLink__withoutMenu {
   padding: 0;
@@ -1032,41 +1053,24 @@ input[type="reset"]::-moz-focus-inner {
   width: 8px;
   height: 6px;
   right: 0;
-  top: 7px;
+  top: 10px;
   background: transparent;
 }
 .controls-MenuLink__Menu {
   margin-left: -9px;
   background: #ffffff;
-  margin-top: -20px;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
   height: 24px;
 }
-.controls-MenuLink__Menu .controls-MenuLink__header .controls-Link {
-  margin: 3px 0 0;
-}
 .controls-MenuLink__Menu .controls-MenuItem {
   height: 24px;
 }
-.controls-MenuLink__Menu.controls-MenuLink__32px {
-  margin-top: -25px;
-}
-.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuLink__header {
+.controls-MenuLink__Menu.controls-Menu__32px .controls-MenuLink__header {
   height: 32px;
 }
-.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuLink__header .controls-Link {
-  margin: 8px 0 0;
-}
-.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuItem {
+.controls-MenuLink__Menu.controls-Menu__32px .controls-MenuItem {
   height: 32px;
-}
-.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuItem .controls-MenuItem__content {
-  top: 4px;
-}
-.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
-  top: 0px;
-  left: 0px;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
   display: inline-block;
@@ -1088,11 +1092,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuLink__Menu .controls-MenuLink__header .controls-MenuLink__arrowDown {
   display: none;
-}
-@-moz-document url-prefix() {
-  .controls-MenuLink__Menu {
-    margin-top: -19px;
-  }
 }
 .controls-MenuIcon {
   position: relative;
@@ -2038,11 +2037,18 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 21px;
   padding-top: 8px;
 }
+<<<<<<< HEAD
 .controls-Button {
   white-space: normal;
 }
 .controls-Button__text {
   line-height: 20px;
+=======
+.controls-Button.controls-Button__thirdRow {
+  white-space: normal;
+  line-height: 18px;
+  padding-top: 2px;
+>>>>>>> origin
 }
 body {
   background-color: #373944;
