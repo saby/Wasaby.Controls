@@ -18,11 +18,11 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          this._publish('onMenuItemActivate');
       },
 
-      _setPickerConfig: function(){
-         return {
+      _createPicker: function(targetElement){
+         return new ContextMenu({
             parent: this.getParent(),
             context: this.getParent() ? this.getParent().getLinkedContext() : {},
-            element: $('<div></div>'),
+            element: targetElement,
             target : this.getContainer(),
             items: this._items,
             corner : 'bl',
@@ -36,11 +36,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             },
             closeByExternalClick: true,
             targetPart: true
-         };
-      },
-
-      _createPicker: function(){
-         return new ContextMenu(this._setPickerConfig());
+         });
       },
 
       after : {
