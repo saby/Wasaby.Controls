@@ -2016,6 +2016,11 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 21px;
   padding-top: 8px;
 }
+.controls-Button.controls-Button__thirdRow {
+  white-space: normal;
+  line-height: 18px;
+  padding-top: 2px;
+}
 body {
   background-color: #373944;
 }
