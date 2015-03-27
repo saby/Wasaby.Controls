@@ -240,23 +240,17 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             var self = this, records;
             if (this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore) { //Хорошо проверить по newdataSet.getCoount
                this._addLoadingIndicator();
-               if (this._options.items) {
-                  this.setNumItems(this.getNumItems() + this._recordsPerPage);
-                  this.reload();
-               } else {
-                  this._dataSource.query(this._filter, this._sorting, this._autoLoadOffset  + this._limit, this._limit).addCallback(function (dataSet) {
-                     //Если с БЛ не пришли данные,
-                     if (dataSet.getCount() || self._hasNextPage(dataSet.getMetaData().more)) {
-                        records = dataSet.getRecords();
-                        self._dataSet.addRecords(records);
-                        self._autoLoadOffset += self._limit;
-                        self._drawItems(records);
-                     } else {
-                        self._hasScrollMore = false;
-                        self._removeLoadingIndicator();
-                     }
-                  });
-               }
+               this._dataSource.query(this._filter, this._sorting, this._autoLoadOffset  + this._limit, this._limit).addCallback(function (dataSet) {
+                  if (dataSet.getCount() || self._hasNextPage(dataSet.getMetaData().more)) {
+                     records = dataSet.getRecords();
+                     self._dataSet.addRecords(records);
+                     self._autoLoadOffset += self._limit;
+                     self._drawItems(records);
+                  } else {
+                     self._hasScrollMore = false;
+                     self._removeLoadingIndicator();
+                  }
+               });
 
             } else {
                self._removeLoadingIndicator();
