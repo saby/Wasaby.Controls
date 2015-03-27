@@ -159,9 +159,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          reload: function(){
             if (this.isAutoLoad()) {
-               //if (this._options.items) {
-               //   this.setNumItems(this._recordsPerPage);
-               //}
                this._loadingIndicator = undefined;
                this._hasScrollMore = true;
             }
