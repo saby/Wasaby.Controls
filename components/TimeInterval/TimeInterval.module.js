@@ -166,8 +166,7 @@ define(
 
             availTextArray[0] = this._addPlaceholder(days);
             this._options.text = availTextArray.join(':');
-            this._options.interval = this._getIntervalByText(this._options.text);
-            this.setInterval( this._options.interval, true );
+            this.setInterval( this._getIntervalByText(this._options.text), true );
          },
 
          /**
@@ -200,8 +199,7 @@ define(
             }
 
             this._options.text = availTextArray.join(':');
-            this._options.interval = this._getIntervalByText(this._options.text);
-            this.setInterval( this._options.interval,true );
+            this.setInterval( this._getIntervalByText(this._options.text),true );
          },
 
          /**
@@ -224,8 +222,7 @@ define(
             }
             availTextArray[minutesIndex] = minutes;
             this._options.text = availTextArray.join(':');
-            this._options.interval = this._getIntervalByText(this._options.text);
-            this.setInterval( this._options.interval, true );
+            this.setInterval( this._getIntervalByText(this._options.text), true );
          },
 
          /**
