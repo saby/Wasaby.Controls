@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTR
    /**
     * Контрол, отображающий обычную кнопку
     * @class SBIS3.CONTROLS.IconButton
-	* @demo SBIS3.Demo.Control.MyIconButton Пример кнопки с иконкой
+	* @demo SBIS3.Demo.Control.MyIconButton
     * @extends $ws.proto.Control
     * @control
     * @initial
