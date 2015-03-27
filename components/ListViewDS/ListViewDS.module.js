@@ -52,10 +52,12 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                elemClickHandler: null,
                multiselect: false,
 
-               useScroll: false
+               autoLoad: false
             },
             _loadingIndicator: undefined,
-            _hasScrollMore : true
+            _hasScrollMore : true,
+            _recordsPerPage : 10,
+            _autoLoadOffset: 0
          },
 
          $constructor: function () {
@@ -71,8 +73,11 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                }
             });
             this._createItemsActions();
-            if (this.isScroll()) {
-               $(window).bind('scroll.wsUseScroll', this._onWindowScroll.bind(this));
+            if (this.isAutoLoad()) {
+               $(window).bind('scroll.wsAutoLoad', this._onWindowScroll.bind(this));
+               if (this._options.items) {
+                  this._recordsPerPage = this._options.numItems;
+               }
             }
          },
 
@@ -152,6 +157,17 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).addClass('controls-ListView__item__selected');
             }
          },
+         reload: function(){
+            if (this.isAutoLoad()) {
+               //if (this._options.items) {
+               //   this.setNumItems(this._recordsPerPage);
+               //}
+               this._loadingIndicator = undefined;
+               this._hasScrollMore = true;
+            }
+            ListViewDS.superclass.reload.apply(this, arguments);
+            this._autoLoadOffset = this._offset;
+         },
 
          setElemClickHandler: function (method) {
             this._options.elemClickHandler = method;
@@ -197,7 +213,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          _drawItemsCallback: function () {
             this._drawItemsActions(this._options.itemsActions);
-            if (this.isScroll()) {
+            if (this.isAutoLoad()) {
                this._addLoadingIndicator();
                this._loadBeforeScrollAppears();
             }
@@ -207,13 +223,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             return container;
          },
          destroy: function() {
-            if (this.isScroll()){
-               $(window).unbind('.wsUseScroll');
+            if (this.isAutoLoad()){
+               $(window).unbind('.wsAutoLoad');
             }
          },
          //-----------------------------------Scroll------------------------
-         isScroll : function(){
-            return this._options.useScroll;
+         isAutoLoad : function(){
+            return this._options.autoLoad;
          },
          _onWindowScroll: function(event){
             if (this._isBottomOfPage()){
@@ -225,13 +241,15 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore) { //Хорошо проверить по newdataSet.getCoount
                this._addLoadingIndicator();
                if (this._options.items) {
-                  this.setNumItems(this.getNumItems() + this._options.recordsPerPage);
+                  this.setNumItems(this.getNumItems() + this._recordsPerPage);
+                  this.reload();
                } else {
-                  this._dataSource.query(this._filter, this._sorting, this._offset  + this._limit, this._limit).addCallback(function (dataSet) {
-                     if (dataSet.getCount() || self._hasNextPage(dataSet.getMetaData().more)) {//TODO лучше проверить
+                  this._dataSource.query(this._filter, this._sorting, this._autoLoadOffset  + this._limit, this._limit).addCallback(function (dataSet) {
+                     //Если с БЛ не пришли данные,
+                     if (dataSet.getCount() || self._hasNextPage(dataSet.getMetaData().more)) {
                         records = dataSet.getRecords();
                         self._dataSet.addRecords(records);
-                        self._offset += self._limit;
+                        self._autoLoadOffset += self._limit;
                         self._drawItems(records);
                      } else {
                         self._hasScrollMore = false;
@@ -259,17 +277,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          _loadBeforeScrollAppears: function(){
             if (this._dataSet.getCount() <= parseInt(($(window).height() /  MIN_ROW_HEIGHT ) + 10 , 10)){
                /*this._options.display.recordsPerPage*/
-               if (this._nextLoad()) {
-                  this._addLoadingIndicator();
-               } else {
-                  this._removeLoadingIndicator();
-               }
+               this._nextLoad();
             }
-            /*else {
-               if (!this._nowLoading) {
-                  this._removeLoadingIndicator();
-               }
-            }*/
 
          },
          _addLoadingIndicator: function(){

@@ -111,7 +111,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
       setNumItems: function(num){
          this._options.numItems = num;
-         this.reload();
       },
       getNumItems: function(){
          return  this._options.numItems;
