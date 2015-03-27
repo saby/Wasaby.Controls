@@ -56,7 +56,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             },
             _loadingIndicator: undefined,
             _hasScrollMore : true,
-            _recordsPerPage : null,
             _autoLoadOffset: null
          },
 
@@ -75,9 +74,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             this._createItemsActions();
             if (this.isAutoLoad()) {
                $(window).bind('scroll.wsAutoLoad', this._onWindowScroll.bind(this));
-               if (this._options.items) {
-                  this._recordsPerPage = this._options.pageSize;
-               }
             }
          },
 
@@ -161,9 +157,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (this.isAutoLoad()) {
                this._loadingIndicator = undefined;
                this._hasScrollMore = true;
+               this._autoLoadOffset = this._offset;
             }
             ListViewDS.superclass.reload.apply(this, arguments);
-            this._autoLoadOffset = this._offset;
+            //this._autoLoadOffset = this._offset;
          },
 
          setElemClickHandler: function (method) {
@@ -235,7 +232,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          _nextLoad: function(){
             var self = this, records;
-            if (this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore) { //Хорошо проверить по newdataSet.getCoount
+            //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
+            if (this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore) {
                this._addLoadingIndicator();
                this._dataSource.query(this._filter, this._sorting, this._autoLoadOffset  + this._limit, this._limit).addCallback(function (dataSet) {
                   if (dataSet.getCount() || self._hasNextPage(dataSet.getMetaData().more)) {
@@ -253,21 +251,16 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                self._removeLoadingIndicator();
             }
          },
-         _isBottomOfPage : function(target) {
-            var docBody = target || document.body,
-                  docElem = target || document.documentElement,
-                  clientHeigth = Math.min (docBody.clientHeight, docElem.clientHeight),
-                  scrollTop = Math.max (docBody.scrollTop, docElem.scrollTop),
-                  scrollHeight = Math.max (docBody.scrollHeight, docElem.scrollHeight),
-                  parent = this.getTopParent();
-            if (!clientHeigth) {
-               clientHeigth = Math.max (docBody.clientHeight, parent ? parent.getContainer().height() : 0);
-            }
-            return (clientHeigth + scrollTop >= scrollHeight - MIN_ROW_HEIGHT);
+         _isBottomOfPage : function() {
+            var docBody = document.body,
+               docElem = document.documentElement,
+               clientHeight = Math.min (docBody.clientHeight, docElem.clientHeight),
+               scrollTop = Math.max (docBody.scrollTop, docElem.scrollTop),
+               scrollHeight = Math.max (docBody.scrollHeight, docElem.scrollHeight);
+            return (clientHeight + scrollTop >= scrollHeight - MIN_ROW_HEIGHT);
          },
          _loadBeforeScrollAppears: function(){
             if (this._dataSet.getCount() <= parseInt(($(window).height() /  MIN_ROW_HEIGHT ) + 10 , 10)){
-               /*this._options.display.recordsPerPage*/
                this._nextLoad();
             }
 

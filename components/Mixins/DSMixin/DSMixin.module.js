@@ -263,12 +263,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return instances[id];
       },
       _hasNextPage: function(hasMore){
-         //this._dataSource
-         //TODO Костыль! узнать про hasNextPage у dataset и проблемы со статическими данными
-         //return this._limit < this._options.items.length || this._dataSet.getCount();
-         return this._options.items ? this._limit < this._options.items.length :
-            typeof (hasMore) !== 'boolean' ? hasMore > this._offset : !!hasMore;/* - поменять когда будут сохранять n // this._limit < this._dataSet.getCount()*/;
-         //return this._limit < this._options.items.length;
+         //n - приходит true, false || общее количество записей в списочном методе
+         return typeof (hasMore) !== 'boolean' ? hasMore > this._offset : !!hasMore;
       }
 
    };

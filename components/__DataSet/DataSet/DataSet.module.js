@@ -232,6 +232,13 @@ define('js!SBIS3.CONTROLS.DataSet', [
          });
          return records;
       },
+      /**
+       * TODO Сделать правильный mergeRecords
+       * @param dataSetMergeFrom
+       */
+      mergeRecords: function(dataSetMergeFrom){
+         this.addRecords(dataSetMergeFrom.getRecords())
+      },
       _prepareRecordForAdd: function (record) {
          //FixME: потому что метод создать не возвращает тип поля "идентификатор"
          record._keyField = this._keyField;
