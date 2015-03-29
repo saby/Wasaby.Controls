@@ -985,7 +985,12 @@ input[type="reset"]::-moz-focus-inner {
   width: 12px;
   height: 28px;
   margin: 0;
-  background: transparent url('img/MenuButton-header.png') 0 28px;
+  background: transparent url('img/MenuButton-header.png') 0 84px;
+}
+.controls-MenuButton__header .controls-MenuButton__headerLeft.controls-MenuButton__headerLeft__revert {
+  width: 28px;
+  height: 28px;
+  background: transparent url('img/MenuButton-header.png') 0 56px;
 }
 .controls-MenuButton__header .controls-MenuButton__headerCenter {
   display: inline-block;
@@ -1000,6 +1005,11 @@ input[type="reset"]::-moz-focus-inner {
   height: 28px;
   margin: 0 0 0 -5px;
   background: transparent url('img/MenuButton-header.png') 0 0;
+}
+.controls-MenuButton__header .controls-MenuButton__headerRight.controls-MenuButton__headerRight__revert {
+  width: 12px;
+  height: 28px;
+  background: transparent url('img/MenuButton-header.png') 0 28px;
 }
 .controls-MenuButton__Menu {
   margin-top: 4px;
