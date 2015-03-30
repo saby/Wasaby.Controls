@@ -78,7 +78,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
                                   <i class="controls-MenuButton__headerCenter"></i>\
                                   <i class="controls-MenuButton__headerRight"></i>\
                                </span>');
-             $('.controls-MenuButton__headerCenter', this._header).width(this._container.width() + 12);
+             $('.controls-MenuButton__headerCenter', this._header).width(this._container.width() - 12 - 11);
              this._header.css({
                 width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
                 height: this._container.outerHeight()
@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
              $('body').append(this._header);
           }
          MenuButton.superclass.togglePicker.call(this);
-         $('.controls-MenuButton__headerCenter', this._container).width(this._container.width() + 12);
+         $('.controls-MenuButton__headerCenter', this._container).width(this._container.width() - 12 - 11);
          this._header.css({
             left: this._container.offset().left,
             top: this._container.offset().top + 1,
