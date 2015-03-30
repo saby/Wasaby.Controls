@@ -602,9 +602,33 @@
             enabled: false
          });
 
+         new MenuButton({
+            element: 'menuButtonFixedWidthIcon',
+            primary: true,
+            items: items,
+            hierField: 'par',
+            caption: 'Primary dropdown menu with long text',
+            icon: 'sprite:icon-16 icon-Alert icon-primary'
+         });
+
+         new MenuButton({
+            element: 'menuButtonFixedWidth',
+            primary: true,
+            items: items,
+            hierField: 'par',
+            caption: 'Primary dropdown menu with long text'
+         });
+
          new MenuLink({
             caption: 'Menu link',
             element: 'menuLink',
+            items: items,
+            hierField: 'par'
+         });
+
+         new MenuLink({
+            caption: 'Menu link fixed width long text',
+            element: 'menuLinkFixedWidth',
             items: items,
             hierField: 'par'
          });
