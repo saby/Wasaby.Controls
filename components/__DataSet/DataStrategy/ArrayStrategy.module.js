@@ -115,12 +115,15 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
       },
 
       //TODO пустышка
-      getMetaData: function(data) {
+      getMetaData: function (data) {
          return {
-            more : data.length
+            more: data.length
          };
       },
 
+      getParentKey: function (rawKey) {
+         return rawKey;
+      },
 
       query: function (data, filter, sorting, offset, limit) {
          var newData = data;

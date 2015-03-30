@@ -120,6 +120,11 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
          }
       },
 
+      getParentKey: function (rawKey) {
+         // так как c БЛ приходит массив
+         return rawKey[0];
+      },
+
       prepareFilterParam: function (filter) {
          // настройка объекта фильтрации для отправки на БЛ
          var filterParam = {

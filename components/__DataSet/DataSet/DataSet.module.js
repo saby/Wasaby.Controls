@@ -260,10 +260,39 @@ define('js!SBIS3.CONTROLS.DataSet', [
             this._loadFromRaw();
          }
 
+         if (this._options.hierField) {
+            this._hierIterate(iterateCallback, status);
+         } else {
+            this._simpleIterate(iterateCallback, status);
+         }
+
+      },
+
+      setHierField: function (hierField) {
+         this._options.hierField = hierField;
+      },
+
+      getChildRecordsByRecordKey: function (key) {
+
+         var child = [];
+
+
+         this._hierIterate(function (record) {
+            if (record.get(this._options.hierField) == key) {
+               child.push(record);
+            }
+
+         });
+
+         return child;
+      },
+
+      _simpleIterate: function (iterateCallback, status) {
          var length = this.getCount();
 
          for (var i = 0; i < length; i++) {
             var record = this.at(i);
+
             switch (status) {
                case 'all':
                   iterateCallback.call(this, record);
@@ -283,57 +312,22 @@ define('js!SBIS3.CONTROLS.DataSet', [
                      iterateCallback.call(this, record);
                   }
             }
-         }
 
-      },
-
-      setHierField: function (hierField) {
-         this._options.hierField = hierField;
-      },
-
-      getChildRecordsByKey: function (key) {
-
-         var child = [];
-
-         this.each(function (record) {
-            if (record.get(this._options.hierField) == key) {
-               child.push(record);
-            }
-         });
-
-         return child;
-      },
-
-      iterate: function (iterateCallback) {
-         if (this._options.hierField) {
-            this._hierIterate(iterateCallback);
-         } else {
-            this._simpleIterate(iterateCallback);
          }
       },
 
-      _simpleIterate: function (iterateCallback) {
-         var length = this.getCount();
-
-         for (var i = 0; i < length; i++) {
-            var record = this.at(i);
-            //FixME: статус будем отслеживать?
-            iterateCallback.call(this, record);
-         }
-      },
-
-      _hierIterate: function (iterateCallback) {
+      _hierIterate: function (iterateCallback, status) {
 
          var curParent = null,
             parents = [];
          do {
             this._simpleIterate(function (record) {
-               if ((record.get(this._options.hierField) || null) === (curParent ? curParent.getKey() : null)) {
+               if ((this.getParentKey(record) || null) === (curParent ? curParent.getKey() : null)) {
                   parents.push(record);
                   //TODO: тут можно сделать кэш дерева
                   iterateCallback.call(this, record);
                }
-            });
+            }, status);
 
             if (parents.length) {
                var a = Array.remove(parents, 0);
@@ -344,6 +338,10 @@ define('js!SBIS3.CONTROLS.DataSet', [
             }
          } while (curParent);
 
+      },
+
+      getParentKey: function(record){
+         return this.getStrategy().getParentKey(record.get(this._options.hierField));
       },
 
       getMetaData: function () {
