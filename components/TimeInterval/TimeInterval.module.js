@@ -49,6 +49,7 @@ define(
                "HHH:II",
                "HH:II"
             ],
+            _isFinishedPrint: false, //Завершили ли ввод интервала (смотрит на последний символ)
             /**
              * Опции создаваемого контролла
              */
@@ -425,8 +426,23 @@ define(
 
          //Переопределенный метод
          _getCursor: function(position){
-            var selection;
-            selection = window.getSelection();
+            var selection = this._getSelection(),
+               cursorPositionEnd = this._correctCursor(selection.endContainer, selection.endOffset);
+
+            //Проверяем, не ввели ли мы сейчас последний символ
+            //Получаем массив позиции курсора.
+            //Нулевой индекс - позиция блоков (дни, часы или минуты)
+            //Первый индекс - позиция курсора внутри данного блока
+            if (cursorPositionEnd[0] >= (1 + this._hasMaskDays() + this._hasMaskMinutes()) && cursorPositionEnd[1]){
+               this._isFinishedPrint = true;
+            }
+
+            return ( position ?
+               this._correctCursor(selection.startContainer, selection.startOffset) :  cursorPositionEnd);
+         },
+
+         _getSelection: function(){
+            var selection = window.getSelection();
             if (selection.type === "None"){
                selection = this._options.lastSelection;
             }
@@ -434,15 +450,11 @@ define(
                selection = selection.getRangeAt(0);
                this._options.lastSelection = selection;
             }
-            return ( position ?
-               this._correctCursor(selection.startContainer, selection.startOffset) :
-               this._correctCursor(selection.endContainer, selection.endOffset)
-               );
-         },
 
+            return selection;
+         },
          /**
           * Обновляяет значения this._options.text и this._options.interval (вызывается в _replaceCharacter из FormattedTextBoxBase). Переопределённый метод.
-          * Если есть хотя бы одно незаполненное место ( плэйсхолдер ), то text = '' (пустая строка) и _date = null
           * @private
           */
          _updateText: function(){
@@ -458,6 +470,12 @@ define(
                this._options.text = this._placeholder + text;
                this._setMask(this._options.mask[0] + this._options.mask);
             }
+            if (this._isFinishedPrint){
+               this._correctInterval();
+               this._isFinishedPrint = false;
+            }
+
+            //this._isFinishedPrint(this._getSelection());
 
             // Если дата изменилась -- генерировать событие.
             // Если использовать просто setInterval, то событие будет генерироваться даже если дата введена с клавиатуры не полностью, что неверно
