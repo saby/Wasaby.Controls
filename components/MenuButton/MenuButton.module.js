@@ -47,6 +47,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          var self = this;
          MenuButton.superclass.init.call(this);
          this._initMenu();
+         //TODO: использовать событие из Popup миксина
          $ws.helpers.trackElement(this._container, true).subscribe('onMove', function () {
             if (self._header) {
                self._header.css({
