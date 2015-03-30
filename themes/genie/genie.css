@@ -13,6 +13,7 @@ input[type="reset"]::-moz-focus-inner {
   text-align: center;
   line-height: normal;
   padding: 0;
+  box-sizing: border-box;
 }
 .controls-Link:hover {
   cursor: pointer;
@@ -33,6 +34,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Link .controls-Link__icon + .controls-Link__field {
   margin: 0 0 0 4px;
+}
+.controls-Link.controls-Button__ellispis {
+  vertical-align: text-bottom;
 }
 .controls-Button {
   position: relative;
@@ -327,7 +331,8 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background: #d1d1d1;
 }
-.controls-Button__ellispis .controls-Button__text {
+.controls-Button__ellispis .controls-Button__text,
+.controls-Link.controls-Button__ellispis {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -920,7 +925,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-MenuButton {
   position: relative;
-  padding: 0 30px 0 12px;
+  padding: 0;
 }
 .controls-Button.controls-MenuButton.controls-MenuButton__withoutMenu {
   padding: 0 8px;
@@ -987,6 +992,10 @@ input[type="reset"]::-moz-focus-inner {
   border-style: solid;
   border-color: #919191 transparent transparent transparent;
   background: transparent;
+}
+.controls-MenuButton .controls-Button__text,
+.controls-MenuButton .controls-Button__icon + .controls-Button__text {
+  margin-right: 30px;
 }
 .controls-MenuButton__header {
   display: inline-block;
