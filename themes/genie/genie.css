@@ -35,6 +35,7 @@ input[type="reset"]::-moz-focus-inner {
   margin: 0 0 0 4px;
 }
 .controls-Button {
+  position: relative;
   cursor: pointer;
   display: inline-block;
   outline: none;
@@ -55,8 +56,9 @@ input[type="reset"]::-moz-focus-inner {
   min-width: 24px;
   height: 30px;
   line-height: 28px;
-  padding: 0 8px;
+  padding: 0;
   margin: auto;
+  overflow: hidden;
   border: 1px solid #d1d1d1;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -85,37 +87,32 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background: #ffffff;
 }
-.controls-Button .controls-Button__content {
-  position: relative;
-}
-.controls-Button .controls-Button__text {
-  padding: 0;
-}
 .controls-Button .controls-Button__text.controls-Button__emptyCaption {
   margin: 0 0 0 13px !important;
 }
 .controls-Button .controls-Button__icon {
   position: absolute;
-  top: -1px;
+  top: 5px;
+  left: 8px;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .controls-Button .controls-Button__icon {
-    top: 0px;
+    top: 6px;
   }
 }
 .controls-Button .controls-Button__icon + .controls-Button__text {
-  margin: 0 0 0 20px;
+  margin: 0 8px 0 28px;
 }
 .controls-Button .controls-Button__icon.icon-24 {
-  top: -6px;
+  top: 0px;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .controls-Button .controls-Button__icon.icon-24 {
-    top: -5px;
+    top: 1px;
   }
 }
 .controls-Button .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin: 0 0 0 28px;
+  margin: 0 8px 0 36px;
 }
 .controls-Button.controls-Button__primary {
   color: #ffffff;
@@ -220,7 +217,7 @@ input[type="reset"]::-moz-focus-inner {
   min-width: 24px;
   height: 54px;
   line-height: 24px;
-  padding: 15px 20px;
+  padding: 0;
   margin: auto;
   border: 1px solid #d1d1d1;
   -webkit-border-radius: 6px;
@@ -251,33 +248,35 @@ input[type="reset"]::-moz-focus-inner {
   background: #ffffff;
 }
 .controls-Button.controls-Button__big .controls-Button__text {
-  padding: 11px 0 0;
+  margin: 0 20px;
 }
 .controls-Button.controls-Button__big .controls-Button__text.controls-Button__emptyCaption {
   margin: 0 0 0 13px !important;
 }
 .controls-Button.controls-Button__big .controls-Button__icon {
   position: absolute;
-  top: 0px;
+  top: 16px;
+  left: 20px;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .controls-Button.controls-Button__big .controls-Button__icon {
-    top: 1px;
+    top: 17px;
   }
 }
 .controls-Button.controls-Button__big .controls-Button__icon + .controls-Button__text {
-  margin: 0 0 0 20px;
+  margin: 0 20px 0 40px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-  top: -3px;
+  top: 13px;
+  left: 20px;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-    top: -2px;
+    top: 14px;
   }
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin: 0 0 0 28px;
+  margin: 0 20px 0 48px;
 }
 .controls-Button.controls-Button__big.controls-Button__primary {
   color: #ffffff;
@@ -319,12 +318,6 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background: #d1d1d1;
 }
-.controls-Button.controls-Button__ellispis,
-.controls-Link.controls-Button__ellispis {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 .controls-Button.ws-disabled {
   cursor: default;
   color: #919191;
@@ -334,18 +327,27 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background: #d1d1d1;
 }
+.controls-Button__ellispis .controls-Button__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.controls-Button__text {
+  display: block;
+  margin: 0 8px;
+}
 @-moz-document url-prefix() {
   .controls-Button .controls-Button__icon {
-    top: 0px;
+    top: 6px;
   }
   .controls-Button .controls-Button__icon.icon-24 {
-    top: -5px;
-  }
-  .controls-Button.controls-Button__big .controls-Button__icon {
     top: 1px;
   }
+  .controls-Button.controls-Button__big .controls-Button__icon {
+    top: 17px;
+  }
   .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-    top: -2px;
+    top: 14px;
   }
 }
 .controls-ButtonGroup .controls-ListView__item {
@@ -869,11 +871,13 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Menu__32px .controls-MenuItem {
   height: 32px;
-}
-.controls-Menu__32px .controls-MenuItem .controls-MenuItem__content {
-  top: 4px;
+  line-height: 32px;
 }
 .controls-Menu__32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
+  top: 0px;
+  left: 0px;
+}
+.controls-Menu__32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon.icon-24 {
   top: 0px;
   left: 0px;
 }
@@ -906,6 +910,10 @@ input[type="reset"]::-moz-focus-inner {
   position: absolute;
   top: -2px;
   left: -2px;
+}
+.controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon.icon-24 {
+  top: 0px;
+  left: 0px;
 }
 .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__text {
   margin: 0 0 0 22px;

@@ -70,6 +70,17 @@
          });
 
          new Button({
+            element: 'normalMultilineDefaultButton',
+            caption: 'Default button with long text'
+          });
+
+         new Button({
+             element: 'normalMultilineDefaultButton16',
+             caption: 'Default button with long text',
+             icon: 'sprite:icon-16 icon-Alert icon-primary'
+          });
+
+         new Button({
             element: 'normalDefaultButton16',
             caption: 'Default button 16x16',
             icon: 'sprite:icon-16 icon-Alert icon-primary'
