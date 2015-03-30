@@ -15,11 +15,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
       },
 
       $constructor: function () {
-         var self = this;
          this._publish('onMenuItemActivate');
-         this.subscribe('onPopupAlignmentChange', function(event, alignment){
-            self._onAlignmentChangeHandler(alignment);
-         })
       },
 
       _setPickerConfig: function(){
