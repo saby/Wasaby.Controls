@@ -1,5 +1,5 @@
 /**
- * Модуль 'Компонент кнопка'.
+ * Модуль 'Кнопка-иконка'.
  *
  * @description
  */
@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTR
    /**
     * Контрол, отображающий обычную кнопку
     * @class SBIS3.CONTROLS.IconButton
-	* @demo SBIS3.Demo.Control.MyIconButton Пример кнопки с иконкой
+	* @demo SBIS3.Demo.Control.MyIconButton
     * @extends $ws.proto.Control
     * @control
     * @initial
@@ -21,7 +21,9 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTR
     * @category Buttons
     * @mixes SBIS3.CONTROLS.IconMixin
     * @mixes SBIS3.CONTROLS.Clickable
-    * @ignoreOptions validators independentContext contextRestriction extendedTooltip
+    * @ignoreOptions independentContext contextRestriction extendedTooltip validators
+    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
+    * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment
     */
 
    var IconButton = Control.Control.extend([Clickable, IconMixin], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {

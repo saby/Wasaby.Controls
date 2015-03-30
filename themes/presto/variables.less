@@ -55,10 +55,12 @@
 @button-padding:                          0 8px;
 @button-margin:                           auto;
 @button-border-radius:                    0;
-@button-icon-top-offset:                  0px;                      // top offset of 16x16 icon
-@button-icon-text-margin:                 0 0 0 20px;               // margin of text following 16x16 icon
-@button-icon-big-top-offset:              -5px;                     // top offset of 24x24 icon
-@button-icon-big-text-margin:             0 0 0 28px;               // margin of text following 24x24 icon
+@button-icon-top-offset:                  20px;                     // top offset of 16x16 icon
+@button-icon-left-offset:                 8px;
+@button-icon-text-margin:                 0 8px 0 28px;             // margin of text following 16x16 icon
+@button-icon-big-top-offset:              15px;                     // top offset of 24x24 icon
+@button-icon-big-text-margin:             0 8px 0 36px;             // margin of text following 24x24 icon
+@button-text-margin:                      0 8px 0 8px;
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
 
@@ -147,11 +149,14 @@
 @button-big-padding:                      @button-padding;
 @button-big-margin:                       @button-margin;
 @button-big-border-radius:                0;
-@button-big-icon-top-offset:              1px;                              // top offset of 16x16 icon
+@button-big-icon-top-offset:              20px;                             // top offset of 16x16 icon
+@button-big-icon-left-offset:             8px;
 @button-big-icon-text-margin:             @button-icon-text-margin;         // margin of text following 16x16 icon
-@button-big-icon-big-top-offset:          -3px;                             // top offset of 24x24 icon
+@button-big-icon-big-top-offset:          15px;                             // top offset of 24x24 icon
+@button-big-icon-big-left-offset:         @button-big-icon-left-offset;
 @button-big-icon-big-text-margin:         @button-icon-big-text-margin;     // margin of text following 24x24 icon
-@button-big-text-padding:                 11px 0 0;
+@button-big-text-margin:                  0 8px 0 8px;
+@button-big-text-padding:                 0;
 @button-big-empty-text-margin:            @button-empty-text-margin;
 
 @button-big-text-color:                   @button-text-color;
@@ -557,12 +562,18 @@
 
 @menu-item-icon-top-offset:               0px;
 @menu-item-icon-top-offset-big:           0px;
+
 @menu-item-icon-left-offset:              -2px;
 @menu-item-icon-left-offset-big:           0px;
 
+@menu-item-icon24-top-offset:               0px;
+@menu-item-icon24-top-offset-big:           0px;
+
+@menu-item-icon24-left-offset:              -2px;
+@menu-item-icon24-left-offset-big:           0px;
+
 @menu-item-text-margin:                   0 0 0 22px;
 
-@menu-item-big-content-top:                   4px;
 
 
 
