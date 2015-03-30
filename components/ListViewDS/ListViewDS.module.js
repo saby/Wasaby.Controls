@@ -57,7 +57,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _loadingIndicator: undefined,
             _hasScrollMore : true,
             _autoLoadOffset: null,
-            _nowLoading: false
+            _nowLoading: false,
+            _allowAutoLoad: true,
+            _scrollIndicatorHeight: 32,
+            _isLoadBeforeScrollAppears : true
          },
 
          $constructor: function () {
@@ -159,9 +162,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                this._loadingIndicator = undefined;
                this._hasScrollMore = true;
                this._autoLoadOffset = this._offset;
+               //После релоада придется заново догружать данные до появлени скролла
+               this._isLoadBeforeScrollAppears = true;
             }
             ListViewDS.superclass.reload.apply(this, arguments);
-            //this._autoLoadOffset = this._offset;
          },
 
          setElemClickHandler: function (method) {
@@ -234,7 +238,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          _nextLoad: function(){
             var self = this, records;
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
-            if (this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._nowLoading) {
+            if (this._allowAutoLoad && this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._nowLoading) {
                this._addLoadingIndicator();
                this._nowLoading = true;
                this._dataSource.query(this._filter, this._sorting, this._autoLoadOffset  + this._limit, this._limit).addCallback(function (dataSet) {
@@ -260,17 +264,20 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                clientHeight = Math.min (docBody.clientHeight, docElem.clientHeight),
                scrollTop = Math.max (docBody.scrollTop, docElem.scrollTop),
                scrollHeight = Math.max (docBody.scrollHeight, docElem.scrollHeight);
-            return (clientHeight + scrollTop >= scrollHeight - MIN_ROW_HEIGHT);
+            return (clientHeight + scrollTop >= scrollHeight - this._scrollIndicatorHeight);//Учитываем отступ снизу на высоту картинки индикатора загрузки
          },
          _loadBeforeScrollAppears: function(){
-            if (this._dataSet.getCount() <= parseInt(($(window).height() /  MIN_ROW_HEIGHT ) + 10 , 10)){
+            if (this._isLoadBeforeScrollAppears && this._dataSet.getCount() <= parseInt(($(window).height() /  MIN_ROW_HEIGHT ) + 10 , 10)){
                this._nextLoad();
+            } else {
+               this._isLoadBeforeScrollAppears = false;
             }
 
          },
          _addLoadingIndicator: function(){
             if (!this._loadingIndicator ) {
                this._loadingIndicator = this._container.find('.controls-ListView-scrollIndicator');
+               this._scrollIndicatorHeight = this._loadingIndicator.height();
             }
             this._loadingIndicator.removeClass('ws-hidden');
          },
@@ -282,6 +289,19 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if( this._loadingIndicator && !this._nowLoading){
                this._loadingIndicator.addClass('ws-hidden');
             }
+         },
+         /**
+          * Разрешить или запретить подгрузку данных по скроллу.
+          * @param {Boolean} allow - true - разрешить, false - запретить
+          * @param {Boolean} [noLoad] - true - не загружать сразу
+          */
+         setAutoLoad: function(allow, noLoad){
+            this._allowAutoLoad = allow;
+            if (allow && !noLoad) {
+               this._nextLoad();
+               return;
+            }
+            this._removeLoadingIndicator();
          }
       });
 
