@@ -43,6 +43,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          _initOrigins: true,
          _marginsInited: false,
          _zIndex: null,
+         _currentAlignment: {},
          _options: {
             /**
              * @typedef {Object} CornerEnum
@@ -107,7 +108,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
 
       $constructor: function () {
-         this._publish('onClose');
+         this._publish('onClose', 'onAlignmentChange');
          var self = this;
          var container = this._container;
          var trg = $ws.helpers.trackElement(this._options.target, true);
@@ -156,6 +157,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
        */
       recalcPosition: function (recalcFlag) {
          if (this._isVisible) {
+            this._currentAlignment = {
+               verticalAlign : this._options.verticalAlign,
+               horizontalAlign : this._options.horizontalAlign,
+               corner : this._options.corner
+            };
             if (recalcFlag) {
                this._initOrigins = true;
             }
@@ -183,6 +189,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
                offset.top = this._calculateOverflow(offset, 'vertical');
                offset.left = this._calculateOverflow(offset, 'horizontal');
+               this._notifyOnAlignmentChange();
+
 
                this._container.css({
                   'top': offset.top + 'px',
@@ -667,6 +675,18 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          offset.top = offset1.top + offset2.top;
          offset.left = offset1.left + offset2.left;
          return offset;
+      },
+
+      _notifyOnAlignmentChange: function(){
+         if (this._options.verticalAlign.side != this._currentAlignment.verticalAlign.side ||
+             this._options.horizontalAlign.side != this._currentAlignment.horizontalAlign.side ||
+             this._options.corner != this._currentAlignment.corner){
+            this._notify('onAlignmentChange', {
+               verticalAlign : this._options.verticalAlign,
+               horizontalAlign : this._options.horizontalAlign,
+               corner : this._options.corner
+            });
+         }
       },
 
       after: {

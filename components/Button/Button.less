@@ -1,5 +1,6 @@
 // Normal default button
 .controls-Button {
+  position: relative;
   cursor: pointer;
   display: inline-block;
   outline: none;
@@ -14,8 +15,9 @@
   min-width: @button-min-width;
   height: @button-height;
   line-height: @button-line-height;
-  padding: @button-padding;
+  padding: 0;         //FF ignore padding in button, therefore we use SPAN with margin
   margin: @button-margin;
+  overflow: hidden;   //В FF у кнопки с фиксированной высотой и шириной текст выходит за пределы
   border: @button-border;
   .border-radius(@button-border-radius);
   .box-shadow(@button-shadow);
@@ -35,12 +37,7 @@
     background: @button-active-bg;
   }
 
-  .controls-Button__content {
-    position: relative;
-  }
-
   .controls-Button__text {
-    padding: @button-text-padding;
 
     &.controls-Button__emptyCaption {
       margin: @button-empty-text-margin;
@@ -51,6 +48,7 @@
   .controls-Button__icon {
     position: absolute;
     top: @button-icon-top-offset - 1px;         // this rule is for IE, see normal overrides for Chrome and Firefox below
+    left: @button-icon-left-offset;
     @media screen and (-webkit-min-device-pixel-ratio: 0) {
       top: @button-icon-top-offset;             // normal override for Chrome
     }
@@ -166,7 +164,7 @@
     min-width: @button-big-min-width;
     height: @button-big-height;
     line-height: @button-big-line-height;
-    padding: @button-big-padding;
+    padding: 0;   //FF ignore padding in button, therefore we use SPAN with margin
     margin: @button-big-margin;
     border: @button-big-border;
     .border-radius(@button-big-border-radius);
@@ -188,8 +186,7 @@
     }
 
     .controls-Button__text {
-      padding: @button-big-text-padding;
-
+      margin: @button-big-text-margin;
       &.controls-Button__emptyCaption {
         margin: @button-big-empty-text-margin;
       }
@@ -199,6 +196,7 @@
     .controls-Button__icon {
       position: absolute;
       top: @button-big-icon-top-offset - 1px;         // this rule is for IE, see normal overrides for Chrome and Firefox below
+      left: @button-big-icon-left-offset;
       @media screen and (-webkit-min-device-pixel-ratio: 0) {
         top: @button-big-icon-top-offset;             // normal override for Chrome
       }
@@ -209,6 +207,7 @@
 
       &.icon-24 {
         top: @button-big-icon-big-top-offset - 1px;   // this rule is for IE, see normal overrides for Chrome and Firefox below
+        left: @button-big-icon-big-left-offset;
         @media screen and (-webkit-min-device-pixel-ratio: 0) {
           top: @button-big-icon-big-top-offset;       // normal override for Chrome
         }
@@ -256,13 +255,6 @@
     }
   }
 
-  // Text overflow effect
-  &.controls-Button__ellispis {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
   &.ws-disabled {
     cursor: default;
     color: @button-disabled-text-color;
@@ -270,6 +262,17 @@
     .box-shadow(@button-disabled-shadow);
     background: @button-disabled-bg;
   }
+}
+
+.controls-Button__ellispis .controls-Button__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.controls-Button__text {
+  display: block;
+  margin: @button-text-margin;
 }
 
 // Normal offsets' override for Firefox

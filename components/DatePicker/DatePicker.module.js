@@ -20,6 +20,8 @@ define(
     * @control
     * @public
     * @demo SBIS3.Demo.Control.MyDatePicker
+    * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
+    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
     */
 
    var DatePicker = FormattedTextBoxBase.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
