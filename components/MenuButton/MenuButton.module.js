@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * Кнопка с выпадающим меню
     * @class SBIS3.CONTROLS.MenuButton
     * @extends SBIS3.CONTROLS.Button
-	* @demo SBIS3.Demo.Control.MyMenuButton
+	* @demo SBIS3.Demo.Control.MyMenuButton Пример кнопки с выпадающим меню    
     * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuButton'>
@@ -35,13 +35,26 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       _dotTplFn: dotTplFn,
       $protected: {
          _header: null,
+         _headerAlignment: {
+            horizontal: 'left',
+            vertical: 'bottom'
+         },
          _options: {
          }
       },
 
       init: function(){
+         var self = this;
          MenuButton.superclass.init.call(this);
          this._initMenu();
+         $ws.helpers.trackElement(this._container, true).subscribe('onMove', function () {
+            if (self._header) {
+               self._header.css({
+                  left: (self._headerAlignment.horizontal == 'left') ? self._container.offset().left : self._container.offset().left - 16,
+                  top: self._container.offset().top + 1
+               });
+            }
+         });
       },
 
       _initMenu: function(){
@@ -53,6 +66,20 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             this._container.addClass('controls-MenuButton__withoutMenu');
             this._container.removeClass('controls-Picker__show');
             $('.controls-MenuButton__header', this._container).remove();
+         }
+      },
+
+      _onAlignmentChangeHandler: function(alignment){
+         if (alignment.horizontalAlign.side == 'right'){
+            $('.controls-MenuButton__headerLeft', this._header).addClass('controls-MenuButton__headerLeft__revert');
+            $('.controls-MenuButton__headerRight', this._header).addClass('controls-MenuButton__headerRight__revert');
+            this._header.css('left', parseFloat(this._header.css('left')) - 16);
+            this._headerAlignment.horizontal = 'right';
+         } else {
+            $('.controls-MenuButton__headerLeft', this._header).removeClass('controls-MenuButton__headerLeft__revert');
+            $('.controls-MenuButton__headerRight', this._header).removeClass('controls-MenuButton__headerRight__revert');
+            this._header.css('left', parseFloat(this._header.css('left')) + 16);
+            this._headerAlignment.horizontal = 'left';
          }
       },
 
@@ -88,7 +115,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          MenuButton.superclass.togglePicker.call(this);
          $('.controls-MenuButton__headerCenter', this._container).width(this._container.width() + 12);
          this._header.css({
-            left: this._container.offset().left,
+            left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 16,
             top: this._container.offset().top + 1,
             'z-index': parseInt(this._picker._container.css('z-index'),10) + 1
          });

@@ -117,7 +117,15 @@
     height: @menu-button-header-left-height;
     margin: @menu-button-header-left-margin;
     background: @menu-button-header-left-bg;
+
+    &.controls-MenuButton__headerLeft__revert{
+      width: @menu-button-header-right-width;
+      height: @menu-button-header-right-height;
+      background: @menu-button-header-left-bg-revert;
+    }
   }
+
+
 
   .controls-MenuButton__headerCenter {
     display: inline-block;
@@ -133,6 +141,12 @@
     height: @menu-button-header-right-height;
     margin: @menu-button-header-right-margin;
     background: @menu-button-header-right-bg;
+
+    &.controls-MenuButton__headerRight__revert{
+      width: @menu-button-header-left-width;
+      height: @menu-button-header-left-height;
+      background: @menu-button-header-right-bg-revert;
+    }
   }
 }
 
