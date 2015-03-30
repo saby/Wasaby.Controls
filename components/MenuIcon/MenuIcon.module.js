@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
    /**
     * Кнопка с выпадающим меню
     * @class SBIS3.CONTROLS.MenuIcon
-	* @demo SBIS3.Demo.Control.MyMenuIcon Пример кнопки с выпадающим меню
+	* @demo SBIS3.Demo.Control.MyMenuIcon
     * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuIcon'>
@@ -24,7 +24,9 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
     * @extends SBIS3.CONTROLS.ToggleButton
     * @public
     * @category Buttons
-    * @ignoreOptions validators independentContext contextRestriction extendedTooltip
+    * @ignoreOptions independentContext contextRestriction extendedTooltip validators
+    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
+    * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.CollectionMixin
     */
