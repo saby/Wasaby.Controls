@@ -106,7 +106,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._limit = typeof(limit) != 'undefined' ? limit : this._limit;
          this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (DataSet) {
             self._dataSet = DataSet;
-            self._drawItems();
+            self._redraw();
          });
       },
 
@@ -133,9 +133,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          /*Method must be implemented*/
       },
 
-      _drawItems: function () {
+      _redraw: function() {
          this._clearItems();
-
          var
             self = this,
             DataSet = this._dataSet;
@@ -154,9 +153,27 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          });
       },
 
+      _drawItems: function (records) {
+         if (records && records.length > 0) {
+            for (var i = 0; i < records.length; i++) {
+               var
+                  targetContainer = this._getTargetContainer(records[i], records[i].getKey());
+               if (targetContainer) {
+                  this._drawItem(records[i], targetContainer,  records[i].getKey(), i);
+               }
+            }
+
+            var self = this;
+            this.reviveComponents().addCallback(function () {
+               self._notify('onDrawItems');
+               self._drawItemsCallback();
+            });
+         }
+      },
+
 
       _clearItems : function(container) {
-         container = container || this._container;
+         container = container || this._getItemsContainer();
          /*Удаляем компоненты-инстансы элементов*/
          if (!Object.isEmpty(this._itemsInstances)) {
             for (var i in this._itemsInstances) {

@@ -111,7 +111,7 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
             this._thead.append(th);
          }
 
-         this._drawItems();
+         this._redraw();
       },
 
       _getLeftOfItemContainer : function(container) {

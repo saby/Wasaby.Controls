@@ -13,6 +13,8 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!
     * @demo SBIS3.Demo.Control.MyPasswordTextBox
     * @public
     * @category Inputs
+    * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
+    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
     */
    var PasswordTextBox;
    PasswordTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS.PasswordTextBox.prototype */ {

@@ -1,6 +1,14 @@
 /**
  * Модуль 'Компонент кнопка'.
- *
+ * Можно настроить:
+ * <ol>
+ *    <li>{@link $ws.proto.Control#allowChangeEnable возможность изменения доступности кнопки};</li>
+ *    <li>{@link SBIS3.CONTROLS.ButtonBase#caption текст на кнопке};</li>
+ *    <li>{@link $ws.proto.Control#enabled возможность взаимодействия с кнопкой};</li>
+ *    <li>{@link SBIS3.CONTROLS.IconMixin#icon иконку на кнопке};</li>
+ *    <li>{@link primary по умолчанию ли кнопка};</li>
+ *    <li>{@link $ws.proto.Control#visible видимость кнопки};</li>
+ * </ol>
  * @description
  */
 define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.Button'], function(ButtonBase, dotTplFn) {
@@ -12,14 +20,16 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
     * @class SBIS3.CONTROLS.Button
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
-	* @demo SBIS3.Demo.Control.MyButton Пример кнопки
+	* @demo SBIS3.Demo.Control.MyButton
     * @initial
     * <component data-component='SBIS3.CONTROLS.Button'>
     *    <option name='caption' value='Кнопка'></option>
     * </component>
     * @public
     * @category Buttons
-    * @ignoreOptions validators independentContext contextRestriction extendedTooltip
+    * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
+    * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
+    * @ignoreOptions subcontrol verticalAlignment
     */
 
    var Button = ButtonBase.extend( /** @lends SBIS3.CONTROLS.Button.prototype */ {
@@ -54,14 +64,8 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
 
       setCaption: function(caption){
          Button.superclass.setCaption.call(this, caption);
-         var btnText;
-         if (this._options.icon) {
-            btnText = $('.js-controls-Button__text', this._container.get(0));
-            btnText.toggleClass('controls-Button__emptyCaption', !caption);
-         }
-         else {
-            btnText = this._container;
-         }
+         var btnText = $('.js-controls-Button__text', this._container.get(0));
+         btnText.toggleClass('controls-Button__emptyCaption', !caption);
          btnText.text(caption || '');
       },
        /**
@@ -115,25 +119,15 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
         */
       setIcon: function(icon) {
          Button.superclass.setIcon.call(this, icon);
-         var caption;
+         var content,
+             caption = $(".js-controls-Button__text", this._container.get(0)).html();
          if (!icon) {
-            caption = $(".js-controls-Button__text", this._container.get(0)).html();
-            this._container.html(caption).addClass('controls-Button__text');
+             content = $('<span class="controls-Button__text js-controls-Button__text">' + caption + '</span>');
          } else {
-            var iconCont = $('.js-controls-Button__icon', this._container.get(0));
-            if (!(iconCont.length)) {
-               caption = this._container.html();
-               var content = $('<span class="controls-Button__content">\
-                  <i class="controls-Button__icon js-controls-Button__icon ' + this._iconClass + '"></i><span class="controls-Button__text js-controls-Button__text">' + caption + '</span>\
-               </span>');
-               $('.controls-Button__text', content).toggleClass('controls-Button__emptyCaption', !caption);
-               this._container.html(content);
-            }
-            else {
-               $('.js-controls-Button__icon', this._container.get(0)).get(0).className = 'controls-Button__icon js-controls-Button__icon ' + this._iconClass;
-            }
-            this._container.removeClass('controls-Button__text');
+             content = $('<i class="controls-Button__icon js-controls-Button__icon ' + this._iconClass + '"></i><span class="controls-Button__text js-controls-Button__text">' + caption + '</span>');
          }
+         $('.controls-Button__text', content).toggleClass('controls-Button__emptyCaption', !caption);
+         this._container.html(content);
       },
 
       /*TODO методы для поддержки defaultButton*/

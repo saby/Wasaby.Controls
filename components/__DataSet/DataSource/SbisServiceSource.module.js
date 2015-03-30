@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             }
          }, 'all');
 
-         syncCompleteDef.done().getResult().addCallback(function(){
+         syncCompleteDef.done().getResult().addCallback(function () {
             self._notify('onDataSync', changedRecords);
          });
       },
@@ -66,13 +66,19 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
          self._BL.call(self._options.crateMethodName, {
             'Фильтр': null,
             'ИмяМетода': null
-         }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+         }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             var record = new Record({
                strategy: self.getStrategy(),
                raw: res
+               //TODO: на БЛ приходит не тип идентификатор, а целое число
                //keyField: self.getStrategy().getKey(res)
             });
             def.callback(record);
+         }, function (error) {
+            if (typeof(window) != 'undefined') {
+               console['log'](error);
+            }
+            throw new Error('Не удалось выпонить метод create');
          });
          return def;
       },
@@ -88,13 +94,17 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
          self._BL.call(self._options.readMethodName, {
             'ИдО': id,
             'ИмяМетода': 'Список'
-         }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
-            //TODO: переделать установку стратегии стратегию
+         }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             var record = new Record({
                'strategy': self.getStrategy(),
                'raw': res
             });
             def.callback(record);
+         }, function (error) {
+            if (typeof(window) != 'undefined') {
+               console['log'](error);
+            }
+            throw new Error('Не удалось выпонить метод read');
          });
          return def;
       },
@@ -110,8 +120,13 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def = new $ws.proto.Deferred(),
             rec = strategy.prepareRecordForUpdate(record);
 
-         self._BL.call(self._options.updateMethodName, {'Запись': rec}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+         self._BL.call(self._options.updateMethodName, {'Запись': rec}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             def.callback(true);
+         }, function (error) {
+            if (typeof(window) != 'undefined') {
+               console['log'](error);
+            }
+            throw new Error('Не удалось выпонить метод update');
          });
 
          return def;
@@ -126,8 +141,13 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
          var self = this,
             def = new $ws.proto.Deferred();
 
-         self._BL.call(self._options.destroyMethodName, {'ИдО': id}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+         self._BL.call(self._options.destroyMethodName, {'ИдО': id}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             def.callback(true);
+         }, function (error) {
+            if (typeof(window) != 'undefined') {
+               console['log'](error);
+            }
+            throw new Error('Не удалось выпонить метод destroy');
          });
 
          return def;
@@ -157,14 +177,18 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             'Фильтр': filterParam,
             'Сортировка': sortingParam,
             'Навигация': pagingParam
-         }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function (res) {
+         }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
 
             var DS = new DataSet({
                strategy: strategy,
                data: res
             });
-
             def.callback(DS);
+         }, function (error) {
+            if (typeof(window) != 'undefined') {
+               console['log'](error);
+            }
+            throw new Error('Не удалось выпонить метод query');
          });
 
          return def;

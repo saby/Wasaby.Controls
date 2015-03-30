@@ -15,13 +15,19 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     *    <li>{@link onlyPositive запрещение ввода отрицательных чисел};</li>
     *    <li>{@link onlyInteger запрещение ввода дробных чисел};</li>
     *    <li>{@link enableArrows отображать ли стрелки для увеличения/уменьшения числа};</li>
+    *    <li>{@link text начальное значение}.</li>
     * </ol>
     * @class SBIS3.CONTROLS.NumberTextBox
     * @extends SBIS3.CONTROLS.TextBox
     * @control
     * @public
     * @demo SBIS3.Demo.Control.MyNumberTextBox
-    * @ignoreOptions independentContext contextRestriction
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.NumberTextBox'>
+    *     <option name="text">0</option>
+    * </component>
+    * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
+    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
     */
 
    var NumberTextBox;
@@ -97,12 +103,19 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
              * С помощью стрелок можно увеличивать/уменьшать целую часть числа на 1.
              * @example
              * <pre>
-             *     <option name="enableArrows"></option>
+             *     <option name="enableArrows">true</option>
              * </pre>
              */
             enableArrows: false,
             /**
              * @cfg {Boolean} Показать разделители триад
+             * @example
+             * <pre>
+             *     <option name="delimiters">true</option>
+             * </pre>
+             * @see integers
+             * @see onlyInteger
+             * @see decimals
              */
             delimiters: false
          }
@@ -128,11 +141,29 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _setText: function(text){
-         text = this._formatValue(text);
+         if (text !== '-' && text !== '.' && text !== ''){
+            if (text.indexOf('.') === text.length - 1) {
+               text = this._formatValue(text) + '.';
+               this._inputField.val(text);
+               this._setCaretPosition(this._caretPosition[0] + 1, this._caretPosition[1] + 1);
+               return;
+            } else {
+               text = this._formatValue(text);
+            }
+         }
          this._inputField.val(text);
-         this._setCaretPosition(this._caretPosition[0], this._caretPosition[1])
+         this._setCaretPosition(this._caretPosition[0], this._caretPosition[1]);
       },
-
+       /**
+        * Возвращает текущее числовое значение поля ввода.
+        * @returns {Number} Текущее значение поля ввода числа.
+        * @example
+        * <pre>
+        *     if (control.getNumericValue() < 19) {
+        *        textBox.setEnabled("false");
+        *     }
+        * </pre>
+        */
       getNumericValue: function(){
          var val = this._options.text.replace(/\s/g, '');
          if (this._options.onlyInteger) {
@@ -140,7 +171,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          } else {
             val = parseFloat(val);
          }
-        return (isNaN(val)) ? null : val
+        return (isNaN(val)) ? null : val;
       },
 
       _formatValue: function(value, fromFocusOut){
@@ -285,8 +316,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
                currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? this._getZeroString(e - b) : '') + currentVal.substr(e);
             }
          } else { // точка в выделении
-            currentVal = currentVal.substr(0, b) + '.' + (this._options.decimals > 0 ? this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
-            newCaretPosition = currentVal.indexOf('.') - 1;
+            currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ?  '.' + this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
+            newCaretPosition = (currentVal.indexOf('.') != -1) ? currentVal.indexOf('.') - 1 : currentVal.length;
          }
          currentVal = currentVal.replace(/\s/g, '');
          this._setText(currentVal);
@@ -313,7 +344,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          } else
          if (b > dotPosition && e > dotPosition){ // после точки
             if (b == e){
-               if (b != dotPosition + 1) {
+               if (!(b == dotPosition + 1 && this._options.decimals > 0)) {
                   currentVal = currentVal.substr(0, b - 1) + (this._options.decimals > 0 ? '0' : '') + currentVal.substr(e);
                }
                newCaretPosition--;
@@ -321,8 +352,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
                currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? this._getZeroString(e - b) : '') + currentVal.substr(e);
             }
          } else { // точка в выделении
-            currentVal = currentVal.substr(0, b) + '.' + (this._options.decimals > 0 ? this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
-            newCaretPosition = currentVal.indexOf('.') - 1;
+            currentVal = currentVal.substr(0, b) +  (this._options.decimals > 0 ? '.' + this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
+            newCaretPosition = (currentVal.indexOf('.') != -1) ? currentVal.indexOf('.') - 1 : currentVal.length;
          }
          currentVal = currentVal.replace(/\s/g, '');
          this._setText(currentVal);

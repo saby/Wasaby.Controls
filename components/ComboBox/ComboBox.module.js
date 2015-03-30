@@ -309,9 +309,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
-      _drawItems: function () {
+      _redraw: function () {
          if (this._picker) {
-            ComboBox.superclass._drawItems.call(this);
+            ComboBox.superclass._redraw.call(this);
             this._picker.recalcPosition();
          }
          else {

@@ -35,6 +35,7 @@ input[type="reset"]::-moz-focus-inner {
   margin: 0 0 0 4px;
 }
 .controls-Button {
+  position: relative;
   cursor: pointer;
   display: inline-block;
   outline: none;
@@ -55,8 +56,9 @@ input[type="reset"]::-moz-focus-inner {
   min-width: 24px;
   height: 24px;
   line-height: 22px;
-  padding: 0 12px;
+  padding: 0;
   margin: auto;
+  overflow: hidden;
   border: 1px transparent;
   -webkit-border-radius: 16px;
   -moz-border-radius: 16px;
@@ -85,37 +87,32 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: inset 0 1px 1px #939292;
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXBWQ6DIABAwXf/sxlj3UUJhIqKogSX+tsZ3t/Fc0fuM3DGgxg8YV85vMOvM5uzuHlksYZp1Fij+GqJUT1aCtTQIkXN0FaIpqCrPjRFRp2nlFnyB0tqP75XY7RKAAAAAElFTkSuQmCC');
 }
-.controls-Button .controls-Button__content {
-  position: relative;
-}
-.controls-Button .controls-Button__text {
-  padding: 0;
-}
 .controls-Button .controls-Button__text.controls-Button__emptyCaption {
   margin: 0 0 0 13px !important;
 }
 .controls-Button .controls-Button__icon {
   position: absolute;
-  top: 0px;
+  top: 3px;
+  left: 12px;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .controls-Button .controls-Button__icon {
-    top: 1px;
+    top: 4px;
   }
 }
 .controls-Button .controls-Button__icon + .controls-Button__text {
-  margin: 0 0 0 20px;
+  margin: 0 12px 0 32px;
 }
 .controls-Button .controls-Button__icon.icon-24 {
-  top: -4px;
+  top: -1px;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .controls-Button .controls-Button__icon.icon-24 {
-    top: -3px;
+    top: 0;
   }
 }
 .controls-Button .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin: 0 0 0 28px;
+  margin: 0 12px 0 40px;
 }
 .controls-Button.controls-Button__primary {
   color: #ffffff;
@@ -220,7 +217,7 @@ input[type="reset"]::-moz-focus-inner {
   min-width: 24px;
   height: 48px;
   line-height: 18px;
-  padding: 15px 24px;
+  padding: 0;
   margin: auto;
   border: 1px transparent;
   -webkit-border-radius: 24px;
@@ -251,33 +248,35 @@ input[type="reset"]::-moz-focus-inner {
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAJNJREFUGFcNw1USgzAAQMF3/6tVcAiugWDB6W/ZmeV3H9zXznVunMfKuS8cu2bfNNs6sy0Tqx5Z5gE99+ipZx4V09Ax9u1TMqiGvmtQbY2SFZ0saZsCWefIKqcpM+oipSoSqjymzCKKNCJPwqcgiwPSyCcJPRLhEQuXKHAIfZvQsxCuSeCY+I6Bb3/xrA+u+cYxXn8Tm385Ml6/+QAAAABJRU5ErkJggg==');
 }
 .controls-Button.controls-Button__big .controls-Button__text {
-  padding: 11px 0 0;
+  margin: 0 24px 0 24px;
 }
 .controls-Button.controls-Button__big .controls-Button__text.controls-Button__emptyCaption {
   margin: 0 0 0 13px !important;
 }
 .controls-Button.controls-Button__big .controls-Button__icon {
   position: absolute;
-  top: 1px;
+  top: 14px;
+  left: 24px;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .controls-Button.controls-Button__big .controls-Button__icon {
-    top: 2px;
+    top: 15px;
   }
 }
 .controls-Button.controls-Button__big .controls-Button__icon + .controls-Button__text {
-  margin: 0 0 0 20px;
+  margin: 0 24px 0 44px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-  top: -2px;
+  top: 11px;
+  left: 24px;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-    top: -1px;
+    top: 12px;
   }
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin: 0 0 0 28px;
+  margin: 0 24px 0 52px;
 }
 .controls-Button.controls-Button__big.controls-Button__primary {
   color: #ffffff;
@@ -319,12 +318,6 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: inset 0 -1px 1px #bbbbba;
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAFVJREFUGFc9wwkOgDAIBMD9/2OtLb2AHgaqTjLYe2Ot9Z9zvgfG+CqGKtQLVATiGcIncwd329Bts9W3aouvxWZfsqWTCJnSmSLoG2+f7B18tOFCDNcDpuCK5d42KGsAAAAASUVORK5CYII=');
 }
-.controls-Button.controls-Button__ellispis,
-.controls-Link.controls-Button__ellispis {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 .controls-Button.ws-disabled {
   cursor: default;
   color: #cccccc;
@@ -334,18 +327,27 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: inset 0 -1px 1px #bbbbba;
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAARUlEQVQYVxXDCRIAEQwAwfn/Y9cRQcSxdFVzzmHvzVrrnsx5u+M+GOM2w6xjvdHbW2lVqfoWtAgqQpGM5ISkSH5jIIXvByxNRX+NbFFRAAAAAElFTkSuQmCC');
 }
+.controls-Button__ellispis .controls-Button__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.controls-Button__text {
+  display: block;
+  margin: 0 12px 0 12px;
+}
 @-moz-document url-prefix() {
   .controls-Button .controls-Button__icon {
-    top: 1px;
+    top: 4px;
   }
   .controls-Button .controls-Button__icon.icon-24 {
-    top: -3px;
+    top: 0;
   }
   .controls-Button.controls-Button__big .controls-Button__icon {
-    top: 2px;
+    top: 15px;
   }
   .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-    top: -1px;
+    top: 12px;
   }
 }
 .controls-ButtonGroup .controls-ListView__item {
@@ -867,6 +869,21 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Menu__submenu {
   display: none;
 }
+.controls-Menu__32px .controls-MenuItem {
+  height: 32px;
+  line-height: 32px;
+}
+.controls-Menu__32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
+  top: 0px;
+  left: 0px;
+}
+.controls-Menu__32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon.icon-24 {
+  top: -4px;
+  left: -3px;
+}
+.controls-Menu__32px .controls-MenuItem.controls-Menu__hasChild:after {
+  top: 7px;
+}
 .controls-MenuItem {
   position: relative;
   display: block;
@@ -891,8 +908,12 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
   position: absolute;
-  top: -2px;
-  left: -2px;
+  top: 0px;
+  left: 0px;
+}
+.controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon.icon-24 {
+  top: -4px;
+  left: -3px;
 }
 .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__text {
   margin: 0 0 0 22px;
@@ -967,18 +988,19 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent;
   background: transparent url('img/MenuButton-arrowDown.png') 0 0;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header {
+.controls-MenuButton__header {
   display: inline-block;
   position: absolute;
+  cursor: pointer;
   border: none;
   top: 0;
   left: 0;
   width: 100%;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header.controls-MenuButton__header-hidden {
+.controls-MenuButton__header.controls-MenuButton__header-hidden {
   display: none;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerLeft {
+.controls-MenuButton__header .controls-MenuButton__headerLeft {
   float: left;
   display: inline-block;
   width: 12px;
@@ -986,14 +1008,14 @@ input[type="reset"]::-moz-focus-inner {
   margin: 0;
   background: transparent url('img/MenuButton-header.png') 0 28px;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerCenter {
+.controls-MenuButton__header .controls-MenuButton__headerCenter {
   display: inline-block;
   width: auto;
   height: 4px;
   margin: 0;
   background: #ffffff;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerRight {
+.controls-MenuButton__header .controls-MenuButton__headerRight {
   display: inline-block;
   width: 28px;
   height: 28px;
@@ -1003,7 +1025,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuButton__Menu {
   margin-top: 4px;
   margin-left: 0;
-  border-width: 0 1px 1px;
+  border-width: 1px;
   border-style: solid;
   border-color: #cccccc;
   background: #ffffff;
@@ -1013,6 +1035,13 @@ input[type="reset"]::-moz-focus-inner {
   color: #0055bb;
   text-decoration: none;
   padding: 0 12px 0 0;
+  line-height: 24px;
+}
+.controls-MenuLink.controls-MenuLink__32px {
+  line-height: 32px;
+}
+.controls-MenuLink.controls-MenuLink__32px .controls-MenuLink__arrowDown {
+  top: 14px;
 }
 .controls-MenuLink.controls-MenuLink__withoutMenu {
   padding: 0;
@@ -1030,41 +1059,24 @@ input[type="reset"]::-moz-focus-inner {
   width: 8px;
   height: 6px;
   right: 0;
-  top: 7px;
+  top: 10px;
   background: transparent url('img/MenuButton-arrowDown.png') 0 0;
 }
 .controls-MenuLink__Menu {
   margin-left: -9px;
   background: #ffffff;
-  margin-top: -20px;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
   height: 24px;
 }
-.controls-MenuLink__Menu .controls-MenuLink__header .controls-Link {
-  margin: 3px 0 0;
-}
 .controls-MenuLink__Menu .controls-MenuItem {
   height: 24px;
 }
-.controls-MenuLink__Menu.controls-MenuLink__32px {
-  margin-top: -25px;
-}
-.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuLink__header {
+.controls-MenuLink__Menu.controls-Menu__32px .controls-MenuLink__header {
   height: 32px;
 }
-.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuLink__header .controls-Link {
-  margin: 8px 0 0;
-}
-.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuItem {
+.controls-MenuLink__Menu.controls-Menu__32px .controls-MenuItem {
   height: 32px;
-}
-.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuItem .controls-MenuItem__content {
-  top: 4px;
-}
-.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
-  top: 0px;
-  left: 0px;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
   display: inline-block;
@@ -1086,11 +1098,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuLink__Menu .controls-MenuLink__header .controls-MenuLink__arrowDown {
   display: none;
-}
-@-moz-document url-prefix() {
-  .controls-MenuLink__Menu {
-    margin-top: -19px;
-  }
 }
 .controls-MenuIcon {
   position: relative;

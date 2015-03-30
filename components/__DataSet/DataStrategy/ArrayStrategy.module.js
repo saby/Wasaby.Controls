@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
    var ArrayStrategy = IDataStrategy.extend({
       $protected: {},
       $constructor: function () {
-         var a = 5;
       },
       getKey: function (data) {
          var
@@ -115,6 +114,14 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
          }
       },
 
+      //TODO пустышка
+      getMetaData: function(data) {
+         return {
+            more : data.length
+         };
+      },
+
+
       query: function (data, filter, sorting, offset, limit) {
          var newData = data;
          filter = filter || {};
@@ -170,7 +177,7 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
          if (typeof(offset) != 'undefined' && offset != null && typeof(limit) != 'undefined' && limit != null) {
             pagingData = [];
             var
-               firstIdx = offset * limit,
+               firstIdx = offset,
                length = newData.length;
             for (var i = firstIdx; i < firstIdx + limit; i++) {
                if (i >= length) {

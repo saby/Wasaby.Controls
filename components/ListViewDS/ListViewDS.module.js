@@ -85,6 +85,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             return this._options.itemTemplate;
          },
 
+         _getItemsContainer : function() {
+            return $(".controls-ListView__itemsContainer", this._container.get(0))
+         },
+
          /* +++++++++++++++++++++++++++ */
 
          _elemClickHandler: function (id, data, target) {

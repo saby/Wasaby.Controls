@@ -21,6 +21,8 @@ define(
        * @control
        * @public
        * @demo SBIS3.Demo.Control.MyCalendar
+       * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
+       * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
        */
 
       var Calendar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Calendar.prototype */{

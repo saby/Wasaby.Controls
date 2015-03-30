@@ -35,6 +35,7 @@ input[type="reset"]::-moz-focus-inner {
   margin: 0 0 0 4px;
 }
 .controls-Button {
+  position: relative;
   cursor: pointer;
   display: inline-block;
   outline: none;
@@ -55,8 +56,9 @@ input[type="reset"]::-moz-focus-inner {
   min-width: 24px;
   height: 58px;
   line-height: 56px;
-  padding: 0 8px;
+  padding: 0;
   margin: auto;
+  overflow: hidden;
   border: 0 none;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -85,37 +87,32 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background: #ffe6cc;
 }
-.controls-Button .controls-Button__content {
-  position: relative;
-}
-.controls-Button .controls-Button__text {
-  padding: 0;
-}
 .controls-Button .controls-Button__text.controls-Button__emptyCaption {
   margin: 0 0 0 13px !important;
 }
 .controls-Button .controls-Button__icon {
   position: absolute;
-  top: -1px;
+  top: 19px;
+  left: 8px;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .controls-Button .controls-Button__icon {
-    top: 0px;
+    top: 20px;
   }
 }
 .controls-Button .controls-Button__icon + .controls-Button__text {
-  margin: 0 0 0 20px;
+  margin: 0 8px 0 28px;
 }
 .controls-Button .controls-Button__icon.icon-24 {
-  top: -6px;
+  top: 14px;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .controls-Button .controls-Button__icon.icon-24 {
-    top: -5px;
+    top: 15px;
   }
 }
 .controls-Button .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin: 0 0 0 28px;
+  margin: 0 8px 0 36px;
 }
 .controls-Button.controls-Button__primary {
   color: #333333;
@@ -220,7 +217,7 @@ input[type="reset"]::-moz-focus-inner {
   min-width: 24px;
   height: 58px;
   line-height: 56px;
-  padding: 0 8px;
+  padding: 0;
   margin: auto;
   border: 0 none;
   -webkit-border-radius: 0;
@@ -251,33 +248,35 @@ input[type="reset"]::-moz-focus-inner {
   background: #ffe6cc;
 }
 .controls-Button.controls-Button__big .controls-Button__text {
-  padding: 11px 0 0;
+  margin: 0 8px 0 8px;
 }
 .controls-Button.controls-Button__big .controls-Button__text.controls-Button__emptyCaption {
   margin: 0 0 0 13px !important;
 }
 .controls-Button.controls-Button__big .controls-Button__icon {
   position: absolute;
-  top: 0px;
+  top: 19px;
+  left: 8px;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .controls-Button.controls-Button__big .controls-Button__icon {
-    top: 1px;
+    top: 20px;
   }
 }
 .controls-Button.controls-Button__big .controls-Button__icon + .controls-Button__text {
-  margin: 0 0 0 20px;
+  margin: 0 8px 0 28px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-  top: -4px;
+  top: 14px;
+  left: 8px;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-    top: -3px;
+    top: 15px;
   }
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin: 0 0 0 28px;
+  margin: 0 8px 0 36px;
 }
 .controls-Button.controls-Button__big.controls-Button__primary {
   color: #333333;
@@ -319,12 +318,6 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background: #eeeeee;
 }
-.controls-Button.controls-Button__ellispis,
-.controls-Link.controls-Button__ellispis {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 .controls-Button.ws-disabled {
   cursor: default;
   color: #aaaaaa;
@@ -334,18 +327,27 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background: #eeeeee;
 }
+.controls-Button__ellispis .controls-Button__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.controls-Button__text {
+  display: block;
+  margin: 0 8px 0 8px;
+}
 @-moz-document url-prefix() {
   .controls-Button .controls-Button__icon {
-    top: 0px;
+    top: 20px;
   }
   .controls-Button .controls-Button__icon.icon-24 {
-    top: -5px;
+    top: 15px;
   }
   .controls-Button.controls-Button__big .controls-Button__icon {
-    top: 1px;
+    top: 20px;
   }
   .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-    top: -3px;
+    top: 15px;
   }
 }
 .controls-ButtonGroup .controls-ListView__item {
@@ -867,6 +869,21 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Menu__submenu {
   display: none;
 }
+.controls-Menu__32px .controls-MenuItem {
+  height: 32px;
+  line-height: 32px;
+}
+.controls-Menu__32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
+  top: 0px;
+  left: 0px;
+}
+.controls-Menu__32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon.icon-24 {
+  top: 0px;
+  left: 0px;
+}
+.controls-Menu__32px .controls-MenuItem.controls-Menu__hasChild:after {
+  top: 20px;
+}
 .controls-MenuItem {
   position: relative;
   display: block;
@@ -891,6 +908,10 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
   position: absolute;
+  top: 0px;
+  left: -2px;
+}
+.controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon.icon-24 {
   top: 0px;
   left: -2px;
 }
@@ -967,18 +988,19 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #aaaaaa transparent transparent transparent;
   background: transparent;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header {
+.controls-MenuButton__header {
   display: inline-block;
   position: absolute;
+  cursor: pointer;
   border: none;
   top: 0;
   left: 0;
   width: 100%;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header.controls-MenuButton__header-hidden {
+.controls-MenuButton__header.controls-MenuButton__header-hidden {
   display: none;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerLeft {
+.controls-MenuButton__header .controls-MenuButton__headerLeft {
   float: left;
   display: inline-block;
   width: 0;
@@ -986,14 +1008,14 @@ input[type="reset"]::-moz-focus-inner {
   margin: 0;
   background: transparent;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerCenter {
+.controls-MenuButton__header .controls-MenuButton__headerCenter {
   display: inline-block;
   width: 0;
   height: 0;
   margin: 0;
   background: transparent;
 }
-.controls-Button.controls-MenuButton .controls-MenuButton__header .controls-MenuButton__headerRight {
+.controls-MenuButton__header .controls-MenuButton__headerRight {
   display: inline-block;
   width: 0;
   height: 0;
@@ -1013,6 +1035,13 @@ input[type="reset"]::-moz-focus-inner {
   color: #ffcc99;
   text-decoration: none;
   padding: 0 12px 0 0;
+  line-height: 24px;
+}
+.controls-MenuLink.controls-MenuLink__32px {
+  line-height: 32px;
+}
+.controls-MenuLink.controls-MenuLink__32px .controls-MenuLink__arrowDown {
+  top: 14px;
 }
 .controls-MenuLink.controls-MenuLink__withoutMenu {
   padding: 0;
@@ -1030,41 +1059,24 @@ input[type="reset"]::-moz-focus-inner {
   width: 8px;
   height: 6px;
   right: 0;
-  top: 7px;
+  top: 10px;
   background: transparent;
 }
 .controls-MenuLink__Menu {
   margin-left: -9px;
   background: #ffffff;
-  margin-top: -20px;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
   height: 24px;
 }
-.controls-MenuLink__Menu .controls-MenuLink__header .controls-Link {
-  margin: 3px 0 0;
-}
 .controls-MenuLink__Menu .controls-MenuItem {
   height: 24px;
 }
-.controls-MenuLink__Menu.controls-MenuLink__32px {
-  margin-top: -25px;
-}
-.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuLink__header {
+.controls-MenuLink__Menu.controls-Menu__32px .controls-MenuLink__header {
   height: 32px;
 }
-.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuLink__header .controls-Link {
-  margin: 8px 0 0;
-}
-.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuItem {
+.controls-MenuLink__Menu.controls-Menu__32px .controls-MenuItem {
   height: 32px;
-}
-.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuItem .controls-MenuItem__content {
-  top: 4px;
-}
-.controls-MenuLink__Menu.controls-MenuLink__32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
-  top: 0px;
-  left: 0px;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
   display: inline-block;
@@ -1086,11 +1098,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuLink__Menu .controls-MenuLink__header .controls-MenuLink__arrowDown {
   display: none;
-}
-@-moz-document url-prefix() {
-  .controls-MenuLink__Menu {
-    margin-top: -19px;
-  }
 }
 .controls-MenuIcon {
   position: relative;
@@ -2035,6 +2042,17 @@ input[type="reset"]::-moz-focus-inner {
   white-space: normal;
   line-height: 21px;
   padding-top: 8px;
+}
+.controls-Button.controls-Button__thirdRow {
+  white-space: normal;
+  line-height: 18px;
+  padding-top: 2px;
+}
+.controls-Button {
+  white-space: normal;
+}
+.controls-Button__text {
+  line-height: 20px;
 }
 body {
   background-color: #373944;

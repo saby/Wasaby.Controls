@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
    /**
     * Контрол, отображающий кнопку в виде ссылки и выпадающее из нее меню
     * @class SBIS3.Engine.MenuLink
-	* @demo SBIS3.Demo.Control.MyMenuLink Пример ссылки с выпадающим меню
+	* @demo SBIS3.Demo.Control.MyMenuLink
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
     * @initial
@@ -26,7 +26,9 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @public
     * @category Buttons
-    * @ignoreOptions validators independentContext contextRestriction extendedTooltip
+    * @ignoreOptions independentContext contextRestriction extendedTooltip validators
+    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
+    * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment
     */
 
    var MenuLink = Link.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.Engine.Link.prototype */ {
@@ -74,11 +76,12 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
 
       _setPickerContent: function(){
          var self = this;
+         this._picker._container.css('margin-top', -parseInt(this._container.css('height'), 10) - 1);
          this._picker._container.addClass('controls-MenuLink__Menu');
          if (this._container.hasClass('controls-MenuLink__32px')){
-            this._picker._container.addClass('controls-MenuLink__32px');
+            this._picker._container.addClass('controls-Menu__32px');
          }
-         var header= $('<div class="controls-MenuLink__header"></div>');
+         var header= $('<span class="controls-MenuLink__header"></span>');
          header.append(this._container.clone().removeAttr('style'));
          this._picker.getContainer().prepend(header);
          $(".controls-Link__icon", header.get(0)).addClass('icon-hover');

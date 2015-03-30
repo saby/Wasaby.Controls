@@ -16,6 +16,9 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SB
     *     <option name='stateOn'>Вкл</option>
     *     <option name='stateOff'>Выкл</option>
     * </component>
+    * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers
+    * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner stateKey
+    * @ignoreOptions subcontrol verticalAlignment parent
     */
 
    var Switcher = SwitcherBase.extend( /** @lends SBIS3.CONTROLS.Switcher.prototype */ {
