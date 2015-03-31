@@ -27,6 +27,7 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SB
     * @ignoreMethods subscribe unbind unsubscribe unsubscribeFrom
     *
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChange onTooltipContentRequest onChange
+    * @ignoreEvents onFocusIn onFocusOut onKeyPressed
     */
 
    var Switcher = SwitcherBase.extend( /** @lends SBIS3.CONTROLS.Switcher.prototype */ {
