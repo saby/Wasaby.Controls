@@ -25,6 +25,7 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
     * @ignoreMethods subscribe unbind unsubscribe unsubscribeFrom
     *
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChange onTooltipContentRequest onChange
+    * @ignoreEvents onFocusIn onFocusOut onKeyPressed
     */
    var SwitcherDoubleOnline = SwitcherBase.extend( /** @lends SBIS3.Engine.SwitcherDoubleOnline.prototype */ {
       _dotTplFn: dotTplFn,
