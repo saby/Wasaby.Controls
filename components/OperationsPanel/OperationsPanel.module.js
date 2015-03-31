@@ -71,27 +71,28 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          this._bindPanelEvents();
          this.setLinkedView(this._options.linkedView);
       },
+      init: function() {
+         OperationsPanel.superclass.init.apply(this, arguments);
+         this._markCheckBox = this.getChildControlByName('markCheckBox');
+         this._bindMarkCheckBox();
+      },
       _drawItemsCallback: function() {
-         this._markButton =  this.getItemInstance('markOperations');
-         if (!this._panelDrawn) {
-            this._panelDrawn = true;
-            this._markCheckBox = this.getChildControlByName('markCheckBox');
-            this._bindMarkCheckBox();
-            this._updateMarkBlock();
-         }
+         this._markButton = OperationsPanel.superclass.getItemInstance.apply(this, ['markOperations']);
+         this._panelDrawn = true;
       },
       setLinkedView: function(linkedView) {
          if ($ws.helpers.instanceOfModule(linkedView, 'SBIS3.CONTROLS.DataGrid')) {
-            this._toggleView(linkedView);
-            this._toggleMarkBlock();
-            this._togglePanel();
-            this._toggleMode();
+            this._reassignView(linkedView);
+            this.togglePicker();
+            this._setMode();
+            this._setVisibleMarkBlock();
+            this._updateMarkBlock();
          }
       },
       getLinkedView: function() {
          return this._options.linkedView;
       },
-      _toggleView: function(linkedView) {
+      _reassignView: function(linkedView) {
          if (this._options.linkedView) {
             this._options.linkedView.unsubscribe('onSelectedItemsChange', this._handlers.onChangeSelection);
          }
@@ -115,7 +116,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             remove: this._removeRecords.bind(this)
          };
       },
-      /*TODO подумать как без такого обхода*/
       _initOperations: function() {
          var items = this.getItems(),
             self = this;
@@ -143,9 +143,9 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
       _onChangeSelection: function() {
          this._selectedCount = this._options.linkedView.getSelectedItems().length;
+         this.togglePicker();
+         this._setMode();
          this._updateMarkBlock();
-         this._toggleMode();
-         this._togglePanel();
       },
       _onCheckBoxActivated: function() {
          this._markCheckBox.isChecked() === true ? this._selectCurrentPage() : this._removeSelection();
@@ -177,50 +177,51 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          view._dataSource.sync(view._dataSet);
       },
       _bindPanelEvents: function() {
-         this._blocks.closedButton.bind('click', this.open.bind(this));
-         this._blocks.openedButton.bind('click', this.close.bind(this));
+         this._blocks.closedButton.bind('click', this.showPicker.bind(this));
+         this._blocks.openedButton.bind('click', this.hidePicker.bind(this));
       },
       _bindMarkCheckBox: function() {
          this._markCheckBox.subscribe('onActivated', this._handlers.onCheckBoxActivated);
       },
-      open: function() {
+      showPicker: function() {
          if (this.isEnabled() && this.getLinkedView()) {
             this._drawButtons();
-            this.showPicker();
+            OperationsPanel.superclass.showPicker.apply(this);
          }
       },
-      close: function() {
-         this.hidePicker();
+      togglePicker: function() {
+         if (!!this._selectedCount !== this._pickerIsVisible()) {
+            OperationsPanel.superclass.togglePicker.apply(this);
+         }
+      },
+      _pickerIsVisible: function() {
+         return !!this._picker && this._picker.isVisible()
       },
       hide: function() {
          this.hidePicker();
-         $ws.proto.OperationsPanel.superclass.hide.apply(this, arguments);
-      },
-      isOpen: function() {
-         return this._picker && this._picker.isVisible();
+         OperationsPanel.superclass.hide.apply(this, arguments);
       },
       _drawButtons: function() {
          if (!this._panelDrawn) {
             this._drawItems();
          }
       },
-      _togglePanel: function() {
-         this[this._selectedCount ? 'open' : 'close']();
-      },
       _updateMarkBlock: function() {
-         this._updateMarkCheckBox();
-         this._updateMarkButton();
+         if (this._panelDrawn) {
+            this._updateMarkCheckBox();
+            this._updateMarkButton();
+         }
       },
-      _toggleMode: function() {
+      _setMode: function() {
          this._currentMode = !!this._selectedCount;
          this._blocks.wrapper.toggleClass('controls__operations-panel__mass-mode',  !this._currentMode).toggleClass('controls__operations-panel__selection-mode',  this._currentMode);
       },
-      _toggleMarkBlock: function() {
+      _setVisibleMarkBlock: function() {
          this._blocks.markOperations.toggleClass('ws-hidden', !this._options.linkedView._options.multiselect);
       },
       _updateMarkCheckBox: function() {
          var recordsCount = this._options.linkedView._dataSet.getCount();
-         this._markCheckBox.setChecked(this._selectedCount === recordsCount && recordsCount ? true : this._selectedCount ? null : false)
+         this._markCheckBox.setChecked(this._selectedCount === recordsCount && recordsCount ? true : this._selectedCount ? null : false);
       },
       _updateMarkButton: function() {
          var hasMarkOptions = !!this._markButton.getItems().getItemsCount(),
@@ -283,7 +284,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       _addMarkOperation: function() {
          this._items.addItem({
             name: 'markOperations',
-            type: {'mark': true},
+            type: { 'mark': true },
             caption: 'Отметить'
          });
       },
@@ -292,46 +293,13 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
       setEnabled: function(enabled) {
          if (!enabled) {
-            this.close();
+            this.hidePicker();
          }
          OperationsPanel.superclass.setEnabled.apply(this, arguments);
       },
-      addButtons: function(buttons) {
-         this._toggleButtons(buttons, false);
-      },
-      removeButtons: function(buttons) {
-         this._toggleButtons(buttons, true);
-      },
-      _toggleButtons: function(buttons, flag) {
-         var self = this;
-         buttons = buttons instanceof Array ? buttons : [buttons];
-         $.each(buttons, function(key, value) {
-            if (flag) {
-               self.getItems().destroyItem(value);
-               self._drawItems();
-            } else {
-               self._parseOperation(value);
-               self.addItem(value);
-            }
-         });
-      },
-      hideButtons: function(names) {
-         this._toggleButtonsVisible(names, false);
-      },
-      showButtons: function(names) {
-         this._toggleButtonsVisible(names, true);
-      },
-      _toggleButtonsVisible: function(names, state) {
-         var self = this;
-         names = names instanceof Array ? names : [names];
-         $.each(names, function(key, value) {
-            self.getItems().getItem(value).visible = state;
-         });
-         this._drawItems();
-      },
-      getButton: function(name) {
+      getItemInstance: function() {
          this._drawButtons();
-         return this.getItemInstance(name);
+         return OperationsPanel.superclass.getItemInstance.apply(this, arguments);
       },
       getPanelState: function() {
          return this._currentMode;
@@ -343,8 +311,3 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    });
    return OperationsPanel;
 });
-
-/*TODO переименовать некоторые функции с toggle*/
-/*TODO если в опциях передать LinkedView то чекбокс не оживает*/
-
-
