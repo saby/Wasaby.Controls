@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
    function (CompoundControl, DSMixin, MultiSelectable, dotTplFn) {
 
       'use strict';
-      var MIN_ROW_HEIGHT = 32;
 
       /**
        * Контрол, отображающий внутри себя набор однотипных сущностей, умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать
@@ -290,7 +289,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             return (clientHeight + scrollTop >= scrollHeight - this._scrollIndicatorHeight);//Учитываем отступ снизу на высоту картинки индикатора загрузки
          },
          _loadBeforeScrollAppears: function(){
-            if (this._isLoadBeforeScrollAppears && this._dataSet.getCount() <= parseInt(($(window).height() /  MIN_ROW_HEIGHT ) + 10 , 10)){
+            var elem = this._infiniteScrollContainer.length ? this._infiniteScrollContainer.get(0) : $('body').get(0);
+            //TODO функционал не оттестирован на контейнерах со скроллом Было: this._dataSet.getCount() <= parseInt(($(window).height() /  32 ) + 10 , 10
+            if (this._isLoadBeforeScrollAppears && !(elem.scrollHeight > $(window).height())){
                this._nextLoad();
             } else {
                this._isLoadBeforeScrollAppears = false;
