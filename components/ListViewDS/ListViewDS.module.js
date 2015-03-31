@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (this.isInfiniteScroll()) {
                this._infiniteScrollContainer = this._container.closest('.controls-ListView__infiniteScroll');
                if (this._infiniteScrollContainer.length) {
-                  //TODO Данный функционад пока не протестирован
+                  //TODO Данный функционал пока не протестирован
                   this._infiniteScrollContainer.bind('scroll.wsInfiniteScroll', this._onInfiniteContainerScroll.bind(this));
                } else {
                   $(window).bind('scroll.wsInfiniteScroll', this._onWindowScroll.bind(this));
@@ -290,7 +290,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          _loadBeforeScrollAppears: function(){
             var elem = this._infiniteScrollContainer.length ? this._infiniteScrollContainer.get(0) : $('body').get(0);
-            //TODO функционал не оттестирован на контейнерах со скроллом Было: this._dataSet.getCount() <= parseInt(($(window).height() /  32 ) + 10 , 10
+            //TODO функционал не оттестирован на контейнерах со скроллом.
+            // Было: this._dataSet.getCount() <= parseInt(($(window).height() /  32 ) + 10 , 10
             if (this._isLoadBeforeScrollAppears && !(elem.scrollHeight > $(window).height())){
                this._nextLoad();
             } else {
