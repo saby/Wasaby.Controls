@@ -37,3 +37,26 @@
 .controls-Menu__submenu {
   display: none;
 }
+
+.controls-Menu__32px {
+   .controls-MenuItem{
+      height: @menu-link-header-height-big;
+      line-height: @menu-link-header-height-big;
+      .controls-MenuItem__content{
+         .controls-MenuItem__icon{
+            top: @menu-item-icon-top-offset-big;
+            left: @menu-item-icon-left-offset-big;
+            &.icon-24 {
+               top: @menu-item-icon24-top-offset-big;
+               left: @menu-item-icon24-left-offset-big;
+            }
+         }
+      }
+      &.controls-Menu__hasChild {
+         &:after {
+            top: @menu-expand-top-offset32;
+         }
+      }
+   }
+
+}

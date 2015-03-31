@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
       },
 
       $constructor: function() {
+
       },
 
       _initializePicker: function () {
@@ -29,6 +30,9 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
          // чтобы не нарушать выравнивание по базовой линии
          $('body').append(pickerContainer);
          self._picker = this._createPicker(pickerContainer);
+         this._picker.subscribe('onAlignmentChange', function(event, alignment){
+            self._onAlignmentChangeHandler(alignment);
+         });
          self._picker.subscribe('onClose', function(){
             self._container.removeClass('controls-Picker__show');
          });
@@ -62,6 +66,10 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
             },
             closeByExternalClick: true
          };
+      },
+
+      _onAlignmentChangeHandler: function(alignment){
+
       },
 
       /**

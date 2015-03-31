@@ -120,10 +120,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   self.togglePicker();
                }
             }
-         }).mousedown(function(e){
-            e.stopPropagation();
          })
-
       },
 
       setText: function (text) {
@@ -164,6 +161,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                }
             });
 
+         }
+         else {
+            if (this._picker) {
+               $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
+            }
          }
 
       },
@@ -307,9 +309,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
-      _drawItems: function () {
+      _redraw: function () {
          if (this._picker) {
-            ComboBox.superclass._drawItems.call(this);
+            ComboBox.superclass._redraw.call(this);
             this._picker.recalcPosition();
          }
          else {

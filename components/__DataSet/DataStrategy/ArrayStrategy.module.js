@@ -1,20 +1,18 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'], function (IDataStrategy) {
+define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], function (IDataStrategy) {
    'use strict';
 
    /**
     * Реализация интерфеса IDataStrategy для работы с массивами
     */
 
-   var DataStrategyArray = IDataStrategy.extend({
-      $protected: {
-      },
+   var ArrayStrategy = IDataStrategy.extend({
+      $protected: {},
       $constructor: function () {
-         var a = 5;
       },
-      getKey : function(data) {
+      getKey: function (data) {
          var
             key,
             keys = Object.keys(data);
@@ -46,12 +44,12 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
       },
 
       rebuild: function (data, keyField) {
-         var _pkIndex = {},
+         var _indexId = [],
             length = data.length;
          for (var i = 0; i < length; i++) {
-            _pkIndex[data[i][keyField]] = i;
+            _indexId[i] = data[i][keyField];
          }
-         return _pkIndex;
+         return _indexId;
       },
 
       /**
@@ -77,12 +75,16 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
          return data[field];
       },
 
-      addRecord: function (data, record) {
+      addRecord: function (data, record, at) {
          var rawData = record.getRaw();
-         data.push(rawData);
+         if (at) {
+            data.splice(at, 0, rawData);
+         } else {
+            data.push(rawData);
+         }
       },
 
-      getLength: function (data) {
+      getCount: function (data) {
          return data.length;
       },
 
@@ -111,6 +113,14 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
             }
          }
       },
+
+      //TODO пустышка
+      getMetaData: function(data) {
+         return {
+            more : data.length
+         };
+      },
+
 
       query: function (data, filter, sorting, offset, limit) {
          var newData = data;
@@ -167,7 +177,7 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
          if (typeof(offset) != 'undefined' && offset != null && typeof(limit) != 'undefined' && limit != null) {
             pagingData = [];
             var
-               firstIdx = offset*limit,
+               firstIdx = offset,
                length = newData.length;
             for (var i = firstIdx; i < firstIdx + limit; i++) {
                if (i >= length) {
@@ -183,5 +193,5 @@ define('js!SBIS3.CONTROLS.DataStrategyArray', ['js!SBIS3.CONTROLS.IDataStrategy'
 
    });
 
-   return DataStrategyArray;
+   return ArrayStrategy;
 });
