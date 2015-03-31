@@ -41,9 +41,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       $protected: {
          _options: {
             linkedView: undefined,
-            items: defaultItems
+            items: defaultItems,
+            hierField: 'mainAction',
+            keyField: 'name'
          },
-         _linkedView: undefined,
          _blocks: undefined,
          _markCheckBox: undefined,
          _markButton: undefined,
@@ -72,49 +73,38 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
       _drawItemsCallback: function() {
          this._markButton =  this.getItemInstance('markOperations');
-         this._markCheckBox = this.getChildControlByName('markCheckBox');
-         if (!this._panelInitialized) {
-            this._panelInitialized = true;
+         if (!this._panelDrawn) {
+            this._panelDrawn = true;
+            this._markCheckBox = this.getChildControlByName('markCheckBox');
             this._bindMarkCheckBox();
+            this._updateMarkBlock();
          }
       },
       setLinkedView: function(linkedView) {
-         var name;
-         if (linkedView) {
-            if ($ws.helpers.instanceOfModule(linkedView, 'SBIS3.CONTROLS.DataGrid')) {
-               this._setLinkedView(linkedView);
-            } else if (typeof linkedView === 'string') {
-               name = linkedView.indexOf('/') !== -1 ? linkedView.split('/')[1] : linkedView;
-               this.getTopParent().waitChildControlByName(name).addCallback(function(instanse) {
-                  this._setLinkedView(instanse);
-               }.bind(this));
-            }
+         if ($ws.helpers.instanceOfModule(linkedView, 'SBIS3.CONTROLS.DataGrid')) {
+            this._toggleView(linkedView);
+            this._toggleMarkBlock();
+            this._togglePanel();
+            this._toggleMode();
          }
-      },
-      _setLinkedView: function(linkedView) {
-         this._toggleView(linkedView);
-         this._toggleMarkBlock();
-         this._togglePanel();
-         this._toggleMode();
-         this._notify('onAfterLoad');
       },
       getLinkedView: function() {
-         return this._linkedView;
+         return this._options.linkedView;
       },
       _toggleView: function(linkedView) {
-         if (this._linkedView) {
-            this._linkedView.unsubscribe('onSelectedItemsChange', this._handlers.onChangeSelection);
+         if (this._options.linkedView) {
+            this._options.linkedView.unsubscribe('onSelectedItemsChange', this._handlers.onChangeSelection);
          }
-         this._linkedView = linkedView;
-         this._selectedCount = this._linkedView.getSelectedItems().length;
-         if (this._linkedView) {
-            this._linkedView.subscribe('onSelectedItemsChange', this._handlers.onChangeSelection);
+         this._options.linkedView = linkedView;
+         this._selectedCount = linkedView.getSelectedItems().length;
+         if (this._options.linkedView) {
+            this._options.linkedView.subscribe('onSelectedItemsChange', this._handlers.onChangeSelection);
          }
       },
       _initHandlers: function() {
          this._handlers = {
             onChangeSelection: this._onChangeSelection.bind(this),
-            onCheckBoxClick: this._onCheckBoxClick.bind(this),
+            onCheckBoxActivated: this._onCheckBoxActivated.bind(this),
             onButtonClick: this._onButtonClick,
             /*mark*/
             selectCurrentPage: this._selectCurrentPage.bind(this),
@@ -150,16 +140,15 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          if (cfg.action) {
             this._handlers[cfg.name] = cfg.action;
          }
-         cfg.visible = cfg.visible !== false;
-         cfg.enabled = cfg.enabled !== false;
       },
       _onChangeSelection: function() {
-         this._selectedCount = this._linkedView.getSelectedItems().length;
+         this._selectedCount = this._options.linkedView.getSelectedItems().length;
+         this._updateMarkBlock();
          this._toggleMode();
          this._togglePanel();
       },
-      _onCheckBoxClick: function() {
-         this._markCheckBox.getValue() === true ? this._selectCurrentPage() : this._removeSelection();
+      _onCheckBoxActivated: function() {
+         this._markCheckBox.isChecked() === true ? this._selectCurrentPage() : this._removeSelection();
       },
       _onButtonClick: function(e, id) {
          var parent = this.getParent();
@@ -169,13 +158,13 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          }
       },
       _selectCurrentPage: function() {
-         this._linkedView.setSelectedItemsAll()
+         this._options.linkedView.setSelectedItemsAll()
       },
       _removeSelection: function() {
-         this._linkedView.setSelectedItems([]);
+         this._options.linkedView.setSelectedItems([]);
       },
       _invertSelection: function() {
-         this._linkedView.toggleItemsSelectionAll();
+         this._options.linkedView.toggleItemsSelectionAll();
       },
       _showSelection: function() {
          console.log('_showSelection');
@@ -192,12 +181,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          this._blocks.openedButton.bind('click', this.close.bind(this));
       },
       _bindMarkCheckBox: function() {
-         this._markCheckBox._container.bind('click', this._handlers.onCheckBoxClick);
+         this._markCheckBox.subscribe('onActivated', this._handlers.onCheckBoxActivated);
       },
       open: function() {
-         if (this.isEnabled()) {
+         if (this.isEnabled() && this.getLinkedView()) {
             this._drawButtons();
-            this._updateMarkBlock();
             this.showPicker();
          }
       },
@@ -205,14 +193,14 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          this.hidePicker();
       },
       hide: function() {
-         this.close();
+         this.hidePicker();
          $ws.proto.OperationsPanel.superclass.hide.apply(this, arguments);
       },
       isOpen: function() {
          return this._picker && this._picker.isVisible();
       },
       _drawButtons: function() {
-         if (!this._panelInitialized) {
+         if (!this._panelDrawn) {
             this._drawItems();
          }
       },
@@ -228,15 +216,14 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          this._blocks.wrapper.toggleClass('controls__operations-panel__mass-mode',  !this._currentMode).toggleClass('controls__operations-panel__selection-mode',  this._currentMode);
       },
       _toggleMarkBlock: function() {
-         this._blocks.markOperations.toggleClass('ws-hidden', !this._linkedView._options.multiselect);
+         this._blocks.markOperations.toggleClass('ws-hidden', !this._options.linkedView._options.multiselect);
       },
       _updateMarkCheckBox: function() {
-         /*TODO убрать не нужные проверки когда этот метод будет запускаться по деферреду загрузки датасоурса*/
-         var recordsCount = this._linkedView && this._linkedView._dataSet && this._linkedView._dataSet.getCount();
+         var recordsCount = this._options.linkedView._dataSet.getCount();
          this._markCheckBox.setChecked(this._selectedCount === recordsCount && recordsCount ? true : this._selectedCount ? null : false)
       },
       _updateMarkButton: function() {
-         var hasMarkOptions = !!this._markButton.getItems()._data.length,
+         var hasMarkOptions = !!this._markButton.getItems().getItemsCount(),
             caption;
          if (hasMarkOptions) {
             this.getItems().getItem('markOperations').caption = caption = this._selectedCount ? 'Отмечено(' + this._selectedCount + ')' : 'Отметить';
@@ -358,5 +345,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
 });
 
 /*TODO переименовать некоторые функции с toggle*/
+/*TODO если в опциях передать LinkedView то чекбокс не оживает*/
 
 
