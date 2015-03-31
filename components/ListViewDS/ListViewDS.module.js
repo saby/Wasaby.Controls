@@ -52,15 +52,16 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                elemClickHandler: null,
                multiselect: false,
 
-               autoLoad: false
+               infiniteScroll: false
             },
             _loadingIndicator: undefined,
             _hasScrollMore : true,
-            _autoLoadOffset: null,
+            _infiniteScrollOffset: null,
             _nowLoading: false,
-            _allowAutoLoad: true,
+            _allowInfiniteScroll: true,
             _scrollIndicatorHeight: 32,
-            _isLoadBeforeScrollAppears : true
+            _isLoadBeforeScrollAppears : true,
+            _infiniteScrollContainer: null
          },
 
          $constructor: function () {
@@ -76,8 +77,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                }
             });
             this._createItemsActions();
-            if (this.isAutoLoad()) {
-               $(window).bind('scroll.wsAutoLoad', this._onWindowScroll.bind(this));
+            if (this.isInfiniteScroll()) {
+               $(window).bind('scroll.wsInfiniteScroll', this._onWindowScroll.bind(this));
             }
          },
 
@@ -158,10 +159,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
          },
          reload: function(){
-            if (this.isAutoLoad()) {
+            if (this.isInfiniteScroll()) {
                this._loadingIndicator = undefined;
                this._hasScrollMore = true;
-               this._autoLoadOffset = this._offset;
+               this._infiniteScrollOffset = this._offset;
                //После релоада придется заново догружать данные до появлени скролла
                this._isLoadBeforeScrollAppears = true;
             }
@@ -212,7 +213,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          _drawItemsCallback: function () {
             this._drawItemsActions(this._options.itemsActions);
-            if (this.isAutoLoad()) {
+            if (this.isInfiniteScroll()) {
                this._addLoadingIndicator();
                this._loadBeforeScrollAppears();
             }
@@ -222,13 +223,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             return container;
          },
          destroy: function() {
-            if (this.isAutoLoad()){
-               $(window).unbind('.wsAutoLoad');
+            if (this.isInfiniteScroll()){
+               $(window).unbind('.wsInfiniteScroll');
             }
          },
          //-----------------------------------Scroll------------------------
-         isAutoLoad : function(){
-            return this._options.autoLoad;
+         isInfiniteScroll : function(){
+            return this._options.infiniteScroll;
          },
          _onWindowScroll: function(event){
             if (this._isBottomOfPage()){
@@ -238,15 +239,15 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          _nextLoad: function(){
             var self = this, records;
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
-            if (this._allowAutoLoad && this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._nowLoading) {
+            if (this._allowInfiniteScroll && this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._nowLoading) {
                this._addLoadingIndicator();
                this._nowLoading = true;
-               this._dataSource.query(this._filter, this._sorting, this._autoLoadOffset  + this._limit, this._limit).addCallback(function (dataSet) {
+               this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset  + this._limit, this._limit).addCallback(function (dataSet) {
                   self._nowLoading = false;
                   if (dataSet.getCount() || self._hasNextPage(dataSet.getMetaData().more)) {
-                     records = dataSet.getRecords();
-                     self._dataSet.addRecords(records);
-                     self._autoLoadOffset += self._limit;
+                     records = dataSet._getRecords();
+                     self._dataSet.merge(dataSet);
+                     self._infiniteScrollOffset += self._limit;
                      self._drawItems(records);
                   } else {
                      self._hasScrollMore = false;
@@ -295,8 +296,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @param {Boolean} allow - true - разрешить, false - запретить
           * @param {Boolean} [noLoad] - true - не загружать сразу
           */
-         setAutoLoad: function(allow, noLoad){
-            this._allowAutoLoad = allow;
+         setInfiniteScroll: function(allow, noLoad){
+            this._allowInfiniteScroll = allow;
             if (allow && !noLoad) {
                this._nextLoad();
                return;

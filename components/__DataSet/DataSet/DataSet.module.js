@@ -218,14 +218,14 @@ define('js!SBIS3.CONTROLS.DataSet', [
       // добавляет рекорд (массив рекордов) в DataSet. Если рекорд уже представлен в DataSet, то
       // рекорд будет пропущен, только если не передана опция {merge: true}, в этом случае атрибуты
       // будут совмещены в существующий рекорд
-      addRecords: function (records, options) {
+      _addRecords: function (records, options) {
          this.setRecords(records, $ws.core.merge($ws.core.merge({merge: false}, options), addOptions));
       },
       /**
        * Получить массив записей в текущем датасете
        * @returns {Array}
        */
-      getRecords: function(){
+      _getRecords: function(){
          var records = [];
          this.each(function(rec){
             records.push(rec);
@@ -233,11 +233,11 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return records;
       },
       /**
-       * TODO Сделать правильный mergeRecords
-       * @param dataSetMergeFrom
+       * TODO Сделать правильный merge
+       * @param dataSetMergeFrom Датасет, из которого будет происходить мерж
        */
-      mergeRecords: function(dataSetMergeFrom){
-         this.addRecords(dataSetMergeFrom.getRecords())
+      merge: function(dataSetMergeFrom){
+         this._addRecords(dataSetMergeFrom._getRecords())
       },
       _prepareRecordForAdd: function (record) {
          //FixME: потому что метод создать не возвращает тип поля "идентификатор"
