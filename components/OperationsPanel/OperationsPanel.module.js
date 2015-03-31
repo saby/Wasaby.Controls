@@ -232,7 +232,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
       _updateMarkCheckBox: function() {
          /*TODO убрать не нужные проверки когда этот метод будет запускаться по деферреду загрузки датасоурса*/
-         this._markCheckBox.setChecked(this._selectedCount === (this._linkedView && this._linkedView._dataSet && this._linkedView._dataSet.getCount()) && this._selectedCount ? true : this._selectedCount ? null : false)
+         var recordsCount = this._linkedView && this._linkedView._dataSet && this._linkedView._dataSet.getCount();
+         this._markCheckBox.setChecked(this._selectedCount === recordsCount && recordsCount ? true : this._selectedCount ? null : false)
       },
       _updateMarkButton: function() {
          var hasMarkOptions = !!this._markButton.getItems()._data.length,
@@ -261,6 +262,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          return function (cfg) {
             var items = this.getItems().getChildItems(cfg.name, true),
                type = this._getButtonType(cfg.type),
+               elementClass = 'controls__operations-panel__action-type-' + type,
                menu = [];
             //TODO В будущем меню само должно уметь строить себя если нулевой уровень имеет hierField
             $.each(items, function (key, value) {
@@ -281,8 +283,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                   visible: cfg.visible !== false,
                   enabled: cfg.enabled !== false,
                   hierField: this._options.hierField,
-                  className: 'controls__operations-panel__action-type-' + type + ' controls-MenuLink__32px',
-                  pickerClassName: '1234567890',
+                  className: elementClass + ' controls-MenuLink__32px',
+                  pickerClassName: elementClass,
                   handlers: {
                      onActivated: this._handlers.onButtonClick,
                      onMenuItemActivate: this._handlers.onButtonClick
