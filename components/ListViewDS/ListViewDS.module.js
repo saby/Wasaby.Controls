@@ -78,7 +78,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             });
             this._createItemsActions();
             if (this.isInfiniteScroll()) {
-               $(window).bind('scroll.wsInfiniteScroll', this._onWindowScroll.bind(this));
+               this._infiniteScrollContainer = this._container.closest('.controls-ListView__infiniteScroll');
+               if (this._infiniteScrollContainer.length) {
+                  //TODO Данный функционад пока не протестирован
+                  this._infiniteScrollContainer.bind('scroll.wsInfiniteScroll', this._onInfiniteContainerScroll.bind(this));
+               } else {
+                  $(window).bind('scroll.wsInfiniteScroll', this._onWindowScroll.bind(this));
+               }
             }
          },
 
@@ -224,17 +230,33 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          destroy: function() {
             if (this.isInfiniteScroll()){
-               $(window).unbind('.wsInfiniteScroll');
+               if (this._infiniteScrollContainer.length) {
+                  this._infiniteScrollContainer.unbind('.wsInfiniteScroll');
+               } else {
+                  $(window).unbind('.wsInfiniteScroll');
+               }
             }
          },
          //-----------------------------------Scroll------------------------
          isInfiniteScroll : function(){
             return this._options.infiniteScroll;
          },
-         _onWindowScroll: function(event){
-            if (this._isBottomOfPage()){
+         /**
+          *  Общая проверка и загрузка данных для всех событий по скроллу
+          */
+         _checkForLoad: function(result){
+            if (result) {
                this._nextLoad();
             }
+         },
+         _onWindowScroll: function(event){
+            this._checkForLoad(this._isBottomOfPage());
+         },
+         _onInfiniteContainerScroll: function(){
+            var scrollTop = this._infiniteScrollContainer.scrollTop(),
+            //на самом деле loadingIndicator десь должен быть всегда, но подстраховаться не помешает
+                  check = this._loadingIndicator ? scrollTop + this._scrollIndicatorHeight >= this._loadingIndicator.offset().top : false;
+            this._checkForLoad(check);
          },
          _nextLoad: function(){
             var self = this, records;
