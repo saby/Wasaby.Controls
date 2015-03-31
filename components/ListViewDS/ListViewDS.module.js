@@ -275,7 +275,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                      self._removeLoadingIndicator();
                   }
                });
-
             } else {
                self._removeLoadingIndicator();
             }
