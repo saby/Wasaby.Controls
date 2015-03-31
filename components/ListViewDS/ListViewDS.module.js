@@ -296,7 +296,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             } else {
                this._isLoadBeforeScrollAppears = false;
             }
-
          },
          _addLoadingIndicator: function(){
             if (!this._loadingIndicator ) {
