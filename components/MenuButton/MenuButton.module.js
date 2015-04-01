@@ -139,7 +139,9 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
 
       _closeHandler: function(){
          this._container.removeClass('controls-Checked__checked');
-         this._header.addClass('controls-MenuButton__header-hidden');
+         if (this._header) {
+            this._header.addClass('controls-MenuButton__header-hidden');
+         }
       }
    });
 
