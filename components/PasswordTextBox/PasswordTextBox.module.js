@@ -15,6 +15,14 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!
     * @category Inputs
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
+    *
+    * @ignoreMethods applyEmptyState applyState findParent getAlignment getEventHandlers getEvents getExtendedTooltip
+    * @ignoreMethods getId getLinkedContext getMinHeight getMinSize getMinWidth getOwner getOwnerId getParentByClass
+    * @ignoreMethods getParentByName getParentByWindow getStateKey getTopParent getUserData hasEvent hasEventHandlers
+    * @ignoreMethods isDestroyed isSubControl makeOwnerName once sendCommand setOwner setStateKey setUserData setValue
+    * @ignoreMethods subscribe unbind unsubscribe unsubscribeFrom
+    *
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChange onTooltipContentRequest onChange
     */
    var PasswordTextBox;
    PasswordTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS.PasswordTextBox.prototype */ {

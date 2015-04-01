@@ -17,6 +17,15 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner stateKey
     * @ignoreOptions subcontrol verticalAlignment parent
+    *
+    * @ignoreMethods applyEmptyState applyState findParent getAlignment getEventHandlers getEvents getExtendedTooltip
+    * @ignoreMethods getId getLinkedContext getMinHeight getMinSize getMinWidth getOwner getOwnerId getParentByClass
+    * @ignoreMethods getParentByName getParentByWindow getStateKey getTopParent getUserData hasEvent hasEventHandlers
+    * @ignoreMethods isDestroyed isSubControl makeOwnerName once sendCommand setOwner setStateKey setUserData setValue
+    * @ignoreMethods subscribe unbind unsubscribe unsubscribeFrom
+    *
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChange onTooltipContentRequest onChange
+    * @ignoreEvents onFocusIn onFocusOut onKeyPressed
     */
    var SwitcherDoubleOnline = SwitcherBase.extend( /** @lends SBIS3.Engine.SwitcherDoubleOnline.prototype */ {
       _dotTplFn: dotTplFn,

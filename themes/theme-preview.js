@@ -564,7 +564,8 @@
                side: 'right',
                offset: 0
             },
-            closeByExternalClick: true
+            closeByExternalClick: true,
+            closeButton: true
          });
 
          new Menu({
@@ -617,6 +618,14 @@
             items: items,
             hierField: 'par',
             caption: 'Primary dropdown menu with long text'
+         });
+
+         var menuButtonWithClose = new MenuButton({
+            element: 'menuButtonWithClose',
+            primary: true,
+            items: items,
+            hierField: 'par',
+            caption: 'Primary dropdown menu with close button'
          });
 
          new MenuLink({

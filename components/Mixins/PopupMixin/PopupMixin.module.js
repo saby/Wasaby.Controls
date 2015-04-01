@@ -97,6 +97,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
              */
             closeByExternalOver: false,
             /**
+             * @cfg {Boolean} отображать кнопку закрытия
+             */
+            closeButton: false,
+            /**
              * @cfg {Boolean} при клике мышки на таргет или перемещении по нему панель не закрывается
              */
             targetPart: false,
@@ -136,6 +140,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          }
          else if (this._options.closeByExternalClick) {
             $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
+         }
+
+         if (this._options.closeButton) {
+            container.append('<div class="controls-PopupMixin__closeButton" ></div>');
+            $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {
+                  self.hide();
+            });
          }
          container.appendTo('body');
          this._defaultCorner = this._options.corner;
