@@ -3,7 +3,14 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
    'use strict';
 
    /**
-    * Поле ввода в одну строчку
+    * Однострочное текстовое поле ввода.
+    * Специальные поля:
+    * <ul>
+    *     <li>{@link SBIS3.CONTROLS.NumberTextBox NumberTextBox} - числовое поле ввода;</li>
+    *     <li>{@link SBIS3.CONTROLS.PasswordTextBox PasswordTextBox} - поле ввода пароля;</li>
+    *     <li>{@link SBIS3.CONTROLS.TextArea TextArea} - многострочное поле ввода;</li>
+    *     <li>{@link SBIS3.CONTROLS.FormattedTextBox FormattedTextBox} - поле ввода с маской.</li>
+    * </ul>
     * @class SBIS3.CONTROLS.TextBox
     * @extends SBIS3.CONTROLS.TextBoxBase
     * @control
