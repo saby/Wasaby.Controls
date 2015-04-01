@@ -475,8 +475,6 @@ define(
                this._isFinishedPrint = false;
             }
 
-            //this._isFinishedPrint(this._getSelection());
-
             // Если дата изменилась -- генерировать событие.
             // Если использовать просто setInterval, то событие будет генерироваться даже если дата введена с клавиатуры не полностью, что неверно
             if ( oldDate !== this._options.interval ) {
