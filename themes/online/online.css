@@ -2111,3 +2111,78 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background: #ffffff !important;
 }
+.controls-operations-panel {
+  height: 30px;
+  overflow: visible !important;
+}
+.controls-operations-panel .controls__operations-panel__closed {
+  background: url('img/OperationsPanel.png') 0 -16px no-repeat;
+}
+.controls-operations-panel .controls__operations-panel__closed:hover {
+  background-image: url('img/OperationsPanel.png') 0 -16px no-repeat;
+}
+.controls-operations-panel .controls__operations-panel__closed:active {
+  background-image: url('img/OperationsPanel.png') 0 -16px no-repeat;
+}
+.controls-operations-panel.ws-disabled .controls__operations-panel__closed {
+  background: url('img/OperationsPanel.png') 0 -16px no-repeat;
+}
+.controls__operations-panel__opened,
+.controls__operations-panel__closed {
+  position: absolute;
+  top: 3px;
+  left: 0;
+  width: 30px;
+  height: 24px;
+  cursor: pointer;
+}
+.controls__operations-panel__wrapper {
+  line-height: 30px;
+  width: auto;
+  white-space: nowrap;
+  background-color: #e5ecf5;
+  padding-left: 30px;
+}
+.controls__operations-panel__wrapper > * {
+  display: inline-block;
+}
+.controls__operations-panel__wrapper:after {
+  background-image: url('img/OperationsPanel.png') 0 -16px no-repeat;
+  content: '\00a0';
+  position: absolute;
+  width: 8px;
+  height: 30px;
+  top: 0;
+}
+.controls__operations-panel__wrapper .controls__operations-panel__opened {
+  background: url('img/OperationsPanel.png') 0 -16px no-repeat;
+}
+.controls__operations-panel__wrapper .controls__operations-panel__opened:hover {
+  background-image: url('img/OperationsPanel.png') 0 -16px no-repeat;
+}
+.controls__operations-panel__wrapper .controls__operations-panel__opened:active {
+  background-image: url('img/OperationsPanel.png') 0 -16px no-repeat;
+}
+.controls__operations-panel__wrapper .controls__operations-panel__actions-mark > * {
+  margin-left: 4px;
+}
+.controls__operations-panel__wrapper .controls__operations-panel__actions-mark:after {
+  margin-left: 8px;
+  margin-right: 4px;
+  background: #cccccc;
+  width: 1px;
+  height: 21px;
+  content: '\00a0';
+  font-size: 1px;
+  display: inline-block;
+  line-height: 30px;
+}
+.controls__operations-panel__wrapper .controls__operations-panel__actions > * {
+  margin: 0 4px;
+}
+.controls__operations-panel__wrapper.controls__operations-panel__mass-mode .controls__operations-panel__action-type-selection {
+  display: none;
+}
+.controls__operations-panel__wrapper.controls__operations-panel__selection-mode .controls__operations-panel__action-type-mass {
+  display: none;
+}

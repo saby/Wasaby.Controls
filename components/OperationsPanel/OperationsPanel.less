@@ -3,18 +3,18 @@
    overflow: visible !important;
 
    .controls__operations-panel__closed {
-      background: url(@controls-OperationPanel-closed);
+      background: @controls-OperationPanel-closed;
 
       &:hover {
-         background-image: url(@controls-OperationPanel-closed-hovered);
+         background-image: @controls-OperationPanel-closed-hovered;
       }
       &:active {
-         background-image: url(@controls-OperationPanel-closed-activated);
+         background-image: @controls-OperationPanel-closed-activated;
       }
    }
    &.ws-disabled {
       .controls__operations-panel__closed {
-         background: url(@controls-OperationPanel-closed-disabled);
+         background: @controls-OperationPanel-closed-disabled;
       }
    }
 
@@ -41,7 +41,7 @@
    }
 
    &:after {
-      background-image: url(@controls-OperationPanel-triangle);
+      background-image: @controls-OperationPanel-triangle;
       content: '\00a0';
       position: absolute;
       width: @controls-OperationPanel-triangle-width;
@@ -50,13 +50,13 @@
    }
 
    .controls__operations-panel__opened {
-      background: url(@controls-OperationPanel-opened);
+      background: @controls-OperationPanel-opened;
 
       &:hover {
-         background-image: url(@controls-OperationPanel-opened-hovered);
+         background-image: @controls-OperationPanel-opened-hovered;
       }
       &:active {
-         background-image: url(@controls-OperationPanel-opened-activated);
+         background-image: @controls-OperationPanel-opened-activated;
       }
    }
 
