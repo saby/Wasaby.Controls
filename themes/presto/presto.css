@@ -2016,16 +2016,16 @@ input[type="reset"]::-moz-focus-inner {
   overflow: visible !important;
 }
 .controls-operations-panel .controls__operations-panel__closed {
-  background: url('img/OperationsPanel.png') 0 -16px no-repeat;
+  background: url('img/OperationPanel.png') 0 0 no-repeat;
 }
 .controls-operations-panel .controls__operations-panel__closed:hover {
-  background-image: url('img/OperationsPanel.png') 0 -16px no-repeat;
+  background: url('img/OperationPanel.png') 0 -24px no-repeat;
 }
 .controls-operations-panel .controls__operations-panel__closed:active {
-  background-image: url('img/OperationsPanel.png') 0 -16px no-repeat;
+  background: url('img/OperationPanel.png') 0 -48px no-repeat;
 }
 .controls-operations-panel.ws-disabled .controls__operations-panel__closed {
-  background: url('img/OperationsPanel.png') 0 -16px no-repeat;
+  background: url('img/OperationPanel.png') 0 -72px no-repeat;
 }
 .controls__operations-panel__opened,
 .controls__operations-panel__closed {
@@ -2047,7 +2047,7 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
 }
 .controls__operations-panel__wrapper:after {
-  background-image: url('img/OperationsPanel.png') 0 -16px no-repeat;
+  background: url('') 0 0 no-repeat;
   content: '\00a0';
   position: absolute;
   width: 8px;
@@ -2055,13 +2055,13 @@ input[type="reset"]::-moz-focus-inner {
   top: 0;
 }
 .controls__operations-panel__wrapper .controls__operations-panel__opened {
-  background: url('img/OperationsPanel.png') 0 -16px no-repeat;
+  background: url('img/OperationPanel.png') -30px 0 no-repeat;
 }
 .controls__operations-panel__wrapper .controls__operations-panel__opened:hover {
-  background-image: url('img/OperationsPanel.png') 0 -16px no-repeat;
+  background: url('img/OperationPanel.png') -30px -24px no-repeat;
 }
 .controls__operations-panel__wrapper .controls__operations-panel__opened:active {
-  background-image: url('img/OperationsPanel.png') 0 -16px no-repeat;
+  background: url('img/OperationPanel.png') -30px -48px no-repeat;
 }
 .controls__operations-panel__wrapper .controls__operations-panel__actions-mark > * {
   margin-left: 4px;

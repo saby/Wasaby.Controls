@@ -49,7 +49,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          _markCheckBox: undefined,
          _markButton: undefined,
          _selectedCount: undefined,
-         /*TODO подумать как без него*/
          _defaultItems: undefined,
          _currentMode: undefined,
          _panelInitialized: undefined
@@ -85,8 +84,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             this._reassignView(linkedView);
             this.togglePicker();
             this._setMode();
-            this._setVisibleMarkBlock();
             this._updateMarkBlock();
+            this._setVisibleMarkBlock();
          }
       },
       getLinkedView: function() {
