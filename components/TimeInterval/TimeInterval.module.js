@@ -233,8 +233,26 @@ define(
           */
          setText: function ( text ) {
             text = text ? text: '';
-            TimeInterval.superclass.setText.call( this, text );
-            if (!this._checkBoundaryValues()){
+            if (typeof text != 'string' || !this._checkTextByMask(text)) {
+               return;
+            }
+            this._setText(text, checkValues);
+
+         },
+
+         /**
+          * В добавление к проверкам и обновлению опции text, необходимо обновить поле _date
+          * @param text
+          * checkValues = проверять ли введенное значение на корректность
+          * @private
+          */
+         _setText: function(text, checkValues){
+            var availTextArray = text.split(":"),
+               dataContainers = this.getContainer().find('em');
+            for (var i = 0; i < (this._hasMaskDays() + this._hasMaskMinutes() + 1);i++){
+               $(dataContainers[i * 2]).text(availTextArray[i]);
+            }
+            if (!this._checkBoundaryValues() && checkValues){
                this._correctInterval();
             }
             this._options.interval = text == '' ? null : this._getIntervalByText( text );
@@ -361,7 +379,7 @@ define(
           */
          _drawDate: function(){
             var newText = this._options.interval == null ? '' : this._getTextByInterval(this._options.interval);
-            this._inputField.html( this._getHtmlMask(newText) );
+            this._setText(newText);
          },
 
          /**
@@ -445,6 +463,8 @@ define(
             var selection = window.getSelection();
             if (selection.type === "None"){
                selection = this._options.lastSelection;
+               delete selection.startOffset;
+               selection.startOffset = 2;
             }
             else{
                selection = selection.getRangeAt(0);
