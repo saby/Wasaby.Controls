@@ -2096,3 +2096,14 @@ input[type="reset"]::-moz-focus-inner {
   left: 4px;
   top: 8px;
 }
+.controls-PopupMixin__closeButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  background: url('img/cancelIcon-sprite.png') 0 -32px no-repeat;
+}
+.controls-PopupMixin__closeButton:hover {
+  background: url('img/cancelIcon-sprite.png') 0 -16px no-repeat;
+}
