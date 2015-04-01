@@ -13,6 +13,14 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
     * @ignoreOptions independentContext contextRestriction extendedTooltip
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
     * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment
+    *
+    * @ignoreMethods applyEmptyState applyState findParent getAlignment getEventHandlers getEvents getExtendedTooltip
+    * @ignoreMethods getId getLinkedContext getMinHeight getMinSize getMinWidth getOwner getOwnerId getParentByClass
+    * @ignoreMethods getParentByName getParentByWindow getStateKey getTopParent getUserData hasEvent hasEventHandlers
+    * @ignoreMethods isDestroyed isSubControl makeOwnerName once sendCommand setOwner setStateKey setUserData setValue
+    * @ignoreMethods subscribe unbind unsubscribe unsubscribeFrom
+    *
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChange onTooltipContentRequest onChange
     */
 
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.TextBox.prototype */ {
