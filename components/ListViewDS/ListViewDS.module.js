@@ -3,12 +3,15 @@
  */
 
 define('js!SBIS3.CONTROLS.ListViewDS',
-   ['js!SBIS3.CORE.CompoundControl',
+   [
+      'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.DSMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
-      'html!SBIS3.CONTROLS.ListViewDS'
+      'js!SBIS3.CONTROLS.ItemActionsGroup',
+      'html!SBIS3.CONTROLS.ListViewDS',
+      'js!SBIS3.CONTROLS.CommonHandlers'
    ],
-   function (CompoundControl, DSMixin, MultiSelectable, dotTplFn) {
+   function (CompoundControl, DSMixin, MultiSelectable, ItemActionsGroup, dotTplFn, CommonHandlers) {
 
       'use strict';
 
@@ -21,14 +24,20 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        * @control
        */
 
-      var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
+      var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
          $protected: {
             _floatCheckBox : null,
             _dotTplFn: dotTplFn,
             _dotItemTpl: null,
             _itemsContainer: null,
             _actsContainer: null,
-            _options: {
+            _mouseOnItemActions: false,
+            _hoveredItem: {
+               key: null,
+               container: null
+            },
+            _itemActionsGroup: null,
+               _options: {
                /**
                 * @cfg {} Шаблон отображения каждого элемента коллекции
                 */
@@ -36,7 +45,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                /**
                 * @cfg {Array} Набор действий, над элементами, отображающийся в виде иконок. Можно использовать для массовых операций.
                 */
-               itemsActions: [],
+               itemsActions: [{
+                  name: 'delete',
+                  icon: 'icon-16 icon-Erase icon-error',
+                  title: 'Удалить',
+                  onActivated: function(item) {
+                     this.deleteRecords(item.data('id'));
+                  }
+               }],
                /**
                 * @cfg {Boolean} Разрешено или нет перемещение элементов Drag-and-Drop
                 */
@@ -54,24 +70,75 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
 
          $constructor: function () {
-            //this._items.setHierField(null);
             var self = this;
+            this._publish('onChangeHoveredItem', 'onItemActions');
+
             this._container.mouseup(function (e) {
                if (e.which == 1) {
-                  var targ = $(e.target).hasClass('controls-ListView__item') ? e.target : $(e.target).closest('.controls-ListView__item');
-                  if (targ.length) {
-                     var id = targ.data('id');
+                  var $target = $(e.target),
+                      target = $target.hasClass('controls-ListView__item') ? e.target : $target.closest('.controls-ListView__item');
+                  if (target.length) {
+                     var id = target.data('id');
                      self._elemClickHandler(id, self._dataSet.getRecordByKey(id), e.target);
                   }
                }
             });
-            this._createItemsActions();
+            this._container.mousemove(this._mouseMoveHandler.bind(this))
+                           .mouseleave(this._mouseLeaveHandler.bind(this));
          },
 
          init: function () {
             var self = this;
             // запросим данные из источника
             this.reload();
+         },
+         _mouseMoveHandler: function(e) {
+            var $target = $(e.target),
+                target,
+                targetKey;
+            //Если увели мышку на оперции по ховеру, то делать ничего не надо
+            if(this._mouseOnItemActions) {
+               return;
+            }
+            //Если увели мышку с контейнера с элементами(например на шапку), нужно об этом посигналить
+            if($target.closest('.controls-DataGrid__thead').length) {
+               this._mouseLeaveHandler();
+               return;
+            }
+            target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
+
+            if (target.length) {
+               targetKey = target.data('id');
+               if (targetKey && this._hoveredItem.key !== targetKey) {
+                  this._hoveredItem = {
+                     key: targetKey,
+                     container: target
+                  };
+                  this._notify('onChangeHoveredItem', target, targetKey);
+                  this._onChangeHoveredItem(target, targetKey);
+               }
+            }
+         },
+         _mouseLeaveHandler: function() {
+            this._hoveredItem = {
+               key: null,
+               container: null
+            };
+            this._notify('onChangeHoveredItem', false);
+            this._onChangeHoveredItem(false);
+         },
+
+         _onChangeHoveredItem: function(target, targetKey) {
+           if(this._options.itemsActions.length) {
+              if(target) {
+                 this._showItemActions(target);
+              } else {
+                 //Если открыто меню опций, то скрывать опции не надо
+                 if(this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
+                    this._itemActionsGroup.hideItemActions();
+                 }
+              }
+           }
          },
 
          /**
@@ -115,29 +182,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             return $(".controls-ListView__item[data-id='" + id + "']", this._container.get(0));
          },
 
-         _createItemsActions: function () {
-            var self = this;
-            this._container.mousemove(function (e) {
-               var targ = $(e.target).hasClass('controls-ListView__item') ? e.target : $(e.target).closest('.controls-ListView__item');
-               if (targ.length) {
-                  var id = targ.attr('data-id');
-
-                  if (self._actsContainer) {
-                     self._getItemActionsContainer(id).append(self._actsContainer.show());
-                  }
-               }
-               else {
-                  if (self._actsContainer) {
-                     self._actsContainer.hide()
-                  }
-               }
-            });
-
-            this._container.mouseout(function () {
-               if (self._actsContainer) self._actsContainer.hide();
-            });
-         },
-
          _drawSelectedItems: function (idArray) {
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
             for (var i = 0; i < idArray.length; i++) {
@@ -148,53 +192,66 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          setElemClickHandler: function (method) {
             this._options.elemClickHandler = method;
          },
+         /**
+          * Показывает оперцаии над записью для элемента
+          * @param item
+          * @private
+          */
+         _showItemActions: function(item) {
+            var res;
 
-         setItemsActions: function (itemsActions) {
-            this._options.itemsActions = itemsActions;
-            this._drawItemsActions(itemsActions);
-         },
-
-         _drawItemsActions: function (itemsActions) {
-            var self = this;
-            if (itemsActions.length) {
-               if (!this._actsContainer) {
-                  this._actsContainer = $('<div class="controls-ListView__itemActions"></div>').hide().appendTo(this._container);
-               }
-               this._actsContainer.empty();
-               var acts = itemsActions;
-               for (var i = 0; i < acts.length; i++) {
-                  var action = $("<span></span>").addClass('controls-ListView__action');
-                  if (acts[i].icon && acts[i].icon.indexOf('sprite:') == 0) {
-                     action.addClass(acts[i].icon.substring(7));
-                  }
-                  if (acts[i].handler) {
-                     var handler = acts[i].handler.bind(this);
-                     action.mouseup(function (e) {
-                        e.stopPropagation();
-                        var
-                           id = $(this).closest('.controls-ListView__item').attr('data-id'),
-                           item = self._dataSet.getRecordByKey(id);
-                        handler(id, item);
-                     })
-                  }
-                  this._actsContainer.append(action);
-               }
+            //Создадим операции над записью, если их нет
+            if(!this._itemActionsGroup) {
+               this._initItemActions();
             }
-            else {
-               if (this._actsContainer) {
-                  this._actsContainer.remove();
-                  this._actsContainer = null
-               }
+            //Если показывается меню, то не надо позиционировать операции над записью
+            if(this._itemActionsGroup.isItemActionsMenuVisible()) {
+               return;
+            }
+
+            res = this._notify('onItemActions', item);
+
+            if(res === false) {
+               return;
+            }
+            this._itemActionsGroup.applyItemActions(res, item);
+            this._itemActionsGroup.showItemActions(item);
+         },
+         /**
+          * Создаёт операции над записью
+          * @private
+          */
+         _drawItemActions: function() {
+            return new ItemActionsGroup({
+               items: this._options.itemsActions,
+               element: this._container.find('> .controls-ListView__itemActions-container'),
+               keyField: 'name',
+               parent: this
+            });
+         },
+         /**
+          * Инициализирует операции над записью
+          * @private
+          */
+         _initItemActions: function() {
+            this._itemActionsGroup = this._drawItemActions();
+            this._itemActionsGroup
+               .getContainer()
+               .bind('mousemove mouseleave', this._itemActionsHoverHandler.bind(this))
+         },
+         /**
+          * Обрабатывает приход/уход мыши на операции строки
+          * Нужен чтобы нормально работал ховер
+          */
+         _itemActionsHoverHandler: function(e) {
+            this._mouseOnItemActions = e.type === 'mousemove';
+            if (!this._itemActionsGroup.isItemActionsMenuVisible()) {
+               this._itemActionsGroup.hoverImitation(e.type === 'mousemove');
             }
          },
-         _drawItemsCallback: function () {
-            this._drawItemsActions(this._options.itemsActions);
-         },
-
-         _getLeftOfItemContainer : function(container) {
-            return container;
+         getItemActions: function() {
+            return this._itemActionsGroup;
          }
-
       });
 
       return ListViewDS;

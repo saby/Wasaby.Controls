@@ -2,27 +2,5 @@
   .controls-ListView__item {
     overflow: hidden;
     position: relative;
-
-    .controls-ListView__itemActions {
-      position: absolute;
-      display: none;
-      height: @list-view-actions-height;
-      top: @list-view-actions-top-offset;
-      right: @list-view-actions-right-offset;
-      margin: @list-view-actions-margin;
-      padding: @list-view-actions-padding;
-      z-index: @list-view-actions-zindex;
-      background: @list-view-actions-bg;
-
-      .controls-ListView__action {
-        display: inline;
-        cursor: @list-view-actions-cursor;
-        margin: 0 @list-view-actions-gap 0 0;
-
-        &:last-child {
-          margin: 0;
-        }
-      }
-    }
   }
 }
