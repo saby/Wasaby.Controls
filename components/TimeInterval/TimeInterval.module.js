@@ -205,7 +205,7 @@ define(
           * @private
           */
          setText: function ( text ) {
-            text = text ? text: '';
+            text = text || '';
             if (typeof text != 'string' || !this._checkTextByMask(text)) {
                return;
             }
@@ -271,21 +271,29 @@ define(
             availTextArray = text.split(':');
 
             for (var i = 0; i < availCharsArray.length; i++) {
-               if (!availTextArray[i]){
-                  continue;
-               }
-
-               if (availCharsArray[i].indexOf('D') > -1){
-                  interval = "P" + availTextArray[i] + "D";
-               }
-               else if (availCharsArray[i].indexOf('H') > -1){
-                  interval += "T" + availTextArray[i] + "H";
-               }
-               else if (availCharsArray[i].indexOf('I') > -1){
-                  interval += availTextArray[i] + "M";
-               }
+               interval += this._getPartIntervalByPattern(availCharsArray[i], availTextArray[i]);
             }
             return interval;
+         },
+
+         _getPartIntervalByPattern: function(availChars, availText){
+            var pattern = availChars[0],
+               controlChar = '';
+            if (availChars.indexOf(pattern) == -1 || !availText){
+               return;
+            }
+            switch (pattern){
+               case 'D':
+                  controlChar = 'P';
+                  break;
+               case 'H':
+                  controlChar = 'T';
+                  break;
+               case 'I':
+                  pattern = 'M';
+                  break;
+            }
+            return controlChar + availText + pattern;
          },
 
          /**
@@ -389,9 +397,9 @@ define(
                hours = allMinutes / 60 | 0;
                minutes = allMinutes % 60;
             }
-            this.setDays(days);
-            this._setMinutes(minutes);
-            this._setHours(hours);
+            this._setPattern('D', days);
+            this._setPattern('I', minutes);
+            this._setPattern('H', hours);
          },
 
          _getMinutes: function(){
