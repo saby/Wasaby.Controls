@@ -51,6 +51,10 @@ define(
             ],
             _isFinishedPrint: false, //Завершили ли ввод интервала (смотрит на последний символ)
             /**
+             * Хранит последний window.getSelection()
+             */
+            _lastSelection: null,
+            /**
              * Опции создаваемого контролла
              */
             _options: {
@@ -66,11 +70,7 @@ define(
                /**
                 * Интервал
                 */
-               interval: null,
-               /**
-                * Хранит последний window.getSelection()
-                */
-               lastSelection: null
+               interval: null
             }
          },
 
@@ -107,7 +107,7 @@ define(
             this._options.mask = this._primalMask = mask;
             this._clearMask = this._getClearMask();
             this._maskRegExp = this._getRegExpByMask(this._primalMask);
-            this._drawDate();
+            this._drawInterval();
          },
          /**
           * Проверить, является ли маска допустимой ( по массиву допустимых маск this._possibleMasks )
@@ -118,20 +118,13 @@ define(
                throw new Error('Маска не удовлетворяет ни одной допустимой маске данного контролла');
             }
          },
-
-         /**
-          * Содержит ли интервал дни
-          * @private
-          */
-         _hasMaskDays: function(){
-            return this._options.mask.indexOf('D') > -1;
-         },
          /**
           * Содержит ли интервал минуты
+          * @param pattern (Значения D - дни, I - минуты)
           * @private
           */
-         _hasMaskMinutes: function(){
-            return this._options.mask.indexOf('I') > -1;
+         _hasMaskPattern: function(pattern){
+            return this._options.mask.indexOf(pattern) > -1;
          },
 
          _addPlaceholder: function(element){
@@ -148,7 +141,7 @@ define(
          setDays: function ( days ) {
             var availMaskArray = this._options.mask.split(':'),
                 availTextArray = this._options.text.split(':');
-            if (!this._hasMaskDays()){
+            if (!this._hasMaskPattern('D')){
                return;
             }
 
@@ -182,7 +175,7 @@ define(
             hours = hours.toString().replace(/[^\d]/g, '');
 
             //Если количество часов не соответствует маске, то меняем маску
-            if (!this._hasMaskDays()) {
+            if (!this._hasMaskPattern('D')) {
                if (hours.length > 4){
                   hours = "9999";
                }
@@ -209,10 +202,10 @@ define(
          },
          _setMinutes: function ( minutes ) {
             var availTextArray = this._options.text.split(':'),
-               minutesIndex = this._hasMaskDays() ? 2 : 1;
+               minutesIndex = this._hasMaskPattern('D') ? 2 : 1;
             minutes = minutes.toString().replace(/[^\d]/g, '');
 
-            if (!this._hasMaskMinutes()){
+            if (!this._hasMaskPattern('I')){
                return;
             }
             availTextArray[minutesIndex] = minutes;
@@ -243,7 +236,7 @@ define(
          _setText: function(text, checkValues){
             var availTextArray = text.split(":"),
                dataContainers = this.getContainer().find('em');
-            for (var i = 0; i < (this._hasMaskDays() + this._hasMaskMinutes() + 1);i++){
+            for (var i = 0; i < (this._hasMaskPattern('D') + this._hasMaskPattern('I') + 1);i++){
                $(dataContainers[i * 2]).text(availTextArray[i]);
             }
             if (checkValues){
@@ -272,7 +265,7 @@ define(
             if (dontCheck !== true){
                this._correctInterval();
             }
-            this._drawDate();
+            this._drawInterval();
          },
          /**
           * Получить дату
@@ -369,7 +362,7 @@ define(
           * Обновить поле даты по текущему значению даты в this._options.interval
           * @private
           */
-         _drawDate: function(){
+         _drawInterval: function(){
             var newText = this._options.interval == null ? '' : this._getTextByInterval(this._options.interval);
             this._setText(newText);
          },
@@ -403,7 +396,7 @@ define(
                days = hours = minutes = 0;
             }
             else{
-               if (this._hasMaskDays()){
+               if (this._hasMaskPattern('D')){
                   days = allMinutes / (24 * 60) | 0;
                   allMinutes %= 24 * 60;
                }
@@ -417,20 +410,20 @@ define(
 
          _getMinutes: function(){
             var minuteIndex;
-            if (this._hasMaskMinutes()){
-               minuteIndex = this._hasMaskDays() ? 2 : 1;
+            if (this._hasMaskPattern('I')){
+               minuteIndex = this._hasMaskPattern('D') ? 2 : 1;
                return parseInt(this._options.text.split(':')[minuteIndex].replace(new RegExp(this._placeholder,'g'), "0"));
             }
             return 0;
          },
 
          _getHours: function(){
-            var hourIndex = this._hasMaskDays() ? 1 : 0;
+            var hourIndex = this._hasMaskPattern('D') ? 1 : 0;
             return parseInt(this._options.text.split(':')[hourIndex].replace(new RegExp(this._placeholder,'g'), "0"));
          },
 
          _getDays: function(){
-            if (this._hasMaskDays()){
+            if (this._hasMaskPattern('D')){
                return parseInt(this._options.text.split(':')[0].replace(new RegExp(this._placeholder,'g'), "0"));
             }
             return 0;
@@ -445,7 +438,7 @@ define(
             //Получаем массив позиции курсора.
             //Нулевой индекс - позиция блоков (дни, часы или минуты)
             //Первый индекс - позиция курсора внутри данного блока
-            if (cursorPositionEnd[0] >= (1 + this._hasMaskDays() + this._hasMaskMinutes()) && cursorPositionEnd[1]){
+            if (cursorPositionEnd[0] >= (1 + this._hasMaskPattern('D') + this._hasMaskPattern('I')) && cursorPositionEnd[1]){
                this._isFinishedPrint = true;
             }
 
@@ -456,13 +449,13 @@ define(
          _getSelection: function(){
             var selection = window.getSelection();
             if (selection.type === "None"){
-               selection = this._options.lastSelection;
+               selection = this._lastSelection;
                delete selection.startOffset;
                selection.startOffset = 2;
             }
             else{
                selection = selection.getRangeAt(0);
-               this._options.lastSelection = selection;
+               this._lastSelection = selection;
             }
 
             return selection;
@@ -475,7 +468,7 @@ define(
             var text = $(this._inputField.get(0)).text(),
                 oldDate = this._options.interval,
                 minLengthMask = 7,//Минимальная длина маски в символах
-                minutesLengthMask = (this._hasMaskMinutes() && this._hasMaskDays()) ? 3 : 0;//Если маска имеет дни и минуты, то увеличиваем minLengthMask на 3
+                minutesLengthMask = (this._hasMaskPattern('I') && this._hasMaskPattern('D')) ? 3 : 0;//Если маска имеет дни и минуты, то увеличиваем minLengthMask на 3
 
             this._options.interval = this._getIntervalByText(text);
             this._options.text = this._getTextByInterval(this._options.interval);
