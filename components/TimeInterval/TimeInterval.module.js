@@ -90,9 +90,7 @@ define(
             }
 
             this.subscribe("onFocusOut", function(){
-               if (!self._checkBoundaryValues()){
-                  self._correctInterval();
-               }
+               self._correctInterval();
             });
 
          },
@@ -176,9 +174,7 @@ define(
           */
          setHours: function ( hours ) {
             this._setHours(hours);
-            if (!this._checkBoundaryValues()){
-               this._correctInterval();
-            }
+            this._correctInterval();
          },
          _setHours: function ( hours ) {
             var availMaskArray = this._options.mask.split(':'),
@@ -209,9 +205,7 @@ define(
           */
          setMinutes: function ( minutes ) {
             this._setMinutes(minutes);
-            if (!this._checkBoundaryValues()){
-               this._correctInterval();
-            }
+            this._correctInterval();
          },
          _setMinutes: function ( minutes ) {
             var availTextArray = this._options.text.split(':'),
@@ -252,7 +246,7 @@ define(
             for (var i = 0; i < (this._hasMaskDays() + this._hasMaskMinutes() + 1);i++){
                $(dataContainers[i * 2]).text(availTextArray[i]);
             }
-            if (!this._checkBoundaryValues() && checkValues){
+            if (checkValues){
                this._correctInterval();
             }
             this._options.interval = text == '' ? null : this._getIntervalByText( text );
@@ -276,9 +270,7 @@ define(
             this._options.interval = interval;
             this._options.text = this._getTextByInterval(interval);
             if (dontCheck !== true){
-               if (!this._checkBoundaryValues()){
-                  this._correctInterval();
-               }
+               this._correctInterval();
             }
             this._drawDate();
          },
@@ -392,7 +384,9 @@ define(
 
          //Устанавливаем часы и минуты в их диапазоне
          _correctInterval: function(){
-            this.incValue(0);
+            if (!this._checkBoundaryValues()){
+               this.incValue(0);
+            }
          },
          /**
           * Увеличиваем/уменьшаем интервал на заданное кол-во минут
@@ -491,9 +485,7 @@ define(
                this._setMask(this._options.mask[0] + this._options.mask);
             }
             if (this._isFinishedPrint){
-               if (!this._checkBoundaryValues()){
-                  this._correctInterval();
-               }
+               this._correctInterval();
                this._isFinishedPrint = false;
             }
 
