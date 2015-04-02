@@ -135,30 +135,51 @@ define(
          },
 
          /**
+          * Установить дни,часы или минуты
+          * @param {String} pattern Значения D(дни), H(часы), I(минуты).
+          * @param {String/Number} patternValue Значение, которое хотим установить
+          */
+         _setPattern: function(pattern, patternValue){
+            var availMaskArray = this._options.mask.split(':'),
+               availTextArray = this._options.text.split(':'),
+               patternIndex;
+
+            if (!this._hasMaskPattern(pattern)){
+               return;
+            }
+
+            switch (pattern){
+               case 'D':
+                  patternIndex = 0;
+                  break;
+               case 'H':
+                  patternIndex = this._hasMaskPattern('D') ? 1 : 0;
+                  break;
+               case 'I':
+                  patternIndex = this._hasMaskPattern('D') ? 2 : 1;
+                  break;
+            }
+
+            patternValue = patternValue.toString().replace(/[^\d]/g, '');
+            if (!(pattern == 'H' && this._hasMaskPattern('D') || pattern == 'I')) {
+               if (patternValue.length > 4) {
+                  patternValue = "9999";
+               }
+               while (patternValue.length > availMaskArray[0].length)
+                  availMaskArray[0] = pattern + availMaskArray[0];
+               this._setMask(availMaskArray.join(':'));
+            }
+            availTextArray[patternIndex] = this._addPlaceholder(patternValue);
+            this._options.text = availTextArray.join(':');
+            this.setInterval( this._getIntervalByText(this._options.text), true );
+         },
+
+         /**
           * Устанавливаем кол-во дней
           * @param days
           */
          setDays: function ( days ) {
-            var availMaskArray = this._options.mask.split(':'),
-                availTextArray = this._options.text.split(':');
-            if (!this._hasMaskPattern('D')){
-               return;
-            }
-
-            days = days.toString().replace(/[^\d]/g, '');
-
-            if (days.length > 4){
-               days = "9999";
-            }
-
-            //Если количество дней не соответствует маске, то меняем маску
-            while (days.length > availMaskArray[0].length)
-               availMaskArray[0] = "D" + availMaskArray[0];
-            this._setMask(availMaskArray.join(':'));
-
-            availTextArray[0] = this._addPlaceholder(days);
-            this._options.text = availTextArray.join(':');
-            this.setInterval( this._getIntervalByText(this._options.text), true );
+            this._setPattern('D', days);
          },
 
          /**
@@ -166,30 +187,8 @@ define(
           * @param hours
           */
          setHours: function ( hours ) {
-            this._setHours(hours);
+            this._setPattern('H', hours);
             this._correctInterval();
-         },
-         _setHours: function ( hours ) {
-            var availMaskArray = this._options.mask.split(':'),
-               availTextArray = this._options.text.split(':');
-            hours = hours.toString().replace(/[^\d]/g, '');
-
-            //Если количество часов не соответствует маске, то меняем маску
-            if (!this._hasMaskPattern('D')) {
-               if (hours.length > 4){
-                  hours = "9999";
-               }
-               while (hours.length > availMaskArray[0].length)
-                  availMaskArray[0] = "H" + availMaskArray[0];
-               this._setMask(availMaskArray.join(':'));
-               availTextArray[0] = hours;
-            }
-            else{
-               availTextArray[1] = hours;
-            }
-
-            this._options.text = availTextArray.join(':');
-            this.setInterval( this._getIntervalByText(this._options.text),true );
          },
 
          /**
@@ -197,22 +196,9 @@ define(
           * @param minutes
           */
          setMinutes: function ( minutes ) {
-            this._setMinutes(minutes);
+            this._setPattern('I', minutes);
             this._correctInterval();
          },
-         _setMinutes: function ( minutes ) {
-            var availTextArray = this._options.text.split(':'),
-               minutesIndex = this._hasMaskPattern('D') ? 2 : 1;
-            minutes = minutes.toString().replace(/[^\d]/g, '');
-
-            if (!this._hasMaskPattern('I')){
-               return;
-            }
-            availTextArray[minutesIndex] = minutes;
-            this._options.text = availTextArray.join(':');
-            this.setInterval( this._getIntervalByText(this._options.text), true );
-         },
-
          /**
           * В добавление к проверкам и обновлению опции text, необходимо обновить поле _date
           * @param text
