@@ -150,70 +150,6 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background: #eeeeee;
 }
-.controls-Button.controls-Button__light {
-  color: #333333;
-  border: 0 none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #ffffff;
-}
-.controls-Button.controls-Button__light:hover {
-  color: #333333;
-  border: 0 none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #f2f2f2;
-}
-.controls-Button.controls-Button__light.controls-Click__active {
-  color: #4e5762;
-  border: 0 none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #ffe6cc;
-}
-.controls-Button.controls-Button__light.controls-Button__primary {
-  color: #333333;
-  border: 0 none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #ffffff;
-}
-.controls-Button.controls-Button__light.controls-Button__primary:hover {
-  color: #333333;
-  border: 0 none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #ffcc99;
-}
-.controls-Button.controls-Button__light.controls-Button__primary.controls-Click__active {
-  color: #4e5762;
-  border: 0 none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #ffe6cc;
-}
-.controls-Button.controls-Button__light.controls-Button__primary.ws-disabled {
-  color: #aaaaaa;
-  border: 0 none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #eeeeee;
-}
-.controls-Button.controls-Button__light.ws-disabled {
-  color: #aaaaaa;
-  border: 0 none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #eeeeee;
-}
 .controls-Button.controls-Button__big {
   font: 18px Exo2, sans-serif;
   color: #333333;
@@ -1175,15 +1111,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextBox.ws-validation-error .controls-TextBox__fieldWrapper .controls-TextBox__field {
   color: inherit;
 }
-.controls-TextBox:hover {
-  border-width: 1px;
-  border-style: solid;
-  border-color: #666666;
-  background: transparent;
-}
-.controls-TextBox:hover .controls-TextBox__fieldWrapper .controls-TextBox__field {
-  color: inherit;
-}
 .controls-TextBox.ws-has-focus {
   border-width: 1px;
   border-style: solid;
@@ -1191,6 +1118,15 @@ input[type="reset"]::-moz-focus-inner {
   background: #4e5762;
 }
 .controls-TextBox.ws-has-focus .controls-TextBox__fieldWrapper .controls-TextBox__field {
+  color: inherit;
+}
+.controls-TextBox:hover {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #666666;
+  background: transparent;
+}
+.controls-TextBox:hover .controls-TextBox__fieldWrapper .controls-TextBox__field {
   color: inherit;
 }
 .controls-TextBox.ws-disabled {
