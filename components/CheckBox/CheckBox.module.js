@@ -4,7 +4,8 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
    'use strict';
 
    /**
-    * Контрол, отображающий стандартный чекбокс.
+    * Контрол, отображающий стандартный флаг.
+    * При необходимости создания нескольких флагов используйте {@link SBIS3.CONTROLS.CheckBoxGroup CheckBoxGroup}.
     * @class SBIS3.CONTROLS.CheckBox
     * @extends SBIS3.CONTROLS.ButtonBase
     * @mixes SBIS3.CONTROLS.Checkable
