@@ -39,9 +39,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
             /**
              * @cfg {String} название поля-идентификатора записи, при работе с БЛ проставляется автоматически
              */
-            keyField: '',
-            hierField: null
-
+            keyField: ''
          }
       },
       $constructor: function () {
@@ -134,6 +132,28 @@ define('js!SBIS3.CONTROLS.DataSet', [
             this._loadFromRaw();
          }
          return this._indexId[index];
+      },
+
+      where: function (config) {
+         var result = [];
+
+         this.each(function (record) {
+            var isRight = true;
+            for (var key in config) {
+               if (config.hasOwnProperty(key)) {
+                  if (record.get(key) != config[key]) {
+                     isRight = false;
+                  }
+               }
+            }
+
+            if (isRight) {
+               result.push(record);
+            }
+
+         }, 'all');
+
+         return result;
       },
 
       /**
@@ -260,39 +280,10 @@ define('js!SBIS3.CONTROLS.DataSet', [
             this._loadFromRaw();
          }
 
-         if (this._options.hierField) {
-            this._hierIterate(iterateCallback, status);
-         } else {
-            this._simpleIterate(iterateCallback, status);
-         }
-
-      },
-
-      setHierField: function (hierField) {
-         this._options.hierField = hierField;
-      },
-
-      getChildRecordsByRecordKey: function (key) {
-
-         var child = [];
-
-
-         this._hierIterate(function (record) {
-            if (record.get(this._options.hierField) == key) {
-               child.push(record);
-            }
-
-         });
-
-         return child;
-      },
-
-      _simpleIterate: function (iterateCallback, status) {
          var length = this.getCount();
 
          for (var i = 0; i < length; i++) {
             var record = this.at(i);
-
             switch (status) {
                case 'all':
                   iterateCallback.call(this, record);
@@ -312,36 +303,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
                      iterateCallback.call(this, record);
                   }
             }
-
          }
-      },
 
-      _hierIterate: function (iterateCallback, status) {
-
-         var curParent = null,
-            parents = [];
-         do {
-            this._simpleIterate(function (record) {
-               if ((this.getParentKey(record) || null) === (curParent ? curParent.getKey() : null)) {
-                  parents.push(record);
-                  //TODO: тут можно сделать кэш дерева
-                  iterateCallback.call(this, record);
-               }
-            }, status);
-
-            if (parents.length) {
-               var a = Array.remove(parents, 0);
-               curParent = a[0];
-            }
-            else {
-               curParent = null;
-            }
-         } while (curParent);
-
-      },
-
-      getParentKey: function(record){
-         return this.getStrategy().getParentKey(record.get(this._options.hierField));
       },
 
       getMetaData: function () {
@@ -349,5 +312,4 @@ define('js!SBIS3.CONTROLS.DataSet', [
       }
 
    });
-})
-;
+});

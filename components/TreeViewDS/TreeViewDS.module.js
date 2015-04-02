@@ -1,8 +1,9 @@
 define('js!SBIS3.CONTROLS.TreeViewDS', [
    'js!SBIS3.CONTROLS.ListViewDS',
+   'js!SBIS3.CONTROLS.TreeMixinDS',
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'js!SBIS3.CORE.MarkupTransformer'
-], function (ListViewDS, hierarchyMixin, MarkupTransformer) {
+], function (ListViewDS, TreeMixinDS, hierarchyMixin, MarkupTransformer) {
    'use strict';
    /**
     * Контрол, отображающий данные имеющие иерархическую структуру. Позволяет отобразить данные в произвольном виде с возможностью открыть или закрыть отдельные узлы
@@ -11,7 +12,7 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
     * @mixes SBIS3.CONTROLS.TreeMixin
     */
 
-   var TreeViewDS = ListViewDS.extend([hierarchyMixin], /** @lends SBIS3.CONTROLS.TreeViewDS.prototype*/ {
+   var TreeViewDS = ListViewDS.extend([TreeMixinDS, hierarchyMixin], /** @lends SBIS3.CONTROLS.TreeViewDS.prototype*/ {
       $protected: {},
 
       $constructor: function () {
@@ -63,7 +64,7 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
       },
 
       _getTargetContainer: function (record) {
-         var parentKey =  this._dataSet.getParentKey(record),
+         var parentKey = this.getParentKey(this._dataSet, record),
             curList;
          if (parentKey) {
             var curItem = $('.controls-ListView__item[data-id="' + parentKey + '"]', this.getContainer().get(0));

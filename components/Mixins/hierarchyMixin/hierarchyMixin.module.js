@@ -1,108 +1,51 @@
 define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
-   /**
-    * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
-    * @mixin SBIS3.CONTROLS.hierarchyMixin
-    */
+
    var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
       $protected: {
-         _openedPath: [],
-         _ulClass: 'controls-TreeView__list',
          _options: {
-            /**
-             * @cfg {Boolean} Отображать сначала узлы, потом листья
-             * @noShow
-             */
-            folderSort: false,
-            /**
-             * @cfg {String} Идентификатор узла, относительно которого надо отображать данные
-             * @noShow
-             */
-            root: '',
-            /**
-             * @cfg {Boolean} При открытия узла закрывать другие
-             * @noShow
-             */
-            singleExpand: '',
-            /**
-             * @cfg {String[]} Набор идентификаторов, обозначающих какую ветку надо развернуть при инициализации
-             */
-            openedPath: '',
             /**
              * @cfg {String} Поле иерархии
              */
-            hierField: null,
-            openType: 'nothing'
+            hierField: null
          }
       },
       $constructor: function () {
-
       },
 
-      before : {
-         //FixME: необходимо задать датасету поле иерархии, так как он еще не знает об этом
-         _redraw : function () {
-            this._dataSet.setHierField(this._options.hierField);
-         }
+      setHierField: function (hierField) {
+         this._options.hierField = hierField;
       },
 
-      /**
-       * Установить корень выборки
-       * @param {String} root Идентификатор корня
-       */
-      setRoot: function (root) {
+      hierIterate: function (DataSet, iterateCallback, status) {
+         var self = this,
+            curParent = null,
+            parents = [];
+         do {
 
-      },
-      /**
-       * Открыть определенный путь
-       * @param {String[]} path набор идентификаторов
-       */
-      setOpenedPath: function (path) {
+            DataSet.each(function (record) {
 
-      },
-      /**
-       * Раскрыть определенный узел
-       * @param {String} key Идентификатор раскрываемого узла
-       */
-      openNode: function (key) {
-         //must be implemented
-      },
-      /**
-       * Закрыть определенный узел
-       * @param {String} key Идентификатор раскрываемого узла
-       */
-      closeNode: function (key) {
-         //must be implemented
+               if ((self.getParentKey(DataSet, record) || null) === (curParent ? curParent.getKey() : null)) {
+                  parents.push(record);
+                  //TODO: тут можно сделать кэш дерева
+                  iterateCallback.call(this, record);
+               }
+
+            }, status);
+
+            if (parents.length) {
+               var a = Array.remove(parents, 0);
+               curParent = a[0];
+            }
+            else {
+               curParent = null;
+            }
+         } while (curParent);
       },
 
-      /**
-       * Закрыть или открыть определенный узел
-       * @param {String} key Идентификатор раскрываемого узла
-       */
-      toggleNode: function (key) {
-         //must be implemented
-      },
+      getParentKey: function (DataSet, record) {
+         return DataSet.getStrategy().getParentKey(record.get(this._options.hierField));
+      }
 
-      /*
-       after : {
-       _drawItems : function() {
-       this._drawOpenedPath();
-       }
-       },
-
-       _drawOpenedPath : function() {
-       var self = this;
-       if (this._options.openType == 'all') {
-       this._items.iterate(function(item, key){
-       self.openNode(key);
-       });
-       }
-       else {
-       for (var i = 0; i < this._openedPath.length; i++) {
-       this.openNode(this._openedPath[i]);
-       }
-       }
-       }
-       */
 
    };
 
