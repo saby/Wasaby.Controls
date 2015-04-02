@@ -386,7 +386,7 @@ define(
           * Проверяем, не превысили ли введенные значения свой максимум
           * @private
           */
-         _checkBoundaryValues: function(text){
+         _checkBoundaryValues: function(){
             return this._getHours() < 24 && this._getMinutes() < 60;
          },
 
@@ -491,7 +491,9 @@ define(
                this._setMask(this._options.mask[0] + this._options.mask);
             }
             if (this._isFinishedPrint){
-               this._correctInterval();
+               if (!this._checkBoundaryValues()){
+                  this._correctInterval();
+               }
                this._isFinishedPrint = false;
             }
 
