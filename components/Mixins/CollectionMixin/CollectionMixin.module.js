@@ -33,6 +33,10 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
              * @see items
              */
             keyField : null,
+            /**
+             * @cfg {String} Название поля из набора, отображающее данные
+             */
+            displayField: '',
              /**
               * @typedef {Object} Items
               * @property {String} id Идентификатор.

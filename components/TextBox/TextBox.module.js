@@ -3,7 +3,14 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
    'use strict';
 
    /**
-    * Поле ввода в одну строчку
+    * Однострочное текстовое поле ввода.
+    * Специальные поля:
+    * <ul>
+    *     <li>{@link SBIS3.CONTROLS.NumberTextBox NumberTextBox} - поле ввода числа;</li>
+    *     <li>{@link SBIS3.CONTROLS.PasswordTextBox PasswordTextBox} - поле ввода пароля;</li>
+    *     <li>{@link SBIS3.CONTROLS.TextArea TextArea} - многострочное поле ввода;</li>
+    *     <li>{@link SBIS3.CONTROLS.FormattedTextBox FormattedTextBox} - поле ввода с маской.</li>
+    * </ul>
     * @class SBIS3.CONTROLS.TextBox
     * @extends SBIS3.CONTROLS.TextBoxBase
     * @control
@@ -101,7 +108,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  TextBox.superclass.setText.call(self, self._formatValue(self._inputField.val()));
+                  TextBox.superclass.setText.call(self, self._formatText(self._inputField.val()));
                   self._inputField.val(self._options.text);
                }
             }, 100)
@@ -125,18 +132,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          }
       },
 
-      _formatValue: function(value){
-         value = value || ''; // так как есть датабиндинг может прийти undefined
-         if (this._options.trim) {
-            value = String.trim(value);
-         }
-         return value;
-      },
-
-      setText: function(text){
-         //перед изменением делаем trim если нужно
-         text = this._formatValue(text);
-         TextBox.superclass.setText.call(this, text);
+      _drawText: function(text) {
          if (this._compatPlaceholder) {
             this._compatPlaceholder.toggle(!text);
          }
@@ -162,16 +158,12 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
        */
       setPlaceholder: function(text){
          if ($ws._const.compatibility.placeholder) {
-            if (this._compatPlaceholder) {
-               this._compatPlaceholder.text(text || '');
-            }
-            else {
-               this._createCompatPlaceholder();
-            }
+            this._compatPlaceholder.text(text || '');
          }
          else {
             this._inputField.attr('placeholder', text || '');
          }
+         this._options.placeholder = text;
       },
 
       /**
@@ -208,12 +200,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       _keyUpBind: function() {
          var newText = this._inputField.val();
-         if (newText != this._options.text) {
-            TextBox.superclass.setText.call(this, newText);
-         }
-         if (this._compatPlaceholder) {
-            this._compatPlaceholder.toggle(!newText);
-         }
+         this.setText(newText);
       },
 
       _keyDownBind: function(event) {

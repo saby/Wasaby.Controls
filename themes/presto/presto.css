@@ -2076,3 +2076,7 @@ input[type="reset"]::-moz-focus-inner {
 body {
   background-color: #373944;
 }
+.controls-TextBox.controls-TextBox__big {
+  height: 50px;
+  font-size: 36px;
+}
