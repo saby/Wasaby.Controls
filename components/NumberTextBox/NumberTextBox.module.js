@@ -144,19 +144,19 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             }
          });
 
-         this._options.text = this._formatValue(this._options.text);
+         this._options.text = this._formatText(this._options.text);
          this._inputField.val(this._options.text);
       },
 
       _setText: function(text){
          if (text !== '-' && text !== '.' && text !== ''){
             if (text.indexOf('.') === text.length - 1) {
-               text = this._formatValue(text) + '.';
+               text = this._formatText(text) + '.';
                this._inputField.val(text);
                this._setCaretPosition(this._caretPosition[0] + 1, this._caretPosition[1] + 1);
                return;
             } else {
-               text = this._formatValue(text);
+               text = this._formatText(text);
             }
          }
          this._inputField.val(text);
@@ -182,7 +182,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
         return (isNaN(val)) ? null : val;
       },
 
-      _formatValue: function(value, fromFocusOut){
+      _formatText: function(value, fromFocusOut){
          var decimals = (this._options.onlyInteger) ? 0 : this._options.decimals;
          value = $ws.render.defaultColumn.numeric(
             value,
