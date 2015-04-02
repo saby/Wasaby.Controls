@@ -125,8 +125,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          }
       },
 
-      setText: function(text){
-         TextBox.superclass.setText.call(this, text);
+      _drawText: function(text) {
          if (this._compatPlaceholder) {
             this._compatPlaceholder.toggle(!text);
          }
@@ -194,12 +193,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       _keyUpBind: function() {
          var newText = this._inputField.val();
-         if (newText != this._options.text) {
-            TextBox.superclass.setText.call(this, newText);
-         }
-         if (this._compatPlaceholder) {
-            this._compatPlaceholder.toggle(!newText);
-         }
+         this.setText(newText);
       },
 
       _keyDownBind: function(event) {
