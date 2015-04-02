@@ -25,7 +25,16 @@ define('js!SBIS3.CONTROLS.DataBindMixin', ['js!SBIS3.CORE.AttributeCfgParser'], 
          }
          return ctx;
       },
-
+        /**
+         * Метод изменения значения поля контекста.
+         * Если указать несуществующее поле, то метод ничего не сделает.
+         * @param {String} field Поле контекста.
+         * @param {String} value Новое значение.
+         * @example
+         * <pre>
+         *
+         * </pre>
+         */
       saveToContext: function(field, value){
          if (this._dataBind[field]) {
             this._getBindingContext().setValue(this._dataBind[field], value, false, this);
