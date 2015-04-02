@@ -150,70 +150,6 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: inset 0 -1px 1px #bbbbba;
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAARUlEQVQYVxXDCRIAEQwAwfn/Y9cRQcSxdFVzzmHvzVrrnsx5u+M+GOM2w6xjvdHbW2lVqfoWtAgqQpGM5ISkSH5jIIXvByxNRX+NbFFRAAAAAElFTkSuQmCC');
 }
-.controls-Button.controls-Button__light {
-  color: #000000;
-  border: 1px solid #587ab0;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #ffffff;
-}
-.controls-Button.controls-Button__light:hover {
-  color: #000000;
-  border: 1px solid #587ab0;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #e4e9f1;
-}
-.controls-Button.controls-Button__light.controls-Click__active {
-  color: #000000;
-  border: 1px solid #587ab0;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #cbd5e5;
-}
-.controls-Button.controls-Button__light.controls-Button__primary {
-  color: #000000;
-  border: 1px solid #ff7033;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #ffffff;
-}
-.controls-Button.controls-Button__light.controls-Button__primary:hover {
-  color: #000000;
-  border: 1px solid #ff7033;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #fdecd9;
-}
-.controls-Button.controls-Button__light.controls-Button__primary.controls-Click__active {
-  color: #000000;
-  border: 1px solid #ff7033;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #fdd2c0;
-}
-.controls-Button.controls-Button__light.controls-Button__primary.ws-disabled {
-  color: #cccccc;
-  border: 1px solid #cccccc;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #ffffff !important;
-}
-.controls-Button.controls-Button__light.ws-disabled {
-  color: #cccccc;
-  border: 1px solid #cccccc;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #ffffff !important;
-}
 .controls-Button.controls-Button__big {
   font: italic normal 18px 'Cambria', Georgia, serif;
   color: #000000;
@@ -2106,4 +2042,68 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-PopupMixin__closeButton:hover {
   background: url('img/cancelIcon-sprite.png') 0 -16px no-repeat;
+}
+.controls-Button__light {
+  color: #000000;
+  border: 1px solid #587ab0;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #ffffff;
+}
+.controls-Button__light:hover {
+  color: #000000;
+  border: 1px solid #587ab0;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #e4e9f1;
+}
+.controls-Button__light.controls-Click__active {
+  color: #000000;
+  border: 1px solid #587ab0;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #cbd5e5;
+}
+.controls-Button__light.controls-Button__primary {
+  color: #000000;
+  border: 1px solid #ff7033;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #ffffff;
+}
+.controls-Button__light.controls-Button__primary:hover {
+  color: #000000;
+  border: 1px solid #ff7033;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #fdecd9;
+}
+.controls-Button__light.controls-Button__primary.controls-Click__active {
+  color: #000000;
+  border: 1px solid #ff7033;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #fdd2c0;
+}
+.controls-Button__light.controls-Button__primary.ws-disabled {
+  color: #cccccc;
+  border: 1px solid #cccccc;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #ffffff !important;
+}
+.controls-Button__light.ws-disabled {
+  color: #cccccc;
+  border: 1px solid #cccccc;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background: #ffffff !important;
 }
