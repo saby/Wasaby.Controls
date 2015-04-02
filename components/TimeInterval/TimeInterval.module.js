@@ -142,22 +142,10 @@ define(
          _setPattern: function(pattern, patternValue){
             var availMaskArray = this._options.mask.split(':'),
                availTextArray = this._options.text.split(':'),
-               patternIndex;
+               patternIndex = this._getIndexForPattern(pattern);
 
             if (!this._hasMaskPattern(pattern)){
                return;
-            }
-
-            switch (pattern){
-               case 'D':
-                  patternIndex = 0;
-                  break;
-               case 'H':
-                  patternIndex = this._hasMaskPattern('D') ? 1 : 0;
-                  break;
-               case 'I':
-                  patternIndex = this._hasMaskPattern('D') ? 2 : 1;
-                  break;
             }
 
             patternValue = patternValue.toString().replace(/[^\d]/g, '');
@@ -351,7 +339,6 @@ define(
 
             return text;
          },
-
          /**
           * Обновить поле даты по текущему значению даты в this._options.interval
           * @private
@@ -366,7 +353,7 @@ define(
           * @private
           */
          _checkBoundaryValues: function(){
-            return this._getHours() < 24 && this._getMinutes() < 60;
+            return this._getPatterns('H') < 24 && this._getPatterns('I') < 60;
          },
 
          //Устанавливаем часы и минуты в их диапазоне
@@ -385,7 +372,7 @@ define(
                minutes,
                hours,
                days;
-            allMinutes = (this._getDays() * 24 + this._getHours()) * 60 + this._getMinutes() + parseInt(incMinutes == "" ? 0 : incMinutes);
+            allMinutes = (this._getPatterns('D') * 24 + this._getPatterns('H')) * 60 + this._getPatterns('I') + parseInt(incMinutes == "" ? 0 : incMinutes);
             if (allMinutes < 0){
                days = hours = minutes = 0;
             }
@@ -402,27 +389,26 @@ define(
             this._setPattern('H', hours);
          },
 
-         _getMinutes: function(){
-            var minuteIndex;
-            if (this._hasMaskPattern('I')){
-               minuteIndex = this._hasMaskPattern('D') ? 2 : 1;
-               return parseInt(this._options.text.split(':')[minuteIndex].replace(new RegExp(this._placeholder,'g'), "0"));
+         _getIndexForPattern: function(pattern){
+            if (!this._hasMaskPattern(pattern)){
+               return -1;
             }
-            return 0;
-         },
-
-         _getHours: function(){
-            var hourIndex = this._hasMaskPattern('D') ? 1 : 0;
-            return parseInt(this._options.text.split(':')[hourIndex].replace(new RegExp(this._placeholder,'g'), "0"));
-         },
-
-         _getDays: function(){
-            if (this._hasMaskPattern('D')){
-               return parseInt(this._options.text.split(':')[0].replace(new RegExp(this._placeholder,'g'), "0"));
+            switch (pattern){
+               case 'D':
+                  return 0;
+                  break;
+               case 'H':
+                  return this._hasMaskPattern('D') ? 1 : 0;
+                  break;
+               case 'I':
+                  return this._hasMaskPattern('D') ? 2 : 1;
+                  break;
             }
-            return 0;
          },
-
+         _getPatterns: function(pattern){
+            var patternIndex = this._getIndexForPattern(pattern);
+            return patternIndex > -1 ? parseInt(this._options.text.split(':')[patternIndex].replace(new RegExp(this._placeholder,'g'), "0")) : 0;
+         },
          //Переопределенный метод
          _getCursor: function(position){
             var selection = this._getSelection(),
