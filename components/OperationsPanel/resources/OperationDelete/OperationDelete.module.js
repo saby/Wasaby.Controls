@@ -2,10 +2,10 @@
  * Created by as.suhoruchkin on 02.04.2015.
  */
 define('js!SBIS3.CONTROLS.OperationDelete', [
-      'js!SBIS3.CONTROLS.MenuLink'
-], function(MenuLink) {
+      'js!SBIS3.CONTROLS.Link'
+], function(Link) {
 
-   var OperationDelete = MenuLink.extend({
+   var OperationDelete = Link.extend({
 
       $protected: {
          _options: {
