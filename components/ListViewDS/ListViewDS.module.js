@@ -400,7 +400,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @returns {*}
           */
          getItemActions: function() {
-            if(!this._itemActionsGroup) {
+            if(this._options.itemsActions.length && !this._itemActionsGroup) {
                this._initItemActions();
             }
             return this._itemActionsGroup;
