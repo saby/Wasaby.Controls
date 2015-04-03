@@ -97,6 +97,9 @@
                <li>
                   <div id="Views"></div>
                </li>
+                <li>
+                    <div id="ViewsScroll"></div>
+                </li>
                <li>
                   <div id="Popup"></div>
                </li>
@@ -264,6 +267,13 @@
                href: '/pages/Views.html'
             })
          });
+          require(["js!SBIS3.CONTROLS.Link"], function (r) {
+              new r({
+                  element: "ViewsScroll",
+                  caption: 'ViewsScroll',
+                  href: '/pages/ViewsScroll.html'
+              })
+          });
 
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
