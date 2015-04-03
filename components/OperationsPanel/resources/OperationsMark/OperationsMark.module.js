@@ -4,7 +4,6 @@
 define('js!SBIS3.CONTROLS.OperationsMark', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.OperationsMark',
-   'css!SBIS3.CONTROLS.OperationsMark',
    'js!SBIS3.CONTROLS.MenuLink',
    'js!SBIS3.CONTROLS.CheckBox'
 ], function(CompoundControl, dotTplFn) {

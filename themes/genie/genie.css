@@ -2043,54 +2043,6 @@ input[type="reset"]::-moz-focus-inner {
   height: 1px;
   background: white;
 }
-.controls-ItemActions {
-  position: absolute;
-  height: 20px;
-  background-color: #00c795;
-  right: 1px;
-  box-shadow: -2px -2px 5px #00c795;
-  z-index: 10;
-  display: none;
-}
-.controls-ItemActions > * {
-  display: inline;
-  cursor: pointer;
-  margin: 0 4px;
-  width: 16px;
-  height: 16px;
-  padding: 0 !important;
-}
-.controls-ItemActions > *.controls-ItemActions__hiddenAction {
-  display: none !important;
-}
-.controls-ItemActions > *.controls-ItemActions__menu-button {
-  display: inline-block;
-  z-index: 11;
-  background: url('img/ItemActions-menu.png') no-repeat;
-  float: right;
-}
-.controls-ItemActions > *.controls-ItemActions__menu-button:hover {
-  background: url('img/ItemActions-menu.png') no-repeat 0 -20px;
-}
-.controls-ItemActions__menu-container .controls-MenuItem {
-  padding-right: 24px;
-}
-.controls-ItemActions__menu-container .controls-PopupMixin__closeButton {
-  height: 16px;
-  width: 16px;
-  z-index: 1;
-  right: 4px;
-  top: 4px;
-  position: absolute;
-  cursor: pointer;
-  background: url('img/ItemActions-menu.png') no-repeat 0 -40px;
-}
-.controls-ItemActions__menu-container .controls-PopupMixin__closeButton:hover {
-  background: url('img/ItemActions-menu.png') no-repeat 0 -60px;
-}
-.controls-ItemActions__activeItem {
-  background-color: #00c795 !important;
-}
 .controls-operations-panel {
   height: 30px;
   overflow: visible !important;
@@ -2155,6 +2107,54 @@ input[type="reset"]::-moz-focus-inner {
 .controls__operations-panel__wrapper .controls__operations-panel__action-type-selection,
 .controls__operations-panel__wrapper .controls__operations-panel__action-type-all {
   margin: 0 4px;
+}
+.controls-ItemActions {
+  position: absolute;
+  height: 20px;
+  background-color: #00c795;
+  right: 1px;
+  box-shadow: -2px -2px 5px #00c795;
+  z-index: 10;
+  display: none;
+}
+.controls-ItemActions > * {
+  display: inline;
+  cursor: pointer;
+  margin: 0 4px;
+  width: 16px;
+  height: 16px;
+  padding: 0 !important;
+}
+.controls-ItemActions > *.controls-ItemActions__hiddenAction {
+  display: none !important;
+}
+.controls-ItemActions > *.controls-ItemActions__menu-button {
+  display: inline-block;
+  z-index: 11;
+  background: url('img/ItemActions-menu.png') no-repeat;
+  float: right;
+}
+.controls-ItemActions > *.controls-ItemActions__menu-button:hover {
+  background: url('img/ItemActions-menu.png') no-repeat 0 -20px;
+}
+.controls-ItemActions__menu-container .controls-MenuItem {
+  padding-right: 24px;
+}
+.controls-ItemActions__menu-container .controls-PopupMixin__closeButton {
+  height: 16px;
+  width: 16px;
+  z-index: 1;
+  right: 4px;
+  top: 4px;
+  position: absolute;
+  cursor: pointer;
+  background: url('img/ItemActions-menu.png') no-repeat 0 -40px;
+}
+.controls-ItemActions__menu-container .controls-PopupMixin__closeButton:hover {
+  background: url('img/ItemActions-menu.png') no-repeat 0 -60px;
+}
+.controls-ItemActions__activeItem {
+  background-color: #00c795 !important;
 }
 .controls-ComboBox__picker.controls-Picker__owner__hover {
   border-top-color: #00c795;

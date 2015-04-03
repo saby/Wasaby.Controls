@@ -4,13 +4,12 @@
 define('js!SBIS3.CONTROLS.OperationsPanel', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.OperationsPanel',
-   'css!SBIS3.CONTROLS.OperationsPanel',
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.CollectionMixin',
    /*TODO это должна подключать не панель а прекладники, потом убрать*/
    'js!SBIS3.CONTROLS.OperationDelete',
    'js!SBIS3.CONTROLS.OperationsMark'
-], function(Control, dotTplFn, OPStyles, PickerMixin, CollectionMixin) {
+], function(Control, dotTplFn, PickerMixin, CollectionMixin) {
    /**
     * SBIS3.CONTROLS.OperationsPanel
     * @class SBIS3.CONTROLS.OperationsPanel
