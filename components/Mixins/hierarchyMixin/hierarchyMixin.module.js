@@ -2,6 +2,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
    var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
       $protected: {
+         _indexTree: {},
          _options: {
             /**
              * @cfg {String} Поле иерархии
@@ -19,14 +20,23 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       hierIterate: function (DataSet, iterateCallback, status) {
          var self = this,
             curParent = null,
-            parents = [];
+            parents = [],
+            indexTree = {};
+
          do {
 
             DataSet.each(function (record) {
+               var parentKey = self.getParentKey(DataSet, record);
 
-               if ((self.getParentKey(DataSet, record) || null) === (curParent ? curParent.getKey() : null)) {
+               if ((parentKey || null) === (curParent ? curParent.getKey() : null)) {
                   parents.push(record);
-                  //TODO: тут можно сделать кэш дерева
+
+                  if (!indexTree.hasOwnProperty(parentKey)) {
+                     indexTree[self.getParentKey(DataSet, record)] = [];
+                  }
+
+                  indexTree[self.getParentKey(DataSet, record)].push(record.getKey());
+
                   iterateCallback.call(this, record);
                }
 
@@ -40,6 +50,9 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
                curParent = null;
             }
          } while (curParent);
+
+         this._indexTree = indexTree;
+         DataSet.setIndexTree(indexTree);
       },
 
       getParentKey: function (DataSet, record) {

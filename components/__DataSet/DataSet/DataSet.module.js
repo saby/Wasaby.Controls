@@ -20,8 +20,10 @@ define('js!SBIS3.CONTROLS.DataSet', [
    // Дефолтный набор опций при добавлении рекордов в датасет
    var addOptions = {add: true, remove: false};
 
+
    return $ws.proto.Abstract.extend({
       $protected: {
+         _indexTree: {},// индекс иерархии
          _isLoaded: false,
          _byId: {},
          _indexId: [],
@@ -132,28 +134,6 @@ define('js!SBIS3.CONTROLS.DataSet', [
             this._loadFromRaw();
          }
          return this._indexId[index];
-      },
-
-      where: function (config) {
-         var result = [];
-
-         this.each(function (record) {
-            var isRight = true;
-            for (var key in config) {
-               if (config.hasOwnProperty(key)) {
-                  if (record.get(key) != config[key]) {
-                     isRight = false;
-                  }
-               }
-            }
-
-            if (isRight) {
-               result.push(record);
-            }
-
-         }, 'all');
-
-         return result;
       },
 
       /**
@@ -309,6 +289,10 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
       getMetaData: function () {
          return this.getStrategy().getMetaData(this._rawData);
+      },
+
+      setIndexTree: function (index) {
+         this._indexTree = index;
       }
 
    });
