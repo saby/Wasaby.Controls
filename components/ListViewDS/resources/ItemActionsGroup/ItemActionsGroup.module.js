@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                handlers: {
                   onClose: function() {
                      self._itemActionsMenuVisible = false;
-                     self._activeItem.removeClass('controls-ItemActions__hoverImitation');
+                     self._activeItem.removeClass('controls-ItemActions__activeItem');
                   },
                   onMenuItemActivate: function(e, id) {
                      self._itemActivatedHandler(id);
@@ -126,7 +126,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * @param show
           */
          hoverImitation: function(show) {
-            this._activeItem[show ? 'addClass' : 'removeClass']('controls-ItemActions__hoverImitation');
+            this._activeItem[show ? 'addClass' : 'removeClass']('controls-ItemActions__activeItem');
          },
          /**
           * Показывает меню для операций над записью
@@ -134,7 +134,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          showItemActionsMenu: function() {
             this._onBeforeMenuShowHandler();
             this._itemActionsMenu.show();
-            this._activeItem.addClass('controls-ItemActions__hoverImitation');
+            this._activeItem.addClass('controls-ItemActions__activeItem');
             this._itemActionsMenuVisible = true;
          },
          /**
@@ -159,7 +159,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var position = this._getItemActionPositionForItem(item);
 
             this._container[0].style.top = position.top + 'px';
-            this._container[0].style.right = position.right + 'px';
             this._container[0].style.display = 'block';
          },
          /**
@@ -202,6 +201,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             '<option name="icon">' + item.get('icon') + '</option>' +
             '</component>';
          },
+
          destroy: function() {
             this._itemActionsButtons = {};
             this._activeItem = undefined;

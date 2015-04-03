@@ -2068,7 +2068,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ItemActions__menu-container .controls-PopupMixin__closeButton:hover {
   background: url('img/ItemActions-menu.png') no-repeat 0 -60px;
 }
-.controls-ItemActions__hoverImitation {
+.controls-ItemActions__activeItem {
   background-color: #f3f3f3;
 }
 .controls-ComboBox.controls-Picker__show {

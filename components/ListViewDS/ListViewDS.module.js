@@ -49,6 +49,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   name: 'delete',
                   icon: 'icon-16 icon-Erase icon-error',
                   title: 'Удалить',
+                  isMainAction: true,
                   onActivated: function(item) {
                      this.deleteRecords(item.data('id'));
                   }
@@ -92,6 +93,11 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             // запросим данные из источника
             this.reload();
          },
+         /**
+          * Обрабатывает перемещения мышки на элемент представления
+          * @param e
+          * @private
+          */
          _mouseMoveHandler: function(e) {
             var $target = $(e.target),
                 target,
@@ -119,6 +125,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                }
             }
          },
+         /**
+          * Обрабатывает уведение мышки с элемента представления
+          * @private
+          */
          _mouseLeaveHandler: function() {
             this._hoveredItem = {
                key: null,
@@ -127,7 +137,12 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             this._notify('onChangeHoveredItem', false);
             this._onChangeHoveredItem(false);
          },
-
+         /**
+          * Обработчик на смену выделенного элемента представления
+          * @param target
+          * @param targetKey
+          * @private
+          */
          _onChangeHoveredItem: function(target, targetKey) {
            if(this._options.itemsActions.length) {
               if(target) {
@@ -248,9 +263,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (!this._itemActionsGroup.isItemActionsMenuVisible()) {
                this._itemActionsGroup.hoverImitation(e.type === 'mousemove');
             }
-         },
-         getItemActions: function() {
-            return this._itemActionsGroup;
          }
       });
 

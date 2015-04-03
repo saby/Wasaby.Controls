@@ -2112,7 +2112,7 @@ input[type="reset"]::-moz-focus-inner {
   height: 20px;
   background-color: #00c795;
   right: 1px;
-  box-shadow: -2px -2px 5px #f3f3f3;
+  box-shadow: -2px -2px 5px #00c795;
   z-index: 10;
   display: none;
 }
@@ -2148,8 +2148,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ItemActions__menu-container .controls-PopupMixin__closeButton:hover {
   background: url('img/ItemActions-menu.png') no-repeat 0 -60px;
 }
-.controls-ItemActions__hoverImitation {
-  background-color: #f3f3f3;
+.controls-ItemActions__activeItem {
+  background-color: #00c795 !important;
 }
 .controls-ComboBox__picker.controls-Picker__owner__hover {
   border-top-color: #00c795;
