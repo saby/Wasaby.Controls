@@ -79,6 +79,9 @@
                <li>
                   <div id="TextBoxes"></div>
                </li>
+                <li>
+                    <div id="TimeInterval"></div>
+                </li>
                <li>
                   <div id="Buttons"></div>
                </li>
@@ -213,6 +216,14 @@
                href: '/pages/textBoxCommonStyles.html'
             })
          });
+
+          require(["js!SBIS3.CONTROLS.Link"], function (r) {
+              new r({
+                  element: "TimeInterval",
+                  caption: 'TimeInterval',
+                  href: '/pages/TimeInterval.html'
+              })
+          });
 
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
