@@ -139,8 +139,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                      key: targetKey,
                      container: target
                   };
-                  this._notify('onChangeHoveredItem', target, targetKey);
                   this._onChangeHoveredItem(target, targetKey);
+                  this._notify('onChangeHoveredItem', target, targetKey);
                }
             }
          },
