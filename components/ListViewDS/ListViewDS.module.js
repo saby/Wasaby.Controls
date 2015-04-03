@@ -260,6 +260,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (this.isInfiniteScroll()) {
                this._loadBeforeScrollAppears();
             }
+         },
          /**
           * Создаёт операции над записью
           * @private
