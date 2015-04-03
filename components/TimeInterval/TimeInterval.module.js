@@ -107,10 +107,15 @@ define(
           * Установить маску.
           */
          _setMask: function (mask) {
+            var self = this;
             this._options.mask = this._primalMask = mask;
             this._clearMask = this._getClearMask();
             this._maskRegExp = this._getRegExpByMask(this._primalMask);
             this._drawInterval();
+            //TODO исправить выставление курсора
+            setTimeout(function() {
+               self._keyPressHandler(18, "character");
+            }, 0);
          },
          /**
           * Проверить, является ли маска допустимой ( по массиву допустимых маск this._possibleMasks )
@@ -431,9 +436,7 @@ define(
             //Получаем массив позиции курсора.
             //Нулевой индекс - позиция блоков (дни, часы или минуты)
             //Первый индекс - позиция курсора внутри данного блока
-            if (cursorPositionEnd[0] >= (1 + this._hasMaskPattern('D') + this._hasMaskPattern('I')) && cursorPositionEnd[1]){
-               this._isFinishedPrint = true;
-            }
+            this._isFinishedPrint = cursorPositionEnd[0] >= (1 + this._hasMaskPattern('D') + this._hasMaskPattern('I')) && cursorPositionEnd[1];
 
             return ( position ?
                this._correctCursor(selection.startContainer, selection.startOffset) :  cursorPositionEnd);
