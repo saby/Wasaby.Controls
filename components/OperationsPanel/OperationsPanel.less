@@ -1,20 +1,20 @@
 .controls-operations-panel {
-   height: @controls-OperationPanel-height;
+   height: @controls-OperationsPanel-height;
    overflow: visible !important;
 
    .controls__operations-panel__closed {
-      background: @controls-OperationPanel-closed;
+      background: @controls-OperationsPanel-closed;
 
       &:hover {
-         background: @controls-OperationPanel-closed-hovered;
+         background: @controls-OperationsPanel-closed-hovered;
       }
       &:active {
-         background: @controls-OperationPanel-closed-activated;
+         background: @controls-OperationsPanel-closed-activated;
       }
    }
    &.ws-disabled {
       .controls__operations-panel__closed {
-         background: @controls-OperationPanel-closed-disabled;
+         background: @controls-OperationsPanel-closed-disabled;
       }
    }
 
@@ -22,41 +22,41 @@
 
 .controls__operations-panel__opened, .controls__operations-panel__closed {
    position: absolute;
-   top: @controls-OperationPanel-opened-closed-top;
-   left: @controls-OperationPanel-opened-closed-left;
-   width: @controls-OperationPanel-opened-closed-width;
-   height: @controls-OperationPanel-opened-closed-height;
-   cursor: @controls-OperationPanel-cursor;
+   top: @controls-OperationsPanel-opened-closed-top;
+   left: @controls-OperationsPanel-opened-closed-left;
+   width: @controls-OperationsPanel-opened-closed-width;
+   height: @controls-OperationsPanel-opened-closed-height;
+   cursor: @controls-OperationsPanel-cursor;
 }
 
 .controls__operations-panel__wrapper {
-   line-height: @controls-OperationPanel-line-height;
-   width: @controls-OperationPanel-width;
+   line-height: @controls-OperationsPanel-line-height;
+   width: @controls-OperationsPanel-width;
    white-space: nowrap;
-   background-color: @controls-OperationPanel-bg;
-   padding-left: @controls-OperationPanel-padding-left;
+   background-color: @controls-OperationsPanel-bg;
+   padding-left: @controls-OperationsPanel-padding-left;
 
    > * {
       display: inline-block;
    }
 
    &:after {
-      background: @controls-OperationPanel-triangle;
+      background: @controls-OperationsPanel-triangle;
       content: '\00a0';
       position: absolute;
-      width: @controls-OperationPanel-triangle-width;
-      height: @controls-OperationPanel-triangle-height;
+      width: @controls-OperationsPanel-triangle-width;
+      height: @controls-OperationsPanel-triangle-height;
       top: 0;
    }
 
    .controls__operations-panel__opened {
-      background: @controls-OperationPanel-opened;
+      background: @controls-OperationsPanel-opened;
 
       &:hover {
-         background: @controls-OperationPanel-opened-hovered;
+         background: @controls-OperationsPanel-opened-hovered;
       }
       &:active {
-         background: @controls-OperationPanel-opened-activated;
+         background: @controls-OperationsPanel-opened-activated;
       }
    }
 
