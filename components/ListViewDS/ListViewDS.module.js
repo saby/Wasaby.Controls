@@ -394,6 +394,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                return;
             }
             this._removeLoadingIndicator();
+         },
+         /**
+          * Геттер для получения операций над записью
+          * @returns {*}
+          */
+         getItemActions: function() {
+            return this._itemActionsGroup;
          }
       });
 
