@@ -22,7 +22,7 @@ define('js!SBIS3.Demo.Control.MyIconButton',
 
       init: function() {
          moduleClass.superclass.init.call(this);
-         this.getChildControlByName("Button 1").subscribe("onActivated", function() {
+         this.getChildControlByName("IconButton").subscribe("onActivated", function() {
             $ws.helpers.question("Действительно хотите в отпуск?"); 
          });
       }
