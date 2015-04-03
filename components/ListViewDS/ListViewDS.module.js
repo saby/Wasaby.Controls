@@ -134,7 +134,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
             if (target.length) {
                targetKey = target.data('id');
-               if (targetKey && this._hoveredItem.key !== targetKey) {
+               if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
                   this._hoveredItem = {
                      key: targetKey,
                      container: target
