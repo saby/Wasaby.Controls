@@ -19,8 +19,7 @@ define('js!SBIS3.CONTROLS.OperationDelete', [
          var view = this.getParent().getLinkedView(),
             selectedItems = view.getSelectedItems(),
             records = selectedItems.length ? selectedItems : view._dataSet._indexId;
-         view._dataSet.removeRecord(records);
-         view._dataSource.sync(view._dataSet);
+         view.deleteRecords(records);
       }
    });
 
