@@ -26,7 +26,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             _itemActionsHiddenButton: [],
             _activeItem: undefined,
             _options: {
-
+               /**
+                * Количество записей, которые можно показать не в меню
+                */
+               itemActionsOverflow: 3
             }
          },
 
@@ -37,24 +40,24 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          /**
           * Изменяет операции над строкой до нужного состояния - скрывает / показывает кнопки
           */
-         applyItemActions: function(filter, item) {
+         applyItemActions: function(item) {
             var onlyMain = true,
-               itemsInstances = this.getItemsInstances();
+                itemsInstances = this.getItemsInstances(),
+                count = 0;
 
-            this._activeItem = item;
-            this._itemActionsHiddenButton = Array.isArray(filter) ? filter : [];
-            for(var i in this._itemActionsButtons) {
-               if(this._itemActionsButtons.hasOwnProperty(i)) {
-                  //Если все опции главные, то меню не надо показывать вообще
+            for(var i in itemsInstances) {
+               if(itemsInstances.hasOwnProperty(i)) {
                   onlyMain &= this._itemActionsButtons[i]['isMainAction'];
-                  itemsInstances[i].getContainer()[0].style.display =
-                     //Если пользователь ничего скрывать не хочет, тогда не будем лишних проверок делать
-                     (this._itemActionsHiddenButton.length ? Array.indexOf(this._itemActionsHiddenButton, i) === -1 : true)
-                     && this._itemActionsButtons[i]['isMainAction'] ?
-                        'inline-block' : 'none';
+                  if(itemsInstances[i].isVisible()) {
+                     count++;
+                  }
+                  //Если кнопок больше чем itemActionsOverflow или она не главная, то скроем
+                  itemsInstances[i]
+                     .getContainer()
+                     .toggleClass('controls-ItemActions__hiddenAction', count > this._options.itemActionsOverflow || !this._itemActionsButtons[i]['isMainAction']);
                }
             }
-            this._itemActionsMenuButton[0].style.display = (!onlyMain ? 'inline-block' : 'none');
+            this._itemActionsMenuButton[0].style.display = (!onlyMain || count >= this._options.itemActionsOverflow ? 'inline-block' : 'none');
          },
          /**
           * Расщитывает позицию для операций на записью
@@ -129,6 +132,15 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._activeItem[show ? 'addClass' : 'removeClass']('controls-ItemActions__activeItem');
          },
          /**
+          * Задаёт количество записей, которые показываются на строке(не прячутся в меню)
+          * @param {Number} amount
+          */
+         setItemsActionsOverFlow: function(amount) {
+            if(typeof amount === 'number') {
+               this._options.itemActionsOverflow = amount;
+            }
+         },
+         /**
           * Показывает меню для операций над записью
           */
          showItemActionsMenu: function() {
@@ -143,11 +155,12 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * @private
           */
          _onBeforeMenuShowHandler: function() {
-            var instances = this._itemActionsMenu.getItemsInstances();
+            var menuInstances = this._itemActionsMenu.getItemsInstances(),
+                itemActionsInstances = this.getItemsInstances();
 
-            for(var i in instances) {
-               if(instances.hasOwnProperty(i)) {
-                  instances[i].getContainer()[Array.indexOf(this._itemActionsHiddenButton, i) === -1 ? 'show' : 'hide']();
+            for(var i in menuInstances) {
+               if(menuInstances.hasOwnProperty(i)) {
+                  menuInstances[i].getContainer()[itemActionsInstances.hasOwnProperty(i) && itemActionsInstances[i].isVisible() ? 'show' : 'hide']();
                }
             }
          },
@@ -157,6 +170,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          showItemActions: function(item) {
             var position = this._getItemActionPositionForItem(item);
+            this._activeItem = item;
 
             this._container[0].style.top = position.top + 'px';
             this._container[0].style.display = 'block';

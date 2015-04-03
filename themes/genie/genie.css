@@ -2122,6 +2122,10 @@ input[type="reset"]::-moz-focus-inner {
   margin: 0 4px;
   width: 16px;
   height: 16px;
+  padding: 0 !important;
+}
+.controls-ItemActions > *.controls-ItemActions__hiddenAction {
+  display: none !important;
 }
 .controls-ItemActions > *.controls-ItemActions__menu-button {
   display: inline-block;

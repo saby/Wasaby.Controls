@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 */
                itemsActions: [{
                   name: 'delete',
-                  icon: 'icon-16 icon-Erase icon-error',
+                  icon: 'sprite:icon-16 icon-Erase icon-error',
                   title: 'Удалить',
                   isMainAction: true,
                   onActivated: function(item) {
@@ -224,12 +224,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                return;
             }
 
-            res = this._notify('onItemActions', item);
-
-            if(res === false) {
-               return;
-            }
-            this._itemActionsGroup.applyItemActions(res, item);
+            this._itemActionsGroup.applyItemActions(item);
             this._itemActionsGroup.showItemActions(item);
          },
          /**
