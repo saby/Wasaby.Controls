@@ -115,8 +115,18 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                closeByExternalClick: true,
                handlers: {
                   onClose: function() {
+                     var hoverItem = self.getParent().getHoveredItem().container;
+
                      self._itemActionsMenuVisible = false;
                      self._activeItem.removeClass('controls-ItemActions__activeItem');
+                     //Если меню закрылось, возможно надо переместить операции на новую строку
+                     //или скрыть их совсем
+                     if(!hoverItem) {
+                        self.hideItemActions();
+                     } else if(hoverItem !== self._activeItem) {
+                        self.applyItemActions(hoverItem);
+                        self.showItemActions(hoverItem);
+                     }
                   },
                   onMenuItemActivate: function(e, id) {
                      self._itemActivatedHandler(id);
@@ -148,6 +158,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._itemActionsMenu.show();
             this._activeItem.addClass('controls-ItemActions__activeItem');
             this._itemActionsMenuVisible = true;
+            this._itemActionsMenu.recalcPosition(true);
          },
          /**
           * Срабатывает перед открытием меню

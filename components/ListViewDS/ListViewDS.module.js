@@ -405,6 +405,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                this._initItemActions();
             }
             return this._itemActionsGroup;
+         },
+         /**
+          * Геттер для получения текущего выделенного элемента
+          * @returns {{key: null | number, container: (null | jQuery)}}
+          */
+         getHoveredItem: function() {
+           return this._hoveredItem;
          }
       });
 
