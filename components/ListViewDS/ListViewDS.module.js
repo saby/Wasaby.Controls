@@ -267,12 +267,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                this._nowLoading = true;
                this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset  + this._limit, this._limit).addCallback(function (dataSet) {
                   self._nowLoading = false;
-                  //TODO это нельзя разнести в два if, ибо есть проблема у статичских данных
-                  if (dataSet.getCount() || self._hasNextPage(dataSet.getMetaData().more)) {
+                  //Если данные пришли, нарисуем
+                  if (dataSet.getCount()) {
                      records = dataSet._getRecords();
                      self._dataSet.merge(dataSet);
-                     self._infiniteScrollOffset += self._limit;
                      self._drawItems(records);
+                  }
+                  if (self._hasNextPage(dataSet.getMetaData().more)){
+                     self._infiniteScrollOffset += self._limit;
                   } else {
                      self._hasScrollMore = false;
                      self._removeLoadingIndicator();
