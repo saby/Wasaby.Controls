@@ -9,7 +9,6 @@ define('js!SBIS3.CONTROLS.OperationDelete', [
 
       $protected: {
          _options: {
-            name: 'delete',
             icon: 'sprite:icon-24 action-hover icon-Erase icon-error'
          }
       },

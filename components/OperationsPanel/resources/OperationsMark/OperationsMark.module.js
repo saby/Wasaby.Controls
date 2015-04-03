@@ -14,7 +14,6 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
 
       $protected: {
          _options: {
-            name: 'markOperations',
             caption: 'Отметить',
             items: [
                { name: 'selectCurrentPage', title: 'Всю страницу' },
@@ -36,10 +35,10 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
             items: this._options.items
          });
          this._initHandlers();
+         this._updateMark();
          this._markButton.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
          this._markCheckBox.subscribe('onActivated', this._onCheckBoxActivated.bind(this));
-         view.subscribe('onSelectedItemsChange', this._onSelectedItemsChange.bind(this));
-
+         view.subscribe('onSelectedItemsChange', this._updateMark.bind(this));
       },
       _initHandlers: function() {
          $.each(this._options.items, function(key, val){
@@ -72,7 +71,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          }
          this._markButton.setVisible(hasMarkOptions)
       },
-      _onSelectedItemsChange: function() {
+      _updateMark: function() {
          this._updateMarkButton();
          this._updateMarkCheckBox();
       },
