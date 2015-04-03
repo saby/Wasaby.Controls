@@ -49,7 +49,10 @@ define(
                "HHH:II",
                "HH:II"
             ],
-            _isFinishedPrint: false, //Завершили ли ввод интервала (смотрит на последний символ)
+            /**
+             * Завершили ли ввод интервала (смотрит на последний символ)
+             */
+            _isFinishedPrint: false,
             /**
              * Хранит последний window.getSelection()
              */
@@ -127,6 +130,11 @@ define(
             return this._options.mask.indexOf(pattern) > -1;
          },
 
+         /**
+          * Добавляет _placeholder к первому блоку данных, если нужно
+          * @param {String/Number} element
+          * @private
+          */
          _addPlaceholder: function(element){
             if (element.indexOf(this._placeholder) > - 1 || element.length > 3){
                return element;
@@ -202,9 +210,9 @@ define(
          },
 
          /**
-          * В добавление к проверкам и обновлению опции text, необходимо обновить поле _date
+          * В добавление к проверкам и обновлению опции text, необходимо обновить поле interval
           * @param text
-          * checkValues = проверять ли введенное значение на корректность
+          * @param {Boolean} checkValues проверять ли введенное значение на корректность
           * @private
           */
          _setText: function(text, checkValues){
@@ -231,7 +239,8 @@ define(
 
          /**
           * Установить интервал. Приватный метод
-          * @param interval новое значение интервала, объект типа Date
+          * @param interval новое значение интервала
+          * @param {Boolean} dontCheck true - не нормализуем, false-нормализуем
           */
          _setInterval: function (interval, dontCheck) {
             this._options.interval = interval;
@@ -242,13 +251,15 @@ define(
             this._drawInterval();
          },
          /**
-          * Получить дату
-          * @returns {Date|*|SBIS3.CONTROLS.TimeInterval._options.interval}
+          * Получить интервал
           */
          getInterval: function(){
             return this._options.interval;
          },
 
+         /**
+          * Получить интервал по тексту
+          */
          _getIntervalByText: function(text){
             var regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
                availCharsArray = this._options.mask.match(regexp),
@@ -384,6 +395,9 @@ define(
             this._setPattern('H', hours);
          },
 
+         /**
+          * Получить индекс паттерна в маске
+          */
          _getIndexForPattern: function(pattern){
             if (!this._hasMaskPattern(pattern)){
                return -1;
@@ -400,6 +414,10 @@ define(
                   break;
             }
          },
+         /**
+          * Получить Дни, Часы, минуты
+          * @param pattern D - дни, H - часы, I - минуты
+          */
          _getPatterns: function(pattern){
             var patternIndex = this._getIndexForPattern(pattern);
             return patternIndex > -1 ? parseInt(this._options.text.split(':')[patternIndex].replace(new RegExp(this._placeholder,'g'), "0")) : 0;
@@ -421,16 +439,19 @@ define(
                this._correctCursor(selection.startContainer, selection.startOffset) :  cursorPositionEnd);
          },
 
+         //TODO проверить, можно ли от этого избавиться
+         //В случае смены маски сбивается позиция курсора, в этом случае выставляем курсор на блок, после первого ":"
          _getSelection: function(){
             var selection = window.getSelection();
-            if (selection.type === "None"){
-               selection = this._lastSelection;
-               delete selection.startOffset;
-               selection.startOffset = 2;
-            }
-            else{
+            if (selection.type !== "None"){
                selection = selection.getRangeAt(0);
                this._lastSelection = selection;
+            }
+            else{
+               selection = this._lastSelection;
+               //Напрямую свойство у объекта window не меняется
+               delete selection.startOffset;
+               selection.startOffset = 2;
             }
 
             return selection;
