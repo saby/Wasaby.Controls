@@ -5,13 +5,12 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.OperationsPanel',
    'css!SBIS3.CONTROLS.OperationsPanel',
-   'js!SBIS3.CONTROLS.CheckBox',
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.CollectionMixin',
    /*TODO это должна подключать не панель а прекладники, потом убрать*/
    'js!SBIS3.CONTROLS.OperationDelete',
    'js!SBIS3.CONTROLS.OperationsMark'
-], function(Control, dotTplFn, OPStyles, CheckBox, PickerMixin, CollectionMixin) {
+], function(Control, dotTplFn, OPStyles, PickerMixin, CollectionMixin) {
    /**
     * SBIS3.CONTROLS.OperationsPanel
     * @class SBIS3.CONTROLS.OperationsPanel
@@ -70,6 +69,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       _initHandlers: function() {
          this._handlers = {
             onChangeSelection: this._onChangeSelection.bind(this)
+            /*TODO тут ещё будут обработчики, так что считаю целесообразно оставить такой блок*/
          };
       },
       _onChangeSelection: function() {
@@ -127,7 +127,9 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       _getItemTemplate: function() {
          return function (cfg) {
             var type = this._getButtonType(cfg.type);
+            cfg.options = cfg.options || {};
             cfg.options.className = 'controls__operations-panel__action-type-' + type;
+            cfg.options.name = cfg.name;
             return {
                componentType: cfg.componentType,
                config: cfg.options
