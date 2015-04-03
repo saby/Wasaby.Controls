@@ -21,6 +21,7 @@
 }
 
 .controls__operations-panel__opened, .controls__operations-panel__closed {
+   display: inline-block;
    position: absolute;
    top: @controls-OperationsPanel-opened-closed-top;
    left: @controls-OperationsPanel-opened-closed-left;
@@ -35,10 +36,6 @@
    white-space: nowrap;
    background-color: @controls-OperationsPanel-bg;
    padding-left: @controls-OperationsPanel-padding-left;
-
-   > * {
-      display: inline-block;
-   }
 
    &:after {
       background: @controls-OperationsPanel-triangle;
@@ -60,10 +57,8 @@
       }
    }
 
-   .controls__operations-panel__actions {
-      > * {
-         margin: 0 4px;
-      }
+   .controls__operations-panel__actions-mark, .controls__operations-panel__actions {
+      display: inline-block;
    }
 
    &.controls__operations-panel__mass-mode {
@@ -75,5 +70,10 @@
       .controls__operations-panel__action-type-mass {
          display: none;
       }
+   }
+   .controls__operations-panel__action-type-mass,
+   .controls__operations-panel__action-type-selection,
+   .controls__operations-panel__action-type-all {
+      margin: 0 4px;
    }
 }

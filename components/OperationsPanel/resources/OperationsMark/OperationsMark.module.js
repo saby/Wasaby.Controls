@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
    'css!SBIS3.CONTROLS.OperationsMark',
    'js!SBIS3.CONTROLS.MenuLink',
    'js!SBIS3.CONTROLS.CheckBox'
-], function(CompoundControl, dotTplFn, OMStyles, MenuLink) {
+], function(CompoundControl, dotTplFn) {
 
    var OperationsMark = CompoundControl.extend({
       _dotTplFn: dotTplFn,
@@ -24,20 +24,18 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          _markButton: undefined,
          _markCheckBox: undefined
       },
-      $constructor: function() {
-         var view = this.getParent().getLinkedView();
-         this.reviveComponents();
+      init: function() {
+         OperationsMark.superclass.init.apply(this, arguments);
          this._markCheckBox = this.getChildControlByName('markCheckBox');
-         /*TODO не знаю как в xhtml задать items*/
-         this._markButton = new MenuLink({
-            caption: this._options.caption,
-            element: $('<div>').appendTo($('.controls__operations-mark')),
-            items: this._options.items
-         });
-         this._initHandlers();
+         this._markButton = this.getChildControlByName('markButton');
+         this._markButton.setItems(this._options.items);
          this._updateMark();
          this._markButton.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
          this._markCheckBox.subscribe('onActivated', this._onCheckBoxActivated.bind(this));
+      },
+      $constructor: function() {
+         var view = this.getParent().getLinkedView();
+         this._initHandlers();
          view.subscribe('onSelectedItemsChange', this._updateMark.bind(this));
       },
       _initHandlers: function() {
