@@ -13,7 +13,11 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
     */
 
    var TreeViewDS = ListViewDS.extend([TreeMixinDS, hierarchyMixin], /** @lends SBIS3.CONTROLS.TreeViewDS.prototype*/ {
-      $protected: {},
+      $protected: {
+         _options:{
+            itemsActions:[]//FixME: так как приходит набор от листвью. пока он не нужен
+         }
+      },
 
       $constructor: function () {
       },
