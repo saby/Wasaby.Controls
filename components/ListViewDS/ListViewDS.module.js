@@ -139,8 +139,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                      key: targetKey,
                      container: target
                   };
-                  this._onChangeHoveredItem(target, targetKey);
                   this._notify('onChangeHoveredItem', target, targetKey);
+                  this._onChangeHoveredItem(target, targetKey);
                }
             }
          },
@@ -400,6 +400,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @returns {*}
           */
          getItemActions: function() {
+            if(!this._itemActionsGroup) {
+               this._initItemActions();
+            }
             return this._itemActionsGroup;
          }
       });
