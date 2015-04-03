@@ -268,7 +268,7 @@ define(
             var pattern = availChars[0],
                controlChar = '';
             if (availChars.indexOf(pattern) == -1 || !availText){
-               return;
+               return '';
             }
             switch (pattern){
                case 'D':
@@ -292,7 +292,7 @@ define(
                textObj = {},
                text = this._options.mask,
                availCharsArray = this._options.mask.split(':'),
-               manageChar,
+               valueByManageChar,
                num;
 
             interval = interval.replace('P', '').replace('T', '');
@@ -304,29 +304,8 @@ define(
                      num = num * 10 + parseInt(interval[i++]);
                   }
                } else{
-                  manageChar = interval[i++];
-                  switch (manageChar){
-                     case 'D':
-                        if (availCharsArray.indexOf('DDDD') > -1)
-                           textObj['DDDD'] =  ('___' + num).slice(-4);
-                        else if (availCharsArray.indexOf('DDD') > -1)
-                           textObj['DDD'] =  ('__' + num).slice(-3);
-                        else if(availCharsArray.indexOf('DD') > -1)
-                           textObj['DD'] =  ('0' + num).slice(-2);
-                        break;
-                     case 'H' :
-                        if (availCharsArray.indexOf('HHHH') > -1)
-                           textObj['HHHH'] =  ('___' + num).slice(-4);
-                        else if (availCharsArray.indexOf('HHH') > -1)
-                           textObj['HHH'] =  ('__' + num).slice(-3);
-                        else if(availCharsArray.indexOf('HH') > -1)
-                           textObj['HH'] =  ('0' + num).slice(-2);
-                        break;
-                     case 'M' :
-                        if (availCharsArray.indexOf('II') > -1)
-                           textObj['II'] =  ('0' + num).slice(-2);
-                        break;
-                  }
+                  valueByManageChar = this._getPartTextByPattern(availCharsArray, interval[i++], num);
+                  textObj[valueByManageChar[0]] = valueByManageChar[1];
                }
             }
 
@@ -336,8 +315,24 @@ define(
                }
             }
             text = text.replace(/[DHI]/g, "_");
-
             return text;
+         },
+
+         _getPartTextByPattern: function(availCharsArray, manageChar, num){
+            var searchPattern,
+               prefix = '___',
+               needZeroInPrefix = !(manageChar == 'D' || (manageChar == 'H' && !this._hasMaskPattern('D')));
+            if (needZeroInPrefix)
+               prefix += 0;
+            searchPattern = manageChar = manageChar.replace('M','I');
+            for(var j = 3; j > 0; j--){
+               for(var i = 0; i < j; i++){
+                  searchPattern += manageChar;
+               }
+               if (availCharsArray.indexOf(searchPattern) > -1)
+                  return [searchPattern, (prefix + num).slice(-searchPattern.length)];
+               searchPattern = manageChar;
+            }
          },
          /**
           * Обновить поле даты по текущему значению даты в this._options.interval
