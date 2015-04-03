@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (this.isInfiniteScroll()) {
                this._infiniteScrollContainer = this._container.closest('.controls-ListView__infiniteScroll');
                if (this._infiniteScrollContainer.length) {
-                  //TODO Данный функционал пока не протестирован
+                  //TODO Данный функционал пока не протестирован, проверить, когда появтся скроллы в контейнерах
                   this._infiniteScrollContainer.bind('scroll.wsInfiniteScroll', this._onInfiniteContainerScroll.bind(this));
                } else {
                   $(window).bind('scroll.wsInfiniteScroll', this._onWindowScroll.bind(this));
@@ -219,7 +219,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          _drawItemsCallback: function () {
             this._drawItemsActions(this._options.itemsActions);
             if (this.isInfiniteScroll()) {
-               this._addLoadingIndicator();
                this._loadBeforeScrollAppears();
             }
          },
@@ -236,35 +235,39 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                }
             }
          },
-         //-----------------------------------Scroll------------------------
+         //-----------------------------------infiniteScroll------------------------
+         //TODO Сделать подгрузку вверх
+         //TODO (?) избавиться от _allowInfiniteScroll - пусть все будет завязано на опцию infiniteScroll
          isInfiniteScroll : function(){
             return this._options.infiniteScroll;
          },
          /**
           *  Общая проверка и загрузка данных для всех событий по скроллу
           */
-         _checkForLoad: function(result){
+         _loadChecked: function(result){
             if (result) {
                this._nextLoad();
             }
          },
          _onWindowScroll: function(event){
-            this._checkForLoad(this._isBottomOfPage());
+            this._loadChecked(this._isBottomOfPage());
          },
+         //TODO Проверить, когда появятся контейнеры со скроллом. Возможно нужно смотреть не на offset
          _onInfiniteContainerScroll: function(){
-            var scrollTop = this._infiniteScrollContainer.scrollTop(),
-            //на самом деле loadingIndicator десь должен быть всегда, но подстраховаться не помешает
-                  check = this._loadingIndicator ? scrollTop + this._scrollIndicatorHeight >= this._loadingIndicator.offset().top : false;
-            this._checkForLoad(check);
+            this._loadChecked(this._infiniteScrollContainer.scrollTop() + this._scrollIndicatorHeight >= this._loadingIndicator.offset().top );
          },
+
          _nextLoad: function(){
             var self = this, records;
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
+            //TODO Когда в core появится возможность останавливать Deferred убрать _nowLoading и отменять или дожидаться загрузки по готовности Deferred
+            // запоминать в query (Deferred.isReady()). Так же нужно будет исользовать для фильтрации
             if (this._allowInfiniteScroll && this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._nowLoading) {
                this._addLoadingIndicator();
                this._nowLoading = true;
                this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset  + this._limit, this._limit).addCallback(function (dataSet) {
                   self._nowLoading = false;
+                  //TODO это нельзя разнести в два if, ибо есть проблема у статичских данных
                   if (dataSet.getCount() || self._hasNextPage(dataSet.getMetaData().more)) {
                      records = dataSet._getRecords();
                      self._dataSet.merge(dataSet);
@@ -275,8 +278,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                      self._removeLoadingIndicator();
                   }
                });
-            } else {
-               self._removeLoadingIndicator();
             }
          },
          _isBottomOfPage : function() {
