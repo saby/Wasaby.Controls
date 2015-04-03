@@ -107,10 +107,15 @@ define(
           * Установить маску.
           */
          _setMask: function (mask) {
+            var self = this;
             this._options.mask = this._primalMask = mask;
             this._clearMask = this._getClearMask();
             this._maskRegExp = this._getRegExpByMask(this._primalMask);
             this._drawInterval();
+            //TODO исправить выставление курсора
+            setTimeout(function() {
+               self._keyPressHandler(18, "character");
+            }, 0);
          },
          /**
           * Проверить, является ли маска допустимой ( по массиву допустимых маск this._possibleMasks )
