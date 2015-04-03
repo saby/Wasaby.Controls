@@ -26,39 +26,42 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * @category Buttons
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.CollectionMixin
-    * @ignoreOptions validators independentContext contextRestriction extendedTooltip
+    * @ignoreOptions independentContext contextRestriction extendedTooltip validators
+    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
+    * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment
     */
 
    var MenuButton = Button.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _header: null,
+         _headerAlignment: {
+            horizontal: 'left',
+            vertical: 'bottom'
+         },
          _options: {
          }
       },
 
       init: function(){
+         var self = this;
          MenuButton.superclass.init.call(this);
          this._initMenu();
+         //TODO: использовать событие из Popup миксина
+         $ws.helpers.trackElement(this._container, true).subscribe('onMove', function () {
+            if (self._header) {
+               self._header.css({
+                  left: (self._headerAlignment.horizontal == 'left') ? self._container.offset().left : self._container.offset().left - 16,
+                  top: self._container.offset().top + 1
+               });
+            }
+         });
       },
 
       _initMenu: function(){
          if (this.getItems().getItemsCount() > 1) {
             $('.js-controls-MenuButton__arrowDown', this._container).show();
             this._container.removeClass('controls-MenuButton__withoutMenu');
-            if (!this._header) {
-               this._header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
-                                  <i class="controls-MenuButton__headerLeft"></i>\
-                                  <i class="controls-MenuButton__headerCenter"></i>\
-                                  <i class="controls-MenuButton__headerRight"></i>\
-                               </span>');
-               $('.controls-MenuButton__headerCenter', this._header).width(this._container.width() + 12);
-               this._header.css({
-                  width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
-                  height: this._container.outerHeight()
-               });
-               $('body').append(this._header);
-            }
          } else {
             $('.js-controls-MenuButton__arrowDown', this._container).hide();
             this._container.addClass('controls-MenuButton__withoutMenu');
@@ -67,11 +70,25 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          }
       },
 
+      _onAlignmentChangeHandler: function(alignment){
+         if (alignment.horizontalAlign.side == 'right'){
+            $('.controls-MenuButton__headerLeft', this._header).addClass('controls-MenuButton__headerLeft__revert');
+            $('.controls-MenuButton__headerRight', this._header).addClass('controls-MenuButton__headerRight__revert');
+            this._header.css('left', this._container.offset().left - 16);
+            this._headerAlignment.horizontal = 'right';
+         } else {
+            $('.controls-MenuButton__headerLeft', this._header).removeClass('controls-MenuButton__headerLeft__revert');
+            $('.controls-MenuButton__headerRight', this._header).removeClass('controls-MenuButton__headerRight__revert');
+            this._header.css('left', this._container.offset().left);
+            this._headerAlignment.horizontal = 'left';
+         }
+      },
+
       _clickHandler: function(){
          if (this.getItems().getItemsCount() > 1) {
             this._container.addClass('controls-Checked__checked');
-            this._header.toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
             this.togglePicker();
+            this._header.toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
          } else {
             if (this.getItems().getItemsCount() == 1) {
                var id = this.getItems().getKey(this.getItems().getNextItem());
@@ -83,12 +100,25 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
         * Скрывает/показывает меню у кнопки
         */
       togglePicker: function(){
+          if (!this._header) {
+             this._header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
+                                  <i class="controls-MenuButton__headerLeft"></i>\
+                                  <i class="controls-MenuButton__headerCenter"></i>\
+                                  <i class="controls-MenuButton__headerRight"></i>\
+                               </span>');
+             $('.controls-MenuButton__headerCenter', this._header).width(this._container.width() - 12 - 11);
+             this._header.css({
+                width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
+                height: this._container.outerHeight()
+             });
+             $('body').append(this._header);
+          }
          MenuButton.superclass.togglePicker.call(this);
-         $('.controls-MenuButton__headerCenter', this._container).width(this._container.width() + 12);
+         $('.controls-MenuButton__headerCenter', this._container).width(this._container.width() - 12 - 11);
          this._header.css({
-            left: this._container.offset().left,
+            left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 16,
             top: this._container.offset().top + 1,
-            'z-index': this._picker._container.css('z-index') + 1
+            'z-index': parseInt(this._picker._container.css('z-index'),10) + 1
          });
       },
 
@@ -109,7 +139,9 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
 
       _closeHandler: function(){
          this._container.removeClass('controls-Checked__checked');
-         this._header.addClass('controls-MenuButton__header-hidden');
+         if (this._header) {
+            this._header.addClass('controls-MenuButton__header-hidden');
+         }
       }
    });
 

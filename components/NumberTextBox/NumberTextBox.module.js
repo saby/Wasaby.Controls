@@ -6,23 +6,36 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
    'use strict';
    /**
-    * Поле ввода числа
+    * Поле ввода числа.
     * Можно настроить:
     * <ol>
-    *    <li>{@link integers количество знаков в целой части};</li>
-    *    <li>{@link decimals количество знаков после запятой};</li>
+    *    <li>количество знаков {@link integers в целой части};</li>
+    *    <li>количество знаков {@link decimals после запятой};</li>
     *    <li>{@link hideEmptyDecimals прятать ли пустую дробную часть};</li>
-    *    <li>{@link onlyPositive запрещение ввода отрицательных чисел};</li>
-    *    <li>{@link onlyInteger запрещение ввода дробных чисел};</li>
-    *    <li>{@link enableArrows отображать ли стрелки для увеличения/уменьшения числа};</li>
+    *    <li>запрещение ввода {@link onlyPositive отрицательных чисел};</li>
+    *    <li>запрещение ввода {@link onlyInteger дробных чисел};</li>
+    *    <li>{@link enableArrows наличие стрелок} для увеличения/уменьшения числа;</li>
+    *    <li>{@link text начальное значение}.</li>
     * </ol>
     * @class SBIS3.CONTROLS.NumberTextBox
     * @extends SBIS3.CONTROLS.TextBox
     * @control
     * @public
     * @demo SBIS3.Demo.Control.MyNumberTextBox
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.NumberTextBox'>
+    *     <option name="text">0</option>
+    * </component>
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
+    *
+    * @ignoreMethods applyEmptyState applyState findParent getAlignment getEventHandlers getEvents getExtendedTooltip
+    * @ignoreMethods getId getLinkedContext getMinHeight getMinSize getMinWidth getOwner getOwnerId getParentByClass
+    * @ignoreMethods getParentByName getParentByWindow getStateKey getTopParent getUserData hasEvent hasEventHandlers
+    * @ignoreMethods isDestroyed isSubControl makeOwnerName once sendCommand setOwner setStateKey setUserData setValue
+    * @ignoreMethods subscribe unbind unsubscribe unsubscribeFrom
+    *
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChange onTooltipContentRequest onChange
     */
 
    var NumberTextBox;
@@ -131,19 +144,19 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             }
          });
 
-         this._options.text = this._formatValue(this._options.text);
+         this._options.text = this._formatText(this._options.text);
          this._inputField.val(this._options.text);
       },
 
       _setText: function(text){
          if (text !== '-' && text !== '.' && text !== ''){
             if (text.indexOf('.') === text.length - 1) {
-               text = this._formatValue(text) + '.';
+               text = this._formatText(text) + '.';
                this._inputField.val(text);
                this._setCaretPosition(this._caretPosition[0] + 1, this._caretPosition[1] + 1);
                return;
             } else {
-               text = this._formatValue(text);
+               text = this._formatText(text);
             }
          }
          this._inputField.val(text);
@@ -169,7 +182,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
         return (isNaN(val)) ? null : val;
       },
 
-      _formatValue: function(value, fromFocusOut){
+      _formatText: function(value, fromFocusOut){
          var decimals = (this._options.onlyInteger) ? 0 : this._options.decimals;
          value = $ws.render.defaultColumn.numeric(
             value,

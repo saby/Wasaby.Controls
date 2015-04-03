@@ -55,10 +55,12 @@
 @button-padding:                          0 12px;
 @button-margin:                           auto;
 @button-border-radius:                    16px;
-@button-icon-top-offset:                  1px;                      // top offset of 16x16 icon
-@button-icon-text-margin:                 0 0 0 20px;               // margin of text following 16x16 icon
-@button-icon-big-top-offset:              -3px;                     // top offset of 24x24 icon
-@button-icon-big-text-margin:             0 0 0 28px;               // margin of text following 24x24 icon
+@button-icon-top-offset:                  4px;                      // top offset of 16x16 icon
+@button-icon-left-offset:                 12px;
+@button-icon-text-margin:                 0 12px 0 32px;            // margin of text following 16x16 icon
+@button-icon-big-top-offset:              0;                        // top offset of 24x24 icon
+@button-icon-big-text-margin:             0 12px 0 40px;            // margin of text following 24x24 icon
+@button-text-margin:                      0 12px 0 12px;
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
 
@@ -100,43 +102,7 @@
 @button-disabled-shadow:                  inset 0 -1px 1px #bbbbba;
 @button-disabled-bg:                      url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAARUlEQVQYVxXDCRIAEQwAwfn/Y9cRQcSxdFVzzmHvzVrrnsx5u+M+GOM2w6xjvdHbW2lVqfoWtAgqQpGM5ISkSH5jIIXvByxNRX+NbFFRAAAAAElFTkSuQmCC');
 
-// Normal light button
-@button-light-text-color:                 @black-color;
-@button-light-border:                     1px solid #587ab0;
-@button-light-shadow:                     none;
-@button-light-bg:                         @white-color;
 
-@button-light-hover-text-color:           @button-light-text-color;
-@button-light-hover-border:               @button-light-border;
-@button-light-hover-shadow:               @button-light-shadow;
-@button-light-hover-bg:                   #e4e9f1;
-
-@button-light-active-text-color:          @button-light-text-color;
-@button-light-active-border:              @button-light-border;
-@button-light-active-shadow:              @button-light-shadow;
-@button-light-active-bg:                  #cbd5e5;
-
-// Normal light primary button
-@button-light-primary-text-color:         @button-light-text-color;
-@button-light-primary-border:             1px solid @link-hover-text-color;
-@button-light-primary-shadow:             @button-light-shadow;
-@button-light-primary-bg:                 @button-light-bg;
-
-@button-light-primary-hover-text-color:   @button-light-primary-text-color;
-@button-light-primary-hover-border:       @button-light-primary-border;
-@button-light-primary-hover-shadow:       @button-light-primary-shadow;
-@button-light-primary-hover-bg:           #fdecd9;
-
-@button-light-primary-active-text-color:  @button-light-primary-text-color;
-@button-light-primary-active-border:      @button-light-primary-border;
-@button-light-primary-active-shadow:      @button-light-primary-shadow;
-@button-light-primary-active-bg:          #fdd2c0;
-
-// Normal light disabled button
-@button-light-disabled-text-color:        @button-disabled-text-color;
-@button-light-disabled-border:            1px solid @button-light-disabled-text-color;
-@button-light-disabled-shadow:            @button-light-shadow;
-@button-light-disabled-bg:                @white-color !important;
 
 // Big button
 @button-big-font:                         italic normal 18px 'Cambria', Georgia, serif;
@@ -147,11 +113,14 @@
 @button-big-padding:                      15px 24px;
 @button-big-margin:                       @button-margin;
 @button-big-border-radius:                24px;
-@button-big-icon-top-offset:              2px;                              // top offset of 16x16 icon
-@button-big-icon-text-margin:             @button-icon-text-margin;         // margin of text following 16x16 icon
-@button-big-icon-big-top-offset:          -1px;                             // top offset of 24x24 icon
-@button-big-icon-big-text-margin:         @button-icon-big-text-margin;     // margin of text following 24x24 icon
-@button-big-text-padding:                 11px 0 0;
+@button-big-icon-top-offset:              15px;                              // top offset of 16x16 icon
+@button-big-icon-left-offset:             24px;
+@button-big-icon-text-margin:             0 24px 0 44px;                    // margin of text following 16x16 icon
+@button-big-icon-big-top-offset:          12px;                             // top offset of 24x24 icon
+@button-big-icon-big-left-offset:         @button-big-icon-left-offset;
+@button-big-icon-big-text-margin:         0 24px 0 52px;                    // margin of text following 24x24 icon
+@button-big-text-margin:                  0 24px 0 24px;
+@button-big-text-padding:                 0;
 @button-big-empty-text-margin:            @button-empty-text-margin;
 
 @button-big-text-color:                   @button-text-color;
@@ -560,9 +529,14 @@
 @menu-item-icon-left-offset:              0px;
 @menu-item-icon-left-offset-big:           0px;
 
+@menu-item-icon24-top-offset:               -4px;
+@menu-item-icon24-top-offset-big:           -4px;
+
+@menu-item-icon24-left-offset:              -3px;
+@menu-item-icon24-left-offset-big:           -3px;
+
 @menu-item-text-margin:                   0 0 0 22px;
 
-@menu-item-big-content-top:                   4px;
 
 
 
@@ -579,6 +553,7 @@
 @menu-button-no-arrow-padding:                          @button-padding;        // padding for menu button when dropdown arrow is missed
 
 // Default menu button
+@menu-button-text-right-margin:                         23px;                   //this margin reserve space for arrow-down icon
 @menu-button-arrow-spritesheet:                         'img/MenuButton-arrowDown.png';
 
 @menu-button-arrow-border-width:                        0;
@@ -640,7 +615,8 @@
 @menu-button-header-left-width:                         12px;
 @menu-button-header-left-height:                        28px;
 @menu-button-header-left-margin:                        0;
-@menu-button-header-left-bg:                            transparent url(@menu-button-header-spritesheet) 0 28px;
+@menu-button-header-left-bg:                            transparent url(@menu-button-header-spritesheet) 0 84px;
+@menu-button-header-right-bg-revert:                    transparent url(@menu-button-header-spritesheet) 0 28px;
 
 @menu-button-header-center-width:                       auto;
 @menu-button-header-center-height:                      4px;
@@ -651,6 +627,7 @@
 @menu-button-header-right-height:                       28px;
 @menu-button-header-right-margin:                       0 0 0 -5px;
 @menu-button-header-right-bg:                           transparent url(@menu-button-header-spritesheet) 0 0;
+@menu-button-header-left-bg-revert:                     transparent url(@menu-button-header-spritesheet) 0 56px;
 
 
 
@@ -663,7 +640,9 @@
 @menu-link-arrow-width:                   8px;
 @menu-link-arrow-height:                  6px;
 @menu-link-arrow-right-offset:            0;
-@menu-link-arrow-top-offset:              7px;
+@menu-link-arrow-top-offset:              10px;
+@menu-link-arrow-top-offset-big:          14px;
+@menu-link-line-height:                   24px;
 
 @menu-link-arrow-padding:                 0 12px 0 0;
 @menu-link-no-arrow-padding:              0;
@@ -683,8 +662,6 @@
 @menu-link-checked-hover-text-decoration: @menu-link-checked-text-decoration;
 
 // Menu
-@menu-link-menu-top-margin:               -20px;
-@menu-link-menu-top-margin-big:           -25px;
 @menu-link-menu-left-margin:              -9px;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
 
@@ -694,8 +671,6 @@
 @menu-link-header-height-big:             32px;
 @menu-link-header-padding:                0 8px;
 @menu-link-header-bottom-border:          1px solid #ededed;
-@menu-link-header-link-margin:            3px 0 0;
-@menu-link-header-link-margin-big:        8px 0 0;
 @menu-link-header-bg:                     @menu-link-menu-bg;
 
 
@@ -1170,21 +1145,25 @@
 // --------- //
 
 @list-view-actions-cursor:                      pointer;
-@list-view-actions-height:                      16px;
-@list-view-actions-top-offset:                  50%;
-@list-view-actions-right-offset:                0;
-@list-view-actions-margin:                      -8px 0 0;
+@list-view-actions-height:                      20px;
+@list-view-actions-right-offset:                1px;
+@list-view-actions-margin:                      0 4px;
 @list-view-actions-padding:                     0;
-@list-view-actions-gap:                         16px;
 @list-view-actions-zindex:                      10;
-@list-view-actions-bg:                          transparent;
+@list-view-actions-box-shadow:                  -2px -2px 5px @data-grid-row-hover-bg;
+@list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
+@list-view-actions-bg:                          @data-grid-row-hover-bg;
+@list-view-actions-menu-icon:                   url('img/ItemActions-menu.png') no-repeat;
+@list-view-actions-menu-icon-hover:             @list-view-actions-menu-icon 0 -20px;
+@list-view-actions-menu-icon-close:             @list-view-actions-menu-icon 0 -40px;
+@list-view-actions-menu-icon-close-hover:       @list-view-actions-menu-icon 0 -60px;
 
 @list-view-scroll-spritesheet :                 'img/ajax-loader-indicator.gif';
 @list-view-scroll-bg:                           url(@list-view-scroll-spritesheet) 0 0 no-repeat;
 @list-view-scroll-height:                       32px;
 @list-view-scroll-width:                        32px;
 
-// --------- //
+  // --------- //
 // Tree view //
 // --------- //
 

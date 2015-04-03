@@ -6,6 +6,7 @@
   text-align: @link-text-alignment;
   line-height: @link-line-height;
   padding: @link-padding;
+  box-sizing: border-box;
 
   &:hover {
     cursor: @link-cursor;
@@ -33,6 +34,7 @@
   }
 
   &.controls-Button__ellispis {
-    &:extend(.controls-Button.controls-Button__ellispis);
+    &:extend(.controls-Button__ellispis .controls-Button__text);
+    vertical-align: text-bottom;
   }
 }

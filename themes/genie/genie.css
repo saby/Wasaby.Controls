@@ -13,6 +13,7 @@ input[type="reset"]::-moz-focus-inner {
   text-align: center;
   line-height: normal;
   padding: 0;
+  box-sizing: border-box;
 }
 .controls-Link:hover {
   cursor: pointer;
@@ -34,7 +35,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Link .controls-Link__icon + .controls-Link__field {
   margin: 0 0 0 4px;
 }
+.controls-Link.controls-Button__ellispis {
+  vertical-align: text-bottom;
+}
 .controls-Button {
+  position: relative;
   cursor: pointer;
   display: inline-block;
   outline: none;
@@ -55,8 +60,9 @@ input[type="reset"]::-moz-focus-inner {
   min-width: 24px;
   height: 30px;
   line-height: 28px;
-  padding: 0 8px;
+  padding: 0;
   margin: auto;
+  overflow: hidden;
   border: 1px solid #d1d1d1;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -85,37 +91,32 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background: #ffffff;
 }
-.controls-Button .controls-Button__content {
-  position: relative;
-}
-.controls-Button .controls-Button__text {
-  padding: 0;
-}
 .controls-Button .controls-Button__text.controls-Button__emptyCaption {
   margin: 0 0 0 13px !important;
 }
 .controls-Button .controls-Button__icon {
   position: absolute;
-  top: -1px;
+  top: 5px;
+  left: 8px;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .controls-Button .controls-Button__icon {
-    top: 0px;
+    top: 6px;
   }
 }
 .controls-Button .controls-Button__icon + .controls-Button__text {
-  margin: 0 0 0 20px;
+  margin: 0 8px 0 28px;
 }
 .controls-Button .controls-Button__icon.icon-24 {
-  top: -6px;
+  top: 0px;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .controls-Button .controls-Button__icon.icon-24 {
-    top: -5px;
+    top: 1px;
   }
 }
 .controls-Button .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin: 0 0 0 28px;
+  margin: 0 8px 0 36px;
 }
 .controls-Button.controls-Button__primary {
   color: #ffffff;
@@ -149,70 +150,6 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background: #d1d1d1;
 }
-.controls-Button.controls-Button__light {
-  color: #353535;
-  border: 1px solid #d1d1d1;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #ffffff;
-}
-.controls-Button.controls-Button__light:hover {
-  color: #00c795;
-  border: 1px solid #00c795;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #e1fff7;
-}
-.controls-Button.controls-Button__light.controls-Click__active {
-  color: #00c795;
-  border: 1px solid #00c795;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #ffffff;
-}
-.controls-Button.controls-Button__light.controls-Button__primary {
-  color: #353535;
-  border: 1px solid #00c795;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #ffffff;
-}
-.controls-Button.controls-Button__light.controls-Button__primary:hover {
-  color: #353535;
-  border: 1px solid #00c795;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #e1fff7;
-}
-.controls-Button.controls-Button__light.controls-Button__primary.controls-Click__active {
-  color: #00c795;
-  border: 1px solid #00c795;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #ffffff;
-}
-.controls-Button.controls-Button__light.controls-Button__primary.ws-disabled {
-  color: #919191;
-  border: 1px solid #d1d1d1;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #d1d1d1;
-}
-.controls-Button.controls-Button__light.ws-disabled {
-  color: #919191;
-  border: 1px solid #d1d1d1;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #d1d1d1;
-}
 .controls-Button.controls-Button__big {
   font: 15.6px Tahoma, Geneva, sans-serif;
   color: #919191;
@@ -220,7 +157,7 @@ input[type="reset"]::-moz-focus-inner {
   min-width: 24px;
   height: 54px;
   line-height: 24px;
-  padding: 15px 20px;
+  padding: 0;
   margin: auto;
   border: 1px solid #d1d1d1;
   -webkit-border-radius: 6px;
@@ -251,33 +188,35 @@ input[type="reset"]::-moz-focus-inner {
   background: #ffffff;
 }
 .controls-Button.controls-Button__big .controls-Button__text {
-  padding: 11px 0 0;
+  margin: 0 20px;
 }
 .controls-Button.controls-Button__big .controls-Button__text.controls-Button__emptyCaption {
   margin: 0 0 0 13px !important;
 }
 .controls-Button.controls-Button__big .controls-Button__icon {
   position: absolute;
-  top: 0px;
+  top: 16px;
+  left: 20px;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .controls-Button.controls-Button__big .controls-Button__icon {
-    top: 1px;
+    top: 17px;
   }
 }
 .controls-Button.controls-Button__big .controls-Button__icon + .controls-Button__text {
-  margin: 0 0 0 20px;
+  margin: 0 20px 0 40px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-  top: -3px;
+  top: 13px;
+  left: 20px;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-    top: -2px;
+    top: 14px;
   }
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin: 0 0 0 28px;
+  margin: 0 20px 0 48px;
 }
 .controls-Button.controls-Button__big.controls-Button__primary {
   color: #ffffff;
@@ -319,12 +258,6 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background: #d1d1d1;
 }
-.controls-Button.controls-Button__ellispis,
-.controls-Link.controls-Button__ellispis {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 .controls-Button.ws-disabled {
   cursor: default;
   color: #919191;
@@ -334,18 +267,28 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background: #d1d1d1;
 }
+.controls-Button__ellispis .controls-Button__text,
+.controls-Link.controls-Button__ellispis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.controls-Button__text {
+  display: block;
+  margin: 0 8px;
+}
 @-moz-document url-prefix() {
   .controls-Button .controls-Button__icon {
-    top: 0px;
+    top: 6px;
   }
   .controls-Button .controls-Button__icon.icon-24 {
-    top: -5px;
-  }
-  .controls-Button.controls-Button__big .controls-Button__icon {
     top: 1px;
   }
+  .controls-Button.controls-Button__big .controls-Button__icon {
+    top: 17px;
+  }
   .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-    top: -2px;
+    top: 14px;
   }
 }
 .controls-ButtonGroup .controls-ListView__item {
@@ -869,11 +812,13 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Menu__32px .controls-MenuItem {
   height: 32px;
-}
-.controls-Menu__32px .controls-MenuItem .controls-MenuItem__content {
-  top: 4px;
+  line-height: 32px;
 }
 .controls-Menu__32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
+  top: 0px;
+  left: 0px;
+}
+.controls-Menu__32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon.icon-24 {
   top: 0px;
   left: 0px;
 }
@@ -907,12 +852,16 @@ input[type="reset"]::-moz-focus-inner {
   top: -2px;
   left: -2px;
 }
+.controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon.icon-24 {
+  top: 0px;
+  left: 0px;
+}
 .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__text {
   margin: 0 0 0 22px;
 }
 .controls-Button.controls-MenuButton {
   position: relative;
-  padding: 0 30px 0 12px;
+  padding: 0;
 }
 .controls-Button.controls-MenuButton.controls-MenuButton__withoutMenu {
   padding: 0 8px;
@@ -980,6 +929,10 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #919191 transparent transparent transparent;
   background: transparent;
 }
+.controls-MenuButton .controls-Button__text,
+.controls-MenuButton .controls-Button__icon + .controls-Button__text {
+  margin-right: 30px;
+}
 .controls-MenuButton__header {
   display: inline-block;
   position: absolute;
@@ -1000,6 +953,11 @@ input[type="reset"]::-moz-focus-inner {
   margin: 0;
   background: transparent;
 }
+.controls-MenuButton__header .controls-MenuButton__headerLeft.controls-MenuButton__headerLeft__revert {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
 .controls-MenuButton__header .controls-MenuButton__headerCenter {
   display: inline-block;
   width: 0;
@@ -1012,6 +970,11 @@ input[type="reset"]::-moz-focus-inner {
   width: 0;
   height: 0;
   margin: 0;
+  background: transparent;
+}
+.controls-MenuButton__header .controls-MenuButton__headerRight.controls-MenuButton__headerRight__revert {
+  width: 0;
+  height: 0;
   background: transparent;
 }
 .controls-MenuButton__Menu {
@@ -1027,6 +990,13 @@ input[type="reset"]::-moz-focus-inner {
   color: #00c795;
   text-decoration: none;
   padding: 0 12px 0 0;
+  line-height: 24px;
+}
+.controls-MenuLink.controls-MenuLink__32px {
+  line-height: 32px;
+}
+.controls-MenuLink.controls-MenuLink__32px .controls-MenuLink__arrowDown {
+  top: 14px;
 }
 .controls-MenuLink.controls-MenuLink__withoutMenu {
   padding: 0;
@@ -1044,28 +1014,24 @@ input[type="reset"]::-moz-focus-inner {
   width: 8px;
   height: 6px;
   right: 0;
-  top: 7px;
+  top: 10px;
   background: transparent;
 }
 .controls-MenuLink__Menu {
   margin-left: -9px;
   background: #ffffff;
-  margin-top: -20px;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
   height: 24px;
 }
-.controls-MenuLink__Menu .controls-MenuLink__header .controls-Link {
-  margin: 3px 0 0;
-}
-.controls-MenuLink__Menu.controls-Menu__32px {
-  margin-top: -25px;
+.controls-MenuLink__Menu .controls-MenuItem {
+  height: 24px;
 }
 .controls-MenuLink__Menu.controls-Menu__32px .controls-MenuLink__header {
   height: 32px;
 }
-.controls-MenuLink__Menu.controls-Menu__32px .controls-MenuLink__header .controls-Link {
-  margin: 8px 0 0;
+.controls-MenuLink__Menu.controls-Menu__32px .controls-MenuItem {
+  height: 32px;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
   display: inline-block;
@@ -1087,11 +1053,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuLink__Menu .controls-MenuLink__header .controls-MenuLink__arrowDown {
   display: none;
-}
-@-moz-document url-prefix() {
-  .controls-MenuLink__Menu {
-    margin-top: -19px;
-  }
 }
 .controls-MenuIcon {
   position: relative;
@@ -1150,15 +1111,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextBox.ws-validation-error .controls-TextBox__fieldWrapper .controls-TextBox__field {
   color: inherit;
 }
-.controls-TextBox:hover {
-  border-width: 1px;
-  border-style: solid;
-  border-color: #00c795;
-  background: #ffffff;
-}
-.controls-TextBox:hover .controls-TextBox__fieldWrapper .controls-TextBox__field {
-  color: inherit;
-}
 .controls-TextBox.ws-has-focus {
   border-width: 1px;
   border-style: solid;
@@ -1166,6 +1118,15 @@ input[type="reset"]::-moz-focus-inner {
   background: #ffffff;
 }
 .controls-TextBox.ws-has-focus .controls-TextBox__fieldWrapper .controls-TextBox__field {
+  color: inherit;
+}
+.controls-TextBox:hover {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #00c795;
+  background: #ffffff;
+}
+.controls-TextBox:hover .controls-TextBox__fieldWrapper .controls-TextBox__field {
   color: inherit;
 }
 .controls-TextBox.ws-disabled {
@@ -1850,54 +1811,10 @@ input[type="reset"]::-moz-focus-inner {
   overflow: hidden;
   position: relative;
 }
-.controls-ListView .controls-ListView__item .controls-ListView__itemActions,
-.controls-DataGrid .controls-ListView__item .controls-ListView__itemActions {
-  position: absolute;
-  display: none;
-  height: 16px;
-  top: 50%;
-  right: 8px;
-  margin: -8px 0 0;
-  padding: 0;
-  z-index: 10;
-  background: transparent;
-}
-.controls-ListView .controls-ListView__item .controls-ListView__itemActions .controls-ListView__action,
-.controls-DataGrid .controls-ListView__item .controls-ListView__itemActions .controls-ListView__action {
-  display: inline;
-  cursor: pointer;
-  margin: 0 16px 0 0;
-}
-.controls-ListView .controls-ListView__item .controls-ListView__itemActions .controls-ListView__action:last-child,
-.controls-DataGrid .controls-ListView__item .controls-ListView__itemActions .controls-ListView__action:last-child {
-  margin: 0;
-}
 .controls-ListView .controls-ListView__item,
 .controls-DataGrid .controls-ListView__item {
   overflow: hidden;
   position: relative;
-}
-.controls-ListView .controls-ListView__item .controls-ListView__itemActions,
-.controls-DataGrid .controls-ListView__item .controls-ListView__itemActions {
-  position: absolute;
-  display: none;
-  height: 16px;
-  top: 50%;
-  right: 8px;
-  margin: -8px 0 0;
-  padding: 0;
-  z-index: 10;
-  background: transparent;
-}
-.controls-ListView .controls-ListView__item .controls-ListView__itemActions .controls-ListView__action,
-.controls-DataGrid .controls-ListView__item .controls-ListView__itemActions .controls-ListView__action {
-  display: inline;
-  cursor: pointer;
-  margin: 0 16px 0 0;
-}
-.controls-ListView .controls-ListView__item .controls-ListView__itemActions .controls-ListView__action:last-child,
-.controls-DataGrid .controls-ListView__item .controls-ListView__itemActions .controls-ListView__action:last-child {
-  margin: 0;
 }
 .controls-ListView .controls-ListView__item:hover .controls-ListView__itemCheckBox,
 .controls-DataGrid .controls-ListView__item:hover .controls-ListView__itemCheckBox {
@@ -2125,6 +2042,54 @@ input[type="reset"]::-moz-focus-inner {
   right: 0;
   height: 1px;
   background: white;
+}
+.controls-ItemActions {
+  position: absolute;
+  height: 20px;
+  background-color: #00c795;
+  right: 1px;
+  box-shadow: -2px -2px 5px #00c795;
+  z-index: 10;
+  display: none;
+}
+.controls-ItemActions > * {
+  display: inline;
+  cursor: pointer;
+  margin: 0 4px;
+  width: 16px;
+  height: 16px;
+  padding: 0 !important;
+}
+.controls-ItemActions > *.controls-ItemActions__hiddenAction {
+  display: none !important;
+}
+.controls-ItemActions > *.controls-ItemActions__menu-button {
+  display: inline-block;
+  z-index: 11;
+  background: url('img/ItemActions-menu.png') no-repeat;
+  float: right;
+}
+.controls-ItemActions > *.controls-ItemActions__menu-button:hover {
+  background: url('img/ItemActions-menu.png') no-repeat 0 -20px;
+}
+.controls-ItemActions__menu-container .controls-MenuItem {
+  padding-right: 24px;
+}
+.controls-ItemActions__menu-container .controls-PopupMixin__closeButton {
+  height: 16px;
+  width: 16px;
+  z-index: 1;
+  right: 4px;
+  top: 4px;
+  position: absolute;
+  cursor: pointer;
+  background: url('img/ItemActions-menu.png') no-repeat 0 -40px;
+}
+.controls-ItemActions__menu-container .controls-PopupMixin__closeButton:hover {
+  background: url('img/ItemActions-menu.png') no-repeat 0 -60px;
+}
+.controls-ItemActions__activeItem {
+  background-color: #00c795 !important;
 }
 .controls-ComboBox__picker.controls-Picker__owner__hover {
   border-top-color: #00c795;

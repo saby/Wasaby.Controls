@@ -20,6 +20,26 @@
    padding-top: 8px;
 }
 
-body {
+.controls-Button.controls-Button__thirdRow {
+   white-space: normal;
+   line-height: 18px;
+   padding-top: 2px;
+}
+.controls-Button {
+  white-space: normal;
+}
+.controls-Button__text {
+  line-height: 20px;//for 1 or 2 lines
+}body {
    background-color: #373944;
+}
+
+
+@text-box-height-prestoBig:   50px;
+@text-box-height-prestoFont:  36px;
+.controls-TextBox {
+   &.controls-TextBox__big {
+      height: @text-box-height-prestoBig;
+      font-size: @text-box-height-prestoFont;
+   }
 }
