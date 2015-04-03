@@ -245,9 +245,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             var res;
 
             //Создадим операции над записью, если их нет
-            if(!this._itemActionsGroup) {
-               this._initItemActions();
-            }
+            //TODO сделать создание нормально
+            this.getItemActions();
+
             //Если показывается меню, то не надо позиционировать операции над записью
             if(this._itemActionsGroup.isItemActionsMenuVisible()) {
                return;
@@ -400,6 +400,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @returns {*}
           */
          getItemActions: function() {
+            if(this._options.itemsActions.length && !this._itemActionsGroup) {
+               this._initItemActions();
+            }
             return this._itemActionsGroup;
          }
       });
