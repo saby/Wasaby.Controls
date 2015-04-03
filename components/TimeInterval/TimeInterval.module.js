@@ -431,9 +431,7 @@ define(
             //Получаем массив позиции курсора.
             //Нулевой индекс - позиция блоков (дни, часы или минуты)
             //Первый индекс - позиция курсора внутри данного блока
-            if (cursorPositionEnd[0] >= (1 + this._hasMaskPattern('D') + this._hasMaskPattern('I')) && cursorPositionEnd[1]){
-               this._isFinishedPrint = true;
-            }
+            this._isFinishedPrint = cursorPositionEnd[0] >= (1 + this._hasMaskPattern('D') + this._hasMaskPattern('I')) && cursorPositionEnd[1];
 
             return ( position ?
                this._correctCursor(selection.startContainer, selection.startOffset) :  cursorPositionEnd);
