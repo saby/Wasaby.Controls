@@ -4,9 +4,16 @@
 define('js!SBIS3.CONTROLS.OperationsMark', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.OperationsMark',
+   'js!SBIS3.CONTROLS.StaticSource',
+   'js!SBIS3.CONTROLS.ArrayStrategy',
    'js!SBIS3.CONTROLS.MenuLink',
    'js!SBIS3.CONTROLS.CheckBox'
-], function(CompoundControl, dotTplFn) {
+], function(CompoundControl, dotTplFn, StaticSource, ArrayStrategy) {
+   var defaultItems = [
+      { name: 'selectCurrentPage', title: 'Всю страницу' },
+      { name: 'removeSelection', title: 'Снять' },
+      { name: 'invertSelection', title: 'Инвертировать' }
+   ];
 
    var OperationsMark = CompoundControl.extend({
       _dotTplFn: dotTplFn,
@@ -14,11 +21,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
       $protected: {
          _options: {
             caption: 'Отметить',
-            items: [
-               { name: 'selectCurrentPage', title: 'Всю страницу' },
-               { name: 'removeSelection', title: 'Снять' },
-               { name: 'invertSelection', title: 'Инвертировать' }
-            ]
+            items: defaultItems
          },
          _markButton: undefined,
          _markCheckBox: undefined
@@ -28,24 +31,33 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          this._markCheckBox = this.getChildControlByName('markCheckBox');
          this._markButton = this.getChildControlByName('markButton');
          this._markButton.setItems(this._options.items);
+         this._bindMarkEvents();
          this._updateMark();
+      },
+      $constructor: function() {
+         this._initItems();
+      },
+      _initItems: function() {
+         var self = this,
+            defaultItems = new StaticSource({data: defaultItems, keyField: 'name', strategy: new ArrayStrategy()}),
+            defaultItem;
+         $.each(this._options.items, function(key, val) {
+            defaultItem = defaultItems.getItem(val.name);
+            if (val.action) {
+               self[val.name] = val.action;
+            }
+            val.title = val.title ? val.title : defaultItem ? defaultItem.get('title') : '';
+         });
+      },
+      _bindMarkEvents: function() {
+         this.getParent().getLinkedView().subscribe('onSelectedItemsChange', this._updateMark.bind(this));
          this._markButton.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
          this._markCheckBox.subscribe('onActivated', this._onCheckBoxActivated.bind(this));
       },
-      $constructor: function() {
-         var view = this.getParent().getLinkedView();
-         this._initHandlers();
-         view.subscribe('onSelectedItemsChange', this._updateMark.bind(this));
-      },
-      _initHandlers: function() {
-         $.each(this._options.items, function(key, val){
-            if (val.action) {
-               this[val.name] = val.action;
-            }
-         });
-      },
       _onMenuItemActivate: function(e, id) {
-         this[id]();
+         if (this[id]) {
+            this[id].apply(this);
+         }
       },
       _onCheckBoxActivated: function() {
          this._markCheckBox.isChecked() === true ? this.selectCurrentPage() : this.removeSelection();
@@ -63,7 +75,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
             selectedCount;
          if (hasMarkOptions) {
             selectedCount = view.getSelectedItems().length;
-            caption = selectedCount ? 'Отмечено(' + selectedCount + ')' : 'Отметить';
+            caption = selectedCount ? 'Отмечено(' + selectedCount + ')' : this._options.caption;
             this._markButton.setCaption(caption);
          }
          this._markButton.setVisible(hasMarkOptions)
@@ -84,5 +96,4 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
    });
 
    return OperationsMark;
-
 });
