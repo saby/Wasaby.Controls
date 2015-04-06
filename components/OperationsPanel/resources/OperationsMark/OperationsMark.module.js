@@ -46,7 +46,9 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
             if (val.action) {
                self[val.name] = val.action;
             }
-            val.title = val.title ? val.title : defaultItem ? defaultItem.get('title') : '';
+            if (!val.title && val.title !== '') {
+               val.title = defaultItem ? defaultItem.get('title') : '';
+            }
          });
       },
       _bindMarkEvents: function() {
@@ -70,11 +72,10 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
       },
       _updateMarkButton: function() {
          var hasMarkOptions = !!this._markButton.getItems().getItemsCount(),
-            view = this.getParent().getLinkedView(),
-            caption,
-            selectedCount;
+            selectedCount,
+            caption;
          if (hasMarkOptions) {
-            selectedCount = view.getSelectedItems().length;
+            selectedCount = this.getParent().getLinkedView().getSelectedItems().length;
             caption = selectedCount ? 'Отмечено(' + selectedCount + ')' : this._options.caption;
             this._markButton.setCaption(caption);
          }
