@@ -23,6 +23,19 @@
     }
   }
 
+  &.ws-has-focus {
+     border-width: @text-box-focus-border-width;
+     border-style: @text-box-focus-border-style;
+     border-color: @text-box-focus-border-color;
+     background: @text-box-focus-bg;
+
+     .controls-TextBox__fieldWrapper {
+        .controls-TextBox__field {
+           color: @text-box-field-focus-text-color;
+        }
+     }
+  }
+
   &:hover {
     border-width: @text-box-hover-border-width;
     border-style: @text-box-hover-border-style;
@@ -36,18 +49,7 @@
     }
   }
 
-  &.ws-has-focus {
-    border-width: @text-box-focus-border-width;
-    border-style: @text-box-focus-border-style;
-    border-color: @text-box-focus-border-color;
-    background: @text-box-focus-bg;
 
-    .controls-TextBox__fieldWrapper {
-      .controls-TextBox__field {
-          color: @text-box-field-focus-text-color;
-      }
-    }
-  }
 
   &.ws-disabled {
     border-width: @text-box-disabled-border-width;

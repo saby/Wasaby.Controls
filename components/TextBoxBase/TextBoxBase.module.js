@@ -95,11 +95,12 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
        * @see getValue
        */
       setText:function(text){
-         var oldText = this._options.text;
-         this._options.text = text || '';
-         if (oldText !== this._options.text) {
-            this.saveToContext('Text', text);
-            this._notify('onTextChange', this._options.text);
+         var newText = this._formatText(text) || '';
+         if (newText !== this._options.text) {
+            this._options.text = newText;
+            this._drawText(newText);
+            this.saveToContext('Text', newText);
+            this._notify('onTextChange', newText);
          }
       },
 
@@ -136,18 +137,12 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
          this._options.maxLength = num;
       },
 
-      
-      /**
-       * @noShow
-       */
-      setValue: function(value){
-         this.setText(value);
-      },
-      /**
-       * @noShow
-       */
-      getValue: function(){
-         return this.getText();
+      _formatText : function(text) {
+         text = text || ''; // так как есть датабиндинг может прийти undefined
+         if (this._options.trim) {
+            text = String.trim(text);
+         }
+         return text;
       }
    });
 

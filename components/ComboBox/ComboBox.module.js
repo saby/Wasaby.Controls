@@ -89,11 +89,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              * @cfg {String} Форматирование значений в списке
              * @noShow
              */
-            valueFormat: '',
-            /**
-             * @cfg {String} Название поля из набора, отображаемое в выпадающем списке
-             */
-            displayField: ''
+            valueFormat: ''
          }
       },
 
@@ -230,7 +226,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             return doT.template(this._options.itemTemplate)({item : item, displayField : title})
          }
          else {
-            return '<div class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow">' + title + '</div>';
+            return '<div>' + title + '</div>';
          }
       },
 

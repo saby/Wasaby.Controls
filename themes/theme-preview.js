@@ -564,7 +564,8 @@
                side: 'right',
                offset: 0
             },
-            closeByExternalClick: true
+            closeByExternalClick: true,
+            closeButton: true
          });
 
          new Menu({
@@ -602,9 +603,41 @@
             enabled: false
          });
 
+         new MenuButton({
+            element: 'menuButtonFixedWidthIcon',
+            primary: true,
+            items: items,
+            hierField: 'par',
+            caption: 'Primary dropdown menu with long text',
+            icon: 'sprite:icon-16 icon-Alert icon-primary'
+         });
+
+         new MenuButton({
+            element: 'menuButtonFixedWidth',
+            primary: true,
+            items: items,
+            hierField: 'par',
+            caption: 'Primary dropdown menu with long text'
+         });
+
+         var menuButtonWithClose = new MenuButton({
+            element: 'menuButtonWithClose',
+            primary: true,
+            items: items,
+            hierField: 'par',
+            caption: 'Primary dropdown menu with close button'
+         });
+
          new MenuLink({
             caption: 'Menu link',
             element: 'menuLink',
+            items: items,
+            hierField: 'par'
+         });
+
+         new MenuLink({
+            caption: 'Menu link fixed width long text',
+            element: 'menuLinkFixedWidth',
             items: items,
             hierField: 'par'
          });
