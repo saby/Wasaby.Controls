@@ -150,70 +150,6 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background: #d1d1d1;
 }
-.controls-Button.controls-Button__light {
-  color: #353535;
-  border: 1px solid #d1d1d1;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #ffffff;
-}
-.controls-Button.controls-Button__light:hover {
-  color: #00c795;
-  border: 1px solid #00c795;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #e1fff7;
-}
-.controls-Button.controls-Button__light.controls-Click__active {
-  color: #00c795;
-  border: 1px solid #00c795;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #ffffff;
-}
-.controls-Button.controls-Button__light.controls-Button__primary {
-  color: #353535;
-  border: 1px solid #00c795;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #ffffff;
-}
-.controls-Button.controls-Button__light.controls-Button__primary:hover {
-  color: #353535;
-  border: 1px solid #00c795;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #e1fff7;
-}
-.controls-Button.controls-Button__light.controls-Button__primary.controls-Click__active {
-  color: #00c795;
-  border: 1px solid #00c795;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #ffffff;
-}
-.controls-Button.controls-Button__light.controls-Button__primary.ws-disabled {
-  color: #919191;
-  border: 1px solid #d1d1d1;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #d1d1d1;
-}
-.controls-Button.controls-Button__light.ws-disabled {
-  color: #919191;
-  border: 1px solid #d1d1d1;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  background: #d1d1d1;
-}
 .controls-Button.controls-Button__big {
   font: 15.6px Tahoma, Geneva, sans-serif;
   color: #919191;
@@ -1175,15 +1111,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextBox.ws-validation-error .controls-TextBox__fieldWrapper .controls-TextBox__field {
   color: inherit;
 }
-.controls-TextBox:hover {
-  border-width: 1px;
-  border-style: solid;
-  border-color: #00c795;
-  background: #ffffff;
-}
-.controls-TextBox:hover .controls-TextBox__fieldWrapper .controls-TextBox__field {
-  color: inherit;
-}
 .controls-TextBox.ws-has-focus {
   border-width: 1px;
   border-style: solid;
@@ -1191,6 +1118,15 @@ input[type="reset"]::-moz-focus-inner {
   background: #ffffff;
 }
 .controls-TextBox.ws-has-focus .controls-TextBox__fieldWrapper .controls-TextBox__field {
+  color: inherit;
+}
+.controls-TextBox:hover {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #00c795;
+  background: #ffffff;
+}
+.controls-TextBox:hover .controls-TextBox__fieldWrapper .controls-TextBox__field {
   color: inherit;
 }
 .controls-TextBox.ws-disabled {
