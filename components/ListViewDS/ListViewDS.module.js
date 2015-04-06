@@ -145,7 +145,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                      },
                      size: {
                         height: target[0].offsetHeight,
-                        width: target[0].offsetWidth,
+                        width: target[0].offsetWidth
                      }
                   };
                   this._notify('onChangeHoveredItem', this._hoveredItem);
