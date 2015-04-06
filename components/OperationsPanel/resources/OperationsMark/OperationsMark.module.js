@@ -35,14 +35,14 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          this._updateMark();
       },
       $constructor: function() {
-         this._initItems();
+         this._parseItems();
       },
-      _initItems: function() {
+      _parseItems: function() {
          var self = this,
-            defaultItems = new StaticSource({data: defaultItems, keyField: 'name', strategy: new ArrayStrategy()}),
+            defaults = new StaticSource({data: defaultItems, keyField: 'name', strategy: new ArrayStrategy()}),
             defaultItem;
          $.each(this._options.items, function(key, val) {
-            defaultItem = defaultItems.getItem(val.name);
+            defaultItem = defaults.read(val.name).getResult();
             if (val.action) {
                self[val.name] = val.action;
             }

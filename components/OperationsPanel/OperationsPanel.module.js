@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             closedButton: this._container.find('.controls__operations-panel__closed'),
             openedButton: this._container.find('.controls__operations-panel__opened')
          };
-         this._initItems();
+         this._initHandlers();
          this._bindPanelEvents();
          this.setLinkedView(this._options.linkedView);
       },
@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          this._options.linkedView = linkedView;
          this._options.linkedView.subscribe('onSelectedItemsChange', this._internalHandlers.onChangeSelection);
       },
-      _initItems: function() {
+      _initHandlers: function() {
          this._internalHandlers = {
             onChangeSelection: this._onChangeSelection.bind(this)
             /*TODO тут ещё будут обработчики, так что считаю целесообразно оставить такой блок*/
