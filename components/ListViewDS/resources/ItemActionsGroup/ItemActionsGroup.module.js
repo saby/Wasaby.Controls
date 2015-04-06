@@ -40,40 +40,26 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          /**
           * Изменяет операции над строкой до нужного состояния - скрывает / показывает кнопки
           */
-         applyItemActions: function(item) {
+         applyItemActions: function() {
             var onlyMain = true,
                 itemsInstances = this.getItemsInstances(),
+                overFlow = false,
                 count = 0;
 
             for(var i in itemsInstances) {
                if(itemsInstances.hasOwnProperty(i)) {
                   onlyMain &= this._itemActionsButtons[i]['isMainAction'];
-                  if(itemsInstances[i].isVisible()) {
+                  if(itemsInstances[i].isVisible() && !overFlow) {
                      count++;
+                     overFlow = count > this._options.itemActionsOverflow;
                   }
-                  //Если кнопок больше чем itemActionsOverflow или она не главная, то скроем
-                  itemsInstances[i]
-                     .getContainer()
-                     .toggleClass('controls-ItemActions__hiddenAction', count > this._options.itemActionsOverflow || !this._itemActionsButtons[i]['isMainAction']);
+                  //Если кнопок больше чем itemActionsOverflow или она не главная, то скроем ее
+                  itemsInstances[i].getContainer()[0].style.display =
+                     (overFlow || !this._itemActionsButtons[i]['isMainAction']) ?
+                        'none' : 'inline-block';
                }
             }
-            this._itemActionsMenuButton[0].style.display = (!onlyMain || count >= this._options.itemActionsOverflow ? 'inline-block' : 'none');
-         },
-         /**
-          * Расщитывает позицию для операций на записью
-          * @param item
-          * @returns {{top: number, right: number}}
-          * @private
-          */
-         _getItemActionPositionForItem: function(item) {
-            var position = item[0].offsetTop,
-                itemHeight = item[0].offsetHeight;
-
-            return {
-               'top': position + ((itemHeight > ITEMS_ACTIONS_HEIGHT) ? itemHeight - ITEMS_ACTIONS_HEIGHT : 0),
-               //TODO Для плитки надо будет считать где именно, подумать как сделать получше
-               'right': 1
-            }
+            this._itemActionsMenuButton[0].style.display = (!onlyMain || overFlow ? 'inline-block' : 'inline-block');
          },
          /**
           * Создаёт меню для операций над записью
@@ -115,18 +101,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                closeByExternalClick: true,
                handlers: {
                   onClose: function() {
-                     var hoverItem = self.getParent().getHoveredItem().container;
-
+                     var hoveredItem = self.getParent().getHoveredItem().container;
                      self._itemActionsMenuVisible = false;
                      self._activeItem.removeClass('controls-ItemActions__activeItem');
-                     //Если меню закрылось, возможно надо переместить операции на новую строку
-                     //или скрыть их совсем
-                     if(!hoverItem) {
-                        self.hideItemActions();
-                     } else if(hoverItem !== self._activeItem) {
-                        self.applyItemActions(hoverItem);
-                        self.showItemActions(hoverItem);
-                     }
+                     self[hoveredItem ? 'showItemActions' : 'hideItemActions'](hoveredItem);
                   },
                   onMenuItemActivate: function(e, id) {
                      self._itemActivatedHandler(id);
@@ -177,13 +155,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          },
          /**
           * Показывает операции над записью
-          * @param item
           */
-         showItemActions: function(item) {
-            var position = this._getItemActionPositionForItem(item);
-            this._activeItem = item;
-
-            this._container[0].style.top = position.top + 'px';
+         showItemActions: function(hoveredItem) {
+            this._activeItem = hoveredItem.container;
+            this._container[0].style.top = hoveredItem.position.top + ((hoveredItem.size.height > ITEMS_ACTIONS_HEIGHT) ? hoveredItem.size.height - ITEMS_ACTIONS_HEIGHT : 0 ) + 'px';
             this._container[0].style.display = 'block';
          },
          /**
@@ -220,10 +195,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
             return linkText ?
             '<component data-component="SBIS3.CONTROLS.Link">' +
-            '<option name="caption">' + linkText + '</option>' +
+               '<option name="caption">' + linkText + '</option>' +
             '</component>' :
             '<component data-component="SBIS3.CONTROLS.IconButton">' +
-            '<option name="icon">' + item.get('icon') + '</option>' +
+               '<option name="icon">' + item.get('icon') + '</option>' +
             '</component>';
          },
 
