@@ -9,7 +9,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 ], function (TextBox, dotTplFn, PickerMixin, DSMixin, Selectable, DataBindMixin, arrowTpl) {
    'use strict';
    /**
-    * Выпадающий список с выбором значений из набора. Есть настройка которая позволяет также  вручную вводить значения.
+    * Выпадающий список с выбором значений из набора.
+    * По умолчанию позволяет вручную вводить значение.
     * @class SBIS3.CONTROLS.ComboBox
     * @extends SBIS3.CONTROLS.TextBox
     * @control

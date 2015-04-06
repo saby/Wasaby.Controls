@@ -11,6 +11,15 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
     *    <li>{@link SBIS3.CONTROLS.TextArea TextArea} - многострочное поле ввода;</li>
     *    <li>{@link SBIS3.CONTROLS.FormattedTextBox FormattedTextBox} - поле ввода с маской.</li>
     * </ul>
+    *
+    * Для поля ввода можно задать:
+    * <ol>
+    *    <li>{@link maxLength} - ограничение количества вводимых символов;</li>
+    *    <li>{@link inputRegExp} - фильтр вводимых символов;</li>
+    *    <li>{@link trim} - обрезать ли пробелы при вставке текста;</li>
+    *    <li>{@link selectOnClick} - выделять ли текст при получении контролом фокуса;</li>
+    *    <li>{@link textTransform} - форматирование регистра текста.</li>
+    * </ol>
     * @class SBIS3.CONTROLS.TextBox
     * @extends SBIS3.CONTROLS.TextBoxBase
     * @control
