@@ -24,7 +24,8 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
             items: defaultItems
          },
          _markButton: undefined,
-         _markCheckBox: undefined
+         _markCheckBox: undefined,
+         _defaultItems: undefined
       },
       init: function() {
          OperationsMark.superclass.init.apply(this, arguments);
@@ -35,21 +36,23 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          this._updateMark();
       },
       $constructor: function() {
-         this._parseItems();
+         this._defaultItems = new StaticSource({data: defaultItems, keyField: 'name', strategy: new ArrayStrategy()});
+         this._initItems();
       },
-      _parseItems: function() {
-         var self = this,
-            defaults = new StaticSource({data: defaultItems, keyField: 'name', strategy: new ArrayStrategy()}),
-            defaultItem;
+      _initItems: function() {
+         var self = this;
          $.each(this._options.items, function(key, val) {
-            defaultItem = defaults.read(val.name).getResult();
-            if (val.action) {
-               self[val.name] = val.action;
-            }
-            if (!val.title && val.title !== '') {
-               val.title = defaultItem ? defaultItem.get('title') : '';
-            }
+            self._parseItem.apply(self,[val]);
          });
+      },
+      _parseItem: function(item) {
+         var defaultItem = this._defaultItems.read(item.name).getResult();
+         if (item.action) {
+            this[item.name] = item.action;
+         }
+         if (!item.title && item.title !== '') {
+            item.title = defaultItem ? defaultItem.get('title') : '';
+         }
       },
       _bindMarkEvents: function() {
          this.getParent().getLinkedView().subscribe('onSelectedItemsChange', this._updateMark.bind(this));
