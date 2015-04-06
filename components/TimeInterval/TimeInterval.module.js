@@ -114,7 +114,12 @@ define(
             this._drawInterval();
             //TODO исправить выставление курсора
             setTimeout(function() {
-               self._keyPressHandler(18, "character");
+               //Если контрол не сфокусирован, и мы вызываем нажатие alt, то
+               //вывалится ошибка при вызове getSelection, ловим ее здесь.
+               try{
+                  self._keyPressHandler(18);
+               }
+               catch(ex) {}
             }, 0);
          },
          /**
