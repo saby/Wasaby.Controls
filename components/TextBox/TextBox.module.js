@@ -3,7 +3,23 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
    'use strict';
 
    /**
-    * Поле ввода в одну строчку
+    * Однострочное текстовое поле ввода.
+    * Специальные поля:
+    * <ul>
+    *    <li>{@link SBIS3.CONTROLS.NumberTextBox NumberTextBox} - поле ввода числа;</li>
+    *    <li>{@link SBIS3.CONTROLS.PasswordTextBox PasswordTextBox} - поле ввода пароля;</li>
+    *    <li>{@link SBIS3.CONTROLS.TextArea TextArea} - многострочное поле ввода;</li>
+    *    <li>{@link SBIS3.CONTROLS.FormattedTextBox FormattedTextBox} - поле ввода с маской.</li>
+    * </ul>
+    *
+    * Для поля ввода можно задать:
+    * <ol>
+    *    <li>{@link maxLength} - ограничение количества вводимых символов;</li>
+    *    <li>{@link inputRegExp} - фильтр вводимых символов;</li>
+    *    <li>{@link trim} - обрезать ли пробелы при вставке текста;</li>
+    *    <li>{@link selectOnClick} - выделять ли текст при получении контролом фокуса;</li>
+    *    <li>{@link textTransform} - форматирование регистра текста.</li>
+    * </ol>
     * @class SBIS3.CONTROLS.TextBox
     * @extends SBIS3.CONTROLS.TextBoxBase
     * @control
@@ -125,8 +141,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          }
       },
 
-      setText: function(text){
-         TextBox.superclass.setText.call(this, text);
+      _drawText: function(text) {
          if (this._compatPlaceholder) {
             this._compatPlaceholder.toggle(!text);
          }
@@ -194,12 +209,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       _keyUpBind: function() {
          var newText = this._inputField.val();
-         if (newText != this._options.text) {
-            TextBox.superclass.setText.call(this, newText);
-         }
-         if (this._compatPlaceholder) {
-            this._compatPlaceholder.toggle(!newText);
-         }
+         this.setText(newText);
       },
 
       _keyDownBind: function(event) {

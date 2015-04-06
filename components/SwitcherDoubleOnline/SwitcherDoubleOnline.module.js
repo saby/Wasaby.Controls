@@ -2,7 +2,14 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
 
    'use strict';
    /**
-    * Класс определяет отображение двухпозиционного переключателя для поддержания макетов online.sbis.ru
+    * Контрол, отображающий двухпозиционный переключатель для поддержания макетов online.sbis.ru.
+    * Данный переключатель отличается от обычного {@link Switcher} только внешне, функционально они одинаковы.
+    * Можно настроить:
+    * <ol>
+    *    <li>state - начальное состояние;</li>
+    *    <li>stateOn - текст подписи при включенном состоянии;</li>
+    *    <li>stateOff - текст подписи при выключенном состоянии.</li>
+    * </ol>
     * @class SBIS3.Engine.SwitcherDoubleOnline
     * @extends SBIS3.CONTROLS.SwitcherBase
     * @mixes SBIS3.CONTROLS.FormWidgetMixin

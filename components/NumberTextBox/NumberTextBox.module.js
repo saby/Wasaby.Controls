@@ -6,15 +6,15 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
    'use strict';
    /**
-    * Поле ввода числа
+    * Поле ввода числа.
     * Можно настроить:
     * <ol>
-    *    <li>{@link integers количество знаков в целой части};</li>
-    *    <li>{@link decimals количество знаков после запятой};</li>
+    *    <li>количество знаков {@link integers в целой части};</li>
+    *    <li>количество знаков {@link decimals после запятой};</li>
     *    <li>{@link hideEmptyDecimals прятать ли пустую дробную часть};</li>
-    *    <li>{@link onlyPositive запрещение ввода отрицательных чисел};</li>
-    *    <li>{@link onlyInteger запрещение ввода дробных чисел};</li>
-    *    <li>{@link enableArrows отображать ли стрелки для увеличения/уменьшения числа};</li>
+    *    <li>запрещение ввода {@link onlyPositive отрицательных чисел};</li>
+    *    <li>запрещение ввода {@link onlyInteger дробных чисел};</li>
+    *    <li>{@link enableArrows наличие стрелок} для увеличения/уменьшения числа;</li>
     *    <li>{@link text начальное значение}.</li>
     * </ol>
     * @class SBIS3.CONTROLS.NumberTextBox
@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     * <component data-component='SBIS3.CONTROLS.NumberTextBox'>
     *     <option name="text">0</option>
     * </component>
-    * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
+    * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol textTransform
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
     *
     * @ignoreMethods applyEmptyState applyState findParent getAlignment getEventHandlers getEvents getExtendedTooltip
@@ -107,12 +107,14 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
              */
             hideEmptyDecimals: false,
             /**
-             * @cfg {Boolean} Показать стрелки
-             * С помощью стрелок можно увеличивать/уменьшать целую часть числа на 1.
+             * @cfg {Boolean} Использовать ли кнопки для изменения значения
+             * С помощью кнопок можно увеличивать/уменьшать целую часть числа на 1.
              * @example
              * <pre>
              *     <option name="enableArrows">true</option>
              * </pre>
+             * @see integers
+             * @see onlyInteger
              */
             enableArrows: false,
             /**
