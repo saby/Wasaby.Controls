@@ -9,10 +9,11 @@ define(
    [
       'js!SBIS3.CORE.Control',
       'js!SBIS3.CONTROLS.PickerMixin',
+      'js!SBIS3.CONTROLS.Utils.DateUtil',
       'html!SBIS3.CONTROLS.MonthPicker/resources/MonthPickerDropdown',
       'html!SBIS3.CONTROLS.MonthPicker'
    ],
-   function(Control, PickerMixin, DropdownTpl, dotTplFn){
+   function(Control, PickerMixin, DateUtil, DropdownTpl, dotTplFn){
 
    'use strict';
 
@@ -224,13 +225,22 @@ define(
        * @private
        */
       _setDateByString: function(value){
-         var checkResult = /^(?:(\d{1,2})\.)?(\d{1,4})$/.exec(value);
+         var checkResult = /^(?:(\d{1,2})\.)?(\d{1,4})$/.exec(value),
+            isCorrect = false;
 
          if ( checkResult ){
             this._setDateByDateObject(this._getFirstDay( parseInt(checkResult[2], 10), parseInt(checkResult[1], 10) - 1 || 0 ));
+            isCorrect = true;
+         } else if (typeof value == 'string') {
+            //convert ISO-date to Date
+            this._options.date = DateUtil.dateFromIsoString(value);
+            if (DateUtil.isValidDate(this._options.date)) {
+               this._setDateByDateObject(this._options.date);
+               isCorrect = true;
+            }
          }
-         else {
-            throw new Error('Неверный формат даты');
+         if ( ! isCorrect) {
+            throw new Error('MonthPicker. Неверный формат даты');
          }
       },
 

@@ -6,10 +6,11 @@ define(
    [
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'js!SBIS3.CONTROLS.PickerMixin',
+      'js!SBIS3.CONTROLS.Utils.DateUtil',
       'js!SBIS3.CONTROLS.Calendar',
       'html!SBIS3.CONTROLS.DatePicker'
    ],
-   function (FormattedTextBoxBase, PickerMixin, Calendar, dotTplFn) {
+   function (FormattedTextBoxBase, PickerMixin, DateUtil, Calendar, dotTplFn) {
 
    'use strict';
 
@@ -285,18 +286,27 @@ define(
        * @param date новое значение даты, объект типа Date
        */
       _setDate: function ( date ) {
+         var isCorrect = false;
          if ( date instanceof Date ) {
             this._options.date = date;
             this._options.text = this._getTextByDate( date );
+            isCorrect = true;
+         } else if (typeof date == 'string') {
+            //convert ISO-date to Date
+            this._options.date = DateUtil.dateFromIsoString(date);
+            if (DateUtil.isValidDate(this._options.date)) {
+               this._options.text = this._getTextByDate( this._options.date );
+               isCorrect = true;
+            }
          }
-         else {
+         if ( ! isCorrect) {
             this._options.date = null;
             this._options.text = '';
+            throw new Error('DatePicker. Неверный формат даты');
          }
 
          this._drawDate();
       },
-
       /**
        * Переопределенный метод из TextBoxBase
        * @param value
