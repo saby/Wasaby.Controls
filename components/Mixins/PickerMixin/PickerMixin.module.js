@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], function(FloatArea) {
    /**
-    * Контрол умеющий отображать выдающий вниз блок
+    * Миксин, умеющий отображать выдающий вниз блок.
     * Задается контент (протектед методом каким-то) и методы которые позволяют открывать, закрывать блок.
     * @mixin SBIS3.CONTROLS.PickerMixin
     */
@@ -74,6 +74,8 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
 
       /**
        * Показывает выпадающий блок
+       * @see hidePicker
+       * @see togglePicker
        */
       showPicker: function() {
          if (!this._picker) {
@@ -85,6 +87,8 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
       },
       /**
        * Скрывает выпадающий блок
+       * @see showPicker
+       * @see togglePicker
        */
       hidePicker: function() {
          if (!this._picker) {
@@ -95,6 +99,8 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
       },
      /**
       * Изменяет состояние выпадающего блока на противоположное (скрывает/показывает)
+      * @sse showPicker
+      * @see hidePicker
       */
       togglePicker: function() {
          if (!this._picker) {

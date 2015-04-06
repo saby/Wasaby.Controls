@@ -34,21 +34,42 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 */
                itemTemplate: '',
                /**
-                * @cfg {Array} Набор действий, над элементами, отображающийся в виде иконок. Можно использовать для массовых операций.
+                * @cfg {Array} Набор действий над элементами, отображающийся в виде иконок.
+                * Можно использовать для массовых операций.
+                * @see setItemsActions
                 */
                itemsActions: [],
                /**
-                * @cfg {Boolean} Разрешено или нет перемещение элементов Drag-and-Drop
+                * @cfg {Boolean} Разрешено или нет перемещение элементов "Drag-and-Drop"
+                * @example
+                * <pre>
+                *     <option name="itemsDragNDrop">true</option>
+                * </pre>
                 */
                itemsDragNDrop: false,
                /**
-                * @cfg {String|jQuery|HTMLElement} Что отображается когда нет записей
+                * @cfg {String|jQuery|HTMLElement} Отображение при отсутствии записей
+                * @example
+                * <pre>
+                *     <option name="emptyHTML">Нет данных</option>
+                * </pre>
+                * @see setEmptyHTML
                 */
                emptyHTML: null,
                /**
                 * @cfg {Function} Обработчик клика на элемент
+                * @see setElemClickHandler
                 */
                elemClickHandler: null,
+                /**
+                 * @cfg {Boolean} Разрешить выбор нескольких строк
+                 * Позволяет выбрать несколько строк для одновременного взаимодействия с ними.
+                 * При значении данной опции false у связанной панели массовых операций не будет флага "Отметить все".
+                 * @example
+                 * <pre>
+                 *    <option name="multiselect">false</option>
+                 * </pre>
+                 */
                multiselect: false
             }
          },
@@ -75,8 +96,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
 
          /**
-          * Установить, что отображается когда нет записей
+          * Установить что отображается при отсутствии записей
           * @param html содержимое блока
+          * @see emptyHTML
           */
          setEmptyHTML: function (html) {
 
@@ -144,11 +166,19 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).addClass('controls-ListView__item__selected');
             }
          },
-
+          /**
+           *
+           * @param method
+           * @see elemClickHandler
+           */
          setElemClickHandler: function (method) {
             this._options.elemClickHandler = method;
          },
-
+          /**
+           *
+           * @param itemsActions
+           * @see itemsActions
+           */
          setItemsActions: function (itemsActions) {
             this._options.itemsActions = itemsActions;
             this._drawItemsActions(itemsActions);
