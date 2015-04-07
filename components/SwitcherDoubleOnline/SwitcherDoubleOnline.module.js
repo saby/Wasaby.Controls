@@ -6,9 +6,9 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
     * Данный переключатель отличается от обычного {@link Switcher} только внешне, функционально они одинаковы.
     * Можно настроить:
     * <ol>
-    *    <li>state - начальное состояние;</li>
-    *    <li>stateOn - текст подписи при включенном состоянии;</li>
-    *    <li>stateOff - текст подписи при выключенном состоянии.</li>
+    *    <li>{@link state} - начальное состояние;</li>
+    *    <li>{@link stateOn} - текст подписи при включенном состоянии;</li>
+    *    <li>{@link stateOff} - текст подписи при выключенном состоянии.</li>
     * </ol>
     * @class SBIS3.Engine.SwitcherDoubleOnline
     * @extends SBIS3.CONTROLS.SwitcherBase
@@ -32,7 +32,7 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
     * @ignoreMethods subscribe unbind unsubscribe unsubscribeFrom
     *
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChange onTooltipContentRequest onChange
-    * @ignoreEvents onFocusIn onFocusOut onKeyPressed
+    * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady
     */
    var SwitcherDoubleOnline = SwitcherBase.extend( /** @lends SBIS3.Engine.SwitcherDoubleOnline.prototype */ {
       _dotTplFn: dotTplFn,
