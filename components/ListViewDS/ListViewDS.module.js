@@ -351,6 +351,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            */
          reload: function(){
             if (this.isInfiniteScroll()) {
+               this._cancelLoading();
                this._loadingIndicator = undefined;
                this._hasScrollMore = true;
                this._infiniteScrollOffset = this._offset;
@@ -510,13 +511,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          _nextLoad: function(){
             var self = this, records;
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
-            //TODO Когда в core появится возможность останавливать Deferred убрать _nowLoading и отменять или дожидаться загрузки по готовности Deferred
-            // запоминать в query (Deferred.isReady()). Так же нужно будет исользовать для фильтрации
-            if (this._allowInfiniteScroll && this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._nowLoading) {
+            if (this._allowInfiniteScroll && this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._isNowLoading()) {
                this._addLoadingIndicator();
-               this._nowLoading = true;
-               this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset  + this._limit, this._limit).addCallback(function (dataSet) {
-                  self._nowLoading = false;
+               this._nowLoading = this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset  + this._limit, this._limit).addCallback(function (dataSet) {
+                  self._nowLoading = false;//_cancelLoading?
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
                      records = dataSet._getRecords();
@@ -529,8 +527,20 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                      self._hasScrollMore = false;
                      self._removeLoadingIndicator();
                   }
+               }).addErrback(function(error){
+                  //Здесь при .cancel приходит ошибка вида DeferredCanceledError
+                  return error;
                });
             }
+         },
+         _cancelLoading : function(){
+            if (this._isNowLoading()){
+               this._nowLoading.cancel();
+            }
+            this._nowLoading = false;
+         },
+         _isNowLoading: function(){
+            return this._nowLoading && !this._nowLoading.isReady();
          },
          _isBottomOfPage : function() {
             var docBody = document.body,
@@ -543,7 +553,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          _loadBeforeScrollAppears: function(){
             var elem = this._infiniteScrollContainer.length ? this._infiniteScrollContainer.get(0) : $('body').get(0);
             // Было: this._dataSet.getCount() <= parseInt(($(window).height() /  32 ) + 10 , 10
-            if (this._isLoadBeforeScrollAppears && !(elem.scrollHeight > $(window).height())){
+            if (this._isLoadBeforeScrollAppears && !(elem.scrollHeight > $(window).height() + this._scrollIndicatorHeight)){
                this._nextLoad();
             } else {
                this._isLoadBeforeScrollAppears = false;
