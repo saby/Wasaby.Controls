@@ -93,8 +93,11 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          this._markCheckBox = new CheckBox({
             threeState: true,
             element: $('<span>').insertBefore(this._container),
-            className: 'controls-OperationsMark-checkBox'});
-         this._markCheckBox.subscribe('onActivated', this._onCheckBoxActivated.bind(this));
+            className: 'controls-OperationsMark-checkBox',
+            handlers: {
+               onActivated: this._onCheckBoxActivated.bind(this)
+            }
+         });
       }
    });
 
