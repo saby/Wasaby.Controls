@@ -7,9 +7,9 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
     * Контрол, отображающий стандартный флажок.
     * Можно настроить:
     * <ol>
-    *    <li>caption - текст подписи;</li>
-    *    <li>threeState - количество состояний;</li>
-    *    <li>checked - начальное состояние.</li>
+    *    <li>{@link caption} - текст подписи;</li>
+    *    <li>{@link threeState} - количество состояний;</li>
+    *    <li>{@link checked} - начальное состояние.</li>
     * </ol>
     * При необходимости создания нескольких флажков используйте {@link SBIS3.CONTROLS.CheckBoxGroup CheckBoxGroup}.
     * @class SBIS3.CONTROLS.CheckBox
