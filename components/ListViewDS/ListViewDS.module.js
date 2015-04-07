@@ -256,6 +256,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @private
           */
          _showItemActions: function() {
+            console.time('1');
             //Создадим операции над записью, если их нет
             this.getItemActions();
 
@@ -266,6 +267,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
             this._itemActionsGroup.applyItemActions();
             this._itemActionsGroup.showItemActions(this._hoveredItem);
+            console.timeEnd('1');
          },
          /**
           * Создаёт операции над записью

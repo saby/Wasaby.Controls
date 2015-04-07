@@ -44,6 +44,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var onlyMain = true,
                 itemsInstances = this.getItemsInstances(),
                 overFlow = false,
+                show = false,
                 count = 0;
 
             for(var i in itemsInstances) {
@@ -53,13 +54,17 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                      count++;
                      overFlow = count > this._options.itemActionsOverflow;
                   }
-                  //Если кнопок больше чем itemActionsOverflow или она не главная, то скроем ее
-                  itemsInstances[i].getContainer()[0].style.display =
-                     (overFlow || !this._itemActionsButtons[i]['isMainAction']) ?
-                        'none' : 'inline-block';
+                  //Если кнопок больше чем itemActionsOverflow или кнопка не главная, то нужно их скрыть
+                  //и показать в меню
+                  show = overFlow || !this._itemActionsButtons[i]['isMainAction'];
+                  //Если видимость кнопки не изменилась, то делать ничего не будем
+                  if(this._itemActionsButtons[i]['isVisible'] !== show) {
+                     itemsInstances[i].getContainer()[0].style.display = show ? 'none' : 'inline-block';
+                     this._itemActionsButtons[i]['isVisible'] = show;
+                  }
                }
             }
-            this._itemActionsMenuButton[0].style.display = (!onlyMain || overFlow ? 'inline-block' : 'inline-block');
+            this._itemActionsMenuButton[0].style.display = (!onlyMain || overFlow ? 'none' : 'inline-block');
          },
          /**
           * Создаёт меню для операций над записью
@@ -189,9 +194,11 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var linkText = item.get('linkText'),
                 name = item.get('name');
 
-            this._itemActionsButtons[name] ={};
-            this._itemActionsButtons[name]['isMainAction'] = item.get('isMainAction');
-            this._itemActionsButtons[name]['handler'] = item.get('onActivated');
+            this._itemActionsButtons[name] = {
+               isMainActions : item.get('isMainAction'),
+               handler: item.get('onActivated'),
+               isVisible: true
+            };
 
             return linkText ?
             '<component data-component="SBIS3.CONTROLS.Link">' +
