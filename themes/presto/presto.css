@@ -2017,6 +2017,17 @@ input[type="reset"]::-moz-focus-inner {
 .controls__operations-panel__wrapper .controls__operations-panel__actions {
   display: inline-block;
 }
+.controls__operations-panel__wrapper .controls__operations-panel__actions-mark:after {
+  margin-left: 8px;
+  margin-right: 4px;
+  background: #cccccc;
+  width: 1px;
+  height: 21px;
+  content: '\00a0';
+  font-size: 1px;
+  display: inline-block;
+  line-height: 30px;
+}
 .controls__operations-panel__wrapper.controls__operations-panel__mass-mode .controls__operations-panel__action-type-selection {
   display: none;
 }

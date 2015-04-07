@@ -2,62 +2,54 @@
  * Created by as.suhoruchkin on 02.04.2015.
  */
 define('js!SBIS3.CONTROLS.OperationsMark', [
-   'js!SBIS3.CORE.CompoundControl',
-   'html!SBIS3.CONTROLS.OperationsMark',
+   'js!SBIS3.CONTROLS.MenuLink',
    'js!SBIS3.CONTROLS.StaticSource',
    'js!SBIS3.CONTROLS.ArrayStrategy',
-   'js!SBIS3.CONTROLS.MenuLink',
-   'js!SBIS3.CONTROLS.CheckBox'
-], function(CompoundControl, dotTplFn, StaticSource, ArrayStrategy) {
+   'js!SBIS3.CONTROLS.CheckBox',
+], function(MenuLink, StaticSource, ArrayStrategy, CheckBox) {
    var defaultItems = [
       { name: 'selectCurrentPage', title: 'Всю страницу' },
       { name: 'removeSelection', title: 'Снять' },
       { name: 'invertSelection', title: 'Инвертировать' }
    ];
 
-   var OperationsMark = CompoundControl.extend({
-      _dotTplFn: dotTplFn,
-
+   var OperationsMark = MenuLink.extend({
       $protected: {
          _options: {
             caption: 'Отметить',
             items: defaultItems
          },
-         _markButton: undefined,
-         _markCheckBox: undefined,
-         _defaultItems: undefined
-      },
-      init: function() {
-         OperationsMark.superclass.init.apply(this, arguments);
-         this._markCheckBox = this.getChildControlByName('markCheckBox');
-         this._markButton = this.getChildControlByName('markButton');
-         this._markButton.setItems(this._options.items);
-         this._bindMarkEvents();
-         this._updateMark();
+         _markCheckBox: undefined
       },
       $constructor: function() {
-         this._defaultItems = new StaticSource({data: defaultItems, keyField: 'name', strategy: new ArrayStrategy()});
-         this._initItems();
+         this._createMarkCheckBox();
+         this._bindEvents();
+         this._updateMark();
       },
-      _initItems: function() {
+      _initItems: function(items) {
          var self = this;
-         $.each(this._options.items, function(key, val) {
+         this._defaultItems = new StaticSource({data: defaultItems, keyField: 'name', strategy: new ArrayStrategy()});
+         $.each(items, function(key, val) {
             self._parseItem.apply(self,[val]);
          });
+         OperationsMark.superclass._initItems.apply(this, [items]);
       },
       _parseItem: function(item) {
          var defaultItem = this._defaultItems.read(item.name).getResult();
-         if (item.action) {
-            this[item.name] = item.action;
+         if (item.handler) {
+            this[item.name] = item.handler;
          }
          if (!item.title && item.title !== '') {
             item.title = defaultItem ? defaultItem.get('title') : '';
          }
       },
-      _bindMarkEvents: function() {
+      addItem: function(item) {
+         this._parseItem(item);
+         OperationsMark.superclass.addItem.apply(this, [item]);
+      },
+      _bindEvents: function() {
          this.getParent().getLinkedView().subscribe('onSelectedItemsChange', this._updateMark.bind(this));
-         this._markButton.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
-         this._markCheckBox.subscribe('onActivated', this._onCheckBoxActivated.bind(this));
+         this.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
       },
       _onMenuItemActivate: function(e, id) {
          if (this[id]) {
@@ -74,15 +66,15 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          this._markCheckBox.setChecked(selectedCount === recordsCount && recordsCount ? true : selectedCount ? null : false);
       },
       _updateMarkButton: function() {
-         var hasMarkOptions = !!this._markButton.getItems().getItemsCount(),
+         var hasMarkOptions = !!this.getItems().getItemsCount(),
             selectedCount,
             caption;
          if (hasMarkOptions) {
             selectedCount = this.getParent().getLinkedView().getSelectedItems().length;
-            caption = selectedCount ? 'Отмечено(' + selectedCount + ')' : this._options.caption;
-            this._markButton.setCaption(caption);
+            caption = selectedCount ? 'Отмечено(' + selectedCount + ')' : 'Отметить';
+            this.setCaption(caption);
          }
-         this._markButton.setVisible(hasMarkOptions)
+         this.setVisible(hasMarkOptions);
       },
       _updateMark: function() {
          this._updateMarkButton();
@@ -96,6 +88,13 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
       },
       invertSelection: function() {
          this.getParent().getLinkedView().toggleItemsSelectionAll();
+      },
+      _createMarkCheckBox: function() {
+         this._markCheckBox = new CheckBox({
+            threeState: true,
+            element: $('<span>').insertBefore(this._container),
+            className: 'controls-OperationsMark-checkBox'});
+         this._markCheckBox.subscribe('onActivated', this._onCheckBoxActivated.bind(this));
       }
    });
 
