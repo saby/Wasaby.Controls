@@ -71,8 +71,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * @private
           */
          _createItemActionMenu: function() {
-            var items = this._getItemsForMenu(this._options.items),
-                self = this;
+            var self = this;
 
             this._itemActionsMenuButton = this._container
                .find('.controls-ItemActions__menu-button')
@@ -82,7 +81,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
             this._itemActionsMenu = new ContextMenu({
                element: $('> .controls-ItemActions__menu-container', this._container[0]),
-               items: items,
+               items: this._options.items,
                parent: this,
                target:  this._itemActionsMenuButton,
                corner: 'br',
@@ -108,22 +107,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   }
                }
             });
-         },
-         /**
-          * TODO: Нужен для работы с меню, удалится в будущем
-          */
-         _getItemsForMenu: function(items) {
-            var itemsArray = [];
-
-            for(var i = 0, len = items.length; i < len; i++) {
-               itemsArray.push({
-                  id: items[i].name,
-                  icon: items[i].icon,
-                  title: items[i].title
-               });
-            }
-
-            return itemsArray;
          },
          /**
           * Иммитирует ховер, когда мышку увели на операции над записью
@@ -180,10 +163,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * @param items Массив новых items
           */
          setItems: function(items) {
-            this._clearItems();
             this._itemActionsButtons ={};
-            this._itemActionsMenu._clearItems();
-            this._itemActionsMenu.setItems(this._getItemsForMenu(items));
+            this._itemActionsMenu.setItems(items);
             ItemActionsGroup.superclass.setItems.apply(this, arguments);
          },
          /**

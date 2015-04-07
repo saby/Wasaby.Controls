@@ -251,7 +251,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          //*******************************//
          /**
           * Показывает оперцаии над записью для элемента
-          * @param item
           * @private
           */
          _showItemActions: function() {
