@@ -36,6 +36,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     * @ignoreMethods subscribe unbind unsubscribe unsubscribeFrom
     *
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChange onTooltipContentRequest onChange
+    * @ignoreEvents onStateChange onReady
     */
 
    var NumberTextBox;
