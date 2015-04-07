@@ -7,9 +7,9 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SB
     * Контрол, отображающий обычный переключатель.
     * Можно настроить:
     * <ol>
-    *    <li>state - начальное состояние;</li>
-    *    <li>stateOn - текст подписи при включенном состоянии;</li>
-    *    <li>stateOff - текст подписи при выключенном состоянии.</li>
+    *    <li>{@link state} - начальное состояние;</li>
+    *    <li>{@link stateOn} - текст подписи при включенном состоянии;</li>
+    *    <li>{@link stateOff} - текст подписи при выключенном состоянии.</li>
     * </ol>
     * @class SBIS3.CONTROLS.Switcher
     * @extends SBIS3.CONTROLS.SwitcherBase
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SB
     * @ignoreMethods subscribe unbind unsubscribe unsubscribeFrom
     *
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChange onTooltipContentRequest onChange
-    * @ignoreEvents onFocusIn onFocusOut onKeyPressed
+    * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady
     */
 
    var Switcher = SwitcherBase.extend( /** @lends SBIS3.CONTROLS.Switcher.prototype */ {
