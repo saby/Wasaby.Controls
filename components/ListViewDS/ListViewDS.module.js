@@ -249,16 +249,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          //********************************//
          //   БЛОК ОПЕРАЦИЙ НАД ЗАПИСЬЮ    //
          //*******************************//
-         //TODO Сделать создание опций, как по одной, так и нескольких
          /**
           * Показывает оперцаии над записью для элемента
           * @param item
           * @private
           */
          _showItemActions: function() {
-            console.time('1');
             //Создадим операции над записью, если их нет
-            this.getItemActions();
+            this.getItemsActions();
 
             //Если показывается меню, то не надо позиционировать операции над записью
             if(this._itemActionsGroup.isItemActionsMenuVisible()) {
@@ -267,7 +265,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
             this._itemActionsGroup.applyItemActions();
             this._itemActionsGroup.showItemActions(this._hoveredItem);
-            console.timeEnd('1');
          },
          /**
           * Создаёт операции над записью
@@ -305,11 +302,21 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * Геттер для получения операций над записью
           * @returns {*}
           */
-         getItemActions: function() {
+         getItemsActions: function() {
             if(!this._itemActionsGroup && this._options.itemsActions.length) {
                this._initItemActions();
             }
             return this._itemActionsGroup;
+         },
+         /**
+          * Устанавливает операции над записью
+          * Нужно передать массив обьектов
+          * @param {Array} items
+          * Объект формата {name: ..., icon: ..., name: ..., title: ..., onActivated: ..., linkText: ... , isMainOption: ...}
+          */
+         setItemsAction: function(items) {
+            this._options.itemsActions = items;
+            this.getItemsActions().setItems(items);
          },
          //**********************************//
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //

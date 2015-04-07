@@ -56,31 +56,23 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   }
                   //Если кнопок больше чем itemActionsOverflow или кнопка не главная, то нужно их скрыть
                   //и показать в меню
-                  show = overFlow || !this._itemActionsButtons[i]['isMainAction'];
+                  show = !(overFlow || !this._itemActionsButtons[i]['isMainAction']);
                   //Если видимость кнопки не изменилась, то делать ничего не будем
                   if(this._itemActionsButtons[i]['isVisible'] !== show) {
-                     itemsInstances[i].getContainer()[0].style.display = show ? 'none' : 'inline-block';
+                     itemsInstances[i].getContainer()[0].style.display = show ? 'inline-block' : 'none';
                      this._itemActionsButtons[i]['isVisible'] = show;
                   }
                }
             }
-            this._itemActionsMenuButton[0].style.display = (!onlyMain || overFlow ? 'none' : 'inline-block');
+            this._itemActionsMenuButton[0].style.display = (!onlyMain || overFlow ? 'inline-block' : 'none');
          },
          /**
           * Создаёт меню для операций над записью
           * @private
           */
          _createItemActionMenu: function() {
-            var items = [],
+            var items = this._getItemsForMenu(this._options.items),
                 self = this;
-
-            for(var i = 0, len = this._options.items.length; i < len; i++) {
-               items.push({
-                  id: this._options.items[i].name,
-                  icon: this._options.items[i].icon,
-                  title: this._options.items[i].title
-               });
-            }
 
             this._itemActionsMenuButton = this._container
                .find('.controls-ItemActions__menu-button')
@@ -116,6 +108,22 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   }
                }
             });
+         },
+         /**
+          * TODO: Нужен для работы с меню, удалится в будущем
+          */
+         _getItemsForMenu: function(items) {
+            var itemsArray = [];
+
+            for(var i = 0, len = items.length; i < len; i++) {
+               itemsArray.push({
+                  id: items[i].name,
+                  icon: items[i].icon,
+                  title: items[i].title
+               });
+            }
+
+            return itemsArray;
          },
          /**
           * Иммитирует ховер, когда мышку увели на операции над записью
@@ -167,6 +175,18 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._container[0].style.display = 'block';
          },
          /**
+          * Задаёт новые операции над записью
+          * Как в меню, так и на строке
+          * @param items Массив новых items
+          */
+         setItems: function(items) {
+            this._clearItems();
+            this._itemActionsButtons ={};
+            this._itemActionsMenu._clearItems();
+            this._itemActionsMenu.setItems(this._getItemsForMenu(items));
+            ItemActionsGroup.superclass.setItems.apply(this, arguments);
+         },
+         /**
           * Скрывает операции над записью
           * @private
           */
@@ -191,11 +211,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          },
 
          _getItemTemplate : function(item) {
-            var linkText = item.get('linkText'),
-                name = item.get('name');
+            var linkText = item.get('linkText');
 
-            this._itemActionsButtons[name] = {
-               isMainActions : item.get('isMainAction'),
+            this._itemActionsButtons[item.get('name')] = {
+               isMainAction : item.get('isMainAction'),
                handler: item.get('onActivated'),
                isVisible: true
             };
