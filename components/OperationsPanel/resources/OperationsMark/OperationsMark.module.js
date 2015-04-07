@@ -3,21 +3,20 @@
  */
 define('js!SBIS3.CONTROLS.OperationsMark', [
    'js!SBIS3.CONTROLS.MenuLink',
-   'js!SBIS3.CONTROLS.StaticSource',
-   'js!SBIS3.CONTROLS.ArrayStrategy',
    'js!SBIS3.CONTROLS.CheckBox',
-], function(MenuLink, StaticSource, ArrayStrategy, CheckBox) {
-   var defaultItems = [
-      { name: 'selectCurrentPage', title: 'Всю страницу' },
-      { name: 'removeSelection', title: 'Снять' },
-      { name: 'invertSelection', title: 'Инвертировать' }
-   ];
+], function(MenuLink, CheckBox) {
 
+   /*TODO Пока что динамическое создание CheckBox, пока не слиты Control и CompaundControl!!!*/
    var OperationsMark = MenuLink.extend({
       $protected: {
          _options: {
             caption: 'Отметить',
-            items: defaultItems
+            linkedView: undefined,
+            items: [
+               { name: 'selectCurrentPage', title: 'Всю страницу' },
+               { name: 'removeSelection', title: 'Снять' },
+               { name: 'invertSelection', title: 'Инвертировать' }
+            ]
          },
          _markCheckBox: undefined
       },
@@ -28,19 +27,14 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
       },
       _initItems: function(items) {
          var self = this;
-         this._defaultItems = new StaticSource({data: defaultItems, keyField: 'name', strategy: new ArrayStrategy()});
          $.each(items, function(key, val) {
-            self._parseItem.apply(self,[val]);
+            self._parseItem(val);
          });
          OperationsMark.superclass._initItems.apply(this, [items]);
       },
       _parseItem: function(item) {
-         var defaultItem = this._defaultItems.read(item.name).getResult();
          if (item.handler) {
             this[item.name] = item.handler;
-         }
-         if (!item.title && item.title !== '') {
-            item.title = defaultItem ? defaultItem.get('title') : '';
          }
       },
       addItem: function(item) {
@@ -48,7 +42,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          OperationsMark.superclass.addItem.apply(this, [item]);
       },
       _bindEvents: function() {
-         this.getParent().getLinkedView().subscribe('onSelectedItemsChange', this._updateMark.bind(this));
+         this._options.linkedView.subscribe('onSelectedItemsChange', this._updateMark.bind(this));
          this.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
       },
       _onMenuItemActivate: function(e, id) {
@@ -60,7 +54,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          this._markCheckBox.isChecked() === true ? this.selectCurrentPage() : this.removeSelection();
       },
       _updateMarkCheckBox: function() {
-         var view = this.getParent().getLinkedView(),
+         var view = this._options.linkedView,
             recordsCount = view._dataSet.getCount(),
             selectedCount = view.getSelectedItems().length;
          this._markCheckBox.setChecked(selectedCount === recordsCount && recordsCount ? true : selectedCount ? null : false);
@@ -70,7 +64,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
             selectedCount,
             caption;
          if (hasMarkOptions) {
-            selectedCount = this.getParent().getLinkedView().getSelectedItems().length;
+            selectedCount = this._options.linkedView.getSelectedItems().length;
             caption = selectedCount ? 'Отмечено(' + selectedCount + ')' : 'Отметить';
             this.setCaption(caption);
          }
@@ -81,13 +75,13 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          this._updateMarkCheckBox();
       },
       selectCurrentPage: function() {
-         this.getParent().getLinkedView().setSelectedItemsAll()
+         this._options.linkedView.setSelectedItemsAll()
       },
       removeSelection: function() {
-         this.getParent().getLinkedView().setSelectedItems([]);
+         this._options.linkedView.setSelectedItems([]);
       },
       invertSelection: function() {
-         this.getParent().getLinkedView().toggleItemsSelectionAll();
+         this._options.linkedView.toggleItemsSelectionAll();
       },
       _createMarkCheckBox: function() {
          this._markCheckBox = new CheckBox({

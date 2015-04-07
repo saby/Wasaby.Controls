@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          this._itemsDrawn = true;
       },
       setLinkedView: function(linkedView) {
-         if ($ws.helpers.instanceOfModule(linkedView, 'SBIS3.CONTROLS.DataGrid')) {
+         if ($ws.helpers.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
             this._reassignView(linkedView);
             this.togglePicker();
             this._setMode();
@@ -118,6 +118,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          return function (cfg) {
             var type = this._getItemType(cfg.type);
             cfg.options = cfg.options || {};
+            cfg.options.linkedView = this.getLinkedView();
             cfg.options.className = 'controls__operations-panel__action-type-' + type;
             return {
                componentType: cfg.componentType,
