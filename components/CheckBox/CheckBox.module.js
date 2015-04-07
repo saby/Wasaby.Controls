@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
     *
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChange onTooltipContentRequest onChange
     * @ignoreEvents onBeforeShow onAfterShow onBeforeLoad onAfterLoad onBeforeControlsLoad onKeyPressed onResize
-    * @ignoreEvents onFocusIn onFocusOut
+    * @ignoreEvents onFocusIn onFocusOut onReady
     */
 
    var CheckBox = ButtonBase.extend([Checkable], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
@@ -43,12 +43,16 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
          _checkBoxCaption: null,
          _options: {
             /**
-             * @cfg {Boolean} Наличие неопределённого значения
+             * @cfg {Boolean} Наличие неопределённого состояния
              * Возможные значения:
              * <ul>
-             *    <li>true - есть неопределённое значение;</li>
-             *    <li>false - нет неопределённого значения.</li>
+             *    <li>true - есть неопределённое состояние;</li>
+             *    <li>false - нет неопределённого состояния.</li>
              * </ul>
+             * @example
+             * <pre>
+             *    <option name="threeState">true</option>
+             * </pre>
              */
             threeState: false
          }
