@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          _header: null,
          _headerAlignment: {
             horizontal: 'left',
-            vertical: 'bottom'
+            vertical: 'top'
          },
          _options: {
          }
@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             if (self._header) {
                self._header.css({
                   left: (self._headerAlignment.horizontal == 'left') ? self._container.offset().left : self._container.offset().left - 16,
-                  top: self._container.offset().top + 1
+                  top: (self._headerAlignment.vertical == 'top') ? self._container.offset().top + 1 : self._container.offset().top - 6
                });
             }
          });
@@ -81,16 +81,22 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       },
 
       _onAlignmentChangeHandler: function(alignment){
-         if (alignment.horizontalAlign.side == 'right'){
-            $('.controls-MenuButton__headerLeft', this._header).addClass('controls-MenuButton__headerLeft__revert');
-            $('.controls-MenuButton__headerRight', this._header).addClass('controls-MenuButton__headerRight__revert');
+         var right = alignment.horizontalAlign == 'right',
+            bottom = alignment.verticalAlign == 'bottom';
+         this._header.toggleClass('controls-MenuButton__header-revert-horizontal', right).toggleClass('controls-MenuButton__header-revert-vertical', bottom);
+         if (right){
             this._header.css('left', this._container.offset().left - 16);
             this._headerAlignment.horizontal = 'right';
          } else {
-            $('.controls-MenuButton__headerLeft', this._header).removeClass('controls-MenuButton__headerLeft__revert');
-            $('.controls-MenuButton__headerRight', this._header).removeClass('controls-MenuButton__headerRight__revert');
             this._header.css('left', this._container.offset().left);
             this._headerAlignment.horizontal = 'left';
+         }
+         if (bottom){
+            this._header.css('top', this._container.offset().top - 6);
+            this._headerAlignment.vertical = 'bottom';
+         } else {
+            this._header.css('top', this._container.offset().top + 1);
+            this._headerAlignment.vertical = 'top';
          }
       },
 
@@ -114,7 +120,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          $('.controls-MenuButton__headerCenter', this._container).width(this._container.width() + 12);
          this._header.css({
             left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 16,
-            top: this._container.offset().top + 1,
+            top: (this._headerAlignment.vertical == 'top') ? this._container.offset().top + 1 : this._container.offset().top - 6,
             'z-index': this._picker._container.css('z-index') + 1
          });
       },
