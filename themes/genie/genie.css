@@ -953,10 +953,41 @@ input[type="reset"]::-moz-focus-inner {
   margin: 0;
   background: transparent;
 }
-.controls-MenuButton__header .controls-MenuButton__headerLeft.controls-MenuButton__headerLeft__revert {
+.controls-MenuButton__header.controls-MenuButton__header-revert-horizontal .controls-MenuButton__headerLeft {
   width: 0;
   height: 0;
   background: transparent;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-horizontal .controls-MenuButton__headerRight {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-horizontal.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerLeft {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-horizontal.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerRight {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-horizontal.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerCenter {
+  vertical-align: top;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerLeft {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerRight {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerCenter {
+  vertical-align: top;
 }
 .controls-MenuButton__header .controls-MenuButton__headerCenter {
   display: inline-block;
@@ -970,11 +1001,6 @@ input[type="reset"]::-moz-focus-inner {
   width: 0;
   height: 0;
   margin: 0;
-  background: transparent;
-}
-.controls-MenuButton__header .controls-MenuButton__headerRight.controls-MenuButton__headerRight__revert {
-  width: 0;
-  height: 0;
   background: transparent;
 }
 .controls-MenuButton__Menu {
@@ -1835,6 +1861,14 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ListView.controls-ListView__multiselect .controls-ListView__item__selected .controls-ListView__itemCheckBox {
   background: url('img/CheckBox-sprite.png') 0 -32px;
+}
+.controls-ListView .controls-ListView-scrollIndicator {
+  display: block;
+  background: url('img/ajax-loader-indicator.gif') 0 0 no-repeat;
+  margin: 0 auto !important;
+  top: 50%!important;
+  height: 32px;
+  width: 32px;
 }
 .controls-ListView > .controls-TreeView__childContainer {
   display: block;
