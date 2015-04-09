@@ -589,10 +589,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
                if (spaces.top < spaces.bottom) {
                   spaces = this._getSpaces(this._options.corner);
+                  this._notifyOnAlignmentChange('top');
                   this._container.css('height', spaces.bottom - (this._options.verticalAlign.offset || 0) - 3 - this._margins.top + this._margins.bottom);
                   offset.top = this._targetSizes.offset.top + oppositeOffset.top;
                } else {
                   offset.top = 0;
+                  this._notifyOnAlignmentChange('bottom');
                   this._container.css('height', spaces.top - (this._options.verticalAlign.offset || 0)  - this._margins.top + this._margins.bottom);
                }
                this._isMovedV = !this._isMovedV;
@@ -610,10 +612,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
                if (spaces.left < spaces.right) {
                   spaces = this._getSpaces(this._options.corner);
+                  this._notifyOnAlignmentChange(null, 'left');
                   this._container.css('width', spaces.right - (this._options.horizontalAlign.offset || 0) - 3 - this._margins.left + this._margins.right);
                   offset.left = this._targetSizes.offset.left + oppositeOffset.left;
                } else {
                   offset.left = 0;
+                  this._notifyOnAlignmentChange(null, 'right');
                   this._container.css('width', spaces.left - (this._options.horizontalAlign.offset || 0) - this._margins.left + this._margins.right);
                }
                this._isMovedH = !this._isMovedH;
@@ -688,13 +692,20 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          return offset;
       },
 
-      _notifyOnAlignmentChange: function(){
-         if (this._options.verticalAlign.side != this._currentAlignment.verticalAlign.side ||
-             this._options.horizontalAlign.side != this._currentAlignment.horizontalAlign.side ||
-             this._options.corner != this._currentAlignment.corner){
+      //TODO Передалать на зависимость только от опций
+      _notifyOnAlignmentChange: function(verticalAlign, horizontalAlign, corner){
+         if (verticalAlign || horizontalAlign || corner){
             this._notify('onAlignmentChange', {
-               verticalAlign : this._options.verticalAlign,
-               horizontalAlign : this._options.horizontalAlign,
+               verticalAlign : verticalAlign || this._options.verticalAlign.side,
+               horizontalAlign : horizontalAlign || this._options.horizontalAlign.side,
+               corner : corner || this._options.corner
+            });
+         } else if (this._options.verticalAlign.side != this._currentAlignment.verticalAlign.side ||
+            this._options.horizontalAlign.side != this._currentAlignment.horizontalAlign.side ||
+            this._options.corner != this._currentAlignment.corner){
+            this._notify('onAlignmentChange', {
+               verticalAlign : this._options.verticalAlign.side,
+               horizontalAlign : this._options.horizontalAlign.side,
                corner : this._options.corner
             });
          }
