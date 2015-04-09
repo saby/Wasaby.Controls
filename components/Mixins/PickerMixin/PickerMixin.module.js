@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
     * Миксин, умеющий отображать выдающий вниз блок.
     * Задается контент (протектед методом каким-то) и методы которые позволяют открывать, закрывать блок.
     * @mixin SBIS3.CONTROLS.PickerMixin
+    * @public
     */
    var PickerMixin = /** @lends SBIS3.CONTROLS.PickerMixin.prototype */{
       $protected: {

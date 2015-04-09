@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
     * Необходим для однообразной работы с набором контролов на диалоге, когда речь идет о сохранении набора данных в БЛ,
     * или заполнении контролов значениями из БЛ. В каждом контроле методы должны быть определены
     * @mixin SBIS3.CONTROLS.FormWidgetMixin
+    * @public
     */
    var FormWidgetMixin = /** @lends SBIS3.CONTROLS.FormWidgetMixin.prototype */{
       $protected: {
@@ -15,23 +16,17 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
          _options: {
             /**
              * @typedef {Object} Validator
-             * @property {String} validator
-             * @property {String} option
-             * @property {String} errorMessage
+             * @property {Function} validator Функция валидации.
+             * @property {String} option Валидируемая опция. Передаётся в функцию валидации в качестве её аргумента.
+             * @property {String} errorMessage Текст сообщения об ошибке валидации.
+             * Если свойство не определено, то в качестве текста будет использовано значение, возвращаемое функцией валидации.
              * @translatable errorMessage
-             * @property {Boolean} noFailOnError
+             * @property {Boolean} noFailOnError Нежёсткая валидация.
+             * Если значение опции true, то при непрохождении валидации контрол маркируется и возвращается true.
              */
             /**
              * @cfg {Validator[]} Валидаторы контрола
-             * Массив объектов, описывающих функции валидации. В каждом объекте возможны следующие свойства:
-             * <ol>
-             *    <li>{Function} validator - функция валидации.</li>
-             *    <li>{String} option - валидируемая опция. Передаётся в функцию валидации в качестве её аргумента.</li>
-             *    <li>{String} errorMessage - текст сообщения об ошибке валидации.
-             *    Если свойство не определено, то в качестве текста будет использовано значение, возвращаемое функцией валидации.</li>
-             *    <li>{Boolean} noFailOnError - нежёсткая валидация.
-             *    Если noFailOnError установлено в true, то при непрохождении валидации контрол маркируется и возвращается true.</li>
-             * </ol>
+             * Массив объектов, описывающих функции валидации.
              * @group Validation
              */
             validators: []

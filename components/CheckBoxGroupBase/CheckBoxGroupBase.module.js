@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
    /**
     * Контрол, реализующий поведение выбора одного или нескольких значений из набора. Отображения не имеет.
     * @class SBIS3.CONTROLS.CheckBoxGroupBase
+    * @public
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @mixes SBIS3.CONTROLS.MultiSelectable
     * @extends SBIS3.CONTROLS.ButtonGroupBase

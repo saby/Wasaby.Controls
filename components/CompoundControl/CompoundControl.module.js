@@ -7,9 +7,10 @@ define('js!SBIS3.CONTROLS.CompoundControl', ['js!SBIS3.CORE.CompoundControl'], f
    'use strict';
 
    /**
-    * базовый класс для всех контролов. Включает в себя объединенные старые классы Control и CompoundControl.
+    * Базовый класс для всех контролов. Включает в себя объединенные старые классы Control и CompoundControl.
     * Объединение помогает однозначно понимать от какого класса должны наследоваться все остальные контролы.
     * @class SBIS3.CONTROLS.CompoundControl
+    * @public
     * @extends $ws.proto.Control
     */
 
@@ -17,7 +18,6 @@ define('js!SBIS3.CONTROLS.CompoundControl', ['js!SBIS3.CORE.CompoundControl'], f
       _options : {
          /**
           * @cfg {$ws.proto.Context} Контекст
-          * <wiTag group="Данные">
           * Свой собственный контекст данной области.
           * Если не передан, создастся новый из предыдущего (родительского) контекста.
           * Если нет родителя (не передали) - создается из Глобального.
@@ -37,7 +37,6 @@ define('js!SBIS3.CONTROLS.CompoundControl', ['js!SBIS3.CORE.CompoundControl'], f
          /**
           * @cfg {String} Текст всплывающей подсказки
           * Текст вспылающей подсказки можно изменить методом {@link setTooltip}.
-          * <wiTag group="Отображение">
           *
           * Пример:
           * <pre>
@@ -49,8 +48,6 @@ define('js!SBIS3.CONTROLS.CompoundControl', ['js!SBIS3.CORE.CompoundControl'], f
          tooltip: '',
          /**
           * @cfg {String|Boolean} Текст расширенной подсказки, отображаемой во всплывающей панельке (Infobox)
-          * <wiTag group="Отображение">
-          * <wiTag class="GroupCheckBox" noShow>
           * Задается либо текст подсказки, либо "true". Во втором случае соджержимое подсказки можно задать с помощью события {@link onTooltipContentRequest}
           * @noShow
           */

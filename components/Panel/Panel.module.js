@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.Panel', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
     * @class SBIS3.CONTROLS.Panel
     * @extends $ws.proto.CompoundControl
     * @control
+    * @public
     * @designTime actions /design/design
     * @designTime plugin /design/DesignPlugin 
     * @initial

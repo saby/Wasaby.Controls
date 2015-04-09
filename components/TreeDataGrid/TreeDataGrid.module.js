@@ -5,6 +5,8 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', ['js!SBIS3.CONTROLS.DataGrid', 'js!SBIS
     * @class SBIS3.CONTROLS.TreeDataGrid
     * @extends SBIS3.CONTROLS.DataGrid
     * @mixes SBIS3.CONTROLS.TreeMixin
+    * @public
+    * @control
     */
 
    var TreeDataGrid = DataGrid.extend([TreeMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
