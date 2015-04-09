@@ -122,15 +122,51 @@
     height: @menu-button-header-left-height;
     margin: @menu-button-header-left-margin;
     background: @menu-button-header-left-bg;
+  }
 
-    &.controls-MenuButton__headerLeft__revert{
+  &.controls-MenuButton__header-revert-horizontal{
+    .controls-MenuButton__headerLeft{
       width: @menu-button-header-right-width;
       height: @menu-button-header-right-height;
-      background: @menu-button-header-left-bg-revert;
+      background: @menu-button-header-left-bg-revert-horizontal;
+    }
+    .controls-MenuButton__headerRight{
+      width: @menu-button-header-left-width;
+      height: @menu-button-header-left-height;
+      background: @menu-button-header-right-bg-revert-horizontal;
+    }
+    &.controls-MenuButton__header-revert-vertical{
+      .controls-MenuButton__headerLeft{
+        width: @menu-button-header-right-width;
+        height: @menu-button-header-right-height;
+        background: @menu-button-header-left-bg-revert-vertical-horizontal;
+      }
+      .controls-MenuButton__headerRight{
+        width: @menu-button-header-left-width;
+        height: @menu-button-header-left-height;
+        background: @menu-button-header-right-bg-revert-vertical-horizontal;
+      }
+      .controls-MenuButton__headerCenter{
+        vertical-align: top;
+      }
     }
   }
 
-
+  &.controls-MenuButton__header-revert-vertical{
+    .controls-MenuButton__headerLeft{
+      width: @menu-button-header-left-width;
+      height: @menu-button-header-left-height;
+      background: @menu-button-header-left-bg-revert-vertical;
+    }
+    .controls-MenuButton__headerRight{
+      width: @menu-button-header-right-width;
+      height: @menu-button-header-right-height;
+      background: @menu-button-header-right-bg-revert-vertical;
+    }
+    .controls-MenuButton__headerCenter{
+      vertical-align: top;
+    }
+  }
 
   .controls-MenuButton__headerCenter {
     display: inline-block;
@@ -146,12 +182,6 @@
     height: @menu-button-header-right-height;
     margin: @menu-button-header-right-margin;
     background: @menu-button-header-right-bg;
-
-    &.controls-MenuButton__headerRight__revert{
-      width: @menu-button-header-left-width;
-      height: @menu-button-header-left-height;
-      background: @menu-button-header-right-bg-revert;
-    }
   }
 }
 
