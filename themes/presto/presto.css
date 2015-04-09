@@ -953,10 +953,41 @@ input[type="reset"]::-moz-focus-inner {
   margin: 0;
   background: transparent;
 }
-.controls-MenuButton__header .controls-MenuButton__headerLeft.controls-MenuButton__headerLeft__revert {
+.controls-MenuButton__header.controls-MenuButton__header-revert-horizontal .controls-MenuButton__headerLeft {
   width: 0;
   height: 0;
   background: transparent;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-horizontal .controls-MenuButton__headerRight {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-horizontal.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerLeft {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-horizontal.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerRight {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-horizontal.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerCenter {
+  vertical-align: top;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerLeft {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerRight {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerCenter {
+  vertical-align: top;
 }
 .controls-MenuButton__header .controls-MenuButton__headerCenter {
   display: inline-block;
@@ -970,11 +1001,6 @@ input[type="reset"]::-moz-focus-inner {
   width: 0;
   height: 0;
   margin: 0;
-  background: transparent;
-}
-.controls-MenuButton__header .controls-MenuButton__headerRight.controls-MenuButton__headerRight__revert {
-  width: 0;
-  height: 0;
   background: transparent;
 }
 .controls-MenuButton__Menu {
