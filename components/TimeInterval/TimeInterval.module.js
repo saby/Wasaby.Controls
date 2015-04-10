@@ -85,11 +85,11 @@ define(
             // Проверяем, является ли маска, с которой создается контролл, допустимой
             this._checkPossibleMask();
 
+            this._options.text = this._clearMask;
+
             // Первоначальная установка интервала, если передана опция
             if (this._options.interval ) {
                this._setInterval( this._options.interval );
-            } else{
-               this._options.text = this._clearMask;
             }
 
             this.subscribe("onFocusOut", function(){
@@ -160,7 +160,8 @@ define(
          _setPattern: function(pattern, patternValue){
             var availMaskArray = this._options.mask.split(':'),
                availTextArray = this._options.text.split(':'),
-               patternIndex = this._getIndexForPattern(pattern);
+               patternIndex = this._getIndexForPattern(pattern),
+               changeMask;
 
             if (!this._hasMaskPattern(pattern)){
                return;
@@ -171,9 +172,13 @@ define(
                if (patternValue.length > 4) {
                   patternValue = "9999";
                }
-               while (patternValue.length > availMaskArray[0].length)
+               while (patternValue.length > availMaskArray[0].length){
                   availMaskArray[0] = pattern + availMaskArray[0];
-               this._setMask(availMaskArray.join(':'));
+                  changeMask = true;
+               }
+               if (changeMask) {
+                  this._setMask(availMaskArray.join(':'));
+               }
             }
             availTextArray[patternIndex] = this._addPlaceholder(patternValue);
             this._options.text = availTextArray.join(':');
@@ -210,12 +215,12 @@ define(
           * @param text
           * @private
           */
-         setText: function ( text ) {
+         setText: function (text) {
             text = text || '';
             if (typeof text != 'string' || !this._checkTextByMask(text)) {
                return;
             }
-            this._setText(text, checkValues);
+            this._setText(text);
 
          },
 
@@ -369,7 +374,7 @@ define(
           * @private
           */
          _checkBoundaryValues: function(){
-            return this._getPatterns('H') < 24 && this._getPatterns('I') < 60;
+            return this._getPatterns('I') < 60 && (this._hasMaskPattern('D') ? this._getPatterns('H') < 24 : true);
          },
 
          //Устанавливаем часы и минуты в их диапазоне
