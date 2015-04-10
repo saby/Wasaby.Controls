@@ -1303,6 +1303,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox {
   cursor: pointer;
+  line-height: normal;
 }
 .controls-ComboBox .controls-TextBox__fieldWrapper {
   position: relative;
@@ -2151,6 +2152,11 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-FilterView .controls-ListView__item {
   min-height: 32px;
+  max-height: 32px;
+  line-height: 32px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .controls-ItemActions {
   position: absolute;
