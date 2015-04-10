@@ -80,6 +80,15 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
        */
       getCaption: function() {
          return this._options.caption;
+      },
+      /**
+       * Переопределённый метод из базового Control
+       * Нужен, чтобы быстро работало скртие контрола,
+       * Не запускались расчёты авторазмеров
+       */
+      _setVisibility: function(show) {
+         this._container.toggleClass('ws-hidden', !show);
+         this._isVisible = show;
       }
    });
 

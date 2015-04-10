@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @cfg {DataSource} Набор исходных данных по которому строится отображение
              */
             dataSource: undefined,
-            numItems : null
+            pageSize : null
          }
       },
 
@@ -97,20 +97,19 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       reload: function (filter, sorting, offset, limit) {
-         if (this._options.numItems) {
-            this._limit = this._options.numItems;
+         if (this._options.pageSize) {
+            this._limit = this._options.pageSize;
          }
          var self = this;
          this._filter = typeof(filter) != 'undefined' ? filter : this._filter;
          this._sorting = typeof(sorting) != 'undefined' ? sorting : this._sorting;
          this._offset = typeof(offset) != 'undefined' ? offset : this._offset;
          this._limit = typeof(limit) != 'undefined' ? limit : this._limit;
-         this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (DataSet) {
-            self._dataSet = DataSet;
+         this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
+            self._dataSet = dataSet;
             self._redraw();
          });
       },
-
       setItems: function (items) {
          var
             item = items[0],
@@ -155,6 +154,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _drawItems: function (records) {
+         var self = this;
          if (records && records.length > 0) {
             for (var i = 0; i < records.length; i++) {
                var
@@ -163,8 +163,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   this._drawItem(records[i], targetContainer,  records[i].getKey(), i);
                }
             }
-
-            var self = this;
             this.reviveComponents().addCallback(function () {
                self._notify('onDrawItems');
                self._drawItemsCallback();
@@ -264,6 +262,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       getItemInstance: function (id) {
          var instances = this.getItemsInstances();
          return instances[id];
+      },
+      _hasNextPage: function(hasMore){
+         //n - приходит true, false || общее количество записей в списочном методе
+         return typeof (hasMore) !== 'boolean' ? hasMore > this._offset : !!hasMore;
       }
 
    };

@@ -3,27 +3,6 @@
     overflow: hidden;
     position: relative;
 
-    .controls-ListView__itemActions {
-      position: absolute;
-      display: none;
-      height: @list-view-actions-height;
-      top: @list-view-actions-top-offset;
-      right: @list-view-actions-right-offset;
-      margin: @list-view-actions-margin;
-      padding: @list-view-actions-padding;
-      z-index: @list-view-actions-zindex;
-      background: @list-view-actions-bg;
-
-      .controls-ListView__action {
-        display: inline;
-        cursor: @list-view-actions-cursor;
-        margin: 0 @list-view-actions-gap 0 0;
-
-        &:last-child {
-          margin: 0;
-        }
-      }
-    }
      &:hover{
         .controls-ListView__itemCheckBox {
            background: @check-box-icon-hover-bg;
@@ -50,5 +29,12 @@
          }
       }
    }
-
+   .controls-ListView-scrollIndicator{
+      display: block;
+      background: @list-view-scroll-bg;
+      margin: 0 auto !important;
+      top: 50%!important;
+      height: @list-view-scroll-height;
+      width: @list-view-scroll-width;
+   }
 }
