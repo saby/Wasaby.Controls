@@ -31,12 +31,30 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _actsContainer: null,
             _options: {
                /**
-                * @cfg {} Шаблон отображения каждого элемента коллекции
+                * @cfg {String} Шаблон отображения каждого элемента коллекции
                 */
                itemTemplate: '',
                /**
-                * @cfg {Array} Набор действий над элементами, отображающийся в виде иконок.
+                * @typedef {Array} ItemsActions
+                * @property {String} name Имя кнопки.
+                * @property {String} icon Путь до иконки.
+                * @property {String} title Текст на кнопке.
+                * @property {Boolean} isMainAction Отображать ли кнопку на строке или только выпадающем в меню.
+                * На строке кнопки отображаются в том же порядке, в каком они перечислены.
+                * На строке может быть только три кнопки, полный список будет в меню.
+                * @property {Function} onActivated Действие кнопки.
+                * @editor icon ImageEditor
+                * @translatable title
+                */
+               /**
+                * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок.
                 * Можно использовать для массовых операций.
+                * @example
+                * <pre>
+                *     <option name="itemsActions">
+                *
+                *     </option>
+                * </pre>
                 * @see setItemsActions
                 */
                itemsActions: [],
@@ -97,7 +115,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
 
          /**
-          * Установить что отображается при отсутствии записей
+          * Установить что отображается при отсутствии записей.
           * @param html содержимое блока
           * @see emptyHTML
           */
@@ -168,7 +186,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
          },
           /**
-           *
+           * Метод установки/замены обработчика клика на элемент.
            * @param method
            * @see elemClickHandler
            */
@@ -176,7 +194,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             this._options.elemClickHandler = method;
          },
           /**
-           *
+           * Метод установки/замены набора действий над элементами.
            * @param itemsActions
            * @see itemsActions
            */
