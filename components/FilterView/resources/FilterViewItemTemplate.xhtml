@@ -1,9 +1,9 @@
 <div class="listViewItem">
    {{var it = it.getRaw();}}
    {{?it.tpl}}
-      <div class="FilterViewItem-control">{{=it.tpl}}</div>
+      {{=it.tpl}}
    {{??it.componentType}}
-      <div class="FilterViewItem-control"><component data-component="{{=it.componentType}}" name="{{=it.field}}" config="{{=$ws.helpers.encodeCfgAttr(it.cfg)}}"></component></div>
+      <component data-component="{{=it.componentType}}" class="FilterViewItem-control" name="{{=it.field}}" config="{{=$ws.helpers.encodeCfgAttr(it.cfg)}}"></component>
    {{??}}
       <span class="FilterViewItem-text">{{=it.cfg.textValue}}</span>
    {{?}}
