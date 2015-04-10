@@ -34,11 +34,16 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                itemTemplate: '',
                /**
-                * @cfg {Array} Набор действий, над элементами, отображающийся в виде иконок. Можно использовать для массовых операций.
+                * @cfg {Array} Набор действий над элементами, отображающийся в виде иконок.
+                * Можно использовать для массовых операций.
                 */
                itemsActions: [],
                /**
-                * @cfg {Boolean} Разрешено или нет перемещение элементов Drag-and-Drop
+                * @cfg {Boolean} Разрешено или нет перемещение элементов "Drag-and-Drop"
+                * @example
+                * <pre>
+                *     <option name="itemsDragNDrop">true</option>
+                * </pre>
                 */
                itemsDragNDrop: false,
                /**
@@ -49,7 +54,21 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @cfg {Function} Обработчик клика на элемент
                 */
                elemClickHandler : null,
+                /**
+                 * @cfg {Boolean} Разрешить множественный выбор
+                 * @example
+                 * <pre>
+                 *     <option name="multiselect">true</option>
+                 * </pre>
+                 */
                multiselect : false,
+                /**
+                 * @cfg {Boolean} Разрешить выбор записей
+                 * @example
+                 * <pre>
+                 *     <option name="itemSelect">true</option>
+                 * </pre>
+                 */
                itemSelect : false
             }
          },
