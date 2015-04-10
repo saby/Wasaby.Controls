@@ -7,8 +7,10 @@ define('js!SBIS3.CONTROLS.ContextMenu', ['js!SBIS3.CONTROLS.Menu', 'js!SBIS3.CON
    'use strict';
 
    /**
-    * Контрол, отображающий горизонтальное меню
+    * Контрол, отображающий горизонтальное меню.
     * @class SBIS3.CONTROLS.ContextMenu
+    * @control
+    * @public
     * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS.CollectionMixin
     */

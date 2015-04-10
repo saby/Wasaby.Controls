@@ -14,6 +14,7 @@ define(
     * какие символы могут вводиться, определяются предназначением контролла.
     * @class SBIS3.CONTROLS.FormattedTextBoxBase
     * @extends $ws.proto.Control
+    * @public
     */
 
    var FormattedTextBoxBase = TextBoxBase.extend( /** @lends SBIS3.CONTROLS.FormattedTextBoxBase.prototype */ {

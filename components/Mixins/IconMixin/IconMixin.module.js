@@ -6,6 +6,7 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
    /**
     * Миксин, добавляющий иконку
     * @mixin SBIS3.CONTROLS.IconMixin
+    * @public
     */
 
    var IconMixin = /**@lends SBIS3.CONTROLS.IconMixin.prototype  */{
@@ -16,6 +17,10 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
             /**
              * @cfg {String}  Путь до иконки
              * Путь задаётся относительно корня сайта либо через sprite.
+             * @example
+             * <pre>
+             *     <option name="icon">sprite:icon-16 icon-Arrow1730 icon-primary</option>
+             * </pre>
              * @see setIcon
              * @see getIcon
              * @editor ImageEditor

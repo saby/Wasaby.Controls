@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.RadioButton', ['js!SBIS3.CONTROLS.RadioButtonBase', 'h
     * Контрол, отображающий стандартный радиобаттон. Работает только в составе группы. В джине не вытаскивается
     * @class SBIS3.CONTROLS.RadioButton
     * @extends SBIS3.CONTROLS.RadioButtonBase
+    * @public
     */
 
    var RadioButton = RadioButtonBase.extend( /** @lends SBIS3.CONTROLS.RadioButton.prototype */ {

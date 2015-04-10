@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.DialogTemplate', ['js!SBIS3.CORE.Control'], function(C
    /**
     * Шаблон диалога с одной областью, заголовком и крестиком. Используется для отображения диалоговых окон с крестиком и заголовком.
     * @class SBIS3.CONTROLS.DialogTemplate
+    * @public
     * @extends $ws.proto.Control
     */
 
