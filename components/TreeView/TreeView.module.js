@@ -7,6 +7,8 @@ define('js!SBIS3.CONTROLS.TreeView', ['js!SBIS3.CONTROLS.ListView', 'js!SBIS3.CO
     * @extends SBIS3.CONTROLS.ListView
     * @mixes SBIS3.CONTROLS.TreeMixin
     * @public
+    * @control
+    *
     */
 
    var TreeView = ListView.extend([TreeMixin], /** @lends SBIS3.CONTROLS.TreeView.prototype*/ {
