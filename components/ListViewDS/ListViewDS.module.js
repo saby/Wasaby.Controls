@@ -16,7 +16,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
       'use strict';
 
       /**
-       * Контрол, отображающий внутри себя набор однотипных сущностей, умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать
+       * Контрол, отображающий внутри себя набор однотипных сущностей.
+       * Умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
        * @class SBIS3.CONTROLS.ListViewDS
        * @extends $ws.proto.Control
        * @mixes SBIS3.CONTROLS.DSMixin
@@ -41,6 +42,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                _options: {
                /**
                 * @cfg {String} Шаблон отображения каждого элемента коллекции
+                * !Важно: опция обязательна к заполнению!
+                * @example
+                * <pre>
+                *     <div class="listViewItem" style="height: 30px;">\
+                *        <div>{{=it.get("title")}}</div>\
+                *     </div>
+                * </pre>
                 */
                itemTemplate: '',
                /**
@@ -56,12 +64,25 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 * @translatable title
                 */
                /**
-                * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок.
+                * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок
                 * Можно использовать для массовых операций.
                 * @example
                 * <pre>
                 *     <option name="itemsActions">
-                *
+                *        <options>
+                *           <option name="name">btn1</option>
+                *           <option name="icon">sprite:icon-16 icon-Delete icon-primary</option>
+                *           <option name="isMainAction">false</option>
+                *           <option name="title">Удалить</option>
+                *           <option name="onActivated" type="function">js!SBIS3.Demo.Control.MyListViewDS:prototype.myOnActivatedHandler</option>
+                *        </options>
+                *        <options>
+                *            <option name="name">btn2</option>
+                *            <option name="icon">sprite:icon-16 icon-Trade icon-primary</option>
+                *            <option name="title">Изменить</option>
+                *            <option name="isMainAction">true</option>
+                *            <option name="onActivated" type="function">js!SBIS3.Demo.Control.MyListViewDS:prototype.myOnActivatedHandler</option>
+                *         </options>
                 *     </option>
                 * </pre>
                 * @see setItemsActions
@@ -107,7 +128,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 * </pre>
                 */
                multiselect: false,
-
+               /**
+                *
+                */
                infiniteScroll: false
             },
             _loadingIndicator: undefined,
