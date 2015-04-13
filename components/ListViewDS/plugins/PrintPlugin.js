@@ -1,8 +1,8 @@
 /**
  * Created by ad.chistyakova on 08.04.2015.
  */
-define('js!SBIS3.CONTROLS.PrintPlugin', [ 'js!SBIS3.CONTROLS.ListViewDS' ],
-   function(ListViewDS) {
+define('js!SBIS3.CONTROLS.PrintPlugin', [ 'js!SBIS3.CONTROLS.ListViewDS' , 'js!SBIS3.CORE.Dialog'],
+   function(ListViewDS, Dialog) {
 
    var MAX_VALUE = 20000;  //Максимальное количество записей на операцию
 
@@ -24,8 +24,21 @@ define('js!SBIS3.CONTROLS.PrintPlugin', [ 'js!SBIS3.CONTROLS.ListViewDS' ],
          return true;
       },
       $constructor: function(){
-         console.log('print Constructor');
+
       },
+      printReport : function(idReport){
+         // TODO ? здесь сами решим печать выбранных или всей страницы, или все-таки нужно дать возможность точно указывать пользователю что он хочет напечатать
+         var selectedItems = this.getSelectedItems();
+         if (!selectedItems.length) {
+            //Показать диалог выбора записей
+            new Dialog ({
+               template: 'js!SBIS3.CONTROLS.PrintMassSelectorDialog',
+               caption : 'Что напечатать',
+               resizable: false
+            });
+         }
+      },
+      unloadReport: function(){},
       _saveToFile: function(options, idReport, data, isReportsForList) {
          var readerParams = this.getDataSource().readerParams,
                listMethod = readerParams ? readerParams.queryName : 'Список',

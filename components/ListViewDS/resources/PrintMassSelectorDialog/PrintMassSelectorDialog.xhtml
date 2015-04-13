@@ -1,0 +1,40 @@
+<div class="controls-PrintMassDialog" hasMarkup="true" autoHeight="true" >
+   <div class="ws-window-titlebar-custom">
+      <comment data-component="SBIS3.CONTROLS.Button">
+         <option name="caption" value="Выполнить"></option>
+         <option name="primary" type="boolean" value="true"></option>
+         <option name="className" value="controls-Button__activatePrintMass" ></option>
+      </comment>
+   </div>
+   <component  data-component="SBIS3.CONTROLS.RadioGroup">
+      <!--<options name="items" type="ref" value="{{@it.itemsRadio}}"></options>-->
+      <options name="items" type="array">
+         {{ for(var i in it.items) { }}
+         {{? it.items.hasOwnProperty(i)}}
+            <options>
+               <option name="id" value="{{=it.items[i].id}}"></option>
+               <option name="title" value="{{=it.items[i].title}}"></option>
+            </options>
+         {{?}}
+         {{ } }}
+      </options>
+      <option name="captionField" value="title"></option>
+      <option name="name" value="controls-RadioButtons"></option>
+      <option name="selectedItem">{{=it.items[0].id}}</option>
+      <option name="className" value="controls-ButtonGroup__vertical" ></option>
+   </component>
+
+   <div class="controls-PrintMassSelector__numberTextBox ws-hidden">
+      <br/>
+      <div class="ws-label controls-PrintMassDialog__label">Количество записей</div>
+      <component  data-component="SBIS3.CONTROLS.NumberTextBox">
+         <option name="text" value="25"></option>
+         <option name="name" value="controls-numberTextBox"></option>
+         <option name="onlyInteger" type="boolean" value="true"></option>
+         <option name="onlyPositive" type="boolean" value="true"></option>
+         <option name="integers" value="8"></option>
+         <option name="maxLength" value="8"></option>
+      </component>
+   </div>
+   <br/>
+</div>
