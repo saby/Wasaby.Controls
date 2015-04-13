@@ -657,6 +657,7 @@
          'js!SBIS3.CONTROLS.PasswordTextBox',
          'js!SBIS3.CONTROLS.FormattedTextBox',
          'js!SBIS3.CONTROLS.DatePicker',
+         'js!SBIS3.CONTROLS.MonthPicker',
          'js!SBIS3.CONTROLS.NumberTextBox',
          'js!SBIS3.CONTROLS.ComboBox',
          'js!SBIS3.CONTROLS.TextArea',
@@ -668,6 +669,7 @@
          PasswordTextBox,
          FormattedTextBox,
          DatePicker,
+         MonthPicker,
          NumberTextBox,
          ComboBox,
          TextArea,
@@ -724,6 +726,17 @@
          new DatePicker({
             element: 'formattedTextBox4',
             enabled: false
+         });
+
+         new DatePicker({
+            element: 'datePickerISO',
+            mask: 'DD.MM.YYYY',
+            date: '2015-03-09T21:00:00.000+03:00'
+         });
+
+         new MonthPicker({
+            element: 'monthPickerISO',
+            date: '2015-03-09'
          });
 
          new NumberTextBox({

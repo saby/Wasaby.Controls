@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
    function() {
       var CommonHandlers = {
          deleteRecords: function(idArray) {
-            var message = Array.isArray(idArray.length) &&  idArray.length !== 1 ? "Удалить записи?" : "Удалить текущую запись?",
+            var message = Array.isArray(idArray) &&  idArray.length !== 1 ? "Удалить записи?" : "Удалить текущую запись?",
                self = this;
 
             $ws.helpers.question(message).addCallback(function(res) {

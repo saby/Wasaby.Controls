@@ -4,8 +4,14 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
    'use strict';
 
    /**
-    * Контрол, отображающий стандартный флаг.
-    * При необходимости создания нескольких флагов используйте {@link SBIS3.CONTROLS.CheckBoxGroup CheckBoxGroup}.
+    * Контрол, отображающий стандартный флажок.
+    * Можно настроить:
+    * <ol>
+    *    <li>{@link caption} - текст подписи;</li>
+    *    <li>{@link threeState} - количество состояний;</li>
+    *    <li>{@link checked} - начальное состояние.</li>
+    * </ol>
+    * При необходимости создания нескольких флажков используйте {@link SBIS3.CONTROLS.CheckBoxGroup CheckBoxGroup}.
     * @class SBIS3.CONTROLS.CheckBox
     * @extends SBIS3.CONTROLS.ButtonBase
     * @mixes SBIS3.CONTROLS.Checkable
@@ -26,9 +32,9 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
     * @ignoreMethods isDestroyed isSubControl makeOwnerName once sendCommand setOwner setStateKey setUserData setValue
     * @ignoreMethods subscribe unbind unsubscribe unsubscribeFrom
     *
-    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChange onTooltipContentRequest onChange
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
     * @ignoreEvents onBeforeShow onAfterShow onBeforeLoad onAfterLoad onBeforeControlsLoad onKeyPressed onResize
-    * @ignoreEvents onFocusIn onFocusOut
+    * @ignoreEvents onFocusIn onFocusOut onReady
     */
 
    var CheckBox = ButtonBase.extend([Checkable], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
@@ -37,12 +43,16 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
          _checkBoxCaption: null,
          _options: {
             /**
-             * @cfg {Boolean} Наличие неопределённого значения
+             * @cfg {Boolean} Наличие неопределённого состояния
              * Возможные значения:
              * <ul>
-             *    <li>true - есть неопределённое значение;</li>
-             *    <li>false - нет неопределённого значения.</li>
+             *    <li>true - есть неопределённое состояние;</li>
+             *    <li>false - нет неопределённого состояния.</li>
              * </ul>
+             * @example
+             * <pre>
+             *    <option name="threeState">true</option>
+             * </pre>
              */
             threeState: false
          }

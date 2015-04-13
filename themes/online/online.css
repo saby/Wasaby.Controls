@@ -951,12 +951,43 @@ input[type="reset"]::-moz-focus-inner {
   width: 12px;
   height: 28px;
   margin: 0;
-  background: transparent url('img/MenuButton-header.png') 0 84px;
+  background: transparent url('img/MenuButton-header.png') 0 196px;
 }
-.controls-MenuButton__header .controls-MenuButton__headerLeft.controls-MenuButton__headerLeft__revert {
+.controls-MenuButton__header.controls-MenuButton__header-revert-horizontal .controls-MenuButton__headerLeft {
   width: 28px;
   height: 28px;
-  background: transparent url('img/MenuButton-header.png') 0 56px;
+  background: transparent url('img/MenuButton-header.png') 0 168px;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-horizontal .controls-MenuButton__headerRight {
+  width: 12px;
+  height: 28px;
+  background: transparent url('img/MenuButton-header.png') 0 140px;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-horizontal.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerLeft {
+  width: 28px;
+  height: 28px;
+  background: transparent url('img/MenuButton-header.png') 0 45px;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-horizontal.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerRight {
+  width: 12px;
+  height: 28px;
+  background: transparent url('img/MenuButton-header.png') 0 15px;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-horizontal.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerCenter {
+  vertical-align: top;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerLeft {
+  width: 12px;
+  height: 28px;
+  background: transparent url('img/MenuButton-header.png') 0 72px;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerRight {
+  width: 28px;
+  height: 28px;
+  background: transparent url('img/MenuButton-header.png') 0 101px;
+}
+.controls-MenuButton__header.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerCenter {
+  vertical-align: top;
 }
 .controls-MenuButton__header .controls-MenuButton__headerCenter {
   display: inline-block;
@@ -971,11 +1002,6 @@ input[type="reset"]::-moz-focus-inner {
   height: 28px;
   margin: 0 0 0 -5px;
   background: transparent url('img/MenuButton-header.png') 0 0;
-}
-.controls-MenuButton__header .controls-MenuButton__headerRight.controls-MenuButton__headerRight__revert {
-  width: 12px;
-  height: 28px;
-  background: transparent url('img/MenuButton-header.png') 0 28px;
 }
 .controls-MenuButton__Menu {
   margin-top: 4px;
@@ -1836,6 +1862,14 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ListView.controls-ListView__multiselect .controls-ListView__item__selected .controls-ListView__itemCheckBox {
   background: url('img/CheckBox.png') 0 49px;
 }
+.controls-ListView .controls-ListView-scrollIndicator {
+  display: block;
+  background: url('img/ajax-loader-indicator.gif') 0 0 no-repeat;
+  margin: 0 auto !important;
+  top: 50%!important;
+  height: 32px;
+  width: 32px;
+}
 .controls-ListView > .controls-TreeView__childContainer {
   display: block;
 }
@@ -2042,6 +2076,17 @@ input[type="reset"]::-moz-focus-inner {
 .controls__operations-panel__wrapper .controls__operations-panel__actions {
   display: inline-block;
 }
+.controls__operations-panel__wrapper .controls__operations-panel__actions-mark:after {
+  margin-left: 8px;
+  margin-right: 4px;
+  background: #cccccc;
+  width: 1px;
+  height: 21px;
+  content: '\00a0';
+  font-size: 1px;
+  display: inline-block;
+  line-height: 30px;
+}
 .controls__operations-panel__wrapper.controls__operations-panel__mass-mode .controls__operations-panel__action-type-selection {
   display: none;
 }
@@ -2053,22 +2098,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls__operations-panel__wrapper .controls__operations-panel__action-type-all {
   margin: 0 4px;
 }
-.controls__operations-mark {
-  display: inline;
-}
-.controls__operations-mark > * {
-  margin-left: 4px;
-}
-.controls__operations-mark:after {
-  margin-left: 8px;
-  margin-right: 4px;
-  background: #cccccc;
-  width: 1px;
-  height: 21px;
-  content: '\00a0';
-  font-size: 1px;
-  display: inline-block;
-  line-height: 30px;
+.controls-OperationsMark-checkBox {
+  margin: 0 4px;
 }
 .controls-ItemActions {
   position: absolute;

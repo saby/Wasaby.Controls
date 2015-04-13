@@ -2,7 +2,14 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
 
    'use strict';
    /**
-    * Класс определяет отображение двухпозиционного переключателя для поддержания макетов online.sbis.ru
+    * Контрол, отображающий двухпозиционный переключатель для поддержания макетов online.sbis.ru.
+    * Данный переключатель отличается от обычного {@link Switcher} только внешне, функционально они одинаковы.
+    * Можно настроить:
+    * <ol>
+    *    <li>{@link state} - начальное состояние;</li>
+    *    <li>{@link stateOn} - текст подписи при включенном состоянии;</li>
+    *    <li>{@link stateOff} - текст подписи при выключенном состоянии.</li>
+    * </ol>
     * @class SBIS3.Engine.SwitcherDoubleOnline
     * @extends SBIS3.CONTROLS.SwitcherBase
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
@@ -24,8 +31,8 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
     * @ignoreMethods isDestroyed isSubControl makeOwnerName once sendCommand setOwner setStateKey setUserData setValue
     * @ignoreMethods subscribe unbind unsubscribe unsubscribeFrom
     *
-    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChange onTooltipContentRequest onChange
-    * @ignoreEvents onFocusIn onFocusOut onKeyPressed
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
+    * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady
     */
    var SwitcherDoubleOnline = SwitcherBase.extend( /** @lends SBIS3.Engine.SwitcherDoubleOnline.prototype */ {
       _dotTplFn: dotTplFn,

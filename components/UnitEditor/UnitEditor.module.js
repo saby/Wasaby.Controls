@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 25.09.2014.
  */
 
-define('js!SBIS3.Genie.UnitEditor',
+define('js!SBIS3.CONTROLS.UnitEditor',
      ['js!SBIS3.CONTROLS.NumberTextBox',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.FloatArea',
@@ -11,16 +11,17 @@ define('js!SBIS3.Genie.UnitEditor',
       'use strict';
 
       /**
-       * Редактор с поддержкой единиц измереиния.
+       * Редактор с поддержкой единиц измерения.
        * Можно устанавливать значения вида 96px/50%/auto
-       * @class SBIS3.Genie.UnitEditor
+       * @class SBIS3.CONTROLS.UnitEditor
        * @extends SBIS3.CONTROLS.NumberTextBox
        * @mixes SBIS3.CONTROLS.PickerMixin
        * @control
+       * @public
        */
 
       var UnitEditor;
-      UnitEditor = NumberTextBox.extend([PickerMixin], /** @lends SBIS3.Genie.UnitEditor.prototype */ {
+      UnitEditor = NumberTextBox.extend([PickerMixin], /** @lends SBIS3.CONTROLS.UnitEditor.prototype */ {
          $protected: {
             _currentUnit: null,
             _units: ['px','%','-'],

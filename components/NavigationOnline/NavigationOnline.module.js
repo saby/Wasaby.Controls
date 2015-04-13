@@ -11,6 +11,7 @@ define('js!SBIS3.Engine.NavigationOnline', ['js!SBIS3.CORE.Control'], function(C
     * @class SBIS3.Engine.NavigationOnline
     * @extends $ws.proto.Control
     * @control
+    * @public
     */
 
    var NavigationOnline = Control.Control.extend(/** @lends SBIS3.Engine.NavigationOnline.prototype */{

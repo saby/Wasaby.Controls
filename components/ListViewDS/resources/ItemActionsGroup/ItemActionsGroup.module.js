@@ -40,56 +40,38 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          /**
           * Изменяет операции над строкой до нужного состояния - скрывает / показывает кнопки
           */
-         applyItemActions: function(item) {
+         applyItemActions: function() {
             var onlyMain = true,
                 itemsInstances = this.getItemsInstances(),
+                overFlow = false,
+                show = false,
                 count = 0;
 
             for(var i in itemsInstances) {
                if(itemsInstances.hasOwnProperty(i)) {
                   onlyMain &= this._itemActionsButtons[i]['isMainAction'];
-                  if(itemsInstances[i].isVisible()) {
+                  if(itemsInstances[i].isVisible() && !overFlow) {
                      count++;
+                     overFlow = count > this._options.itemActionsOverflow;
                   }
-                  //Если кнопок больше чем itemActionsOverflow или она не главная, то скроем
-                  itemsInstances[i]
-                     .getContainer()
-                     .toggleClass('controls-ItemActions__hiddenAction', count > this._options.itemActionsOverflow || !this._itemActionsButtons[i]['isMainAction']);
+                  //Если кнопок больше чем itemActionsOverflow или кнопка не главная, то нужно их скрыть
+                  //и показать в меню
+                  show = !(overFlow || !this._itemActionsButtons[i]['isMainAction']);
+                  //Если видимость кнопки не изменилась, то делать ничего не будем
+                  if(this._itemActionsButtons[i]['isVisible'] !== show) {
+                     itemsInstances[i].getContainer()[0].style.display = show ? 'inline-block' : 'none';
+                     this._itemActionsButtons[i]['isVisible'] = show;
+                  }
                }
             }
-            this._itemActionsMenuButton[0].style.display = (!onlyMain || count >= this._options.itemActionsOverflow ? 'inline-block' : 'none');
-         },
-         /**
-          * Расщитывает позицию для операций на записью
-          * @param item
-          * @returns {{top: number, right: number}}
-          * @private
-          */
-         _getItemActionPositionForItem: function(item) {
-            var position = item[0].offsetTop,
-                itemHeight = item[0].offsetHeight;
-
-            return {
-               'top': position + ((itemHeight > ITEMS_ACTIONS_HEIGHT) ? itemHeight - ITEMS_ACTIONS_HEIGHT : 0),
-               //TODO Для плитки надо будет считать где именно, подумать как сделать получше
-               'right': 1
-            }
+            this._itemActionsMenuButton[0].style.display = (!onlyMain || overFlow ? 'inline-block' : 'none');
          },
          /**
           * Создаёт меню для операций над записью
           * @private
           */
          _createItemActionMenu: function() {
-            var items = [],
-                self = this;
-
-            for(var i = 0, len = this._options.items.length; i < len; i++) {
-               items.push({
-                  id: this._options.items[i].name,
-                  icon: this._options.items[i].icon,
-                  title: this._options.items[i].title
-               });
-            }
+            var self = this;
 
             this._itemActionsMenuButton = this._container
                .find('.controls-ItemActions__menu-button')
@@ -99,7 +81,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
             this._itemActionsMenu = new ContextMenu({
                element: $('> .controls-ItemActions__menu-container', this._container[0]),
-               items: items,
+               items: this._options.items,
                parent: this,
                target:  this._itemActionsMenuButton,
                corner: 'br',
@@ -115,8 +97,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                closeByExternalClick: true,
                handlers: {
                   onClose: function() {
+                     var hoveredItem = self.getParent().getHoveredItem().container;
                      self._itemActionsMenuVisible = false;
                      self._activeItem.removeClass('controls-ItemActions__activeItem');
+                     self[hoveredItem ? 'showItemActions' : 'hideItemActions'](hoveredItem);
                   },
                   onMenuItemActivate: function(e, id) {
                      self._itemActivatedHandler(id);
@@ -148,6 +132,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._itemActionsMenu.show();
             this._activeItem.addClass('controls-ItemActions__activeItem');
             this._itemActionsMenuVisible = true;
+            this._itemActionsMenu.recalcPosition(true);
          },
          /**
           * Срабатывает перед открытием меню
@@ -166,14 +151,21 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          },
          /**
           * Показывает операции над записью
-          * @param item
           */
-         showItemActions: function(item) {
-            var position = this._getItemActionPositionForItem(item);
-            this._activeItem = item;
-
-            this._container[0].style.top = position.top + 'px';
+         showItemActions: function(hoveredItem) {
+            this._activeItem = hoveredItem.container;
+            this._container[0].style.top = hoveredItem.position.top + ((hoveredItem.size.height > ITEMS_ACTIONS_HEIGHT) ? hoveredItem.size.height - ITEMS_ACTIONS_HEIGHT : 0 ) + 'px';
             this._container[0].style.display = 'block';
+         },
+         /**
+          * Задаёт новые операции над записью
+          * Как в меню, так и на строке
+          * @param items Массив новых items
+          */
+         setItems: function(items) {
+            this._itemActionsButtons ={};
+            this._itemActionsMenu.setItems(items);
+            ItemActionsGroup.superclass.setItems.apply(this, arguments);
          },
          /**
           * Скрывает операции над записью
@@ -200,19 +192,20 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          },
 
          _getItemTemplate : function(item) {
-            var linkText = item.get('linkText'),
-                name = item.get('name');
+            var linkText = item.get('linkText');
 
-            this._itemActionsButtons[name] ={};
-            this._itemActionsButtons[name]['isMainAction'] = item.get('isMainAction');
-            this._itemActionsButtons[name]['handler'] = item.get('onActivated');
+            this._itemActionsButtons[item.get('name')] = {
+               isMainAction : item.get('isMainAction'),
+               handler: item.get('onActivated'),
+               isVisible: true
+            };
 
             return linkText ?
             '<component data-component="SBIS3.CONTROLS.Link">' +
-            '<option name="caption">' + linkText + '</option>' +
+               '<option name="caption">' + linkText + '</option>' +
             '</component>' :
             '<component data-component="SBIS3.CONTROLS.IconButton">' +
-            '<option name="icon">' + item.get('icon') + '</option>' +
+               '<option name="icon">' + item.get('icon') + '</option>' +
             '</component>';
          },
 

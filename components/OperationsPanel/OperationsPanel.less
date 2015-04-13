@@ -60,6 +60,19 @@
    .controls__operations-panel__actions-mark, .controls__operations-panel__actions {
       display: inline-block;
    }
+   .controls__operations-panel__actions-mark {
+      &:after {
+         margin-left: @controls-OperationsPanel-separator-margin-left;
+         margin-right: @controls-OperationsPanel-separator-margin-right;
+         background: @controls-OperationsPanel-separator-bg;
+         width: @controls-OperationsPanel-separator-width;
+         height: @controls-OperationsPanel-separator-height;
+         content: '\00a0';
+         font-size: 1px;
+         display: inline-block;
+         line-height: @controls-OperationsPanel-separator-line-height;
+      }
+   }
 
    &.controls__operations-panel__mass-mode {
       .controls__operations-panel__action-type-selection {
@@ -74,6 +87,6 @@
    .controls__operations-panel__action-type-mass,
    .controls__operations-panel__action-type-selection,
    .controls__operations-panel__action-type-all {
-      margin: 0 4px;
+      margin: @controls-OperationsPanel-actions-margin;
    }
 }

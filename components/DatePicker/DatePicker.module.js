@@ -6,10 +6,11 @@ define(
    [
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'js!SBIS3.CONTROLS.PickerMixin',
+      'js!SBIS3.CONTROLS.Utils.DateUtil',
       'js!SBIS3.CONTROLS.Calendar',
       'html!SBIS3.CONTROLS.DatePicker'
    ],
-   function (FormattedTextBoxBase, PickerMixin, Calendar, dotTplFn) {
+   function (FormattedTextBoxBase, PickerMixin, DateUtil, Calendar, dotTplFn) {
 
    'use strict';
 
@@ -24,7 +25,7 @@ define(
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
     */
 
-   var DatePicker = FormattedTextBoxBase.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
+   var DatePicker = FormattedTextBoxBase.extend([PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
       $protected: {
          _dotTplFn: dotTplFn,
          /**
@@ -92,6 +93,10 @@ define(
             /**
              * @cfg {String} Формат отображения даты, на базе которой будет создана html-разметка и в соответствии с которой
              * будет определён весь функционал. Должна представлять собой одну из масок в массиве допустимых маск.
+             * @example
+             * <pre>
+             *     <option name="mask">HH:II:SS.UUU</option>
+             * </pre>
              * @variant 'DD.MM.YYYY',
              * @variant 'DD.MM.YY',
              * @variant 'DD.MM',
@@ -126,13 +131,12 @@ define(
              * <pre>
              *     <option name="date">2015-03-07T21:00:00.000Z</option>
              * </pre>
-             * @mask
              * @see isCalendarIconShow
              */
             date: null,
             /**
-             * @cfg {Boolean} Показана ли иконка календарика.
-             * По умолчанию true. Если маска представляет собой только время, то автоматически становится false.
+             * @cfg {Boolean} Показана ли иконка календарика. По умолчанию true. Если маска представляет собой только время,
+             * то автоматически (точнее в методе _checkTypeOfMask) становится false.
              * @example
              * <pre>
              *     <option name="isCalendarIconShown">false</option>
@@ -144,8 +148,6 @@ define(
       },
 
       $constructor: function () {
-         var self = this;
-
          this._publish('onDateChange');
 
          // Проверяем, является ли маска, с которой создается контролл, допустимой
@@ -168,20 +170,19 @@ define(
       _calendarInit: function() {
          var self = this;
          this._calendarIcon = $('.js-controls-DatePicker__calendarIcon', this.getContainer().get(0));
-         if ( self._options.isCalendarIconShown ) {
+         if (self._options.isCalendarIconShown) {
             // Клик по иконке календарика
-            this._calendarIcon.click(function(){
+            this._calendarIcon.click(function() {
                if (self.isEnabled()) {
                   self.togglePicker();
 
                   // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
-                  if ( self._picker.isVisible() && self._options.date ){
+                  if (self._picker.isVisible() && self._options.date){
                      self._calendarControl._setDate(self._options.date);
                   }
                }
             });
-         }
-         else {
+         } else {
             this._calendarIcon.parent().addClass('ws-hidden');
          }
 
@@ -189,7 +190,9 @@ define(
          // Если пользователь ввел слишком большие данные ( напр., 45.23.7234 ), то значение установится корректно,
          // ввиду особенностей работы setMonth(), setDate() и т.д., но нужно обновить поле
          $('.js-controls-FormattedTextBox__field', this.getContainer().get(0)).blur(function(){
-            if ( self._options.date ){ self._drawDate(); }
+            if (self._options.date) {
+               self._drawDate();
+            }
          });
       },
 
@@ -204,33 +207,26 @@ define(
       },
 
       /**
-       * Получить маску. Переопределённый метод
-       */
-      _getMask: function () {
-         return this._options.mask;
-      },
-
-      /**
        * Определение контента пикера. Переопределённый метод
        * @private
        */
       _setPickerContent: function() {
-         var self = this;
+         var self = this,
+            // Создаем пустой контейнер
+            element = $('<div name= "Calendar" class="controls-DatePicker__calendar"></div>');
 
          this._picker.getContainer().empty();
-         // Создаем пустой контейнер
-         var element = $('<div name= "Calendar" class="controls-DatePicker__calendar"></div>');
          // Преобразуем контейнер в контролл Calendar и запоминаем
          self._calendarControl = new Calendar({
             parent: self._picker,
-            element : element
+            element: element
          });
 
          // Добавляем в пикер
          this._picker.getContainer().append(element);
 
          // Нажатие на календарный день в пикере устанавливает дату
-         this._calendarControl.subscribe('onDateChange', function(eventObject, date){
+         this._calendarControl.subscribe('onDateChange', function(eventObject, date) {
             self.setDate(date);
             self.hidePicker();
          });
@@ -241,7 +237,7 @@ define(
        * @private
        */
       _checkPossibleMask: function(){
-         if ( Array.indexOf(this._possibleMasks, this._options.mask) == -1 ){
+         if (Array.indexOf(this._possibleMasks, this._options.mask) == -1) {
             throw new Error('Маска не удовлетворяет ни одной допустимой маске данного контролла');
          }
       },
@@ -253,8 +249,8 @@ define(
        * @private
        */
       _checkTypeOfMask: function () {
-         if ( !/[DMY]/.test(this._options.mask) || ( /[DMY]/.test(this._options.mask) && !/Y/.test(this._options.mask) )
-               || ( /[DMY]/.test(this._options.mask) && !/D/.test(this._options.mask) ) ){
+         if ( !/[DMY]/.test(this._options.mask) || ( /[DMY]/.test(this._options.mask) && !/Y/.test(this._options.mask) ) ||
+            ( /[DMY]/.test(this._options.mask) && !/D/.test(this._options.mask) ) ){
             this._options.isCalendarIconShown = false;
          }
       },
@@ -264,10 +260,9 @@ define(
       * @param text
       * @private
       */
-      setText: function ( text ) {
-         text = text ? text: '';
-         DatePicker.superclass.setText.call( this, text );
-         this._options.date = text == '' ? null : this._getDateByText( text );
+      setText: function (text) {
+         DatePicker.superclass.setText.call(this, text);
+         this._options.date = text == '' ? null : this._getDateByText(text);
          this._notify('onDateChange', this._options.date);
       },
 
@@ -275,8 +270,8 @@ define(
        * Установить дату. Публичный метод. Отличается от приватного метода тем, что генерирует событие.
        * @param date
        */
-      setDate: function ( date ) {
-         this._setDate( date );
+      setDate: function (date) {
+         this._setDate(date);
          this._notify('onDateChange', this._options.date);
       },
 
@@ -284,30 +279,38 @@ define(
        * Установить дату. Приватный метод
        * @param date новое значение даты, объект типа Date
        */
-      _setDate: function ( date ) {
-         if ( date instanceof Date ) {
-            this._options.date = date;
-            this._options.text = this._getTextByDate( date );
+      _setDate: function (date) {
+         var isCorrect = false;
+         if (date instanceof Date) {            this._options.date = date;
+            this._options.text = this._getTextByDate(date);
+            isCorrect = true;
+         } else if (typeof date == 'string') {
+            //convert ISO-date to Date
+            this._options.date = DateUtil.dateFromIsoString(date);
+            if (DateUtil.isValidDate(this._options.date)) {
+               this._options.text = this._getTextByDate( this._options.date );
+               isCorrect = true;
+            }
          }
-         else {
+         if ( ! isCorrect) {
             this._options.date = null;
             this._options.text = '';
+            throw new Error('DatePicker. Неверный формат даты');
          }
 
          this._drawDate();
       },
-
       /**
        * Переопределенный метод из TextBoxBase
        * @param value
        */
-      setValue: function ( value ) {
+      setValue: function (value) {
          value = value ? value : '';
 
-         if ( value instanceof Date ) {
+         if (value instanceof Date) {
             this.setDate(value);
          }
-         else if ( typeof value == 'string' ) {
+         else if (typeof value == 'string') {
             this.setText(value);
          }
          else {
@@ -319,8 +322,15 @@ define(
        * Получить дату
        * @returns {Date|*|SBIS3.CONTROLS.DatePicker._options.date}
        */
-      getDate: function(){
+      getDate: function() {
         return this._options.date;
+      },
+
+      /**
+       * Получить маску. Переопределённый метод
+       */
+      _getMask: function () {
+         return this._options.mask;
       },
 
       /**
@@ -337,15 +347,15 @@ define(
        * Если есть хотя бы одно незаполненное место ( плэйсхолдер ), то text = '' (пустая строка) и _date = null
        * @private
        */
-      _updateText: function(){
+      _updateText: function() {
          var text = $(this._inputField.get(0)).text();
 
          // Запоминаем старую дату для последующего сравнения и генерации события
          var oldDate = this._options.date;
 
-         var expr = new RegExp('(' + this._placeholder + ')', 'ig');
+         var expr = new RegExp('(' + this._maskReplacer + ')', 'ig');
          // если есть плейсхолдеры (т.е. незаполненные места), то значит опция text = null
-         if ( expr.test(text) ) {
+         if (expr.test(text)) {
             this._options.text = '';
             this._options.date = null;
          }
@@ -356,7 +366,7 @@ define(
 
          // Если дата изменилась -- генерировать событие.
          // Если использовать просто setDate, то событие будет генерироваться даже если дата введена с клавиатуры не полностью, что неверно
-         if ( oldDate !== this._options.date ) {
+         if (oldDate !== this._options.date) {
             this._notify('onDateChange', this._options.date);
          }
       },
@@ -368,44 +378,43 @@ define(
        * @private
        */
       _getDateByText: function(text) {
-         var date = new Date();
          var
+            date = new Date(),
             regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
             availCharsArray = this._primalMask.match(regexp);
-
-         for (var i = 0; i < availCharsArray.length; i++) {
-            switch ( availCharsArray[i] ) {
+         for (var i = availCharsArray.length-1; i >= 0; i--) {
+            switch (availCharsArray[i]) {
                case 'YY' :
-                  date.setYear('20' + text.substr(0, 2));
-                  text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
+                  date.setYear('20' + text.substr(-2));
+                  text = text.slice(0, -3);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'YYYY' :
-                  date.setYear(text.substr(0, 4));
-                  text = text.substr(5);  // отрезаем на один символ больше -- это разделяющий символ
+                  date.setYear(text.substr(-4));
+                  text = text.slice(0, -5);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'MM' :
-                  date.setMonth(text.substr(0, 2) - 1);
-                  text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
+                  date.setMonth(text.substr(-2) - 1);
+                  text = text.slice(0, -3);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'DD' :
-                  date.setDate(text.substr(0, 2));
-                  text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
+                  date.setDate(text.substr(-2));
+                  text = text.slice(0, -3);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'HH' :
-                  date.setHours(text.substr(0, 2));
-                  text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
+                  date.setHours(text.substr(-2));
+                  text = text.slice(0, -3);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'II' :
-                  date.setMinutes(text.substr(0, 2));
-                  text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
+                  date.setMinutes(text.substr(-2));
+                  text = text.slice(0, -3);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'SS' :
-                  date.setSeconds(text.substr(0, 2));
-                  text = text.substr(3);  // отрезаем на один символ больше -- это разделяющий символ
+                  date.setSeconds(text.substr(-2));
+                  text = text.slice(0, -3);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'UUU' :
-                  date.setMilliseconds(text.substr(0, 3));
-                  text = text.substr(4);  // отрезаем на один символ больше -- это разделяющий символ
+                  date.setMilliseconds(text.substr(-3));
+                  text = text.slice(0, -4);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
             }
          }
@@ -439,7 +448,7 @@ define(
          }
          var text = this._primalMask;
 
-         for (var i in textObj) {
+         for (i in textObj) {
             if (textObj.hasOwnProperty(i)) {
                text = text.replace(i, textObj[i])
             }

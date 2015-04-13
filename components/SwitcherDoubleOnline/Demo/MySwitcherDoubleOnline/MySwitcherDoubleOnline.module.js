@@ -1,4 +1,4 @@
-define('js!SBIS3.Demo.Control.MySwitcherDoubleOnline', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.Demo.Control.MySwitcherDoubleOnline', 'css!SBIS3.Demo.Control.MySwitcherDoubleOnline', 'js!SBIS3.CONTROLS.SwitcherDoubleOnline', 'js!SBIS3.Engine.SwitcherDoubleOnline'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.Demo.Control.MySwitcherDoubleOnline', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.Demo.Control.MySwitcherDoubleOnline', 'css!SBIS3.Demo.Control.MySwitcherDoubleOnline', 'js!SBIS3.Engine.SwitcherDoubleOnline'], function(CompoundControl, dotTplFn) {
    /**
     * SBIS3.Demo.Control.MySwitcherDoubleOnline
     * @class SBIS3.Demo.Control.MySwitcherDoubleOnline
