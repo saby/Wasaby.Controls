@@ -1,13 +1,11 @@
 <div class="controls-PrintMassDialog" hasMarkup="true" autoHeight="true" >
    <div class="ws-window-titlebar-custom">
-      <comment data-component="SBIS3.CONTROLS.Button">
+      <comment data-component="SBIS3.CONTROLS.Button" class="controls-Button__activatePrintMass">
          <option name="caption" value="Выполнить"></option>
          <option name="primary" type="boolean" value="true"></option>
-         <option name="className" value="controls-Button__activatePrintMass" ></option>
       </comment>
    </div>
-   <component  data-component="SBIS3.CONTROLS.RadioGroup">
-      <!--<options name="items" type="ref" value="{{@it.itemsRadio}}"></options>-->
+   <component  data-component="SBIS3.CONTROLS.RadioGroup" data-bind="{SelectedItem: controls-RadioButtons}" class="controls-ButtonGroup__vertical">
       <options name="items" type="array">
          {{ for(var i in it.items) { }}
          {{? it.items.hasOwnProperty(i)}}
@@ -21,7 +19,6 @@
       <option name="captionField" value="title"></option>
       <option name="name" value="controls-RadioButtons"></option>
       <option name="selectedItem">{{=it.items[0].id}}</option>
-      <option name="className" value="controls-ButtonGroup__vertical" ></option>
    </component>
 
    <div class="controls-PrintMassSelector__numberTextBox ws-hidden">

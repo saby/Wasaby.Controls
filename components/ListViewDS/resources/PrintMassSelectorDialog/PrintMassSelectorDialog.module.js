@@ -39,11 +39,14 @@ define('js!SBIS3.CONTROLS.PrintMassSelectorDialog', [
       },
       init: function(){
          PrintMassSelector.superclass.init.call(this);
+         //Так как забиндились на контекст в него нужно положить правильное первоначальное значение.
+         this.getContext().setValue('controls-RadioButtons', this._options.items[0].id);
          //TODO нужно запомнить и отписываться на destroy или сам догадается?
          this._radioButtons = this.getChildControlByName('controls-RadioButtons').subscribe('onActivate', this.onChangeRadioButton.bind(this));
          this._numberTextBox = this.getChildControlByName('controls-numberTextBox');
       },
       onChangeRadioButton: function(){
+         //TODO может стоит заменить на onFieldChange у контекста? Ибо радио-кнопки теперь с data-bind'ом
          this._container.find('> .controls-PrintMassSelector__numberTextBox').toggleClass('ws-hidden', this._radioButtons.getSelectedItem() !== 'pickNum');
       }
    });
