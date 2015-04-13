@@ -11,16 +11,6 @@ define('js!SBIS3.CONTROLS.FilterView', [
    'js!SBIS3.CONTROLS.ComboBox',
    'js!SBIS3.CONTROLS.MenuButton'
 ], function(ListView, PickerMixin, dotTplFn, itemDotTpl) {
-   var userTpl = '<div class="userClass"><span style="margin-right: 15px;">{{=it.get("cfg").textValue}}</span><span style="color: red;">Это прикладной шаблон</span></div>';
-   var userItems = [ {name: '1993', title: '1993'}, {name: '1994', title: '1994'}, {name: '1995', title: '1995'}, {name: '1996', title: '1996'}, {name: '1997', title: '1997'} ];
-   var items = [
-      { field: 'Наличие', cfg: { textValue: 'В наличии' }},
-      { field: 'Тип', cfg: { textValue: 'ТипТип' }, tpl: userTpl },
-      { field: 'ГодMenuLink', componentType: 'SBIS3.CONTROLS.MenuLink', cfg: { items: userItems, caption: 'ГодMenuLink' } },
-      { field: 'ГодComboBox', componentType: 'SBIS3.CONTROLS.ComboBox', cfg: { items: userItems, caption: 'ГодComboBox' } },
-      { field: 'ГодMenuButton', componentType: 'SBIS3.CONTROLS.MenuButton', cfg: { items: userItems, caption: 'ГодMenuButton' } }
-   ];
-
    var FilterButton = ListView.extend([PickerMixin], {
       $protected: {
          _dotTplFn: dotTplFn,
@@ -50,7 +40,10 @@ define('js!SBIS3.CONTROLS.FilterView', [
          return this._itemDotTpl;
       },
       _drawItemsCallback: function() {
-
+         this._resetValues();
+      },
+      _resetValues: function() {
+         /*TODO тут ввостановить значения контролов после перерисовки*/
       },
       deleteRecords: function(idArray) {
          /*TODO тут будет не удаление а скрытие видимости, когда появится перерисовка только одной строки*/

@@ -24,13 +24,13 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             linkedView: undefined,
             keyField: 'name'
          },
-         _blocks: undefined,
+         _buttons: undefined,
          _selectedCount: undefined,
          _currentMode: undefined
       },
 
       $constructor: function() {
-         this._blocks = {
+         this._buttons = {
             wrapper: this._container.find('.controls__operations-panel__wrapper'),
             markOperations: this._container.find('.controls__operations-panel__actions-mark'),
             allOperations: this._container.find('.controls__operations-panel__actions'),
@@ -77,8 +77,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          this._setMode();
       },
       _bindPanelEvents: function() {
-         this._blocks.closedButton.bind('click', this.showPicker.bind(this));
-         this._blocks.openedButton.bind('click', this.hidePicker.bind(this));
+         this._buttons.closedButton.bind('click', this.showPicker.bind(this));
+         this._buttons.openedButton.bind('click', this.hidePicker.bind(this));
       },
       showPicker: function() {
          if (this.isEnabled() && this.getLinkedView()) {
@@ -103,15 +103,15 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
       _setMode: function() {
          this._currentMode = !!this._selectedCount;
-         this._blocks.wrapper.toggleClass('controls__operations-panel__mass-mode',  !this._currentMode).toggleClass('controls__operations-panel__selection-mode',  this._currentMode);
+         this._buttons.wrapper.toggleClass('controls__operations-panel__mass-mode',  !this._currentMode).toggleClass('controls__operations-panel__selection-mode',  this._currentMode);
       },
       /*TODO чья это ответственность? OperationsPanel или OperationsMark*/
       _setVisibleMarkBlock: function() {
-         this._blocks.markOperations.toggleClass('ws-hidden', !this._options.linkedView._options.multiselect);
+         this._buttons.markOperations.toggleClass('ws-hidden', !this._options.linkedView._options.multiselect);
       },
       _setPickerContent: function() {
-         this._picker.getContainer().append(this._blocks.wrapper);
-         this._blocks.wrapper.removeClass('ws-hidden');
+         this._picker.getContainer().append(this._buttons.wrapper);
+         this._buttons.wrapper.removeClass('ws-hidden');
       },
       _setPickerConfig: function () {
          return {
@@ -121,7 +121,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
       _getTargetContainer: function(item) {
          var type = item.type.mark ? 'mark' : 'all';
-         return this._blocks[type + 'Operations'];
+         return this._buttons[type + 'Operations'];
       },
       _getItemTemplate: function() {
          return function (cfg) {

@@ -29,7 +29,8 @@ define('js!SBIS3.CONTROLS.demoFilterViewArea', [
          this._addRecordToFilterView({ field: 'НаМне', cfg: { textValue: 'На мне' }});
       },
       _FromMeActivated: function() {
-         this._addRecordToFilterView({ field: 'ОтМеня', cfg: { textValue: 'От меня' }});
+         var userTpl = '<div class="userClass"><span style="margin-right: 15px;">{{=it.get("cfg").textValue}}</span><span style="color: red;">Это прикладной шаблон</span></div>';
+         this._addRecordToFilterView({ field: 'ОтМеня', tpl: userTpl, cfg: { textValue: 'От меня' }});
       },
       _bindEvents: function() {
          this._container.find('.demo_template__opened').bind('click', this.hide.bind(this));
