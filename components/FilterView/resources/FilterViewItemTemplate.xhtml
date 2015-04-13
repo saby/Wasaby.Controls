@@ -1,0 +1,10 @@
+<div class="listViewItem">
+   {{var it = it.getRaw();}}
+   {{?it.tpl}}
+      {{=it.tpl}}
+   {{??it.componentType}}
+      <component data-component="{{=it.componentType}}" class="FilterViewItem-control" name="{{=it.field}}" config="{{=$ws.helpers.encodeCfgAttr(it.cfg)}}"></component>
+   {{??}}
+      <span class="FilterViewItem-text">{{=it.cfg.textValue}}</span>
+   {{?}}
+ </div>

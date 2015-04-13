@@ -1329,6 +1329,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox {
   cursor: pointer;
+  line-height: normal;
 }
 .controls-ComboBox .controls-TextBox__fieldWrapper {
   position: relative;

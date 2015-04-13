@@ -1,0 +1,22 @@
+<div class="controls__filter-button controls__filter-button__default-filter">
+   <component data-component="SBIS3.CONTROLS.Link" name="filterLine" class="controls__filter-button__filter-line">
+      <option name="caption">Нужно отобрать?</option>
+      <option name="icon">sprite: icon-16 icon-DayForward icon-primary</option>
+   </component>
+   <span class="controls__filter-button__clear" title="Очистить фильтр"></span>
+   <span class="controls__filter-button__closed"></span>
+   <div class="controls__filter-button__wrapper ws-hidden">
+      <div class="controls__filter-button__wrapper-header">
+         <component data-component="SBIS3.CONTROLS.Link" name="clearFilterButton" class="controls__filter-button__clear-filter">
+            <option name="caption">Очистить фильтр</option>
+         </component>
+         <component data-component="SBIS3.CONTROLS.Button" name="applyFilterButton" class="controls__filter-button__apply-filter">
+            <option name="caption">Отобрать</option>
+         </component>
+         <div class="controls__filter-button__opened"></div>
+      </div>
+      <div class="controls__filter-button__template-area">
+         {{?it.template}}{{=it.template}}{{?}}
+      </div>
+   </div>
+</div>
