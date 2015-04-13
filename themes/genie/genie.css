@@ -2160,7 +2160,7 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/select-arrow.png') 0 -28px no-repeat;
 }
 .controls-PathFilter__pathFilterComboBox .controls-TextBox__fieldWrapper {
-  margin: 0 19px 0 19px;
+  margin: 0 19px 0 19px !important;
 }
 .controls-PathFilter__pathFilterComboBox .controls-TextBox__afterFieldWrapper {
   height: 16px;

@@ -1462,6 +1462,9 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+.controls-TextArea .controls-TextArea__inputField:-ms-input-placeholder {
+  color: #999999;
+}
 .controls-TextArea.ws-has-focus {
   border-width: 1px;
   border-style: solid;
@@ -1488,6 +1491,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextArea:hover .controls-TextArea__inputField {
   color: inherit;
+}
+.controls-TextArea:hover .controls-TextArea__inputField:-ms-input-placeholder {
+  color: #999999;
 }
 .controls-TextArea.ws-disabled {
   border-width: 1px;
@@ -2282,7 +2288,7 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/select-arrow.png') 0 -28px no-repeat;
 }
 .controls-PathFilter__pathFilterComboBox .controls-TextBox__fieldWrapper {
-  margin: 0 19px 0 19px;
+  margin: 0 19px 0 19px !important;
 }
 .controls-PathFilter__pathFilterComboBox .controls-TextBox__afterFieldWrapper {
   height: 16px;
