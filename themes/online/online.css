@@ -2113,6 +2113,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls__filter-button {
   height: 40px !important;
+  float: right;
   width: auto;
 }
 .controls__filter-button .controls__filter-button__closed {
