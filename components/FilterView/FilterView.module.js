@@ -17,7 +17,11 @@ define('js!SBIS3.CONTROLS.FilterView', [
          _itemDotTpl: itemDotTpl,
 
          _options: {
-            linkText: 'Другие фильтры',
+            linkText: {
+               emptyFilterText: 'Выберете фильтр...',
+               filterText: 'Другие фильтры...'
+            },
+            items: [],
             keyField: 'field'
          },
          _linkButton: undefined
@@ -41,9 +45,13 @@ define('js!SBIS3.CONTROLS.FilterView', [
       },
       _drawItemsCallback: function() {
          this._resetValues();
+         this._updateLink();
       },
       _resetValues: function() {
          /*TODO тут ввостановить значения контролов после перерисовки*/
+      },
+      _updateLink: function() {
+         this._linkButton.setCaption(this._dataSet.getCount() ? this._options.linkText.filterText : this._options.linkText.emptyFilterText);
       },
       deleteRecords: function(idArray) {
          /*TODO тут будет не удаление а скрытие видимости, когда появится перерисовка только одной строки*/

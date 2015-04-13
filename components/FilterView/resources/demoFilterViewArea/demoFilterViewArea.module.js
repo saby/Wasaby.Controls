@@ -12,7 +12,8 @@ define('js!SBIS3.CONTROLS.demoFilterViewArea', [
          _dotTplFn: dotTplFn,
 
          _options: {
-            corner: 'bl'
+            corner: 'bl',
+            closeByExternalClick: true
          }
       },
       $constructor: function() {
@@ -26,11 +27,11 @@ define('js!SBIS3.CONTROLS.demoFilterViewArea', [
          this._addRecordToFilterView({ field: 'Год', componentType: 'SBIS3.CONTROLS.ComboBox', cfg: { items: userItems, caption: 'Год' } });
       },
       _MyActivated: function() {
-         this._addRecordToFilterView({ field: 'НаМне', cfg: { textValue: 'На мне' }});
+         this._addRecordToFilterView({ field: 'НаКом', tpl: '', cfg: { textValue: 'На мне'}});
       },
       _FromMeActivated: function() {
          var userTpl = '<div class="userClass"><span style="margin-right: 15px;">{{=it.get("cfg").textValue}}</span><span style="color: red;">Это прикладной шаблон</span></div>';
-         this._addRecordToFilterView({ field: 'ОтМеня', tpl: userTpl, cfg: { textValue: 'От меня' }});
+         this._addRecordToFilterView({ field: 'НаКом', tpl: userTpl, cfg: { textValue: 'От меня' }});
       },
       _bindEvents: function() {
          this._container.find('.demo_template__opened').bind('click', this.hide.bind(this));

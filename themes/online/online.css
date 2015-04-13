@@ -2227,7 +2227,7 @@ input[type="reset"]::-moz-focus-inner {
   padding: 10px;
 }
 .demo_template .demo_template-wrapper .demo_template-buttons {
-  padding: 10px;
+  padding: 0 10px;
 }
 .demo_template .demo_template-wrapper .clear {
   clear: both;

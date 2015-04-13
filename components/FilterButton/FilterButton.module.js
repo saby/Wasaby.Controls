@@ -17,10 +17,7 @@ define('js!SBIS3.CONTROLS.FilterButton', [
          _options: {
             template: demoTpl()
          },
-         _buttons: undefined,
-         _filterLine: undefined,
-         _clearFilterButton: undefined,
-         _applyFilterButton: undefined
+         _buttons: undefined
 
       },
       init: function() {
@@ -39,13 +36,13 @@ define('js!SBIS3.CONTROLS.FilterButton', [
          };
       },
       _bindButtons: function() {
-         var self = this._buttons;
-         self.closedButton.bind('click', this.showPicker.bind(this));
-         self.openedButton.bind('click', this.hidePicker.bind(this));
-         self.clearLineButton.bind('click', this.resetFilter.bind(this));
-         self._applyFilterButton.subscribe('onActivated', this._applyFilter.bind(this));
-         self._clearFilterButton.subscribe('onActivated', this.resetFilter.bind(this));
-         self._filterLine.subscribe('onActivated', this.showPicker.bind(this));
+         var buttons = this._buttons;
+         buttons.closedButton.bind('click', this.showPicker.bind(this));
+         buttons.openedButton.bind('click', this.hidePicker.bind(this));
+         buttons.clearLineButton.bind('click', this.resetFilter.bind(this));
+         buttons._applyFilterButton.subscribe('onActivated', this._applyFilter.bind(this));
+         buttons._clearFilterButton.subscribe('onActivated', this.resetFilter.bind(this));
+         buttons._filterLine.subscribe('onActivated', this.showPicker.bind(this));
       },
       _setPickerContent: function() {
          var wrapper = this._container.find('.controls__filter-button__wrapper');
