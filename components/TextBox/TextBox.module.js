@@ -146,7 +146,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          if (this._compatPlaceholder) {
             this._compatPlaceholder.toggle(!text);
          }
-         this._inputField.attr('value', text);
+         if (this._inputField.val() != text) {
+            this._inputField.val(text);
+         }
       },
 
       setMaxLength: function(num) {
