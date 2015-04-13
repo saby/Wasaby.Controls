@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     * <component data-component='SBIS3.CONTROLS.NumberTextBox'>
     *     <option name="text">0</option>
     * </component>
-    * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
+    * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol textTransform
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
     *
     * @ignoreMethods applyEmptyState applyState findParent getAlignment getEventHandlers getEvents getExtendedTooltip
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
    NumberTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS.NumberTextBox.prototype */ {
       $protected: {
          _inputField: null,
-         _caretPosition: null,
+         _caretPosition: [0, 0],
          _SHIFT_KEY: false,
          _CTRL_KEY: false,
          _options: {
@@ -107,12 +107,14 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
              */
             hideEmptyDecimals: false,
             /**
-             * @cfg {Boolean} Показать стрелки
-             * С помощью стрелок можно увеличивать/уменьшать целую часть числа на 1.
+             * @cfg {Boolean} Использовать ли кнопки для изменения значения
+             * С помощью кнопок можно увеличивать/уменьшать целую часть числа на 1.
              * @example
              * <pre>
              *     <option name="enableArrows">true</option>
              * </pre>
+             * @see integers
+             * @see onlyInteger
              */
             enableArrows: false,
             /**
@@ -405,17 +407,24 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          if (!this._options.onlyPositive) {
             if (this._options.text.indexOf('-') == -1) {
                this._setText('-' + this._inputField.val());
-               this._setCaretPosition(this._caretPosition[0] + 1, this._caretPosition[1] + 1);
+               this._setCaretPosition(this._caretPosition[0] + 1);
             } else {
                this._setText(this._inputField.val().substr(1));
-               this._setCaretPosition(this._caretPosition[0] - 1, this._caretPosition[1] - 1);
+               this._setCaretPosition(this._caretPosition[0] - 1);
             }
             TextBox.superclass.setText.call(this, this._inputField.val());
          }
       },
 
       _getSibling: function (a) {
-         return this.getNumericValue() + a;
+         var sibling = this.getNumericValue();
+         if ((sibling < 1 && sibling > 0 && a == -1) ||
+             (sibling > -1 && sibling < 0 && a == 1)){
+            this._toggleMinus();
+            return -sibling;
+         } else {
+            return sibling + a;
+         }
       },
 
       /**
