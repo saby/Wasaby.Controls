@@ -1426,7 +1426,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox__picker .controls-ComboBox__itemRow:hover {
   color: #333333;
-  background: #f2f2f2;
+  background: #f2f2f2 !important;
 }
 .controls-ComboBox__inputWrapper {
   height: 100%;
@@ -2101,6 +2101,54 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ItemActions__activeItem {
   background-color: #f3f3f3;
+}
+.controls-PathFilter .controls-PathFilter__pathFilterComboBox {
+  border: none;
+}
+.controls-PathFilter .controls-PathFilter__pathFilterComboBox.controls-Picker__show {
+  outline: 1px solid #cccccc;
+  outline-offset: -1px;
+}
+.controls-PathFilter__pathFilterComboBox.controls-Picker__show .controls-TextBox__beforeFieldWrapper .controls-PathFilter__arrow {
+  background: url('img/select-arrow.png') 0 -28px no-repeat;
+}
+.controls-PathFilter__pathFilterComboBox .controls-TextBox__fieldWrapper {
+  margin: 0 19px 0 19px;
+}
+.controls-PathFilter__pathFilterComboBox .controls-TextBox__afterFieldWrapper {
+  height: 16px;
+  width: 16px;
+  display: inline-block;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+.controls-PathFilter__pathFilterComboBox .controls-TextBox__afterFieldWrapper .controls-PathFilter__cross {
+  background: url('img/cancelIcon-sprite.png') 0 -35px no-repeat;
+  height: 16px;
+  width: 16px;
+  display: inline-block;
+}
+.controls-PathFilter__pathFilterComboBox .controls-PathFilter__cross:hover {
+  background: url('img/cancelIcon-sprite.png') 0 -19px no-repeat;
+}
+.controls-PathFilter__pathFilterComboBox .controls-TextBox__beforeFieldWrapper {
+  height: 16px;
+  width: 16px;
+  display: inline-block;
+  float: left;
+}
+.controls-PathFilter__pathFilterComboBox .controls-TextBox__beforeFieldWrapper .controls-PathFilter__arrow {
+  background: url('img/select-arrow.png') 0 -52px no-repeat;
+  height: 16px;
+  width: 16px;
+  display: inline-block;
+}
+.controls-PathFilter_comboBox {
+  z-index: 1;
+}
+.controls-PathFilter_comboBox .controls-ComboBox__itemRow.controls-ComboBox__itemRow__selected {
+  background: #ffffff;
 }
 .controls-ComboBox.controls-Picker__show {
   border-width: 1px;
