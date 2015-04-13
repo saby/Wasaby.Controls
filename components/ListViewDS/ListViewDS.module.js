@@ -22,6 +22,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        * @mixes SBIS3.CONTROLS.DSMixin
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
+       * @public
        */
 
       var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
@@ -39,12 +40,32 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _itemActionsGroup: null,
                _options: {
                /**
-                * @cfg {} Шаблон отображения каждого элемента коллекции
+                * @cfg {String} Шаблон отображения каждого элемента коллекции
                 */
                itemTemplate: '',
                /**
-                * @cfg {Array} Набор действий, над элементами, отображающийся в виде иконок. Можно использовать для массовых операций.
+                * @typedef {Array} ItemsActions
+                * @property {String} name Имя кнопки.
+                * @property {String} icon Путь до иконки.
+                * @property {String} title Текст на кнопке.
+                * @property {Boolean} isMainAction Отображать ли кнопку на строке или только выпадающем в меню.
+                * На строке кнопки отображаются в том же порядке, в каком они перечислены.
+                * На строке может быть только три кнопки, полный список будет в меню.
+                * @property {Function} onActivated Действие кнопки.
+                * @editor icon ImageEditor
+                * @translatable title
                 */
+               /**
+                * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок.
+                * Можно использовать для массовых операций.
+                * @example
+                * <pre>
+                *     <option name="itemsActions">
+                *
+                *     </option>
+                * </pre>
+                * @see setItemsActions
+                */   
                itemsActions: [{
                   name: 'delete',
                   icon: 'sprite:icon-16 icon-Erase icon-error',
@@ -55,17 +76,36 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   }
                }],
                /**
-                * @cfg {Boolean} Разрешено или нет перемещение элементов Drag-and-Drop
+                * @cfg {Boolean} Разрешено или нет перемещение элементов "Drag-and-Drop"
+                * @example
+                * <pre>
+                *     <option name="itemsDragNDrop">true</option>
+                * </pre>
                 */
                itemsDragNDrop: false,
                /**
-                * @cfg {String|jQuery|HTMLElement} Что отображается когда нет записей
+                * @cfg {String|jQuery|HTMLElement} Отображение при отсутствии записей
+                * @example
+                * <pre>
+                *     <option name="emptyHTML">Нет данных</option>
+                * </pre>
+                * @see setEmptyHTML
                 */
                emptyHTML: null,
                /**
                 * @cfg {Function} Обработчик клика на элемент
+                * @see setElemClickHandler
                 */
                elemClickHandler: null,
+               /**
+                * @cfg {Boolean} Разрешить выбор нескольких строк
+                * Позволяет выбрать несколько строк для одновременного взаимодействия с ними.
+                * При значении данной опции false у связанной панели массовых операций не будет флага "Отметить все".
+                * @example
+                * <pre>
+                *    <option name="multiselect">false</option>
+                * </pre>
+                */
                multiselect: false,
 
                infiniteScroll: false
@@ -175,9 +215,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            }
          },
 
-         /**
-          * Установить, что отображается когда нет записей
+         /**        
+          * Установить что отображается при отсутствии записей.
           * @param html содержимое блока
+          * @see emptyHTML
           */
          setEmptyHTML: function (html) {
 
@@ -233,6 +274,11 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             ListViewDS.superclass.reload.apply(this, arguments);
          },
 
+          /**
+           * Метод установки/замены обработчика клика на элемент.
+           * @param method
+           * @see elemClickHandler
+           */
          setElemClickHandler: function (method) {
             this._options.elemClickHandler = method;
          },

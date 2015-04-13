@@ -1,10 +1,14 @@
 define('js!SBIS3.CONTROLS.TreeView', ['js!SBIS3.CONTROLS.ListView', 'js!SBIS3.CONTROLS.TreeMixin'], function(ListView, TreeMixin) {
    'use strict';
    /**
-    * Контрол, отображающий данные имеющие иерархическую структуру. Позволяет отобразить данные в произвольном виде с возможностью открыть или закрыть отдельные узлы
+    * Контрол, отображающий данные имеющие иерархическую структуру.
+    * Позволяет отобразить данные в произвольном виде с возможностью открыть или закрыть отдельные узлы.
     * @class SBIS3.CONTROLS.TreeView
     * @extends SBIS3.CONTROLS.ListView
     * @mixes SBIS3.CONTROLS.TreeMixin
+    * @public
+    * @control
+    *
     */
 
    var TreeView = ListView.extend([TreeMixin], /** @lends SBIS3.CONTROLS.TreeView.prototype*/ {

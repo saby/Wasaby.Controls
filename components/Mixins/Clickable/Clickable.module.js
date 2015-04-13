@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного
     * @mixin SBIS3.CONTROLS.Clickable
+    * @public
     */
 
    var Clickable = /**@lends SBIS3.CONTROLS.Clickable.prototype  */{
