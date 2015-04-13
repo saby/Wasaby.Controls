@@ -195,7 +195,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._picker.getContainer().mouseup(function (e) {
             var row = $(e.target).closest('.js-controls-ComboBox__itemRow');
             if (row.length) {
-               self.setSelectedItem($(row).attr('data-id'));
+               self.setSelectedItem(row.attr('data-id'));
                self.hidePicker();
             }
          });

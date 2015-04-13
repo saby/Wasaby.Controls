@@ -1,0 +1,47 @@
+.controls-PathFilter__pathFilterComboBox {
+  &.controls-Picker__show {
+    .controls-TextBox__beforeFieldWrapper {
+      .controls-PathFilter__arrow {
+        background: @pathFilter-ComboBox-arrowBg-hover;
+      }
+    }
+  }
+  .controls-TextBox__fieldWrapper {
+    margin: @pathFilter-TextBox-fieldWrapper-margin
+  }
+  .controls-TextBox__afterFieldWrapper {
+    height: @pathFilter-ComboBox-iconHeight;
+    width: @pathFilter-ComboBox-iconWidth;
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    .controls-PathFilter__cross {
+      background: @pathFilter-ComboBox-crossBg;
+      height: @pathFilter-ComboBox-iconHeight;
+      width: @pathFilter-ComboBox-iconWidth;
+      display: inline-block;
+    }
+  }
+  .controls-PathFilter__cross:hover {
+    background: @pathFilter-ComboBox-crossBg-hover;
+  }
+  .controls-TextBox__beforeFieldWrapper {
+    height: @pathFilter-ComboBox-iconHeight;
+    width: @pathFilter-ComboBox-iconWidth;
+    display: inline-block;
+    float: left;
+    .controls-PathFilter__arrow {
+      background: @pathFilter-ComboBox-arrowBg;
+      height: @pathFilter-ComboBox-iconHeight;
+      width: @pathFilter-ComboBox-iconWidth;
+      display: inline-block;
+    }
+  }
+}
+.controls-PathFilter_comboBox {
+  .controls-ComboBox__itemRow.controls-ComboBox__itemRow__selected {
+      background: #ffffff;
+  }
+  z-index: 1;
+}
