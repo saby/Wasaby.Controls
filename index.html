@@ -79,6 +79,9 @@
                <li>
                   <div id="TextBoxes"></div>
                </li>
+                <li>
+                    <div id="TimeInterval"></div>
+                </li>
                <li>
                   <div id="Buttons"></div>
                </li>
@@ -94,6 +97,9 @@
                <li>
                   <div id="Views"></div>
                </li>
+                <li>
+                    <div id="ViewsScroll"></div>
+                </li>
                <li>
                   <div id="Popup"></div>
                </li>
@@ -214,6 +220,14 @@
             })
          });
 
+          require(["js!SBIS3.CONTROLS.Link"], function (r) {
+              new r({
+                  element: "TimeInterval",
+                  caption: 'TimeInterval',
+                  href: '/pages/TimeInterval.html'
+              })
+          });
+
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
                element: "Buttons",
@@ -253,6 +267,13 @@
                href: '/pages/Views.html'
             })
          });
+          require(["js!SBIS3.CONTROLS.Link"], function (r) {
+              new r({
+                  element: "ViewsScroll",
+                  caption: 'ViewsScroll',
+                  href: '/pages/ViewsScroll.html'
+              })
+          });
 
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({

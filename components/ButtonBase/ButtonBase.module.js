@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
     * Поведенческий класс, задающий базовое поведение кнопки. Основное предназначение - обрабатывать клик.
     * Все контролы-кнопки должны наследоваться от этого класса. Отображение и вёрстка задаются именно в унаследованных классах.
     * @class SBIS3.CONTROLS.ButtonBase
+    * @public
     * @extends $ws.proto.CompoundControl
     * @mixes SBIS3.CONTROLS.Clickable
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
@@ -79,6 +80,15 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
        */
       getCaption: function() {
          return this._options.caption;
+      },
+      /**
+       * Переопределённый метод из базового Control
+       * Нужен, чтобы быстро работало скртие контрола,
+       * Не запускались расчёты авторазмеров
+       */
+      _setVisibility: function(show) {
+         this._container.toggleClass('ws-hidden', !show);
+         this._isVisible = show;
       }
    });
 

@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.RichTextArea', ['js!SBIS3.CONTROLS.TextArea'], functio
     * Класс, определяющий многострочное поле с редактором в виде CKEditor
     * @class SBIS3.CONTROLS.RichTextArea
     * @extends SBIS3.CONTROLS.TextArea
+    * @public
     */
 
    var RichTextArea = TextArea.extend( /** @lends SBIS3.CONTROLS.RichTextArea.prototype */ {
