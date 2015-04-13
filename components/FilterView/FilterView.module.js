@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.FilterView', [
 
          _options: {
             linkText: 'Другие фильтры',
-            items: items
+            keyField: 'field'
          },
          _linkButton: undefined
       },

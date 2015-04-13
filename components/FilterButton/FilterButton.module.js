@@ -65,6 +65,7 @@ define('js!SBIS3.CONTROLS.FilterButton', [
       },
       applyFilter: function(filter) {
          console.log(filter);
+
          this._updateFilterButtonView(filter);
       },
       _pickFilter: function() {
