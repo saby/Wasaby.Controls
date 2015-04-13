@@ -53,8 +53,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _actsContainer: null,
             _mouseOnItemActions: false,
             _hoveredItem: {
+               target: null,
                key: null,
-               container: null
+               position: null,
+               size: null
             },
             _itemActionsGroup: null,
                _options: {
@@ -206,8 +208,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           */
          _mouseMoveHandler: function(e) {
             var $target = $(e.target),
-                target,
-                targetKey;
+               target,
+               targetKey;
             //Если увели мышку на оперции по ховеру, то делать ничего не надо
             if(this._mouseOnItemActions) {
                return;
@@ -218,16 +220,23 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                return;
             }
             target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
-
             if (target.length) {
                targetKey = target.data('id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
                   this._hoveredItem = {
                      key: targetKey,
-                     container: target
+                     container: target,
+                     position: {
+                        top: target[0].offsetTop,
+                        left: target[0].offsetLeft
+                     },
+                     size: {
+                        height: target[0].offsetHeight,
+                        width: target[0].offsetWidth
+                     }
                   };
-                  this._notify('onChangeHoveredItem', target, targetKey);
-                  this._onChangeHoveredItem(target, targetKey);
+                  this._notify('onChangeHoveredItem', this._hoveredItem);
+                  this._onChangeHoveredItem(this._hoveredItem);
                }
             }
          },
@@ -237,22 +246,22 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           */
          _mouseLeaveHandler: function() {
             this._hoveredItem = {
+               container: null,
                key: null,
-               container: null
+               position: null,
+               size: null
             };
-            this._notify('onChangeHoveredItem', false);
-            this._onChangeHoveredItem(false);
+            this._notify('onChangeHoveredItem', this._hoveredItem);
+            this._onChangeHoveredItem(this._hoveredItem);
          },
          /**
           * Обработчик на смену выделенного элемента представления
-          * @param target
-          * @param targetKey
           * @private
           */
-         _onChangeHoveredItem: function(target, targetKey) {
+         _onChangeHoveredItem: function(hoveredItem) {
            if(this._options.itemsActions.length) {
-              if(target) {
-                 this._showItemActions(target);
+              if(hoveredItem.container) {
+                 this._showItemActions();
               } else {
                  //Если открыто меню опций, то скрывать опции не надо
                  if(this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
@@ -329,31 +338,25 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          setElemClickHandler: function (method) {
             this._options.elemClickHandler = method;
          },
+
+         //********************************//
+         //   БЛОК ОПЕРАЦИЙ НАД ЗАПИСЬЮ    //
+         //*******************************//
          /**
           * Показывает оперцаии над записью для элемента
-          * @param item
           * @private
           */
-         _showItemActions: function(item) {
-            var res;
-
+         _showItemActions: function() {
             //Создадим операции над записью, если их нет
-            //TODO сделать создание нормально
-            this.getItemActions();
+            this.getItemsActions();
 
             //Если показывается меню, то не надо позиционировать операции над записью
             if(this._itemActionsGroup.isItemActionsMenuVisible()) {
                return;
             }
 
-            this._itemActionsGroup.applyItemActions(item);
-            this._itemActionsGroup.showItemActions(item);
-         },
-         _drawItemsCallback: function () {
-            if (this.isInfiniteScroll()) {
-               this._loadBeforeScrollAppears();
-            }
-            this._drawSelectedItems(this._options.selectedItems);
+            this._itemActionsGroup.applyItemActions();
+            this._itemActionsGroup.showItemActions(this._hoveredItem);
          },
          /**
           * Создаёт операции над записью
@@ -386,6 +389,38 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (!this._itemActionsGroup.isItemActionsMenuVisible()) {
                this._itemActionsGroup.hoverImitation(e.type === 'mousemove');
             }
+         },
+         /**
+          * Геттер для получения операций над записью
+          * @returns {*}
+          * @see itemsActions
+          * @see setItemActions
+          */
+         getItemsActions: function() {
+            if(!this._itemActionsGroup && this._options.itemsActions.length) {
+               this._initItemActions();
+            }
+            return this._itemActionsGroup;
+         },
+         /**
+          * Устанавливает операции над записью
+          * Нужно передать массив обьектов
+          * @param {Array} items
+          * Объект формата {name: ..., icon: ..., name: ..., title: ..., onActivated: ..., linkText: ... , isMainOption: ...}
+          */
+         setItemsAction: function(items) {
+            this._options.itemsActions = items;
+            this.getItemsActions().setItems(items);
+         },
+         //**********************************//
+         //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
+         //*********************************//
+
+         _drawItemsCallback: function () {
+            if (this.isInfiniteScroll()) {
+               this._loadBeforeScrollAppears();
+            }
+            this._drawSelectedItems(this._options.selectedItems);
          },
          destroy: function() {
             if (this.isInfiniteScroll()){
@@ -501,18 +536,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                return;
             }
             this._removeLoadingIndicator();
-         },
-         /**
-          * Геттер для получения операций над записью
-          * @returns {*}
-          * @see itemsActions
-          * @see setItemActions
-          */
-         getItemActions: function() {
-            if(this._options.itemsActions.length && !this._itemActionsGroup) {
-               this._initItemActions();
-            }
-            return this._itemActionsGroup;
          },
          /**
           * Геттер для получения текущего выделенного элемента
