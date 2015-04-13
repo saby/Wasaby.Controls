@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.PrintMassSelectorDialog', [
             height: 'auto'
          },
          _radioButtons : undefined,
-         _numberTextBox: undefined,
+         _numberTextBox: undefined
       },
       _dotTplFn: dotTplFn,
 
