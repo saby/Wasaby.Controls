@@ -15,6 +15,8 @@ define('js!SBIS3.CONTROLS.FilterButton', [
 
       $protected: {
          _options: {
+            linkText: 'Нужно отобрать?',
+            filterAlign: 'right',
             template: demoTpl()
          },
          _buttons: undefined
@@ -50,10 +52,10 @@ define('js!SBIS3.CONTROLS.FilterButton', [
       },
       _setPickerConfig: function () {
          return {
-            corner: 'tr',
+            corner: this._options.filterAlign === 'right' ? 'tr' : 'tl',
             target: this,
             horizontalAlign: {
-               side: 'right'
+               side: this._options.filterAlign
             }
          };
       },
@@ -78,11 +80,17 @@ define('js!SBIS3.CONTROLS.FilterButton', [
          var isDefault = this._isDefaultFilter(filter);
          this._container.toggleClass('controls__filter-button__default-filter', isDefault);
          this._buttons._clearFilterButton.setEnabled(!isDefault);
-         this._setFilterLine(filter, isDefault);
+         this._updateFilterLine(filter, isDefault);
       },
-      _setFilterLine: function(filter, isDefault) {
-         var filterLine = isDefault ? 'Нужно отобрать?' : 'Применён какой-то фильтр';
-         this._buttons._filterLine.setCaption(filterLine);
+      _updateFilterLine: function(filter, isDefault) {
+         var filterLine = isDefault ? this._options.linkText : this._getFilterLine();
+         if (filterLine) {
+            this._buttons._filterLine.setCaption(filterLine);
+         }
+         this._buttons._filterLine.setVisible(!!filterLine);
+      },
+      _getFilterLine: function() {
+         return 'Применён какой-то фильтр';
       },
       _isDefaultFilter: function(filter) {
          return !filter.isNotDefault;

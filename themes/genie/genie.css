@@ -2156,6 +2156,9 @@ input[type="reset"]::-moz-focus-inner {
   outline: 1px solid #cccccc;
   outline-offset: -1px;
 }
+.controls-PathFilter__pathFilterComboBox {
+  position: relative;
+}
 .controls-PathFilter__pathFilterComboBox.controls-Picker__show .controls-TextBox__beforeFieldWrapper .controls-PathFilter__arrow {
   background: url('img/select-arrow.png') 0 -28px no-repeat;
 }

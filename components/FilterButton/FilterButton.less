@@ -9,9 +9,26 @@
 
 .controls__filter-button {
    height: 40px !important;
+   line-height: 40px;
    float: right;
    width: auto;
 
+   &.controls__filter-button-left {
+      float: left;
+      .controls__filter-button__closed {
+         float: left;
+         /*TODO пока нет картинок*/
+         -webkit-transform: scale(-1, 1);
+         background: @controls__filter-button__closed;
+
+         &:hover {
+            background: @controls__filter-button__closed-hovered;
+         }
+         &:active {
+            background: @controls__filter-button__closed-activated;
+         }
+      }
+   }
    .controls__filter-button__closed {
       background: @controls__filter-button__closed;
 
@@ -23,14 +40,11 @@
       }
    }
 
-   .controls__filter-button__filter-line, .controls__filter-button__clear {
-      vertical-align: middle;
-   }
-
    .controls__filter-button__clear {
       width: 16px;
       height: 16px;
       display: inline-block;
+      vertical-align: middle;
       cursor: pointer;
       background: @controls__filter-button__clear;
 
@@ -53,18 +67,27 @@
    width: 30px;
    height: 24px;
    cursor: pointer;
+   float: right;
 }
 .controls__filter-button__wrapper {
    background: #f7f3f0;
 
    .controls__filter-button__wrapper-header {
+      width: 100%;
+      line-height: 40px;
+      text-align: right;
       height: 40px;
-      float: right;
 
       .controls__filter-button__clear-filter, .controls__filter-button__apply-filter {
-         margin-left: 10px;
+         margin: 0 5px;
+         float: right;
       }
-
+      .controls__filter-button__clear-filter {
+         margin-top: 12px;
+      }
+      .controls__filter-button__apply-filter {
+         margin-top: 8px;
+      }
       .controls__filter-button__opened {
          background: @controls__filter-button__opened;
 
@@ -78,5 +101,27 @@
    }
    .controls__filter-button__template-area {
       clear: both;
+   }
+
+   &.controls__filter-button-left {
+      .controls__filter-button__wrapper-header {
+         text-align: left;
+      }
+      .controls__filter-button__opened {
+         float: left;
+         /*TODO пока нет картинок*/
+         -webkit-transform: scale(-1, 1);
+         background: @controls__filter-button__opened;
+
+         &:hover {
+            background: @controls__filter-button__opened-hovered;
+         }
+         &:active {
+            background: @controls__filter-button__opened-activated;
+         }
+      }
+      .controls__filter-button__clear-filter, .controls__filter-button__apply-filter {
+         float: left;
+      }
    }
 }
