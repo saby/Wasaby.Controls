@@ -2111,6 +2111,7 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   line-height: 30px;
 }
+/*TODO тема оформления*/
 .controls__filter-button {
   height: 40px !important;
   line-height: 40px;
@@ -2217,6 +2218,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls__filter-button__wrapper.controls__filter-button-left .controls__filter-button__apply-filter {
   float: left;
 }
+/*TODO тема оформления*/
 .controls-FilterView {
   width: 100%;
   min-width: 300px;
