@@ -15,13 +15,26 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * @class SBIS3.CONTROLS.OperationsPanel
     * @extends $ws.proto.CompoundControl
     * @control
+    * @public
     */
    var OperationsPanel = Control.extend([CollectionMixin, PickerMixin],/** @lends SBIS3.CONTROLS.OperationsPanel.prototype */{
       _dotTplFn: dotTplFn,
 
       $protected: {
          _options: {
+             /**
+              * @cfg {String} Имя связанного представления данных
+              * @example
+              * <pre>
+              *     <option name="linkedView">MyDataGrid</option>
+              * </pre>
+              * @see setLinkedView
+              * @see getLinkedView
+              */
             linkedView: undefined,
+             /**
+              *
+              */
             keyField: 'name'
          },
          _blocks: undefined,
@@ -44,6 +57,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       _drawItemsCallback: function() {
          this._itemsDrawn = true;
       },
+       /**
+        * Метод установки или замены имени связанного представления данных, установленного в опции {@link linkedView}.
+        * @param linkedView
+        */
       setLinkedView: function(linkedView) {
          if ($ws.helpers.instanceOfModule(linkedView, 'SBIS3.CONTROLS.DataGrid')) {
             this._reassignView(linkedView);
@@ -52,6 +69,13 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             this._setVisibleMarkBlock();
          }
       },
+       /**
+        * Метод получения имени связанного представления данных, установленного либо в опции {@link linkedView},
+        * либо методом {@link setLinkedView}.
+        * @returns {String} Возвращает имя связанного представления данных.
+        * @see linkedView
+        * @see setLinkedView
+        */
       getLinkedView: function() {
          return this._options.linkedView;
       },
@@ -138,18 +162,30 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       _getButtonType: function (type) {
          return type.mark ? 'mark' : type.mass && type.selection ? 'all' : type.mass ? 'mass' : 'selection';
       },
+       /**
+        * Установить возможность взаимодействия с панелью массовых операций.
+        * @param enabled
+        */
       setEnabled: function(enabled) {
          if (!enabled) {
             this.hidePicker();
          }
          OperationsPanel.superclass.setEnabled.apply(this, arguments);
       },
+       /**
+        *
+        * @returns {*}
+        */
       getItemInstance: function() {
          if (!this._itemsDrawn) {
             this._drawItems();
          }
          return OperationsPanel.superclass.getItemInstance.apply(this, arguments);
       },
+       /**
+        *
+        * @returns {boolean|*}
+        */
       getPanelState: function() {
          return this._currentMode;
       },
