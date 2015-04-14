@@ -28,14 +28,13 @@ define('js!SBIS3.CONTROLS.PathFilterComboBox',
             this._crossButton = this._container.find('.controls-TextBox__afterFieldWrapper');
             this._defaultValue = this._options.items[0].title;
             this.setText(this._defaultValue);
-            this._inittEvents();
+            this._initEvents();
          },
          _setPickerConfig: function () {
             return {
                corner: 'bl',
                verticalAlign: {
-                  side: 'top',
-                  offset: -1
+                  side: 'top'
                },
                horizontalAlign: {
                   side: 'left'
@@ -44,7 +43,7 @@ define('js!SBIS3.CONTROLS.PathFilterComboBox',
                targetPart: true
             };
          },
-         _inittEvents: function() {
+         _initEvents: function() {
             this._crossButton.click(this.setDefaultValue.bind(this));
             this._container.bind('mouseenter', this.showPicker.bind(this));
          },
