@@ -181,7 +181,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _loadingIndicator: undefined,
             _hasScrollMore : true,
             _infiniteScrollOffset: null,
-            _nowLoading: false,
+            _nowLoading: null,
             _allowInfiniteScroll: true,
             _scrollIndicatorHeight: 32,
             _isLoadBeforeScrollAppears : true,
@@ -514,7 +514,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (this._allowInfiniteScroll && this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._isNowLoading()) {
                this._addLoadingIndicator();
                this._nowLoading = this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset  + this._limit, this._limit).addCallback(function (dataSet) {
-                  self._nowLoading = false;//_cancelLoading?
+                  self._nowLoading = null;//_cancelLoading?
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
                      records = dataSet._getRecords();
@@ -537,7 +537,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (this._isNowLoading()){
                this._nowLoading.cancel();
             }
-            this._nowLoading = false;
+            this._nowLoading = null;
          },
          _isNowLoading: function(){
             return this._nowLoading && !this._nowLoading.isReady();
