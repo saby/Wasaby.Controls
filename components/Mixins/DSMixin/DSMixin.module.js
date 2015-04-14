@@ -40,8 +40,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @cfg {DataSource} Набор исходных данных по которому строится отображение
              */
             dataSource: undefined,
-            pageSize: null
-         }
+            pageSize : null
+         },
+         _loader : null
       },
 
       $constructor: function () {
@@ -99,11 +100,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._limit = this._options.pageSize;
          }
          var self = this;
+         this._cancelLoading(this._loader);
          this._filter = typeof(filter) != 'undefined' ? filter : this._filter;
          this._sorting = typeof(sorting) != 'undefined' ? sorting : this._sorting;
          this._offset = typeof(offset) != 'undefined' ? offset : this._offset;
          this._limit = typeof(limit) != 'undefined' ? limit : this._limit;
-         this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
+         this._loader = this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
+            self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
             if (self._dataSet) {
                self._dataSet.merge(dataSet);
             } else {
@@ -112,6 +115,17 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             self._dataLoadedCallback();
             self._redraw();
          });
+      },
+      //TODO Сделать публичным? вроде так всем захочется делать
+      _isLoading: function(loader){
+         return loader && !loader.isReady();
+      },
+      //TODO Сделать публичным? вроде так всем захочется делать
+      _cancelLoading: function(loader){
+         if (this._isLoading(loader)){
+            loader.cancel();
+         }
+         loader = null;
       },
       setItems: function (items) {
          var
