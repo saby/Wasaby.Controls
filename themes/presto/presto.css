@@ -1461,6 +1461,9 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+.controls-TextArea .controls-TextArea__inputField:-ms-input-placeholder {
+  color: #aaaaaa;
+}
 .controls-TextArea.ws-has-focus {
   border-width: 1px;
   border-style: #666666;
@@ -1487,6 +1490,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextArea:hover .controls-TextArea__inputField {
   color: inherit;
+}
+.controls-TextArea:hover .controls-TextArea__inputField:-ms-input-placeholder {
+  color: #aaaaaa;
 }
 .controls-TextArea.ws-disabled {
   border-width: 1px;
