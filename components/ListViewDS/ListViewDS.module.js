@@ -352,6 +352,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          reload: function(){
             if (this.isInfiniteScroll()) {
                this._cancelLoading(this._scrollLoader);
+               this._scrollLoader = null;
                this._loadingIndicator = undefined;
                this._hasScrollMore = true;
                this._infiniteScrollOffset = this._offset;

@@ -121,11 +121,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return loader && !loader.isReady();
       },
       //TODO Сделать публичным? вроде так всем захочется делать
+      /**
+       * После использования нужно присвоить null переданному loader самостоятельно!
+       * @param loader
+       * @private
+       */
       _cancelLoading: function(loader){
          if (this._isLoading(loader)){
             loader.cancel();
          }
-         loader = null;
       },
       setItems: function (items) {
          var
