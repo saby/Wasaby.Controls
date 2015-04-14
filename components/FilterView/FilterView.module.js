@@ -55,6 +55,7 @@ define('js!SBIS3.CONTROLS.FilterView', [
       },
       deleteRecords: function(idArray) {
          /*TODO тут будет не удаление а скрытие видимости, когда появится перерисовка только одной строки*/
+         /*this._container.find("[data-id='"+idArray+"']").addClass('ws-hidden');*/
          this._dataSet.removeRecord(idArray);
          this._dataSource.sync(this._dataSet);
       }
