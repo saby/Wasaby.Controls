@@ -2042,7 +2042,6 @@ input[type="reset"]::-moz-focus-inner {
   height: 128px;
   float: left;
   box-sizing: border-box;
-  border: 1px solid #dddddd;
   margin: 0 16px 16px 0;
   cursor: pointer;
   text-align: center;
