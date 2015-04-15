@@ -56,6 +56,10 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
 
                targetContainer.append(itemWrapper);
 
+               if(item.get(this._options.hierField + '@')){
+                  $('.controls-ListView__item[data-id="' + key + '"] .controls-TreeView__item', this.getContainer().get(0)).first().addClass('controls-TreeView__hasChild');
+               }
+
                $('.intro', itemWrapper).click(function () {
                   var id = $(this).closest('.controls-ListView__item').attr('data-id');
                });
@@ -81,15 +85,22 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
 
          _getTargetContainer: function (record) {
             var parentKey = this.getParentKey(this._dataSet, record),
+               parent = record.get(this._options.hierField + '@'),
+               curItem,
                curList;
-            console.log(parentKey)
+
             if (parentKey) {
-               var curItem = $('.controls-ListView__item[data-id="' + parentKey + '"]', this.getContainer().get(0));
+               curItem = $('.controls-ListView__item[data-id="' + parentKey + '"]', this.getContainer().get(0));
                curList = $('.controls-TreeView__childContainer', curItem.get(0)).first();
                if (!curList.length) {
                   curList = $('<div></div>').appendTo(curItem).addClass('controls-TreeView__childContainer');
                }
-               $('.controls-TreeView__item', curItem).first().addClass('controls-TreeView__hasChild');
+
+               if (parent) {
+                  console.log(record.getKey() + ' is parent ');
+                  $('.controls-TreeView__item', curItem).first().addClass('controls-TreeView__hasChild');
+               }
+
             } else {
                curList = this._getItemsContainer();
             }
@@ -103,18 +114,26 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
           */
          openNode: function (key) {
             var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-            $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
-            $('.controls-TreeView__childContainer', itemCont).first().css('display', 'block');
 
-            var childItems = this.getChildItems(key);
+
+            $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
+            // $('.controls-TreeView__childContainer', itemCont).first().css('display', 'block');
+
             var self = this;
 
-            $ws.helpers.forEach(childItems, function (value) {
-               var record = self._dataSet.getRecordByKey(value);
-               var targetContainer = self._getTargetContainer(record);
-               if (targetContainer) {
-                  self._drawItem(record, targetContainer);
-               }
+            var filter = this._filter || {};
+            filter[self._options.hierField] = key;
+            self._dataSource.query(filter).addCallback(function (dataSet) {
+               self._dataSet.merge(dataSet);
+               dataSet.each(function (record) {
+                  var targetContainer = self._getTargetContainer(record);
+                  if (targetContainer) {
+                     self._drawItem(record, targetContainer);
+                  }
+               });
+
+               $('.controls-TreeView__childContainer', itemCont).first().css('display', 'block');
+
             });
 
          },
