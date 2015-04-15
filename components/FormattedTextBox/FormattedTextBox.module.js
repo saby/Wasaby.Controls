@@ -25,7 +25,8 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
     * @ignoreMethods isDestroyed isSubControl makeOwnerName once sendCommand setOwner setStateKey setUserData setValue
     * @ignoreMethods subscribe unbind unsubscribe unsubscribeFrom
     *
-    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChange onTooltipContentRequest onChange
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
+    * @ignoreEvents onReady
     */
 
    var FormattedTextBox = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS.FormattedTextBox.prototype */{
@@ -61,46 +62,17 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
 
       /**
        * Получить маску. Переопределённый метод
+       * Работа с опцией вынесена была из FormattedTextBoxBase, для того,
+       * чтобы при желании в детях нельзя было переопределить маску.
+       * Например в поле email, или телефон. Если мы это выносим в Base, то эта опция будет доступна везде.
+       * Нам это не нужно. (Бегунов А.В.)
        * @returns {*}
        * @private
        */
       _getMask: function () {
          return this._options.mask;
-      },
-
-      /**
-       * Обновляяет значение this._options.text (вызывается в _replaceCharacter из FormattedTextBoxBase). Переопределённый метод.
-       * null если есть хотя бы одно незаполненное место ( плэйсхолдер )
-       * @private
-       */
-      _updateText:function(){
-         var text = $(this._inputField.get(0)).text();
-
-         var expr = new RegExp( '(' + this._placeholder + ')', 'ig' );
-         // если есть плейсхолдеры (т.е. незаполненные места), то опция text = null
-         if ( expr.test(text) ){
-            this._options.text = '';
-         }
-         else {
-            this._options.text = text;
-         }
-      },
-       /**
-        * Установить активность контрола, которая определяется свойством {@link $ws.proto.Control#enabled}.
-        * @param enabled Признак активности: true - контрол активен, false - не активен.
-        * @example
-        * <pre>
-        *    if (age >= 18) {
-        *       TextBox.setEnabled(true);
-        *    }
-        * </pre>
-        * @see $ws.proto.Control#enabled
-        */
-      setEnabled: function(enabled){
-         FormattedTextBoxBase.superclass.setEnabled.call(this, enabled);
-         this._inputField.attr('contenteditable', enabled);
       }
-});
+   });
 
    return FormattedTextBox;
 });

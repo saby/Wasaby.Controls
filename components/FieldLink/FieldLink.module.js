@@ -10,6 +10,7 @@ define('js!SBIS3.Engine.FieldLink', ['js!SBIS3.CORE.Control'], function(Control)
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @control
+    * @public
     */
 
    var FieldLink = Control.Control.extend(/** @lends SBIS3.Engine.FieldLink.prototype */{

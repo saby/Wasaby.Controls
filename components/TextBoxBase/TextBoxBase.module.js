@@ -7,6 +7,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
     * @class SBIS3.CONTROLS.TextBoxBase
     * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    * @public
+    *
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth extendedTooltip horizontalAlignment
     * @ignoreOptions isContainerInsideParent owner stateKey subcontrol validators verticalAlignment
     */
@@ -143,6 +145,10 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
             text = String.trim(text);
          }
          return text;
+      },
+
+      _drawText: function() {
+
       }
    });
 

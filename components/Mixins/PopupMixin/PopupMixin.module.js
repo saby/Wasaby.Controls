@@ -25,9 +25,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
    }
 
    /**
-    * Миксин определяющий поведение контролов, которые отображаются с абсолютным позиционированием поверх всех остальных компонентов (диалоговые окна, плавающие панели, подсказки).
-    * При подмешивании этого миксина в контрол, он вырезается из своего местоположения и вставляется в Body.
+    * Миксин, определяющий поведение контролов, которые отображаются с абсолютным позиционированием поверх всех остальных
+    * компонентов (диалоговые окна, плавающие панели, подсказки).
+    * При подмешивании этого миксина в контрол он вырезается из своего местоположения и вставляется в Body.
     * @mixin SBIS3.CONTROLS.PopupMixin
+    * @public
     */
    var PopupMixin = /** @lends SBIS3.CONTROLS.PopupMixin.prototype */ {
       $protected: {
@@ -501,7 +503,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             br: {
                horizontal: {
                   top: 'bl',
-                  bottom: 'br'
+                  bottom: 'bl'
                },
                vertical: {
                   left: 'tr',
@@ -586,18 +588,16 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          if (orientation == 'vertical') {
             if (offset.top < 0) {
                this._container.css('overflow-y', 'auto');
-               oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
                if (spaces.top < spaces.bottom) {
+                  oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
                   spaces = this._getSpaces(this._options.corner);
-                  this._notifyOnAlignmentChange('top');
                   this._container.css('height', spaces.bottom - (this._options.verticalAlign.offset || 0) - 3 - this._margins.top + this._margins.bottom);
                   offset.top = this._targetSizes.offset.top + oppositeOffset.top;
+                  this._isMovedV = !this._isMovedV;
                } else {
                   offset.top = 0;
-                  this._notifyOnAlignmentChange('bottom');
-                  this._container.css('height', spaces.top - (this._options.verticalAlign.offset || 0)  - this._margins.top + this._margins.bottom);
+                  this._container.css('height', spaces.top - (this._options.verticalAlign.offset || 0) - this._margins.top + this._margins.bottom);
                }
-               this._isMovedV = !this._isMovedV;
             }
             if (this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom < spaces.bottom) {
                this._container.css('overflow-y', 'visible');
@@ -609,18 +609,16 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             if (offset.left < 0) {
                this._container.css('overflow-x', 'auto');
                spaces = this._getSpaces(this._options.corner);
-               oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
                if (spaces.left < spaces.right) {
+                  oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
                   spaces = this._getSpaces(this._options.corner);
-                  this._notifyOnAlignmentChange(null, 'left');
                   this._container.css('width', spaces.right - (this._options.horizontalAlign.offset || 0) - 3 - this._margins.left + this._margins.right);
                   offset.left = this._targetSizes.offset.left + oppositeOffset.left;
+                  this._isMovedH = !this._isMovedH;
                } else {
                   offset.left = 0;
-                  this._notifyOnAlignmentChange(null, 'right');
                   this._container.css('width', spaces.left - (this._options.horizontalAlign.offset || 0) - this._margins.left + this._margins.right);
                }
-               this._isMovedH = !this._isMovedH;
             }
             if (this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right < spaces.right) {
                this._container.css('overflow-x', 'visible');
@@ -693,21 +691,17 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
 
       //TODO Передалать на зависимость только от опций
-      _notifyOnAlignmentChange: function(verticalAlign, horizontalAlign, corner){
-         if (verticalAlign || horizontalAlign || corner){
-            this._notify('onAlignmentChange', {
-               verticalAlign : verticalAlign || this._options.verticalAlign.side,
-               horizontalAlign : horizontalAlign || this._options.horizontalAlign.side,
-               corner : corner || this._options.corner
-            });
-         } else if (this._options.verticalAlign.side != this._currentAlignment.verticalAlign.side ||
-            this._options.horizontalAlign.side != this._currentAlignment.horizontalAlign.side ||
-            this._options.corner != this._currentAlignment.corner){
-            this._notify('onAlignmentChange', {
-               verticalAlign : this._options.verticalAlign.side,
-               horizontalAlign : this._options.horizontalAlign.side,
-               corner : this._options.corner
-            });
+      _notifyOnAlignmentChange: function () {
+         var newAlignment;
+         if (this._options.verticalAlign.side != this._currentAlignment.verticalAlign.side ||
+             this._options.horizontalAlign.side != this._currentAlignment.horizontalAlign.side ||
+             this._options.corner != this._currentAlignment.corner) {
+            newAlignment = {
+               verticalAlign: this._options.verticalAlign,
+               horizontalAlign: this._options.horizontalAlign,
+               corner: this._options.corner
+            };
+            this._notify('onAlignmentChange', newAlignment);
          }
       },
 

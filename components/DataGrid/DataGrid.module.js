@@ -4,6 +4,21 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
     * Контрол отображающий набор данных в виде в таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.DataGrid
     * @extends SBIS3.CONTROLS.ListView
+    * @control
+    * @public
+    * @demo SBIS3.Demo.Control.MyDataGrid
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.DataGrid'>
+    *    <options name="columns" type="array">
+    *       <options>
+    *          <option name="title">Поле 1</option>
+    *          <option name="width">100</option>
+    *       </options>
+    *       <options>
+    *          <option name="title">Поле 2</option>
+    *       </options>
+    *    </options>      
+    * </component>
     */
 
    var DataGrid = ListView.extend(/** @lends SBIS3.CONTROLS.DataGrid.prototype*/ {
@@ -13,29 +28,42 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
          _options: {
             /**
              * @typedef {Object} Columns
-             * @property {String} title
-             * @property {String} field
-             * @property {String} width
-             * @property {String} className
+             * @property {String} title Заголовок колонки
+             * @property {String} field Имя поля
+             * @property {Number} Ширина колонки
+             * Значение необходимо задавать для колонок с фиксированной шириной. 
+             * 
+             * @property {String} className Имя класса, который будет применён к каждой ячейке столбца
              * @property {String} captionTemplate Шаблон отображения шапки колонки
              * @property {String} cellTemplate Шаблон отображения ячейки
              */
             /**
              * @cfg {Columns[]} Набор колонок
+             * @see setColumns
+             * @see getColumns
              */
             columns: [],
             /**
              * @cfg {Boolean} Отображать заголовки колонок
+             * @example
+             * <pre>
+             *     <option name="showHead">false</option>
+             * </pre>
              */
             showHead : true,
             /**
              * @typedef {Object} PagingEnum
-             * @variant no
-             * @variant part
-             * @variant full
+             * @variant no Не используется
+             * @variant part Частичная
+             * @variant full Полная
              */
             /**
              * @cfg {PagingEnum} Режим постраничной навигации
+             * При частичной постраничной навигации заранее неизвестно общее количество страниц.
+             * @example
+             * <pre>
+             *     <option name="paging">full</option>
+             * </pre>
              */
             paging: 'no'
          }
@@ -46,15 +74,25 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
          this._colgroup = $('.controls-DataGrid__colgroup', this._container.get(0))
       },
       /**
-       * Установить страницу
-       * @param num номер страницы
+       * Установить страницу.
+       * Метод установки номера страницы, с которой нужно открыть представление данных.
+       * Работает при использовании постраничной навигации.
+       * @param num Номер страницы.
+       * @example
+       * <pre>
+       *
+       * </pre>
+       * @see getPage
+       * @see paging
        */
       setPage: function(num){
 
       },
 
       /**
-       * Получить текущую страницу
+       * Получить текущую страницу.
+       * @see paging
+       * @see setPage
        */
       getPage: function(){
 
@@ -92,11 +130,17 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
       _getItemActionsContainer : function(id) {
          return $(".controls-ListView__item[data-id='" + id + "']", this._container.get(0)).find('.controls-DataGrid__td').last();
       },
-
+       /**
+        *
+        * @returns {*|columns}
+        */
       getColumns : function() {
          return this._options.columns;
       },
-
+       /**
+        *
+        * @param columns
+        */
       setColumns : function(columns) {
          this._options.columns = columns;
          this._thead.empty();

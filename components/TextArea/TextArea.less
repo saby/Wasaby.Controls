@@ -19,6 +19,10 @@
     border: none;
     background: transparent;
     .box-sizing(border-box);
+    // Internet Explorer 10+ placeholder
+    &:-ms-input-placeholder {
+       color: @gray-color;
+    }
   }
 
   &.ws-has-focus {
@@ -51,6 +55,10 @@
 
     .controls-TextArea__inputField {
       color: @text-area-field-hover-text-color;
+      // Internet Explorer 10+ placeholder
+      &:-ms-input-placeholder {
+        color: @gray-color;
+      }
     }
   }
 

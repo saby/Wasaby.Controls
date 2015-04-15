@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CON
     * Данный класс поведенческий.
     * @class SBIS3.CONTROLS.SwitcherBase
     * @extends $ws.proto.Control
+    * @public
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner stateKey
     * @ignoreOptions subcontrol verticalAlignment parent

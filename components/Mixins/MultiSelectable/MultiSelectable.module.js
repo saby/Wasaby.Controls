@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
     * @mixin SBIS3.CONTROLS.MultiSelectable
+    * @public
     */
 
    var MultiSelectable = /**@lends SBIS3.CONTROLS.MultiSelectable.prototype  */{
@@ -14,10 +15,19 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
              * <pre>
              *     <option name="multiselect">false</option>
              * </pre>
+             * @see selectedItems
              */
             multiselect : true,
             /**
              * @cfg {String[]} Массив идентификаторов выбранных элементов
+             * @example
+             * <pre>
+             *     <options name="selectedItems" type="array">
+             *        <option type="string">1</option>
+             *        <option type="string">2</option>
+             *     </options>
+             * </pre>
+             * @see multiselect
              */
             selectedItems : []
          }

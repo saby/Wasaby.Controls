@@ -16,15 +16,35 @@ define('js!SBIS3.CONTROLS.ListViewDS',
       'use strict';
 
       /**
-       * Контрол, отображающий внутри себя набор однотипных сущностей, умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать
+       * Контрол, отображающий внутри себя набор однотипных сущностей.
+       * Умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
        * @class SBIS3.CONTROLS.ListViewDS
        * @extends $ws.proto.Control
        * @mixes SBIS3.CONTROLS.DSMixin
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
+       * @public
        */
 
       var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
+
+          /**
+           * @event onChangeHoveredItem При переводе курсора мыши на другую запись
+           * Событие срабатывает при смене записи под курсором мыши.
+           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+           * @param {Object} hoveredItem Объект
+           * @param {Number|String} hoveredItem.key ключ элемента представления данных
+           * @param {jQuery|false} hoveredItem.container элемент представления данных
+           * @param {Object} hoveredItem.position координаты контейнера элемента
+           * @param {Number} hoveredItem.top отступ сверху
+           * @param {Number} hoveredItem.left отступ слева
+           * @param {Object} hoveredItem.size размеры контейнера элемента
+           * @param {Number} hoveredItem.height высота
+           * @param {Number} hoveredItem.width ширина
+           * @see itemsActions
+           * @see setItemsActions
+           * @see getItemsActions
+           */
          $protected: {
             _floatCheckBox : null,
             _dotTplFn: dotTplFn,
@@ -33,18 +53,60 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _actsContainer: null,
             _mouseOnItemActions: false,
             _hoveredItem: {
+               target: null,
                key: null,
-               container: null
+               position: null,
+               size: null
             },
             _itemActionsGroup: null,
                _options: {
                /**
-                * @cfg {} Шаблон отображения каждого элемента коллекции
+                * @cfg {String} Шаблон отображения каждого элемента коллекции
+                * !Важно: опция обязательна к заполнению!
+                * @example
+                * <pre>
+                *     <div class="listViewItem" style="height: 30px;">
+                *        <div>{{=it.get("title")}}</div>
+                *     </div>
+                * </pre>
                 */
                itemTemplate: '',
                /**
-                * @cfg {Array} Набор действий, над элементами, отображающийся в виде иконок. Можно использовать для массовых операций.
+                * @typedef {Array} ItemsActions
+                * @property {String} name Имя кнопки.
+                * @property {String} icon Путь до иконки.
+                * @property {String} title Текст на кнопке.
+                * @property {Boolean} isMainAction Отображать ли кнопку на строке или только выпадающем в меню.
+                * На строке кнопки отображаются в том же порядке, в каком они перечислены.
+                * На строке может быть только три кнопки, полный список будет в меню.
+                * @property {Function} onActivated Действие кнопки.
+                * @editor icon ImageEditor
+                * @translatable title
                 */
+               /**
+                * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок
+                * Можно использовать для массовых операций.
+                * @example
+                * <pre>
+                *     <option name="itemsActions">
+                *        <options>
+                *           <option name="name">btn1</option>
+                *           <option name="icon">sprite:icon-16 icon-Delete icon-primary</option>
+                *           <option name="isMainAction">false</option>
+                *           <option name="title">Удалить</option>
+                *           <option name="onActivated" type="function">js!SBIS3.Demo.Control.MyListViewDS:prototype.myOnActivatedHandler</option>
+                *        </options>
+                *        <options>
+                *            <option name="name">btn2</option>
+                *            <option name="icon">sprite:icon-16 icon-Trade icon-primary</option>
+                *            <option name="title">Изменить</option>
+                *            <option name="isMainAction">true</option>
+                *            <option name="onActivated" type="function">js!SBIS3.Demo.Control.MyListViewDS:prototype.myOnActivatedHandler</option>
+                *         </options>
+                *     </option>
+                * </pre>
+                * @see setItemsActions
+                */   
                itemsActions: [{
                   name: 'delete',
                   icon: 'sprite:icon-16 icon-Erase icon-error',
@@ -55,19 +117,46 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   }
                }],
                /**
-                * @cfg {Boolean} Разрешено или нет перемещение элементов Drag-and-Drop
+                * @cfg {Boolean} Разрешено или нет перемещение элементов "Drag-and-Drop"
+                * @example
+                * <pre>
+                *     <option name="itemsDragNDrop">true</option>
+                * </pre>
                 */
                itemsDragNDrop: false,
                /**
-                * @cfg {String|jQuery|HTMLElement} Что отображается когда нет записей
+                * @cfg {String|jQuery|HTMLElement} Отображение при отсутствии записей
+                * @example
+                * <pre>
+                *     <option name="emptyHTML">Нет данных</option>
+                * </pre>
+                * @see setEmptyHTML
                 */
                emptyHTML: null,
                /**
                 * @cfg {Function} Обработчик клика на элемент
+                * @see setElemClickHandler
                 */
                elemClickHandler: null,
+               /**
+                * @cfg {Boolean} Разрешить выбор нескольких строк
+                * Позволяет выбрать несколько строк для одновременного взаимодействия с ними.
+                * При значении данной опции false у связанной панели массовых операций не будет флага "Отметить все".
+                * @example
+                * <pre>
+                *    <option name="multiselect">false</option>
+                * </pre>
+                */
                multiselect: false,
-
+               /**
+                * @cfg {Boolean} Подгружать ли данные по скроллу.
+                * @example
+                * <pre>
+                *    <option name="infiniteScroll">true</option>
+                * </pre>
+                * @see isInfiniteScroll
+                * @see setInfiniteScroll
+                */
                infiniteScroll: false
             },
             _loadingIndicator: undefined,
@@ -119,8 +208,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           */
          _mouseMoveHandler: function(e) {
             var $target = $(e.target),
-                target,
-                targetKey;
+               target,
+               targetKey;
             //Если увели мышку на оперции по ховеру, то делать ничего не надо
             if(this._mouseOnItemActions) {
                return;
@@ -131,16 +220,23 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                return;
             }
             target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
-
             if (target.length) {
                targetKey = target.data('id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
                   this._hoveredItem = {
                      key: targetKey,
-                     container: target
+                     container: target,
+                     position: {
+                        top: target[0].offsetTop,
+                        left: target[0].offsetLeft
+                     },
+                     size: {
+                        height: target[0].offsetHeight,
+                        width: target[0].offsetWidth
+                     }
                   };
-                  this._notify('onChangeHoveredItem', target, targetKey);
-                  this._onChangeHoveredItem(target, targetKey);
+                  this._notify('onChangeHoveredItem', this._hoveredItem);
+                  this._onChangeHoveredItem(this._hoveredItem);
                }
             }
          },
@@ -150,22 +246,22 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           */
          _mouseLeaveHandler: function() {
             this._hoveredItem = {
+               container: null,
                key: null,
-               container: null
+               position: null,
+               size: null
             };
-            this._notify('onChangeHoveredItem', false);
-            this._onChangeHoveredItem(false);
+            this._notify('onChangeHoveredItem', this._hoveredItem);
+            this._onChangeHoveredItem(this._hoveredItem);
          },
          /**
           * Обработчик на смену выделенного элемента представления
-          * @param target
-          * @param targetKey
           * @private
           */
-         _onChangeHoveredItem: function(target, targetKey) {
+         _onChangeHoveredItem: function(hoveredItem) {
            if(this._options.itemsActions.length) {
-              if(target) {
-                 this._showItemActions(target);
+              if(hoveredItem.container) {
+                 this._showItemActions();
               } else {
                  //Если открыто меню опций, то скрывать опции не надо
                  if(this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
@@ -175,9 +271,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            }
          },
 
-         /**
-          * Установить, что отображается когда нет записей
+         /**        
+          * Установить что отображается при отсутствии записей.
           * @param html содержимое блока
+          * @see emptyHTML
           */
          setEmptyHTML: function (html) {
 
@@ -233,34 +330,33 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             ListViewDS.superclass.reload.apply(this, arguments);
          },
 
+          /**
+           * Метод установки/замены обработчика клика на элемент.
+           * @param method
+           * @see elemClickHandler
+           */
          setElemClickHandler: function (method) {
             this._options.elemClickHandler = method;
          },
+
+         //********************************//
+         //   БЛОК ОПЕРАЦИЙ НАД ЗАПИСЬЮ    //
+         //*******************************//
          /**
           * Показывает оперцаии над записью для элемента
-          * @param item
           * @private
           */
-         _showItemActions: function(item) {
-            var res;
-
+         _showItemActions: function() {
             //Создадим операции над записью, если их нет
-            //TODO сделать создание нормально
-            this.getItemActions();
+            this.getItemsActions();
 
             //Если показывается меню, то не надо позиционировать операции над записью
             if(this._itemActionsGroup.isItemActionsMenuVisible()) {
                return;
             }
 
-            this._itemActionsGroup.applyItemActions(item);
-            this._itemActionsGroup.showItemActions(item);
-         },
-         _drawItemsCallback: function () {
-            if (this.isInfiniteScroll()) {
-               this._loadBeforeScrollAppears();
-            }
-            this._drawSelectedItems(this._options.selectedItems);
+            this._itemActionsGroup.applyItemActions();
+            this._itemActionsGroup.showItemActions(this._hoveredItem);
          },
          /**
           * Создаёт операции над записью
@@ -294,6 +390,38 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                this._itemActionsGroup.hoverImitation(e.type === 'mousemove');
             }
          },
+         /**
+          * Геттер для получения операций над записью
+          * @returns {*}
+          * @see itemsActions
+          * @see setItemActions
+          */
+         getItemsActions: function() {
+            if(!this._itemActionsGroup && this._options.itemsActions.length) {
+               this._initItemActions();
+            }
+            return this._itemActionsGroup;
+         },
+         /**
+          * Устанавливает операции над записью
+          * Нужно передать массив обьектов
+          * @param {Array} items
+          * Объект формата {name: ..., icon: ..., name: ..., title: ..., onActivated: ..., linkText: ... , isMainOption: ...}
+          */
+         setItemsAction: function(items) {
+            this._options.itemsActions = items;
+            this.getItemsActions().setItems(items);
+         },
+         //**********************************//
+         //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
+         //*********************************//
+
+         _drawItemsCallback: function () {
+            if (this.isInfiniteScroll()) {
+               this._loadBeforeScrollAppears();
+            }
+            this._drawSelectedItems(this._options.selectedItems);
+         },
          destroy: function() {
             if (this.isInfiniteScroll()){
                if (this._infiniteScrollContainer.length) {
@@ -306,6 +434,16 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          //-----------------------------------infiniteScroll------------------------
          //TODO Сделать подгрузку вверх
          //TODO (?) избавиться от _allowInfiniteScroll - пусть все будет завязано на опцию infiniteScroll
+          /**
+           * Используется ли подгрузка по скроллу.
+           * @returns {Boolean} Возможные значения:
+           * <ol>
+           *    <li>true - используется подгрузка по скроллу;</li>
+           *    <li>false - не используется.</li>
+           * </ol>
+           * @see infiniteScroll
+           * @see setInfiniteScroll
+           */
          isInfiniteScroll : function(){
             return this._options.infiniteScroll;
          },
@@ -384,9 +522,12 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
          },
          /**
-          * Разрешить или запретить подгрузку данных по скроллу.
-          * @param {Boolean} allow - true - разрешить, false - запретить
-          * @param {Boolean} [noLoad] - true - не загружать сразу
+          * Метод изменения возможности подгрузки по скроллу.
+          * Изменяет значение, заданной в опции {@link infiniteScroll}.
+          * @param {Boolean} allow Разрешить (true) или запретить (false) подгрузку по скроллу.
+          * @param {Boolean} [noLoad] Сразу ли загружать (true - не загружать сразу).
+          * @see infiniteScroll
+          * @see isInfiniteScroll
           */
          setInfiniteScroll: function(allow, noLoad){
             this._allowInfiniteScroll = allow;
@@ -397,18 +538,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             this._removeLoadingIndicator();
          },
          /**
-          * Геттер для получения операций над записью
-          * @returns {*}
-          */
-         getItemActions: function() {
-            if(this._options.itemsActions.length && !this._itemActionsGroup) {
-               this._initItemActions();
-            }
-            return this._itemActionsGroup;
-         },
-         /**
           * Геттер для получения текущего выделенного элемента
           * @returns {{key: null | number, container: (null | jQuery)}}
+          * @see itemsActions
+          * @see getItemActions
           */
          getHoveredItem: function() {
            return this._hoveredItem;

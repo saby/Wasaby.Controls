@@ -127,7 +127,22 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
          this._data = [];
          this._index = {};
       },
-
+       /**
+        * Возвращает количество элементов коллекции.
+        * Сначала нужно получить саму коллекцию методом {@link getItems}.
+        * Коллекция задаётся либо опций {@link items}, либо методом {@link setItems}.
+        * @returns {Number} Количество элементов коллекции.
+        * @example
+        * <pre>
+        *     var
+        *        self = this,
+        *        topPar = this.getTopParent(),
+        *        fHideStraight = false;
+        *     if (topPar.getChildControlByName('addDocument').getItems().getItemsCount()===1){
+        *           fHideStraight = true;
+        *     }
+        * </pre>
+        */
       getItemsCount : function() {
          return this._options.adapter.getItemsCount(this._data);
       },

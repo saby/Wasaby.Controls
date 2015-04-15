@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
     * @mixin SBIS3.CONTROLS.DSMixin
+    * @public
     */
 
    var setDataSourceCB = function () {
@@ -113,8 +114,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var
             item = items[0],
             keyField;
-         if (item && Object.prototype.toString.call(item) === '[object Object]') {
-            keyField = Object.keys(item)[0];
+
+         if (this._options.keyField) {
+            keyField = this._options.keyField;
+         }
+         else {
+            if (item && Object.prototype.toString.call(item) === '[object Object]') {
+               keyField = Object.keys(item)[0];
+            }
          }
          this._dataSource = new StaticSource({
             data: items,

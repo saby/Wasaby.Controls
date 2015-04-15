@@ -2,87 +2,98 @@
  * Created by as.suhoruchkin on 02.04.2015.
  */
 define('js!SBIS3.CONTROLS.OperationsMark', [
-   'js!SBIS3.CORE.CompoundControl',
-   'html!SBIS3.CONTROLS.OperationsMark',
    'js!SBIS3.CONTROLS.MenuLink',
-   'js!SBIS3.CONTROLS.CheckBox'
-], function(CompoundControl, dotTplFn) {
+   'js!SBIS3.CONTROLS.CheckBox',
+], function(MenuLink, CheckBox) {
 
-   var OperationsMark = CompoundControl.extend({
-      _dotTplFn: dotTplFn,
-
+   /*TODO Пока что динамическое создание CheckBox, пока не слиты Control и CompaundControl!!!*/
+   var OperationsMark = MenuLink.extend({
       $protected: {
          _options: {
             caption: 'Отметить',
+            linkedView: undefined,
             items: [
                { name: 'selectCurrentPage', title: 'Всю страницу' },
                { name: 'removeSelection', title: 'Снять' },
                { name: 'invertSelection', title: 'Инвертировать' }
             ]
          },
-         _markButton: undefined,
          _markCheckBox: undefined
       },
-      init: function() {
-         OperationsMark.superclass.init.apply(this, arguments);
-         this._markCheckBox = this.getChildControlByName('markCheckBox');
-         this._markButton = this.getChildControlByName('markButton');
-         this._markButton.setItems(this._options.items);
-         this._updateMark();
-         this._markButton.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
-         this._markCheckBox.subscribe('onActivated', this._onCheckBoxActivated.bind(this));
-      },
       $constructor: function() {
-         var view = this.getParent().getLinkedView();
-         this._initHandlers();
-         view.subscribe('onSelectedItemsChange', this._updateMark.bind(this));
+         this._createMarkCheckBox();
+         this._bindEvents();
+         this._updateMark();
       },
-      _initHandlers: function() {
-         $.each(this._options.items, function(key, val){
-            if (val.action) {
-               this[val.name] = val.action;
-            }
+      _initItems: function(items) {
+         var self = this;
+         $.each(items, function(key, val) {
+            self._parseItem(val);
          });
+         OperationsMark.superclass._initItems.apply(this, [items]);
+      },
+      _parseItem: function(item) {
+         if (item.handler) {
+            this[item.name] = item.handler;
+         }
+      },
+      addItem: function(item) {
+         this._parseItem(item);
+         OperationsMark.superclass.addItem.apply(this, [item]);
+      },
+      _bindEvents: function() {
+         this._options.linkedView.subscribe('onSelectedItemsChange', this._updateMark.bind(this));
+         this.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
       },
       _onMenuItemActivate: function(e, id) {
-         this[id]();
+         if (this[id]) {
+            this[id].apply(this);
+         }
       },
       _onCheckBoxActivated: function() {
          this._markCheckBox.isChecked() === true ? this.selectCurrentPage() : this.removeSelection();
       },
       _updateMarkCheckBox: function() {
-         var view = this.getParent().getLinkedView(),
+         var view = this._options.linkedView,
             recordsCount = view._dataSet.getCount(),
             selectedCount = view.getSelectedItems().length;
          this._markCheckBox.setChecked(selectedCount === recordsCount && recordsCount ? true : selectedCount ? null : false);
       },
       _updateMarkButton: function() {
-         var hasMarkOptions = !!this._markButton.getItems().getItemsCount(),
-            view = this.getParent().getLinkedView(),
-            caption,
-            selectedCount;
+         var hasMarkOptions = !!this.getItems().getItemsCount(),
+            selectedCount,
+            caption;
          if (hasMarkOptions) {
-            selectedCount = view.getSelectedItems().length;
+            selectedCount = this._options.linkedView.getSelectedItems().length;
             caption = selectedCount ? 'Отмечено(' + selectedCount + ')' : 'Отметить';
-            this._markButton.setCaption(caption);
+            this.setCaption(caption);
          }
-         this._markButton.setVisible(hasMarkOptions)
+         this.setVisible(hasMarkOptions);
       },
       _updateMark: function() {
          this._updateMarkButton();
          this._updateMarkCheckBox();
       },
       selectCurrentPage: function() {
-         this.getParent().getLinkedView().setSelectedItemsAll()
+         this._options.linkedView.setSelectedItemsAll()
       },
       removeSelection: function() {
-         this.getParent().getLinkedView().setSelectedItems([]);
+         this._options.linkedView.setSelectedItems([]);
       },
       invertSelection: function() {
-         this.getParent().getLinkedView().toggleItemsSelectionAll();
+         this._options.linkedView.toggleItemsSelectionAll();
+      },
+      _createMarkCheckBox: function() {
+         this._markCheckBox = new CheckBox({
+            threeState: true,
+            element: $('<span>').insertBefore(this._container),
+            className: 'controls-OperationsMark-checkBox',
+            handlers: {
+               onActivated: this._onCheckBoxActivated.bind(this)
+            }
+         });
       }
    });
 
    return OperationsMark;
-
 });
