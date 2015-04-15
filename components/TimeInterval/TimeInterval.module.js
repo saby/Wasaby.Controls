@@ -58,6 +58,10 @@ define(
              */
             _lastSelection: null,
             /**
+             * Общее кол-во минут
+             */
+            totalMinutes: null,
+            /**
              * Опции создаваемого контролла
              */
             _options: {
@@ -111,7 +115,7 @@ define(
             this._options.mask = this._primalMask = mask;
             this._clearMask = this._getClearMask();
             this._maskRegExp = this._getRegExpByMask(this._primalMask);
-            this._drawInterval();
+            this._setText();
             //TODO исправить выставление курсора
             setTimeout(function() {
                //Если контрол не сфокусирован, и мы вызываем нажатие alt, то
@@ -139,50 +143,20 @@ define(
          _hasMaskPattern: function(pattern){
             return this._options.mask.indexOf(pattern) > -1;
          },
-
-         /**
-          * Добавляет _placeholder к первому блоку данных, если нужно
-          * @param {String/Number} element
-          * @private
-          */
-         _addPlaceholder: function(element){
-            if (element.indexOf(this._placeholder) > - 1 || element.length > 3){
-               return element;
-            }
-            return this._placeholder + element;
-         },
-
          /**
           * Установить дни,часы или минуты
           * @param {String} pattern Значения D(дни), H(часы), I(минуты).
           * @param {String/Number} patternValue Значение, которое хотим установить
           */
-         _setPattern: function(pattern, patternValue){
-            var availMaskArray = this._options.mask.split(':'),
-               availTextArray = this._options.text.split(':'),
-               patternIndex = this._getIndexForPattern(pattern),
-               changeMask;
-
+         _setPattern: function(pattern, newPatternValue){
+            var coefficient = { D : 24 * 60, H : 60, I: 1 },
+                totalMinutes = this._getTotalMinutes(),
+                patternValue = this._getPatterns(pattern);
             if (!this._hasMaskPattern(pattern)){
                return;
             }
-
-            patternValue = patternValue.toString().replace(/[^\d]/g, '');
-            if (!(pattern == 'H' && this._hasMaskPattern('D') || pattern == 'I')) {
-               if (patternValue.length > 4) {
-                  patternValue = "9999";
-               }
-               while (patternValue.length > availMaskArray[0].length){
-                  availMaskArray[0] = pattern + availMaskArray[0];
-                  changeMask = true;
-               }
-               if (changeMask) {
-                  this._setMask(availMaskArray.join(':'));
-               }
-            }
-            availTextArray[patternIndex] = this._addPlaceholder(patternValue);
-            this._options.text = availTextArray.join(':');
-            this.setInterval( this._getIntervalByText(this._options.text), true );
+            totalMinutes = totalMinutes - patternValue * coefficient[pattern] + (parseInt(newPatternValue) * coefficient[pattern]);
+            this._setText(this._getTextByTotalMinutes(totalMinutes));
          },
 
          /**
@@ -221,7 +195,6 @@ define(
                return;
             }
             this._setText(text);
-
          },
 
          /**
@@ -231,15 +204,22 @@ define(
           * @private
           */
          _setText: function(text, checkValues){
-            var availTextArray = text.split(":"),
-               dataContainers = this.getContainer().find('em');
+            var dataContainers = this.getContainer().find('em'),
+               availTextArray;
+
+            if (!text){
+               text = this._options.text;
+            }
+            availTextArray = text.split(":");
             for (var i = 0; i < (this._hasMaskPattern('D') + this._hasMaskPattern('I') + 1);i++){
                $(dataContainers[i * 2]).text(availTextArray[i]);
             }
+            this._options.text = availTextArray.join(':');
+
             if (checkValues){
                this._correctInterval();
             }
-            this._options.interval = text == '' ? null : this._getIntervalByText( text );
+            this._options.interval = this._getIntervalByTotalMinutes();
             this._notify('onChangeInterval', this._options.interval);
          },
 
@@ -259,11 +239,12 @@ define(
           */
          _setInterval: function (interval, dontCheck) {
             this._options.interval = interval;
-            this._options.text = this._getTextByInterval(interval);
+            this.totalMinutes = this._getTotalMinutesByInterval(interval);
+            this._options.text = this._getTextByTotalMinutes(this.totalMinutes);
             if (dontCheck !== true){
                this._correctInterval();
             }
-            this._drawInterval();
+            this._setText();
          },
          /**
           * Получить интервал
@@ -272,103 +253,69 @@ define(
             return this._options.interval;
          },
 
-         /**
-          * Получить интервал по тексту
-          */
-         _getIntervalByText: function(text){
-            var regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
-               availCharsArray = this._options.mask.match(regexp),
-               availTextArray,
-               interval = '';
+         _getIntervalByTotalMinutes: function(){
+            var patternValues = this._getPatternValues(),
+               availMaskArray = this._options.mask.split(":"),
+               interval = '',
+               prefix = { D : "P", H : "T", I : ""},
+               manageChar,
+               patternIndex;
+            for(var i = 0; i < availMaskArray.length; i++){
+               manageChar = availMaskArray[i][0];
+               patternIndex = this._getIndexForPattern(manageChar);
+               if (patternIndex < 0){
+                  continue;
+               }
 
-            text = text.replace(new RegExp(this._placeholder,'g'), "");
-            availTextArray = text.split(':');
-
-            for (var i = 0; i < availCharsArray.length; i++) {
-               interval += this._getPartIntervalByPattern(availCharsArray[i], availTextArray[i]);
+               if (patternValues[i] > 0){
+                  interval += prefix[manageChar] + patternValues[patternIndex] + manageChar;
+               }
             }
-            return interval;
+            return interval.replace('I', 'M');
+         },
+         /**
+          * Получить _options.text
+          */
+         _getTextByTotalMinutes: function (totalMinutes) {
+            var patternValues = this._getPatternValues(totalMinutes),
+               prefix = '___',
+               availMaskArray = this._options.mask.split(":");
+
+            //Увеличиваем маску, если нужно
+            while (patternValues[0].toString().length > availMaskArray[0].length && availMaskArray[0].length < 4) {
+               availMaskArray[0] += availMaskArray[0][0];
+            }
+            this._setMask(availMaskArray.join(':'));
+
+            for (var i = 0; i < patternValues.length; i++) {
+               if (i > 0) {
+                  prefix += 0;
+               }
+               patternValues[i] = (prefix + patternValues[i]).slice(-availMaskArray[i].length);
+            }
+            return patternValues[0] + ":" + patternValues[1] + (patternValues.length > 2 ? ":" + patternValues[2] : "");
          },
 
-         _getPartIntervalByPattern: function(availChars, availText){
-            var pattern = availChars[0],
-               controlChar = '';
-            if (availChars.indexOf(pattern) == -1 || !availText){
-               return '';
-            }
-            switch (pattern){
-               case 'D':
-                  controlChar = 'P';
-                  break;
-               case 'H':
-                  controlChar = 'T';
-                  break;
-               case 'I':
-                  pattern = 'M';
-                  break;
-            }
-            return controlChar + availText + pattern;
-         },
-
-         /**
-          * Получить _options.text из интервала
-          */
-         _getTextByInterval: function(interval){
-            var i = 0,
-               textObj = {},
-               text = this._options.mask,
-               availCharsArray = this._options.mask.split(':'),
-               valueByManageChar,
-               num;
-
+         _getTotalMinutesByInterval: function(interval){
+            var manageChar = '',
+               val = '',
+               totalMinutes = 0,
+               coefficient = {M : 1, H : 60, D : 24*60};
             interval = interval.replace('P', '').replace('T', '');
 
-            while(interval[i]){
-               if (isFinite(interval[i])){
-                  num = 0;
-                  while (isFinite(interval[i])){
-                     num = num * 10 + parseInt(interval[i++]);
+            for (var i = interval.length - 1; i >= -1 ; i--){
+               if (isFinite(interval[i])) {
+                  val = interval[i] + val;
+               } else {
+                  if (val) {
+                     totalMinutes += parseInt(val) * coefficient[manageChar];
+                     val = '';
                   }
-               } else{
-                  valueByManageChar = this._getPartTextByPattern(availCharsArray, interval[i++], num);
-                  textObj[valueByManageChar[0]] = valueByManageChar[1];
+                  manageChar = interval[i];
                }
             }
-
-            for (i in textObj) {
-               if (textObj.hasOwnProperty(i)) {
-                  text = text.replace(i, textObj[i])
-               }
-            }
-            text = text.replace(/[DHI]/g, "_");
-            return text;
+            return totalMinutes;
          },
-
-         _getPartTextByPattern: function(availCharsArray, manageChar, num){
-            var searchPattern,
-               prefix = '___',
-               needZeroInPrefix = !(manageChar == 'D' || (manageChar == 'H' && !this._hasMaskPattern('D')));
-            if (needZeroInPrefix)
-               prefix += 0;
-            searchPattern = manageChar = manageChar.replace('M','I');
-            for(var j = 3; j > 0; j--){
-               for(var i = 0; i < j; i++){
-                  searchPattern += manageChar;
-               }
-               if (availCharsArray.indexOf(searchPattern) > -1)
-                  return [searchPattern, (prefix + num).slice(-searchPattern.length)];
-               searchPattern = manageChar;
-            }
-         },
-         /**
-          * Обновить поле даты по текущему значению даты в this._options.interval
-          * @private
-          */
-         _drawInterval: function(){
-            var newText = this._options.interval == null ? '' : this._getTextByInterval(this._options.interval);
-            this._setText(newText);
-         },
-
          /**
           * Проверяем, не превысили ли введенные значения свой максимум
           * @private
@@ -380,7 +327,7 @@ define(
          //Устанавливаем часы и минуты в их диапазоне
          _correctInterval: function(){
             if (!this._checkBoundaryValues()){
-               this.incValue(0);
+               this._setText(this._getTextByTotalMinutes());
             }
          },
          /**
@@ -389,25 +336,8 @@ define(
           * @private
           */
          incValue: function(incMinutes){
-            var allMinutes,
-               minutes,
-               hours,
-               days;
-            allMinutes = (this._getPatterns('D') * 24 + this._getPatterns('H')) * 60 + this._getPatterns('I') + parseInt(incMinutes == "" ? 0 : incMinutes);
-            if (allMinutes < 0){
-               days = hours = minutes = 0;
-            }
-            else{
-               if (this._hasMaskPattern('D')){
-                  days = allMinutes / (24 * 60) | 0;
-                  allMinutes %= 24 * 60;
-               }
-               hours = allMinutes / 60 | 0;
-               minutes = allMinutes % 60;
-            }
-            this._setPattern('D', days);
-            this._setPattern('I', minutes);
-            this._setPattern('H', hours);
+            var totalMinutes = this._getTotalMinutes() + parseInt(incMinutes == "" ? 0 : incMinutes);
+            this._setText(this._getTextByTotalMinutes(totalMinutes));
          },
 
          /**
@@ -428,6 +358,41 @@ define(
                   return this._hasMaskPattern('D') ? 2 : 1;
                   break;
             }
+         },
+
+         /**
+          * Получить общее кол-во минут
+          * @param pattern D - дни, H - часы, I - минуты
+          */
+         _getTotalMinutes: function(){
+            return (this._getPatterns('D') * 24 + this._getPatterns('H')) * 60 + this._getPatterns('I');
+         },
+
+         _getPatternValues: function(totalMinutes){
+            var patternArray = [],
+               minutes,
+               hours,
+               days;
+            if (!totalMinutes){
+               totalMinutes = this._getTotalMinutes();
+            }
+            if (totalMinutes < 0){
+               days = hours = minutes = 0;
+            }
+            else{
+               if (this._hasMaskPattern('D')){
+                  days = totalMinutes / (24 * 60) | 0;
+                  patternArray.push(days);
+                  totalMinutes %= 24 * 60;
+               }
+               hours = totalMinutes / 60 | 0;
+               patternArray.push(hours);
+               minutes = totalMinutes % 60;
+               if (this._hasMaskPattern('I')){
+                  patternArray.push(minutes);
+               }
+            }
+            return patternArray;
          },
          /**
           * Получить Дни, Часы, минуты
@@ -479,8 +444,8 @@ define(
                 minLengthMask = 7,//Минимальная длина маски в символах
                 minutesLengthMask = (this._hasMaskPattern('I') && this._hasMaskPattern('D')) ? 3 : 0;//Если маска имеет дни и минуты, то увеличиваем minLengthMask на 3
 
-            this._options.interval = this._getIntervalByText(text);
-            this._options.text = this._getTextByInterval(this._options.interval);
+            this._options.text = text;
+            this._options.interval = this._getIntervalByTotalMinutes();
 
             if (this._options.mask.length < (minLengthMask + minutesLengthMask) && text.split(':')[0].indexOf('_') == -1) {
                this._options.text = this._placeholder + text;
