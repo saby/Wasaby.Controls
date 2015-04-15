@@ -113,7 +113,6 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
          openNode: function (key) {
             var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
 
-
             $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
             // $('.controls-TreeView__childContainer', itemCont).first().css('display', 'block');
 
@@ -121,6 +120,8 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
 
             var filter = this._filter || {};
             filter[self._options.hierField] = key;
+
+            //TODO: проверка что уже загружали ветку и просто показать ее
             self._dataSource.query(filter).addCallback(function (dataSet) {
                self._dataSet.merge(dataSet);
                dataSet.each(function (record) {
