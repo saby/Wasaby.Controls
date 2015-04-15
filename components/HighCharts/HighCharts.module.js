@@ -31,8 +31,8 @@ function(BaseControl, dotTpl){
       }
    }
    /**
-    * Диаграмма HighChartsLight
-    * @class $ws.proto.HighCharts
+    * Диаграмма HighCharts
+    * @class HighCharts
     * @extends $ws.proto.Control
     * @control
     * @public
@@ -42,7 +42,7 @@ function(BaseControl, dotTpl){
     * <component data-component='SBIS3.CONTROLS.HighCharts'>
     * </component>
     */
-   $ws.proto.HighCharts = BaseControl.Control.extend(/** @lends $ws.proto.HighCharts.prototype */{
+   var HighCharts = BaseControl.Control.extend(/** @lends HighCharts.prototype */{
       /**
        * @event onBeforeReload перед перерисовкой диаграммы
        * может использоваться для задания специфических опций при отрисовке диаграммы, например, когда надо сделать подпись в зависимости от условий
@@ -707,7 +707,7 @@ function(BaseControl, dotTpl){
       },
 
       init : function() {
-         $ws.proto.HighCharts.superclass.init.call(this);
+         HighCharts.superclass.init.call(this);
 
          var self = this;
          //читаем фильтры из контекста
@@ -1090,9 +1090,9 @@ function(BaseControl, dotTpl){
             this.getLinkedContext().unsubscribe('onFieldChange', this._ctxFieldChangeHandler);
             this.getLinkedContext().unsubscribe('onDataBind', this._ctxDataBindHandler);
          }
-         $ws.proto.HighCharts.superclass.destroy.call(this);
+         HighCharts.superclass.destroy.call(this);
       }
 
    });
-   return $ws.proto.HighCharts;
+   return HighCharts;
 });
