@@ -9,7 +9,7 @@ function(BaseControl, dotTpl){
 
    /**
     * Диаграмма HighChartsLight
-    * @class $ws.proto.HighChartsLight
+    * @class HighChartsLight
     * @extends $ws.proto.Control
     * @control
     * @public
@@ -19,7 +19,7 @@ function(BaseControl, dotTpl){
     * <component data-component='SBIS3.CONTROLS.HighChartsLight'>
     * </component>
     */
-   $ws.proto.HighChartsLight = BaseControl.Control.extend(/** @lends $ws.proto.HighChartsLight.prototype */{
+   var HighChartsLight = BaseControl.Control.extend(/** @lends HighChartsLight.prototype */{
       _dotTplFn : dotTpl,
       $protected : {
          _chartObj : null,
@@ -567,7 +567,7 @@ function(BaseControl, dotTpl){
       },
 
       init : function() {
-         $ws.proto.HighChartsLight.superclass.init.call(this);
+         HighChartsLight.superclass.init.call(this);
          if (this._options.firstLoad !== false) {
             this._drawHighChart();
          }
@@ -656,5 +656,5 @@ function(BaseControl, dotTpl){
       }
 
    });
-   return $ws.proto.HighChartsLight;
+   return HighChartsLight;
 });
