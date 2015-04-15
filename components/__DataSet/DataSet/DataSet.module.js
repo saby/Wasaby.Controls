@@ -238,7 +238,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @param dataSetMergeFrom Датасет, из которого будет происходить мерж
        */
       merge: function(dataSetMergeFrom){
-         this._addRecords(dataSetMergeFrom._getRecords())
+         this._addRecords(dataSetMergeFrom._getRecords());
       },
       _prepareRecordForAdd: function (record) {
          //FixME: потому что метод создать не возвращает тип поля "идентификатор"

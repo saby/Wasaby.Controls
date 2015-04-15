@@ -13,114 +13,141 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
     */
 
    var TreeViewDS = ListViewDS.extend([TreeMixinDS, hierarchyMixin], /** @lends SBIS3.CONTROLS.TreeViewDS.prototype*/ {
-      $protected: {
-         _options:{
-            itemsActions:[]//FixME: так как приходит набор от листвью. пока он не нужен
-         }
-      },
+         $protected: {
+            _options: {
+               itemsActions: []//FixME: так как приходит набор от листвью. пока он не нужен
+            }
+         },
 
-      $constructor: function () {
-      },
+         $constructor: function () {
+         },
 
-      _createItemInstance: function (item, targetContainer) {
+         reload: function () {
+            if (this._filter === undefined) {
+               this._filter = {};
+            }
+            this._filter[this._options.hierField] = this._options.root;
+            TreeViewDS.superclass.reload.apply(this, arguments);
+         },
 
-         var self = this,
-            key = item.getKey(),
-            itemTpl = this._getItemTemplate(item),
-            container, dotTemplate,
-            itemWrapper = this._drawItemWrapper(item);
+         _createItemInstance: function (item, targetContainer) {
 
-         if (typeof itemTpl == 'string') {
-            dotTemplate = itemTpl;
-         }
-         else if (itemTpl instanceof Function) {
-            dotTemplate = itemTpl(item);
-         }
+            var self = this,
+               key = item.getKey(),
+               itemTpl = this._getItemTemplate(item),
+               container, dotTemplate,
+               itemWrapper = this._drawItemWrapper(item);
 
-         if (typeof dotTemplate == 'string') {
+            if (typeof itemTpl == 'string') {
+               dotTemplate = itemTpl;
+            }
+            else if (itemTpl instanceof Function) {
+               dotTemplate = itemTpl(item);
+            }
 
-            container = $(MarkupTransformer(doT.template(dotTemplate)(item)));
+            if (typeof dotTemplate == 'string') {
 
-            // вставляем в шаблон тривью пользовательский + добавляем кнопку развертки
-            $('.js-controls-ListView__itemContent', itemWrapper).append(container).before('<div class="controls-TreeView__expand js-controls-TreeView__expand"></div>');
+               container = $(MarkupTransformer(doT.template(dotTemplate)(item)));
 
-            this._addItemClasses(itemWrapper, key);
+               // вставляем в шаблон тривью пользовательский + добавляем кнопку развертки
+               $('.js-controls-ListView__itemContent', itemWrapper).append(container).before('<div class="controls-TreeView__expand js-controls-TreeView__expand"></div>');
 
-            targetContainer.append(itemWrapper);
+               this._addItemClasses(itemWrapper, key);
 
-            $('.js-controls-TreeView__expand', itemWrapper).click(function () {
-               var id = $(this).closest('.controls-ListView__item').attr('data-id');
-               self.toggleNode(id);
-            });
+               targetContainer.append(itemWrapper);
 
-         }
-         else {
-            throw new Error('Шаблон должен быть строкой');
-         }
-      },
+               $('.intro', itemWrapper).click(function () {
+                  var id = $(this).closest('.controls-ListView__item').attr('data-id');
+               });
 
-      _drawItemWrapper: function (item) {
-         return $('<div>\
+               $('.js-controls-TreeView__expand', itemWrapper).click(function () {
+                  var id = $(this).closest('.controls-ListView__item').attr('data-id');
+                  self.toggleNode(id);
+               });
+
+            }
+            else {
+               throw new Error('Шаблон должен быть строкой');
+            }
+         },
+
+         _drawItemWrapper: function (item) {
+            return $('<div>\
             <div class="controls-TreeView__item">\
                <div class="controls-TreeView__itemContent js-controls-ListView__itemContent"></div>\
             </div>\
          </div>');
-      },
+         },
 
-      _getTargetContainer: function (record) {
-         var parentKey = this.getParentKey(this._dataSet, record),
-            curList;
-         if (parentKey) {
-            var curItem = $('.controls-ListView__item[data-id="' + parentKey + '"]', this.getContainer().get(0));
-            curList = $('.controls-TreeView__childContainer', curItem.get(0)).first();
-            if (!curList.length) {
-               curList = $('<div></div>').appendTo(curItem).addClass('controls-TreeView__childContainer');
+         _getTargetContainer: function (record) {
+            var parentKey = this.getParentKey(this._dataSet, record),
+               curList;
+            console.log(parentKey)
+            if (parentKey) {
+               var curItem = $('.controls-ListView__item[data-id="' + parentKey + '"]', this.getContainer().get(0));
+               curList = $('.controls-TreeView__childContainer', curItem.get(0)).first();
+               if (!curList.length) {
+                  curList = $('<div></div>').appendTo(curItem).addClass('controls-TreeView__childContainer');
+               }
+               $('.controls-TreeView__item', curItem).first().addClass('controls-TreeView__hasChild');
+            } else {
+               curList = this._getItemsContainer();
             }
-            $('.controls-TreeView__item', curItem).first().addClass('controls-TreeView__hasChild');
-         } else {
-            curList = this._getItemsContainer();
+
+            return curList;
+         },
+
+         /**
+          * Раскрыть определенный узел
+          * @param {String} key Идентификатор раскрываемого узла
+          */
+         openNode: function (key) {
+            var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
+            $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
+            $('.controls-TreeView__childContainer', itemCont).first().css('display', 'block');
+
+            var childItems = this.getChildItems(key);
+            var self = this;
+
+            $ws.helpers.forEach(childItems, function (value) {
+               var record = self._dataSet.getRecordByKey(value);
+               var targetContainer = self._getTargetContainer(record);
+               if (targetContainer) {
+                  self._drawItem(record, targetContainer);
+               }
+            });
+
+         },
+         /**
+          * Закрыть определенный узел
+          * @param {String} key Идентификатор раскрываемого узла
+          */
+         closeNode: function (key) {
+            var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
+            $('.js-controls-TreeView__expand', itemCont).removeClass('controls-TreeView__expand__open');
+            $('.controls-TreeView__childContainer', itemCont).css('display', 'none').empty();
+         },
+
+         /**
+          * Закрыть или открыть определенный узел
+          * @param {String} key Идентификатор раскрываемого узла
+          */
+
+         toggleNode: function (key) {
+            var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
+            if ($('.js-controls-TreeView__expand', itemCont).hasClass('controls-TreeView__expand__open')) {
+               this.closeNode(key);
+            }
+            else {
+               this.openNode(key);
+            }
          }
 
-         return curList;
-      },
 
-      /**
-       * Раскрыть определенный узел
-       * @param {String} key Идентификатор раскрываемого узла
-       */
-      openNode: function (key) {
-         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-         $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
-         $('.controls-TreeView__childContainer', itemCont).first().css('display', 'block');
-      },
-      /**
-       * Закрыть определенный узел
-       * @param {String} key Идентификатор раскрываемого узла
-       */
-      closeNode: function (key) {
-         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-         $('.js-controls-TreeView__expand', itemCont).removeClass('controls-TreeView__expand__open');
-         $('.controls-TreeView__childContainer', itemCont).css('display', 'none');
-      },
-
-      /**
-       * Закрыть или открыть определенный узел
-       * @param {String} key Идентификатор раскрываемого узла
-       */
-
-      toggleNode: function (key) {
-         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-         if ($('.js-controls-TreeView__expand', itemCont).hasClass('controls-TreeView__expand__open')) {
-            this.closeNode(key);
-         }
-         else {
-            this.openNode(key);
-         }
-      }
-
-
-   });
+      })
+      ;
 
    return TreeViewDS;
 
-});
+})
+;

@@ -1,5 +1,7 @@
 define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
+   // только работа с иерархией, ничего больше
+
    var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
       $protected: {
          _indexTree: {},
@@ -53,6 +55,19 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
          this._indexTree = indexTree;
          DataSet.setIndexTree(indexTree);
+      },
+
+      getChildItems: function (parentId) {
+         parentId = parentId || null;
+         return  this._indexTree[parentId];
+      },
+
+      hasChild: function (parentKey) {
+         return this._indexTree.hasOwnProperty(parentKey);
+      },
+
+      getParent: function () {
+
       },
 
       getParentKey: function (DataSet, record) {

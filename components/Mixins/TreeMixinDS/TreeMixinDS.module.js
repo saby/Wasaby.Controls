@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
              * @cfg {String} Идентификатор узла, относительно которого надо отображать данные
              * @noShow
              */
-            root: '',
+            root: null,
             /**
              * @cfg {Boolean} При открытия узла закрывать другие
              * @noShow
@@ -27,10 +27,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
              * @cfg {String[]} Набор идентификаторов, обозначающих какую ветку надо развернуть при инициализации
              */
             openedPath: '',
-            /**
-             * @cfg {String} Поле иерархии
-             */
-            hierField: null,
+
             openType: 'nothing'
          }
       },
@@ -39,6 +36,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
 
       _redraw: function () {
 
+         console.log('_redraw');
+
          this._clearItems();
          var
             self = this,
@@ -46,8 +45,11 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
 
          this.hierIterate(DataSet, function (record) {
             var
-               targetContainer = self._getTargetContainer(record);
-            if (targetContainer) {
+               targetContainer;
+
+            var parentKey = self.getParentKey(DataSet, record);
+
+            if ((targetContainer = self._getTargetContainer(record)) && (parentKey == self._options.root)) {
                self._drawItem(record, targetContainer);
             }
          });
