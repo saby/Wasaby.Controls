@@ -2028,6 +2028,35 @@ input[type="reset"]::-moz-focus-inner {
   left: 4px;
   top: 8px;
 }
+.controls-MultiView .controls-MultiView__listItem {
+  height: 16px;
+  line-height: 16px;
+  padding: 6px 6px;
+  cursor: pointer;
+}
+.controls-MultiView .controls-MultiView__listItem:hover {
+  background: #f3f3f3;
+}
+.controls-MultiView .controls-MultiView__tileItem {
+  width: 128px;
+  height: 128px;
+  float: left;
+  box-sizing: border-box;
+  border: 1px solid #dddddd;
+  margin: 0 16px 16px 0;
+  cursor: pointer;
+  text-align: center;
+}
+.controls-MultiView .controls-MultiView__tileItem:hover {
+  background: #f3f3f3;
+}
+.controls-MultiView .controls-MultiView__tileItem .controls-MultiView__tileImg {
+  width: 96px;
+  height: 96px;
+}
+.controls-MultiView .controls-MultiView__tileItem .controls-MultiView__tileText {
+  margin-top: 7px;
+}
 .controls-operations-panel {
   height: 30px;
   overflow: visible !important;
