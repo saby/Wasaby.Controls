@@ -56,7 +56,7 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
 
                targetContainer.append(itemWrapper);
 
-               if(item.get(this._options.hierField + '@')){
+               if (item.get(this._options.hierField + '@')) {
                   $('.controls-ListView__item[data-id="' + key + '"] .controls-TreeView__item', this.getContainer().get(0)).first().addClass('controls-TreeView__hasChild');
                }
 
@@ -85,18 +85,16 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
 
          _getTargetContainer: function (record) {
             var parentKey = this.getParentKey(this._dataSet, record),
-               parent = record.get(this._options.hierField + '@'),
-               curItem,
                curList;
 
             if (parentKey) {
-               curItem = $('.controls-ListView__item[data-id="' + parentKey + '"]', this.getContainer().get(0));
+               var curItem = $('.controls-ListView__item[data-id="' + parentKey + '"]', this.getContainer().get(0));
                curList = $('.controls-TreeView__childContainer', curItem.get(0)).first();
                if (!curList.length) {
                   curList = $('<div></div>').appendTo(curItem).addClass('controls-TreeView__childContainer');
                }
 
-               if (parent) {
+               if (record.get(this._options.hierField + '@')) {
                   console.log(record.getKey() + ' is parent ');
                   $('.controls-TreeView__item', curItem).first().addClass('controls-TreeView__hasChild');
                }
