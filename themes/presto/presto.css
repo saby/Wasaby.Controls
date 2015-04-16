@@ -905,6 +905,9 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #ffffff transparent transparent transparent;
   background: transparent;
 }
+.controls-Button.controls-MenuButton.controls-Button__primary:hover.ws-disabled .controls-MenuButton__arrowDown {
+  background: transparent;
+}
 .controls-Button.controls-MenuButton.controls-Button__primary:hover .controls-MenuButton__arrowDown {
   border-width: 8px 8px 0 8px;
   border-style: solid;
