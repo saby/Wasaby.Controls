@@ -65,10 +65,19 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 * !Важно: опция обязательна к заполнению!
                 * @example
                 * <pre>
-                *     <div class="listViewItem" style="height: 30px;">
-                *        <div>{{=it.get("title")}}</div>
+                *     <div class="listViewItem" style="height: 30px;">\
+                *        {{=it.get("title")}}\
                 *     </div>
                 * </pre>
+                * @remarks Почему нет флажков при включенной опции {@link multiselect}?
+                * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
+                * <pre>
+                *     <div class="listViewItem" style="height: 30px;">\
+                *        <span class="controls-ListView__itemCheckBox"></span>\
+                *        {{=it.get("title")}}\
+                *     </div>
+                * </pre>
+                * @see multiselect
                 */
                itemTemplate: '',
                /**
@@ -141,15 +150,25 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                /**
                 * @cfg {Boolean} Разрешить выбор нескольких строк
                 * Позволяет выбрать несколько строк для одновременного взаимодействия с ними.
-                * При значении данной опции false у связанной панели массовых операций не будет флага "Отметить все".
+                *
                 * @example
                 * <pre>
                 *    <option name="multiselect">false</option>
                 * </pre>
+                * @remarks Почему нет флажков при включенной опции {@link multiselect}?
+                * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
+                * <pre>
+                *     <div class="listViewItem" style="height: 30px;">\
+                *        <span class="controls-ListView__itemCheckBox"></span>\
+                *        {{=it.get("title")}}\
+                *     </div>
+                * </pre>
+                * @remarks При значении данной опции false у связанной панели массовых операций не будет флага "Отметить все".
+                * @see itemTemplate
                 */
                multiselect: false,
                /**
-                * @cfg {Boolean} Подгружать ли данные по скроллу.
+                * @cfg {Boolean} Подгружать ли данные по скроллу
                 * @example
                 * <pre>
                 *    <option name="infiniteScroll">true</option>
@@ -273,7 +292,11 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
          /**        
           * Установить что отображается при отсутствии записей.
-          * @param html содержимое блока
+          * @param html Содержимое блока.
+          * @example
+          * <pre>
+          *     dataGrid.setEmptyHTML('Нет записей');
+          * </pre>
           * @see emptyHTML
           */
          setEmptyHTML: function (html) {
@@ -319,6 +342,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).addClass('controls-ListView__item__selected');
             }
          },
+          /**
+           * Перезагружает набор записей представления данных с последующим обновлением отображения.
+           * @example
+           * <pre>
+           *    dataGrid.reload();
+           * </pre>
+           */
          reload: function(){
             if (this.isInfiniteScroll()) {
                this._loadingIndicator = undefined;
@@ -331,7 +361,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
 
           /**
-           * Метод установки/замены обработчика клика на элемент.
+           * Метод установки/замены обработчика клика по строке.
            * @param method
            * @see elemClickHandler
            */
@@ -391,8 +421,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
          },
          /**
-          * Геттер для получения операций над записью
-          * @returns {*}
+          * Метод получения операций над записью.
+          * @returns {Array}
           * @see itemsActions
           * @see setItemActions
           */
@@ -403,10 +433,21 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             return this._itemActionsGroup;
          },
          /**
-          * Устанавливает операции над записью
+          * Метод установки или замены кнопок операций над записью, заданных в опции {@link itemsActions}
           * Нужно передать массив обьектов
-          * @param {Array} items
-          * Объект формата {name: ..., icon: ..., name: ..., title: ..., onActivated: ..., linkText: ... , isMainOption: ...}
+          * @param {Array} items Объект формата {name: ..., icon: ..., title: ..., onActivated: ..., isMainOption: ...}
+          * @param {String} items.name Имя кнопки операции над записью.
+          * @param {String} items.icon Иконка кнопки.
+          * @param {String} items.title Текст на кнопке.
+          * @param {String} items.onActivated Имя функции, задабщей действие кнопки.
+          * @param {String} items.isMainOption На строке ли кнопка (или в меню).
+          * @example
+          * <pre>
+          *     dataGrid.setItemsActions()
+          * <pre>
+          * @see itemsActions
+          * @see getItemsActions
+          * @see getHoveredItem
           */
          setItemsAction: function(items) {
             this._options.itemsActions = items;
@@ -422,6 +463,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
             this._drawSelectedItems(this._options.selectedItems);
          },
+          /**
+           *
+           */
          destroy: function() {
             if (this.isInfiniteScroll()){
                if (this._infiniteScrollContainer.length) {
