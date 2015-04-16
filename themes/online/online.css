@@ -905,6 +905,9 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent;
   background: transparent url('img/MenuButton-arrowDown__primary.png') 0 0;
 }
+.controls-Button.controls-MenuButton.controls-Button__primary:hover.ws-disabled .controls-MenuButton__arrowDown {
+  background: transparent url('img/MenuButton-arrowDown.png') 0 0;
+}
 .controls-Button.controls-MenuButton.controls-Button__primary:hover .controls-MenuButton__arrowDown {
   border-width: 0;
   border-style: solid;
@@ -1461,6 +1464,9 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+.controls-TextArea .controls-TextArea__inputField:-ms-input-placeholder {
+  color: #999999;
+}
 .controls-TextArea.ws-has-focus {
   border-width: 1px;
   border-style: solid;
@@ -1487,6 +1493,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextArea:hover .controls-TextArea__inputField {
   color: inherit;
+}
+.controls-TextArea:hover .controls-TextArea__inputField:-ms-input-placeholder {
+  color: #999999;
 }
 .controls-TextArea.ws-disabled {
   border-width: 1px;
@@ -2076,6 +2085,17 @@ input[type="reset"]::-moz-focus-inner {
 .controls__operations-panel__wrapper .controls__operations-panel__actions {
   display: inline-block;
 }
+.controls__operations-panel__wrapper .controls__operations-panel__actions-mark:after {
+  margin-left: 8px;
+  margin-right: 4px;
+  background: #cccccc;
+  width: 1px;
+  height: 21px;
+  content: '\00a0';
+  font-size: 1px;
+  display: inline-block;
+  line-height: 30px;
+}
 .controls__operations-panel__wrapper.controls__operations-panel__mass-mode .controls__operations-panel__action-type-selection {
   display: none;
 }
@@ -2087,22 +2107,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls__operations-panel__wrapper .controls__operations-panel__action-type-all {
   margin: 0 4px;
 }
-.controls__operations-mark {
-  display: inline;
-}
-.controls__operations-mark > * {
-  margin-left: 4px;
-}
-.controls__operations-mark:after {
-  margin-left: 8px;
-  margin-right: 4px;
-  background: #cccccc;
-  width: 1px;
-  height: 21px;
-  content: '\00a0';
-  font-size: 1px;
-  display: inline-block;
-  line-height: 30px;
+.controls-OperationsMark-checkBox {
+  margin: 0 4px;
 }
 .controls-ItemActions {
   position: absolute;

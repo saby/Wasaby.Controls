@@ -145,6 +145,10 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
             text = String.trim(text);
          }
          return text;
+      },
+
+      _drawText: function() {
+
       }
    });
 
