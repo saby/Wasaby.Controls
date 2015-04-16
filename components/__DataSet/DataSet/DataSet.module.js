@@ -23,7 +23,6 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
    return $ws.proto.Abstract.extend({
       $protected: {
-         _indexTree: {},// индекс иерархии
          _isLoaded: false,
          _byId: {},
          _indexId: [],
@@ -306,10 +305,6 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
       getMetaData: function () {
          return this.getStrategy().getMetaData(this._rawData);
-      },
-
-      setIndexTree: function (index) {
-         this._indexTree = index;
       }
 
    });
