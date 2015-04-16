@@ -13,7 +13,13 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
 
       $protected: {
          _options: {
+             /**
+              * @cfg {String} Текст на кнопке
+              */
             caption: 'Отметить',
+             /**
+              * @cfg {Array[]} Операции отметки
+              */
             items: [
                { name: 'selectCurrentPage', title: 'Всю страницу' },
                { name: 'removeSelection', title: 'Снять' },
