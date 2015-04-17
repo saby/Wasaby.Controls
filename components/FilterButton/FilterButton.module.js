@@ -24,9 +24,9 @@ define('js!SBIS3.CONTROLS.FilterButton', [
       },
       init: function() {
          FilterButton.superclass.init.apply(this, arguments);
-         this._buttons._filterLine = this.getChildControlByName('filterLine');
-         this._buttons._clearFilterButton = this.getChildControlByName('clearFilterButton');
-         this._buttons._applyFilterButton = this.getChildControlByName('applyFilterButton');
+         this._buttons.filterLine = this.getChildControlByName('filterLine');
+         this._buttons.clearFilterButton = this.getChildControlByName('clearFilterButton');
+         this._buttons.applyFilterButton = this.getChildControlByName('applyFilterButton');
          this._bindButtons();
          this._applyFilter();
       },
@@ -42,9 +42,9 @@ define('js!SBIS3.CONTROLS.FilterButton', [
          buttons.closedButton.bind('click', this.showPicker.bind(this));
          buttons.openedButton.bind('click', this.hidePicker.bind(this));
          buttons.clearLineButton.bind('click', this.resetFilter.bind(this));
-         buttons._applyFilterButton.subscribe('onActivated', this._applyFilter.bind(this));
-         buttons._clearFilterButton.subscribe('onActivated', this.resetFilter.bind(this));
-         buttons._filterLine.subscribe('onActivated', this.showPicker.bind(this));
+         buttons.applyFilterButton.subscribe('onActivated', this._applyFilter.bind(this));
+         buttons.clearFilterButton.subscribe('onActivated', this.resetFilter.bind(this));
+         buttons.filterLine.subscribe('onActivated', this.showPicker.bind(this));
       },
       _setPickerContent: function() {
          var wrapper = this._container.find('.controls__filter-button__wrapper');
@@ -79,15 +79,15 @@ define('js!SBIS3.CONTROLS.FilterButton', [
       _updateFilterButtonView: function(filter) {
          var isDefault = this._isDefaultFilter(filter);
          this._container.toggleClass('controls__filter-button__default-filter', isDefault);
-         this._buttons._clearFilterButton.setEnabled(!isDefault);
+         this._buttons.clearFilterButton.setEnabled(!isDefault);
          this._updateFilterLine(filter, isDefault);
       },
       _updateFilterLine: function(filter, isDefault) {
          var filterLine = isDefault ? this._options.linkText : this._getFilterLine();
          if (filterLine) {
-            this._buttons._filterLine.setCaption(filterLine);
+            this._buttons.filterLine.setCaption(filterLine);
          }
-         this._buttons._filterLine.setVisible(!!filterLine);
+         this._buttons.filterLine.setVisible(!!filterLine);
       },
       _getFilterLine: function() {
          return 'Применён какой-то фильтр';

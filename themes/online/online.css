@@ -2137,14 +2137,14 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls__filter-button .controls__filter-button__clear {
   width: 16px;
-  height: 16px;
+  height: 12px;
   display: inline-block;
   vertical-align: middle;
   cursor: pointer;
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAVFBMVEUAAAD///9bW1tbW1v////////p6enp6enp6en///////////+6urq4uLi1tbXCwsLAwMC4uLi6urpbW1vExMTGxsZbW1tbW1tbW1tbW1tbW1uamppP4JMvAAAAHHRSTlMABggKRkhMTlBQUqW5u8HDxcfHycnJ19nf4evvf4sAIQAAAFRJREFUeAG1zT0WwiAQAOFZARFRQNcfAve/Zyretmny9fOG0wwu4Bgs3y4g24clVgWtkUV8+f+KF0yaM2Ec+n4pzpL+SPdnF9u2K9yabXMQkJA5ZAcu9AK0GCqiJgAAAABJRU5ErkJggg==');
+  background: url('img/cancelIcon-sprite.png') 0 -35px no-repeat;
 }
 .controls__filter-button .controls__filter-button__clear:hover {
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAXVBMVEUAAAD/LRT/LRT/LRT/tJf/LRT/////LRT/s5X/6OP/sZT/LRT/////oYH/LRT/LRT/ooP/////dUL/dEL/p4f/pYT/qo3/////qIr/sJP/5+L/6OP/r5H////////Q/P6sAAAAH3RSTlMA6wgKyd8G4clOw8lGwdnXwVDv78fHuVK7xUxQxaVIsgePJgAAAFRJREFUeAG1zckVQiEQRcH7RZ5C44DzIOQfpqs+vXVjJVD8zcIKEgtunQXabHGlGlgtOLXd/nBsIvTTuRMSdrkaCad86/dHVrTPF7w/0Y4p0Bz85Avz+wKswkQ9wQAAAABJRU5ErkJggg==');
+  background: url('img/cancelIcon-sprite.png') 0 -19px no-repeat;
 }
 .controls__filter-button.controls__filter-button__default-filter .controls-Link__icon,
 .controls__filter-button.controls__filter-button__default-filter .controls__filter-button__clear {

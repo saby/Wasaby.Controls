@@ -1,7 +1,7 @@
 /*TODO тема оформления*/
 @controls__filter-button-height: 40px;
 @controls__filter-button__clear-cursor: pointer;
-@controls__filter-button__clear-height: 16px;
+@controls__filter-button__clear-height: 12px;
 @controls__filter-button__clear-width: 16px;
 @controls__filter-button__trigger-top: 8px;
 @controls__filter-button__trigger-width: 30px;
@@ -49,15 +49,15 @@
    }
 
    .controls__filter-button__clear {
-      width: @controls__filter-button__clear-height;
-      height: @controls__filter-button__clear-width;
+      width: @controls__filter-button__clear-width;
+      height: @controls__filter-button__clear-height;
       display: inline-block;
       vertical-align: middle;
       cursor: @controls__filter-button__clear-cursor;
-      background: @controls__filter-button__clear;
+      background: @pathFilter-ComboBox-crossBg;
 
       &:hover {
-         background: @controls__filter-button__clear-hovered;
+         background: @pathFilter-ComboBox-crossBg-hover;
       }
    }
 
