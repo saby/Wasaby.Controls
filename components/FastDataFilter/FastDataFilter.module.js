@@ -31,7 +31,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                items: item.get('values'),
                keyField: item.get('keyField'),
                mode: this._options.mode,
-               displayField: this._options.displayField
+               displayField: this._options.displayField,
+               pickerClassName: 'controls-CustomFilterMenu__picker'
             };
             return '<component data-component="SBIS3.CONTROLS.CustomFilterMenu" config="' + $ws.helpers.encodeCfgAttr(cfg) + '"></component>';
          }

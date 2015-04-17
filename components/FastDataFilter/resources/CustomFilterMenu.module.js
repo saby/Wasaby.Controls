@@ -21,13 +21,13 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
       var CustomFilterMenu = Control.extend([PickerMixin, DSMixin, Selectable, DataBindMixin], {
          $protected: {
             _options: {
-               pickerClassName: 'controls-CustomFilterMenu__picker'
+
             },
             _dotTplFn: dotTplFn,
             _dotTplFnForItem: dotTplFnForItem,
             _captionField: null,
             _defaultValueId: null,
-            _crossButton: null
+            _resetButton: null
          },
          $constructor: function() {
             //TODO непонятно, как брать дефолтное значение, поэтому пока просто возьму первое из items
@@ -40,16 +40,19 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
             }
 
             this._initEvents();
-            this.setSelectedItem(this._defaultValueId);
          },
          _initEvents: function() {
             var self = this;
 
             //В зависимости от режима, показываем пикер по клику на котнейнер или по наведению мышки
             this._container.bind(this._options.mode === 'hover' ? 'mouseenter' : 'click', this.showPicker.bind(this));
-            this._crossButton = this._container.find('.controls-CustomFilterMenu__crossIcon').click(function() {
+            this._resetButton = this._container.find('.controls-CustomFilterMenu__crossIcon').click(function() {
                self.setSelectedItem(self._defaultValueId);
             });
+         },
+         _initComplete: function() {
+            CustomFilterMenu.superclass._initComplete.apply(this, arguments);
+            this.setSelectedItem(this._defaultValueId);
          },
          _setPickerContent: function () {
             var self = this;
@@ -72,7 +75,7 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
                } else if (id === this._defaultValueId) { //TODO сделать правильно
                   this._captionField.text(this._options.items[0][this._options.displayField]);
                }
-               this._crossButton[id === this._defaultValueId ? 'hide' : 'show']();
+               this._resetButton[id === this._defaultValueId ? 'hide' : 'show']();
             }
          },
          _getItemsContainer: function () {
