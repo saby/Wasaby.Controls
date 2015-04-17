@@ -9,6 +9,9 @@ define('js!SBIS3.CONTROLS.OperationDelete', [
 
       $protected: {
          _options: {
+             /**
+              * @noShow
+              */
             linkedView: undefined,
              /**
               * @cfg {String} Иконка кнопки удаления
