@@ -1,0 +1,48 @@
+.controls-CustomFilterMenu {
+  display: inline-block;
+  min-height: @customFilterMenu-min-height;
+  box-sizing: @customFilterMenu-box-sizing;
+  &> * {
+    display: inline-block;
+  }
+  .controls-CustomFilterMenu__beforeCaptionWrapper {
+    display: inline-block;
+    .controls-CustomFilterMenu__arrowIcon {
+      display: inline-block;
+      width: @customFilterMenu-iconWidth;
+      height: @customFilterMenu-iconHeight;
+      background: @pathFilter-ComboBox-arrowBg;
+    }
+  }
+  .controls-CustomFilterMenu__afterCaptionWrapper {
+    display: inline-block;
+    .controls-CustomFilterMenu__crossIcon {
+      display: inline-block;
+      position: relative;
+      bottom: -5px;
+      width: @customFilterMenu-iconWidth;
+      height: @customFilterMenu-iconHeight;
+      background: @customFilterMenu-cross-bg;
+      &:hover {
+        background: @customFilterMenu-cross-bg-hover;
+      }
+    }
+  }
+  &.controls-Picker__show {
+    box-shadow: @customFilterMenu-shadow-hover;
+    .controls-CustomFilterMenu__arrowIcon {
+      background: @pathFilter-ComboBox-arrowBg-hover;
+    }
+  }
+}
+.controls-CustomFilterMenu__picker {
+  border: @customFilterMenu-picker-border;
+  .border-radius(@customFilterMenu-picker-border-radius);
+  .controls-CustomFilterMenu__item {
+    padding: @customFilterMenu-picker-menu-item-padding;
+    background: @customFilterMenu-picker-menu-item-color;
+    &:hover {
+      background: @customFilterMenu-picker-menu-item-hover;
+    }
+  }
+}
