@@ -22,7 +22,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                displayField: ''
             }
          },
-         $constructor: function() {
+         init: function () {
+            FastDataFilter.superclass.init.apply(this, arguments);
             this.reload();
          },
          _getItemTemplate: function(item) {
