@@ -56,6 +56,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
               * @editor InternalComponentChooser
               */
             linkedView: undefined,
+            items: [
+               { name: 'delete', componentType: 'js!SBIS3.CONTROLS.OperationDelete', type: { mass: true, selection: true }, options: {} },
+               { name: 'operationsMark', componentType: 'js!SBIS3.CONTROLS.OperationsMark', type: { 'mark': true }, options: {} }
+            ],
              /**
               * @noShow
               */
