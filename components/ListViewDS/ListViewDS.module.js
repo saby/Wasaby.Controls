@@ -181,7 +181,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _loadingIndicator: undefined,
             _hasScrollMore : true,
             _infiniteScrollOffset: null,
-            _scrollLoader: null,
             _allowInfiniteScroll: true,
             _scrollIndicatorHeight: 32,
             _isLoadBeforeScrollAppears : true,
@@ -351,8 +350,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            */
          reload: function(){
             if (this.isInfiniteScroll()) {
-               this._cancelLoading(this._scrollLoader);
-               this._scrollLoader = null;
                this._loadingIndicator = undefined;
                this._hasScrollMore = true;
                this._infiniteScrollOffset = this._offset;
@@ -512,10 +509,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          _nextLoad: function(){
             var self = this, records;
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
-            if (this._allowInfiniteScroll && this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._isLoading(this._scrollLoader)) {
+            if (this._allowInfiniteScroll && this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._isLoading()) {
                this._addLoadingIndicator();
-               this._scrollLoader = this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset  + this._limit, this._limit).addCallback(function (dataSet) {
-                  self._scrollLoader = null;//_cancelLoading?
+               this._loader = this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset  + this._limit, this._limit).addCallback(function (dataSet) {
+                  self._loader = null;//_cancelLoading?
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
                      records = dataSet._getRecords();
@@ -563,7 +560,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @private
           */
          _removeLoadingIndicator: function(){
-            if( this._loadingIndicator && !this._scrollLoader){
+            if( this._loadingIndicator && !this._loader){
                this._loadingIndicator.addClass('ws-hidden');
             }
          },

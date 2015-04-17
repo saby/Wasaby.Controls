@@ -100,7 +100,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._limit = this._options.pageSize;
          }
          var self = this;
-         this._cancelLoading(this._loader);
+         this._cancelLoading();
          this._filter = typeof(filter) != 'undefined' ? filter : this._filter;
          this._sorting = typeof(sorting) != 'undefined' ? sorting : this._sorting;
          this._offset = typeof(offset) != 'undefined' ? offset : this._offset;
@@ -117,8 +117,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          });
       },
       //TODO Сделать публичным? вроде так всем захочется делать
-      _isLoading: function(loader){
-         return loader && !loader.isReady();
+      _isLoading: function(){
+         return this._loader && !this._loader.isReady();
       },
       //TODO Сделать публичным? вроде так всем захочется делать
       /**
@@ -126,10 +126,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * @param loader
        * @private
        */
-      _cancelLoading: function(loader){
-         if (this._isLoading(loader)){
-            loader.cancel();
+      _cancelLoading: function(){
+         if (this._isLoading()){
+            this._loader.cancel();
          }
+         this._loader = null;
       },
       setItems: function (items) {
          var
