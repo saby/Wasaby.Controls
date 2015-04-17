@@ -17,6 +17,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * @control
     * @public
     * @author Сухоручкин Андрей
+    * @ignoreOptions contextRestriction independentContext
     */
    var OperationsPanel = Control.extend([CollectionMixin, PickerMixin],/** @lends SBIS3.CONTROLS.OperationsPanel.prototype */{
       _dotTplFn: dotTplFn,
@@ -41,7 +42,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
         * <pre>
         *
         * </pre>
-        * @see keyField
+        * @see linkedView
         */
       $protected: {
          _options: {
