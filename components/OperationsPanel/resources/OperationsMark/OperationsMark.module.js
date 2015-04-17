@@ -10,8 +10,14 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
    var OperationsMark = MenuLink.extend({
       $protected: {
          _options: {
+             /**
+              * @cfg {String} Текст на кнопке
+              */
             caption: 'Отметить',
             linkedView: undefined,
+             /**
+              * @cfg {Array[]} Операции отметки
+              */
             items: [
                { name: 'selectCurrentPage', title: 'Всю страницу' },
                { name: 'removeSelection', title: 'Снять' },
