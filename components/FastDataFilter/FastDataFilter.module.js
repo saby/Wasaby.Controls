@@ -4,17 +4,17 @@
 define('js!SBIS3.CONTROLS.FastDataFilter',
    [
       'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.CollectionMixin',
+      'js!SBIS3.CONTROLS.DSMixin',
       'js!SBIS3.CONTROLS.CustomFilterMenu',
       'html!SBIS3.CONTROLS.FastDataFilter'
    ],
 
-   function(CompoundControl, CollectionMixin, CustomFilterMenu, dotTplFn) {
+   function(CompoundControl, DSMixin, CustomFilterMenu, dotTplFn) {
 
 
       'use strict';
 
-      var FastDataFilter = CompoundControl.extend([CollectionMixin],{
+      var FastDataFilter = CompoundControl.extend([DSMixin],{
          $protected: {
             _dotTplFn: dotTplFn,
             _options: {
@@ -23,20 +23,16 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             }
          },
          $constructor: function() {
-            this._drawItems();
+            this.reload();
          },
-         _getItemTemplate: function() {
-            return function (cfg) {
-               cfg.options = cfg.options || {};
-               cfg.options.items = cfg.values;
-               cfg.options.keyField = cfg.keyField;
-               cfg.options.mode = this._options.mode;
-               cfg.options.displayField = this._options.displayField;
-               return {
-                  componentType: 'js!SBIS3.CONTROLS.CustomFilterMenu',
-                  config: cfg.options
-               };
+         _getItemTemplate: function(item) {
+            var cfg = {
+               items: item.get('values'),
+               keyField: item.get('keyField'),
+               mode: this._options.mode,
+               displayField: this._options.displayField
             };
+            return '<component data-component="SBIS3.CONTROLS.CustomFilterMenu" config="' + $ws.helpers.encodeCfgAttr(cfg) + '"></component>';
          }
       });
       return FastDataFilter;
