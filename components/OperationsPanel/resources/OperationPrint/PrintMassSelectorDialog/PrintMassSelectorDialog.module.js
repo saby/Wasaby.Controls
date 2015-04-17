@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.PrintMassSelectorDialog', [
 
       $protected: {
          _options: {
+            name: 'controls-PrintMassSelectorDialog',
             items: [{
                id : 'current',
                title : 'Текущую страницу'

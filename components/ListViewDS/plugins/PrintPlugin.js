@@ -28,15 +28,7 @@ define('js!SBIS3.CONTROLS.PrintPlugin', [ 'js!SBIS3.CONTROLS.ListViewDS' , 'js!S
       },
       printReport : function(idReport){
          // TODO ? здесь сами решим печать выбранных или всей страницы, или все-таки нужно дать возможность точно указывать пользователю что он хочет напечатать
-         var selectedItems = this.getSelectedItems();
-         if (!selectedItems.length) {
-            //Показать диалог выбора записей
-            new Dialog ({
-               template: 'js!SBIS3.CONTROLS.PrintMassSelectorDialog',
-               caption : 'Что напечатать',
-               resizable: false
-            });
-         }
+
       },
       unloadReport: function(){},
       _saveToFile: function(options, idReport, data, isReportsForList) {
