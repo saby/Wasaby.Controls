@@ -112,6 +112,7 @@ define(
        * @param position позиция в блоке
        * @private
        */
+         //TODO переделать на (groupNum, posInGroup)
       _moveCursor = function(container, position) {
          if ($ws._const.browser.isIE) {
             var rng = document.body.createTextRange();
@@ -201,7 +202,8 @@ define(
        * @private
        */
       _getClearMask = function() {
-         return this._primalMask.replace(new RegExp('['+this._controlCharacters+']', 'g'), this._maskReplacer);
+         //return this._primalMask.replace(new RegExp('['+this._controlCharacters+']', 'g'), this._maskReplacer);
+         return this.formatModel.getStrMask().replace(new RegExp('['+this._controlCharacters+']', 'g'), this._maskReplacer);
       },
       /**
        * Получить положение курсора
@@ -326,6 +328,138 @@ define(
             ARROW_RIGHT: 39,
             END: 35,
             HOME: 36
+         },
+
+         /**
+          * Модель форматного поля
+          */
+         formatModel: {
+            /** Параметры по-умолчанию для модели форматного поля */
+            params: {
+            },
+            _maskReplacer: '.',
+            controlCharactersSet: null,
+            //groupCharactersRegExp: /[Lldx]/,
+            model: [],
+            /** позиция курсора
+             * FIXME ? храним позицию символа вместе с маской либо группу + позцию в ней
+             */
+            cursorPosition: {
+               start: 0,
+               end: 0
+            },
+            setMaskReplacer: function(maskReplacer) {
+               if (!maskReplacer) {
+                  throw new Error('setMaskReplacer. Не задан символ замены');
+               }
+               this._maskReplacer = maskReplacer;
+            },
+
+            setControlCharactersSet: function(controlCharactersSet) {
+               this.controlCharactersSet = controlCharactersSet;
+            },
+            /** Задать маску */
+            setMask: function(strMask) {
+               //FIXME убрать отладку
+               console.log(strMask);
+               //+++LLLlll///ddd---ddddddd===xxx
+               var group = [],
+                   groupInner = [],
+                   separator = [],
+                   maskSplit = strMask.split(''),
+                   groupCharactersRegExp = /[Lldx]/,
+                   innerChar;
+                   //textSplit = groupMask.split('');
+               //FIXME убрать отладку
+               if (strMask == 'DD.MM.YYYY') {
+                  strMask = strMask;
+               }
+               this.model = [];
+               for (var c in maskSplit) {
+                  //заменяем символы маски на внутренние, например HH:MM на dd:dd
+                  innerChar = maskSplit[c];
+                  if (innerChar in this.controlCharactersSet) {
+                     innerChar = this.controlCharactersSet[maskSplit[c]]
+                  }
+                  if (groupCharactersRegExp.test(innerChar)) {
+                     if (separator.length) {
+                        this.addSeparator(separator.join(''));
+                        separator = [];
+                     }
+                     group.push(maskSplit[c]);
+                     groupInner.push(innerChar);
+                  } else {
+                     if (group.length) {
+                        this.addGroup(group.join(''), groupInner.join(''));
+                        group = [];
+                        groupInner = [];
+                     }
+                     separator.push(maskSplit[c]);
+                  }
+               }
+               if (group.length) {
+                  this.addGroup(group.join(''), groupInner.join(''));
+               }
+               if (separator.length) {
+                  this.addSeparator(separator.join(''));
+               }
+               return this;
+            },
+
+            /** Добавить группу символов в модель
+             * @param groupMask подмаска группы, например LLddd
+             */
+            addGroup: function(groupMask, innerMask) {
+               //console.log('addGroup', this.formatModelParams.escapeChar, '.');
+               if ( !groupMask) {
+                  return this;
+               }
+               //var innerMask = '',
+               //    textSplit = groupMask.split('');
+               var group = {
+                  type:'group',
+                  mask: groupMask,
+                  //TODO сделать замену на внутренние символы
+                  //innerMask: textSplit.join(''),
+                  innerMask: innerMask,
+                  //TODO символы будут храниться в массиве, чтобы позволить не введённые места в группе
+                  value: [],
+                  getReplaced: function(replaceChar) {
+                     return this.innerMask.replace(/./ig, replaceChar);
+                  }
+               };
+               if ( ! this.model) {
+                  this.model = [];
+               }
+               this.model.push(group);
+               return this;
+            },
+
+            /* Добавить разделитель в модель*/
+            addSeparator: function(strSeparator) {
+               //console.log('addSeparator');
+               if ( !strSeparator) {
+                  return this;
+               }
+               var separator = {
+                  type:'separator',
+                  innerMask: strSeparator
+               };
+               if ( ! this.model) {
+                  this.model = [];
+               }
+               this.model.push(separator);
+               return this;
+            },
+
+            /** Маска с управляющими символами строкой, например 'Lddd=xx' */
+            getStrMask: function() {
+               var strMask = '';
+               for (var i = 0; i < this.model.length; i++) {
+                  strMask += this.model[i].innerMask;
+               }
+               return strMask;
+            }
          }
       },
 
@@ -340,6 +474,9 @@ define(
          // [string] строка всех допустимых управляющих символов (без пробелов). Если набор допустимых символов не задан, то задается
          // набор основных управляющих символов, а так же возвращается строка из них
          this._controlCharacters = Object.keys(this._controlCharactersSet).join('');
+         this.formatModel.setControlCharactersSet(this._controlCharactersSet);
+         this.formatModel.setMask(this._options.mask);//lllxx=ddd:ddd,LLlll
+         console.log(this.formatModel);
          clearMask = _getClearMask.call(this);
          // [boolean] Получить логическое, определяющее, является ли первый контейнер разделителем или вводимым блоком.
          // true: первый контейнер - разделитель, false: вводимый блок
@@ -419,6 +556,10 @@ define(
          this._options.text = expr.test(text) ? '' : text;
       },
 
+      _updateModelData: function() {
+         //TODO читаем html с текстом, обновляем value в группах
+      },
+
       /**
        * Получить текущую используемую маску.
        * @private
@@ -457,6 +598,31 @@ define(
             htmlMask += '">' + value + '</em>';
             offset += item.length;
          });
+
+         var newHtmlMask = '';
+         if ( !this.formatModel || !this.formatModel.model) {
+            return '';
+         }
+         var model = this.formatModel.model;
+         for (var i = 0; i < model.length; i++) {
+            newHtmlMask += '<em class="controls-FormattedTextBox__field-symbol';
+            if (model[i].type == 'group') {
+               newHtmlMask += ' controls-FormattedTextBox__field-placeholder';
+               //TODO если данные есть, то нужно возвратить их, а не очищенную маску value = model[i].value;
+               value = model[i].getReplaced(self._maskReplacer);
+            } else {
+               value = model[i].innerMask;
+            }
+            newHtmlMask += '">' + value + '</em>';
+         }
+         //FIXME убрать отладку
+         console.log('_getHtmlMask=',htmlMask);
+         console.log('newHtmlMask =',newHtmlMask);
+         if (htmlMask == newHtmlMask) {
+            console.info('равны');
+         } else {
+            console.error('НЕ равны');
+         }
          return htmlMask;
       },
 
@@ -498,48 +664,76 @@ define(
             nextSibling = positionObject.container.parentNode.nextSibling;
 
          _clearSelect.call(this, positionObject, positionObjEnd);
+         //получить группу модели
+         var group = this.formatModel.model[positionIndexesBegin[0]],
+             maskChar,
+             newGroup;
 
-         if (type == 'character') {
-            // Обработка зажатой кнопки shift (-> в букву верхнего регистра)
-            character = isShiftPressed ? character.toUpperCase() : character.toLowerCase();
-            // Проверка по действительной маске
-            character = regexp[1] ? (regexp[1] == 'toUpperCase' ? character.toUpperCase() : character.toLowerCase()) : character;
-            if (regexp[0].test(character)) {
-               if (positionObject.position == positionObject.container.nodeValue.length) {
-                  if (nextSibling && nextSibling.nextSibling) {
-                     positionObject.container = nextSibling.nextSibling.childNodes[0];
-                     positionObject.position = 0;
-                     // Перешли в новое место -- нужно обновить проверку и посмотреть снова
-                     regexp = this._keyExp($(positionObject.container.parentNode).index(), positionObject.position);
-                     if (regexp[0].test(character)) {
-                        // Проверка по действительной маске
-                        character = regexp[1] ? (regexp[1] == 'toUpperCase' ? character.toUpperCase() : character.toLowerCase()) : character;
-                        _replaceCharacter.call(this, positionObject.container, positionObject.position, character);
-                        positionObject.position++;
-                     }
-                  }
+         //курсор идёт вправо
+         if (group.mask.length === positionObject.position  &&  type != 'backspace'  &&  type != 'arrow_left') {
+            //ищем следующую группу
+            positionIndexesBegin[0] += 2;
+            group = this.formatModel.model[positionIndexesBegin[0]];
+            positionObject.position = 0;
+         }
+         //курсор идёт влево
+         if (type == 'backspace'  ||  type == 'arrow_left') {
+            if (positionObject.position === 0) {
+               //ищем предыдущую группу
+               positionIndexesBegin[0] -= 2;
+               newGroup = this.formatModel.model[positionIndexesBegin[0]];
+               if (newGroup) {
+                  group = newGroup;
+                  positionObject.container = _getContainerByIndex.call(this, positionIndexesBegin[0]);
+                  positionObject.position = group.mask.length;
                } else {
-                  _replaceCharacter.call(this, positionObject.container, positionObject.position, character);
-                  positionObject.position++;
-               }
-            }
-         } else if (type == 'delete') {
-            if (positionObject.position == positionObject.container.nodeValue.length) {
-               if (nextSibling && nextSibling.nextSibling) {
-                  positionObject.container = nextSibling.nextSibling.childNodes[0];
-                  positionObject.position = 0;
-                  _replaceCharacter.call(this, positionObject.container, positionObject.position, this._maskReplacer);
-                  positionObject.position++;
+                  //positionObject.position = 0;
                }
             } else {
-               _replaceCharacter.call(this, positionObject.container, positionObject.position, this._maskReplacer);
-               positionObject.position++;
+               positionObject.position--;
             }
+         }
+
+         if (type == 'character') {
+            if ( !group) {
+               return;
+            }
+            maskChar = group.innerMask.charAt(positionObject.position);
+            // Обработка зажатой кнопки shift (-> в букву верхнего регистра)
+            character = isShiftPressed ? character.toUpperCase() : character.toLowerCase();
+            //получить для позиции символ маски и регулярное выражение для проверки
+            var regExpChar = new RegExp(_charToRegExp(maskChar));
+            //соответствует ли символ регулярному выражению
+            if (!regExpChar.test(character)) {
+               return;
+            }
+            character = (maskChar == 'L') ? character.toUpperCase() : character;
+            character = (maskChar == 'l') ? character.toLowerCase() : character;
+
+            //записываем символ в модель
+            group.value[positionObject.position] = character;
+
+            //записываем символ в html
+            positionObject.container = _getContainerByIndex.call(this, positionIndexesBegin[0]);
+            _replaceCharacter.call(this, positionObject.container, positionObject.position, character);
+            positionObject.position++;
+         } else if (type == 'delete') {
+            //удалить символ в модели
+            group.value[positionObject.position] = undefined;
+
+            //обновить html
+            positionObject.container = _getContainerByIndex.call(this, positionIndexesBegin[0]);
+            _replaceCharacter.call(this, positionObject.container, positionObject.position, this._maskReplacer);
+            positionObject.position++;
             positionObject = positionObjEnd;
          } else if (type == 'backspace') {
-            _getPreviousPosition(positionObject);
+            //TODO удалить символ в модели
+
+            //TODO обновить html
+            //_getPreviousPosition(positionObject);
             _replaceCharacter.call(this, positionObject.container, positionObject.position, this._maskReplacer);
          } else if (type == 'arrow_left')   {
+            //FIXME если курсов в конце последней группы - курсор прыгает через символы
             _getPreviousPosition(positionObject);
          } else if (type == 'arrow_right') {
             _getNextPosition(positionObject);
