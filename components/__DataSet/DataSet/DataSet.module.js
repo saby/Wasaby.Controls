@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
    // Дефолтный набор опций при добавлении рекордов в датасет
    var addOptions = {add: true, remove: false};
 
-   return $ws.proto.Abstract.extend({
+   var DataSet = $ws.proto.Abstract.extend({
       $protected: {
          _isLoaded: false,
          _byId: {},
@@ -322,8 +322,25 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
       getMetaData: function () {
          return this.getStrategy().getMetaData(this._rawData);
+      },
+
+      filter : function(filterCallback) {
+         var filterDataSet = new DataSet({
+            strategy: this._options.strategy,
+            data: [],
+            keyField: this._options.keyField
+         });
+
+         this.each(function(record){
+            if (filterCallback(record)) {
+               filterDataSet.push(record);
+            }
+         });
+
+         return filterDataSet;
       }
 
    });
+   return DataSet;
 })
 ;
