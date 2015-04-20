@@ -34,13 +34,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * </pre>
              * @see items
              */
-            keyField : null,
+            keyField: null,
             items: undefined,
             /**
              * @cfg {DataSource} Набор исходных данных по которому строится отображение
              */
             dataSource: undefined,
-            pageSize : null
+            pageSize: null
          }
       },
 
@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   items = this._options.items;
                }
                else {
-                  throw new Error('Array expected')
+                  throw new Error('Array expected');
                }
             }
             else {
@@ -83,8 +83,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
 
 
-
-
          this._setDataSourceCB = setDataSourceCB.bind(this);
          this._dataSource.subscribe('onDataSync', this._setDataSourceCB);
       },
@@ -106,7 +104,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._offset = typeof(offset) != 'undefined' ? offset : this._offset;
          this._limit = typeof(limit) != 'undefined' ? limit : this._limit;
          this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
-            self._dataSet = dataSet;
+            if (self._dataSet) {
+               self._dataSet.merge(dataSet);
+            } else {
+               self._dataSet = dataSet;
+            }
             self._redraw();
          });
       },
@@ -139,7 +141,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          /*Method must be implemented*/
       },
 
-      _redraw: function() {
+      _redraw: function () {
          this._clearItems();
          var
             self = this,
@@ -166,7 +168,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                var
                   targetContainer = this._getTargetContainer(records[i], records[i].getKey());
                if (targetContainer) {
-                  this._drawItem(records[i], targetContainer,  records[i].getKey(), i);
+                  this._drawItem(records[i], targetContainer, records[i].getKey(), i);
                }
             }
             this.reviveComponents().addCallback(function () {
@@ -177,7 +179,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
 
-      _clearItems : function(container) {
+      _clearItems: function (container) {
          container = container || this._getItemsContainer();
          /*Удаляем компоненты-инстансы элементов*/
          if (!Object.isEmpty(this._itemsInstances)) {
@@ -191,7 +193,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          var itemsContainers = $(".controls-ListView__item", container.get(0));
          /*Удаляем вложенные компоненты*/
-         $('[data-component]', itemsContainers).each(function(i, item) {
+         $('[data-component]', itemsContainers).each(function (i, item) {
             var inst = $(item).wsControl();
             inst.destroy();
          });
@@ -269,7 +271,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var instances = this.getItemsInstances();
          return instances[id];
       },
-      _hasNextPage: function(hasMore){
+      _hasNextPage: function (hasMore) {
          //n - приходит true, false || общее количество записей в списочном методе
          return typeof (hasMore) !== 'boolean' ? hasMore > this._offset : !!hasMore;
       }
