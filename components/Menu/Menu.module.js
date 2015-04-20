@@ -265,6 +265,28 @@ define('js!SBIS3.CONTROLS.Menu', [
          }
       },
       /*TODO Методы для Зуева, посмотреть в будущем нужны ли они*/
+       /**
+        * Метод добавления подменю.
+        * @param {Array} pointsArr Описание подменю.
+        * @param {String} id Идентификатор пункта меню.
+        * @example
+        * <pre>
+        *    menu.addSubMenu(id, [
+        *       {
+        *          title: 'save',
+        *          icon: "sprite:icon-16 icon-Save icon-primary",
+        *          id: "save",
+        *          parent: 1
+        *       },
+        *       {
+        *          title: 'print',
+        *          icon: "sprite:icon-16 icon-Print icon-primary",
+        *          id: "print",
+        *          parent: 1
+        *       }
+        *    ]);
+        * </pre>
+        */
       addSubMenu : function(pointsArr, id) {
          for (var i = 0; i < pointsArr.length; i++) {
             pointsArr[i][this._options.hierField] = id;

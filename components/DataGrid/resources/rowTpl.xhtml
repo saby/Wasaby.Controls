@@ -1,5 +1,8 @@
 <tr class="controls-DataGrid__tr">
+   {{?it.multiselect}}
+      <td class="controls-DataGrid__td controls-DataGrid__td__checkBox"><span class="controls-ListView__itemCheckBox"></span></td>
+   {{?}}
    {{~it.columns :column:index}}
-      <td class="controls-DataGrid__td{{?column.className}} {{=column.className}}{{?}}">{{?it.multiselect && (index == 0)}}<span class="controls-ListView__itemCheckBox"></span>{{?}}{{=column.value}}</td>
+      <td class="controls-DataGrid__td{{?column.className}} {{=column.className}}{{?}}">{{=column.value}}</td>
    {{~}}
 </tr>

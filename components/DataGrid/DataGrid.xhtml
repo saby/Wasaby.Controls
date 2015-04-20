@@ -1,12 +1,18 @@
 <div class="controls-DataGrid controls-ListView{{?it.multiselect !== false}} controls-ListView__multiselect{{?}}">
    <table class="controls-DataGrid__table">
       <colgroup class="controls-DataGrid__colgroup">
+         {{?it.multiselect}}
+            <col/>
+         {{?}}
          {{~it.columns :column:index}}
          <col{{?column.width}} width="{{=column.width}}" {{?}}/>
          {{~}}
       </colgroup>
       <thead class="controls-DataGrid__thead{{?it.showHead === false}} ws-hidden{{?}}">
          <tr>
+         {{?it.multiselect}}
+            <th class="controls-DataGrid__td__checkBox"></th>
+         {{?}}
          {{~it.columns :column:index}}
             <th class="controls-DataGrid__th">{{=column.title}}</th>
          {{~}}
@@ -15,6 +21,9 @@
       <tbody class="controls-DataGrid__tbody"></tbody>
       <tfoot class="controls-DataGrid__tfoot ws-hidden">
          <tr>
+            {{?it.multiselect}}
+               <td class="controls-DataGrid__td__checkBox"></td>
+            {{?}}
             {{~it.columns :column:index}}
             <td class="controls-DataGrid__td"></td>
             {{~}}
