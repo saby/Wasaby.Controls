@@ -74,19 +74,6 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          this._indexTree = indexTree;
       },
 
-      getChildItems: function (parentId) {
-         parentId = parentId || null;
-         return this._indexTree[parentId];
-      },
-
-      hasChild: function (parentKey) {
-         return this._indexTree.hasOwnProperty(parentKey);
-      },
-
-      getParent: function () {
-
-      },
-
       getParentKey: function (DataSet, record) {
          return DataSet.getStrategy().getParentKey(record.get(this._options.hierField));
       },

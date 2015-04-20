@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
    return $ws.proto.Abstract.extend({
       $protected: {
+         _indexTree: {},
          _isLoaded: false,
          _byId: {},
          _indexId: [],
@@ -225,9 +226,9 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * Получить массив записей в текущем датасете
        * @returns {Array}
        */
-      _getRecords: function(){
+      _getRecords: function () {
          var records = [];
-         this.each(function(rec){
+         this.each(function (rec) {
             records.push(rec);
          });
          return records;
@@ -236,7 +237,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * TODO Сделать правильный merge
        * @param dataSetMergeFrom Датасет, из которого будет происходить мерж
        */
-      merge: function(dataSetMergeFrom){
+      merge: function (dataSetMergeFrom) {
          this._addRecords(dataSetMergeFrom._getRecords());
       },
       _prepareRecordForAdd: function (record) {
@@ -305,6 +306,23 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
       getMetaData: function () {
          return this.getStrategy().getMetaData(this._rawData);
+      },
+
+      getChildItems: function (parentId) {
+         parentId = parentId || null;
+         return this._indexTree[parentId];
+      },
+
+      hasChild: function (parentKey) {
+         return this._indexTree.hasOwnProperty(parentKey);
+      },
+
+      getParent: function () {
+
+      },
+
+      setIndexTree: function (newIndex) {
+         this._indexTree = newIndex;
       }
 
    });
