@@ -905,6 +905,10 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent;
   background: transparent url('img/MenuButton-arrowDown__primary.png') 0 0;
 }
+.controls-Button.controls-MenuButton.controls-Button__primary:hover.ws-disabled .controls-MenuButton__arrowDown {
+  background: transparent url('img/MenuButton-arrowDown.png') 0 0;
+  border-color: transparent;
+}
 .controls-Button.controls-MenuButton.controls-Button__primary:hover .controls-MenuButton__arrowDown {
   border-width: 0;
   border-style: solid;
@@ -1461,6 +1465,9 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+.controls-TextArea .controls-TextArea__inputField:-ms-input-placeholder {
+  color: #999999;
+}
 .controls-TextArea.ws-has-focus {
   border-width: 1px;
   border-style: solid;
@@ -1487,6 +1494,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextArea:hover .controls-TextArea__inputField {
   color: inherit;
+}
+.controls-TextArea:hover .controls-TextArea__inputField:-ms-input-placeholder {
+  color: #999999;
 }
 .controls-TextArea.ws-disabled {
   border-width: 1px;
@@ -1856,9 +1866,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ListView.controls-ListView__multiselect .controls-ListView__itemCheckBox {
   display: inline-block;
 }
-.controls-ListView.controls-ListView__multiselect .controls-ListView__item {
-  padding-left: 20px;
-}
 .controls-ListView.controls-ListView__multiselect .controls-ListView__item__selected .controls-ListView__itemCheckBox {
   background: url('img/CheckBox.png') 0 49px;
 }
@@ -1973,12 +1980,6 @@ input[type="reset"]::-moz-focus-inner {
   color: #999999;
   background: transparent;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
-  padding-left: 12px;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:last-child {
-  padding-left: 12px;
-}
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
   cursor: pointer;
@@ -1996,31 +1997,23 @@ input[type="reset"]::-moz-focus-inner {
   color: inherit;
   background: transparent;
 }
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
+  padding-left: 12px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:last-child {
+  padding-right: 12px;
+}
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:first-child {
   padding-left: 12px;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:last-child {
-  padding-left: 12px;
+  padding-right: 12px;
 }
-.controls-DataGrid .controls-ListView__item__selected .controls-DataGrid__td:first-child {
-  background-image: url('img/rowSelect.png');
-  background-position: left top;
-  background-repeat: repeat-y;
+.controls-DataGrid .controls-DataGrid__td__checkBox {
+  width: 24px;
 }
-.controls-DataGrid.controls-ListView__multiselect .controls-DataGrid__td:first-child {
-  padding-left: 32px;
-  background: none;
-}
-.controls-DataGrid.controls-ListView__multiselect .controls-DataGrid__th:first-child {
-  padding-left: 32px;
-}
-.controls-DataGrid.controls-ListView__multiselect .controls-ListView__item__selected .controls-ListView__itemCheckBox {
-  background: url('img/CheckBox.png') 0 49px;
-}
-.controls-DataGrid .controls-ListView__itemCheckBox {
-  position: absolute;
-  left: 4px;
-  top: 8px;
+.controls-DataGrid .controls-DataGrid__td__checkBox .controls-ListView__itemCheckBox {
+  margin: 0;
 }
 .controls-operations-panel {
   height: 30px;
@@ -2223,4 +2216,12 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-shadow: none;
   box-shadow: none;
   background: #ffffff !important;
+}
+.controls-Button__light .controls-ListView__item__selected .controls-DataGrid__td:first-child {
+  background-image: url('img/rowSelect.png');
+  background-position: left top;
+  background-repeat: repeat-y;
+}
+.controls-Button__light.controls-ListView__multiselect .controls-DataGrid__td:first-child {
+  background: none;
 }

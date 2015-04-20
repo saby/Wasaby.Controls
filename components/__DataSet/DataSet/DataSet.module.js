@@ -20,8 +20,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
    // Дефолтный набор опций при добавлении рекордов в датасет
    var addOptions = {add: true, remove: false};
 
-
-   return $ws.proto.Abstract.extend({
+   var DataSet = $ws.proto.Abstract.extend({
       $protected: {
          _indexTree: {},
          _isLoaded: false,
@@ -115,10 +114,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @returns {js!SBIS3.CONTROLS.Record}
        */
       getRecordByKey: function (key) {
-         if (key == null) {
-            return void 0;
-         }
-
+         //TODO: убрал проверку (key == null), так как с БЛ ключ приходит как null для записи из метода "Создать"
          if (!this._isLoaded) {
             this._loadFromRaw();
          }
@@ -145,7 +141,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       // полная установка рекордов в DataSet
-      setRecords: function (records, options) {
+      _setRecords: function (records, options) {
          options || (options = {});
          options = $ws.core.merge(options, setOptions, {preferSource: true});
          var singular = !(records instanceof Array);
@@ -220,8 +216,9 @@ define('js!SBIS3.CONTROLS.DataSet', [
       // рекорд будет пропущен, только если не передана опция {merge: true}, в этом случае атрибуты
       // будут совмещены в существующий рекорд
       _addRecords: function (records, options) {
-         this.setRecords(records, $ws.core.merge($ws.core.merge({merge: false}, options), addOptions));
+         this._setRecords(records, $ws.core.merge($ws.core.merge({merge: false}, options), addOptions));
       },
+
       /**
        * Получить массив записей в текущем датасете
        * @returns {Array}
@@ -233,13 +230,32 @@ define('js!SBIS3.CONTROLS.DataSet', [
          });
          return records;
       },
+
       /**
-       * TODO Сделать правильный merge
        * @param dataSetMergeFrom Датасет, из которого будет происходить мерж
        */
-      merge: function (dataSetMergeFrom) {
-         this._addRecords(dataSetMergeFrom._getRecords());
+      // если будем добавлять больше одной записи, то нужно предваритьно составить из них датасет
+      merge: function (dataSetMergeFrom, options) {
+         this._setRecords(dataSetMergeFrom._getRecords(), options);
       },
+
+      /**
+       * Добавляет рекорд в конец набора
+       * @param record
+       */
+      push: function (record) {
+         this._addRecords(record);
+      },
+
+      /**
+       * Добавляет рекорд в набор
+       * @param record
+       * @param at - позиция на которую нужно установить новый рекорд, если не задана то добавит в конец
+       */
+      insert: function (record, at) {
+         this._addRecords(record, {at: at});
+      },
+
       _prepareRecordForAdd: function (record) {
          //FixME: потому что метод создать не возвращает тип поля "идентификатор"
          record._keyField = this._keyField;
@@ -323,7 +339,24 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
       setIndexTree: function (newIndex) {
          this._indexTree = newIndex;
-      }
+      },
 
+      filter: function (filterCallback) {
+         var filterDataSet = new DataSet({
+            strategy: this._options.strategy,
+            data: [],
+            keyField: this._options.keyField
+         });
+
+         this.each(function (record) {
+            if (filterCallback(record)) {
+               filterDataSet.push(record);
+            }
+         });
+
+         return filterDataSet;
+      }
    });
+
+   return DataSet;
 });

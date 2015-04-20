@@ -141,8 +141,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
             var self = this;
             def.addCallback(function(item){
-               var newText = item.get(self._options.displayField);
                if (item) {
+                  var newText = item.get(self._options.displayField);
                   if (newText != self._options.text) {
                      ComboBox.superclass.setText.call(self, newText);
                      $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(newText);
@@ -163,6 +163,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             if (this._picker) {
                $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
             }
+            $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text('');
+            ComboBox.superclass.setText.call(this, '');
          }
 
       },

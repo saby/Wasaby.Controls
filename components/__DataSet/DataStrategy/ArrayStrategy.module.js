@@ -74,7 +74,16 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
       value: function (data, field) {
          return data[field];
       },
-
+      /**
+       * Получить тип поля
+       * Rem:  В статических данных нет типов, всегда вернется "Текст"
+       * @param {Object} data "сырые" данные записи
+       * @param {String} field название поля для получения значения
+       * @returns {*}
+       */
+      type: function(data, field){
+         return 'Текст';
+      },
       addRecord: function (data, record, at) {
          var rawData = record.getRaw();
          if (at) {

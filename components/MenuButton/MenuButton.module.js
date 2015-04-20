@@ -71,8 +71,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       },
 
       _onAlignmentChangeHandler: function(alignment){
-         var right = alignment.horizontalAlign == 'right',
-            bottom = alignment.verticalAlign == 'bottom';
+         var right = alignment.horizontalAlign.side == 'right',
+            bottom = alignment.verticalAlign.side == 'bottom';
          this._header.toggleClass('controls-MenuButton__header-revert-horizontal', right).toggleClass('controls-MenuButton__header-revert-vertical', bottom);
          if (right){
             this._header.css('left', this._container.offset().left - 16);

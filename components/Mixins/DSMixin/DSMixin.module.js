@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   items = this._options.items;
                }
                else {
-                  throw new Error('Array expected')
+                  throw new Error('Array expected');
                }
             }
             else {
@@ -104,7 +104,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._offset = typeof(offset) != 'undefined' ? offset : this._offset;
          this._limit = typeof(limit) != 'undefined' ? limit : this._limit;
          this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
-            self._dataSet = dataSet;
+            if (self._dataSet) {
+               self._dataSet.merge(dataSet);
+            } else {
+               self._dataSet = dataSet;
+            }
             self._redraw();
          });
       },
