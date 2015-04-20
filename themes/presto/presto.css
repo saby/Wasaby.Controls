@@ -907,6 +907,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-MenuButton.controls-Button__primary:hover.ws-disabled .controls-MenuButton__arrowDown {
   background: transparent;
+  border-color: #4e5762 transparent transparent transparent;
 }
 .controls-Button.controls-MenuButton.controls-Button__primary:hover .controls-MenuButton__arrowDown {
   border-width: 8px 8px 0 8px;
@@ -1949,12 +1950,6 @@ input[type="reset"]::-moz-focus-inner {
   color: #aaaaaa;
   background: transparent;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
-  padding-left: 12px;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:last-child {
-  padding-left: 12px;
-}
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
   cursor: pointer;
@@ -1972,31 +1967,23 @@ input[type="reset"]::-moz-focus-inner {
   color: inherit;
   background: transparent;
 }
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
+  padding-left: 10px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:last-child {
+  padding-right: 10px;
+}
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:first-child {
-  padding-left: 12px;
+  padding-left: 10px;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:last-child {
-  padding-left: 12px;
+  padding-right: 10px;
 }
-.controls-DataGrid .controls-ListView__item__selected .controls-DataGrid__td:first-child {
-  background-image: url('img/rowSelect.png');
-  background-position: left top;
-  background-repeat: repeat-y;
+.controls-DataGrid .controls-DataGrid__td__checkBox {
+  width: 24px;
 }
-.controls-DataGrid.controls-ListView__multiselect .controls-DataGrid__td:first-child {
-  padding-left: 32px;
-  background: none;
-}
-.controls-DataGrid.controls-ListView__multiselect .controls-DataGrid__th:first-child {
-  padding-left: 32px;
-}
-.controls-DataGrid.controls-ListView__multiselect .controls-ListView__item__selected .controls-ListView__itemCheckBox {
-  background: transparent url('img/checkbox.png') -2px -5px;
-}
-.controls-DataGrid .controls-ListView__itemCheckBox {
-  position: absolute;
-  left: 4px;
-  top: 8px;
+.controls-DataGrid .controls-DataGrid__td__checkBox .controls-ListView__itemCheckBox {
+  margin: 0;
 }
 .controls-operations-panel {
   height: 30px;
