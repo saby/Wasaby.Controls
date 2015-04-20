@@ -907,6 +907,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-MenuButton.controls-Button__primary:hover.ws-disabled .controls-MenuButton__arrowDown {
   background: transparent;
+  border-color: #919191 transparent transparent transparent;
 }
 .controls-Button.controls-MenuButton.controls-Button__primary:hover .controls-MenuButton__arrowDown {
   border-width: 5px 5px 0 5px;
