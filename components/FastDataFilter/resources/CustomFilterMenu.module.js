@@ -6,19 +6,19 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.DSMixin',
-      'js!SBIS3.CONTROLS.Selectable',
+      'js!SBIS3.CONTROLS.MultiSelectable',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'html!SBIS3.CONTROLS.CustomFilterMenu',
       'html!SBIS3.CONTROLS.CustomFilterMenu/CustomFilterMenuItem'
 
    ],
 
-   function(Control, PickerMixin, DSMixin, Selectable, DataBindMixin, dotTplFn, dotTplFnForItem) {
+   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, dotTplFn, dotTplFnForItem) {
 
 
       'use strict';
 
-      var CustomFilterMenu = Control.extend([PickerMixin, DSMixin, Selectable, DataBindMixin], {
+      var CustomFilterMenu = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin], {
          $protected: {
             _options: {
 
@@ -44,15 +44,17 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
          _initEvents: function() {
             var self = this;
 
-            //В зависимости от режима, показываем пикер по клику на котнейнер или по наведению мышки
+            //В зависимости от режима, показываем пикер по клику на контейнер или по наведению мышки
             this._container.bind(this._options.mode === 'hover' ? 'mouseenter' : 'click', this.showPicker.bind(this));
             this._resetButton = this._container.find('.controls-CustomFilterMenu__crossIcon').click(function() {
-               self.setSelectedItem(self._defaultValueId);
+               self.setSelectedItems([self._defaultValueId]);
             });
          },
          _initComplete: function() {
             CustomFilterMenu.superclass._initComplete.apply(this, arguments);
-            this.setSelectedItem(this._defaultValueId);
+            //Проинициализируем пикер, чтобы был готов dataSet
+            this._initializePicker();
+            this.setSelectedItems([this._defaultValueId]);
          },
          _setPickerContent: function () {
             var self = this;
@@ -62,27 +64,41 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
             this._picker.getContainer().mouseup(function (e) {
                var row = $(e.target).closest('.controls-CustomFilterMenu__item');
                if (row.length) {
-                  self.setSelectedItem(row.data('id'));
+                  self.setSelectedItems([row.data('id')]);
                   self.hidePicker();
                }
             });
          },
-         _drawSelectedItem: function(id) {
-            if(id) {
-               //TODO Наверное надо сделать ещё с dataSource
+         _drawSelectedItems: function(id) {
+            var textValue = [],
+                len = id.length,
+                self = this,
+                def;
+
+            if(len) {
+               def = new $ws.proto.Deferred();
                if(this._dataSet) {
-                  this._captionField.text(this._dataSet.getRecordByKey(id).get(this._options.displayField));
-               } else if (id === this._defaultValueId) { //TODO сделать правильно
-                  this._captionField.text(this._options.items[0][this._options.displayField]);
+                  for(var i = 0; i < len; i++) {
+                     textValue.push(this._dataSet.getRecordByKey(id[i]).get(this._options.displayField));
+                  }
+                  def.callback(textValue);
+               } else {
+                  //TODO переделать, когда БЛ научится отдавать несколько записей при чтении
+                  this._dataSource.read(id[0]).addCallback(function(record) {
+                     def.callback(record.get(self._options.displayField));
+                  })
                }
-               this._resetButton[id === this._defaultValueId ? 'hide' : 'show']();
+               def.addCallback(function(textValue) {
+                  self._captionField.text(textValue.join(', '));
+               });
+               this._resetButton[len === 1 && id[0] === this._defaultValueId ? 'hide' : 'show']();
             }
          },
          _getItemsContainer: function () {
             return this._picker.getContainer();
          },
          _getItemTemplate: function(item) {
-           return this._dotTplFnForItem.apply(this, [item]);
+           return this._dotTplFnForItem.call(this, item);
          },
          _setPickerConfig: function () {
             return {
