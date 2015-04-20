@@ -186,7 +186,14 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _formatText: function(value, fromFocusOut){
-         var decimals = (this._options.onlyInteger) ? 0 : this._options.decimals;
+         var decimals;
+         if (this._options.onlyInteger){
+            decimals = 0;
+            value = parseInt(value.replace(/\s/g, ''));
+         } else {
+            decimals =this._options.decimals;
+            value = parseFloat(value.replace(/\s/g, ''));
+         }
          value = $ws.render.defaultColumn.numeric(
             value,
             this._options.integers,
@@ -230,22 +237,23 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          ) {
             return true;
          }
-         var symbol = String.fromCharCode(event.which);
-         if(event.which == 190 /*точка*/){
+         var keyCode = (event.which >= 96 && event.which <= 105) ? event.which - 48 : event.which;
+         if(keyCode == 190 /*точка*/){
             this._dotHandler(event);
             return;
          }
-         if(event.which == 189 /*минус*/){
+         if(keyCode == 189 /*минус*/){
             this._toggleMinus();
             event.preventDefault();
          }
-         if (/[0-9]/.test(symbol)){
-            this._numberPressHandler(event);
-            return true;
-         } else if (event.which == 46 /*Delete*/){
+         if (keyCode == 46){ /*Delete*/
             this._deleteHandler();
-         } else if (event.which == 8 /*Backspace*/){
+         } else if (keyCode == 8){ /*Backspace*/
             this._backspaceHandler();
+         } else if (keyCode >= 48 && keyCode <= 57){ /*Numbers*/
+            event.preventDefault();
+            this._numberPressHandler(keyCode);
+            return true;
          }
          if (this._inputField.val().indexOf('.') == 0){
             this._setText('0' + this._inputField.val());
@@ -257,15 +265,14 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          event.preventDefault();
       },
 
-      _numberPressHandler: function (event) {
+      _numberPressHandler: function (keyCode) {
          var b = this._caretPosition[0], //начало выделения
             e = this._caretPosition[1],  //конец выделения
             currentVal = this._inputField.val(),
             dotPosition = currentVal.indexOf('.'),
-            symbol = String.fromCharCode(event.which),
+            symbol = String.fromCharCode(keyCode),
             spaceCount = currentVal.split(' ').length - 1,
             newCaretPosition = b;
-         event.preventDefault();
          if (currentVal[0] == 0 && b == e && b == 1){ // заменяем первый ноль если курсор после него
             newCaretPosition--;
          }
@@ -377,7 +384,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
       _getIntegersCount: function(value){
         var dotPosition = (value.indexOf('.') != -1) ? value.indexOf('.') : value.length;
-         return value.substr(0, dotPosition).replace(/\s/g, '').length;
+         return value.substr(0, dotPosition).replace(/\s|-/g, '').length;
       },
 
       _dotHandler: function(event){

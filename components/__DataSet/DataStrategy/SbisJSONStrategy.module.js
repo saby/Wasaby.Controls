@@ -113,7 +113,23 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
          }
          return d[index];
       },
-
+      /**
+       * Получить тип поля
+       * @param {Object} data "сырые" данные записи
+       * @param {String} field название поля для получения значения
+       * @returns {*}
+       */
+      type: function(data, field){
+         var s = data.s,
+               index;
+         for (var i = 0, l = s.length; i < l; i++) {
+            if (s[i]['n'] == field) {
+               index = i;
+               break;
+            }
+         }
+         return s[index].t;
+      },
       getMetaData: function(data) {
          return {
             more : data.n

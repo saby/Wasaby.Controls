@@ -10,6 +10,10 @@ define('js!SBIS3.CONTROLS.OperationDelete', [
       $protected: {
          _options: {
             linkedView: undefined,
+             /**
+              * @cfg {String} Иконка кнопки удаления
+              * @editor icon ImageEditor
+              */
             icon: 'sprite:icon-24 action-hover icon-Erase icon-error'
          }
       },
