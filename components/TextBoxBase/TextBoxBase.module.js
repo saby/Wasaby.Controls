@@ -80,6 +80,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
 
       $constructor: function() {
          this._publish('onTextChange');
+         this._options.text = (this._options.text) ? this._options.text.toString() : '';
       },
 
       /**
@@ -97,7 +98,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
        * @see getValue
        */
       setText:function(text){
-         var newText = this._formatText(text) || '';
+         text = (text) ? text.toString() : '';
+         var newText = this._formatText(text);
          if (newText !== this._options.text) {
             this._options.text = newText;
             this._drawText(newText);

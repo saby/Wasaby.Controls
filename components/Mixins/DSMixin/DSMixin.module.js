@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @cfg {DataSource} Набор исходных данных по которому строится отображение
              * @see setDataSource
              */
-            dataSource: undefined,
+            dataSource: undefined,            
              /**
               * @cfg {Number} Количество записей на странице
               * <pre>
@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   items = this._options.items;
                }
                else {
-                  throw new Error('Array expected')
+                  throw new Error('Array expected');
                }
             }
             else {
@@ -112,8 +112,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                keyField: keyField
             });
          }
-
-
 
 
          this._setDataSourceCB = setDataSourceCB.bind(this);
@@ -162,7 +160,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._offset = typeof(offset) != 'undefined' ? offset : this._offset;
          this._limit = typeof(limit) != 'undefined' ? limit : this._limit;
          this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
-            self._dataSet = dataSet;
+            if (self._dataSet) {
+               self._dataSet.merge(dataSet);
+            } else {
+               self._dataSet = dataSet;
+            }
             self._redraw();
          });
       },
@@ -219,7 +221,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          /*Method must be implemented*/
       },
 
-      _redraw: function() {
+      _redraw: function () {
          this._clearItems();
          var
             self = this,
@@ -239,15 +241,19 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          });
       },
 
-      _drawItems: function (records) {
-         var self = this;
+      _drawItems: function (records, at) {
+         var
+            self = this,
+            curAt = at;
          if (records && records.length > 0) {
             for (var i = 0; i < records.length; i++) {
+
                var
                   targetContainer = this._getTargetContainer(records[i], records[i].getKey());
                if (targetContainer) {
-                  this._drawItem(records[i], targetContainer,  records[i].getKey(), i);
+                  this._drawItem(records[i], targetContainer, curAt);
                }
+               curAt.at++;
             }
             this.reviveComponents().addCallback(function () {
                self._notify('onDrawItems');
@@ -257,7 +263,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
 
-      _clearItems : function(container) {
+      _clearItems: function (container) {
          container = container || this._getItemsContainer();
          /*Удаляем компоненты-инстансы элементов*/
          if (!Object.isEmpty(this._itemsInstances)) {
@@ -271,7 +277,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          var itemsContainers = $(".controls-ListView__item", container.get(0));
          /*Удаляем вложенные компоненты*/
-         $('[data-component]', itemsContainers).each(function(i, item) {
+         $('[data-component]', itemsContainers).each(function (i, item) {
             var inst = $(item).wsControl();
             inst.destroy();
          });
@@ -291,9 +297,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return this._container;
       },
 
-      _drawItem: function (item, targetContainer) {
+      _drawItem: function (item, targetContainer, at) {
 
-         this._createItemInstance(item, targetContainer);
+         this._createItemInstance(item, targetContainer, at);
       },
 
       _getItemTemplate: function () {
@@ -304,7 +310,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          container.attr('data-id', key).addClass('controls-ListView__item');
       },
 
-      _createItemInstance: function (item, targetContainer) {
+      _createItemInstance: function (item, targetContainer, at) {
          var
             key = item.getKey(),
             itemTpl = this._getItemTemplate(item),
@@ -320,7 +326,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (typeof dotTemplate == 'string') {
             container = $(MarkupTransformer(doT.template(dotTemplate)(item)));
             this._addItemClasses(container, key);
-            targetContainer.append(container);
+            if (at && (typeof at.at !== 'undefined')) {
+               var atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).get(at.at);
+               $(atContainer).before(container);
+            }
+            else {
+               targetContainer.append(container);
+            }
+
          }
          else {
             throw new Error('Шаблон должен быть строкой');
@@ -371,7 +384,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var instances = this.getItemsInstances();
          return instances[id];
       },
-      _hasNextPage: function(hasMore){
+      _hasNextPage: function (hasMore) {
          //n - приходит true, false || общее количество записей в списочном методе
          return typeof (hasMore) !== 'boolean' ? hasMore > this._offset : !!hasMore;
       }
