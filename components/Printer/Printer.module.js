@@ -1,9 +1,9 @@
 /**
  * Created by ad.chistyakova on 14.04.2015.
  */
-define('js!SBIS3.CONTROLS.Printer', [  'js!SBIS3.CORE.LoadingIndicator', 'js!SBIS3.CORE.Dialog',
+define('js!SBIS3.CONTROLS.Printer', [  'js!SBIS3.CORE.LoadingIndicator',
    'is!browser?js!' + $ws._const.wsRoot + 'Lib/xslt.js'
-], function(LoadingIndicator, Dialog) {
+], function(LoadingIndicator) {
 
    return $ws.core.extend({}, {
 
@@ -54,11 +54,6 @@ define('js!SBIS3.CONTROLS.Printer', [  'js!SBIS3.CORE.LoadingIndicator', 'js!SBI
          }).addBoth(function(){
             $ws.core.setCursor(true);
          });
-      },
-      _getCurrentTransform: function(idReport, isReportsForList){
-         return idReport ?
-               (isReportsForList ? this._options.reportsForList[idReport] : this._options.reports[idReport]) :
-               'default-list-transform.xsl';
       },
       _getTransform: function(idReport, object, xsl) {
          return ( typeof idReport === 'undefined' ?  $ws._const.wsRoot + 'res/xsl/' :  $ws._const.resourceRoot ) + xsl;
