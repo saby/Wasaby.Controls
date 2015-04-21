@@ -64,15 +64,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @cfg {DataSource} Набор исходных данных по которому строится отображение
              * @see setDataSource
              */
-            dataSource: undefined,            
+            dataSource: undefined,
              /**
               * @cfg {Number} Количество записей на странице
               * <pre>
               *     <option name="pageSize">10</option>
               * </pre>
               */
-            pageSize : null
-         }
+            pageSize: null
+         },
+         _loader : null
       },
 
       $constructor: function () {
@@ -155,18 +156,37 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._limit = this._options.pageSize;
          }
          var self = this;
+         this._cancelLoading();
          this._filter = typeof(filter) != 'undefined' ? filter : this._filter;
          this._sorting = typeof(sorting) != 'undefined' ? sorting : this._sorting;
          this._offset = typeof(offset) != 'undefined' ? offset : this._offset;
          this._limit = typeof(limit) != 'undefined' ? limit : this._limit;
-         this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
+         this._loader = this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
+            self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
             if (self._dataSet) {
                self._dataSet.merge(dataSet);
             } else {
                self._dataSet = dataSet;
             }
+            self._dataLoadedCallback();
             self._redraw();
          });
+      },
+      //TODO Сделать публичным? вроде так всем захочется делать
+      _isLoading: function(){
+         return this._loader && !this._loader.isReady();
+      },
+      //TODO Сделать публичным? вроде так всем захочется делать
+      /**
+       * После использования нужно присвоить null переданному loader самостоятельно!
+       * @param loader
+       * @private
+       */
+      _cancelLoading: function(){
+         if (this._isLoading()){
+            this._loader.cancel();
+         }
+         this._loader = null;
       },
        /**
         * Метод установки либо замены коллекции элементов, заданной опцией {@link items}.
@@ -253,7 +273,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                if (targetContainer) {
                   this._drawItem(records[i], targetContainer, curAt);
                }
-               curAt.at++;
+               if (curAt && cuAt.at) {
+                  curAt.at++;
+               }
             }
             this.reviveComponents().addCallback(function () {
                self._notify('onDrawItems');
@@ -387,7 +409,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _hasNextPage: function (hasMore) {
          //n - приходит true, false || общее количество записей в списочном методе
          return typeof (hasMore) !== 'boolean' ? hasMore > this._offset : !!hasMore;
+      },
+
+      _dataLoadedCallback: function() {
+
       }
+
 
    };
 

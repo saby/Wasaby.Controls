@@ -53,9 +53,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
       $constructor: function () {
 
-         if (this._options.data) {
-            this._prepareData(this._options.data);
-         }
+         this._prepareData(this._options.data);
 
          if (this._options.keyField) {
             this._keyField = this._options.keyField;
@@ -92,7 +90,11 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @private
        */
       _prepareData: function (data) {
-         this._rawData = data;
+         if (data) {
+            this._rawData = data;
+         } else {
+            this._rawData = this.getStrategy().getEmptyRawData();
+         }
       },
        /**
         *
@@ -346,14 +348,13 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return this.getStrategy().getMetaData(this._rawData);
       },
 
-      filter : function(filterCallback) {
+      filter: function (filterCallback) {
          var filterDataSet = new DataSet({
             strategy: this._options.strategy,
-            data: [],
-            keyField: this._options.keyField
+            keyField: this._keyField
          });
 
-         this.each(function(record){
+         this.each(function (record) {
             if (filterCallback(record)) {
                filterDataSet.push(record);
             }
