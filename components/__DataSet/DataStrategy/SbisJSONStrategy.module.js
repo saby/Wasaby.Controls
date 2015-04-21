@@ -62,7 +62,11 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
 
       addRecord: function (data, record, at) {
          var rawData = record.getRaw();
-         var d = data['d'];
+         var d;
+         if (!data) {
+            data = {d: [], s: []};
+         }
+         d = data['d'];
          if (at) {
             d.splice(at, 0, rawData['d']);
          } else {
@@ -119,9 +123,9 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
        * @param {String} field название поля для получения значения
        * @returns {*}
        */
-      type: function(data, field){
+      type: function (data, field) {
          var s = data.s,
-               index;
+            index;
          for (var i = 0, l = s.length; i < l; i++) {
             if (s[i]['n'] == field) {
                index = i;
@@ -130,9 +134,9 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
          }
          return s[index].t;
       },
-      getMetaData: function(data) {
+      getMetaData: function (data) {
          return {
-            more : data.n
+            more: data.n
          }
       },
 
@@ -197,7 +201,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
       preparePagingParam: function (offset, limit) {
          var pagingParam = null;
          if (typeof(offset) != 'undefined' && offset != null && typeof(limit) != 'undefined' && limit != null) {
-            var numPage = Math.floor(offset/limit);
+            var numPage = Math.floor(offset / limit);
             pagingParam = {
                'd': [
                   numPage,

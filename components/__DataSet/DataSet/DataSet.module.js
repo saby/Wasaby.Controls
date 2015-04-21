@@ -88,11 +88,16 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       getCount: function () {
-         return this.getStrategy().getCount(this._rawData);
+         if (this._rawData) {
+            return this.getStrategy().getCount(this._rawData);
+         }
+         return 0;
       },
 
       _loadFromRaw: function () {
-         this._indexId = this.getStrategy().rebuild(this._rawData, this._keyField);
+         if (this._rawData) {
+            this._indexId = this.getStrategy().rebuild(this._rawData, this._keyField);
+         }
          this._isLoaded = true;
 
          var length = this.getCount();
@@ -324,14 +329,13 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return this.getStrategy().getMetaData(this._rawData);
       },
 
-      filter : function(filterCallback) {
+      filter: function (filterCallback) {
          var filterDataSet = new DataSet({
             strategy: this._options.strategy,
-            data: [],
-            keyField: this._options.keyField
+            keyField: this._keyField
          });
 
-         this.each(function(record){
+         this.each(function (record) {
             if (filterCallback(record)) {
                filterDataSet.push(record);
             }
