@@ -109,6 +109,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             } else {
                self._dataSet = dataSet;
             }
+            self._dataLoadedCallback();
             self._redraw();
          });
       },
@@ -285,7 +286,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _hasNextPage: function (hasMore) {
          //n - приходит true, false || общее количество записей в списочном методе
          return typeof (hasMore) !== 'boolean' ? hasMore > this._offset : !!hasMore;
+      },
+
+      _dataLoadedCallback: function() {
+
       }
+
 
    };
 
