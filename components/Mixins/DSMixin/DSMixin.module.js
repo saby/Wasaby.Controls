@@ -174,7 +174,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                if (targetContainer) {
                   this._drawItem(records[i], targetContainer, curAt);
                }
-               curAt.at++;
+               if (curAt && cuAt.at) {
+                  curAt.at++;
+               }
             }
             this.reviveComponents().addCallback(function () {
                self._notify('onDrawItems');
