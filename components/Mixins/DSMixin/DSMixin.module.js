@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @cfg {DataSource} Набор исходных данных по которому строится отображение
              */
             dataSource: undefined,
-            pageSize : null
+            pageSize: null
          },
          _loader : null
       },
