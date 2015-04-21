@@ -9,8 +9,7 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
     */
 
    return $ws.core.extend({}, {
-      $protected: {
-      },
+      $protected: {},
       $constructor: function () {
       },
       /**
@@ -49,8 +48,12 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
          /*Method must be implemented*/
       },
 
-      getMetaData: function(data) {
+      getMetaData: function (data) {
          return {};
+      },
+
+      getEmptyRawData: function () {
+         /*Method must be implemented*/
       }
 
    });
