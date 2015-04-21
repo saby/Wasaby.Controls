@@ -2,7 +2,7 @@
  * Created by ad.chistyakova on 14.04.2015.
  */
 define('js!SBIS3.CONTROLS.Printer', [  'js!SBIS3.CORE.LoadingIndicator', 'js!SBIS3.CORE.Dialog',
-   'is!browser?js!' + $ws._const.wsRoot + 'Lib/xslt.js',
+   'is!browser?js!' + $ws._const.wsRoot + 'Lib/xslt.js'
 ], function(LoadingIndicator, Dialog) {
 
    return $ws.core.extend({}, {
@@ -129,7 +129,6 @@ $ws.single.DataSetToXMLSerializer = /** @lends $ws.single.DataSetToXMLSerializer
             column.setAttribute('Поле', columns[i].field);
          }
       }
-      debugger;
       //TODO здесь будет настройка для иерархии
    },
    _serializeObject: function(object, parentElement, document, columns){
@@ -164,7 +163,7 @@ $ws.single.DataSetToXMLSerializer = /** @lends $ws.single.DataSetToXMLSerializer
       recordElement.appendChild(fieldElement = document.createElement('Поле'));
       fieldElement.setAttribute('Имя', column.field);
       var fieldValue = record.get(column.field) === null ? "" : record.get(column.field);
-      column.type = column.type || 'Текст';
+      column.type = record.getRaw ?  record.getType(column.field) : column.type || 'Текст';
       var typeName =  typeof(column.type) == 'object' ? column.type.n : column.type;
       if(!this._complexFields[typeName] && !column.s && !this._complexFields[column.s]){
          tagName = this._colNameToTag[column.type] ? this._colNameToTag[column.type] : column.type;

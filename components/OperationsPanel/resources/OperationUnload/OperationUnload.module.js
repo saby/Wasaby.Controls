@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                {
                   id : 'PDF',
                   title : 'Список в PDF',
-
+                  test: 'saver',
                   icon : 'sprite:icon-24 icon-PDF2 icon-multicolor action-hover'
                },
                {
@@ -71,6 +71,17 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       },
       _isSelectedState: function(){
          return this._view.getSelectedItems().length > 0;
+      },
+      _saveTo: function(idReport, isReportForList, fileType) {
+         var self = this,
+               title = 'Что сохранить в ' + fileType;
+
+         this._validateRecordCount(title).addCallback(function(records) {
+            self._prepareDataToSave(fileType,
+                  fileType === 'EXCEL' && typeof self._options.saveToExcelListMethod === 'string' && self._options.saveToExcelListMethod.length ? undefined : idReport,
+                  isReportForList,
+                  records);
+         });
       }
 
    });
