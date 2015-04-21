@@ -197,8 +197,11 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
          }
 
          return pagingData;
-      }
+      },
 
+      getEmptyRawData: function() {
+         return [];
+      }
 
    });
 

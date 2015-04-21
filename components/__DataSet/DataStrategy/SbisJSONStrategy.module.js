@@ -62,11 +62,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
 
       addRecord: function (data, record, at) {
          var rawData = record.getRaw();
-         var d;
-         if (!data) {
-            data = {d: [], s: []};
-         }
-         d = data['d'];
+         var d = data['d'];
          if (at) {
             d.splice(at, 0, rawData['d']);
          } else {
@@ -229,6 +225,10 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
             /*_key: 2,*/
             _type: 'record'
          };
+      },
+
+      getEmptyRawData: function () {
+         return {d: [], s: []};
       }
 
    });
