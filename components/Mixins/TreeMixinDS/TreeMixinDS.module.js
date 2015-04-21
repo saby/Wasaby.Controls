@@ -57,7 +57,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
          targetContainer.append(itemWrapper);
 
          //TODO: перенести куда нить проверку является ли разделом
-         if (item.get(this._options.hierField + '@')) {
+         //сейчас всегда отображает треугольник раскрытия, если явно не указано,
+         //что не является разделом (false)
+         if (item.get(this._options.hierField + '@') !== false) {
             $('.controls-ListView__item[data-id="' + key + '"] .controls-TreeView__item', this.getContainer().get(0)).first().addClass('controls-TreeView__hasChild');
          }
 
