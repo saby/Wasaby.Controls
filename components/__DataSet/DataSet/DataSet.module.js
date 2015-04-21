@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
    /**
     * Класс "Набор данных"
+    * @author Мануйлов Андрей
     */
 
    /**
@@ -34,10 +35,17 @@ define('js!SBIS3.CONTROLS.DataSet', [
           */
          _keyField: undefined,
          _options: {
+             /**
+              * @cfg {String}
+              */
             strategy: null,
+             /**
+              * @cfg {Object}
+              */
             data: undefined,
             /**
-             * @cfg {String} название поля-идентификатора записи, при работе с БЛ проставляется автоматически
+             * @cfg {String} Название поля-идентификатора записи
+             * При работе с БЛ значение данной опции проставляется автоматически.
              */
             keyField: ''
 
@@ -58,8 +66,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       /**
-       * Удалить запись
-       * @param {Number | Array} key идентификатор записи или массив идентификаторов
+       * Метод удаления записи.
+       * @param {Number | Array} key Идентификатор записи или массив идентификаторов.
        */
       removeRecord: function (key) {
          var self = this;
@@ -86,7 +94,10 @@ define('js!SBIS3.CONTROLS.DataSet', [
       _prepareData: function (data) {
          this._rawData = data;
       },
-
+       /**
+        *
+        * @returns {*|exports.length|Function|length|.__defineGetter__.length|Number}
+        */
       getCount: function () {
          return this.getStrategy().getCount(this._rawData);
       },
@@ -110,8 +121,9 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       /**
-       * Возвращает рекорд по его идентификатору
-       * @returns {js!SBIS3.CONTROLS.Record}
+       * Метод получения записи по её идентификатору
+       * @returns {js!SBIS3.CONTROLS.Record} Возвращает рекорд.
+       * @see getRecordKeyByIndex
        */
       getRecordByKey: function (key) {
          if (key == null) {
@@ -123,11 +135,20 @@ define('js!SBIS3.CONTROLS.DataSet', [
          }
          return this._byId[key];
       },
-
+       /**
+        *
+        * @param index
+        * @returns {*}
+        */
       at: function (index) {
          return this.getRecordByKey(this.getRecordKeyByIndex(index));
       },
-
+       /**
+        *
+        * @param index
+        * @returns {*}
+        * @see getRecordByKey
+        */
       getRecordKeyByIndex: function (index) {
          if (!this._isLoaded) {
             this._loadFromRaw();
@@ -136,14 +157,20 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       /**
-       * Метод получения объекта стратегии работы с данными
-       * @returns {Object}
+       * Метод получения объекта стратегии работы с данными.
+       * @returns {Object} Объект стратегии работы с данными.
+       * @see strategy
        */
       getStrategy: function () {
          return this._options.strategy;
       },
 
-      // полная установка рекордов в DataSet
+       /**
+        * Метод полной установки рекордов в DataSet.
+        * @param records
+        * @param options
+        * @returns {*}
+        */
       setRecords: function (records, options) {
          options || (options = {});
          options = $ws.core.merge(options, setOptions, {preferSource: true});
@@ -268,7 +295,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
       /**
        *
-       * @param iterateCallback
+       * @param iterateCallback Пользовательская функция обратного вызова.
        * @param status {'all'|'deleted'|'changed'} по умолчанию все, кроме удаленных
        */
       each: function (iterateCallback, status) {

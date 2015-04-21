@@ -6,6 +6,7 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
 
    /**
     * Интерфейс предназначен для унификации работы с исходными данными датасорсов
+    * @author Мануйлов Андрей
     */
 
    return $ws.core.extend({}, {
@@ -25,19 +26,27 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
       value: function () {
          /*Method must be implemented*/
       },
-
+       /**
+        *
+        */
       at: function () {
          /*Method must be implemented*/
       },
-
+       /**
+        *
+        */
       replaceAt: function () {
          /*Method must be implemented*/
       },
-
+       /**
+        * Метод добавления записи
+        */
       addRecord: function () {
          /*Method must be implemented*/
       },
-
+       /**
+        *
+        */
       rebuild: function () {
          /*Method must be implemented*/
       },
@@ -48,7 +57,11 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
       setValue: function () {
          /*Method must be implemented*/
       },
-
+       /**
+        *
+        * @param {Object} data
+        * @returns {{}}
+        */
       getMetaData: function(data) {
          return {};
       }

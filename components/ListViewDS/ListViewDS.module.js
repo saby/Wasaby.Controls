@@ -41,6 +41,20 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            * @param {Object} hoveredItem.size размеры контейнера элемента
            * @param {Number} hoveredItem.height высота
            * @param {Number} hoveredItem.width ширина
+           * @example
+           * <pre>
+           *     DataGrid.subscribe('onChangeHoveredItem', function(hoveredItem) {
+           *        var actions = DataGrid.getItemsActions(),
+           *        instances = actions.getItemsInstances();
+           *
+           *        for (var i in instances) {
+           *           if (instances.hasOwnProperty(i)) {
+           *              //Будем скрывать кнопку удаления для всех строк
+           *              instances[i][i === 'delete' ? 'show' : 'hide']();
+           *           }
+           *        }
+           *     });
+           * </pre>
            * @see itemsActions
            * @see setItemsActions
            * @see getItemsActions
@@ -69,7 +83,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 *        {{=it.get("title")}}\
                 *     </div>
                 * </pre>
-                * @remarks Почему нет флажков при включенной опции {@link multiselect}?
+                * @faq Почему нет флажков при включенной опции {@link multiselect}?
                 * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
                 * <pre>
                 *     <div class="listViewItem" style="height: 30px;">\
@@ -77,6 +91,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 *        {{=it.get("title")}}\
                 *     </div>
                 * </pre>
+                * @link SBIS3.CONTROLS.ListViewDS#multiselect
                 * @see multiselect
                 */
                itemTemplate: '',
@@ -150,20 +165,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                /**
                 * @cfg {Boolean} Разрешить выбор нескольких строк
                 * Позволяет выбрать несколько строк для одновременного взаимодействия с ними.
-                *
                 * @example
                 * <pre>
                 *    <option name="multiselect">false</option>
                 * </pre>
-                * @remarks Почему нет флажков при включенной опции {@link multiselect}?
-                * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
-                * <pre>
-                *     <div class="listViewItem" style="height: 30px;">\
-                *        <span class="controls-ListView__itemCheckBox"></span>\
-                *        {{=it.get("title")}}\
-                *     </div>
-                * </pre>
-                * @remarks При значении данной опции false у связанной панели массовых операций не будет флага "Отметить все".
                 * @see itemTemplate
                 */
                multiselect: false,
@@ -363,6 +368,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           /**
            * Метод установки/замены обработчика клика по строке.
            * @param method
+           * @example
+           * <pre>
+           *     var myElemClickHandler = function(id, data, target){
+           *        console.log(id, data, target)
+           *     }
+           *     dataGrid.setElemClickHandler(myElemClickHandler);
+           * </pre>
            * @see elemClickHandler
            */
          setElemClickHandler: function (method) {
@@ -422,7 +434,21 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          /**
           * Метод получения операций над записью.
-          * @returns {Array}
+          * @returns {Array} Массив операций над записью.
+          * @example
+          * <pre>
+          *     DataGrid.subscribe('onChangeHoveredItem', function(hoveredItem) {
+          *        var actions = DataGrid.getItemsActions(),
+          *        instances = actions.getItemsInstances();
+          *
+          *        for (var i in instances) {
+          *           if (instances.hasOwnProperty(i)) {
+          *              //Будем скрывать кнопку удаления для всех строк
+          *              instances[i][i === 'delete' ? 'show' : 'hide']();
+          *           }
+          *        }
+          *     });
+          * </pre>
           * @see itemsActions
           * @see setItemActions
           */

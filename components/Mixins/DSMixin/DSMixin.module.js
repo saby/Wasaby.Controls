@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
     * @mixin SBIS3.CONTROLS.DSMixin
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var setDataSourceCB = function () {
@@ -35,11 +36,41 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @see items
              */
             keyField : null,
+             /**
+              * @cfg {Items[]} Набор исходных данных, по которому строится отображение
+              * @example
+              * <pre>
+              *     <options name="items" type="array">
+              *        <options>
+              *            <option name="id">1</option>
+              *            <option name="title">Пункт1</option>
+              *         </options>
+              *         <options>
+              *            <option name="id">2</option>
+              *            <option name="title">Пункт2</option>
+              *         </options>
+              *         <options>
+              *            <option name="id">3</option>
+              *            <option name="title">ПунктПодменю</option>
+              *            <option name="parent">2</option>
+              *            <option name="icon">sprite:icon-16 icon-Birthday icon-primary</option>
+              *         </options>
+              *      </options>
+              * </pre>
+              * @see keyField
+              */
             items: undefined,
             /**
              * @cfg {DataSource} Набор исходных данных по которому строится отображение
+             * @see setDataSource
              */
             dataSource: undefined,
+             /**
+              * @cfg {Number} Количество записей на странице
+              * <pre>
+              *     <option name="pageSize">10</option>
+              * </pre>
+              */
             pageSize : null
          }
       },
@@ -88,14 +119,39 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._setDataSourceCB = setDataSourceCB.bind(this);
          this._dataSource.subscribe('onDataSync', this._setDataSourceCB);
       },
-
+       /**
+        * Метод установки либо замены источника данных, установленного опцией {@link dataSource}.
+        * @param ds Новый источник данных.
+        * @example
+        * <pre>
+        *     var arrayOfObj = [
+        *        {'@Заметка': 1, 'Содержимое': 'Поиграть в бильярд', 'Завершена': false},
+        *        {'@Заметка': 2, 'Содержимое': 'Посидеть в планшете', 'Завершена': false},
+        *        {'@Заметка': 3, 'Содержимое': 'Купить булку', 'Завершена': true}
+        *     ];
+        *     var ds1 = new StaticSource({
+        *        data: arrayOfObj,
+        *        keyField: '@Заметка',
+        *        strategy: ArrayStrategy
+        *     });
+        *     this.getChildControlByName("ComboBox 1").setDataSource(ds1);
+        * </pre>
+        * @see dataSource
+        */
       setDataSource: function (ds) {
          this._dataSource.unsubscribe('onDataSync', this._setDataSourceCB);
          this._dataSource = ds;
          this.reload();
          this._dataSource.subscribe('onDataSync', this._setDataSourceCB);
       },
-
+       /**
+        * Метод перезагрузки данных.
+        * Можно задать фильтрацию, сортировку.
+        * @param {String} filter Параметры фильтрации.
+        * @param {String} sorting Параметры сортировки.
+        * @param offset Элемент, с которого перезагружать данные.
+        * @param {Number} limit Ограничение количества перезагружаемых элементов.
+        */
       reload: function (filter, sorting, offset, limit) {
          if (this._options.pageSize) {
             this._limit = this._options.pageSize;
@@ -110,6 +166,30 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             self._redraw();
          });
       },
+       /**
+        * Метод установки либо замены коллекции элементов, заданной опцией {@link items}.
+        * @param {Object} items Набор исходных данных, по которому строится отображение.
+        * @example
+        * <pre>
+        *     setItems: [
+        *        {
+        *           id: 1,
+        *           title: 'Сообщения'
+        *        },{
+        *           id: 2,
+        *           title: 'Прочитанные',
+        *           parent: 1
+        *        },{
+        *           id: 3,
+        *           title: 'Непрочитанные',
+        *           parent: 1
+        *        }
+        *     ]
+        * </pre>
+        * @see items
+        * @see addItem
+        * @see getItems
+        */
       setItems: function (items) {
          var
             item = items[0],
@@ -257,14 +337,36 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
 
       },
-
+       /**
+        * Метод получения элементов коллекции.
+        * @returns {*}
+        * @example
+        * <pre>
+        *     var ItemsInstances = Menu.getItemsInstances();
+        *     for (var i = 0; i < ItemsInstances.length; i++){
+        *        ItemsInstances[i].setCaption('Это пункт меню №' + ItemsInstances[i].attr('data-id'));
+        *     }
+        * </pre>
+        */
       getItemsInstances: function () {
          if (Object.isEmpty(this._itemsInstances)) {
             this._fillItemInstances();
          }
          return this._itemsInstances;
       },
-
+       /**
+        * Метод получения элемента коллекции.
+        * @param id Идентификатор элемента коллекции.
+        * @returns {*} Возвращает элемент коллекции по указанному идентификатору.
+        * @example
+        * <pre>
+        *     Menu.getItemsInstance(3).setCaption('SomeNewCaption');
+        * </pre>
+        * @see getItems
+        * @see setItems
+        * @see items
+        * @see getItemInstances
+        */
       getItemInstance: function (id) {
          var instances = this.getItemsInstances();
          return instances[id];
