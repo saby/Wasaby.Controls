@@ -31,7 +31,8 @@ define('js!SBIS3.CONTROLS.PrintMassSelectorDialog', [
             height: 'auto'
          },
          _radioButtons : undefined,
-         _numberTextBox: undefined
+         _numberTextBox: undefined,
+         _numberTextBoxValue: undefined
       },
       _dotTplFn: dotTplFn,
 
@@ -47,6 +48,8 @@ define('js!SBIS3.CONTROLS.PrintMassSelectorDialog', [
          this._numberTextBox = this.getChildControlByName('controls-numberTextBox');
       },
       onChangeRadioButton: function(event, item){
+         this._numberTextBoxValue = this._numberTextBoxValue || this._numberTextBox.getNumericValue();
+         this._numberTextBox.setText(item === 'all' ? 2000 : this._numberTextBoxValue);
          //TODO может стоит заменить на onFieldChange у контекста? Ибо радио-кнопки теперь с data-bind'ом
          this._container.find('> .controls-PrintMassSelector__numberTextBox').toggleClass('ws-hidden', item !== 'pickNum');
       }

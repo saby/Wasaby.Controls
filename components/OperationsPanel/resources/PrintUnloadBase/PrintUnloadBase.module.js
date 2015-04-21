@@ -21,74 +21,74 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          this._view = this.getParent().getLinkedView();
       },
       /**
-       * Must be implemented
+       * Can be implemented
        */
       _clickHandler: function() {
-         
+         PrintUnloadBase.superclass._clickHandler.apply(this, arguments);
       },
       _prepareOperation: function(title){
          var selectedItems = this._view.getSelectedItems(),
-               self = this;
+               selectedItemsObj = {},
+               ds;
          if (!selectedItems.length) {
-            //Показать диалог выбора записей
-            new Dialog ({
-               template: 'js!SBIS3.CONTROLS.PrintMassSelectorDialog',
-               caption : title,
-               resizable: false,
-               handlers: {
-                  onBeforeShow: function(){
-                     var dialog = this;
-                     //this.getLinkedContext().setValue('NumOfRecords', self._view._dataSet.getCount()); Хочется, чтобы было так
-                     //TODO Но пришлось сделать так:
-                     this.getChildControlByName('controls-PrintMassSelectorDialog').getContext().setValue('NumOfRecords', self._view._dataSet.getCount());
-                     this.getChildControlByName('controls-buttonPrint').subscribe('onActivated', function(){
-
-                        if(dialog.validate()){
-                           dialog.ok();
-                           self.applyOperation(self._view.dataSet);
-                           //self._getDataSetFromItems([]).addCallback(function(dataSet){
-                           //   self.applyOperation(dataSet);
-                           //});
-                        }
-                     });
-                  },
-                  onAfterClose : function(){
-                     //self.applyOperation(self._view.dataSet);
-                  }
-               }
-            });
+            this._processMassOperations(title);
          } else {
-            self._getDataSetFromItems(self._getSelectedRecords()).addCallback(function(dataSet){
-               self.applyOperation(dataSet);
+            for (var i = 0, len = selectedItems.length; i < len; i++){
+               selectedItemsObj[selectedItems[i]] = true;
+            }
+            ds = this._view._dataSet.filter(function(item){
+               return selectedItemsObj[item.getKey()];
             });
-
-         }   
-      },
-      _getSelectedRecords: function(){
-         var items = [],
-               selected = this._view.getSelectedItems(),
-               record;
-         for (var i = 0, len = selected.length; i < len; i++) {
-            record = this._view._dataSet.getRecordByKey(selected[i]);
-            items.push(record);
+            this.applyOperation(ds);
          }
-         return items;
-
       },
-      _getDataSetFromItems : function(items){
-         var deferred = new $ws.proto.Deferred(),
-               dataSource = new StaticSource({
-                  data: [],
-                  strategy: new ArrayStrategy(),
-                  keyField: 'id' //Найти в записи
-               });
-         //TODO переписать на .filter
-         dataSource.query(undefined, undefined, 0).addCallback(function (dataSet) {
-            //TODO должна быть другая возможность создать подВхождение датаСета
-            dataSet.setRecords(items);
-            deferred.callback(dataSet);
+      _processMassOperations:function(title){
+         var numOfRecords = this._view._dataSet.getCount(),
+            num = 0,
+            self = this,
+            ds;
+         //Показать диалог выбора записей
+         new Dialog ({
+            template: 'js!SBIS3.CONTROLS.PrintMassSelectorDialog',
+            caption : title,
+            resizable: false,
+            handlers: {
+               onBeforeShow: function(){
+                  var dialog = this;
+                  //this.getLinkedContext().setValue('NumOfRecords', self._view._dataSet.getCount()); Хочется, чтобы было так
+                  //TODO Но пришлось сделать так:
+                  this.getChildControlByName('controls-PrintMassSelectorDialog').getContext().setValue('NumOfRecords', numOfRecords);
+                  this.getChildControlByName('controls-buttonPrint').subscribe('onActivated', function(){
+                     var selectedNumRecords;
+                     if(dialog.validate()){
+                        selectedNumRecords = dialog.getChildControlByName('controls-numberTextBox').getNumericValue();
+                        dialog.ok();
+
+                        if(selectedNumRecords > numOfRecords){
+                           $ws.helpers.question('Операция займет продолжительное время. Провести операцию?', {}, self).addCallback(function(answer){
+                              if (answer) {
+                                 self._view._dataSource.query(self._view._filter, self._view._sorting, 0, selectedNumRecords).addCallback(function (dataSet) {
+                                    self.applyOperation(dataSet);
+                                 });
+                              }
+                           });
+                        } else {
+                           if (selectedNumRecords < numOfRecords) {
+                              num = 0;
+                              //Выберем selectedNumRecords записей из dataSet
+                              ds = self._view._dataSet.filter(function(){
+                                 return num++ < selectedNumRecords;
+                              });
+                           } else {
+                              ds =  self._view._dataSet;
+                           }
+                           self.applyOperation(ds);
+                        }
+                     }
+                  });
+               }
+            }
          });
-         return deferred;
       },
       /**
        * Must be implemented
