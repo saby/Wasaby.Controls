@@ -90,6 +90,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       setDataSource: function (ds) {
          this._dataSource.unsubscribe('onDataSync', this._setDataSourceCB);
          this._dataSource = ds;
+         this._dataSet = null;
          this.reload();
          this._dataSource.subscribe('onDataSync', this._setDataSourceCB);
       },
