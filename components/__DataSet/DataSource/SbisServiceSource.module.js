@@ -177,6 +177,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
 
       /**
        * Вызов списочного метода БЛ
+       * @remark
        * Возможно применене фильтрации, сортировки и выбора определенного количества записей с заданной позиции
        * @param {Object} filter - {property1: value, property2: value}
        * @param {Array} sorting - [{property1: 'ASC'},{property2: 'DESC'}]
