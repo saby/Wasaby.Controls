@@ -191,6 +191,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
             }, 'all');
 
             if (toRemove.length) {
+               //TODO: тут не надо их помечать как удаленными. а вырезать из DataSet
                this.removeRecord(toRemove);
             }
          }
