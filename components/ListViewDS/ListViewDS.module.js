@@ -30,6 +30,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
           /**
            * @event onChangeHoveredItem При переводе курсора мыши на другую запись
+           * @remark
            * Событие срабатывает при смене записи под курсором мыши.
            * @param {$ws.proto.EventObject} eventObject Дескриптор события.
            * @param {Object} hoveredItem Объект
@@ -76,6 +77,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                _options: {
                /**
                 * @cfg {String} Шаблон отображения каждого элемента коллекции
+                * @remark
                 * !Важно: опция обязательна к заполнению!
                 * @example
                 * <pre>
@@ -109,6 +111,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 */
                /**
                 * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок
+                * @remark
                 * Можно использовать для массовых операций.
                 * @example
                 * <pre>
@@ -159,11 +162,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                emptyHTML: null,
                /**
                 * @cfg {Function} Обработчик клика на элемент
+                * @example
+                * <option name="elemClickHandler">MyElemClickHandler</option>
                 * @see setElemClickHandler
                 */
                elemClickHandler: null,
                /**
                 * @cfg {Boolean} Разрешить выбор нескольких строк
+                * @remark
                 * Позволяет выбрать несколько строк для одновременного взаимодействия с ними.
                 * @example
                 * <pre>
@@ -367,7 +373,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
           /**
            * Метод установки/замены обработчика клика по строке.
-           * @param method
+           * @param method Имя новой функции обработчика клика по строке.
            * @example
            * <pre>
            *     var myElemClickHandler = function(id, data, target){
@@ -460,7 +466,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          /**
           * Метод установки или замены кнопок операций над записью, заданных в опции {@link itemsActions}
-          * Нужно передать массив обьектов
+          * Нужно передать массив обьектов.
           * @param {Array} items Объект формата {name: ..., icon: ..., title: ..., onActivated: ..., isMainOption: ...}
           * @param {String} items.name Имя кнопки операции над записью.
           * @param {String} items.icon Иконка кнопки.
@@ -469,7 +475,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @param {String} items.isMainOption На строке ли кнопка (или в меню).
           * @example
           * <pre>
-          *     dataGrid.setItemsActions()
+          *     dataGrid.setItemsActions();
           * <pre>
           * @see itemsActions
           * @see getItemsActions
