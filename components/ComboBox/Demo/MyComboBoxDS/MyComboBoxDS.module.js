@@ -19,14 +19,14 @@ define('js!SBIS3.Demo.Control.MyComboBoxDS', ['js!SBIS3.CORE.CompoundControl', '
       init: function() {
          moduleClass.superclass.init.call(this);
          var arrayOfObj = [
-                  {'@Заметка': 1, 'Содержимое': 'Поиграть в бильярд', 'Завершена': false},
-                  {'@Заметка': 2, 'Содержимое': 'Посидеть в планшете', 'Завершена': false},
-                  {'@Заметка': 3, 'Содержимое': 'Купить булку', 'Завершена': true}
+                  {'@Заметка': 1, 'Содержимое': 'Заказать торт', 'Завершена': false},
+                  {'@Заметка': 2, 'Содержимое': 'Украсить комнату', 'Завершена': false},
+                  {'@Заметка': 3, 'Содержимое': 'Купить подарок', 'Завершена': true}
                ];   
          var ds1 = new StaticSource({
             data: arrayOfObj,
             keyField: '@Заметка',
-            strategy: ArrayStrategy
+            strategy: new ArrayStrategy()
             });
          this.getChildControlByName("ComboBox 1").setDataSource(ds1);
       }
