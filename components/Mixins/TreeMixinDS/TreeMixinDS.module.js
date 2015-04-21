@@ -44,6 +44,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
       },
 
       _appendItemTemplate: function (item, targetContainer, dotTemplate) {
+         //TODO: поддержать at, или сделать с помощью него
          var self = this,
             key = item.getKey(),
             container = $(MarkupTransformer(doT.template(dotTemplate)(item))),
