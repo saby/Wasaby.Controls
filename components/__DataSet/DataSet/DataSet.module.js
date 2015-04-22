@@ -327,6 +327,11 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return this.getStrategy().getMetaData(this._rawData);
       },
 
+      /**
+       * Возвращает массив идентификаторов рекордов, являющихся потомками узла иерархии
+       * @param parentId
+       * @returns {Array}
+       */
       getChildItems: function (parentId) {
          parentId = parentId || null;
          return this._indexTree[parentId];
