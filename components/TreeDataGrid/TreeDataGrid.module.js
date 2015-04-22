@@ -1,4 +1,8 @@
-define('js!SBIS3.CONTROLS.TreeDataGrid', ['js!SBIS3.CONTROLS.DataGrid', 'js!SBIS3.CONTROLS.TreeMixin'], function(DataGrid, TreeMixin) {
+define('js!SBIS3.CONTROLS.TreeDataGrid', [
+   'js!SBIS3.CONTROLS.DataGrid',
+   'js!SBIS3.CONTROLS.hierarchyMixin',
+   'js!SBIS3.CONTROLS.TreeMixinDS'
+], function(DataGrid, hierarchyMixin, TreeMixin) {
    'use strict';
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
@@ -21,7 +25,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', ['js!SBIS3.CONTROLS.DataGrid', 'js!SBIS
     * </component>
     */
 
-   var TreeDataGrid = DataGrid.extend([TreeMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
+   var TreeDataGrid = DataGrid.extend([hierarchyMixin, TreeMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
       $protected: {
       },
 
