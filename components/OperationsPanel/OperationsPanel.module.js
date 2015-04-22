@@ -17,6 +17,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * @control
     * @public
     * @author Сухоручкин Андрей
+    * @ignoreOptions contextRestriction independentContext
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.OperationsPanel' style="height: 30px;">
+    *
+    * </component>
     */
    var OperationsPanel = Control.extend([CollectionMixin, PickerMixin],/** @lends SBIS3.CONTROLS.OperationsPanel.prototype */{
       _dotTplFn: dotTplFn,
@@ -41,24 +46,41 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
         * <pre>
         *
         * </pre>
-        * @see keyField
+        * @see linkedView
         */
       $protected: {
          _options: {
              /**
-              * @cfg {String} Имя связанного представления данных
+              * @cfg {js!SBIS3.CONTROLS.ListView} Связанного представление данных
               * @example
               * <pre>
               *     <option name="linkedView">MyDataGrid</option>
               * </pre>
               * @see setLinkedView
               * @see getLinkedView
-              * @editor InternalComponentChooser
               */
             linkedView: undefined,
+             /**
+              * @cfg  Набор элементов панели массовых операций
+              */
             items: [
-               { name: 'delete', componentType: 'js!SBIS3.CONTROLS.OperationDelete', type: { mass: true, selection: true }, options: {} },
-               { name: 'operationsMark', componentType: 'js!SBIS3.CONTROLS.OperationsMark', type: { 'mark': true }, options: {} }
+               {
+                   name: 'delete',
+                   componentType: 'js!SBIS3.CONTROLS.OperationDelete',
+                   type: {
+                       mass: true,
+                       selection: true
+                   },
+                   options: {}
+               },
+               {
+                   name: 'operationsMark',
+                   componentType: 'js!SBIS3.CONTROLS.OperationsMark',
+                   type: {
+                       'mark': true
+                   },
+                   options: {}
+               }
             ],
              /**
               * @noShow
@@ -85,8 +107,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          this._itemsDrawn = true;
       },
        /**
-        * Метод установки или замены имени связанного представления данных, установленного в опции {@link linkedView}.
+        * Метод установки или замены связанного представления данных, установленного в опции {@link linkedView}.
         * @param linkedView
+        * @see linkedView
+        * @see getLinkedView
         */
       setLinkedView: function(linkedView) {
          if ($ws.helpers.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
@@ -97,9 +121,9 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          }
       },
        /**
-        * Метод получения имени связанного представления данных, установленного либо в опции {@link linkedView},
+        * Метод получения имени представления данных, установленного либо в опции {@link linkedView},
         * либо методом {@link setLinkedView}.
-        * @returns {String} Возвращает имя связанного представления данных.
+        * @returns {String} Возвращает связанного представления данных.
         * @see linkedView
         * @see setLinkedView
         */

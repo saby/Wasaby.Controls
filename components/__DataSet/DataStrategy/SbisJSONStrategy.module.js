@@ -3,12 +3,18 @@
  */
 define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], function (IDataStrategy) {
    'use strict';
+    /**
+     *
+     * Позволяет работать с массивом объектов на бизнес-логике.
+     * @author Мануйлов Андрей
+     */
+
    var SbisJSONStrategy = IDataStrategy.extend({
       $protected: {},
       $constructor: function () {
       },
       /**
-       * Найти название поля, которое является идентификатором
+       * Найти название поля, которое является идентификатором.
        * @param data ответ БЛ
        * @returns {String}
        */
@@ -38,17 +44,32 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
             iterateCallback.call(context, {s: s, d: d[i]});
          }
       },
-
+       /**
+        *
+        * @param {Object} data
+        * @param {} index
+        * @returns {{d: *, s: (*|exports.duration.s|Color.toHSL.s|Color.toHSV.s|s|col.s)}}
+        */
       at: function (data, index) {
          var d = data.d,
             s = data.s;
          return {d: d[index], s: s};
       },
-
+       /**
+        * Метод перемещения записи.
+        * @param {Object} data
+        * @param index
+        * @param newRaw
+        */
       replaceAt: function (data, index, newRaw) {
          data.d[index] = newRaw;
       },
-
+       /**
+        *
+        * @param {Object} data
+        * @param {String} keyField имя поля-идентификатора
+        * @returns {Array}
+        */
       rebuild: function (data, keyField) {
          var _indexId = [],
             d = data.d,
@@ -59,7 +80,12 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
          }
          return _indexId;
       },
-
+       /**
+        * Метод добавления записи.
+        * @param {Object} data
+        * @param record
+        * @param at
+        */
       addRecord: function (data, record, at) {
          var rawData = record.getRaw();
          var d = data['d'];
@@ -69,7 +95,11 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
             d.push(rawData['d']);
          }
       },
-
+       /**
+        *
+        * @param {Object} data
+        * @returns {exports.length|*|Function|length|.__defineGetter__.length|Number}
+        */
       getCount: function (data) {
          return data['d'].length;
       },
@@ -130,12 +160,21 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
          }
          return s[index].t;
       },
+        /**
+         *
+         * @param {Object} data
+         * @returns {{more: *}}
+         */
       getMetaData: function (data) {
          return {
             more: data.n
          }
       },
-
+       /**
+        *
+        * @param filter
+        * @returns {{d: Array, s: Array}}
+        */
       prepareFilterParam: function (filter) {
          // настройка объекта фильтрации для отправки на БЛ
          var filterParam = {
@@ -166,6 +205,11 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
 
 
       //TODO нужны ли эти методы в стратегии
+       /**
+        *
+        * @param sorting
+        * @returns {*}
+        */
       prepareSortingParam: function (sorting) {
          // настройка сортировки
          var sortingParam = null;
@@ -193,7 +237,12 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
          }
          return sortingParam;
       },
-
+       /**
+        *
+        * @param offset
+        * @param limit
+        * @returns {*}
+        */
       preparePagingParam: function (offset, limit) {
          var pagingParam = null;
          if (typeof(offset) != 'undefined' && offset != null && typeof(limit) != 'undefined' && limit != null) {
@@ -214,7 +263,11 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
          return pagingParam;
       },
 
-
+       /**
+        *
+        * @param record
+        * @returns {{s: (*|exports.duration.s|Color.toHSL.s|Color.toHSV.s|s|col.s), d: (*|multi.d|SBIS3.CONTROLS.FormattedTextBoxBase.$protected._controlCharactersSet.d|d.d|d), _type: string}}
+        */
       prepareRecordForUpdate: function (record) {
          // поддержим формат запросов к БЛ
          var rawData = record.getRaw();
