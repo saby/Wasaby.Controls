@@ -48,7 +48,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          var self = this,
             curParent = null,
             parents = [],
-            indexTree = {};
+            indexTree = {},
+            curLvl = 0;
 
          do {
 
@@ -56,7 +57,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
                var parentKey = self.getParentKey(DataSet, record);
 
                if ((parentKey || null) === (curParent ? curParent.getKey() : null)) {
-                  parents.push(record);
+                  parents.push({record : record, lvl : curLvl});
 
                   if (!indexTree.hasOwnProperty(parentKey)) {
                      indexTree[self.getParentKey(DataSet, record)] = [];
@@ -64,14 +65,15 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
                   indexTree[self.getParentKey(DataSet, record)].push(record.getKey());
 
-                  iterateCallback.call(this, record);
+                  iterateCallback.call(this, record, curParent, curLvl);
                }
 
             }, status);
 
             if (parents.length) {
                var a = Array.remove(parents, 0);
-               curParent = a[0];
+               curParent = a[0]['record'];
+               curLvl = a[0].lvl + 1;
             }
             else {
                curParent = null;
@@ -107,24 +109,17 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        * @param {String} key Идентификатор раскрываемого узла
        */
       openNode: function (key) {
-         throw new Error('Method openNode() must be implemented');
+         var
+            self = this,
+            filter = this._filter || {};
+         filter[self._options.hierField] = key;
+
+         //TODO: проверка что уже загружали ветку и просто показать ее
+         self._dataSource.query(filter).addCallback(function (dataSet) {
+            self._nodeDataLoaded(key, dataSet);
+         });
       },
 
-      /**
-       * Закрыть определенный узел
-       * @param {String} key Идентификатор раскрываемого узла
-       */
-      closeNode: function (key) {
-         throw new Error('Method closeNode() must be implemented');
-      },
-
-      /**
-       * Закрыть или открыть определенный узел
-       * @param {String} key Идентификатор раскрываемого узла
-       */
-      toggleNode: function (key) {
-         throw new Error('Method toggleNode() must be implemented');
-      },
 
       after: {
          _drawItems: function () {

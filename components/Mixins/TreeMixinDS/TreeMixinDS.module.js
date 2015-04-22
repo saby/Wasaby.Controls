@@ -33,7 +33,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function (MarkupTransformer) {
             self = this,
             DataSet = this._dataSet;
 
-         this.hierIterate(DataSet, function (record) {
+         /*TODO вынести середину в переопределяемый метод*/
+
+         this.hierIterate(DataSet, function (record, parent, lvl) {
             var
                targetContainer = self._getTargetContainer(record),
                parentKey = self.getParentKey(DataSet, record);
@@ -50,35 +52,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function (MarkupTransformer) {
 
       },
 
-      /**
-       * Раскрыть определенный узел
-       * @param {String} key Идентификатор раскрываемого узла
-       */
-      openNode: function (key) {
-         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
 
-         $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
-
-         var self = this;
-
-         var filter = this._filter || {};
-         filter[self._options.hierField] = key;
-
-         //TODO: проверка что уже загружали ветку и просто показать ее
-         self._dataSource.query(filter).addCallback(function (dataSet) {
-            self._dataSet.merge(dataSet);
-            dataSet.each(function (record) {
-               var targetContainer = self._getTargetContainer(record);
-               if (targetContainer) {
-                  self._drawItem(record, targetContainer);
-               }
-            });
-
-            $('.controls-TreeView__childContainer', itemCont).first().css('display', 'block');
-
-         });
-
-      },
 
       /**
        * Закрыть определенный узел
@@ -103,8 +77,23 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function (MarkupTransformer) {
          else {
             this.openNode(key);
          }
-      }
+      },
 
+      _nodeDataLoaded : function(key, dataSet) {
+         var
+            self = this,
+            itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
+         $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
+
+         dataSet.each(function (record) {
+            var targetContainer = self._getTargetContainer(record);
+            if (targetContainer) {
+               self._drawItem(record, targetContainer);
+            }
+         });
+
+
+      }
    };
 
    return TreeMixinDS;

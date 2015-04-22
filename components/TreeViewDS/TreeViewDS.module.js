@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
     * @mixes SBIS3.CONTROLS.TreeMixin
     */
 
-   return ListViewDS.extend([hierarchyMixin, TreeMixinDS], /** @lends SBIS3.CONTROLS.TreeViewDS.prototype*/ {
+   var TreeViewDS = ListViewDS.extend([hierarchyMixin, TreeMixinDS], /** @lends SBIS3.CONTROLS.TreeViewDS.prototype*/ {
       $protected: {
          _options: {
             //FixME: так как приходит набор от листвью. пока он не нужен
@@ -68,7 +68,15 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
                <div class="controls-TreeView__itemContent js-controls-ListView__itemContent"></div>\
             </div>\
          </div>');
+      },
+
+      _nodeDataLoaded : function(key, ds) {
+         TreeViewDS.superclass._nodeDataLoaded.apply(this, arguments);
+         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
+         $('.controls-TreeView__childContainer', itemCont).first().css('display', 'block');
       }
    });
+
+   return TreeViewDS
 
 });
