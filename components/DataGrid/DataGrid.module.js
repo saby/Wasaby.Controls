@@ -22,9 +22,10 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
     */
 
    var DataGrid = ListView.extend(/** @lends SBIS3.CONTROLS.DataGrid.prototype*/ {
+      _dotTplFn : dotTplFn,
       $protected: {
-         _dotTplFn : dotTplFn,
          _rowData : [],
+         _rowTpl : rowTpl,
          _options: {
             /**
              * @typedef {Object} Columns
@@ -119,7 +120,7 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
                }
                rowData.columns[i].value = value;
             }
-            return rowTpl(rowData)
+            return this._rowTpl(rowData)
          }
          else {
             return this._options.itemTemplate(item)

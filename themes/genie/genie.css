@@ -1884,8 +1884,12 @@ input[type="reset"]::-moz-focus-inner {
   overflow: hidden;
   position: relative;
 }
-.controls-ListView .controls-TreeView__item .controls-TreeView__expand {
-  visibility: hidden;
+.controls-ListView .controls-TreeView__childContainer {
+  display: none;
+  list-style: none;
+  padding: 0 0 0 15px;
+}
+.controls-TreeView__expand {
   float: left;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -1896,40 +1900,32 @@ input[type="reset"]::-moz-focus-inner {
   margin: 3px 0 0 3px;
   border-width: 6px 0 6px 6px;
   border-style: solid;
-  border-color: transparent transparent transparent #00c795;
+  border-color: transparent transparent transparent #353535;
   background: transparent;
 }
-.controls-ListView .controls-TreeView__item .controls-TreeView__expand:hover {
+.controls-TreeView__expand:hover {
   border-width: 6px 0 6px 6px;
   border-style: solid;
-  border-color: transparent transparent transparent #00c795;
+  border-color: transparent transparent transparent #353535;
   background: transparent;
 }
-.controls-ListView .controls-TreeView__item .controls-TreeView__expand.controls-TreeView__expand__open {
+.controls-TreeView__expand.controls-TreeView__expand__open {
   width: auto;
   height: auto;
   margin: 7px 0 0 0;
   border-width: 6px 6px 0 6px;
   border-style: solid;
-  border-color: #00c795 transparent transparent transparent;
+  border-color: #353535 transparent transparent transparent;
   background: transparent;
 }
-.controls-ListView .controls-TreeView__item .controls-TreeView__expand.controls-TreeView__expand__open:hover {
+.controls-TreeView__expand.controls-TreeView__expand__open:hover {
   border-width: 6px 6px 0 6px;
   border-style: solid;
-  border-color: #00c795 transparent transparent transparent;
+  border-color: #353535 transparent transparent transparent;
   background: transparent;
 }
-.controls-ListView .controls-TreeView__item .controls-TreeView__expand + .controls-TreeView__itemContent {
+.controls-TreeView__expand + .controls-TreeView__itemContent {
   margin: 0 0 0 15px;
-}
-.controls-ListView .controls-TreeView__item.controls-TreeView__hasChild > .controls-TreeView__expand {
-  visibility: visible;
-}
-.controls-ListView .controls-TreeView__childContainer {
-  display: none;
-  list-style: none;
-  padding: 0 0 0 15px;
 }
 .controls-DataGrid .controls-DataGrid__table {
   width: 100%;

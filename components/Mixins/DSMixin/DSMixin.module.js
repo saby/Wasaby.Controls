@@ -164,22 +164,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _redraw: function () {
          this._clearItems();
-         var
-            self = this,
-            DataSet = this._dataSet;
+         var records = [];
 
-         DataSet.each(function (item, key, i, parItem, lvl) {
-            var
-               targetContainer = self._getTargetContainer(item, key, parItem, lvl);
-            if (targetContainer) {
-               self._drawItem(item, targetContainer, key, i, parItem, lvl);
-            }
+         this._dataSet.each(function (record) {
+            records.push(record)
          });
 
-         self.reviveComponents().addCallback(function () {
-            self._notify('onDrawItems');
-            self._drawItemsCallback();
-         });
+         this._drawItems(records);
       },
 
       _drawItems: function (records, at) {
@@ -273,9 +264,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _appendItemTemplate: function (item, targetContainer, dotTemplate, at) {
-         var key = item.getKey(),
+         var
+            key = item.getKey(),
             container = $(MarkupTransformer(doT.template(dotTemplate)(item)));
          this._addItemClasses(container, key);
+
          if (at && (typeof at.at !== 'undefined')) {
             var atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).get(at.at);
             $(atContainer).before(container);

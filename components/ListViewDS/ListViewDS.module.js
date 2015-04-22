@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        */
 
       var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
-
+         _dotTplFn: dotTplFn,
           /**
            * @event onChangeHoveredItem При переводе курсора мыши на другую запись
            * Событие срабатывает при смене записи под курсором мыши.
@@ -47,7 +47,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            */
          $protected: {
             _floatCheckBox : null,
-            _dotTplFn: dotTplFn,
             _dotItemTpl: null,
             _itemsContainer: null,
             _actsContainer: null,
