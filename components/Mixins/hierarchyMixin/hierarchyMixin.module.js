@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
    var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
       $protected: {
+         _indexTree: null,
          _openedPath: [],
          _options: {
             /**
@@ -17,7 +18,10 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
              */
             openedPath: [],
 
-            openType: 'nothing',
+            /**
+             * @cfg {Boolean} Открывать ли все узлы при отрисовке
+             */
+            openAllNodes: false,
 
             /**
              * @cfg {String} Поле иерархии
@@ -26,6 +30,10 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          }
       },
       $constructor: function () {
+         this._checkOptions();
+      },
+
+      _checkOptions: function () {
          if (this._options.openedPath.length) {
             this._openedPath = this._options.openedPath;
          }
@@ -69,7 +77,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
                curParent = null;
             }
          } while (curParent);
-
+         this._indexTree = indexTree;
       },
 
       getParentKey: function (DataSet, record) {
@@ -125,7 +133,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       },
 
       _drawOpenedPath: function () {
-         if (this._options.openType == 'all') {
+         if (this._options.openAllNodes) {
             //TODO: Открыть для всех
          }
          else {
