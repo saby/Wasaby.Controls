@@ -37,34 +37,31 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
                 }
             },
 
+            _bindItemSelect: function () {
+                var self = this;
+                //TODO придумать что то нормальное и выпилить
+                this._picker.getContainer().mousedown(function (e) {
+                    e.stopPropagation();
+                });
+                this._picker.getContainer().bind('mouseup', function (e) {
+                    var row = $(e.target).closest('.' + self._getItemClass());
+                    if (row.length) {
+                        self.setSelectedItems([row.data('id')]);
+                        self.hidePicker();
+                    }
+                });
+            },
+
             _getItemClass: function() {
                 /*Method must be implemented*/
             },
+
 
             around: {
                 _clearItems : function(parentClearItems) {
                     if (this._picker) {
                         parentClearItems.call(this, this._picker.getContainer());
                     }
-                }
-            },
-
-            before: {
-                _setPickerContent: function () {
-                    var self = this;
-                    //Запросим данные
-                    this.reload();
-                    //TODO придумать что то нормальное и выпилить
-                    this._picker.getContainer().mousedown(function (e) {
-                        e.stopPropagation();
-                    });
-                    this._picker.getContainer().bind('mouseup', function (e) {
-                        var row = $(e.target).closest('.' + self._getItemClass());
-                        if (row.length) {
-                            self.setSelectedItems([row.data('id')]);
-                            self.hidePicker();
-                        }
-                    });
                 }
             }
         };

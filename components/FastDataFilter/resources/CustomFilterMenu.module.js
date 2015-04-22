@@ -25,6 +25,7 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
                itemTemplate: dotTplFnForItem
             },
             _dotTplFn: dotTplFn,
+            _dotTplFnForItem: dotTplFnForItem,
             _caption: null,
             _pickerCaption: null,
             _pickerListContainer: null,
@@ -33,6 +34,10 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
             _defaultId: null
          },
          $constructor: function() {
+            if (!this._options.displayField) {
+               //По умолчанию отображаемое поле - 'title'
+               this._options.displayField = 'title';
+            }
             this._container.bind('mouseenter', this.showPicker.bind(this));
          },
          _initComplete : function() {
@@ -51,6 +56,8 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
             pickerContainer.append(header, list);
 
             this._setVariables();
+            this.reload();
+            this._bindItemSelect();
             this._pickerResetButton.mouseup(function() {
                self.setSelectedItems([]);
                self.hidePicker();
