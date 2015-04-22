@@ -8,23 +8,23 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
       'js!SBIS3.CONTROLS.DSMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
       'js!SBIS3.CONTROLS.DataBindMixin',
+      'js!SBIS3.CONTROLS.DropdownListMixin',
       'html!SBIS3.CONTROLS.CustomFilterMenu',
       'html!SBIS3.CONTROLS.CustomFilterMenu/CustomFilterMenuItem'
 
    ],
 
-   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, dotTplFn, dotTplFnForItem) {
+   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, dotTplFn, dotTplFnForItem) {
 
 
       'use strict';
 
-      var CustomFilterMenu = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin], {
+      var CustomFilterMenu = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin], {
          $protected: {
             _options: {
-
+               itemTemplate: dotTplFnForItem
             },
             _dotTplFn: dotTplFn,
-            _dotTplFnForItem: dotTplFnForItem,
             _caption: null,
             _pickerCaption: null,
             _pickerListContainer: null,
@@ -33,10 +33,6 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
             _defaultId: null
          },
          $constructor: function() {
-            if (!this._options.displayField) {
-               //По умолчанию отображаемое поле - 'title'
-               this._options.displayField = 'title';
-            }
             this._container.bind('mouseenter', this.showPicker.bind(this));
          },
          _initComplete : function() {
@@ -55,18 +51,14 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
             pickerContainer.append(header, list);
 
             this._setVariables();
-            this.reload();
-            pickerContainer.mouseup(function (e) {
-               var row = $(e.target).closest('.controls-CustomFilterMenu__item');
-               if (row.length) {
-                  self.setSelectedItems([row.data('id')]);
-                  self.hidePicker();
-               }
-            });
             this._pickerResetButton.mouseup(function() {
                self.setSelectedItems([]);
                self.hidePicker();
             });
+         },
+
+         _getItemClass: function(){
+            return 'controls-CustomFilterMenu__item';
          },
 
          _dataLoadedCallback: function() {
@@ -132,10 +124,6 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
 
          _getItemsContainer : function () {
             return this._pickerListContainer;
-         },
-
-         _getItemTemplate: function(item) {
-           return this._dotTplFnForItem.call(this, item);
          },
 
          _setPickerConfig: function () {
