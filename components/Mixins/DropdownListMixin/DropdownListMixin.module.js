@@ -54,15 +54,6 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
 
             _getItemClass: function() {
                 /*Method must be implemented*/
-            },
-
-
-            around: {
-                _clearItems : function(parentClearItems) {
-                    if (this._picker) {
-                        parentClearItems.call(this, this._picker.getContainer());
-                    }
-                }
             }
         };
 
