@@ -44,7 +44,14 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
          this._raw = this._strategy.setValue(this._raw, field, value);
          this._isChanged = true;
       },
-
+      /**
+       * Получить тип поля по наименованию
+       * @param {String} field
+       * @returns {*}
+       */
+      getType: function(field){
+         return this._strategy.type(this._raw, field);
+      },
       toggleStateDeleted: function () {
          if (arguments[0] === undefined) {
             this._isDeleted = !this._isDeleted;

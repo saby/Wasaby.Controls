@@ -9,6 +9,14 @@ define('js!SBIS3.CONTROLS.OperationDelete', [
 
       $protected: {
          _options: {
+             /**
+              * @noShow
+              */
+            linkedView: undefined,
+             /**
+              * @cfg {String} Иконка кнопки удаления
+              * @editor icon ImageEditor
+              */
             icon: 'sprite:icon-24 action-hover icon-Erase icon-error'
          }
       },
@@ -16,7 +24,7 @@ define('js!SBIS3.CONTROLS.OperationDelete', [
       $constructor: function() {
       },
       _clickHandler: function() {
-         var view = this.getParent().getLinkedView(),
+         var view = this._options.linkedView,
             selectedItems = view.getSelectedItems(),
             records = selectedItems.length ? selectedItems : view._dataSet._indexId;
          view.deleteRecords(records);

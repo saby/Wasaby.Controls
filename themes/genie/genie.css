@@ -905,6 +905,10 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #ffffff transparent transparent transparent;
   background: transparent;
 }
+.controls-Button.controls-MenuButton.controls-Button__primary:hover.ws-disabled .controls-MenuButton__arrowDown {
+  background: transparent;
+  border-color: #919191 transparent transparent transparent;
+}
 .controls-Button.controls-MenuButton.controls-Button__primary:hover .controls-MenuButton__arrowDown {
   border-width: 5px 5px 0 5px;
   border-style: solid;
@@ -1862,9 +1866,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ListView.controls-ListView__multiselect .controls-ListView__itemCheckBox {
   display: inline-block;
 }
-.controls-ListView.controls-ListView__multiselect .controls-ListView__item {
-  padding-left: 20px;
-}
 .controls-ListView.controls-ListView__multiselect .controls-ListView__item__selected .controls-ListView__itemCheckBox {
   background: url('img/CheckBox-sprite.png') 0 -32px;
 }
@@ -1979,12 +1980,6 @@ input[type="reset"]::-moz-focus-inner {
   color: #919191;
   background: transparent;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
-  padding-left: 12px;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:last-child {
-  padding-left: 12px;
-}
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
   cursor: pointer;
@@ -2002,31 +1997,23 @@ input[type="reset"]::-moz-focus-inner {
   color: inherit;
   background: transparent;
 }
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
+  padding-left: 10px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:last-child {
+  padding-right: 10px;
+}
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:first-child {
-  padding-left: 12px;
+  padding-left: 10px;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:last-child {
-  padding-left: 12px;
+  padding-right: 10px;
 }
-.controls-DataGrid .controls-ListView__item__selected .controls-DataGrid__td:first-child {
-  background-image: url('img/rowSelect.png');
-  background-position: left top;
-  background-repeat: repeat-y;
+.controls-DataGrid .controls-DataGrid__td__checkBox {
+  width: 16px;
 }
-.controls-DataGrid.controls-ListView__multiselect .controls-DataGrid__td:first-child {
-  padding-left: 32px;
-  background: none;
-}
-.controls-DataGrid.controls-ListView__multiselect .controls-DataGrid__th:first-child {
-  padding-left: 32px;
-}
-.controls-DataGrid.controls-ListView__multiselect .controls-ListView__item__selected .controls-ListView__itemCheckBox {
-  background: url('img/CheckBox-sprite.png') 0 -32px;
-}
-.controls-DataGrid .controls-ListView__itemCheckBox {
-  position: absolute;
-  left: 4px;
-  top: 8px;
+.controls-DataGrid .controls-DataGrid__td__checkBox .controls-ListView__itemCheckBox {
+  margin: 3px 0 0 0;
 }
 .controls-UnitEditor__fieldWrapper {
   margin-right: 34px;
@@ -2136,6 +2123,17 @@ input[type="reset"]::-moz-focus-inner {
 .controls__operations-panel__wrapper .controls__operations-panel__actions-mark,
 .controls__operations-panel__wrapper .controls__operations-panel__actions {
   display: inline-block;
+}
+.controls__operations-panel__wrapper .controls__operations-panel__actions-mark:after {
+  margin-left: 8px;
+  margin-right: 4px;
+  background: #cccccc;
+  width: 1px;
+  height: 21px;
+  content: '\00a0';
+  font-size: 1px;
+  display: inline-block;
+  line-height: 30px;
 }
 .controls__operations-panel__wrapper.controls__operations-panel__mass-mode .controls__operations-panel__action-type-selection {
   display: none;
@@ -2267,4 +2265,12 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-NumberTextBox:hover .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrowDown {
   border-bottom: 1px solid #00c795;
+}
+.controls-ListView__item__selected .controls-DataGrid__td:first-child {
+  background-image: url('img/rowSelect.png');
+  background-position: left top;
+  background-repeat: repeat-y;
+}
+.controls-ListView__multiselect .controls-DataGrid__td:first-child {
+  background: none;
 }

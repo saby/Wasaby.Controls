@@ -15,18 +15,80 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * @class SBIS3.CONTROLS.OperationsPanel
     * @extends $ws.proto.CompoundControl
     * @control
+    * @public
+    * @author Сухоручкин Андрей
+    * @ignoreOptions contextRestriction independentContext
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.OperationsPanel' style="height: 30px;">
+    *
+    * </component>
     */
    var OperationsPanel = Control.extend([CollectionMixin, PickerMixin],/** @lends SBIS3.CONTROLS.OperationsPanel.prototype */{
       _dotTplFn: dotTplFn,
-
+       /**
+        * @typedef {Object} Type
+        * @property {Boolean} mass Массовые операции.
+        * @property {Boolean} mark Операции отметки.
+        * @property {Boolean} selection Операции над выбранными записями.
+        */
+       /**
+        * @typedef {Object} Items
+        * @property {String} name Имя кнопки панели массовых операций.
+        * @property {String} componentType Тип компонента, определяющий формат.
+        * @property {Type} type Тип операций.
+        * @property {Object} options Настройки компонента, переданного в componentType.
+        *
+        */
+       /**
+        * @cfg {Items[]} Набор исходных данных, по которому строится отображение
+        * @name SBIS3.CONTROLS.OperationsPanel#items
+        * @example
+        * <pre>
+        *
+        * </pre>
+        * @see linkedView
+        */
       $protected: {
          _options: {
+             /**
+              * @cfg {js!SBIS3.CONTROLS.ListView} Связанного представление данных
+              * @example
+              * <pre>
+              *     <option name="linkedView">MyDataGrid</option>
+              * </pre>
+              * @see setLinkedView
+              * @see getLinkedView
+              */
             linkedView: undefined,
+             /**
+              * @cfg  Набор элементов панели массовых операций
+              */
+            items: [
+               {
+                   name: 'delete',
+                   componentType: 'js!SBIS3.CONTROLS.OperationDelete',
+                   type: {
+                       mass: true,
+                       selection: true
+                   },
+                   options: {}
+               },
+               {
+                   name: 'operationsMark',
+                   componentType: 'js!SBIS3.CONTROLS.OperationsMark',
+                   type: {
+                       'mark': true
+                   },
+                   options: {}
+               }
+            ],
+             /**
+              * @noShow
+              */
             keyField: 'name'
          },
          _blocks: undefined,
-         _selectedCount: undefined,
-         _currentMode: undefined
+         _internalHandlers: undefined
       },
 
       $constructor: function() {
@@ -44,35 +106,44 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       _drawItemsCallback: function() {
          this._itemsDrawn = true;
       },
+       /**
+        * Метод установки или замены связанного представления данных, установленного в опции {@link linkedView}.
+        * @param linkedView
+        * @see linkedView
+        * @see getLinkedView
+        */
       setLinkedView: function(linkedView) {
-         if ($ws.helpers.instanceOfModule(linkedView, 'SBIS3.CONTROLS.DataGrid')) {
+         if ($ws.helpers.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
             this._reassignView(linkedView);
             this.togglePicker();
             this._setMode();
             this._setVisibleMarkBlock();
          }
       },
+       /**
+        * Метод получения имени представления данных, установленного либо в опции {@link linkedView},
+        * либо методом {@link setLinkedView}.
+        * @returns {String} Возвращает связанного представления данных.
+        * @see linkedView
+        * @see setLinkedView
+        */
       getLinkedView: function() {
          return this._options.linkedView;
       },
       _reassignView: function(linkedView) {
          if (this._options.linkedView) {
-            this._options.linkedView.unsubscribe('onSelectedItemsChange', this._handlers.onChangeSelection);
+            this._options.linkedView.unsubscribe('onSelectedItemsChange', this._internalHandlers.onChangeSelection);
          }
          this._options.linkedView = linkedView;
-         this._selectedCount = linkedView.getSelectedItems().length;
-         if (this._options.linkedView) {
-            this._options.linkedView.subscribe('onSelectedItemsChange', this._handlers.onChangeSelection);
-         }
+         this._options.linkedView.subscribe('onSelectedItemsChange', this._internalHandlers.onChangeSelection);
       },
       _initHandlers: function() {
-         this._handlers = {
+         this._internalHandlers = {
             onChangeSelection: this._onChangeSelection.bind(this)
             /*TODO тут ещё будут обработчики, так что считаю целесообразно оставить такой блок*/
          };
       },
       _onChangeSelection: function() {
-         this._selectedCount = this._options.linkedView.getSelectedItems().length;
          this.togglePicker();
          this._setMode();
       },
@@ -89,23 +160,20 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          }
       },
       togglePicker: function() {
-         if (!!this._selectedCount !== this._pickerIsVisible()) {
+         if (this.isHaveSelectedItems() !== this._pickerIsVisible()) {
             OperationsPanel.superclass.togglePicker.apply(this);
          }
       },
       _pickerIsVisible: function() {
          return !!this._picker && this._picker.isVisible()
       },
-      /*TODO перенести данную логику на уровень PickerMixin*/
-      hide: function() {
-         this.hidePicker();
-         OperationsPanel.superclass.hide.apply(this, arguments);
-      },
       _setMode: function() {
-         this._currentMode = !!this._selectedCount;
-         this._blocks.wrapper.toggleClass('controls__operations-panel__mass-mode',  !this._currentMode).toggleClass('controls__operations-panel__selection-mode',  this._currentMode);
+         var currentMode = this.isHaveSelectedItems();
+         this._blocks.wrapper.toggleClass('controls__operations-panel__mass-mode',  !currentMode).toggleClass('controls__operations-panel__selection-mode',  currentMode);
       },
-      /*TODO чья это ответственность? OperationsPanel или OperationsMark*/
+      isHaveSelectedItems: function() {
+         return !!this.getLinkedView().getSelectedItems().length;
+      },
       _setVisibleMarkBlock: function() {
          this._blocks.markOperations.toggleClass('ws-hidden', !this._options.linkedView._options.multiselect);
       },
@@ -120,43 +188,61 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          };
       },
       _getTargetContainer: function(item) {
-         var type = item.type.mark ? 'mark' : 'all';
-         return this._blocks[type + 'Operations'];
+         return this._blocks[item.type.mark ? 'markOperations' : 'allOperations'];
       },
       _getItemTemplate: function() {
          return function (cfg) {
-            var type = this._getButtonType(cfg.type);
+            var type = this._getItemType(cfg.type);
             cfg.options = cfg.options || {};
+            cfg.options.linkedView = this.getLinkedView();
             cfg.options.className = 'controls__operations-panel__action-type-' + type;
-            cfg.options.name = cfg.name;
             return {
                componentType: cfg.componentType,
                config: cfg.options
             };
          }
       },
-      _getButtonType: function (type) {
+      _getItemType: function (type) {
          return type.mark ? 'mark' : type.mass && type.selection ? 'all' : type.mass ? 'mass' : 'selection';
       },
+       /**
+        * Установить возможность взаимодействия с панелью массовых операций.
+        * @param enabled
+        */
       setEnabled: function(enabled) {
          if (!enabled) {
             this.hidePicker();
          }
          OperationsPanel.superclass.setEnabled.apply(this, arguments);
       },
+       /**
+        *
+        * @returns {*}
+        */
       getItemInstance: function() {
          if (!this._itemsDrawn) {
             this._drawItems();
          }
          return OperationsPanel.superclass.getItemInstance.apply(this, arguments);
       },
+       /**
+        * Получить состояние панели.
+        * Состояние панели информирует о режиме работы с записями связанного представления данных.
+        * @returns {Boolean} Состояние панели массовых операций.
+        * Возможные значения:
+        * <ol>
+        *    <li>true - управление отмеченными записями,</li>
+        *    <li>false - управление всеми записями.</li>
+        * </ol>
+        */
       getPanelState: function() {
          return this._currentMode;
       },
       destroy: function() {
-         /*TODO написать в конце, чтобы ни чего не забыть разрушить*/
+         this._options.linkedView.unsubscribe('onSelectedItemsChange', this._internalHandlers.onChangeSelection);
          OperationsPanel.superclass.destroy.apply(this);
       }
    });
    return OperationsPanel;
 });
+/*TODO перенести логику hide (скрывать пикер перед hide) на уровень PickerMixin*/
