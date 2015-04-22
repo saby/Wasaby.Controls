@@ -49,7 +49,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       /**
        * @cfg {ItemsComboBox[]} Набор исходных данных, по которому строится отображение
        * @name SBIS3.CONTROLS.ComboBox#items
-       * @description
        * @example
        * <pre>
        *     <options name="items" type="array">
@@ -68,7 +67,18 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       $protected: {
          _options: {
             /**
-             * @cfg {} Шаблон отображения каждого элемента коллекции
+             * @cfg {String} Шаблон отображения каждого элемента коллекции
+             * @example
+             * <pre>
+             *     <option name="itemTemplate">
+             *         <div data-key="{{=it.item.getKey()}}" class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow">
+             *             <div class="genie-colorComboBox__itemTitle">
+             *                 {{=it.displayField}}
+             *             </div>
+             *         </div>
+             *     </option>
+             * </pre>
+             * @TextMultiline
              */
             itemTemplate: '',
             afterFieldWrapper: arrowTpl,
@@ -321,6 +331,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        /**
         * Метод установки/изменения возможности ручного ввода.
         * @param editable Возможность ручного ввода.
+        * @example
+        * <pre>
+        *
+        * </pre>
         * @see isEditable
         * @see editable
         */
@@ -331,17 +345,27 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        /**
         * Признак возможности ручного ввода.
         * @returns {Boolean} Возможен ли ручной ввод.
+        * @example
+        * <pre>
+        *
+        * </pre>
         * @see editable
         * @see setEditable
         */
       isEditable: function () {
          return this._options.editable;
       },
-
+       /**
+        * @noShow
+        * @param key
+        */
       setValue: function (key) {
          this.setSelectedItem(key);
       },
-
+       /**
+        * @noShow
+        * @returns {*}
+        */
       getValue: function () {
          return this.getSelectedItem();
       },
@@ -359,6 +383,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       //TODO заглушка
+       /**
+        * @noShow
+        * @returns {$ws.proto.Deferred}
+        */
       reviveComponents : function() {
          var def = new $ws.proto.Deferred();
          def.callback();
