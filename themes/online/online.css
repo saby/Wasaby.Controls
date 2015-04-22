@@ -1333,6 +1333,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox {
   cursor: pointer;
+  line-height: normal;
 }
 .controls-ComboBox .controls-TextBox__fieldWrapper {
   position: relative;
@@ -2125,10 +2126,6 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   vertical-align: middle;
   cursor: pointer;
-  background: url('img/cancelIcon-sprite.png') 0 -35px no-repeat;
-}
-.controls__filter-button .controls__filter-button__clear:hover {
-  background: url('img/cancelIcon-sprite.png') 0 -19px no-repeat;
 }
 .controls__filter-button.controls__filter-button__default-filter .controls-Link__icon,
 .controls__filter-button.controls__filter-button__default-filter .controls__filter-button__clear {
@@ -2325,13 +2322,9 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/cancelIcon-sprite.png') 0 -19px no-repeat;
 }
 .controls-CustomFilterMenu.controls-Picker__show {
-  box-shadow: inset 0 0 0 1px #cccccc;
-}
-.controls-CustomFilterMenu.controls-Picker__show .controls-CustomFilterMenu__arrowIcon {
-  background: url('img/select-arrow.png') 0 -28px no-repeat;
+  box-shadow: 0 0 0 1px #cccccc;
 }
 .controls-CustomFilterMenu__picker {
-  border: 1px solid #cccccc;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
@@ -2339,12 +2332,34 @@ input[type="reset"]::-moz-focus-inner {
   -moz-background-clip: padding;
   background-clip: padding-box;
 }
+.controls-CustomFilterMenu__picker .controls-CustomFilterMenu__header {
+  display: inline-block;
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  border-bottom: 0;
+  z-index: 2;
+}
+.controls-CustomFilterMenu__picker .controls-CustomFilterMenu__header .controls-CustomFilterMenu__arrowIcon {
+  background: url('img/select-arrow.png') 0 -28px no-repeat;
+}
+.controls-CustomFilterMenu__picker .controls-CustomFilterMenu__list {
+  z-index: 1;
+  border: 1px solid #cccccc;
+  background: #ffffff;
+  margin-top: -1px;
+}
+.controls-CustomFilterMenu__picker.controls-FloatArea {
+  background: transparent;
+}
 .controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item {
   padding: 4px;
   background: #ffffff;
 }
 .controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item:hover {
   background: #e7f0f9;
+}
+.controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item.controls-CustomFilterMenu__item__selected {
+  display: none;
 }
 .controls-PopupMixin__closeButton {
   position: absolute;
