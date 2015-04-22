@@ -284,7 +284,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             DataSet.each(function (item) {
                noItems = false;
                selKey = item.getKey();
-               self._options.selectedItem = selKey || null;
+               self._options.selectedItem = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
                //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
                if (oldKey !== self._options.selectedItem) { // при повторном индексе null не стреляет событием
                   self._notifySelectedItem(self._options.selectedItem);
