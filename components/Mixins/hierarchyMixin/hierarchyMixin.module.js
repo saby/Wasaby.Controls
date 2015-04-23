@@ -142,6 +142,18 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       _nodeDataLoaded: function (key, dataSet) {
          this._dataSet = dataSet;
          this._redraw()
+      },
+
+      around : {
+         _elemClickHandler: function (parentFnc, id, data, target) {
+            if ($(target).hasClass('js-controls-TreeView__expand')) {
+               var nodeID = $(target).closest('.controls-ListView__item').data('id');
+               this.toggleNode(nodeID)
+            }
+            else {
+               parentFnc.call(this, id, data, target)
+            }
+         }
       }
 
    };
