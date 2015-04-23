@@ -24,12 +24,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
        * @public
+       * @author Крайнов Дмитрий Олегович
        */
 
       var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
          _dotTplFn: dotTplFn,
           /**
            * @event onChangeHoveredItem При переводе курсора мыши на другую запись
+           * @remark
            * Событие срабатывает при смене записи под курсором мыши.
            * @param {$ws.proto.EventObject} eventObject Дескриптор события.
            * @param {Object} hoveredItem Объект
@@ -41,6 +43,20 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            * @param {Object} hoveredItem.size размеры контейнера элемента
            * @param {Number} hoveredItem.height высота
            * @param {Number} hoveredItem.width ширина
+           * @example
+           * <pre>
+           *     DataGrid.subscribe('onChangeHoveredItem', function(hoveredItem) {
+           *        var actions = DataGrid.getItemsActions(),
+           *        instances = actions.getItemsInstances();
+           *
+           *        for (var i in instances) {
+           *           if (instances.hasOwnProperty(i)) {
+           *              //Будем скрывать кнопку удаления для всех строк
+           *              instances[i][i === 'delete' ? 'show' : 'hide']();
+           *           }
+           *        }
+           *     });
+           * </pre>
            * @see itemsActions
            * @see setItemsActions
            * @see getItemsActions
@@ -60,19 +76,24 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _itemActionsGroup: null,
                _options: {
                /**
-                * @cfg {String} Шаблон отображения каждого элемента коллекции
-                * !Важно: опция обязательна к заполнению!
-                * @example
-                * <pre>
-                *     <div class="listViewItem" style="height: 30px;">\
-                *        {{=it.get("title")}}\
-                *     </div>
-                * </pre>
-                * @remarks Почему нет флажков при включенной опции {@link multiselect}?
+                * @faq Почему нет флажков при включенной опции {@link multiselect}?
                 * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
                 * <pre>
                 *     <div class="listViewItem" style="height: 30px;">\
                 *        <span class="controls-ListView__itemCheckBox"></span>\
+                *        {{=it.get("title")}}\
+                *     </div>
+                * </pre>
+                * @link SBIS3.CONTROLS.ListViewDS#itemTemplate
+                * @link SBIS3.CONTROLS.ListViewDS#multiselect
+                */
+               /**
+                * @cfg {String} Шаблон отображения каждого элемента коллекции
+                * @remark
+                * !Важно: опция обязательна к заполнению!
+                * @example
+                * <pre>
+                *     <div class="listViewItem" style="height: 30px;">\
                 *        {{=it.get("title")}}\
                 *     </div>
                 * </pre>
@@ -93,6 +114,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 */
                /**
                 * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок
+                * @remark
                 * Можно использовать для массовых операций.
                 * @example
                 * <pre>
@@ -143,26 +165,19 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                emptyHTML: null,
                /**
                 * @cfg {Function} Обработчик клика на элемент
+                * @example
+                * <option name="elemClickHandler">MyElemClickHandler</option>
                 * @see setElemClickHandler
                 */
                elemClickHandler: null,
                /**
                 * @cfg {Boolean} Разрешить выбор нескольких строк
+                * @remark
                 * Позволяет выбрать несколько строк для одновременного взаимодействия с ними.
-                *
                 * @example
                 * <pre>
                 *    <option name="multiselect">false</option>
                 * </pre>
-                * @remarks Почему нет флажков при включенной опции {@link multiselect}?
-                * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
-                * <pre>
-                *     <div class="listViewItem" style="height: 30px;">\
-                *        <span class="controls-ListView__itemCheckBox"></span>\
-                *        {{=it.get("title")}}\
-                *     </div>
-                * </pre>
-                * @remarks При значении данной опции false у связанной панели массовых операций не будет флага "Отметить все".
                 * @see itemTemplate
                 */
                multiselect: false,
@@ -360,7 +375,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
           /**
            * Метод установки/замены обработчика клика по строке.
-           * @param method
+           * @param method Имя новой функции обработчика клика по строке.
+           * @example
+           * <pre>
+           *     var myElemClickHandler = function(id, data, target){
+           *        console.log(id, data, target)
+           *     }
+           *     dataGrid.setElemClickHandler(myElemClickHandler);
+           * </pre>
            * @see elemClickHandler
            */
          setElemClickHandler: function (method) {
@@ -420,7 +442,21 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          /**
           * Метод получения операций над записью.
-          * @returns {Array}
+          * @returns {Array} Массив операций над записью.
+          * @example
+          * <pre>
+          *     DataGrid.subscribe('onChangeHoveredItem', function(hoveredItem) {
+          *        var actions = DataGrid.getItemsActions(),
+          *        instances = actions.getItemsInstances();
+          *
+          *        for (var i in instances) {
+          *           if (instances.hasOwnProperty(i)) {
+          *              //Будем скрывать кнопку удаления для всех строк
+          *              instances[i][i === 'delete' ? 'show' : 'hide']();
+          *           }
+          *        }
+          *     });
+          * </pre>
           * @see itemsActions
           * @see setItemActions
           */
@@ -432,7 +468,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          /**
           * Метод установки или замены кнопок операций над записью, заданных в опции {@link itemsActions}
-          * Нужно передать массив обьектов
+          * Нужно передать массив обьектов.
           * @param {Array} items Объект формата {name: ..., icon: ..., title: ..., onActivated: ..., isMainOption: ...}
           * @param {String} items.name Имя кнопки операции над записью.
           * @param {String} items.icon Иконка кнопки.
@@ -441,7 +477,24 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @param {String} items.isMainOption На строке ли кнопка (или в меню).
           * @example
           * <pre>
-          *     dataGrid.setItemsActions()
+          *     dataGrid.setItemsActions([{
+          *        name: 'delete',
+          *        icon: 'sprite:icon-16 icon-Erase icon-error',
+          *        title: 'Удалить',
+          *        isMainAction: true,
+          *        onActivated: function(item) {
+          *           this.deleteRecords(item.data('id'));
+          *        }
+          *     },
+          *     {
+          *        name: 'addRecord',
+          *        icon: 'sprite:icon-16 icon-Add icon-error',
+          *        title: 'Добавить',
+          *        isMainAction: true,
+          *        onActivated: function(item) {
+          *           this.showRecordDialog();
+          *        }
+          *     }]
           * <pre>
           * @see itemsActions
           * @see getItemsActions
@@ -461,9 +514,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
             this._drawSelectedItems(this._options.selectedItems);
          },
-          /**
-           *
-           */
          destroy: function() {
             if (this.isInfiniteScroll()){
                if (this._infiniteScrollContainer.length) {
@@ -582,6 +632,15 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          /**
           * Геттер для получения текущего выделенного элемента
           * @returns {{key: null | number, container: (null | jQuery)}}
+          * @example
+          * <pre>
+          *     editButton.bind('click', functions: (e) {
+          *        var hoveredItem = this.getHoveredItem();
+          *        if(hoveredItem.container) {
+          *           myBigToolTip.showAt(hoveredItem.position);
+          *        }
+          *     })
+          * </pre>
           * @see itemsActions
           * @see getItemActions
           */

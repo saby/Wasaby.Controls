@@ -15,6 +15,12 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
          _options: {
             /**
              * @cfg {String} Идентификатор выбранного элемента
+             * @example
+             * <pre>
+             *     <option name="selectedItem">3</option>
+             * </pre>
+             * @see setSelectedItem
+             * @see getSelectedItem
              */
             selectedItem : null
          }
@@ -25,8 +31,14 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
       },
 
       /**
-       * Установить выбранный элемент
-       * @param id
+       * Установить выбранный элемент.
+       * @param {String} id Идентификатор элемента, который нужно установить в качестве выбранного.
+       * @example
+       * <pre>
+       *     MyComboBox.setSelectedItem('3');
+       * </pre>
+       * @see selectedItem
+       * @see getSelectedItem
        */
       setSelectedItem : function(id) {
          this._options.selectedItem = id;
@@ -36,7 +48,13 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
       },
 
       /**
-       * Получить выбранные элементы
+       * Получить выбранный элемент.
+       * @example
+       * <pre>
+       *     MyComboBox.getSelectedItem();
+       * </pre>
+       * @see selectedItem
+       * @see setSelectedItem
        */
       getSelectedItem : function() {
          return this._options.selectedItem;
