@@ -356,7 +356,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
             }
             return this._indexTree[parentId];
          } else {
-            return null;
+            return [];
          }
       },
 
