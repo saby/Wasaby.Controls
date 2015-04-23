@@ -57,10 +57,8 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                'Название': fileName,//idReport || Standart
                'fileDownloadToken': uniqueToken
             }).addErrback(function(error){
-                     console.log('errback');
                      return error;
                   }).addBoth(function(){
-               console.log('callback');
                self._destroyLoadIndicator();
             });
          });
