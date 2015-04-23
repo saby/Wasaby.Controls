@@ -85,8 +85,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 *        {{=it.get("title")}}\
                 *     </div>
                 * </pre>
-                * @link SBIS3.CONTROLS.ListViewDS#itemTemplate
-                * @link SBIS3.CONTROLS.ListViewDS#multiselect
+                * @bind SBIS3.CONTROLS.ListViewDS#itemTemplate
+                * @bind SBIS3.CONTROLS.ListViewDS#multiselect
                 */
                /**
                 * @cfg {String} Шаблон отображения каждого элемента коллекции
