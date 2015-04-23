@@ -25,15 +25,19 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
     * </component>
     */
 
-   var TreeDataGrid = DataGrid.extend([hierarchyMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
+   var HierarchyDataGrid = DataGrid.extend([hierarchyMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
       $protected: {
          _rowTpl : rowTpl
       },
 
       $constructor: function() {
+
+
       }
+
+
    });
 
-   return TreeDataGrid;
+   return HierarchyDataGrid;
 
 });

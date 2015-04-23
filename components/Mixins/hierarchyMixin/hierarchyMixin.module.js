@@ -120,6 +120,9 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          });
       },
 
+      toggleNode: function(key) {
+         this.openNode(key);
+      },
 
       after: {
          _drawItems: function () {
