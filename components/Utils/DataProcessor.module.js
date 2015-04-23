@@ -23,12 +23,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
       },
       print: function () {
          var self = this;
-         this._createLoadIndicator('Печать записей...');
-         var serializer = new Serializer({
-            columns: this._options.columns,
-            report: this._options.report
-         });
-         serializer.prepareReport(this._options.xsl, this._options.dataSet).addCallback(function(reportText){
+         this._prepareSerializer('Печать записей...').addCallback(function(reportText){
             $ws.helpers.showHTMLForPrint({
                htmlText: reportText,
                //opener: self,
@@ -45,23 +40,26 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
       unload: function (fileType, methodName, fileName) {
          var self = this,
              uniqueToken = ('' + Math.random()).substr(2)* 10;
-         this._createLoadIndicator('Подождите, идет выгрузка данных в ' + fileType);
-         var serializer = new Serializer({
-            columns: this._options.columns,
-            report: this._options.report
-         });
          //fileName = idReport ? idReport : (isSaveColumns ? 'Выбранные столбцы' : 'Как на экране'), ??
-         serializer.prepareReport(this._options.xsl, this._options.dataSet).addCallback(function(reportText){
+         this._prepareSerializer('Подождите, идет выгрузка данных в ' + fileType).addCallback(function(reportText){
             $ws.helpers.saveToFile(fileType, methodName, {
                'html': reportText,
                'Название': fileName,//idReport || Standart
                'fileDownloadToken': uniqueToken
             }).addErrback(function(error){
-                     return error;
-                  }).addBoth(function(){
+               return error;
+            }).addBoth(function(){
                self._destroyLoadIndicator();
             });
          });
+      },
+      _prepareSerializer: function(title){
+         var serializer = new Serializer({
+                  columns: this._options.columns,
+                  report: this._options.report
+               });
+         this._createLoadIndicator(title);
+         return serializer.prepareReport(this._options.xsl, this._options.dataSet);
       },
       _createLoadIndicator: function (message) {
          this._loadIndicator = new LoadingIndicator({
