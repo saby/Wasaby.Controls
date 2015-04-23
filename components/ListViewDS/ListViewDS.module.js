@@ -632,6 +632,15 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          /**
           * Геттер для получения текущего выделенного элемента
           * @returns {{key: null | number, container: (null | jQuery)}}
+          * @example
+          * <pre>
+          *     editButton.bind('click', functions: (e) {
+          *        var hoveredItem = this.getHoveredItem();
+          *        if(hoveredItem.container) {
+          *           myBigToolTip.showAt(hoveredItem.position);
+          *        }
+          *     })
+          * </pre>
           * @see itemsActions
           * @see getItemActions
           */
