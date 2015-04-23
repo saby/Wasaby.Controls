@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function (MarkupTransformer) {
     */
    var TreeMixinDS = /** @lends SBIS3.CONTROLS.TreeMixinDS.prototype */{
       $protected: {
+         _curLvl : null,
          _ulClass: 'controls-TreeView__list',
          _options: {
             /**
@@ -25,9 +26,6 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function (MarkupTransformer) {
             else {
                parentFnc.call(this, id, data, target)
             }
-         },
-         _drawItem: function (parDrawItem, record, at, parent, lvl) {
-            parDrawItem.call(this, record, at);
          }
       },
       _redraw: function () {
@@ -42,8 +40,10 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function (MarkupTransformer) {
             var
                parentKey = self.getParentKey(DataSet, record);
 
+            this._curLvl = lvl;
+
             if ((parentKey == self._options.root)) {
-               self._drawItem(record, undefined, parent, lvl);
+               self._drawItem(record, undefined);
             }
          });
 

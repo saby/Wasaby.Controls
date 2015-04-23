@@ -234,6 +234,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             itemInstance;
          targetContainer = this._getTargetContainer(item);
          itemInstance = this._createItemInstance(item, targetContainer, at);
+         this._addItemAttributes(itemInstance, item);
          this._appendItemTemplate(item, targetContainer, itemInstance, at);
       },
 
@@ -241,8 +242,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          throw new Error('Method _getItemTemplate() must be implemented');
       },
 
-      _addItemAttributes: function (container, key) {
-         container.attr('data-id', key).addClass('controls-ListView__item');
+      _addItemAttributes: function (container, item) {
+         container.attr('data-id', item.getKey()).addClass('controls-ListView__item');
       },
 
       _createItemInstance: function (item, targetContainer, at) {
@@ -268,10 +269,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _appendItemTemplate: function (item, targetContainer, itemBuildedTpl, at) {
-         var
-            key = item.getKey();
-         this._addItemAttributes(itemBuildedTpl, key);
-
          if (at && (typeof at.at !== 'undefined')) {
             var atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).get(at.at);
             $(atContainer).before(itemBuildedTpl);

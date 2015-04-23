@@ -58,11 +58,23 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
                   }
                }
                /**/
-               self._drawItem(record, targetContainer);
+               self._drawItem(record, at);
             }
          });
       },
-      closeNode : function() {
+      _nodeClosed : function(key) {
+         var child = this._dataSet.getChildItems(key);
+         $('.controls-ListView__item[data-parent="' + key + '"]', this._container.get(0)).remove();
+      },
+      _addItemAttributes : function(container, item) {
+         TreeDataGrid.superclass._addItemAttributes.call(this, container, item);
+         var parentKey = this.getParentKey(this._dataSet, item);
+         container.attr('data-parent', parentKey);
+         /*TODO пока придрот*/
+         /*var
+            parentCont = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._container.get(0)).get(0),
+            parentMargin = parseInt($('.controls-TreeView__expand', parentCont).css('margin-left'), 10) || 0;
+         $('.controls-TreeView__expand', container).css('margin-left', parentMargin + 16);*/
 
       }
    });
