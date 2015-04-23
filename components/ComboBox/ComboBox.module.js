@@ -173,8 +173,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._drawSelectedItem(this._options.selectedItem);
       },
 
-      _addItemClasses : function(container, key) {
-         ComboBox.superclass._addItemClasses.call(this, container, key);
+      _addItemAttributes : function(container, key) {
+         ComboBox.superclass._addItemAttributes.call(this, container, key);
          container.addClass('controls-ComboBox__itemRow').addClass('js-controls-ComboBox__itemRow');
       },
 

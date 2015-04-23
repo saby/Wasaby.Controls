@@ -25,6 +25,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function (MarkupTransformer) {
             else {
                parentFnc.call(this, id, data, target)
             }
+         },
+         _drawItem: function (parDrawItem, record, at, parent, lvl) {
+            parDrawItem.call(this, record, at);
          }
       },
       _redraw: function () {
@@ -40,7 +43,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function (MarkupTransformer) {
                parentKey = self.getParentKey(DataSet, record);
 
             if ((parentKey == self._options.root)) {
-               self._drawItem(record);
+               self._drawItem(record, undefined, parent, lvl);
             }
          });
 
@@ -50,8 +53,6 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function (MarkupTransformer) {
          });
 
       },
-
-
 
       /**
        * Закрыть определенный узел
