@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.DropdownListMixin', [],
     function () {
         /**
-         * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
+         * пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
          * @mixin SBIS3.CONTROLS.MenuButtonMixin
          * @public
          */
@@ -13,16 +13,16 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
         var DropdownListMixin = /**@lends SBIS3.CONTROLS.MenuButtonMixin.prototype  */{
             $protected: {
                 _options: {
-                    /**
-                     * @cfg {} Шаблон отображения каждого элемента
-                     */
+                   /**
+                    * @cfg {} РЁР°Р±Р»РѕРЅ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РєР°Р¶РґРѕРіРѕ СЌР»РµРјРµРЅС‚Р° РєРѕР»Р»РµРєС†РёРё
+                    */
                     itemTemplate: ''
                 }
             },
 
             $constructor: function () {
                 if (!this._options.displayField) {
-                    //По умолчанию отображаемое поле - 'title'
+                     //РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РѕС‚РѕР±СЂР°Р¶Р°РµРјРѕРµ РїРѕР»Рµ - 'title'
                     this._options.displayField = 'title';
                 }
             },
@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
 
             _bindItemSelect: function () {
                 var self = this;
-                //TODO придумать что то нормальное и выпилить
+                //TODO РїСЂРёРґСѓРјР°С‚СЊ С‡С‚Рѕ С‚Рѕ РЅРѕСЂРјР°Р»СЊРЅРѕРµ Рё РІС‹РїРёР»РёС‚СЊ
                 this._picker.getContainer().mousedown(function (e) {
                     e.stopPropagation();
                 });

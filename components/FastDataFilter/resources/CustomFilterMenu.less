@@ -33,6 +33,7 @@
   }
 }
 .controls-CustomFilterMenu__picker {
+  cursor: @customFilterMenu-cursor;
   .controls-CustomFilterMenu__header {
     display: inline-block;
     background: @customFilterMenu-picker-bg;
@@ -48,6 +49,7 @@
     border: @customFilterMenu-picker-border;
     background: @customFilterMenu-picker-bg;
     margin-top: -1px;
+    padding: @customFilterMenu-picker-list-padding;
   }
   &.controls-FloatArea {
     background: transparent;
@@ -56,6 +58,7 @@
   .controls-CustomFilterMenu__item {
     padding: @customFilterMenu-picker-menu-item-padding;
     background: @customFilterMenu-picker-menu-item-color;
+    margin: @customFilterMenu-picker-menu-item-margin;
     &:hover {
       background: @customFilterMenu-picker-menu-item-hover;
     }

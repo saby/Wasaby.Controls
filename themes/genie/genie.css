@@ -2234,6 +2234,7 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: 0 0 0 1px #d1d1d1;
 }
 .controls-CustomFilterMenu__picker {
+  cursor: pointer;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
@@ -2256,6 +2257,7 @@ input[type="reset"]::-moz-focus-inner {
   border: 1px solid #d1d1d1;
   background: #ffffff;
   margin-top: -1px;
+  padding: 8px 0;
 }
 .controls-CustomFilterMenu__picker.controls-FloatArea {
   background: transparent;
@@ -2263,6 +2265,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item {
   padding: 4px;
   background: #ffffff;
+  margin: 0 8px;
 }
 .controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item:hover {
   background: #e7f0f9;
