@@ -8,20 +8,21 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
       'js!SBIS3.CONTROLS.DSMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
       'js!SBIS3.CONTROLS.DataBindMixin',
+      'js!SBIS3.CONTROLS.DropdownListMixin',
       'html!SBIS3.CONTROLS.CustomFilterMenu',
       'html!SBIS3.CONTROLS.CustomFilterMenu/CustomFilterMenuItem'
 
    ],
 
-   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, dotTplFn, dotTplFnForItem) {
+   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, dotTplFn, dotTplFnForItem) {
 
 
       'use strict';
 
-      var CustomFilterMenu = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin], {
+      var CustomFilterMenu = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin], {
          $protected: {
             _options: {
-
+               itemTemplate: dotTplFnForItem
             },
             _dotTplFn: dotTplFn,
             _dotTplFnForItem: dotTplFnForItem,
@@ -57,17 +58,16 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
 
             this._setVariables();
             this.reload();
-            pickerContainer.mouseup(function (e) {
-               var row = $(e.target).closest('.controls-CustomFilterMenu__item');
-               if (row.length) {
-                  self.setSelectedItems([row.data('id')]);
-               }
-            });
+            this._bindItemSelect();
             this._pickerResetButton.mouseup(function() {
                self.setSelectedItems([]);
             });
             header.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
             list.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, true));
+         },
+
+         _getItemClass: function(){
+            return 'controls-CustomFilterMenu__item';
          },
 
          setSelectedItems: function(items) {
@@ -142,10 +142,6 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
 
          _getItemsContainer : function () {
             return this._pickerListContainer;
-         },
-
-         _getItemTemplate: function(item) {
-            return this._dotTplFnForItem.call(this, item);
          },
 
          _setPickerConfig: function () {
