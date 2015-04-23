@@ -1,7 +1,8 @@
-define('js!SBIS3.CONTROLS.MultiViewMixin', [], function() {
+define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'], function(dotTplFn) {
    'use strict';
 
    var MultiView = {
+      _dotTplFn : dotTplFn,
       $protected: {
          _options: {
             /**
