@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
        * @public
+       * @author Крайнов Дмитрий Олегович
        */
 
       var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
@@ -511,9 +512,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
             this._drawSelectedItems(this._options.selectedItems);
          },
-          /**
-           *
-           */
          destroy: function() {
             if (this.isInfiniteScroll()){
                if (this._infiniteScrollContainer.length) {
