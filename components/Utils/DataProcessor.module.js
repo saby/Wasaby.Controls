@@ -42,26 +42,25 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             });
          });
       },
-      unload: function (fileType) {
-         var self = this;
-         this._createLoadIndicator('Сохранение в ...');
+      unload: function (fileType, methodName, fileName) {
+         var self = this,
+             uniqueToken = ('' + Math.random()).substr(2)* 10;
+         this._createLoadIndicator('Подождите, идет выгрузка данных в ' + fileType);
          var serializer = new Serializer({
             columns: this._options.columns,
             report: this._options.report
          });
+         //fileName = idReport ? idReport : (isSaveColumns ? 'Выбранные столбцы' : 'Как на экране'), ??
          serializer.prepareReport(this._options.xsl, this._options.dataSet).addCallback(function(reportText){
-            //(object, methodName, params, url)
-            $ws.helpers.saveToFile(fileType, {
-               htmlText: reportText,
-               //opener: self,
-               handlers: {
-                  onAfterClose: function() {
-                     self._destroyLoadIndicator();
-                  }
-               }
-            }).addCallback(function(printDialog){
+            $ws.helpers.saveToFile(fileType, methodName, {
+               'html': reportText,
+               'Название': fileName,//idReport || Standart
+               'fileDownloadToken': uniqueToken
+            }).addCallback(function(){
+               console.log('callback')
                self._destroyLoadIndicator();
             });
+            self._destroyLoadIndicator();
          });
       },
       _createLoadIndicator: function (message) {
