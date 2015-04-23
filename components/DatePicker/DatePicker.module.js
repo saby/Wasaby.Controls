@@ -281,7 +281,8 @@ define(
        */
       _setDate: function (date) {
          var isCorrect = false;
-         if (date instanceof Date) {            this._options.date = date;
+         if (date instanceof Date) {
+            this._options.date = date;
             this._options.text = this._getTextByDate(date);
             isCorrect = true;
          } else if (typeof date == 'string') {
@@ -380,41 +381,41 @@ define(
       _getDateByText: function(text) {
          var
             date = new Date(),
-            regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
-            availCharsArray = this._primalMask.match(regexp);
-         for (var i = availCharsArray.length-1; i >= 0; i--) {
-            switch (availCharsArray[i]) {
+            group,
+            value;
+         for (var i = 0; i < this.formatModel.model.length; i++) {
+            group = this.formatModel.model[i];
+            if (group.type != 'group') {
+               continue;
+            }
+            value = '';
+            for (var j = 0; j < group.mask.length; j++) {
+               value += (typeof group.value[j] === "undefined") ? this._maskReplacer : group.value[j];
+            }
+            switch (group.mask) {
                case 'YY' :
-                  date.setYear('20' + text.substr(-2));
-                  text = text.slice(0, -3);  // отрезаем на один символ больше -- это разделяющий символ
+                  date.setYear('20' + value);
                   break;
                case 'YYYY' :
-                  date.setYear(text.substr(-4));
-                  text = text.slice(0, -5);  // отрезаем на один символ больше -- это разделяющий символ
+                  date.setYear(value);
                   break;
                case 'MM' :
-                  date.setMonth(text.substr(-2) - 1);
-                  text = text.slice(0, -3);  // отрезаем на один символ больше -- это разделяющий символ
+                  date.setMonth(value - 1);
                   break;
                case 'DD' :
-                  date.setDate(text.substr(-2));
-                  text = text.slice(0, -3);  // отрезаем на один символ больше -- это разделяющий символ
+                  date.setDate(value);
                   break;
                case 'HH' :
-                  date.setHours(text.substr(-2));
-                  text = text.slice(0, -3);  // отрезаем на один символ больше -- это разделяющий символ
+                  date.setHours(value);
                   break;
                case 'II' :
-                  date.setMinutes(text.substr(-2));
-                  text = text.slice(0, -3);  // отрезаем на один символ больше -- это разделяющий символ
+                  date.setMinutes(value);
                   break;
                case 'SS' :
-                  date.setSeconds(text.substr(-2));
-                  text = text.slice(0, -3);  // отрезаем на один символ больше -- это разделяющий символ
+                  date.setSeconds(value);
                   break;
                case 'UUU' :
-                  date.setMilliseconds(text.substr(-3));
-                  text = text.slice(0, -4);  // отрезаем на один символ больше -- это разделяющий символ
+                  date.setMilliseconds(value);
                   break;
             }
          }
@@ -430,27 +431,24 @@ define(
        */
       _getTextByDate: function( date ) {
          var
-            textObj = {},
-            regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
-            availCharsArray = this._primalMask.match(regexp);
+            text = '',
+            group;
 
-         for ( var i = 0; i < availCharsArray.length; i++ ){
-            switch ( availCharsArray[i] ){
-               case 'YY'   : textObj.YY   = ( '000' + date.getFullYear() ).slice(-2);     break;
-               case 'YYYY' : textObj.YYYY = ( '000' + date.getFullYear() ).slice(-4);     break;
-               case 'MM'   : textObj.MM   = ( '0' + (date.getMonth() + 1) ).slice(-2);    break;
-               case 'DD'   : textObj.DD   = ( '0' + date.getDate()).slice(-2);            break;
-               case 'HH'   : textObj.HH   = ( '0' + date.getHours()).slice(-2);           break;
-               case 'II'   : textObj.II   = ( '0' + date.getMinutes()).slice(-2);         break;
-               case 'SS'   : textObj.SS   = ( '0' + date.getSeconds()).slice(-2);         break;
-               case 'UUU'  : textObj.UUU  = ( '00' + date.getMilliseconds()).slice(-3);   break;
-            }
-         }
-         var text = this._primalMask;
-
-         for (i in textObj) {
-            if (textObj.hasOwnProperty(i)) {
-               text = text.replace(i, textObj[i])
+         for (var i = 0; i < this.formatModel.model.length; i++) {
+            group = this.formatModel.model[i];
+            if (group.type == 'group') {
+               switch ( group.mask ){
+                  case 'YY'   : text += ( '000' + date.getFullYear() ).slice(-2);     break;
+                  case 'YYYY' : text += ( '000' + date.getFullYear() ).slice(-4);     break;
+                  case 'MM'   : text += ( '0'   + (date.getMonth() + 1) ).slice(-2);  break;
+                  case 'DD'   : text += ( '0'   + date.getDate()).slice(-2);          break;
+                  case 'HH'   : text += ( '0'   + date.getHours()).slice(-2);         break;
+                  case 'II'   : text += ( '0'   + date.getMinutes()).slice(-2);       break;
+                  case 'SS'   : text += ( '0'   + date.getSeconds()).slice(-2);       break;
+                  case 'UUU'  : text += ( '00'  + date.getMilliseconds()).slice(-3);  break;
+               }
+            } else {
+               text += group.innerMask;
             }
          }
 
