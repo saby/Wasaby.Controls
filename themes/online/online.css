@@ -1329,6 +1329,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox {
   cursor: pointer;
+  line-height: normal;
 }
 .controls-ComboBox .controls-TextBox__fieldWrapper {
   position: relative;
@@ -2137,14 +2138,14 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls__filter-button .controls__filter-button__clear {
   width: 16px;
-  height: 12px;
+  height: 16px;
   display: inline-block;
   vertical-align: middle;
   cursor: pointer;
-  background: url('img/cancelIcon-sprite.png') 0 -35px no-repeat;
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAVFBMVEUAAAD///9bW1tbW1v////////p6enp6enp6en///////////+6urq4uLi1tbXCwsLAwMC4uLi6urpbW1vExMTGxsZbW1tbW1tbW1tbW1tbW1uamppP4JMvAAAAHHRSTlMABggKRkhMTlBQUqW5u8HDxcfHycnJ19nf4evvf4sAIQAAAFRJREFUeAG1zT0WwiAQAOFZARFRQNcfAve/Zyretmny9fOG0wwu4Bgs3y4g24clVgWtkUV8+f+KF0yaM2Ec+n4pzpL+SPdnF9u2K9yabXMQkJA5ZAcu9AK0GCqiJgAAAABJRU5ErkJggg==');
 }
 .controls__filter-button .controls__filter-button__clear:hover {
-  background: url('img/cancelIcon-sprite.png') 0 -19px no-repeat;
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAXVBMVEUAAAD/LRT/LRT/LRT/tJf/LRT/////LRT/s5X/6OP/sZT/LRT/////oYH/LRT/LRT/ooP/////dUL/dEL/p4f/pYT/qo3/////qIr/sJP/5+L/6OP/r5H////////Q/P6sAAAAH3RSTlMA6wgKyd8G4clOw8lGwdnXwVDv78fHuVK7xUxQxaVIsgePJgAAAFRJREFUeAG1zckVQiEQRcH7RZ5C44DzIOQfpqs+vXVjJVD8zcIKEgtunQXabHGlGlgtOLXd/nBsIvTTuRMSdrkaCad86/dHVrTPF7w/0Y4p0Bz85Avz+wKswkQ9wQAAAABJRU5ErkJggg==');
 }
 .controls__filter-button.controls__filter-button__default-filter .controls-Link__icon,
 .controls__filter-button.controls__filter-button__default-filter .controls__filter-button__clear {
@@ -2188,6 +2189,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls__filter-button__wrapper .controls__filter-button__template-area {
   clear: both;
+  padding: 5px;
 }
 .controls__filter-button__wrapper.controls__filter-button-left .controls__filter-button__wrapper-header .controls__filter-button__opened {
   float: left;
@@ -2198,64 +2200,13 @@ input[type="reset"]::-moz-focus-inner {
 .controls__filter-button__wrapper.controls__filter-button-left .controls__filter-button__wrapper-header .controls__filter-button__apply-filter {
   float: left;
 }
-/*TODO тема оформления*/
-.controls-FilterView {
-  width: 100%;
-  min-width: 300px;
-}
-.controls-FilterView .controls-ListView__footer {
+.controls-FilterButtonLabel {
   text-align: center;
   line-height: 32px;
 }
-.controls-FilterView .controls-ListView__item {
-  min-height: 32px;
-  max-height: 32px;
-  line-height: 32px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-align: center;
-}
-/*Стили для демо*/
-.demo_template {
-  border: 1px solid #ddd;
-  background: #fff;
-  -moz-box-shadow: 0 0 12px rgba(11, 11, 11, 0.25);
-  -webkit-box-shadow: 0 0 12px rgba(11, 11, 11, 0.25);
-  box-shadow: 0 0 12px rgba(11, 11, 11, 0.25);
-}
-.demo_template .demo_template-header {
-  height: 40px;
-  float: right;
-}
-.demo_template .demo_template-header .demo_template__opened {
-  position: relative;
-  top: 8px;
+.controls-FilterButtonLabel .controls-FilterButtonLabel-removeButton {
   display: inline-block;
-  width: 30px;
-  height: 24px;
-  cursor: pointer;
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAMAAADat72NAAABC1BMVEUAAADl7fbj6/Xj6/Xi6vXh6vXh6vXg6fXg6fTg6fTe6PTe5/Pe5/Pd5/Pd5/Td5/Pg6PPl7PXm7fbm7fbn7fbn7fbm7fbn7fbn7fbm7fbn7fbn7fbm7fbn7fbn7fbm7fX09/v1+Pv19/vn7vfx9frt8vns8fjw9Pnl7Pbv8/nr8fjo7/ft8vjq8Pfi6vXp7/fm7fbr8Pfo7vbg6fTo7veHiImytbmws7fj6vXDxcaJiYnl7PXe6PTn7vbHyMmvs7fk7PXh6fTv9PnGx8mwtLjj6/Xm7PXHyMrj6vTm7fW8vsGZmZm8v8Hi6vTn7fausratsLXu8/nFxseWl5fZ5PLS3/DQ3vDW4vH///9GnxwCAAAAIHRSTlMAqCT5lhjzgQztbwbeWgPPSD/JVAPbaQzkexLzkCT5pUzBZqgAAAD3SURBVHjafc5XUwIxFIbhY++9d9eya7AQUVw5cUEIElc0ErD8/38iIUt2vEiemzPfvDOZwHHgcQIjp2du5zA6FkZOIcD4BXEqAExMXl65XAPA1E0hdCj28/QMvXUoQd/s3X3RKD+YG5fNpTrPzT+WjArG+sRYMZuBtvBEk4GoirUkqWE1MvsZtMWlOjUaHJtN5I1svsDAcr2VIQKRk+F6NXklZUNv7fa7HR8mr0qW+UQhsPM/r8lWtjvIleK653l9g9raVYypru42b9qne4LoQ0Qvz1vb9mOBMlcFed6RzEHn3b3Ul/cl8+SDw9SXjyTz5a/vH7ffP+tQixsHEpdgAAAAAElFTkSuQmCC');
-}
-.demo_template .demo_template-header .demo_template__opened:hover {
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAMAAADat72NAAABR1BMVEUAAADf6fTe5/Tf6PTd5/Tc5/Pd5/Pc5vPc5vPc5vPb5fPa5fLb5fPZ5fLZ5PLa5fPc5vPg6fTj6vXi6fXi6vXi6vXi6fXi6fXj6vXi6fXi6fXj6vXi6fXi6fXi6vXh6fTs8vju8/jv8/nw9Pnu8/nt8vjh6/bs8fjt8vnr8fjm7fbo7vfu8vjh6vXu8vnq8Pfk7PXg6PXp8Pfr8Pjp7/fk6/Xj6/Xq7/fr8Pfo7vbd5/To7/f8RjH0j4f0jYTn7fbi6vXg6fT7rZH/TiT0jIT/TyTm7PXh6fTc5vPk7Pbn7vb8s5XzjITl7PXf6PTl7Pbv9Pn7s5Xyjobl7fbf5/Pl6/X7tJb7s5Tg6PPj6/T3oo//cDPf6PPyi4PyiYH7sZH9ZD/1+Pvk6/Ti6vTj6vTh6vTe5/PW4vHR3/DP3vDP3fDU4fH////evIYrAAAAIHRSTlMAqCT5lhjzgQztbwbeWgPPSD/JVAPbaQzkexLzkCT5pUzBZqgAAAEvSURBVHjadcvnU8IwGMfxx7333lKCxeCoQoIoyihBBaKAUiwgQ9z+/+8lDRx6Fz4v+kvvew/sujR3L8gDfXu6F6l59zH0D/gONDWXjgEGDz1InY9EHhrGukdJPzYAYOTk1K+r+AOklUfHaPBMJRii0DJ+ji8CjvCl3Kuw+PoiUZEnJmORkCNuJsQkWFxMJHkNwtTNLU4J7jTLpFIZlnaLP8xlnp65u8eObI7l8yyXxcKDEQPH7GMhKWmWaRY1+ebkSeY5m/C2Urlc4pJBKzLPFzr52bQss/o/L1BicEeVFREqsurfvLhESKfWEOeoJns7LxPaPq5bmhjNqnfzyqo4djSQXNTo5jVxrCDz+sYL4b3zJpFVnbe2bUoMJdKswE60+WpTpebbO3x8fvX0/fMLcneaTM4fwoQAAAAASUVORK5CYII=');
-}
-.demo_template .demo_template-header .demo_template__opened:active {
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAMAAADat72NAAAA7VBMVEUAAADP3fDQ3vDQ3vDQ3vDQ3vDQ3vDQ3vDQ3vDQ3vDQ3vDQ3vDQ3vDQ3vDQ3vDQ3vDO3O/D1Oi+z+S+z+S/z+W+z+S+z+S+z+W+z+W+z+S+z+W+z+W9zuS+z+S+z+XA0Oa4yuCuwdmqvda0xt7Q3vDN3O/J2OzP3fDR3vDP3vDO3O/5RDDmhoPmg4D2qpD/TiT/TyTO3e/f6fX4sJT4sZXG1urvnY3/cDPE1OnngX6/0OXK2u3f6PXF1en4rpHA0ObL2+77Yz/g6fXs8fnA0ebM2+7H1+vB0efI1+vC0ufS4PHW4vLX4/LT4fH////ScwUwAAAAIHRSTlMAqCT5lhjzgQztbwbeWgPPSD/JVAPbaQzkexLzkCT5pUzBZqgAAADUSURBVCjPfdLnEoIwDADguvfeewsqWIQ6UNx7vf/rqEArekfyJ5d+12vaBtUbTftoIUe7Yx9d5HRxECN3G2SPl4MY+XiQ/YEexCjI981yIBhZHFg4FKbdDbGoqzS0MIrwI6OUFUn8qCJbORqj298uCExNRnF2N5lgzJRyYsyanUynk84fJ2d0QcSEYPWXU/OFWauSommKpFo5nVkyXb3PlVfUdc6uNyZvye6TdmT75VyeNbbXjKztv1w4HIE3L5ZO0I+Vz9A4VKoXiGtXcBRv94d9PF9CQWf4tW1AYAAAAABJRU5ErkJggg==');
-}
-.demo_template .controls__filter-button__template-area {
-  clear: both;
-}
-.demo_template .demo_template-wrapper {
-  width: 200px;
-  padding: 10px;
-}
-.demo_template .demo_template-wrapper .demo_template-buttons {
-  padding: 0 10px;
-}
-.demo_template .demo_template-wrapper .clear {
-  clear: both;
-  margin: 5px 0;
+  float: right;
 }
 .controls-ItemActions {
   position: absolute;
