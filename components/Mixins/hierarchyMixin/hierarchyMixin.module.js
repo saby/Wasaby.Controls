@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
                var parentKey = self.getParentKey(DataSet, record);
 
                if ((parentKey || null) === (curParent ? curParent.getKey() : null)) {
-                  parents.push({record : record, lvl : curLvl});
+                  parents.push({record: record, lvl: curLvl});
 
                   if (!indexTree.hasOwnProperty(parentKey)) {
                      indexTree[self.getParentKey(DataSet, record)] = [];
@@ -80,6 +80,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             }
          } while (curParent);
          this._indexTree = indexTree;
+         DataSet.setIndexTree(indexTree);
       },
 
       getParentKey: function (DataSet, record) {
@@ -138,8 +139,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          }
       },
 
-      _nodeDataLoaded : function(key, dataSet) {
-         this._dataSet= dataSet;
+      _nodeDataLoaded: function (key, dataSet) {
+         this._dataSet = dataSet;
          this._redraw()
       }
 
