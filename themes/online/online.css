@@ -25,6 +25,11 @@ input[type="reset"]::-moz-focus-inner {
   color: #ff7033;
   text-decoration: none;
 }
+.controls-Link.ws-disabled {
+  color: #cccccc;
+  cursor: default;
+  text-decoration: none;
+}
 .controls-Link .controls-Link__icon {
   vertical-align: middle;
   margin: -2px 0 0;
@@ -1031,11 +1036,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuLink.controls-MenuLink__withoutMenu {
   padding: 0;
 }
-.controls-MenuLink:hover {
+.controls-MenuLink.ws-enabled:hover {
   color: #ff7033;
   text-decoration: underline;
 }
-.controls-MenuLink:hover .controls-MenuLink__arrowDown {
+.controls-MenuLink.ws-enabled:hover .controls-MenuLink__arrowDown {
   background: transparent url('img/MenuButton-arrowDown.png') 0 6px;
 }
 .controls-MenuLink .controls-MenuLink__arrowDown {
