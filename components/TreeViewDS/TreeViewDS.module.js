@@ -19,29 +19,10 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
             itemsActions: []
          }
       },
-      _appendItemTemplate: function (item, targetContainer, dotTemplate) {
-         //TODO: поддержать at, или сделать с помощью него
-         var self = this,
-            key = item.getKey(),
-            container = $(MarkupTransformer(doT.template(dotTemplate)(item))),
-            itemWrapper = this._drawItemWrapper(item);
-         this._addItemClasses(itemWrapper, key);
-
-         // вставляем пользовательский шаблон в тривью  + добавляем кнопку развертки
-         $('.js-controls-ListView__itemContent', itemWrapper).append(container).before('<div class="controls-TreeView__expand js-controls-TreeView__expand"></div>');
-
-         targetContainer.append(itemWrapper);
-
-         //TODO: перенести куда нить проверку является ли разделом
-         //сейчас всегда отображает треугольник раскрытия, если явно не указано,
-         //что не является разделом (false)
-         if (item.get(this._options.hierField + '@') !== false) {
-            $('.controls-ListView__item[data-id="' + key + '"] .controls-TreeView__item', this.getContainer().get(0)).first().addClass('controls-TreeView__hasChild');
-         }
-      },
 
       _getTargetContainer: function (record) {
-         var parentKey = this.getParentKey(this._dataSet, record),
+         var
+            parentKey = this.getParentKey(this._dataSet, record),
             curList;
 
          if (parentKey) {
@@ -62,18 +43,15 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
          return curList;
       },
 
-      _drawItemWrapper: function (item) {
-         return $('<div>\
-            <div class="controls-TreeView__item">\
-               <div class="controls-TreeView__itemContent js-controls-ListView__itemContent"></div>\
-            </div>\
-         </div>');
-      },
-
       _nodeDataLoaded : function(key, ds) {
          TreeViewDS.superclass._nodeDataLoaded.apply(this, arguments);
          var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.controls-TreeView__childContainer', itemCont).first().css('display', 'block');
+      },
+
+      _nodeClosed : function(key) {
+         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
+         $('.controls-TreeView__childContainer', itemCont).css('display', 'none').empty();
       }
    });
 

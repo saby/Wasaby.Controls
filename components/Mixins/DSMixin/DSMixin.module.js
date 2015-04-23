@@ -180,11 +180,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (records && records.length > 0) {
             for (var i = 0; i < records.length; i++) {
 
-               var
-                  targetContainer = this._getTargetContainer(records[i], records[i].getKey());
-               if (targetContainer) {
-                  this._drawItem(records[i], targetContainer, curAt);
-               }
+               this._drawItem(records[i], curAt);
+
                if (curAt && curAt.at) {
                   curAt.at++;
                }
@@ -231,9 +228,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return this._container;
       },
 
-      _drawItem: function (item, targetContainer, at) {
-
-         this._createItemInstance(item, targetContainer, at);
+      _drawItem: function (item, at) {
+         var
+            targetContainer,
+            itemInstance;
+         targetContainer = this._getTargetContainer(item);
+         itemInstance = this._createItemInstance(item, targetContainer, at);
+         this._appendItemTemplate(item, targetContainer, itemInstance, at);
       },
 
       _getItemTemplate: function () {
@@ -245,7 +246,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _createItemInstance: function (item, targetContainer, at) {
-         var dotTemplate,
+         var
+            buildedTpl,
+            dotTemplate,
             itemTpl = this._getItemTemplate(item);
 
          if (typeof itemTpl == 'string') {
@@ -256,25 +259,25 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
 
          if (typeof dotTemplate == 'string') {
-            this._appendItemTemplate(item, targetContainer, dotTemplate, at);
+            buildedTpl = $(MarkupTransformer(doT.template(dotTemplate)(item)));
+            return buildedTpl;
          }
          else {
             throw new Error('Шаблон должен быть строкой');
          }
       },
 
-      _appendItemTemplate: function (item, targetContainer, dotTemplate, at) {
+      _appendItemTemplate: function (item, targetContainer, itemBuildedTpl, at) {
          var
-            key = item.getKey(),
-            container = $(MarkupTransformer(doT.template(dotTemplate)(item)));
-         this._addItemClasses(container, key);
+            key = item.getKey();
+         this._addItemClasses(itemBuildedTpl, key);
 
          if (at && (typeof at.at !== 'undefined')) {
             var atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).get(at.at);
-            $(atContainer).before(container);
+            $(atContainer).before(itemBuildedTpl);
          }
          else {
-            targetContainer.append(container);
+            targetContainer.append(itemBuildedTpl);
          }
       },
 

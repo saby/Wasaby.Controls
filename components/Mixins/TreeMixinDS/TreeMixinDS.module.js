@@ -37,11 +37,10 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function (MarkupTransformer) {
 
          this.hierIterate(DataSet, function (record, parent, lvl) {
             var
-               targetContainer = self._getTargetContainer(record),
                parentKey = self.getParentKey(DataSet, record);
 
-            if (targetContainer && (parentKey == self._options.root)) {
-               self._drawItem(record, targetContainer);
+            if ((parentKey == self._options.root)) {
+               self._drawItem(record);
             }
          });
 
@@ -61,7 +60,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function (MarkupTransformer) {
       closeNode: function (key) {
          var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.js-controls-TreeView__expand', itemCont).removeClass('controls-TreeView__expand__open');
-         $('.controls-TreeView__childContainer', itemCont).css('display', 'none').empty();
+         this._nodeClosed(key);
       },
 
       /**
@@ -91,7 +90,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function (MarkupTransformer) {
                self._drawItem(record, targetContainer);
             }
          });
+      },
 
+      _nodeClosed : function(key) {
 
       }
    };
