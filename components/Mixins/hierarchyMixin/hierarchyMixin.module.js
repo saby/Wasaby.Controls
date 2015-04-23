@@ -136,6 +136,11 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
                this.openNode(this._openedPath[i]);
             }
          }
+      },
+
+      _nodeDataLoaded : function(key, dataSet) {
+         this._dataSet= dataSet;
+         this._redraw()
       }
 
    };

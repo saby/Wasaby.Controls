@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.TreeMixinDS', [], function (MarkupTransformer) {
+define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
