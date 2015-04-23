@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        */
 
       var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
-
+         _dotTplFn: dotTplFn,
           /**
            * @event onChangeHoveredItem При переводе курсора мыши на другую запись
            * Событие срабатывает при смене записи под курсором мыши.
@@ -47,7 +47,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            */
          $protected: {
             _floatCheckBox : null,
-            _dotTplFn: dotTplFn,
             _dotItemTpl: null,
             _itemsContainer: null,
             _actsContainer: null,
@@ -181,7 +180,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _loadingIndicator: undefined,
             _hasScrollMore : true,
             _infiniteScrollOffset: null,
-            _nowLoading: false,
             _allowInfiniteScroll: true,
             _scrollIndicatorHeight: 32,
             _isLoadBeforeScrollAppears : true,
@@ -510,13 +508,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          _nextLoad: function(){
             var self = this, records;
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
-            //TODO Когда в core появится возможность останавливать Deferred убрать _nowLoading и отменять или дожидаться загрузки по готовности Deferred
-            // запоминать в query (Deferred.isReady()). Так же нужно будет исользовать для фильтрации
-            if (this._allowInfiniteScroll && this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._nowLoading) {
+            if (this._allowInfiniteScroll && this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._isLoading()) {
                this._addLoadingIndicator();
-               this._nowLoading = true;
-               this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset  + this._limit, this._limit).addCallback(function (dataSet) {
-                  self._nowLoading = false;
+               this._loader = this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset  + this._limit, this._limit).addCallback(function (dataSet) {
+                  self._loader = null;//_cancelLoading?
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
                      records = dataSet._getRecords();
@@ -529,6 +524,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                      self._hasScrollMore = false;
                      self._removeLoadingIndicator();
                   }
+               }).addErrback(function(error){
+                  //Здесь при .cancel приходит ошибка вида DeferredCanceledError
+                  return error;
                });
             }
          },
@@ -543,7 +541,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          _loadBeforeScrollAppears: function(){
             var elem = this._infiniteScrollContainer.length ? this._infiniteScrollContainer.get(0) : $('body').get(0);
             // Было: this._dataSet.getCount() <= parseInt(($(window).height() /  32 ) + 10 , 10
-            if (this._isLoadBeforeScrollAppears && !(elem.scrollHeight > $(window).height())){
+            if (this._isLoadBeforeScrollAppears && !(elem.scrollHeight > $(window).height() + this._scrollIndicatorHeight)){
                this._nextLoad();
             } else {
                this._isLoadBeforeScrollAppears = false;
@@ -561,7 +559,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @private
           */
          _removeLoadingIndicator: function(){
-            if( this._loadingIndicator && !this._nowLoading){
+            if( this._loadingIndicator && !this._loader){
                this._loadingIndicator.addClass('ws-hidden');
             }
          },

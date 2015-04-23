@@ -34,14 +34,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * </pre>
              * @see items
              */
-            keyField : null,
+            keyField: null,
             items: undefined,
             /**
              * @cfg {DataSource} Набор исходных данных по которому строится отображение
              */
             dataSource: undefined,
-            pageSize : null
-         }
+            pageSize: null
+         },
+         _loader: null
       },
 
       $constructor: function () {
@@ -58,7 +59,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   items = this._options.items;
                }
                else {
-                  throw new Error('Array expected')
+                  throw new Error('Array expected');
                }
             }
             else {
@@ -83,8 +84,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
 
 
-
-
          this._setDataSourceCB = setDataSourceCB.bind(this);
          this._dataSource.subscribe('onDataSync', this._setDataSourceCB);
       },
@@ -92,6 +91,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       setDataSource: function (ds) {
          this._dataSource.unsubscribe('onDataSync', this._setDataSourceCB);
          this._dataSource = ds;
+         this._dataSet = null;
          this.reload();
          this._dataSource.subscribe('onDataSync', this._setDataSourceCB);
       },
@@ -101,14 +101,37 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._limit = this._options.pageSize;
          }
          var self = this;
+         this._cancelLoading();
          this._filter = typeof(filter) != 'undefined' ? filter : this._filter;
          this._sorting = typeof(sorting) != 'undefined' ? sorting : this._sorting;
          this._offset = typeof(offset) != 'undefined' ? offset : this._offset;
          this._limit = typeof(limit) != 'undefined' ? limit : this._limit;
-         this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
-            self._dataSet = dataSet;
+         this._loader = this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
+            self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
+            if (self._dataSet) {
+               self._dataSet.merge(dataSet);
+            } else {
+               self._dataSet = dataSet;
+            }
+            self._dataLoadedCallback();
             self._redraw();
          });
+      },
+      //TODO Сделать публичным? вроде так всем захочется делать
+      _isLoading: function () {
+         return this._loader && !this._loader.isReady();
+      },
+      //TODO Сделать публичным? вроде так всем захочется делать
+      /**
+       * После использования нужно присвоить null переданному loader самостоятельно!
+       * @param loader
+       * @private
+       */
+      _cancelLoading: function () {
+         if (this._isLoading()) {
+            this._loader.cancel();
+         }
+         this._loader = null;
       },
       setItems: function (items) {
          var
@@ -139,34 +162,28 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          /*Method must be implemented*/
       },
 
-      _redraw: function() {
+      _redraw: function () {
          this._clearItems();
-         var
-            self = this,
-            DataSet = this._dataSet;
+         var records = [];
 
-         DataSet.each(function (item, key, i, parItem, lvl) {
-            var
-               targetContainer = self._getTargetContainer(item, key, parItem, lvl);
-            if (targetContainer) {
-               self._drawItem(item, targetContainer, key, i, parItem, lvl);
-            }
+         this._dataSet.each(function (record) {
+            records.push(record)
          });
 
-         self.reviveComponents().addCallback(function () {
-            self._notify('onDrawItems');
-            self._drawItemsCallback();
-         });
+         this._drawItems(records);
       },
 
-      _drawItems: function (records) {
-         var self = this;
+      _drawItems: function (records, at) {
+         var
+            self = this,
+            curAt = at;
          if (records && records.length > 0) {
             for (var i = 0; i < records.length; i++) {
-               var
-                  targetContainer = this._getTargetContainer(records[i], records[i].getKey());
-               if (targetContainer) {
-                  this._drawItem(records[i], targetContainer,  records[i].getKey(), i);
+
+               this._drawItem(records[i], curAt);
+
+               if (curAt && curAt.at) {
+                  curAt.at++;
                }
             }
             this.reviveComponents().addCallback(function () {
@@ -177,7 +194,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
 
-      _clearItems : function(container) {
+      _clearItems: function (container) {
          container = container || this._getItemsContainer();
          /*Удаляем компоненты-инстансы элементов*/
          if (!Object.isEmpty(this._itemsInstances)) {
@@ -191,7 +208,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          var itemsContainers = $(".controls-ListView__item", container.get(0));
          /*Удаляем вложенные компоненты*/
-         $('[data-component]', itemsContainers).each(function(i, item) {
+         $('[data-component]', itemsContainers).each(function (i, item) {
             var inst = $(item).wsControl();
             inst.destroy();
          });
@@ -211,39 +228,53 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return this._container;
       },
 
-      _drawItem: function (item, targetContainer) {
-
-         this._createItemInstance(item, targetContainer);
+      _drawItem: function (item, at) {
+         var
+            targetContainer,
+            itemInstance;
+         targetContainer = this._getTargetContainer(item);
+         itemInstance = this._createItemInstance(item, targetContainer, at);
+         this._addItemAttributes(itemInstance, item);
+         this._appendItemTemplate(item, targetContainer, itemInstance, at);
       },
 
       _getItemTemplate: function () {
-         throw new Error('Method _getItemTemplate() must be implemented')
+         throw new Error('Method _getItemTemplate() must be implemented');
       },
 
-      _addItemClasses: function (container, key) {
-         container.attr('data-id', key).addClass('controls-ListView__item');
+      _addItemAttributes: function (container, item) {
+         container.attr('data-id', item.getKey()).addClass('controls-ListView__item');
       },
 
-      _createItemInstance: function (item, targetContainer) {
+      _createItemInstance: function (item, targetContainer, at) {
          var
-            key = item.getKey(),
-            itemTpl = this._getItemTemplate(item),
-            container, dotTemplate;
+            buildedTpl,
+            dotTemplate,
+            itemTpl = this._getItemTemplate(item);
 
          if (typeof itemTpl == 'string') {
             dotTemplate = itemTpl;
          }
-         else if (itemTpl instanceof Function) {
+         else if (typeof itemTpl == 'function') {
             dotTemplate = itemTpl(item);
          }
 
          if (typeof dotTemplate == 'string') {
-            container = $(MarkupTransformer(doT.template(dotTemplate)(item)));
-            this._addItemClasses(container, key);
-            targetContainer.append(container);
+            buildedTpl = $(MarkupTransformer(doT.template(dotTemplate)(item)));
+            return buildedTpl;
          }
          else {
             throw new Error('Шаблон должен быть строкой');
+         }
+      },
+
+      _appendItemTemplate: function (item, targetContainer, itemBuildedTpl, at) {
+         if (at && (typeof at.at !== 'undefined')) {
+            var atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).get(at.at);
+            $(atContainer).before(itemBuildedTpl);
+         }
+         else {
+            targetContainer.append(itemBuildedTpl);
          }
       },
 
@@ -269,10 +300,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var instances = this.getItemsInstances();
          return instances[id];
       },
-      _hasNextPage: function(hasMore){
+      _hasNextPage: function (hasMore) {
          //n - приходит true, false || общее количество записей в списочном методе
          return typeof (hasMore) !== 'boolean' ? hasMore > this._offset : !!hasMore;
+      },
+
+      _dataLoadedCallback: function () {
+
       }
+
 
    };
 
