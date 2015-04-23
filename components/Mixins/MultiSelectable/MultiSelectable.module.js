@@ -29,7 +29,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
              * </pre>
              * @see multiselect
              */
-            selectedItems : []
+            selectedItems : [],
+            allowEmptySelection : true
          }
       },
 
@@ -43,6 +44,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             }
             else {
                throw new Error('Argument must be instance of Array');
+            }
+         }
+         else {
+            if (this._options.allowEmptySelection == false) {
+               this._setFirstItemAsSelected();
             }
          }
       },
@@ -63,6 +69,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             }
             else {
                this._options.selectedItems = [];
+            }
+            if (!this._options.selectedItems.length && this._options.allowEmptySelection == false) {
+               this._setFirstItemAsSelected();
             }
             this._drawSelectedItems(this._options.selectedItems);
             this._notifySelectedItem(this._options.selectedItems);
@@ -111,6 +120,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                   this._options.selectedItems = idArray.slice(0, 1);
                }
             }
+            if (!this._options.selectedItems.length && this._options.allowEmptySelection == false) {
+               this._setFirstItemAsSelected();
+            }
             this._drawSelectedItems(this._options.selectedItems);
             this._notifySelectedItem(this._options.selectedItems);
          }
@@ -131,6 +143,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                if (index >= 0) {
                   Array.remove(this._options.selectedItems, index);
                }
+            }
+            if (!this._options.selectedItems.length && this._options.allowEmptySelection == false) {
+               this._setFirstItemAsSelected();
             }
             this._drawSelectedItems(this._options.selectedItems);
             this._notifySelectedItem(this._options.selectedItems);
@@ -171,6 +186,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                   else {
                      this._options.selectedItems = idArray.slice(0, 1);
                   }
+                  if (!this._options.selectedItems.length && this._options.allowEmptySelection == false) {
+                     this._setFirstItemAsSelected();
+                  }
                   this._drawSelectedItems(this._options.selectedItems);
                   this._notifySelectedItem(this._options.selectedItems);
                }
@@ -201,6 +219,19 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       _notifySelectedItem : function(idArray) {
          this._notify('onSelectedItemsChange', idArray);
+      },
+
+      _dataLoadedCallback : function(){
+         if (!this._options.selectedItems.length && this._options.allowEmptySelection == false) {
+            this._setFirstItemAsSelected();
+         }
+      },
+
+      _setFirstItemAsSelected : function() {
+         if (this._dataSet) {
+            var firstKey = this._dataSet.at(0).getKey();
+            this._options.selectedItems = [firstKey];
+         }
       }
    };
 

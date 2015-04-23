@@ -10,20 +10,42 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
    'use strict';
 
    /**
-    * Класс, реализующий интерфейс IDataSource, для работы с бизнес-логикой СБИС как с источником данных
+    * Класс, реализующий интерфейс IDataSource, для работы с бизнес-логикой СБИС как с источником данных.
+    * @author Мануйлов Андрей
     */
 
    return IDataSource.extend({
       $protected: {
          _options: {
+             /**
+              * @noShow
+              */
             strategy: null,
             /**
+             * @cfg {String}
              * сопоставление CRUD операций и методов БЛ
+             * @see query
              */
             queryMethodName: 'Список',
+             /**
+              * @cfg {String} Метод создания записей
+              * @see create
+              */
             crateMethodName: 'Создать',
+             /**
+              * @cfg {String} Метод чтения записей
+              * @see read
+              */
             readMethodName: 'Прочитать',
+             /**
+              * @cfg {String} Метод обновления записей
+              * @see update
+              */
             updateMethodName: 'Записать',
+             /**
+              * @cfg {String} Метод удаления записей
+              * @see destroy
+              */
             destroyMethodName: 'Удалить'
          },
          /**
@@ -155,6 +177,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
 
       /**
        * Вызов списочного метода БЛ
+       * @remark
        * Возможно применене фильтрации, сортировки и выбора определенного количества записей с заданной позиции
        * @param {Object} filter - {property1: value, property2: value}
        * @param {Array} sorting - [{property1: 'ASC'},{property2: 'DESC'}]

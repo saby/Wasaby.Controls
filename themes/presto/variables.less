@@ -1236,6 +1236,7 @@
 @data-grid-header-cell-text-alignment:          left;
 @data-grid-header-cell-height:                  32px;
 @data-grid-header-cell-padding:                 0 10px;
+@data-grid-header-cell-padding-side:            10px;
 @data-grid-header-cell-font-size:               11px;
 
 @data-grid-header-cell-border-width:            1px 1px 0 1px;
@@ -1252,6 +1253,7 @@
 @data-grid-cell-text-alignment:                 @data-grid-header-cell-text-alignment;
 @data-grid-cell-height:                         @data-grid-header-cell-height;
 @data-grid-cell-padding:                        @data-grid-header-cell-padding;
+@data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 
 @data-grid-cell-border-width:                   1px 0 0;
 @data-grid-cell-border-style:                   solid;
@@ -1263,7 +1265,8 @@
 @data-grid-cell-hover-text-color:               @data-grid-cell-text-color;
 @data-grid-cell-hover-bg:                       @data-grid-cell-bg;
 
-
+@data-grid-td-checkbox-width:                   24px;
+@data-grid-checkbox-margin:                     0;
 
 // --------------- //
 // OperationsPanel //
@@ -1292,19 +1295,19 @@
 @controls-OperationsPanel-triangle-height:          @controls-OperationsPanel-height;
 @controls-OperationsPanel-triangle-width:           8px;
 
-@controls-OperationsPanel-actions-margin-left:      4px;
+@controls-OperationsPanel-actions-margin:           0 4px;
+
+@controls-OperationsPanel-separator-margin-left:    8px;
+@controls-OperationsPanel-separator-margin-right:   4px;
+@controls-OperationsPanel-separator-bg:             #CCCCCC;
+@controls-OperationsPanel-separator-width:          1px;
+@controls-OperationsPanel-separator-height:         21px;
+@controls-OperationsPanel-separator-line-height:    30px;
 
 // --------------- //
 // OperationsMark //
 // --------------- //
-@controls-OperationsMark-elements-margin-left:     4px;
-@controls-OperationsMark-separator-margin-left:    8px;
-@controls-OperationsMark-separator-margin-right:   4px;
-@controls-OperationsMark-separator-bg:             #CCCCCC;
-@controls-OperationsMark-separator-width:          1px;
-@controls-OperationsMark-separator-height:         21px;
-@controls-OperationsMark-separator-line-height:    30px;
-
+@controls-OperationsMark-checkBox-margin:     0 4px;
 // --------------- //
 // FastDataFilter  //
 // --------------- //
@@ -1312,6 +1315,8 @@
 // --------------- //
 // CustomFilterMenu//
 // --------------- //
+@customFilterMenu-cursor:                         pointer;
+
 @customFilterMenu-iconWidth:                      16px;
 @customFilterMenu-iconHeight:                     16px;
 @customFilterMenu-box-sizing:                     border-box;
@@ -1322,15 +1327,17 @@
 
 @customFilterMenu-arrow:                          url('img/select-arrow.png');
 @pathFilter-ComboBox-arrowBg:                     @customFilterMenu-arrow 0 -52px no-repeat;
-@pathFilter-ComboBox-arrowBg-hover:               @customFilterMenu-arrow 0 -28px no-repeat;
+@pathFilter-ComboBox-arrowBg-hover:               @customFilterMenu-arrow 0 -26px no-repeat;
 
 @customFilterMenu-captionWrapper-margin:          0 19px 0 19px;
 @customFilterMenu-min-height:                     24px;
-@customFilterMenu-shadow-hover:                   inset 0 0 0 1px @gray-light-color;
+@customFilterMenu-shadow-hover:                   0 0 0 1px @gray-light-color;
 
 @customFilterMenu-picker-bg:                      @white-color;
 @customFilterMenu-picker-border:                  1px solid @gray-light-color;
 @customFilterMenu-picker-border-radius:           0;
 @customFilterMenu-picker-menu-item-padding:       4px;
+@customFilterMenu-picker-menu-item-margin:        0 8px;
 @customFilterMenu-picker-menu-item-color:         @white-color;
 @customFilterMenu-picker-menu-item-hover:         #E7F0F9;
+@customFilterMenu-picker-list-padding:            8px 0;

@@ -8,106 +8,134 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
       'js!SBIS3.CONTROLS.DSMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
       'js!SBIS3.CONTROLS.DataBindMixin',
+      'js!SBIS3.CONTROLS.DropdownListMixin',
       'html!SBIS3.CONTROLS.CustomFilterMenu',
       'html!SBIS3.CONTROLS.CustomFilterMenu/CustomFilterMenuItem'
 
    ],
 
-   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, dotTplFn, dotTplFnForItem) {
-
+   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, dotTplFn, dotTplFnForItem) {
 
       'use strict';
 
-      var CustomFilterMenu = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin], {
+      var CustomFilterMenu = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin], {
          $protected: {
             _options: {
-
+               itemTemplate: dotTplFnForItem
             },
             _dotTplFn: dotTplFn,
-            _dotTplFnForItem: dotTplFnForItem,
-            _captionField: null,
-            _defaultValueId: null,
-            _resetButton: null
+            _caption: null,
+            _pickerCaption: null,
+            _pickerListContainer: null,
+            _resetButton: null,
+            _pickerResetButton: null,
+            _defaultId: null
          },
          $constructor: function() {
-            //TODO непонятно, как брать дефолтное значение, поэтому пока просто возьму первое из items
-            this._defaultValueId = this._options.items[0].id;
-            this._captionField = this._container.find('.controls-CustomFilterMenu__caption');
-
-            if (!this._options.displayField) {
-               //По умолчанию отображаемое поле - 'title'
-               this._options.displayField = 'title';
-            }
-
-            this._initEvents();
+            this._container.bind('mouseenter', this.showPicker.bind(this));
          },
-         _initEvents: function() {
-            var self = this;
-
-            //В зависимости от режима, показываем пикер по клику на контейнер или по наведению мышки
-            this._container.bind(this._options.mode === 'hover' ? 'mouseenter' : 'click', this.showPicker.bind(this));
-            this._resetButton = this._container.find('.controls-CustomFilterMenu__crossIcon').click(function() {
-               self.setSelectedItems([self._defaultValueId]);
-            });
-         },
-         _initComplete: function() {
-            CustomFilterMenu.superclass._initComplete.apply(this, arguments);
-            //Проинициализируем пикер, чтобы был готов dataSet
+         init : function () {
+            CustomFilterMenu.superclass.init.apply(this, arguments);
             this._initializePicker();
-            this.setSelectedItems([this._defaultValueId]);
          },
-         _setPickerContent: function () {
-            var self = this;
+         _setPickerContent : function () {
+            var self = this,
+                header = $('<div class="controls-CustomFilterMenu__header"/>'),
+                list = $('<div class="controls-CustomFilterMenu__list"/>'),
+                pickerContainer = this._picker.getContainer();
 
-            //Запросим данные
+            header.append(this._container.clone().removeAttr('style'));
+            pickerContainer.append(header, list);
+
+            this._setVariables();
             this.reload();
-            this._picker.getContainer().mouseup(function (e) {
-               var row = $(e.target).closest('.controls-CustomFilterMenu__item');
-               if (row.length) {
-                  self.setSelectedItems([row.data('id')]);
-                  self.hidePicker();
-               }
+            this._bindItemSelect();
+            this._pickerResetButton.mouseup(function() {
+               self.removeItemsSelectionAll();
+               self.hidePicker();
             });
+            header.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, true));
+            list.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
          },
-         _drawSelectedItems: function(id) {
-            var textValue = [],
+         _getItemClass: function(){
+            return 'controls-CustomFilterMenu__item';
+         },
+         _pickerMouseLeaveHandler: function(fromHeader, e) {
+            if(!$(e.toElement).closest('.controls-CustomFilterMenu__' + (fromHeader ? 'list' : 'header')).length) {
+               this.hidePicker();
+            }
+         },
+         _drawItemsCallback: function() {
+            //Надо вызвать просто для того, чтобы отрисовалось выбранное значение/значения
+            this.setSelectedItems(this._options.selectedItems);
+         },
+         _dataLoadedCallback: function() {
+            this._defaultId = this._dataSet.at(0).getKey();
+         },
+         _setVariables: function() {
+            var pickerContainer = this._picker.getContainer();
+
+            this._caption = this._container.find('.controls-CustomFilterMenu__caption');
+            this._resetButton = this._container.find('.controls-CustomFilterMenu__crossIcon');
+            this._pickerCaption  = pickerContainer.find('.controls-CustomFilterMenu__caption');
+            this._pickerResetButton = pickerContainer.find('.controls-CustomFilterMenu__crossIcon');
+            this._pickerListContainer = pickerContainer.find('.controls-CustomFilterMenu__list')
+         },
+         _drawSelectedItems : function(id) {
+            var textValues = [],
                 len = id.length,
                 self = this,
+                pickerContainer,
                 def;
 
             if(len) {
                def = new $ws.proto.Deferred();
+
                if(this._dataSet) {
                   for(var i = 0; i < len; i++) {
-                     textValue.push(this._dataSet.getRecordByKey(id[i]).get(this._options.displayField));
+                     textValues.push(this._dataSet.getRecordByKey(id[i]).get(this._options.displayField));
                   }
-                  def.callback(textValue);
+                  def.callback(textValues);
                } else {
                   //TODO переделать, когда БЛ научится отдавать несколько записей при чтении
                   this._dataSource.read(id[0]).addCallback(function(record) {
-                     def.callback(record.get(self._options.displayField));
+                     def.callback([record.get(self._options.displayField)]);
                   })
                }
+
                def.addCallback(function(textValue) {
-                  self._captionField.text(textValue.join(', '));
+                  pickerContainer = self._picker.getContainer();
+
+                  pickerContainer.find('.controls-CustomFilterMenu__item__selected').removeClass('controls-CustomFilterMenu__item__selected');
+                  pickerContainer.find('[data-id="' + id[0] + '"]').addClass('controls-CustomFilterMenu__item__selected');
+                  self._setCaptionText(textValue.join(', '));
                });
-               this._resetButton[len === 1 && id[0] === this._defaultValueId ? 'hide' : 'show']();
+               self._setResetButtonVisibility(id[0] === this._defaultId);
             }
          },
-         _getItemsContainer: function () {
-            return this._picker.getContainer();
+         _setCaptionText: function(text) {
+            if(typeof text === 'string') {
+               this._caption.text(text);
+               this._pickerCaption.text(text);
+            }
          },
-         _getItemTemplate: function(item) {
-           return this._dotTplFnForItem.call(this, item);
+         _setResetButtonVisibility: function(show) {
+            this._resetButton.toggleClass('ws-hidden', show);
+            this._pickerResetButton.toggleClass('ws-hidden', show);
+         },
+         _getItemsContainer : function () {
+            return this._pickerListContainer;
          },
          _setPickerConfig: function () {
             return {
-               corner: 'bl',
+               corner: 'tl',
                verticalAlign: {
-                  side: 'top'
+                  side: 'top',
+                  offset: -1
                },
                horizontalAlign: {
-                  side: 'left'
+                  side: 'left',
+                  offset: -1
                },
                closeByExternalOver: true,
                targetPart: true
@@ -116,7 +144,7 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
          //Переопределяю, чтобы элементы чистились в пикере
          _clearItems : function() {
             if (this._picker) {
-               CustomFilterMenu.superclass._clearItems.call(this, this._picker.getContainer());
+               CustomFilterMenu.superclass._clearItems.call(this, this._pickerListContainer);
             }
          }
       });

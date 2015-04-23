@@ -30,6 +30,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
           /**
            * @event onChangeHoveredItem При переводе курсора мыши на другую запись
+           * @remark
            * Событие срабатывает при смене записи под курсором мыши.
            * @param {$ws.proto.EventObject} eventObject Дескриптор события.
            * @param {Object} hoveredItem Объект
@@ -41,6 +42,20 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            * @param {Object} hoveredItem.size размеры контейнера элемента
            * @param {Number} hoveredItem.height высота
            * @param {Number} hoveredItem.width ширина
+           * @example
+           * <pre>
+           *     DataGrid.subscribe('onChangeHoveredItem', function(hoveredItem) {
+           *        var actions = DataGrid.getItemsActions(),
+           *        instances = actions.getItemsInstances();
+           *
+           *        for (var i in instances) {
+           *           if (instances.hasOwnProperty(i)) {
+           *              //Будем скрывать кнопку удаления для всех строк
+           *              instances[i][i === 'delete' ? 'show' : 'hide']();
+           *           }
+           *        }
+           *     });
+           * </pre>
            * @see itemsActions
            * @see setItemsActions
            * @see getItemsActions
@@ -62,13 +77,24 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                _options: {
                /**
                 * @cfg {String} Шаблон отображения каждого элемента коллекции
+                * @remark
                 * !Важно: опция обязательна к заполнению!
                 * @example
                 * <pre>
-                *     <div class="listViewItem" style="height: 30px;">
-                *        <div>{{=it.get("title")}}</div>
+                *     <div class="listViewItem" style="height: 30px;">\
+                *        {{=it.get("title")}}\
                 *     </div>
                 * </pre>
+                * @faq Почему нет флажков при включенной опции {@link multiselect}?
+                * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
+                * <pre>
+                *     <div class="listViewItem" style="height: 30px;">\
+                *        <span class="controls-ListView__itemCheckBox"></span>\
+                *        {{=it.get("title")}}\
+                *     </div>
+                * </pre>
+                * @link SBIS3.CONTROLS.ListViewDS#multiselect
+                * @see multiselect
                 */
                itemTemplate: '',
                /**
@@ -85,6 +111,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 */
                /**
                 * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок
+                * @remark
                 * Можно использовать для массовых операций.
                 * @example
                 * <pre>
@@ -135,21 +162,24 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                emptyHTML: null,
                /**
                 * @cfg {Function} Обработчик клика на элемент
+                * @example
+                * <option name="elemClickHandler">MyElemClickHandler</option>
                 * @see setElemClickHandler
                 */
                elemClickHandler: null,
                /**
                 * @cfg {Boolean} Разрешить выбор нескольких строк
+                * @remark
                 * Позволяет выбрать несколько строк для одновременного взаимодействия с ними.
-                * При значении данной опции false у связанной панели массовых операций не будет флага "Отметить все".
                 * @example
                 * <pre>
                 *    <option name="multiselect">false</option>
                 * </pre>
+                * @see itemTemplate
                 */
                multiselect: false,
                /**
-                * @cfg {Boolean} Подгружать ли данные по скроллу.
+                * @cfg {Boolean} Подгружать ли данные по скроллу
                 * @example
                 * <pre>
                 *    <option name="infiniteScroll">true</option>
@@ -162,7 +192,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _loadingIndicator: undefined,
             _hasScrollMore : true,
             _infiniteScrollOffset: null,
-            _nowLoading: false,
             _allowInfiniteScroll: true,
             _scrollIndicatorHeight: 32,
             _isLoadBeforeScrollAppears : true,
@@ -273,7 +302,11 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
          /**        
           * Установить что отображается при отсутствии записей.
-          * @param html содержимое блока
+          * @param html Содержимое блока.
+          * @example
+          * <pre>
+          *     dataGrid.setEmptyHTML('Нет записей');
+          * </pre>
           * @see emptyHTML
           */
          setEmptyHTML: function (html) {
@@ -319,6 +352,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).addClass('controls-ListView__item__selected');
             }
          },
+          /**
+           * Перезагружает набор записей представления данных с последующим обновлением отображения.
+           * @example
+           * <pre>
+           *    dataGrid.reload();
+           * </pre>
+           */
          reload: function(){
             if (this.isInfiniteScroll()) {
                this._loadingIndicator = undefined;
@@ -331,8 +371,15 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
 
           /**
-           * Метод установки/замены обработчика клика на элемент.
-           * @param method
+           * Метод установки/замены обработчика клика по строке.
+           * @param method Имя новой функции обработчика клика по строке.
+           * @example
+           * <pre>
+           *     var myElemClickHandler = function(id, data, target){
+           *        console.log(id, data, target)
+           *     }
+           *     dataGrid.setElemClickHandler(myElemClickHandler);
+           * </pre>
            * @see elemClickHandler
            */
          setElemClickHandler: function (method) {
@@ -391,8 +438,22 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
          },
          /**
-          * Геттер для получения операций над записью
-          * @returns {*}
+          * Метод получения операций над записью.
+          * @returns {Array} Массив операций над записью.
+          * @example
+          * <pre>
+          *     DataGrid.subscribe('onChangeHoveredItem', function(hoveredItem) {
+          *        var actions = DataGrid.getItemsActions(),
+          *        instances = actions.getItemsInstances();
+          *
+          *        for (var i in instances) {
+          *           if (instances.hasOwnProperty(i)) {
+          *              //Будем скрывать кнопку удаления для всех строк
+          *              instances[i][i === 'delete' ? 'show' : 'hide']();
+          *           }
+          *        }
+          *     });
+          * </pre>
           * @see itemsActions
           * @see setItemActions
           */
@@ -403,10 +464,21 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             return this._itemActionsGroup;
          },
          /**
-          * Устанавливает операции над записью
-          * Нужно передать массив обьектов
-          * @param {Array} items
-          * Объект формата {name: ..., icon: ..., name: ..., title: ..., onActivated: ..., linkText: ... , isMainOption: ...}
+          * Метод установки или замены кнопок операций над записью, заданных в опции {@link itemsActions}
+          * Нужно передать массив обьектов.
+          * @param {Array} items Объект формата {name: ..., icon: ..., title: ..., onActivated: ..., isMainOption: ...}
+          * @param {String} items.name Имя кнопки операции над записью.
+          * @param {String} items.icon Иконка кнопки.
+          * @param {String} items.title Текст на кнопке.
+          * @param {String} items.onActivated Имя функции, задабщей действие кнопки.
+          * @param {String} items.isMainOption На строке ли кнопка (или в меню).
+          * @example
+          * <pre>
+          *     dataGrid.setItemsActions();
+          * <pre>
+          * @see itemsActions
+          * @see getItemsActions
+          * @see getHoveredItem
           */
          setItemsAction: function(items) {
             this._options.itemsActions = items;
@@ -422,6 +494,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
             this._drawSelectedItems(this._options.selectedItems);
          },
+          /**
+           *
+           */
          destroy: function() {
             if (this.isInfiniteScroll()){
                if (this._infiniteScrollContainer.length) {
@@ -466,13 +541,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          _nextLoad: function(){
             var self = this, records;
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
-            //TODO Когда в core появится возможность останавливать Deferred убрать _nowLoading и отменять или дожидаться загрузки по готовности Deferred
-            // запоминать в query (Deferred.isReady()). Так же нужно будет исользовать для фильтрации
-            if (this._allowInfiniteScroll && this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._nowLoading) {
+            if (this._allowInfiniteScroll && this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._isLoading()) {
                this._addLoadingIndicator();
-               this._nowLoading = true;
-               this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset  + this._limit, this._limit).addCallback(function (dataSet) {
-                  self._nowLoading = false;
+               this._loader = this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset  + this._limit, this._limit).addCallback(function (dataSet) {
+                  self._loader = null;//_cancelLoading?
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
                      records = dataSet._getRecords();
@@ -485,6 +557,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                      self._hasScrollMore = false;
                      self._removeLoadingIndicator();
                   }
+               }).addErrback(function(error){
+                  //Здесь при .cancel приходит ошибка вида DeferredCanceledError
+                  return error;
                });
             }
          },
@@ -499,7 +574,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          _loadBeforeScrollAppears: function(){
             var elem = this._infiniteScrollContainer.length ? this._infiniteScrollContainer.get(0) : $('body').get(0);
             // Было: this._dataSet.getCount() <= parseInt(($(window).height() /  32 ) + 10 , 10
-            if (this._isLoadBeforeScrollAppears && !(elem.scrollHeight > $(window).height())){
+            if (this._isLoadBeforeScrollAppears && !(elem.scrollHeight > $(window).height() + this._scrollIndicatorHeight)){
                this._nextLoad();
             } else {
                this._isLoadBeforeScrollAppears = false;
@@ -517,7 +592,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @private
           */
          _removeLoadingIndicator: function(){
-            if( this._loadingIndicator && !this._nowLoading){
+            if( this._loadingIndicator && !this._loader){
                this._loadingIndicator.addClass('ws-hidden');
             }
          },
