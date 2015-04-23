@@ -90,6 +90,10 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function (MarkupTransformer) {
             if (targetContainer) {
                self._drawItem(record, targetContainer);
             }
+            /*TODO здесь ли это правильно делать?*/
+            var parKey = self.getParentKey(dataSet, record);
+            self._dataSet._indexTree[parKey] = self._dataSet._indexTree[parKey] || [];
+            self._dataSet._indexTree[parKey].push(record.getKey());
          });
       },
 

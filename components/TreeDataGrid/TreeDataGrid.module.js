@@ -2,9 +2,8 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
    'js!SBIS3.CONTROLS.DataGrid',
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'js!SBIS3.CONTROLS.TreeMixinDS',
-   'html!SBIS3.CONTROLS.TreeDataGrid/resources/rowTpl',
-   'html!SBIS3.CONTROLS.TreeDataGrid'
-], function(DataGrid, hierarchyMixin, TreeMixin, rowTpl, dotTplFn) {
+   'html!SBIS3.CONTROLS.TreeDataGrid/resources/rowTpl'
+], function(DataGrid, hierarchyMixin, TreeMixin, rowTpl) {
    'use strict';
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
@@ -28,7 +27,6 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
     */
 
    var TreeDataGrid = DataGrid.extend([hierarchyMixin, TreeMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
-      _dotTplFn : dotTplFn,
       $protected: {
          _rowTpl : rowTpl
       },
@@ -60,10 +58,15 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
                /**/
                self._drawItem(record, at);
             }
+            /*TODO здесь ли это правильно делать?*/
+            var parKey = self.getParentKey(dataSet, record);
+            self._dataSet._indexTree[parKey] = self._dataSet._indexTree[parKey] || [];
+            self._dataSet._indexTree[parKey].push(record.getKey());
          });
       },
       _nodeClosed : function(key) {
          var child = this._dataSet.getChildItems(key);
+         debugger;
          $('.controls-ListView__item[data-parent="' + key + '"]', this._container.get(0)).remove();
       },
       _addItemAttributes : function(container, item) {
