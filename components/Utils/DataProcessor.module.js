@@ -56,11 +56,13 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                'html': reportText,
                'Название': fileName,//idReport || Standart
                'fileDownloadToken': uniqueToken
-            }).addCallback(function(){
-               console.log('callback')
+            }).addErrback(function(error){
+                     console.log('errback');
+                     return error;
+                  }).addBoth(function(){
+               console.log('callback');
                self._destroyLoadIndicator();
             });
-            self._destroyLoadIndicator();
          });
       },
       _createLoadIndicator: function (message) {

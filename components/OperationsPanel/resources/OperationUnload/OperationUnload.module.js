@@ -29,8 +29,8 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             ]
          },
          _controlsId: {
-            'PDF' : true,
-            'Excel'  : true
+            'PDF' : 'Сохранить',
+            'Excel'  : 'СохранитьПоHTML'
          },
          _currentItem: undefined
       },
@@ -78,7 +78,8 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             cfg.xsl = this._options.xsl;
          }
          var p = new Unloader(cfg);
-         p.unload(this._currentItem, 'Сохранить', 'Test');
+         //TODO Где взять MethodName и FileName
+         p.unload(this._currentItem, this._controlsId[this._currentItem], 'Test');
       }
    });
 
