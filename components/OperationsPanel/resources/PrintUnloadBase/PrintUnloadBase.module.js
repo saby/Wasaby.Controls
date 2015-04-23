@@ -3,10 +3,8 @@
  */
 define('js!SBIS3.CONTROLS.PrintUnloadBase', [
    'js!SBIS3.CONTROLS.MenuLink',
-   'js!SBIS3.CORE.Dialog',
-   'js!SBIS3.CONTROLS.StaticSource',
-   'js!SBIS3.CONTROLS.ArrayStrategy'
-], function(MenuLink, Dialog, StaticSource, ArrayStrategy) {
+   'js!SBIS3.CORE.Dialog'
+], function(MenuLink, Dialog) {
 
    var PrintUnloadBase = MenuLink.extend({
 

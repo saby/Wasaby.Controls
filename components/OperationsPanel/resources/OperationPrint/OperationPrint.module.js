@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.OperationPrint', [
    'js!SBIS3.CONTROLS.PrintUnloadBase',
    'js!SBIS3.CORE.Dialog',
-   'js!SBIS3.CONTROLS.Printer'
+   'js!SBIS3.CONTROLS.Utils.DataProcessor'
 ], function(PrintUnloadBase, Dialog, Printer) {
 
    var OperationPrint = PrintUnloadBase.extend({
