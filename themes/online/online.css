@@ -1979,7 +1979,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:hover {
   color: #999999;
-  background: transparent;
+  background-color: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
@@ -1996,7 +1996,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:hover {
   color: inherit;
-  background: transparent;
+  background-color: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
   padding-left: 12px;
@@ -2246,11 +2246,11 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background: #ffffff !important;
 }
-.controls-Button__light .controls-ListView__item__selected .controls-DataGrid__td:first-child {
+.controls-ListView__item__selected .controls-DataGrid__td:first-child {
   background-image: url('img/rowSelect.png');
   background-position: left top;
   background-repeat: repeat-y;
 }
-.controls-Button__light.controls-ListView__multiselect .controls-DataGrid__td:first-child {
+.controls-ListView__multiselect .controls-DataGrid__td:first-child {
   background: none;
 }
