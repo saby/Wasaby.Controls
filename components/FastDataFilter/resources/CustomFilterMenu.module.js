@@ -39,6 +39,7 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
             }
             this._container.bind('mouseenter', this.showPicker.bind(this));
          },
+
          _initComplete : function() {
             CustomFilterMenu.superclass._initComplete.apply(this, arguments);
             //Проинициализируем пикер, чтобы был готов dataSet
@@ -60,13 +61,24 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
                var row = $(e.target).closest('.controls-CustomFilterMenu__item');
                if (row.length) {
                   self.setSelectedItems([row.data('id')]);
-                  self.hidePicker();
                }
             });
             this._pickerResetButton.mouseup(function() {
                self.setSelectedItems([]);
-               self.hidePicker();
             });
+            header.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
+            list.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, true));
+         },
+
+         setSelectedItems: function(items) {
+            CustomFilterMenu.superclass.setSelectedItems.apply(this, [items]);
+            this.hidePicker();
+         },
+
+         _pickerMouseLeaveHandler: function(toHeader, e) {
+            if(!$(e.toElement).closest('.controls-CustomFilterMenu__' + (toHeader ? 'header' : 'list')).length) {
+               this.hidePicker();
+            }
          },
 
          _dataLoadedCallback: function() {
@@ -87,7 +99,6 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
             var textValues = [],
                 len = id.length,
                 self = this,
-                resultText = '',
                 pickerContainer,
                 def;
 
@@ -108,11 +119,10 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
 
                def.addCallback(function(textValue) {
                   pickerContainer = self._picker.getContainer();
-                  resultText = textValue.join(', ');
 
                   pickerContainer.find('.controls-CustomFilterMenu__item__selected').removeClass('controls-CustomFilterMenu__item__selected');
                   pickerContainer.find('[data-id="' + id[0] + '"]').addClass('controls-CustomFilterMenu__item__selected');
-                  self._setCaptionText(resultText);
+                  self._setCaptionText(textValue.join(', '));
                });
                self._setResetButtonVisibility(id[0] === this._defaultId);
             }
@@ -135,7 +145,7 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
          },
 
          _getItemTemplate: function(item) {
-           return this._dotTplFnForItem.call(this, item);
+            return this._dotTplFnForItem.call(this, item);
          },
 
          _setPickerConfig: function () {

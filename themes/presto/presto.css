@@ -2164,7 +2164,7 @@ input[type="reset"]::-moz-focus-inner {
   z-index: 2;
 }
 .controls-CustomFilterMenu__picker .controls-CustomFilterMenu__header .controls-CustomFilterMenu__arrowIcon {
-  background: url('img/select-arrow.png') 0 -28px no-repeat;
+  background: url('img/select-arrow.png') 0 -26px no-repeat;
 }
 .controls-CustomFilterMenu__picker .controls-CustomFilterMenu__list {
   z-index: 1;

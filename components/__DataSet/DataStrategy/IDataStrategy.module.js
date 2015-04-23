@@ -56,8 +56,6 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
       setValue: function () {
          /*Method must be implemented*/
       },
-
-      getMetaData: function (data) {
        /**
         *
         * @param {Object} data
