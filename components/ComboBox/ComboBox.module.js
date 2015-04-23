@@ -333,7 +333,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
         * @param editable Возможность ручного ввода.
         * @example
         * <pre>
-        *
+        *     myComboBox.setEditable(false);
         * </pre>
         * @see isEditable
         * @see editable
@@ -347,7 +347,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
         * @returns {Boolean} Возможен ли ручной ввод.
         * @example
         * <pre>
-        *
+        *     myComboBox.isEditable();
         * </pre>
         * @see editable
         * @see setEditable
