@@ -474,7 +474,24 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @param {String} items.isMainOption На строке ли кнопка (или в меню).
           * @example
           * <pre>
-          *     dataGrid.setItemsActions();
+          *     dataGrid.setItemsActions([{
+          *        name: 'delete',
+          *        icon: 'sprite:icon-16 icon-Erase icon-error',
+          *        title: 'Удалить',
+          *        isMainAction: true,
+          *        onActivated: function(item) {
+          *           this.deleteRecords(item.data('id'));
+          *        }
+          *     },
+          *     {
+          *        name: 'addRecord',
+          *        icon: 'sprite:icon-16 icon-Add icon-error',
+          *        title: 'Добавить',
+          *        isMainAction: true,
+          *        onActivated: function(item) {
+          *           this.showRecordDialog();
+          *        }
+          *     }]
           * <pre>
           * @see itemsActions
           * @see getItemsActions
