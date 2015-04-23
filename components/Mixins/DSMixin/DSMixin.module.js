@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               */
             items: undefined,
             /**
-             * @cfg {DataSource} Набор исходных данных по которому строится отображение
+             * @cfg {DataSource} Набор исходных данных, по которому строится отображение
              * @see setDataSource
              */
             dataSource: undefined,

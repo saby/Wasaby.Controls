@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
        * @public
+       * @author Крайнов Дмитрий Олегович
        */
 
       var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
@@ -76,6 +77,18 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _itemActionsGroup: null,
                _options: {
                /**
+                * @faq Почему нет флажков при включенной опции {@link multiselect}?
+                * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
+                * <pre>
+                *     <div class="listViewItem" style="height: 30px;">\
+                *        <span class="controls-ListView__itemCheckBox"></span>\
+                *        {{=it.get("title")}}\
+                *     </div>
+                * </pre>
+                * @link SBIS3.CONTROLS.ListViewDS#itemTemplate
+                * @link SBIS3.CONTROLS.ListViewDS#multiselect
+                */
+               /**
                 * @cfg {String} Шаблон отображения каждого элемента коллекции
                 * @remark
                 * !Важно: опция обязательна к заполнению!
@@ -85,15 +98,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 *        {{=it.get("title")}}\
                 *     </div>
                 * </pre>
-                * @faq Почему нет флажков при включенной опции {@link multiselect}?
-                * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
-                * <pre>
-                *     <div class="listViewItem" style="height: 30px;">\
-                *        <span class="controls-ListView__itemCheckBox"></span>\
-                *        {{=it.get("title")}}\
-                *     </div>
-                * </pre>
-                * @link SBIS3.CONTROLS.ListViewDS#multiselect
                 * @see multiselect
                 */
                itemTemplate: '',
@@ -511,9 +515,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
             this._drawSelectedItems(this._options.selectedItems);
          },
-          /**
-           *
-           */
          destroy: function() {
             if (this.isInfiniteScroll()){
                if (this._infiniteScrollContainer.length) {
