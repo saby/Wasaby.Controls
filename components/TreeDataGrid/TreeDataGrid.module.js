@@ -58,10 +58,6 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
                /**/
                self._drawItem(record, at);
             }
-            /*TODO здесь ли это правильно делать?*/
-            var parKey = self.getParentKey(dataSet, record);
-            self._dataSet._indexTree[parKey] = self._dataSet._indexTree[parKey] || [];
-            self._dataSet._indexTree[parKey].push(record.getKey());
          });
       },
       _nodeClosed : function(key) {
