@@ -57,15 +57,16 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
                var parentKey = self.getParentKey(DataSet, record);
 
                if ((parentKey || null) === (curParent ? curParent.getKey() : null)) {
-                  parents.push({record : record, lvl : curLvl});
+                  parents.push({record: record, lvl: curLvl});
 
                   if (!indexTree.hasOwnProperty(parentKey)) {
                      indexTree[self.getParentKey(DataSet, record)] = [];
                   }
 
                   indexTree[self.getParentKey(DataSet, record)].push(record.getKey());
-
-                  iterateCallback.call(this, record, curParent, curLvl);
+                  if (typeof iterateCallback == 'function') {
+                     iterateCallback.call(this, record, curParent, curLvl);
+                  }
                }
 
             }, status);
@@ -80,6 +81,11 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             }
          } while (curParent);
          this._indexTree = indexTree;
+         DataSet.setIndexTree(indexTree);
+      },
+
+      refreshIndexTree: function () {
+         this.hierIterate(this._dataSet);
       },
 
       getParentKey: function (DataSet, record) {
@@ -117,6 +123,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          //TODO: проверка что уже загружали ветку и просто показать ее
          self._dataSource.query(filter).addCallback(function (dataSet) {
             self._nodeDataLoaded(key, dataSet);
+            self.refreshIndexTree();
          });
       },
 
@@ -141,12 +148,12 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          }
       },
 
-      _nodeDataLoaded : function(key, dataSet) {
-         this._dataSet= dataSet;
+      _nodeDataLoaded: function (key, dataSet) {
+         this._dataSet = dataSet;
          this._redraw()
       },
 
-      around : {
+      around: {
          _elemClickHandler: function (parentFnc, id, data, target) {
             if ($(target).hasClass('js-controls-TreeView__expand')) {
                var nodeID = $(target).closest('.controls-ListView__item').data('id');

@@ -352,11 +352,34 @@ define('js!SBIS3.CONTROLS.DataSet', [
       /**
        * Возвращает массив идентификаторов рекордов, являющихся потомками узла иерархии
        * @param parentId
+       * @param getFullBranch {Boolean} вернуть всю ветку
        * @returns {Array}
        */
-      getChildItems: function (parentId) {
+      getChildItems: function (parentId, getFullBranch) {
          parentId = parentId || null;
-         return this._indexTree[parentId];
+         if (this._indexTree.hasOwnProperty(parentId)) {
+            if (getFullBranch) {
+               var curParent = parentId,
+                  parents = [],
+                  childs = [];
+
+               do {
+                  $ws.helpers.forEach(this._indexTree[curParent], function (newParent) {
+                     parents.push(newParent);
+                     childs.push(newParent);
+                  });
+                  if (parents.length) {
+                     curParent = Array.remove(parents, 0);
+                  } else {
+                     curParent = null;
+                  }
+               } while (curParent);
+               return childs;
+            }
+            return this._indexTree[parentId];
+         } else {
+            return [];
+         }
       },
 
       hasChild: function (parentKey) {

@@ -58,16 +58,14 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
                /**/
                self._drawItem(record, at);
             }
-            /*TODO здесь ли это правильно делать?*/
-            var parKey = self.getParentKey(dataSet, record);
-            self._dataSet._indexTree[parKey] = self._dataSet._indexTree[parKey] || [];
-            self._dataSet._indexTree[parKey].push(record.getKey());
          });
       },
       _nodeClosed : function(key) {
-         var child = this._dataSet.getChildItems(key);
-         debugger;
-         $('.controls-ListView__item[data-parent="' + key + '"]', this._container.get(0)).remove();
+         var childKeys = this._dataSet.getChildItems(key, true);
+         for (var i = 0; i < childKeys.length; i++) {
+            $('.controls-ListView__item[data-id="' + childKeys[i] + '"]', this._container.get(0)).remove();
+         }
+
       },
       _addItemAttributes : function(container, item) {
          TreeDataGrid.superclass._addItemAttributes.call(this, container, item);
