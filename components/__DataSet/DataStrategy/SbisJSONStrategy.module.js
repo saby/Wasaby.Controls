@@ -141,6 +141,10 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
          return rawKey[0];
       },
 
+      destroyAt: function (data, at) {
+         data['d'].splice(at, 1);
+      },
+
       prepareFilterParam: function (filter) {
          // настройка объекта фильтрации для отправки на БЛ
          var filterParam = {

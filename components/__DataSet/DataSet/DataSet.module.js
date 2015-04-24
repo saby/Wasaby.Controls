@@ -56,7 +56,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       /**
-       * Удалить запись
+       * Удалить запись. Пометку запись как удаленную. Реальное удаление записи из источника будет выполнено только после вызова метода sync на датасорсе.
        * @param {Number | Array} key идентификатор записи или массив идентификаторов
        */
       removeRecord: function (key) {
@@ -73,6 +73,30 @@ define('js!SBIS3.CONTROLS.DataSet', [
             }
          } else {
             mark(key);
+         }
+      },
+
+      /**
+       * Удаляет запись из DataSet
+       * @param key
+       * @private
+       */
+      _removeReference: function (key) {
+
+         var remove = function (id) {
+            var index= Array.indexOf(this._indexId,id);
+            console.log(id, index)
+            this.getStrategy().destroyAt(this._rawData, index);
+            this._loadFromRaw();
+         };
+
+         if (key instanceof Array) {
+            var length = key.length;
+            for (var i = 0; i < length; i++) {
+               remove.call(this, key[i]);
+            }
+         } else {
+            remove.call(this, key);
          }
       },
 
@@ -192,7 +216,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
             if (toRemove.length) {
                //TODO: тут не надо их помечать как удаленными. а вырезать из DataSet
-               this.removeRecord(toRemove);
+               this._removeReference(toRemove);
+               //this.removeRecord(toRemove);
             }
          }
 
@@ -333,6 +358,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @param getFullBranch {Boolean} вернуть всю ветку
        * @returns {Array}
        */
+      //TODO: переименовать в getChildKeys
       getChildItems: function (parentId, getFullBranch) {
          parentId = parentId || null;
          if (this._indexTree.hasOwnProperty(parentId)) {

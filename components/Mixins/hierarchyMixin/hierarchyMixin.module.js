@@ -120,10 +120,12 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             filter = this._filter || {};
          filter[self._options.hierField] = key;
 
+         console.log('ds length '+self._dataSet.getCount());
          //TODO: проверка что уже загружали ветку и просто показать ее
          self._dataSource.query(filter).addCallback(function (dataSet) {
+            self._dataSet.merge(dataSet);
+            console.log('ds length '+self._dataSet.getCount());
             self._nodeDataLoaded(key, dataSet);
-            self.refreshIndexTree();
          });
       },
 
@@ -131,6 +133,9 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       after: {
          _drawItems: function () {
             this._drawOpenedPath();
+         },
+         _nodeDataLoaded: function(){
+            this.refreshIndexTree();
          }
       },
 
@@ -146,18 +151,19 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       },
 
       _nodeDataLoaded: function (key, dataSet) {
-         this._dataSet = dataSet;
-         this._redraw()
+         console.log('_nodeDataLoaded hierarhyMixin');
+         //this._dataSet = dataSet;
+         this._redraw();
       },
 
       around: {
          _elemClickHandler: function (parentFnc, id, data, target) {
             if ($(target).hasClass('js-controls-TreeView__expand')) {
                var nodeID = $(target).closest('.controls-ListView__item').data('id');
-               this.toggleNode(nodeID)
+               this.toggleNode(nodeID);
             }
             else {
-               parentFnc.call(this, id, data, target)
+               parentFnc.call(this, id, data, target);
             }
          }
       }

@@ -167,7 +167,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var records = [];
 
          this._dataSet.each(function (record) {
-            records.push(record)
+            records.push(record);
          });
 
          this._drawItems(records);

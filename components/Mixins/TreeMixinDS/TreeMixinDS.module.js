@@ -70,6 +70,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
       },
 
       _nodeDataLoaded : function(key, dataSet) {
+         console.log('_nodeDataLoaded TreeMixinDS');
          var
             self = this,
             itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
