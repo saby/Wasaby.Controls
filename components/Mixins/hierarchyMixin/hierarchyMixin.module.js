@@ -84,6 +84,21 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          DataSet.setIndexTree(indexTree);
       },
 
+      _redraw: function () {
+         this._clearItems();
+         var records = [];
+
+         /*TODO вынести середину в переопределяемый метод*/
+         var self = this;
+         this._dataSet.each(function (record) {
+            if (self.getParentKey(self._dataSet, record) == self._curRoot) {
+               records.push(record);
+            }
+         });
+
+         this._drawItems(records);
+      },
+
       refreshIndexTree: function () {
          this.hierIterate(this._dataSet);
       },
