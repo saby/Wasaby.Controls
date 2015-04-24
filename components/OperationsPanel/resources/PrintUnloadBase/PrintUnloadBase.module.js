@@ -44,49 +44,53 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          var numOfRecords = this._view._dataSet.getCount(),
             num = 0,
             self = this,
-            ds;
-         //Показать диалог выбора записей
-         new Dialog ({
-            template: 'js!SBIS3.CONTROLS.PrintMassSelectorDialog',
-            caption : title,
-            resizable: false,
-            handlers: {
-               onBeforeShow: function(){
-                  var dialog = this;
-                  //this.getLinkedContext().setValue('NumOfRecords', self._view._dataSet.getCount()); Хочется, чтобы было так
-                  //TODO Но пришлось сделать так:
-                  this.getChildControlByName('controls-PrintMassSelectorDialog').getContext().setValue('NumOfRecords', numOfRecords);
-                  this.getChildControlByName('controls-buttonPrint').subscribe('onActivated', function(){
-                     var selectedNumRecords;
-                     if(dialog.validate()){
-                        selectedNumRecords = dialog.getChildControlByName('controls-numberTextBox').getNumericValue();
-                        dialog.ok();
+            ds = this._view._dataSet;
+         if (this._view._hasNextPage(this._view._dataSet.getMetaData().more)) {
+            //Показать диалог выбора записей
+            new Dialog ({
+               template: 'js!SBIS3.CONTROLS.PrintMassSelectorDialog',
+               caption : title,
+               resizable: false,
+               handlers: {
+                  onBeforeShow: function(){
+                     var dialog = this;
+                     //this.getLinkedContext().setValue('NumOfRecords', self._view._dataSet.getCount()); Хочется, чтобы было так
+                     //TODO Но пришлось сделать так:
+                     this.getChildControlByName('controls-PrintMassSelectorDialog').getContext().setValue('NumOfRecords', numOfRecords);
+                     this.getChildControlByName('controls-buttonPrint').subscribe('onActivated', function(){
+                        var selectedNumRecords;
+                        if(dialog.validate()){
+                           selectedNumRecords = dialog.getChildControlByName('controls-numberTextBox').getNumericValue();
+                           dialog.ok();
 
-                        if(selectedNumRecords > numOfRecords){
-                           $ws.helpers.question('Операция займет продолжительное время. Провести операцию?', {}, self).addCallback(function(answer){
-                              if (answer) {
-                                 self._view._dataSource.query(self._view._filter, self._view._sorting, 0, selectedNumRecords).addCallback(function (dataSet) {
-                                    self.applyOperation(dataSet);
-                                 });
-                              }
-                           });
-                        } else {
-                           if (selectedNumRecords < numOfRecords) {
-                              num = 0;
-                              //Выберем selectedNumRecords записей из dataSet
-                              ds = self._view._dataSet.filter(function(){
-                                 return num++ < selectedNumRecords;
+                           if(selectedNumRecords > numOfRecords){
+                              $ws.helpers.question('Операция займет продолжительное время. Провести операцию?', {}, self).addCallback(function(answer){
+                                 if (answer) {
+                                    self._view._dataSource.query(self._view._filter, self._view._sorting, 0, selectedNumRecords).addCallback(function (dataSet) {
+                                       self.applyOperation(dataSet);
+                                    });
+                                 }
                               });
                            } else {
-                              ds =  self._view._dataSet;
+                              if (selectedNumRecords < numOfRecords) {
+                                 num = 0;
+                                 //Выберем selectedNumRecords записей из dataSet
+                                 ds = self._view._dataSet.filter(function(){
+                                    return num++ < selectedNumRecords;
+                                 });
+                              }
+                              self.applyOperation(ds);
                            }
-                           self.applyOperation(ds);
                         }
-                     }
-                  });
+                     });
+                  }
                }
-            }
-         });
+            });
+         }
+         else {
+            self.applyOperation(ds);
+         }
+
       },
       /**
        * Must be implemented
