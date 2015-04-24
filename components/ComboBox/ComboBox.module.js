@@ -208,7 +208,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._picker.getContainer().mouseup(function (e) {
             var row = $(e.target).closest('.js-controls-ComboBox__itemRow');
             if (row.length) {
-               self.setSelectedItem($(row).attr('data-id'));
+               self.setSelectedIndex($(row).attr('data-id'));
                self.hidePicker();
             }
          });
@@ -249,7 +249,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          /*описываем здесь поведение стрелок вверх и вниз*/
          /*
          var self = this,
-            current = self.getSelectedItem();
+            current = self.getSelectedIndex();
          if (e.which == 40 || e.which == 38) {
             e.preventDefault();
          }
@@ -261,7 +261,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             newItem = self.getItems().getPreviousItem(current);
          }
          if (newItem) {
-            self.setSelectedItem(this._items.getKey(newItem));
+            self.setSelectedIndex(this._items.getKey(newItem));
          }
          if (e.which == 13) {
             this.hidePicker();
@@ -360,14 +360,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
         * @param key
         */
       setValue: function (key) {
-         this.setSelectedItem(key);
+         this.setSelectedIndex(key);
       },
        /**
         * @noShow
         * @returns {*}
         */
       getValue: function () {
-         return this.getSelectedItem();
+         return this.getSelectedIndex();
       },
 
       _setEnabled: function (enabled) {

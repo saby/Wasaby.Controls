@@ -19,6 +19,8 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
              * <pre>
              *     <option name="selectedItem">3</option>
              * </pre>
+             * @see setSelectedIndex
+             * @see getSelectedIndex
              * @see setSelectedItem
              * @see getSelectedItem
              */
@@ -31,16 +33,34 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
       },
 
       /**
-       * Установить выбранный элемент.
+       * Метод-заглушка. Будет переделан на установку самого элемента, а не его id
+       * @param id
+       */
+      setSelectedItem: function(id) {
+         //TODO изменить логику на установку выбранного элемента
+         console.log('c 3.7.3 метод setSelectedItem перестанет работать. Используйте метод setSelectedIndex');
+         this.setSelectedIndex(id);
+      },
+
+      /**
+       * Метод-заглушка. Будет переделан на возвращение самого элемента, а не его id
+       */
+      getSelectedItem : function() {
+         //TODO изменить логику на возврат выбранного элемента
+         console.log('c 3.7.3 метод getSelectedItem перестанет работать. Используйте метод getSelectedIndex');
+         return this.getSelectedIndex();
+      },
+      /**
+       * Установить выбранный элемент по индексу
        * @param {String} id Идентификатор элемента, который нужно установить в качестве выбранного.
        * @example
        * <pre>
-       *     MyComboBox.setSelectedItem('3');
+       *     MyComboBox.setSelectedIndex('3');
        * </pre>
        * @see selectedItem
-       * @see getSelectedItem
+       * @see getSelectedIndex
        */
-      setSelectedItem : function(id) {
+      setSelectedIndex : function(id) {
          this._options.selectedItem = id;
          this.saveToContext('SelectedItem', id); //TODO: Перенести отсюда
          this._drawSelectedItem(id);
@@ -48,15 +68,15 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
       },
 
       /**
-       * Получить выбранный элемент.
+       * Получить индекс выбранного элемента
        * @example
        * <pre>
-       *     MyComboBox.getSelectedItem();
+       *     MyComboBox.getSelectedIndex();
        * </pre>
        * @see selectedItem
-       * @see setSelectedItem
+       * @see setSelectedIndex
        */
-      getSelectedItem : function() {
+      getSelectedIndex : function() {
          return this._options.selectedItem;
       },
 

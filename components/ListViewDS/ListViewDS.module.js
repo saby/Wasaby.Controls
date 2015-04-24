@@ -339,7 +339,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                }
             }
             else {
-               this.setSelectedItems([id]);
+               this.setSelectedIndexes([id]);
                if (this._options.elemClickHandler) {
                   this._options.elemClickHandler.call(this, id, data, target);
                }

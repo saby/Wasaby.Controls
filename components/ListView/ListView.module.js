@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _elemClickHandler : function(id, data) {
-            this.setSelectedItems([id]);
+            this.setSelectedIndexes([id]);
             if (this._options.elemClickHandler) {
                var parent = this.getParent();
                this._options.elemClickHandler.call(this, id, data);

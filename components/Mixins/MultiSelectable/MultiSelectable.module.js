@@ -54,10 +54,28 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       /**
-       * Устанавливает выбранные элементы
+       * Метод-заглушка. Будет переделан на установку самих элементов, а не их id
+       */
+      setSelectedItems: function(idArray) {
+         //TODO изменить логику на установку выбранных элементов
+         console.log('c 3.7.3 метод setSelectedItems перестанет работать. Используйте метод setSelectedIndexes');
+         this.setSelectedIndexes(idArray);
+      },
+
+      /**
+       * Метод-заглушка. Будет переделан на получение самих элементов, а не их id
+       */
+      getSelectedItems: function() {
+         //TODO изменить логику на получение выбранных элементов
+         console.log('c 3.7.3 метод getSelectedItems перестанет работать. Используйте метод getSelectedIndexes');
+         return this.getSelectedIndexes();
+      },
+
+      /**
+       * Устанавливает выбранные элементы по id
        * @param idArray
        */
-      setSelectedItems : function(idArray) {
+      setSelectedIndexes : function(idArray) {
          if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
             if (idArray.length) {
                if (this._options.multiselect) {
@@ -90,15 +108,15 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             this._dataSet.each(function(rec){
                items.push(rec.getKey())
             });
-            this.setSelectedItems(items);
+            this.setSelectedIndexes(items);
          }
 
       },
 
       /**
-       * Получает выбранные элементы
+       * Получает индексы выбранных элементов
        */
-      getSelectedItems : function() {
+      getSelectedIndexes : function() {
          return this._options.selectedItems;
       },
 
@@ -159,7 +177,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * Убрать все элементы из набора выбранных
        */
       removeItemsSelectionAll : function() {
-         this.setSelectedItems([]);
+         this.setSelectedIndexes([]);
       },
 
       /**

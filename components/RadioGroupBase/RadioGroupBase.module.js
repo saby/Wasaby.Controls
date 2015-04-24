@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBaseDS
       },
 
       _itemActivatedHandler : function(key) {
-         this.setSelectedItem(key);
+         this.setSelectedIndex(key);
       },
 
       _drawSelectedItem : function(id) {
