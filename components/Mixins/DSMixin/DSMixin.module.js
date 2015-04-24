@@ -304,6 +304,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var instances = this.getItemsInstances();
          return instances[id];
       },
+      //TODO Сделать публичным? И перенести в другое место
       _hasNextPage: function (hasMore) {
          //n - приходит true, false || общее количество записей в списочном методе
          return typeof (hasMore) !== 'boolean' ? hasMore > this._offset : !!hasMore;
