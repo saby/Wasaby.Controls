@@ -17,12 +17,16 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
              * @cfg {String} Идентификатор выбранного элемента
              * @example
              * <pre>
-             *     <option name="selectedItem">3</option>
+             *     <option name="selectedIndex">3</option>
              * </pre>
              * @see setSelectedIndex
              * @see getSelectedIndex
              * @see setSelectedItem
              * @see getSelectedItem
+             */
+            selectedIndex: null,
+            /**
+             * TODO Выбранный элемент
              */
             selectedItem : null
          }
@@ -30,6 +34,10 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
 
       $constructor: function() {
          this._publish('onSelectedItemChange');
+         if (this._options.selectedItem) {
+            console.log('c 3.7.3 свойство selectedItem перестанет работать. Используйте свойство selectedIndex');
+            this._options.selectedIndex = this._options.selectedItem;
+         }
       },
 
       /**
@@ -61,7 +69,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
        * @see getSelectedIndex
        */
       setSelectedIndex : function(id) {
-         this._options.selectedItem = id;
+         this._options.selectedIndex = id;
          this.saveToContext('SelectedItem', id); //TODO: Перенести отсюда
          this._drawSelectedItem(id);
          this._notifySelectedItem(id);
@@ -77,7 +85,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
        * @see setSelectedIndex
        */
       getSelectedIndex : function() {
-         return this._options.selectedItem;
+         return this._options.selectedIndex;
       },
 
       _drawSelectedItem : function() {
