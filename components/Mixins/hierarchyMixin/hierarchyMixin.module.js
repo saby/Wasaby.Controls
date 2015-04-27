@@ -2,12 +2,6 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
    // только работа с иерархией + методы для отображения
 
-   var treeExpandMap = {
-      'onlyFolders': 'Только узлы',
-      'items': 'Только листья',
-      'folders': 'С узлами и листьями'
-   };
-
    var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
       $protected: {
          _indexTree: null,
@@ -31,16 +25,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             /**
              * @cfg {String} Поле иерархии
              */
-            hierField: null,
+            hierField: null
 
-            /**
-             * Опция задаёт режим разворота.
-             * @variant '' Без разворота
-             * @variant items Только листья
-             * @variant onlyFolders Только узлы
-             * @variant folders С узлами и листьями
-             */
-            expand: ''
          }
       },
       $constructor: function () {
@@ -141,11 +127,6 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             self = this,
             filter = this._filter || {};
          filter[self._options.hierField] = key;
-
-         if (this._options.expand) {
-            filter['Разворот'] = 'С разворотом';
-            filter['ВидДерева'] = treeExpandMap[this._options.expand];
-         }
 
          //TODO: проверка что уже загружали ветку и просто показать ее
          self._dataSource.query(filter).addCallback(function (dataSet) {
