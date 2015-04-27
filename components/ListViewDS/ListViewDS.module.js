@@ -339,7 +339,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                }
             }
             else {
-               this.setSelectedItems([id]);
+               this.setSelectedIndexes([id]);
                if (this._options.elemClickHandler) {
                   this._options.elemClickHandler.call(this, id, data, target);
                }
@@ -513,7 +513,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (this.isInfiniteScroll()) {
                this._loadBeforeScrollAppears();
             }
-            this._drawSelectedItems(this._options.selectedItems);
+            this._drawSelectedItems(this._options.selectedIndexes);
          },
          destroy: function() {
             if (this.isInfiniteScroll()){
