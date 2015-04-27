@@ -8,8 +8,8 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
    /**
     * Контрол, отображающий данные имеющие иерархическую структуру. Позволяет отобразить данные в произвольном виде с возможностью открыть или закрыть отдельные узлы
     * @class SBIS3.CONTROLS.TreeViewDS
-    * @extends SBIS3.CONTROLS.ListView
-    * @mixes SBIS3.CONTROLS.TreeMixin
+    * @extends SBIS3.CONTROLS.ListViewDS
+    * @mixes SBIS3.CONTROLS.TreeMixinDS
     */
 
    var TreeViewDS = ListViewDS.extend([hierarchyMixin, TreeMixinDS], /** @lends SBIS3.CONTROLS.TreeViewDS.prototype*/ {
@@ -44,6 +44,7 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
       },
 
       _nodeDataLoaded : function(key, ds) {
+         console.log('_nodeDataLoaded TreeViewDS');
          TreeViewDS.superclass._nodeDataLoaded.apply(this, arguments);
          var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.controls-TreeView__childContainer', itemCont).first().css('display', 'block');
@@ -55,6 +56,6 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
       }
    });
 
-   return TreeViewDS
+   return TreeViewDS;
 
 });

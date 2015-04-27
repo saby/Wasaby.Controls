@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'
                      dotTpl = doT.template(this._options.tileTemplate)
                   }
                   else {
-                     dotTpl = doT.template('<div><img class="controls-MultiView__tileImg" src="{{=it.item.get(it.image)}}"/><div class="controls-MultiView__tileText">{{=it.item.get(it.field)}}</div></div>')
+                     dotTpl = doT.template('<div><div class="controls-ListView__itemCheckBox"></div><img class="controls-MultiView__tileImg" src="{{=it.item.get(it.image)}}"/><div class="controls-MultiView__tileText">{{=it.item.get(it.field)}}</div></div>')
                   }
                   resultTpl = dotTpl({item : item, field : this._options.descriptionField, image : this._options.imageField});
                   break;

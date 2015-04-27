@@ -1,4 +1,11 @@
 define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
+
+   var treeExpandMap = {
+      'onlyFolders': 'Только узлы',
+      'items': 'Только листья',
+      'folders': 'С узлами и листьями'
+   };
+
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
@@ -12,7 +19,16 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
              * @cfg {Boolean} При открытия узла закрывать другие
              * @noShow
              */
-            singleExpand: ''
+            singleExpand: '',
+
+            /**
+             * Опция задаёт режим разворота.
+             * @variant '' Без разворота
+             * @variant items Только листья
+             * @variant onlyFolders Только узлы
+             * @variant folders С узлами и листьями
+             */
+            expand: ''
 
          }
       },
@@ -69,7 +85,18 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
          }
       },
 
+      before: {
+         openNode: function () {
+            if (this._options.expand) {
+               this._filter = this._filter || {};
+               this._filter['Разворот'] = 'С разворотом';
+               this._filter['ВидДерева'] = treeExpandMap[this._options.expand];
+            }
+         }
+      },
+
       _nodeDataLoaded : function(key, dataSet) {
+         console.log('_nodeDataLoaded TreeMixinDS');
          var
             self = this,
             itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));

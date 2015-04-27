@@ -255,22 +255,26 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (target.length) {
                targetKey = target.data('id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
-                  this._hoveredItem = {
-                     key: targetKey,
-                     container: target,
-                     position: {
-                        top: target[0].offsetTop,
-                        left: target[0].offsetLeft
-                     },
-                     size: {
-                        height: target[0].offsetHeight,
-                        width: target[0].offsetWidth
-                     }
-                  };
+                  this._hoveredItem = this._getHoveredItemConfig(target);
                   this._notify('onChangeHoveredItem', this._hoveredItem);
                   this._onChangeHoveredItem(this._hoveredItem);
                }
             }
+         },
+
+         _getHoveredItemConfig: function(target){
+            return {
+               key: target.data('id'),
+               container: target,
+               position: {
+                  top: target[0].offsetTop,
+                  left: target[0].offsetLeft
+               },
+               size: {
+                  height: target[0].offsetHeight,
+                  width: target[0].offsetWidth
+               }
+            };
          },
          /**
           * Обрабатывает уведение мышки с элемента представления

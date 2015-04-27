@@ -1902,7 +1902,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   width: 16px;
   height: 16px;
-  margin: 0;
+  margin: 0 3px 0 0;
   border-width: 0;
   border-style: none;
   border-color: transparent;
@@ -1917,7 +1917,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TreeView__expand.controls-TreeView__expand__open {
   width: 16px;
   height: 16px;
-  margin: 0;
+  margin: 0 3px 0 0;
   border-width: 0;
   border-style: none;
   border-color: transparent;
@@ -2025,24 +2025,34 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MultiView .controls-MultiView__listItem:hover {
   background: #f3f3f3;
 }
+.controls-MultiView .controls-ListView__itemCheckBox {
+  position: absolute;
+  left: 3px;
+  top: 5px;
+}
 .controls-MultiView .controls-MultiView__tileItem {
-  width: 128px;
-  height: 128px;
-  float: left;
-  box-sizing: border-box;
-  margin: 0 16px 16px 0;
+  display: inline-block;
+  border: 1px solid #eeeeee;
+  min-width: 128px;
+  min-height: 128px;
   cursor: pointer;
-  text-align: center;
+  text-align: left;
+  margin: -4px 0 0 -1px;
 }
 .controls-MultiView .controls-MultiView__tileItem:hover {
   background: #f3f3f3;
 }
+.controls-MultiView .controls-MultiView__tileItem:hover .controls-MultiView__tileImg {
+  box-shadow: 1px 2px 4px #aaa;
+}
+.controls-MultiView .controls-MultiView__tileItem.controls-ListView__item__selected {
+  background: #E7F0F9;
+}
 .controls-MultiView .controls-MultiView__tileItem .controls-MultiView__tileImg {
-  width: 96px;
-  height: 96px;
+  margin: 10px 40px;
 }
 .controls-MultiView .controls-MultiView__tileItem .controls-MultiView__tileText {
-  margin-top: 7px;
+  margin: 7px;
 }
 .controls-operations-panel {
   height: 30px;
@@ -2126,6 +2136,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ItemActions {
   position: absolute;
   height: 20px;
+  width: 20px;
   background-color: #f3f3f3;
   right: 1px;
   box-shadow: -2px -2px 5px #f3f3f3;
@@ -2133,7 +2144,7 @@ input[type="reset"]::-moz-focus-inner {
   display: none;
 }
 .controls-ItemActions > * {
-  display: inline;
+  display: inline-block;
   cursor: pointer;
   margin: 0 4px;
   width: 16px;
