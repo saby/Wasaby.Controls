@@ -25,6 +25,11 @@ input[type="reset"]::-moz-focus-inner {
   color: #ffcc99;
   text-decoration: none;
 }
+.controls-Link.ws-disabled {
+  color: #eeeeee;
+  cursor: default;
+  text-decoration: none;
+}
 .controls-Link .controls-Link__icon {
   vertical-align: middle;
   margin: -2px 0 0;
@@ -1031,11 +1036,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuLink.controls-MenuLink__withoutMenu {
   padding: 0;
 }
-.controls-MenuLink:hover {
+.controls-MenuLink.ws-enabled:hover {
   color: #ffcc99;
   text-decoration: underline;
 }
-.controls-MenuLink:hover .controls-MenuLink__arrowDown {
+.controls-MenuLink.ws-enabled:hover .controls-MenuLink__arrowDown {
   background: transparent;
 }
 .controls-MenuLink .controls-MenuLink__arrowDown {
@@ -1944,7 +1949,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:hover {
   color: #aaaaaa;
-  background: transparent;
+  background-color: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
@@ -1961,7 +1966,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:hover {
   color: inherit;
-  background: transparent;
+  background-color: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
   padding-left: 10px;

@@ -25,6 +25,11 @@ input[type="reset"]::-moz-focus-inner {
   color: #ff7033;
   text-decoration: none;
 }
+.controls-Link.ws-disabled {
+  color: #cccccc;
+  cursor: default;
+  text-decoration: none;
+}
 .controls-Link .controls-Link__icon {
   vertical-align: middle;
   margin: -2px 0 0;
@@ -1031,11 +1036,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuLink.controls-MenuLink__withoutMenu {
   padding: 0;
 }
-.controls-MenuLink:hover {
+.controls-MenuLink.ws-enabled:hover {
   color: #ff7033;
   text-decoration: underline;
 }
-.controls-MenuLink:hover .controls-MenuLink__arrowDown {
+.controls-MenuLink.ws-enabled:hover .controls-MenuLink__arrowDown {
   background: transparent url('img/MenuButton-arrowDown.png') 0 6px;
 }
 .controls-MenuLink .controls-MenuLink__arrowDown {
@@ -1974,7 +1979,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:hover {
   color: #999999;
-  background: transparent;
+  background-color: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
@@ -1991,7 +1996,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:hover {
   color: inherit;
-  background: transparent;
+  background-color: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
   padding-left: 12px;
@@ -2010,6 +2015,34 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__td__checkBox .controls-ListView__itemCheckBox {
   margin: 0;
+}
+.controls-MultiView .controls-MultiView__listItem {
+  height: 16px;
+  line-height: 16px;
+  padding: 6px 6px;
+  cursor: pointer;
+}
+.controls-MultiView .controls-MultiView__listItem:hover {
+  background: #f3f3f3;
+}
+.controls-MultiView .controls-MultiView__tileItem {
+  width: 128px;
+  height: 128px;
+  float: left;
+  box-sizing: border-box;
+  margin: 0 16px 16px 0;
+  cursor: pointer;
+  text-align: center;
+}
+.controls-MultiView .controls-MultiView__tileItem:hover {
+  background: #f3f3f3;
+}
+.controls-MultiView .controls-MultiView__tileItem .controls-MultiView__tileImg {
+  width: 96px;
+  height: 96px;
+}
+.controls-MultiView .controls-MultiView__tileItem .controls-MultiView__tileText {
+  margin-top: 7px;
 }
 .controls-operations-panel {
   height: 30px;
@@ -2213,11 +2246,11 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background: #ffffff !important;
 }
-.controls-Button__light .controls-ListView__item__selected .controls-DataGrid__td:first-child {
+.controls-ListView__item__selected .controls-DataGrid__td:first-child {
   background-image: url('img/rowSelect.png');
   background-position: left top;
   background-repeat: repeat-y;
 }
-.controls-Button__light.controls-ListView__multiselect .controls-DataGrid__td:first-child {
+.controls-ListView__multiselect .controls-DataGrid__td:first-child {
   background: none;
 }
