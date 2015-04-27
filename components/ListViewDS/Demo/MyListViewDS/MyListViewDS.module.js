@@ -1,4 +1,4 @@
-define('js!SBIS3.Demo.Control.MyListViewDS', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.Demo.Control.MyListViewDS', 'css!SBIS3.Demo.Control.MyListViewDS', 'js!SBIS3.CONTROLS.ListViewDS', 'js!SBIS3.CONTROLS.TreeView', 'js!SBIS3.Demo.Control.MyListViewDS'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.Demo.Control.MyListViewDS', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.Demo.Control.MyListViewDS', 'css!SBIS3.Demo.Control.MyListViewDS', 'js!SBIS3.CONTROLS.ListViewDS', 'js!SBIS3.CONTROLS.TreeView'], function(CompoundControl, dotTplFn) {
    /**
     * SBIS3.Demo.Control.MyListViewDS
     * @class SBIS3.Demo.Control.MyListViewDS
