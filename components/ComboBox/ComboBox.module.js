@@ -355,20 +355,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       isEditable: function () {
          return this._options.editable;
       },
-       /**
-        * @noShow
-        * @param key
-        */
-      setValue: function (key) {
-         this.setSelectedIndex(key);
-      },
-       /**
-        * @noShow
-        * @returns {*}
-        */
-      getValue: function () {
-         return this.getSelectedIndex();
-      },
 
       _setEnabled: function (enabled) {
          TextBox.superclass._setEnabled.call(this, enabled);
