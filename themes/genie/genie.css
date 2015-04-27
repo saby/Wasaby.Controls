@@ -2161,7 +2161,7 @@ input[type="reset"]::-moz-focus-inner {
   display: none;
 }
 .controls-ItemActions > * {
-  display: inline;
+  display: inline-block;
   cursor: pointer;
   margin: 0 4px;
   width: 16px;
@@ -2179,6 +2179,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ItemActions > *.controls-ItemActions__menu-button:hover {
   background: url('img/ItemActions-menu.png') no-repeat 0 -20px;
+}
+.controls-ItemActions > .controls-Link {
+  display: inline;
 }
 .controls-ItemActions__menu-container .controls-MenuItem {
   padding-right: 24px;
