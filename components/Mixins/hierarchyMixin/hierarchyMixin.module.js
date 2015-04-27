@@ -2,10 +2,15 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
    // только работа с иерархией + методы для отображения
 
+   var treeExpandMap = {
+      'onlyFolders': 'Только узлы',
+      'items': 'Только листья',
+      'folders': 'С узлами и листьями'
+   };
+
    var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
       $protected: {
          _indexTree: null,
-         _openedPath: [],
          _options: {
             /**
              * @cfg {String} Идентификатор узла, относительно которого надо отображать данные
@@ -26,17 +31,27 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             /**
              * @cfg {String} Поле иерархии
              */
-            hierField: null
+            hierField: null,
+
+            /**
+             * Опция задаёт режим разворота.
+             * @variant '' Без разворота
+             * @variant items Только листья
+             * @variant onlyFolders Только узлы
+             * @variant folders С узлами и листьями
+             */
+            //Будут ли загружаемые данные раскрытыми 'С разворотом' : 'Без разворота'
+            expand: ''
          }
       },
       $constructor: function () {
-         this._checkOptions();
-      },
 
-      _checkOptions: function () {
-         if (this._options.openedPath.length) {
-            this._openedPath = this._options.openedPath;
+         var filter = {};
+         if (this._options.expand) {
+            filter['Разворот'] = 'С разворотом';
+            filter['ВидДерева'] = treeExpandMap[this._options.expand];
          }
+
       },
 
       setHierField: function (hierField) {
@@ -135,11 +150,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             filter = this._filter || {};
          filter[self._options.hierField] = key;
 
-         console.log('ds length '+self._dataSet.getCount());
          //TODO: проверка что уже загружали ветку и просто показать ее
          self._dataSource.query(filter).addCallback(function (dataSet) {
-            self._dataSet.merge(dataSet);
-            console.log('ds length '+self._dataSet.getCount());
             self._nodeDataLoaded(key, dataSet);
          });
       },
@@ -149,7 +161,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          _drawItems: function () {
             this._drawOpenedPath();
          },
-         _nodeDataLoaded: function(){
+         _nodeDataLoaded: function () {
             this.refreshIndexTree();
          }
       },
@@ -159,15 +171,15 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             //TODO: Открыть для всех
          }
          else {
-            for (var i = 0; i < this._openedPath.length; i++) {
-               this.openNode(this._openedPath[i]);
+            for (var i = 0; i < this._options.openedPath.length; i++) {
+               this.openNode(this._options.openedPath[i]);
             }
          }
       },
 
       _nodeDataLoaded: function (key, dataSet) {
          console.log('_nodeDataLoaded hierarhyMixin');
-         //this._dataSet = dataSet;
+         this._dataSet = dataSet;
          this._redraw();
       },
 

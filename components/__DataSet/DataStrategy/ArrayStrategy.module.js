@@ -123,15 +123,6 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
          }
       },
 
-      /**
-       * Удалить элемент на позиции
-       * @param data
-       * @param at
-       */
-      destroyAt: function (data, at) {
-         data.splice(at, 1);
-      },
-
       //TODO пустышка
       getMetaData: function (data) {
          return {

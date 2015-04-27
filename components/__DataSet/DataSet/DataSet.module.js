@@ -77,30 +77,6 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       /**
-       * Удаляет запись из DataSet
-       * @param key
-       * @private
-       */
-      _removeReference: function (key) {
-
-         var remove = function (id) {
-            var index= Array.indexOf(this._indexId,id);
-            console.log(id, index)
-            this.getStrategy().destroyAt(this._rawData, index);
-            this._loadFromRaw();
-         };
-
-         if (key instanceof Array) {
-            var length = key.length;
-            for (var i = 0; i < length; i++) {
-               remove.call(this, key[i]);
-            }
-         } else {
-            remove.call(this, key);
-         }
-      },
-
-      /**
        * Заполнение массива исходных данных
        * @param {Array} data
        * @private
@@ -216,7 +192,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
             if (toRemove.length) {
                //TODO: тут не надо их помечать как удаленными. а вырезать из DataSet
-               this._removeReference(toRemove);
+               //this._removeReference(toRemove);
                //this.removeRecord(toRemove);
             }
          }
@@ -263,8 +239,9 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @param dataSetMergeFrom Датасет, из которого будет происходить мерж
        */
       // если будем добавлять больше одной записи, то нужно предваритьно составить из них датасет
-      merge: function (dataSetMergeFrom, options) {
-         this._setRecords(dataSetMergeFrom._getRecords(), options);
+      //FixMe: только добавляет записи. старые так и остнаутся в наборе
+      merge: function (dataSetMergeFrom) {
+         this._addRecords(dataSetMergeFrom._getRecords());
       },
 
       /**
