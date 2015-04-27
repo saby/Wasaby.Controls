@@ -40,18 +40,10 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
              * @variant onlyFolders Только узлы
              * @variant folders С узлами и листьями
              */
-            //Будут ли загружаемые данные раскрытыми 'С разворотом' : 'Без разворота'
             expand: ''
          }
       },
       $constructor: function () {
-
-         var filter = {};
-         if (this._options.expand) {
-            filter['Разворот'] = 'С разворотом';
-            filter['ВидДерева'] = treeExpandMap[this._options.expand];
-         }
-
       },
 
       setHierField: function (hierField) {
@@ -149,6 +141,11 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             self = this,
             filter = this._filter || {};
          filter[self._options.hierField] = key;
+
+         if (this._options.expand) {
+            filter['Разворот'] = 'С разворотом';
+            filter['ВидДерева'] = treeExpandMap[this._options.expand];
+         }
 
          //TODO: проверка что уже загружали ветку и просто показать ее
          self._dataSource.query(filter).addCallback(function (dataSet) {
