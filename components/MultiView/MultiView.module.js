@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.MultiView', ['js!SBIS3.CONTROLS.DataGrid', 'js!SBIS3.C
             key: target.data('id'),
             container: target,
             position: {
-               top: target[0].offsetTop + 30,
+               top: target[0].offsetTop + 10,
                left: target[0].offsetLeft - 5
             },
             size: {
