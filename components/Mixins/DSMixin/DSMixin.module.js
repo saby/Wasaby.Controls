@@ -269,7 +269,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                if (targetContainer) {
                   this._drawItem(records[i], targetContainer, curAt);
                }
-               if (curAt && cuAt.at) {
+               if (curAt && typeof curAt.at != 'undefined') {
                   curAt.at++;
                }
             }
