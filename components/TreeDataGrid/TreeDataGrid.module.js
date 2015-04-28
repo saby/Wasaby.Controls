@@ -35,7 +35,6 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
       },
 
       _nodeDataLoaded : function(key, dataSet) {
-         console.log('_nodeDataLoaded TreeDataGrid');
          /*TODO Копипаст с TreeView*/
          var
             self = this,
