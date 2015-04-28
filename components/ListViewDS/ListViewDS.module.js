@@ -210,7 +210,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             this._container.mouseup(function (e) {
                if (e.which == 1) {
                   var $target = $(e.target),
-                      target = $target.hasClass('controls-ListView__item') ? e.target : $target.closest('.controls-ListView__item');
+                      target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
                   if (target.length) {
                      var id = target.data('id');
                      self._elemClickHandler(id, self._dataSet.getRecordByKey(id), e.target);
