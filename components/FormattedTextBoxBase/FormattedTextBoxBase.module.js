@@ -20,15 +20,16 @@ define(
          var buffer = container.nodeValue.split('');
          buffer[position] = character;
          container.nodeValue = buffer.join('');
+         this._updateText();
       },
       /**
        * Вычисляет котейнет и позицир для установки курсора в начало
        * @param {Object} positionObject
        * @private
        */
-      _getHomePosition = function (positionObject) {
+      _setHomePosition = function (positionObject) {
          var group = this.formatModel.model[0];
-         positionObject.container = _getContainerByIndex.call(this, (group  &&  group.type == 'group') ? 0 : 1);
+         positionObject.container = _getContainerByIndex.call(this, (group  &&  group.isGroup) ? 0 : 1);
          positionObject.position = 0;
       },
 
@@ -37,10 +38,10 @@ define(
        * @param {Object} positionObject
        * @private
        */
-      _getEndPosition = function (positionObject) {
+      _setEndPosition = function (positionObject) {
          var groupInd = this.formatModel.model.length - 1;
          var group = this.formatModel.model[groupInd];
-         positionObject.container = _getContainerByIndex.call(this, (group  &&  group.type == 'group') ? groupInd : --groupInd);
+         positionObject.container = _getContainerByIndex.call(this, (group  &&  group.isGroup) ? groupInd : --groupInd);
          positionObject.position = this.formatModel.model[groupInd].mask.length;
       },
       _getPreviousPosition = function (positionObject) {
@@ -114,18 +115,7 @@ define(
       _getContainerByIndex = function(idx) {
          return this._inputField.get(0).childNodes[parseInt(idx, 10)].childNodes[0];
       },
-      /**
-       * Возвращает чистую строку по маске
-       * Изначально отображаемый текст в созданном контролле, то есть, по сути, маска, где каждый
-       * управляющий символ заменён на символ-заполнитель
-       * Пример: если маска контролла DatePicker имеет вид 'DD:MM:YYYY', то чистая маска будет иметь вид '__:__:____',
-       * если символом-заполнителем является знак нижней черты.
-       * @returns {string}
-       * @private
-       */
-      _getClearMask = function() {
-         return this.formatModel.getStrMask(this._maskReplacer);
-      },
+
       /**
        * Получить положение курсора
        * @param {Boolean} position Позиция: true — начала, false — конца
@@ -151,7 +141,7 @@ define(
             // [Number] индекс контейнера <em> во wrapper'е
             buf = $(container.parentNode).index(),
             // [Number] является ли контейнер разделителем (1) или вводимым блоком (0)
-            isSepCont = (buf + this._isSeparatorContainerFirst) % 2,
+            isSepCont = (buf + !this.formatModel.model[0].isGroup) % 2,
             // [Number] если контейнер - разделитель, то возвращается положение следующего контейнера
             cnt = isSepCont ? buf + 1 : buf,
             // [Number] если контейнер - разделитель, то возвращается начальная позиция курсора в контейнере
@@ -211,14 +201,14 @@ define(
             }
             if (groupCharactersRegExp.test(innerChar)) {
                if (separator.length) {
-                  this.addSeparator(separator.join(''));
+                  this._addItem(false, separator.join(''));
                   separator = [];
                }
                group.push(maskChar);
                groupInner.push(innerChar);
             } else {
                if (group.length) {
-                  this.addGroup(group.join(''), groupInner.join(''));
+                  this._addItem(true, group.join(''), groupInner.join(''));
                   group = [];
                   groupInner = [];
                }
@@ -226,56 +216,39 @@ define(
             }
          }
          if (group.length) {
-            this.addGroup(group.join(''), groupInner.join(''));
+            this._addItem(true, group.join(''), groupInner.join(''));
          }
          if (separator.length) {
-            this.addSeparator(separator.join(''));
+            this._addItem(false, separator.join(''));
          }
          return this;
       },
+
       /**
-       * Добавить группу символов в модель
-       * @param groupMask подмаска группы, например HH:MM
-       * @param innerMask внутренняя маска, например dd:dd
+       * Добавляет группу или разделитель в модель
+       * @param isGroup true - элемент является группой, false - разделитель
+       * @param mask первичная маска, например HH
+       * @param innerMask внутренняя маска, например dd. Используем только для групп
+       * @returns {boolean}
+       * @private
        */
-      addGroup: function(groupMask, innerMask) {
-         if ( !groupMask) {
-            return this;
+      _addItem: function(isGroup, mask, innerMask) {
+         if ( !mask) {
+            return false;
          }
-         var group = {
-            type: 'group',
-            mask: groupMask,
-            innerMask: innerMask,
+         if ( ! this.model) {
+            this.model = [];
+         }
+         var item = {
+            isGroup: isGroup,
+            mask: mask,
+            innerMask: (isGroup) ? innerMask : mask,
             //символы хранятся в массиве, чтобы позволить вводить символы произвольно и разделять где символ не введён
-            value: [],
-            getReplaced: function(replaceChar) {
-               return this.innerMask.replace(/./ig, replaceChar);
-            }
+            value: (isGroup) ? [] : mask.split('')
          };
-         if ( ! this.model) {
-            this.model = [];
-         }
-         this.model.push(group);
-         return this;
-      },
-      /**
-       * Добавить разделитель в модель
-       * @param strSeparator текст разделителя, например ':'
-       */
-      addSeparator: function(strSeparator) {
-         //console.log('addSeparator');
-         if ( !strSeparator) {
-            return this;
-         }
-         var separator = {
-            type: 'separator',
-            innerMask: strSeparator
-         };
-         if ( ! this.model) {
-            this.model = [];
-         }
-         this.model.push(separator);
-         return this;
+
+         this.model.push(item);
+         return true;
       },
       /**
        * Маска с управляющими символами строкой, например 'Lddd=xx'
@@ -284,16 +257,9 @@ define(
        * @returns {string}
        */
       getStrMask: function(clearChar) {
-         var strMask = '',
-             i;
-         if (clearChar) {
-            for (i = 0; i < this.model.length; i++) {
-               strMask += (this.model[i].type == 'group') ? this.model[i].getReplaced(clearChar) : this.model[i].innerMask;
-            }
-         } else {
-            for (i = 0; i < this.model.length; i++) {
-               strMask += this.model[i].innerMask;
-            }
+         var strMask = '';
+         for (var i = 0; i < this.model.length; i++) {
+            strMask += (clearChar  &&  this.model[i].isGroup) ? this.model[i].innerMask.replace(/./ig, clearChar) : this.model[i].innerMask;
          }
 
          return strMask;
@@ -310,7 +276,7 @@ define(
             throw new Error('setCursor. Не задана модель');
          }
          group = this.model[groupNum];
-         if ( !group  ||  group.type != 'group') {
+         if ( !group  ||  !group.isGroup) {
             return false;
          }
          if (position > group.mask.length) {
@@ -331,19 +297,23 @@ define(
       charIsFitToGroup: function (group, position, character) {
          var maskChar,
             regExpChar;
-         if ( !group  ||  position > group.mask.length) {
+         if ( !group  ||  position > group.mask.length  ||  character === '') {
             return false;
          }
          //маска для позиции
          maskChar = group.innerMask.charAt(position);
-         //получить регулярное выражение для проверки
-         regExpChar = new RegExp(_charToRegExp(maskChar));
-         //соответствует ли символ регулярному выражению
-         if (!regExpChar.test(character)) {
-            return false;
+         if (group.isGroup) {
+            //получить регулярное выражение для проверки
+            regExpChar = new RegExp(_charToRegExp(maskChar));
+            //соответствует ли символ регулярному выражению
+            if (!regExpChar.test(character)) {
+               return false;
+            }
+            character = (maskChar == 'L') ? character.toUpperCase() : character;
+            character = (maskChar == 'l') ? character.toLowerCase() : character;
+         } else {
+            character = (character == maskChar) ? character : false;
          }
-         character = (maskChar == 'L') ? character.toUpperCase() : character;
-         character = (maskChar == 'l') ? character.toLowerCase() : character;
 
          return character;
       },
@@ -353,7 +323,7 @@ define(
        * @param position позиция в группе
        * @param character вставляемый символ
        * @param isClear если true, то символ подставляется без учёта маски
-       * @returns если втавка прошла успешно, возвращает объект с информацией о вставке
+       * @returns {object|boolean} если втавка прошла успешно, возвращает объект с информацией о вставке
        */
       insertCharacter: function(groupNum, position, character, isClear) {
          var group,
@@ -363,7 +333,7 @@ define(
             throw new Error('insertCharacter. Не задана модель');
          }
          group = this.model[groupNum];
-         if ( !group  ||  group.type != 'group') {
+         if ( !group  ||  !group.isGroup) {
             return false;
          }
          //вставка символа в конце группы
@@ -414,44 +384,32 @@ define(
        * @returns {Array|boolean} если текст проходит проверку, вернёт массив обработанных значений, если нет - false
        */
       textIsFitToModel: function(text, clearChar) {
-         var strMask = this.getStrMask(),
+         var
             /*массив со значениями, нужен чтобы не записывать значения до полной проверки соответствия текста маске */
             tempModelValues = [],
             curIndex = 0,
             group,
             value,
             character;
-         if (strMask.length != text.length) {
-            return false;
-         }
          for (var i = 0; i < this.model.length; i++) {
             group = this.model[i];
-            if (group.type == 'group') {
-               value = [];
-               for (var j = 0; j < group.innerMask.length; j++) {
-                  character = text.charAt(curIndex);
-                  if (character == clearChar) {
-                     value.push(undefined);
-                  } else {
-                     character = this.charIsFitToGroup(group, j, character);
-                     if (character) {
-                        value.push(character);
-                     } else {
-                        return false;
-                     }
-                  }
-                  curIndex++;
-               }
-               tempModelValues.push(value);
-            } else {
-               //разделитель
-               if (group.innerMask != text.substring(curIndex, curIndex + group.innerMask.length)) {
+            value = [];
+            for (var j = 0; j < group.innerMask.length; j++) {
+               character = text.charAt(curIndex);
+               character = (character == clearChar) ? undefined : this.charIsFitToGroup(group, j, character);
+               if (character || (typeof character === "undefined")) {
+                  value.push(character);
+               } else {
                   return false;
                }
-               tempModelValues.push(group.innerMask);
-               curIndex += group.innerMask.length;
+               curIndex++;
             }
+            tempModelValues.push(value);
          }
+         if (curIndex != text.length) {
+            return false; //текст длиннее маски
+         }
+
          return tempModelValues;
       },
       /**
@@ -470,7 +428,7 @@ define(
          //записываем проверенные данные
          for (var i = 0; i < this.model.length; i++) {
             group = this.model[i];
-            if (group.type == 'group') {
+            if (group.isGroup) {
                group.value = tempModelValues[i];
             }
          }
@@ -488,7 +446,7 @@ define(
              group;
          for (var i = 0; i < this.model.length; i++) {
             group = this.model[i];
-            if (group.type == 'group') {
+            if (group.isGroup) {
                for (var j = 0; j < group.mask.length; j++) {
                   text += (typeof group.value[j] === "undefined") ? clearChar : group.value[j];
                }
@@ -511,14 +469,6 @@ define(
 
    var FormattedTextBoxBase = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.FormattedTextBoxBase.prototype */ {
       $protected: {
-         /**
-          * Изначальная маска (либо задается в опциях при создании, либо берется по умолчанию)
-          */
-         _primalMask: '',
-         /**
-          * Логическое, определяющее, является ли первый контейнер контейнером-разделителем
-          */
-         _isSeparatorContainerFirst: false,
          /**
           * Html-элемент, в который будет добавлена динамически создаваемая, в зависимости от маски, html-разметка
           */
@@ -562,13 +512,6 @@ define(
             'x': 'x'
          },
          /**
-          * Строка всех допустимых управляющих символов, создается автоматически из набора _controlCharactersSet,
-          * используется в регулярных выражениях.
-          * Пример: для DatePicker будет:
-          *       _controlCharacters: 'DMYHISU'
-          */
-         _controlCharacters: '',
-         /**
           * Опции создаваемого контролла
           */
          _options: {
@@ -595,17 +538,11 @@ define(
          var
             inputValue,
             self = this,
-            clearMask,
             key;
          this._inputField = $('.js-controls-FormattedTextBox__field', this.getContainer().get(0));
-         this._primalMask = this._getMask();
          this.formatModel = new FormatModel();
          this.formatModel.setControlCharactersSet(this._controlCharactersSet);
          this.formatModel.setMask(this._options.mask);//lllxx=ddd:ddd,LLlll
-         clearMask = _getClearMask.call(this);
-         // [boolean] Получить логическое, определяющее, является ли первый контейнер разделителем или вводимым блоком.
-         // true: первый контейнер - разделитель, false: вводимый блок
-         this._isSeparatorContainerFirst = clearMask[0] != this._maskReplacer;
          this._inputField.html(this._getHtmlMask());
          if (this._options.text) {
             this.setText(this._options.text);
@@ -653,6 +590,7 @@ define(
          });
          this._inputField.bind('paste', function() {
             self._pasteProcessing++;
+            //TODO перенести в TextBoxBase и вместо этого вызвать метод для вставки
             window.setTimeout(function() {
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
@@ -668,6 +606,15 @@ define(
       },
 
       /**
+       * Обновляяет значение this._options.text
+       * null если есть хотя бы одно незаполненное место (плэйсхолдер)
+       * @protected
+       */
+      _updateText:function() {
+         this._options.text = this.formatModel.getStrMask(this._maskReplacer);
+      },
+
+      /**
        * Получить текущую используемую маску.
        * @private
        */
@@ -675,32 +622,39 @@ define(
          /*Method must be implemented*/
       },
 
+      _getTemplate: function() {
+         return   '{{~it :value:index}}' +
+                  '<em class="controls-FormattedTextBox__field-symbol{{? value.isGroup }} controls-FormattedTextBox__field-placeholder{{?}}">{{=value.text}}</em>'+
+                  '{{~}}';
+      },
       /**
        * Возвращает html-разметку для заданной маски
        * @returns {string} html-разметка
        * @private
        */
       _getHtmlMask: function() {
-         var htmlMask = '',
-             value;
+         var
+            value,
+            dotTpl,
+            resultTpl;
+
          if ( !this.formatModel || !this.formatModel.model) {
             return '';
          }
          var model = this.formatModel.model;
+         var items = [];
          for (var i = 0; i < model.length; i++) {
-            htmlMask += '<em class="controls-FormattedTextBox__field-symbol';
-            if (model[i].type == 'group') {
-               htmlMask += ' controls-FormattedTextBox__field-placeholder';
-               value = '';
-               for (var j = 0; j < model[i].mask.length; j++) {
-                  value += (typeof model[i].value[j] === "undefined") ? this._maskReplacer : model[i].value[j];
-               }
-            } else {
-               value = model[i].innerMask;
+            value = '';
+            for (var j = 0; j < model[i].mask.length; j++) {
+               value += (typeof model[i].value[j] === "undefined") ? this._maskReplacer : model[i].value[j];
             }
-            htmlMask += '">' + value + '</em>';
+            items.push({isGroup: model[i].isGroup, text: value});
          }
-         return htmlMask;
+         //передать в шаблон
+         dotTpl = doT.template(this._getTemplate());
+         resultTpl = dotTpl(items);
+
+         return resultTpl;
       },
 
 
@@ -711,7 +665,7 @@ define(
        */
       _focusHandler: function() {
          var
-            child = this._isSeparatorContainerFirst ? 1 : 0,
+            child = !this.formatModel.model[0].isGroup ? 1 : 0,
             startContainer = this._inputField.get(0).childNodes[child].childNodes[0],
             startPosition = 0;
          _moveCursor(startContainer, startPosition);
@@ -728,6 +682,7 @@ define(
          var
             positionIndexesBegin = _getCursor.call(this, true),
             positionIndexesEnd = _getCursor.call(this, false),
+            //TODO заменить на 2 переменные, без объекта (учесть в _getPreviousPosition, _getNextPosition, _setHomePosition, _setEndPosition)
             positionObject = {
                container: _getContainerByIndex.call(this, positionIndexesBegin[0]),
                position: positionIndexesBegin[1]
@@ -738,42 +693,32 @@ define(
             },
             character = String.fromCharCode(key),
             groupNum = positionIndexesBegin[0],
+            isClear = (type == 'delete' || type == 'backspace'),
+            positionOffset = (type == 'backspace') ? -1 : 0,
             keyInsertInfo;
 
-         if (type == 'character') {
-            // Обработка зажатой кнопки shift (-> в букву верхнего регистра)
-            character = isShiftPressed ? character.toUpperCase() : character.toLowerCase();
-            keyInsertInfo = this.formatModel.insertCharacter(groupNum, positionObject.position, character);
+         // Обработка зажатой кнопки shift (-> в букву верхнего регистра)
+         character = isShiftPressed ? character.toUpperCase() : character.toLowerCase();
+         character = isClear ? this._maskReplacer : character;
+         if (type == 'character'  ||  type == 'delete'  ||  type == 'backspace') {
+            keyInsertInfo = this.formatModel.insertCharacter(groupNum, positionObject.position + positionOffset, character, isClear);
             if (keyInsertInfo) {
                //записываем символ в html
                positionObject.container = _getContainerByIndex.call(this, keyInsertInfo.groupNum);
                _replaceCharacter.call(this, positionObject.container, keyInsertInfo.position, keyInsertInfo.character);
-               positionObject.position = this.formatModel._options.cursorPosition.position;
+               positionObject.position = this.formatModel._options.cursorPosition.position + positionOffset;
             }
-         } else if (type == 'delete') {
-            keyInsertInfo = this.formatModel.insertCharacter(groupNum, positionObject.position, this._maskReplacer, true);
-            if (keyInsertInfo) {
-               //записываем символ в html
-               positionObject.container = _getContainerByIndex.call(this, keyInsertInfo.groupNum);
-               _replaceCharacter.call(this, positionObject.container, keyInsertInfo.position, keyInsertInfo.character);
-               positionObject.position = this.formatModel._options.cursorPosition.position;
-            }
-            positionObject = positionObjEnd;
-         } else if (type == 'backspace') {
-            keyInsertInfo = this.formatModel.insertCharacter(groupNum, positionObject.position - 1, this._maskReplacer, true);
-            if (keyInsertInfo) {
-               positionObject.container = _getContainerByIndex.call(this, keyInsertInfo.groupNum);
-               _replaceCharacter.call(this, positionObject.container, keyInsertInfo.position, keyInsertInfo.character);
-               positionObject.position = this.formatModel._options.cursorPosition.position - 1;
+            if (type == 'delete') {
+               positionObject = positionObjEnd;
             }
          } else if (type == 'arrow_left')   {
             _getPreviousPosition(positionObject);
          } else if (type == 'arrow_right') {
             _getNextPosition(positionObject);
          } else if (type == 'home') {
-            _getHomePosition.call(this, positionObject);
+            _setHomePosition.call(this, positionObject);
          } else if (type == 'end') {
-            _getEndPosition.call(this, positionObject);
+            _setEndPosition.call(this, positionObject);
          }
          _moveCursor(positionObject.container, positionObject.position);
       },

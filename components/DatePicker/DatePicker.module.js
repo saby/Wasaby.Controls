@@ -340,7 +340,9 @@ define(
       */
       _drawDate: function(){
          var newText = this._options.date == null ? '' : this._getTextByDate( this._options.date );
-         this._inputField.html( this._getHtmlMask(newText) );
+         //записываем текст в модель
+         this.formatModel.setText(newText);
+         this._inputField.html( this._getHtmlMask() );
       },
 
       /**
@@ -381,18 +383,18 @@ define(
       _getDateByText: function(text) {
          var
             date = new Date(),
-            group,
+            item,
             value;
          for (var i = 0; i < this.formatModel.model.length; i++) {
-            group = this.formatModel.model[i];
-            if (group.type != 'group') {
+            item = this.formatModel.model[i];
+            if ( !item.isGroup) {
                continue;
             }
             value = '';
-            for (var j = 0; j < group.mask.length; j++) {
-               value += (typeof group.value[j] === "undefined") ? this._maskReplacer : group.value[j];
+            for (var j = 0; j < item.mask.length; j++) {
+               value += (typeof item.value[j] === "undefined") ? this._maskReplacer : item.value[j];
             }
-            switch (group.mask) {
+            switch (item.mask) {
                case 'YY' :
                   date.setYear('20' + value);
                   break;
@@ -432,12 +434,12 @@ define(
       _getTextByDate: function( date ) {
          var
             text = '',
-            group;
+            item;
 
          for (var i = 0; i < this.formatModel.model.length; i++) {
-            group = this.formatModel.model[i];
-            if (group.type == 'group') {
-               switch ( group.mask ){
+            item = this.formatModel.model[i];
+            if (item.isGroup) {
+               switch ( item.mask ){
                   case 'YY'   : text += ( '000' + date.getFullYear() ).slice(-2);     break;
                   case 'YYYY' : text += ( '000' + date.getFullYear() ).slice(-4);     break;
                   case 'MM'   : text += ( '0'   + (date.getMonth() + 1) ).slice(-2);  break;
@@ -448,7 +450,7 @@ define(
                   case 'UUU'  : text += ( '00'  + date.getMilliseconds()).slice(-3);  break;
                }
             } else {
-               text += group.innerMask;
+               text += item.innerMask;
             }
          }
 
