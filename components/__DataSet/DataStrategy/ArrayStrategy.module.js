@@ -103,7 +103,7 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
        * @param {String} field название поля для получения значения
        * @returns {*}
        */
-      type: function(data, field){
+      type: function (data, field) {
          return 'Текст';
       },
        /**
@@ -242,7 +242,7 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
          return pagingData;
       },
 
-      getEmptyRawData: function() {
+      getEmptyRawData: function () {
          return [];
       }
 
