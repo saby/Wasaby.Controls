@@ -162,6 +162,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
       _nodeDataLoaded: function (key, dataSet) {
          this._dataSet = dataSet;
+         this._curRoot = key;
          this._redraw()
       },
 
