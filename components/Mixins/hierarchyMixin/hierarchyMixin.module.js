@@ -5,7 +5,6 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
    var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
       $protected: {
          _indexTree: null,
-         _openedPath: [],
          _options: {
             /**
              * @cfg {String} Идентификатор узла, относительно которого надо отображать данные
@@ -27,16 +26,10 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
              * @cfg {String} Поле иерархии
              */
             hierField: null
+
          }
       },
       $constructor: function () {
-         this._checkOptions();
-      },
-
-      _checkOptions: function () {
-         if (this._options.openedPath.length) {
-            this._openedPath = this._options.openedPath;
-         }
       },
 
       setHierField: function (hierField) {
@@ -138,7 +131,6 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          //TODO: проверка что уже загружали ветку и просто показать ее
          self._dataSource.query(filter).addCallback(function (dataSet) {
             self._nodeDataLoaded(key, dataSet);
-            self.refreshIndexTree();
          });
       },
 
@@ -146,6 +138,9 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       after: {
          _drawItems: function () {
             this._drawOpenedPath();
+         },
+         _nodeDataLoaded: function () {
+            this.refreshIndexTree();
          }
       },
 
@@ -154,26 +149,26 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             //TODO: Открыть для всех
          }
          else {
-            for (var i = 0; i < this._openedPath.length; i++) {
-               this.openNode(this._openedPath[i]);
+            for (var i = 0; i < this._options.openedPath.length; i++) {
+               this.openNode(this._options.openedPath[i]);
             }
          }
       },
 
       _nodeDataLoaded: function (key, dataSet) {
+         console.log('_nodeDataLoaded hierarhyMixin');
          this._dataSet = dataSet;
          this._curRoot = key;
-         this._redraw()
-      },
+         this._redraw()      },
 
       around: {
          _elemClickHandler: function (parentFnc, id, data, target) {
             if ($(target).hasClass('js-controls-TreeView__expand')) {
                var nodeID = $(target).closest('.controls-ListView__item').data('id');
-               this.toggleNode(nodeID)
+               this.toggleNode(nodeID);
             }
             else {
-               parentFnc.call(this, id, data, target)
+               parentFnc.call(this, id, data, target);
             }
          }
       }

@@ -108,11 +108,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._limit = typeof(limit) != 'undefined' ? limit : this._limit;
          this._loader = this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
             self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
-            if (self._dataSet) {
-               self._dataSet.merge(dataSet);
-            } else {
-               self._dataSet = dataSet;
-            }
+            //FixMe: перезаписываем dataSet
+            self._dataSet = dataSet;
             self._dataLoadedCallback();
             self._redraw();
          });
@@ -167,7 +164,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var records = [];
 
          this._dataSet.each(function (record) {
-            records.push(record)
+            records.push(record);
          });
 
          this._drawItems(records);

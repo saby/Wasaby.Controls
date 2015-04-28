@@ -56,7 +56,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       /**
-       * Удалить запись
+       * Удалить запись. Пометку запись как удаленную. Реальное удаление записи из источника будет выполнено только после вызова метода sync на датасорсе.
        * @param {Number | Array} key идентификатор записи или массив идентификаторов
        */
       removeRecord: function (key) {
@@ -192,7 +192,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
             if (toRemove.length) {
                //TODO: тут не надо их помечать как удаленными. а вырезать из DataSet
-               this.removeRecord(toRemove);
+               //this._removeReference(toRemove);
+               //this.removeRecord(toRemove);
             }
          }
 
@@ -238,8 +239,9 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @param dataSetMergeFrom Датасет, из которого будет происходить мерж
        */
       // если будем добавлять больше одной записи, то нужно предваритьно составить из них датасет
-      merge: function (dataSetMergeFrom, options) {
-         this._setRecords(dataSetMergeFrom._getRecords(), options);
+      //FixMe: только добавляет записи. старые так и остнаутся в наборе
+      merge: function (dataSetMergeFrom) {
+         this._addRecords(dataSetMergeFrom._getRecords());
       },
 
       /**
@@ -333,6 +335,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @param getFullBranch {Boolean} вернуть всю ветку
        * @returns {Array}
        */
+      //TODO: переименовать в getChildKeys
       getChildItems: function (parentId, getFullBranch) {
          parentId = parentId || null;
          if (this._indexTree.hasOwnProperty(parentId)) {
