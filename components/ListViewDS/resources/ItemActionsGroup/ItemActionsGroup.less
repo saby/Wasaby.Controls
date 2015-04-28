@@ -8,7 +8,7 @@
   display: none;
 
   > * {
-    display: inline;
+    display: inline-block;
     cursor: @list-view-actions-cursor;
     margin: @list-view-actions-margin;
     width: 16px;
@@ -29,6 +29,9 @@
         background: @list-view-actions-menu-icon-hover;
       }
     }
+  }
+  > .controls-Link {
+    display: inline;
   }
 }
 .controls-ItemActions__menu-container {
