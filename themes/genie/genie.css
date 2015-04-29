@@ -2151,6 +2151,42 @@ input[type="reset"]::-moz-focus-inner {
 .controls__operations-panel__wrapper .controls__operations-panel__action-type-all {
   margin: 0 4px;
 }
+.controls-ProgressBar {
+  height: 17px;
+}
+.controls-ProgressBar__line {
+  height: 100%;
+  background: #f3f3f3;
+  position: relative;
+  border-radius: 8px;
+}
+.controls-ProgressBar__progress {
+  height: 100%;
+  background: #a2e68c;
+  border-radius: 8px;
+}
+.controls-ProgressBar__progress {
+  background: linear-gradient(to top, #8dcf66, #b6f5a9);
+}
+.controls-ProgressBar__value {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+}
+.controls-ProgressBar_align-left .controls-ProgressBar__line {
+  margin-left: 40px;
+}
+.controls-ProgressBar_align-left .controls-ProgressBar__value {
+  width: auto;
+  left: -40px;
+}
+.controls-ProgressBar_align-right .controls-ProgressBar__line {
+  margin-right: 40px;
+}
+.controls-ProgressBar_align-right .controls-ProgressBar__value {
+  width: auto;
+  right: -40px;
+}
 .controls-ItemActions {
   position: absolute;
   height: 20px;
