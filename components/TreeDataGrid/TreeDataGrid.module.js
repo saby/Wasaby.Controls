@@ -46,13 +46,15 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
             if (targetContainer) {
                /*TODO пока придрот для определения позиции вставки*/
                var
-                  parentContainer = $('.controls-ListView__item[data-id="'+key+'"]', self._getItemsContainer().get(0)).get(0),
+                  parentContainer = $('.controls-ListView__item[data-id="'+key+'"]', self._getItemsContainer().get(0)),
                   allContainers = $('.controls-ListView__item', self._getItemsContainer().get(0)),
-                  at;
+                  at = {at: 0};
                for (var i = 0; i < allContainers.length; i++) {
-                  if (allContainers[i] == parentContainer) {
+                  if (allContainers[i] == parentContainer.get(0)) {
                      at = {at : i + 1};
-                     break;
+                  } else
+                  if ($(allContainers[i]).data('parent') == parentContainer.data('id')){
+                     at.at ++;
                   }
                }
                /**/
