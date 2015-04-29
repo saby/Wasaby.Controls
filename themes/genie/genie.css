@@ -2150,9 +2150,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ItemActions {
   position: absolute;
   height: 20px;
-  width: 20px;
   background-color: #00c795;
-  right: 1px;
   box-shadow: -2px -2px 5px #00c795;
   z-index: 10;
   display: none;

@@ -2025,6 +2025,13 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MultiView .controls-MultiView__listItem:hover {
   background: #f3f3f3;
 }
+.controls-MultiView.controls-MultiView-tile {
+  border-left: 1px solid #cccccc;
+  border-top: 1px solid #cccccc;
+}
+.controls-MultiView.controls-MultiView-tile .controls-ItemActions {
+  width: 20px;
+}
 .controls-MultiView .controls-ListView__itemCheckBox {
   position: absolute;
   left: 3px;
@@ -2032,21 +2039,21 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MultiView .controls-MultiView__tileItem {
   display: inline-block;
-  border: 1px solid #eeeeee;
-  min-width: 128px;
-  min-height: 128px;
   cursor: pointer;
   text-align: left;
+  border: 1px solid #cccccc;
+  min-width: 128px;
+  min-height: 128px;
   margin: -4px 0 0 -1px;
 }
 .controls-MultiView .controls-MultiView__tileItem:hover {
   background: #f3f3f3;
 }
 .controls-MultiView .controls-MultiView__tileItem:hover .controls-MultiView__tileImg {
-  box-shadow: 1px 2px 4px #aaa;
+  box-shadow: 1px 2px 4px #aaaaaa;
 }
 .controls-MultiView .controls-MultiView__tileItem.controls-ListView__item__selected {
-  background: #E7F0F9;
+  background: #e7f0f9;
 }
 .controls-MultiView .controls-MultiView__tileItem .controls-MultiView__tileImg {
   margin: 10px 40px;
@@ -2136,9 +2143,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ItemActions {
   position: absolute;
   height: 20px;
-  width: 20px;
   background-color: #f3f3f3;
-  right: 1px;
   box-shadow: -2px -2px 5px #f3f3f3;
   z-index: 10;
   display: none;

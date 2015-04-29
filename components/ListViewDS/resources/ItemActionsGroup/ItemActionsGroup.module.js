@@ -156,8 +156,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          showItemActions: function(hoveredItem) {
             this._activeItem = hoveredItem.container;
             this._container[0].style.top = hoveredItem.position.top + ((hoveredItem.size.height > ITEMS_ACTIONS_HEIGHT) ? hoveredItem.size.height - ITEMS_ACTIONS_HEIGHT : 0 ) + 'px';
-            this._container[0].style.left = hoveredItem.position.left + ((hoveredItem.size.width > ITEMS_ACTIONS_WIDTH) ? hoveredItem.size.width - ITEMS_ACTIONS_WIDTH : 0 ) + 'px';
-            this._container[0].style.display = 'inline-block';
+            this._container[0].style.left = hoveredItem.position.left + hoveredItem.size.width - this._container.width()  + 'px';
+            this._container[0].style.display = 'block';
          },
          /**
           * Задаёт новые операции над записью

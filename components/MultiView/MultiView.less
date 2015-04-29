@@ -8,33 +8,42 @@
          background: @data-grid-row-hover-bg;
       }
    }
+
+   &.controls-MultiView-tile {
+      border-left: @multiView-tile-item-border;
+      border-top: @multiView-tile-item-border;
+      .controls-ItemActions {
+         width: @list-view-actions-width;
+      }
+   }
+
    .controls-ListView__itemCheckBox{
       position: absolute;
-      left: 3px;
-      top: 5px;
+      left: @multiView-check-box-left;
+      top: @multiView-check-box-top;
    }
    .controls-MultiView__tileItem {
       display: inline-block;
-      border: 1px solid #eeeeee;
-      min-width: 128px;
-      min-height: 128px;
       cursor: pointer;
       text-align: left;
-      margin: -4px 0 0 -1px;
+      border: @multiView-tile-item-border;
+      min-width: @multiView-tile-item-min-width;
+      min-height: @multiView-tile-item-min-height;
+      margin: @multiView-tile-item-margin;
       &:hover {
-         background: #f3f3f3;
+         background: @data-grid-row-hover-bg;
          .controls-MultiView__tileImg{
-            box-shadow: 1px 2px 4px #aaa;
+            box-shadow: @multiView-tile-item-image-box-shadow;
          }
       }
       &.controls-ListView__item__selected{
-         background: #E7F0F9;
+         background: @multiView-tile-selected-item-bg;
       }
       .controls-MultiView__tileImg{
-         margin: 10px 40px;
+         margin:@multiView-tile-item-image-margin;
       }
       .controls-MultiView__tileText {
-         margin: 7px;
+         margin: @multiView-tile-item-text-margin;
       }
    }
 
