@@ -741,6 +741,7 @@ define(
        * @param mask маска строкой, например 'dd:dd', 'HH:MM'
        */
       setMask: function(mask) {
+         this._options.mask = mask;
          this.formatModel.setMask(mask);
          this._inputField.html(this._getHtmlMask());
       }
