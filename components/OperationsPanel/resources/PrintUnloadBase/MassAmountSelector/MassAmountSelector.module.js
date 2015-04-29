@@ -28,12 +28,20 @@ define('js!SBIS3.CONTROLS.MassAmountSelector', [
          //TODO возможно кнопка печати может стать кнопкой меню, в зависимости от набора отчетов на печать
       },
       init: function(){
+         var self = this;
          MassAmountSelector.superclass.init.call(this);
          //Так как забиндились на контекст в него нужно положить правильное первоначальное значение.
          this.getContext().setValue('controls-RadioButtons', 'current');
          //TODO нужно запомнить и отписываться на destroy или сам догадается?
          this._radioButtons = this.getChildControlByName('controls-RadioButtons').subscribe('onSelectedItemChange', this.onChangeRadioButton.bind(this));
          this._numberTextBox = this.getChildControlByName('controls-numberTextBox');
+         this.getChildControlByName('controls-buttonPrint').subscribe('onActivated', function(){
+            var parent = this.getTopParent();
+            if (parent.validate()){
+               parent.setResult(self._numberTextBox.getNumericValue());
+               parent.ok();
+            }
+         });
       },
       onChangeRadioButton: function(event, item){
          this._numberTextBoxValue = this._numberTextBoxValue || this._numberTextBox.getNumericValue();
