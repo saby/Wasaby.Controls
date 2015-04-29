@@ -32,8 +32,8 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
 
       _drawItemsCallback : function() {
          CheckBoxGroupBase.superclass._drawItemsCallback.call(this);
-         if (this._options.selectedItems && this._options.selectedItems.length) {
-            this._drawSelectedItems(this._options.selectedItems);
+         if (this._options.selectedIndexes && this._options.selectedIndexes.length) {
+            this._drawSelectedItems(this._options.selectedIndexes);
          }
       },
 

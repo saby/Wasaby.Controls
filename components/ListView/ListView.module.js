@@ -13,13 +13,15 @@ define('js!SBIS3.CONTROLS.ListView',
       'use strict';
 
       /**
-       * Контрол, отображающий внутри себя набор однотипных сущностей, умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать
+       * Контрол, отображающий внутри себя набор однотипных сущностей.
+       * Умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать их.
        * @class SBIS3.CONTROLS.ListView
        * @extends $ws.proto.Control
        * @mixes SBIS3.CONTROLS.CollectionMixin
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
        * @public
+       * @author Черёмушкин Илья
        */
 
       var ListView = CompoundControl.extend([CollectionMixin, MultiSelectable], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
@@ -30,7 +32,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _actsContainer : null,
             _options: {
                /**
-                * @cfg {} Шаблон отображения каждого элемента коллекции
+                * @cfg {String} Шаблон отображения каждого элемента коллекции
                 */
                itemTemplate: '',
                /**
@@ -78,9 +80,10 @@ define('js!SBIS3.CONTROLS.ListView',
             var self = this;
             this._container.mouseup(function(e){
                if (e.which == 1) {
-                  var targ = $(e.target).hasClass('controls-ListView__item') ? e.target : $(e.target).closest('.controls-ListView__item');
-                  if (targ.length) {
-                     var id = targ.attr('data-id');
+                  var $target = $(e.target),
+                     target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
+                  if (target.length) {
+                     var id = target.attr('data-id');
                      self._elemClickHandler(id, self._items.getItem(id));
                   }
                }
@@ -105,7 +108,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _elemClickHandler : function(id, data) {
-            this.setSelectedItems([id]);
+            this.setSelectedIndexes([id]);
             if (this._options.elemClickHandler) {
                var parent = this.getParent();
                this._options.elemClickHandler.call(this, id, data);

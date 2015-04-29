@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS3.CONTROLS.DataGrid', 'html!SBIS3.CONTROLS.DataGrid/resources/rowTpl', 'js!SBIS3.CORE.MarkupTransformer'], function(ListView, dotTplFn, rowTpl, MarkupTransformer) {
    'use strict';
    /**
-    * Контрол отображающий набор данных в виде в таблицы с несколькими колонками.
+    * Контрол, отображающий набор данных в виде в таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.DataGrid
     * @extends SBIS3.CONTROLS.ListView
     * @control
@@ -59,11 +59,14 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
              */
             /**
              * @cfg {PagingEnum} Режим постраничной навигации
+             * @remark
              * При частичной постраничной навигации заранее неизвестно общее количество страниц.
              * @example
              * <pre>
              *     <option name="paging">full</option>
              * </pre>
+             * @see setPage
+             * @see getPage
              */
             paging: 'no'
          }
@@ -74,13 +77,15 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
          this._colgroup = $('.controls-DataGrid__colgroup', this._container.get(0))
       },
       /**
-       * Установить страницу.
+       * Установить страницу по её номеру.
+       * @remark
        * Метод установки номера страницы, с которой нужно открыть представление данных.
        * Работает при использовании постраничной навигации.
        * @param num Номер страницы.
        * @example
        * <pre>
-       *
+       *    if(dataGrid.getPage() > 0)
+       *       dataGrid.setPage(0);
        * </pre>
        * @see getPage
        * @see paging
@@ -90,7 +95,15 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
       },
 
       /**
-       * Получить текущую страницу.
+       * Получить номер текущей страницы.
+       * @remark
+       * Метод получения номера текущей страницы представления данных.
+       * Работает при использовании постраничной навигации.
+       * @example
+       * <pre>
+       *    if(dataGrid.getPage() > 0)
+       *       dataGrid.setPage(0);
+       * </pre>
        * @see paging
        * @see setPage
        */
@@ -131,15 +144,43 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
          return $(".controls-ListView__item[data-id='" + id + "']", this._container.get(0)).find('.controls-DataGrid__td').last();
       },
        /**
-        *
-        * @returns {*|columns}
+        * Метод получения текущего описания колонок представления данных.
+        * @returns {*|columns} Описание набора колонок.
+        * @example
+        * <pre>
+        *    var columns = dataGrid.getColumns(),
+        *        newColumns = [];
+        *    for(var i = 0, l = columns.length; i < l; i++){
+        *       if(columns[i].title !== "Примечание")
+        *          newColumns.push(columns[i]);
+        *    }
+        *    newColumns.push({
+        *       title: 'ФИО',
+        *       field: 'РП.ФИО'
+        *    });
+        *    dataGrid.setColumns(newColumns);
+        * </pre>
         */
       getColumns : function() {
          return this._options.columns;
       },
        /**
-        *
-        * @param columns
+        * Метод установки либо замены колонок, заданных опцией {@link columns}.
+        * @param columns Новый набор колонок.
+        * @example
+        * <pre>
+        *    var columns = dataGrid.getColumns(),
+        *        newColumns = [];
+        *    for(var i = 0, l = columns.length; i < l; i++){
+        *       if(columns[i].title !== "Примечание")
+        *          newColumns.push(columns[i]);
+        *    }
+        *    newColumns.push({
+        *       title: 'ФИО',
+        *       field: 'РП.ФИО'
+        *    });
+        *    dataGrid.setColumns(newColumns);
+        * </pre>
         */
       setColumns : function(columns) {
          this._options.columns = columns;

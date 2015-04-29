@@ -12,11 +12,24 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          _options: {
              /**
               * @cfg {String} Текст на кнопке
+              * @example
+              * <pre>
+              *     <option name="caption">Операции отметки</option>
+              * </pre>
               */
             caption: 'Отметить',
+             /**
+              * @noShow
+              */
             linkedView: undefined,
              /**
-              * @cfg {Array[]} Операции отметки
+              * @typedef {Object} OperationsMarkItems
+              * @property {String} name Имя кнопки операции.
+              * @property {String} title Заголовок кнопки операции.
+              * @property {String} handler Имя функции обработчика клика по пункту меню операций отметки.
+              */
+             /**
+              * @cfg {OperationsMarkItems[]} Операции отметки.
               */
             items: [
                { name: 'selectCurrentPage', title: 'Всю страницу' },

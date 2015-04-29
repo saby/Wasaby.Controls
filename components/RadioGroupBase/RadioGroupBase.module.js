@@ -24,13 +24,13 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBaseDS
 
       _drawItemsCallback : function() {
          RadioGroupBase.superclass._drawItemsCallback.call(this);
-         if (this._options.selectedItem) {
-            this._drawSelectedItem(this._options.selectedItem);
+         if (this._options.selectedIndex) {
+            this._drawSelectedItem(this._options.selectedIndex);
          }
       },
 
       _itemActivatedHandler : function(key) {
-         this.setSelectedItem(key);
+         this.setSelectedIndex(key);
       },
 
       _drawSelectedItem : function(id) {

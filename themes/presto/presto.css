@@ -25,6 +25,11 @@ input[type="reset"]::-moz-focus-inner {
   color: #ffcc99;
   text-decoration: none;
 }
+.controls-Link.ws-disabled {
+  color: #eeeeee;
+  cursor: default;
+  text-decoration: none;
+}
 .controls-Link .controls-Link__icon {
   vertical-align: middle;
   margin: -2px 0 0;
@@ -437,34 +442,34 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-RadioButton .controls-RadioButton__icon {
   display: inline-block;
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 17px;
   line-height: normal;
-  background: none;
+  background: url('img/RadioButton-sprite.png') 0 -4px;
 }
 .controls-RadioButton:hover .controls-RadioButton__caption {
   color: #ffcc99;
 }
 .controls-RadioButton:hover .controls-RadioButton__icon {
-  background: none;
+  background: url('img/RadioButton-sprite.png') 0 -100px;
 }
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__caption {
   color: #ffffff;
 }
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__icon {
-  background: none;
+  background: url('img/RadioButton-sprite.png') 0 -52px;
 }
 .controls-RadioButton.controls-Checked__checked:hover .controls-RadioButton__caption {
   color: #ffcc99;
 }
 .controls-RadioButton.controls-Checked__checked:hover .controls-RadioButton__icon {
-  background: none;
+  background: url('img/RadioButton-sprite.png') 0 -52px;
 }
 .controls-RadioButton.controls-Checked__checked.ws-disabled .controls-RadioButton__icon {
-  background: none;
+  background: url('img/RadioButton-sprite.png') 0 -4px;
 }
 .controls-RadioButton.controls-Checked__checked.ws-disabled:hover .controls-RadioButton__icon {
-  background: none;
+  background: url('img/RadioButton-sprite.png') 0 -4px;
 }
 .controls-RadioButton.ws-disabled {
   cursor: default;
@@ -473,13 +478,13 @@ input[type="reset"]::-moz-focus-inner {
   color: #aaaaaa;
 }
 .controls-RadioButton.ws-disabled .controls-RadioButton__icon {
-  background: none;
+  background: url('img/RadioButton-sprite.png') 0 -4px;
 }
 .controls-RadioButton.ws-disabled:hover .controls-RadioButton__caption {
   color: #aaaaaa;
 }
 .controls-RadioButton.ws-disabled:hover .controls-RadioButton__icon {
-  background: none;
+  background: url('img/RadioButton-sprite.png') 0 -4px;
 }
 .controls-RadioGroup .controls-ListView__item {
   display: inline-block;
@@ -907,7 +912,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-MenuButton.controls-Button__primary:hover.ws-disabled .controls-MenuButton__arrowDown {
   background: transparent;
-  border-color: #4e5762 transparent transparent transparent;
+  border-color: #aaaaaa transparent transparent transparent;
 }
 .controls-Button.controls-MenuButton.controls-Button__primary:hover .controls-MenuButton__arrowDown {
   border-width: 8px 8px 0 8px;
@@ -1031,11 +1036,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuLink.controls-MenuLink__withoutMenu {
   padding: 0;
 }
-.controls-MenuLink:hover {
+.controls-MenuLink.ws-enabled:hover {
   color: #ffcc99;
   text-decoration: underline;
 }
-.controls-MenuLink:hover .controls-MenuLink__arrowDown {
+.controls-MenuLink.ws-enabled:hover .controls-MenuLink__arrowDown {
   background: transparent;
 }
 .controls-MenuLink .controls-MenuLink__arrowDown {
@@ -2061,6 +2066,42 @@ input[type="reset"]::-moz-focus-inner {
 .controls__operations-panel__wrapper .controls__operations-panel__action-type-all {
   margin: 0 4px;
 }
+.controls-ProgressBar {
+  height: 17px;
+}
+.controls-ProgressBar__line {
+  height: 100%;
+  background: #f3f3f3;
+  position: relative;
+  border-radius: 8px;
+}
+.controls-ProgressBar__progress {
+  height: 100%;
+  background: #a2e68c;
+  border-radius: 8px;
+}
+.controls-ProgressBar__progress {
+  background: linear-gradient(to top, #8dcf66, #b6f5a9);
+}
+.controls-ProgressBar__value {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+}
+.controls-ProgressBar_align-left .controls-ProgressBar__line {
+  margin-left: 40px;
+}
+.controls-ProgressBar_align-left .controls-ProgressBar__value {
+  width: auto;
+  left: -40px;
+}
+.controls-ProgressBar_align-right .controls-ProgressBar__line {
+  margin-right: 40px;
+}
+.controls-ProgressBar_align-right .controls-ProgressBar__value {
+  width: auto;
+  right: -40px;
+}
 .controls-ItemActions {
   position: absolute;
   height: 20px;
@@ -2071,7 +2112,7 @@ input[type="reset"]::-moz-focus-inner {
   display: none;
 }
 .controls-ItemActions > * {
-  display: inline;
+  display: inline-block;
   cursor: pointer;
   margin: 0 4px;
   width: 16px;
@@ -2089,6 +2130,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ItemActions > *.controls-ItemActions__menu-button:hover {
   background: url('img/ItemActions-menu.png') no-repeat 0 -20px;
+}
+.controls-ItemActions > .controls-Link {
+  display: inline;
 }
 .controls-ItemActions__menu-container .controls-MenuItem {
   padding-right: 24px;

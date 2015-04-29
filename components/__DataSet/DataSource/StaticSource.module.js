@@ -22,6 +22,10 @@ define('js!SBIS3.CONTROLS.StaticSource', [
             data: [],
             /**
              * @cfg {String} Название поля, являющегося первичных ключом
+             * @example
+             * <pre>
+             *     <option name="keyField">@Заметка</option>
+             * </pre>
              */
             keyField: ''
          }
@@ -57,8 +61,8 @@ define('js!SBIS3.CONTROLS.StaticSource', [
       },
 
       /**
-       * Метод создает запись в источнике данных
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record
+       * Метод создаёт запись в источнике данных.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт js!SBIS3.CONTROLS.Record.
        */
       create: function () {
          var def = new $ws.proto.Deferred(),
@@ -72,9 +76,9 @@ define('js!SBIS3.CONTROLS.StaticSource', [
       },
 
       /**
-       * Метод для чтения записи из массива по ее идентификатору
-       * @param {Number} id - идентификатор записи
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record
+       * Метод для чтения записи из массива по её идентификатору.
+       * @param {Number} id Идентификатор записи.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record.
        */
       read: function (id) {
          var def = new $ws.proto.Deferred();
@@ -83,9 +87,10 @@ define('js!SBIS3.CONTROLS.StaticSource', [
       },
 
       /**
-       * Метод для обновления записи в источнике данных
-       * @param (SBIS3.CONTROLS.Record) record - измененная запись
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет Boolean - результат успешности выполнения операции
+       * Метод для обновления записи в источнике данных.
+       * @param (SBIS3.CONTROLS.Record) record Изменённая запись.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
+       * В колбэке придёт Boolean - результат успешности выполнения операции.
        */
       update: function (record) {
          var def = new $ws.proto.Deferred();
@@ -94,9 +99,10 @@ define('js!SBIS3.CONTROLS.StaticSource', [
       },
 
       /**
-       * Метод для удаления записи из источника данных
-       * @param {Array | Number} id - идентификатор записи или массив идентификаторов
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет Boolean - результат успешности выполнения операции
+       * Метод для удаления записи из источника данных.
+       * @param {Array | Number} id Идентификатор записи или массив идентификаторов.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
+       * В колбэке придёт Boolean - результат успешности выполнения операции.
        */
       destroy: function (id) {
          var def = new $ws.proto.Deferred(),
@@ -107,13 +113,14 @@ define('js!SBIS3.CONTROLS.StaticSource', [
       },
 
       /**
-       * Метод для получения набора записей из источника данных
-       * Возможно применене фильтрации, сортировки и выбора определенного количества записей с заданной позиции
-       * @param {Object} filter - {property1: value, property2: value}
-       * @param {Array} sorting - [{property1: 'ASC'},{property2: 'DESC'}]
-       * @param {Number} offset смещение начала выборки
-       * @param {Number} limit количество возвращаемых записей
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.DataSet - набор отобранных элементов
+       * Метод для получения набора записей из источника данных.
+       * Возможно применение фильтрации, сортировки и выбора определённого количества записей с заданной позиции.
+       * @param {Object} filter Параметры фильтрации вида - {property1: value, property2: value}.
+       * @param {Array} sorting Параметры сортировки вида - [{property1: 'ASC'},{property2: 'DESC'}].
+       * @param {Number} offset Смещение начала выборки.
+       * @param {Number} limit Количество возвращаемых записей.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
+       * В колбэке придёт js!SBIS3.CONTROLS.DataSet - набор отобранных элементов.
        */
       query: function (filter, sorting, offset, limit) {
 
