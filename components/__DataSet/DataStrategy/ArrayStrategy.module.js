@@ -5,13 +5,20 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
    'use strict';
 
    /**
-    * Реализация интерфеса IDataStrategy для работы с массивами
+    * Реализация интерфеса IDataStrategy для работы с массивами.
+    * Позволяет работать с массивом объектов на статике.
+    * @author Мануйлов Андрей
     */
 
    var ArrayStrategy = IDataStrategy.extend({
       $protected: {},
       $constructor: function () {
       },
+       /**
+        * Найти название поля, которое является идентификатором.
+        * @param data
+        * @returns {*}
+        */
       getKey: function (data) {
          var
             key,
@@ -34,15 +41,30 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
             iterateCallback.call(context, data[i]);
          }
       },
-
+       /**
+        *
+        * @param {Array} data
+        * @param index
+        * @returns {*}
+        */
       at: function (data, index) {
          return data[index];
       },
-
+       /**
+        *
+        * @param {Array} data
+        * @param index
+        * @param newRaw
+        */
       replaceAt: function (data, index, newRaw) {
          data[index] = newRaw;
       },
-
+       /**
+        *
+        * @param {Array} data
+        * @param {String} keyField название поля-идентификатора
+        * @returns {Array}
+        */
       rebuild: function (data, keyField) {
          var _indexId = [],
             length = data.length;
@@ -84,6 +106,12 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
       type: function(data, field){
          return 'Текст';
       },
+       /**
+        * Метод добавления записи.
+        * @param {Array} data
+        * @param record
+        * @param at
+        */
       addRecord: function (data, record, at) {
          var rawData = record.getRaw();
          if (at) {
@@ -92,7 +120,11 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
             data.push(rawData);
          }
       },
-
+       /**
+        *
+        * @param {Array} data
+        * @returns {exports.length|*|Function|length|.__defineGetter__.length|Number}
+        */
       getCount: function (data) {
          return data.length;
       },
@@ -130,7 +162,15 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
          };
       },
 
-
+       /**
+        * Метод для получения набора записей из источника данных.
+        * @param {Array} data
+        * @param filter
+        * @param sorting
+        * @param offset
+        * @param limit
+        * @returns {*}
+        */
       query: function (data, filter, sorting, offset, limit) {
          var newData = data;
          filter = filter || {};
@@ -197,8 +237,11 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
          }
 
          return pagingData;
-      }
+      },
 
+      getEmptyRawData: function() {
+         return [];
+      }
 
    });
 

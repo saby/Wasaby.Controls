@@ -10,20 +10,58 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
    'use strict';
 
    /**
-    * Класс, реализующий интерфейс IDataSource, для работы с бизнес-логикой СБИС как с источником данных
+    * Класс, реализующий интерфейс IDataSource, для работы с бизнес-логикой СБИС как с источником данных.
+    * @author Мануйлов Андрей
     */
 
    return IDataSource.extend({
       $protected: {
          _options: {
+             /**
+              * @noShow
+              */
             strategy: null,
             /**
+             * @cfg {String} Имя метода, который будет использоваться для построения списка записей
              * сопоставление CRUD операций и методов БЛ
+             * @see query
              */
             queryMethodName: 'Список',
+             /**
+              * @cfg {String} Имя метода, который будет использоваться для создания записей
+              * @example
+              * <pre>
+              *    <option name="crateMethodName">Создать</option>
+              * </pre>
+              * @see create
+              */
             crateMethodName: 'Создать',
+             /**
+              * @cfg {String} Имя метода, который будет использоваться для чтения записей
+              * @example
+              * <pre>
+              *    <option name="readMethodName">Прочитать</option>
+              * </pre>
+              * @see read
+              */
             readMethodName: 'Прочитать',
+             /**
+              * @cfg {String} Имя метода, который будет использоваться для обновления записей
+              * @example
+              * <pre>
+              *    <option name="updateMethodName">Записать</option>
+              * </pre>
+              * @see update
+              */
             updateMethodName: 'Записать',
+             /**
+              * @cfg {String} Имя метода, который будет использоваться для удаления записей
+              * @example
+              * <pre>
+              *    <option name="destroyMethodName">Удалить</option>
+              * </pre>
+              * @see destroy
+              */
             destroyMethodName: 'Удалить'
          },
          /**
@@ -57,8 +95,9 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       },
 
       /**
-       * Метод создает запись в источнике данных
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record
+       * Метод создаёт запись в источнике данных.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record.
+       * @see createMethodName
        */
       create: function () {
          var self = this,
@@ -84,9 +123,10 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       },
 
       /**
-       * Метод для чтения записи из БЛ по ее идентификатору
-       * @param {Number} id - идентификатор записи
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record
+       * Метод для чтения записи из БЛ по её идентификатору.
+       * @param {Number} id Идентификатор записи.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт js!SBIS3.CONTROLS.Record.
+       * @see readMethodName
        */
       read: function (id) {
          var self = this,
@@ -110,9 +150,11 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       },
 
       /**
-       * Метод для обновления записи на БЛ
-       * @param (SBIS3.CONTROLS.Record) record - измененная запись
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет Boolean - результат успешности выполнения операции
+       * Метод для обновления записи на БЛ.
+       * @param (SBIS3.CONTROLS.Record) record Изменённая запись.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
+       * В колбэке придёт Boolean - результат успешности выполнения операции.
+       * @see updateMethodName
        */
       update: function (record) {
          var self = this,
@@ -133,9 +175,11 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       },
 
       /**
-       * Метод для удаления записи из БЛ
-       * @param {Array | Number} id - идентификатор записи или массив идентификаторов
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет Boolean - результат успешности выполнения операции
+       * Метод для удаления записи из БЛ.
+       * @param {Array | Number} id Идентификатор записи или массив идентификаторов.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
+       * В колбэке придет Boolean - результат успешности выполнения операции.
+       * @see destroyMethodName
        */
       destroy: function (id) {
          var self = this,
@@ -154,13 +198,16 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       },
 
       /**
-       * Вызов списочного метода БЛ
-       * Возможно применене фильтрации, сортировки и выбора определенного количества записей с заданной позиции
-       * @param {Object} filter - {property1: value, property2: value}
-       * @param {Array} sorting - [{property1: 'ASC'},{property2: 'DESC'}]
-       * @param {Number} offset смещение начала выборки
-       * @param {Number} limit количество возвращаемых записей
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.DataSet - набор отобранных элементов
+       * Вызов списочного метода БЛ.
+       * @remark
+       * Возможно применение фильтрации, сортировки и выбора определенного количества записей с заданной позиции.
+       * @param {Object} filter Параметры фильтрации вида - {property1: value, property2: value}.
+       * @param {Array} sorting Параметры сортировки вида - [{property1: 'ASC'},{property2: 'DESC'}].
+       * @param {Number} offset Смещение начала выборки.
+       * @param {Number} limit Количество возвращаемых записей.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
+       * В колбэке придет js!SBIS3.CONTROLS.DataSet - набор отобранных элементов.
+       * @see queryMethodName
        */
       query: function (filter, sorting, offset, limit) {
          filter = filter || {};
