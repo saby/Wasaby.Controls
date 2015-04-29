@@ -14,7 +14,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
       'use strict';
       var
-         ITEMS_ACTIONS_HEIGHT = 20;
+         ITEMS_ACTIONS_HEIGHT = 20,
+         ITEMS_ACTIONS_WIDTH  = 20;
 
       var ItemActionsGroup = ButtonGroupBaseDS.extend( /** @lends SBIS3.CONTROLS.ItemActionsGroup.prototype */ {
          $protected: {
@@ -155,6 +156,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          showItemActions: function(hoveredItem) {
             this._activeItem = hoveredItem.container;
             this._container[0].style.top = hoveredItem.position.top + ((hoveredItem.size.height > ITEMS_ACTIONS_HEIGHT) ? hoveredItem.size.height - ITEMS_ACTIONS_HEIGHT : 0 ) + 'px';
+            this._container[0].style.left = hoveredItem.position.left + hoveredItem.size.width - this._container.width()  + 'px';
             this._container[0].style.display = 'block';
          },
          /**
@@ -192,7 +194,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          },
 
          _getItemTemplate : function(item) {
-            var linkText = item.get('linkText');
+            var caption = item.get('caption');
 
             this._itemActionsButtons[item.get('name')] = {
                isMainAction : item.get('isMainAction'),
@@ -200,9 +202,9 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                isVisible: true
             };
 
-            return linkText ?
+            return caption ?
             '<component data-component="SBIS3.CONTROLS.Link">' +
-               '<option name="caption">' + linkText + '</option>' +
+               '<option name="caption">' + caption + '</option>' +
             '</component>' :
             '<component data-component="SBIS3.CONTROLS.IconButton">' +
                '<option name="icon">' + item.get('icon') + '</option>' +

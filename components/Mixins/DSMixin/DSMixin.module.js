@@ -229,10 +229,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             keyField: keyField
          });
          this.reload();
-         //TODO совместимость
-         if (typeof(window) != 'undefined') {
-            console['log']('Метод setItems устарел. Он прекратит работу в версии 3.7.2');
-         }
       },
 
       _drawItemsCallback: function () {
