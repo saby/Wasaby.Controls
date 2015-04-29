@@ -89,7 +89,7 @@ define(
             // Проверяем, является ли маска, с которой создается контролл, допустимой
             this._checkPossibleMask();
 
-            this._options.text = this._clearMask;
+            this._options.text = this.formatModel.getStrMask(this._maskReplacer);
 
             // Первоначальная установка интервала, если передана опция
             if (this._options.interval ) {
@@ -111,20 +111,8 @@ define(
           * Установить маску.
           */
          _setMask: function (mask) {
-            var self = this;
-            this._options.mask = this._primalMask = mask;
-            this._clearMask = this._getClearMask();
-            this._maskRegExp = this._getRegExpByMask(this._primalMask);
+            this.setMask(mask);
             this._setText();
-            //TODO исправить выставление курсора
-            setTimeout(function() {
-               //Если контрол не сфокусирован, и мы вызываем нажатие alt, то
-               //вывалится ошибка при вызове getSelection, ловим ее здесь.
-               try{
-                  self._keyPressHandler(18);
-               }
-               catch(ex) {}
-            }, 0);
          },
          /**
           * Проверить, является ли маска допустимой ( по массиву допустимых маск this._possibleMasks )
@@ -185,36 +173,17 @@ define(
             this._correctInterval();
          },
          /**
-          * В добавление к проверкам и обновлению опции text, необходимо обновить поле _date
-          * @param text
-          * @private
-          */
-         setText: function (text) {
-            text = text || '';
-            if (typeof text != 'string' || !this._checkTextByMask(text)) {
-               return;
-            }
-            this._setText(text);
-         },
-
-         /**
           * В добавление к проверкам и обновлению опции text, необходимо обновить поле interval
           * @param text
           * @param {Boolean} checkValues проверять ли введенное значение на корректность
           * @private
           */
          _setText: function(text, checkValues){
-            var dataContainers = this.getContainer().find('em'),
-               availTextArray;
-
             if (!text){
                text = this._options.text;
             }
-            availTextArray = text.split(":");
-            for (var i = 0; i < (this._hasMaskPattern('D') + this._hasMaskPattern('I') + 1);i++){
-               $(dataContainers[i * 2]).text(availTextArray[i]);
-            }
-            this._options.text = availTextArray.join(':');
+            this.setText(text);
+            this._options.text = text;
 
             if (checkValues){
                this._correctInterval();
@@ -327,7 +296,7 @@ define(
          //Устанавливаем часы и минуты в их диапазоне
          _correctInterval: function(){
             if (!this._checkBoundaryValues()){
-               this._setText(this._getTextByTotalMinutes());
+               this._setText(this._getTextByTotalMinutes(this._getTotalMinutes()));
             }
          },
          /**
@@ -400,39 +369,7 @@ define(
           */
          _getPatterns: function(pattern){
             var patternIndex = this._getIndexForPattern(pattern);
-            return patternIndex > -1 ? parseInt(this._options.text.split(':')[patternIndex].replace(new RegExp(this._placeholder,'g'), "0")) : 0;
-         },
-         //Переопределенный метод
-         _getCursor: function(position){
-            var selection = this._getSelection(),
-               cursorPositionEnd = this._correctCursor(selection.endContainer, selection.endOffset);
-
-            //Проверяем, не ввели ли мы сейчас последний символ
-            //Получаем массив позиции курсора.
-            //Нулевой индекс - позиция блоков (дни, часы или минуты)
-            //Первый индекс - позиция курсора внутри данного блока
-            this._isFinishedPrint = cursorPositionEnd[0] >= (1 + this._hasMaskPattern('D') + this._hasMaskPattern('I')) && cursorPositionEnd[1];
-
-            return ( position ?
-               this._correctCursor(selection.startContainer, selection.startOffset) :  cursorPositionEnd);
-         },
-
-         //TODO проверить, можно ли от этого избавиться
-         //В случае смены маски сбивается позиция курсора, в этом случае выставляем курсор на блок, после первого ":"
-         _getSelection: function(){
-            var selection = window.getSelection();
-            if (selection.type !== "None"){
-               selection = selection.getRangeAt(0);
-               this._lastSelection = selection;
-            }
-            else{
-               selection = this._lastSelection;
-               //Напрямую свойство у объекта window не меняется
-               delete selection.startOffset;
-               selection.startOffset = 2;
-            }
-
-            return selection;
+            return patternIndex > -1 ? parseInt(this._options.text.split(':')[patternIndex].replace(new RegExp('_','g'), "0")) : 0;
          },
          /**
           * Обновляяет значения this._options.text и this._options.interval (вызывается в _replaceCharacter из FormattedTextBoxBase). Переопределённый метод.
@@ -448,7 +385,7 @@ define(
             this._options.interval = this._getIntervalByTotalMinutes();
 
             if (this._options.mask.length < (minLengthMask + minutesLengthMask) && text.split(':')[0].indexOf('_') == -1) {
-               this._options.text = this._placeholder + text;
+               this._options.text = '_' + text;
                this._setMask(this._options.mask[0] + this._options.mask);
             }
             if (this._isFinishedPrint){
@@ -463,6 +400,5 @@ define(
             }
          }
       });
-
       return TimeInterval;
    });
