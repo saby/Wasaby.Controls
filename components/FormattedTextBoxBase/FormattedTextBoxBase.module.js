@@ -174,9 +174,8 @@ define(
          model: []
       },
 
-      $constructor: function (controlCharactersSet) {
-         //задаем множество управляющих символов
-         this.controlCharactersSet = controlCharactersSet;
+      $constructor: function () {
+         this.setMask(this._options.mask);
       },
       /**
        * Задать маску и создать модель
@@ -195,8 +194,8 @@ define(
             maskChar = strMask.charAt(i);
             //заменяем символы маски на внутренние, например HH:MM на dd:dd
             innerChar = maskChar;
-            if (innerChar in this.controlCharactersSet) {
-               innerChar = this.controlCharactersSet[maskChar]
+            if (innerChar in this._options.controlCharactersSet) {
+               innerChar = this._options.controlCharactersSet[maskChar]
             }
             if (groupCharactersRegExp.test(innerChar)) {
                if (separator.length) {
@@ -604,8 +603,7 @@ define(
        * Изменяем опции до отрисовки
        */
       _modifyOptions: function(options) {
-         this.formatModel = new FormatModel(this._controlCharactersSet);
-         this.formatModel.setMask(this._options.mask);
+         this.formatModel = new FormatModel({controlCharactersSet: this._controlCharactersSet, mask: this._options.mask});
          if (options.text) {
             this.formatModel.setText(options.text, this._maskReplacer);
          }
