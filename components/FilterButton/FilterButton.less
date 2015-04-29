@@ -79,6 +79,7 @@
 
 .controls__filter-button__wrapper {
    background: @controls__filter-button__wrapper-bg;
+   text-align: center;
 
    .controls__filter-button__wrapper-header {
       height: @controls__filter-button__wrapper-header-height;
@@ -105,9 +106,17 @@
          }
       }
    }
-   .controls__filter-button__template-area {
-      clear: both;
+
+   .controls__filter-button__more-filters {
+      margin: 5px 0;
+   }
+   
+   .controls__filter-button__items-container {
       padding: 5px;
+
+      .controls__filter-button-item-label {
+         margin-right: 5px ;
+      }
    }
 
    &.controls__filter-button-left {

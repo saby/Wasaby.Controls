@@ -4,57 +4,63 @@
 define('js!SBIS3.CONTROLS.FilterButton', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.FilterButton',
-   'html!SBIS3.CONTROLS.FilterButton/resources/demoFilterButtonTemplate',
-   'js!SBIS3.CONTROLS.FilterButtonTemplateArea',
    'js!SBIS3.CONTROLS.PickerMixin',
+   'js!SBIS3.CONTROLS.DSMixin',
+   'html!SBIS3.CONTROLS.FilterButton/resources/FilterButtonItemTemplate',
    'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.Button',
-   'js!SBIS3.CONTROLS.FilterButtonLabel'
-], function(CompoundControl, dotTplFn, demoTpl, FilterButtonTemplateArea, PickerMixin) {
-
-   var FilterButton = CompoundControl.extend([PickerMixin],{
+   'js!SBIS3.CONTROLS.FilterButtonCustomItem',
+   'js!SBIS3.CONTROLS.ComboBox'
+], function(CompoundControl, dotTplFn, PickerMixin, DSMixin, itemDotTpl) {
+   var myTpl = '<div><span style="margin-right: 5px;">Год</span><component data-component="SBIS3.CONTROLS.ComboBox" config="{{=$ws.helpers.encodeCfgAttr(it.getRaw().cfg)}}"></component></div>';
+   var myItems = [ {name: '1993', title: '1993'}, {name: '1994', title: '1994'}, {name: '1995', title: '1995'}, {name: '1996', title: '1996'}, {name: '1997', title: '1997'} ];
+   var items = [
+      { name: 'Год', componentType: 'SBIS3.CONTROLS.ComboBox', cfg: { field: 'Год', visible: true, items: myItems} },
+      { name: 'Год2', cfg: { field: 'Год', tpl: myTpl, items: myItems} },
+      { name: 'НаКомMy', cfg: { field: 'НаКом', caption: 'На мне' } },
+      { name: 'НаКомFromMe', cfg: { field: 'НаКом', caption: 'От меня' } }
+   ];
+   var FilterButton = CompoundControl.extend([PickerMixin, DSMixin], {
       _dotTplFn: dotTplFn,
 
       $protected: {
          _options: {
             linkText: 'Нужно отобрать?',
+            moreLinkCaption: 'Другие фильтры...',
             filterAlign: 'right',
-            template: demoTpl()
+            items: items,
+            keyField: 'name'
          },
-         _buttons: undefined,
-         _filterArea: undefined
-
+         _buttons: {},
+         _filter: {}
       },
       init: function() {
          FilterButton.superclass.init.apply(this, arguments);
          this._buttons.filterLine = this.getChildControlByName('filterLine');
-         this._buttons.filterLine.subscribe('onActivated', this.showPicker.bind(this));
+         this._buttons.clearFilterButton = this.getChildControlByName('clearFilterButton');
+         this._buttons.applyFilterButton = this.getChildControlByName('applyFilterButton');
+         this._bindButtons();
+         this.reload();
       },
       $constructor: function() {
          this._buttons = {
             closedButton: this._container.find('.controls__filter-button__closed'),
+            openedButton: this._container.find('.controls__filter-button__opened'),
             clearLineButton: this._container.find('.controls__filter-button__clear')
          };
-         this._buttons.closedButton.bind('click', this.showPicker.bind(this));
-         this._buttons.clearLineButton.bind('click', this.resetFilter.bind(this));
       },
       _bindButtons: function() {
          var buttons = this._buttons;
-         buttons.openedButton.bind('click', this.hidePicker.bind(this));;
+         buttons.closedButton.bind('click', this.showPicker.bind(this));
+         buttons.openedButton.bind('click', this.hidePicker.bind(this));
+         buttons.clearLineButton.bind('click', this.resetFilter.bind(this));
          buttons.applyFilterButton.subscribe('onActivated', this._applyFilter.bind(this));
          buttons.clearFilterButton.subscribe('onActivated', this.resetFilter.bind(this));
-      },
-      _initFilterButtonTemplateArea: function() {
-         this._buttons.clearFilterButton = this._filterArea.getChildControlByName('clearFilterButton');
-         this._buttons.applyFilterButton = this._filterArea.getChildControlByName('applyFilterButton');
-         this._buttons.openedButton = this._filterArea._container.find('.controls__filter-button__opened');
-         this._bindButtons();
+         buttons.filterLine.subscribe('onActivated', this.showPicker.bind(this));
       },
       _setPickerContent: function() {
-         var element = this._container.find('.controls__filter-button__wrapper').removeClass('ws-hidden');
-         this._picker.getContainer().append(element);
-         this._filterArea = new FilterButtonTemplateArea({filterAlign: this._options.filterAlign, template: this._options.template, element: element});
-         this._initFilterButtonTemplateArea();
+         var wrapper = this._container.find('.controls__filter-button__wrapper');
+         this._picker.getContainer().append(wrapper.removeClass('ws-hidden'));
       },
       _setPickerConfig: function () {
          return {
@@ -65,52 +71,18 @@ define('js!SBIS3.CONTROLS.FilterButton', [
             }
          };
       },
-
-
-
-
-
-
-
-
-
-
-
+      _drawItemsCallback: function() {
+         console.log('drawn');
+      },
+      _getItemsContainer: function() {
+         return this._container.find('.controls__filter-button__items-container');
+      },
+      _getItemTemplate: function() {
+         return itemDotTpl;
+      },
       _applyFilter: function() {
-         var filter = this._pickFilter();
-         this.hidePicker();
-         this.applyFilter(filter);
-      },
-      applyFilter: function(filter) {
-         console.log(filter);
-
-         this._updateFilterButtonView(filter);
-      },
-      _pickFilter: function() {
-         var filter = { isNotDefault: true };
-         return filter;
       },
       resetFilter: function() {
-         this.applyFilter({});
-      },
-      _updateFilterButtonView: function(filter) {
-         var isDefault = this._isDefaultFilter(filter);
-         this._container.toggleClass('controls__filter-button__default-filter', isDefault);
-         this._buttons.clearFilterButton.setEnabled(!isDefault);
-         this._updateFilterLine(filter, isDefault);
-      },
-      _updateFilterLine: function(filter, isDefault) {
-         var filterLine = isDefault ? this._options.linkText : this._getFilterLine();
-         if (filterLine) {
-            this._buttons.filterLine.setCaption(filterLine);
-         }
-         this._buttons.filterLine.setVisible(!!filterLine);
-      },
-      _getFilterLine: function() {
-         return 'Применён какой-то фильтр';
-      },
-      _isDefaultFilter: function(filter) {
-         return !filter.isNotDefault;
       }
    });
 
