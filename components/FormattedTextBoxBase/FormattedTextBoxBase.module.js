@@ -2,9 +2,10 @@ define(
    'js!SBIS3.CONTROLS.FormattedTextBoxBase',
    [
       'js!SBIS3.CONTROLS.TextBoxBase',
+      'html!SBIS3.CONTROLS.FormattedTextBoxBase/FormattedTextBoxBase_mask',
       'is!msIe?js!SBIS3.CONTROLS.FormattedTextBoxBase/resources/ext/ierange-m2-min'
    ],
-   function (TextBoxBase) {
+   function (TextBoxBase, maskTemplateFn) {
 
    'use strict';
 
@@ -113,6 +114,7 @@ define(
        * @private
        */
       _getContainerByIndex = function(idx) {
+         //TODO если в основном шаблоне или шаблоне маски есть пробелы или переносы строк, они собъют этот порядок
          return this._inputField.get(0).childNodes[parseInt(idx, 10)].childNodes[0];
       },
 
@@ -515,6 +517,9 @@ define(
           * Опции создаваемого контролла
           */
          _options: {
+            maskTemplateFn: maskTemplateFn,
+            //упрощенная модель для вставки в xhtml-шаблон
+            modelForMaskTpl: []
          },
 
          _KEYS: {
@@ -540,13 +545,6 @@ define(
             self = this,
             key;
          this._inputField = $('.js-controls-FormattedTextBox__field', this.getContainer().get(0));
-         this.formatModel = new FormatModel();
-         this.formatModel.setControlCharactersSet(this._controlCharactersSet);
-         this.formatModel.setMask(this._options.mask);//lllxx=ddd:ddd,LLlll
-         this._inputField.html(this._getHtmlMask());
-         if (this._options.text) {
-            this.setText(this._options.text);
-         }
          this._container.bind('focusin', function () {
             self._focusHandler();
          });
@@ -606,6 +604,20 @@ define(
       },
 
       /**
+       * Изменяем опции до отрисовки
+       */
+      _modifyOptions: function(options) {
+         this.formatModel = new FormatModel();
+         this.formatModel.setControlCharactersSet(this._controlCharactersSet);
+         this.formatModel.setMask(this._options.mask);
+         if (options.text) {
+            this.formatModel.setText(options.text, this._maskReplacer);
+         }
+         //записываем модель для шаблона
+         options.modelForMaskTpl = this._getItemsForTemplate();
+         return options;
+      },
+      /**
        * Обновляяет значение this._options.text
        * null если есть хотя бы одно незаполненное место (плэйсхолдер)
        * @protected
@@ -622,24 +634,11 @@ define(
          /*Method must be implemented*/
       },
 
-      _getTemplate: function() {
-         return   '{{~it :value:index}}' +
-                  '<em class="controls-FormattedTextBox__field-symbol{{? value.isGroup }} controls-FormattedTextBox__field-placeholder{{?}}">{{=value.text}}</em>'+
-                  '{{~}}';
-      },
-      /**
-       * Возвращает html-разметку для заданной маски
-       * @returns {string} html-разметка
-       * @private
-       */
-      _getHtmlMask: function() {
-         var
-            value,
-            dotTpl,
-            resultTpl;
+      _getItemsForTemplate: function() {
+         var value;
 
          if ( !this.formatModel || !this.formatModel.model) {
-            return '';
+            return [];
          }
          var model = this.formatModel.model;
          var items = [];
@@ -650,13 +649,17 @@ define(
             }
             items.push({isGroup: model[i].isGroup, text: value});
          }
-         //передать в шаблон
-         dotTpl = doT.template(this._getTemplate());
-         resultTpl = dotTpl(items);
-
-         return resultTpl;
+         return items;
       },
-
+      /**
+       * Возвращает html-разметку для заданной маски
+       * @returns {string} html-разметка
+       * @private
+       */
+      _getHtmlMask: function() {
+         //передать в шаблон
+         return maskTemplateFn(this._getItemsForTemplate());
+      },
 
       /**
        * Обработка события фокусировки на элементе
@@ -736,6 +739,15 @@ define(
       setText: function(text) {
          this.formatModel.setText(text, this._maskReplacer);
          //обновить html
+         this._inputField.html(this._getHtmlMask());
+      },
+
+      /**
+       * Задает маску в модель и обновляет html
+       * @param mask маска строкой, например 'dd:dd', 'HH:MM'
+       */
+      setMask: function(mask) {
+         this.formatModel.setMask(mask);
          this._inputField.html(this._getHtmlMask());
       }
 
