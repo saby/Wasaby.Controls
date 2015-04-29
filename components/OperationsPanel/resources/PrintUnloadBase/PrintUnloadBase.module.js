@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
             ds = this._view._dataSet.filter(function(item){
                return selectedItemsObj[item.getKey()];
             });
-            this.applyOperation(ds);
+            this._applyOperation(ds);
          }
       },
       _processMassOperations:function(title){
@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
                         $ws.helpers.question('Операция займет продолжительное время. Провести операцию?', {}, self).addCallback(function(answer){
                            if (answer) {
                               self._view._dataSource.query(self._view._filter, self._view._sorting, 0, selectedNumRecords).addCallback(function (dataSet) {
-                                 self.applyOperation(dataSet);
+                                 self._applyOperation(dataSet);
                               });
                            }
                         });
@@ -76,16 +76,21 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
                               return num++ < selectedNumRecords;
                            });
                         }
-                        self.applyOperation(ds);
+                        self._applyOperation(ds);
                      }
                   }
                }
             });
          }
          else {
-            self.applyOperation(ds);
+            self._applyOperation(ds);
          }
 
+      },
+      _applyOperation : function(dataSet){
+         //Скроем панель с массовыми операциями
+         this.getTopParent().hidePicker();
+         this.applyOperation(dataSet);
       },
       /**
        * Must be implemented
