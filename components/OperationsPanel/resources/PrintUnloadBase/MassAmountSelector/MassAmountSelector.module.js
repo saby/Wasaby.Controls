@@ -1,32 +1,20 @@
 /**
  * Created by ad.chistyakova on 10.04.2015.
  */
-define('js!SBIS3.CONTROLS.PrintMassSelectorDialog', [
+define('js!SBIS3.CONTROLS.MassAmountSelector', [
    'js!SBIS3.CORE.CompoundControl',
-   'html!SBIS3.CONTROLS.PrintMassSelectorDialog',
+   'html!SBIS3.CONTROLS.MassAmountSelector',
    'js!SBIS3.CONTROLS.RadioGroup',
    'js!SBIS3.CONTROLS.NumberTextBox',
    'js!SBIS3.CONTROLS.Button',
-   'css!SBIS3.CONTROLS.PrintMassSelectorDialog'
+   'css!SBIS3.CONTROLS.MassAmountSelector'
 ], function(Control, dotTplFn) {
 
-   var PrintMassSelector = Control.extend({
+   var MassAmountSelector = Control.extend({
 
       $protected: {
          _options: {
-            name: 'controls-PrintMassSelectorDialog',
-            items: [{
-               id : 'current',
-               title : 'Текущую страницу'
-            },
-            {
-               id : 'all',
-               title : 'Все записи'
-            },
-            {
-               id : 'pickNum',
-               title : 'Количество записей'
-            }],
+            name: 'controls-MassAmountSelector',
             verticalAlignment: 'Top',
             height: 'auto'
          },
@@ -40,9 +28,9 @@ define('js!SBIS3.CONTROLS.PrintMassSelectorDialog', [
          //TODO возможно кнопка печати может стать кнопкой меню, в зависимости от набора отчетов на печать
       },
       init: function(){
-         PrintMassSelector.superclass.init.call(this);
+         MassAmountSelector.superclass.init.call(this);
          //Так как забиндились на контекст в него нужно положить правильное первоначальное значение.
-         this.getContext().setValue('controls-RadioButtons', this._options.items[0].id);
+         this.getContext().setValue('controls-RadioButtons', 'current');
          //TODO нужно запомнить и отписываться на destroy или сам догадается?
          this._radioButtons = this.getChildControlByName('controls-RadioButtons').subscribe('onSelectedItemChange', this.onChangeRadioButton.bind(this));
          this._numberTextBox = this.getChildControlByName('controls-numberTextBox');
@@ -51,10 +39,10 @@ define('js!SBIS3.CONTROLS.PrintMassSelectorDialog', [
          this._numberTextBoxValue = this._numberTextBoxValue || this._numberTextBox.getNumericValue();
          this._numberTextBox.setText(item === 'all' ? 2000 : this._numberTextBoxValue);
          //TODO может стоит заменить на onFieldChange у контекста? Ибо радио-кнопки теперь с data-bind'ом
-         this._container.find('> .controls-PrintMassSelector__numberTextBox').toggleClass('ws-hidden', item !== 'pickNum');
+         this._container.find('> .controls-MassAmountSelector__numberTextBox').toggleClass('ws-hidden', item !== 'pickNum');
       }
    });
 
-   return PrintMassSelector;
+   return MassAmountSelector;
 
 });

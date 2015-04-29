@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          if (this._view._hasNextPage(this._view._dataSet.getMetaData().more)) {
             //Показать диалог выбора записей
             new Dialog ({
-               template: 'js!SBIS3.CONTROLS.PrintMassSelectorDialog',
+               template: 'js!SBIS3.CONTROLS.MassAmountSelector',
                caption : title,
                resizable: false,
                handlers: {
@@ -56,7 +56,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
                      var dialog = this;
                      //this.getLinkedContext().setValue('NumOfRecords', self._view._dataSet.getCount()); Хочется, чтобы было так
                      //TODO Но пришлось сделать так:
-                     this.getChildControlByName('controls-PrintMassSelectorDialog').getContext().setValue('NumOfRecords', numOfRecords);
+                     this.getChildControlByName('controls-MassAmountSelector').getContext().setValue('NumOfRecords', numOfRecords);
                      this.getChildControlByName('controls-buttonPrint').subscribe('onActivated', function(){
                         var selectedNumRecords;
                         if(dialog.validate()){
@@ -74,6 +74,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
                            } else {
                               if (selectedNumRecords < numOfRecords) {
                                  num = 0;
+                                 //TODO здесь должен быть не filter, а что-то типа .range - получение первых N записей
                                  //Выберем selectedNumRecords записей из dataSet
                                  ds = self._view._dataSet.filter(function(){
                                     return num++ < selectedNumRecords;
