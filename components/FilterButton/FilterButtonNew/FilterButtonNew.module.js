@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
 
       _setPickerContent: function() {
          var self = this;
-         this._picker.getContainer().append(dotTplForPicker.call(this, {template: this._options.template}));
+         this._picker.getContainer().append(dotTplForPicker.call(this, {template: this._options.template})).addClass('controls__filterButton-' + this._options.filterAlign);
          this._picker.reviveComponents().addCallback(function() {
             self._picker.getChildControlByName('clearFilterButton').subscribe('onActivated', self.resetFilter.bind(self));
             self._picker.getChildControlByName('applyFilterButton').subscribe('onActivated', self.applyFilter.bind(self));
@@ -64,8 +64,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
             horizontalAlign: {
                side: this._options.filterAlign
             },
-            closeButton: true,
-            closeByExternalClick: true
+            closeButton: true
          };
       }
    });
