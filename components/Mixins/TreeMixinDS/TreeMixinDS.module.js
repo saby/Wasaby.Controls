@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
 
             this._curLvl = lvl;
 
-            if ((parentKey == self._options.root)) {
+            if ((parentKey == this._curRoot)) {
                self._drawItem(record, undefined);
             }
          });

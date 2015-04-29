@@ -30,6 +30,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          }
       },
       $constructor: function () {
+         this._curRoot = this._options.root;
       },
 
       setHierField: function (hierField) {
@@ -123,15 +124,17 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        * @param {String} key Идентификатор раскрываемого узла
        */
       openNode: function (key) {
-         var
-            self = this,
-            filter = this._filter || {};
-         filter[self._options.hierField] = key;
-
-         //TODO: проверка что уже загружали ветку и просто показать ее
-         self._dataSource.query(filter).addCallback(function (dataSet) {
+         var self = this;
+         this._loadNode(key).addCallback(function (dataSet) {
             self._nodeDataLoaded(key, dataSet);
          });
+      },
+
+      _loadNode : function(key) {
+         /*TODO проверка на что уже загружали*/
+         var filter = this._filter || {};
+         filter[this._options.hierField] = key;
+         return this._dataSource.query(filter);
       },
 
       toggleNode: function(key) {
@@ -159,6 +162,10 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       },
 
       _nodeDataLoaded: function (key, dataSet) {
+         this._setCurRootNode(key, dataSet);
+      },
+
+      _setCurRootNode: function(key, dataSet) {
          this._dataSet = dataSet;
          this._curRoot = key;
          this._redraw();
