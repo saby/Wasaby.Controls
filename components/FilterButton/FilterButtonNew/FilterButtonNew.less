@@ -1,0 +1,43 @@
+.controls__filterButton {
+  height: 40px;
+  > * {
+    display: inline-block;
+  }
+  .controls__filterButton-button {
+    background: url('img/filterButtonAreaButton.png') no-repeat;
+    width: 30px;
+    height: 24px;
+    margin: 8px 0;
+  }
+  .controls__filterButton__filteLine-button {
+    height: 24px;
+    line-height: 24px;
+    margin-right: 0;
+    vertical-align: top;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 8px 8px 8px 0;
+    font-size: 13px;
+  }
+}
+.controls__filterButton__picker {
+  background: #f7f3f0 !important;
+  .controls-PopupMixin__closeButton {
+    background: url('img/filterButtonAreaButton.png') -30px 0 no-repeat;
+    top: 8px;
+    width: 30px;
+    height: 24px;
+    &:hover {
+      background: url('img/filterButtonAreaButton.png') -30px -24px no-repeat;
+    }
+    &:active {
+      background: url('img/filterButtonAreaButton.png') -30px -48px no-repeat;
+    }
+  }
+  .controls-PopupMixin__closeButton:hover {
+    background-position: -30px -24px;
+  }
+  .controls-PopupMixin__closeButton:active {
+    background-position: -30px -48px;
+  }
+}
