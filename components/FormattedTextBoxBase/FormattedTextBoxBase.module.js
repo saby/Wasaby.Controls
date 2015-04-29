@@ -174,11 +174,8 @@ define(
          model: []
       },
 
-      /**
-       * задаем множество управляющих символов
-       * @param controlCharactersSet управляющие символы
-       */
-      setControlCharactersSet: function(controlCharactersSet) {
+      $constructor: function (controlCharactersSet) {
+         //задаем множество управляющих символов
          this.controlCharactersSet = controlCharactersSet;
       },
       /**
@@ -607,8 +604,7 @@ define(
        * Изменяем опции до отрисовки
        */
       _modifyOptions: function(options) {
-         this.formatModel = new FormatModel();
-         this.formatModel.setControlCharactersSet(this._controlCharactersSet);
+         this.formatModel = new FormatModel(this._controlCharactersSet);
          this.formatModel.setMask(this._options.mask);
          if (options.text) {
             this.formatModel.setText(options.text, this._maskReplacer);
