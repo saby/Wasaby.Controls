@@ -77,7 +77,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _itemActionsGroup: null,
                _options: {
                /**
-                * @faq Почему нет флажков при включенной опции {@link multiselect}?
+                * @faq Почему нет флажков при включенной опции {@link SBIS3.CONTROLS.ListViewDS#multiselect multiselect}?
                 * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
                 * <pre>
                 *     <div class="listViewItem" style="height: 30px;">\
