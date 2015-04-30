@@ -25,12 +25,28 @@
       }
   }
    .controls__filterButton__filterLine {
-      margin: 8px 4px;
-      .controls__filterButton__filterLine-button {
-         height: 24px;
-         line-height: 24px;
+      line-height: 40px;
+      .controls__filterButton__filterLine-items {
          overflow: hidden;
          text-overflow: ellipsis;
+
+         &:not(:first-child):before {
+            content: ', ';
+         }
+      }
+      .controls__filterButton__filterLine-arrow, .controls__filterButton__filterLine-cross {
+         display: inline-block;
+         vertical-align: middle;
+         cursor: pointer;
+         width: 16px;
+         height: 16px;
+      }
+      //TODO добавить картинки
+      .controls__filterButton__filterLine-arrow {
+         //background-color: ;
+      }
+      .controls__filterButton__filterLine-cross {
+         //background-color: ;
       }
    }
    &.controls__filterButton-left {
