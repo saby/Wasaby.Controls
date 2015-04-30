@@ -6,6 +6,7 @@
    </td>
    {{?}}
    {{~it.columns :column:index}}
-      <td class="controls-DataGrid__td{{?column.className}} {{=column.className}}{{?}}">{{?index == 0}}<div class="controls-TreeView__expand js-controls-TreeView__expand"></div>{{?}}{{=column.value}}</td>
+      <td class="controls-DataGrid__td{{?column.className}} {{=column.className}}{{?}}">{{?index == 0}}<div class="controls-TreeView__expand js-controls-TreeView__expand"></div>{{?}}{{=column.value}}
+          <div class="controls-TreeView__expand--inside icon-16 icon-View icon-primary"></div></td>
    {{~}}
 </tr>

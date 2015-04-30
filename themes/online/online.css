@@ -2016,6 +2016,14 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__td__checkBox .controls-ListView__itemCheckBox {
   margin: 0;
 }
+.controls-DataGrid__td .controls-TreeView__expand--inside {
+  display: none;
+  line-height: 13px !important;
+}
+.controls-DataGrid__td:hover .controls-TreeView__expand--inside {
+  display: inline-block;
+  height: 14px;
+}
 .controls-HierarchyDataGrid__expand {
   height: 20px;
 }
