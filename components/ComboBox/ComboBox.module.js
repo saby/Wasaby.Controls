@@ -113,8 +113,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._options.displayField = 'title';
          }
 
-         if (this._options.selectedItem) {
-            this._drawSelectedItem(this._options.selectedItem);
+         if (this._options.selectedIndex) {
+            this._drawSelectedItem(this._options.selectedIndex);
          } else {
             if (this._options.text) {
                this._setKeyByText();
@@ -181,7 +181,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawItemsCallback : function() {
-         this._drawSelectedItem(this._options.selectedItem);
+         this._drawSelectedItem(this._options.selectedIndex);
       },
 
       _addItemClasses : function(container, key) {
@@ -208,7 +208,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._picker.getContainer().mouseup(function (e) {
             var row = $(e.target).closest('.js-controls-ComboBox__itemRow');
             if (row.length) {
-               self.setSelectedItem($(row).attr('data-id'));
+               self.setSelectedIndex($(row).attr('data-id'));
                self.hidePicker();
             }
          });
@@ -249,7 +249,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          /*описываем здесь поведение стрелок вверх и вниз*/
          /*
          var self = this,
-            current = self.getSelectedItem();
+            current = self.getSelectedIndex();
          if (e.which == 40 || e.which == 38) {
             e.preventDefault();
          }
@@ -261,7 +261,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             newItem = self.getItems().getPreviousItem(current);
          }
          if (newItem) {
-            self.setSelectedItem(this._items.getKey(newItem));
+            self.setSelectedIndex(this._items.getKey(newItem));
          }
          if (e.which == 13) {
             this.hidePicker();
@@ -283,7 +283,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          /*устанавливаем ключ, когда текст изменен извне*/
          var
             selKey,
-            oldKey = this._options.selectedItem,
+            oldKey = this._options.selectedIndex,
             self = this,
             filterFieldObj = {};
 
@@ -294,16 +294,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             DataSet.each(function (item) {
                noItems = false;
                selKey = item.getKey();
-               self._options.selectedItem = selKey || null;
+               self._options.selectedIndex = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
                //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
-               if (oldKey !== self._options.selectedItem) { // при повторном индексе null не стреляет событием
-                  self._notifySelectedItem(self._options.selectedItem);
-                  self._drawSelectedItem(self._options.selectedItem);
+               if (oldKey !== self._options.selectedIndex) { // при повторном индексе null не стреляет событием
+                  self._notifySelectedItem(self._options.selectedIndex);
+                  self._drawSelectedItem(self._options.selectedIndex);
                }
             });
 
             if (noItems) {
-               self._options.selectedItem = null;
+               self._options.selectedIndex = null;
                self._notifySelectedItem(null);
                self._drawSelectedItem(null);
             }
@@ -325,7 +325,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._picker.recalcPosition();
          }
          else {
-            this._drawSelectedItem(this._options.selectedItem);
+            this._drawSelectedItem(this._options.selectedIndex);
          }
       },
        /**
@@ -354,20 +354,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
         */
       isEditable: function () {
          return this._options.editable;
-      },
-       /**
-        * @noShow
-        * @param key
-        */
-      setValue: function (key) {
-         this.setSelectedItem(key);
-      },
-       /**
-        * @noShow
-        * @returns {*}
-        */
-      getValue: function () {
-         return this.getSelectedItem();
       },
 
       _setEnabled: function (enabled) {

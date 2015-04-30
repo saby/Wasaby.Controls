@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                $(this._container.children()[0]).addClass('controls-EditAtPlace__textAreaWrapper');
             }
 
-            this._loadChildControls();
+            this.reviveComponents();
 
             this.getContext().subscribe('onFieldChange', function(e, f, v, o){
                self.getParent().getLinkedContext().setValue(f, v, false, o);
@@ -163,7 +163,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             this._picker.getContainer().addClass('controls-EditAtPlace__editorOverlay');
             $('[data-component]', this._picker.getContainer()).attr('data-bind', this._container.attr('data-bind'));
             $('[data-component]', this._picker.getContainer()).width(this._container.width());
-            this._picker._loadChildControls();
+            this._picker.reviveComponents();
             this._addControlPanel(this._picker._container);
             this._picker._container.bind('keydown', function (e) {
                self._keyPressHandler(e);
@@ -372,22 +372,6 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
 
          getText: function () {
             return this._options.text;
-         },
-
-         //*TODO переопределяем метод compoundControl - костыль*//*
-         _loadControls: function (pdResult) {
-            return pdResult.done([]);
-         },
-
-         /*TODO свой механизм загрузки дочерних контролов - костыль*/
-         _loadChildControls: function () {
-            var def = new $ws.proto.Deferred();
-            var self = this;
-            self._loadControlsBySelector(new $ws.proto.ParallelDeferred(), undefined, '[data-component]')
-               .getResult().addCallback(function () {
-                  def.callback();
-               });
-            return def;
          }
 
       });

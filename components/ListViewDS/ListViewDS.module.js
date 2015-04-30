@@ -105,13 +105,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 * @typedef {Array} ItemsActions
                 * @property {String} name Имя кнопки.
                 * @property {String} icon Путь до иконки.
-                * @property {String} title Текст на кнопке.
+                * @property {String} caption Текст на кнопке.
+                * @property {String} tooltip Всплывающая подсказка.
                 * @property {Boolean} isMainAction Отображать ли кнопку на строке или только выпадающем в меню.
                 * На строке кнопки отображаются в том же порядке, в каком они перечислены.
                 * На строке может быть только три кнопки, полный список будет в меню.
                 * @property {Function} onActivated Действие кнопки.
                 * @editor icon ImageEditor
-                * @translatable title
+                * @translatable caption
                 */
                /**
                 * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок
@@ -124,13 +125,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 *           <option name="name">btn1</option>
                 *           <option name="icon">sprite:icon-16 icon-Delete icon-primary</option>
                 *           <option name="isMainAction">false</option>
-                *           <option name="title">Удалить</option>
+                *           <option name="tooltip">Удалить</option>
                 *           <option name="onActivated" type="function">js!SBIS3.Demo.Control.MyListViewDS:prototype.myOnActivatedHandler</option>
                 *        </options>
                 *        <options>
                 *            <option name="name">btn2</option>
                 *            <option name="icon">sprite:icon-16 icon-Trade icon-primary</option>
-                *            <option name="title">Изменить</option>
+                *            <option name="tooltip">Изменить</option>
                 *            <option name="isMainAction">true</option>
                 *            <option name="onActivated" type="function">js!SBIS3.Demo.Control.MyListViewDS:prototype.myOnActivatedHandler</option>
                 *         </options>
@@ -141,7 +142,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                itemsActions: [{
                   name: 'delete',
                   icon: 'sprite:icon-16 icon-Erase icon-error',
-                  title: 'Удалить',
+                  tooltip: 'Удалить',
                   isMainAction: true,
                   onActivated: function(item) {
                      this.deleteRecords(item.data('id'));
@@ -209,7 +210,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             this._container.mouseup(function (e) {
                if (e.which == 1) {
                   var $target = $(e.target),
-                      target = $target.hasClass('controls-ListView__item') ? e.target : $target.closest('.controls-ListView__item');
+                      target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
                   if (target.length) {
                      var id = target.data('id');
                      self._elemClickHandler(id, self._dataSet.getRecordByKey(id), e.target);
@@ -339,7 +340,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                }
             }
             else {
-               this.setSelectedItems([id]);
+               this.setSelectedIndexes([id]);
                if (this._options.elemClickHandler) {
                   this._options.elemClickHandler.call(this, id, data, target);
                }
@@ -470,10 +471,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          /**
           * Метод установки или замены кнопок операций над записью, заданных в опции {@link itemsActions}
           * Нужно передать массив обьектов.
-          * @param {Array} items Объект формата {name: ..., icon: ..., title: ..., onActivated: ..., isMainOption: ...}
+          * @param {Array} items Объект формата {name: ..., icon: ..., caption: ..., onActivated: ..., isMainOption: ...}
           * @param {String} items.name Имя кнопки операции над записью.
           * @param {String} items.icon Иконка кнопки.
-          * @param {String} items.title Текст на кнопке.
+          * @param {String} items.caption Текст на кнопке.
           * @param {String} items.onActivated Имя функции, задабщей действие кнопки.
           * @param {String} items.isMainOption На строке ли кнопка (или в меню).
           * @example
@@ -513,7 +514,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (this.isInfiniteScroll()) {
                this._loadBeforeScrollAppears();
             }
-            this._drawSelectedItems(this._options.selectedItems);
+            this._drawSelectedItems(this._options.selectedIndexes);
          },
          destroy: function() {
             if (this.isInfiniteScroll()){

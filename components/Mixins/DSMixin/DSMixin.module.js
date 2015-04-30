@@ -231,10 +231,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             keyField: keyField
          });
          this.reload();
-         //TODO совместимость
-         if (typeof(window) != 'undefined') {
-            console['log']('Метод setItems устарел. Он прекратит работу в версии 3.7.2');
-         }
       },
 
       _drawItemsCallback: function () {
@@ -273,7 +269,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                if (targetContainer) {
                   this._drawItem(records[i], targetContainer, curAt);
                }
-               if (curAt && cuAt.at) {
+               if (curAt && typeof curAt.at != 'undefined') {
                   curAt.at++;
                }
             }
