@@ -2126,8 +2126,11 @@ input[type="reset"]::-moz-focus-inner {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-items:not(:first-child):before {
+.controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-items :before {
   content: ', ';
+}
+.controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-items :first-child:before {
+  content: '';
 }
 .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-arrow,
 .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-cross {

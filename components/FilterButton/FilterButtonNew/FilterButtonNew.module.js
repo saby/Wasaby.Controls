@@ -28,25 +28,28 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
             ],
             keyField: 'field'
          },
-         _filterLineButton: undefined
+         _filterLineItemsContainer: undefined,
+         _filterLine: undefined
       },
 
       $constructor: function() {
          var self = this;
          this._container.removeClass('ws-area');
-         this._filterLineButton = this._container.find('.controls__filterButton__filterLine-items');
+         this._filterLineItemsContainer = this._container.find('.controls__filterButton__filterLine-items');
+         this._filterLine = this._container.find('.controls__filterButton__filterLine');
          this._initEvents();
          this.reload();
 
       },
       _initEvents: function() {
          var self = this;
-         this._container.mouseup(this.showPicker());
-         this._container.find('.controls__filterButton__filterLine-cross', function(e) {
+         //TODO Переделать
+         this._container.mouseup(this.showPicker.bind(this));
+         this._container.find('.controls__filterButton__filterLine-cross').mouseup(function(e) {
             self.setItems([]);
             e.preventDefault();
             e.stopPropagation();
-         })
+         });
       },
 
       resetFilter: function() {
@@ -67,11 +70,11 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
       },
 
       _drawItemsCallback: function() {
-         var isFilterLineEmpty = Object.isEmpty(this.getItemsInstances());
+         var isFilterLineEmpty = !this._container.find('.controls-ListView__item').length;
          if(isFilterLineEmpty) {
-            this._filterLineButton.text(this._options.linkText)
+            this._filterLineItemsContainer.text(this._options.linkText)
          }
-         this._filterLineButton.toggleClass('controls__filterButton__filterLine-defaultText', isFilterLineEmpty);
+         this._filterLine.toggleClass('controls__filterButton__filterLine-defaultText', isFilterLineEmpty);
       },
 
       _getItemTemplate: function(item) {
@@ -84,12 +87,12 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
       },
 
       _getItemsContainer: function() {
-         return this._filterLineButton;
+         return this._filterLineItemsContainer;
       },
 
       _clearItems: function() {
          FilterButtonNew.superclass._clearItems.apply(this, arguments);
-         this._filterLineButton.empty();
+         this._filterLineItemsContainer.empty();
       },
 
       _setPickerConfig: function () {
