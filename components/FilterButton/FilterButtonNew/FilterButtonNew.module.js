@@ -25,7 +25,8 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
                {field: 'field2', textValue: 'filter2'},
                {field: 'field3', textValue: 'filter3'},
                {field: 'field4', textValue: 'filter4'}
-            ]
+            ],
+            keyField: 'field'
          },
          _filterLineButton: undefined
       },
@@ -33,15 +34,19 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
       $constructor: function() {
          var self = this;
          this._container.removeClass('ws-area');
-         this._container.find('.controls__filterButton-button').mouseup(function() {
-            self.showPicker();
-         });
-      },
-
-      init: function() {
-         FilterButtonNew.superclass.init.apply(this, arguments);
-         (this._filterLineButton = this.getChildControlByName('filterLine')).subscribe('onActivated', this.showPicker.bind(this));
+         this._filterLineButton = this._container.find('.controls__filterButton__filterLine-items');
+         this._initEvents();
          this.reload();
+
+      },
+      _initEvents: function() {
+         var self = this;
+         this._container.mouseup(this.showPicker());
+         this._container.find('.controls__filterButton__filterLine-cross', function(e) {
+            self.setItems([]);
+            e.preventDefault();
+            e.stopPropagation();
+         })
       },
 
       resetFilter: function() {
@@ -52,37 +57,41 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          console.log('applyFilter');
       },
 
-      //_redraw: function() {/*Переопределяем, чтобы не было отрисовки*/},
-
       _setPickerContent: function() {
          var self = this;
-         this._picker.getContainer().append(dotTplForPicker.call(this, {template: this._options.template})).addClass('controls__filterButton-' + this._options.filterAlign);
+         this._picker.getContainer().append(dotTplForPicker.call(this, {template: this._options.template}));
          this._picker.reviveComponents().addCallback(function() {
             self._picker.getChildControlByName('clearFilterButton').subscribe('onActivated', self.resetFilter.bind(self));
             self._picker.getChildControlByName('applyFilterButton').subscribe('onActivated', self.applyFilter.bind(self));
          });
       },
-      _getItemTemplate: function(item) {
-         var textValue = item.getRaw().textValue;
-         if (textValue) {
-            return '<span>' + textValue + ', </span>';
-         }
-      },
-      _drawItemsCallback: function() {
-         var lastSpan = this._filterLineButton._container.find('.controls-Link__field').find('span:last');
-         if (lastSpan.length) {
-            lastSpan.text(lastSpan.text().slice(0, -2));
-         } else {
-            this._filterLineButton.setCaption(this._options.linkText);
-         }
-      },
-      _getItemsContainer: function() {
-         return this._filterLineButton._container.find('.controls-Link__field');
-      },
-      _clearItems: function() {
 
-         this._getItemsContainer().empty();
+      _drawItemsCallback: function() {
+         var isFilterLineEmpty = Object.isEmpty(this.getItemsInstances());
+         if(isFilterLineEmpty) {
+            this._filterLineButton.text(this._options.linkText)
+         }
+         this._filterLineButton.toggleClass('controls__filterButton__filterLine-defaultText', isFilterLineEmpty);
       },
+
+      _getItemTemplate: function(item) {
+         var textValue = item.get('textValue');
+         if (textValue) {
+            return '<component data-component="SBIS3.CONTROLS.Link">' +
+                     '<option name="caption">' + textValue + '</option>' +
+                   '</component>';
+         }
+      },
+
+      _getItemsContainer: function() {
+         return this._filterLineButton;
+      },
+
+      _clearItems: function() {
+         FilterButtonNew.superclass._clearItems.apply(this, arguments);
+         this._filterLineButton.empty();
+      },
+
       _setPickerConfig: function () {
          return {
             corner: this._options.filterAlign === 'right' ? 'tr' : 'tl',
@@ -90,7 +99,10 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
             horizontalAlign: {
                side: this._options.filterAlign
             },
-            closeButton: true
+            closeButton: true,
+            closeByExternalClick: true,
+            //TODO спросить почему не вешается класс
+            cssClassName: 'controls__filterButton-' + this._options.filterAlign
          };
       }
    });

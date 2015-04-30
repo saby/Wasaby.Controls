@@ -2118,6 +2118,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls__filterButton .controls__filterButton__filterLine {
   line-height: 40px;
 }
+.controls__filterButton .controls__filterButton__filterLine.controls__filterButton__filterLine-defaultText .controls__filterButton__filterLine-arrow,
+.controls__filterButton .controls__filterButton__filterLine.controls__filterButton__filterLine-defaultText .controls__filterButton__filterLine-cross {
+  display: none;
+}
 .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-items {
   overflow: hidden;
   text-overflow: ellipsis;
