@@ -2019,9 +2019,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-HierarchyDataGrid__expand {
   height: 20px;
 }
-.controls-HierarchyDataGrid__PathSelector__block {
-  margin-bottom: 4px;
-}
 .controls-HierarchyDataGrid__PathSelector__block__arrow {
   height: 13px;
 }
@@ -2048,9 +2045,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MultiView .controls-MultiView__listItem:hover {
   background: #f3f3f3;
 }
-.controls-MultiView.controls-MultiView-tile {
+.controls-MultiView.controls-MultiView-tile .controls-MultiView__itemsContainer {
   border-left: 1px solid #cccccc;
   border-top: 1px solid #cccccc;
+  overflow: hidden;
 }
 .controls-MultiView.controls-MultiView-tile .controls-ItemActions {
   width: 20px;

@@ -10,8 +10,12 @@
    }
 
    &.controls-MultiView-tile {
-      border-left: @multiView-tile-item-border;
-      border-top: @multiView-tile-item-border;
+      .controls-MultiView__itemsContainer {
+        border-left: @multiView-tile-item-border;
+        border-top: @multiView-tile-item-border;
+        overflow: hidden;
+      }
+
       .controls-ItemActions {
          width: @list-view-actions-width;
       }
