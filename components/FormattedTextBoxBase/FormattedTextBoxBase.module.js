@@ -125,7 +125,17 @@ define(
        * @protected
        */
       _getCursor = function(position) {
-         var selection = window.getSelection().getRangeAt(0);
+         var selection = window.getSelection();
+         if (selection.type !== "None"){
+            selection = selection.getRangeAt(0);
+            this._lastSelection = selection;
+         } else {
+            selection = this._lastSelection;
+            //Напрямую свойство у объекта window не меняется
+            delete selection.startOffset;
+            selection.startOffset = 0;
+         }
+
          return (position ?
             _getCursorContainerAndPosition.call(this, selection.startContainer, selection.startOffset) :
             _getCursorContainerAndPosition.call(this, selection.endContainer, selection.endOffset)
@@ -540,6 +550,7 @@ define(
             inputValue,
             self = this,
             key;
+         this._publish('onInputFinished');
          this._inputField = $('.js-controls-FormattedTextBox__field', this.getContainer().get(0));
          this._container.bind('focusin', function () {
             self._focusHandler();
@@ -704,6 +715,12 @@ define(
                positionObject.container = _getContainerByIndex.call(this, keyInsertInfo.groupNum);
                _replaceCharacter.call(this, positionObject.container, keyInsertInfo.position, keyInsertInfo.character);
                positionObject.position = this.formatModel._options.cursorPosition.position + positionOffset;
+               //проверяем был ли введен последний символ в последней группе
+               var lastGroupNum = this.formatModel.model.length - 1;
+               lastGroupNum = this.formatModel.model[lastGroupNum].isGroup ? lastGroupNum : lastGroupNum - 1;
+               if (keyInsertInfo.groupNum == lastGroupNum  &&  keyInsertInfo.position == this.formatModel.model[lastGroupNum].mask.length - 1) {
+                  this._notify('onInputFinished');
+               }
             }
             if (type == 'delete') {
                positionObject = positionObjEnd;
@@ -741,9 +758,18 @@ define(
        * @param mask маска строкой, например 'dd:dd', 'HH:MM'
        */
       setMask: function(mask) {
+         var self = this;
          this._options.mask = mask;
          this.formatModel.setMask(mask);
          this._inputField.html(this._getHtmlMask());
+         //TODO исправить выставление курсора
+         setTimeout(function() {
+            //Если контрол не сфокусирован, и мы вызываем нажатие alt, то
+            //вывалится ошибка при вызове getSelection, ловим ее здесь.
+            try {
+               self._keyPressHandler(18);
+            } catch(ex) {}
+         }, 0);
       }
 
    });
