@@ -50,10 +50,6 @@ define(
                "HH:II"
             ],
             /**
-             * Завершили ли ввод интервала (смотрит на последний символ)
-             */
-            _isFinishedPrint: false,
-            /**
              * Хранит последний window.getSelection()
              */
             _lastSelection: null,
@@ -100,6 +96,7 @@ define(
                self._correctInterval();
             });
 
+            this.subscribe('onInputFinished',self._correctInterval);
          },
          /**
           * Получить маску. Переопределённый метод
@@ -388,10 +385,6 @@ define(
             if (this._options.mask.length < (minLengthMask + minutesLengthMask) && text.split(':')[0].indexOf('_') == -1) {
                this._options.text = '_' + text;
                this._setMask(this._options.mask[0] + this._options.mask);
-            }
-            if (this._isFinishedPrint){
-               this._correctInterval();
-               this._isFinishedPrint = false;
             }
 
             // Если дата изменилась -- генерировать событие.
