@@ -96,10 +96,7 @@ define(
                self._correctInterval();
             });
 
-            this.subscribe('onInputFinished', function(){
-               self._correctInterval();
-            });
-
+            this.subscribe('onInputFinished',self._correctInterval);
          },
          /**
           * Получить маску. Переопределённый метод
