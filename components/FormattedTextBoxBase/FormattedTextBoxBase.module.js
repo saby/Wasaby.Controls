@@ -133,7 +133,16 @@ define(
             selection = this._lastSelection;
             //Напрямую свойство у объекта window не меняется
             delete selection.startOffset;
-            selection.startOffset = 0;
+            if (this.formatModel._options.newContainer) {
+               delete selection.startContainer;
+               selection.startContainer = this.formatModel._options.newContainer;
+               delete selection.endContainer;
+               selection.endContainer = this.formatModel._options.newContainer;
+               selection.startOffset  = this.formatModel._options.newPosition;
+               this.formatModel._options.newContainer = undefined;
+            } else {
+               selection.startOffset = 0;
+            }
          }
 
          return (position ?
@@ -740,6 +749,20 @@ define(
       _setEnabled: function(enabled) {
          FormattedTextBoxBase.superclass._setEnabled.call(this, enabled);
          this._inputField.attr('contenteditable', !!enabled);
+      },
+
+      /**
+       * Установка курсора в заданную позицию
+       * @param groupNum - номер контейнера
+       * @param position - позиция в контейнере
+       * @returns {boolean}
+       */
+      setCursor: function(groupNum, position) {
+         if (!this.formatModel.setCursor(groupNum, position)) {
+            return false;
+         }
+         this.formatModel._options.newContainer = _getContainerByIndex.call(this, this.formatModel._options.cursorPosition.group);
+         this.formatModel._options.newPosition = position;
       },
       /**
        * Установить значение в поле. Значение вводится в точности с маской, включая разделяющие символы

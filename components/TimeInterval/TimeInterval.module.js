@@ -113,6 +113,7 @@ define(
          _setMask: function (mask) {
             this.setMask(mask);
             this._setText();
+            this.setCursor(2,0);
          },
          /**
           * Проверить, является ли маска допустимой ( по массиву допустимых маск this._possibleMasks )
