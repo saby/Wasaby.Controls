@@ -33,6 +33,8 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
       },
 
       $constructor: function () {
+         //чтобы не добавлять новый шаблон модуля просто добавим класс тут
+         this.getContainer().addClass('controls-HierarchyDataGrid');
       },
 
       _dataLoadedCallback: function () {
@@ -42,7 +44,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
       },
 
       _drawPathSelector: function () {
-         var pathSelectorContainer = $('<div class="controls-DataGrid__PathSelector"><div class="controls-DataGrid__PathSelector__block"></div></div>');
+         var pathSelectorContainer = $('<div class="controls-HierarchyDataGrid__PathSelector"><div class="controls-HierarchyDataGrid__PathSelector__block"></div></div>');
 
          this.getContainer().prepend(pathSelectorContainer);
 

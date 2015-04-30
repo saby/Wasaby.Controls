@@ -72,12 +72,15 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
       _addItemAttributes : function(container, item) {
          TreeDataGrid.superclass._addItemAttributes.call(this, container, item);
          var parentKey = this.getParentKey(this._dataSet, item);
+         console.log(parentKey)
          container.attr('data-parent', parentKey);
          /*TODO пока придрот*/
-         /*var
-            parentCont = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._container.get(0)).get(0),
-            parentMargin = parseInt($('.controls-TreeView__expand', parentCont).css('margin-left'), 10) || 0;
-         $('.controls-TreeView__expand', container).css('margin-left', parentMargin + 16);*/
+         if(parentKey) {
+            var
+               parentCont = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._container.get(0)).get(0),
+               parentMargin = parseInt($('.controls-TreeView__expand', parentCont).css('margin-left'), 10) || 0;
+            $('.controls-TreeView__expand', container).css('margin-left', parentMargin + 16);
+         }
 
       }
    });

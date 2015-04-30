@@ -5,7 +5,6 @@ define('js!SBIS3.CONTROLS.PathSelector', [
 
    var PathSelector = CompoundControl.extend({
       $protected: {
-         //_rowTpl : rowTpl
          _hierarchyField: undefined,
          _block: undefined,
          _path: [],
@@ -24,19 +23,13 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             'id': this._options.rootNodeId
          });
 
-         this._block = this.getContainer().find('.controls-DataGrid__PathSelector__block');
-         this._initEvents();
+         this._block = this.getContainer().find('.controls-HierarchyDataGrid__PathSelector__block');
          this._build();
          this._publish('onPathChange');
       },
 
-      _initEvents: function () {
-         var parent = this._block.get(0);
-         $('.controls-DataGrid__PathSelector__block__point', parent).live('click', this._onMouseClick.bind(this));
-      },
-
       _onMouseClick: function () {
-         var target = $(event.target).closest('.controls-DataGrid__PathSelector__block__point'),
+         var target = $(event.target).closest('.controls-HierarchyDataGrid__PathSelector__block__point'),
             index = target.data('index'),
             id = this._path[index].id,
             title = this._path[index].title;
@@ -71,11 +64,14 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       _drawPoint: function (index, last) {
-         var point = $('<a class="controls-DataGrid__PathSelector__block__point" style="cursor: pointer;">' + this._path[index]['title'] + '</a>');
+         var point = $('<a class="controls-HierarchyDataGrid__PathSelector__block__point" style="cursor: pointer;">' + this._path[index]['title'] + '</a>');
+         point.click(this._onMouseClick.bind(this));
          point.attr('data-index', index);
          this._block.append(point);
          if (!last) {
-            this._block.append('&nbsp;&nbsp;&nbsp;');
+            this._block.append('<span class="controls-HierarchyDataGrid__PathSelector__block__arrow icon-16 icon-DayForward icon-primary"></span>');
+         } else {
+            point.addClass('controls-HierarchyDataGrid__PathSelector__block__point--current');
          }
       },
 
