@@ -30,9 +30,13 @@
          overflow: hidden;
          text-overflow: ellipsis;
 
-         &:not(:first-child):before {
+         :before {
             content: ', ';
          }
+         :first-child:before {
+            content: '';
+         }
+
       }
       .controls__filterButton__filterLine-arrow, .controls__filterButton__filterLine-cross {
          display: inline-block;
