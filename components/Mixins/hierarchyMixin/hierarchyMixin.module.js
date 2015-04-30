@@ -40,17 +40,16 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       // обход происходит в том порядке что и пришли
       hierIterate: function (DataSet, iterateCallback, status) {
          var self = this,
-            curParent = null,
+            curParentId = this._curRoot,
             parents = [],
             indexTree = {},
             curLvl = 0;
-
          do {
 
             DataSet.each(function (record) {
                var parentKey = self.getParentKey(DataSet, record);
-
-               if ((parentKey || null) === (curParent ? curParent.getKey() : null)) {
+              // if ((parentKey || null) === (curParent ? curParent.getKey() : null)) {
+               if ((parentKey || null) === curParentId) {
                   parents.push({record: record, lvl: curLvl});
 
                   if (!indexTree.hasOwnProperty(parentKey)) {
@@ -59,7 +58,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
                   indexTree[self.getParentKey(DataSet, record)].push(record.getKey());
                   if (typeof iterateCallback == 'function') {
-                     iterateCallback.call(this, record, curParent, curLvl);
+                     iterateCallback.call(this, record, curParentId, curLvl);
                   }
                }
 
@@ -67,13 +66,13 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
             if (parents.length) {
                var a = Array.remove(parents, 0);
-               curParent = a[0]['record'];
+               curParentId = a[0]['record'].getKey();
                curLvl = a[0].lvl + 1;
             }
             else {
-               curParent = null;
+               curParentId = null;
             }
-         } while (curParent);
+         } while (curParentId);
          this._indexTree = indexTree;
          DataSet.setIndexTree(indexTree);
       },

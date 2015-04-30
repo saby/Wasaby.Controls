@@ -42,13 +42,13 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
 
          /*TODO вынести середину в переопределяемый метод*/
 
-         this.hierIterate(DataSet, function (record, parent, lvl) {
+         this.hierIterate(DataSet, function (record, parentId, lvl) {
             var
                parentKey = self.getParentKey(DataSet, record);
 
             this._curLvl = lvl;
 
-            if ((parentKey == this._curRoot)) {
+            if ((parentKey == self._curRoot)) {
                self._drawItem(record, undefined);
             }
          });

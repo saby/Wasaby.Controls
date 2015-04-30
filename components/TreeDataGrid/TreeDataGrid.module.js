@@ -72,10 +72,15 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
       },
 
       _elemClickHandler: function (id, data, target) {
+         var self=this;
          if ($(target).hasClass('controls-TreeView__expand--inside')) {
             var nodeID = $(target).closest('.controls-ListView__item').data('id');
             this._insideFolder=true;
-            this.openNode(nodeID);
+
+            this._loadNode(nodeID).addCallback(function (dataSet) {
+               self._setCurRootNode(nodeID, dataSet);
+            });
+
          } else {
             this._insideFolder=false;
             TreeDataGrid.superclass._elemClickHandler.call(this, id, data, target);
