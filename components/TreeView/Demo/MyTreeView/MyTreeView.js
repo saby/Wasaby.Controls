@@ -1,4 +1,11 @@
-define('js!SBIS3.Demo.Control.MyTreeView', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.Demo.Control.MyTreeView', 'css!SBIS3.Demo.Control.MyTreeView', 'js!SBIS3.CONTROLS.TreeView', 'js!SBIS3.CONTROLS.TreeDataGrid'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.Demo.Control.MyTreeView',
+    [
+        'js!SBIS3.CORE.CompoundControl',
+        'html!SBIS3.Demo.Control.MyTreeView',
+        'css!SBIS3.Demo.Control.MyTreeView',
+        'js!SBIS3.CONTROLS.TreeView',
+        'js!SBIS3.CONTROLS.TreeDataGrid'
+    ], function(CompoundControl, dotTplFn) {
     /**
      * SBIS3.Demo.Control.MyTreeView
      * @class SBIS3.Demo.Control.MyTreeView
