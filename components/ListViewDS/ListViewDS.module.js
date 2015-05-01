@@ -361,7 +361,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            * Перезагружает набор записей представления данных с последующим обновлением отображения.
            * @example
            * <pre>
-           *    dataGrid.reload();
+           *    var btn = new Button({
+           *         element: "buttonReload",
+           *         caption: 'reload offset: 450'
+           *    }).subscribe('onActivated', function(event, id){
+           *           //При нажатии на кнопку перезагрузим DataGrid  с 450ой записи
+           *           DataGridBL.reload(DataGridBL._filter, DataGridBL._sorting, 450, DataGridBL._limit);
+           *    });
            * </pre>
            */
          reload: function(){
@@ -470,7 +476,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          /**
           * Метод установки или замены кнопок операций над записью, заданных в опции {@link itemsActions}
-          * Нужно передать массив обьектов.
+          * @remark
+          * В метод нужно передать массив обьектов.
           * @param {Array} items Объект формата {name: ..., icon: ..., caption: ..., onActivated: ..., isMainOption: ...}
           * @param {String} items.name Имя кнопки операции над записью.
           * @param {String} items.icon Иконка кнопки.
@@ -535,6 +542,11 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            *    <li>true - используется подгрузка по скроллу;</li>
            *    <li>false - не используется.</li>
            * </ol>
+           * @example
+           * Переключим режим управления скроллом:
+           * <pre>
+           *     listView.setInfiniteScroll(!listView.isInfiniteScroll());
+           * </pre>
            * @see infiniteScroll
            * @see setInfiniteScroll
            */
@@ -617,9 +629,15 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          /**
           * Метод изменения возможности подгрузки по скроллу.
-          * Изменяет значение, заданной в опции {@link infiniteScroll}.
+          * @remark
+          * Метод изменяет значение, заданное в опции {@link infiniteScroll}.
           * @param {Boolean} allow Разрешить (true) или запретить (false) подгрузку по скроллу.
           * @param {Boolean} [noLoad] Сразу ли загружать (true - не загружать сразу).
+          * @example
+          * Переключим режим управления скроллом:
+          * <pre>
+          *     listView.setInfiniteScroll(!listView.isInfiniteScroll())
+          * </pre>
           * @see infiniteScroll
           * @see isInfiniteScroll
           */
