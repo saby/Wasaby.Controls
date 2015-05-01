@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
        * @public
+       * @demo SBIS3.Demo.Control.MyListViewDS
        * @author Крайнов Дмитрий Олегович
        */
 
@@ -60,6 +61,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            * @see itemsActions
            * @see setItemsActions
            * @see getItemsActions
+           */
+          /**
+           * @event onItemActions При
            */
          $protected: {
             _floatCheckBox : null,
