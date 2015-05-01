@@ -25,7 +25,6 @@ define('js!SBIS3.CONTROLS.MassAmountSelector', [
       _dotTplFn: dotTplFn,
 
       $constructor: function() {
-         //TODO возможно кнопка печати может стать кнопкой меню, в зависимости от набора отчетов на печать
       },
       init: function(){
          var self = this;

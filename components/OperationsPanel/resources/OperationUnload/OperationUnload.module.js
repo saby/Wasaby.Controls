@@ -43,7 +43,6 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       _clickHandlerOverwritten: function() {
          var items = this.getItems(),
              item, extraText, itemId;
-         console.log('_clickHandler');
          //view.deleteRecords(records);
          extraText =  this._isSelectedState() ? ' отмеченных ' : ' ';
          while (item = items.getNextItem(itemId)) {
@@ -56,11 +55,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                this._picker._container.find('>[data-id="' + itemId + '"]').find('.controls-MenuItem__text').text( item.title );
             }
          }
-         //Относится к TODO в while выше
-         //this._drawItemsCallback();
-
-         //selectedItems = this._view.getSelectedItems(),
-         //      records = selectedItems.length ? selectedItems : this._view._dataSet._indexId
+         //this._picker._drawItems(); - это заенит строку выше с .text, когда заработает
       },
       _menuItemActivated: function(event, itemId){
          this._currentItem = itemId;
