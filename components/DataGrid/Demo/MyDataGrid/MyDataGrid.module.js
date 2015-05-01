@@ -1,4 +1,10 @@
-define('js!SBIS3.Demo.Control.MyDataGrid', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.Demo.Control.MyDataGrid', 'css!SBIS3.Demo.Control.MyDataGrid', 'js!SBIS3.CONTROLS.DataGrid'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.Demo.Control.MyDataGrid',
+    [
+        'js!SBIS3.CORE.CompoundControl',
+        'html!SBIS3.Demo.Control.MyDataGrid',
+        'css!SBIS3.Demo.Control.MyDataGrid',
+        'js!SBIS3.CONTROLS.DataGrid'
+    ], function(CompoundControl, dotTplFn) {
    /**
     * SBIS3.Demo.Control.MyDataGrid
     * @class SBIS3.Demo.Control.MyDataGrid
