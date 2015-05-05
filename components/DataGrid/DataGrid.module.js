@@ -132,6 +132,7 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
                   value = ((value != undefined) && (value != null)) ? value : '';
                }
                rowData.columns[i].value = value;
+               rowData.columns[i].item = item;
             }
             return this._rowTpl(rowData)
          }

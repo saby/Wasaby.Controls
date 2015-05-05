@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.TreeDataGrid', [
-   'js!SBIS3.CONTROLS.DataGrid',
+   'js!SBIS3.CONTROLS.HierarchyDataGrid',
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'js!SBIS3.CONTROLS.TreeMixinDS',
    'html!SBIS3.CONTROLS.TreeDataGrid/resources/rowTpl'

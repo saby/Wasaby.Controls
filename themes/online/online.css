@@ -1932,6 +1932,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TreeView__expand + .controls-TreeView__itemContent {
   margin: 0 0 0 15px;
 }
+.controls-TreeView__expand__leaf,
+.controls-TreeView__expand__leaf:hover {
+  background: none !important;
+}
 .controls-DataGrid .controls-DataGrid__table {
   width: 100%;
   border-spacing: 0;
