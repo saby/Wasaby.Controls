@@ -172,7 +172,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
       around: {
          _elemClickHandler: function (parentFnc, id, data, target) {
-            if ($(target).hasClass('js-controls-TreeView__expand')) {
+            if ($(target).hasClass('js-controls-TreeView__expand') && $(target).hasClass('has-child')) {
                var nodeID = $(target).closest('.controls-ListView__item').data('id');
                this.toggleNode(nodeID);
             }
