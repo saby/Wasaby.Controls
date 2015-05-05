@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       _drawPoint: function (index, last) {
-         var point = $('<a class="controls-HierarchyDataGrid__PathSelector__block__point hover-target" style="cursor: pointer;">' + this._path[index]['title'] + '<span class="' + this._path[index]['icon'] +'"><span>' + '</a>');
+         var point = $('<a class="controls-HierarchyDataGrid__PathSelector__block__point hover-target" style="cursor: pointer;">' + this._path[index]['title'] + '<span class="' + this._path[index]['icon'] +'"style="top: 2px; position: relative;"><span>' + '</a>');
          point.click(this._onMouseClick.bind(this));
          point.data('index', index);
          this._block.append(point);
