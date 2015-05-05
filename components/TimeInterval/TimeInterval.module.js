@@ -137,7 +137,7 @@ define(
          _setInterval: function (interval) {
             this.timeInterval.set(interval);
             this._options.text = this._getTextByTotalMinutes(this.timeInterval.getTotalMinutes());
-            this._setText();
+            this.setText();
          },
          /**
           * Получить интервал
@@ -149,8 +149,8 @@ define(
           * Установить маску.
           */
          _setMask: function (mask) {
-            this.setMask(mask);
-            this._setText();
+            TimeInterval.superclass.setMask.apply(this, arguments);
+            this.setText();
             this.setCursor(this.formatModel._options.cursorPosition.group,this.formatModel._options.cursorPosition.position + 1);
          },
          /**
@@ -175,7 +175,7 @@ define(
           * @param text
           * @private
           */
-         _setText: function(text){
+         setText: function(text){
             if (!text){
                text = this._options.text;
             }
@@ -247,25 +247,23 @@ define(
          },
 
          _getPatternValues: function () {
-            var patternArray = [],
-               minutes = this.timeInterval.getMinutes(),
-               hours = this.timeInterval.getHours(),
-               days = this.timeInterval.getDays();
+            var intervalValues = this.timeInterval.getValueAsObject(),
+               patternArray = [];
 
             if (this._hasMaskPattern(this._patterns.days)) {
-               patternArray.push(days);
-               patternArray.push(hours);
+               patternArray.push(intervalValues.days);
+               patternArray.push(intervalValues.hours);
             }
             else{
                patternArray.push(this.timeInterval.getTotalHours());
             }
             if (this._hasMaskPattern(this._patterns.minutes)) {
-               patternArray.push(minutes);
+               patternArray.push(intervalValues.minutes);
             }
             return patternArray;
          },
          _setTextByTotalMinutes: function(){
-            this._setText(this._getTextByTotalMinutes(this.timeInterval.getTotalMinutes()));
+            this.setText(this._getTextByTotalMinutes(this.timeInterval.getTotalMinutes()));
          },
          /**
           * Обновляяет значения this._options.text и this._options.interval (вызывается в _replaceCharacter из FormattedTextBoxBase). Переопределённый метод.
@@ -273,14 +271,12 @@ define(
           */
          _updateText: function(){
             var text = $(this._inputField.get(0)).text(),
-                oldDate = this.timeInterval.getValue(),
-                minLengthMask = 7,//Минимальная длина маски в символах
-                minutesLengthMask = (this._hasMaskPattern('I') && this._hasMaskPattern('D')) ? 3 : 0;//Если маска имеет дни и минуты, то увеличиваем minLengthMask на 3
+                oldDate = this.timeInterval.getValue();
 
             this._getIntervalByText(text);
             this._options.text = this._getTextByTotalMinutes(this.timeInterval.getTotalMinutes());
 
-            if (this._options.mask.length < (minLengthMask + minutesLengthMask) && text.split(':')[0].indexOf(this._maskReplacer) == -1) {
+            if (this.formatModel.model[0].value[0] && this.formatModel.model[0].mask.length < 4) {
                this._options.text = this._maskReplacer + this._options.text;
                this._setMask(this._options.mask[0] + this._options.mask);
             }
