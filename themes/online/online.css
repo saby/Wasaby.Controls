@@ -2028,25 +2028,31 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   height: 14px;
 }
+.controls-HierarchyDataGrid {
+  height: 20px;
+}
 .controls-HierarchyDataGrid__expand {
   height: 20px;
 }
 .controls-HierarchyDataGrid__PathSelector__block__arrow {
-  height: 13px;
+  cursor: pointer;
 }
 .controls-HierarchyDataGrid__PathSelector__block__point {
   line-height: 17px;
   color: #0055BB;
+  position: relative;
+  top: -2px;
 }
 .controls-HierarchyDataGrid__PathSelector__block__point:hover {
-  text-decoration: underline;
+  color: #FF7033;
 }
 .controls-HierarchyDataGrid__PathSelector__block__point--current {
   font-size: 15px;
   color: #000;
 }
 .controls-HierarchyDataGrid__PathSelector__block__point--current:hover {
-  text-decoration: none;
+  color: black;
+  cursor: default;
 }
 .controls-MultiView .controls-MultiView__listItem {
   height: 16px;
