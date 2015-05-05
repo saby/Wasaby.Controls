@@ -1,5 +1,11 @@
 define ('js!SBIS3.CONTROLS.Collection', [], function(){
-   return $ws.proto.Abstract.extend({
+    /**
+     * @class SBIS3.CONTROLS.Collection
+     * @public
+     * @auhtor Крайнов Дмитрий Олегович
+     * @extend $ws.proto.Abstract
+     */
+   return $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.Collection.prototype */{
       $protected : {
          _data : [],
          _index : {},
