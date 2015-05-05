@@ -99,12 +99,6 @@ define(
             this.subscribe('onInputFinished',self._correctInterval);
          },
          /**
-          * Получить маску. Переопределённый метод
-          */
-         _getMask: function () {
-            return this._options.mask;
-         },
-         /**
           * Установить маску.
           */
          _setMask: function (mask) {
@@ -132,7 +126,7 @@ define(
          /**
           * Установить дни,часы или минуты
           * @param {String} pattern Значения D(дни), H(часы), I(минуты).
-          * @param {String/Number} patternValue Значение, которое хотим установить
+          * @param {String/Number} newPatternValue Значение, которое хотим установить
           */
          _setPattern: function(pattern, newPatternValue){
             var coefficient = { D : 24 * 60, H : 60, I: 1 },
@@ -141,8 +135,8 @@ define(
             if (!this._hasMaskPattern(pattern)){
                return;
             }
-            totalMinutes = totalMinutes - patternValue * coefficient[pattern] + (parseInt(newPatternValue) * coefficient[pattern]);
-            this._setText(this._getTextByTotalMinutes(totalMinutes));
+            this.totalMinutes = totalMinutes - patternValue * coefficient[pattern] + (parseInt(newPatternValue) * coefficient[pattern]);
+            this._setText(this._getTextByTotalMinutes(this.totalMinutes));
          },
 
          /**
@@ -193,6 +187,7 @@ define(
          /**
           * Установить дату. Публичный метод. Отличается от приватного метода тем, что генерирует событие.
           * @param interval
+          * @param dontCheck
           */
          setInterval: function ( interval, dontCheck ) {
             this._setInterval( interval, dontCheck );
@@ -246,13 +241,17 @@ define(
          _getTextByTotalMinutes: function (totalMinutes) {
             var patternValues = this._getPatternValues(totalMinutes),
                prefix = '___',
-               availMaskArray = this._options.mask.split(":");
+               availMaskArray = this._options.mask.split(":"),
+               needSetMask = false;
 
             //Увеличиваем маску, если нужно
             while (patternValues[0].toString().length > availMaskArray[0].length && availMaskArray[0].length < 4) {
                availMaskArray[0] += availMaskArray[0][0];
+               needSetMask = true;
             }
-            this._setMask(availMaskArray.join(':'));
+            if (needSetMask){
+               this._setMask(availMaskArray.join(':'));
+            }
 
             for (var i = 0; i < patternValues.length; i++) {
                if (i > 0) {
@@ -303,8 +302,8 @@ define(
           * @private
           */
          incValue: function(incMinutes){
-            var totalMinutes = this._getTotalMinutes() + parseInt(incMinutes == "" ? 0 : incMinutes);
-            this._setText(this._getTextByTotalMinutes(totalMinutes));
+            this.totalMinutes = this._getTotalMinutes() + parseInt(incMinutes == "" ? 0 : incMinutes);
+            this._setText(this._getTextByTotalMinutes(this.totalMinutes));
          },
 
          /**
@@ -329,35 +328,36 @@ define(
 
          /**
           * Получить общее кол-во минут
-          * @param pattern D - дни, H - часы, I - минуты
           */
          _getTotalMinutes: function(){
             return (this._getPatterns('D') * 24 + this._getPatterns('H')) * 60 + this._getPatterns('I');
          },
 
-         _getPatternValues: function(totalMinutes){
+         _getPatternValues: function (totalMinutes) {
             var patternArray = [],
                minutes,
                hours,
                days;
-            if (!totalMinutes){
+            if (!totalMinutes) {
                totalMinutes = this._getTotalMinutes();
             }
-            if (totalMinutes < 0){
+            if (totalMinutes < 0) {
                days = hours = minutes = 0;
             }
-            else{
-               if (this._hasMaskPattern('D')){
+            else {
+               if (this._hasMaskPattern('D')) {
                   days = totalMinutes / (24 * 60) | 0;
-                  patternArray.push(days);
                   totalMinutes %= 24 * 60;
                }
                hours = totalMinutes / 60 | 0;
-               patternArray.push(hours);
                minutes = totalMinutes % 60;
-               if (this._hasMaskPattern('I')){
-                  patternArray.push(minutes);
-               }
+            }
+            if (this._hasMaskPattern('D')) {
+               patternArray.push(days);
+            }
+            patternArray.push(hours);
+            if (this._hasMaskPattern('I')) {
+               patternArray.push(minutes);
             }
             return patternArray;
          },
@@ -367,7 +367,7 @@ define(
           */
          _getPatterns: function(pattern){
             var patternIndex = this._getIndexForPattern(pattern);
-            return patternIndex > -1 ? parseInt(this._options.text.split(':')[patternIndex].replace(new RegExp('_','g'), "0")) : 0;
+            return patternIndex > -1 ? parseInt(this._options.text.split(':')[patternIndex].replace(new RegExp(this._maskReplacer,'g'), "0")) : 0;
          },
          /**
           * Обновляяет значения this._options.text и this._options.interval (вызывается в _replaceCharacter из FormattedTextBoxBase). Переопределённый метод.
@@ -382,8 +382,8 @@ define(
             this._options.text = text;
             this._options.interval = this._getIntervalByTotalMinutes();
 
-            if (this._options.mask.length < (minLengthMask + minutesLengthMask) && text.split(':')[0].indexOf('_') == -1) {
-               this._options.text = '_' + text;
+            if (this._options.mask.length < (minLengthMask + minutesLengthMask) && text.split(':')[0].indexOf(this._maskReplacer) == -1) {
+               this._options.text = this._maskReplacer + text;
                this._setMask(this._options.mask[0] + this._options.mask);
             }
 

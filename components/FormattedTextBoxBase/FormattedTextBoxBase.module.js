@@ -645,7 +645,7 @@ define(
        * @private
        */
       _getMask: function() {
-         /*Method must be implemented*/
+         return this._options.mask;
       },
 
       _getItemsForTemplate: function() {
