@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.SearchString', ['js!SBIS3.CORE.Control'], function (Co
     * @extends $ws.proto.Control
     * @public
     * @control
-    * @demo SBIS3.Demo.Control.MySearchString
+    *
     * @author Крайнов Дмитрий Олегович
     */
 
