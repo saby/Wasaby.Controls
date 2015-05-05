@@ -8,7 +8,10 @@ define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.HierarchyData
          }
          else {
             var nodeID = $(target).closest('.controls-ListView__item').data('id');
-            this.toggleNode(nodeID);
+            var rec = this._dataSet.getRecordByKey(nodeID);
+            if (rec.get('par@')) {
+               this.toggleNode(nodeID);
+            }
          }
       }
    });
