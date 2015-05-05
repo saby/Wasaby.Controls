@@ -75,7 +75,6 @@ define(
 
          $constructor: function () {
             var self = this;
-
             this._publish('onChangeInterval');
 
             // Проверяем, является ли маска, с которой создается контролл, допустимой
