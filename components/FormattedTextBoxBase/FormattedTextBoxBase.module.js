@@ -288,19 +288,17 @@ define(
        * @returns {boolean} true если курсор установлен
        */
       setCursor: function(groupNum, position) {
-         var group;
+         var group,
+             insertInfo;
          if ( !this.model  ||  this.model.length == 0) {
             throw new Error('setCursor. Не задана модель');
          }
-         group = this.model[groupNum];
-         if ( !group  ||  !group.isGroup) {
+         insertInfo = this._calcPosition(groupNum, position);
+         if (!insertInfo) {
             return false;
          }
-         if (position > group.mask.length) {
-            return false;
-         }
-         this._options.cursorPosition.group = groupNum;
-         this._options.cursorPosition.position = position;
+         this._options.cursorPosition.group = insertInfo.groupNum;
+         this._options.cursorPosition.position = insertInfo.position;
 
          return true;
       },
@@ -334,21 +332,9 @@ define(
 
          return character;
       },
-      /**
-       * Вставляет символ в заданную группу и позицию, если это возможно
-       * @param groupNum индекс группы относительно других групп и разделителей
-       * @param position позиция в группе
-       * @param character вставляемый символ
-       * @param isClear если true, то символ подставляется без учёта маски
-       * @returns {object|boolean} если втавка прошла успешно, возвращает объект с информацией о вставке
-       */
-      insertCharacter: function(groupNum, position, character, isClear) {
-         var group,
-             insertInfo;
-
-         if ( !this.model  ||  this.model.length == 0) {
-            throw new Error('insertCharacter. Не задана модель');
-         }
+      /* вычисляет позицию для курсора, если курсор стоит в конце группы, пробует поставить курсор в следующуюу группу */
+      _calcPosition: function(groupNum, position) {
+         var group;
          group = this.model[groupNum];
          if ( !group  ||  !group.isGroup) {
             return false;
@@ -372,25 +358,47 @@ define(
             }
             position = group.mask.length - 1;
          }
+         return {
+            group: group,
+            groupNum: groupNum,
+            position: position
+         }
+      },
+      /**
+       * Вставляет символ в заданную группу и позицию, если это возможно
+       * @param groupNum индекс группы относительно других групп и разделителей
+       * @param position позиция в группе
+       * @param character вставляемый символ
+       * @param isClear если true, то символ подставляется без учёта маски
+       * @returns {object|boolean} если втавка прошла успешно, возвращает объект с информацией о вставке
+       */
+      insertCharacter: function(groupNum, position, character, isClear) {
+         var group,
+             insertInfo;
+
+         if ( !this.model  ||  this.model.length == 0) {
+            throw new Error('insertCharacter. Не задана модель');
+         }
+         insertInfo = this._calcPosition(groupNum, position);
+         if (!insertInfo) {
+            return false;
+         }
+         group = insertInfo.group;
          if (isClear) {
-            group.value[position] = undefined;
+            group.value[insertInfo.position] = undefined;
          } else {
-            character = this.charIsFitToGroup(group, position, character);
+            character = this.charIsFitToGroup(group, insertInfo.position, character);
             if (character) {
-               group.value[position] = character;
+               group.value[insertInfo.position] = character;
             } else {
                return false;
             }
          }
 
-         insertInfo = {
-            groupNum: groupNum,
-            position: position,
-            character: character
-         };
+         insertInfo.character = character;
          //задать курсор
-         this._options.cursorPosition.group = groupNum;
-         this._options.cursorPosition.position = position + 1;
+         this._options.cursorPosition.group = insertInfo.groupNum;
+         this._options.cursorPosition.position = insertInfo.position + 1;
 
          return insertInfo;
       },
@@ -762,7 +770,7 @@ define(
             return false;
          }
          this.formatModel._options.newContainer = _getContainerByIndex.call(this, this.formatModel._options.cursorPosition.group);
-         this.formatModel._options.newPosition = position;
+         this.formatModel._options.newPosition = this.formatModel._options.cursorPosition.position;
       },
       /**
        * Установить значение в поле. Значение вводится в точности с маской, включая разделяющие символы
