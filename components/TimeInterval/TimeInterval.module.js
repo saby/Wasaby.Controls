@@ -104,7 +104,7 @@ define(
          _setMask: function (mask) {
             this.setMask(mask);
             this._setText();
-            this.setCursor(2,0);
+            this.setCursor(this.formatModel._options.cursorPosition.group,this.formatModel._options.cursorPosition.position + 1);
          },
          /**
           * Проверить, является ли маска допустимой ( по массиву допустимых маск this._possibleMasks )
