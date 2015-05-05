@@ -38,7 +38,6 @@ define(
              * Допустимые при создании контролла маски.
              */
             _possibleMasks: [
-               // I. Маски для отображения даты:
                'DDDD:HH:II',
                'DDD:HH:II',
                'DD:HH:II',
@@ -50,9 +49,9 @@ define(
                "HH:II"
             ],
             /**
-             * Общее кол-во минут
+             * объект $ws.proto.TimeInterval
              */
-            totalMinutes: null,
+            timeInterval: null,
             /**
              * Опции создаваемого контролла
              */
@@ -69,54 +68,53 @@ define(
                /**
                 * Интервал
                 */
-               interval: null
+               interval: undefined
             }
          },
 
          $constructor: function () {
             var self = this;
             this._publish('onChangeInterval');
-
-            // Проверяем, является ли маска, с которой создается контролл, допустимой
             this._checkPossibleMask();
 
             this._options.text = this.formatModel.getStrMask(this._maskReplacer);
-
-            // Первоначальная установка интервала, если передана опция
-            if (this._options.interval ) {
-               this._setInterval( this._options.interval );
+            this.timeInterval = new $ws.proto.TimeInterval;
+            if (this._options.interval){
+               this.timeInterval.set(this._options.interval);
+               this._setTextByTotalMinutes();
             }
 
-            this.subscribe("onFocusOut", function(){
-               self._correctInterval();
-            });
-
-            this.subscribe('onInputFinished',self._correctInterval);
+            this.subscribe('onFocusOut', self._setTextByTotalMinutes);
+            this.subscribe('onInputFinished',self._setTextByTotalMinutes);
          },
          /**
           * Устанавливаем кол-во дней
           * @param days
           */
-         setDays: function ( days ) {
-            this._setPattern('D', days);
+         setDays: function (days) {
+            this._setPattern(days, "D");
          },
-
          /**
           * Устанавливаем кол-во часов
           * @param hours
           */
-         setHours: function ( hours ) {
-            this._setPattern('H', hours);
-            this._correctInterval();
+         setHours: function (hours) {
+            this._setPattern(hours, "H");
          },
-
          /**
           * Устанавливаем кол-во минут
           * @param minutes
           */
-         setMinutes: function ( minutes ) {
-            this._setPattern('I', minutes);
-            this._correctInterval();
+         setMinutes: function (minutes) {
+            this._setPattern(minutes, "I");
+         },
+
+         _setPattern: function(value, pattern){
+            var patternIndex = this._getIndexForPattern(pattern),
+               values = [this.timeInterval.getDays(), this.timeInterval.getHours(), this.timeInterval.getMinutes()];
+            values[patternIndex] = value;
+            this.timeInterval.set(values);
+            this._setText(this._getTextByTotalMinutes(this.timeInterval.getTotalMinutes()));
          },
 
          /**
@@ -125,26 +123,23 @@ define(
           */
          setInterval: function ( interval ) {
             this._setInterval( interval);
-            this._notify('onChangeInterval', this._options.interval);
+            this._notify('onChangeInterval', this.timeInterval.getValue());
          },
-
          /**
-          * Увеличиваем/уменьшаем интервал на заданное кол-во минут
-          * @param incMinutes
-          * @private
+          * Установить интервал. Приватный метод
+          * @param interval новое значение интервала
           */
-         incValue: function(incMinutes){
-            this.totalMinutes = this._getTotalMinutes() + parseInt(incMinutes == "" ? 0 : incMinutes);
-            this._setText(this._getTextByTotalMinutes(this.totalMinutes));
+         _setInterval: function (interval) {
+            this.timeInterval.set(interval);
+            this._options.text = this._getTextByTotalMinutes(this.timeInterval.getTotalMinutes());
+            this._setText();
          },
-
          /**
           * Получить интервал
           */
          getInterval: function(){
-            return this._options.interval;
+            return this.timeInterval.getValue();
          },
-
          /**
           * Установить маску.
           */
@@ -171,22 +166,6 @@ define(
             return this._options.mask.indexOf(pattern) > -1;
          },
          /**
-          * Установить дни,часы или минуты
-          * @param {String} pattern Значения D(дни), H(часы), I(минуты).
-          * @param {String/Number} newPatternValue Значение, которое хотим установить
-          */
-         _setPattern: function(pattern, newPatternValue){
-            var coefficient = { D : 24 * 60, H : 60, I: 1 },
-               totalMinutes = this._getTotalMinutes(),
-               patternValue = this._getPatterns(pattern);
-            if (!this._hasMaskPattern(pattern)){
-               return;
-            }
-            this.totalMinutes = totalMinutes - patternValue * coefficient[pattern] + (parseInt(newPatternValue) * coefficient[pattern]);
-            this._setText(this._getTextByTotalMinutes(this.totalMinutes));
-         },
-
-         /**
           * В добавление к проверкам и обновлению опции text, необходимо обновить поле interval
           * @param text
           * @private
@@ -196,50 +175,31 @@ define(
                text = this._options.text;
             }
             this.setText(text);
-            this._options.text = text;
-            this._correctInterval();
-            this._options.interval = this._getIntervalByTotalMinutes();
+            this._getIntervalByText(text);
+            this._options.text = this._getTextByTotalMinutes(this.timeInterval.getTotalMinutes());
             this._notify('onChangeInterval', this._options.interval);
          },
 
-         /**
-          * Установить интервал. Приватный метод
-          * @param interval новое значение интервала
-          * @param {Boolean} dontCheck true - не нормализуем, false-нормализуем
-          */
-         _setInterval: function (interval) {
-            this._options.interval = interval;
-            this.totalMinutes = this._getTotalMinutesByInterval(interval);
-            this._options.text = this._getTextByTotalMinutes(this.totalMinutes);
-            this._correctInterval();
-            this._setText();
-         },
+         _getIntervalByText: function(text){
+            var days = 0,
+               hours = 0,
+               minutes = 0,
+               availTextArray = text.replace(new RegExp(this._maskReplacer,'g'), "").split(':');
 
-         _getIntervalByTotalMinutes: function(){
-            var patternValues = this._getPatternValues(),
-               availMaskArray = this._options.mask.split(":"),
-               interval = '',
-               prefix = { D : "P", H : "T", I : ""},
-               manageChar,
-               patternIndex;
-            for(var i = 0; i < availMaskArray.length; i++){
-               manageChar = availMaskArray[i][0];
-               patternIndex = this._getIndexForPattern(manageChar);
-               if (patternIndex < 0){
-                  continue;
-               }
-
-               if (patternValues[i] > 0){
-                  interval += prefix[manageChar] + patternValues[patternIndex] + manageChar;
-               }
+            if (this._hasMaskPattern('D')){
+               days = parseInt(availTextArray[0]);
             }
-            return interval.replace('I', 'M');
+            hours = parseInt(availTextArray[this._getIndexForPattern('H')]);
+            if (this._hasMaskPattern('I')){
+               minutes = parseInt(availTextArray[this._getIndexForPattern('I')]);
+            }
+            this.timeInterval.set("P" + days + "DT" + hours + "H" + minutes + "M");
          },
          /**
           * Получить _options.text
           */
-         _getTextByTotalMinutes: function (totalMinutes) {
-            var patternValues = this._getPatternValues(totalMinutes),
+         _getTextByTotalMinutes: function (minutes) {
+            var patternValues = this._getPatternValues(minutes),
                prefix = '___',
                availMaskArray = this._options.mask.split(":"),
                needSetMask = false;
@@ -261,42 +221,6 @@ define(
             }
             return patternValues[0] + ":" + patternValues[1] + (patternValues.length > 2 ? ":" + patternValues[2] : "");
          },
-
-         _getTotalMinutesByInterval: function(interval){
-            var manageChar = '',
-               val = '',
-               totalMinutes = 0,
-               coefficient = {M : 1, H : 60, D : 24*60};
-            interval = interval.replace('P', '').replace('T', '');
-
-            for (var i = interval.length - 1; i >= -1 ; i--){
-               if (isFinite(interval[i])) {
-                  val = interval[i] + val;
-               } else {
-                  if (val) {
-                     totalMinutes += parseInt(val) * coefficient[manageChar];
-                     val = '';
-                  }
-                  manageChar = interval[i];
-               }
-            }
-            return totalMinutes;
-         },
-         /**
-          * Проверяем, не превысили ли введенные значения свой максимум
-          * @private
-          */
-         _checkBoundaryValues: function(){
-            return this._getPatterns('I') < 60 && (this._hasMaskPattern('D') ? this._getPatterns('H') < 24 : true);
-         },
-
-         //Устанавливаем часы и минуты в их диапазоне
-         _correctInterval: function(){
-            if (!this._checkBoundaryValues()){
-               this._setText(this._getTextByTotalMinutes(this._getTotalMinutes()));
-            }
-         },
-
          /**
           * Получить индекс паттерна в маске
           */
@@ -317,46 +241,26 @@ define(
             }
          },
 
-         /**
-          * Получить общее кол-во минут
-          */
-         _getTotalMinutes: function(){
-            return (this._getPatterns('D') * 24 + this._getPatterns('H')) * 60 + this._getPatterns('I');
-         },
-
-         _getPatternValues: function (totalMinutes) {
+         _getPatternValues: function () {
             var patternArray = [],
-               minutes = 0,
-               hours = 0,
-               days = 0;
-            if (!totalMinutes) {
-               totalMinutes = this._getTotalMinutes();
-            }
-            if (totalMinutes > 0) {
-               if (this._hasMaskPattern('D')) {
-                  days = totalMinutes / (24 * 60) | 0;
-                  totalMinutes %= 24 * 60;
-               }
-               hours = totalMinutes / 60 | 0;
-               minutes = totalMinutes % 60;
-            }
+               minutes = this.timeInterval.getMinutes(),
+               hours = this.timeInterval.getHours(),
+               days = this.timeInterval.getDays();
 
             if (this._hasMaskPattern('D')) {
                patternArray.push(days);
+               patternArray.push(hours);
             }
-            patternArray.push(hours);
+            else{
+               patternArray.push(this.timeInterval.getTotalHours());
+            }
             if (this._hasMaskPattern('I')) {
                patternArray.push(minutes);
             }
             return patternArray;
          },
-         /**
-          * Получить Дни, Часы, минуты
-          * @param pattern D - дни, H - часы, I - минуты
-          */
-         _getPatterns: function(pattern){
-            var patternIndex = this._getIndexForPattern(pattern);
-            return patternIndex > -1 ? parseInt(this._options.text.split(':')[patternIndex].replace(new RegExp(this._maskReplacer,'g'), "0")) : 0;
+         _setTextByTotalMinutes: function(){
+            this._setText(this._getTextByTotalMinutes(this.timeInterval.getTotalMinutes()));
          },
          /**
           * Обновляяет значения this._options.text и this._options.interval (вызывается в _replaceCharacter из FormattedTextBoxBase). Переопределённый метод.
@@ -364,22 +268,22 @@ define(
           */
          _updateText: function(){
             var text = $(this._inputField.get(0)).text(),
-                oldDate = this._options.interval,
+                oldDate = this.timeInterval.getValue(),
                 minLengthMask = 7,//Минимальная длина маски в символах
                 minutesLengthMask = (this._hasMaskPattern('I') && this._hasMaskPattern('D')) ? 3 : 0;//Если маска имеет дни и минуты, то увеличиваем minLengthMask на 3
 
-            this._options.text = text;
-            this._options.interval = this._getIntervalByTotalMinutes();
+            this._getIntervalByText(text);
+            this._options.text = this._getTextByTotalMinutes(this.timeInterval.getTotalMinutes());
 
             if (this._options.mask.length < (minLengthMask + minutesLengthMask) && text.split(':')[0].indexOf(this._maskReplacer) == -1) {
-               this._options.text = this._maskReplacer + text;
+               this._options.text = this._maskReplacer + this._options.text;
                this._setMask(this._options.mask[0] + this._options.mask);
             }
 
             // Если дата изменилась -- генерировать событие.
             // Если использовать просто setInterval, то событие будет генерироваться даже если дата введена с клавиатуры не полностью, что неверно
-            if ( oldDate !== this._options.interval ) {
-               this._notify('onChangeInterval', this._options.interval);
+            if ( oldDate !== this.timeInterval.getValue()) {
+               this._notify('onChangeInterval', this.timeInterval.getValue());
             }
          }
       });
