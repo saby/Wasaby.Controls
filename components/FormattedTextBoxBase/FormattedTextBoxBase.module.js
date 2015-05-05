@@ -341,7 +341,7 @@ define(
             return false;
          }
          //вставка символа в конце группы
-         if (group.mask.length >= position) {
+         if (group.mask.length <= position) {
             //ищем следующую группу
             groupNum += 2;
             group = this.model[groupNum];
