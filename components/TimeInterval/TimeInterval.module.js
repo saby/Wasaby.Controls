@@ -174,7 +174,7 @@ define(
             if (!text){
                text = this._options.text;
             }
-            this.setText(text);
+            TimeInterval.superclass.setText.apply(this,arguments);
             this._getIntervalByText(text);
             this._options.text = this._getTextByTotalMinutes(this.timeInterval.getTotalMinutes());
             this._notify('onChangeInterval', this._options.interval);
@@ -198,8 +198,8 @@ define(
          /**
           * Получить _options.text
           */
-         _getTextByTotalMinutes: function (minutes) {
-            var patternValues = this._getPatternValues(minutes),
+         _getTextByTotalMinutes: function (totalMinutes) {
+            var patternValues = this._getPatternValues(totalMinutes),
                prefix = '___',
                availMaskArray = this._options.mask.split(":"),
                needSetMask = false;
