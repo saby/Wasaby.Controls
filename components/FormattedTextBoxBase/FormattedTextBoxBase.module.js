@@ -90,6 +90,7 @@ define(
        * @return {String}
        * @private
        */
+         
       _charToRegExp = function(c) {
          var regexp;
          switch(c) {
