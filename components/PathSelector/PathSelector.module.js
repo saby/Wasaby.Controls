@@ -17,15 +17,15 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       $constructor: function () {
+         this._publish('onPathChange');
          this._hierarchyField = this._options.hierarchyField + '@';
          this._path.unshift({
-            'title': 'Root',
-            'id': this._options.rootNodeId
+            'title': '',
+            'id': this._options.rootNodeId,
+            'icon': 'icon-16 icon-Home2 icon-primary action-hover'
          });
-
          this._block = this.getContainer().find('.controls-HierarchyDataGrid__PathSelector__block');
          this._build();
-         this._publish('onPathChange');
       },
 
       _onMouseClick: function () {
@@ -64,12 +64,12 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       _drawPoint: function (index, last) {
-         var point = $('<a class="controls-HierarchyDataGrid__PathSelector__block__point" style="cursor: pointer;">' + this._path[index]['title'] + '</a>');
+         var point = $('<a class="controls-HierarchyDataGrid__PathSelector__block__point hover-target" style="cursor: pointer;">' + this._path[index]['title'] + '<span class="' + this._path[index]['icon'] +'"><span>' + '</a>');
          point.click(this._onMouseClick.bind(this));
-         point.attr('data-index', index);
+         point.data('index', index);
          this._block.append(point);
          if (!last) {
-            this._block.append('<span class="controls-HierarchyDataGrid__PathSelector__block__arrow icon-16 icon-DayForward icon-primary"></span>');
+            this._block.append('<span class="controls-HierarchyDataGrid__PathSelector__block__arrow icon-16 icon-Back icon-primary"></span>');
          } else {
             point.addClass('controls-HierarchyDataGrid__PathSelector__block__point--current');
          }
