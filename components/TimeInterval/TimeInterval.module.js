@@ -34,6 +34,11 @@ define(
                'H' : 'd',
                'I' : 'd'
             },
+            _patterns: {
+               'days' : 'D',
+               'hours' : "H",
+               'minutes' : "I"
+            },
             /**
              * Допустимые при создании контролла маски.
              */
@@ -92,21 +97,21 @@ define(
           * @param days
           */
          setDays: function (days) {
-            this._setPattern(days, "D");
+            this._setPattern(days, this._patterns.days);
          },
          /**
           * Устанавливаем кол-во часов
           * @param hours
           */
          setHours: function (hours) {
-            this._setPattern(hours, "H");
+            this._setPattern(hours, this._patterns.hours);
          },
          /**
           * Устанавливаем кол-во минут
           * @param minutes
           */
          setMinutes: function (minutes) {
-            this._setPattern(minutes, "I");
+            this._setPattern(minutes, this._patterns.minutes);
          },
 
          _setPattern: function(value, pattern){
@@ -114,7 +119,7 @@ define(
                values = [this.timeInterval.getDays(), this.timeInterval.getHours(), this.timeInterval.getMinutes()];
             values[patternIndex] = value;
             this.timeInterval.set(values);
-            this._setText(this._getTextByTotalMinutes(this.timeInterval.getTotalMinutes()));
+            this._setTextByTotalMinutes();
          },
 
          /**
@@ -174,7 +179,7 @@ define(
             if (!text){
                text = this._options.text;
             }
-            TimeInterval.superclass.setText.apply(this,arguments);
+            TimeInterval.superclass.setText.apply(this, [text]);
             this._getIntervalByText(text);
             this._options.text = this._getTextByTotalMinutes(this.timeInterval.getTotalMinutes());
             this._notify('onChangeInterval', this._options.interval);
@@ -186,11 +191,11 @@ define(
                minutes = 0,
                availTextArray = text.replace(new RegExp(this._maskReplacer,'g'), "").split(':');
 
-            if (this._hasMaskPattern('D')){
+            if (this._hasMaskPattern(this._patterns.days)){
                days = parseInt(availTextArray[0]);
             }
             hours = parseInt(availTextArray[this._getIndexForPattern('H')]);
-            if (this._hasMaskPattern('I')){
+            if (this._hasMaskPattern(this._patterns.minutes)){
                minutes = parseInt(availTextArray[this._getIndexForPattern('I')]);
             }
             this.timeInterval.set("P" + days + "DT" + hours + "H" + minutes + "M");
@@ -229,14 +234,14 @@ define(
                return -1;
             }
             switch (pattern){
-               case 'D':
+               case this._patterns.days:
                   return 0;
                   break;
-               case 'H':
-                  return this._hasMaskPattern('D') ? 1 : 0;
+               case this._patterns.hours:
+                  return this._hasMaskPattern(this._patterns.days) ? 1 : 0;
                   break;
-               case 'I':
-                  return this._hasMaskPattern('D') ? 2 : 1;
+               case this._patterns.minutes:
+                  return this._hasMaskPattern(this._patterns.days) ? 2 : 1;
                   break;
             }
          },
@@ -247,14 +252,14 @@ define(
                hours = this.timeInterval.getHours(),
                days = this.timeInterval.getDays();
 
-            if (this._hasMaskPattern('D')) {
+            if (this._hasMaskPattern(this._patterns.days)) {
                patternArray.push(days);
                patternArray.push(hours);
             }
             else{
                patternArray.push(this.timeInterval.getTotalHours());
             }
-            if (this._hasMaskPattern('I')) {
+            if (this._hasMaskPattern(this._patterns.minutes)) {
                patternArray.push(minutes);
             }
             return patternArray;
