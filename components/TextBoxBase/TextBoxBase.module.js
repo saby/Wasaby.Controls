@@ -49,6 +49,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
             text: '',
             /**
              * @cfg {Boolean} Обрезать ли пробелы при вставке
+             * @remark
              * При включённой опции обрезаются пробелы в начале и в конце текста.
              * Возможные значения:
              * <ul>
