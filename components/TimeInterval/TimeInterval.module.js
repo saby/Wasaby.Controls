@@ -177,8 +177,13 @@ define(
           */
          _getTextByTimeInterval: function () {
             var valuesArray = this._getSectionValues(),
-               value = valuesArray.join(':');
+               value;
 
+            if (valuesArray[0] > 9999){
+               valuesArray[0] = 9999;
+            }
+
+            value = valuesArray.join(':');
             while (value.length <= this._options.mask.length && valuesArray[0].toString().length < 4 && (value[0] != this._maskReplacer && value[0] != "0")){
                value = this._maskReplacer + value;
             }
