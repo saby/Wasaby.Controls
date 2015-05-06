@@ -112,7 +112,6 @@ define(
          },
 
          /**
-          * Увеличить маску.
           * @param value Значение
           * @param section Что обновляем ( дни, часы, минуты)
           * @private
@@ -147,7 +146,7 @@ define(
          _incMask: function (length) {
             this._options.mask = this._options.mask.substr(0, length) + this._options.mask;
             TimeInterval.superclass.setMask.apply(this, [this._options.mask]);
-            this.setText();
+            this.setText(this._options.text);
             this.setCursor(this.formatModel._options.cursorPosition.group, this.formatModel._options.cursorPosition.position + 1);
          },
          /**
@@ -163,9 +162,6 @@ define(
           * @param text
           */
          setText: function(text){
-            if (!text){
-               text = this._options.text;
-            }
             TimeInterval.superclass.setText.apply(this, [text]);
             this._updateIntervalByText(text);
             this._options.text = this._getTextByTimeInterval();
@@ -250,7 +246,7 @@ define(
           * @private
           */
          _updateText: function(){
-            var text = $(this._inputField.get(0)).text(),
+            var text = this.formatModel.getText(this._maskReplacer),
                 oldDate = this.timeInterval.getValue();
 
             this._updateIntervalByText(text);
