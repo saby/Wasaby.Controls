@@ -150,8 +150,6 @@ define(
       $constructor: function () {
          this._publish('onDateChange');
 
-         // Проверяем, является ли маска, с которой создается контролл, допустимой
-         this._checkPossibleMask();
          // Проверить тип маски -- дата, время или и дата, и время. В случае времени -- сделать isCalendarIconShown = false
          this._checkTypeOfMask();
 
@@ -230,16 +228,6 @@ define(
             self.setDate(date);
             self.hidePicker();
          });
-      },
-
-      /**
-       * Проверить, является ли маска допустимой ( по массиву допустимых маск this._possibleMasks )
-       * @private
-       */
-      _checkPossibleMask: function(){
-         if (Array.indexOf(this._possibleMasks, this._options.mask) == -1) {
-            throw new Error('Маска не удовлетворяет ни одной допустимой маске данного контролла');
-         }
       },
 
       /**

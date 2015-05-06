@@ -538,6 +538,10 @@ define(
             'x': 'x'
          },
          /**
+          * Допустимые при создании контролла маски.
+          */
+         _possibleMasks: null,
+         /**
           * Опции создаваемого контролла
           */
          _options: {
@@ -569,6 +573,8 @@ define(
             self = this,
             key;
          this._publish('onInputFinished');
+         // Проверяем, является ли маска, с которой создается контролл, допустимой
+         this._checkPossibleMask();
          this._inputField = $('.js-controls-FormattedTextBox__field', this.getContainer().get(0));
          this._container.bind('focusin', function () {
             self._focusHandler();
@@ -655,6 +661,16 @@ define(
        */
       _getMask: function() {
          return this._options.mask;
+      },
+
+      /**
+       * Проверить, является ли маска допустимой ( по массиву допустимых маск this._possibleMasks )
+       * @private
+       */
+      _checkPossibleMask: function(){
+         if (this._possibleMasks && this._options.mask && Array.indexOf(this._possibleMasks, this._options.mask) == -1){
+            throw new Error('_checkPossibleMask. Маска не удовлетворяет ни одной допустимой маске данного контролла');
+         }
       },
 
       _getItemsForTemplate: function() {
