@@ -136,7 +136,7 @@ define(
             return this.timeInterval.getValue();
          },
          /**
-          * Установить маску.
+          * Увеличить маску.
           * @param length на сколько увеличить маску
           */
          _incMask: function (length) {
@@ -191,14 +191,13 @@ define(
          _getTextByTimeInterval: function () {
             var value = this._getPatternValues().join(':');
 
-            //Если длина текста < маски, то добавляем "_"
-            while (value.length < this._options.mask.length){
+            while (value.length <= this._options.mask.length && this.formatModel.model[0].mask.length < 4 && (value[0] != this._maskReplacer && value[0] != "0")){
                value = this._maskReplacer + value;
             }
 
-            //Если маска меньше чем текст, увеличиваем маску
             if (value.length > this._options.mask.length){
-               this._incMask(value.length - this._options.mask.length)
+               this._options.text = value;
+               this._incMask(value.length - this._options.mask.length);
             }
 
             return value;
@@ -257,11 +256,10 @@ define(
                 oldDate = this.timeInterval.getValue();
 
             this._getIntervalByText(text);
-            this._options.text = this._getTextByTimeInterval();
 
-            if (this.formatModel.model[0].value[0] && this._options.text.split(':')[0].length < 4 && this.formatModel.model[0].mask.length < 4) {
-               this._options.text = this._maskReplacer + this._options.text;
-               this._options.text.length !== this._options.mask.length ? this._incMask(2) : this._incMask(1);
+            if ((text.split(':')[0].length == this.formatModel.model[0].mask.length) && text.split(':')[0].indexOf(this._maskReplacer) == -1 && this.formatModel.model[0].mask.length < 4) {
+               this._options.text = this._maskReplacer + text;
+               this._incMask(1);
             }
 
             // Если дата изменилась -- генерировать событие.
