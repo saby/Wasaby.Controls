@@ -85,41 +85,39 @@ define(
             this._options.text = this.formatModel.getStrMask(this._maskReplacer);
             this.timeInterval = new $ws.proto.TimeInterval;
             if (this._options.interval){
-               this.timeInterval.set(this._options.interval);
-               this._setTextByTotalMinutes();
+               this.setInterval(this._options.interval);
             }
 
-            this.subscribe('onFocusOut', self._setTextByTotalMinutes);
-            this.subscribe('onInputFinished',self._setTextByTotalMinutes);
+            this.subscribe('onFocusOut', self._setTextByTimeInterval);
+            this.subscribe('onInputFinished',self._setTextByTimeInterval);
          },
          /**
           * Устанавливаем кол-во дней
           * @param days
           */
          setDays: function (days) {
-            this._setPattern(days, this._patterns.days);
+            this._setPattern(days, "days");
          },
          /**
           * Устанавливаем кол-во часов
           * @param hours
           */
          setHours: function (hours) {
-            this._setPattern(hours, this._patterns.hours);
+            this._setPattern(hours, "hours");
          },
          /**
           * Устанавливаем кол-во минут
           * @param minutes
           */
          setMinutes: function (minutes) {
-            this._setPattern(minutes, this._patterns.minutes);
+            this._setPattern(minutes, "minutes");
          },
 
          _setPattern: function(value, pattern){
-            var patternIndex = this._getIndexForPattern(pattern),
-               values = [this.timeInterval.getDays(), this.timeInterval.getHours(), this.timeInterval.getMinutes()];
-            values[patternIndex] = value;
+            var values = this.timeInterval.getValueAsObject();
+            values[pattern] = value;
             this.timeInterval.set(values);
-            this._setTextByTotalMinutes();
+            this._setTextByTimeInterval();
          },
 
          /**
@@ -127,17 +125,9 @@ define(
           * @param interval
           */
          setInterval: function ( interval ) {
-            this._setInterval( interval);
-            this._notify('onChangeInterval', this.timeInterval.getValue());
-         },
-         /**
-          * Установить интервал. Приватный метод
-          * @param interval новое значение интервала
-          */
-         _setInterval: function (interval) {
             this.timeInterval.set(interval);
-            this._options.text = this._getTextByTotalMinutes(this.timeInterval.getTotalMinutes());
-            this.setText();
+            this._setTextByTimeInterval();
+            this._notify('onChangeInterval', this.timeInterval.getValue());
          },
          /**
           * Получить интервал
@@ -147,20 +137,13 @@ define(
          },
          /**
           * Установить маску.
+          * @param length на сколько увеличить маску
           */
-         _setMask: function (mask) {
-            TimeInterval.superclass.setMask.apply(this, arguments);
+         _incMask: function (length) {
+            this._options.mask = this._options.mask.substr(0, length) + this._options.mask;
+            TimeInterval.superclass.setMask.apply(this, [this._options.mask]);
             this.setText();
             this.setCursor(this.formatModel._options.cursorPosition.group,this.formatModel._options.cursorPosition.position + 1);
-         },
-         /**
-          * Проверить, является ли маска допустимой ( по массиву допустимых маск this._possibleMasks )
-          * @private
-          */
-         _checkPossibleMask: function(){
-            if (this._options.mask && Array.indexOf(this._possibleMasks, this._options.mask) == -1){
-               throw new Error('Маска не удовлетворяет ни одной допустимой маске данного контролла');
-            }
          },
          /**
           * Содержит ли интервал дни\минуты
@@ -181,7 +164,7 @@ define(
             }
             TimeInterval.superclass.setText.apply(this, [text]);
             this._getIntervalByText(text);
-            this._options.text = this._getTextByTotalMinutes(this.timeInterval.getTotalMinutes());
+            this._options.text = this._getTextByTimeInterval();
             this._notify('onChangeInterval', this._options.interval);
          },
 
@@ -191,40 +174,34 @@ define(
                minutes = 0,
                availTextArray = text.replace(new RegExp(this._maskReplacer,'g'), "").split(':');
 
-            if (this._hasMaskPattern(this._patterns.days)){
+            if (this._hasMaskPattern(this._patterns.days) && availTextArray[0]){
                days = parseInt(availTextArray[0]);
             }
-            hours = parseInt(availTextArray[this._getIndexForPattern('H')]);
-            if (this._hasMaskPattern(this._patterns.minutes)){
+            if (availTextArray[this._getIndexForPattern('H')]){
+               hours = parseInt(availTextArray[this._getIndexForPattern('H')]);
+            }
+            if (this._hasMaskPattern(this._patterns.minutes) && availTextArray[this._getIndexForPattern('I')]){
                minutes = parseInt(availTextArray[this._getIndexForPattern('I')]);
             }
-            this.timeInterval.set("P" + days + "DT" + hours + "H" + minutes + "M");
+            this.timeInterval.set([days, hours, minutes]);
          },
          /**
           * Получить _options.text
           */
-         _getTextByTotalMinutes: function (totalMinutes) {
-            var patternValues = this._getPatternValues(totalMinutes),
-               prefix = '___',
-               availMaskArray = this._options.mask.split(":"),
-               needSetMask = false;
+         _getTextByTimeInterval: function () {
+            var value = this._getPatternValues().join(':');
 
-            //Увеличиваем маску, если нужно
-            while (patternValues[0].toString().length > availMaskArray[0].length && availMaskArray[0].length < 4) {
-               availMaskArray[0] += availMaskArray[0][0];
-               needSetMask = true;
-            }
-            if (needSetMask){
-               this._setMask(availMaskArray.join(':'));
+            //Если длина текста < маски, то добавляем "_"
+            while (value.length < this._options.mask.length){
+               value = this._maskReplacer + value;
             }
 
-            for (var i = 0; i < patternValues.length; i++) {
-               if (i > 0) {
-                  prefix += 0;
-               }
-               patternValues[i] = (prefix + patternValues[i]).slice(-availMaskArray[i].length);
+            //Если маска меньше чем текст, увеличиваем маску
+            if (value.length > this._options.mask.length){
+               this._incMask(value.length - this._options.mask.length)
             }
-            return patternValues[0] + ":" + patternValues[1] + (patternValues.length > 2 ? ":" + patternValues[2] : "");
+
+            return value;
          },
          /**
           * Получить индекс паттерна в маске
@@ -260,13 +237,19 @@ define(
             if (this._hasMaskPattern(this._patterns.minutes)) {
                patternArray.push(intervalValues.minutes);
             }
+
+            $.each(patternArray, function(i, value){
+               if (value < 10){
+                  patternArray[i] = "0" + value;
+               }
+            });
             return patternArray;
          },
-         _setTextByTotalMinutes: function(){
-            this.setText(this._getTextByTotalMinutes(this.timeInterval.getTotalMinutes()));
+         _setTextByTimeInterval: function(){
+            this.setText(this._getTextByTimeInterval());
          },
          /**
-          * Обновляяет значения this._options.text и this._options.interval (вызывается в _replaceCharacter из FormattedTextBoxBase). Переопределённый метод.
+          * Обновляяет значения this._options.text и interval (вызывается в _replaceCharacter из FormattedTextBoxBase). Переопределённый метод.
           * @private
           */
          _updateText: function(){
@@ -274,15 +257,14 @@ define(
                 oldDate = this.timeInterval.getValue();
 
             this._getIntervalByText(text);
-            this._options.text = this._getTextByTotalMinutes(this.timeInterval.getTotalMinutes());
+            this._options.text = this._getTextByTimeInterval();
 
-            if (this.formatModel.model[0].value[0] && this.formatModel.model[0].mask.length < 4) {
+            if (this.formatModel.model[0].value[0] && this._options.text.split(':')[0].length < 4 && this.formatModel.model[0].mask.length < 4) {
                this._options.text = this._maskReplacer + this._options.text;
-               this._setMask(this._options.mask[0] + this._options.mask);
+               this._options.text.length !== this._options.mask.length ? this._incMask(2) : this._incMask(1);
             }
 
             // Если дата изменилась -- генерировать событие.
-            // Если использовать просто setInterval, то событие будет генерироваться даже если дата введена с клавиатуры не полностью, что неверно
             if ( oldDate !== this.timeInterval.getValue()) {
                this._notify('onChangeInterval', this.timeInterval.getValue());
             }
