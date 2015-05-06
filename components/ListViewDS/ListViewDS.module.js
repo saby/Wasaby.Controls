@@ -62,9 +62,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            * @see setItemsActions
            * @see getItemsActions
            */
-          /**
-           * @event onItemActions При
-           */
+
          $protected: {
             _floatCheckBox : null,
             _dotTplFn: dotTplFn,
@@ -209,7 +207,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
          $constructor: function () {
             var self = this;
-            this._publish('onChangeHoveredItem', 'onItemActions');
+            this._publish('onChangeHoveredItem');
 
             this._container.mouseup(function (e) {
                if (e.which == 1) {
