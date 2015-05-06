@@ -162,6 +162,7 @@ define(
           * @param text
           */
          setText: function(text){
+            text = this._getTextCorrespondingToMask(text);
             TimeInterval.superclass.setText.apply(this, [text]);
             this._updateIntervalByText(text);
             this._options.text = this._getTextByTimeInterval();
@@ -172,24 +173,28 @@ define(
           * @private
           */
          _getTextByTimeInterval: function () {
-            var valuesArray = this._getSectionValues(),
-               value;
-
+            var valuesArray = this._getSectionValues();
             if (valuesArray[0] > 9999){
                valuesArray[0] = 9999;
             }
-
-            value = valuesArray.join(':');
-            while (value.length <= this._options.mask.length && valuesArray[0].toString().length < 4 && (value[0] != this._maskReplacer && value[0] != "0")){
-               value = this._maskReplacer + value;
+            return this._getTextCorrespondingToMask(valuesArray.join(':'));
+         },
+         /**
+          * Получить текст, который соответствующий маске
+          * При установке текста, может получиться такая ситуация, что маска больше текста. В этом случае
+          * к тексту слева будет добавлен this._maskReplacer
+          * И наоборот, если маска будет меньше текста, то маска будет увеличена, чтобы туда поместился текст
+          * @private
+          */
+         _getTextCorrespondingToMask: function(text){
+            while ((text.length < this._options.mask.length || (text[0] != this._maskReplacer && text[0] != "0" && text.length == this._options.mask.length)) && text.split(':')[0].length < 4){
+               text = this._maskReplacer + text;
             }
-
-            if (value.length > this._options.mask.length){
-               this._options.text = value;
-               this._incMask(value.length - this._options.mask.length);
+            if (text.length > this._options.mask.length){
+               this._options.text = text;
+               this._incMask(text.length - this._options.mask.length);
             }
-
-            return value;
+            return text;
          },
 
          /**
