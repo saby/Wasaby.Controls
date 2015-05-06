@@ -1,11 +1,11 @@
-define('js!SBIS3.Demo.Control.MyMonthPicker', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.Demo.Control.MyMonthPicker', 'css!SBIS3.Demo.Control.MyMonthPicker', 'js!SBIS3.CONTROLS.MonthPicker'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.Controls.Demo.MyMonthPicker', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.Controls.Demo.MyMonthPicker', 'css!SBIS3.Controls.Demo.MyMonthPicker', 'js!SBIS3.CONTROLS.MonthPicker'], function(CompoundControl, dotTplFn) {
    /**
-    * SBIS3.Demo.Control.MyMonthPicker
-    * @class SBIS3.Demo.Control.MyMonthPicker
+    * SBIS3.Controls.Demo.MyMonthPicker
+    * @class SBIS3.Controls.Demo.MyMonthPicker
     * @extends $ws.proto.CompoundControl
     * @control
     */
-   var moduleClass = CompoundControl.extend(/** @lends SBIS3.Demo.Control.MyMonthPicker.prototype */{
+   var moduleClass = CompoundControl.extend(/** @lends SBIS3.Controls.Demo.MyMonthPicker.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

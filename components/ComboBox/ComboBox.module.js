@@ -30,8 +30,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     *      <option name="keyField">key</option>
     * </component>
     * @category Inputs
-    * @demo SBIS3.Demo.Control.MyComboBox
-    * @demo SBIS3.Demo.Control.MyComboBoxDS Выпадающий список с dataSource
+    * @demo SBIS3.Controls.Demo.MyComboBox
+    * @demo SBIS3.Controls.Demo.MyComboBoxDS Выпадающий список с dataSource
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.DSMixin

@@ -1,11 +1,11 @@
-define('js!SBIS3.Demo.Control.MyPasswordTextBox', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.Demo.Control.MyPasswordTextBox', 'css!SBIS3.Demo.Control.MyPasswordTextBox', 'js!SBIS3.CONTROLS.PasswordTextBox'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.Controls.Demo.MyPasswordTextBox', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.Controls.Demo.MyPasswordTextBox', 'css!SBIS3.Controls.Demo.MyPasswordTextBox', 'js!SBIS3.CONTROLS.PasswordTextBox'], function(CompoundControl, dotTplFn) {
    /**
-    * SBIS3.Demo.Control.MyPasswordTextBox
-    * @class SBIS3.Demo.Control.MyPasswordTextBox
+    * SBIS3.Controls.Demo.MyPasswordTextBox
+    * @class SBIS3.Controls.Demo.MyPasswordTextBox
     * @extends $ws.proto.CompoundControl
     * @control
     */
-   var moduleClass = CompoundControl.extend(/** @lends SBIS3.Demo.Control.MyPasswordTextBox.prototype */{
+   var moduleClass = CompoundControl.extend(/** @lends SBIS3.Controls.Demo.MyPasswordTextBox.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

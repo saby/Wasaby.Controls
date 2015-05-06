@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
     * @extends SBIS3.CONTROLS.CheckBoxGroupBase
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @control
-    * @demo SBIS3.Demo.Control.MyCheckBoxGroup
+    * @demo SBIS3.Controls.Demo.MyCheckBoxGroup
     * @public
     * @initial
     * <component data-component='SBIS3.CONTROLS.CheckBoxGroup'>

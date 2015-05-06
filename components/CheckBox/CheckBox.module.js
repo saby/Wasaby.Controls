@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
     * @extends SBIS3.CONTROLS.ButtonBase
     * @mixes SBIS3.CONTROLS.Checkable
     * @control
-    * @demo SBIS3.Demo.Control.MyCheckbox
+    * @demo SBIS3.Controls.Demo.MyCheckbox
     * @initial
     * <component data-component='SBIS3.CONTROLS.CheckBox'>
     *     <option name="caption">CheckBox</option>

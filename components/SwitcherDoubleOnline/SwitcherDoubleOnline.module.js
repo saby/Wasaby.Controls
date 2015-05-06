@@ -19,7 +19,7 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
     *    <option name="stateOn">Вкл</option>
     * </component>
     * @control
-    * @demo SBIS3.Demo.Control.MySwitcherDoubleOnline
+    * @demo SBIS3.Controls.Demo.MySwitcherDoubleOnline
     * @public
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner stateKey
