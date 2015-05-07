@@ -1,16 +1,16 @@
-define('js!SBIS3.Controls.Demo.MyLink',
+define('js!SBIS3.CONTROLSs.Demo.MyLink',
     ['js!SBIS3.CORE.CompoundControl',
-     'html!SBIS3.Controls.Demo.MyLink',
-     'css!SBIS3.Controls.Demo.MyLink',
+     'html!SBIS3.CONTROLSs.Demo.MyLink',
+     'css!SBIS3.CONTROLSs.Demo.MyLink',
      'js!SBIS3.CONTROLS.Link'],
     function(CompoundControl, dotTplFn) {
    /**
-    * SBIS3.Controls.Demo.MyLink
-    * @class SBIS3.Controls.Demo.MyLink
+    * SBIS3.CONTROLSs.Demo.MyLink
+    * @class SBIS3.CONTROLSs.Demo.MyLink
     * @extends $ws.proto.CompoundControl
     * @control
     */
-   var moduleClass = CompoundControl.extend(/** @lends SBIS3.Controls.Demo.MyLink.prototype */{
+   var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLSs.Demo.MyLink.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

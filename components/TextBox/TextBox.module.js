@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
     * @extends SBIS3.CONTROLS.TextBoxBase
     * @control
     * @public
-    * @demo SBIS3.Controls.Demo.MyTextBox
+    * @demo SBIS3.CONTROLSs.Demo.MyTextBox
     * @category Inputs
     * @ignoreOptions independentContext contextRestriction extendedTooltip
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment

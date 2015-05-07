@@ -1,11 +1,11 @@
-define('js!SBIS3.Controls.Demo.MyCheckBoxGroup', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.Controls.Demo.MyCheckBoxGroup', 'css!SBIS3.Controls.Demo.MyCheckBoxGroup', 'js!SBIS3.CONTROLS.CheckBoxGroup'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.CONTROLSs.Demo.MyCheckBoxGroup', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLSs.Demo.MyCheckBoxGroup', 'css!SBIS3.CONTROLSs.Demo.MyCheckBoxGroup', 'js!SBIS3.CONTROLS.CheckBoxGroup'], function(CompoundControl, dotTplFn) {
    /**
-    * SBIS3.Controls.Demo.MyCheckBoxGroup
-    * @class SBIS3.Controls.Demo.MyCheckBoxGroup
+    * SBIS3.CONTROLSs.Demo.MyCheckBoxGroup
+    * @class SBIS3.CONTROLSs.Demo.MyCheckBoxGroup
     * @extends $ws.proto.CompoundControl
     * @control
     */
-   var moduleClass = CompoundControl.extend(/** @lends SBIS3.Controls.Demo.MyCheckBoxGroup.prototype */{
+   var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLSs.Demo.MyCheckBoxGroup.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

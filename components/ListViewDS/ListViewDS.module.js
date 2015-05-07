@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
        * @public
-       * @demo SBIS3.Controls.Demo.MyListViewDS
+       * @demo SBIS3.CONTROLSs.Demo.MyListViewDS
        * @author Крайнов Дмитрий Олегович
        */
 
@@ -128,14 +128,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 *           <option name="icon">sprite:icon-16 icon-Delete icon-primary</option>
                 *           <option name="isMainAction">false</option>
                 *           <option name="tooltip">Удалить</option>
-                *           <option name="onActivated" type="function">js!SBIS3.Controls.Demo.MyListViewDS:prototype.myOnActivatedHandler</option>
+                *           <option name="onActivated" type="function">js!SBIS3.CONTROLSs.Demo.MyListViewDS:prototype.myOnActivatedHandler</option>
                 *        </options>
                 *        <options>
                 *            <option name="name">btn2</option>
                 *            <option name="icon">sprite:icon-16 icon-Trade icon-primary</option>
                 *            <option name="tooltip">Изменить</option>
                 *            <option name="isMainAction">true</option>
-                *            <option name="onActivated" type="function">js!SBIS3.Controls.Demo.MyListViewDS:prototype.myOnActivatedHandler</option>
+                *            <option name="onActivated" type="function">js!SBIS3.CONTROLSs.Demo.MyListViewDS:prototype.myOnActivatedHandler</option>
                 *         </options>
                 *     </option>
                 * </pre>

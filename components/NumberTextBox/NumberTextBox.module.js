@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     * @extends SBIS3.CONTROLS.TextBox
     * @control
     * @public
-    * @demo SBIS3.Controls.Demo.MyNumberTextBox
+    * @demo SBIS3.CONTROLSs.Demo.MyNumberTextBox
     * @initial
     * <component data-component='SBIS3.CONTROLS.NumberTextBox'>
     *     <option name="text">0</option>

@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
     * @extends SBIS3.CONTROLS.ListView
     * @control
     * @public
-    * @demo SBIS3.Controls.Demo.MyDataGrid
+    * @demo SBIS3.CONTROLSs.Demo.MyDataGrid
     * @initial
     * <component data-component='SBIS3.CONTROLS.DataGrid'>
     *    <options name="columns" type="array">
