@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SB
     * @extends SBIS3.CONTROLS.SwitcherBase
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @control
-    * @demo SBIS3.CONTROLSs.Demo.MySwitcher
+    * @demo SBIS3.CONTROLS.Demo.MySwitcher
     * @public
     * @initial
     * <component data-component='SBIS3.CONTROLS.Switcher'>

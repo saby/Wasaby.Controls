@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLSs.Demo.MyComboBox', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLSs.Demo.MyComboBox', 'css!SBIS3.CONTROLSs.Demo.MyComboBox', 'js!SBIS3.CONTROLS.ComboBox'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.CONTROLS.Demo.MyComboBox', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Demo.MyComboBox', 'css!SBIS3.CONTROLS.Demo.MyComboBox', 'js!SBIS3.CONTROLS.ComboBox'], function(CompoundControl, dotTplFn) {
    /**
-    * SBIS3.CONTROLSs.Demo.MyComboBox
-    * @class SBIS3.CONTROLSs.Demo.MyComboBox
+    * SBIS3.CONTROLS.Demo.MyComboBox
+    * @class SBIS3.CONTROLS.Demo.MyComboBox
     * @extends $ws.proto.CompoundControl
     * @control
     */
-   var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLSs.Demo.MyComboBox.prototype */{
+   var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Demo.MyComboBox.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

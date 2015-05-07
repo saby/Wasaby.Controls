@@ -1,16 +1,16 @@
-define('js!SBIS3.CONTROLSs.Demo.MyMenuLink',
+define('js!SBIS3.CONTROLS.Demo.MyMenuLink',
     ['js!SBIS3.CORE.CompoundControl',
-     'html!SBIS3.CONTROLSs.Demo.MyMenuLink',
-     'css!SBIS3.CONTROLSs.Demo.MyMenuLink',
+     'html!SBIS3.CONTROLS.Demo.MyMenuLink',
+     'css!SBIS3.CONTROLS.Demo.MyMenuLink',
      'js!SBIS3.CONTROLS.MenuLink'],
     function(CompoundControl, dotTplFn) {
    /**
-    * SBIS3.CONTROLSs.Demo.MyMenuLink
-    * @class SBIS3.CONTROLSs.Demo.MyMenuLink
+    * SBIS3.CONTROLS.Demo.MyMenuLink
+    * @class SBIS3.CONTROLS.Demo.MyMenuLink
     * @extends $ws.proto.CompoundControl
     * @control
     */
-   var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLSs.Demo.MyMenuLink.prototype */{
+   var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Demo.MyMenuLink.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

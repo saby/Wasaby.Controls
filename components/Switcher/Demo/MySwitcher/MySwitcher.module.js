@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLSs.Demo.MySwitcher', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLSs.Demo.MySwitcher', 'css!SBIS3.CONTROLSs.Demo.MySwitcher', 'js!SBIS3.CONTROLS.Switcher'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.CONTROLS.Demo.MySwitcher', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Demo.MySwitcher', 'css!SBIS3.CONTROLS.Demo.MySwitcher', 'js!SBIS3.CONTROLS.Switcher'], function(CompoundControl, dotTplFn) {
    /**
-    * SBIS3.CONTROLSs.Demo.MySwitcher
-    * @class SBIS3.CONTROLSs.Demo.MySwitcher
+    * SBIS3.CONTROLS.Demo.MySwitcher
+    * @class SBIS3.CONTROLS.Demo.MySwitcher
     * @extends $ws.proto.CompoundControl
     * @control
     */
-   var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLSs.Demo.MySwitcher.prototype */{
+   var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Demo.MySwitcher.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

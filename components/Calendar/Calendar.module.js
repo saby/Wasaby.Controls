@@ -20,7 +20,7 @@ define(
        * @extends SBIS3.CORE.CompoundControl
        * @control
        * @public
-       * @demo SBIS3.CONTROLSs.Demo.MyCalendar
+       * @demo SBIS3.CONTROLS.Demo.MyCalendar
        * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
        * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
        */

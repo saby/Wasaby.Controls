@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!
     * @class SBIS3.CONTROLS.PasswordTextBox
     * @extends SBIS3.CONTROLS.TextBox
     * @control
-    * @demo SBIS3.CONTROLSs.Demo.MyPasswordTextBox
+    * @demo SBIS3.CONTROLS.Demo.MyPasswordTextBox
     * @public
     * @category Inputs
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol textTransform

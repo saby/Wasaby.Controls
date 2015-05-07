@@ -25,7 +25,7 @@ define(
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @control
     * @public
-    * @demo SBIS3.CONTROLSs.Demo.MyMonthPicker
+    * @demo SBIS3.CONTROLS.Demo.MyMonthPicker
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
     */
