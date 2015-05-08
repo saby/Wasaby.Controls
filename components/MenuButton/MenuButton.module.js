@@ -55,6 +55,11 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          });
       },
 
+      destroy: function(){
+         MenuButton.superclass.destroy.call(this);
+         this._header.remove();
+      },
+
       _initMenu: function(){
          if (this.getItems().getItemsCount() > 1) {
             $('.js-controls-MenuButton__arrowDown', this._container).show();
@@ -65,7 +70,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
                                     <i class="controls-MenuButton__headerCenter"></i>\
                                     <i class="controls-MenuButton__headerRight"></i>\
                                  </span>');
-               $('.controls-MenuButton__headerCenter', this._header).width(this._container.width() + 12);
+               $('.controls-MenuButton__headerCenter', this._header).width(this._container.outerWidth() - 23);
                this._header.css({
                   width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
                   height: this._container.outerHeight()
