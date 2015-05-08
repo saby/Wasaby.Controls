@@ -36,6 +36,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @see items
              */
             keyField : null,
+            /**
+             * @cfg {String} Название поля из набора, отображающее данные
+             * @example
+             * <pre>
+             *     <option name="displayField">Название</option>
+             * </pre>
+             */
+            displayField: null,
              /**
               * @cfg {Items[]} Набор исходных данных, по которому строится отображение
               * @example

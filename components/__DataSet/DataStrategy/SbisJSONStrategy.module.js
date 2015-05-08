@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
      *
      * Позволяет работать с массивом объектов на бизнес-логике.
      * @author Мануйлов Андрей
+     * @public
      */
 
    var SbisJSONStrategy = IDataStrategy.extend({

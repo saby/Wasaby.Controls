@@ -1746,6 +1746,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-EditAtPlace.ws-disabled .controls-EditAtPlace__fieldWrapper .controls-EditAtPlace__textField {
   cursor: text;
 }
+.controls-EditAtPlace.controls-EditAtPlace__ellipsis .controls-EditAtPlace__fieldWrapper {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .controls-EditAtPlace.controls-EditAtPlace__multiline {
   display: inline;
   text-indent: 0;
