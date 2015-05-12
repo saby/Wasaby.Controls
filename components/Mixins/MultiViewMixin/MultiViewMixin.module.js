@@ -65,6 +65,11 @@ define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'
                }
                case 'tile' : {
                   if (this._options.tileTemplate) {
+                     if (this._options.tileTemplate.indexOf('html!') !== 1) {
+                        require([this._options.tileTemplate], function(tileTpl){
+                              dotTpl = tileTpl;
+                        })
+                     }
                      dotTpl = doT.template(this._options.tileTemplate)
                   }
                   else {
