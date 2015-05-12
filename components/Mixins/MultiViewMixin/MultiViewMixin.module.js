@@ -67,10 +67,11 @@ define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'
                   if (this._options.tileTemplate) {
                      if (this._options.tileTemplate.indexOf('html!') !== 1) {
                         require([this._options.tileTemplate], function(tileTpl){
-                              dotTpl = tileTpl(item);
+                           resultTpl = tileTpl(item);
                         })
+                     } else {
+                        resultTpl = doT.template(this._options.tileTemplate)
                      }
-                     dotTpl = doT.template(this._options.tileTemplate)
                   }
                   else {
                      var src;
