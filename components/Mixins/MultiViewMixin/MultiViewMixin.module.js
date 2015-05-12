@@ -23,8 +23,14 @@ define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'
       },
 
       $constructor: function() {
+         var self = this;
          this._drawViewMode(this._options.mode);
          this._container.addClass('controls-MultiView-' + this._options.viewMode);
+         if (this._options.tileTemplate.indexOf('html!') !== -1) {
+            require([this._options.tileTemplate], function(tileTpl){
+               self._options.tileTemplate = tileTpl;
+            })
+         }
       },
 
       setViewMode: function(mode) {
@@ -65,12 +71,10 @@ define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'
                }
                case 'tile' : {
                   if (this._options.tileTemplate) {
-                     if (this._options.tileTemplate.indexOf('html!') !== 1) {
-                        require([this._options.tileTemplate], function(tileTpl){
-                           resultTpl = tileTpl(item);
-                        })
+                     if (this._options.tileTemplate instanceof Function) {
+                        dotTpl = this._options.tileTemplate;
                      } else {
-                        resultTpl = doT.template(this._options.tileTemplate)
+                        dotTpl = doT.template(this._options.tileTemplate);
                      }
                   }
                   else {
