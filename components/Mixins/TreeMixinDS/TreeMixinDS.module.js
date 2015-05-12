@@ -107,6 +107,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
                self._drawItem(record, targetContainer);
             }
          });
+
+         this.refreshIndexTree()
       },
 
       _nodeClosed : function(key) {

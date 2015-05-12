@@ -143,10 +143,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       after: {
          _drawItems: function () {
             this._drawOpenedPath();
-         },
-         _nodeDataLoaded: function () {
-            this.refreshIndexTree();
          }
+
       },
 
       _drawOpenedPath: function () {
