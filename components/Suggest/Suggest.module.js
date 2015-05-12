@@ -163,12 +163,6 @@ define('js!SBIS3.CONTROLS.Suggest', [
         },
 
         init: function() {
-            //[SBIS3.CORE.Control::getOwner() bug?]
-            if (!this._owner && this._options.owner instanceof $ws.proto.Control) {
-                this._owner = this._options.owner;
-            }
-            //[/SBIS3.CORE.Control::getOwner() bug?]
-
             Suggest.superclass.init.apply(this, arguments);
 
             this._connectBindings();
@@ -190,25 +184,29 @@ define('js!SBIS3.CONTROLS.Suggest', [
         },
 
         _connectBindings: function() {
-            var owner = this.getOwner();
-            if (!owner) {
-                return;
-            }
+            var self = this,
+                parent = this.getParent();
 
-            var context = this.getLinkedContext();
-            this.subscribeTo(context, 'onFieldChange', $.proxy(function(eventObject, fieldName) {
+            //this.subscribeTo(parent, 'onReady', function() {
+            var controls = parent.getChildControls(true);
+            $ws.helpers.forEach(controls, function(control) {
+                if (control.getName() in this._filterBindings) {
+                    this.subscribeTo(control, 'onFocusIn', function(eventObject) {
+                        self._checkPickerState(this.getName(), false);
+                    });
+                }
+            }, this);
+            //});
+
+            var context = this._getBindingContext();
+            this.subscribeTo(context, 'onFieldChange', $.proxy(function(eventObject, fieldName, fieldValue, initiator) {
+                if (initiator !== this) {
                     this._checkPickerState(fieldName, true);
-                }, this))
-                .subscribeTo(owner, 'onFocusIn', $.proxy(function() {
-                    this._checkPickerState(owner.getName(), false);
-                }, this));
-
-            //owner && owner.subscribe('onKeyPressed', this._checkPickerState);
+                }
+            }, this));
         },
 
         _disconnectBindings: function() {
-            //var owner = this.getOwner();
-            //owner && owner.unsubscribe('onKeyPressed', this._checkPickerState);
         },
 
         _checkPickerState: function(fieldName, delayed) {
@@ -241,12 +239,17 @@ define('js!SBIS3.CONTROLS.Suggest', [
             if (!this._filterChanged) {
                 return;
             }
-            console.log(this._filter);
             this.reload();
         },
 
         _setPickerContent: function() {
-            this._picker.getContainer().addClass('controls-Suggest__picker');
+            var self = this;
+
+            this._picker.getContainer()
+                .addClass('controls-Suggest__picker')
+                .delegate('.controls-Suggest__itemRow', 'mouseup', function() {
+                    self.setSelectedIndex($(this).attr('data-id'));
+                });
         },
 
         _buildFilter: function() {
@@ -254,13 +257,13 @@ define('js!SBIS3.CONTROLS.Suggest', [
             this._filter = {};
             this._filterChanged = false;
 
-            var context = this.getLinkedContext();
+            var context = this._getBindingContext();
             for (var field in this._filterBindings) {
                 if (this._filterBindings.hasOwnProperty(field)) {
                     var filterField = this._filterBindings[field],
                         filterValue = context.getValue(field);
                     if (filterValue && String(filterValue).length >= this._options.startChar) {
-                        this._filter[filterField] = filterValue;
+                        this._filter[filterField] = new RegExp('^.*' + filterValue + '.*$') ;
                     }
 
                     if (prevFilter[filterField] !== this._filter[filterField]) {
@@ -272,11 +275,9 @@ define('js!SBIS3.CONTROLS.Suggest', [
 
         _drawSelectedItem: function(key) {
             if (key !== undefined && key !== null) {
-                var item, def;
-                def = new $ws.proto.Deferred();
+                var def = new $ws.proto.Deferred();
                 if (this._dataSet) {
-                    item = this._dataSet.getRecordByKey(key);
-                    def.callback(item);
+                    def.callback(this._dataSet.getRecordByKey(key));
                 } else {
                     this._dataSource.read(key).addCallback(function(item) {
                         def.callback(item);
@@ -285,17 +286,32 @@ define('js!SBIS3.CONTROLS.Suggest', [
 
                 var self = this;
                 def.addCallback(function(item) {
-                    var context = self.getLinkedContext();
-                    for (var field in this._resultBindings) {
-                        if (this._resultBindings.hasOwnProperty(field)) {
-                            context.setValue(field, item.get(this._resultBindings[field]));
+                    var context = self._getBindingContext();
+                    for (var field in self._resultBindings) {
+                        if (self._resultBindings.hasOwnProperty(field)) {
+                            context.setValue(
+                                field,
+                                item.get(self._resultBindings[field]),
+                                false,
+                                self
+                            );
                         }
+                    }
+
+                    if (self._picker) {
+                        self._picker.getContainer()
+                            .find('.controls-Suggest__itemRow__selected')
+                                .removeClass('controls-Suggest__itemRow__selected')
+                            .end()
+                            .find('.controls-Suggest__itemRow[data-id="' + key + '"]')
+                                .addClass('controls-Suggest__itemRow__selected');
                     }
                 });
             } else {
                 if (this._picker) {
-                    $('.controls-Suggest__itemRow__selected', this._picker.getContainer().get(0))
-                        .removeClass('controls-Suggest__itemRow__selected');
+                    this._picker.getContainer()
+                        .find('.controls-Suggest__itemRow__selected')
+                            .removeClass('controls-Suggest__itemRow__selected');
                 }
             }
 
@@ -336,6 +352,20 @@ define('js!SBIS3.CONTROLS.Suggest', [
             if (this._picker) {
                 Suggest.superclass._clearItems.call(this, this._picker.getContainer());
             }
+        },
+
+        /**
+         * Метод перезагрузки данных.
+         * Можно задать фильтрацию, сортировку.
+         * @param {String} filter Параметры фильтрации.
+         * @param {String} sorting Параметры сортировки.
+         * @param offset Элемент, с которого перезагружать данные.
+         * @param {Number} limit Ограничение количества перезагружаемых элементов.
+         */
+        reload: function (filter, sorting, offset, limit) {
+            this._options.selectedIndex = null;
+
+            Suggest.superclass.reload.apply(this, arguments);
         },
 
         _redraw: function () {
