@@ -73,8 +73,8 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             cfg.xsl = this._options.xsl;
          }
          var p = new Unloader(cfg);
-         //TODO Где взять MethodName и FileName
-         p.unload(this._currentItem, this._controlsId[this._currentItem], 'Test');
+         //TODO Если не задали имя файла в опции, то возьмем из 1ой колонки
+         p.unload(this._currentItem, this._controlsId[this._currentItem], this._options.fileName || this._view.getColumns()[0].title);
       }
    });
 

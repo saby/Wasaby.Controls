@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
 
       $protected: {
          _options: {
+            fileName : ''
          },
          _view : undefined
       },
