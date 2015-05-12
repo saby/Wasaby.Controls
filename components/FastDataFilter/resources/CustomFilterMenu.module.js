@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
          },
          _drawItemsCallback: function() {
             //Надо вызвать просто для того, чтобы отрисовалось выбранное значение/значения
-            this.setSelectedItems(this._options.selectedItems);
+            this.setSelectedIndexes(this._options.selectedIndexes);
          },
          _dataLoadedCallback: function() {
             this._defaultId = this._dataSet.at(0).getKey();

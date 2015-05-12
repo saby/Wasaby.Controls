@@ -33,7 +33,6 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
       },
 
       $constructor: function() {
-         var self = this;
          this._container.removeClass('ws-area');
          this._filterLineItemsContainer = this._container.find('.controls__filterButton__filterLine-items');
          this._filterLine = this._container.find('.controls__filterButton__filterLine');
@@ -43,7 +42,6 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
       },
       _initEvents: function() {
          var self = this;
-         //TODO Переделать
          this._container.mouseup(this.showPicker.bind(this));
          this._container.find('.controls__filterButton__filterLine-cross').mouseup(function(e) {
             self.setItems([]);
@@ -61,12 +59,9 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
       },
 
       _setPickerContent: function() {
-         var self = this;
-         this._picker.getContainer().append(dotTplForPicker.call(this, {template: this._options.template}));
-         this._picker.reviveComponents().addCallback(function() {
-            self._picker.getChildControlByName('clearFilterButton').subscribe('onActivated', self.resetFilter.bind(self));
-            self._picker.getChildControlByName('applyFilterButton').subscribe('onActivated', self.applyFilter.bind(self));
-         });
+         this._picker.getContainer().addClass('controls__filterButton-' + this._options.filterAlign);
+         this._picker.getChildControlByName('clearFilterButton').subscribe('onActivated', this.resetFilter.bind(this));
+         this._picker.getChildControlByName('applyFilterButton').subscribe('onActivated', this.applyFilter.bind(this));
       },
 
       _drawItemsCallback: function() {
@@ -104,8 +99,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
             },
             closeButton: true,
             closeByExternalClick: true,
-            //TODO спросить почему не вешается класс
-            cssClassName: 'controls__filterButton-' + this._options.filterAlign
+            template: dotTplForPicker.call(this, {template: this._options.template})
          };
       }
    });

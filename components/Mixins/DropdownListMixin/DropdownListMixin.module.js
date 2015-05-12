@@ -4,7 +4,6 @@
 define('js!SBIS3.CONTROLS.DropdownListMixin', [],
     function () {
         /**
-         * ������, ����������� ��������� �������� ������ ��� ���������� ��������� ���������
          * @mixin SBIS3.CONTROLS.MenuButtonMixin
          * @public
          */
@@ -46,7 +45,7 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
                 this._picker.getContainer().bind('mouseup', function (e) {
                     var row = $(e.target).closest('.' + self._getItemClass());
                     if (row.length) {
-                        self.setSelectedItems([row.data('id')]);
+                        self.setSelectedIndexes([row.data('id')]);
                         self.hidePicker();
                     }
                 });
