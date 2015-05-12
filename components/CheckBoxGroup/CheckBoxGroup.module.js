@@ -32,6 +32,33 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
 
    var CheckBoxGroup = CheckBoxGroupBase.extend( /** @lends SBIS3.CONTROLS.CheckBoxGroup.prototype */ {
       _dotTplFn : dotTplFn,
+       /**
+        * @typedef {Object} GroupItems
+        * @property {String} id Идентификатор.
+        * @property {String} title Подпись.
+        */
+       /**
+        * @cfg {GroupItems[]} Набор исходных данных, по которому строится отображение
+        * @name SBIS3.CONTROLS.CheckBoxGroup#items
+        * @example
+        * <pre>
+        *     <options name="items" type="array">
+        *        <options>
+        *            <option name="id">1</option>
+        *            <option name="title">Флажок_1</option>
+        *         </options>
+        *         <options>
+        *            <option name="id">2</option>
+        *            <option name="title">Флажок_2</option>
+        *         </options>
+        *         <options>
+        *            <option name="id">3</option>
+        *            <option name="title">Флажок_3</option>
+        *         </options>
+        *      </options>
+        * </pre>
+        */
+
       $protected: {
          _options: {
 
