@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
        * @returns {js!SBIS3.CONTROLS.Record}
        */
       merge: function (record) {
-         this._raw = $ws.core.merge(this._raw, record.getRaw());
+         $ws.core.merge(this._raw, record.getRaw());
          this._isDeleted = record.getMarkDeleted();
          this._isChanged = record.getMarkChanged();
          //this._keyField = record._keyField;
