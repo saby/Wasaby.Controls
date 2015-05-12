@@ -192,7 +192,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          },
 
          _getItemTemplate : function(item) {
-            var linkText = item.get('linkText');
+            var caption = item.get('caption');
 
             this._itemActionsButtons[item.get('name')] = {
                isMainAction : item.get('isMainAction'),
@@ -200,9 +200,9 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                isVisible: true
             };
 
-            return linkText ?
+            return caption ?
             '<component data-component="SBIS3.CONTROLS.Link">' +
-               '<option name="caption">' + linkText + '</option>' +
+               '<option name="caption">' + caption + '</option>' +
             '</component>' :
             '<component data-component="SBIS3.CONTROLS.IconButton">' +
                '<option name="icon">' + item.get('icon') + '</option>' +

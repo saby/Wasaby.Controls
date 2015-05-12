@@ -1,0 +1,36 @@
+.controls-ProgressBar {
+   height: @controls-ProgressBar-height;
+}
+.controls-ProgressBar__line {
+   height: 100%;
+   background: @controls-ProgressBar-empty-bg;
+   position: relative;
+   border-radius: @controls-ProgressBar-border-radius;
+}
+.controls-ProgressBar__progress {
+   height: 100%;
+   background: @controls-ProgressBar-progress-bg;
+   border-radius: @controls-ProgressBar-border-radius;
+}
+.controls-ProgressBar__progress {
+   background: @controls-ProgressBar-progress-bg-grad;
+}
+.controls-ProgressBar__value {
+   position: absolute;
+   width: 100%;
+   text-align: center;
+}
+.controls-ProgressBar_align-left .controls-ProgressBar__line {
+   margin-left: @controls-ProgressBar-side-space;
+}
+.controls-ProgressBar_align-left .controls-ProgressBar__value{
+   width: auto;
+   left: -@controls-ProgressBar-side-space;
+}
+.controls-ProgressBar_align-right .controls-ProgressBar__line {
+   margin-right: @controls-ProgressBar-side-space;
+}
+.controls-ProgressBar_align-right .controls-ProgressBar__value{
+   width: auto;
+   right: -@controls-ProgressBar-side-space;
+}

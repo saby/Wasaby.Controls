@@ -36,6 +36,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @see items
              */
             keyField : null,
+            /**
+             * @cfg {String} Название поля из набора, отображающее данные
+             * @example
+             * <pre>
+             *     <option name="displayField">Название</option>
+             * </pre>
+             */
+            displayField: null,
              /**
               * @cfg {Items[]} Набор исходных данных, по которому строится отображение
               * @example
@@ -61,7 +69,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               */
             items: undefined,
             /**
-             * @cfg {DataSource} Набор исходных данных по которому строится отображение
+             * @cfg {DataSource} Набор исходных данных, по которому строится отображение
              * @see setDataSource
              */
             dataSource: undefined,
@@ -231,10 +239,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             keyField: keyField
          });
          this.reload();
-         //TODO совместимость
-         if (typeof(window) != 'undefined') {
-            console['log']('Метод setItems устарел. Он прекратит работу в версии 3.7.2');
-         }
       },
 
       _drawItemsCallback: function () {
@@ -273,7 +277,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                if (targetContainer) {
                   this._drawItem(records[i], targetContainer, curAt);
                }
-               if (curAt && cuAt.at) {
+               if (curAt && typeof curAt.at != 'undefined') {
                   curAt.at++;
                }
             }

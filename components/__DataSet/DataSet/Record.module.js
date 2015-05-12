@@ -6,6 +6,8 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
 
    /**
     * Обертка для данных
+    * @author Мануйлов Андрей
+    * @public
     */
 
    return $ws.core.extend({}, {

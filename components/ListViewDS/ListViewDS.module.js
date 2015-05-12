@@ -24,6 +24,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
        * @public
+       * @demo SBIS3.Demo.Control.MyListViewDS
+       * @author Крайнов Дмитрий Олегович
        */
 
       var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
@@ -60,6 +62,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            * @see setItemsActions
            * @see getItemsActions
            */
+
          $protected: {
             _floatCheckBox : null,
             _dotTplFn: dotTplFn,
@@ -76,6 +79,18 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _itemActionsGroup: null,
                _options: {
                /**
+                * @faq Почему нет флажков при включенной опции {@link SBIS3.CONTROLS.ListViewDS#multiselect multiselect}?
+                * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
+                * <pre>
+                *     <div class="listViewItem" style="height: 30px;">\
+                *        <span class="controls-ListView__itemCheckBox"></span>\
+                *        {{=it.get("title")}}\
+                *     </div>
+                * </pre>
+                * @bind SBIS3.CONTROLS.ListViewDS#itemTemplate
+                * @bind SBIS3.CONTROLS.ListViewDS#multiselect
+                */
+               /**
                 * @cfg {String} Шаблон отображения каждого элемента коллекции
                 * @remark
                 * !Важно: опция обязательна к заполнению!
@@ -85,15 +100,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 *        {{=it.get("title")}}\
                 *     </div>
                 * </pre>
-                * @faq Почему нет флажков при включенной опции {@link multiselect}?
-                * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
-                * <pre>
-                *     <div class="listViewItem" style="height: 30px;">\
-                *        <span class="controls-ListView__itemCheckBox"></span>\
-                *        {{=it.get("title")}}\
-                *     </div>
-                * </pre>
-                * @link SBIS3.CONTROLS.ListViewDS#multiselect
                 * @see multiselect
                 */
                itemTemplate: '',
@@ -101,13 +107,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 * @typedef {Array} ItemsActions
                 * @property {String} name Имя кнопки.
                 * @property {String} icon Путь до иконки.
-                * @property {String} title Текст на кнопке.
+                * @property {String} caption Текст на кнопке.
+                * @property {String} tooltip Всплывающая подсказка.
                 * @property {Boolean} isMainAction Отображать ли кнопку на строке или только выпадающем в меню.
                 * На строке кнопки отображаются в том же порядке, в каком они перечислены.
                 * На строке может быть только три кнопки, полный список будет в меню.
                 * @property {Function} onActivated Действие кнопки.
                 * @editor icon ImageEditor
-                * @translatable title
+                * @translatable caption
                 */
                /**
                 * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок
@@ -120,13 +127,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 *           <option name="name">btn1</option>
                 *           <option name="icon">sprite:icon-16 icon-Delete icon-primary</option>
                 *           <option name="isMainAction">false</option>
-                *           <option name="title">Удалить</option>
+                *           <option name="tooltip">Удалить</option>
                 *           <option name="onActivated" type="function">js!SBIS3.Demo.Control.MyListViewDS:prototype.myOnActivatedHandler</option>
                 *        </options>
                 *        <options>
                 *            <option name="name">btn2</option>
                 *            <option name="icon">sprite:icon-16 icon-Trade icon-primary</option>
-                *            <option name="title">Изменить</option>
+                *            <option name="tooltip">Изменить</option>
                 *            <option name="isMainAction">true</option>
                 *            <option name="onActivated" type="function">js!SBIS3.Demo.Control.MyListViewDS:prototype.myOnActivatedHandler</option>
                 *         </options>
@@ -137,7 +144,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                itemsActions: [{
                   name: 'delete',
                   icon: 'sprite:icon-16 icon-Erase icon-error',
-                  title: 'Удалить',
+                  tooltip: 'Удалить',
                   isMainAction: true,
                   onActivated: function(item) {
                      this.deleteRecords(item.data('id'));
@@ -200,12 +207,12 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
          $constructor: function () {
             var self = this;
-            this._publish('onChangeHoveredItem', 'onItemActions');
+            this._publish('onChangeHoveredItem');
 
             this._container.mouseup(function (e) {
                if (e.which == 1) {
                   var $target = $(e.target),
-                      target = $target.hasClass('controls-ListView__item') ? e.target : $target.closest('.controls-ListView__item');
+                      target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
                   if (target.length) {
                      var id = target.data('id');
                      self._elemClickHandler(id, self._dataSet.getRecordByKey(id), e.target);
@@ -335,7 +342,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                }
             }
             else {
-               this.setSelectedItems([id]);
+               this.setSelectedIndexes([id]);
                if (this._options.elemClickHandler) {
                   this._options.elemClickHandler.call(this, id, data, target);
                }
@@ -356,7 +363,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            * Перезагружает набор записей представления данных с последующим обновлением отображения.
            * @example
            * <pre>
-           *    dataGrid.reload();
+           *    var btn = new Button({
+           *         element: "buttonReload",
+           *         caption: 'reload offset: 450'
+           *    }).subscribe('onActivated', function(event, id){
+           *           //При нажатии на кнопку перезагрузим DataGrid  с 450ой записи
+           *           DataGridBL.reload(DataGridBL._filter, DataGridBL._sorting, 450, DataGridBL._limit);
+           *    });
            * </pre>
            */
          reload: function(){
@@ -465,16 +478,34 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          /**
           * Метод установки или замены кнопок операций над записью, заданных в опции {@link itemsActions}
-          * Нужно передать массив обьектов.
-          * @param {Array} items Объект формата {name: ..., icon: ..., title: ..., onActivated: ..., isMainOption: ...}
+          * @remark
+          * В метод нужно передать массив обьектов.
+          * @param {Array} items Объект формата {name: ..., icon: ..., caption: ..., onActivated: ..., isMainOption: ...}
           * @param {String} items.name Имя кнопки операции над записью.
           * @param {String} items.icon Иконка кнопки.
-          * @param {String} items.title Текст на кнопке.
+          * @param {String} items.caption Текст на кнопке.
           * @param {String} items.onActivated Имя функции, задабщей действие кнопки.
           * @param {String} items.isMainOption На строке ли кнопка (или в меню).
           * @example
           * <pre>
-          *     dataGrid.setItemsActions();
+          *     dataGrid.setItemsActions([{
+          *        name: 'delete',
+          *        icon: 'sprite:icon-16 icon-Erase icon-error',
+          *        title: 'Удалить',
+          *        isMainAction: true,
+          *        onActivated: function(item) {
+          *           this.deleteRecords(item.data('id'));
+          *        }
+          *     },
+          *     {
+          *        name: 'addRecord',
+          *        icon: 'sprite:icon-16 icon-Add icon-error',
+          *        title: 'Добавить',
+          *        isMainAction: true,
+          *        onActivated: function(item) {
+          *           this.showRecordDialog();
+          *        }
+          *     }]
           * <pre>
           * @see itemsActions
           * @see getItemsActions
@@ -492,11 +523,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (this.isInfiniteScroll()) {
                this._loadBeforeScrollAppears();
             }
-            this._drawSelectedItems(this._options.selectedItems);
+            this._drawSelectedItems(this._options.selectedIndexes);
          },
-          /**
-           *
-           */
          destroy: function() {
             if (this.isInfiniteScroll()){
                if (this._infiniteScrollContainer.length) {
@@ -516,6 +544,11 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            *    <li>true - используется подгрузка по скроллу;</li>
            *    <li>false - не используется.</li>
            * </ol>
+           * @example
+           * Переключим режим управления скроллом:
+           * <pre>
+           *     listView.setInfiniteScroll(!listView.isInfiniteScroll());
+           * </pre>
            * @see infiniteScroll
            * @see setInfiniteScroll
            */
@@ -598,9 +631,15 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          /**
           * Метод изменения возможности подгрузки по скроллу.
-          * Изменяет значение, заданной в опции {@link infiniteScroll}.
+          * @remark
+          * Метод изменяет значение, заданное в опции {@link infiniteScroll}.
           * @param {Boolean} allow Разрешить (true) или запретить (false) подгрузку по скроллу.
           * @param {Boolean} [noLoad] Сразу ли загружать (true - не загружать сразу).
+          * @example
+          * Переключим режим управления скроллом:
+          * <pre>
+          *     listView.setInfiniteScroll(!listView.isInfiniteScroll())
+          * </pre>
           * @see infiniteScroll
           * @see isInfiniteScroll
           */
@@ -615,6 +654,15 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          /**
           * Геттер для получения текущего выделенного элемента
           * @returns {{key: null | number, container: (null | jQuery)}}
+          * @example
+          * <pre>
+          *     editButton.bind('click', functions: (e) {
+          *        var hoveredItem = this.getHoveredItem();
+          *        if(hoveredItem.container) {
+          *           myBigToolTip.showAt(hoveredItem.position);
+          *        }
+          *     })
+          * </pre>
           * @see itemsActions
           * @see getItemActions
           */

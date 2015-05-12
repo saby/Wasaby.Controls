@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
    /**
     * Интерфейс предназначен для работы с источником данных
     * @author Мануйлов Андрей
+    * @public
     */
 
    return $ws.proto.Abstract.extend({
@@ -46,6 +47,12 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
          _options: {
              /**
               * @cfg {Object} Объект стратегии работы с данными
+              * @example
+              * <pre>
+              *     <option name="strategy">ArrayStrategy</option>
+              * </pre>
+              * @variant ArrayStrategy
+              * @variant SbisJSONStrategy
               * @see getStrategy
               */
             strategy: null

@@ -65,6 +65,8 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
              * <pre>
              *     <option name="paging">full</option>
              * </pre>
+             * @see setPage
+             * @see getPage
              */
             paging: 'no'
          }
@@ -75,7 +77,7 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
          this._colgroup = $('.controls-DataGrid__colgroup', this._container.get(0))
       },
       /**
-       * Установить страницу.
+       * Установить страницу по её номеру.
        * @remark
        * Метод установки номера страницы, с которой нужно открыть представление данных.
        * Работает при использовании постраничной навигации.
@@ -93,7 +95,10 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
       },
 
       /**
-       * Получить текущую страницу.
+       * Получить номер текущей страницы.
+       * @remark
+       * Метод получения номера текущей страницы представления данных.
+       * Работает при использовании постраничной навигации.
        * @example
        * <pre>
        *    if(dataGrid.getPage() > 0)
