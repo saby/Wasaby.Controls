@@ -204,7 +204,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
          $constructor: function () {
             var self = this;
-            this._publish('onChangeHoveredItem', 'onItemActions');
+            this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
 
             this._container.mouseup(function (e) {
                if (e.which == 1) {
@@ -331,6 +331,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          /* +++++++++++++++++++++++++++ */
 
          _elemClickHandler: function (id, data, target) {
+            this._notify('onItemClick');
             if (this._options.multiselect) {
                if ($(target).hasClass('controls-ListView__itemCheckBox')) {
                   var key = $(target).closest('.controls-ListView__item').data('id');
