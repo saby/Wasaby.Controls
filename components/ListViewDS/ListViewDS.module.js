@@ -331,7 +331,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          /* +++++++++++++++++++++++++++ */
 
          _elemClickHandler: function (id, data, target) {
-            this._notify('onItemClick');
+            this._notify('onItemClick', id, data, target);
             if (this._options.multiselect) {
                if ($(target).hasClass('controls-ListView__itemCheckBox')) {
                   var key = $(target).closest('.controls-ListView__item').data('id');
