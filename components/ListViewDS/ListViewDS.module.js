@@ -233,6 +233,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
 
          init: function () {
+            ListViewDS.superclass.init.call(this);
             var self = this;
             // запросим данные из источника
             this.reload();
