@@ -293,14 +293,16 @@ define('js!SBIS3.CONTROLS.StaticSource', [
             return data;
          }
 
-         var newData = [],
-             firstIdx = offset,
-             length = data.length;
-         for (var i = firstIdx; i < firstIdx + limit; i++) {
-            if (i >= length) {
-               break;
-            }
-            newData.push(data[i]);
+         var strategy = this.getStrategy(),
+            newData = strategy.getEmptyRawData(),
+            newIndex = 0,
+            beginIndex = offset,
+            endIndex = Math.min(
+                strategy.getCount(data),
+                beginIndex + limit
+            );
+         for (var index = beginIndex; index < endIndex; index++, newIndex++) {
+            strategy.replaceAt(newData, newIndex, strategy.at(data, index));
          }
 
          return newData;
