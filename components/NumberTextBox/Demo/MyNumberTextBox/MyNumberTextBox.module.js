@@ -1,11 +1,11 @@
-define('js!SBIS3.Demo.Control.MyNumberTextBox', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.Demo.Control.MyNumberTextBox', 'css!SBIS3.Demo.Control.MyNumberTextBox', 'js!SBIS3.CONTROLS.NumberTextBox'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.CONTROLS.Demo.MyNumberTextBox', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Demo.MyNumberTextBox', 'css!SBIS3.CONTROLS.Demo.MyNumberTextBox', 'js!SBIS3.CONTROLS.NumberTextBox'], function(CompoundControl, dotTplFn) {
    /**
-    * SBIS3.Demo.Control.MyNumberTextBox
-    * @class SBIS3.Demo.Control.MyNumberTextBox
+    * SBIS3.CONTROLS.Demo.MyNumberTextBox
+    * @class SBIS3.CONTROLS.Demo.MyNumberTextBox
     * @extends $ws.proto.CompoundControl
     * @control
     */
-   var moduleClass = CompoundControl.extend(/** @lends SBIS3.Demo.Control.MyNumberTextBox.prototype */{
+   var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Demo.MyNumberTextBox.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
