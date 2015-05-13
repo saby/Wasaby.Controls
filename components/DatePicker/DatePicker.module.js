@@ -353,41 +353,41 @@ define(
        */
       _getDateByText: function(text) {
          var
-            date = new Date(),
-            regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
-            availCharsArray = this._primalMask.match(regexp);
+             date = new Date(),
+             regexp = new RegExp('[' + this._controlCharacters + ']+', 'g'),
+             availCharsArray = this._primalMask.match(regexp);
          for (var i = availCharsArray.length-1; i >= 0; i--) {
             switch (availCharsArray[i]) {
                case 'YY' :
-                  date.setYear('20' + text.substr(-2));
+                  date.setYear('20' + text.substr(text.length - 2));
                   text = text.slice(0, -3);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'YYYY' :
-                  date.setYear(text.substr(-4));
+                  date.setYear(text.substr(text.length - 4));
                   text = text.slice(0, -5);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'MM' :
-                  date.setMonth(text.substr(-2) - 1);
+                  date.setMonth(text.substr(text.length - 2) - 1);
                   text = text.slice(0, -3);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'DD' :
-                  date.setDate(text.substr(-2));
+                  date.setDate(text.substr(text.length - 2));
                   text = text.slice(0, -3);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'HH' :
-                  date.setHours(text.substr(-2));
+                  date.setHours(text.substr(text.length - 2));
                   text = text.slice(0, -3);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'II' :
-                  date.setMinutes(text.substr(-2));
+                  date.setMinutes(text.substr(text.length - 2));
                   text = text.slice(0, -3);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'SS' :
-                  date.setSeconds(text.substr(-2));
+                  date.setSeconds(text.substr(text.length - 2));
                   text = text.slice(0, -3);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
                case 'UUU' :
-                  date.setMilliseconds(text.substr(-3));
+                  date.setMilliseconds(text.substr(text.length - 3));
                   text = text.slice(0, -4);  // отрезаем на один символ больше -- это разделяющий символ
                   break;
             }
