@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.StaticSource', [
              * @cfg {Array} Исходный массив данных, с которым работает StaticSource
              */
             data: [],
+
             /**
              * @cfg {String} Название поля, являющегося первичных ключом
              * @example
@@ -31,7 +32,12 @@ define('js!SBIS3.CONTROLS.StaticSource', [
              *     <option name="keyField">@Заметка</option>
              * </pre>
              */
-            keyField: ''
+            keyField: '',
+
+            /**
+             * @cfg {Function|null} Сallback для фильтра массива данных в query()
+             */
+            dataFilterCallback: null
          }
       },
       $constructor: function (cfg) {
@@ -147,6 +153,14 @@ define('js!SBIS3.CONTROLS.StaticSource', [
       },
 
       /**
+       * Установить callback для фильтра массива данных в query()
+       * @param {Function} handler Callback для фильтра массива данных в query()
+       */
+      setDataFilterCallback: function (handler) {
+         this._options.dataFilterCallback = handler;
+      },
+
+      /**
        * Применяет фильтр к массиву данных
        * @param {Array} data Массив данных
        * @param {Object} filter Параметры фильтрации вида - {property1: value, property2: value}
@@ -158,17 +172,23 @@ define('js!SBIS3.CONTROLS.StaticSource', [
             return data;
          }
 
-         var newData = [];
-         for (var i = 0; i < data.length; i++) {
+         var strategy = this.getStrategy(),
+            newData = strategy.getEmptyRawData(),
+            index = 0;
+         strategy.each(data, function(dataItem) {
             var filterMatch = true;
 
             for (var filterField in filter) {
                if (filter.hasOwnProperty(filterField)) {
-                  var filterValue = filter[filterField];
-                  if (filterValue instanceof RegExp) {
-                     filterMatch = filterValue.test(data[i][filterField]);
+                  var filterValue = filter[filterField],
+                      dataValue = strategy.value(dataItem, filterField);
+
+                  //Если установлен фильтр-callback - используем его результат, иначе - проверяем полное совпадение значений
+                  var callbackResult = this._options.dataFilterCallback ? this._options.dataFilterCallback(filterField, dataValue, filterValue) : undefined;
+                  if (callbackResult === undefined) {
+                     filterMatch = dataValue == filterValue;
                   } else {
-                     filterMatch = data[i][filterField] == filterValue;
+                     filterMatch = callbackResult;
                   }
                }
 
@@ -178,9 +198,10 @@ define('js!SBIS3.CONTROLS.StaticSource', [
             }
 
             if (filterMatch) {
-               newData.push(data[i]);
+               strategy.replaceAt(newData, index, dataItem);
+               index++;
             }
-         }
+         }, this);
 
          return newData;
       },
