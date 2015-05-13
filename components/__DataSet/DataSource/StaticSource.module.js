@@ -123,28 +123,135 @@ define('js!SBIS3.CONTROLS.StaticSource', [
        * Метод для получения набора записей из источника данных.
        * Возможно применение фильтрации, сортировки и выбора определённого количества записей с заданной позиции.
        * @param {Object} filter Параметры фильтрации вида - {property1: value, property2: value}.
-       * @param {Array} sorting Параметры сортировки вида - [{property1: 'ASC'},{property2: 'DESC'}].
+       * @param {Array} sorting Параметры сортировки вида - [{property1: 'ASC'}, {property2: 'DESC'}].
        * @param {Number} offset Смещение начала выборки.
        * @param {Number} limit Количество возвращаемых записей.
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
        * В колбэке придёт js!SBIS3.CONTROLS.DataSet - набор отобранных элементов.
        */
       query: function (filter, sorting, offset, limit) {
-
-         var def = new $ws.proto.Deferred(),
-            strategy = this.getStrategy(),
-         /*TODO непонятно пока, кажется что метода query в стратегии быть не должно*/
-            data = strategy.query(this._options.data, filter, sorting, offset, limit);
+         var data = this._options.data;
+         data = this._applyFilter(data, filter);
+         data = this._applySorting(data, sorting);
+         data = this._applyPaging(data, offset, limit);
 
          var DS = new DataSet({
-            strategy:strategy,
+            strategy: this.getStrategy(),
             data: data,
             keyField: this._options.keyField
          });
+
+         var def = new $ws.proto.Deferred();
          def.callback(DS);
          return def;
-      }
+      },
 
+      /**
+       * Применяет фильтр к массиву данных
+       * @param {Array} data Массив данных
+       * @param {Object} filter Параметры фильтрации вида - {property1: value, property2: value}
+       * @returns {Array}
+       */
+      _applyFilter: function (data, filter) {
+         filter = filter || {};
+         if (Object.isEmpty(filter)) {
+            return data;
+         }
+
+         var newData = [];
+         for (var i = 0; i < data.length; i++) {
+            var filterMatch = true;
+
+            for (var filterField in filter) {
+               if (filter.hasOwnProperty(filterField)) {
+                  var filterValue = filter[filterField];
+                  if (filterValue instanceof RegExp) {
+                     filterMatch = filterValue.test(data[i][filterField]);
+                  } else {
+                     filterMatch = data[i][filterField] == filterValue;
+                  }
+               }
+
+               if (!filterMatch) {
+                  break;
+               }
+            }
+
+            if (filterMatch) {
+               newData.push(data[i]);
+            }
+         }
+
+         return newData;
+      },
+
+      /**
+       * Применяет сортировку к массиву данных
+       * @param {Array} data Массив данных
+       * @param {Array} sorting Параметры сортировки вида - [{property1: 'ASC'}, {property2: 'DESC'}]
+       * @returns {Array}
+       */
+      _applySorting: function (data, sorting) {
+         sorting = sorting || [];
+         if (!sorting.length) {
+            return data;
+         }
+
+         //TODO: сортировка по нескольким полям одновременно
+         var sortField,
+             sortOrder,
+            sortHandler = function (a, b) {
+               if (a[sortField] > b[sortField]) {
+                  return sortOrder == 'DESC' ? -1 : 1;
+               } else if (a[sortField] < b[sortField]) {
+                  return sortOrder == 'DESC' ? 1 : -1;
+               }
+
+               return 0;
+            };
+
+         $ws.helpers.forEach(sorting, function (sortItem) {
+            if (!Object.isEmpty(sortItem)) {
+               for (sortField in sortItem) {
+                  if (sortItem.hasOwnProperty(sortField)) {
+                     sortOrder = sortItem[sortField];
+                     data.sort(sortHandler);
+                  }
+               }
+            }
+         });
+
+         return data;
+      },
+
+      /**
+       * Применяет срез к массиву данных
+       * @param {Array} data Массив данных
+       * @param {Number} offset Смещение начала выборки
+       * @param {Number} limit Количество записей выборки
+       * @returns {Array}
+       */
+      _applyPaging: function (data, offset, limit) {
+         if (offset === undefined ||
+             offset === null ||
+             limit === undefined ||
+             limit === null
+         ) {
+            return data;
+         }
+
+         var newData = [],
+             firstIdx = offset,
+             length = data.length;
+         for (var i = firstIdx; i < firstIdx + limit; i++) {
+            if (i >= length) {
+               break;
+            }
+            newData.push(data[i]);
+         }
+
+         return newData;
+      }
 
    });
 });
