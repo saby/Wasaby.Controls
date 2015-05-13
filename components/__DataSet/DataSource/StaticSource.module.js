@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.StaticSource', [
             keyField: '',
 
             /**
-             * @cfg {Function|null} Сallback для фильтра массива данных в query()
+             * @cfg {Function|null} Сallback для фильтра массива данных в методе query()
              */
             dataFilterCallback: null
          }
@@ -153,8 +153,8 @@ define('js!SBIS3.CONTROLS.StaticSource', [
       },
 
       /**
-       * Установить callback для фильтра массива данных в query()
-       * @param {Function} handler Callback для фильтра массива данных в query()
+       * Установить callback для фильтра массива данных в методе query()
+       * @param {Function} handler Callback для фильтра массива данных в методе query()
        */
       setDataFilterCallback: function (handler) {
          this._options.dataFilterCallback = handler;
@@ -219,30 +219,62 @@ define('js!SBIS3.CONTROLS.StaticSource', [
          }
 
          //TODO: сортировка по нескольким полям одновременно
-         var sortField,
-             sortOrder,
-            sortHandler = function (a, b) {
-               if (a[sortField] > b[sortField]) {
-                  return sortOrder == 'DESC' ? -1 : 1;
-               } else if (a[sortField] < b[sortField]) {
-                  return sortOrder == 'DESC' ? 1 : -1;
-               }
 
-               return 0;
-            };
-
+         //Создаем карту сортировки
+         var sortMap = [],
+            sortIndex = 0;
          $ws.helpers.forEach(sorting, function (sortItem) {
             if (!Object.isEmpty(sortItem)) {
-               for (sortField in sortItem) {
+               for (var sortField in sortItem) {
                   if (sortItem.hasOwnProperty(sortField)) {
-                     sortOrder = sortItem[sortField];
-                     data.sort(sortHandler);
+                     sortMap.push({
+                        field: sortField,
+                        order: sortItem[sortField]
+                     });
+                     sortIndex++;
                   }
                }
             }
          });
 
-         return data;
+         //Создаем индексированый массив данных
+         var strategy = this.getStrategy(),
+             dataMap = [];
+         strategy.each(data, function(dataItem) {
+            var dataItemIndexed = {};
+            for (sortIndex = 0; sortIndex < sortMap.length; sortIndex++) {
+               var sortField = sortMap[sortIndex].field;
+               dataItemIndexed[sortField] = strategy.value(dataItem, sortField);
+            }
+            dataMap.push({
+               index: dataItemIndexed,
+               item: dataItem
+            });
+         }, this);
+
+         //Сортируем индексированый массив данных
+         var sortItem,
+             sortHandler = function (a, b) {
+                if (a.index[sortItem.field] > b.index[sortItem.field]) {
+                   return sortItem.order == 'DESC' ? -1 : 1;
+                } else if (a.index[sortItem.field] < b.index[sortItem.field]) {
+                   return sortItem.order == 'DESC' ? 1 : -1;
+                }
+
+                return 0;
+             };
+         for (sortIndex = 0; sortIndex < sortMap.length; sortIndex++) {
+            sortItem = sortMap[sortIndex];
+            dataMap.sort(sortHandler);
+         }
+
+         //Создаем новый массив данных по индексированному
+         var newData = strategy.getEmptyRawData();
+         for (var index = 0, count = dataMap.length; index < count; index++) {
+            strategy.replaceAt(newData, index, dataMap[index].item);
+         }
+
+         return newData;
       },
 
       /**
