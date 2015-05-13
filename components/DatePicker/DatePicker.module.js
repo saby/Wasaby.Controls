@@ -20,7 +20,7 @@ define(
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
     * @control
     * @public
-    * @demo SBIS3.Demo.Control.MyDatePicker
+    * @demo SBIS3.CONTROLS.Demo.MyDatePicker
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
     */

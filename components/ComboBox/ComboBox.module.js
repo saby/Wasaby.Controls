@@ -30,8 +30,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     *      <option name="keyField">key</option>
     * </component>
     * @category Inputs
-    * @demo SBIS3.Demo.Control.MyComboBox
-    * @demo SBIS3.Demo.Control.MyComboBoxDS Выпадающий список с dataSource
+    * @demo SBIS3.CONTROLS.Demo.MyComboBox
+    * @demo SBIS3.CONTROLS.Demo.MyComboBoxDS Выпадающий список с dataSource
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.DSMixin
@@ -174,8 +174,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             if (this._picker) {
                $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
             }
-            $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text('');
-            ComboBox.superclass.setText.call(this, '');
+            /*$('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text('');
+            ComboBox.superclass.setText.call(this, '');*/
          }
 
       },
