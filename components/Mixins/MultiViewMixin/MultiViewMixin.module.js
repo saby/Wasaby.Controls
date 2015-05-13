@@ -66,9 +66,9 @@ define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'
                case 'tile' : {
                   if (this._options.tileTemplate) {
                      if (this._options.tileTemplate instanceof Function) {
-                        dotTpl = this._options.tileTemplate({item : item, field : this._options.descriptionField, image : this._options.imageField});
-                     } else {
                         dotTpl = this._options.tileTemplate;
+                     } else {
+                        dotTpl = doT.template(this._options.tileTemplate);
                      }
                   }
                   else {
