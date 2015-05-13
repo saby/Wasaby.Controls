@@ -174,8 +174,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             if (this._picker) {
                $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
             }
-            $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text('');
-            ComboBox.superclass.setText.call(this, '');
+            /*$('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text('');
+            ComboBox.superclass.setText.call(this, '');*/
          }
 
       },
