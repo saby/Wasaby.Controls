@@ -78,7 +78,7 @@ define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'
                   else {
                      var src;
                      if (!item.get(this._options.imageField)) {
-                        src = item.get('par@') ? 'img/defaultFolder.png' : 'img/defaultItem.png';
+                        src = item.get(this._options.hierField + '@') ? 'img/defaultFolder.png' : 'img/defaultItem.png';
                      } else {
                         src = '{{=it.item.get(it.image)}}'
                      }

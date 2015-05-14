@@ -14,6 +14,10 @@ define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.HierarchyData
                   this.toggleItemsSelection([key]);
                }
                else {
+                  this._notify('onItemClick', id, data, target);
+                  if (this._options.elemClickHandler) {
+                     this._options.elemClickHandler.call(this, id, data, target);
+                  }
                   var nodeID = $(target).closest('.controls-ListView__item').data('id');
                   var rec = this._dataSet.getRecordByKey(nodeID);
                   if (rec.get(this._options.hierField + '@')) {
@@ -21,6 +25,7 @@ define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.HierarchyData
                   }
                }
             } else {
+               this._notify('onItemClick', id, data, target);
                this.setSelectedIndexes([id]);
                if (this._options.elemClickHandler) {
                   this._options.elemClickHandler.call(this, id, data, target);
@@ -30,7 +35,7 @@ define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.HierarchyData
       },
 
       _getTargetContainer: function (item) {
-         if (this.getViewMode() == 'tile' && item.get('par@')) {
+         if (this.getViewMode() == 'tile' && item.get(this._options.hierField + '@')) {
             return  $('.controls-MultiView__foldersContainer',this._container);
          }
          return this._getItemsContainer();

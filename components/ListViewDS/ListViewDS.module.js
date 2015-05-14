@@ -213,7 +213,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   if (target.length) {
                      var id = target.data('id'), data = self._dataSet.getRecordByKey(id);
                      self._elemClickHandler(id, data, e.target);
-                     self._notify('onItemClick', id, data, target);
                   }
                }
             });
@@ -338,6 +337,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   this.toggleItemsSelection([key]);
                }
                else {
+                  this._notify('onItemClick', id, data, target);
                   if (this._options.elemClickHandler) {
                      this._options.elemClickHandler.call(this, id, data, target);
                   }
@@ -345,6 +345,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
             else {
                this.setSelectedIndexes([id]);
+               this._notify('onItemClick', id, data, target);
                if (this._options.elemClickHandler) {
                   this._options.elemClickHandler.call(this, id, data, target);
                }
