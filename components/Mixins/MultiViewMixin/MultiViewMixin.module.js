@@ -59,7 +59,11 @@ define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'
                case 'table': resultTpl = parentFnc.call(this, item); break;
                case 'list': {
                   if (this._options.listTemplate) {
-                     dotTpl = doT.template(this._options.itemTemplate)
+                     if (this._options.listTemplate instanceof Function) {
+                        dotTpl = this._options.listTemplate;
+                     } else {
+                        dotTpl = doT.template(this._options.listTemplate);
+                     }
                   }
                   else {
                      dotTpl = doT.template('<div>{{=it.item.get(it.field)}}</div>')
