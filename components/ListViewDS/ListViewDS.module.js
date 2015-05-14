@@ -512,7 +512,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @see getItemsActions
           * @see getHoveredItem
           */
-         setItemsAction: function(items) {
+         setItemsActions: function(items) {
             this._options.itemsActions = items;
             this.getItemsActions().setItems(items);
          },
@@ -534,6 +534,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   $(window).unbind('.wsInfiniteScroll');
                }
             }
+            ListViewDS.superclass.destroy.call(this);
          },
          //-----------------------------------infiniteScroll------------------------
          //TODO Сделать подгрузку вверх
