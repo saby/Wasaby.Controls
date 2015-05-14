@@ -116,6 +116,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          if (this._options.selectedIndex) {
             this._drawSelectedItem(this._options.selectedIndex);
          } else {
+            /*TODO следующая строчка должна быть в Selector*/
+            this._options.selectedIndex = null;
             if (this._options.text) {
                this._setKeyByText();
             }
@@ -303,9 +305,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             });
 
             if (noItems) {
-               self._options.selectedIndex = null;
-               self._notifySelectedItem(null);
-               self._drawSelectedItem(null);
+               if (self._options.selectedIndex !== null) {
+                  self._options.selectedIndex = null;
+                  self._notifySelectedItem(null);
+                  self._drawSelectedItem(null);
+               }
             }
 
          });
