@@ -33,6 +33,10 @@ define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'
          this._redraw();
       },
 
+      getViewMode: function(){
+         return this._options.viewMode;
+      },
+
       _drawViewMode : function(mode) {
          this._container.toggleClass('controls-MultiView-table', mode == 'table')
                         .toggleClass('controls-MultiView-list', mode == 'list')
@@ -73,11 +77,10 @@ define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'
                   }
                   else {
                      var src;
-                     if (item.get('par@')) {
-                        src = 'img/folder.png'
-                     }
-                     else {
-                        src = '{{=it.item.get(it.image)}}';
+                     if (!item.get(this._options.imageField)) {
+                        src = item.get('par@') ? 'img/defaultFolder.png' : 'img/defaultItem.png';
+                     } else {
+                        src = '{{=it.item.get(it.image)}}'
                      }
                      dotTpl = doT.template('<div><div class="controls-ListView__itemCheckBox"></div><img class="controls-MultiView__tileImg" src="' + src + '"/><div class="controls-MultiView__tileText">{{=it.item.get(it.field)}}</div></div>')
                   }
@@ -89,6 +92,23 @@ define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'
             return resultTpl;
          },
 
+         _getHoveredItemConfig: function(parentFnc, target){
+            if (this._options.viewMode != 'tile'){
+               return parentFnc.call(this, target);
+            }
+            return {
+               key: target.data('id'),
+               container: target,
+               position: {
+                  top: target[0].offsetTop + 10,
+                  left: target[0].offsetLeft - 5
+               },
+               size: {
+                  height: 0,
+                  width: target[0].offsetWidth
+               }
+            };
+         },
 
          _getItemsContainer: function(parentFnc){
             if (this._options.viewMode == 'table') {

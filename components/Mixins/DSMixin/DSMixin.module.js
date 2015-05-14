@@ -291,7 +291,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       //метод определяющий в какой контейнер разместить определенный элемент
-      _getTargetContainer: function () {
+      _getTargetContainer: function (item) {
          //по стандарту все строки рисуются в itemsContainer
          return this._getItemsContainer();
       },

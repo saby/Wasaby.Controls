@@ -211,8 +211,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   var $target = $(e.target),
                       target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
                   if (target.length) {
-                     var id = target.data('id');
-                     self._elemClickHandler(id, self._dataSet.getRecordByKey(id), e.target);
+                     var id = target.data('id'), data = self._dataSet.getRecordByKey(id);
+                     self._elemClickHandler(id, data, e.target);
+                     this._notify('onItemClick', id, data, target);
                   }
                }
             });
@@ -331,7 +332,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          /* +++++++++++++++++++++++++++ */
 
          _elemClickHandler: function (id, data, target) {
-            this._notify('onItemClick', id, data, target);
             if (this._options.multiselect) {
                if ($(target).hasClass('controls-ListView__itemCheckBox')) {
                   var key = $(target).closest('.controls-ListView__item').data('id');

@@ -13,6 +13,13 @@ define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.HierarchyData
                this.toggleNode(nodeID);
             }
          }
+      },
+
+      _getTargetContainer: function (item) {
+         if (this.getViewMode() == 'tile' && item.get('par@')) {
+            return  $('.controls-MultiView__foldersContainer',this._container);
+         }
+         return this._getItemsContainer();
       }
    });
 

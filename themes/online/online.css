@@ -2028,9 +2028,6 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   height: 14px;
 }
-.controls-HierarchyDataGrid {
-  height: 20px;
-}
 .controls-HierarchyDataGrid__expand {
   height: 20px;
 }
@@ -2063,6 +2060,12 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MultiView .controls-MultiView__listItem:hover {
   background: #f3f3f3;
 }
+.controls-MultiView .controls-MultiView__listItem-defaultFolderImage {
+  background: url("img/defaultFolder.png");
+}
+.controls-MultiView .controls-MultiView__listItem-defaultItemImage {
+  background: url("img/defaultItem.png");
+}
 .controls-MultiView.controls-MultiView-tile .controls-MultiView__itemsContainer {
   padding: 4px 0 0 1px;
 }
@@ -2078,7 +2081,7 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   cursor: pointer;
   text-align: left;
-  border: 1px solid #cccccc;
+  border: 1px solid #e7f0f9;
   min-width: 128px;
   min-height: 128px;
   margin: -4px 0 0 -1px;
