@@ -2,7 +2,7 @@
  * Created by ad.chistyakova on 22.04.2015.
  */
 define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
-         'is!browser?js!' + $ws._const.wsRoot + 'Lib/xslt.js'
+         'is!browser?js!/ws/Lib/xslt.js'           //TODO Потенциально путь может оказаться неверным
       ], function() {
    return $ws.core.extend({}, {
 
