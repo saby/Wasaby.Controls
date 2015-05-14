@@ -2,15 +2,29 @@ define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.HierarchyData
    'use strict';
 
    var HierarchyMultiView = DataGrid.extend([MultiViewMixin],/** @lends SBIS3.CONTROLS.DataGrid.prototype*/ {
+
       _elemClickHandler: function (id, data, target) {
          if (this._options.viewMode == 'table') {
             HierarchyMultiView.superclass._elemClickHandler.call(this, id, data, target);
          }
          else {
-            var nodeID = $(target).closest('.controls-ListView__item').data('id');
-            var rec = this._dataSet.getRecordByKey(nodeID);
-            if (rec.get('par@')) {
-               this.toggleNode(nodeID);
+            if (this._options.multiselect) {
+               if ($(target).hasClass('controls-ListView__itemCheckBox')) {
+                  var key = $(target).closest('.controls-ListView__item').data('id');
+                  this.toggleItemsSelection([key]);
+               }
+               else {
+                  var nodeID = $(target).closest('.controls-ListView__item').data('id');
+                  var rec = this._dataSet.getRecordByKey(nodeID);
+                  if (rec.get(this._options.hierField + '@')) {
+                     this.toggleNode(nodeID);
+                  }
+               }
+            } else {
+               this.setSelectedIndexes([id]);
+               if (this._options.elemClickHandler) {
+                  this._options.elemClickHandler.call(this, id, data, target);
+               }
             }
          }
       },

@@ -213,7 +213,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   if (target.length) {
                      var id = target.data('id'), data = self._dataSet.getRecordByKey(id);
                      self._elemClickHandler(id, data, e.target);
-                     this._notify('onItemClick', id, data, target);
+                     self._notify('onItemClick', id, data, target);
                   }
                }
             });
