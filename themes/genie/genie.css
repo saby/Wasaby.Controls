@@ -1243,7 +1243,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-FormattedTextBox {
   display: inline-block;
-  vertical-align: top;
   line-height: normal;
   background: transparent;
 }
@@ -1268,6 +1267,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-FormattedTextBox.ws-validation-error .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
   color: inherit;
+}
+.controls-FormattedTextBox__field {
+  outline: none;
 }
 .controls-NumberTextBox .controls-TextBox__fieldWrapper {
   margin: 0;
