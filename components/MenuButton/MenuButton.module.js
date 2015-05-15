@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * Кнопка с выпадающим меню
     * @class SBIS3.CONTROLS.MenuButton
     * @extends SBIS3.CONTROLS.Button
-	* @demo SBIS3.Demo.Control.MyMenuButton Пример кнопки с выпадающим меню    
+	* @demo SBIS3.CONTROLS.Demo.MyMenuButton Пример кнопки с выпадающим меню
     * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuButton'>
@@ -47,7 +47,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          var self = this;
          MenuButton.superclass.init.call(this);
          this._initMenu();
-         //TODO: использовать событие из Popup миксина
          $ws.helpers.trackElement(this._container, true).subscribe('onMove', function () {
             if (self._header) {
                self._header.css({
@@ -56,6 +55,11 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
                });
             }
          });
+      },
+
+      destroy: function(){
+         MenuButton.superclass.destroy.call(this);
+         this._header.remove();
       },
 
       _initMenu: function(){
@@ -93,8 +97,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       _clickHandler: function(){
          if (this.getItems().getItemsCount() > 1) {
             this._container.addClass('controls-Checked__checked');
-            this.togglePicker();
             this._header.toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
+            this.togglePicker();
          } else {
             if (this.getItems().getItemsCount() == 1) {
                var id = this.getItems().getKey(this.getItems().getNextItem());
@@ -102,9 +106,9 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             }
          }
       },
-       /**
-        * Скрывает/показывает меню у кнопки
-        */
+      /**
+       * Скрывает/показывает меню у кнопки
+       */
       togglePicker: function(){
           if (!this._header) {
              this._header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
@@ -112,7 +116,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
                                   <i class="controls-MenuButton__headerCenter"></i>\
                                   <i class="controls-MenuButton__headerRight"></i>\
                                </span>');
-             $('.controls-MenuButton__headerCenter', this._header).width(this._container.width() - 12 - 11);
+             $('.controls-MenuButton__headerCenter', this._header).width(this._container.outerWidth() - 23);
              this._header.css({
                 width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
                 height: this._container.outerHeight()
@@ -120,7 +124,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
              $('body').append(this._header);
           }
          MenuButton.superclass.togglePicker.call(this);
-         $('.controls-MenuButton__headerCenter', this._container).width(this._container.width() + 12);
          this._header.css({
             left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 16,
             top: (this._headerAlignment.vertical == 'top') ? this._container.offset().top + 1 : this._container.offset().top - 6,

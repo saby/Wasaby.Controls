@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
    /**
     * Интерфейс предназначен для работы с источником данных
     * @author Мануйлов Андрей
+    * @public
     */
 
    return $ws.proto.Abstract.extend({

@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
    /**
     * Класс "Набор данных"
     * @author Мануйлов Андрей
+    * @public
     */
 
    /**
@@ -169,7 +170,16 @@ define('js!SBIS3.CONTROLS.DataSet', [
          options || (options = {});
          options = $ws.core.merge(options, setOptions, {preferSource: true});
          var singular = !(records instanceof Array);
-         records = singular ? (records ? [records] : []) : $ws.core.clone(records);
+         if (singular) {
+            records = records ? [records] : [];
+         }
+         else {
+            /*TODO какая то лажа с клонами*/
+            var newRec = [];
+            for (var j = 0; j < records.length; j++) {
+               newRec.push($ws.core.clone(records[j]));
+            }
+         }
          var i, l, key, record, existing;
          var at = options.at;
          var toAdd = [], toRemove = [], recordMap = {};
@@ -260,6 +270,10 @@ define('js!SBIS3.CONTROLS.DataSet', [
        */
       // если будем добавлять больше одной записи, то нужно предваритьно составить из них датасет
       merge: function (dataSetMergeFrom, options) {
+         /*TODO какая то лажа с ключами*/
+         if ((!this._keyField) && (dataSetMergeFrom._keyField)) {
+            this._keyField = dataSetMergeFrom._keyField;
+         }
          this._setRecords(dataSetMergeFrom._getRecords(), options);
       },
 

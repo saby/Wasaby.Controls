@@ -6,6 +6,8 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
 
    /**
     * Обертка для данных
+    * @author Мануйлов Андрей
+    * @public
     */
 
    return $ws.core.extend({}, {
@@ -17,11 +19,26 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
          _raw: null,
          _strategy: null
       },
+
       $constructor: function (cfg) {
          this._strategy = cfg.strategy;
          this._raw = cfg.raw;
          this._keyField = cfg.keyField || null;
          this._cid = $ws.helpers.randomId('c');
+      },
+
+      /**
+       * Объединить с данными и состоянием другой записи
+       * @param {js!SBIS3.CONTROLS.Record} record Запись, с которой следует объединиться
+       * @returns {js!SBIS3.CONTROLS.Record}
+       */
+      merge: function (record) {
+         $ws.core.merge(this._raw, record.getRaw());
+         this._isDeleted = record.getMarkDeleted();
+         this._isChanged = record.getMarkChanged();
+         //this._keyField = record._keyField;
+
+         return this;
       },
 
       /**

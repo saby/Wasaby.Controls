@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
     * Реализация интерфеса IDataStrategy для работы с массивами.
     * Позволяет работать с массивом объектов на статике.
     * @author Мануйлов Андрей
+    * @public
     */
 
    var ArrayStrategy = IDataStrategy.extend({

@@ -10,6 +10,17 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
    'use strict';
 
    var MenuButtonMixin = /**@lends SBIS3.CONTROLS.MenuButtonMixin.prototype  */{
+       /**
+        * @event onMenuItemActivate При активации пункта меню
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {String} id Идентификатор пункта меню.
+        * @example
+        * <pre>
+        *     MenuIcon.subscribe('onMenuItemActivate', function(e, id) {
+        *        alert('Вы нажали на ' + this._items.getItem(id).title)
+        *     })
+        * </pre>
+        */
       $protected: {
          _options: {
          }
