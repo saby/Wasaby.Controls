@@ -57,7 +57,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
 
       destroy: function(){
          MenuButton.superclass.destroy.call(this);
-         this._header.remove();
+         if(this._header)
+            this._header.remove();
       },
 
       _initMenu: function(){
