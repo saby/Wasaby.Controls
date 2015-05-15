@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
        * @public
-       * @demo SBIS3.Demo.Control.MyListViewDS
+       * @demo SBIS3.CONTROLS.Demo.MyListViewDS
        * @author Крайнов Дмитрий Олегович
        */
 
@@ -128,14 +128,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 *           <option name="icon">sprite:icon-16 icon-Delete icon-primary</option>
                 *           <option name="isMainAction">false</option>
                 *           <option name="tooltip">Удалить</option>
-                *           <option name="onActivated" type="function">js!SBIS3.Demo.Control.MyListViewDS:prototype.myOnActivatedHandler</option>
+                *           <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyListViewDS:prototype.myOnActivatedHandler</option>
                 *        </options>
                 *        <options>
                 *            <option name="name">btn2</option>
                 *            <option name="icon">sprite:icon-16 icon-Trade icon-primary</option>
                 *            <option name="tooltip">Изменить</option>
                 *            <option name="isMainAction">true</option>
-                *            <option name="onActivated" type="function">js!SBIS3.Demo.Control.MyListViewDS:prototype.myOnActivatedHandler</option>
+                *            <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyListViewDS:prototype.myOnActivatedHandler</option>
                 *         </options>
                 *     </option>
                 * </pre>
@@ -233,6 +233,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
 
          init: function () {
+            ListViewDS.superclass.init.call(this);
             var self = this;
             // запросим данные из источника
             this.reload();
@@ -511,7 +512,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @see getItemsActions
           * @see getHoveredItem
           */
-         setItemsAction: function(items) {
+         setItemsActions: function(items) {
             this._options.itemsActions = items;
             this.getItemsActions().setItems(items);
          },
@@ -533,6 +534,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   $(window).unbind('.wsInfiniteScroll');
                }
             }
+            ListViewDS.superclass.destroy.call(this);
          },
          //-----------------------------------infiniteScroll------------------------
          //TODO Сделать подгрузку вверх
