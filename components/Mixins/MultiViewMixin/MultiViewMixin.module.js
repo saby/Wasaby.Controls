@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'], function(dotTplFn) {
+define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin', 'html!SBIS3.CONTROLS.MultiViewMixin/resources/MultiView__folderTpl'], function(dotTplFn, folderTpl) {
    'use strict';
 
    var MultiView = {
@@ -30,7 +30,6 @@ define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'
       setViewMode: function(mode) {
          this._options.viewMode = mode;
          this._drawViewMode(mode);
-         this._redraw();
       },
 
       getViewMode: function(){
@@ -58,37 +57,45 @@ define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'
 
                case 'table': resultTpl = parentFnc.call(this, item); break;
                case 'list': {
-                  if (this._options.listTemplate) {
-                     if (this._options.listTemplate instanceof Function) {
-                        dotTpl = this._options.listTemplate;
-                     } else {
-                        dotTpl = doT.template(this._options.listTemplate);
+                  if (item.get(this._options.hierField + '@')) {
+                     dotTpl = folderTpl;
+                  } else {
+                     if (this._options.listTemplate) {
+                        if (this._options.listTemplate instanceof Function) {
+                           dotTpl = this._options.listTemplate;
+                        } else {
+                           dotTpl = doT.template(this._options.listTemplate);
+                        }
+                     }
+                     else {
+                        dotTpl = doT.template('<div>{{=it.item.get(it.description)}}</div>')
                      }
                   }
-                  else {
-                     dotTpl = doT.template('<div>{{=it.item.get(it.field)}}</div>')
-                  }
-                  resultTpl = dotTpl({item : item, field : this._options.descriptionField, image : this._options.imageField});
+                  resultTpl = dotTpl({item : item, description : this._options.descriptionField, image : this._options.imageField});
                   break;
                }
                case 'tile' : {
-                  if (this._options.tileTemplate) {
-                     if (this._options.tileTemplate instanceof Function) {
-                        dotTpl = this._options.tileTemplate;
-                     } else {
-                        dotTpl = doT.template(this._options.tileTemplate);
+                  if (item.get(this._options.hierField + '@')) {
+                     dotTpl = folderTpl;
+                  } else {
+                     if (this._options.tileTemplate) {
+                        if (this._options.tileTemplate instanceof Function) {
+                           dotTpl = this._options.tileTemplate;
+                        } else {
+                           dotTpl = doT.template(this._options.tileTemplate);
+                        }
+                     }
+                     else {
+                        var src;
+                        if (!item.get(this._options.imageField)) {
+                           src = item.get(this._options.hierField + '@') ? 'img/defaultFolder.png' : 'img/defaultItem.png';
+                        } else {
+                           src = '{{=it.item.get(it.image)}}'
+                        }
+                        dotTpl = doT.template('<div><div class="controls-ListView__itemCheckBox"></div><img class="controls-MultiView__tileImg" src="' + src + '"/><div class="controls-MultiView__tileTitle">{{=it.item.get(it.description)}}</div></div>')
                      }
                   }
-                  else {
-                     var src;
-                     if (!item.get(this._options.imageField)) {
-                        src = item.get(this._options.hierField + '@') ? 'img/defaultFolder.png' : 'img/defaultItem.png';
-                     } else {
-                        src = '{{=it.item.get(it.image)}}'
-                     }
-                     dotTpl = doT.template('<div><div class="controls-ListView__itemCheckBox"></div><img class="controls-MultiView__tileImg" src="' + src + '"/><div class="controls-MultiView__tileText">{{=it.item.get(it.field)}}</div></div>')
-                  }
-                  resultTpl = dotTpl({item : item, field : this._options.descriptionField, image : this._options.imageField});
+                  resultTpl = dotTpl({item : item, description : this._options.descriptionField, image : this._options.imageField});
                   break;
                }
 

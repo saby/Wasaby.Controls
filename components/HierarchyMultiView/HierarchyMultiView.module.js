@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.HierarchyData
       },
 
       _getTargetContainer: function (item) {
-         if (this.getViewMode() == 'tile' && item.get(this._options.hierField + '@')) {
+         if (this.getViewMode() != 'table' && item.get(this._options.hierField + '@')) {
             return  $('.controls-MultiView__foldersContainer',this._container);
          }
          return this._getItemsContainer();

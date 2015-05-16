@@ -77,7 +77,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       $constructor: function () {
-         this._publish('onDrawItems');
+         this._publish('onDrawItems', 'onDataLoad');
          //Для совместимости пока делаем Array
 
          if (this._options.dataSource) {
@@ -163,10 +163,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._offset = typeof(offset) != 'undefined' ? offset : this._offset;
          this._limit = typeof(limit) != 'undefined' ? limit : this._limit;
          this._loader = this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
+            self._notify('onDataLoad');
             self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
             //FixMe: перезаписываем dataSet
             self._dataSet = dataSet;
             self._dataLoadedCallback();
+            //self._notify('onBeforeRedraw');
             self._redraw();
          });
       },
@@ -316,7 +318,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _addItemAttributes: function (container, item) {
-         container.attr('data-id', item.getKey()).addClass('controls-ListView__item');
+         var isFolder = (item.get(this._options.hierField + '@')) ? 'controls-ListView__folder' : '';
+         container.attr('data-id', item.getKey()).addClass('controls-ListView__item ' + isFolder);
       },
 
       _createItemInstance: function (item, targetContainer, at) {

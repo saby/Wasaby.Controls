@@ -2060,6 +2060,29 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MultiView .controls-MultiView__listItem:hover {
   background: #f3f3f3;
 }
+.controls-MultiView .controls-MultiView__listItem.controls-ListView__folder {
+  padding: 0;
+  display: inline-block;
+  width: 229px;
+  height: 190px;
+  border: none;
+}
+.controls-MultiView .controls-MultiView__listItem.controls-ListView__folder .controls-MultiView__tileImg {
+  display: block;
+  width: 120px;
+  height: 120px;
+  margin: 4px auto 0 auto;
+}
+.controls-MultiView .controls-MultiView__listItem.controls-ListView__folder .controls-MultiView__tileTitle {
+  font-weight: 600;
+  font-size: 15px;
+  color: #313e78;
+  text-align: center;
+  margin-top: 8px;
+}
+.controls-MultiView .controls-MultiView__listItem.controls-ListView__folder:hover .controls-MultiView__tileTitle {
+  text-decoration: underline;
+}
 .controls-MultiView .controls-MultiView__listItem-defaultFolderImage {
   background: url("img/defaultFolder.png");
 }
@@ -2092,14 +2115,37 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MultiView .controls-MultiView__tileItem:hover .controls-MultiView__tileImg {
   box-shadow: 1px 2px 4px #aaaaaa;
 }
+.controls-MultiView .controls-MultiView__tileItem.controls-ListView__folder {
+  width: 229px;
+  height: 190px;
+  border: none;
+}
+.controls-MultiView .controls-MultiView__tileItem.controls-ListView__folder .controls-MultiView__tileImg {
+  display: block;
+  width: 120px;
+  height: 120px;
+  margin: 4px auto 0 auto;
+}
+.controls-MultiView .controls-MultiView__tileItem.controls-ListView__folder .controls-MultiView__tileTitle {
+  font-weight: 600;
+  font-size: 15px;
+  color: #313e78;
+}
+.controls-MultiView .controls-MultiView__tileItem.controls-ListView__folder:hover .controls-MultiView__tileTitle {
+  text-decoration: underline;
+}
 .controls-MultiView .controls-MultiView__tileItem.controls-ListView__item__selected {
   background: #e7f0f9;
 }
 .controls-MultiView .controls-MultiView__tileItem .controls-MultiView__tileImg {
-  margin: 10px 40px;
+  display: block;
+  margin: 4px auto 0 auto;
 }
-.controls-MultiView .controls-MultiView__tileItem .controls-MultiView__tileText {
-  margin: 7px;
+.controls-MultiView .controls-MultiView__tileItem .controls-MultiView__tileTitle {
+  font-family: Tahoma;
+  margin-top: 8px;
+  font-size: 15px;
+  text-align: center;
 }
 .controls-operations-panel {
   height: 30px;
