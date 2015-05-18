@@ -1,4 +1,4 @@
-<div class="controls-DataGrid controls-ListView{{?it.multiselect !== false}} controls-ListView__multiselect{{?}}">
+<div class="controls-DataGrid controls-ListView{{?it.multiselect !== false}} controls-ListView__multiselect{{?}}{{? it.editInPlace.enabled}} controls-DataGrid__with-editInPlace{{?}}">
    <table class="controls-DataGrid__table">
       <colgroup class="controls-DataGrid__colgroup">
          {{?it.multiselect}}
@@ -35,5 +35,8 @@
    {{?}}
    {{? it.itemsActions.length}}
       <div class="controls-ListView__itemActions-container"></div>
+   {{?}}
+   {{? it.editInPlace.enabled && it.editInPlace.addInPlace}}
+      <div class="controls-DataGrid__addInPlace-container"></div>
    {{?}}
 </div>
