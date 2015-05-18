@@ -163,7 +163,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._offset = typeof(offset) != 'undefined' ? offset : this._offset;
          this._limit = typeof(limit) != 'undefined' ? limit : this._limit;
          this._loader = this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
-            self._notify('onDataLoad');
+            self._notify('onDataLoad', dataSet);
             self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
             //FixMe: перезаписываем dataSet
             self._dataSet = dataSet;
