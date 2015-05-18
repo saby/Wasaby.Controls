@@ -353,7 +353,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
             strategy: this.getStrategy(),
             raw: meta.results,
             keyField: this._keyField
-         })
+         });
+         return meta;
       },
 
       /**
