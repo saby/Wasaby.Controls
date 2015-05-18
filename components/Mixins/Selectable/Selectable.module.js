@@ -19,8 +19,8 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
              * <pre>
              *     <option name="selectedIndex">3</option>
              * </pre>
-             * @see setSelectedIndex
-             * @see getSelectedIndex
+             * @see setSelectedKey
+             * @see getSelectedKey
              * @see setSelectedItem
              * @see getSelectedItem
              */
@@ -53,8 +53,8 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
        */
       setSelectedItem: function(id) {
          //TODO изменить логику на установку выбранного элемента
-         console.log('c 3.7.3 метод setSelectedItem перестанет работать. Используйте метод setSelectedIndex');
-         this.setSelectedIndex(id);
+         console.log('c 3.7.3 метод setSelectedItem перестанет работать. Используйте метод setSelectedKey');
+         this.setSelectedKey(id);
       },
 
       /**
@@ -62,20 +62,20 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
        */
       getSelectedItem : function() {
          //TODO изменить логику на возврат выбранного элемента
-         console.log('c 3.7.3 метод getSelectedItem перестанет работать. Используйте метод getSelectedIndex');
-         return this.getSelectedIndex();
+         console.log('c 3.7.3 метод getSelectedItem перестанет работать. Используйте метод getSelectedKey');
+         return this.getSelectedKey();
       },
       /**
        * Установить выбранный элемент по индексу
        * @param {String} id Идентификатор элемента, который нужно установить в качестве выбранного.
        * @example
        * <pre>
-       *     MyComboBox.setSelectedIndex('3');
+       *     MyComboBox.setSelectedKey('3');
        * </pre>
        * @see selectedItem
-       * @see getSelectedIndex
+       * @see getSelectedKey
        */
-      setSelectedIndex : function(id) {
+      setSelectedKey : function(id) {
          this._options.selectedIndex = id;
          if (!this._options.selectedIndex && this._options.allowEmptySelection == false) {
             this._setFirstItemAsSelected();
@@ -89,12 +89,12 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
        * Получить индекс выбранного элемента
        * @example
        * <pre>
-       *     MyComboBox.getSelectedIndex();
+       *     MyComboBox.getSelectedKey();
        * </pre>
        * @see selectedItem
-       * @see setSelectedIndex
+       * @see setSelectedKey
        */
-      getSelectedIndex : function() {
+      getSelectedKey : function() {
          return this._options.selectedIndex;
       },
 

@@ -66,8 +66,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        */
       setSelectedItems: function(idArray) {
          //TODO изменить логику на установку выбранных элементов
-         console.log('c 3.7.3 метод setSelectedItems перестанет работать. Используйте метод setSelectedIndexes');
-         this.setSelectedIndexes(idArray);
+         console.log('c 3.7.3 метод setSelectedItems перестанет работать. Используйте метод setSelectedKeys');
+         this.setSelectedKeys(idArray);
       },
 
       /**
@@ -75,15 +75,15 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        */
       getSelectedItems: function() {
          //TODO изменить логику на получение выбранных элементов
-         console.log('c 3.7.3 метод getSelectedItems перестанет работать. Используйте метод getSelectedIndexes');
-         return this.getSelectedIndexes();
+         console.log('c 3.7.3 метод getSelectedItems перестанет работать. Используйте метод getSelectedKeys');
+         return this.getSelectedKeys();
       },
 
       /**
        * Устанавливает выбранные элементы по id
        * @param idArray
        */
-      setSelectedIndexes : function(idArray) {
+      setSelectedKeys : function(idArray) {
          if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
             if (idArray.length) {
                if (this._options.multiselect) {
@@ -116,7 +116,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             this._dataSet.each(function(rec){
                items.push(rec.getKey())
             });
-            this.setSelectedIndexes(items);
+            this.setSelectedKeys(items);
          }
 
       },
@@ -124,7 +124,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       /**
        * Получает индексы выбранных элементов
        */
-      getSelectedIndexes : function() {
+      getSelectedKeys : function() {
          return this._options.selectedIndexes;
       },
 
@@ -185,7 +185,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * Убрать все элементы из набора выбранных
        */
       removeItemsSelectionAll : function() {
-         this.setSelectedIndexes([]);
+         this.setSelectedKeys([]);
       },
 
       /**
