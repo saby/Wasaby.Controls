@@ -348,7 +348,12 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       getMetaData: function () {
-         return this.getStrategy().getMetaData(this._rawData);
+         var meta = this.getStrategy().getMetaData(this._rawData);
+         meta.results = new Record({
+            strategy: this.getStrategy(),
+            raw: meta.results,
+            keyField: this._keyField
+         })
       },
 
       /**
