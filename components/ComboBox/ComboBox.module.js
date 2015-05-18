@@ -113,11 +113,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._options.displayField = 'title';
          }
 
-         if (this._options.selectedIndex) {
-            this._drawSelectedItem(this._options.selectedIndex);
+         if (this._options.selectedKey) {
+            this._drawSelectedItem(this._options.selectedKey);
          } else {
             /*TODO следующая строчка должна быть в Selector*/
-            this._options.selectedIndex = null;
+            this._options.selectedKey = null;
             if (this._options.text) {
                this._setKeyByText();
             }
@@ -183,7 +183,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawItemsCallback : function() {
-         this._drawSelectedItem(this._options.selectedIndex);
+         this._drawSelectedItem(this._options.selectedKey);
       },
 
       _addItemClasses : function(container, key) {
@@ -210,7 +210,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._picker.getContainer().mouseup(function (e) {
             var row = $(e.target).closest('.js-controls-ComboBox__itemRow');
             if (row.length) {
-               self.setSelectedIndex($(row).attr('data-id'));
+               self.setSelectedKey($(row).attr('data-id'));
                self.hidePicker();
             }
          });
@@ -251,7 +251,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          /*описываем здесь поведение стрелок вверх и вниз*/
          /*
          var self = this,
-            current = self.getSelectedIndex();
+            current = self.getSelectedKey();
          if (e.which == 40 || e.which == 38) {
             e.preventDefault();
          }
@@ -263,7 +263,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             newItem = self.getItems().getPreviousItem(current);
          }
          if (newItem) {
-            self.setSelectedIndex(this._items.getKey(newItem));
+            self.setSelectedKey(this._items.getKey(newItem));
          }
          if (e.which == 13) {
             this.hidePicker();
@@ -285,7 +285,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          /*устанавливаем ключ, когда текст изменен извне*/
          var
             selKey,
-            oldKey = this._options.selectedIndex,
+            oldKey = this._options.selectedKey,
             self = this,
             filterFieldObj = {};
 
@@ -296,17 +296,17 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             DataSet.each(function (item) {
                noItems = false;
                selKey = item.getKey();
-               self._options.selectedIndex = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
+               self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
                //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
-               if (oldKey !== self._options.selectedIndex) { // при повторном индексе null не стреляет событием
-                  self._notifySelectedItem(self._options.selectedIndex);
-                  self._drawSelectedItem(self._options.selectedIndex);
+               if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
+                  self._notifySelectedItem(self._options.selectedKey);
+                  self._drawSelectedItem(self._options.selectedKey);
                }
             });
 
             if (noItems) {
-               if (self._options.selectedIndex !== null) {
-                  self._options.selectedIndex = null;
+               if (self._options.selectedKey !== null) {
+                  self._options.selectedKey = null;
                   self._notifySelectedItem(null);
                   self._drawSelectedItem(null);
                }
@@ -329,7 +329,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._picker.recalcPosition();
          }
          else {
-            this._drawSelectedItem(this._options.selectedIndex);
+            this._drawSelectedItem(this._options.selectedKey);
          }
       },
        /**
