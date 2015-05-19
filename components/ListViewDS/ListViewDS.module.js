@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        */
 
       var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
-
+         _dotTplFn: dotTplFn,
           /**
            * @event onChangeHoveredItem При переводе курсора мыши на другую запись
            * @remark
@@ -65,7 +65,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
          $protected: {
             _floatCheckBox : null,
-            _dotTplFn: dotTplFn,
             _dotItemTpl: null,
             _itemsContainer: null,
             _actsContainer: null,
@@ -207,15 +206,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
          $constructor: function () {
             var self = this;
-            this._publish('onChangeHoveredItem');
-
+this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
             this._container.mouseup(function (e) {
                if (e.which == 1) {
                   var $target = $(e.target),
                       target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
                   if (target.length) {
-                     var id = target.data('id');
-                     self._elemClickHandler(id, self._dataSet.getRecordByKey(id), e.target);
+                     var id = target.data('id'), data = self._dataSet.getRecordByKey(id);
+                     self._elemClickHandler(id, data, e.target);
                   }
                }
             });
@@ -264,7 +262,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (target.length) {
                targetKey = target.data('id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
-                  this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
+this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
                   this._hoveredItem = {
                      key: targetKey,
                      container: target.addClass('controls-ListView__hoveredItem'),
@@ -276,11 +274,25 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                         height: target[0].offsetHeight,
                         width: target[0].offsetWidth
                      }
-                  };
-                  this._notify('onChangeHoveredItem', this._hoveredItem);
+                  };                  this._notify('onChangeHoveredItem', this._hoveredItem);
                   this._onChangeHoveredItem(this._hoveredItem);
                }
             }
+         },
+
+         _getHoveredItemConfig: function(target){
+            return {
+               key: target.data('id'),
+               container: target,
+               position: {
+                  top: target[0].offsetTop,
+                  left: target[0].offsetLeft
+               },
+               size: {
+                  height: target[0].offsetHeight,
+                  width: target[0].offsetWidth
+               }
+            };
          },
          /**
           * Обрабатывает уведение мышки с элемента представления
@@ -343,6 +355,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   this.toggleItemsSelection([key]);
                }
                else {
+                  this._notify('onItemClick', id, data, target);
                   if (this._options.elemClickHandler) {
                      this._options.elemClickHandler.call(this, id, data, target);
                   }
@@ -350,6 +363,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
             else {
                this.setSelectedIndexes([id]);
+               this._notify('onItemClick', id, data, target);
                if (this._options.elemClickHandler) {
                   this._options.elemClickHandler.call(this, id, data, target);
                }

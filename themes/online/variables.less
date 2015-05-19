@@ -1152,6 +1152,7 @@
 
 @list-view-actions-cursor:                      pointer;
 @list-view-actions-height:                      20px;
+@list-view-actions-width:                       20px;
 @list-view-actions-right-offset:                1px;
 @list-view-actions-margin:                      0 4px;
 @list-view-actions-padding:                     0;
@@ -1179,7 +1180,7 @@
 
 @tree-view-expand-width:                        16px;
 @tree-view-expand-height:                       16px;
-@tree-view-expand-margin:                       0;
+@tree-view-expand-margin:                       0 3px 0 0;
 
 @tree-view-expand-border-width:                 0;
 @tree-view-expand-border-style:                 none;
@@ -1308,9 +1309,26 @@
 @controls-OperationsPanel-separator-line-height:    30px;
 
 // --------------- //
-// OperationsMark //
+// OperationsMark  //
 // --------------- //
-@controls-OperationsMark-checkBox-margin:     0 4px;
+@controls-OperationsMark-checkBox-margin:           0 4px;
+
+// --------------- //
+//    MultiView    //
+// --------------- //
+@multiView-tile-itemsContainer-padding:             4px 0 0 1px;
+@multiView-check-box-left:                          3px;
+@multiView-check-box-top:                           5px;
+@multiView-tile-item-border:                        1px solid #E7F0F9 ;
+@multiView-tile-item-min-width:                     128px;
+@multiView-tile-item-min-height:                    128px;
+@multiView-tile-item-margin :                       -4px 0 0 -1px;
+@multiView-tile-item-image-box-shadow:              1px 2px 4px #aaa;
+@multiView-tile-item-image-margin:                  4px auto 0 auto;
+@multiView-tile-item-text-margin:                   8px;
+@multiView-tile-selected-item-bg:                   #E7F0F9;
+@multiView-default-folder-bg:                       url("img/defaultFolder.png");
+@multiView-default-item-bg:                         url("img/defaultItem.png");
 //ProgressBar
 @controls-ProgressBar-height:                       17px;
 @controls-ProgressBar-empty-bg:                     #F3F3F3;

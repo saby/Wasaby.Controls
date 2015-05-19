@@ -168,6 +168,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
          */
       getMetaData: function (data) {
          return {
+            results : data.r,
             more: data.n
          }
       },
@@ -176,6 +177,11 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
         * @param filter
         * @returns {{d: Array, s: Array}}
         */
+      getParentKey: function (rawKey) {
+         // так как c БЛ приходит массив
+         return rawKey[0];
+      },
+
       prepareFilterParam: function (filter) {
          // настройка объекта фильтрации для отправки на БЛ
          var filterParam = {

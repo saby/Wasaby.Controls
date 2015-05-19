@@ -1149,6 +1149,7 @@
 
 @list-view-actions-cursor:                      pointer;
 @list-view-actions-height:                      20px;
+@list-view-actions-width:                       20px;
 @list-view-actions-right-offset:                1px;
 @list-view-actions-margin:                      0 4px;
 @list-view-actions-padding:                     0;
@@ -1179,7 +1180,7 @@
 
 @tree-view-expand-border-width:                 6px 0 6px 6px;
 @tree-view-expand-border-style:                 solid;
-@tree-view-expand-border-color:                 transparent transparent transparent @primary-color;
+@tree-view-expand-border-color:                 transparent transparent transparent @black-color;
 @tree-view-expand-bg:                           transparent;
 
 @tree-view-expand-hover-border-width:           @tree-view-expand-border-width;
@@ -1193,7 +1194,7 @@
 
 @tree-view-expand-open-border-width:            6px 6px 0 6px;
 @tree-view-expand-open-border-style:            @tree-view-expand-border-style;
-@tree-view-expand-open-border-color:            @primary-color transparent transparent transparent;
+@tree-view-expand-open-border-color:            @black-color transparent transparent transparent;
 @tree-view-expand-open-bg:                      transparent;
 
 @tree-view-expand-open-hover-border-width:      @tree-view-expand-open-border-width;
@@ -1307,6 +1308,20 @@
 // OperationsMark //
 // --------------- //
 @controls-OperationsMark-checkBox-margin:     0 4px;
+
+// --------------- //
+//    MultiView    //
+// --------------- //
+@multiView-check-box-left:                          3px;
+@multiView-check-box-top:                           5px;
+@multiView-tile-item-border:                        1px solid @gray-light-color;
+@multiView-tile-item-min-width:                     128px;
+@multiView-tile-item-min-height:                    128px;
+@multiView-tile-item-margin :                       -4px 0 0 -1px;
+@multiView-tile-item-image-box-shadow:              1px 2px 4px #aaa;
+@multiView-tile-item-image-margin:                  10px 40px;
+@multiView-tile-item-text-margin:                   7px;
+@multiView-tile-selected-item-bg:                   #E7F0F9;
 //ProgressBar
 @controls-ProgressBar-height:                       17px;
 @controls-ProgressBar-empty-bg:                     #F3F3F3;

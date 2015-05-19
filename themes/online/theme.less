@@ -102,18 +102,16 @@
       .box-shadow(@button-light-disabled-shadow);
       background: @button-light-disabled-bg;
    }
-
-   .controls-ListView__item__selected {
-      .controls-DataGrid__td:first-child {
-         background-image: url('img/rowSelect.png');
-         background-position: left top;
-         background-repeat: repeat-y;
-      }
+}
+.controls-ListView__item__selected {
+   .controls-DataGrid__td:first-child {
+      background-image: url('img/rowSelect.png');
+      background-position: left top;
+      background-repeat: repeat-y;
    }
-
-   &.controls-ListView__multiselect {
-      .controls-DataGrid__td:first-child {
-         background: none;
-      }
+}
+&.controls-ListView__multiselect {
+   .controls-DataGrid__td:first-child {
+      background: none;
    }
 }
