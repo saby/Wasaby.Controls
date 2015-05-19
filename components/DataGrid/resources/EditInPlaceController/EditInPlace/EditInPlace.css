@@ -1,0 +1,34 @@
+.controls-editInPlace {
+  position: absolute;
+  white-space: nowrap;
+  padding: 2px;
+  z-index: 1;
+}
+.controls-editInPlace > div {
+  display: inline-block;
+  vertical-align: top;
+  height: 100%;
+}
+.controls-editInPlace > div .ws-component {
+  height: 100%;
+  width: 100%;
+}
+.controls-editInPlace > div .ws-component.controls-CheckBox {
+  text-align: center;
+}
+.controls-editInPlace > div .ws-component.controls-TextBox {
+  padding-left: 1px;
+}
+.controls-editInPlace .controls-editInPlace__withEditor {
+  background-color: white;
+  cursor: text;
+  padding: 0 2px 0 0;
+}
+.controls-editInPlace .editInPlace__editor {
+  width: 100%;
+  height: 100%;
+}
+.controls-editInPlace .editInPlace__editor.controls-CheckBox {
+  text-align: center;
+  vertical-align: middle;
+}

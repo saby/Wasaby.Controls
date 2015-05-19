@@ -17,12 +17,14 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
          _isChanged: false,
          _keyField: null,
          _raw: null,
-         _strategy: null
+         _strategy: null,
+         _onChangeHandler: null
       },
 
       $constructor: function (cfg) {
          this._strategy = cfg.strategy;
          this._raw = cfg.raw;
+         this._onChangeHandler = cfg.onChangeHandler;
          this._keyField = cfg.keyField || null;
          this._cid = $ws.helpers.randomId('c');
       },
@@ -60,6 +62,9 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
          // с данными можем работать только через стратегию
          this._raw = this._strategy.setValue(this._raw, field, value);
          this._isChanged = true;
+         if (this._isChanged && this._onChangeHandler) {
+            this._onChangeHandler(this);
+         }
       },
       /**
        * Получить тип поля по наименованию
