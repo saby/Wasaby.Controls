@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
       _nodeDataLoaded: function (key, dataSet) {
          var record;
          if (record = this._dataSet.getRecordByKey(key)) {
-            var title = record.get('title');
+            var title = record.get(this._options.descriptionField);
             HierarchyDataGrid.superclass._nodeDataLoaded.call(this, key, dataSet);
             this._pathSelector.push({
                'title': title,
