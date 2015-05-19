@@ -80,9 +80,10 @@ define('js!SBIS3.CONTROLS.ListView',
             var self = this;
             this._container.mouseup(function(e){
                if (e.which == 1) {
-                  var targ = $(e.target).hasClass('controls-ListView__item') ? e.target : $(e.target).closest('.controls-ListView__item');
-                  if (targ.length) {
-                     var id = targ.attr('data-id');
+                  var $target = $(e.target),
+                     target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
+                  if (target.length) {
+                     var id = target.attr('data-id');
                      self._elemClickHandler(id, self._items.getItem(id));
                   }
                }
@@ -91,6 +92,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          init : function() {
+            ListView.superclass.init.call(this);
             this._drawItems();
          },
 

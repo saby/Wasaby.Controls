@@ -43,44 +43,7 @@ define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS
          }else {
             this.show();
          }
-      },
-
-      /*TODO переопределяем метод compoundControl - костыль*/
-      _loadControls: function(pdResult){
-         return pdResult.done([]);
-      },
-
-      /*TODO свой механизм загрузки дочерних контролов - костыль*/
-      _loadChildControls: function() {
-         var def = new $ws.proto.Deferred();
-         var self = this;
-         self._loadControlsBySelector(new $ws.proto.ParallelDeferred(), undefined, '[data-component]')
-            .getResult().addCallback(function () {
-               def.callback();
-            });
-         return def;
-      },
-
-      /*TODO Метод скопирован из areaAbstract - костыль*/
-      _getChildControls: function(excludeContainers) {
-         var children = [];
-         for (var i = 0, l = this._childControls.length; i < l; i++) {
-            if (i in this._childControls) {
-               var c = this._childControls[i];
-               if (c) {
-                  if (c instanceof $ws.proto.AreaAbstract) {
-                     Array.prototype.push.apply(children, c.getChildControls(excludeContainers));
-                     if (excludeContainers) {
-                        continue;
-                     }
-                  }
-                  children.push(c);
-               }
-            }
-         }
-         return children;
       }
-
    });
 
    return FloatArea;

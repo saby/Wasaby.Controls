@@ -28,7 +28,8 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
             /**
              * TODO Выбранный элемент
              */
-            selectedItem : null
+            selectedItem : null,
+            allowEmptySelection : true
          }
       },
 
@@ -38,6 +39,12 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
             console.log('c 3.7.3 свойство selectedItem перестанет работать. Используйте свойство selectedIndex');
             this._options.selectedIndex = this._options.selectedItem;
          }
+         else {
+            if (this._options.allowEmptySelection == false) {
+               this._setFirstItemAsSelected();
+            }
+         }
+         this._drawSelectedItem();
       },
 
       /**
@@ -70,9 +77,26 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
        */
       setSelectedIndex : function(id) {
          this._options.selectedIndex = id;
-         this.saveToContext('SelectedItem', id); //TODO: Перенести отсюда
-         this._drawSelectedItem(id);
-         this._notifySelectedItem(id);
+         if (!this._options.selectedIndex && this._options.allowEmptySelection == false) {
+            this._setFirstItemAsSelected();
+         }
+         this.saveToContext('SelectedItem', this._options.selectedIndex); //TODO: Перенести отсюда
+         this._drawSelectedItem(this._options.selectedIndex);
+         this._notifySelectedItem(this._options.selectedIndex);
+      },
+
+      getNextItemIndex: function() {
+         var
+            current = parseInt(this.getSelectedIndex(), 10),
+            next = this._dataSet.getRecordByKey(current + 1);
+         return next !== undefined ? next.getKey() : false;
+      },
+
+      getPrevItemIndex: function() {
+         var
+            current = parseInt(this.getSelectedIndex(), 10),
+            prev = this._dataSet.getRecordByKey(current - 1);
+         return prev !== undefined ? prev.getKey() : false;
       },
 
       /**
@@ -95,6 +119,18 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
       _notifySelectedItem : function(id) {
          //TODO: может тут указать, что метод надо переопредить чтобы текст передавать и пр.?
          this._notify('onSelectedItemChange', id);
+      },
+
+      _dataLoadedCallback : function(){
+         if (!this._options.selectedIndex && this._options.allowEmptySelection == false) {
+            this._setFirstItemAsSelected();
+         }
+      },
+
+      _setFirstItemAsSelected : function() {
+         if (this._dataSet) {
+            this._options.selectedIndex = this._dataSet.at(0).getKey();
+         }
       }
    };
 

@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
     * @extends SBIS3.CONTROLS.ListView
     * @control
     * @public
-    * @demo SBIS3.Demo.Control.MyDataGrid
+    * @demo SBIS3.CONTROLS.Demo.MyDataGrid
     * @initial
     * <component data-component='SBIS3.CONTROLS.DataGrid'>
     *    <options name="columns" type="array">
@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
     *       <options>
     *          <option name="title">Поле 2</option>
     *       </options>
-    *    </options>      
+    *    </options>
     * </component>
     */
 
@@ -25,15 +25,14 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
       _dotTplFn : dotTplFn,
       $protected: {
          _rowData : [],
-         _rowTpl : rowTpl,
          _options: {
             /**
              * @typedef {Object} Columns
              * @property {String} title Заголовок колонки
              * @property {String} field Имя поля
              * @property {Number} Ширина колонки
-             * Значение необходимо задавать для колонок с фиксированной шириной. 
-             * 
+             * Значение необходимо задавать для колонок с фиксированной шириной.
+             *
              * @property {String} className Имя класса, который будет применён к каждой ячейке столбца
              * @property {String} captionTemplate Шаблон отображения шапки колонки
              * @property {String} cellTemplate Шаблон отображения ячейки
@@ -69,7 +68,14 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
              * @see setPage
              * @see getPage
              */
-            paging: 'no'
+            paging: 'no',
+            /**
+             * @cfg {Object} Редактирование по месту
+             */
+            editInPlace: {
+               enabled: false,
+               addInPlace: false
+            }
          }
       },
 
@@ -77,6 +83,65 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
          this._thead = $('.controls-DataGrid__thead', this._container.get(0));
          this._colgroup = $('.controls-DataGrid__colgroup', this._container.get(0))
       },
+
+      init: function() {
+         DataGrid.superclass.init.call(this);
+         if (this._options.editInPlace.enabled && this._options.editInPlace.addInPlace && !this._editInPlace) {
+            this._initAddInPlace();
+         }
+      },
+      _initAddInPlace: function() {
+         var
+            self = this,
+            itemsContainer = this._getItemsContainer(),
+            tr = '';
+         this._addInPlaceButton = new Link({
+            name: 'controls-ListView__addInPlace-button',
+            icon: 'sprite:icon-16 icon-NewCategory',
+            caption: 'Новая запись',
+            element: $('<div>').appendTo(this._container.find('.controls-ListView__addInPlace-container'))
+         });
+         if (this._options.multiselect) {
+            tr += '<td class="controls-DataGrid__td"></td>';
+         }
+         for (var i in this._options.columns) {
+            tr += '<td class="controls-DataGrid__td"></td>';
+         }
+         tr += '</tr>';
+         this._addInPlaceButton.subscribe('onActivated', function() {
+            self._initEditInPlace();
+            self._editInPlace.showEditing(
+               $('<tr class="controls-DataGrid__tr controls-ListView__item">' + tr)
+                  .appendTo(itemsContainer));
+         });
+      },
+      _initEditInPlace: function() {
+         var self = this;
+         if (!this._editInPlace) {
+            this._dataSet.subscribe('onRecordChange', function(event, record) {
+               self._getItemsContainer().find('.controls-ListView__item[data-id="' + record.getKey() + '"]')
+                  .empty()
+                  .append($(self._getItemTemplate(record)).children());
+            });
+            this._editInPlace = new EditInPlaceController({
+               columns: this._options.columns,
+               addInPlaceButton: this._addInPlaceButton,
+               element: $('<div>').appendTo(this._container),
+               dataSet: this._dataSet,
+               ignoreFirstColumn: this._options.multiselect,
+               dataSource: this._dataSource
+            });
+         }
+      },
+      
+      _onChangeHoveredItem: function(hoveredItem) {
+         if (this._options.editInPlace.enabled && this._options.columns && this._options.columns.length) {
+            this._initEditInPlace();
+            this._editInPlace.updateDisplay(hoveredItem);
+         }
+         DataGrid.superclass.init.apply(this, arguments);
+      },
+      
       /**
        * Установить страницу по её номеру.
        * @remark
@@ -110,6 +175,11 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
        */
       getPage: function(){
 
+      },
+
+      _checkHeadContainer: function(target) {
+         var headContainer = this._container.find('.controls-DataGrid__thead');
+         return headContainer && target.closest(headContainer).length || this._editInPlace && target.closest('.controls-ListView__addInPlace-container').length;
       },
 
       _getItemsContainer: function(){

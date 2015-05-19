@@ -1,11 +1,17 @@
-define('js!SBIS3.Demo.Control.MyDataGrid', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.Demo.Control.MyDataGrid', 'css!SBIS3.Demo.Control.MyDataGrid', 'js!SBIS3.CONTROLS.DataGrid'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.CONTROLS.Demo.MyDataGrid',
+    [
+        'js!SBIS3.CORE.CompoundControl',
+        'html!SBIS3.CONTROLS.Demo.MyDataGrid',
+        'css!SBIS3.CONTROLS.Demo.MyDataGrid',
+        'js!SBIS3.CONTROLS.DataGrid'
+    ], function(CompoundControl, dotTplFn) {
    /**
-    * SBIS3.Demo.Control.MyDataGrid
-    * @class SBIS3.Demo.Control.MyDataGrid
+    * SBIS3.CONTROLS.Demo.MyDataGrid
+    * @class SBIS3.CONTROLS.Demo.MyDataGrid
     * @extends $ws.proto.CompoundControl
     * @control
     */
-   var moduleClass = CompoundControl.extend(/** @lends SBIS3.Demo.Control.MyDataGrid.prototype */{
+   var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Demo.MyDataGrid.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

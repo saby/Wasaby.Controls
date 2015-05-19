@@ -12,6 +12,9 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
    /**
     * Класс, реализующий интерфейс IDataSource, для работы с бизнес-логикой СБИС как с источником данных.
     * @author Мануйлов Андрей
+    * @public
+    * @class SBIS3.CONTROLS.SbisServiceSource
+    * @extends SBIS3.CONTROLS.IDataSource
     */
 
    return IDataSource.extend({
@@ -73,7 +76,10 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
          this._BL = new $ws.proto.ClientBLObject(cfg.service);
          this._options.strategy = cfg.strategy || new SbisJSONStrategy();
       },
-
+       /**
+        * Метод синхронизирует набор данных с источником данных.
+        * @param dataSet Набор данных.
+        */
       sync: function (dataSet) {
          var self = this,
             syncCompleteDef = new $ws.proto.ParallelDeferred(),
@@ -95,15 +101,25 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       },
 
       /**
-       * Метод создаёт запись в источнике данных.
+       * Вызов создания записи в источнике данных методом, указанным в опции {@link createMethodName}.
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record.
        * @see createMethodName
        */
       create: function () {
          var self = this,
             def = new $ws.proto.Deferred();
+         //todo Выпилить адовый костыль для создания черновика, как только решится вопрос на стороне БЛ
+         //(задание https://inside.tensor.ru/opendoc.html?guid=a886eecb-c2a0-4628-8919-a395be42dbbb)
          self._BL.call(self._options.crateMethodName, {
-            'Фильтр': null,
+            'Фильтр': {
+               d: [
+                  true
+               ],
+               s: [{
+                  n: 'ВызовИзБраузера',
+                  t: 'Логическое'
+               }]
+            },
             'ИмяМетода': null
          }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             var record = new Record({
@@ -123,7 +139,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       },
 
       /**
-       * Метод для чтения записи из БЛ по её идентификатору.
+       * Метод для {@link readMethodName чтения} записи её по идентификатору.
        * @param {Number} id Идентификатор записи.
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт js!SBIS3.CONTROLS.Record.
        * @see readMethodName
@@ -150,7 +166,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       },
 
       /**
-       * Метод для обновления записи на БЛ.
+       * Вызов обновления записи на БЛ методом, указанным в опции {@link updateMethodName}.
        * @param (SBIS3.CONTROLS.Record) record Изменённая запись.
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
        * В колбэке придёт Boolean - результат успешности выполнения операции.
@@ -175,7 +191,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       },
 
       /**
-       * Метод для удаления записи из БЛ.
+       * Вызов удаления записи из БЛ методом, указанным в опции {@link destroyMethodName}.
        * @param {Array | Number} id Идентификатор записи или массив идентификаторов.
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
        * В колбэке придет Boolean - результат успешности выполнения операции.
@@ -198,7 +214,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       },
 
       /**
-       * Вызов списочного метода БЛ.
+       * Вызов списочного метода БЛ, указанногов опции {@link queryMethodName}.
        * @remark
        * Возможно применение фильтрации, сортировки и выбора определенного количества записей с заданной позиции.
        * @param {Object} filter Параметры фильтрации вида - {property1: value, property2: value}.

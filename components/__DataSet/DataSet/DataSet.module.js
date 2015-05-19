@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
    /**
     * Класс "Набор данных"
     * @author Мануйлов Андрей
+    * @public
     */
 
    /**
@@ -116,7 +117,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
             this._byId[this.getRecordKeyByIndex(i)] = new Record({
                strategy: this.getStrategy(),
                raw: data,
-               keyField: this._keyField
+               keyField: this._keyField,
+               onChangeHandler: this._onRecordChange.bind(this)
             });
          }
 
@@ -169,7 +171,16 @@ define('js!SBIS3.CONTROLS.DataSet', [
          options || (options = {});
          options = $ws.core.merge(options, setOptions, {preferSource: true});
          var singular = !(records instanceof Array);
-         records = singular ? (records ? [records] : []) : $ws.core.clone(records);
+         if (singular) {
+            records = records ? [records] : [];
+         }
+         else {
+            /*TODO какая то лажа с клонами*/
+            var newRec = [];
+            for (var j = 0; j < records.length; j++) {
+               newRec.push($ws.core.clone(records[j]));
+            }
+         }
          var i, l, key, record, existing;
          var at = options.at;
          var toAdd = [], toRemove = [], recordMap = {};
@@ -261,9 +272,12 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @param dataSetMergeFrom Датасет, из которого будет происходить мерж
        */
       // если будем добавлять больше одной записи, то нужно предваритьно составить из них датасет
-      //FixMe: только добавляет записи. старые так и остнаутся в наборе
-      merge: function (dataSetMergeFrom) {
-         this._addRecords(dataSetMergeFrom._getRecords());
+      merge: function (dataSetMergeFrom, options) {
+         /*TODO какая то лажа с ключами*/
+         if ((!this._keyField) && (dataSetMergeFrom._keyField)) {
+            this._keyField = dataSetMergeFrom._keyField;
+         }
+         this._setRecords(dataSetMergeFrom._getRecords(), options);
       },
 
       /**
@@ -292,7 +306,12 @@ define('js!SBIS3.CONTROLS.DataSet', [
          if (key === undefined) {
             record.set(this._keyField, key = record._cid);
          }
+         record._onChangeHandler = this._onRecordChange.bind(this);
          return record;
+      },
+
+      _onRecordChange: function(record) {
+         this._notify('onRecordChange', record);
       },
 
       _addReference: function (record, options) {

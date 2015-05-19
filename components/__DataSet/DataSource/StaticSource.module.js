@@ -9,7 +9,11 @@ define('js!SBIS3.CONTROLS.StaticSource', [
    'use strict';
 
    /**
-    * Класс, реализующий интерфейс IDataSource, для работы с массивами как с источником данных
+    * Класс, реализующий интерфейс IDataSource, для работы с массивами как с источником данных.
+    * @author Мануйлов Андрей
+    * @public
+    * @class SBIS3.CONTROLS.StaticSource
+    * @extends SBIS3.CONTROLS.IDataSource
     */
 
    return IDataSource.extend({
@@ -38,7 +42,10 @@ define('js!SBIS3.CONTROLS.StaticSource', [
             keyField: this._options.keyField
          });
       },
-
+       /**
+        * Метод синхронизирует набор данных с источником данных.
+        * @param dataSet Набор данных.
+        */
       sync: function (dataSet) {
          var self = this,
             syncCompleteDef = new $ws.proto.ParallelDeferred(),

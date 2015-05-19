@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
        * @public
+       * @demo SBIS3.CONTROLS.Demo.MyListViewDS
        * @author Крайнов Дмитрий Олегович
        */
 
@@ -61,6 +62,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            * @see setItemsActions
            * @see getItemsActions
            */
+
          $protected: {
             _floatCheckBox : null,
             _dotItemTpl: null,
@@ -76,7 +78,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _itemActionsGroup: null,
                _options: {
                /**
-                * @faq Почему нет флажков при включенной опции {@link multiselect}?
+                * @faq Почему нет флажков при включенной опции {@link SBIS3.CONTROLS.ListViewDS#multiselect multiselect}?
                 * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
                 * <pre>
                 *     <div class="listViewItem" style="height: 30px;">\
@@ -125,14 +127,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 *           <option name="icon">sprite:icon-16 icon-Delete icon-primary</option>
                 *           <option name="isMainAction">false</option>
                 *           <option name="tooltip">Удалить</option>
-                *           <option name="onActivated" type="function">js!SBIS3.Demo.Control.MyListViewDS:prototype.myOnActivatedHandler</option>
+                *           <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyListViewDS:prototype.myOnActivatedHandler</option>
                 *        </options>
                 *        <options>
                 *            <option name="name">btn2</option>
                 *            <option name="icon">sprite:icon-16 icon-Trade icon-primary</option>
                 *            <option name="tooltip">Изменить</option>
                 *            <option name="isMainAction">true</option>
-                *            <option name="onActivated" type="function">js!SBIS3.Demo.Control.MyListViewDS:prototype.myOnActivatedHandler</option>
+                *            <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyListViewDS:prototype.myOnActivatedHandler</option>
                 *         </options>
                 *     </option>
                 * </pre>
@@ -204,8 +206,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
          $constructor: function () {
             var self = this;
-            this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
-
+this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
             this._container.mouseup(function (e) {
                if (e.which == 1) {
                   var $target = $(e.target),
@@ -234,6 +235,11 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             // запросим данные из источника
             this.reload();
          },
+
+         _checkHeadContainer: function(target) {
+            return null;
+         },
+
          /**
           * Обрабатывает перемещения мышки на элемент представления
           * @param e
@@ -248,7 +254,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                return;
             }
             //Если увели мышку с контейнера с элементами(например на шапку), нужно об этом посигналить
-            if($target.closest('.controls-DataGrid__thead').length) {
+            if (this._checkHeadContainer($target)) {
                this._mouseLeaveHandler();
                return;
             }
@@ -256,8 +262,19 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (target.length) {
                targetKey = target.data('id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
-                  this._hoveredItem = this._getHoveredItemConfig(target);
-                  this._notify('onChangeHoveredItem', this._hoveredItem);
+this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
+                  this._hoveredItem = {
+                     key: targetKey,
+                     container: target.addClass('controls-ListView__hoveredItem'),
+                     position: {
+                        top: target[0].offsetTop,
+                        left: target[0].offsetLeft
+                     },
+                     size: {
+                        height: target[0].offsetHeight,
+                        width: target[0].offsetWidth
+                     }
+                  };                  this._notify('onChangeHoveredItem', this._hoveredItem);
                   this._onChangeHoveredItem(this._hoveredItem);
                }
             }
@@ -282,6 +299,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @private
           */
          _mouseLeaveHandler: function() {
+            this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
             this._hoveredItem = {
                container: null,
                key: null,
@@ -295,17 +313,17 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * Обработчик на смену выделенного элемента представления
           * @private
           */
-         _onChangeHoveredItem: function(hoveredItem) {
-           if(this._options.itemsActions.length) {
-              if(hoveredItem.container) {
-                 this._showItemActions();
-              } else {
-                 //Если открыто меню опций, то скрывать опции не надо
-                 if(this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
-                    this._itemActionsGroup.hideItemActions();
-                 }
-              }
-           }
+         _onChangeHoveredItem: function(target) {
+            if(this._options.itemsActions.length) {
+               if (target.container) {
+                  this._showItemActions(target);
+               } else {
+                  //Если открыто меню опций, то скрывать опции не надо
+                  if(this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
+                     this._itemActionsGroup.hideItemActions();
+                  }
+               }
+            }
          },
 
          /**        
@@ -366,7 +384,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            * Перезагружает набор записей представления данных с последующим обновлением отображения.
            * @example
            * <pre>
-           *    dataGrid.reload();
+           *    var btn = new Button({
+           *         element: "buttonReload",
+           *         caption: 'reload offset: 450'
+           *    }).subscribe('onActivated', function(event, id){
+           *           //При нажатии на кнопку перезагрузим DataGrid  с 450ой записи
+           *           DataGridBL.reload(DataGridBL._filter, DataGridBL._sorting, 450, DataGridBL._limit);
+           *    });
            * </pre>
            */
          reload: function(){
@@ -475,7 +499,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          /**
           * Метод установки или замены кнопок операций над записью, заданных в опции {@link itemsActions}
-          * Нужно передать массив обьектов.
+          * @remark
+          * В метод нужно передать массив обьектов.
           * @param {Array} items Объект формата {name: ..., icon: ..., caption: ..., onActivated: ..., isMainOption: ...}
           * @param {String} items.name Имя кнопки операции над записью.
           * @param {String} items.icon Иконка кнопки.
@@ -507,7 +532,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @see getItemsActions
           * @see getHoveredItem
           */
-         setItemsAction: function(items) {
+         setItemsActions: function(items) {
             this._options.itemsActions = items;
             this.getItemsActions().setItems(items);
          },
@@ -529,6 +554,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   $(window).unbind('.wsInfiniteScroll');
                }
             }
+            ListViewDS.superclass.destroy.call(this);
          },
          //-----------------------------------infiniteScroll------------------------
          //TODO Сделать подгрузку вверх
@@ -540,6 +566,11 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            *    <li>true - используется подгрузка по скроллу;</li>
            *    <li>false - не используется.</li>
            * </ol>
+           * @example
+           * Переключим режим управления скроллом:
+           * <pre>
+           *     listView.setInfiniteScroll(!listView.isInfiniteScroll());
+           * </pre>
            * @see infiniteScroll
            * @see setInfiniteScroll
            */
@@ -622,9 +653,15 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          /**
           * Метод изменения возможности подгрузки по скроллу.
-          * Изменяет значение, заданной в опции {@link infiniteScroll}.
+          * @remark
+          * Метод изменяет значение, заданное в опции {@link infiniteScroll}.
           * @param {Boolean} allow Разрешить (true) или запретить (false) подгрузку по скроллу.
           * @param {Boolean} [noLoad] Сразу ли загружать (true - не загружать сразу).
+          * @example
+          * Переключим режим управления скроллом:
+          * <pre>
+          *     listView.setInfiniteScroll(!listView.isInfiniteScroll())
+          * </pre>
           * @see infiniteScroll
           * @see isInfiniteScroll
           */

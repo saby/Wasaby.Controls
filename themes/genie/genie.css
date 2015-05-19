@@ -510,10 +510,12 @@ input[type="reset"]::-moz-focus-inner {
   border: none;
   background: url('img/CheckBox-sprite.png') 0 0px;
 }
-.controls-CheckBox:hover .controls-CheckBox__caption {
+.controls-CheckBox:hover .controls-CheckBox__caption,
+.controls-CheckBox.ws-has-focus .controls-CheckBox__caption {
   color: #00c795;
 }
-.controls-CheckBox:hover .controls-CheckBox__icon {
+.controls-CheckBox:hover .controls-CheckBox__icon,
+.controls-CheckBox.ws-has-focus .controls-CheckBox__icon {
   border: none;
   background: url('img/CheckBox-sprite.png') 0 -16px;
 }
@@ -1243,7 +1245,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-FormattedTextBox {
   display: inline-block;
-  vertical-align: top;
   line-height: normal;
   background: transparent;
 }
@@ -1268,6 +1269,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-FormattedTextBox.ws-validation-error .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
   color: inherit;
+}
+.controls-FormattedTextBox__field {
+  outline: none;
 }
 .controls-NumberTextBox .controls-TextBox__fieldWrapper {
   margin: 0;
@@ -1746,6 +1750,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-EditAtPlace.ws-disabled .controls-EditAtPlace__fieldWrapper .controls-EditAtPlace__textField {
   cursor: text;
 }
+.controls-EditAtPlace.controls-EditAtPlace__ellipsis .controls-EditAtPlace__fieldWrapper {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .controls-EditAtPlace.controls-EditAtPlace__multiline {
   display: inline;
   text-indent: 0;
@@ -1857,8 +1866,8 @@ input[type="reset"]::-moz-focus-inner {
   overflow: hidden;
   position: relative;
 }
-.controls-ListView .controls-ListView__item:hover .controls-ListView__itemCheckBox,
-.controls-DataGrid .controls-ListView__item:hover .controls-ListView__itemCheckBox {
+.controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox,
+.controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox {
   background: url('img/CheckBox-sprite.png') 0 -16px;
 }
 .controls-ListView .controls-ListView__itemCheckBox {
@@ -2236,6 +2245,16 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ItemActions__activeItem {
   background-color: #00c795 !important;
+}
+.controls-EditInPlaceController {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  height: 0;
+  overflow: visible;
+}
+.controls-ListView.controls-ListView__multiselect .controls-EditInPlaceController {
+  left: 42px;
 }
 .controls-ComboBox__picker.controls-Picker__owner__hover {
   border-top-color: #00c795;
