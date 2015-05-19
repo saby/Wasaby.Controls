@@ -117,7 +117,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
             this._byId[this.getRecordKeyByIndex(i)] = new Record({
                strategy: this.getStrategy(),
                raw: data,
-               keyField: this._keyField
+               keyField: this._keyField,
+               onChangeHandler: this._onRecordChange.bind(this)
             });
          }
 
@@ -303,7 +304,12 @@ define('js!SBIS3.CONTROLS.DataSet', [
          if (key === undefined) {
             record.set(this._keyField, key = record._cid);
          }
+         record._onChangeHandler = this._onRecordChange.bind(this);
          return record;
+      },
+
+      _onRecordChange: function(record) {
+         this._notify('onRecordChange', record);
       },
 
       _addReference: function (record, options) {

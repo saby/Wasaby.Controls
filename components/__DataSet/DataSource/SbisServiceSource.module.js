@@ -108,8 +108,18 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       create: function () {
          var self = this,
             def = new $ws.proto.Deferred();
+         //todo Выпилить адовый костыль для создания черновика, как только решится вопрос на стороне БЛ
+         //(задание https://inside.tensor.ru/opendoc.html?guid=a886eecb-c2a0-4628-8919-a395be42dbbb)
          self._BL.call(self._options.crateMethodName, {
-            'Фильтр': null,
+            'Фильтр': {
+               d: [
+                  true
+               ],
+               s: [{
+                  n: 'ВызовИзБраузера',
+                  t: 'Логическое'
+               }]
+            },
             'ИмяМетода': null
          }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             var record = new Record({

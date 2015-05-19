@@ -234,10 +234,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
          init: function () {
             ListViewDS.superclass.init.call(this);
-            var self = this;
             // запросим данные из источника
             this.reload();
          },
+
+         _checkHeadContainer: function(target) {
+            return null;
+         },
+
          /**
           * Обрабатывает перемещения мышки на элемент представления
           * @param e
@@ -252,7 +256,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                return;
             }
             //Если увели мышку с контейнера с элементами(например на шапку), нужно об этом посигналить
-            if($target.closest('.controls-DataGrid__thead').length) {
+            if (this._checkHeadContainer($target)) {
                this._mouseLeaveHandler();
                return;
             }
@@ -260,9 +264,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (target.length) {
                targetKey = target.data('id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
+                  this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
                   this._hoveredItem = {
                      key: targetKey,
-                     container: target,
+                     container: target.addClass('controls-ListView__hoveredItem'),
                      position: {
                         top: target[0].offsetTop,
                         left: target[0].offsetLeft
@@ -282,6 +287,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @private
           */
          _mouseLeaveHandler: function() {
+            this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
             this._hoveredItem = {
                container: null,
                key: null,
@@ -295,17 +301,17 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * Обработчик на смену выделенного элемента представления
           * @private
           */
-         _onChangeHoveredItem: function(hoveredItem) {
-           if(this._options.itemsActions.length) {
-              if(hoveredItem.container) {
-                 this._showItemActions();
-              } else {
-                 //Если открыто меню опций, то скрывать опции не надо
-                 if(this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
-                    this._itemActionsGroup.hideItemActions();
-                 }
-              }
-           }
+         _onChangeHoveredItem: function(target) {
+            if(this._options.itemsActions.length) {
+               if (target.container) {
+                  this._showItemActions(target);
+               } else {
+                  //Если открыто меню опций, то скрывать опции не надо
+                  if(this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
+                     this._itemActionsGroup.hideItemActions();
+                  }
+               }
+            }
          },
 
          /**        
