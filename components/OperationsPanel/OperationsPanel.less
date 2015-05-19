@@ -1,5 +1,6 @@
 .controls-operations-panel {
-   height: @controls-OperationsPanel-height;
+   /*TODO придрот (2 important), чтобы перебить высоту ws-area*/
+   height: @controls-OperationsPanel-height !important;
    width: @controls-OperationsPanel-width;
    overflow: visible !important;
 
@@ -33,7 +34,7 @@
 
 .controls__operations-panel__wrapper {
    line-height: @controls-OperationsPanel-line-height;
-   width: @controls-OperationsPanel-width;
+   width: auto;
    white-space: nowrap;
    background-color: @controls-OperationsPanel-bg;
    padding-left: @controls-OperationsPanel-padding-left;
