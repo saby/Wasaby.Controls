@@ -144,6 +144,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this.reload();
          this._dataSource.subscribe('onDataSync', this._setDataSourceCB);
       },
+      /**
+       * Метод получения набора данных
+       */
+      getDataSet: function() {
+         return this._dataSet;
+      },
        /**
         * Метод перезагрузки данных.
         * Можно задать фильтрацию, сортировку.
