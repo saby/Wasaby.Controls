@@ -154,8 +154,11 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * Показывает операции над записью
           */
          showItemActions: function(hoveredItem) {
+            var parent = this.getParent(),
+                view = parent.getViewMode && parent.getViewMode();
+
             this._activeItem = hoveredItem.container;
-            this._container[0].style.top = hoveredItem.position.top + ((hoveredItem.size.height > ITEMS_ACTIONS_HEIGHT) ? hoveredItem.size.height - ITEMS_ACTIONS_HEIGHT : 0 ) + 'px';
+            this._container[0].style.top = hoveredItem.position.top + ((view !== 'tile' && view !== 'list') ? hoveredItem.size.height > ITEMS_ACTIONS_HEIGHT ? hoveredItem.size.height - ITEMS_ACTIONS_HEIGHT : 0 : 0) + 'px';
             this._container[0].style.left = hoveredItem.position.left + hoveredItem.size.width - this._container.width()  + 'px';
             this._container[0].style.display = 'block';
          },
