@@ -139,7 +139,7 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
             this._initEditInPlace();
             this._editInPlace.updateDisplay(hoveredItem);
          }
-         DataGrid.superclass.init.apply(this, arguments);
+         DataGrid.superclass._onChangeHoveredItem.apply(this, arguments);
       },
       
       /**
