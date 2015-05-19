@@ -188,7 +188,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          _itemActivatedHandler: function(item) {
             this.hideItemActions();
-            this._itemActionsButtons[item]['handler'].call(this.getParent(), this._activeItem);
+            this._itemActionsButtons[item]['handler'].apply(this.getParent(), [this._activeItem, this._activeItem.data('id')]);
          },
 
          _getItemTemplate : function(item) {
