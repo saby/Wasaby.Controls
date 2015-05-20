@@ -2132,15 +2132,23 @@ input[type="reset"]::-moz-focus-inner {
 .controls__filterButton .controls__filterButton__filterLine.controls__filterButton__filterLine-defaultText .controls__filterButton__filterLine-cross {
   display: none;
 }
-.controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-items {
+.controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-hoverContainer:hover a {
+  color: #ff7033;
+  text-decoration: underline;
+}
+.controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-hoverContainer:hover .controls__filterButton__filterLine-arrow {
+  color: #ff7033;
+}
+.controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-hoverContainer .controls__filterButton__filterLine-items {
   overflow: hidden;
   text-overflow: ellipsis;
+  vertical-align: middle;
 }
-.controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-items :before {
+.controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-hoverContainer .controls__filterButton__filterLine-items :before {
   content: ', ';
 }
-.controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-items :first-child:before {
-  content: '';
+.controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-hoverContainer .controls__filterButton__filterLine-items :first-child:before {
+  content: ' ';
 }
 .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-arrow,
 .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-cross {
@@ -2149,6 +2157,12 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   width: 16px;
   height: 16px;
+}
+.controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-cross {
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAJiS0dEAP+Hj8y/AAAACXBIWXMAAABIAAAASABGyWs+AAAAnElEQVQoz9WQMQ6CQBBFX2GI4QDcxp7CkI2lcxRrL0HPHRAbAiLZI1gRytWCwsbKsSDbrJQ2/mr+z0zy38A/SR4gawCJZxfoamXQCEAjGS/2a8FlTSsWQGzTusznKz8kZfJ6Hrjx3t83R+rFHmryKZ/ULJeMQWzVl73Y2YXXkQzVSY3uyrOvG2DWndsCOFN3C5haaOoxNdXidx/+AAnTQEYc86HTAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE1LTA0LTEwVDEwOjM2OjQxKzAzOjAwZkUzPgAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNS0wNC0xMFQxMDozNjo0MSswMzowMBcYi4IAAAAASUVORK5CYII=');
+}
+.controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-cross:hover {
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAGBQTFRFAAAA/y0U/y0U/y0U/7SX/y0U/////y0U/7OV/+jj/7GU/y0U/////6GB/y0U/y0U/6KD/////3VC/3RC/6eH/6WE/6qN/////6iK/7CT/+fi/+jj/6+R////////////Eakp0AAAAB90Uk5TAOsICsnfBuHJTsPJRsHZ18FQ7+/Hx7lSu8VMUMWlSLIHjyYAAAABYktHRAZhZrh9AAAACXBIWXMAAABIAAAASABGyWs+AAAAWUlEQVQY07VOtxKAIBQLIk8pFuwN/v8zxUFgdDFLLrlLAf4CQwHwQC9KQQBVdTSk0oBWMhpkmrbrDWUtdhhtJjn0NOtAMSIWu24iRdh+AOeVZp1/Zr379voG8/sCrMl+GUkAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTUtMDQtMTBUMTA6MzY6NDErMDM6MDBmRTM+AAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE1LTA0LTEwVDEwOjM2OjQxKzAzOjAwFxiLggAAAABJRU5ErkJggg==');
 }
 .controls__filterButton.controls__filterButton-left .controls__filterButton-button {
   float: left;
