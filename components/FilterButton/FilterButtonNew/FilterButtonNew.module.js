@@ -155,6 +155,9 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
             horizontalAlign: {
                side: this._options.filterAlign
             },
+            verticalAlign: {
+               side: 'top'
+            },
             closeButton: true,
             closeByExternalClick: true,
             template: dotTplForPicker.call(this, {template: tpl})
