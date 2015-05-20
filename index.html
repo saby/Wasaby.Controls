@@ -112,6 +112,9 @@
                <li>
                   <div id="EditAtPlace"></div>
                </li>
+               <li>
+                  <div id="MultiView"></div>
+               </li>
             </ul>
          </td>
          <td>
@@ -304,6 +307,13 @@
                element: "EditAtPlace",
                caption: 'Edit At Place',
                href: '/pages/editAtPlace.html'
+            })
+         });
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "MultiView",
+               caption: 'MultiView',
+               href: '/pages/MultiView.html'
             })
          });
       })

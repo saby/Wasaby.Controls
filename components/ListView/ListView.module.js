@@ -92,6 +92,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          init : function() {
+            ListView.superclass.init.call(this);
             this._drawItems();
          },
 

@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
     * Контрол, отображающий кнопку в виде ссылки. Используется только в онлайне.
     * Сторонние пользователи скорее предпочтут использовать просто <a></a>
     * @class SBIS3.CONTROLS.Link
-	* @demo SBIS3.Demo.Control.MyLink
+	* @demo SBIS3.CONTROLS.Demo.MyLink
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
     * @initial

@@ -1,16 +1,16 @@
-define('js!SBIS3.Demo.Control.MyIconButton',
+define('js!SBIS3.CONTROLS.Demo.MyIconButton',
     ['js!SBIS3.CORE.CompoundControl',
-     'html!SBIS3.Demo.Control.MyIconButton',
-     'css!SBIS3.Demo.Control.MyIconButton',
+     'html!SBIS3.CONTROLS.Demo.MyIconButton',
+     'css!SBIS3.CONTROLS.Demo.MyIconButton',
      'js!SBIS3.CONTROLS.IconButton'],
     function(CompoundControl, dotTplFn) {
    /**
-    * SBIS3.Demo.Control.MyIconButton
-    * @class SBIS3.Demo.Control.MyIconButton
+    * SBIS3.CONTROLS.Demo.MyIconButton
+    * @class SBIS3.CONTROLS.Demo.MyIconButton
     * @extends $ws.proto.CompoundControl
     * @control
     */
-   var moduleClass = CompoundControl.extend(/** @lends SBIS3.Demo.Control.MyIconButton.prototype */{
+   var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Demo.MyIconButton.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

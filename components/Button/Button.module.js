@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
     * @class SBIS3.CONTROLS.Button
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
-	* @demo SBIS3.Demo.Control.MyButton
+	* @demo SBIS3.CONTROLS.Demo.MyButton
     * @initial
     * <component data-component='SBIS3.CONTROLS.Button'>
     *    <option name='caption' value='Кнопка'></option>
@@ -35,6 +35,9 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
    var Button = ButtonBase.extend( /** @lends SBIS3.CONTROLS.Button.prototype */ {
       _dotTplFn : dotTplFn,
       $protected: {
+         _keysWeHandle: [
+            $ws._const.key.enter
+         ],
          _options: {
             /**
              * @cfg {Boolean} Кнопка по умолчанию

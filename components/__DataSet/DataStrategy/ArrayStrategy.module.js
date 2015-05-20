@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
        * @param {String} field название поля для получения значения
        * @returns {*}
        */
-      type: function(data, field){
+      type: function (data, field) {
          return 'Текст';
       },
        /**
@@ -157,13 +157,16 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
       },
 
       //TODO пустышка
-      getMetaData: function(data) {
+      getMetaData: function (data) {
          return {
-            more : data.length
+            more: data.length
          };
       },
 
-      getEmptyRawData: function() {
+      getParentKey: function (rawKey) {
+         return rawKey;
+      },
+      getEmptyRawData: function () {
          return [];
       }
 

@@ -1,11 +1,11 @@
-define('js!SBIS3.Demo.Control.MyDatePicker', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.Demo.Control.MyDatePicker', 'css!SBIS3.Demo.Control.MyDatePicker', 'js!SBIS3.CONTROLS.DatePicker'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.CONTROLS.Demo.MyDatePicker', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Demo.MyDatePicker', 'css!SBIS3.CONTROLS.Demo.MyDatePicker', 'js!SBIS3.CONTROLS.DatePicker'], function(CompoundControl, dotTplFn) {
    /**
-    * SBIS3.Demo.Control.MyDatePicker
-    * @class SBIS3.Demo.Control.MyDatePicker
+    * SBIS3.CONTROLS.Demo.MyDatePicker
+    * @class SBIS3.CONTROLS.Demo.MyDatePicker
     * @extends $ws.proto.CompoundControl
     * @control
     */
-   var moduleClass = CompoundControl.extend(/** @lends SBIS3.Demo.Control.MyDatePicker.prototype */{
+   var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Demo.MyDatePicker.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
