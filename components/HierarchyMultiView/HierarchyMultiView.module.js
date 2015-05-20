@@ -39,7 +39,19 @@ define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.HierarchyData
             return  $('.controls-MultiView__foldersContainer',this._container);
          }
          return this._getItemsContainer();
+      },
+      _getItemActionsPosition: function(hoveredItem) {
+         var viewMode = this.getViewMode(),
+             itemActions = this.getItemsActions().getContainer(),
+             height = itemActions.height(),
+             width = itemActions.width();
+
+         return {
+            top: hoveredItem.position.top + ((viewMode !== 'tile' && viewMode !== 'list') ? (hoveredItem.size.height > height ? hoveredItem.size.height - height : 0) : 0),
+            right: this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
+         };
       }
+
    });
 
    return HierarchyMultiView;
