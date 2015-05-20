@@ -23,7 +23,10 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
             keyField: 'field'
          },
          _filterLineItemsContainer: undefined,
-         _filterLine: undefined
+         _filterLine: undefined,
+         //FIXME придрот для демки
+         _linkedView: undefined,
+         _initialFilter: undefined
       },
 
       $constructor: function() {
@@ -43,15 +46,60 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
             e.stopPropagation();
          });
       },
-
+      setLinkedView: function(view) {
+         this._linkedView = view;
+      },
       resetFilter: function() {
-         console.log('resetFilter');
+         this._linkedView.reload(this._initialFilter);
       },
 
       applyFilter: function() {
          console.log('applyFilter');
+         //FIXME придрот для демки
+         var controls = this._picker.getChildControls(),
+             ctrlName,
+             txtValue;
+         for (var i = 0, len = controls.length; i < len; i++) {
+            ctrlName = controls[i].getName();
+            if(ctrlName !== 'applyFilterButton' && ctrlName !== 'clearFilterButton') {
+               if(ctrlName === 'NDS_filter') {
+                  this._linkedView._filter['withoutNDS'] = controls[i].getText() === 'Без НДС';
+               }
+               if(ctrlName === 'Using_filter') {
+                  txtValue = controls[i].getText();
+                  if(txtValue === 'Неиспользуемые') {
+                     this._linkedView._filter['showDeleted'] = true;
+                     this._linkedView._filter['ShowOnlyDeleted'] = true;
+                  }
+                  if(txtValue === 'Испльзуемые') {
+                     this._linkedView._filter['showDeleted'] = false;
+                     this._linkedView._filter['ShowOnlyDeleted'] = false;
+                  }
+                  if(txtValue === 'Все (используемые и нет)') {
+                     this._linkedView._filter['showDeleted'] = true;
+                     this._linkedView._filter['ShowOnlyDeleted'] = false;
+                  }
+               }
+               if(ctrlName === 'Selling_filter') {
+                  txtValue = controls[i].getText();
+                  if(txtValue === 'Все (для продажи и нет)') {
+                     this._linkedView._filter['onlySelling'] = false;
+                     this._linkedView._filter['onlyNotSelling'] = false;
+                  }
+                  if(txtValue === 'Для продажи') {
+                     this._linkedView._filter['onlySelling'] = true;
+                     this._linkedView._filter['onlyNotSelling'] = false;
+                  }
+                  if(txtValue === 'Не для продажи') {
+                     this._linkedView._filter['onlySelling'] = false;
+                     this._linkedView._filter['onlyNotSelling'] = true;
+                  }
+               }
+            }
+         }
          this.hidePicker();
          this.reload();
+         this._linkedView.reload();
       },
 
       _setPickerContent: function() {
@@ -89,6 +137,9 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
       _clearItems: function() {
          FilterButtonNew.superclass._clearItems.apply(this, arguments);
          this._filterLineItemsContainer.empty();
+      },
+      _setInitialFilter: function() {
+         this._initialFilter  = this._linkedView._filter ;
       },
 
       _setPickerConfig: function () {
