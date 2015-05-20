@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
    var DataGrid = ListView.extend(/** @lends SBIS3.CONTROLS.DataGrid.prototype*/ {
       _dotTplFn : dotTplFn,
       $protected: {
+         _rowTpl : rowTpl,
          _rowData : [],
          _options: {
             /**
