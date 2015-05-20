@@ -91,6 +91,12 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
       },
 
       _setPickerConfig: function () {
+         var tpl = '';
+         for(var i in this._options.items) {
+            if(this._options.items.hasOwnProperty(i) && this._options.items[i].editor) {
+               tpl += this._options.items[i].editor;
+            }
+         }
          return {
             corner: this._options.filterAlign === 'right' ? 'tr' : 'tl',
             target: this,
@@ -99,7 +105,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
             },
             closeButton: true,
             closeByExternalClick: true,
-            template: dotTplForPicker.call(this, {template: this._options.template})
+            template: dotTplForPicker.call(this, {template: tpl})
          };
       }
    });
