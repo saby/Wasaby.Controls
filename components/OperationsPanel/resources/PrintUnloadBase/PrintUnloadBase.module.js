@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       },
       _applyOperation : function(dataSet){
          //Скроем панель с массовыми операциями
-         this.getTopParent().hidePicker();
+         this.getParent().hidePicker();
          this.applyOperation(dataSet);
       },
       /**
