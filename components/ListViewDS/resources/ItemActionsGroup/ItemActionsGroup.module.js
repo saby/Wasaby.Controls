@@ -153,7 +153,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          showItemActions: function(hoveredItem, position) {
             this._activeItem = hoveredItem.container;
             this._container[0].style.top = position.top + 'px';
-            this._container[0].style.right = position.left + 'px';
+            this._container[0].style.right = position.right + 'px';
             this._container[0].style.display = 'block';
          },
          /**
