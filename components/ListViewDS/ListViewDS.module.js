@@ -9,9 +9,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
       'js!SBIS3.CONTROLS.MultiSelectable',
       'js!SBIS3.CONTROLS.ItemActionsGroup',
       'html!SBIS3.CONTROLS.ListViewDS',
-      'js!SBIS3.CONTROLS.CommonHandlers'
+      'js!SBIS3.CONTROLS.CommonHandlers',
+      'js!SBIS3.CORE.Paging'
    ],
-   function (CompoundControl, DSMixin, MultiSelectable, ItemActionsGroup, dotTplFn, CommonHandlers) {
+   function (CompoundControl, DSMixin, MultiSelectable, ItemActionsGroup, dotTplFn, CommonHandlers, Paging) {
 
       'use strict';
 
@@ -205,7 +206,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _allowInfiniteScroll: true,
             _scrollIndicatorHeight: 32,
             _isLoadBeforeScrollAppears : true,
-            _infiniteScrollContainer: null
+            _infiniteScrollContainer: null,
+            _paging : undefined,
+            _pageChangeDeferred : undefined
          },
 
          $constructor: function () {
@@ -553,6 +556,9 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
             if (this.isInfiniteScroll()) {
                this._loadBeforeScrollAppears();
             }
+            if (this._options.showPaging) {
+               this._createPaging();
+            }
             this._drawSelectedItems(this._options.selectedKeys);
          },
          destroy: function() {
@@ -699,6 +705,106 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
           */
          getHoveredItem: function() {
            return this._hoveredItem;
+         },
+         _dataLoadedCallback: function(){
+            if (this._options.showPaging) {
+               this._updateOffset();
+            }
+         },
+         //------------------------Paging---------------------
+         _createPaging: function(){
+            if (!this._paging) {
+               var more = this._dataSet.getMetaData().more,
+                     hasNextPage = this._hasNextPage(more),
+                     self = this;
+               this._paging = new Paging({
+                  recordsPerPage: this._dataSet._options.pageSize,
+                  currentPage:  1,
+                  recordsCount: more,
+                  pagesLeftRight: 3,
+                  onlyLeftSide: typeof more === 'boolean', // (this._options.display.usePaging === 'parts')
+                  rightArrow: hasNextPage,
+                  element: this.getContainer().find('.controls-ListView__paging-container'),
+                  allowChangeEnable: false, //Запрещаем менять состояние, т.к. он нужен активный всегда
+                  handlers:{
+                     'onPageChange': function(event, pageNum, deferred) {
+                        //self._setPageSave(pageNum);
+                        self.setPage(pageNum - 1);
+                        self._pageChangeDeferred = deferred;
+                     }
+                  }
+               });
+            }
+            this._processPaging();
+         },
+         /**
+          * Метод обработки интеграции с пейджингом
+          */
+         _processPaging : function(){
+            var nextPage = this.isInfiniteScroll() ? this._hasScrollMore : this._hasNextPage(this._dataSet.getMetaData().more);
+            if (this._paging) {
+               var pageNum = this._paging.getPage();
+               if (this._pageChangeDeferred) { // только когда меняли страницу
+                  this._pageChangeDeferred.callback([this.getPage() + 1, nextPage, nextPage]);//смотреть в DataSet мб ?
+                  this._pageChangeDeferred = undefined;
+               }
+               //Если на странице больше нет записей - то устанавливаем предыдущую (если это возможно)
+               if (this._dataSet.getCount() === 0 && pageNum > 1) {
+                  this._paging.setPage(pageNum - 1);
+               }
+               this._paging.update(this.getPage(this.isInfiniteScroll() ? this._infiniteScrollOffset + this._options.pageSize: this._offset) + 1, nextPage, nextPage);
+
+            }
+         },
+         /**
+          * Установить страницу по её номеру.
+          * @remark
+          * Метод установки номера страницы, с которой нужно открыть представление данных.
+          * Работает при использовании постраничной навигации.
+          * @param num Номер страницы.
+          * @example
+          * <pre>
+          *    if(dataGrid.getPage() > 0)
+          *       dataGrid.setPage(0);
+          * </pre>
+          * @see getPage
+          * @see paging
+          */
+         setPage: function(pageNumber, noLoad){
+            pageNumber = parseInt(pageNumber, 10);
+            var offset = this._offset;
+            if(this._options.showPaging){
+               this._offset = this._options.pageSize * pageNumber;
+               if (!noLoad && this._offset !== offset) {
+                  this.reload();
+               }
+            }
+         },
+
+         /**
+          * Получить номер текущей страницы.
+          * @remark
+          * Метод получения номера текущей страницы представления данных.
+          * Работает при использовании постраничной навигации.
+          * @example
+          * <pre>
+          *    if(dataGrid.getPage() > 0)
+          *       dataGrid.setPage(0);
+          * </pre>
+          * @see paging
+          * @see setPage
+          * @param {Number} [offset] - если передать, то номер страницы рассчитается от него
+          */
+         getPage: function(offset){
+            var offset = offset || this._offset;
+            return Math.ceil( offset / this._options.pageSize);
+         },
+         _updateOffset: function(){
+            var  more = this._dataSet.getMetaData().more,
+                 nextPage = this._hasNextPage(more);
+            if(this.getPage() === -1) {
+               this._offset = more - this._options.pageSize;
+            }
          }
       });
 

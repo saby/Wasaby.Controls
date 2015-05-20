@@ -141,41 +141,6 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
          }
          DataGrid.superclass._onChangeHoveredItem.apply(this, arguments);
       },
-      
-      /**
-       * Установить страницу по её номеру.
-       * @remark
-       * Метод установки номера страницы, с которой нужно открыть представление данных.
-       * Работает при использовании постраничной навигации.
-       * @param num Номер страницы.
-       * @example
-       * <pre>
-       *    if(dataGrid.getPage() > 0)
-       *       dataGrid.setPage(0);
-       * </pre>
-       * @see getPage
-       * @see paging
-       */
-      setPage: function(num){
-
-      },
-
-      /**
-       * Получить номер текущей страницы.
-       * @remark
-       * Метод получения номера текущей страницы представления данных.
-       * Работает при использовании постраничной навигации.
-       * @example
-       * <pre>
-       *    if(dataGrid.getPage() > 0)
-       *       dataGrid.setPage(0);
-       * </pre>
-       * @see paging
-       * @see setPage
-       */
-      getPage: function(){
-
-      },
 
       _checkHeadContainer: function(target) {
          var headContainer = this._container.find('.controls-DataGrid__thead');

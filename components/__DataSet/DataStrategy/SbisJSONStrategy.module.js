@@ -258,7 +258,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
                'd': [
                   numPage,
                   limit,
-                  true
+                  offset >= 0 //Если offset отричательный, то грузится последняя страница
                ],
                's': [
                   {'n': 'Страница', 't': 'Число целое'},
