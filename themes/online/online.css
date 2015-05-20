@@ -2107,6 +2107,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls__filterButton {
   height: 40px;
+  display: inline-block;
 }
 .controls__filterButton > * {
   display: inline-block;
@@ -2132,12 +2133,17 @@ input[type="reset"]::-moz-focus-inner {
 .controls__filterButton .controls__filterButton__filterLine.controls__filterButton__filterLine-defaultText .controls__filterButton__filterLine-cross {
   display: none;
 }
-.controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-hoverContainer:hover a {
+.controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-hoverContainer {
+  cursor: pointer;
+  color: #05b;
+}
+.controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-hoverContainer:hover a,
+.controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-hoverContainer:hover span {
   color: #ff7033;
   text-decoration: underline;
 }
 .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-hoverContainer:hover .controls__filterButton__filterLine-arrow {
-  color: #ff7033;
+  color: #ff7033 !important;
 }
 .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-hoverContainer .controls__filterButton__filterLine-items {
   overflow: hidden;

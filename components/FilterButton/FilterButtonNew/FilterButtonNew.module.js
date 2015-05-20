@@ -66,7 +66,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
 
       _drawItemsCallback: function() {
          var isFilterLineEmpty = !this._container.find('.controls-ListView__item').length;
-         if(isFilterLineEmpty) {
+         if (isFilterLineEmpty) {
             this._filterLineItemsContainer.text(this._options.linkText)
          }
          this._filterLine.toggleClass('controls__filterButton__filterLine-defaultText', isFilterLineEmpty);
