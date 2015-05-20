@@ -27,7 +27,8 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          //FIXME придрот для демки
          _linkedView: undefined,
          _initialFilter: undefined,
-         _currentFilter: {}
+         _initialControlsValues: {},
+         _currentControlsValues: {}
       },
 
       $constructor: function() {
@@ -39,34 +40,33 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
 
       },
       _initEvents: function() {
-         var self = this;
-         this._container.mouseup(this.showPicker.bind(this));
-         this._container.find('.controls__filterButton__filterLine-cross').mouseup(function(e) {
-            self.resetFilter();
-            e.preventDefault();
-            e.stopPropagation();
-         });
+         this._container.find('.controls__filterButton__filterLine-hoverContainer, .controls__filterButton-button').click(this.showPicker.bind(this));
+         this._container.find('.controls__filterButton__filterLine-cross').click(this.resetFilter.bind(this));
       },
       setLinkedView: function(view) {
          this._linkedView = view;
+         this._setInitialFilter();
       },
       resetFilter: function() {
-         this._linkedView._filter = this._initialFilter;
-         this._linkedView.reload();
+         this._setControlsValues(this._initialControlsValues);
+         this._currentControlsValues = $ws.core.clone(this._initialControlsValues);
+         this.reload();
+         this._linkedView.reload(this._initialFilter);
       },
       showPicker: function() {
-
-         FilterButtonNew.superclass.showPicker.apply(this, argument);
+         this._setControlsValues(this._currentControlsValues);
+         FilterButtonNew.superclass.showPicker.apply(this, arguments);
       },
       applyFilter: function() {
          console.log('applyFilter');
          //FIXME придрот для демки
          var controls = this._picker.getChildControls(),
-             ctrlName,
-             txtValue;
+            ctrlName,
+            txtValue;
          for (var i = 0, len = controls.length; i < len; i++) {
             ctrlName = controls[i].getName();
             if(ctrlName !== 'applyFilterButton' && ctrlName !== 'clearFilterButton') {
+               this._currentControlsValues[ctrlName] = this._getControlValue(controls[i]);
                if(ctrlName === 'NDS_filter') {
                   this._linkedView._filter['withoutNDS'] = controls[i].getText() === 'Без НДС';
                }
@@ -102,13 +102,14 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
                }
             }
          }
-         this._currentFilter = this._linkedView._filter;
          this.hidePicker();
          this.reload();
          this._linkedView.reload();
       },
 
       _setPickerContent: function() {
+         this._currentControlsValues = this._getControlsValues();
+         this._initialControlsValues = $ws.core.clone(this._currentControlsValues);
          this._picker.getContainer().addClass('controls__filterButton-' + this._options.filterAlign);
          this._picker.getChildControlByName('clearFilterButton').subscribe('onActivated', this.resetFilter.bind(this));
          this._picker.getChildControlByName('applyFilterButton').subscribe('onActivated', this.applyFilter.bind(this));
@@ -129,8 +130,8 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
             textValue = control && control.getText();
          if (textValue) {
             return '<component data-component="SBIS3.CONTROLS.Link">' +
-                     '<option name="caption">' + textValue + '</option>' +
-                   '</component>';
+               '<option name="caption">' + textValue + '</option>' +
+               '</component>';
          } else {
             return '';
          }
@@ -168,6 +169,34 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
             closeByExternalClick: true,
             template: dotTplForPicker.call(this, {template: tpl})
          };
+      },
+      _setControlValue: function(control, value) {
+         if($ws.helpers.instanceOfModule(control, 'SBIS3.CONTROLS.ComboBox')) {
+            control.setSelectedIndex(value || 0);
+         }
+      },
+      _getControlValue: function(control) {
+         var result;
+         if($ws.helpers.instanceOfModule(control, 'SBIS3.CONTROLS.ComboBox')) {
+            result = control.getSelectedIndex();
+         }
+         return result;
+      },
+      _setControlsValues: function(values) {
+         var self = this,
+            control;
+         $.each(values, function(name, value) {
+            control = self._picker.getChildControlByName(name);
+            control && self._setControlValue(control, value);
+         });
+      },
+      _getControlsValues: function() {
+         var controls = this._picker.getChildControls(),
+            result = {};
+         for (var i = 0, len = controls.length; i < len; i++) {
+            result[controls[i].getName()] = this._getControlValue(controls[i]);
+         }
+         return result;
       }
    });
 
