@@ -2085,7 +2085,9 @@ input[type="reset"]::-moz-focus-inner {
   background: white;
 }
 .controls-operations-panel {
-  height: 30px;
+  /*TODO придрот пока, чтобы перебить высоту ws-area*/
+  height: 30px !important;
+  width: 30px;
   overflow: visible !important;
 }
 .controls-operations-panel .controls__operations-panel__closed {

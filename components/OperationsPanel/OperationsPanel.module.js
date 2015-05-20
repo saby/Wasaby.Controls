@@ -184,7 +184,13 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       _setPickerConfig: function () {
          return {
             corner: 'tl',
-            target: this
+            target: this,
+            horizontalAlign: {
+               side: 'left'
+            },
+            verticalAlign: {
+               side: 'top'
+            }
          };
       },
       _getTargetContainer: function(item) {
