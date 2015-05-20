@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
         * @see getLinkedView
         */
       setLinkedView: function(linkedView) {
-         if ($ws.helpers.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
+         if (linkedView && $ws.helpers.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
             this._reassignView(linkedView);
             this.togglePicker();
             this._setMode();
@@ -184,7 +184,13 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       _setPickerConfig: function () {
          return {
             corner: 'tl',
-            target: this
+            target: this,
+            horizontalAlign: {
+               side: 'left'
+            },
+            verticalAlign: {
+               side: 'top'
+            }
          };
       },
       _getTargetContainer: function(item) {
