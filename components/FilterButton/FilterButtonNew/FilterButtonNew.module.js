@@ -18,14 +18,8 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          _options: {
             linkText: 'Нужно отобрать?',
             filterAlign: 'right',
-            template: '',
             pickerClassName: 'controls__filterButton__picker',
-            items: [
-               {field: 'field1', textValue: 'filter1'},
-               {field: 'field2', textValue: 'filter2'},
-               {field: 'field3', textValue: 'filter3'},
-               {field: 'field4', textValue: 'filter4'}
-            ],
+            items: [],
             keyField: 'field'
          },
          _filterLineItemsContainer: undefined,
@@ -44,7 +38,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          var self = this;
          this._container.mouseup(this.showPicker.bind(this));
          this._container.find('.controls__filterButton__filterLine-cross').mouseup(function(e) {
-            self.setItems([]);
+            self.resetFilter();
             e.preventDefault();
             e.stopPropagation();
          });
@@ -56,6 +50,8 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
 
       applyFilter: function() {
          console.log('applyFilter');
+         this.hidePicker();
+         this.reload();
       },
 
       _setPickerContent: function() {
@@ -73,11 +69,16 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
       },
 
       _getItemTemplate: function(item) {
-         var textValue = item.get('textValue');
+         var
+            filterName = item.get('filter'),
+            control = this._picker && this._picker.getChildControlByName(filterName),
+            textValue = control && control.getText();
          if (textValue) {
             return '<component data-component="SBIS3.CONTROLS.Link">' +
                      '<option name="caption">' + textValue + '</option>' +
                    '</component>';
+         } else {
+            return '';
          }
       },
 
