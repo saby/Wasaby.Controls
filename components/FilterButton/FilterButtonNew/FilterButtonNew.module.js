@@ -26,7 +26,8 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          _filterLine: undefined,
          //FIXME придрот для демки
          _linkedView: undefined,
-         _initialFilter: undefined
+         _initialFilter: undefined,
+         _currentFilter: {}
       },
 
       $constructor: function() {
@@ -50,9 +51,13 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          this._linkedView = view;
       },
       resetFilter: function() {
-         this._linkedView.reload(this._initialFilter);
+         this._linkedView._filter = this._initialFilter;
+         this._linkedView.reload();
       },
+      showPicker: function() {
 
+         FilterButtonNew.superclass.showPicker.apply(this, argument);
+      },
       applyFilter: function() {
          console.log('applyFilter');
          //FIXME придрот для демки
@@ -97,6 +102,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
                }
             }
          }
+         this._currentFilter = this._linkedView._filter;
          this.hidePicker();
          this.reload();
          this._linkedView.reload();
@@ -139,7 +145,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          this._filterLineItemsContainer.empty();
       },
       _setInitialFilter: function() {
-         this._initialFilter  = this._linkedView._filter ;
+         this._initialFilter = this._linkedView._filter;
       },
 
       _setPickerConfig: function () {
