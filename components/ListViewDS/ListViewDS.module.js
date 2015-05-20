@@ -615,18 +615,20 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
                this._addLoadingIndicator();
                this._loader = this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset  + this._limit, this._limit).addCallback(function (dataSet) {
                   self._loader = null;//_cancelLoading?
-                  //Если данные пришли, нарисуем
-                  if (dataSet.getCount()) {
-                     records = dataSet._getRecords();
-                     self._dataSet.merge(dataSet);
-                     self._drawItems(records);
-                  }
+                  //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                   if (self._hasNextPage(dataSet.getMetaData().more)){
                      self._infiniteScrollOffset += self._limit;
                   } else {
                      self._hasScrollMore = false;
                      self._removeLoadingIndicator();
                   }
+                  //Если данные пришли, нарисуем
+                  if (dataSet.getCount()) {
+                     records = dataSet._getRecords();
+                     self._dataSet.merge(dataSet);
+                     self._drawItems(records);
+                  }
+
                }).addErrback(function(error){
                   //Здесь при .cancel приходит ошибка вида DeferredCanceledError
                   return error;
@@ -718,7 +720,7 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
                      hasNextPage = this._hasNextPage(more),
                      self = this;
                this._paging = new Paging({
-                  recordsPerPage: this._dataSet._options.pageSize,
+                  recordsPerPage: this._dataSet._options.pageSize || more,
                   currentPage:  1,
                   recordsCount: more,
                   pagesLeftRight: 3,
