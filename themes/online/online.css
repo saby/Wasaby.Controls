@@ -2101,8 +2101,20 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MultiView.controls-MultiView-tile .controls-MultiView__itemsContainer {
   padding: 4px 0 0 1px;
 }
-.controls-MultiView.controls-MultiView-tile .controls-ItemActions {
+.controls-MultiView.controls-MultiView-tile .controls-ItemActions,
+.controls-MultiView.controls-MultiView-list .controls-ItemActions {
   width: 20px;
+  height: auto;
+  margin: 8px 3px 0 0;
+}
+.controls-MultiView.controls-MultiView-tile .controls-ItemActions > *,
+.controls-MultiView.controls-MultiView-list .controls-ItemActions > * {
+  margin: 0 6px 4px 0;
+}
+.controls-MultiView.controls-MultiView-tile .controls-ItemActions .controls-ItemActions__menu-button,
+.controls-MultiView.controls-MultiView-list .controls-ItemActions .controls-ItemActions__menu-button {
+  float: none;
+  margin-left: -1px;
 }
 .controls-MultiView .controls-ListView__itemCheckBox {
   position: absolute;

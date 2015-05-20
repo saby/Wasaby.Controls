@@ -15,6 +15,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
       'use strict';
 
+      var
+         ITEMS_ACTIONS_HEIGHT = 20,
+         ITEMS_ACTIONS_WIDTH  = 20;
+
       /**
        * Контрол, отображающий внутри себя набор однотипных сущностей.
        * Умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
@@ -435,9 +439,14 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
             if(this._itemActionsGroup.isItemActionsMenuVisible()) {
                return;
             }
-
             this._itemActionsGroup.applyItemActions();
-            this._itemActionsGroup.showItemActions(this._hoveredItem);
+            this._itemActionsGroup.showItemActions(this._hoveredItem, this._getItemActionsPosition(this._hoveredItem));
+         },
+         _getItemActionsPosition: function(item) {
+            return {
+               top: item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
+               right: this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
+            };
          },
          /**
           * Создаёт операции над записью
