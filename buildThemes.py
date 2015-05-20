@@ -10,7 +10,7 @@ def process_file(name):
    util = "lessc"
    if platform.system() == "Windows":
       util += ".cmd"
-   subprocess.call([os.path.join("build","duncansmart-less","lessc.cmd"), name, css_name])
+   subprocess.call([os.path.join("build","duncansmart-less",util), name, css_name])
 
 def main(): 
    for root, dirs, files in os.walk(r'themes'):
