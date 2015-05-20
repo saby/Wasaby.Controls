@@ -13,8 +13,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
    function(ButtonGroupBaseDS, IconButton, Link, ContextMenu, dotTplFn) {
 
       'use strict';
-      var
-         ITEMS_ACTIONS_HEIGHT = 20;
 
       var ItemActionsGroup = ButtonGroupBaseDS.extend( /** @lends SBIS3.CONTROLS.ItemActionsGroup.prototype */ {
          $protected: {
@@ -152,9 +150,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          /**
           * Показывает операции над записью
           */
-         showItemActions: function(hoveredItem) {
+         showItemActions: function(hoveredItem, position) {
             this._activeItem = hoveredItem.container;
-            this._container[0].style.top = hoveredItem.position.top + ((hoveredItem.size.height > ITEMS_ACTIONS_HEIGHT) ? hoveredItem.size.height - ITEMS_ACTIONS_HEIGHT : 0 ) + 'px';
+            this._container[0].style.top = position.top + 'px';
+            this._container[0].style.right = position.left + 'px';
             this._container[0].style.display = 'block';
          },
          /**
@@ -188,7 +187,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          _itemActivatedHandler: function(item) {
             this.hideItemActions();
-            this._itemActionsButtons[item]['handler'].call(this.getParent(), this._activeItem);
+            this._itemActionsButtons[item]['handler'].apply(this.getParent(), [this._activeItem, this._activeItem.data('id')]);
          },
 
          _getItemTemplate : function(item) {

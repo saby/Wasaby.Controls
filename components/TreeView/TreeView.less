@@ -7,53 +7,7 @@
     overflow: hidden;
     position: relative;
 
-    .controls-TreeView__expand {
-      visibility: hidden;
-      float: left;
-      .box-sizing(border-box);
-      cursor: @tree-view-expand-cursor;
-      width: @tree-view-expand-width;
-      height: @tree-view-expand-height;
-      margin: @tree-view-expand-margin;
-      border-width: @tree-view-expand-border-width;
-      border-style: @tree-view-expand-border-style;
-      border-color: @tree-view-expand-border-color;
-      background: @tree-view-expand-bg;
 
-      &:hover {
-        border-width: @tree-view-expand-hover-border-width;
-        border-style: @tree-view-expand-hover-border-style;
-        border-color: @tree-view-expand-hover-border-color;
-        background: @tree-view-expand-hover-bg;
-      }
-
-      &.controls-TreeView__expand__open {
-        width: @tree-view-expand-open-width;
-        height: @tree-view-expand-open-height;
-        margin: @tree-view-expand-open-margin;
-        border-width: @tree-view-expand-open-border-width;
-        border-style: @tree-view-expand-open-border-style;
-        border-color: @tree-view-expand-open-border-color;
-        background: @tree-view-expand-open-bg;
-
-        &:hover {
-          border-width: @tree-view-expand-open-hover-border-width;
-          border-style: @tree-view-expand-open-hover-border-style;
-          border-color: @tree-view-expand-open-hover-border-color;
-          background: @tree-view-expand-open-hover-bg;
-        }
-      }
-
-      & + .controls-TreeView__itemContent {
-        margin: @tree-view-item-content-margin;
-      }
-    }
-
-    &.controls-TreeView__hasChild {
-      & > .controls-TreeView__expand {
-        visibility: visible;
-      }
-    }
   }
 
   .controls-TreeView__childContainer {
@@ -61,4 +15,48 @@
     list-style: none;
     padding: @tree-view-child-container-padding;
   }
+}
+
+.controls-TreeView__expand {
+   float: left;
+   .box-sizing(border-box);
+   cursor: @tree-view-expand-cursor;
+   width: @tree-view-expand-width;
+   height: @tree-view-expand-height;
+   margin: @tree-view-expand-margin;
+   border-width: @tree-view-expand-border-width;
+   border-style: @tree-view-expand-border-style;
+   border-color: @tree-view-expand-border-color;
+   background: @tree-view-expand-bg;
+
+   &:hover {
+      border-width: @tree-view-expand-hover-border-width;
+      border-style: @tree-view-expand-hover-border-style;
+      border-color: @tree-view-expand-hover-border-color;
+      background: @tree-view-expand-hover-bg;
+   }
+
+   &.controls-TreeView__expand__open {
+      width: @tree-view-expand-open-width;
+      height: @tree-view-expand-open-height;
+      margin: @tree-view-expand-open-margin;
+      border-width: @tree-view-expand-open-border-width;
+      border-style: @tree-view-expand-open-border-style;
+      border-color: @tree-view-expand-open-border-color;
+      background: @tree-view-expand-open-bg;
+
+      &:hover {
+         border-width: @tree-view-expand-open-hover-border-width;
+         border-style: @tree-view-expand-open-hover-border-style;
+         border-color: @tree-view-expand-open-hover-border-color;
+         background: @tree-view-expand-open-hover-bg;
+      }
+   }
+
+   & + .controls-TreeView__itemContent {
+      margin: @tree-view-item-content-margin;
+   }
+}
+.controls-TreeView__expand__leaf, .controls-TreeView__expand__leaf:hover {
+   background: none !important;
 }
