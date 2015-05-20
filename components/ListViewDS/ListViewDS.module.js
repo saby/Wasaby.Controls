@@ -445,7 +445,7 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
          _getItemActionsPosition: function(item) {
             return {
                top: item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
-               right: this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
+               right: this._container[0].offsetWidth - (item.position.left + item.size.width)
             };
          },
          /**
