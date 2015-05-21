@@ -26,7 +26,9 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * @category Buttons
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.CollectionMixin
-    * @ignoreOptions independentContext contextRestriction extendedTooltip validators
+    * TODO Нужен ли миксин js!SBIS3.CONTROLS.hierarchyMixin? (он только для опции hierField)
+    * @mixes SBIS3.CONTROLS.hierarchyMixin
+    * @ignoreOptions independentContext contextRestriction extendedTooltip validators root openedPath openAllNodes
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
     * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment
     */
