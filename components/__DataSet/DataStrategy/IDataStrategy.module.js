@@ -66,6 +66,10 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
          return {};
       },
 
+      getParentKey: function (rawKey) {
+         /*Method must be implemented*/
+      },
+
       getEmptyRawData: function () {
          /*Method must be implemented*/
       }

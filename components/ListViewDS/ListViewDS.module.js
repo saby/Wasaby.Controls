@@ -15,6 +15,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
       'use strict';
 
+      var
+         ITEMS_ACTIONS_HEIGHT = 20,
+         ITEMS_ACTIONS_WIDTH  = 20;
+
       /**
        * Контрол, отображающий внутри себя набор однотипных сущностей.
        * Умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
@@ -24,12 +28,12 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
        * @public
-       * @demo SBIS3.Demo.Control.MyListViewDS
+       * @demo SBIS3.CONTROLS.Demo.MyListViewDS
        * @author Крайнов Дмитрий Олегович
        */
 
       var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
-
+         _dotTplFn: dotTplFn,
           /**
            * @event onChangeHoveredItem При переводе курсора мыши на другую запись
            * @remark
@@ -65,7 +69,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
          $protected: {
             _floatCheckBox : null,
-            _dotTplFn: dotTplFn,
             _dotItemTpl: null,
             _itemsContainer: null,
             _actsContainer: null,
@@ -128,14 +131,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 *           <option name="icon">sprite:icon-16 icon-Delete icon-primary</option>
                 *           <option name="isMainAction">false</option>
                 *           <option name="tooltip">Удалить</option>
-                *           <option name="onActivated" type="function">js!SBIS3.Demo.Control.MyListViewDS:prototype.myOnActivatedHandler</option>
+                *           <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyListViewDS:prototype.myOnActivatedHandler</option>
                 *        </options>
                 *        <options>
                 *            <option name="name">btn2</option>
                 *            <option name="icon">sprite:icon-16 icon-Trade icon-primary</option>
                 *            <option name="tooltip">Изменить</option>
                 *            <option name="isMainAction">true</option>
-                *            <option name="onActivated" type="function">js!SBIS3.Demo.Control.MyListViewDS:prototype.myOnActivatedHandler</option>
+                *            <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyListViewDS:prototype.myOnActivatedHandler</option>
                 *         </options>
                 *     </option>
                 * </pre>
@@ -207,15 +210,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
          $constructor: function () {
             var self = this;
-            this._publish('onChangeHoveredItem');
-
+this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
             this._container.mouseup(function (e) {
                if (e.which == 1) {
                   var $target = $(e.target),
                       target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
                   if (target.length) {
-                     var id = target.data('id');
-                     self._elemClickHandler(id, self._dataSet.getRecordByKey(id), e.target);
+                     var id = target.data('id'), data = self._dataSet.getRecordByKey(id);
+                     self._elemClickHandler(id, data, e.target);
                   }
                }
             });
@@ -233,10 +235,15 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
 
          init: function () {
-            var self = this;
+            ListViewDS.superclass.init.call(this);
             // запросим данные из источника
             this.reload();
          },
+
+         _checkHeadContainer: function(target) {
+            return null;
+         },
+
          /**
           * Обрабатывает перемещения мышки на элемент представления
           * @param e
@@ -251,7 +258,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                return;
             }
             //Если увели мышку с контейнера с элементами(например на шапку), нужно об этом посигналить
-            if($target.closest('.controls-DataGrid__thead').length) {
+            if (this._checkHeadContainer($target)) {
                this._mouseLeaveHandler();
                return;
             }
@@ -259,9 +266,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (target.length) {
                targetKey = target.data('id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
+this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
                   this._hoveredItem = {
                      key: targetKey,
-                     container: target,
+                     container: target.addClass('controls-ListView__hoveredItem'),
                      position: {
                         top: target[0].offsetTop,
                         left: target[0].offsetLeft
@@ -270,17 +278,32 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                         height: target[0].offsetHeight,
                         width: target[0].offsetWidth
                      }
-                  };
-                  this._notify('onChangeHoveredItem', this._hoveredItem);
+                  };                  this._notify('onChangeHoveredItem', this._hoveredItem);
                   this._onChangeHoveredItem(this._hoveredItem);
                }
             }
+         },
+
+         _getHoveredItemConfig: function(target){
+            return {
+               key: target.data('id'),
+               container: target,
+               position: {
+                  top: target[0].offsetTop,
+                  left: target[0].offsetLeft
+               },
+               size: {
+                  height: target[0].offsetHeight,
+                  width: target[0].offsetWidth
+               }
+            };
          },
          /**
           * Обрабатывает уведение мышки с элемента представления
           * @private
           */
          _mouseLeaveHandler: function() {
+            this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
             this._hoveredItem = {
                container: null,
                key: null,
@@ -294,17 +317,17 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * Обработчик на смену выделенного элемента представления
           * @private
           */
-         _onChangeHoveredItem: function(hoveredItem) {
-           if(this._options.itemsActions.length) {
-              if(hoveredItem.container) {
-                 this._showItemActions();
-              } else {
-                 //Если открыто меню опций, то скрывать опции не надо
-                 if(this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
-                    this._itemActionsGroup.hideItemActions();
-                 }
-              }
-           }
+         _onChangeHoveredItem: function(target) {
+            if(this._options.itemsActions.length) {
+               if (target.container) {
+                  this._showItemActions(target);
+               } else {
+                  //Если открыто меню опций, то скрывать опции не надо
+                  if(this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
+                     this._itemActionsGroup.hideItemActions();
+                  }
+               }
+            }
          },
 
          /**        
@@ -336,6 +359,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   this.toggleItemsSelection([key]);
                }
                else {
+                  this._notify('onItemClick', id, data, target);
                   if (this._options.elemClickHandler) {
                      this._options.elemClickHandler.call(this, id, data, target);
                   }
@@ -343,6 +367,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
             else {
                this.setSelectedIndexes([id]);
+               this._notify('onItemClick', id, data, target);
                if (this._options.elemClickHandler) {
                   this._options.elemClickHandler.call(this, id, data, target);
                }
@@ -414,9 +439,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if(this._itemActionsGroup.isItemActionsMenuVisible()) {
                return;
             }
-
             this._itemActionsGroup.applyItemActions();
-            this._itemActionsGroup.showItemActions(this._hoveredItem);
+            this._itemActionsGroup.showItemActions(this._hoveredItem, this._getItemActionsPosition(this._hoveredItem));
+         },
+         _getItemActionsPosition: function(item) {
+            return {
+               top: item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
+               right: this._container[0].offsetWidth - (item.position.left + item.size.width)
+            };
          },
          /**
           * Создаёт операции над записью
@@ -511,7 +541,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @see getItemsActions
           * @see getHoveredItem
           */
-         setItemsAction: function(items) {
+         setItemsActions: function(items) {
             this._options.itemsActions = items;
             this.getItemsActions().setItems(items);
          },
@@ -533,6 +563,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   $(window).unbind('.wsInfiniteScroll');
                }
             }
+            ListViewDS.superclass.destroy.call(this);
          },
          //-----------------------------------infiniteScroll------------------------
          //TODO Сделать подгрузку вверх

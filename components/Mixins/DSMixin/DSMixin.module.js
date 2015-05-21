@@ -81,11 +81,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               */
             pageSize: null
          },
-         _loader : null
+         _loader: null
       },
 
       $constructor: function () {
-         this._publish('onDrawItems');
+         this._publish('onDrawItems', 'onDataLoad');
          //Для совместимости пока делаем Array
 
          if (this._options.dataSource) {
@@ -148,10 +148,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       setDataSource: function (ds) {
          this._dataSource.unsubscribe('onDataSync', this._setDataSourceCB);
          this._dataSource = ds;
+         this._dataSet = null;
          this.reload();
          this._dataSource.subscribe('onDataSync', this._setDataSourceCB);
       },
-       /**
+/**
+       * Метод получения набора данных, который в данный момент установлен в представлении
+       */
+      getDataSet: function() {
+         return this._dataSet;
+      },       /**
         * Метод перезагрузки данных.
         * Можно задать фильтрацию, сортировку.
         * @param {String} filter Параметры фильтрации.
@@ -170,18 +176,17 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._offset = typeof(offset) != 'undefined' ? offset : this._offset;
          this._limit = typeof(limit) != 'undefined' ? limit : this._limit;
          this._loader = this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
+            self._notify('onDataLoad', dataSet);
             self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
-            if (self._dataSet) {
-               self._dataSet.merge(dataSet);
-            } else {
-               self._dataSet = dataSet;
-            }
+            //FixMe: перезаписываем dataSet
+            self._dataSet = dataSet;
             self._dataLoadedCallback();
+            //self._notify('onBeforeRedraw');
             self._redraw();
          });
       },
       //TODO Сделать публичным? вроде так всем захочется делать
-      _isLoading: function(){
+      _isLoading: function () {
          return this._loader && !this._loader.isReady();
       },
       //TODO Сделать публичным? вроде так всем захочется делать
@@ -190,8 +195,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * @param loader
        * @private
        */
-      _cancelLoading: function(){
-         if (this._isLoading()){
+      _cancelLoading: function () {
+         if (this._isLoading()) {
             this._loader.cancel();
          }
          this._loader = null;
@@ -247,22 +252,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _redraw: function () {
          this._clearItems();
-         var
-            self = this,
-            DataSet = this._dataSet;
+         var records = [];
 
-         DataSet.each(function (item, key, i, parItem, lvl) {
-            var
-               targetContainer = self._getTargetContainer(item, key, parItem, lvl);
-            if (targetContainer) {
-               self._drawItem(item, targetContainer, key, i, parItem, lvl);
-            }
+         this._dataSet.each(function (record) {
+            records.push(record);
          });
 
-         self.reviveComponents().addCallback(function () {
-            self._notify('onDrawItems');
-            self._drawItemsCallback();
-         });
+         this._drawItems(records);
       },
 
       _drawItems: function (records, at) {
@@ -272,12 +268,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (records && records.length > 0) {
             for (var i = 0; i < records.length; i++) {
 
-               var
-                  targetContainer = this._getTargetContainer(records[i], records[i].getKey());
-               if (targetContainer) {
-                  this._drawItem(records[i], targetContainer, curAt);
-               }
-               if (curAt && typeof curAt.at != 'undefined') {
+               this._drawItem(records[i], curAt);
+
+               if (curAt && curAt.at) {
                   curAt.at++;
                }
             }
@@ -313,7 +306,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       //метод определяющий в какой контейнер разместить определенный элемент
-      _getTargetContainer: function () {
+      _getTargetContainer: function (item) {
          //по стандарту все строки рисуются в itemsContainer
          return this._getItemsContainer();
       },
@@ -323,46 +316,54 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return this._container;
       },
 
-      _drawItem: function (item, targetContainer, at) {
-
-         this._createItemInstance(item, targetContainer, at);
+      _drawItem: function (item, at) {
+         var
+            targetContainer,
+            itemInstance;
+         targetContainer = this._getTargetContainer(item);
+         itemInstance = this._createItemInstance(item, targetContainer, at);
+         this._addItemAttributes(itemInstance, item);
+         this._appendItemTemplate(item, targetContainer, itemInstance, at);
       },
 
       _getItemTemplate: function () {
-         throw new Error('Method _getItemTemplate() must be implemented')
+         throw new Error('Method _getItemTemplate() must be implemented');
       },
 
-      _addItemClasses: function (container, key) {
-         container.attr('data-id', key).addClass('controls-ListView__item');
+      _addItemAttributes: function (container, item) {
+         var isFolder = (item.get(this._options.hierField + '@')) ? 'controls-ListView__folder' : '';
+         container.attr('data-id', item.getKey()).addClass('controls-ListView__item ' + isFolder);
       },
 
       _createItemInstance: function (item, targetContainer, at) {
          var
-            key = item.getKey(),
-            itemTpl = this._getItemTemplate(item),
-            container, dotTemplate;
+            buildedTpl,
+            dotTemplate,
+            itemTpl = this._getItemTemplate(item);
 
          if (typeof itemTpl == 'string') {
             dotTemplate = itemTpl;
          }
-         else if (itemTpl instanceof Function) {
+         else if (typeof itemTpl == 'function') {
             dotTemplate = itemTpl(item);
          }
 
          if (typeof dotTemplate == 'string') {
-            container = $(MarkupTransformer(doT.template(dotTemplate)(item)));
-            this._addItemClasses(container, key);
-            if (at && (typeof at.at !== 'undefined')) {
-               var atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).get(at.at);
-               $(atContainer).before(container);
-            }
-            else {
-               targetContainer.append(container);
-            }
-
+            buildedTpl = $(MarkupTransformer(doT.template(dotTemplate)(item)));
+            return buildedTpl;
          }
          else {
             throw new Error('Шаблон должен быть строкой');
+         }
+      },
+
+      _appendItemTemplate: function (item, targetContainer, itemBuildedTpl, at) {
+         if (at && (typeof at.at !== 'undefined')) {
+            var atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).get(at.at);
+            $(atContainer).before(itemBuildedTpl);
+         }
+         else {
+            targetContainer.append(itemBuildedTpl);
          }
       },
 
@@ -410,12 +411,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var instances = this.getItemsInstances();
          return instances[id];
       },
+      //TODO Сделать публичным? И перенести в другое место
       _hasNextPage: function (hasMore) {
          //n - приходит true, false || общее количество записей в списочном методе
          return typeof (hasMore) !== 'boolean' ? hasMore > this._offset : !!hasMore;
       },
 
-      _dataLoadedCallback: function() {
+      _dataLoadedCallback: function () {
 
       }
 

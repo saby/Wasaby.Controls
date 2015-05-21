@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
        * @param {String} field название поля для получения значения
        * @returns {*}
        */
-      type: function(data, field){
+      type: function (data, field) {
          return 'Текст';
       },
        /**
@@ -157,13 +157,16 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
       },
 
       //TODO пустышка
-      getMetaData: function(data) {
+      getMetaData: function (data) {
          return {
-            more : data.length
+            more: data.length
          };
       },
 
-       /**
+      getParentKey: function (rawKey) {
+         return rawKey;
+      },
+      /**
         * Метод для получения набора записей из источника данных.
         * @param {Array} data
         * @param filter
@@ -240,7 +243,7 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
          return pagingData;
       },
 
-      getEmptyRawData: function() {
+      getEmptyRawData: function () {
          return [];
       }
 

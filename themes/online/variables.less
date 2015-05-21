@@ -1152,8 +1152,14 @@
 
 @list-view-actions-cursor:                      pointer;
 @list-view-actions-height:                      20px;
+@list-view-actions-width:                       20px;
 @list-view-actions-right-offset:                1px;
 @list-view-actions-margin:                      0 4px;
+@list-view-actions-margin-multiView:            8px 3px 0 0;
+@list-view-actions-margin-action-multiView:     0 6px 4px 0;
+@list-view-actions-height-multiView:            auto;
+@list-view-actions-float-multiView:             none;
+@list-view-actions-marginLeft-menu-multiView:   -1px;
 @list-view-actions-padding:                     0;
 @list-view-actions-zindex:                      10;
 @list-view-actions-box-shadow:                  -2px -2px 5px @data-grid-row-hover-bg;
@@ -1179,7 +1185,7 @@
 
 @tree-view-expand-width:                        16px;
 @tree-view-expand-height:                       16px;
-@tree-view-expand-margin:                       0;
+@tree-view-expand-margin:                       0 3px 0 0;
 
 @tree-view-expand-border-width:                 0;
 @tree-view-expand-border-style:                 none;
@@ -1284,6 +1290,7 @@
 @controls-OperationsPanel-triangle:                 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAeCAYAAAFmh2+bAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RUM1Qzk4ODZFMEUxMTFFMzk4NDBBREQ1MDNBNTE0MDAiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RUM1Qzk4ODVFMEUxMTFFMzk4NDBBREQ1MDNBNTE0MDAiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTZDMTQ5Q0Y3OUY0MTFFM0FGQUJDREQ2NTc1MEY5OUMiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTZDMTQ5RDA3OUY0MTFFM0FGQUJDREQ2NTc1MEY5OUMiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7t6k/sAAABa0lEQVR42mJ4/PrLPoYnr7/8Z2JkZGQAEgwMAAHE8P//fwamp2++7mcAEv/BXIAAYgCq+w8WB6l4+vbrfxZGBpBaBrDIbylhLkaAAGIEKwSJPHnzdR+Y9QSmiwGi6yBMlx0TiATpAmkHa4NrBwgguF0wDFb7BOQUKGBhhFgNdgiQYmViQAW/4a6DAmcWJL6jlBDXARYo30FSiOsgiAEQQAj7oQDhDZgASC+6AMhh+2ECjCAPwySlRbj/gz0OxfshKt58QbaGDd3pO9Gd3sz4FMnr4CBDknUCGwoNBwagxxghAYQkCwbP3n79jR6mLsjWAATok9pyAARhGDF4LRVMPJY3E4h38RL6oV0MOiazSb9aHmtHqe9gx13yRAsuGLg3FeRvWTDCNHwMbxaGGoybMPG0ntQwm5NPSIRskvFK+Mb8Y5bxc6zgpN1ASzSinsMqooN43gGVLyTUVuyVZXrEfnot6lQTc99Ba5J4AW0OyhmCf3mNAAAAAElFTkSuQmCC');
 
 @controls-OperationsPanel-height:                   30px;
+@controls-OperationsPanel-width:                    30px;
 @controls-OperationsPanel-opened-closed-top:        3px;
 @controls-OperationsPanel-opened-closed-left:       0;
 @controls-OperationsPanel-opened-closed-width:      30px;
@@ -1291,7 +1298,6 @@
 @controls-OperationsPanel-cursor: pointer;
 
 @controls-OperationsPanel-line-height:              @controls-OperationsPanel-height;
-@controls-OperationsPanel-width:                    auto;
 @controls-OperationsPanel-bg:                       #E5ECF5;
 @controls-OperationsPanel-padding-left:             @controls-OperationsPanel-opened-closed-width;
 
@@ -1308,9 +1314,26 @@
 @controls-OperationsPanel-separator-line-height:    30px;
 
 // --------------- //
-// OperationsMark //
+// OperationsMark  //
 // --------------- //
-@controls-OperationsMark-checkBox-margin:     0 4px;
+@controls-OperationsMark-checkBox-margin:           0 4px;
+
+// --------------- //
+//    MultiView    //
+// --------------- //
+@multiView-tile-itemsContainer-padding:             4px 0 0 1px;
+@multiView-check-box-left:                          3px;
+@multiView-check-box-top:                           5px;
+@multiView-tile-item-border:                        1px solid #E7F0F9 ;
+@multiView-tile-item-min-width:                     128px;
+@multiView-tile-item-min-height:                    128px;
+@multiView-tile-item-margin :                       -4px 0 0 -1px;
+@multiView-tile-item-image-box-shadow:              1px 2px 4px #aaa;
+@multiView-tile-item-image-margin:                  4px auto 0 auto;
+@multiView-tile-item-text-margin:                   8px;
+@multiView-tile-selected-item-bg:                   #E7F0F9;
+@multiView-default-folder-bg:                       url("img/defaultFolder.png");
+@multiView-default-item-bg:                         url("img/defaultItem.png");
 // --------------- //
 // FastDataFilter  //
 // --------------- //
