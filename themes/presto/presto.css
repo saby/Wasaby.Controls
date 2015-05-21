@@ -510,10 +510,12 @@ input[type="reset"]::-moz-focus-inner {
   border: 1px solid #f2f2f2;
   background: transparent;
 }
-.controls-CheckBox:hover .controls-CheckBox__caption {
+.controls-CheckBox:hover .controls-CheckBox__caption,
+.controls-CheckBox.ws-has-focus .controls-CheckBox__caption {
   color: #ffcc99;
 }
-.controls-CheckBox:hover .controls-CheckBox__icon {
+.controls-CheckBox:hover .controls-CheckBox__icon,
+.controls-CheckBox.ws-has-focus .controls-CheckBox__icon {
   border: 1px solid #f2f2f2;
   background: transparent;
 }
@@ -1243,7 +1245,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-FormattedTextBox {
   display: inline-block;
-  vertical-align: top;
   line-height: normal;
   background: transparent;
 }
@@ -1268,6 +1269,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-FormattedTextBox.ws-validation-error .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
   color: inherit;
+}
+.controls-FormattedTextBox__field {
+  outline: none;
 }
 .controls-NumberTextBox .controls-TextBox__fieldWrapper {
   margin: 0;
@@ -1865,8 +1869,12 @@ input[type="reset"]::-moz-focus-inner {
   overflow: hidden;
   position: relative;
 }
-.controls-ListView .controls-TreeView__item .controls-TreeView__expand {
-  visibility: hidden;
+.controls-ListView .controls-TreeView__childContainer {
+  display: none;
+  list-style: none;
+  padding: 0 0 0 20px;
+}
+.controls-TreeView__expand {
   float: left;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -1880,13 +1888,13 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent transparent transparent #ffcc99;
   background: transparent;
 }
-.controls-ListView .controls-TreeView__item .controls-TreeView__expand:hover {
+.controls-TreeView__expand:hover {
   border-width: 8px 0 8px 8px;
   border-style: solid;
   border-color: transparent transparent transparent #ffb366;
   background: transparent;
 }
-.controls-ListView .controls-TreeView__item .controls-TreeView__expand.controls-TreeView__expand__open {
+.controls-TreeView__expand.controls-TreeView__expand__open {
   width: auto;
   height: auto;
   margin: 8px 0 0;
@@ -1895,22 +1903,18 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #ffcc99 transparent transparent transparent;
   background: transparent;
 }
-.controls-ListView .controls-TreeView__item .controls-TreeView__expand.controls-TreeView__expand__open:hover {
+.controls-TreeView__expand.controls-TreeView__expand__open:hover {
   border-width: 8px 8px 0 8px;
   border-style: solid;
   border-color: #ffb366 transparent transparent transparent;
   background: transparent;
 }
-.controls-ListView .controls-TreeView__item .controls-TreeView__expand + .controls-TreeView__itemContent {
+.controls-TreeView__expand + .controls-TreeView__itemContent {
   margin: 0 0 0 20px;
 }
-.controls-ListView .controls-TreeView__item.controls-TreeView__hasChild > .controls-TreeView__expand {
-  visibility: visible;
-}
-.controls-ListView .controls-TreeView__childContainer {
-  display: none;
-  list-style: none;
-  padding: 0 0 0 20px;
+.controls-TreeView__expand__leaf,
+.controls-TreeView__expand__leaf:hover {
+  background: none !important;
 }
 .controls-DataGrid .controls-DataGrid__table {
   width: 100%;
@@ -1959,7 +1963,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:hover {
   color: #aaaaaa;
-  background: transparent;
+  background-color: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
@@ -1976,7 +1980,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:hover {
   color: inherit;
-  background: transparent;
+  background-color: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
   padding-left: 10px;
@@ -2112,7 +2116,6 @@ input[type="reset"]::-moz-focus-inner {
   position: absolute;
   height: 20px;
   background-color: #f2f2f2;
-  right: 1px;
   box-shadow: -2px -2px 5px #f3f3f3;
   z-index: 10;
   display: none;
@@ -2158,6 +2161,16 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ItemActions__activeItem {
   background-color: #f3f3f3;
+}
+.controls-EditInPlaceController {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  height: 0;
+  overflow: visible;
+}
+.controls-ListView.controls-ListView__multiselect .controls-EditInPlaceController {
+  left: 42px;
 }
 .controls-FastDataFilter {
   display: inline-block;

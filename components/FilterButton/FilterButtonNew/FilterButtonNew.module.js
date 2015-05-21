@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          this._setControlsValues(this._initialControlsValues);
          this._currentControlsValues = $ws.core.clone(this._initialControlsValues);
          this.reload();
-         this._linkedView.reload(this._initialFilter);
+         this._linkedView.reload($ws.core.clone(this._initialFilter));
       },
       showPicker: function() {
          this._setControlsValues(this._currentControlsValues);
@@ -146,7 +146,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          this._filterLineItemsContainer.empty();
       },
       _setInitialFilter: function() {
-         this._initialFilter = this._linkedView._filter;
+         this._initialFilter = $ws.core.clone(this._linkedView._filter);
       },
 
       _setPickerConfig: function () {
