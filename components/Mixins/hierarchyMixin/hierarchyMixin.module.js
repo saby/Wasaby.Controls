@@ -164,11 +164,11 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', ['js!SBIS3.CONTROLS.DataSet'], functi
       },
 
       _setCurRootNode: function(key, dataSet) {
-         var strategy = this._dataSet.getStrategy();
-         this._dataSet = new DataSet({
-            data: dataSet,
-            strategy: strategy
-         });
+         if (!this._dataSet){
+            this._dataSet = dataSet;
+         } else {
+            this._dataSet = this._dataSet.merge(dataSet);
+         }
          this._curRoot = key;
          this._redraw();
       },
