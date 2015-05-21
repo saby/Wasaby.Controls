@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
        * @returns {*}
        */
       getType: function(field){
-         return this._strategy.type(this._raw, field);
+         return field ? this._strategy.type(this._raw, field)  : '';
       },
       toggleStateDeleted: function () {
          if (arguments[0] === undefined) {
