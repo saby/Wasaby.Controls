@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.hierarchyMixin', ['js!SBIS3.CONTROLS.DataSet'], function (DataSet) {
+define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
    // только работа с иерархией + методы для отображения
 
