@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
+define('js!SBIS3.CONTROLS.hierarchyMixin', ['js!SBIS3.CONTROLS.DataSet'], function (DataSet) {
 
    // только работа с иерархией + методы для отображения
 
@@ -164,7 +164,11 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       },
 
       _setCurRootNode: function(key, dataSet) {
-         this._dataSet = dataSet;
+         var strategy = this._dataSet.getStrategy();
+         this._dataSet = new DataSet({
+            data: dataSet,
+            strategy: strategy
+         });
          this._curRoot = key;
          this._redraw();
       },
