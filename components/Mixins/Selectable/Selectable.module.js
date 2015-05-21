@@ -17,14 +17,14 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
              * @cfg {String} Идентификатор выбранного элемента
              * @example
              * <pre>
-             *     <option name="selectedIndex">3</option>
+             *     <option name="selectedKey">3</option>
              * </pre>
-             * @see setSelectedIndex
-             * @see getSelectedIndex
+             * @see setSelectedKey
+             * @see getSelectedKey
              * @see setSelectedItem
              * @see getSelectedItem
              */
-            selectedIndex: null,
+            selectedKey: null,
             /**
              * TODO Выбранный элемент
              */
@@ -36,8 +36,8 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
       $constructor: function() {
          this._publish('onSelectedItemChange');
          if (this._options.selectedItem) {
-            console.log('c 3.7.3 свойство selectedItem перестанет работать. Используйте свойство selectedIndex');
-            this._options.selectedIndex = this._options.selectedItem;
+            console.log('c 3.7.3 свойство selectedItem перестанет работать. Используйте свойство selectedKey');
+            this._options.selectedKey = this._options.selectedItem;
          }
          else {
             if (this._options.allowEmptySelection == false) {
@@ -53,8 +53,8 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
        */
       setSelectedItem: function(id) {
          //TODO изменить логику на установку выбранного элемента
-         console.log('c 3.7.3 метод setSelectedItem перестанет работать. Используйте метод setSelectedIndex');
-         this.setSelectedIndex(id);
+         console.log('c 3.7.3 метод setSelectedItem перестанет работать. Используйте метод setSelectedKey');
+         this.setSelectedKey(id);
       },
 
       /**
@@ -62,27 +62,27 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
        */
       getSelectedItem : function() {
          //TODO изменить логику на возврат выбранного элемента
-         console.log('c 3.7.3 метод getSelectedItem перестанет работать. Используйте метод getSelectedIndex');
-         return this.getSelectedIndex();
+         console.log('c 3.7.3 метод getSelectedItem перестанет работать. Используйте метод getSelectedKey');
+         return this.getSelectedKey();
       },
       /**
        * Установить выбранный элемент по индексу
        * @param {String} id Идентификатор элемента, который нужно установить в качестве выбранного.
        * @example
        * <pre>
-       *     MyComboBox.setSelectedIndex('3');
+       *     MyComboBox.setSelectedKey('3');
        * </pre>
        * @see selectedItem
-       * @see getSelectedIndex
+       * @see getSelectedKey
        */
-      setSelectedIndex : function(id) {
-         this._options.selectedIndex = id;
-         if (!this._options.selectedIndex && this._options.allowEmptySelection == false) {
+      setSelectedKey : function(id) {
+         this._options.selectedKey = id;
+         if (!this._options.selectedKey && this._options.allowEmptySelection == false) {
             this._setFirstItemAsSelected();
          }
-         this.saveToContext('SelectedItem', this._options.selectedIndex); //TODO: Перенести отсюда
-         this._drawSelectedItem(this._options.selectedIndex);
-         this._notifySelectedItem(this._options.selectedIndex);
+         this.saveToContext('SelectedItem', this._options.selectedKey); //TODO: Перенести отсюда
+         this._drawSelectedItem(this._options.selectedKey);
+         this._notifySelectedItem(this._options.selectedKey);
       },
 
       getNextItemIndex: function() {
@@ -103,13 +103,13 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
        * Получить индекс выбранного элемента
        * @example
        * <pre>
-       *     MyComboBox.getSelectedIndex();
+       *     MyComboBox.getSelectedKey();
        * </pre>
        * @see selectedItem
-       * @see setSelectedIndex
+       * @see setSelectedKey
        */
-      getSelectedIndex : function() {
-         return this._options.selectedIndex;
+      getSelectedKey : function() {
+         return this._options.selectedKey;
       },
 
       _drawSelectedItem : function() {
@@ -122,14 +122,14 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
       },
 
       _dataLoadedCallback : function(){
-         if (!this._options.selectedIndex && this._options.allowEmptySelection == false) {
+         if (!this._options.selectedKey && this._options.allowEmptySelection == false) {
             this._setFirstItemAsSelected();
          }
       },
 
       _setFirstItemAsSelected : function() {
          if (this._dataSet) {
-            this._options.selectedIndex = this._dataSet.at(0).getKey();
+            this._options.selectedKey = this._dataSet.at(0).getKey();
          }
       }
    };
