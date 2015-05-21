@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
    var DataSet = $ws.proto.Abstract.extend({
       $protected: {
+         _indexTree: {},
          _isLoaded: false,
          _byId: {},
          _indexId: [],
@@ -49,7 +50,6 @@ define('js!SBIS3.CONTROLS.DataSet', [
              * При работе с БЛ значение данной опции проставляется автоматически.
              */
             keyField: ''
-
          }
       },
       $constructor: function () {
@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       /**
-       * Метод удаления записи.
+       * Метод удаления записи. Помечает запись как удаленную. Реальное удаление записи из источника будет выполнено только после вызова метода sync на датасорсе.
        * @param {Number | Array} key Идентификатор записи или массив идентификаторов.
        */
       removeRecord: function (key) {
@@ -117,7 +117,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
             this._byId[this.getRecordKeyByIndex(i)] = new Record({
                strategy: this.getStrategy(),
                raw: data,
-               keyField: this._keyField
+               keyField: this._keyField,
+               onChangeHandler: this._onRecordChange.bind(this)
             });
          }
 
@@ -223,7 +224,9 @@ define('js!SBIS3.CONTROLS.DataSet', [
             }, 'all');
 
             if (toRemove.length) {
-               this.removeRecord(toRemove);
+               //TODO: тут не надо их помечать как удаленными. а вырезать из DataSet
+               //this._removeReference(toRemove);
+               //this.removeRecord(toRemove);
             }
          }
 
@@ -303,7 +306,12 @@ define('js!SBIS3.CONTROLS.DataSet', [
          if (key === undefined) {
             record.set(this._keyField, key = record._cid);
          }
+         record._onChangeHandler = this._onRecordChange.bind(this);
          return record;
+      },
+
+      _onRecordChange: function(record) {
+         this._notify('onRecordChange', record);
       },
 
       _addReference: function (record, options) {
@@ -359,7 +367,59 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       getMetaData: function () {
-         return this.getStrategy().getMetaData(this._rawData);
+         var meta = this.getStrategy().getMetaData(this._rawData);
+         meta.results = new Record({
+            strategy: this.getStrategy(),
+            raw: meta.results,
+            keyField: this._keyField
+         });
+         return meta;
+      },
+
+      /**
+       * Возвращает массив идентификаторов рекордов, являющихся потомками узла иерархии
+       * @param parentId
+       * @param getFullBranch {Boolean} вернуть всю ветку
+       * @returns {Array}
+       */
+      //TODO: переименовать в getChildKeys
+      getChildItems: function (parentId, getFullBranch) {
+         parentId = parentId || null;
+         if (this._indexTree.hasOwnProperty(parentId)) {
+            if (getFullBranch) {
+               var curParent = parentId,
+                  parents = [],
+                  childs = [];
+
+               do {
+                  $ws.helpers.forEach(this._indexTree[curParent], function (newParent) {
+                     parents.push(newParent);
+                     childs.push(newParent);
+                  });
+                  if (parents.length) {
+                     curParent = Array.remove(parents, 0);
+                  } else {
+                     curParent = null;
+                  }
+               } while (curParent);
+               return childs;
+            }
+            return this._indexTree[parentId];
+         } else {
+            return [];
+         }
+      },
+
+      hasChild: function (parentKey) {
+         return this._indexTree.hasOwnProperty(parentKey);
+      },
+
+      getParent: function () {
+
+      },
+
+      setIndexTree: function (newIndex) {
+         this._indexTree = newIndex;
       },
 
       filter: function (filterCallback) {
@@ -376,8 +436,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
          return filterDataSet;
       }
-
    });
+
    return DataSet;
-})
-;
+});

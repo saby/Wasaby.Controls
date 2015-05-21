@@ -85,6 +85,20 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
          this._notifySelectedItem(this._options.selectedKey);
       },
 
+      getNextItemIndex: function() {
+         var
+            current = parseInt(this.getSelectedIndex(), 10),
+            next = this._dataSet.getRecordByKey(current + 1);
+         return next !== undefined ? next.getKey() : false;
+      },
+
+      getPrevItemIndex: function() {
+         var
+            current = parseInt(this.getSelectedIndex(), 10),
+            prev = this._dataSet.getRecordByKey(current - 1);
+         return prev !== undefined ? prev.getKey() : false;
+      },
+
       /**
        * Получить индекс выбранного элемента
        * @example

@@ -1,14 +1,8 @@
 /**
  * Created by ad.chistyakova on 22.04.2015.
  */
-//хак для depenceCollector
-$ws = $ws || {
-      _const : {
-         wsRoot: '/ws/'
-      }
-   }
 define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
-   'is!browser?js!' + $ws._const.wsRoot + 'Lib/xslt.js'
+         'js!SBIS3.CORE.XSLT'
       ], function() {
    return $ws.core.extend({}, {
 
