@@ -30,17 +30,28 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
       },
 
       /**
-       * Объединить с данными и состоянием другой записи
-       * @param {js!SBIS3.CONTROLS.Record} record Запись, с которой следует объединиться
-       * @returns {js!SBIS3.CONTROLS.Record}
+       * Объединяет запись с данными и состоянием другой записи
+       * @param {SBIS3.CONTROLS.Record} record Запись, с которой следует объединиться
+       * @returns {SBIS3.CONTROLS.Record}
        */
       merge: function (record) {
+         //FIXME: сейчас стратегии должны быть одинаковы. Сделать объединение _raw через стратегии.
          $ws.core.merge(this._raw, record.getRaw());
          this._isDeleted = record.getMarkDeleted();
          this._isChanged = record.getMarkChanged();
          //this._keyField = record._keyField;
 
          return this;
+      },
+
+      /**
+       * Обновляет запись в источнике данных.
+       * @param (SBIS3.CONTROLS.IDataSource) dataSource Источник данных
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
+       * @see {SBIS3.CONTROLS.IDataSource#update}
+       */
+      update: function (dataSource) {
+         return dataSource.update(this);
       },
 
       /**
@@ -66,6 +77,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
             this._onChangeHandler(this);
          }
       },
+
       /**
        * Получить тип поля по наименованию
        * @param {String} field
@@ -74,6 +86,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
       getType: function(field){
          return field ? this._strategy.type(this._raw, field)  : '';
       },
+
       toggleStateDeleted: function () {
          if (arguments[0] === undefined) {
             this._isDeleted = !this._isDeleted;

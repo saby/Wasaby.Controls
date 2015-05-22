@@ -34,6 +34,7 @@ define('js!SBIS3.CONTROLS.StaticSource', [
             keyField: ''
          }
       },
+	  
       $constructor: function (cfg) {
          // неявно создадим начальный датасет, с которым будем работать дальше
          this._initialDataSet = new DataSet({
@@ -42,35 +43,7 @@ define('js!SBIS3.CONTROLS.StaticSource', [
             keyField: this._options.keyField
          });
       },
-       /**
-        * Метод синхронизирует набор данных с источником данных.
-        * @param dataSet Набор данных.
-        */
-      sync: function (dataSet) {
-         var self = this,
-            syncCompleteDef = new $ws.proto.ParallelDeferred(),
-            changedRecords = [];
-         dataSet.each(function (record) {
-            if (record.getMarkStatus() == 'changed') {
-               syncCompleteDef.push(self.update(record));
-               changedRecords.push(record);
-            }
-            if (record.getMarkStatus() == 'deleted') {
-               syncCompleteDef.push(self.destroy(record.getKey()));
-               changedRecords.push(record);
-            }
-         }, 'all');
 
-         syncCompleteDef.done().getResult().addCallback(function(){
-            self._notify('onDataSync', changedRecords);
-         });
-
-      },
-
-      /**
-       * Метод создаёт запись в источнике данных.
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт js!SBIS3.CONTROLS.Record.
-       */
       create: function () {
          var def = new $ws.proto.Deferred(),
             record = new Record({
@@ -82,35 +55,18 @@ define('js!SBIS3.CONTROLS.StaticSource', [
          return def;
       },
 
-      /**
-       * Метод для чтения записи из массива по её идентификатору.
-       * @param {Number} id Идентификатор записи.
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record.
-       */
       read: function (id) {
          var def = new $ws.proto.Deferred();
          def.callback(this._initialDataSet.getRecordByKey(id));
          return def;
       },
 
-      /**
-       * Метод для обновления записи в источнике данных.
-       * @param (SBIS3.CONTROLS.Record) record Изменённая запись.
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
-       * В колбэке придёт Boolean - результат успешности выполнения операции.
-       */
       update: function (record) {
          var def = new $ws.proto.Deferred();
          def.callback(true);
          return def;
       },
 
-      /**
-       * Метод для удаления записи из источника данных.
-       * @param {Array | Number} id Идентификатор записи или массив идентификаторов.
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
-       * В колбэке придёт Boolean - результат успешности выполнения операции.
-       */
       destroy: function (id) {
          var def = new $ws.proto.Deferred(),
             strategy = this.getStrategy();
