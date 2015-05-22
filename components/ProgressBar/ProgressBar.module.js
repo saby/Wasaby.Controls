@@ -32,7 +32,12 @@ define('js!SBIS3.CONTROLS.ProgressBar', ['html!SBIS3.CONTROLS.ProgressBar', 'js!
              * @see setProgress
              * @see getProgress
              */
-            progress : 0
+            progress: 0,
+            /**
+             * @cfg {Number} Максимальное значение, которое можно задать в прогресс бар
+             * @see setMaximum
+             */
+            maximum: 100
          }
       },
 
@@ -42,9 +47,13 @@ define('js!SBIS3.CONTROLS.ProgressBar', ['html!SBIS3.CONTROLS.ProgressBar', 'js!
        * @see progress
        * @see getProgress
        */
-      setProgress : function(progress) {
-         this._options.progress = progress;
-         this._drawProgress(progress);
+      setProgress: function(progress) {
+         progress = parseFloat(progress);
+         if (isNaN(progress)) {
+            return false;
+         }
+         this._options.progress = Math.max(Math.min(progress, this._options.maximum),0);
+         this._drawProgress(Math.floor(this._options.progress / this._options.maximum * 100));
       },
 
       /**
@@ -53,11 +62,24 @@ define('js!SBIS3.CONTROLS.ProgressBar', ['html!SBIS3.CONTROLS.ProgressBar', 'js!
        * @see progress
        * @see setProgress
        */
-      getProgress : function() {
+      getProgress: function() {
          return this._options.progress;
       },
 
-      _drawProgress : function(progress) {
+      /**
+       * Задает максимальное значение
+       * @param max {Number}
+       */
+      setMaximum: function(max) {
+         max = parseFloat(max);
+         if (max <= 0  || isNaN(max)) {
+            return false;
+         }
+         this._options.maximum = max;
+         this.setProgress(this._options.progress);
+      },
+
+      _drawProgress: function(progress) {
          $('.controls-ProgressBar__progress', this._container.get(0)).width(progress + '%');
          $('.controls-ProgressBar__value', this._container.get(0)).text(progress + '%');
       }
