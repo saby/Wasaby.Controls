@@ -1,8 +1,8 @@
 <div class="controls-ProgressBar">
    <div class="controls-ProgressBar__line">
-      <div class="controls-ProgressBar__value">{{it.progress=Math.max(Math.min(it.progress, it.maximum),0);}}{{=Math.floor(it.progress / it.maximum * 100)}}%</div>
+      <div class="controls-ProgressBar__value">{{=Math.floor(it.progress / it.maximum * 100)}}%</div>
       <div class="controls-ProgressBar__backProgress">
-         <div class="controls-ProgressBar__progress" style="width: {{=Math.floor(it.progress / it.maximum * 100)}}%"></div>
+          <div class="controls-ProgressBar__progress" style="width: {{=Math.floor(it.progress / it.maximum * 100)}}%"></div>
       </div>
    </div>
 </div>

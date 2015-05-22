@@ -21,6 +21,7 @@ define('js!SBIS3.CONTROLS.ProgressBar', ['html!SBIS3.CONTROLS.ProgressBar', 'js!
    var ProgressBar = Control.Control.extend({
       _dotTplFn : dotTplFn,
       $protected : {
+         _errorText: null,
          _options : {
             /**
              * @cfg {Number}  Текущее состояние процесса в процентах
@@ -42,17 +43,47 @@ define('js!SBIS3.CONTROLS.ProgressBar', ['html!SBIS3.CONTROLS.ProgressBar', 'js!
       },
 
       /**
+       * Изменяем опции до отрисовки
+       */
+      _modifyOptions: function(options) {
+         options.progress = parseFloat(options.progress);
+         if (isNaN(options.progress)) {
+            this._errorText = 'Значение прогресса не является числом';
+            return options;
+         }
+         if (options.progress < 0) {
+            this._errorText = 'Значение прогресса меньше ноля';
+            return options;
+         }
+         if (options.maximum < 0) {
+            this._errorText = 'Значение максимума меньше ноля';
+            return options;
+         }
+         if (options.progress > options.maximum) {
+            this._errorText = 'Значение прогресса превышает максимальное значение';
+            return options;
+         }
+         return options;
+      },
+
+      init: function() {
+         if (this._errorText) {
+            throw new Error('init. ' + this._errorText);
+         }
+      },
+
+      /**
        * Устанавливает текущее состояние процесса в процентах
        * @param {String} progress Текст на кнопке.
        * @see progress
        * @see getProgress
        */
       setProgress: function(progress) {
-         progress = parseFloat(progress);
-         if (isNaN(progress)) {
-            return false;
+         this._options.progress = progress;
+         this._modifyOptions(this._options);
+         if (this._errorText) {
+            throw new Error('setProgress. ' + this._errorText);
          }
-         this._options.progress = Math.max(Math.min(progress, this._options.maximum),0);
          this._drawProgress(Math.floor(this._options.progress / this._options.maximum * 100));
       },
 
@@ -71,12 +102,12 @@ define('js!SBIS3.CONTROLS.ProgressBar', ['html!SBIS3.CONTROLS.ProgressBar', 'js!
        * @param max {Number}
        */
       setMaximum: function(max) {
-         max = parseFloat(max);
-         if (max <= 0  || isNaN(max)) {
-            return false;
-         }
          this._options.maximum = max;
-         this.setProgress(this._options.progress);
+         this._modifyOptions(this._options);
+         if (this._errorText) {
+            throw new Error('setMaximum. ' + this._errorText);
+         }
+         this._drawProgress(Math.floor(this._options.progress / this._options.maximum * 100));
       },
 
       _drawProgress: function(progress) {
