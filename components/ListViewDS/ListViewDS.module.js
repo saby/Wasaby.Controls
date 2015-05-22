@@ -720,7 +720,7 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
                      hasNextPage = this._hasNextPage(more),
                      self = this;
                this._paging = new Paging({
-                  recordsPerPage: this._dataSet._options.pageSize || more,
+                  recordsPerPage: this._options.pageSize || more,
                   currentPage:  1,
                   recordsCount: more,
                   pagesLeftRight: 3,
@@ -743,7 +743,8 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
           * Метод обработки интеграции с пейджингом
           */
          _processPaging : function(){
-            var nextPage = this.isInfiniteScroll() ? this._hasScrollMore : this._hasNextPage(this._dataSet.getMetaData().more);
+            var more = this._dataSet.getMetaData().more,
+                nextPage = this.isInfiniteScroll() ? this._hasScrollMore : this._hasNextPage(more);
             if (this._paging) {
                var pageNum = this._paging.getPage();
                if (this._pageChangeDeferred) { // только когда меняли страницу
@@ -754,7 +755,7 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
                if (this._dataSet.getCount() === 0 && pageNum > 1) {
                   this._paging.setPage(pageNum - 1);
                }
-               this._paging.update(this.getPage(this.isInfiniteScroll() ? this._infiniteScrollOffset + this._options.pageSize: this._offset) + 1, nextPage, nextPage);
+               this._paging.update(this.getPage(this.isInfiniteScroll() ? this._infiniteScrollOffset + this._options.pageSize: this._offset) + 1, more, nextPage);
 
             }
          },
