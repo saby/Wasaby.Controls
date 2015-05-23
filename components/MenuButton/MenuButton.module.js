@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * Кнопка с выпадающим меню
     * @class SBIS3.CONTROLS.MenuButton
     * @extends SBIS3.CONTROLS.Button
-	* @demo SBIS3.CONTROLS.Demo.MyMenuButton Пример кнопки с выпадающим меню
+    * @demo SBIS3.CONTROLS.Demo.MyMenuButton Пример кнопки с выпадающим меню
     * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuButton'>
@@ -77,8 +77,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       },
 
       _onAlignmentChangeHandler: function(alignment){
-         var right = alignment.horizontalAlign.side == 'right',
-            bottom = alignment.verticalAlign.side == 'bottom';
+         var right = alignment.horizontalAlign == 'right',
+             bottom = alignment.verticalAlign == 'bottom';
          this._header.toggleClass('controls-MenuButton__header-revert-horizontal', right).toggleClass('controls-MenuButton__header-revert-vertical', bottom);
          if (right){
             this._header.css('left', this._container.offset().left - 16);
@@ -99,8 +99,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       _clickHandler: function(){
          if (this.getItems().getItemsCount() > 1) {
             this._container.addClass('controls-Checked__checked');
-            this._header.toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
             this.togglePicker();
+            this._header.toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
          } else {
             if (this.getItems().getItemsCount() == 1) {
                var id = this.getItems().getKey(this.getItems().getNextItem());
@@ -112,25 +112,29 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
        * Скрывает/показывает меню у кнопки
        */
       togglePicker: function(){
-          if (!this._header) {
-             this._header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
-                                  <i class="controls-MenuButton__headerLeft"></i>\
-                                  <i class="controls-MenuButton__headerCenter"></i>\
-                                  <i class="controls-MenuButton__headerRight"></i>\
-                               </span>');
-             $('.controls-MenuButton__headerCenter', this._header).width(this._container.outerWidth() - 23);
-             this._header.css({
-                width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
-                height: this._container.outerHeight()
-             });
-             $('body').append(this._header);
-          }
+         if (!this._header) {
+            this._createHeader();
+         }
          MenuButton.superclass.togglePicker.call(this);
          this._header.css({
             left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 16,
             top: (this._headerAlignment.vertical == 'top') ? this._container.offset().top + 1 : this._container.offset().top - 6,
             'z-index': this._picker._container.css('z-index') + 1
          });
+      },
+
+      _createHeader: function(){
+         this._header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
+                                  <i class="controls-MenuButton__headerLeft"></i>\
+                                  <i class="controls-MenuButton__headerCenter"></i>\
+                                  <i class="controls-MenuButton__headerRight"></i>\
+                               </span>');
+         $('.controls-MenuButton__headerCenter', this._header).width(this._container.outerWidth() - 23);
+         this._header.css({
+            width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
+            height: this._container.outerHeight()
+         });
+         $('body').append(this._header);
       },
 
       _setWidth: function(){
