@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
    var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
       $protected: {
-         _indexTree: null,
+         _curRoot: null,
          _options: {
             /**
              * @cfg {String} Идентификатор узла, относительно которого надо отображать данные
@@ -73,10 +73,6 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          return records;
       },
 
-      refreshIndexTree: function () {
-         this.hierIterate(this._dataSet);
-      },
-
       getParentKey: function (DataSet, record) {
          return this._dataSet.getParentKey(record, this._options.hierField)
       },
@@ -124,7 +120,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          if (!this._dataSet){
             this._dataSet = dataSet;
          } else {
-            this._dataSet.merge(dataSet);
+            this._dataSet.setRawData(dataSet.getRawData());
          }
          this._curRoot = key;
          this._redraw();

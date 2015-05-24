@@ -297,6 +297,15 @@ define('js!SBIS3.CONTROLS.DataSet', [
          this._addRecords(record, {at: at});
       },
 
+      setRawData: function(data) {
+         this._rawData = data;
+         this._loadFromRaw();
+      },
+
+      getRawData: function() {
+         return this._rawData;
+      },
+
       _prepareRecordForAdd: function (record) {
          //FixME: потому что метод создать не возвращает тип поля "идентификатор"
          record._keyField = this._keyField;

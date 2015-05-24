@@ -179,7 +179,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             self._notify('onDataLoad', dataSet);
             self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
             if (self._dataSet) {
-               self._dataSet.merge(dataSet);
+               self._dataSet.setRawData(dataSet.getRawData());
             } else {
                self._dataSet = dataSet;
             }
