@@ -107,6 +107,12 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
 
       _nodeClosed : function(key) {
 
+      },
+
+      _drawItemsCallback: function() {
+         if (this._options.expand) {
+            $('.js-controls-TreeView__expand', this._container.get(0)).addClass('controls-TreeView__expand__open')
+         }
       }
    };
 

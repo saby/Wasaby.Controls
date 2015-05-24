@@ -96,9 +96,6 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
                parentMargin = parseInt($('.controls-TreeView__expand', parentCont).css('margin-left'), 10) || 0;
             $('.controls-TreeView__expand', container).css('margin-left', parentMargin + 16);
          }
-         if (this._options.expand) {
-            $('.controls-TreeView__expand', container).addClass('controls-TreeView__expand__open')
-         }
       }
    });
 
