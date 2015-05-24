@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
              * Опция задаёт режим разворота.
              * @Boolean false Без разворота
              */
-            expand: false
+            expand: true
 
          }
       },

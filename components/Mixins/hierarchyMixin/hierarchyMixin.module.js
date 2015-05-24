@@ -32,37 +32,26 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          if (Object.isEmpty(DataSet._indexTree)) {
             DataSet._reindexTree(this._options.hierField);
          }
-         var indexTree = DataSet._indexTree;
-         var self = this,
+         var
+            indexTree = DataSet._indexTree,
+            self = this,
             curParentId = this._curRoot || null,
-            parents = [],
             curLvl = 0;
 
-         /*TODO мб в этом ереборе задействовать индекс?*/
-         do {
-
-            DataSet.each(function (record) {
-               var parentKey = DataSet.getParentKey(record, self._options.hierField);
-              // if ((parentKey || null) === (curParent ? curParent.getKey() : null)) {
-               if ((parentKey || null) === curParentId) {
-                  parents.push({record: record, lvl: curLvl});
-
-                  if (typeof iterateCallback == 'function') {
-                     iterateCallback.call(this, record, curParentId, curLvl);
-                  }
+         var hierIterate = function(root) {
+            var
+               childKeys = indexTree[root];
+            for (var i = 0; i < childKeys.length; i++) {
+               var record = self._dataSet.getRecordByKey(childKeys[i]);
+               iterateCallback.call(this, record, root, curLvl);
+               if (indexTree[childKeys[i]]) {
+                  curLvl++;
+                  hierIterate(childKeys[i]);
+                  curLvl--
                }
-
-            }, status);
-
-            if (parents.length) {
-               var a = Array.remove(parents, 0);
-               curParentId = a[0]['record'].getKey();
-               curLvl = a[0].lvl + 1;
             }
-            else {
-               curParentId = null;
-            }
-         } while (curParentId);
+         };
+         hierIterate(curParentId);
       },
 
 
