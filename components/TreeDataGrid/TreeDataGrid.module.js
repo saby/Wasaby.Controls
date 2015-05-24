@@ -1,9 +1,8 @@
 define('js!SBIS3.CONTROLS.TreeDataGrid', [
    'js!SBIS3.CONTROLS.HierarchyDataGrid',
-   'js!SBIS3.CONTROLS.hierarchyMixin',
    'js!SBIS3.CONTROLS.TreeMixinDS',
    'html!SBIS3.CONTROLS.TreeDataGrid/resources/rowTpl'
-], function(DataGrid, hierarchyMixin, TreeMixin, rowTpl) {
+], function(HierarchyDataGrid, TreeMixin, rowTpl) {
    'use strict';
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
@@ -26,7 +25,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
     * </component>
     */
 
-   var TreeDataGrid = DataGrid.extend([hierarchyMixin, TreeMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
+   var TreeDataGrid = HierarchyDataGrid.extend([TreeMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
       $protected: {
          _rowTpl : rowTpl
       },
@@ -64,7 +63,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
       },
 
       _nodeClosed : function(key) {
-         var childKeys = this._dataSet.getChildItems(key, true);
+         var childKeys = this._dataSet.getChildItems(key, true, this._options.hierField);
          for (var i = 0; i < childKeys.length; i++) {
             $('.controls-ListView__item[data-id="' + childKeys[i] + '"]', this._container.get(0)).remove();
          }
@@ -75,21 +74,17 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          var self=this;
          if ($(target).hasClass('controls-TreeView__expand--inside')) {
             var nodeID = $(target).closest('.controls-ListView__item').data('id');
-            this._insideFolder=true;
-
             this._loadNode(nodeID).addCallback(function (dataSet) {
                self._setCurRootNode(nodeID, dataSet);
             });
-
          } else {
-            this._insideFolder=false;
             TreeDataGrid.superclass._elemClickHandler.call(this, id, data, target);
          }
       },
 
       _addItemAttributes : function(container, item) {
          TreeDataGrid.superclass._addItemAttributes.call(this, container, item);
-         var parentKey = this.getParentKey(this._dataSet, item);
+         var parentKey = this._dataSet.getParentKey(item, this._options.hierField);
          container.attr('data-parent', parentKey);
          /*TODO пока придрот*/
          if(parentKey) {

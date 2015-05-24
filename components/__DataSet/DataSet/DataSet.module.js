@@ -383,7 +383,10 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @returns {Array}
        */
       //TODO: переименовать в getChildKeys
-      getChildItems: function (parentId, getFullBranch) {
+      getChildItems: function (parentId, getFullBranch, field) {
+         if(Object.isEmpty(this._indexTree)) {
+            this._reindexTree(field);
+         }
          parentId = parentId || null;
          if (this._indexTree.hasOwnProperty(parentId)) {
             if (getFullBranch) {
@@ -410,7 +413,10 @@ define('js!SBIS3.CONTROLS.DataSet', [
          }
       },
 
-      hasChild: function (parentKey) {
+      hasChild: function (parentKey, field) {
+         if(Object.isEmpty(this._indexTree)) {
+            this._reindexTree(field);
+         }
          return this._indexTree.hasOwnProperty(parentKey);
       },
 
@@ -418,8 +424,40 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
       },
 
-      setIndexTree: function (newIndex) {
-         this._indexTree = newIndex;
+      getParentKey: function (record, field) {
+         return this.getStrategy().getParentKey(record, field);
+      },
+
+      /*Делаем индекс по полю иерархии*/
+      _reindexTree : function(field) {
+         var self = this,
+            curParentId = null,
+            parents = [],
+            curLvl = 0;
+         do {
+            this.each(function (record) {
+               var parentKey = self.getParentKey(record, field) || null;
+               if ((parentKey) === curParentId) {
+                  parents.push({record: record, lvl: curLvl});
+
+                  if (!this._indexTree.hasOwnProperty(parentKey)) {
+                     this._indexTree[parentKey] = [];
+                  }
+
+                  this._indexTree[parentKey].push(record.getKey());
+               }
+
+            }, false);
+
+            if (parents.length) {
+               var a = Array.remove(parents, 0);
+               curParentId = a[0]['record'].getKey();
+               curLvl = a[0].lvl + 1;
+            }
+            else {
+               curParentId = null;
+            }
+         } while (curParentId);
       },
 
       filter: function (filterCallback) {

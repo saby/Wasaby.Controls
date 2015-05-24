@@ -1,11 +1,5 @@
 define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
 
-   var treeExpandMap = {
-      'onlyFolders': 'Только узлы',
-      'items': 'Только листья',
-      'folders': 'С узлами и листьями'
-   };
-
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
@@ -23,41 +17,28 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
 
             /**
              * Опция задаёт режим разворота.
-             * @variant '' Без разворота
-             * @variant items Только листья
-             * @variant onlyFolders Только узлы
-             * @variant folders С узлами и листьями
+             * @Boolean false Без разворота
              */
-            expand: ''
+            expand: false
 
          }
       },
 
 
-      _redraw: function () {
-         this._clearItems();
+      _getRecordsForRedraw: function() {
+         /*Получаем только рекорды с parent = curRoot*/
          var
-            self = this,
-            DataSet = this._dataSet;
+            records = [];
+         if (this._options.expand) {
+            this.hierIterate(this._dataSet, function (record) {
+               records.push(record);
+            });
+         }
+         else {
+            return this._getRecordsForRedrawCurFolder();
+         }
 
-         /*TODO вынести середину в переопределяемый метод*/
-
-         this.hierIterate(DataSet, function (record, parentId, lvl) {
-            var
-               parentKey = self.getParentKey(DataSet, record);
-
-            this._curLvl = lvl;
-
-            if ((parentKey == self._curRoot)) {
-               self._drawItem(record, undefined);
-            }
-         });
-
-         self.reviveComponents().addCallback(function () {
-            self._notify('onDrawItems');
-            self._drawItemsCallback();
-         });
-
+         return records;
       },
 
       /**
@@ -90,7 +71,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
             if (this._options.expand) {
                this._filter = this._filter || {};
                this._filter['Разворот'] = 'С разворотом';
-               this._filter['ВидДерева'] = treeExpandMap[this._options.expand];
+               this._filter['ВидДерева'] = 'Узлы и листья';
             }
          }
       },
@@ -108,7 +89,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
             }
          });
 
-         this.refreshIndexTree()
+         this._dataSet.merge(dataSet);
+         this._dataSet._reindexTree(this._options.hierField);
       },
 
       _nodeClosed : function(key) {

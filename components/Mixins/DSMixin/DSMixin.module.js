@@ -255,13 +255,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _redraw: function () {
          this._clearItems();
-         var records = [];
+         var records = this._getRecordsForRedraw();
+         this._drawItems(records);
+      },
 
+      _getRecordsForRedraw : function() {
+         var records = [];
          this._dataSet.each(function (record) {
             records.push(record);
          });
-
-         this._drawItems(records);
+         return records;
       },
 
       _drawItems: function (records, at) {

@@ -177,9 +177,9 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
         * @param filter
         * @returns {{d: Array, s: Array}}
         */
-      getParentKey: function (rawKey) {
+      getParentKey: function (record, rawKey) {
          // так как c БЛ приходит массив
-         return rawKey[0];
+         return record.get(rawKey)[0];
       },
 
       prepareFilterParam: function (filter) {

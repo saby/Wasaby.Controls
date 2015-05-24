@@ -13,16 +13,6 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             root: null,
 
             /**
-             * @cfg {Array} Набор идентификаторов, обозначающих какую ветку надо развернуть при инициализации
-             */
-            openedPath: [],
-
-            /**
-             * @cfg {Boolean} Открывать ли все узлы при отрисовке
-             */
-            openAllNodes: false,
-
-            /**
              * @cfg {String} Поле иерархии
              */
             hierField: null
@@ -39,24 +29,24 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
       // обход происходит в том порядке что и пришли
       hierIterate: function (DataSet, iterateCallback, status) {
+         if (Object.isEmpty(DataSet._indexTree)) {
+            DataSet._reindexTree(this._options.hierField);
+         }
+         var indexTree = DataSet._indexTree;
          var self = this,
-            curParentId = this._curRoot,
+            curParentId = this._curRoot || null,
             parents = [],
-            indexTree = {},
             curLvl = 0;
+
+         /*TODO мб в этом ереборе задействовать индекс?*/
          do {
 
             DataSet.each(function (record) {
-               var parentKey = self.getParentKey(DataSet, record);
+               var parentKey = DataSet.getParentKey(record, self._options.hierField);
               // if ((parentKey || null) === (curParent ? curParent.getKey() : null)) {
                if ((parentKey || null) === curParentId) {
                   parents.push({record: record, lvl: curLvl});
 
-                  if (!indexTree.hasOwnProperty(parentKey)) {
-                     indexTree[self.getParentKey(DataSet, record)] = [];
-                  }
-
-                  indexTree[self.getParentKey(DataSet, record)].push(record.getKey());
                   if (typeof iterateCallback == 'function') {
                      iterateCallback.call(this, record, curParentId, curLvl);
                   }
@@ -73,23 +63,25 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
                curParentId = null;
             }
          } while (curParentId);
-         this._indexTree = indexTree;
-         DataSet.setIndexTree(indexTree);
       },
 
-      _redraw: function () {
-         this._clearItems();
-         var records = [];
 
-         /*TODO вынести середину в переопределяемый метод*/
-         var self = this;
+      _getRecordsForRedraw: function() {
+         return this._getRecordsForRedrawCurFolder()
+      },
+
+      _getRecordsForRedrawCurFolder: function() {
+         /*Получаем только рекорды с parent = curRoot*/
+         var
+            records = [],
+            self = this;
          this._dataSet.each(function (record) {
-            if (self.getParentKey(self._dataSet, record) == self._curRoot) {
+            if (self._dataSet.getParentKey(record, self._options.hierField) == self._curRoot) {
                records.push(record);
             }
          });
 
-         this._drawItems(records);
+         return records;
       },
 
       refreshIndexTree: function () {
@@ -97,7 +89,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       },
 
       getParentKey: function (DataSet, record) {
-         return DataSet.getStrategy().getParentKey(record.get(this._options.hierField));
+         return this._dataSet.getParentKey(record, this._options.hierField)
       },
 
       /* отображение */
@@ -107,14 +99,6 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        * @param {String} root Идентификатор корня
        */
       setRoot: function (root) {
-
-      },
-
-      /**
-       * Открыть определенный путь
-       * @param {Array} path набор идентификаторов
-       */
-      setOpenedPath: function (path) {
 
       },
 
@@ -140,23 +124,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          this.openNode(key);
       },
 
-      after: {
-         _drawItems: function () {
-            this._drawOpenedPath();
-         }
 
-      },
-
-      _drawOpenedPath: function () {
-         if (this._options.openAllNodes) {
-            //TODO: Открыть для всех
-         }
-         else {
-            for (var i = 0; i < this._options.openedPath.length; i++) {
-               this.openNode(this._options.openedPath[i]);
-            }
-         }
-      },
 
       _nodeDataLoaded: function (key, dataSet) {
          this._notify('onDataLoad', dataSet);
@@ -167,7 +135,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          if (!this._dataSet){
             this._dataSet = dataSet;
          } else {
-            this._dataSet = this._dataSet.merge(dataSet);
+            this._dataSet.merge(dataSet);
          }
          this._curRoot = key;
          this._redraw();
