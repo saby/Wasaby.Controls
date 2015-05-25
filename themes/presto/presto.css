@@ -2086,6 +2086,11 @@ input[type="reset"]::-moz-focus-inner {
   position: relative;
   border-radius: 8px;
 }
+.controls-ProgressBar__backProgress {
+  height: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+}
 .controls-ProgressBar__progress {
   height: 100%;
   background: #a2e68c;
@@ -2112,6 +2117,12 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ProgressBar_align-right .controls-ProgressBar__value {
   width: auto;
   right: -40px;
+}
+.ws-disabled .controls-ProgressBar__progress {
+  background: #eeeeee;
+}
+.ws-disabled .controls-ProgressBar__value {
+  color: #aaaaaa;
 }
 .controls-ItemActions {
   position: absolute;
