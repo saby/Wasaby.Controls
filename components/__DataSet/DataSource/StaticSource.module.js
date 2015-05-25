@@ -187,7 +187,6 @@ define('js!SBIS3.CONTROLS.StaticSource', [
                         field: sortField,
                         order: sortItem[sortField]
                      });
-                     sortIndex++;
                   }
                }
             }
