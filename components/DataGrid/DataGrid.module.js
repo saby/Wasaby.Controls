@@ -258,6 +258,10 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
          this._options.columns = columns;
          this._thead.empty();
          this._colgroup.empty();
+         if (this._options.multiselect) {
+            this._thead.append('<th class="controls-DataGrid__th"></th>');
+            this._colgroup.append('<col width="24px">');
+         }
 
          for (var i = 0; i < columns.length; i++) {
             var column = $('<col/>');

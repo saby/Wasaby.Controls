@@ -1993,6 +1993,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:last-child {
   padding-right: 10px;
 }
+.controls-DataGrid .controls-ListView__folder {
+  font-size: 15px;
+}
 .controls-DataGrid .controls-DataGrid__td__checkBox {
   width: 24px;
 }
