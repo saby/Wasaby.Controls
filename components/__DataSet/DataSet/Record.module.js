@@ -45,16 +45,6 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
       },
 
       /**
-       * Обновляет запись в источнике данных.
-       * @param (SBIS3.CONTROLS.IDataSource) dataSource Источник данных
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
-       * @see {SBIS3.CONTROLS.IDataSource#update}
-       */
-      update: function (dataSource) {
-         return dataSource.update(this);
-      },
-
-      /**
        * Получить значение по наименованию поля
        * @param {String} field
        * @returns {*}

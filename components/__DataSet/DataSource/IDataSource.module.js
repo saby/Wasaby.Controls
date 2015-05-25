@@ -43,6 +43,11 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
         * @event onDataChange При изменении данных
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
         */
+      /**
+       * @event onDataSync При изменении синхронизации данных с источником
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param (SBIS3.CONTROLS.Record[]) records Измененные записи
+       */
       $protected: {
          _options: {
              /**
@@ -60,7 +65,7 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
       },
 
       $constructor: function () {
-         this._publish('onCreate', 'onRead', 'onUpdate', 'onDestroy', 'onQuery', 'onDataChange');
+         this._publish('onCreate', 'onRead', 'onUpdate', 'onDestroy', 'onQuery', 'onDataChange', 'onDataSync');
       },
 
       /**
@@ -73,43 +78,73 @@ define('js!SBIS3.CONTROLS.IDataSource', [], function () {
       },
 
       /**
-       * Cинхронизирует набор данных с источником данных.
-       * @param {SBIS3.CONTROLS.DataSet|SBIS3.CONTROLS.Record} dataSet Набор данных или отдельная запись
+       * Cинхронизирует набор данных или запись с источником данных.
+       * @param {SBIS3.CONTROLS.DataSet|SBIS3.CONTROLS.Record} data Набор данных или запись.
+       * @returns {$ws.proto.ParallelDeferred|$ws.proto.Deferred|undefined} Асинхронный результат выполнения.
        */
-      sync: function (dataSet) {
-         if ($ws.helpers.instanceOfModule(dataSet, 'SBIS3.CONTROLS.Record')) {
-            this._syncRecord(dataSet);
-            return;
+      sync: function (data) {
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Record')) {
+            return this._syncRecord(data);
+         } else {
+            return this._syncDataSet(data);
          }
+      },
+
+      /**
+       * Cинхронизирует набор данных с источником данных.
+       * @param {SBIS3.CONTROLS.DataSet} dataSet Набор данных.
+       * @param {Boolean} [notify=true] Генерировать событие 'onDataSync'.
+       * @returns {$ws.proto.ParallelDeferred} Асинхронный результат выполнения.
+       */
+      _syncDataSet: function (dataSet, notify) {
+         notify = notify === undefined ? true : notify;
 
          var self = this,
              syncCompleteDef = new $ws.proto.ParallelDeferred(),
              changedRecords = [];
          dataSet.each(function(record) {
-            var syncResult = self._syncRecord(record);
+            var syncResult = self._syncRecord(record, false);
             if (syncResult !== undefined) {
                syncCompleteDef.push(syncResult);
                changedRecords.push(record);
             }
          }, 'all');
+         syncCompleteDef.done();
 
-         syncCompleteDef.done().getResult().addCallback(function(){
-            self._notify('onDataSync', changedRecords);
-         });
+         if (notify) {
+            syncCompleteDef.getResult().addCallback(function() {
+               self._notify('onDataSync', changedRecords);
+            });
+         }
+
+         return syncCompleteDef;
       },
 
       /**
        * Cинхронизирует запись с источником данных.
        * @param {SBIS3.CONTROLS.Record} record Запись.
-       * @returns {$ws.proto.Deferred|undefined} Асинхронный результат выполнения. В колбэке придет SBIS3.CONTROLS.Record.
+       * @param {Boolean} [notify=true] Генерировать событие 'onDataSync'.
+       * @returns {$ws.proto.Deferred|undefined} Асинхронный результат выполнения. В колбэке придет результат операции.
        */
-      _syncRecord: function (record) {
-         if (record.getMarkStatus() == 'changed') {
-            return this.update(record);
+      _syncRecord: function (record, notify) {
+         notify = notify === undefined ? true : notify;
+
+         var mark = record.getMarkStatus(),
+             syncResult;
+         if (mark == 'deleted') {
+            syncResult = this.destroy(record.getKey());
+         } else if (mark == 'changed') {
+            syncResult = this.update(record);
          }
-         if (record.getMarkStatus() == 'deleted') {
-            return this.destroy(record.getKey());
+
+         if (notify && syncResult) {
+            var self = this;
+            syncResult.addCallback(function() {
+               self._notify('onDataSync', [record]);
+            });
          }
+
+         return syncResult;
       },
 
       /**
