@@ -72,37 +72,15 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
           */
          _BL: undefined
       },
+
       $constructor: function (cfg) {
          this._BL = new $ws.proto.ClientBLObject(cfg.service);
          this._options.strategy = cfg.strategy || new SbisJSONStrategy();
       },
-       /**
-        * Метод синхронизирует набор данных с источником данных.
-        * @param dataSet Набор данных.
-        */
-      sync: function (dataSet) {
-         var self = this,
-            syncCompleteDef = new $ws.proto.ParallelDeferred(),
-            changedRecords = [];
-         dataSet.each(function (record) {
-            if (record.getMarkStatus() == 'changed') {
-               syncCompleteDef.push(self.update(record));
-               changedRecords.push(record);
-            }
-            if (record.getMarkStatus() == 'deleted') {
-               syncCompleteDef.push(self.destroy(record.getKey()));
-               changedRecords.push(record);
-            }
-         }, 'all');
-
-         syncCompleteDef.done().getResult().addCallback(function () {
-            self._notify('onDataSync', changedRecords);
-         });
-      },
 
       /**
        * Вызов создания записи в источнике данных методом, указанным в опции {@link createMethodName}.
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет SBIS3.CONTROLS.Record.
        * @see createMethodName
        */
       create: function () {
@@ -141,7 +119,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       /**
        * Метод для {@link readMethodName чтения} записи её по идентификатору.
        * @param {Number} id Идентификатор записи.
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт js!SBIS3.CONTROLS.Record.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт SBIS3.CONTROLS.Record.
        * @see readMethodName
        */
       read: function (id) {
@@ -168,8 +146,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       /**
        * Вызов обновления записи на БЛ методом, указанным в опции {@link updateMethodName}.
        * @param (SBIS3.CONTROLS.Record) record Изменённая запись.
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
-       * В колбэке придёт Boolean - результат успешности выполнения операции.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт Boolean - результат успешности выполнения операции.
        * @see updateMethodName
        */
       update: function (record) {
@@ -193,8 +170,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       /**
        * Вызов удаления записи из БЛ методом, указанным в опции {@link destroyMethodName}.
        * @param {Array | Number} id Идентификатор записи или массив идентификаторов.
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
-       * В колбэке придет Boolean - результат успешности выполнения операции.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт Boolean - результат успешности выполнения операции.
        * @see destroyMethodName
        */
       destroy: function (id) {
@@ -218,11 +194,10 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
        * @remark
        * Возможно применение фильтрации, сортировки и выбора определенного количества записей с заданной позиции.
        * @param {Object} filter Параметры фильтрации вида - {property1: value, property2: value}.
-       * @param {Array} sorting Параметры сортировки вида - [{property1: 'ASC'},{property2: 'DESC'}].
+       * @param {Array} sorting Параметры сортировки вида - [{property1: 'ASC'}, {property2: 'DESC'}].
        * @param {Number} offset Смещение начала выборки.
        * @param {Number} limit Количество возвращаемых записей.
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
-       * В колбэке придет js!SBIS3.CONTROLS.DataSet - набор отобранных элементов.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет SBIS3.CONTROLS.DataSet - набор отобранных элементов.
        * @see queryMethodName
        */
       query: function (filter, sorting, offset, limit) {
