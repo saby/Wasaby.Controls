@@ -16,7 +16,7 @@ function(RadioGroupBase, dotTpl) {
     * @public
     * @initial
     * <component data-component='SBIS3.CONTROLS.RadioGroup'>
-    *    <option name="captionField">title</option>
+    *    <option name="displayField">title</option>
     *    <option name="keyField">id</option>
     *    <options name="items" type="array">
     *       <options>
@@ -62,7 +62,7 @@ function(RadioGroupBase, dotTpl) {
       },
 
       _getItemTemplate : function(item) {
-         var caption = item.get(this._options.captionField);
+         var caption = item.get(this._options.displayField);
          return '<component data-component="SBIS3.CONTROLS.RadioButton">' +
                '<option name="caption">'+caption+'</option>'+
             '</component>';

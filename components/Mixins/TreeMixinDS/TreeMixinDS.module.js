@@ -1,19 +1,11 @@
 define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
 
-   var treeExpandMap = {
-      'onlyFolders': 'Только узлы',
-      'items': 'Только листья',
-      'folders': 'С узлами и листьями'
-   };
-
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
     */
    var TreeMixinDS = /** @lends SBIS3.CONTROLS.TreeMixinDS.prototype */{
       $protected: {
-         _curLvl : null,
-         _ulClass: 'controls-TreeView__list',
          _options: {
             /**
              * @cfg {Boolean} При открытия узла закрывать другие
@@ -23,41 +15,28 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
 
             /**
              * Опция задаёт режим разворота.
-             * @variant '' Без разворота
-             * @variant items Только листья
-             * @variant onlyFolders Только узлы
-             * @variant folders С узлами и листьями
+             * @Boolean false Без разворота
              */
-            expand: ''
+            expand: false
 
          }
       },
 
 
-      _redraw: function () {
-         this._clearItems();
+      _getRecordsForRedraw: function() {
+         /*Получаем только рекорды с parent = curRoot*/
          var
-            self = this,
-            DataSet = this._dataSet;
+            records = [];
+         if (this._options.expand) {
+            this.hierIterate(this._dataSet, function (record) {
+               records.push(record);
+            });
+         }
+         else {
+            return this._getRecordsForRedrawCurFolder();
+         }
 
-         /*TODO вынести середину в переопределяемый метод*/
-
-         this.hierIterate(DataSet, function (record, parentId, lvl) {
-            var
-               parentKey = self.getParentKey(DataSet, record);
-
-            this._curLvl = lvl;
-
-            if ((parentKey == self._curRoot)) {
-               self._drawItem(record, undefined);
-            }
-         });
-
-         self.reviveComponents().addCallback(function () {
-            self._notify('onDrawItems');
-            self._drawItemsCallback();
-         });
-
+         return records;
       },
 
       /**
@@ -90,9 +69,20 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
             if (this._options.expand) {
                this._filter = this._filter || {};
                this._filter['Разворот'] = 'С разворотом';
-               this._filter['ВидДерева'] = treeExpandMap[this._options.expand];
+               this._filter['ВидДерева'] = 'Узлы и листья';
             }
          }
+      },
+
+      _loadNode : function(key) {
+         /*TODO проверка на что уже загружали*/
+         var filter = this._filter || {};
+         if (this._options.expand) {
+            filter['Разворот'] = 'С разворотом';
+            filter['ВидДерева'] = 'Узлы и листья';
+         }
+         filter[this._options.hierField] = key;
+         return this._dataSource.query(filter);
       },
 
       _nodeDataLoaded : function(key, dataSet) {
@@ -101,6 +91,10 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
             itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
 
+         this._dataSet.merge(dataSet);
+         this._dataSet._reindexTree(this._options.hierField);
+
+
          dataSet.each(function (record) {
             var targetContainer = self._getTargetContainer(record);
             if (targetContainer) {
@@ -108,11 +102,17 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
             }
          });
 
-         this.refreshIndexTree()
+
       },
 
       _nodeClosed : function(key) {
 
+      },
+
+      _drawItemsCallback: function() {
+         if (this._options.expand) {
+            $('.js-controls-TreeView__expand', this._container.get(0)).addClass('controls-TreeView__expand__open')
+         }
       }
    };
 

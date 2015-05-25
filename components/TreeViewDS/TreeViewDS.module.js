@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
 
       _getTargetContainer: function (record) {
          var
-            parentKey = this.getParentKey(this._dataSet, record),
+            parentKey = this._dataSet.getParentKey(record, this._options.hierField),
             curList;
 
          if (parentKey) {

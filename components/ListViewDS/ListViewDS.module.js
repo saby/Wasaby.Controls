@@ -366,7 +366,7 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
                }
             }
             else {
-               this.setSelectedIndexes([id]);
+               this.setSelectedKeys([id]);
                this._notify('onItemClick', id, data, target);
                if (this._options.elemClickHandler) {
                   this._options.elemClickHandler.call(this, id, data, target);
@@ -445,7 +445,7 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
          _getItemActionsPosition: function(item) {
             return {
                top: item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
-               right: this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
+               right: this._container[0].offsetWidth - (item.position.left + item.size.width)
             };
          },
          /**
@@ -553,7 +553,7 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
             if (this.isInfiniteScroll()) {
                this._loadBeforeScrollAppears();
             }
-            this._drawSelectedItems(this._options.selectedIndexes);
+            this._drawSelectedItems(this._options.selectedKeys);
          },
          destroy: function() {
             if (this.isInfiniteScroll()){

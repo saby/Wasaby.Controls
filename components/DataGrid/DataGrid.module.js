@@ -31,9 +31,8 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
              * @typedef {Object} Columns
              * @property {String} title Заголовок колонки
              * @property {String} field Имя поля
-             * @property {Number} Ширина колонки
+             * @property {Number} width Ширина колонки
              * Значение необходимо задавать для колонок с фиксированной шириной.
-             *
              * @property {String} className Имя класса, который будет применён к каждой ячейке столбца
              * @property {String} captionTemplate Шаблон отображения шапки колонки
              * @property {String} cellTemplate Шаблон отображения ячейки

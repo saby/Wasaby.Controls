@@ -163,8 +163,8 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
          };
       },
 
-      getParentKey: function (rawKey) {
-         return rawKey;
+      getParentKey: function (record, rawKey) {
+         return record.get(rawKey);
       },
       getEmptyRawData: function () {
          return [];
