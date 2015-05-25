@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
     * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuIcon'>
-    *    <option name="icon">sprite:icon-16 icon-AddButton icon-primary</option>
+    *    <option name="icon">sprite:icon-24 icon-AddButton icon-primary</option>
     *    <options name="items" type="array">
     *        <options>
     *            <option name="id">1</option>
