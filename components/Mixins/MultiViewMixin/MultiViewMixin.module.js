@@ -13,10 +13,7 @@ define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'
              */
             viewMode : 'table',
 
-            descriptionField : null,
-
             imageField : null,
-
             listTemplate : null,
             tileTemplate : null
          }
@@ -71,7 +68,7 @@ define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'
                         dotTpl = doT.template('<div>{{=it.item.get(it.description)}}</div>')
                      }
                   }
-                  resultTpl = dotTpl({item : item, description : this._options.descriptionField, image : this._options.imageField});
+                  resultTpl = dotTpl({item : item, description : this._options.displayField, image : this._options.imageField});
                   break;
                }
                case 'tile' : {
@@ -95,7 +92,7 @@ define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'
                         dotTpl = doT.template('<div><div class="controls-ListView__itemCheckBox"></div><img class="controls-MultiView__tileImg" src="' + src + '"/><div class="controls-MultiView__tileTitle">{{=it.item.get(it.description)}}</div></div>')
                      }
                   }
-                  resultTpl = dotTpl({item : item, description : this._options.descriptionField, image : this._options.imageField});
+                  resultTpl = dotTpl({item : item, description : this._options.displayField, image : this._options.imageField});
                   break;
                }
 
