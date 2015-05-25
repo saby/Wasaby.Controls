@@ -2258,6 +2258,11 @@ input[type="reset"]::-moz-focus-inner {
   position: relative;
   border-radius: 8px;
 }
+.controls-ProgressBar__backProgress {
+  height: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+}
 .controls-ProgressBar__progress {
   height: 100%;
   background: #a2e68c;
@@ -2284,6 +2289,12 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ProgressBar_align-right .controls-ProgressBar__value {
   width: auto;
   right: -40px;
+}
+.ws-disabled .controls-ProgressBar__progress {
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAARUlEQVQYVxXDCRIAEQwAwfn/Y9cRQcSxdFVzzmHvzVrrnsx5u+M+GOM2w6xjvdHbW2lVqfoWtAgqQpGM5ISkSH5jIIXvByxNRX+NbFFRAAAAAElFTkSuQmCC');
+}
+.ws-disabled .controls-ProgressBar__value {
+  color: #cccccc;
 }
 .controls-ItemActions {
   position: absolute;
