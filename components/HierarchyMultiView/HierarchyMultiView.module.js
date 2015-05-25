@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.HierarchyData
       _getItemActionsPosition: function(hoveredItem) {
          var viewMode = this.getViewMode(),
              itemActions = this.getItemsActions().getContainer(),
-             height = itemActions.height() / 2,
+             height = itemActions.height(),
              width = itemActions.width();
 
          return {
