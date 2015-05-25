@@ -100,21 +100,13 @@ define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'
             return resultTpl;
          },
 
-         _getHoveredItemConfig: function(parentFnc, target){
-            if (this._options.viewMode != 'tile'){
-               return parentFnc.call(this, target);
-            }
+         _getItemActionsPosition: function(parentFunc, item) {
+            if (this._options.viewMode == 'table') {
+               parentFnc.call(this, target);
+            } else 
             return {
-               key: target.data('id'),
-               container: target,
-               position: {
-                  top: target[0].offsetTop + 10,
-                  left: target[0].offsetLeft - 5
-               },
-               size: {
-                  height: 0,
-                  width: target[0].offsetWidth
-               }
+               top: item.position.top,
+               right: this._container[0].offsetWidth - (item.position.left + item.size.width)
             };
          },
 
