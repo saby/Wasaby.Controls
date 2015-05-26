@@ -1,11 +1,11 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.IDataSource', [], function () {
+define('js!SBIS3.CONTROLS.BaseSource', [], function () {
    'use strict';
 
    /**
-    * Интерфейс предназначен для работы с источником данных
+    * Базовый источник данных
     * @author Мануйлов Андрей
     * @public
     */
