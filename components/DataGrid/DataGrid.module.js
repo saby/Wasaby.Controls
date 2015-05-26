@@ -354,19 +354,23 @@ define('js!SBIS3.CONTROLS.DataGrid',
          }
          return cords.left;
       },
+
       _toggleActiveArrow: function(arrow, enable) {
          arrow.toggleClass('icon-disabled', !enable)
               .toggleClass('icon-primary action-hover', enable);
       },
+
       _isPartScrollNeeded: function() {
          return this._container[0].offsetWidth < this._getItemsContainer()[0].offsetWidth;
       },
+
       _hidePartScroll: function() {
          if(this._isPartScrollVisible) {
             this._getWithinElem().addClass('ws-hidden');
             this._isPartScrollVisible = false;
          }
       },
+
       _showPartScroll: function() {
          if(!this._isPartScrollVisible) {
             this._getWithinElem().removeClass('ws-hidden');
