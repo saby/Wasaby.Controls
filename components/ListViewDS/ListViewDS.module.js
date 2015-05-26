@@ -556,9 +556,6 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
             if (this.isInfiniteScroll()) {
                this._loadBeforeScrollAppears();
             }
-            if (this._options.showPaging) {
-               this._createPaging();
-            }
             this._drawSelectedItems(this._options.selectedKeys);
          },
          destroy: function() {
@@ -627,6 +624,7 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
                      records = dataSet._getRecords();
                      self._dataSet.merge(dataSet);
                      self._drawItems(records);
+                     self._dataLoadedCallback();
                   }
 
                }).addErrback(function(error){
@@ -710,11 +708,12 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
          },
          _dataLoadedCallback: function(){
             if (this._options.showPaging) {
+               this._processPaging();
                this._updateOffset();
             }
          },
          //------------------------Paging---------------------
-         _createPaging: function(){
+         _processPaging: function(){
             if (!this._paging) {
                var more = this._dataSet.getMetaData().more,
                      hasNextPage = this._hasNextPage(more),
@@ -737,12 +736,12 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
                   }
                });
             }
-            this._processPaging();
+            this._updatePaging();
          },
          /**
           * Метод обработки интеграции с пейджингом
           */
-         _processPaging : function(){
+         _updatePaging : function(){
             var more = this._dataSet.getMetaData().more,
                 nextPage = this.isInfiniteScroll() ? this._hasScrollMore : this._hasNextPage(more);
             if (this._paging) {

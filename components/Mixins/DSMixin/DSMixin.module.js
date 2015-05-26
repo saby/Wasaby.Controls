@@ -188,6 +188,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             self._redraw();
          });
       },
+      setPageSize: function(pageSize){
+         this._options.pageSize = pageSize;
+         this.reload(this._filter, this._sorting, 0, pageSize);
+      },
       //TODO Сделать публичным? вроде так всем захочется делать
       _isLoading: function () {
          return this._loader && !this._loader.isReady();
