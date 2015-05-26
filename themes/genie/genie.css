@@ -64,7 +64,7 @@ input[type="reset"]::-moz-focus-inner {
   text-align: center;
   min-width: 24px;
   height: 30px;
-  line-height: 28px;
+  line-height: normal;
   padding: 0;
   margin: auto;
   overflow: hidden;
@@ -161,7 +161,7 @@ input[type="reset"]::-moz-focus-inner {
   text-align: center;
   min-width: 24px;
   height: 54px;
-  line-height: 24px;
+  line-height: normal;
   padding: 0;
   margin: auto;
   border: 1px solid #d1d1d1;
