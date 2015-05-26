@@ -16,8 +16,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
       'use strict';
 
       var
-         ITEMS_ACTIONS_HEIGHT = 20,
-         ITEMS_ACTIONS_WIDTH  = 20;
+         ITEMS_ACTIONS_HEIGHT = 20;
 
       /**
        * Контрол, отображающий внутри себя набор однотипных сущностей.
@@ -266,7 +265,7 @@ this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
             if (target.length) {
                targetKey = target.data('id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
-this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
+                  this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
                   this._hoveredItem = {
                      key: targetKey,
                      container: target.addClass('controls-ListView__hoveredItem'),

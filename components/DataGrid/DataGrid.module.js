@@ -1,5 +1,16 @@
-define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS3.CONTROLS.DataGrid', 'html!SBIS3.CONTROLS.DataGrid/resources/rowTpl', 'js!SBIS3.CORE.MarkupTransformer'], function(ListView, dotTplFn, rowTpl, MarkupTransformer) {
-   'use strict';
+define('js!SBIS3.CONTROLS.DataGrid',
+   [
+      'js!SBIS3.CONTROLS.ListViewDS',
+      'html!SBIS3.CONTROLS.DataGrid',
+      'html!SBIS3.CONTROLS.DataGrid/resources/rowTpl',
+      'js!SBIS3.CORE.MarkupTransformer',
+      'js!SBIS3.CONTROLS.DragAndDropMixin'
+   ],
+   function(ListView, dotTplFn, rowTpl, MarkupTransformer, DragAndDropMixin) {
+      'use strict';
+
+      var
+         ITEMS_ACTIONS_HEIGHT = 20;
    /**
     * Контрол, отображающий набор данных в виде в таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.DataGrid
@@ -21,11 +32,21 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
     * </component>
     */
 
-   var DataGrid = ListView.extend(/** @lends SBIS3.CONTROLS.DataGrid.prototype*/ {
+   var DataGrid = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGrid.prototype*/ {
       _dotTplFn : dotTplFn,
       $protected: {
          _rowTpl : rowTpl,
          _rowData : [],
+         _isPartScrollVisible: false,
+         _movableElements: undefined,
+         _arrowLeft: undefined,
+         _arrowRight: undefined,
+         _thumb: undefined,
+         _stopMovingCords: {
+            left: 0,
+            right: 0
+         },
+         _scrollingNow: false,
          _options: {
             /**
              * @typedef {Object} Columns
@@ -75,7 +96,8 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
             editInPlace: {
                enabled: false,
                addInPlace: false
-            }
+            },
+            startScrollColumn: 1
          }
       },
 
@@ -88,6 +110,9 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
          DataGrid.superclass.init.call(this);
          if (this._options.editInPlace.enabled && this._options.editInPlace.addInPlace && !this._editInPlace) {
             this._initAddInPlace();
+         }
+         if(this._options.startScrollColumn !== undefined) {
+            this._initPartScroll();
          }
       },
       _initAddInPlace: function() {
@@ -189,8 +214,13 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
       _getItemTemplate: function(item){
          if (!this._options.itemTemplate) {
 
-            var rowData = {columns : [], multiselect : this._options.multiselect, hierField: this._options.hierField + '@'};
-            rowData.columns = $ws.core.clone(this._options.columns);
+            var rowData = {
+               columns : $ws.core.clone(this._options.columns),
+               multiselect : this._options.multiselect,
+               hierField: this._options.hierField + '@',
+               startScrollColumn: this._options.startScrollColumn
+            };
+
             for (var i = 0; i < rowData.columns.length; i++) {
                var value;
                if (rowData.columns[i].cellTemplate) {
@@ -212,9 +242,137 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
 
       },
 
-      _getItemActionsContainer : function(id) {
-         return $(".controls-ListView__item[data-id='" + id + "']", this._container.get(0)).find('.controls-DataGrid__td').last();
+      _drawItemsCallback: function () {
+         if(this._options.startScrollColumn !== undefined) {
+            var needShowScroll = this._isPartScrollNeeded();
+
+            this._isPartScrollVisible ?
+               needShowScroll ?
+                  this._updatePartScrollWidth() : this._hidePartScroll() :
+               needShowScroll ?
+                  this._showPartScroll() : this._hidePartScroll();
+
+            this._movableElems = this._findMovableCells();
+         }
       },
+      /************************/
+      /*   Частичный скролл   */
+      /***********************/
+      _initPartScroll: function() {
+         this._arrowLeft = this._thead.find('.controls-DataGrid__PartScroll__arrowLeft');
+         this._arrowRight = this._thead.find('.controls-DataGrid__PartScroll__arrowRight');
+         this._thumb = this._getDragContainer();
+         this.initializeDragAndDrop();
+      },
+
+      _dragStart: function() {
+         $ws._const.$body.addClass('ws-unSelectable')
+         this._scrollingNow = true;
+      },
+
+      _dragEnd: function() {
+         $ws._const.$body.removeClass('ws-unSelectable')
+         this._scrollingNow = false;
+      },
+
+      _getDragContainer: function() {
+         return this._thead.find('.controls-DataGrid__PartScroll__thumb');
+      },
+
+      _getWithinElem: function() {
+         return this._thead.find('.controls-DataGrid__PartScroll__container');
+      },
+
+      _dragMove: function(event, cords) {
+         var correctCords = this._checkThumbPosition(cords),
+            movePosition = -correctCords*this._partScrollRatio;
+
+         this._setThumbPosition(correctCords);
+         for(var i= 0, len = this._movableElems.length; i < len; i++) {
+            this._movableElems[i].style.left = movePosition + 'px';
+         }
+      },
+
+      _setThumbPosition: function(cords) {
+         this._thumb[0].style.left = cords + 'px';
+      },
+
+      _updatePartScrollWidth: function() {
+         var containerWidth = this._container[0].offsetWidth,
+            tableWidth = this._getItemsContainer()[0].offsetWidth,
+            scrollContainer = this._getWithinElem(),
+            thumbWidth = this._thumb[0].offsetWidth,
+            correctMargin = 0,
+            notScrolledCells;
+
+         /* Найдём ширину нескролируемых колонок */
+         if(this._options.startScrollColumn > 0) {
+            notScrolledCells = this._thead.find('tr').eq(0).find('.controls-DataGrid__notScrolledCell');
+            for(var i = 0, len = notScrolledCells.length; i < len; i++) {
+               correctMargin += notScrolledCells[i].offsetWidth
+            }
+            /* Сдвинем контейнер скрола на ширину нескролируемых колонок */
+            scrollContainer[0].style.marginLeft = correctMargin + 'px';
+         }
+         /* Проставим ширину контейнеру скрола */
+         scrollContainer[0].style.width = containerWidth - correctMargin + 'px';
+
+         /* Найдём соотношение, для того чтобы правильно двигать скролируемый контент относительно ползунка */
+         this._partScrollRatio = (tableWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - 40);
+         this._stopMovingCords.right = scrollContainer[0].offsetWidth - thumbWidth - 40;
+      },
+
+      _findMovableCells: function() {
+         //firefox запрещает двигать табличные элементы, поэтому ищем вложенные
+         return $ws._const.browser.firefox ?
+            this._container.find('.controls-DataGrid__scrolledCell').children() : this._container.find('.controls-DataGrid__scrolledCell');
+      },
+
+      _checkThumbPosition: function(cords) {
+         if (cords.left <= this._stopMovingCords.left){
+            this._toggleActiveArrow(this._arrowLeft, false);
+            return 0;
+         } else if (!this._arrowLeft.hasClass('icon-primary')) {
+            this._toggleActiveArrow(this._arrowLeft, true);
+         }
+
+         if (cords.left >= this._stopMovingCords.right) {
+            this._toggleActiveArrow(this._arrowRight, false);
+            return this._stopMovingCords.right;
+         } else if (!this._arrowRight.hasClass('icon-primary')) {
+            this._toggleActiveArrow(this._arrowRight, true);
+         }
+         return cords.left;
+      },
+      _toggleActiveArrow: function(arrow, enable) {
+         arrow.toggleClass('icon-disabled', !enable)
+            .toggleClass('icon-primary action-hover', enable);
+      },
+      _isPartScrollNeeded: function() {
+         return this._container[0].offsetWidth < this._getItemsContainer()[0].offsetWidth;
+      },
+      _hidePartScroll: function() {
+         if(this._isPartScrollVisible) {
+            this._getWithinElem().addClass('ws-hidden');
+            this._isPartScrollVisible = false;
+         }
+      },
+      _showPartScroll: function() {
+         if(!this._isPartScrollVisible) {
+            this._getWithinElem().removeClass('ws-hidden');
+            this._updatePartScrollWidth();
+            this._isPartScrollVisible = true;
+         }
+      },
+
+      isNowScrolling: function() {
+         return this._scrollingNow;
+      },
+
+      /*******************************/
+      /*  Конец частичного скролла   */
+      /*******************************/
+
        /**
         * Метод получения текущего описания колонок представления данных.
         * @returns {*|columns} Описание набора колонок.
@@ -254,25 +412,39 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
         *    dataGrid.setColumns(newColumns);
         * </pre>
         */
-      setColumns : function(columns) {
-         this._options.columns = columns;
-         this._thead.empty();
-         this._colgroup.empty();
-         if (this._options.multiselect) {
-            this._thead.append('<th class="controls-DataGrid__th"></th>');
-            this._colgroup.append('<col width="24px">');
+       setColumns : function(columns) {
+          var headerTr = $('<tr>'),
+              docFragmentForColGroup = document.createDocumentFragment();
+
+          this._thead.find('.controls-DataGrid__th').eq(0).parent().remove();
+          this._colgroup.empty();
+          this._options.columns = columns;
+
+          for (var i = 0; i < columns.length; i++) {
+             var column = document.createElement('col');
+             if (columns[i]['width']) column.width = columns[i]['width'];
+             docFragmentForColGroup.appendChild(column);
+             headerTr.append(
+                $('<th class="controls-DataGrid__th' +
+                (this._options.startScrollColumn !== undefined ? this._options.startScrollColumn <= i ?
+                      ' controls-DataGrid__scrolledCell' : ' controls-DataGrid__notScrolledCell' : '')
+                + '"></th>').text(columns[i].title));
+          }
+
+          this._colgroup.append(docFragmentForColGroup);
+          this._thead.prepend(headerTr);
+          this._redraw();
+       },
+      _getItemActionsPosition: function(item) {
+         return {
+            top: item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
+            right: 0
+         };
+      },
+      _showItemActions: function() {
+         if(!this._scrollingNow) {
+            DataGrid.superclass._showItemActions.call(this);
          }
-
-         for (var i = 0; i < columns.length; i++) {
-            var column = $('<col/>');
-            if (columns[i]['width']) column.attr('width', columns[i]['width']);
-            this._colgroup.append(column);
-
-            var th = $('<th class="controls-DataGrid__th"></th>').text(columns[i].title);
-            this._thead.append(th);
-         }
-
-         this._redraw();
       },
 
       _getLeftOfItemContainer : function(container) {
