@@ -7,6 +7,11 @@
    position: relative;
    border-radius: @controls-ProgressBar-border-radius;
 }
+.controls-ProgressBar__backProgress {
+  height: 100%;
+  overflow: hidden;
+  border-radius: @controls-ProgressBar-border-radius;
+}
 .controls-ProgressBar__progress {
    height: 100%;
    background: @controls-ProgressBar-progress-bg;
@@ -33,4 +38,12 @@
 .controls-ProgressBar_align-right .controls-ProgressBar__value{
    width: auto;
    right: -@controls-ProgressBar-side-space;
+}
+.ws-disabled {
+  .controls-ProgressBar__progress {
+    background: @button-disabled-bg;
+  }
+  .controls-ProgressBar__value {
+    color: @button-disabled-text-color;
+  }
 }

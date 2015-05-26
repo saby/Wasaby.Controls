@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
       },
 
       _getItemTemplate : function(item) {
-         var caption = item.get(this._options.captionField);
+         var caption = item.get(this._options.displayField);
          return '<component data-component="SBIS3.CONTROLS.CheckBox">' +
                   '<option name="caption">'+caption+'</option>'+
                 '</component>';
