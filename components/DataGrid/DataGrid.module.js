@@ -285,7 +285,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
       _dragMove: function(event, cords) {
          var correctCords = this._checkThumbPosition(cords),
-            movePosition = -correctCords*this._partScrollRatio;
+             movePosition = -correctCords*this._partScrollRatio;
 
          this._setThumbPosition(correctCords);
          for(var i= 0, len = this._movableElems.length; i < len; i++) {
@@ -299,11 +299,10 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
       _updatePartScrollWidth: function() {
          var containerWidth = this._container[0].offsetWidth,
-            tableWidth = this._getItemsContainer()[0].offsetWidth,
-            scrollContainer = this._getWithinElem(),
-            thumbWidth = this._thumb[0].offsetWidth,
-            correctMargin = 0,
-            notScrolledCells;
+             scrollContainer = this._getWithinElem(),
+             thumbWidth = this._thumb[0].offsetWidth,
+             correctMargin = 0,
+             notScrolledCells;
 
          /* Найдём ширину нескролируемых колонок */
          if(this._options.startScrollColumn > 0) {
@@ -318,7 +317,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
          scrollContainer[0].style.width = containerWidth - correctMargin + 'px';
 
          /* Найдём соотношение, для того чтобы правильно двигать скролируемый контент относительно ползунка */
-         this._partScrollRatio = (tableWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - 40);
+         this._partScrollRatio = (this._getItemsContainer()[0].offsetWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - 40);
          this._stopMovingCords.right = scrollContainer[0].offsetWidth - thumbWidth - 40;
       },
 
@@ -346,7 +345,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
       },
       _toggleActiveArrow: function(arrow, enable) {
          arrow.toggleClass('icon-disabled', !enable)
-            .toggleClass('icon-primary action-hover', enable);
+              .toggleClass('icon-primary action-hover', enable);
       },
       _isPartScrollNeeded: function() {
          return this._container[0].offsetWidth < this._getItemsContainer()[0].offsetWidth;
@@ -442,7 +441,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
          };
       },
       _showItemActions: function() {
-         if(!this._scrollingNow) {
+         if(!this.isNowScrolling()) {
             DataGrid.superclass._showItemActions.call(this);
          }
       },
