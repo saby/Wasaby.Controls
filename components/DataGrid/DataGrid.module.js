@@ -37,16 +37,17 @@ define('js!SBIS3.CONTROLS.DataGrid',
       $protected: {
          _rowTpl : rowTpl,
          _rowData : [],
-         _isPartScrollVisible: false,
-         _movableElements: undefined,
-         _arrowLeft: undefined,
-         _arrowRight: undefined,
-         _thumb: undefined,
+         _isPartScrollVisible: false,                 //Видимость скроллбара
+         _movableElements: undefined,                 //Скролируемые элементы
+         _arrowLeft: undefined,                       //Контейнер для левой стрелки
+         _arrowRight: undefined,                      //Контейнер для правой стрелки
+         _thumb: undefined,                           //Контейнер для ползунка
          _stopMovingCords: {
             left: 0,
             right: 0
          },
-         _scrollingNow: false,
+         _currentThumbPosition: undefined,            //Контейнер скроллбара
+         _scrollingNow: false,                        //Флаг обозаначающий, происходит ли в данный момент скролирование элементов
          _options: {
             /**
              * @typedef {Object} Columns
@@ -259,19 +260,24 @@ define('js!SBIS3.CONTROLS.DataGrid',
       /*   Частичный скролл   */
       /***********************/
       _initPartScroll: function() {
-         this._arrowLeft = this._thead.find('.controls-DataGrid__PartScroll__arrowLeft');
-         this._arrowRight = this._thead.find('.controls-DataGrid__PartScroll__arrowRight');
+         (this._arrowLeft = this._thead.find('.controls-DataGrid__PartScroll__arrowLeft')).click(this._arrowClickHandler.bind(this, true));
+         (this._arrowRight = this._thead.find('.controls-DataGrid__PartScroll__arrowRight')).click(this._arrowClickHandler.bind(this, false));
          this._thumb = this._getDragContainer();
          this.initializeDragAndDrop();
       },
 
       _dragStart: function() {
-         $ws._const.$body.addClass('ws-unSelectable')
+         $ws._const.$body.addClass('ws-unSelectable');
          this._scrollingNow = true;
       },
 
+      _arrowClickHandler: function(isRightArrow) {
+         var shift = (this._getWithinElem()[0].offsetWidth/100)*5;
+         this._dragMove(false, {left: (parseInt(a._thumb[0].style.left) || 0) + (isRightArrow ?  -shift : shift)});
+      },
+
       _dragEnd: function() {
-         $ws._const.$body.removeClass('ws-unSelectable')
+         $ws._const.$body.removeClass('ws-unSelectable');
          this._scrollingNow = false;
       },
 
