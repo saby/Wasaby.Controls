@@ -200,7 +200,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        */
       _cancelLoading: function () {
          if (this._isLoading()) {
-           // this._loader.cancel();
+            this._loader.cancel();
          }
          this._loader = null;
       },

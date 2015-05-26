@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
                enabled: false,
                addInPlace: false
             },
-            startScrollColumn: 1
+            startScrollColumn: undefined
          }
       },
 
