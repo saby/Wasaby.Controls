@@ -10,9 +10,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
       'js!SBIS3.CONTROLS.ItemActionsGroup',
       'html!SBIS3.CONTROLS.ListViewDS',
       'js!SBIS3.CONTROLS.CommonHandlers',
-      'js!SBIS3.CORE.Paging'
+      'js!SBIS3.CORE.Paging',
+      'js!SBIS3.CORE.Pager'
    ],
-   function (CompoundControl, DSMixin, MultiSelectable, ItemActionsGroup, dotTplFn, CommonHandlers, Paging) {
+   function (CompoundControl, DSMixin, MultiSelectable, ItemActionsGroup, dotTplFn, CommonHandlers, Paging, Pager) {
 
       'use strict';
 
@@ -198,7 +199,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 * @see isInfiniteScroll
                 * @see setInfiniteScroll
                 */
-               infiniteScroll: false
+               infiniteScroll: false,
+               ignoreLocalPageSize : false
             },
             _loadingIndicator: undefined,
             _hasScrollMore : true,
@@ -208,12 +210,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _isLoadBeforeScrollAppears : true,
             _infiniteScrollContainer: null,
             _paging : undefined,
-            _pageChangeDeferred : undefined
+            _pageChangeDeferred : undefined,
+            _pager : undefined
          },
 
          $constructor: function () {
             var self = this;
-this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
+            this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
             this._container.mouseup(function (e) {
                if (e.which == 1) {
                   var $target = $(e.target),
@@ -734,6 +737,14 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
                         self._pageChangeDeferred = deferred;
                      }
                   }
+               });
+            }
+            if (!this._pager) {
+               this._pager = new Pager({
+                  pageSize : this._options.pageSize,
+                  opener : this,
+                  element: this.getContainer().find('.controls-ListView__pager-container'),
+                  allowChangeEnable: false //Запрещаем менять состояние, т.к. он нужен активный всегда
                });
             }
             this._updatePaging();
