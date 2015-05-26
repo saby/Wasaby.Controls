@@ -262,7 +262,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
       _initPartScroll: function() {
          (this._arrowLeft = this._thead.find('.controls-DataGrid__PartScroll__arrowLeft')).click(this._arrowClickHandler.bind(this, true));
          (this._arrowRight = this._thead.find('.controls-DataGrid__PartScroll__arrowRight')).click(this._arrowClickHandler.bind(this, false));
-         this._thumb = this._getDragContainer();
+         (this._thumb = this._getDragContainer()).mousedown(this._thumbClickHandler.bind(this));
          this.initializeDragAndDrop();
       },
 
@@ -276,8 +276,13 @@ define('js!SBIS3.CONTROLS.DataGrid',
          this._dragMove(false, {left: (parseInt(a._thumb[0].style.left) || 0) + (isRightArrow ?  -shift : shift)});
       },
 
+      _thumbClickHandler: function() {
+        this._thumb.addClass('controls-DataGrid__PartScroll__thumb-clicked');
+      },
+
       _dragEnd: function() {
          $ws._const.$body.removeClass('ws-unSelectable');
+         this._thumb.removeClass('controls-DataGrid__PartScroll__thumb-clicked');
          this._scrollingNow = false;
       },
 
@@ -454,6 +459,19 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
       _getLeftOfItemContainer : function(container) {
          return $(".controls-DataGrid__td", container.get(0)).first();
+      },
+
+      destroy: function() {
+         if(this._options.startScrollColumn !== undefined) {
+            this._thumb.unbind('click');
+            this._thumb = undefined;
+            this._arrowLeft.unbind('click');
+            this._arrowLeft = undefined;
+            this._arrowRight.unbind('click');
+            this._arrowRight = undefined;
+            this._movableElems = [];
+         }
+         DataGrid.superclass.destroy.call(this);
       }
 
    });

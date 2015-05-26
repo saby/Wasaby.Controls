@@ -68,13 +68,16 @@
        .controls-DataGrid__PartScroll__thumb {
          height: @data-grid-partScroll-thumb-height;
          width: @data-grid-partScroll-thumb-width;
-         top: @data-grid-partScroll-thumb-top-shift;
          margin-left: @data-grid-partScroll-thumb-margin;
          z-index: @data-grid-partScroll-thumb-zIndex;
          border-radius: @data-grid-partScroll-thumb-border-radius;
          background-color: @data-grid-partScroll-thumb-color;
          position: absolute;
          cursor: pointer;
+         &:hover, &.controls-DataGrid__PartScroll__thumb-clicked {
+           height: @data-grid-partScroll-thumb-height-hover;
+           top: @data-grid-partScroll-thumb-top-shift;
+         }
        }
      }
 

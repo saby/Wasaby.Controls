@@ -1999,15 +1999,19 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__thumb {
-  height: 5px;
+  height: 3px;
   width: 96px;
-  top: -1px;
   margin-left: 20px;
   z-index: 2;
-  border-radius: 2px 2px;
+  border-radius: 3px 3px;
   background-color: #313e78;
   position: absolute;
   cursor: pointer;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__thumb:hover,
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__thumb.controls-DataGrid__PartScroll__thumb-clicked {
+  height: 6px;
+  top: -1px;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th {
   position: relative;

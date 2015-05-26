@@ -209,8 +209,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
          $constructor: function () {
             var self = this;
-this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
-            this._container.mouseup(function (e) {
+            this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
+            this._container.mousedown(function (e) {
                if (e.which == 1) {
                   var $target = $(e.target),
                       target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
@@ -554,16 +554,6 @@ this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
             }
             this._drawSelectedItems(this._options.selectedKeys);
          },
-         destroy: function() {
-            if (this.isInfiniteScroll()){
-               if (this._infiniteScrollContainer.length) {
-                  this._infiniteScrollContainer.unbind('.wsInfiniteScroll');
-               } else {
-                  $(window).unbind('.wsInfiniteScroll');
-               }
-            }
-            ListViewDS.superclass.destroy.call(this);
-         },
          //-----------------------------------infiniteScroll------------------------
          //TODO Сделать подгрузку вверх
          //TODO (?) избавиться от _allowInfiniteScroll - пусть все будет завязано на опцию infiniteScroll
@@ -698,6 +688,16 @@ this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
           */
          getHoveredItem: function() {
            return this._hoveredItem;
+         },
+         destroy: function() {
+            if (this.isInfiniteScroll()){
+               if (this._infiniteScrollContainer.length) {
+                  this._infiniteScrollContainer.unbind('.wsInfiniteScroll');
+               } else {
+                  $(window).unbind('.wsInfiniteScroll');
+               }
+            }
+            ListViewDS.superclass.destroy.call(this);
          }
       });
 
