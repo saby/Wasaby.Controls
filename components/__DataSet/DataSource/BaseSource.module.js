@@ -141,7 +141,7 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
        * @see onCreate
        */
       create: function () {
-         /*Method must be implemented*/
+         throw new Error('Method must be implemented');
       },
 
       /**
@@ -151,27 +151,27 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
        * @see onRead
        */
       read: function (id) {
-         /*Method must be implemented*/
+         throw new Error('Method must be implemented');
       },
 
       /**
        * Метод для обновления записи в источнике данных.
        * @param (SBIS3.CONTROLS.Record) record Измененная запись.
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт Boolean - результат успешности выполнения операции.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт Boolean - результат выполнения операции.
        * @see onUpdate
        */
       update: function (record) {
-         /*Method must be implemented*/
+         throw new Error('Method must be implemented');
       },
 
       /**
        * Метод для удаления записи из источника данных.
        * @param {Array | Number} id Идентификатор записи или массив идентификаторов.
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт Boolean - результат успешности выполнения операции.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт Boolean - результат выполнения операции.
        * @see onDestroy
        */
       destroy: function (id) {
-         /*Method must be implemented*/
+         throw new Error('Method must be implemented');
       },
 
       /**
@@ -181,11 +181,11 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
        * @param {Array} sorting Параметры сортировки вида - [{property1: 'ASC'}, {property2: 'DESC'}].
        * @param {Number} offset Смещение начала выборки.
        * @param {Number} limit Количество возвращаемых записей.
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт SBIS3.CONTROLS.DataSet - набор отобранных элементов.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт SBIS3.CONTROLS.DataSet - набор выбранных записей.
        * @see onQuery
        */
       query: function (filter, sorting, offset, limit) {
-         /*Method must be implemented*/
+         throw new Error('Method must be implemented');
       }
 
    });

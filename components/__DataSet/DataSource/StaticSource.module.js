@@ -75,16 +75,6 @@ define('js!SBIS3.CONTROLS.StaticSource', [
          return def;
       },
 
-      /**
-       * Метод для получения набора записей из источника данных.
-       * Возможно применение фильтрации, сортировки и выбора определённого количества записей с заданной позиции.
-       * @param {Object} filter Параметры фильтрации вида - {property1: value, property2: value}.
-       * @param {Array} sorting Параметры сортировки вида - [{property1: 'ASC'},{property2: 'DESC'}].
-       * @param {Number} offset Смещение начала выборки.
-       * @param {Number} limit Количество возвращаемых записей.
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
-       * В колбэке придёт js!SBIS3.CONTROLS.DataSet - набор отобранных элементов.
-       */
       query: function (filter, sorting, offset, limit) {
 
          var def = new $ws.proto.Deferred(),
@@ -100,7 +90,6 @@ define('js!SBIS3.CONTROLS.StaticSource', [
          def.callback(DS);
          return def;
       }
-
 
    });
 });
