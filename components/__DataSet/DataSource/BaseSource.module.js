@@ -80,68 +80,56 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
       /**
        * Cинхронизирует набор данных или запись с источником данных.
        * @param {SBIS3.CONTROLS.DataSet|SBIS3.CONTROLS.Record} data Набор данных или запись.
-       * @returns {$ws.proto.ParallelDeferred|$ws.proto.Deferred|undefined} Асинхронный результат выполнения.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
        */
       sync: function (data) {
+         var self = this,
+             def;
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Record')) {
-            return this._syncRecord(data);
+            def = this._syncRecord(data);
          } else {
-            return this._syncDataSet(data);
+            def = this._syncDataSet(data);
          }
+         def = def || $ws.proto.Deferred.success(false);
+
+         def.addCallback(function() {
+            self._notify('onDataSync');
+         });
+
+         return def;
       },
 
       /**
        * Cинхронизирует набор данных с источником данных.
        * @param {SBIS3.CONTROLS.DataSet} dataSet Набор данных.
-       * @param {Boolean} [notify=true] Генерировать событие 'onDataSync'.
-       * @returns {$ws.proto.ParallelDeferred} Асинхронный результат выполнения.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
        */
-      _syncDataSet: function (dataSet, notify) {
-         notify = notify === undefined ? true : notify;
-
+      _syncDataSet: function (dataSet) {
          var self = this,
-             syncCompleteDef = new $ws.proto.ParallelDeferred(),
-             changedRecords = [];
+             syncCompleteDef = new $ws.proto.ParallelDeferred();
          dataSet.each(function(record) {
-            var syncResult = self._syncRecord(record, false);
+            var syncResult = self._syncRecord(record);
             if (syncResult !== undefined) {
                syncCompleteDef.push(syncResult);
-               changedRecords.push(record);
             }
          }, 'all');
          syncCompleteDef.done();
 
-         if (notify) {
-            syncCompleteDef.getResult().addCallback(function() {
-               self._notify('onDataSync', changedRecords);
-            });
-         }
-
-         return syncCompleteDef;
+         return syncCompleteDef.getResult();
       },
 
       /**
        * Cинхронизирует запись с источником данных.
        * @param {SBIS3.CONTROLS.Record} record Запись.
-       * @param {Boolean} [notify=true] Генерировать событие 'onDataSync'.
-       * @returns {$ws.proto.Deferred|undefined} Асинхронный результат выполнения. В колбэке придет результат операции.
+       * @returns {$ws.proto.Deferred|undefined} Асинхронный результат выполнения. В колбэке придет результат выполненной операции.
        */
-      _syncRecord: function (record, notify) {
-         notify = notify === undefined ? true : notify;
-
+      _syncRecord: function (record) {
          var mark = record.getMarkStatus(),
              syncResult;
          if (mark == 'deleted') {
             syncResult = this.destroy(record.getKey());
          } else if (mark == 'changed') {
             syncResult = this.update(record);
-         }
-
-         if (notify && syncResult) {
-            var self = this;
-            syncResult.addCallback(function() {
-               self._notify('onDataSync', [record]);
-            });
          }
 
          return syncResult;
