@@ -273,7 +273,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
       _arrowClickHandler: function(isRightArrow) {
          var shift = (this._getWithinElem()[0].offsetWidth/100)*5;
-         this._dragMove(false, {left: (parseInt(a._thumb[0].style.left) || 0) + (isRightArrow ?  -shift : shift)});
+         this._dragMove(false, {left: (parseInt(this._thumb[0].style.left) || 0) + (isRightArrow ?  -shift : shift)});
       },
 
       _thumbClickHandler: function() {
@@ -333,9 +333,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
       },
 
       _findMovableCells: function() {
-         //firefox запрещает двигать табличные элементы, поэтому ищем вложенные
-         return $ws._const.browser.firefox ?
-            this._container.find('.controls-DataGrid__scrolledCell').children() : this._container.find('.controls-DataGrid__scrolledCell');
+         return this._container.find('.controls-DataGrid__scrolledCell');
       },
 
       _checkThumbPosition: function(cords) {
