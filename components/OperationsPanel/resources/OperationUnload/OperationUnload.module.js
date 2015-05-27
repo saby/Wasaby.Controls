@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
          this._prepareOperation('Что сохранить в ' + itemId);
       },
       _isSelectedState: function(){
-         return this._view.getSelectedItems().length > 0;
+         return this._view.getSelectedKeys().length > 0;
       },
       applyOperation: function(dataSet){
          var cfg = {

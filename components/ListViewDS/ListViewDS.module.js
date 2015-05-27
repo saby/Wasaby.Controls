@@ -9,9 +9,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
       'js!SBIS3.CONTROLS.MultiSelectable',
       'js!SBIS3.CONTROLS.ItemActionsGroup',
       'html!SBIS3.CONTROLS.ListViewDS',
-      'js!SBIS3.CONTROLS.CommonHandlers'
+      'js!SBIS3.CONTROLS.CommonHandlers',
+      'js!SBIS3.CONTROLS.Pager'
    ],
-   function (CompoundControl, DSMixin, MultiSelectable, ItemActionsGroup, dotTplFn, CommonHandlers) {
+   function (CompoundControl, DSMixin, MultiSelectable, ItemActionsGroup, dotTplFn, CommonHandlers, Pager) {
 
       'use strict';
 
@@ -196,7 +197,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 * @see isInfiniteScroll
                 * @see setInfiniteScroll
                 */
-               infiniteScroll: false
+               infiniteScroll: false,
+               ignoreLocalPageSize : false
             },
             _loadingIndicator: undefined,
             _hasScrollMore : true,
@@ -204,13 +206,15 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _allowInfiniteScroll: true,
             _scrollIndicatorHeight: 32,
             _isLoadBeforeScrollAppears : true,
-            _infiniteScrollContainer: null
+            _infiniteScrollContainer: null,
+            _pageChangeDeferred : undefined,
+            _pager : undefined
          },
 
          $constructor: function () {
             var self = this;
             this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
-            this._container.mousedown(function (e) {
+            this._container.mouseup(function (e) {
                if (e.which == 1) {
                   var $target = $(e.target),
                       target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
@@ -243,6 +247,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             return null;
          },
 
+         _checkPagingContainer: function(target) {
+            if(!this._options.showPaging) {
+               return false;
+            }
+            return this._pager && $.contains(this._pager.getContainer()[0], target[0]);
+         },
+
          /**
           * Обрабатывает перемещения мышки на элемент представления
           * @param e
@@ -250,14 +261,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           */
          _mouseMoveHandler: function(e) {
             var $target = $(e.target),
-               target,
-               targetKey;
+                target,
+                targetKey;
             //Если увели мышку на оперции по ховеру, то делать ничего не надо
             if(this._mouseOnItemActions) {
                return;
             }
             //Если увели мышку с контейнера с элементами(например на шапку), нужно об этом посигналить
-            if (this._checkHeadContainer($target)) {
+            if (this._checkHeadContainer($target) || this._checkPagingContainer($target)) {
                this._mouseLeaveHandler();
                return;
             }
@@ -265,37 +276,25 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (target.length) {
                targetKey = target.data('id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
+                  var cords = this._container[0].getBoundingClientRect(),
+                      targetCords = target[0].getBoundingClientRect();
                   this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
                   this._hoveredItem = {
                      key: targetKey,
                      container: target.addClass('controls-ListView__hoveredItem'),
                      position: {
-                        top: target[0].offsetTop,
-                        left: target[0].offsetLeft
+                        top: targetCords.top - cords.top,
+                        left: targetCords.left - cords.left
                      },
                      size: {
                         height: target[0].offsetHeight,
                         width: target[0].offsetWidth
                      }
-                  };                  this._notify('onChangeHoveredItem', this._hoveredItem);
+                  };
+                  this._notify('onChangeHoveredItem', this._hoveredItem);
                   this._onChangeHoveredItem(this._hoveredItem);
                }
             }
-         },
-
-         _getHoveredItemConfig: function(target){
-            return {
-               key: target.data('id'),
-               container: target,
-               position: {
-                  top: target[0].offsetTop,
-                  left: target[0].offsetLeft
-               },
-               size: {
-                  height: target[0].offsetHeight,
-                  width: target[0].offsetWidth
-               }
-            };
          },
          /**
           * Обрабатывает уведение мышки с элемента представления
@@ -598,18 +597,21 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                this._addLoadingIndicator();
                this._loader = this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset  + this._limit, this._limit).addCallback(function (dataSet) {
                   self._loader = null;//_cancelLoading?
-                  //Если данные пришли, нарисуем
-                  if (dataSet.getCount()) {
-                     records = dataSet._getRecords();
-                     self._dataSet.merge(dataSet);
-                     self._drawItems(records);
-                  }
+                  //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                   if (self._hasNextPage(dataSet.getMetaData().more)){
                      self._infiniteScrollOffset += self._limit;
                   } else {
                      self._hasScrollMore = false;
                      self._removeLoadingIndicator();
                   }
+                  //Если данные пришли, нарисуем
+                  if (dataSet.getCount()) {
+                     records = dataSet._getRecords();
+                     self._dataSet.merge(dataSet);
+                     self._drawItems(records);
+                     self._dataLoadedCallback();
+                  }
+
                }).addErrback(function(error){
                   //Здесь при .cancel приходит ошибка вида DeferredCanceledError
                   return error;
@@ -688,6 +690,114 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           */
          getHoveredItem: function() {
            return this._hoveredItem;
+         },
+         _dataLoadedCallback: function(){
+            if (this._options.showPaging) {
+               this._processPaging();
+               this._updateOffset();
+            }
+         },
+         //------------------------Paging---------------------
+         _processPaging: function(){
+            if (!this._pager) {
+               var more = this._dataSet.getMetaData().more,
+                     hasNextPage = this._hasNextPage(more),
+                     pagingOptions ={
+                        recordsPerPage: this._options.pageSize || more,
+                        currentPage:  1,
+                        recordsCount: more,
+                        pagesLeftRight: 3,
+                        onlyLeftSide: typeof more === 'boolean', // (this._options.display.usePaging === 'parts')
+                        rightArrow: hasNextPage
+                     },
+                     self = this;
+               this._pager = new Pager({
+                  pageSize : this._options.pageSize,
+                  opener : this,
+                  element: this.getContainer().find('.controls-Pager-container'),
+                  allowChangeEnable: false, //Запрещаем менять состояние, т.к. он нужен активный всегда
+                  pagingOptions : pagingOptions,
+                  handlers:{
+                     'onPageChange': function(event, pageNum, deferred) {
+                        //TODO добавить сохранение страницы
+                        //self._setPageSave(pageNum);
+                        self.setPage(pageNum - 1);
+                        self._pageChangeDeferred = deferred;
+                     }
+                  }
+               });
+            }
+            this._updatePaging();
+         },
+         /**
+          * Метод обработки интеграции с пейджингом
+          */
+         _updatePaging : function(){
+            var more = this._dataSet.getMetaData().more,
+                nextPage = this.isInfiniteScroll() ? this._hasScrollMore : this._hasNextPage(more);
+            if (this._pager) {
+               var pageNum = this._pager.getPaging().getPage();
+               if (this._pageChangeDeferred) { // только когда меняли страницу
+                  this._pageChangeDeferred.callback([this.getPage() + 1, nextPage, nextPage]);//смотреть в DataSet мб ?
+                  this._pageChangeDeferred = undefined;
+               }
+               //Если на странице больше нет записей - то устанавливаем предыдущую (если это возможно)
+               if (this._dataSet.getCount() === 0 && pageNum > 1) {
+                  this._pager.getPaging().setPage(pageNum - 1);
+               }
+               this._pager.getPaging().update(this.getPage(this.isInfiniteScroll() ? this._infiniteScrollOffset + this._options.pageSize: this._offset) + 1, more, nextPage);
+
+            }
+         },
+         /**
+          * Установить страницу по её номеру.
+          * @remark
+          * Метод установки номера страницы, с которой нужно открыть представление данных.
+          * Работает при использовании постраничной навигации.
+          * @param num Номер страницы.
+          * @example
+          * <pre>
+          *    if(dataGrid.getPage() > 0)
+          *       dataGrid.setPage(0);
+          * </pre>
+          * @see getPage
+          * @see paging
+          */
+         setPage: function(pageNumber, noLoad){
+            pageNumber = parseInt(pageNumber, 10);
+            var offset = this._offset;
+            if(this._options.showPaging){
+               this._offset = this._options.pageSize * pageNumber;
+               if (!noLoad && this._offset !== offset) {
+                  this.reload();
+               }
+            }
+         },
+
+         /**
+          * Получить номер текущей страницы.
+          * @remark
+          * Метод получения номера текущей страницы представления данных.
+          * Работает при использовании постраничной навигации.
+          * @example
+          * <pre>
+          *    if(dataGrid.getPage() > 0)
+          *       dataGrid.setPage(0);
+          * </pre>
+          * @see paging
+          * @see setPage
+          * @param {Number} [offset] - если передать, то номер страницы рассчитается от него
+          */
+         getPage: function(offset){
+            var offset = offset || this._offset;
+            return Math.ceil( offset / this._options.pageSize);
+         },
+         _updateOffset: function(){
+            var  more = this._dataSet.getMetaData().more,
+                 nextPage = this._hasNextPage(more);
+            if(this.getPage() === -1) {
+               this._offset = more - this._options.pageSize;
+            }
          },
          destroy: function() {
             if (this.isInfiniteScroll()){

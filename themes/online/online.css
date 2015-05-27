@@ -1947,6 +1947,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__table {
   width: 100%;
+  position: relative;
   border-spacing: 0;
   border-collapse: collapse;
   border-width: 0;
@@ -2069,6 +2070,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__td__checkBox .controls-ListView__itemCheckBox {
   margin: 0;
+}
+.controls-DataGrid__addInPlace-container {
+  padding-left: 8px;
 }
 .controls-DataGrid__td .controls-TreeView__expand--inside {
   display: none;
