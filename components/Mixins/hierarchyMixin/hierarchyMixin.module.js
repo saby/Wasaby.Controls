@@ -15,7 +15,11 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             /**
              * @cfg {String} Поле иерархии
              */
-            hierField: null
+            hierField: null,
+            /**
+             * folders/all
+             * */
+            displayType : 'all'
 
          }
       },
@@ -66,7 +70,14 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             self = this;
          this._dataSet.each(function (record) {
             if (self._dataSet.getParentKey(record, self._options.hierField) == self._curRoot) {
-               records.push(record);
+               if (self._options.displayType == 'folders') {
+                  if (record.get(self._options.hierField + '@')) {
+                     records.push(record);
+                  }
+               }
+               else {
+                  records.push(record);
+               }
             }
          });
 
