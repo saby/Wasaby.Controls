@@ -18,7 +18,6 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
              * @Boolean false Без разворота
              */
             expand: false
-
          }
       },
 
@@ -26,10 +25,18 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
       _getRecordsForRedraw: function() {
          /*Получаем только рекорды с parent = curRoot*/
          var
+            self = this,
             records = [];
          if (this._options.expand) {
             this.hierIterate(this._dataSet, function (record) {
-               records.push(record);
+               if (this._options.displayType == 'folders') {
+                  if (record.get(self._options.hierField + '@')) {
+                     records.push(record);
+                  }
+               }
+               else {
+                  records.push(record);
+               }
             });
          }
          else {
@@ -98,7 +105,15 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
          dataSet.each(function (record) {
             var targetContainer = self._getTargetContainer(record);
             if (targetContainer) {
-               self._drawItem(record, targetContainer);
+               if (self._options.displayType == 'folders') {
+                  if (record.get(self._options.hierField + '@')) {
+                     self._drawItem(record, targetContainer);
+                  }
+               }
+               else {
+                  self._drawItem(record, targetContainer);
+               }
+
             }
          });
 
@@ -112,6 +127,17 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
       _drawItemsCallback: function() {
          if (this._options.expand) {
             $('.js-controls-TreeView__expand', this._container.get(0)).addClass('controls-TreeView__expand__open')
+         }
+      },
+      around: {
+         _elemClickHandler: function (parentFnc, id, data, target) {
+            if ($(target).hasClass('js-controls-TreeView__expand') && $(target).hasClass('has-child')) {
+               var nodeID = $(target).closest('.controls-ListView__item').data('id');
+               this.toggleNode(nodeID);
+            }
+            else {
+               parentFnc.call(this, id, data, target);
+            }
          }
       }
    };
