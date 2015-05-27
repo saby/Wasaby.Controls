@@ -95,6 +95,13 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             this._headerAlignment.vertical = 'top';
          }
       },
+      //TODO в 3.7.2 ждать починки от Вити
+      setEnabled:function(enabled){
+         MenuButton.superclass.setEnabled.call(this, arguments);
+         if (this._picker) {
+            this._picker.setEnabled(enabled);
+         }
+      },
 
       _clickHandler: function(){
          if (this.getItems().getItemsCount() > 1) {
