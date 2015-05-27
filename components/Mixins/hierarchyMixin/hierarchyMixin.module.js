@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          var
             indexTree = DataSet._indexTree,
             self = this,
-            curParentId = this._curRoot || null,
+            curParentId = (typeof this._curRoot != 'undefined') ? this._curRoot : null,
             curLvl = 0;
 
          var hierIterate = function(root) {
