@@ -172,7 +172,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          this._blocks.wrapper.toggleClass('controls__operations-panel__mass-mode',  !currentMode).toggleClass('controls__operations-panel__selection-mode',  currentMode);
       },
       isHaveSelectedItems: function() {
-         return !!this.getLinkedView().getSelectedItems().length;
+         return !!this.getLinkedView().getSelectedKeys().length;
       },
       _setVisibleMarkBlock: function() {
          this._blocks.markOperations.toggleClass('ws-hidden', !this._options.linkedView._options.multiselect);
