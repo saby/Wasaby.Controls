@@ -15,7 +15,11 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             /**
              * @cfg {String} Поле иерархии
              */
-            hierField: null
+            hierField: null,
+            /**
+             * folders/all
+             * */
+            displayType : 'all'
 
          }
       },
@@ -68,7 +72,14 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             self = this;
          this._dataSet.each(function (record) {
             if (self._dataSet.getParentKey(record, self._options.hierField) == self._curRoot) {
-               records.push(record);
+               if (self._options.displayType == 'folders') {
+                  if (record.get(self._options.hierField + '@')) {
+                     records.push(record);
+                  }
+               }
+               else {
+                  records.push(record);
+               }
             }
          });
 
@@ -128,18 +139,6 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          }
          this._curRoot = key;
          this._redraw();
-      },
-
-      around: {
-         _elemClickHandler: function (parentFnc, id, data, target) {
-            if ($(target).hasClass('js-controls-TreeView__expand') && $(target).hasClass('has-child')) {
-               var nodeID = $(target).closest('.controls-ListView__item').data('id');
-               this.toggleNode(nodeID);
-            }
-            else {
-               parentFnc.call(this, id, data, target);
-            }
-         }
       }
 
    };
