@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
       _updateMarkCheckBox: function() {
          var view = this._options.linkedView,
             recordsCount = view._dataSet.getCount(),
-            selectedCount = view.getSelectedItems().length;
+            selectedCount = view.getSelectedKeys().length;
          this._markCheckBox.setChecked(selectedCount === recordsCount && recordsCount ? true : selectedCount ? null : false);
       },
       _updateMarkButton: function() {
@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
             selectedCount,
             caption;
          if (hasMarkOptions) {
-            selectedCount = this._options.linkedView.getSelectedItems().length;
+            selectedCount = this._options.linkedView.getSelectedKeys().length;
             caption = selectedCount ? 'Отмечено(' + selectedCount + ')' : 'Отметить';
             this.setCaption(caption);
          }
