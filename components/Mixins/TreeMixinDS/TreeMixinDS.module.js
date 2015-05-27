@@ -17,7 +17,12 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
              * Опция задаёт режим разворота.
              * @Boolean false Без разворота
              */
-            expand: false
+            expand: false,
+
+            /**
+            * folders/all
+            * */
+            displayType : 'all'
 
          }
       },
@@ -26,10 +31,18 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
       _getRecordsForRedraw: function() {
          /*Получаем только рекорды с parent = curRoot*/
          var
+            self = this,
             records = [];
          if (this._options.expand) {
             this.hierIterate(this._dataSet, function (record) {
-               records.push(record);
+               /*if (this._options.displayType == 'folders') {
+                  if (record.get(self._options.hierField + '@')) {
+                     records.push(record);
+                  }
+               }*
+               else {*/
+                  records.push(record);
+               /*}*/
             });
          }
          else {
