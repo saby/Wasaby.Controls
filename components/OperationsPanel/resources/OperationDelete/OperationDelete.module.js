@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.OperationDelete', [
       },
       _clickHandler: function() {
          var view = this._options.linkedView,
-            selectedItems = view.getSelectedItems(),
+            selectedItems = view.getSelectedKeys(),
             records = selectedItems.length ? selectedItems : view._dataSet._indexId;
          view.deleteRecords(records);
       }
