@@ -2056,8 +2056,16 @@ input[type="reset"]::-moz-focus-inner {
   padding-right: 6px;
   margin-top: -3px;
 }
+.controls-HierarchyDataGrid__PathSelector {
+  min-height: 26px;
+}
 .controls-HierarchyDataGrid__PathSelector__block__arrow {
   cursor: pointer;
+  position: relative;
+  top: 2px;
+}
+.controls-HierarchyDataGrid__PathSelector__block__arrow-last {
+  top: 5px;
 }
 .controls-HierarchyDataGrid__PathSelector__block__point {
   line-height: 17px;
@@ -2067,6 +2075,10 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-HierarchyDataGrid__PathSelector__block__point:hover {
   color: #FF7033;
+}
+.controls-HierarchyDataGrid__PathSelector__block__point:hover .controls-HierarchyDataGrid__PathSelector__block__arrow {
+  color: #FF7033!important;
+  /*выпилить когда нибудь*/
 }
 .controls-HierarchyDataGrid__PathSelector__block__point--current {
   font-size: 15px;

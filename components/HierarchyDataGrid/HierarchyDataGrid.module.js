@@ -54,7 +54,8 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
             dataSet: this._dataSet,
             handlers: {
                'onPathChange': this._onPathSelectorChange.bind(this)
-            }
+            },
+            rootNodeId: this._options.root
          });
       },
 
