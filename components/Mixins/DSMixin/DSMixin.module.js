@@ -11,10 +11,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
     * @author Крайнов Дмитрий Олегович
     */
 
-   var setDataSourceCB = function () {
-      this.reload();
-   };
-
    var DSMixin = /**@lends SBIS3.CONTROLS.DSMixin.prototype  */{
       $protected: {
          _itemsInstances: {},
@@ -23,7 +19,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          _offset: 0,
          _limit: undefined,
          _dataSource: undefined,
-         _setDataSourceCB: null, //чтобы подписки отрабатывали всегда
          _dataSet: null,
          _dotItemTpl: null,
          _options: {
@@ -121,10 +116,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                keyField: keyField
             });
          }
-
-
-         this._setDataSourceCB = setDataSourceCB.bind(this);
-         this._dataSource.subscribe('onDataSync', this._setDataSourceCB);
       },
        /**
         * Метод установки либо замены источника данных, установленного опцией {@link dataSource}.
@@ -146,11 +137,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see dataSource
         */
       setDataSource: function (ds) {
-         this._dataSource.unsubscribe('onDataSync', this._setDataSourceCB);
          this._dataSource = ds;
          this._dataSet = null;
          this.reload();
-         this._dataSource.subscribe('onDataSync', this._setDataSourceCB);
       },
 /**
        * Метод получения набора данных, который в данный момент установлен в представлении
