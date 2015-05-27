@@ -60,7 +60,15 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
                   }
                }
                /**/
-               self._drawItem(record, at);
+               if (self._options.displayType == 'folders') {
+                  if (record.get(self._options.hierField + '@')) {
+                     self._drawItem(record, at);
+                  }
+
+               }
+               else {
+                  self._drawItem(record, at);
+               }
             }
          });
       },
