@@ -123,7 +123,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          container.addClass('ws-hidden');
          this._isVisible = false;
          //TODO: ДаблПридрот для того что бы панель не перекрывала дочерние попапы
-         if (this.getTopParent() instanceof $ws.proto.FloatArea){
+         if ($ws.proto.FloatArea && this.getTopParent() instanceof $ws.proto.FloatArea){
            this.getTopParent()._childWindows.push(this);   
          }
          /********************************/
