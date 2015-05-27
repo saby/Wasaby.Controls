@@ -5,7 +5,7 @@
  * Time: 10:50
  * To change this template use File | Settings | File Templates.
  */
-define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Pager', 'js!SBIS3.CORE.FieldDropdown',  'js!SBIS3.CORE.Paging', 'css!SBIS3.CONTROLS.Pager'], function(CompoundControl, dotTplFn, Combobox, Paging) {
+define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Pager', 'js!SBIS3.CORE.FieldDropdown',  'js!SBIS3.CORE.Paging'], function(CompoundControl, dotTplFn, Combobox, Paging) {
 
    'use strict';
 
@@ -84,7 +84,6 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
          }
          Pager.superclass.destroy.apply(this, arguments);
       }
-
    });
 
    return Pager;
