@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
    ],
    function(ListView, dotTplFn, rowTpl, MarkupTransformer, EditInPlaceController, Link, DragAndDropMixin) {
    'use strict';
-
+      /* TODO: Надо считать высоту один раз, а не делать константой */
       var
          ITEMS_ACTIONS_HEIGHT = 20;
    /**
@@ -102,6 +102,9 @@ define('js!SBIS3.CONTROLS.DataGrid',
                enabled: false,
                addInPlace: false
             },
+            /**
+             * @cfg {Number} Частичный скролл
+             */
             startScrollColumn: undefined
          }
       },
