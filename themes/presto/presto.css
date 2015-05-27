@@ -64,7 +64,7 @@ input[type="reset"]::-moz-focus-inner {
   text-align: center;
   min-width: 24px;
   height: 58px;
-  line-height: 56px;
+  line-height: normal;
   padding: 0;
   margin: auto;
   overflow: hidden;
@@ -161,7 +161,7 @@ input[type="reset"]::-moz-focus-inner {
   text-align: center;
   min-width: 24px;
   height: 58px;
-  line-height: 56px;
+  line-height: normal;
   padding: 0;
   margin: auto;
   border: 0 none;
@@ -1992,6 +1992,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:last-child {
   padding-right: 10px;
+}
+.controls-DataGrid .controls-ListView__folder {
+  font-size: 15px;
 }
 .controls-DataGrid .controls-DataGrid__td__checkBox {
   width: 24px;
