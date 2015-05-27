@@ -355,6 +355,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                }
                else {
                   this._notify('onItemClick', id, data, target);
+                  this._elemClickHandlerInternal(id, data, target);
                   if (this._options.elemClickHandler) {
                      this._options.elemClickHandler.call(this, id, data, target);
                   }
@@ -363,10 +364,15 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             else {
                this.setSelectedKeys([id]);
                this._notify('onItemClick', id, data, target);
+               this._elemClickHandlerInternal(id, data, target);
                if (this._options.elemClickHandler) {
                   this._options.elemClickHandler.call(this, id, data, target);
                }
             }
+         },
+
+         _elemClickHandlerInternal : function(id, data, target) {
+
          },
 
          _getItemActionsContainer: function (id) {

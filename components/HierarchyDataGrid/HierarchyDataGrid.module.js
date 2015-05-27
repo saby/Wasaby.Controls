@@ -76,13 +76,10 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
          this.openNode(id);
       },
 
-      _elemClickHandler: function (id, data, target) {
+      _elemClickHandlerInternal: function (id, data, target) {
          if (data.get(this._options.hierField+'@')) {
             var nodeID = $(target).closest('.controls-ListView__item').data('id');
             this.toggleNode(nodeID);
-         }
-         else {
-            HierarchyDataGrid.superclass._elemClickHandler.call(this, id, data, target);
          }
       }
 

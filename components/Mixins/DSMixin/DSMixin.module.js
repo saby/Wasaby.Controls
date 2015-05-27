@@ -355,12 +355,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _appendItemTemplate: function (item, targetContainer, itemBuildedTpl, at) {
          if (at && (typeof at.at !== 'undefined')) {
             var atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).get(at.at);
-            if (atContainer.length) {
+            if ($(atContainer).length) {
                $(atContainer).before(itemBuildedTpl);
             }
             else {
                atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).get(at.at - 1);
-               if (atContainer.length) {
+               if ($(atContainer).length) {
                   $(atContainer).after(itemBuildedTpl);
                }
             }

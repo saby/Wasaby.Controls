@@ -446,7 +446,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
             curLvl = 0;
          do {
             this.each(function (record) {
-               var parentKey = self.getParentKey(record, field) != 'undefined';
+               var parentKey = self.getParentKey(record, field);
                parentKey = (typeof parentKey != 'undefined') ? parentKey : null;
                if ((parentKey) === curParentId) {
                   parents.push({record: record, lvl: curLvl});
