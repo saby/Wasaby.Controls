@@ -2036,6 +2036,19 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid__addInPlace-container {
   padding-left: 8px;
 }
+.controls-Pager {
+  float: right;
+  height: 28px;
+  padding: 5px 0 0 6px;
+}
+.controls-Pager .controls-Amount-text {
+  line-height: 20px;
+  font-size: 11px;
+  color: #919191;
+}
+.controls-Pager .controls-Pager-block {
+  float: right;
+}
 .controls-UnitEditor__fieldWrapper {
   margin-right: 34px;
 }
