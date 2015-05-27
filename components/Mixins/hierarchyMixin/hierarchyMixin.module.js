@@ -21,6 +21,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       },
       $constructor: function () {
          this._curRoot = this._options.root;
+         this._filter = this._filter || {};
+         this._filter[this._options.hierField] = this._options.root;
       },
 
       setHierField: function (hierField) {
@@ -102,7 +104,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          /*TODO проверка на что уже загружали*/
          var filter = this._filter || {};
          filter[this._options.hierField] = key;
-         return this._dataSource.query(filter);
+         this._filter = filter;
+         return this._dataSource.query(filter, undefined, 0, this._limit);//узел грузим с 0-ой страницы
       },
 
       toggleNode: function(key) {
@@ -114,6 +117,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       _nodeDataLoaded: function (key, dataSet) {
          this._notify('onDataLoad', dataSet);
          this._setCurRootNode(key, dataSet);
+         this._dataLoadedCallback();
       },
 
       _setCurRootNode: function(key, dataSet) {

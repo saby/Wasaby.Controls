@@ -111,7 +111,7 @@ define('js!SBIS3.CONTROLS.ProgressBar', ['html!SBIS3.CONTROLS.ProgressBar', 'js!
       },
 
       _getPercent: function() {
-         return Math.floor((this._options.progress - this._options.minimum) / (this._options.maximum - this._options.minimum) * 100);
+         return Math.round((this._options.progress - this._options.minimum) / (this._options.maximum - this._options.minimum) * 100);
       },
 
       _drawProgress: function(progress) {

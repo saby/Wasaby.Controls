@@ -638,7 +638,7 @@ define(
        * Изменяем опции до отрисовки
        */
       _modifyOptions: function(options) {
-         this.formatModel = new FormatModel({controlCharactersSet: this._controlCharactersSet, mask: this._options.mask});
+         this.formatModel = new FormatModel({controlCharactersSet: this._controlCharactersSet, mask: options.mask});
          if (options.text) {
             this.formatModel.setText(options.text, this._maskReplacer);
          }
