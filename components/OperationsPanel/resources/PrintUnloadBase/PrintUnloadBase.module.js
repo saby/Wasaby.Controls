@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          PrintUnloadBase.superclass._clickHandler.apply(this, arguments);
       },
       _prepareOperation: function(title){
-         var selectedItems = this._view.getSelectedItems(),
+         var selectedItems = this._view.getSelectedKeys(),
                selectedItemsObj = {},
                ds;
          if (!selectedItems.length) {
