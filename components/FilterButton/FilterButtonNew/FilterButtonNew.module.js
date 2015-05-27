@@ -178,7 +178,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
       _getControlValue: function(control) {
          var result;
          if($ws.helpers.instanceOfModule(control, 'SBIS3.CONTROLS.ComboBox')) {
-            result = control.getSelectedIndex();
+            result = control.getSelectedKey();
          }
          return result;
       },
