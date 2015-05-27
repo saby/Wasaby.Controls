@@ -1,4 +1,13 @@
-define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS3.CONTROLS.DataGrid', 'html!SBIS3.CONTROLS.DataGrid/resources/rowTpl', 'js!SBIS3.CORE.MarkupTransformer'], function(ListView, dotTplFn, rowTpl, MarkupTransformer) {
+define('js!SBIS3.CONTROLS.DataGrid',
+   [
+      'js!SBIS3.CONTROLS.ListViewDS',
+      'html!SBIS3.CONTROLS.DataGrid',
+      'html!SBIS3.CONTROLS.DataGrid/resources/rowTpl',
+      'js!SBIS3.CORE.MarkupTransformer',
+      'js!SBIS3.CONTROLS.EditInPlaceController',
+      'js!SBIS3.CONTROLS.Link'
+   ],
+   function(ListView, dotTplFn, rowTpl, MarkupTransformer, EditInPlaceController, Link) {
    'use strict';
    /**
     * Контрол, отображающий набор данных в виде в таблицы с несколькими колонками.
@@ -26,6 +35,8 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
       $protected: {
          _rowTpl : rowTpl,
          _rowData : [],
+         _editInPlace: null,
+         _addInPlaceButton: null,
          _options: {
             /**
              * @typedef {Object} Columns
@@ -99,7 +110,7 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
             name: 'controls-ListView__addInPlace-button',
             icon: 'sprite:icon-16 icon-NewCategory',
             caption: 'Новая запись',
-            element: $('<div>').appendTo(this._container.find('.controls-ListView__addInPlace-container'))
+            element: $('<div>').appendTo(this._container.find('.controls-DataGrid__addInPlace-container'))
          });
          if (this._options.multiselect) {
             tr += '<td class="controls-DataGrid__td"></td>';
@@ -115,6 +126,7 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
                   .appendTo(itemsContainer));
          });
       },
+
       _initEditInPlace: function() {
          var self = this;
          if (!this._editInPlace) {
@@ -123,15 +135,19 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
                   .empty()
                   .append($(self._getItemTemplate(record)).children());
             });
-            this._editInPlace = new EditInPlaceController({
-               columns: this._options.columns,
-               addInPlaceButton: this._addInPlaceButton,
-               element: $('<div>').appendTo(this._container),
-               dataSet: this._dataSet,
-               ignoreFirstColumn: this._options.multiselect,
-               dataSource: this._dataSource
-            });
+            this._createEditInPlace();
          }
+      },
+
+      _createEditInPlace: function() {
+         this._editInPlace = new EditInPlaceController({
+            columns: this._options.columns,
+            addInPlaceButton: this._addInPlaceButton,
+            element: $('<div>').appendTo(this._container.find('.controls-DataGrid__table')),
+            dataSet: this._dataSet,
+            ignoreFirstColumn: this._options.multiselect,
+            dataSource: this._dataSource
+         });
       },
       
       _onChangeHoveredItem: function(hoveredItem) {
@@ -178,8 +194,7 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
       },
 
       _checkHeadContainer: function(target) {
-         var headContainer = this._container.find('.controls-DataGrid__thead');
-         return headContainer && target.closest(headContainer).length || this._editInPlace && target.closest('.controls-ListView__addInPlace-container').length;
+         return this._thead.length && $.contains(this._thead[0], target[0]) || this._editInPlace && $.contains(this._editInPlace.getContainer()[0], target[0]);
       },
 
       _getItemsContainer: function(){
@@ -271,8 +286,18 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
             var th = $('<th class="controls-DataGrid__th"></th>').text(columns[i].title);
             this._thead.append(th);
          }
-
+         if (this._editInPlace) {
+            this._editInPlace.destroy();
+            this._createEditInPlace();
+         }
          this._redraw();
+      },
+
+      reload: function() {
+         if (this._editInPlace && this._editInPlace.isEditing()) {
+            this._editInPlace.finishEditing();
+         }
+         DataGrid.superclass.reload.apply(this, arguments);
       },
 
       _getLeftOfItemContainer : function(container) {
