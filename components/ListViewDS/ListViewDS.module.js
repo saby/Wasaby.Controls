@@ -757,7 +757,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   this._pager.getPaging().setPage(pageNum - 1);
                }
                this._pager.getPaging().update(this.getPage(this.isInfiniteScroll() ? this._infiniteScrollOffset + this._options.pageSize: this._offset) + 1, more, nextPage);
-
+               this._pager.updateAmount(this._dataSet.getCount(), nextPage);
             }
          },
          /**
