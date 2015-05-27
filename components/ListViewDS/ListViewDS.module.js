@@ -10,10 +10,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
       'js!SBIS3.CONTROLS.ItemActionsGroup',
       'html!SBIS3.CONTROLS.ListViewDS',
       'js!SBIS3.CONTROLS.CommonHandlers',
-      'js!SBIS3.CORE.Paging',
-      'js!SBIS3.CORE.Pager'
+      'js!SBIS3.CONTROLS.Pager'
    ],
-   function (CompoundControl, DSMixin, MultiSelectable, ItemActionsGroup, dotTplFn, CommonHandlers, Paging, Pager) {
+   function (CompoundControl, DSMixin, MultiSelectable, ItemActionsGroup, dotTplFn, CommonHandlers, Pager) {
 
       'use strict';
 
@@ -209,7 +208,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _scrollIndicatorHeight: 32,
             _isLoadBeforeScrollAppears : true,
             _infiniteScrollContainer: null,
-            _paging : undefined,
             _pageChangeDeferred : undefined,
             _pager : undefined
          },
@@ -717,34 +715,32 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
          },
          //------------------------Paging---------------------
          _processPaging: function(){
-            if (!this._paging) {
+            if (!this._pager) {
                var more = this._dataSet.getMetaData().more,
                      hasNextPage = this._hasNextPage(more),
+                     pagingOptions ={
+                        recordsPerPage: this._options.pageSize || more,
+                        currentPage:  1,
+                        recordsCount: more,
+                        pagesLeftRight: 3,
+                        onlyLeftSide: typeof more === 'boolean', // (this._options.display.usePaging === 'parts')
+                        rightArrow: hasNextPage
+                     },
                      self = this;
-               this._paging = new Paging({
-                  recordsPerPage: this._options.pageSize || more,
-                  currentPage:  1,
-                  recordsCount: more,
-                  pagesLeftRight: 3,
-                  onlyLeftSide: typeof more === 'boolean', // (this._options.display.usePaging === 'parts')
-                  rightArrow: hasNextPage,
-                  element: this.getContainer().find('.controls-ListView__paging-container'),
+               this._pager = new Pager({
+                  pageSize : this._options.pageSize,
+                  opener : this,
+                  element: this.getContainer().find('.controls-Pager-container'),
                   allowChangeEnable: false, //Запрещаем менять состояние, т.к. он нужен активный всегда
+                  pagingOptions : pagingOptions,
                   handlers:{
                      'onPageChange': function(event, pageNum, deferred) {
+                        //TODO добавить сохранение страницы
                         //self._setPageSave(pageNum);
                         self.setPage(pageNum - 1);
                         self._pageChangeDeferred = deferred;
                      }
                   }
-               });
-            }
-            if (!this._pager) {
-               this._pager = new Pager({
-                  pageSize : this._options.pageSize,
-                  opener : this,
-                  element: this.getContainer().find('.controls-ListView__pager-container'),
-                  allowChangeEnable: false //Запрещаем менять состояние, т.к. он нужен активный всегда
                });
             }
             this._updatePaging();
@@ -755,17 +751,17 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
          _updatePaging : function(){
             var more = this._dataSet.getMetaData().more,
                 nextPage = this.isInfiniteScroll() ? this._hasScrollMore : this._hasNextPage(more);
-            if (this._paging) {
-               var pageNum = this._paging.getPage();
+            if (this._pager) {
+               var pageNum = this._pager.getPaging().getPage();
                if (this._pageChangeDeferred) { // только когда меняли страницу
                   this._pageChangeDeferred.callback([this.getPage() + 1, nextPage, nextPage]);//смотреть в DataSet мб ?
                   this._pageChangeDeferred = undefined;
                }
                //Если на странице больше нет записей - то устанавливаем предыдущую (если это возможно)
                if (this._dataSet.getCount() === 0 && pageNum > 1) {
-                  this._paging.setPage(pageNum - 1);
+                  this._pager.getPaging().setPage(pageNum - 1);
                }
-               this._paging.update(this.getPage(this.isInfiniteScroll() ? this._infiniteScrollOffset + this._options.pageSize: this._offset) + 1, more, nextPage);
+               this._pager.getPaging().update(this.getPage(this.isInfiniteScroll() ? this._infiniteScrollOffset + this._options.pageSize: this._offset) + 1, more, nextPage);
 
             }
          },

@@ -5,7 +5,7 @@
  * Time: 10:50
  * To change this template use File | Settings | File Templates.
  */
-define('js!SBIS3.CORE.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CORE.Pager', 'js!SBIS3.CORE.FieldDropdown', 'css!SBIS3.CORE.Pager'], function(CompoundControl, dotTplFn, Combobox) {
+define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Pager', 'js!SBIS3.CORE.FieldDropdown',  'js!SBIS3.CORE.Paging', 'css!SBIS3.CONTROLS.Pager'], function(CompoundControl, dotTplFn, Combobox, Paging) {
 
    'use strict';
 
@@ -35,7 +35,8 @@ define('js!SBIS3.CORE.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CORE
       $protected: {
          _dotTplFn: dotTplFn,
          _options: {
-            ignoreLocalPageSize : false
+            ignoreLocalPageSize : false,
+            pagingOptions: {}
          },
          _fddData: {
             keys: [10, 20, 25, 50, 100, 200, 500, 1000],
@@ -45,6 +46,7 @@ define('js!SBIS3.CORE.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CORE
       },
       $constructor: function(){
          var localPageSize = $ws.helpers.getLocalStorageValue('ws-page-size');
+         this._publish('onPageChange');
          this._options.pageSize = !this._options.ignoreLocalPageSize  && localPageSize ? localPageSize : this._options.pageSize;
          this.getLinkedContext().setValue('controls-pageSize', this._options.pageSize);
          this._updateLocalStorageValue();
@@ -55,20 +57,25 @@ define('js!SBIS3.CORE.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CORE
          }
       },
       init: function(){
-         var self = this, fdd;
+         var self = this, fdd, paging;
          Pager.superclass.init.call(this);
-         fdd = this.getChildControlByName('controls-ComboBox')
+         fdd = this.getChildControlByName('controls-Pager_comboBox');
          //TODO подписаться на изменение проперти в контексте. Пока Витя не допилил - подписываюсь на комбобокс
          fdd.setData(this._fddData);
          fdd.setValue(this._options.pageSize);
          fdd.subscribe('onChange', function(event, value){
             //TODO здесь поменять у связанного DataGrid - pageSize
-            debugger;
             self._options.pageSize = value;
             self.getOpener().setPageSize(value);
             $ws.helpers.setLocalStorageValue('ws-page-size', self._options.pageSize);
          });
-
+         paging = this.getChildControlByName('controls-Pager_paging');
+         paging.subscribe('onPageChange', function(event, pageNum, deferred){
+            self._notify('onPageChange', pageNum, deferred);
+         })
+      },
+      getPaging: function(){
+         return this.getChildControlByName('controls-Pager_paging');
       },
       destroy: function () {
          if (this._block) {

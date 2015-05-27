@@ -1,17 +1,33 @@
 <div class="controls-Pager{{? !it.visible}} ws-hidden{{?}}" hasMarkup="true">
    <div class="controls-Amount-text"></div>
-   <component  data-component="SBIS3.CORE.FieldDropdown" data-bind="{value: controls-pageSize}" class="controls-ButtonGroup__vertical">
-      <options name="data" >
-         <options name="keys" type="array"></options>
-         <options name="values" type="array"></options>
-      </options>
-      <option name="captionField" value="title"></option>
-      <option name="name" value="controls-ComboBox"></option>
-      <option name="allowEmptySelection" value="false" type="boolean"></option>
-      <option name="showSelectedInList" value="false" type="boolean"></option>
-      <option name="wordWrap" value="false" type="boolean"></option>
-      <option name="enabled" value="true" type="boolean"></option>
-      <option name="renderStyle" value="simple" ></option>
-
-   </component>
+   <!--Таблица здесь только потому, что собирала по-быстрому-->
+   <table class="controls-Pager__table">
+      <tr>
+         <td>
+            <component  data-component="SBIS3.CORE.Paging"  class="controls-Pager-block controls-Pager__paging-container">
+               <option name="recordsPerPage" value="{{=it.pagingOptions.recordsPerPage}}"></option>
+               <option name="currentPage" value="{{=it.pagingOptions.currentPage}}"></option>
+               <option name="recordsCount" value="{{=it.pagingOptions.recordsCount}}"></option>
+               <option name="pagesLeftRight" value="{{=it.pagingOptions.pagesLeftRight}}"></option>
+               <option name="onlyLeftSide" value="{{=it.pagingOptions.onlyLeftSide}}"></option>
+               <option name="rightArrow" value="{{=it.pagingOptions.rightArrow}}"></option>
+               <option name="name" value="controls-Pager_paging"></option>
+               <option name="allowEmptySelection" value="false" type="boolean"></option>
+            </component>
+            <component  data-component="SBIS3.CORE.FieldDropdown" data-bind="{value: controls-pageSize}" class="controls-Pager-block controls-Pager__pageSize-container">
+               <options name="data" >
+                  <options name="keys" type="array"></options>
+                  <options name="values" type="array"></options>
+               </options>
+               <option name="captionField" value="title"></option>
+               <option name="name" value="controls-Pager_comboBox"></option>
+               <option name="allowEmptySelection" value="false" type="boolean"></option>
+               <option name="showSelectedInList" value="false" type="boolean"></option>
+               <option name="wordWrap" value="false" type="boolean"></option>
+               <option name="enabled" value="true" type="boolean"></option>
+               <option name="renderStyle" value="simple" ></option>
+            </component>
+         </td>
+      </tr>
+   </table>
 </div>
