@@ -159,7 +159,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
       },
 
       _checkHeadContainer: function(target) {
-         return this._thead.length && $.contains(this._thead[0], target[0]) || this._editInPlace && $.contains(this._editInPlace.getContainer()[0], target[0]);
+         return this._thead.length && $.contains(this._thead[0], target[0]) || this._addInPlaceButton && $.contains(this._addInPlaceButton.getContainer().parent()[0], target[0]);
       },
 
       _getItemsContainer: function(){
