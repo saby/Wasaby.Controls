@@ -86,12 +86,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
             },
             showEditing: function(area) {
                if (this._editing) {
-                  this._finishEditing(this._areas[this._editing]);
+                  this.finishEditing(this._areas[this._editing]);
                }
                this._editing = area instanceof $ ? 'first' : area;
                this._areas[this._editing].addInPlace = area instanceof $;
                if (area instanceof $) {
-                  this._options.addInPlaceButton.hide();
+                  if (this._options.addInPlaceButton) {
+                     this._options.addInPlaceButton.hide();
+                  }
                   this._areas[this._editing].target = area;
                   this._options.dataSource.create().addCallback(function (rec) {
                      this._areas[this._editing].record = rec;
@@ -138,7 +140,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
              * @param {Boolean} notHide Не скрывать область editInPlace
              * @private
              */
-            _finishEditing: function(saveFields, notHide) {
+            finishEditing: function(saveFields, notHide) {
                var editingArea = this._areas[this._editing];
                if (!notHide) {
                   editingArea.editInPlace.hide();
@@ -155,11 +157,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                   if (editingArea.addInPlace) {
                      this._options.dataSet.push(editingArea.record);
                   }
-                  this._options.dataSource.once('onDataSync', function () {
-                     this._options.addInPlaceButton.show();
-                  }.bind(this));
+                  if (this._options.addInPlaceButton) {
+                     this._options.dataSource.once('onDataSync', function () {
+                        this._options.addInPlaceButton.show();
+                     }.bind(this));
+                  }
                   this._options.dataSource.sync(this._options.dataSet);
-               } else {
+               } else if (this._options.addInPlaceButton) {
                   this._options.addInPlaceButton.show();
                }
                if (editingArea.addInPlace) {
@@ -178,7 +182,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
              */
             _onMouseDown: function(e) {
                if (this._editing) {
-                  this._finishEditing(this._areas[this._editing]);
+                  this.finishEditing(this._areas[this._editing]);
                }
             },
             /**
@@ -193,14 +197,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                   area,
                   viewingArea;
                if (key === $ws._const.key.esc) {
-                  this._finishEditing();
+                  this.finishEditing();
                   e.stopImmediatePropagation();
                   e.preventDefault();
                } else if (key === $ws._const.key.enter || key === $ws._const.key.down || key === $ws._const.key.up) {
                   area = this._areas[this._editing];
                   newTarget = $('[data-id="' + area.record.getKey() + '"]')[key === $ws._const.key.down || key === $ws._const.key.enter ? 'next' : 'prev']('.controls-ListView__item');
                   if (newTarget.length) {
-                     this._finishEditing(true, true);
+                     this.finishEditing(true, true);
                      area.target = newTarget;
                      area.record = this._options.dataSet.getRecordByKey(newTarget.data('id'));
                      //Если будем редактировать строку, на которую наведена мышь, то скрываем вторую область
@@ -212,8 +216,16 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                      e.stopImmediatePropagation();
                      e.preventDefault();
                   } else if (key === $ws._const.key.enter) {
-                     this._finishEditing(true);
+                     this.finishEditing(true);
                   }
+               }
+            },
+            _hideEditInPlace: function() {
+               if (isMobileBrowser) {
+                  this._areas.first.editInPlace.hide();
+               } else {
+                  this._editing !== 'first' && this._areas.first.editInPlace.hide();
+                  this._editing !== 'second' && this._areas.second.editInPlace.hide();
                }
             },
             /**
@@ -223,26 +235,18 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
              */
             updateDisplay: function(target) {
                var
-                  tds,
                   hoveredArea,
-                  record,
-                  self = this;
+                  record;
                if (!target.container) {
-                  if (isMobileBrowser) {
-                     this._areas.first.editInPlace.hide();
-                  } else {
-                     this._editing !== 'first' && this._areas.first.editInPlace.hide();
-                     this._editing !== 'second' && this._areas.second.editInPlace.hide();
-                  }
+                  this._hideEditInPlace();
                } else {
-                  if (!this._editing || this._areas[this._editing].record.getKey() !== target.key) {
-                     record =  this._options.dataSet.getRecordByKey(target.key);
-                     if (!record) {
-                        return;
-                     }
+                  record = this._options.dataSet.getRecordByKey(target.key);
+                  if (!record || record.get('Раздел@')) {
+                     this._hideEditInPlace();
+                  } else if (!this._editing || this._areas[this._editing].record.getKey() !== target.key) {
                      if (isMobileBrowser) {
                         if (this._editing) {
-                           this._finishEditing(true, true);
+                           this.finishEditing(true, true);
                         } else {
                            this._editing = 'first';
                         }
