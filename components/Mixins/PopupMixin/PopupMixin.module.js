@@ -128,6 +128,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          container.removeClass('ws-area');
          container.addClass('ws-hidden');
          this._isVisible = false;
+         //TODO: ДаблПридрот для того что бы панель не перекрывала дочерние попапы
+         if ($ws.proto.FloatArea && this.getTopParent() instanceof $ws.proto.FloatArea){
+           this.getTopParent()._childWindows.push(this);   
+         }
          /********************************/
 
          this._initOppositeCorners();
@@ -260,6 +264,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
       isModal: function(){
          return !!this._options.isModal;
+      },
+
+      moveToTop: function(){
+        this._zIndex = $ws.single.WindowManager.acquireZIndex();
+        this._container.css('z-index', this._zIndex);
       },
 
       //Позиционируем относительно body
@@ -723,6 +732,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                this._initOrigins = false;
             }
             this.recalcPosition();
+            this._zIndex = $ws.single.WindowManager.acquireZIndex();
+            $ws.single.WindowManager.setVisible(this._zIndex);
+            this._container.css('zIndex', this._zIndex);
          },
 
          hide: function () {
@@ -739,8 +751,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                left: '-10000px',
                top: '-10000px'
             });
-            this._zIndex = ControlHierarchyManager.zIndexManager.getNext();
-            this._container.css('zIndex', this._zIndex);
             ControlHierarchyManager.setTopWindow(this);
             //Показываем оверлей
             if (this._options.isModal) {
@@ -748,7 +758,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             }
          },
          destroy: function () {
-            ControlHierarchyManager.zIndexManager.setFree(this._zIndex);
+            //ControlHierarchyManager.zIndexManager.setFree(this._zIndex);
+            $ws.single.WindowManager.setHidden(this._zIndex);
+            $ws.single.WindowManager.releaseZIndex(this._zIndex);
             ControlHierarchyManager.removeNode(this);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._windowChangeHandler, this);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._windowChangeHandler, this);
@@ -770,10 +782,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                result.addCallback(function (res) {
                   if (res !== false) {
                      parentHide.call(self);
+                     $ws.single.WindowManager.setHidden(this._zIndex);
+                     $ws.single.WindowManager.releaseZIndex(this._zIndex);
                   }
                });
             } else if (result !== false) {
                parentHide.call(this);
+               $ws.single.WindowManager.setHidden(this._zIndex);
+               $ws.single.WindowManager.releaseZIndex(this._zIndex);
             }
          }
       }
