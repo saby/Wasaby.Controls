@@ -210,7 +210,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
          $constructor: function () {
             var self = this;
-this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
+            this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
             this._container.mouseup(function (e) {
                if (e.which == 1) {
                   var $target = $(e.target),
@@ -244,6 +244,13 @@ this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
             return null;
          },
 
+         _checkPagingContainer: function(target) {
+            if(!this._options.showPaging) {
+               return false;
+            }
+            return this._pager && $.contains(this._pager.getContainer()[0], target[0]);
+         },
+
          /**
           * Обрабатывает перемещения мышки на элемент представления
           * @param e
@@ -251,14 +258,14 @@ this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
           */
          _mouseMoveHandler: function(e) {
             var $target = $(e.target),
-               target,
-               targetKey;
+                target,
+                targetKey;
             //Если увели мышку на оперции по ховеру, то делать ничего не надо
             if(this._mouseOnItemActions) {
                return;
             }
             //Если увели мышку с контейнера с элементами(например на шапку), нужно об этом посигналить
-            if (this._checkHeadContainer($target)) {
+            if (this._checkHeadContainer($target) || this._checkPagingContainer($target)) {
                this._mouseLeaveHandler();
                return;
             }
@@ -266,37 +273,25 @@ this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
             if (target.length) {
                targetKey = target.data('id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
-this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
+                  var cords = this._container[0].getBoundingClientRect(),
+                      targetCords = target[0].getBoundingClientRect();
+                  this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
                   this._hoveredItem = {
                      key: targetKey,
                      container: target.addClass('controls-ListView__hoveredItem'),
                      position: {
-                        top: target[0].offsetTop,
-                        left: target[0].offsetLeft
+                        top: targetCords.top - cords.top,
+                        left: targetCords.left - cords.left
                      },
                      size: {
                         height: target[0].offsetHeight,
                         width: target[0].offsetWidth
                      }
-                  };                  this._notify('onChangeHoveredItem', this._hoveredItem);
+                  };
+                  this._notify('onChangeHoveredItem', this._hoveredItem);
                   this._onChangeHoveredItem(this._hoveredItem);
                }
             }
-         },
-
-         _getHoveredItemConfig: function(target){
-            return {
-               key: target.data('id'),
-               container: target,
-               position: {
-                  top: target[0].offsetTop,
-                  left: target[0].offsetLeft
-               },
-               size: {
-                  height: target[0].offsetHeight,
-                  width: target[0].offsetWidth
-               }
-            };
          },
          /**
           * Обрабатывает уведение мышки с элемента представления
