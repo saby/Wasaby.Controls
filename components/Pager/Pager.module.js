@@ -84,7 +84,6 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
          }
          Pager.superclass.destroy.apply(this, arguments);
       }
-
    });
 
    return Pager;
