@@ -177,6 +177,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             self._redraw();
          });
       },
+      setPageSize: function(pageSize){
+         this._options.pageSize = pageSize;
+         this.reload(this._filter, this._sorting, 0, pageSize);
+      },
       //TODO Сделать публичным? вроде так всем захочется делать
       _isLoading: function () {
          return this._loader && !this._loader.isReady();
@@ -409,7 +413,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       //TODO Сделать публичным? И перенести в другое место
       _hasNextPage: function (hasMore) {
          //n - приходит true, false || общее количество записей в списочном методе
-         return typeof (hasMore) !== 'boolean' ? hasMore > this._offset : !!hasMore;
+         return typeof (hasMore) !== 'boolean' ? hasMore > (this._offset + this._options.pageSize) : !!hasMore;
       },
 
       _dataLoadedCallback: function () {

@@ -41,6 +41,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
          if (!this._pathSelector) {
             this._drawPathSelector();
          }
+         HierarchyDataGrid.superclass._dataLoadedCallback.call(this, arguments);
       },
 
       _drawPathSelector: function () {
