@@ -42,7 +42,8 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
             keys: [10, 20, 25, 50, 100, 200, 500, 1000],
             values: [10, 20, 25, 50, 100, 200, 500, 1000]
 
-         }
+         },
+         _paging : undefined
       },
       $constructor: function(){
          var localPageSize = $ws.helpers.getLocalStorageValue('ws-page-size');
@@ -57,25 +58,26 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
          }
       },
       init: function(){
-         var self = this, fdd, paging;
+         var self = this, fdd;
          Pager.superclass.init.call(this);
          fdd = this.getChildControlByName('controls-Pager_comboBox');
          //TODO подписаться на изменение проперти в контексте. Пока Витя не допилил - подписываюсь на комбобокс
          fdd.setData(this._fddData);
          fdd.setValue(this._options.pageSize);
          fdd.subscribe('onChange', function(event, value){
-            //TODO здесь поменять у связанного DataGrid - pageSize
+            //TODO может менять pageSize модно будет в фильтре?
             self._options.pageSize = value;
+            self.getPaging().setPageSize(value);
             self.getOpener().setPageSize(value);
             $ws.helpers.setLocalStorageValue('ws-page-size', self._options.pageSize);
          });
-         paging = this.getChildControlByName('controls-Pager_paging');
-         paging.subscribe('onPageChange', function(event, pageNum, deferred){
+         this._paging = this.getChildControlByName('controls-Pager_paging');
+         this._paging.subscribe('onPageChange', function(event, pageNum, deferred){
             self._notify('onPageChange', pageNum, deferred);
          })
       },
       getPaging: function(){
-         return this.getChildControlByName('controls-Pager_paging');
+         return this._paging;
       },
       destroy: function () {
          if (this._block) {
