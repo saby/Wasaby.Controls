@@ -31,9 +31,8 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
              * @typedef {Object} Columns
              * @property {String} title Заголовок колонки
              * @property {String} field Имя поля
-             * @property {Number} Ширина колонки
+             * @property {Number} width Ширина колонки
              * Значение необходимо задавать для колонок с фиксированной шириной.
-             *
              * @property {String} className Имя класса, который будет применён к каждой ячейке столбца
              * @property {String} captionTemplate Шаблон отображения шапки колонки
              * @property {String} cellTemplate Шаблон отображения ячейки
@@ -259,6 +258,10 @@ define('js!SBIS3.CONTROLS.DataGrid', ['js!SBIS3.CONTROLS.ListViewDS', 'html!SBIS
          this._options.columns = columns;
          this._thead.empty();
          this._colgroup.empty();
+         if (this._options.multiselect) {
+            this._thead.append('<th class="controls-DataGrid__th"></th>');
+            this._colgroup.append('<col width="24px">');
+         }
 
          for (var i = 0; i < columns.length; i++) {
             var column = $('<col/>');

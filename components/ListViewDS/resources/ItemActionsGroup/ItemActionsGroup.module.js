@@ -24,10 +24,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             _itemActionsHiddenButton: [],
             _activeItem: undefined,
             _options: {
-               /**
-                * Количество записей, которые можно показать не в меню
-                */
-               itemActionsOverflow: 3
+
             }
          },
 
@@ -40,21 +37,12 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          applyItemActions: function() {
             var onlyMain = true,
-                itemsInstances = this.getItemsInstances(),
-                overFlow = false,
-                show = false,
-                count = 0;
+               itemsInstances = this.getItemsInstances(),
+               show = false;
 
             for(var i in itemsInstances) {
                if(itemsInstances.hasOwnProperty(i)) {
-                  onlyMain &= this._itemActionsButtons[i]['isMainAction'];
-                  if(itemsInstances[i].isVisible() && !overFlow) {
-                     count++;
-                     overFlow = count > this._options.itemActionsOverflow;
-                  }
-                  //Если кнопок больше чем itemActionsOverflow или кнопка не главная, то нужно их скрыть
-                  //и показать в меню
-                  show = !(overFlow || !this._itemActionsButtons[i]['isMainAction']);
+                  show = this._itemActionsButtons[i]['isMainAction'] && itemsInstances[i].isVisible();
                   //Если видимость кнопки не изменилась, то делать ничего не будем
                   if(this._itemActionsButtons[i]['isVisible'] !== show) {
                      itemsInstances[i].getContainer()[0].style.display = show ? 'inline-block' : 'none';
@@ -62,7 +50,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   }
                }
             }
-            this._itemActionsMenuButton[0].style.display = (!onlyMain || overFlow ? 'inline-block' : 'none');
+            this._itemActionsMenuButton[0].style.display = (!onlyMain ? 'inline-block' : 'none');
          },
          /**
           * Создаёт меню для операций над записью
@@ -112,15 +100,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          hoverImitation: function(show) {
             this._activeItem[show ? 'addClass' : 'removeClass']('controls-ItemActions__activeItem');
-         },
-         /**
-          * Задаёт количество записей, которые показываются на строке(не прячутся в меню)
-          * @param {Number} amount
-          */
-         setItemsActionsOverFlow: function(amount) {
-            if(typeof amount === 'number') {
-               this._options.itemActionsOverflow = amount;
-            }
          },
          /**
           * Показывает меню для операций над записью

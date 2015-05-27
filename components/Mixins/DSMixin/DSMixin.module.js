@@ -178,8 +178,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._loader = this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
             self._notify('onDataLoad', dataSet);
             self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
-            //FixMe: перезаписываем dataSet
-            self._dataSet = dataSet;
+            if (self._dataSet) {
+               self._dataSet.setRawData(dataSet.getRawData());
+            } else {
+               self._dataSet = dataSet;
+            }
             self._dataLoadedCallback();
             //self._notify('onBeforeRedraw');
             self._redraw();
@@ -252,13 +255,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _redraw: function () {
          this._clearItems();
-         var records = [];
+         var records = this._getRecordsForRedraw();
+         this._drawItems(records);
+      },
 
+      _getRecordsForRedraw : function() {
+         var records = [];
          this._dataSet.each(function (record) {
             records.push(record);
          });
-
-         this._drawItems(records);
+         return records;
       },
 
       _drawItems: function (records, at) {

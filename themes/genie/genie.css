@@ -64,7 +64,7 @@ input[type="reset"]::-moz-focus-inner {
   text-align: center;
   min-width: 24px;
   height: 30px;
-  line-height: 28px;
+  line-height: normal;
   padding: 0;
   margin: auto;
   overflow: hidden;
@@ -161,7 +161,7 @@ input[type="reset"]::-moz-focus-inner {
   text-align: center;
   min-width: 24px;
   height: 54px;
-  line-height: 24px;
+  line-height: normal;
   padding: 0;
   margin: auto;
   border: 1px solid #d1d1d1;
@@ -2023,6 +2023,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:last-child {
   padding-right: 10px;
 }
+.controls-DataGrid .controls-ListView__folder {
+  font-size: 15px;
+}
 .controls-DataGrid .controls-DataGrid__td__checkBox {
   width: 16px;
 }
@@ -2171,6 +2174,11 @@ input[type="reset"]::-moz-focus-inner {
   position: relative;
   border-radius: 8px;
 }
+.controls-ProgressBar__backProgress {
+  height: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+}
 .controls-ProgressBar__progress {
   height: 100%;
   background: #a2e68c;
@@ -2197,6 +2205,12 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ProgressBar_align-right .controls-ProgressBar__value {
   width: auto;
   right: -40px;
+}
+.ws-disabled .controls-ProgressBar__progress {
+  background: #d1d1d1;
+}
+.ws-disabled .controls-ProgressBar__value {
+  color: #919191;
 }
 .controls-ItemActions {
   position: absolute;

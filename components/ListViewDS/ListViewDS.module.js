@@ -366,7 +366,7 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
                }
             }
             else {
-               this.setSelectedIndexes([id]);
+               this.setSelectedKeys([id]);
                this._notify('onItemClick', id, data, target);
                if (this._options.elemClickHandler) {
                   this._options.elemClickHandler.call(this, id, data, target);
@@ -553,7 +553,7 @@ this._hoveredItem.container && this._hoveredItem.container.removeClass('controls
             if (this.isInfiniteScroll()) {
                this._loadBeforeScrollAppears();
             }
-            this._drawSelectedItems(this._options.selectedIndexes);
+            this._drawSelectedItems(this._options.selectedKeys);
          },
          destroy: function() {
             if (this.isInfiniteScroll()){
