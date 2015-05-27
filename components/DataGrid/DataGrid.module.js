@@ -194,8 +194,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
       },
 
       _checkHeadContainer: function(target) {
-         var headContainer = this._container.find('.controls-DataGrid__thead');
-         return headContainer && target.closest(headContainer).length || this._editInPlace && target.closest('.controls-ListView__addInPlace-container').length;
+         return this._thead.length && $.contains(this._thead[0], target[0]) || this._editInPlace && $.contains(this._editInPlace.getContainer()[0], target[0]);
       },
 
       _getItemsContainer: function(){
