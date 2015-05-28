@@ -180,8 +180,10 @@ define('js!SBIS3.CONTROLS.DataGrid',
          DataGrid.superclass._onChangeHoveredItem.apply(this, arguments);
       },
 
-      _checkHeadContainer: function(target) {
-         return this._thead.length && $.contains(this._thead[0], target[0]) || this._addInPlaceButton && $.contains(this._addInPlaceButton.getContainer().parent()[0], target[0]);
+      _checkTargetContainer: function(target) {
+         return this._thead.length && $.contains(this._thead[0], target[0]) ||
+                this._addInPlaceButton && $.contains(this._addInPlaceButton.getContainer().parent()[0], target[0]) ||
+                DataGrid.superclass._checkTargetContainer.apply(this, arguments);
       },
 
       _getItemsContainer: function(){
@@ -217,6 +219,10 @@ define('js!SBIS3.CONTROLS.DataGrid',
             return this._options.itemTemplate(item)
          }
 
+      },
+
+      _hoveredEditInPlace: function($target) {
+         return this._editInPlace && $.contains(this._editInPlace.getContainer()[0], $target[0]);
       },
 
       _drawItemsCallback: function () {
@@ -406,8 +412,11 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
           this._thead.find('.controls-DataGrid__th').eq(0).parent().remove();
           this._colgroup.empty();
+          if (this._options.multiselect) {
+             headerTr.append('<th class="controls-DataGrid__th"></th>');
+             docFragmentForColGroup.appendChild($('<col width="24px">')[0]);
+          }
           this._options.columns = columns;
-
           for (var i = 0; i < columns.length; i++) {
              var column = document.createElement('col');
              if (columns[i]['width']) column.width = columns[i]['width'];
