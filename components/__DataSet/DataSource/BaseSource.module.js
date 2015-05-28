@@ -186,6 +186,17 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
        */
       query: function (filter, sorting, offset, limit) {
          throw new Error('Method must be implemented');
+         /*Method must be implemented*/
+      },
+      /**
+       * Метод перемещения записи к другому родителю и смены порядковых номеров
+       * @param {SBIS3.CONTROLS.Record} record - запись, которую необходимо перенести
+       * @param {String} hierField - имя колонки с иерархией
+       * @param {Number} parentKey - ключ нового родителя для записи
+       * @param {Object} orderDetails - детали смены порядковых номеров. Объект со свойствами after и before: после или перед какой записью нужно вставить перемещаемую.
+       */
+      move: function (record, hierField, parentKey, orderDetails) {
+         /*Method must be implemented*/
       }
 
    });

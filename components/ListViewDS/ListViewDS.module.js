@@ -17,8 +17,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
       'use strict';
 
       var
-         ITEMS_ACTIONS_HEIGHT = 20,
-         ITEMS_ACTIONS_WIDTH  = 20;
+         ITEMS_ACTIONS_HEIGHT = 20;
 
       /**
        * Контрол, отображающий внутри себя набор однотипных сущностей.
@@ -359,6 +358,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                }
                else {
                   this._notify('onItemClick', id, data, target);
+                  this._elemClickHandlerInternal(id, data, target);
                   if (this._options.elemClickHandler) {
                      this._options.elemClickHandler.call(this, id, data, target);
                   }
@@ -367,10 +367,15 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             else {
                this.setSelectedKeys([id]);
                this._notify('onItemClick', id, data, target);
+               this._elemClickHandlerInternal(id, data, target);
                if (this._options.elemClickHandler) {
                   this._options.elemClickHandler.call(this, id, data, target);
                }
             }
+         },
+
+         _elemClickHandlerInternal : function(id, data, target) {
+
          },
 
          _getItemActionsContainer: function (id) {
@@ -553,16 +558,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                this._loadBeforeScrollAppears();
             }
             this._drawSelectedItems(this._options.selectedKeys);
-         },
-         destroy: function() {
-            if (this.isInfiniteScroll()){
-               if (this._infiniteScrollContainer.length) {
-                  this._infiniteScrollContainer.unbind('.wsInfiniteScroll');
-               } else {
-                  $(window).unbind('.wsInfiniteScroll');
-               }
-            }
-            ListViewDS.superclass.destroy.call(this);
          },
          //-----------------------------------infiniteScroll------------------------
          //TODO Сделать подгрузку вверх
@@ -809,6 +804,16 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if(this.getPage() === -1) {
                this._offset = more - this._options.pageSize;
             }
+         },
+         destroy: function() {
+            if (this.isInfiniteScroll()){
+               if (this._infiniteScrollContainer.length) {
+                  this._infiniteScrollContainer.unbind('.wsInfiniteScroll');
+               } else {
+                  $(window).unbind('.wsInfiniteScroll');
+               }
+            }
+            ListViewDS.superclass.destroy.call(this);
          }
       });
 
