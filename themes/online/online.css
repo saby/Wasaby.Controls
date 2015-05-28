@@ -2400,11 +2400,12 @@ input[type="reset"]::-moz-focus-inner {
 .controls-editInPlace {
   position: absolute;
   white-space: nowrap;
-  padding: 2px;
+  padding: 2px 0;
   z-index: 1;
 }
 .controls-editInPlace > div {
   display: inline-block;
+  margin: 0 1px;
   vertical-align: top;
   height: 100%;
 }
@@ -2415,13 +2416,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-editInPlace > div .ws-component.controls-CheckBox {
   text-align: center;
 }
-.controls-editInPlace > div .ws-component.controls-TextBox {
-  padding-left: 1px;
-}
 .controls-editInPlace .controls-editInPlace__withEditor {
   background-color: white;
   cursor: text;
-  padding: 0 2px 0 0;
 }
 .controls-editInPlace .editInPlace__editor {
   width: 100%;
