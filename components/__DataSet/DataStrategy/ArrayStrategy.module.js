@@ -168,6 +168,43 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
       },
       getEmptyRawData: function () {
          return [];
+      },
+
+      changeOrder: function(data, record, orderDetails){
+         var orderColumn = orderDetails.column,
+            targetOrder,
+            recordKey = record.getKey(),
+            length = data.length,
+            shift = false,
+            shiftSize,
+            startKey,
+            stopKey,
+            rowKey,
+            row;
+         if(orderDetails.after){
+            stopKey = orderDetails.after;
+            startKey = recordKey;
+            shiftSize = -1;
+         } else {
+            stopKey = recordKey;
+            startKey = orderDetails.before;
+            shiftSize = 1;
+         }
+         for (var i = 0; i < length; i++) {
+            row = data[i];
+            rowKey = this.getKey(row);
+            if(!shift && rowKey === startKey){
+               targetOrder = row[orderColumn];
+               shift = true;
+            }
+            if(shift && rowKey === stopKey){
+               shift = false;
+               row[orderColumn] = targetOrder;
+            }
+            if(shift){
+               row[orderColumn] = data[i + shiftSize][orderColumn];
+            }
+         }
       }
 
    });
