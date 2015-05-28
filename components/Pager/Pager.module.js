@@ -43,7 +43,9 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
 
          },
          _paging : undefined,
-         _fdd: undefined
+         _fdd: undefined,
+         _lastNumRecords: undefined,
+         _lastNextPage: undefined
       },
       $constructor: function(){
          var localPageSize = $ws.helpers.getLocalStorageValue('ws-page-size');
@@ -58,7 +60,8 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
          }
       },
       init: function(){
-         var self = this;
+         var self = this,
+               opener;
          Pager.superclass.init.call(this);
          this._fdd = this.getChildControlByName('controls-Pager_comboBox');
          //TODO подписаться на изменение проперти в контексте. Пока Витя не допилил - подписываюсь на комбобокс
@@ -74,10 +77,19 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
          this._paging = this.getChildControlByName('controls-Pager_paging');
          this._paging.subscribe('onPageChange', function(event, pageNum, deferred){
             self._notify('onPageChange', pageNum, deferred);
-         })
+         });
+         //TODO Надо как-то по-другому понимать изменения в выделении listView
+         opener = this.getOpener();
+         if ($ws.helpers.instanceOfMixin(opener, 'SBIS3.CONTROLS.MultiSelectable')){
+            opener.subscribe('onSelectedItemsChange', function(ev, array){
+               self.updateAmount(self._lastNumRecords, self._lastNextPage, array.length);
+            });
+         }
       },
       updateAmount : function(numRecords, hasNextPage, selectedCount){
          var pagerStr = '';
+         this._lastNumRecords = numRecords;
+         this._lastNextPage = hasNextPage;
          selectedCount = selectedCount || 0;
          if (typeof hasNextPage === 'boolean'){
             var strEnd = '',//typeof hasNextPage !== 'boolean' && hasNextPage ? (' из ' + hasNextPage) : '',
@@ -105,7 +117,7 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
                ' ' + selectedCount + ' запис' + $ws.helpers.wordCaseByNumber(selectedCount, 'ей', 'ь', 'и') + '. ' + pagerStr;
             }
          }
-         this.getContainer().find('.controls-Amount-text').text(pagerStr);
+         this.getContainer().find('.controls-Amount-text_js').text(pagerStr);
       },
       /**
        * Получить SBIS3.CORE.Paging
