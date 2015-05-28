@@ -221,6 +221,10 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
       },
 
+      _hoveredEditInPlace: function($target) {
+         return this._editInPlace && $.contains(this._editInPlace.getContainer()[0], $target[0]);
+      },
+
       _drawItemsCallback: function () {
          if(this._options.startScrollColumn !== undefined) {
             var needShowScroll = this._isPartScrollNeeded();
