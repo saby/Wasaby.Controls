@@ -3,8 +3,9 @@
  */
 define('js!SBIS3.CONTROLS.MoveDialog', [
    'js!SBIS3.CORE.Dialog',
-   'js!SBIS3.CONTROLS.Record'
-], function(Dialog, Record) {
+   'js!SBIS3.CONTROLS.Record',
+   'js!SBIS3.CONTROLS.ArrayStrategy'
+], function(Dialog, Record, ArrayStrategy) {
 
    var MoveDialog = Dialog.extend({
 
@@ -48,7 +49,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          raw[hierField + '@'] = true;
          var record = new Record({
             /*TODO разобраться со стратегией и форматами*/
-            strategy: dataSet.getStrategy(),
+            strategy: new ArrayStrategy(),
             raw: raw,
             keyField: dataSet._keyField
          });
