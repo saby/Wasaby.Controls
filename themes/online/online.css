@@ -2238,15 +2238,26 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Pager {
   float: right;
   height: 28px;
-  padding: 5px 0 0 6px;
 }
-.controls-Pager .controls-Amount-text {
+.controls-Pager .controls-text {
   line-height: 20px;
   font-size: 11px;
+  padding-top: 2px;
   color: #999999;
 }
 .controls-Pager .controls-Pager-block {
   float: right;
+}
+.controls-Pager .controls-Pager-block-amount {
+  padding: 5px 6px 6px 1px;
+}
+.controls-Pager .controls-Pager-block-paging {
+  padding: 4px 0 0 6px;
+}
+.controls-Pager .controls-Pager__pageSize-container select,
+.controls-Pager .controls-Pager__pageSize-container .custom-select.asLink {
+  font-size: 11px;
+  text-decoration: underline;
 }
 .controls-operations-panel {
   /*TODO придрот (2 important), чтобы перебить высоту ws-area*/
@@ -2328,6 +2339,21 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-OperationsMark-checkBox {
   margin: 0 4px;
+}
+.controls-MoveDialogTemplate {
+  overflow-y: auto;
+}
+.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid {
+  padding: 0 0 5px 0;
+  /*TODO как скрыть PathSelector?*/
+}
+.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid .controls-HierarchyDataGrid__PathSelector {
+  display: none;
+}
+.controls-MoveDialogTemplate__activateMove {
+  position: absolute;
+  right: 38px;
+  top: 8px;
 }
 .controls__filterButton {
   height: 40px;
