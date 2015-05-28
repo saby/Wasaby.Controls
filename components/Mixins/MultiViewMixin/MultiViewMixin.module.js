@@ -102,7 +102,7 @@ define('js!SBIS3.CONTROLS.MultiViewMixin', ['html!SBIS3.CONTROLS.MultiViewMixin'
 
          _getItemActionsPosition: function(parentFunc, item) {
             if (this._options.viewMode == 'table') {
-               parentFnc.call(this, target);
+               parentFunc.call(this, target);
             } else 
             return {
                top: item.position.top,
