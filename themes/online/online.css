@@ -2290,17 +2290,17 @@ input[type="reset"]::-moz-focus-inner {
 .controls-OperationsMark-checkBox {
   margin: 0 4px;
 }
-.controls-MoveDialog {
+.controls-MoveDialogTemplate {
   overflow-y: auto;
 }
-.controls-MoveDialog .controls-MoveDialog-TreeDataGrid {
+.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid {
   padding: 0 0 5px 0;
   /*TODO как скрыть PathSelector?*/
 }
-.controls-MoveDialog .controls-MoveDialog-TreeDataGrid .controls-HierarchyDataGrid__PathSelector {
+.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid .controls-HierarchyDataGrid__PathSelector {
   display: none;
 }
-.controls-MoveDialog__activateMove {
+.controls-MoveDialogTemplate__activateMove {
   position: absolute;
   right: 38px;
   top: 8px;

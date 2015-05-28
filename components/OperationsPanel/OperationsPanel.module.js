@@ -8,7 +8,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    'js!SBIS3.CONTROLS.CollectionMixin',
    /*TODO это должна подключать не панель а прекладники, потом убрать*/
    'js!SBIS3.CONTROLS.OperationDelete',
-   'js!SBIS3.CONTROLS.OperationsMark'
+   'js!SBIS3.CONTROLS.OperationsMark',
+   'js!SBIS3.CONTROLS.OperationMove'
 ], function(Control, dotTplFn, PickerMixin, CollectionMixin) {
    /**
     * SBIS3.CONTROLS.OperationsPanel
