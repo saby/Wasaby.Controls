@@ -45,6 +45,15 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
     *
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
+    * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
+    *
+    * @cssModifier controls-Button__light Контурная кнопка.
+    * @cssModifier controls-Button__big Большая кнопка.
+    * @cssModifier controls-Button__ellipsis Кнопка, на которой в тексте появляется многоточие при нехватке ширины.
+    * !Важно: при добавлении этого класса сломается "Базовая линия".
+    *
+    * @css controls-Button__icon Класс для изменения отображения иконки кнопки.
+    * @css controls-Button__text Класс для изменения отображения текста на кнопке.
     */
 
    var Button = ButtonBase.extend( /** @lends SBIS3.CONTROLS.Button.prototype */ {
