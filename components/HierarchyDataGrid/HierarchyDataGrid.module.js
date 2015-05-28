@@ -54,7 +54,8 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
             dataSet: this._dataSet,
             handlers: {
                'onPathChange': this._onPathSelectorChange.bind(this)
-            }
+            },
+            rootNodeId: this._options.root
          });
       },
 
@@ -75,8 +76,14 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
 
       _onPathSelectorChange: function (event, id) {
          this.openNode(id);
-      }
+      },
 
+      _elemClickHandlerInternal: function (id, data, target) {
+         if (data.get(this._options.hierField+'@')) {
+            var nodeID = $(target).closest('.controls-ListView__item').data('id');
+            this.toggleNode(nodeID);
+         }
+      }
 
    });
 
