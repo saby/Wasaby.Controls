@@ -367,7 +367,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          if (this._options.target) {
             var winHeight = $(window).height(),
                top = this._options.target.offset().top - $(window).scrollTop() - winHeight - 3;
-            if (top > 0 || -top > winHeight) {
+            if (this.isVisible() && (top > 0 || -top > winHeight)) {
                self.hide();
             }
          }
