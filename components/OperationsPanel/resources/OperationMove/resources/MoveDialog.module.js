@@ -58,6 +58,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          raw[hierField] = null;
          raw[hierField + '@'] = true;
          var record = new Record({
+            /*TODO разобраться со стратегией и форматами*/
             strategy: dataSet.getStrategy(),
             raw: raw,
             keyField: dataSet._keyField
