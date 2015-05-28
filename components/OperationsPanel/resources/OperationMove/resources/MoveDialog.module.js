@@ -28,11 +28,8 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          this._dialog = new Dialog ({
             template: 'js!SBIS3.CONTROLS.MoveDialogTemplate',
             resizable: false,
-            title: 'Переместить ' + selectedCount + ' запис' + $ws.helpers.wordCaseByNumber(selectedCount, 'ей', 'ь', 'и') + ' в',
+            title: 'Перенести ' + selectedCount + ' запис' + $ws.helpers.wordCaseByNumber(selectedCount, 'ей', 'ь', 'и') + ' в',
             handlers: {
-               onBeforeShow: function(){
-                  console.log('onBeforeShow');
-               },
                onReady : function() {
                   var linkedView = self._options.linkedView;
                   self._treeView = this.getChildControlByName('MoveDialogTemplate-TreeDataGrid');
