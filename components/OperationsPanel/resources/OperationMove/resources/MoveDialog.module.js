@@ -2,10 +2,9 @@
  * Created by as.suhoruchkin on 02.04.2015.
  */
 define('js!SBIS3.CONTROLS.MoveDialog', [
-   'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CORE.Dialog',
    'js!SBIS3.CONTROLS.Record'
-], function(Control, Dialog, Record) {
+], function(Dialog, Record) {
 
    var MoveDialog = Dialog.extend({
 
