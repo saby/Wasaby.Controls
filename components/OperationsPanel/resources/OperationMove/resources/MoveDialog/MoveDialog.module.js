@@ -43,9 +43,10 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
 
       },
       _onDataLoadHandler: function(event, dataSet) {
+         var hierField = this._linkedView._options.hierField;
          dataSet.each(function(record) {
-            if (!record.get('par')) {
-               record.set('par', 0);
+            if (!record.get(hierField)) {
+               record.set(hierField, 0);
             }
          });
          var record = new Record({

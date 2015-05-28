@@ -2290,6 +2290,25 @@ input[type="reset"]::-moz-focus-inner {
 .controls-OperationsMark-checkBox {
   margin: 0 4px;
 }
+.controls-MoveDialog {
+  min-width: 400px;
+  max-width: 400px;
+  min-height: 400px;
+  max-height: 400px;
+  overflow-y: scroll;
+}
+.controls-MoveDialog .controls-MoveDialog-TreeDataGrid {
+  padding: 0 0 5px 0;
+  /*TODO как скрыть PathSelector?*/
+}
+.controls-MoveDialog .controls-MoveDialog-TreeDataGrid .controls-HierarchyDataGrid__PathSelector {
+  display: none;
+}
+.controls-MoveDialog__activateMove {
+  position: absolute;
+  right: 38px;
+  top: 8px;
+}
 .controls-ProgressBar {
   height: 17px;
 }
