@@ -466,9 +466,9 @@ define('js!SBIS3.CONTROLS.DataSet', [
                curLvl = a[0].lvl + 1;
             }
             else {
-               curParentId = null;
+               curParentId = undefined;
             }
-         } while (curParentId);
+         } while (typeof curParentId != 'undefined');
       },
 
       filter: function (filterCallback) {
