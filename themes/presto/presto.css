@@ -1342,6 +1342,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox {
   cursor: pointer;
+  line-height: normal;
 }
 .controls-ComboBox .controls-TextBox__fieldWrapper {
   position: relative;
@@ -1925,6 +1926,11 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent;
   background: #4e5762;
 }
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell,
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th.controls-DataGrid__notScrolledCell {
+  background-color: #4e5762;
+  z-index: 1;
+}
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr {
   background: transparent;
 }
@@ -1933,7 +1939,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected .controls-DataGrid__td {
   color: inherit;
-  background-color: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover {
   background: #f2f2f2;
@@ -1945,6 +1950,40 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover .controls-DataGrid__td {
   color: #333333;
   background-color: #f2f2f2;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container {
+  position: absolute;
+  height: 1px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__arrowLeft {
+  position: relative;
+  float: left;
+  top: -12px;
+  z-index: 2;
+  cursor: pointer;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__arrowRight {
+  position: relative;
+  float: right;
+  top: -12px;
+  z-index: 2;
+  left: 4px;
+  cursor: pointer;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__thumb {
+  height: 3px;
+  width: 96px;
+  margin-left: 20px;
+  z-index: 2;
+  border-radius: 3px 3px;
+  background-color: #313e78;
+  position: absolute;
+  cursor: pointer;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__thumb:hover,
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__thumb.controls-DataGrid__PartScroll__thumb-clicked {
+  height: 6px;
+  top: -1px;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th {
   position: relative;
@@ -2005,6 +2044,30 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid__addInPlace-container {
   padding-left: 8px;
+}
+.controls-Pager {
+  float: right;
+  height: 28px;
+}
+.controls-Pager .controls-text {
+  line-height: 20px;
+  font-size: 11px;
+  padding-top: 2px;
+  color: #999999;
+}
+.controls-Pager .controls-Pager-block {
+  float: right;
+}
+.controls-Pager .controls-Pager-block-amount {
+  padding: 5px 6px 6px 1px;
+}
+.controls-Pager .controls-Pager-block-paging {
+  padding: 4px 0 0 6px;
+}
+.controls-Pager .controls-Pager__pageSize-container select,
+.controls-Pager .controls-Pager__pageSize-container .custom-select.asLink {
+  font-size: 11px;
+  text-decoration: underline;
 }
 .controls-PathSelector {
   min-height: 26px;
@@ -2104,6 +2167,21 @@ input[type="reset"]::-moz-focus-inner {
 .controls__operations-panel__wrapper .controls__operations-panel__action-type-selection,
 .controls__operations-panel__wrapper .controls__operations-panel__action-type-all {
   margin: 0 4px;
+}
+.controls-MoveDialogTemplate {
+  overflow-y: auto;
+}
+.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid {
+  padding: 0 0 5px 0;
+  /*TODO как скрыть PathSelector?*/
+}
+.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid .controls-HierarchyDataGrid__PathSelector {
+  display: none;
+}
+.controls-MoveDialogTemplate__activateMove {
+  position: absolute;
+  right: 38px;
+  top: 8px;
 }
 .controls-ProgressBar {
   height: 17px;
@@ -2211,6 +2289,84 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ListView.controls-ListView__multiselect .controls-EditInPlaceController {
   left: 42px;
+}
+.controls-FastDataFilter {
+  display: inline-block;
+  border: 0;
+}
+.controls-CustomFilterMenu {
+  display: inline-block;
+  min-height: 24px;
+  box-sizing: border-box;
+}
+.controls-CustomFilterMenu > * {
+  display: inline-block;
+}
+.controls-CustomFilterMenu .controls-CustomFilterMenu__beforeCaptionWrapper {
+  display: inline-block;
+}
+.controls-CustomFilterMenu .controls-CustomFilterMenu__beforeCaptionWrapper .controls-CustomFilterMenu__arrowIcon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: url('img/select-arrow.png') 0 -52px no-repeat;
+}
+.controls-CustomFilterMenu .controls-CustomFilterMenu__afterCaptionWrapper {
+  display: inline-block;
+}
+.controls-CustomFilterMenu .controls-CustomFilterMenu__afterCaptionWrapper .controls-CustomFilterMenu__crossIcon {
+  display: inline-block;
+  position: relative;
+  bottom: -5px;
+  width: 16px;
+  height: 16px;
+  background: url('img/cancelIcon-sprite.png') 0 -35px no-repeat;
+}
+.controls-CustomFilterMenu .controls-CustomFilterMenu__afterCaptionWrapper .controls-CustomFilterMenu__crossIcon:hover {
+  background: url('img/cancelIcon-sprite.png') 0 -19px no-repeat;
+}
+.controls-CustomFilterMenu.controls-Picker__show {
+  box-shadow: 0 0 0 1px #eeeeee;
+}
+.controls-CustomFilterMenu__picker {
+  cursor: pointer;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+}
+.controls-CustomFilterMenu__picker .controls-CustomFilterMenu__header {
+  display: inline-block;
+  background: #ffffff;
+  border: 1px solid #eeeeee;
+  border-bottom: 0;
+  z-index: 2;
+}
+.controls-CustomFilterMenu__picker .controls-CustomFilterMenu__header .controls-CustomFilterMenu__arrowIcon {
+  background: url('img/select-arrow.png') 0 -26px no-repeat;
+}
+.controls-CustomFilterMenu__picker .controls-CustomFilterMenu__list {
+  z-index: 1;
+  border: 1px solid #eeeeee;
+  background: #ffffff;
+  margin-top: -1px;
+  padding: 8px 0;
+}
+.controls-CustomFilterMenu__picker.controls-FloatArea {
+  background: transparent;
+}
+.controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item {
+  padding: 4px;
+  background: #ffffff;
+  margin: 0 8px;
+}
+.controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item:hover {
+  background: #e7f0f9;
+}
+.controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item.controls-CustomFilterMenu__item__selected {
+  display: none;
 }
 .controls-ComboBox.controls-Picker__show {
   border-width: 1px;

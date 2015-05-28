@@ -41,10 +41,12 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   .bind(isMobileBrowser ? 'touchend' : 'mouseup', this._onMouseDownArea.bind(this));
                this.once('onReady', function() {
                   childControls = this.getChildControls();
-                  this._firstField = childControls[0].getName();
-                  $ws.helpers.forEach(childControls, function(ctrl) {
-                     this._fields[ctrl.getName()] = ctrl;
-                  }, this);
+                  if (childControls.length) {
+                     this._firstField = childControls[0].getName();
+                     $ws.helpers.forEach(childControls, function (ctrl) {
+                        this._fields[ctrl.getName()] = ctrl;
+                     }, this);
+                  }
                });
             },
             /**

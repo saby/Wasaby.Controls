@@ -166,85 +166,45 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
       getParentKey: function (record, rawKey) {
          return record.get(rawKey);
       },
-      /**
-        * Метод для получения набора записей из источника данных.
-        * @param {Array} data
-        * @param filter
-        * @param sorting
-        * @param offset
-        * @param limit
-        * @returns {*}
-        */
-      query: function (data, filter, sorting, offset, limit) {
-         var newData = data;
-         filter = filter || {};
-         sorting = sorting || [];
-
-         if (!Object.isEmpty(filter)) {
-            newData = [];
-            $ws.helpers.forEach(filter, function (value, index) {
-
-               for (var i = 0; i < data.length; i++) {
-                  if (data[i][index] == value) {
-                     newData.push(data[i]);
-                  }
-               }
-
-
-            });
-         }
-
-         if (sorting.length) {
-            //TODO: сортировка по нескольким полям одновременно
-
-            $ws.helpers.forEach(sorting, function (value) {
-
-               if (!Object.isEmpty(value)) {
-
-                  for (var j in value) {
-                     if (value.hasOwnProperty(j)) {
-
-                        newData.sort(function (a, b) {
-
-                           if (a[j] > b[j]) {
-                              return (value[j] == 'DESC') ? -1 : 1;
-                           }
-
-                           if (a[j] < b[j]) {
-                              return (value[j] == 'DESC') ? 1 : -1;
-                           }
-
-                           return 0;
-
-                        });
-
-                     }
-                  }
-
-               }
-
-            });
-         }
-
-         var pagingData = newData;
-         if (typeof(offset) != 'undefined' && offset != null && typeof(limit) != 'undefined' && limit != null) {
-            pagingData = [];
-            var
-               firstIdx = offset,
-               length = newData.length;
-            for (var i = firstIdx; i < firstIdx + limit; i++) {
-               if (i >= length) {
-                  break;
-               }
-               pagingData.push(newData[i]);
-            }
-         }
-
-         return pagingData;
-      },
-
       getEmptyRawData: function () {
          return [];
+      },
+
+      changeOrder: function(data, record, orderDetails){
+         var orderColumn = orderDetails.column,
+            targetOrder,
+            recordKey = record.getKey(),
+            length = data.length,
+            shift = false,
+            shiftSize,
+            startKey,
+            stopKey,
+            rowKey,
+            row;
+         if(orderDetails.after){
+            stopKey = orderDetails.after;
+            startKey = recordKey;
+            shiftSize = -1;
+         } else {
+            stopKey = recordKey;
+            startKey = orderDetails.before;
+            shiftSize = 1;
+         }
+         for (var i = 0; i < length; i++) {
+            row = data[i];
+            rowKey = this.getKey(row);
+            if(!shift && rowKey === startKey){
+               targetOrder = row[orderColumn];
+               shift = true;
+            }
+            if(shift && rowKey === stopKey){
+               shift = false;
+               row[orderColumn] = targetOrder;
+            }
+            if(shift){
+               row[orderColumn] = data[i + shiftSize][orderColumn];
+            }
+         }
       }
 
    });

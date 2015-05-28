@@ -37,6 +37,13 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
 
       _dataLoadedCallback: function () {
          HierarchyDataGrid.superclass._dataLoadedCallback.call(this, arguments);
+      },
+
+      _elemClickHandlerInternal: function (id, data, target) {
+         if (data.get(this._options.hierField+'@')) {
+            var nodeID = $(target).closest('.controls-ListView__item').data('id');
+            this.toggleNode(nodeID);
+         }
       }
    });
 

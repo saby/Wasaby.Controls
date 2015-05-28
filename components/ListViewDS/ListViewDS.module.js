@@ -17,8 +17,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
       'use strict';
 
       var
-         ITEMS_ACTIONS_HEIGHT = 20,
-         ITEMS_ACTIONS_WIDTH  = 20;
+         ITEMS_ACTIONS_HEIGHT = 20;
 
       /**
        * Контрол, отображающий внутри себя набор однотипных сущностей.
@@ -244,11 +243,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             this.reload();
          },
 
-         _checkHeadContainer: function(target) {
-            return null;
-         },
-
-         _checkPagingContainer: function(target) {
+         _checkTargetContainer: function(target) {
             if(!this._options.showPaging) {
                return false;
             }
@@ -269,7 +264,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                return;
             }
             //Если увели мышку с контейнера с элементами(например на шапку), нужно об этом посигналить
-            if (this._checkHeadContainer($target) || this._checkPagingContainer($target)) {
+            if (this._checkTargetContainer($target)) {
                this._mouseLeaveHandler();
                return;
             }
@@ -295,7 +290,12 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   this._notify('onChangeHoveredItem', this._hoveredItem);
                   this._onChangeHoveredItem(this._hoveredItem);
                }
+            } else if (!this._hoveredEditInPlace($target)) {
+               this._mouseLeaveHandler();
             }
+         },
+         _hoveredEditInPlace: function($target) {
+            return false;
          },
          /**
           * Обрабатывает уведение мышки с элемента представления
@@ -359,6 +359,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                }
                else {
                   this._notify('onItemClick', id, data, target);
+                  this._elemClickHandlerInternal(id, data, target);
                   if (this._options.elemClickHandler) {
                      this._options.elemClickHandler.call(this, id, data, target);
                   }
@@ -367,10 +368,15 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             else {
                this.setSelectedKeys([id]);
                this._notify('onItemClick', id, data, target);
+               this._elemClickHandlerInternal(id, data, target);
                if (this._options.elemClickHandler) {
                   this._options.elemClickHandler.call(this, id, data, target);
                }
             }
+         },
+
+         _elemClickHandlerInternal : function(id, data, target) {
+
          },
 
          _getItemActionsContainer: function (id) {
@@ -554,16 +560,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
             this._drawSelectedItems(this._options.selectedKeys);
          },
-         destroy: function() {
-            if (this.isInfiniteScroll()){
-               if (this._infiniteScrollContainer.length) {
-                  this._infiniteScrollContainer.unbind('.wsInfiniteScroll');
-               } else {
-                  $(window).unbind('.wsInfiniteScroll');
-               }
-            }
-            ListViewDS.superclass.destroy.call(this);
-         },
          //-----------------------------------infiniteScroll------------------------
          //TODO Сделать подгрузку вверх
          //TODO (?) избавиться от _allowInfiniteScroll - пусть все будет завязано на опцию infiniteScroll
@@ -745,8 +741,11 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           */
          _updatePaging : function(){
             var more = this._dataSet.getMetaData().more,
-                nextPage = this.isInfiniteScroll() ? this._hasScrollMore : this._hasNextPage(more);
+                nextPage = this.isInfiniteScroll() ? this._hasScrollMore : this._hasNextPage(more),
+                numSelected = 0;
             if (this._pager) {
+               //Если данных в папке нет, не рисуем Pager
+               this._pager.getContainer().toggleClass('ws-hidden', !this._dataSet.getCount());
                var pageNum = this._pager.getPaging().getPage();
                if (this._pageChangeDeferred) { // только когда меняли страницу
                   this._pageChangeDeferred.callback([this.getPage() + 1, nextPage, nextPage]);//смотреть в DataSet мб ?
@@ -757,7 +756,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   this._pager.getPaging().setPage(pageNum - 1);
                }
                this._pager.getPaging().update(this.getPage(this.isInfiniteScroll() ? this._infiniteScrollOffset + this._options.pageSize: this._offset) + 1, more, nextPage);
-
+               if (this._options.multiselect) {
+                  numSelected = this.getSelectedKeys().length;
+               }
+               this._pager.updateAmount(this._dataSet.getCount(), nextPage, numSelected);
             }
          },
          /**
@@ -809,6 +811,16 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if(this.getPage() === -1) {
                this._offset = more - this._options.pageSize;
             }
+         },
+         destroy: function() {
+            if (this.isInfiniteScroll()){
+               if (this._infiniteScrollContainer.length) {
+                  this._infiniteScrollContainer.unbind('.wsInfiniteScroll');
+               } else {
+                  $(window).unbind('.wsInfiniteScroll');
+               }
+            }
+            ListViewDS.superclass.destroy.call(this);
          }
       });
 
