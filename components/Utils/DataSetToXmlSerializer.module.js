@@ -113,6 +113,9 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
          var fieldElement,
                tagName,
                element;
+         if (!column.hasOwnProperty('field')){
+            return;
+         }
          recordElement.appendChild(fieldElement = document.createElement('Поле'));
          fieldElement.setAttribute('Имя', column.field);
          var fieldValue = record.get(column.field) === null ? "" : record.get(column.field);
