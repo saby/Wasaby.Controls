@@ -741,8 +741,11 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           */
          _updatePaging : function(){
             var more = this._dataSet.getMetaData().more,
-                nextPage = this.isInfiniteScroll() ? this._hasScrollMore : this._hasNextPage(more);
+                nextPage = this.isInfiniteScroll() ? this._hasScrollMore : this._hasNextPage(more),
+                numSelected = 0;
             if (this._pager) {
+               //Если данных в папке нет, не рисуем Pager
+               this._pager.getContainer().toggleClass('ws-hidden', !this._dataSet.getCount());
                var pageNum = this._pager.getPaging().getPage();
                if (this._pageChangeDeferred) { // только когда меняли страницу
                   this._pageChangeDeferred.callback([this.getPage() + 1, nextPage, nextPage]);//смотреть в DataSet мб ?
@@ -753,7 +756,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   this._pager.getPaging().setPage(pageNum - 1);
                }
                this._pager.getPaging().update(this.getPage(this.isInfiniteScroll() ? this._infiniteScrollOffset + this._options.pageSize: this._offset) + 1, more, nextPage);
-
+               if (this._options.multiselect) {
+                  numSelected = this.getSelectedKeys().length;
+               }
+               this._pager.updateAmount(this._dataSet.getCount(), nextPage, numSelected);
             }
          },
          /**
