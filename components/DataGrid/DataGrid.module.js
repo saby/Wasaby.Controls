@@ -180,8 +180,10 @@ define('js!SBIS3.CONTROLS.DataGrid',
          DataGrid.superclass._onChangeHoveredItem.apply(this, arguments);
       },
 
-      _checkHeadContainer: function(target) {
-         return this._thead.length && $.contains(this._thead[0], target[0]) || this._addInPlaceButton && $.contains(this._addInPlaceButton.getContainer().parent()[0], target[0]);
+      _checkTargetContainer: function(target) {
+         return this._thead.length && $.contains(this._thead[0], target[0]) ||
+                this._addInPlaceButton && $.contains(this._addInPlaceButton.getContainer().parent()[0], target[0]) ||
+                DataGrid.superclass._checkTargetContainer.apply(this, arguments);
       },
 
       _getItemsContainer: function(){
