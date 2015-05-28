@@ -17,8 +17,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
       'use strict';
 
       var
-         ITEMS_ACTIONS_HEIGHT = 20,
-         ITEMS_ACTIONS_WIDTH  = 20;
+         ITEMS_ACTIONS_HEIGHT = 20;
 
       /**
        * Контрол, отображающий внутри себя набор однотипных сущностей.
@@ -560,16 +559,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
             this._drawSelectedItems(this._options.selectedKeys);
          },
-         destroy: function() {
-            if (this.isInfiniteScroll()){
-               if (this._infiniteScrollContainer.length) {
-                  this._infiniteScrollContainer.unbind('.wsInfiniteScroll');
-               } else {
-                  $(window).unbind('.wsInfiniteScroll');
-               }
-            }
-            ListViewDS.superclass.destroy.call(this);
-         },
          //-----------------------------------infiniteScroll------------------------
          //TODO Сделать подгрузку вверх
          //TODO (?) избавиться от _allowInfiniteScroll - пусть все будет завязано на опцию infiniteScroll
@@ -815,6 +804,16 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if(this.getPage() === -1) {
                this._offset = more - this._options.pageSize;
             }
+         },
+         destroy: function() {
+            if (this.isInfiniteScroll()){
+               if (this._infiniteScrollContainer.length) {
+                  this._infiniteScrollContainer.unbind('.wsInfiniteScroll');
+               } else {
+                  $(window).unbind('.wsInfiniteScroll');
+               }
+            }
+            ListViewDS.superclass.destroy.call(this);
          }
       });
 

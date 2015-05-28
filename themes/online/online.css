@@ -1956,6 +1956,11 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent;
   background: #ffffff;
 }
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell,
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th.controls-DataGrid__notScrolledCell {
+  background-color: #ffffff;
+  z-index: 1;
+}
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr {
   background: transparent;
 }
@@ -1964,7 +1969,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected .controls-DataGrid__td {
   color: inherit;
-  background-color: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover {
   background: #f3f3f3;
@@ -1976,6 +1980,40 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover .controls-DataGrid__td {
   color: inherit;
   background-color: #f3f3f3;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container {
+  position: absolute;
+  height: 1px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__arrowLeft {
+  position: relative;
+  float: left;
+  top: -12px;
+  z-index: 2;
+  cursor: pointer;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__arrowRight {
+  position: relative;
+  float: right;
+  top: -12px;
+  z-index: 2;
+  left: 4px;
+  cursor: pointer;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__thumb {
+  height: 3px;
+  width: 96px;
+  margin-left: 20px;
+  z-index: 2;
+  border-radius: 3px 3px;
+  background-color: #313e78;
+  position: absolute;
+  cursor: pointer;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__thumb:hover,
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__thumb.controls-DataGrid__PartScroll__thumb-clicked {
+  height: 6px;
+  top: -1px;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th {
   position: relative;
