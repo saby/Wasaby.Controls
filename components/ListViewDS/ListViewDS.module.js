@@ -243,11 +243,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             this.reload();
          },
 
-         _checkHeadContainer: function(target) {
-            return null;
-         },
-
-         _checkPagingContainer: function(target) {
+         _checkTargetContainer: function(target) {
             if(!this._options.showPaging) {
                return false;
             }
@@ -268,7 +264,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                return;
             }
             //Если увели мышку с контейнера с элементами(например на шапку), нужно об этом посигналить
-            if (this._checkHeadContainer($target) || this._checkPagingContainer($target)) {
+            if (this._checkTargetContainer($target)) {
                this._mouseLeaveHandler();
                return;
             }
@@ -294,7 +290,12 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   this._notify('onChangeHoveredItem', this._hoveredItem);
                   this._onChangeHoveredItem(this._hoveredItem);
                }
+            } else if (!this._hoveredEditInPlace($target)) {
+               this._mouseLeaveHandler();
             }
+         },
+         _hoveredEditInPlace: function($target) {
+            return false;
          },
          /**
           * Обрабатывает уведение мышки с элемента представления
