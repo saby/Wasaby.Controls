@@ -43,17 +43,17 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
 
       },
       _onDataLoadHandler: function(event, dataSet) {
-         /*dataSet.each(function(record) {
-          if (!record.get('par')) {
-          record.set('par', 0);
-          }
-          });
-          var record = new Record({
-          strategy: dataSet.getStrategy(),
-          raw: { id: 0, title: 'Корень', 'par@': true, par: null },
-          keyField: dataSet._keyField
-          });
-          dataSet.push(record);*/
+         dataSet.each(function(record) {
+            if (!record.get('par')) {
+               record.set('par', 0);
+            }
+         });
+         var record = new Record({
+            strategy: dataSet.getStrategy(),
+            raw: { id: 0, title: 'Корень', 'par@': true, par: null },
+            keyField: dataSet._keyField
+         });
+         dataSet.push(record);
          console.log(dataSet);
          event.setResult(dataSet);
       },
@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          var record;
          for (var i = 0; i < records.length; i++) {
             record = this._linkedView._dataSet.getRecordByKey(records[i]);
-            this._linkedView._dataSource.move(record, this._linkedView._options.hierField, moveTo);
+            this._linkedView._dataSource.move(record, this._linkedView._options.hierField, moveTo || null);
          }
       }
    });
