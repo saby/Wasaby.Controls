@@ -261,6 +261,25 @@ define('js!SBIS3.CONTROLS.StaticSource', [
          }
 
          return newData;
+      },
+      /**
+       * Метод перемещения записи к другому родителю и смены порядковых номеров
+       * @param {SBIS3.CONTROLS.Record} record - запись, которую необходимо перенести
+       * @param {String} hierField - имя колонки с иерархией
+       * @param {Number} parentKey - ключ нового родителя для записи
+       * @param {Object} orderDetails - детали смены порядковых номеров. Объект со свойствами after и before: после или перед какой записью нужно вставить перемещаемую. В after и before должны находиться записи
+       */
+      move: function (record, hierField, parentKey, orderDetails) {
+         if(parentKey || parentKey === null){
+            record.set(hierField, parentKey);
+         }
+         if(orderDetails){
+            var strategy = this.getStrategy();
+            strategy.changeOrder(this._options.data, record, orderDetails);
+         } else if(!parentKey && parentKey !== null){
+            throw new Error('Не передано достаточно информации для перемещения');
+         }
+         return new $ws.proto.Deferred().callback(true);
       }
 
    });
