@@ -86,14 +86,13 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          var parentKey = this._dataSet.getParentKey(item, this._options.hierField);
          container.attr('data-parent', parentKey);
          /*TODO пока придрот*/
-         if (parentKey) {
+         if (typeof parentKey != 'undefined' && parentKey !== null) {
             var
                parentCont = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._container.get(0)).get(0),
                parentWrappersCount = $('.controls-TreeView__hierWrapper', parentCont).length;
-               //parentMargin = parseInt($('.controls-TreeView__expand', parentCont).css('margin-left'), 10) || 0;
-               for (var i = 0; i <= parentWrappersCount; i++) {
-                 $('.controls-TreeView__expand', container).before('<div class="controls-TreeView__hierWrapper"></div>');
-               };
+            for (var i = 0; i <= parentWrappersCount; i++) {
+              $('.controls-TreeView__expand', container).before('<div class="controls-TreeView__hierWrapper"></div>');
+            }
          }
       }
    });
