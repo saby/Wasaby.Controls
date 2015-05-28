@@ -16,9 +16,10 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
       $protected: {
          _options: {
             name: 'moveDialog',
-            verticalAlignment: 'Top',
-            height: 'auto',
-            width: 'auto'
+            autoHeight: false,
+            width: '400px',
+            height: '400px'
+
          },
          _linkedView: undefined,
          _treeView: undefined,
@@ -31,6 +32,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
       init: function(){
          var self = this;
          MoveDialog.superclass.init.call(this);
+         this._container.removeClass('ws-area');
          this._dialog = this.getParent();
          this._linkedView = this.getParent().getOpener();
          this._treeView = this.getChildControlByName('MoveDialog-TreeDataGrid');
@@ -40,22 +42,25 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          this._treeView.setHierField(this._linkedView._options.hierField);
          this._treeView.setColumns([{ field: this._linkedView._options.displayField }]);
          this._treeView.setDataSource(this._linkedView._dataSource);
-
+         this._treeView.openNode(0);
       },
       _onDataLoadHandler: function(event, dataSet) {
-         var hierField = this._linkedView._options.hierField;
+         var hierField = this._linkedView._options.hierField,
+            raw;
          dataSet.each(function(record) {
             if (!record.get(hierField)) {
                record.set(hierField, 0);
             }
          });
+         raw = {id: 0, title: 'Корень'};
+         raw[hierField] = null;
+         raw[hierField + '@'] = true;
          var record = new Record({
             strategy: dataSet.getStrategy(),
-            raw: { id: 0, title: 'Корень', 'par@': true, par: null },
+            raw: raw,
             keyField: dataSet._keyField
          });
          dataSet.push(record);
-         console.log(dataSet);
          event.setResult(dataSet);
       },
       _moveRecords: function() {
