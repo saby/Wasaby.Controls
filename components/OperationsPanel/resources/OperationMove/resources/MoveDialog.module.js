@@ -7,42 +7,32 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
    'js!SBIS3.CONTROLS.Record'
 ], function(Control, Dialog, Record) {
 
-   var MoveDialog = Control.extend({
+   var MoveDialog = Dialog.extend({
 
       $protected: {
          _options: {
-            linkedView: undefined
+            linkedView: undefined,
+            template: 'js!SBIS3.CONTROLS.MoveDialogTemplate'
          },
-         _treeView: undefined,
-         _moveButton: undefined,
-         _dialog: undefined
+         _treeView: undefined
       },
 
       $constructor: function() {
-         this.showDialog();
+         this.subscribe('onReady', this._onReady.bind(this));
       },
-      showDialog: function() {
+      _onReady: function() {
          var
-            self = this,
-            selectedCount =  this._options.linkedView.getSelectedKeys().length;
-         this._dialog = new Dialog ({
-            template: 'js!SBIS3.CONTROLS.MoveDialogTemplate',
-            resizable: false,
-            title: 'Перенести ' + selectedCount + ' запис' + $ws.helpers.wordCaseByNumber(selectedCount, 'ей', 'ь', 'и') + ' в',
-            handlers: {
-               onReady : function() {
-                  var linkedView = self._options.linkedView;
-                  self._treeView = this.getChildControlByName('MoveDialogTemplate-TreeDataGrid');
-                  self._moveButton = this.getChildControlByName('MoveDialogTemplate-moveButton');
-                  self._moveButton.subscribe('onActivated', self._moveRecords.bind(self));
-                  self._treeView.subscribe('onDataLoad', self._onDataLoadHandler.bind(self));
-                  self._treeView.setHierField(linkedView._options.hierField);
-                  self._treeView.setColumns([{ field: linkedView._options.displayField }]);
-                  self._treeView.setDataSource(linkedView._dataSource);
-                  self._treeView.openNode(0);
-               }
-            }
-         });
+            linkedView = this._options.linkedView,
+            selectedCount = linkedView.getSelectedKeys().length;
+         this.setTitle('Перенести ' + selectedCount + ' запис' + $ws.helpers.wordCaseByNumber(selectedCount, 'ей', 'ь', 'и') + ' в');
+         this.getChildControlByName('MoveDialogTemplate-moveButton')
+            .subscribe('onActivated', this._moveRecords.bind(this));
+         this._treeView = this.getChildControlByName('MoveDialogTemplate-TreeDataGrid')
+            .subscribe('onDataLoad', this._onDataLoadHandler.bind(this));
+         this._treeView.setHierField(linkedView._options.hierField);
+         this._treeView.setColumns([{ field: linkedView._options.displayField }]);
+         this._treeView.setDataSource(linkedView._dataSource);
+         this._treeView.openNode(0);
       },
       //Добавляем корень
       _onDataLoadHandler: function(event, dataSet) {
@@ -77,7 +67,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
             linkedView.removeItemsSelectionAll();
             linkedView.openNode(moveTo);
          }
-         this._dialog.close();
+         this.close();
       },
       _move: function(records, moveTo) {
          var
