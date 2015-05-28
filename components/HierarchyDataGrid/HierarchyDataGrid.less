@@ -1,50 +1,8 @@
 .controls-HierarchyDataGrid {
-
   &__expand {
     height: 20px;
     float: left;
     padding-right: 6px;
     margin-top: -3px;
-  }
-
-  &__PathSelector{
-    min-height: 26px;
-  }
-
-  &__PathSelector__block {
-
-    &__arrow {
-      cursor: pointer;
-      position: relative;
-      top: 2px;
-    }
-
-    &__arrow-last{
-        top: 5px;
-    }
-
-    &__point {
-      line-height: 17px;
-      color: #0055BB;
-      position: relative;
-      top: -2px;
-
-      &:hover{
-        color: #FF7033;
-        .controls-HierarchyDataGrid__PathSelector__block__arrow{
-          color: #FF7033!important; /*выпилить когда нибудь*/
-        }
-      }
-
-      &--current {
-        font-size: 15px;
-        color: #000;
-
-        &:hover{
-          color: black;
-          cursor: default;
-        }
-      }
-    }
   }
 }

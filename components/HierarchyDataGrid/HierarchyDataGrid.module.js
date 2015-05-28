@@ -1,9 +1,8 @@
 define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
    'js!SBIS3.CONTROLS.DataGrid',
    'js!SBIS3.CONTROLS.hierarchyMixin',
-   'js!SBIS3.CONTROLS.PathSelector',
    'html!SBIS3.CONTROLS.HierarchyDataGrid/resources/rowTpl'
-], function (DataGrid, hierarchyMixin, PathSelector, rowTpl) {
+], function (DataGrid, hierarchyMixin, rowTpl) {
    'use strict';
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
@@ -28,7 +27,6 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
 
    var HierarchyDataGrid = DataGrid.extend([hierarchyMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
       $protected: {
-         _pathSelector: undefined,
          _rowTpl: rowTpl
       },
 
@@ -38,49 +36,9 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
       },
 
       _dataLoadedCallback: function () {
-         if (!this._pathSelector) {
-            this._drawPathSelector();
-         }
          HierarchyDataGrid.superclass._dataLoadedCallback.call(this, arguments);
-      },
-
-      _drawPathSelector: function () {
-         var pathSelectorContainer = $('<div class="controls-HierarchyDataGrid__PathSelector"><div class="controls-HierarchyDataGrid__PathSelector__block"></div></div>');
-
-         this.getContainer().prepend(pathSelectorContainer);
-
-         this._pathSelector = new PathSelector({
-            element: pathSelectorContainer,
-            dataSet: this._dataSet,
-            handlers: {
-               'onPathChange': this._onPathSelectorChange.bind(this)
-            },
-            rootNodeId: this._options.root
-         });
-      },
-
-
-      _nodeDataLoaded: function (key, dataSet) {
-         var record;
-         if (record = this._dataSet.getRecordByKey(key)) {
-            var title = record.get(this._options.displayField);
-            HierarchyDataGrid.superclass._nodeDataLoaded.call(this, key, dataSet);
-            this._pathSelector.push({
-               'title': title,
-               'id': this._curRoot
-            });
-         } else {
-            HierarchyDataGrid.superclass._nodeDataLoaded.call(this, key, dataSet);
-         }
-      },
-
-      _onPathSelectorChange: function (event, id) {
-         this.openNode(id);
       }
-
-
    });
 
    return HierarchyDataGrid;
-
 });

@@ -20,6 +20,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          }
       },
       $constructor: function () {
+         this._publish('onCurrentNodeChange');
          this._curRoot = this._options.root;
          this._filter = this._filter || {};
          this._filter[this._options.hierField] = this._options.root;
@@ -112,8 +113,6 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          this.openNode(key);
       },
 
-
-
       _nodeDataLoaded: function (key, dataSet) {
          this._notify('onDataLoad', dataSet);
          this._setCurRootNode(key, dataSet);
@@ -126,6 +125,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          } else {
             this._dataSet.setRawData(dataSet.getRawData());
          }
+         var title = key ? this._dataSet.getRecordByKey(key).get('title') : '';
+         this._notify('onCurrentNodeChange', key, title);
          this._curRoot = key;
          this._redraw();
       },

@@ -2036,6 +2036,27 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid__addInPlace-container {
   padding-left: 8px;
 }
+.controls-PathSelector {
+  min-height: 26px;
+  height: 26px;
+}
+.controls-PathSelector__point {
+  cursor: pointer;
+}
+.controls-PathSelector__point:hover .controls-PathSelector__title {
+  color: #FF7033;
+}
+.controls-PathSelector__point:hover .controls-PathSelector__arrow {
+  color: #FF7033!important;
+}
+.controls-PathSelector__title {
+  color: #0055BB;
+  margin-left: -5px;
+}
+.controls-PathSelector__arrow {
+  position: relative;
+  top: 2px;
+}
 .controls-UnitEditor__fieldWrapper {
   margin-right: 34px;
 }
