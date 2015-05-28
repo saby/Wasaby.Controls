@@ -406,8 +406,11 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
           this._thead.find('.controls-DataGrid__th').eq(0).parent().remove();
           this._colgroup.empty();
+          if (this._options.multiselect) {
+             headerTr.append('<th class="controls-DataGrid__th"></th>');
+             docFragmentForColGroup.appendChild($('<col width="24px">')[0]);
+          }
           this._options.columns = columns;
-
           for (var i = 0; i < columns.length; i++) {
              var column = document.createElement('col');
              if (columns[i]['width']) column.width = columns[i]['width'];
