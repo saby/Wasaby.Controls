@@ -2056,8 +2056,16 @@ input[type="reset"]::-moz-focus-inner {
   padding-right: 6px;
   margin-top: -3px;
 }
+.controls-HierarchyDataGrid__PathSelector {
+  min-height: 26px;
+}
 .controls-HierarchyDataGrid__PathSelector__block__arrow {
   cursor: pointer;
+  position: relative;
+  top: 2px;
+}
+.controls-HierarchyDataGrid__PathSelector__block__arrow-last {
+  top: 5px;
 }
 .controls-HierarchyDataGrid__PathSelector__block__point {
   line-height: 17px;
@@ -2067,6 +2075,10 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-HierarchyDataGrid__PathSelector__block__point:hover {
   color: #FF7033;
+}
+.controls-HierarchyDataGrid__PathSelector__block__point:hover .controls-HierarchyDataGrid__PathSelector__block__arrow {
+  color: #FF7033!important;
+  /*выпилить когда нибудь*/
 }
 .controls-HierarchyDataGrid__PathSelector__block__point--current {
   font-size: 15px;
@@ -2183,6 +2195,19 @@ input[type="reset"]::-moz-focus-inner {
   margin-top: 8px;
   font-size: 15px;
   text-align: center;
+}
+.controls-Pager {
+  float: right;
+  height: 28px;
+  padding: 5px 0 0 6px;
+}
+.controls-Pager .controls-Amount-text {
+  line-height: 20px;
+  font-size: 11px;
+  color: #999999;
+}
+.controls-Pager .controls-Pager-block {
+  float: right;
 }
 .controls-operations-panel {
   /*TODO придрот (2 important), чтобы перебить высоту ws-area*/
