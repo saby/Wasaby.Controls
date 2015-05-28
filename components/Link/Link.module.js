@@ -33,6 +33,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
     *
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
+    * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     */
 
    var Link = ButtonBase.extend( /** @lends SBIS3.Engine.Link.prototype */ {
