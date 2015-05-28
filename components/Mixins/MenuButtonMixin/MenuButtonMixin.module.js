@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             target : this.getContainer(),
             items: this._items,
             corner : 'bl',
+            enabled: this.isEnabled(),
             hierField: this._options.hierField,
             keyField: this._options.keyField,
             verticalAlign: {
