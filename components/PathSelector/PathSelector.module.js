@@ -38,9 +38,10 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             self = this;
          point.data('index', this._path[index - 1] ? index - 1 : this._options.rootNodeId);
          if (!last) {
-            arrow.get(0).className+= ' icon-16';
+            arrow.addClass('icon-16');
          } else {
-            arrow.get(0).className+= ' icon-24 controls-HierarchyDataGrid__PathSelector__block__arrow-last';
+            arrow.addClass('icon-24');
+            point.addClass('controls-HierarchyDataGrid__PathSelector__block-last')
          }
          point.prepend(arrow);
          point.bind('click', function(e){
