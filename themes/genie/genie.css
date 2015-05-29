@@ -1274,8 +1274,10 @@ input[type="reset"]::-moz-focus-inner {
   outline: none;
 }
 .controls-NumberTextBox .controls-TextBox__fieldWrapper {
-  margin: 0;
   height: 100%;
+}
+.controls-NumberTextBox .controls-TextBox__fieldWrapper.controls-NumberTextBox__enable-arrow {
+  margin: 0;
 }
 .controls-NumberTextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
   text-align: left;
