@@ -9,6 +9,10 @@
 
   &__PathSelector{
     min-height: 26px;
+    a:hover {
+      text-decoration: none;
+      color: #FF7033;
+    }
   }
 
   &__PathSelector__block {
@@ -19,8 +23,16 @@
       top: 2px;
     }
 
-    &__arrow-last{
+    &-last{
+      .controls-HierarchyDataGrid__PathSelector__block__arrow{
         top: 5px;
+      }
+      a {
+          position: relative;
+          left: -2px;
+      }
+      font-size: 14px;
+      top: -3px;
     }
 
     &__point {
@@ -30,9 +42,11 @@
       top: -2px;
 
       &:hover{
-        color: #FF7033;
+        a {
+          color: #FF7033!important; /*перебиваем стили онлайна*/
+        }
         .controls-HierarchyDataGrid__PathSelector__block__arrow{
-          color: #FF7033!important; /*выпилить когда нибудь*/
+          color: #FF7033!important; /*перебиваем стили онлайна*/
         }
       }
 
