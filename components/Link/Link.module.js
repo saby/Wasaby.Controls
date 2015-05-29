@@ -73,6 +73,11 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
          }
       },
 
+      setEnabled: function(enabled){
+          Link.superclass.setEnabled.apply(this, arguments);
+          this._container.toggleClass('ws-hover-target', enabled);
+      },
+
       setIcon: function(icon){
          Link.superclass.setIcon.call(this, icon);
          var content;
