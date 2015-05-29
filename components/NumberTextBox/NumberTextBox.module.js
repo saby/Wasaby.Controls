@@ -284,7 +284,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
                (this._options.delimiters && this._getIntegersCount(currentVal) % 3 == 0) ? newCaretPosition+=2 : newCaretPosition++;
                currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);
             } else {
-               currentVal = currentVal.substr(0, b - 1) + symbol + currentVal.substr(e);
+               currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);
                newCaretPosition++;
             }
          } else
