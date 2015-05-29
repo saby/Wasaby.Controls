@@ -66,13 +66,14 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
          this._fdd = this.getChildControlByName('controls-Pager_comboBox');
          //TODO подписаться на изменение проперти в контексте. Пока Витя не допилил - подписываюсь на комбобокс
          this._fdd.setData(this._fddData);
+         //TODO Проблема! Нужно чтобы pageSize на момент создания Pager был синхронизирован с pageSize ьраузера и localStorage
          this._fdd.setValue(this._options.pageSize);
-         this._fdd.subscribe('onChange', function(event, value){
+         this._fdd.subscribe('onValueChange', function(event, value){
             //TODO может менять pageSize модно будет в фильтре?
             self._options.pageSize = value;
             self.getPaging().setPageSize(value);
             self.getOpener().setPageSize(value);
-            $ws.helpers.setLocalStorageValue('ws-page-size', self._options.pageSize);
+            self._updateLocalStorageValue();
          });
          this._paging = this.getChildControlByName('controls-Pager_paging');
          this._paging.subscribe('onPageChange', function(event, pageNum, deferred){
