@@ -2098,6 +2098,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-HierarchyDataGrid__PathSelector {
   min-height: 26px;
 }
+.controls-HierarchyDataGrid__PathSelector a:hover {
+  text-decoration: none;
+  color: #FF7033;
+}
 .controls-HierarchyDataGrid__PathSelector__block__arrow {
   cursor: pointer;
   position: relative;
@@ -2105,9 +2109,15 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-HierarchyDataGrid__PathSelector__block-last {
   font-size: 14px;
+  top: -3px;
 }
 .controls-HierarchyDataGrid__PathSelector__block-last .controls-HierarchyDataGrid__PathSelector__block__arrow {
   top: 5px;
+}
+.controls-HierarchyDataGrid__PathSelector__block-last a {
+  top: -1px;
+  position: relative;
+  left: -2px;
 }
 .controls-HierarchyDataGrid__PathSelector__block__point {
   line-height: 17px;
@@ -2115,12 +2125,13 @@ input[type="reset"]::-moz-focus-inner {
   position: relative;
   top: -2px;
 }
-.controls-HierarchyDataGrid__PathSelector__block__point:hover {
-  color: #FF7033;
+.controls-HierarchyDataGrid__PathSelector__block__point:hover a {
+  color: #FF7033!important;
+  /*перебиваем стили онлайна*/
 }
 .controls-HierarchyDataGrid__PathSelector__block__point:hover .controls-HierarchyDataGrid__PathSelector__block__arrow {
   color: #FF7033!important;
-  /*выпилить когда нибудь*/
+  /*перебиваем стили онлайна*/
 }
 .controls-HierarchyDataGrid__PathSelector__block__point--current {
   font-size: 15px;
