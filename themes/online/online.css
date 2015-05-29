@@ -2103,7 +2103,10 @@ input[type="reset"]::-moz-focus-inner {
   position: relative;
   top: 2px;
 }
-.controls-HierarchyDataGrid__PathSelector__block__arrow-last {
+.controls-HierarchyDataGrid__PathSelector__block-last {
+  font-size: 14px;
+}
+.controls-HierarchyDataGrid__PathSelector__block-last .controls-HierarchyDataGrid__PathSelector__block__arrow {
   top: 5px;
 }
 .controls-HierarchyDataGrid__PathSelector__block__point {
