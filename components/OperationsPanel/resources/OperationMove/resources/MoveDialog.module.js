@@ -40,16 +40,26 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
             hierField = this._options.linkedView._options.hierField,
             raw;
          dataSet.each(function(record) {
-            if (!record.get(hierField)) {
-               record.set(hierField, 0);
+            if (record.get(hierField)[0] === null) {
+               record.set(hierField, [0]);
             }
          });
-         raw = {id: 0, title: 'Корень'};
-         raw[hierField] = null;
-         raw[hierField + '@'] = true;
+         raw = {
+            d: [[0], [null], true, null, "Корень", false, false, null],
+            s: [
+               {n: "@Номенклатура",t: "Идентификатор"},
+               {n: "Раздел",s: "Иерархия",t: "Идентификатор"},
+               {n: "Раздел@",s: "Иерархия",t: "Логическое"},
+               {n: "Раздел$",s: "Иерархия",t: "Логическое"},
+               {n: "Наименование", t: "Текст"},
+               {n: "Опубликовано", t: "Логическое"},
+               {n: "Deleted",t: "Логическое"},
+               {n: "DisplayStyle",t: "Число целое"}
+            ]
+         };
          var record = new Record({
             /*TODO разобраться со стратегией и форматами*/
-            strategy: new ArrayStrategy(),
+            strategy: dataSet.getStrategy(),
             raw: raw,
             keyField: dataSet._keyField
          });
