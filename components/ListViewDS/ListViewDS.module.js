@@ -198,7 +198,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 * @see setInfiniteScroll
                 */
                infiniteScroll: false,
-               ignoreLocalPageSize : false
+               ignoreLocalPageSize : true
             },
             _loadingIndicator: undefined,
             _hasScrollMore : true,
@@ -721,6 +721,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                this._pager = new Pager({
                   pageSize : this._options.pageSize,
                   opener : this,
+                  ignoreLocalPageSize: this._options.ignoreLocalPageSize,
                   element: this.getContainer().find('.controls-Pager-container'),
                   allowChangeEnable: false, //Запрещаем менять состояние, т.к. он нужен активный всегда
                   pagingOptions : pagingOptions,
