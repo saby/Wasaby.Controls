@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
             linkedView = this._options.linkedView;
          for (var i = 0; i < records.length; i++) {
             record = linkedView._dataSet.getRecordByKey(records[i]);
-            linkedView._dataSource.move(record, linkedView._options.hierField, moveTo || null);
+            linkedView._dataSource.move(record, linkedView._options.hierField, moveTo ? [moveTo] : [null]);
          }
       }
    });
