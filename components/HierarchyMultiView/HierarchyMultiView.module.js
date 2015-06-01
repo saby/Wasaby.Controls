@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.HierarchyData
          }
          else {
             if (this._options.multiselect) {
-               if ($(target).hasClass('controls-ListView__itemCheckBox')) {
+               if ($(target).hasClass('js-controls-ListView__itemCheckBox') || $(target).hasClass('controls-ListView__itemCheckBox')) {
                   var key = $(target).closest('.controls-ListView__item').data('id');
                   this.toggleItemsSelection([key]);
                }
