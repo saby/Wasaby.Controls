@@ -21,6 +21,10 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
              * */
             displayType : 'all'
 
+         },
+         //TODO что если корень не null ? (с прошлого кода проблема та же самая)
+         _pageSaver: {
+            'null': 0
          }
       },
       $constructor: function () {
@@ -116,9 +120,21 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          var filter = this._filter || {};
          filter[this._options.hierField] = key;
          this._filter = filter;
+         //Это специально! По переходу в корень пользователь как бы всегда хочет видеть первую страницу
+         if (key == this._options.root) {
+            this._dropPageSave();
+         }
          //узел грузим с 0-ой страницы
-         this._offset = 0;
+         this._offset = this._pageSaver[key] * this._options.pageSize || 0;
          return this._dataSource.query(filter, undefined, this._offset, this._limit);
+      },
+      _setPageSave: function(pageNum){
+         this._pageSaver[this._curRoot] = pageNum - 1;
+      },
+      _dropPageSave: function(){
+         var root = this._options.root;
+         this._pageSaver = {};
+         this._pageSaver[root] = 0;
       },
 
       toggleNode: function(key) {
