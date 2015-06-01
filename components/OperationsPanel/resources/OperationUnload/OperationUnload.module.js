@@ -73,8 +73,8 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             cfg.xsl = this._options.xsl;
          }
          var p = new Unloader(cfg);
-         //TODO Если не задали имя файла в опции, то возьмем из 1ой колонки
-         p.unload(this._currentItem, this._controlsId[this._currentItem], this._options.fileName || this._view.getColumns()[0].title);
+         //TODO Если не задали имя файла в опции, то возьмем из 1ой колонки, а в 1ой пусто, Вставим текст
+         p.unload(this._currentItem, this._controlsId[this._currentItem], this._options.fileName || this._view.getColumns()[0].title || 'Как на экране');
       }
    });
 

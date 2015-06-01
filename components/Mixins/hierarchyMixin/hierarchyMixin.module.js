@@ -117,7 +117,9 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          var filter = this._filter || {};
          filter[this._options.hierField] = key;
          this._filter = filter;
-         return this._dataSource.query(filter, undefined, 0, this._limit);//узел грузим с 0-ой страницы
+         //узел грузим с 0-ой страницы
+         this._offset = 0;
+         return this._dataSource.query(filter, undefined, this._offset, this._limit);
       },
 
       toggleNode: function(key) {

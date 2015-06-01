@@ -70,11 +70,20 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
          /**
           * @cfg {$ws.proto.ClientBLObject} Объект, который умеет ходить на бизнес-логику
           */
-         _BL: undefined
+         _BL: undefined,
+         /**
+          * @cfg {$ws.proto.ClientBLObject} Объект, который используется для смены порядковых номеров на бизнес-логике
+          */
+         _orderBL: undefined,
+         /**
+          * @cfg {String} Имя объекта бизнес-логики
+          */
+         _object: undefined
       },
 
       $constructor: function (cfg) {
          this._BL = new $ws.proto.ClientBLObject(cfg.service);
+         this._object = cfg.service;
          this._options.strategy = cfg.strategy || new SbisJSONStrategy();
       },
 
@@ -231,6 +240,43 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
 
          return def;
 
+      },
+      /**
+       * Метод перемещения записи к другому родителю и смены порядковых номеров
+       * @param {SBIS3.CONTROLS.Record} record - запись, которую необходимо перенести
+       * @param {String} hierField - имя колонки с иерархией
+       * @param {Number} parentKey - ключ нового родителя для записи
+       * @param {Object} orderDetails - детали смены порядковых номеров. Объект со свойствами after и before: после или перед какой записью нужно вставить перемещаемую.
+       */
+      move: function (record, hierField, parentKey, orderDetails) {
+         if(orderDetails){
+            return this._changeOrder(record, hierField, parentKey, orderDetails);
+         } else if(parentKey){
+            //сменить родителя
+            record.set(hierField, parentKey);
+            return this.update(record);
+         } else {
+            throw new Error('Не передано достаточно информации для перемещения');
+         }
+      },
+      _changeOrder: function(record, hierField, parentKey, orderDetails){
+         var self = this,
+            strategy = this.getStrategy(),
+            def = new $ws.proto.Deferred(),
+            params = strategy.prepareOrderParams(this._object, record, hierField, orderDetails),
+            suffix = orderDetails.after ? 'После' : 'До';
+         if(!this._orderBL){
+            this._orderBL = new $ws.proto.BLObject('ПорядковыйНомер');
+         }
+         self._orderBL.call('Вставить' + suffix, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
+            def.callback(true);
+         }, function (error) {
+            if (typeof(window) != 'undefined') {
+               console['log'](error);
+            }
+            throw new Error('Не удалось выпонить метод update');
+         });
+         return def;
       }
 
    });
