@@ -179,7 +179,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
       setPageSize: function(pageSize){
          this._options.pageSize = pageSize;
+         this._dropPageSave();
          this.reload(this._filter, this._sorting, 0, pageSize);
+      },
+      //переопределяется в HierarchyMixin
+      _setPageSave: function(pageNum){
+      },
+      //переопределяется в HierarchyMixin
+      _dropPageSave: function () {
       },
       //TODO Сделать публичным? вроде так всем захочется делать
       _isLoading: function () {
