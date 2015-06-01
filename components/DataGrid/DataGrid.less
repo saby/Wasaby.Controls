@@ -2,7 +2,7 @@
    .controls-ListView__item {
       &:extend(.controls-ListView .controls-ListView__item all);
    }
-
+   
    .controls-DataGrid__table {
       width: 100%;
       position: relative;
@@ -143,6 +143,7 @@
 
    .controls-DataGrid__td__checkBox {
       width: @data-grid-td-checkbox-width;
+      padding-right: 0!important;
       .controls-ListView__itemCheckBox {
          margin: @data-grid-checkbox-margin;
       }
