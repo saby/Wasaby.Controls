@@ -32,7 +32,6 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          this._treeView.setHierField(linkedView._options.hierField);
          this._treeView.setColumns([{ field: linkedView._options.displayField }]);
          this._treeView.setDataSource(linkedView._dataSource);
-         this._treeView.openNode(0);
       },
       //Добавляем корень
       _onDataLoadHandler: function(event, dataSet) {
@@ -64,29 +63,34 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
             keyField: dataSet._keyField
          });
          dataSet.push(record);
+         this._treeView.openNode(0);
          event.setResult(dataSet);
       },
       _moveRecords: function() {
          var
             records,
             linkedView = this._options.linkedView,
-            moveTo = this._treeView.getSelectedKeys()[0];
+            moveTo = this._treeView.getSelectedKeys()[0] || null;
          if (moveTo !== undefined) {
             records = linkedView.getSelectedKeys();
-            this._move(records, moveTo);
-            linkedView.removeItemsSelectionAll();
-            linkedView.openNode(moveTo);
+            this._move(records, moveTo).getResult().addCallback(function() {
+               linkedView.removeItemsSelectionAll();
+               linkedView.openNode(moveTo);
+            });
          }
          this.close();
       },
       _move: function(records, moveTo) {
          var
             record,
-            linkedView = this._options.linkedView;
+            deferred = new $ws.proto.ParallelDeferred(),
+            linkedView = this._options.linkedView,
+            hierField = linkedView._options.hierField;
          for (var i = 0; i < records.length; i++) {
             record = linkedView._dataSet.getRecordByKey(records[i]);
-            linkedView._dataSource.move(record, linkedView._options.hierField, moveTo ? [moveTo] : [null]);
+            deferred.push(linkedView._dataSource.move(record, hierField, [moveTo]));
          }
+         return deferred.done();
       }
    });
 
