@@ -237,6 +237,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
             this._movableElems = this._findMovableCells();
          }
+         DataGrid.superclass._drawItemsCallback.call(this);
       },
       /************************/
       /*   Частичный скролл   */
