@@ -62,19 +62,19 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
          this._prepareOperation('Что сохранить в ' + itemId);
       },
       _isSelectedState: function(){
-         return this._view.getSelectedKeys().length > 0;
+         return this._getView().getSelectedKeys().length > 0;
       },
       applyOperation: function(dataSet){
          var cfg = {
-            dataSet : dataSet || this._view._dataSet,
-            columns: this._view.getColumns()
+            dataSet : dataSet || this._getView()._dataSet,
+            columns: this._getView().getColumns()
          };
          if ( this._options.xsl ){
             cfg.xsl = this._options.xsl;
          }
          var p = new Unloader(cfg);
          //TODO Если не задали имя файла в опции, то возьмем из 1ой колонки, а в 1ой пусто, Вставим текст
-         p.unload(this._currentItem, this._controlsId[this._currentItem], this._options.fileName || this._view.getColumns()[0].title || 'Как на экране');
+         p.unload(this._currentItem, this._controlsId[this._currentItem], this._options.fileName || this._getView().getColumns()[0].title || 'Как на экране');
       }
    });
 
