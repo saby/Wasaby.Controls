@@ -2020,7 +2020,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th {
   position: relative;
   font-weight: normal;
-  cursor: pointer;
+  cursor: default;
   text-align: left;
   height: 32px;
   padding: 0 10px;
@@ -2070,6 +2070,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__td__checkBox {
   width: 16px;
+  padding-right: 0!important;
 }
 .controls-DataGrid .controls-DataGrid__td__checkBox .controls-ListView__itemCheckBox {
   margin: 3px 0 0 0;
