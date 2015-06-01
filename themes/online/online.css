@@ -1873,6 +1873,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox {
   background: url('img/CheckBox.png') 0 17px;
 }
+.controls-ListView .controls-ListView__EmptyData {
+  width: 100%;
+  color: #999999;
+  text-align: center;
+}
 .controls-ListView .controls-ListView__itemCheckBox {
   width: 16px;
   height: 16px;

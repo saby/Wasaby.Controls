@@ -250,6 +250,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (this._dataSet) {
             this._clearItems();
             var records = this._getRecordsForRedraw();
+            if (!records.length) {
+              //вроде надо опцию emptyHTML
+              this._container.append('<div class="controls-ListView__EmptyData"> нет данных </div>');
+            } else {
+              $('.controls-ListView__EmptyData', this._container).remove();
+            }
             this._drawItems(records);
          }
       },
