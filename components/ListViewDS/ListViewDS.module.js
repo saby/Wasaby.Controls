@@ -727,8 +727,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   pagingOptions : pagingOptions,
                   handlers:{
                      'onPageChange': function(event, pageNum, deferred) {
-                        //TODO добавить сохранение страницы
-                        //self._setPageSave(pageNum);
+                        self._setPageSave(pageNum);
                         self.setPage(pageNum - 1);
                         self._pageChangeDeferred = deferred;
                      }
