@@ -33,12 +33,12 @@ define('js!SBIS3.CONTROLS.PathSelector', [
                               '<span class="' + this._path[index]['icon'] +'"style="top: 2px; position: relative;"><span>' + 
                            '</a>' + 
                        '</span>'),
-            arrow = $('<span class="controls-HierarchyDataGrid__PathSelector__block__arrow icon-Back icon-primary action-hover hover-target"></span>'),
+            arrow = $('<span class="controls-HierarchyDataGrid__PathSelector__block__arrow"></span>'),
             container = this._pathContainer,
             self = this;
          point.data('index', this._path[index - 1] ? index - 1 : this._options.rootNodeId);
          if (!last) {
-            arrow.addClass('icon-16');
+            arrow.addClass('icon-16 icon-Back icon-primary action-hover');
          } else {
             arrow.addClass('icon-24');
             point.addClass('controls-HierarchyDataGrid__PathSelector__block-last')

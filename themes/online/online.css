@@ -2110,37 +2110,32 @@ input[type="reset"]::-moz-focus-inner {
   top: 2px;
 }
 .controls-HierarchyDataGrid__PathSelector__block-last {
-  font-size: 14px;
+  font-size: 15px;
   top: -3px;
 }
 .controls-HierarchyDataGrid__PathSelector__block-last .controls-HierarchyDataGrid__PathSelector__block__arrow {
-  top: 5px;
+  top: 7px;
+  background: url('img/path-filter-icon-back.png') 0 0;
 }
-.controls-HierarchyDataGrid__PathSelector__block-last a {
-  position: relative;
-  left: -2px;
+.controls-HierarchyDataGrid__PathSelector__block-last:hover .controls-HierarchyDataGrid__PathSelector__block__arrow {
+  color: #FF7033!important;
+  /*перебиваем стили онлайна*/
+  background: url('img/path-filter-icon-back.png') 0 24px;
 }
 .controls-HierarchyDataGrid__PathSelector__block__point {
   line-height: 17px;
   color: #0055BB;
   position: relative;
   top: -2px;
-}
-.controls-HierarchyDataGrid__PathSelector__block__point:hover a {
-  color: #FF7033!important;
-  /*перебиваем стили онлайна*/
+  padding-right: 1px;
 }
 .controls-HierarchyDataGrid__PathSelector__block__point:hover .controls-HierarchyDataGrid__PathSelector__block__arrow {
   color: #FF7033!important;
   /*перебиваем стили онлайна*/
 }
-.controls-HierarchyDataGrid__PathSelector__block__point--current {
-  font-size: 15px;
-  color: #000;
-}
-.controls-HierarchyDataGrid__PathSelector__block__point--current:hover {
-  color: black;
-  cursor: default;
+.controls-HierarchyDataGrid__PathSelector__block__point:hover a {
+  color: #FF7033!important;
+  /*перебиваем стили онлайна*/
 }
 .controls-MultiView .controls-MultiView__listItem {
   height: 16px;
