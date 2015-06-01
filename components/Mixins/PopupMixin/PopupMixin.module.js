@@ -117,7 +117,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          this._publish('onClose', 'onAlignmentChange');
          var self = this;
          var container = this._container;
-         var trg = $ws.helpers.trackElement(this._options.target, true);
          container.css({
             'position': 'absolute',
             'top': '-10000px',
@@ -148,6 +147,23 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
 
+         var trg = $ws.helpers.trackElement(this._options.target, true);
+         //перемещаем вслед за таргетом
+         trg.subscribe('onMove', function () {
+            if (self.isVisible()) {
+               self.recalcPosition();
+               self._checkTargetPosition();
+            } else {
+               self._initSizes();
+            }
+         });
+         //скрываем если таргет скрылся
+         trg.subscribe('onVisible', function (event, visible) {
+            if (!visible){
+              self.hide();
+            }
+         });
+
          if (this._options.closeButton) {
             container.append('<div class="controls-PopupMixin__closeButton" ></div>');
             $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {
@@ -158,14 +174,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          this._defaultCorner = this._options.corner;
          this._defaultVerticalAlignSide = this._options.verticalAlign.side;
          this._defaultHorizontalAlignSide = this._options.horizontalAlign.side;
-         trg.subscribe('onMove', function () {
-            if (self.isVisible()) {
-               self.recalcPosition();
-               self._checkTargetPosition();
-            } else {
-               self._initSizes();
-            }
-         });
       },
 
       /**
@@ -364,7 +372,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
       _checkTargetPosition: function () {
          var self = this;
-         if (this._options.target) {
+         //TODO: временно завязываемся на closeByExternalClick пока не придумается что то получше
+         if (this._options.target && this._options.closeByExternalClick) {
             var winHeight = $(window).height(),
                top = this._options.target.offset().top - $(window).scrollTop() - winHeight - 3;
             if (this.isVisible() && (top > 0 || -top > winHeight)) {
