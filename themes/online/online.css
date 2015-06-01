@@ -2020,7 +2020,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th {
   position: relative;
   font-weight: normal;
-  cursor: pointer;
+  cursor: default;
   text-align: left;
   height: 14px;
   padding: 4px 6px;
@@ -2069,10 +2069,11 @@ input[type="reset"]::-moz-focus-inner {
   font-size: 15px;
 }
 .controls-DataGrid .controls-DataGrid__td__checkBox {
-  width: 24px;
+  width: 16px;
+  padding-right: 0!important;
 }
 .controls-DataGrid .controls-DataGrid__td__checkBox .controls-ListView__itemCheckBox {
-  margin: 0;
+  margin: 1px 0 0 5px;
 }
 .controls-DataGrid__addInPlace-container {
   padding-left: 8px;
