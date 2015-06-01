@@ -638,6 +638,10 @@ define(
        * Изменяем опции до отрисовки
        */
       _modifyOptions: function(options) {
+         //_modifyOptions вызывается дважды, в первом вызове следующие переменные не определены
+         if ( !this._controlCharactersSet  ||  !this._maskReplacer  ||  !options.mask) {
+            return options;
+         }
          this.formatModel = new FormatModel({controlCharactersSet: this._controlCharactersSet, mask: options.mask});
          if (options.text) {
             this.formatModel.setText(options.text, this._maskReplacer);
