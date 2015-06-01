@@ -2075,42 +2075,38 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid__addInPlace-container {
   padding-left: 8px;
 }
-.controls-Pager {
-  float: right;
-  height: 28px;
-}
-.controls-Pager .controls-text {
-  line-height: 20px;
-  font-size: 11px;
-  padding-top: 2px;
-  color: #919191;
-}
-.controls-Pager .controls-Pager-block {
-  float: right;
-}
-.controls-Pager .controls-Pager-block-amount {
-  padding: 5px 6px 6px 1px;
-}
-.controls-Pager .controls-Pager-block-paging {
-  padding: 4px 0 0 6px;
-}
-.controls-Pager .controls-Pager__pageSize-container select,
-.controls-Pager .controls-Pager__pageSize-container .custom-select.asLink {
-  font-size: 11px;
-  text-decoration: underline;
-}
 .controls-PathSelector {
   min-height: 26px;
   height: 26px;
 }
 .controls-PathSelector__point {
   cursor: pointer;
+  position: relative;
+  margin-left: -3px;
+  top: -1px;
 }
 .controls-PathSelector__point:hover .controls-PathSelector__title {
   color: #FF7033;
 }
 .controls-PathSelector__point:hover .controls-PathSelector__arrow {
   color: #FF7033!important;
+}
+.controls-PathSelector__point-last {
+  margin-left: 0;
+  top: 0;
+}
+.controls-PathSelector__point-last .controls-PathSelector__title {
+  font-size: 15px;
+}
+.controls-PathSelector__point-last .controls-PathSelector__arrow {
+  display: inline-block;
+  top: 7px;
+  background: url('img/path-filter-icon-back.png') 0 -1px;
+  height: 24px;
+  width: 24px;
+}
+.controls-PathSelector__point-last:hover .controls-PathSelector__arrow {
+  background-position: 0 23px;
 }
 .controls-PathSelector__title {
   color: #0055BB;
@@ -2119,6 +2115,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-PathSelector__arrow {
   position: relative;
   top: 2px;
+  padding-right: 1px;
 }
 .controls-UnitEditor__fieldWrapper {
   margin-right: 34px;

@@ -54,7 +54,8 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             self._onPointClick(node.parent);
          });
          if (last){
-            $('.controls-PathSelector__arrow', point).removeClass('icon-16').addClass('icon-24').css('top', '5px');
+            $('.controls-PathSelector__arrow', point).removeClass('icon-Back icon-16 icon-primary action-hover');
+            point.addClass('controls-PathSelector__point-last');
          }
          this._container.prepend(point);
       },
