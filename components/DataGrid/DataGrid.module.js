@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
              * @typedef {Object} Columns
              * @property {String} title Заголовок колонки
              * @property {String} field Имя поля
-             * @property {Number} width Ширина колонки
+             * @property {String} width Ширина колонки
              * Значение необходимо задавать для колонок с фиксированной шириной.
              * @property {String} className Имя класса, который будет применён к каждой ячейке столбца
              * @property {String} captionTemplate Шаблон отображения шапки колонки
