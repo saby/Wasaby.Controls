@@ -38,7 +38,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                var childControls;
                this._publish('onMouseDown');
                this._container
-                  .bind(isMobileBrowser ? 'touchend' : 'mouseup', this._onMouseDownArea.bind(this));
+                  .bind(isMobileBrowser ? 'touchend' : 'mouseup', this._onMouseDownArea.bind(this))
+                  .bind('keypress keydown', this._onKeyDown);
                this.once('onReady', function() {
                   childControls = this.getChildControls();
                   if (childControls.length) {
@@ -48,6 +49,9 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                      }, this);
                   }
                });
+            },
+            _onKeyDown: function(e) {
+               e.stopPropagation();
             },
             /**
              * Активирует первый контрол редактирования по месту
@@ -93,7 +97,9 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                event.stopImmediatePropagation();
             },
             destroy: function() {
-               this._container.unbind(isMobileBrowser ? 'touchend' : 'mouseup');
+               this._container
+                  .unbind(isMobileBrowser ? 'touchend' : 'mouseup')
+                  .unbind('keypress keydown');
                EditInPlace.superclass.destroy.call(this);
             }
 
