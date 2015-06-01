@@ -25,13 +25,16 @@
 
     &-last{
       .controls-HierarchyDataGrid__PathSelector__block__arrow{
-        top: 5px;
+        top: 7px;
+        background: url('img/path-filter-icon-back.png') 0 0;
       }
-      a {
-          position: relative;
-          left: -2px;
+      &:hover{
+        .controls-HierarchyDataGrid__PathSelector__block__arrow{
+          color: #FF7033!important; /*перебиваем стили онлайна*/
+          background: url('img/path-filter-icon-back.png') 0 24px;
+        }
       }
-      font-size: 14px;
+      font-size: 15px;
       top: -3px;
     }
 
@@ -40,23 +43,14 @@
       color: #0055BB;
       position: relative;
       top: -2px;
+      padding-right: 1px;
 
       &:hover{
-        a {
-          color: #FF7033!important; /*перебиваем стили онлайна*/
-        }
         .controls-HierarchyDataGrid__PathSelector__block__arrow{
           color: #FF7033!important; /*перебиваем стили онлайна*/
         }
-      }
-
-      &--current {
-        font-size: 15px;
-        color: #000;
-
-        &:hover{
-          color: black;
-          cursor: default;
+        a {
+          color: #FF7033!important; /*перебиваем стили онлайна*/
         }
       }
     }
