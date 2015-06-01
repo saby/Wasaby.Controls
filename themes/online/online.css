@@ -2577,20 +2577,19 @@ input[type="reset"]::-moz-focus-inner {
   width: 100%;
   top: 0;
   height: 0;
+  left: 0;
   overflow: visible;
-}
-.controls-ListView.controls-ListView__multiselect .controls-EditInPlaceController {
-  left: 42px;
 }
 .controls-editInPlace {
   position: absolute;
   white-space: nowrap;
-  padding: 2px 0;
+  overflow: visible;
   z-index: 1;
 }
 .controls-editInPlace > div {
+  position: absolute;
   display: inline-block;
-  margin: 0 1px;
+  padding: 1px 2px 1px 0;
   vertical-align: top;
   height: 100%;
 }

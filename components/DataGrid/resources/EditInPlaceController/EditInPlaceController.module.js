@@ -121,17 +121,26 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                   target = $target[0],
                   height = target.getBoundingClientRect().height,
                   $container = area.editInPlace.getContainer(),
-                  container = $container[0];
+                  container = $container[0],
+                  divIdx,
+                  divs;
                area.editInPlace.updateFields(area.record);
                //Рассчитываем top, lineHeight и height для editInPlace панели
-               container.style.top = target.offsetTop + 'px';
+               container.style.top = target.offsetTop + 1 + 'px';
                container.style.lineHeight = height - 6 + 'px';
                container.style.height = height - 4 + 'px';
                if (updateWidth) {
+                  divIdx = 0;
                   tds = $target.find('.controls-DataGrid__td');
-                  $container.find('> div').each(function (idx, div) {
-                     div.style.width = $(tds[this._options.ignoreFirstColumn ? idx + 1 : idx]).outerWidth() - 2 + 'px';
-                  }.bind(this));
+                  divs = $container.find('> div');
+                  $ws.helpers.forEach(this._options.columns, function(col, idx) {
+                     if (col.editor) {
+                        //todo в width заложены правые отступы в 2px (чтобы между полями ввода было пустое пространство)
+                        divs[divIdx].style.width = $(tds[this._options.ignoreFirstColumn ? idx + 1 : idx]).outerWidth() - 2 + 'px';
+                        divs[divIdx].style.left = parseInt(tds[this._options.ignoreFirstColumn ? idx + 1 : idx].offsetLeft, 10) + 'px';
+                        divIdx += 1;
+                     }
+                  }, this);
                }
             },
             /**
