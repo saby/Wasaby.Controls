@@ -639,6 +639,7 @@ define(
        */
       _modifyOptions: function(options) {
          //_modifyOptions вызывается дважды, в первом вызове следующие переменные не определены
+         //TODO в Control.module.js _modifyOptions первый раз вызывается на разметке, без нужного контекста
          if ( !this._controlCharactersSet  ||  !this._maskReplacer  ||  !options.mask) {
             return options;
          }
