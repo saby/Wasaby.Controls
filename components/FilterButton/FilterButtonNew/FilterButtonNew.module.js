@@ -127,10 +127,10 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          var
             filterName = item.get('filter'),
             control = this._picker && this._picker.getChildControlByName(filterName),
-            textValue = control && control.getText();
-         if (textValue) {
+            value = control && control.getSelectedKeys && control.getSelectedKeys();
+         if (value && this._initialControlsValues[control.getName()] !== value[0]) {
             return '<component data-component="SBIS3.CONTROLS.Link">' +
-               '<option name="caption">' + textValue + '</option>' +
+               '<option name="caption">' + control.getText() + '</option>' +
                '</component>';
          } else {
             return '';
@@ -171,14 +171,14 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          };
       },
       _setControlValue: function(control, value) {
-         if($ws.helpers.instanceOfModule(control, 'SBIS3.CONTROLS.ComboBox')) {
-            control.setSelectedKey(value || 0);
+         if($ws.helpers.instanceOfModule(control, 'SBIS3.CONTROLS.DropDownList')) {
+            control.setSelectedKeys([value || 0]);
          }
       },
       _getControlValue: function(control) {
          var result;
-         if($ws.helpers.instanceOfModule(control, 'SBIS3.CONTROLS.ComboBox')) {
-            result = control.getSelectedKey();
+         if($ws.helpers.instanceOfModule(control, 'SBIS3.CONTROLS.DropDownList')) {
+            result = control.getSelectedKeys();
          }
          return result;
       },
@@ -192,9 +192,11 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
       },
       _getControlsValues: function() {
          var controls = this._picker.getChildControls(),
-            result = {};
+             res,
+             result = {};
          for (var i = 0, len = controls.length; i < len; i++) {
-            result[controls[i].getName()] = this._getControlValue(controls[i]);
+            res = this._getControlValue(controls[i]);
+            result[controls[i].getName()] = Array.isArray(res) ? res[0] : res;
          }
          return result;
       }

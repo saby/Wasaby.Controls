@@ -2387,6 +2387,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls__filterButton .controls__filterButton__filterLine {
   line-height: 40px;
+  padding-right: 5px;
 }
 .controls__filterButton .controls__filterButton__filterLine.controls__filterButton__filterLine-defaultText .controls__filterButton__filterLine-arrow,
 .controls__filterButton .controls__filterButton__filterLine.controls__filterButton__filterLine-defaultText .controls__filterButton__filterLine-cross {
@@ -2688,6 +2689,31 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item.controls-CustomFilterMenu__item__selected {
   display: none;
+}
+.controls-dropDownList {
+  color: #05b;
+  cursor: pointer;
+}
+.controls-dropDownList:hover .controls-CustomFilterMenu__caption {
+  text-decoration: underline;
+  color: #ff7033;
+}
+.controls-DropDownList__picker .controls-CustomFilterMenu__captionWrapper {
+  margin: 5px;
+}
+.controls-DropDownList__picker .controls-CustomFilterMenu__captionWrapper .controls-CustomFilterMenu__caption {
+  text-decoration: none;
+  color: #000000;
+}
+.controls-DropDownList__picker .controls-CustomFilterMenu__header {
+  display: block;
+}
+.controls-DropDownList__picker .controls-CustomFilterMenu__list {
+  padding: 0;
+}
+.controls-DropDownList__picker .controls-CustomFilterMenu__list .controls-CustomFilterMenu__item {
+  padding: 5px;
+  margin: 0;
 }
 .controls-PopupMixin__closeButton {
   position: absolute;
