@@ -30,11 +30,17 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       $constructor: function () {
          this._curRoot = this._options.root;
          this._filter = this._filter || {};
-         this._filter[this._options.hierField] = this._options.root;
+         if (this._options.hierField) {
+            this._filter[this._options.hierField] = this._options.root;
+         }
       },
 
       setHierField: function (hierField) {
          this._options.hierField = hierField;
+         this._filter = this._filter || {};
+         if (this._options.hierField) {
+            this._filter[this._options.hierField] = this._curRoot;
+         }
       },
 
       // обход происходит в том порядке что и пришли
