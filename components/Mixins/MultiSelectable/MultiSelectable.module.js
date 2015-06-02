@@ -164,7 +164,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        */
       removeItemsSelection : function(idArray) {
          if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
-            for (var i = 0; i < idArray.length; i++) {
+            for (var i = idArray.length - 1; i >= 0; i--) {
                var index = this._options.selectedKeys.indexOf(idArray[i]);
                if (index >= 0) {
                   Array.remove(this._options.selectedKeys, index);
