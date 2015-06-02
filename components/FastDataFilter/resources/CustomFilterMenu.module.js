@@ -21,7 +21,8 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
       var CustomFilterMenu = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin], {
          $protected: {
             _options: {
-               itemTemplate: dotTplFnForItem
+               itemTemplate: dotTplFnForItem,
+               mode: 'hover'
             },
             _dotTplFn: dotTplFn,
             _caption: null,
@@ -32,7 +33,7 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
             _defaultId: null
          },
          $constructor: function() {
-            this._container.bind('mouseenter', this.showPicker.bind(this));
+            this._container.bind(this._options.mode === 'hover' ? 'mouseenter' : 'mousedown', this.showPicker.bind(this));
          },
          init : function () {
             CustomFilterMenu.superclass.init.apply(this, arguments);
@@ -54,8 +55,10 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
                self.removeItemsSelectionAll();
                self.hidePicker();
             });
-            header.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, true));
-            list.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
+            if(this._options.mode === 'hover') {
+               header.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, true));
+               list.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
+            }
          },
          _getItemClass: function(){
             return 'controls-CustomFilterMenu__item';
@@ -67,7 +70,7 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
          },
          _drawItemsCallback: function() {
             //Надо вызвать просто для того, чтобы отрисовалось выбранное значение/значения
-            this.setSelectedIndexes(this._options.selectedIndexes);
+            this.setSelectedKeys(this._options.selectedKeys);
          },
          _dataLoadedCallback: function() {
             this._defaultId = this._dataSet.at(0).getKey();
@@ -118,6 +121,9 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
                this._caption.text(text);
                this._pickerCaption.text(text);
             }
+         },
+         getText: function() {
+            return this._caption.text();
          },
          _setResetButtonVisibility: function(show) {
             this._resetButton.toggleClass('ws-hidden', show);
