@@ -12,11 +12,11 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
       $protected: {
          _options: {
             linkedView: undefined,
-            template: 'js!SBIS3.CONTROLS.MoveDialogTemplate'
+            template: 'js!SBIS3.CONTROLS.MoveDialogTemplate',
+            cssClassName: 'controls-MoveDialog'
          },
          _treeView: undefined
       },
-
       $constructor: function() {
          this.subscribe('onReady', this._onReady.bind(this));
       },
@@ -32,28 +32,9 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          this._treeView.setHierField(linkedView._options.hierField);
          this._treeView.setColumns([{ field: linkedView._options.displayField }]);
          this._treeView.setDataSource(linkedView._dataSource);
-         this._treeView.openNode(0);
       },
-      //Добавляем корень
+      /*TODO тут добавить корень в дерево*/
       _onDataLoadHandler: function(event, dataSet) {
-         var
-            hierField = this._options.linkedView._options.hierField,
-            raw;
-         dataSet.each(function(record) {
-            if (!record.get(hierField)) {
-               record.set(hierField, 0);
-            }
-         });
-         raw = {id: 0, title: 'Корень'};
-         raw[hierField] = null;
-         raw[hierField + '@'] = true;
-         var record = new Record({
-            /*TODO разобраться со стратегией и форматами*/
-            strategy: new ArrayStrategy(),
-            raw: raw,
-            keyField: dataSet._keyField
-         });
-         dataSet.push(record);
          event.setResult(dataSet);
       },
       _moveRecords: function() {
@@ -63,20 +44,26 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
             moveTo = this._treeView.getSelectedKeys()[0];
          if (moveTo !== undefined) {
             records = linkedView.getSelectedKeys();
-            this._move(records, moveTo);
-            linkedView.removeItemsSelectionAll();
-            linkedView.openNode(moveTo);
+            this._move(records, moveTo).getResult().addCallback(function() {
+               linkedView.removeItemsSelectionAll();
+               linkedView.openNode(moveTo);
+            });
          }
          this.close();
       },
       _move: function(records, moveTo) {
          var
             record,
-            linkedView = this._options.linkedView;
+            deferred = new $ws.proto.ParallelDeferred(),
+            linkedView = this._options.linkedView,
+            hierField = linkedView._options.hierField;
          for (var i = 0; i < records.length; i++) {
             record = linkedView._dataSet.getRecordByKey(records[i]);
-            linkedView._dataSource.move(record, linkedView._options.hierField, moveTo || null);
+            if (record.get(linkedView._dataSet._keyField)[0] !== moveTo) {
+               deferred.push(linkedView._dataSource.move(record, hierField, [moveTo]));
+            }
          }
+         return deferred.done();
       }
    });
 
