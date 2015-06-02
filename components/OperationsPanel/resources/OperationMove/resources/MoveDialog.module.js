@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          var
             records,
             linkedView = this._options.linkedView,
-            moveTo = this._treeView.getSelectedKeys()[0] || null;
+            moveTo = this._treeView.getSelectedKeys()[0];
          if (moveTo !== undefined) {
             records = linkedView.getSelectedKeys();
             this._move(records, moveTo).getResult().addCallback(function() {
