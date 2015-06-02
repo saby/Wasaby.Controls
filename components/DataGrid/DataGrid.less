@@ -30,14 +30,13 @@
                color: @data-grid-row-selected-cell-text-color;
             }
          }
-         &:hover {
+         &.controls-ListView__hoveredItem {
             background: @data-grid-row-hover-bg;
 
             .controls-DataGrid__th {
                color: @data-grid-row-hover-header-cell-text-color;
                background-color: @data-grid-row-hover-header-cell-bg;
             }
-
             .controls-DataGrid__td {
                color: @data-grid-row-hover-cell-text-color;
                background-color: @data-grid-row-hover-cell-bg;
@@ -117,11 +116,6 @@
          border-width: @data-grid-cell-border-width;
          border-style: @data-grid-cell-border-style;
          border-color: #F5F5F5;
-
-         &:hover {
-            color: @data-grid-cell-hover-text-color;
-            background-color: @data-grid-cell-hover-bg;
-         }
       }
       .controls-DataGrid__th:first-child {
          padding-left: @data-grid-cell-padding-side;
