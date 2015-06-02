@@ -26,6 +26,14 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
          this._container.removeClass('ws-area');
       },
 
+      setEnabled: function(enabled) {
+        ButtonGroupBase.superclass.setEnabled.call(this, enabled);
+        var itemsInstances = this.getChildControls();
+        for (var i in itemsInstances){
+          itemsInstances[i].setEnabled(enabled);
+        }
+      },      
+
       _getItemClass : function(config) {
          /*метод должен быть перегружен*/
          return false;

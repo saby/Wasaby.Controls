@@ -36,6 +36,14 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
          this.reload();
       },
 
+      setEnabled: function(enabled) {
+        ButtonGroupBase.superclass.setEnabled.call(this, enabled);
+        var itemsInstances = this.getChildControls();
+        for (var i in itemsInstances){
+          itemsInstances[i].setEnabled(enabled);
+        }
+      },      
+
       _drawItemsCallback : function(){
          var
             controls = this.getItemsInstances(),
