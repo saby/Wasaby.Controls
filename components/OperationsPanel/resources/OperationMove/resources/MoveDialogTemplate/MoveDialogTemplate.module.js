@@ -17,7 +17,8 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
             autoHeight: false,
             width: '400px',
             height: '400px',
-            resizable: false
+            resizable: false,
+            isContainerInsideParent: true
          }
       },
       $constructor: function() {

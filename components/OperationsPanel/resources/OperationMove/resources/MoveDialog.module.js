@@ -19,6 +19,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
 
       $constructor: function() {
          this.subscribe('onReady', this._onReady.bind(this));
+         this._container.css('overflow-y', 'auto')
       },
       _onReady: function() {
          var
@@ -33,37 +34,8 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          this._treeView.setColumns([{ field: linkedView._options.displayField }]);
          this._treeView.setDataSource(linkedView._dataSource);
       },
-      //Добавляем корень
+      /*TODO тут добавить корень в дерево*/
       _onDataLoadHandler: function(event, dataSet) {
-         var
-            hierField = this._options.linkedView._options.hierField,
-            raw;
-         dataSet.each(function(record) {
-            if (record.get(hierField)[0] === null) {
-               record.set(hierField, [0]);
-            }
-         });
-         raw = {
-            d: [[0], [null], true, null, "Корень", false, false, null],
-            s: [
-               {n: "@Номенклатура",t: "Идентификатор"},
-               {n: "Раздел",s: "Иерархия",t: "Идентификатор"},
-               {n: "Раздел@",s: "Иерархия",t: "Логическое"},
-               {n: "Раздел$",s: "Иерархия",t: "Логическое"},
-               {n: "Наименование", t: "Текст"},
-               {n: "Опубликовано", t: "Логическое"},
-               {n: "Deleted",t: "Логическое"},
-               {n: "DisplayStyle",t: "Число целое"}
-            ]
-         };
-         var record = new Record({
-            /*TODO разобраться со стратегией и форматами*/
-            strategy: dataSet.getStrategy(),
-            raw: raw,
-            keyField: dataSet._keyField
-         });
-         dataSet.push(record);
-         this._treeView.openNode(0);
          event.setResult(dataSet);
       },
       _moveRecords: function() {
@@ -88,7 +60,9 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
             hierField = linkedView._options.hierField;
          for (var i = 0; i < records.length; i++) {
             record = linkedView._dataSet.getRecordByKey(records[i]);
-            deferred.push(linkedView._dataSource.move(record, hierField, [moveTo]));
+            if (record.get(linkedView._dataSet._keyField)[0] !== moveTo) {
+               deferred.push(linkedView._dataSource.move(record, hierField, [moveTo]));
+            }
          }
          return deferred.done();
       }
