@@ -32,10 +32,13 @@ define('js!SBIS3.CONTROLS.Demo.MyListViewDS',
          ListView._options.itemTemplate = itemTpl;
          ListView.reload();
       },
-      
-      myOnActivatedHandler: function(item){
-         alert('Вы нажали кнопку ' + item.title);
-      }
+
+       myOnActivatedHandlerD: function(){
+           $ws.core.alert('Вы нажали кнопку DELETE');
+       },
+       myOnActivatedHandlerE: function(){
+           $ws.core.alert('Вы нажали кнопку EDIT');
+       }
    });
    return moduleClass;
 });
