@@ -1977,14 +1977,14 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected .controls-DataGrid__td {
   color: inherit;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover {
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__hoveredItem {
   background: #f3f3f3;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover .controls-DataGrid__th {
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__hoveredItem .controls-DataGrid__th {
   color: inherit;
   background-color: #f3f3f3;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr:hover .controls-DataGrid__td {
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__hoveredItem .controls-DataGrid__td {
   color: inherit;
   background-color: #f3f3f3;
 }
@@ -2053,10 +2053,6 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px 0 0;
   border-style: solid;
   border-color: #F5F5F5;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:hover {
-  color: inherit;
-  background-color: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
   padding-left: 12px;
@@ -2595,7 +2591,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-editInPlace > div {
   position: absolute;
   display: inline-block;
-  padding: 1px 2px 1px 0;
+  padding: 1px;
   vertical-align: top;
   height: 100%;
 }
