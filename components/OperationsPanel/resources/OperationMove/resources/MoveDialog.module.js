@@ -12,14 +12,13 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
       $protected: {
          _options: {
             linkedView: undefined,
-            template: 'js!SBIS3.CONTROLS.MoveDialogTemplate'
+            template: 'js!SBIS3.CONTROLS.MoveDialogTemplate',
+            cssClassName: 'controls-MoveDialog'
          },
          _treeView: undefined
       },
-
       $constructor: function() {
          this.subscribe('onReady', this._onReady.bind(this));
-         this._container.css('overflow-y', 'auto')
       },
       _onReady: function() {
          var
