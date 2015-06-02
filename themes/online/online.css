@@ -2340,9 +2340,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-OperationsMark-checkBox {
   margin: 0 4px;
 }
-.controls-MoveDialogTemplate {
-  overflow-y: auto;
-}
 .controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid {
   padding: 0 0 5px 0;
   /*TODO как скрыть PathSelector?*/
