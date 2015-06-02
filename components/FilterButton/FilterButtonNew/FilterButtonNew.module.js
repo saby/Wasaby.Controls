@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
       },
       setLinkedView: function(view) {
          this._linkedView = view;
-         this._setInitialFilter();
+         view.once('onDrawItems', this._setInitialFilter.bind(this));
       },
       resetFilter: function() {
          this._setControlsValues(this._initialControlsValues);
