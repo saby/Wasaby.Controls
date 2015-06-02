@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
                 this._picker.getContainer().bind('mouseup', function (e) {
                     var row = $(e.target).closest('.' + self._getItemClass());
                     if (row.length) {
-                        self.setSelectedIndexes([row.data('id')]);
+                        self.setSelectedKeys([row.data('id')]);
                         self.hidePicker();
                     }
                 });
