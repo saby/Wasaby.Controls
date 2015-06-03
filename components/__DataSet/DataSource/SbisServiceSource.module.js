@@ -120,7 +120,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             if (typeof(window) != 'undefined') {
                console['log'](error);
             }
-            throw new Error('Не удалось выпонить метод create');
+            throw new Error('Не удалось выполнить метод create');
          });
          return def;
       },
@@ -147,7 +147,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             if (typeof(window) != 'undefined') {
                console['log'](error);
             }
-            throw new Error('Не удалось выпонить метод read');
+            throw new Error('Не удалось выполнить метод read');
          });
          return def;
       },
@@ -170,7 +170,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             if (typeof(window) != 'undefined') {
                console['log'](error);
             }
-            throw new Error('Не удалось выпонить метод update');
+            throw new Error('Не удалось выполнить метод update');
          });
 
          return def;
@@ -192,7 +192,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             if (typeof(window) != 'undefined') {
                console['log'](error);
             }
-            throw new Error('Не удалось выпонить метод destroy');
+            throw new Error('Не удалось выполнить метод destroy');
          });
 
          return def;
@@ -235,7 +235,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             if (typeof(window) != 'undefined') {
                console['log'](error);
             }
-            throw new Error('Не удалось выпонить метод query');
+            throw new Error('Не удалось выполнить метод query');
          });
 
          return def;
@@ -274,7 +274,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             if (typeof(window) != 'undefined') {
                console['log'](error);
             }
-            throw new Error('Не удалось выпонить метод update');
+            throw new Error('Не удалось выполнить метод update');
          });
          return def;
       }
