@@ -1026,7 +1026,7 @@ input[type="reset"]::-moz-focus-inner {
   position: relative;
   color: #ffcc99;
   text-decoration: none;
-  padding: 0 12px 0 0;
+  padding: 0 16px 0 0;
   line-height: 24px;
 }
 .controls-MenuLink.controls-MenuLink__32px {
@@ -1048,21 +1048,24 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuLink .controls-MenuLink__arrowDown {
   position: absolute;
   display: inline-block;
-  width: 8px;
+  width: none;
   height: 6px;
   right: 0;
   top: 10px;
   background: transparent;
+  border-width: 5px 5px 0 5px;
+  border-style: solid;
+  border-color: #ffcc99 transparent transparent transparent;
 }
 .controls-MenuLink__Menu {
   margin-left: -9px;
   background: #ffffff;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
-  height: 24px;
+  height: none;
 }
 .controls-MenuLink__Menu .controls-MenuItem {
-  height: 24px;
+  height: none;
 }
 .controls-MenuLink__Menu.controls-Menu__32px .controls-MenuLink__header {
   height: 32px;
@@ -2148,6 +2151,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid {
   padding: 0 0 5px 0;
+  width: 100%;
   /*TODO как скрыть PathSelector?*/
 }
 .controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid .controls-HierarchyDataGrid__PathSelector {
@@ -2157,6 +2161,9 @@ input[type="reset"]::-moz-focus-inner {
   position: absolute;
   right: 38px;
   top: 8px;
+}
+.controls-MoveDialog {
+  overflow-y: auto !important;
 }
 .controls-ProgressBar {
   height: 17px;

@@ -1053,6 +1053,9 @@ input[type="reset"]::-moz-focus-inner {
   right: 0;
   top: 10px;
   background: transparent url('img/MenuButton-arrowDown.png') 0 0;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
 }
 .controls-MenuLink__Menu {
   margin-left: -9px;
@@ -2354,6 +2357,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid {
   padding: 0 0 5px 0;
+  width: 100%;
   /*TODO как скрыть PathSelector?*/
 }
 .controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid .controls-HierarchyDataGrid__PathSelector {
@@ -2363,6 +2367,9 @@ input[type="reset"]::-moz-focus-inner {
   position: absolute;
   right: 38px;
   top: 8px;
+}
+.controls-MoveDialog {
+  overflow-y: auto !important;
 }
 .controls__filterButton {
   height: 40px;
