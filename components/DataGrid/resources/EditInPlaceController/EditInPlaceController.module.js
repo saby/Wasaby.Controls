@@ -102,6 +102,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                      this._areas[this._editing].editInPlace.activateFirstField();
                   }.bind(this));
                }
+               this._areas[this._editing].target.addClass('controls-editInPlace__editing');
                this._areas[this._editing].hovered = false;
                this._areas[this._editing].editInPlace.getContainer().mousemove(this._onMouseMove.bind(this));
                //Это убирает класс hovered со строки, над которой editInPlace и скрывает опции записи (если те имеются)
@@ -151,6 +152,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
              */
             finishEditing: function(saveFields, notHide) {
                var editingArea = this._areas[this._editing];
+               editingArea.target.removeClass('controls-editInPlace__editing');
                if (!notHide) {
                   editingArea.editInPlace.hide();
                   editingArea.editInPlace.getContainer().unbind('keyup', this._areaHandlers.onKeyDown);
