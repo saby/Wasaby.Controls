@@ -5,13 +5,10 @@
 define('js!SBIS3.CONTROLS.EditInPlace',
    [
       'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.TextBox',
-      'js!SBIS3.CONTROLS.CheckBox',
-      'js!SBIS3.CONTROLS.ComboBox',
       'html!SBIS3.CONTROLS.EditInPlace',
       'css!SBIS3.CONTROLS.EditInPlace'
    ],
-   function(Control, TextBox, CheckBox, ComboBox, dotTplFn) {
+   function(Control, dotTplFn) {
 
       'use strict';
 
@@ -64,10 +61,12 @@ define('js!SBIS3.CONTROLS.EditInPlace',
              * @param record Record, из которого будут браться значения полей
              */
             updateFields: function(record) {
-               var items = [];
+               var
+                  items = [],
+                  methodName;
                this._record = record;
                $ws.helpers.forEach(this._fields, function(field) {
-                  if (field instanceof ComboBox) {
+                  if ($ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.ComboBox')) {
                      //todo избавиться от record.getType(field.getName()).s (получение всех возможных значений перечисляемого поля)
                      $ws.helpers.forEach(record.getType(field.getName()).s, function(value, key) {
                         items.push({ title: value, id: key })
@@ -75,7 +74,11 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                      field.setItems(items);
                      field.setText(record.get(field.getName()));
                   } else {
-                     field[field instanceof CheckBox ? 'setChecked' : field instanceof TextBox ? 'setText' : 'setValue'](record.get(field.getName()));
+                     methodName =
+                        $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.CheckBox') ? 'setChecked' :
+                           $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'setText' :
+                              'setValue'
+                     field[methodName](record.get(field.getName()));
                   }
                });
             },
@@ -83,8 +86,13 @@ define('js!SBIS3.CONTROLS.EditInPlace',
              * Сохранить значения полей области редактирования по месту
              */
             applyChanges: function() {
+               var methodName;
                $ws.helpers.forEach(this._fields, function(field, name) {
-                  this._record.set(name, field instanceof TextBox ? field.getText() : field.getValue());
+                  methodName =
+                     $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.NumberTextBox') ? 'getNumericValue' :
+                        $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'getText' :
+                           'getValue';
+                  this._record.set(name, field[methodName]());
                }, this);
             },
             /**
