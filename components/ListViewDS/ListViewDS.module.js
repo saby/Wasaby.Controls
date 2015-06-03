@@ -143,7 +143,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 *     </option>
                 * </pre>
                 * @see setItemsActions
-                */   
+                */
                itemsActions: [{
                   name: 'delete',
                   icon: 'sprite:icon-16 icon-Erase icon-error',
@@ -329,7 +329,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
          },
 
-         /**        
+         /**
           * Установить что отображается при отсутствии записей.
           * @param html Содержимое блока.
           * @example
