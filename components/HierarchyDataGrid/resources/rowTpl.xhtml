@@ -11,6 +11,7 @@
       {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}">
         {{?index == 0}}
         <div class="controls-HierarchyDataGrid__expand js-controls-TreeView__expand icon-24 {{?column.item.get(it.hierField)}}icon-Folder action-hover icon-disabled has-child{{?}}"></div>
+        {{=column.value}}
         {{??}}
         {{=column.value}}
         {{?}}
