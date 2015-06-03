@@ -6,8 +6,7 @@ define('js!SBIS3.CONTROLS.MassAmountSelector', [
    'html!SBIS3.CONTROLS.MassAmountSelector',
    'js!SBIS3.CONTROLS.RadioGroup',
    'js!SBIS3.CONTROLS.NumberTextBox',
-   'js!SBIS3.CONTROLS.Button',
-   'css!SBIS3.CONTROLS.MassAmountSelector'
+   'js!SBIS3.CONTROLS.Button'
 ], function(Control, dotTplFn) {
 
    var MassAmountSelector = Control.extend({
