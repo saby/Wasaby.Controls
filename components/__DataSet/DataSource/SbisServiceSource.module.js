@@ -2,22 +2,22 @@
  * Created by as.manuylov on 10.11.14.
  */
 define('js!SBIS3.CONTROLS.SbisServiceSource', [
-   'js!SBIS3.CONTROLS.IDataSource',
+   'js!SBIS3.CONTROLS.BaseSource',
    'js!SBIS3.CONTROLS.Record',
    'js!SBIS3.CONTROLS.DataSet',
    'js!SBIS3.CONTROLS.SbisJSONStrategy'
-], function (IDataSource, Record, DataSet, SbisJSONStrategy) {
+], function (BaseSource, Record, DataSet, SbisJSONStrategy) {
    'use strict';
 
    /**
-    * Класс, реализующий интерфейс IDataSource, для работы с бизнес-логикой СБИС как с источником данных.
+    * Класс для работы с бизнес-логикой СБИС, как с источником данных.
     * @author Мануйлов Андрей
     * @public
     * @class SBIS3.CONTROLS.SbisServiceSource
-    * @extends SBIS3.CONTROLS.IDataSource
+    * @extends SBIS3.CONTROLS.BaseSource
     */
 
-   return IDataSource.extend({
+   return BaseSource.extend({
       $protected: {
          _options: {
              /**

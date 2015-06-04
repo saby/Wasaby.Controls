@@ -1,9 +1,8 @@
 define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
    'js!SBIS3.CONTROLS.DataGrid',
    'js!SBIS3.CONTROLS.hierarchyMixin',
-   'js!SBIS3.CONTROLS.PathSelector',
    'html!SBIS3.CONTROLS.HierarchyDataGrid/resources/rowTpl'
-], function (DataGrid, hierarchyMixin, PathSelector, rowTpl) {
+], function (DataGrid, hierarchyMixin, rowTpl) {
    'use strict';
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
@@ -28,7 +27,6 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
 
    var HierarchyDataGrid = DataGrid.extend([hierarchyMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
       $protected: {
-         _pathSelector: undefined,
          _rowTpl: rowTpl
       },
 
@@ -38,29 +36,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
       },
 
       _dataLoadedCallback: function () {
-         if (!this._pathSelector) {
-            this._drawPathSelector();
-         }
          HierarchyDataGrid.superclass._dataLoadedCallback.call(this, arguments);
-      },
-
-      _drawPathSelector: function () {
-         var pathSelectorContainer = $('<div class="controls-HierarchyDataGrid__PathSelector"><div class="controls-HierarchyDataGrid__PathSelector__block"></div></div>');
-
-         this.getContainer().prepend(pathSelectorContainer);
-
-         this._pathSelector = new PathSelector({
-            element: pathSelectorContainer,
-            dataSet: this._dataSet,
-            handlers: {
-               'onPathChange': this._onPathSelectorChange.bind(this)
-            },
-            rootNodeId: this._options.root
-         });
-      },
-
-      _onPathSelectorChange: function (event, id) {
-         this.setCurrentRoot(id);
       },
 
       _elemClickHandlerInternal: function (id, data, target) {
@@ -81,20 +57,11 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
             self._dataLoadedCallback();
             self._notify('onDataLoad', dataSet);
             var record;
-            if (record = self._dataSet.getRecordByKey(key)) {
-               var title = record.get(self._options.displayField);
-               self._pathSelector.push({
-                  'title': title,
-                  'id': self._curRoot
-               });
-            }
             self._curRoot = key;
             self._redraw();
          })
       }
-
    });
 
    return HierarchyDataGrid;
-
 });

@@ -21,26 +21,16 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
              * */
             displayType : 'all'
 
-         },
-         //TODO что если корень не null ? (с прошлого кода проблема та же самая)
-         _pageSaver: {
-            'null': 0
          }
       },
       $constructor: function () {
          this._curRoot = this._options.root;
          this._filter = this._filter || {};
-         if (this._options.hierField) {
-            this._filter[this._options.hierField] = this._options.root;
-         }
+         this._filter[this._options.hierField] = this._options.root;
       },
 
       setHierField: function (hierField) {
          this._options.hierField = hierField;
-         this._filter = this._filter || {};
-         if (this._options.hierField) {
-            this._filter[this._options.hierField] = this._curRoot;
-         }
       },
 
       // обход происходит в том порядке что и пришли
@@ -114,23 +104,25 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        * Раскрыть определенный узел
        * @param {String} key Идентификатор раскрываемого узла
        */
-
+      openNode: function (key) {
+         var self = this;
+         this._loadNode(key).addCallback(function (dataSet) {
+            self._nodeDataLoaded(key, dataSet);
+         });
+      },
 
       _loadNode : function(key) {
          /*TODO проверка на что уже загружали*/
          var filter = this._filter || {};
          filter[this._options.hierField] = key;
          this._filter = filter;
-         //TODO Надо не здесь... Это специально! По переходу в корень пользователь как бы всегда хочет видеть первую страницу
-         if (key == this._options.root) {
-            this._dropPageSave();
-         }
          //узел грузим с 0-ой страницы
-         this._offset = this._pageSaver[key] * this._options.pageSize || 0;
+         this._offset = 0;
          return this._dataSource.query(filter, undefined, this._offset, this._limit);
       },
-      _setPageSave: function(pageNum){
-         this._pageSaver[this._curRoot] = pageNum - 1;
+
+      toggleNode: function(key) {
+         this.openNode(key);
       },
       _dropPageSave: function(){
          var root = this._options.root;

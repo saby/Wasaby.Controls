@@ -1,86 +1,83 @@
 define('js!SBIS3.CONTROLS.PathSelector', [
-   'js!SBIS3.CORE.CompoundControl'
-], function (CompoundControl) {
+   'js!SBIS3.CORE.CompoundControl',
+   'html!SBIS3.CONTROLS.PathSelector',
+   'html!SBIS3.CONTROLS.PathSelector/resources/pointTpl'
+], function (CompoundControl, dotTpl, pointTpl) {
    'use strict';
 
    var PathSelector = CompoundControl.extend({
       $protected: {
+         _dotTplFn: dotTpl,
          _pathContainer: undefined,
+         _curRoot: null,
          _path: [],
          _options: {
-            dataSet: null,
-            rootNodeId: null,
-            titleColumn: ''
+            linkedView: null,
+            rootNodeId: null
          }
       },
 
       $constructor: function () {
-         this._publish('onPathChange');
-         this._pathContainer = this.getContainer().find('.controls-HierarchyDataGrid__PathSelector__block');
+         if (this._options.linkedView){
+            this._options.linkedView._getChannel().subscribe('onCurrentNodeChange', this._nodeChangeHandler, this);
+         }
+         this._curRoot = this._options.rootNodeId;
+      },
+
+      setLinkedView: function(view){
+         if (this._options.linkedView){
+            this._options.linkedView.unsubscribe('onCurrentNodeChange', this._nodeChangeHandler);
+         }
+         this._options.linkedView = view;
+         this._options.linkedView._getChannel().subscribe('onCurrentNodeChange', this._nodeChangeHandler, this);
+      },
+
+      _nodeChangeHandler: function(event, key, title){
+         var node = {key: key, title: title};
+         key && this.push(node);
+         this._redraw();
+         this._curRoot = key;
       },
 
       _redraw: function(){
          var path = this._path;
-         this._pathContainer.empty();
+         this._container.empty();
          for (var i = 0; i < path.length; i++){
-            this._drawPoint(i, i === path.length - 1);
+            this._drawPoint(path[i], i === path.length - 1);
          }
       },
 
-      _drawPoint: function(index, last){
-         var point = $('<span class="controls-HierarchyDataGrid__PathSelector__block__point hover-target" style="cursor:pointer">' +
-                           '<a>' + this._path[index]['title'] +
-                              '<span class="' + this._path[index]['icon'] +'"style="top: 2px; position: relative;"><span>' + 
-                           '</a>' + 
-                       '</span>'),
-            arrow = $('<span class="controls-HierarchyDataGrid__PathSelector__block__arrow"></span>'),
-            container = this._pathContainer,
-            self = this;
-         point.data('index', this._path[index - 1] ? index - 1 : this._options.rootNodeId);
-         if (!last) {
-            arrow.addClass('icon-16 icon-Back icon-primary action-hover');
-         } else {
-            arrow.addClass('icon-24');
-            point.addClass('controls-HierarchyDataGrid__PathSelector__block-last')
-         }
-         point.prepend(arrow);
-         point.bind('click', function(e){
-            self._onMouseClick(e);
+      _drawPoint: function(node, last){
+         var point = $(pointTpl(node)),
+         self = this;
+         point.bind('click', function(){
+            self._onPointClick(node.parent);
          });
-         container.prepend(point);
-      },
-
-      _onMouseClick: function (e) {
-         var target = $(e.target).closest('.controls-HierarchyDataGrid__PathSelector__block__point'),
-            index = target.data('index'),
-            id =  index !== null ? this._path[index].id : null,
-            title = index !== null ? this._path[index].title : '';
-            this._onPointClick(index, id, title, event);
-      },
-
-      _onPointClick: function (index, id, title, event) {
-         if (index !== undefined) {
-            index = index || 0;
-            var count = this._path.length - index - 1;
-            if (id != null){
-               for (var j = 0; j < count; ++j) {
-                  this._path.pop();
-               }
-            } else {
-               this._path = [];
-            }
+         if (last){
+            $('.controls-PathSelector__arrow', point).removeClass('icon-Back icon-16 icon-primary action-hover');
+            point.addClass('controls-PathSelector__point-last');
          }
-         this._redraw();
-         this._notify('onPathChange', id);
+         this._container.prepend(point);
+      },
+
+      _onPointClick: function(parentKey){
+         var path = this._path;
+         //убираем все предыдущие ноды, включая ту на которую нажали
+         while (path.length && path[path.length - 1].key != parentKey){
+            path.pop();
+         }
+         this._options.linkedView.openNode(parentKey);
       },
 
       push: function (node) {
+         node.parent = this._curRoot;
          if (!this._path.length){
             this._path.push(node);
-         } else if (this._path[this._path.length - 1].id != node.id){
+         } else 
+         //не пушим ноду если она и так последняя
+         if (this._path[this._path.length - 1].key != node.key){
                this._path.push(node);
             }
-         this._redraw();
       }
 
    });
