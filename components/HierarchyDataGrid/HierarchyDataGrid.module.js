@@ -59,30 +59,38 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
          });
       },
 
-
-      _nodeDataLoaded: function (key, dataSet) {
-         var record;
-         if (record = this._dataSet.getRecordByKey(key)) {
-            var title = record.get(this._options.displayField);
-            HierarchyDataGrid.superclass._nodeDataLoaded.call(this, key, dataSet);
-            this._pathSelector.push({
-               'title': title,
-               'id': this._curRoot
-            });
-         } else {
-            HierarchyDataGrid.superclass._nodeDataLoaded.call(this, key, dataSet);
-         }
-      },
-
       _onPathSelectorChange: function (event, id) {
-         this.openNode(id);
+         this.setCurrentRoot(id);
       },
 
       _elemClickHandlerInternal: function (id, data, target) {
          if (data.get(this._options.hierField+'@')) {
             var nodeID = $(target).closest('.controls-ListView__item').data('id');
-            this.toggleNode(nodeID);
+            this.setCurrentRoot(nodeID);
          }
+      },
+
+      setCurrentRoot: function(key) {
+         var self = this;
+         this._loadNode(key).addCallback(function(dataSet) {
+            if (!self._dataSet){
+               self._dataSet = dataSet;
+            } else {
+               self._dataSet.setRawData(dataSet.getRawData());
+            }
+            self._dataLoadedCallback();
+            self._notify('onDataLoad', dataSet);
+            var record;
+            if (record = self._dataSet.getRecordByKey(key)) {
+               var title = record.get(self._options.displayField);
+               self._pathSelector.push({
+                  'title': title,
+                  'id': self._curRoot
+               });
+            }
+            self._curRoot = key;
+            self._redraw();
+         })
       }
 
    });

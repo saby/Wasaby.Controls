@@ -94,6 +94,19 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
               $('.controls-TreeView__expand', container).before('<div class="controls-TreeView__hierWrapper"></div>');
             }
          }
+      },
+
+      _elemClickHandlerInternal: function (id, data, target) {
+         var nodeID = $(target).closest('.controls-ListView__item').data('id');
+         if ($(target).hasClass('js-controls-TreeView__expand') && $(target).hasClass('has-child')) {
+            this.toggleNode(nodeID);
+         }
+         else {
+            if (data.get(this._options.hierField+'@')) {
+               var self = this;
+               self.setCurrentRoot(nodeID);
+            }
+         }
       }
    });
 

@@ -114,19 +114,14 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        * Раскрыть определенный узел
        * @param {String} key Идентификатор раскрываемого узла
        */
-      openNode: function (key) {
-         var self = this;
-         this._loadNode(key).addCallback(function (dataSet) {
-            self._nodeDataLoaded(key, dataSet);
-         });
-      },
+
 
       _loadNode : function(key) {
          /*TODO проверка на что уже загружали*/
          var filter = this._filter || {};
          filter[this._options.hierField] = key;
          this._filter = filter;
-         //Это специально! По переходу в корень пользователь как бы всегда хочет видеть первую страницу
+         //TODO Надо не здесь... Это специально! По переходу в корень пользователь как бы всегда хочет видеть первую страницу
          if (key == this._options.root) {
             this._dropPageSave();
          }
@@ -141,28 +136,6 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          var root = this._options.root;
          this._pageSaver = {};
          this._pageSaver[root] = 0;
-      },
-
-      toggleNode: function(key) {
-         this.openNode(key);
-      },
-
-
-
-      _nodeDataLoaded: function (key, dataSet) {
-         this._notify('onDataLoad', dataSet);
-         this._setCurRootNode(key, dataSet);
-         this._dataLoadedCallback();
-      },
-
-      _setCurRootNode: function(key, dataSet) {
-         if (!this._dataSet){
-            this._dataSet = dataSet;
-         } else {
-            this._dataSet.setRawData(dataSet.getRawData());
-         }
-         this._curRoot = key;
-         this._redraw();
       }
 
    };
