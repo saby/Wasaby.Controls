@@ -111,6 +111,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button .controls-Button__icon + .controls-Button__text {
   margin: 0 8px 0 28px;
+  margin-left: 28px;
 }
 .controls-Button .controls-Button__icon.icon-24 {
   top: 0px;
@@ -122,6 +123,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button .controls-Button__icon.icon-24 + .controls-Button__text {
   margin: 0 8px 0 36px;
+  margin-left: 36px;
 }
 .controls-Button.controls-Button__primary {
   color: #ffffff;
@@ -210,6 +212,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-Button__big .controls-Button__icon + .controls-Button__text {
   margin: 0 20px 0 40px;
+  margin-left: 40px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
   top: 13px;
@@ -222,6 +225,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 + .controls-Button__text {
   margin: 0 20px 0 48px;
+  margin-left: 48px;
 }
 .controls-Button.controls-Button__big.controls-Button__primary {
   color: #ffffff;
@@ -335,6 +339,66 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-shadow: none;
   box-shadow: none;
   background: #ffffff;
+}
+.controls-Button.controls-Checked__checked .controls-Button__text {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+.controls-Button.controls-Checked__checked .controls-Button__icon {
+  top: 5px;
+  left: 8px;
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .controls-Button.controls-Checked__checked .controls-Button__icon {
+    top: 6px;
+  }
+}
+.controls-Button.controls-Checked__checked .controls-Button__icon + .controls-Button__text {
+  margin-left: 28px;
+  margin-right: 8px;
+}
+.controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 {
+  top: 0px;
+  left: 8px;
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 {
+    top: 1px;
+  }
+}
+.controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 + .controls-Button__text {
+  margin-left: 36px;
+  margin-right: 8px;
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__text {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__icon {
+  top: 16px;
+  left: 20px;
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .controls-Button__big.controls-Checked__checked .controls-Button__icon {
+    top: 17px;
+  }
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__icon + .controls-Button__text {
+  margin-left: 40px;
+  margin-right: 20px;
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__icon.icon-24 {
+  top: 13px;
+  left: 20px;
+}
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .controls-Button__big.controls-Checked__checked .controls-Button__icon.icon-24 {
+    top: 14px;
+  }
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__icon.icon-24 + .controls-Button__text {
+  margin-left: 48px;
+  margin-right: 20px;
 }
 .controls-IconButton {
   cursor: pointer;
@@ -789,6 +853,12 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: 0 0 8px 1px #aaaaaa;
   -moz-box-shadow: 0 0 8px 1px #aaaaaa;
   box-shadow: 0 0 8px 1px #aaaaaa;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
 }
 .controls-Menu__Popup .controls-Menu__hasChild:after {
   content: ' ';
@@ -942,6 +1012,10 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuButton .controls-Button__text,
 .controls-MenuButton .controls-Button__icon + .controls-Button__text {
+  margin-right: 30px;
+}
+.controls-MenuButton.controls-Checked__checked .controls-Button__text,
+.controls-MenuButton.controls-Checked__checked .controls-Button__icon + .controls-Button__text {
   margin-right: 30px;
 }
 .controls-MenuButton__header {
@@ -2238,6 +2312,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid {
   padding: 0 0 5px 0;
+  width: 100%;
   /*TODO как скрыть PathSelector?*/
 }
 .controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid .controls-HierarchyDataGrid__PathSelector {
@@ -2247,6 +2322,9 @@ input[type="reset"]::-moz-focus-inner {
   position: absolute;
   right: 38px;
   top: 8px;
+}
+.controls-MoveDialog {
+  overflow-y: auto !important;
 }
 .controls-ProgressBar {
   height: 17px;
