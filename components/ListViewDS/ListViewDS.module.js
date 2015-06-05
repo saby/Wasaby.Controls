@@ -143,7 +143,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 *     </option>
                 * </pre>
                 * @see setItemsActions
-                */   
+                */
                itemsActions: [{
                   name: 'delete',
                   icon: 'sprite:icon-16 icon-Erase icon-error',
@@ -198,7 +198,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 * @see setInfiniteScroll
                 */
                infiniteScroll: false,
-               ignoreLocalPageSize : true
+               ignoreLocalPageSize : false
             },
             _loadingIndicator: undefined,
             _hasScrollMore : true,
@@ -329,7 +329,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
          },
 
-         /**        
+         /**
           * Установить что отображается при отсутствии записей.
           * @param html Содержимое блока.
           * @example
@@ -708,6 +708,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          //------------------------Paging---------------------
          _processPaging: function(){
             if (!this._pager) {
+               var localPageSize = $ws.helpers.getLocalStorageValue('ws-page-size');
+               this._options.pageSize = !this._options.ignoreLocalPageSize  && localPageSize ? localPageSize : this._options.pageSize;
                var more = this._dataSet.getMetaData().more,
                      hasNextPage = this._hasNextPage(more),
                      pagingOptions ={
@@ -719,6 +721,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                         rightArrow: hasNextPage
                      },
                      self = this;
+
                this._pager = new Pager({
                   pageSize : this._options.pageSize,
                   opener : this,
@@ -754,7 +757,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                }
                //Если на странице больше нет записей - то устанавливаем предыдущую (если это возможно)
                if (this._dataSet.getCount() === 0 && pageNum > 1) {
-                  this._pager.getPaging().setPage(pageNum - 1);
+                  this._pager.getPaging().setPage(1); //чтобы не перезагружать поставим 1ую. было : pageNum - 1
                }
                this._pager.getPaging().update(this.getPage(this.isInfiniteScroll() ? this._infiniteScrollOffset + this._options.pageSize: this._offset) + 1, more, nextPage);
                if (this._options.multiselect) {

@@ -1100,7 +1100,7 @@ input[type="reset"]::-moz-focus-inner {
   position: relative;
   color: #ffcc99;
   text-decoration: none;
-  padding: 0 12px 0 0;
+  padding: 0 16px 0 0;
   line-height: 24px;
 }
 .controls-MenuLink.controls-MenuLink__32px {
@@ -1122,21 +1122,24 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuLink .controls-MenuLink__arrowDown {
   position: absolute;
   display: inline-block;
-  width: 8px;
+  width: none;
   height: 6px;
   right: 0;
   top: 10px;
   background: transparent;
+  border-width: 5px 5px 0 5px;
+  border-style: solid;
+  border-color: #ffcc99 transparent transparent transparent;
 }
 .controls-MenuLink__Menu {
   margin-left: -9px;
   background: #ffffff;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
-  height: 24px;
+  height: none;
 }
 .controls-MenuLink__Menu .controls-MenuItem {
-  height: 24px;
+  height: none;
 }
 .controls-MenuLink__Menu.controls-Menu__32px .controls-MenuLink__header {
   height: 32px;
@@ -2232,6 +2235,30 @@ input[type="reset"]::-moz-focus-inner {
   position: absolute;
   right: 38px;
   top: 8px;
+}
+.controls-PrintMassDialog {
+  left: 12px;
+}
+.controls-PrintMassDialog .controls-MassAmountSelector__numberTextBox .controls-NumberTextBox {
+  width: 80px;
+}
+.controls-PrintMassDialog .controls-MassAmountSelector__numberTextBox .controls-NumberTextBox .controls-TextBox__field {
+  text-align: right;
+}
+.controls-PrintMassDialog .controls-MassAmountSelector__numberTextBox .controls-NumberTextBox .controls-TextBox__fieldWrapper {
+  margin: 0;
+}
+.controls-PrintMassDialog .controls-PrintMassDialog__label {
+  display: inline-block;
+  color: #999999;
+  padding-left: 6px;
+  padding-right: 8px;
+}
+.controls-Button__activatePrintMass {
+  line-height: 1.2em;
+  margin-top: 8px;
+  position: absolute;
+  right: 40px;
 }
 .controls-MoveDialog {
   overflow-y: auto !important;
