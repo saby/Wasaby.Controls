@@ -14,6 +14,7 @@ function(RadioGroupBase, dotTpl) {
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @control
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @initial
     * <component data-component='SBIS3.CONTROLS.RadioGroup'>
     *    <option name="displayField">title</option>
@@ -29,6 +30,14 @@ function(RadioGroupBase, dotTpl) {
     *       </options>
     *    </options>
     * </component>
+    *
+    * @ignoreOptions className extendedTooltip handlers linkedContext
+    *
+    * @ignoreMethods applyState applyEmptyState getClassName findParent getEventHandlers  getEvents getExtendedTooltip
+    * @ignoreOptions getOwner getOwnerId getTopParent getUserData makeOwnerName hasEvent hasEventHandlers once setOwner
+    * @ignoreOptions sendCommand setClassName setExtendedTooltip setStateKey setUserData subscribeTo unsubscribeFrom
+    *
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onTooltipContentRequest
     */
 
    var RadioGroup = RadioGroupBase.extend( /** @lends SBIS3.CONTROLS.RadioGroup.prototype */ {
