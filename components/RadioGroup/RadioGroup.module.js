@@ -31,6 +31,7 @@ function(RadioGroupBase, dotTpl) {
     *       </options>
     *    </options>
     * </component>
+    * @cssModifier controls-ButtonGroup__vertical Для вертикального расположения элементов в группе.
     *
     * @ignoreOptions className extendedTooltip handlers linkedContext
     *
