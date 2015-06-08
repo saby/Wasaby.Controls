@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
 
    /**
     * Контрол, реализующий поведение выбора одного из нескольких значений при помощи набора радиокнопок. Отображения не имеет.
-    * @class SBIS3.CONTROLS.ButtonGroupBase
+    * @class SBIS3.CONTROLS.ButtonGroupBaseDS
     * @public
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @extends $ws.proto.CompoundControl
