@@ -1,23 +1,32 @@
-<div><label data-lmtype="Label" class="ws-Label ws-Label-titleLeft demo-MyCheckBoxGroup__position">
-      <span data-lmchild="label-title" class="ws-Label-title"></span><component data-component="SBIS3.CONTROLS.CheckBoxGroup" name="CheckBoxGroup 1" class="ws-Label-content">
-      <options name="items" type="array">
-         <options>
-            <option name="id" type="string">1</option>
-            <option name="title">CheckBox 1</option>
+<div>
+   <label data-lmtype="Label" class="ws-Label ws-Label-titleLeft demo-MyCheckBoxGroup__position">
+      <span data-lmchild="label-title" class="ws-Label-title">
+         Группа недоступна для взаимодействия:
+      </span>
+      <component data-component="SBIS3.CONTROLS.CheckBoxGroup" name="CheckBoxGroup 1" class="ws-Label-content">
+         <options name="items" type="array">
+            <options>
+               <option name="id" type="string">1</option>
+               <option name="title">CheckBox 1</option>
+            </options>
+            <options>
+               <option name="id" type="string">2</option>
+               <option name="title">CheckBox 2</option>
+            </options>
          </options>
-         <options>
-            <option name="id" type="string">2</option>
-            <option name="title">CheckBox 2</option>
+         <option name="keyField">id</option>
+         <option name="displayField">title</option>
+         <options name="selectedKeys">
+            <option name="content">1</option>
          </options>
-      </options>
-      <option name="keyField">id</option>
-      <option name="displayField">title</option>
-      <options name="selectedIndex">
-         <option name="content">1</option>
-      </options>
-   </component></label>
-   <label data-lmtype="Label" class="ws-Label ws-Label-titleLeft demo-MyCheckBoxGroup__position" >
-      <span data-lmchild="label-title" class="ws-Label-title"></span><component data-component="SBIS3.CONTROLS.CheckBoxGroup" name="CheckBoxGroup 2" class="ws-Label-content">
+         <option name="enabled">false</option>
+      </component>
+   </label>
+   <label data-lmtype="Label" class="ws-Label ws-Label-titleLeft demo-MyCheckBoxGroup__position">
+      <span data-lmchild="label-title" class="ws-Label-title">
+         Группа с выбором только одного значения:
+      </span>
+      <component data-component="SBIS3.CONTROLS.CheckBoxGroup" name="CheckBoxGroup 2" class="ws-Label-content">
          <options name="items" type="array">
             <options>
                <option name="id" type="string">1</option>
@@ -31,9 +40,13 @@
          <option name="keyField">id</option>
          <option name="displayField">title</option>
          <option name="multiselect">false</option>
-      </component></label>
+      </component>
+   </label>
    <label data-lmtype="Label" class="ws-Label ws-Label-titleLeft demo-MyCheckBoxGroup__position">
-      <span data-lmchild="label-title" class="ws-Label-title"></span><component data-component="SBIS3.CONTROLS.CheckBoxGroup" name="CheckBoxGroup 3" class="ws-Label-content">
+      <span data-lmchild="label-title" class="ws-Label-title">
+         Группа с множественным выбором:
+      </span>
+      <component data-component="SBIS3.CONTROLS.CheckBoxGroup" name="CheckBoxGroup 3" class="ws-Label-content">
          <options name="items" type="array">
             <options>
                <option name="id" type="string">1</option>
@@ -46,5 +59,6 @@
          </options>
          <option name="keyField">id</option>
          <option name="displayField">title</option>
-      </component></label>
+      </component>
+   </label>
 </div>
