@@ -15,6 +15,7 @@ function(RadioGroupBase, dotTpl) {
     * @control
     * @public
     * @author Крайнов Дмитрий Олегович
+    * @demo SBIS3.CONTROLS.Demo.MyRadioGroup
     * @initial
     * <component data-component='SBIS3.CONTROLS.RadioGroup'>
     *    <option name="displayField">title</option>
