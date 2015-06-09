@@ -293,7 +293,22 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
 
       getEmptyRawData: function () {
          return {d: [], s: []};
-      }
+      },
+
+       preprareOrderParams: function(object, record, hierField, orderDetails){
+          var params = {
+             'Объект': object,
+             'ИдО': record.getKey(),
+             'ПорядковыйНомер': orderDetails.column || 'ПорНомер',
+             'Иерархия': hierField
+          };
+          if(orderDetails.after){
+             params['ИдОПосле'] = orderDetails.after;
+          } else {
+             params['ИдОДо'] = orderDetails.before;
+          }
+          return params;
+       }
 
    });
 

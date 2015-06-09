@@ -656,6 +656,9 @@
 @menu-link-text-color:                    @link-text-color;
 @menu-link-text-decoration:               @link-text-decoration;
 @menu-link-arrow-bg:                      @menu-button-arrow-bg;
+@menu-link-border-color: 						transparent;
+@menu-link-border-style: 						solid;
+@menu-link-border-width: 						0;
 
 @menu-link-hover-text-color:              @link-hover-text-color;
 @menu-link-hover-text-decoration:         @link-hover-text-decoration;
@@ -1243,7 +1246,7 @@
 @data-grid-row-selected-cell-text-color:        inherit;
 @data-grid-row-selected-cell-bg:                @data-grid-row-selected-bg;
 
-@data-grid-header-cell-cursor:                  pointer;
+@data-grid-header-cell-cursor:                  default;
 @data-grid-header-cell-text-alignment:          left;
 @data-grid-header-cell-height:                  14px;
 @data-grid-header-cell-padding:                 4px 6px;
@@ -1260,7 +1263,7 @@
 @data-grid-header-cell-hover-text-color:        @data-grid-header-cell-text-color;
 @data-grid-header-cell-hover-bg:                @data-grid-header-cell-bg;
 
-@data-grid-cell-cursor:                         @data-grid-header-cell-cursor;
+@data-grid-cell-cursor:                         pointer;
 @data-grid-cell-text-alignment:                 @data-grid-header-cell-text-alignment;
 @data-grid-cell-height:                         16px;
 @data-grid-cell-padding:                        6px 6px;
@@ -1276,8 +1279,32 @@
 @data-grid-cell-hover-text-color:               @data-grid-cell-text-color;
 @data-grid-cell-hover-bg:                       @data-grid-cell-bg;
 
-@data-grid-td-checkbox-width:                   24px;
-@data-grid-checkbox-margin:                     0;
+@data-grid-td-checkbox-width:                   16px;
+@data-grid-checkbox-margin:                     1px 0 0 5px;
+
+// ---------- //
+// PartScroll //
+// ---------- //
+@data-grid-partScroll-cursor:                   pointer;
+@data-grid-partScroll-wrapper-height:           1px;
+@data-grid-partScroll-notScrolledCell-Color:    @data-grid-bg;
+
+@data-grid-partScroll-thumb-height-hover:       6px;
+@data-grid-partScroll-thumb-height:             3px;
+@data-grid-partScroll-thumb-width:              96px;
+@data-grid-partScroll-thumb-color:              #313e78;
+@data-grid-partScroll-thumb-border-radius:      3px 3px;
+@data-grid-partScroll-thumb-margin:             20px;
+@data-grid-partScroll-thumb-zIndex:             2;
+@data-grid-partScroll-thumb-top-shift:          -1px;
+
+@data-grid-partScroll-arrowLeft-top-shift:      -12px;
+@data-grid-partScroll-arrowLeft-float:          left;
+@data-grid-partScroll-arrowLeft-zIndex:         2;
+
+@data-grid-partScroll-arrowRight-top-shift:     -12px;
+@data-grid-partScroll-arrowRight-left-shift:    4px;
+@data-grid-partScroll-arrowRight-float:         right;
 
 // --------------- //
 // OperationsPanel //
@@ -1336,6 +1363,39 @@
 @multiView-tile-selected-item-bg:                   #E7F0F9;
 @multiView-default-folder-bg:                       url("img/defaultFolder.png");
 @multiView-default-item-bg:                         url("img/defaultItem.png");
+// --------------- //
+// FastDataFilter  //
+// --------------- //
+@fastDataFilter-border:                           0;
+// --------------- //
+// CustomFilterMenu//
+// --------------- //
+@customFilterMenu-cursor:                         pointer;
+
+@customFilterMenu-iconWidth:                      16px;
+@customFilterMenu-iconHeight:                     16px;
+@customFilterMenu-box-sizing:                     border-box;
+
+@customFilterMenu-cross:                          url('img/cancelIcon-sprite.png');
+@customFilterMenu-cross-bg:                       @customFilterMenu-cross 0 -35px no-repeat;
+@customFilterMenu-cross-bg-hover:                 @customFilterMenu-cross 0 -19px no-repeat;
+
+@customFilterMenu-arrow:                          url('img/select-arrow.png');
+@pathFilter-ComboBox-arrowBg:                     @customFilterMenu-arrow 0 -52px no-repeat;
+@pathFilter-ComboBox-arrowBg-hover:               @customFilterMenu-arrow 0 -26px no-repeat;
+
+@customFilterMenu-captionWrapper-margin:          0 19px 0 19px;
+@customFilterMenu-min-height:                     24px;
+@customFilterMenu-shadow-hover:                   0 0 0 1px @gray-light-color;
+
+@customFilterMenu-picker-bg:                      @white-color;
+@customFilterMenu-picker-border:                  1px solid @gray-light-color;
+@customFilterMenu-picker-border-radius:           0;
+@customFilterMenu-picker-menu-item-padding:       4px;
+@customFilterMenu-picker-menu-item-margin:        0 8px;
+@customFilterMenu-picker-menu-item-color:         @white-color;
+@customFilterMenu-picker-menu-item-hover:         #E7F0F9;
+@customFilterMenu-picker-list-padding:            8px 0;//ProgressBar
 //ProgressBar
 @controls-ProgressBar-height:                       17px;
 @controls-ProgressBar-empty-bg:                     #F3F3F3;

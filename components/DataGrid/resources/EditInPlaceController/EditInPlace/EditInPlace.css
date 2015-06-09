@@ -1,11 +1,13 @@
 .controls-editInPlace {
   position: absolute;
   white-space: nowrap;
-  padding: 2px;
+  overflow: visible;
   z-index: 1;
 }
 .controls-editInPlace > div {
+  position: absolute;
   display: inline-block;
+  padding: 1px;
   vertical-align: top;
   height: 100%;
 }
@@ -16,13 +18,9 @@
 .controls-editInPlace > div .ws-component.controls-CheckBox {
   text-align: center;
 }
-.controls-editInPlace > div .ws-component.controls-TextBox {
-  padding-left: 1px;
-}
 .controls-editInPlace .controls-editInPlace__withEditor {
   background-color: white;
   cursor: text;
-  padding: 0 2px 0 0;
 }
 .controls-editInPlace .editInPlace__editor {
   width: 100%;

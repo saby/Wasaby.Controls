@@ -395,6 +395,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * Возвращает массив идентификаторов рекордов, являющихся потомками узла иерархии
        * @param parentId
        * @param getFullBranch {Boolean} вернуть всю ветку
+       * @param field {String} По какому полю строить индекс
        * @returns {Array}
        */
       //TODO: переименовать в getChildKeys
@@ -402,7 +403,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          if(Object.isEmpty(this._indexTree)) {
             this._reindexTree(field);
          }
-         parentId = parentId || null;
+         parentId = (typeof parentId != 'undefined') ? parentId : null;
          if (this._indexTree.hasOwnProperty(parentId)) {
             if (getFullBranch) {
                var curParent = parentId,
@@ -451,7 +452,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
             curLvl = 0;
          do {
             this.each(function (record) {
-               var parentKey = self.getParentKey(record, field) || null;
+               var parentKey = self.getParentKey(record, field);
+               parentKey = (typeof parentKey != 'undefined') ? parentKey : null;
                if ((parentKey) === curParentId) {
                   parents.push({record: record, lvl: curLvl});
 
@@ -470,9 +472,9 @@ define('js!SBIS3.CONTROLS.DataSet', [
                curLvl = a[0].lvl + 1;
             }
             else {
-               curParentId = null;
+               curParentId = undefined;
             }
-         } while (curParentId);
+         } while (typeof curParentId != 'undefined');
       },
 
       filter: function (filterCallback) {

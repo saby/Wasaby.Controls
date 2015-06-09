@@ -7,10 +7,35 @@
     margin-top: -3px;
   }
 
+  &__PathSelector{
+    min-height: 26px;
+    a:hover {
+      text-decoration: none;
+      color: #FF7033;
+    }
+  }
+
   &__PathSelector__block {
 
     &__arrow {
       cursor: pointer;
+      position: relative;
+      top: 2px;
+    }
+
+    &-last{
+      .controls-HierarchyDataGrid__PathSelector__block__arrow{
+        top: 7px;
+        background: url('img/path-filter-icon-back.png') 0 0;
+      }
+      &:hover{
+        .controls-HierarchyDataGrid__PathSelector__block__arrow{
+          color: #FF7033!important; /*перебиваем стили онлайна*/
+          background: url('img/path-filter-icon-back.png') 0 24px;
+        }
+      }
+      font-size: 15px;
+      top: -3px;
     }
 
     &__point {
@@ -18,18 +43,14 @@
       color: #0055BB;
       position: relative;
       top: -2px;
+      padding-right: 1px;
 
       &:hover{
-        color: #FF7033;
-      }
-
-      &--current {
-        font-size: 15px;
-        color: #000;
-
-        &:hover{
-          color: black;
-          cursor: default;
+        .controls-HierarchyDataGrid__PathSelector__block__arrow{
+          color: #FF7033!important; /*перебиваем стили онлайна*/
+        }
+        a {
+          color: #FF7033!important; /*перебиваем стили онлайна*/
         }
       }
     }

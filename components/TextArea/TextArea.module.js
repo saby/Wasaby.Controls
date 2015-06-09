@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          });
 
          this._inputField.bind('keydown', function(event){
-            if(event.shiftKey || event.altKey || event.ctrlKey || event.which != $ws._const.key.esc)
+            if(event.shiftKey || event.altKey || event.ctrlKey || event.which == $ws._const.key.esc)
                return true;
             event.stopPropagation();
             return true;

@@ -179,7 +179,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
       setPageSize: function(pageSize){
          this._options.pageSize = pageSize;
+         this._dropPageSave();
          this.reload(this._filter, this._sorting, 0, pageSize);
+      },
+      //переопределяется в HierarchyMixin
+      _setPageSave: function(pageNum){
+      },
+      //переопределяется в HierarchyMixin
+      _dropPageSave: function () {
       },
       //TODO Сделать публичным? вроде так всем захочется делать
       _isLoading: function () {
@@ -247,9 +254,17 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _redraw: function () {
-         this._clearItems();
-         var records = this._getRecordsForRedraw();
-         this._drawItems(records);
+         if (this._dataSet) {
+            this._clearItems();
+            var records = this._getRecordsForRedraw();
+            if (!records.length) {
+              //вроде надо опцию emptyHTML
+              this._container.append('<div class="controls-ListView__EmptyData"> нет данных </div>');
+            } else {
+              $('.controls-ListView__EmptyData', this._container).remove();
+            }
+            this._drawItems(records);
+         }
       },
 
       _getRecordsForRedraw : function() {
@@ -359,7 +374,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _appendItemTemplate: function (item, targetContainer, itemBuildedTpl, at) {
          if (at && (typeof at.at !== 'undefined')) {
             var atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).get(at.at);
-            $(atContainer).before(itemBuildedTpl);
+            if ($(atContainer).length) {
+               $(atContainer).before(itemBuildedTpl);
+            }
+            else {
+               atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).get(at.at - 1);
+               if ($(atContainer).length) {
+                  $(atContainer).after(itemBuildedTpl);
+               }
+            }
          }
          else {
             targetContainer.append(itemBuildedTpl);

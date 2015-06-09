@@ -34,8 +34,8 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
       },
       applyOperation: function(dataSet){
          var cfg = {
-            dataSet : dataSet || this._view._dataSet,
-            columns: this._view.getColumns()
+            dataSet : dataSet || this._getView()._dataSet,
+            columns: this._getView().getColumns()
          };
          if ( this._options.xsl ){
             cfg.xsl = this._options.xsl;

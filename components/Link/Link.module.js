@@ -33,6 +33,12 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
     *
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
+    * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
+    *
+    * @cssModifier controls-Button__ellipsis При нехватке ширины текст на кнопке оборвётся многоточием.
+    * !Важно: при добавлении этого класса сломается "Базовая линия".
+    *
+    * @css controls-Link__icon Класс для изменения отображения иконки кнопки.
     */
 
    var Link = ButtonBase.extend( /** @lends SBIS3.Engine.Link.prototype */ {
@@ -70,6 +76,11 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
          } else {
             this._container.html(caption);
          }
+      },
+
+      setEnabled: function(enabled){
+          Link.superclass.setEnabled.apply(this, arguments);
+          this._container.toggleClass('ws-hover-target', enabled);
       },
 
       setIcon: function(icon){
