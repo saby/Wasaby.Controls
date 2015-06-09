@@ -112,6 +112,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          var length = this.getCount();
          var data;
 
+         this._byId = {};
          for (var i = 0; i < length; i++) {
             data = this.getStrategy().at(this._rawData, i);
             this._byId[this.getRecordKeyByIndex(i)] = new Record({
@@ -451,31 +452,16 @@ define('js!SBIS3.CONTROLS.DataSet', [
             curParentId = null,
             parents = [],
             curLvl = 0;
-         do {
+         this._indexTree = {};
             this.each(function (record) {
                var parentKey = self.getParentKey(record, field);
                parentKey = (typeof parentKey != 'undefined') ? parentKey : null;
-               if ((parentKey) === curParentId) {
-                  parents.push({record: record, lvl: curLvl});
-
                   if (!this._indexTree.hasOwnProperty(parentKey)) {
                      this._indexTree[parentKey] = [];
                   }
 
                   this._indexTree[parentKey].push(record.getKey());
-               }
-
             }, false);
-
-            if (parents.length) {
-               var a = Array.remove(parents, 0);
-               curParentId = a[0]['record'].getKey();
-               curLvl = a[0].lvl + 1;
-            }
-            else {
-               curParentId = undefined;
-            }
-         } while (typeof curParentId != 'undefined');
       },
 
       filter: function (filterCallback) {
