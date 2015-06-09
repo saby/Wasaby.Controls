@@ -31,6 +31,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
       },
 
       $constructor: function () {
+        this._publish('onSetRoot')
          //чтобы не добавлять новый шаблон модуля просто добавим класс тут
          this.getContainer().addClass('controls-HierarchyDataGrid');
       },

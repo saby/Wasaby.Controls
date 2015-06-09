@@ -2083,13 +2083,11 @@ input[type="reset"]::-moz-focus-inner {
   padding-left: 8px;
 }
 .controls-PathSelector {
-  min-height: 26px;
-  height: 26px;
+  min-height: 27px;
 }
 .controls-PathSelector__point {
   cursor: pointer;
   position: relative;
-  margin-left: -3px;
   top: -1px;
 }
 .controls-PathSelector__point:hover .controls-PathSelector__title {
@@ -2098,31 +2096,31 @@ input[type="reset"]::-moz-focus-inner {
 .controls-PathSelector__point:hover .controls-PathSelector__arrow {
   color: #FF7033!important;
 }
-.controls-PathSelector__point-last {
-  margin-left: 0;
+.controls-PathSelector__point:first-child {
   top: 0;
 }
-.controls-PathSelector__point-last .controls-PathSelector__title {
+.controls-PathSelector__point:first-child .controls-PathSelector__title {
   font-size: 15px;
 }
-.controls-PathSelector__point-last .controls-PathSelector__arrow {
-  display: inline-block;
-  top: 7px;
+.controls-PathSelector__point:first-child .controls-PathSelector__arrow {
   background: url('img/path-filter-icon-back.png') 0 -1px;
   height: 24px;
   width: 24px;
+  top: 7px;
 }
-.controls-PathSelector__point-last:hover .controls-PathSelector__arrow {
+.controls-PathSelector__point:first-child .controls-PathSelector__arrow::before {
+  content: '';
+}
+.controls-PathSelector__point:first-child:hover .controls-PathSelector__arrow {
   background-position: 0 23px;
 }
 .controls-PathSelector__title {
   color: #0055BB;
-  margin-left: -5px;
+  padding-right: 1px;
 }
 .controls-PathSelector__arrow {
   position: relative;
   top: 2px;
-  padding-right: 1px;
 }
 .controls-UnitEditor__fieldWrapper {
   margin-right: 34px;
@@ -2270,6 +2268,9 @@ input[type="reset"]::-moz-focus-inner {
   right: 38px;
   top: 8px;
 }
+.controls-MoveDialog {
+  overflow-y: auto !important;
+}
 .controls-PrintMassDialog {
   left: 12px;
 }
@@ -2293,9 +2294,6 @@ input[type="reset"]::-moz-focus-inner {
   margin-top: 8px;
   position: absolute;
   right: 40px;
-}
-.controls-MoveDialog {
-  overflow-y: auto !important;
 }
 .controls-ProgressBar {
   height: 17px;
@@ -2401,6 +2399,17 @@ input[type="reset"]::-moz-focus-inner {
   height: 0;
   left: 0;
   overflow: visible;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing {
+  background: #00c795;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing .controls-DataGrid__th {
+  color: inherit;
+  background-color: #00c795;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing .controls-DataGrid__td {
+  color: #ffffff;
+  background-color: #00c795;
 }
 .controls-FastDataFilter {
   display: inline-block;

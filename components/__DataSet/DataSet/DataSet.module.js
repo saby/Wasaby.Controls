@@ -285,7 +285,14 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @param record
        */
       push: function (record) {
-         this._addRecords(record);
+        if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Record')){
+          record = new Record({
+            strategy: this.getStrategy(),
+            raw: record,
+            keyField: this._options.keyField
+          })
+        }
+        this._addRecords(record);
       },
 
       /**
