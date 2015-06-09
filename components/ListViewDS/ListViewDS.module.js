@@ -710,7 +710,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          //------------------------Paging---------------------
          _processPaging: function(){
             if (!this._pager) {
-
                var more = this._dataSet.getMetaData().more,
                      hasNextPage = this._hasNextPage(more),
                      pagingOptions ={
