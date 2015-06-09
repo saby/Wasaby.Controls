@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.HierarchyData
                   var nodeID = $(target).closest('.controls-ListView__item').data('id');
                   var rec = this._dataSet.getRecordByKey(nodeID);
                   if (rec.get(this._options.hierField + '@')) {
-                     this.toggleNode(nodeID);
+                     this.setCurrentRoot(nodeID);
                   }
                }
             } else {
