@@ -48,19 +48,30 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
       },
 
       setCurrentRoot: function(key) {
-         var self = this;
-         this._notify('onSetRoot', this._dataSet, key);
-         this._loadNode(key).addCallback(function(dataSet) {
-            if (!self._dataSet){
-               self._dataSet = dataSet;
-            } else {
-               self._dataSet.setRawData(dataSet.getRawData());
-            }
-            self._dataLoadedCallback();
-            self._notify('onDataLoad', dataSet);
-            var record;
-            self._curRoot = key;
-            self._redraw();
+        var self = this,
+          record = this._dataSet.getRecordByKey(key),
+          parentKey = record ? this._dataSet.getParentKey(record, this._options.hierField) : null,
+          hierarchy =[];
+          hierarchy.push(key);
+
+        while (parentKey != null){
+          hierarchy.push(parentKey);
+          record = this._dataSet.getRecordByKey(parentKey);
+          parentKey = this._dataSet.getParentKey(record, this._options.hierField);
+        }
+        for (var i = hierarchy.length - 1; i >= 0; i--){
+          this._notify('onSetRoot', this._dataSet, hierarchy[i]);
+        }
+        this._loadNode(key).addCallback(function(dataSet) {
+          if (!self._dataSet){
+            self._dataSet = dataSet;
+          } else {
+            self._dataSet.setRawData(dataSet.getRawData());
+          }
+          self._dataLoadedCallback();
+          self._notify('onDataLoad', dataSet);
+          self._curRoot = key;
+          self._redraw();
          })
       }
    });
