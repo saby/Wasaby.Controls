@@ -2368,9 +2368,6 @@ input[type="reset"]::-moz-focus-inner {
   right: 38px;
   top: 8px;
 }
-.controls-MoveDialog {
-  overflow-y: auto !important;
-}
 .controls-PrintMassDialog {
   left: 12px;
 }
@@ -2394,6 +2391,9 @@ input[type="reset"]::-moz-focus-inner {
   margin-top: 8px;
   position: absolute;
   right: 40px;
+}
+.controls-MoveDialog {
+  overflow-y: auto !important;
 }
 .controls__filterButton {
   height: 40px;
@@ -2610,17 +2610,6 @@ input[type="reset"]::-moz-focus-inner {
   height: 0;
   left: 0;
   overflow: visible;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing {
-  background: #f3f3f3;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing .controls-DataGrid__th {
-  color: inherit;
-  background-color: #f3f3f3;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing .controls-DataGrid__td {
-  color: inherit;
-  background-color: #f3f3f3;
 }
 .controls-editInPlace {
   position: absolute;
