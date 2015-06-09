@@ -49,6 +49,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
 
       setCurrentRoot: function(key) {
          var self = this;
+         this._notify('onSetRoot', this._dataSet, key);
          this._loadNode(key).addCallback(function(dataSet) {
             if (!self._dataSet){
                self._dataSet = dataSet;
