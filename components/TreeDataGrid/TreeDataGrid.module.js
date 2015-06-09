@@ -68,6 +68,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
                }
                else {
                   self._drawItem(record, at);
+                  self._drawItemsCallback();
                }
             }
          });
