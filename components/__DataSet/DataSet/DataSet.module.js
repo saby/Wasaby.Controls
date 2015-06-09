@@ -200,11 +200,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
                }
 
                if (merge) {
-                  //FixME: надо смержить свойства как то в existing.... + отслеживать состояние
-                  $ws.core.merge(existing.getRaw(), record.getRaw());
+                  existing.merge(record);
                }
-
-               records[i] = existing;
 
                // если это новый рекорд, добавим его в 'toAdd'
             } else if (add) {
@@ -212,7 +209,6 @@ define('js!SBIS3.CONTROLS.DataSet', [
                this._addReference(record);
             }
 
-            record = existing || record;
             recordMap[key] = true;
          }
 
@@ -227,7 +223,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
             if (toRemove.length) {
                //TODO: тут не надо их помечать как удаленными. а вырезать из DataSet
                //this._removeReference(toRemove);
-               //this.removeRecord(toRemove);
+               this.removeRecord(toRemove);
             }
          }
 
