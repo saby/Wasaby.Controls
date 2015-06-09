@@ -23,11 +23,15 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
          var s = data.s,
             index;
          for (var i = 0, l = s.length; i < l; i++) {
-            if (s[i]['t'] == 'Идентификатор') {
+            if (s[i]['n'][0] == '@') {
                index = i;
                break;
             }
          }
+         if (index === undefined) {
+            index = 0;
+         }
+         
          return s[index]['n'];
       },
 

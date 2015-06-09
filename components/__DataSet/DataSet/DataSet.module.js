@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          var self = this;
          var mark = function (key) {
             var record = self.getRecordByKey(key);
-            record.toggleStateDeleted(true);
+            record.setDeleted(true);
          };
 
          if (key instanceof Array) {
@@ -117,6 +117,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
             this._byId[this.getRecordKeyByIndex(i)] = new Record({
                strategy: this.getStrategy(),
                raw: data,
+               isCreated: true,//считаем, что сырые данные пришли из реального источника
                keyField: this._keyField,
                onChangeHandler: this._onRecordChange.bind(this)
             });
@@ -341,7 +342,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
       /**
        *
        * @param iterateCallback
-       * @param status {'all'|'deleted'|'changed'} по умолчанию все, кроме удаленных
+       * @param status {'all'|'created'|'deleted'|'changed'} по умолчанию все, кроме удаленных
        */
       each: function (iterateCallback, status) {
          if (!this._isLoaded) {
@@ -356,18 +357,23 @@ define('js!SBIS3.CONTROLS.DataSet', [
                case 'all':
                   iterateCallback.call(this, record);
                   break;
+               case 'created':
+                  if (record.isCreated()) {
+                     iterateCallback.call(this, record);
+                  }
+                  break;
                case 'deleted':
-                  if (record.getMarkStatus() == 'deleted') {
+                  if (record.isDeleted()) {
                      iterateCallback.call(this, record);
                   }
                   break;
                case 'changed':
-                  if (record.getMarkStatus() == 'changed') {
+                  if (record.isChanged()) {
                      iterateCallback.call(this, record);
                   }
                   break;
                default :
-                  if (record.getMarkStatus() !== 'deleted') {
+                  if (!record.isDeleted()) {
                      iterateCallback.call(this, record);
                   }
             }
