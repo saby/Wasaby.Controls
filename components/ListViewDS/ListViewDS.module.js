@@ -216,10 +216,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
             this._container.mouseup(function (e) {
                if (e.which == 1) {
-                  var
-                     $target = $(e.target),
-                     target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
-                  if (target.length && self._getItemsContainer().find(target).length) {
+                  var $target = $(e.target),
+                      target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
+                  if (target.length && $.contains(self._getItemsContainer()[0], target[0])) {
                      var id = target.data('id'), data = self._dataSet.getRecordByKey(id);
                      self._elemClickHandler(id, data, e.target);
                   }
