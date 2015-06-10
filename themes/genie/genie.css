@@ -1891,7 +1891,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ListView.controls-ListView__multiselect .controls-ListView__itemCheckBox {
   display: inline-block;
 }
-.controls-ListView.controls-ListView__multiselect .controls-ListView__item__selected .controls-ListView__itemCheckBox {
+.controls-ListView.controls-ListView__multiselect .controls-ListView__item__multiSelected .controls-ListView__itemCheckBox {
   background: url('img/CheckBox-sprite.png') 0 -32px;
 }
 .controls-ListView .controls-ListView-scrollIndicator {
@@ -1974,10 +1974,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr {
   background: transparent;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected {
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__multiSelected {
   background-color: transparent;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected .controls-DataGrid__td {
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__multiSelected .controls-DataGrid__td {
   color: inherit;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__hoveredItem {

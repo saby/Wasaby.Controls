@@ -1,7 +1,7 @@
-define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.HierarchyDataGrid', 'js!SBIS3.CONTROLS.MultiViewMixin'], function(DataGrid, MultiViewMixin) {
+define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.TreeDataGrid', 'js!SBIS3.CONTROLS.MultiViewMixin'], function(TreeDataGrid, MultiViewMixin) {
    'use strict';
 
-   var HierarchyMultiView = DataGrid.extend([MultiViewMixin],/** @lends SBIS3.CONTROLS.DataGrid.prototype*/ {
+   var HierarchyMultiView = TreeDataGrid.extend([MultiViewMixin],/** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
 
       _elemClickHandler: function (id, data, target) {
          if (this._options.viewMode == 'table') {

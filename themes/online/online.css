@@ -1891,7 +1891,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ListView.controls-ListView__multiselect .controls-ListView__itemCheckBox {
   display: inline-block;
 }
-.controls-ListView.controls-ListView__multiselect .controls-ListView__item__selected .controls-ListView__itemCheckBox {
+.controls-ListView.controls-ListView__multiselect .controls-ListView__item__multiSelected .controls-ListView__itemCheckBox {
   background: url('img/CheckBox.png') 0 49px;
 }
 .controls-ListView .controls-ListView-scrollIndicator {
@@ -1974,10 +1974,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr {
   background: transparent;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected {
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__multiSelected {
   background-color: transparent;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected .controls-DataGrid__td {
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__multiSelected .controls-DataGrid__td {
   color: inherit;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__hoveredItem {
@@ -2197,7 +2197,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MultiView .controls-MultiView__tileItem.controls-ListView__folder:hover .controls-MultiView__tileTitle {
   text-decoration: underline;
 }
-.controls-MultiView .controls-MultiView__tileItem.controls-ListView__item__selected {
+.controls-MultiView .controls-MultiView__tileItem.controls-ListView__item__multiSelected {
   background: #e7f0f9;
 }
 .controls-MultiView .controls-MultiView__tileItem .controls-MultiView__tileImg {
@@ -2812,7 +2812,4 @@ input[type="reset"]::-moz-focus-inner {
   background-image: url('img/rowSelect.png');
   background-position: left top;
   background-repeat: repeat-y;
-}
-.controls-ListView__multiselect .controls-DataGrid__td:first-child {
-  background: none;
 }

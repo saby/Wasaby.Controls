@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
         while (parentKey != null){
           hierarchy.push(parentKey);
           record = this._dataSet.getRecordByKey(parentKey);
-          parentKey = this._dataSet.getParentKey(record, this._options.hierField);
+          parentKey = record ? this._dataSet.getParentKey(record, this._options.hierField) : null;
         }
         for (var i = hierarchy.length - 1; i >= 0; i--){
           this._notify('onSetRoot', this._dataSet, hierarchy[i]);

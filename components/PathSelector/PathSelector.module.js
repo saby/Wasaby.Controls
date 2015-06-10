@@ -16,13 +16,26 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       $constructor: function () {
+         var self = this;
          if (this._options.linkedView){
-            this._options.linkedView._getChannel().subscribe('onSetRoot', this._rootChangeHandler, this);
+            this._options.linkedView.subscribe('onSetRoot', function(event, dataSet, id){
+               self._rootChangeHandler(dataSet, id);
+            }, this);
          }
+
+         this._container.bind('mousedown', function(e){
+            var target = $(e.target),
+            point = target.closest('.controls-PathSelector__point');
+            if (point.length) {
+               self._onPointClick(point.data('parentId'));
+            }
+         });
+
          //инициализируем dataSet
          this.setItems([]);
       },
 
+      //придрот что бы фэйковый див не ломал :first-child стили
       _moveFocusToFakeDiv: function() {
 
       },
@@ -32,19 +45,21 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             this._options.linkedView.unsubscribe('onSetRoot', this._rootChangeHandler);
          }
          this._options.linkedView = view;
-         this._options.linkedView._getChannel().subscribe('onSetRoot', this._rootChangeHandler, this);
+         this._options.linkedView.subscribe('onSetRoot', function(event, dataSet, id){
+               self._rootChangeHandler(dataSet, id);
+            }, this);
       },
 
-      _rootChangeHandler: function(event, dataSet, key){
+      _rootChangeHandler: function(dataSet, key){
          if (key){
             var displayField = this._options.linkedView._options.displayField, //Как то не очень
                hierField = this._options.linkedView._options.hierField, //И это не очень
                record = dataSet.getRecordByKey(key),
-               parentId = dataSet.getParentKey(record, hierField),
-               title = record.get(displayField);
+               parentId = record ? dataSet.getParentKey(record, hierField) : null,
+               title = record ? record.get(displayField) : '';
 
             //Пушим ноды только если таких еще нет TODO: возможно проверка не нужна, так как датасет мержит рекорды
-            if (!this._dataSet.getRecordByKey('id')) {
+            if (!this._dataSet.getRecordByKey(key)) {
                this._dataSet.push({'title': title, 'parentId': parentId, 'id': key});
             }
          }
@@ -57,9 +72,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
 
       _addItemAttributes: function(container, item){
          var self = this;
-         container.bind('click', function(){
-            self._onPointClick(item.get('parentId'))
-         });
+         container.data('parentId', item.get('parentId'))
          if (item.last){
             $('.controls-PathSelector__arrow', point).removeClass('icon-Back icon-16 icon-primary action-hover');
             point.addClass('controls-PathSelector__point-last');
