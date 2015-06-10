@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.Demo.MyRadioGroup', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Demo.MyRadioGroup', 'css!SBIS3.CONTROLS.Demo.MyRadioGroup', 'js!SBIS3.CONTROLS.RadioGroup'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.CONTROLS.Demo.MyRadioGroup', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Demo.MyRadioGroup', 'css!SBIS3.CONTROLS.Demo.MyRadioGroup', 'js!SBIS3.CONTROLS.RadioGroup', 'js!SBIS3.CORE.PrintPlugin', 'js!SBIS3.CORE.ToolbarPlugin', 'js!SBIS3.CORE.AtPlaceEditPlugin', 'js!SBIS3.CORE.ResultsPlugin'], function(CompoundControl, dotTplFn) {
    /**
     * SBIS3.CONTROLS.Demo.MyRadioGroup
     * @class SBIS3.CONTROLS.Demo.MyRadioGroup
