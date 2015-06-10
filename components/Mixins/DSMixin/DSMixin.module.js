@@ -100,6 +100,25 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               */
             pageSize: null,
             /**
+             * cfg {Object} Настройка группировки записей. Если задать только поле записи(field), то будет группировать по типу лесенки.
+             * Т.е. перед каждым блоком с одинаковыми данными будет создавать блок, для которого можно указать шаблон
+             * Внимание! Для правильной работы группировки данные уже должны прийти отсортированные!
+             * @example
+             * <pre>
+             *    <options name="groupBy">
+             *        <option name="field">ДатаВремя</option>
+             *    </options>
+             * </pre>
+             * @example
+             * <pre>
+             *    <options name="groupBy">
+             *        <option name="field">ДатаВремя</option>
+             *         <option name="method" type="function">js!SBIS3.CONTROLS.Demo.MyListViewDS:prototype.myGroupBy</option>
+             *    </options>
+             * </pre>
+             */
+            groupBy : {},
+            /**
              * @cfg {String|HTMLElement|jQuery} что отображается при отсутствии данных 
              */
             emptyHTML: ''
@@ -381,8 +400,21 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _drawItem: function (item, at) {
          var
+               groupBy = this._options.groupBy,
             targetContainer,
-            itemInstance;
+            itemInstance,
+            isGroup;
+         if (!Object.isEmpty(groupBy)){
+            isGroup = groupBy.method.apply(this, [item, at]);
+            if (isGroup){
+               targetContainer = this._getTargetContainer(item);
+               itemInstance = this._buildTplItem(item, groupBy.template(item));
+               if (groupBy.render && typeof groupBy.render === 'function') {
+                  itemInstance = groupBy.render.apply(this, [item, itemInstance]);
+               }
+               this._appendItemTemplate(item, targetContainer, itemInstance, at);
+            }
+         }
          targetContainer = this._getTargetContainer(item);
          itemInstance = this._createItemInstance(item, targetContainer, at);
          this._addItemAttributes(itemInstance, item);
@@ -399,11 +431,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _createItemInstance: function (item, targetContainer, at) {
+         return this._buildTplItem(item, this._getItemTemplate(item));
+      },
+      _buildTplItem: function(item, itemTpl){
          var
-            buildedTpl,
-            dotTemplate,
-            itemTpl = this._getItemTemplate(item);
-
+               buildedTpl,
+               dotTemplate;
          if (typeof itemTpl == 'string') {
             dotTemplate = itemTpl;
          }
