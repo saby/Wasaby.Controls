@@ -12,6 +12,29 @@ define('js!SBIS3.CONTROLS.DSMixin', [
     */
 
    var DSMixin = /**@lends SBIS3.CONTROLS.DSMixin.prototype  */{
+       /**
+        * @event onDrawItems После отрисовки всех элементов коллекции
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @example
+        * <pre>
+        *     Menu.subscribe('onDrawItems', function(){
+        *        if (Menu.getItemsInstance(2).getCaption() == 'Входящие'){
+        *           Menu.getItemsInstance(2).destroy();
+        *        }
+        *     });
+        * </pre>
+        */
+       /**
+        * @event onDataLoad При загрузке данных
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Array} dataSet Набор данных.
+        * @example
+        * <pre>
+        *     myComboBox.subscribe('onDataLoad', function(eventObject) {
+        *        title.setText('Загрузка прошла успешно');
+        *     });
+        * </pre>
+        */
       $protected: {
          _itemsInstances: {},
          _filter: undefined,
@@ -73,6 +96,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               * <pre>
               *     <option name="pageSize">10</option>
               * </pre>
+              * @see setPageSize
               */
             pageSize: null
          },
@@ -123,9 +147,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @example
         * <pre>
         *     var arrayOfObj = [
-        *        {'@Заметка': 1, 'Содержимое': 'Поиграть в бильярд', 'Завершена': false},
-        *        {'@Заметка': 2, 'Содержимое': 'Посидеть в планшете', 'Завершена': false},
-        *        {'@Заметка': 3, 'Содержимое': 'Купить булку', 'Завершена': true}
+        *        {'@Заметка': 1, 'Содержимое': 'Пункт 1', 'Завершена': false},
+        *        {'@Заметка': 2, 'Содержимое': 'Пункт 2', 'Завершена': false},
+        *        {'@Заметка': 3, 'Содержимое': 'Пункт 3', 'Завершена': true}
         *     ];
         *     var ds1 = new StaticSource({
         *        data: arrayOfObj,
@@ -141,8 +165,18 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._dataSet = null;
          this.reload();
       },
-/**
-       * Метод получения набора данных, который в данный момент установлен в представлении
+      /**
+       * Метод получения набора данных, который в данный момент установлен в представлении.
+       * @example
+       * <pre>
+       *     var dataSet = myComboBox.getDataSet(),
+       *     count = dataSet.getCount();
+       *     if (count > 1) {
+	   *        title.setText('У вас есть выбор: это хорошо!');
+       *     }
+       * </pre>
+       * @see dataSource
+       * @see setDataSource
        */
       getDataSet: function() {
          return this._dataSet;
@@ -177,6 +211,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             self._redraw();
          });
       },
+       /**
+        * Метод установки количества элементов на одной странице.
+        * @param pageSize Количество записей.
+        * @example
+        * <pre>
+        *     myListView.setPageSize(20);
+        * </pre>
+        * @see pageSize
+        */
       setPageSize: function(pageSize){
          this._options.pageSize = pageSize;
          this._dropPageSave();

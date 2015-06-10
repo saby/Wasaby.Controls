@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.DropdownListMixin', [],
     function () {
         /**
-         * @mixin SBIS3.CONTROLS.MenuButtonMixin
+         * @mixin SBIS3.CONTROLS.DropdownListMixin
          * @public
          */
         'use strict';
