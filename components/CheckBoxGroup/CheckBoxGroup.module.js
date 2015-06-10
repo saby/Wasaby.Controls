@@ -34,12 +34,12 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
    var CheckBoxGroup = CheckBoxGroupBase.extend( /** @lends SBIS3.CONTROLS.CheckBoxGroup.prototype */ {
       _dotTplFn : dotTplFn,
        /**
-        * @typedef {Object} GroupItems
-        * @property {String} id Идентификатор.
-        * @property {String} title Подпись.
+        * @typedef {Object} CheckBoxGroupItems
+        * @property {String} id Идентификатор элемента группы.
+        * @property {String} title Подпись у элемента группы.
         */
        /**
-        * @cfg {GroupItems[]} Набор исходных данных, по которому строится отображение
+        * @cfg {CheckBoxGroupItems[]} Набор исходных данных, по которому строится отображение группы
         * @name SBIS3.CONTROLS.CheckBoxGroup#items
         * @example
         * <pre>
