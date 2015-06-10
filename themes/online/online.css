@@ -838,7 +838,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Menu__Popup .controls-Menu__hasChild:after {
   content: ' ';
   position: absolute;
-  top: 3px;
+  top: 4px;
   right: 5px;
   width: 16px;
   height: 16px;
