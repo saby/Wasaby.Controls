@@ -144,8 +144,8 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _drawSelectedItems : function(idArray) {
-            $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
-            $(".controls-ListView__item[data-id='" + idArray[0] + "']", this._container).addClass('controls-ListView__item__selected');
+            $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__multiSelected');
+            $(".controls-ListView__item[data-id='" + idArray[0] + "']", this._container).addClass('controls-ListView__item__multiSelected');
          },
 
          setElemClickHandler : function(method){

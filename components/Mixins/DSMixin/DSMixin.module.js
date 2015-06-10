@@ -98,7 +98,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               * </pre>
               * @see setPageSize
               */
-            pageSize: null
+            pageSize: null,
+            /**
+             * @cfg {String|HTMLElement|jQuery} что отображается при отсутствии данных 
+             */
+            emptyHTML: ''
          },
          _loader: null
       },
@@ -299,12 +303,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _redraw: function () {
          if (this._dataSet) {
             this._clearItems();
-            var records = this._getRecordsForRedraw();
-            if (!records.length) {
-              //вроде надо опцию emptyHTML
-              this._container.append('<div class="controls-ListView__EmptyData"> нет данных </div>');
+            var records = this._getRecordsForRedraw(),
+              container = this._getItemsContainer();
+            if (!records.length && this._options.emptyHTML) {
+                emptyHTML = $('<span></span>').append(this._options.emptyHTML).addClass(' controls-ListView__EmptyData');
+              $('.controls-ListView__EmptyData', container).remove();
+              container.append(emptyHTML);
             } else {
-              $('.controls-ListView__EmptyData', this._container).remove();
+              $('.controls-ListView__EmptyData', container).remove();
             }
             this._drawItems(records);
          }

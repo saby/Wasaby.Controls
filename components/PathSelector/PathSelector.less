@@ -1,0 +1,46 @@
+.controls-PathSelector {
+	min-height: 27px;
+	&__point{
+		cursor: pointer;
+		position: relative;
+		top: -1px;
+		&:hover{
+			.controls-PathSelector__title{
+				color: #FF7033;
+			}
+			.controls-PathSelector__arrow{
+				color: #FF7033!important;
+			}
+		}
+		&:first-child{
+			top: 0;
+			.controls-PathSelector__title{
+				font-size: 15px;
+			}
+			.controls-PathSelector__arrow{
+				&::before{
+					content: '';
+				}
+				background: url('img/path-filter-icon-back.png') 0 -1px;
+				height: 24px;
+				width: 24px;
+				top: 7px;
+			}
+			&:hover{
+				.controls-PathSelector__arrow{
+					background-position: 0 23px;
+				}
+			}
+		}
+	}
+}
+
+.controls-PathSelector__title{
+	color: #0055BB;
+	padding-right: 1px;
+}
+
+.controls-PathSelector__arrow{
+	position: relative;
+	top: 2px;
+}

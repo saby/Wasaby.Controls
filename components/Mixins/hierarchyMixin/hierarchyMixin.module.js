@@ -21,26 +21,16 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
              * */
             displayType : 'all'
 
-         },
-         //TODO что если корень не null ? (с прошлого кода проблема та же самая)
-         _pageSaver: {
-            'null': 0
          }
       },
       $constructor: function () {
          this._curRoot = this._options.root;
          this._filter = this._filter || {};
-         if (this._options.hierField) {
-            this._filter[this._options.hierField] = this._options.root;
-         }
+         this._filter[this._options.hierField] = this._options.root;
       },
 
       setHierField: function (hierField) {
          this._options.hierField = hierField;
-         this._filter = this._filter || {};
-         if (this._options.hierField) {
-            this._filter[this._options.hierField] = this._curRoot;
-         }
       },
 
       // обход происходит в том порядке что и пришли
@@ -126,43 +116,18 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          var filter = this._filter || {};
          filter[this._options.hierField] = key;
          this._filter = filter;
-         //Это специально! По переходу в корень пользователь как бы всегда хочет видеть первую страницу
-         if (key == this._options.root) {
-            this._dropPageSave();
-         }
          //узел грузим с 0-ой страницы
-         this._offset = this._pageSaver[key] * this._options.pageSize || 0;
+         this._offset = 0;
          return this._dataSource.query(filter, undefined, this._offset, this._limit);
-      },
-      _setPageSave: function(pageNum){
-         this._pageSaver[this._curRoot] = pageNum - 1;
-      },
-      _dropPageSave: function(){
-         var root = this._options.root;
-         this._pageSaver = {};
-         this._pageSaver[root] = 0;
       },
 
       toggleNode: function(key) {
          this.openNode(key);
       },
-
-
-
-      _nodeDataLoaded: function (key, dataSet) {
-         this._notify('onDataLoad', dataSet);
-         this._setCurRootNode(key, dataSet);
-         this._dataLoadedCallback();
-      },
-
-      _setCurRootNode: function(key, dataSet) {
-         if (!this._dataSet){
-            this._dataSet = dataSet;
-         } else {
-            this._dataSet.setRawData(dataSet.getRawData());
-         }
-         this._curRoot = key;
-         this._redraw();
+      _dropPageSave: function(){
+         var root = this._options.root;
+         this._pageSaver = {};
+         this._pageSaver[root] = 0;
       }
 
    };
