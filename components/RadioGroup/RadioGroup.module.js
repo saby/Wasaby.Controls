@@ -36,8 +36,8 @@ function(RadioGroupBase, dotTpl) {
     * @ignoreOptions className extendedTooltip handlers linkedContext
     *
     * @ignoreMethods applyState applyEmptyState getClassName findParent getEventHandlers  getEvents getExtendedTooltip
-    * @ignoreOptions getOwner getOwnerId getTopParent getUserData makeOwnerName hasEvent hasEventHandlers once setOwner
-    * @ignoreOptions sendCommand setClassName setExtendedTooltip setStateKey setUserData subscribeTo unsubscribeFrom
+    * @ignoreMethods getOwner getOwnerId getTopParent getUserData makeOwnerName hasEvent hasEventHandlers once setOwner
+    * @ignoreMethods sendCommand setClassName setExtendedTooltip setStateKey setUserData subscribe unsubscribeFrom
     *
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onTooltipContentRequest
     */
