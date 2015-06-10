@@ -8,9 +8,22 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного.
     * @mixin SBIS3.CONTROLS.Selectable
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var Selectable = /**@lends SBIS3.CONTROLS.Selectable.prototype  */{
+       /**
+        * @event onSelectedItemChange При смене выбранных элементов
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {String} id Идентификатор выбранного пункта.
+        * @example
+        * <pre>
+        *     RadioButtonGroup.subscribe('onSelectedItemChange', function(event, id){
+        *        TextBox.setText('Selected item id: ', id);
+        *     })
+        * </pre>
+        * @see selectedKey
+        */
       $protected: {
          _options: {
             /**
@@ -21,14 +34,20 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
              * </pre>
              * @see setSelectedKey
              * @see getSelectedKey
-             * @see setSelectedItem
-             * @see getSelectedItem
              */
             selectedKey: null,
             /**
-             * TODO Выбранный элемент
+             * @deprecated Будет удалено с 3.7.3. Используйте {@link selectedKey}.
+             * @see selectedKey
              */
             selectedItem : null,
+             /**
+              * @cfg {Boolean} Разрешить отсутствие выбранного элемента в группе
+              * @example
+              * <pre>
+              *     <option name="allowEmptySelection">false</option>
+              * </pre>
+              */
             allowEmptySelection : true
          }
       },
@@ -50,6 +69,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
       /**
        * Метод-заглушка. Будет переделан на установку самого элемента, а не его id
        * @param id
+       * @deprecated Будет удалено с 3.7.3. Используйте {@link setSelectedKey}.
        */
       setSelectedItem: function(id) {
          //TODO изменить логику на установку выбранного элемента
@@ -59,6 +79,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
 
       /**
        * Метод-заглушка. Будет переделан на возвращение самого элемента, а не его id
+       * @deprecated Будет удалено с 3.7.3. Используйте {@link getSelectedKey}.
        */
       getSelectedItem : function() {
          //TODO изменить логику на возврат выбранного элемента
@@ -70,7 +91,8 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
        * @param {String} id Идентификатор элемента, который нужно установить в качестве выбранного.
        * @example
        * <pre>
-       *     MyComboBox.setSelectedKey('3');
+       *     var newKey = (someValue > 0) ? 'positive' : 'negative';
+       *     myComboBox.setSelectedKey(newKey);
        * </pre>
        * @see selectedItem
        * @see getSelectedKey
@@ -84,14 +106,34 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
          this._drawSelectedItem(this._options.selectedKey);
          this._notifySelectedItem(this._options.selectedKey);
       },
-
+       /**
+        * Метод получения идентификатора следующего элемента.
+        * @returns {*|String} Идентификатор следующего элемента.
+        * @example
+        * <pre>
+        *     var key = myComboBox.getNextItemIndex();
+        *     myComboBox.setSelectedKey(key);
+        * </pre>
+        * @see  getPrevItemIndex
+        */
       getNextItemIndex: function() {
          var
             current = parseInt(this.getSelectedIndex(), 10),
             next = this._dataSet.getRecordByKey(current + 1);
          return next !== undefined ? next.getKey() : false;
       },
-
+       /**
+        * Метод получения идентификатора предыдущего элемента
+        * @returns {*|String} Идентификатор предыдущего элемента.
+        * @example
+        * <pre>
+        *     var key = myComboBox.getPrevItemIndex();
+        *     if (key !== 'old') {
+        *        myComboBox.setSelectedKey(key);
+        *     }
+        * </pre>
+        * @see getNextItemIndex
+        */
       getPrevItemIndex: function() {
          var
             current = parseInt(this.getSelectedIndex(), 10),
@@ -103,7 +145,10 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
        * Получить индекс выбранного элемента
        * @example
        * <pre>
-       *     MyComboBox.getSelectedKey();
+       *     var key = myComboBox.getPrevItemIndex();
+       *     if (key !== 'old') {
+       *        myComboBox.setSelectedKey(key);
+       *     }
        * </pre>
        * @see selectedItem
        * @see setSelectedKey
