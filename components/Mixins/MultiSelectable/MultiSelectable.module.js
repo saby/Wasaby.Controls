@@ -7,6 +7,19 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
     */
 
    var MultiSelectable = /**@lends SBIS3.CONTROLS.MultiSelectable.prototype  */{
+       /**
+        * @event onSelectedItemsChange
+        *
+        * @param idArray Массив выбранных элементов.
+        * @see selectedKeys
+        * @see setSelectedKeys
+        * @see setSelectedItemsAll
+        * @see addItemsSelection
+        * @see removeItemsSelection
+        * @see removeItemsSelectionAll
+        * @see toggleItemsSelection
+        * @see toggleItemsSelectionAll
+        */
       $protected: {
          _options: {
             /**
@@ -28,12 +41,25 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
              *     </options>
              * </pre>
              * @see multiselect
+             * @see allowEmptySelection
+             * @see setSelectedKeys
+             * @see getSelectedKeys
              */
             selectedKeys : [],
             /**
              * TODO Выбранные элементы
+             * @deprecated Будет удалено с 3.7.3. Используйте {@link selectedKeys}.
              */
             selectedItems : [],
+             /**
+              * @cfg {Boolean} Разрешить отсутствие выбранного элемента в группе
+              * @example
+              * <pre>
+              *     <option name="allowEmptySelection">false</option>
+              * </pre>
+              * @see selectedKeys
+              * @see removeItemsSelectionAll
+              */
             allowEmptySelection : true
          }
       },
@@ -63,6 +89,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       /**
        * Метод-заглушка. Будет переделан на установку самих элементов, а не их id
+       * @deprecated Будет удалено с 3.7.3. Используйте {@link setSelectedKeys}.
        */
       setSelectedItems: function(idArray) {
          //TODO изменить логику на установку выбранных элементов
@@ -72,6 +99,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       /**
        * Метод-заглушка. Будет переделан на получение самих элементов, а не их id
+       * @deprecated Будет удалено с 3.7.3. Используйте {@link getSelectedKeys}.
        */
       getSelectedItems: function() {
          //TODO изменить логику на получение выбранных элементов
@@ -81,7 +109,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       /**
        * Устанавливает выбранные элементы по id
-       * @param idArray
+       * @param idArray Массив идентификаторов выбранных элементов.
+       * @see getSelectedKeys
+       * @see removeItemsSelection
+       * @see addItemsSelection
        */
       setSelectedKeys : function(idArray) {
          if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
@@ -109,6 +140,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       /**
        * Устанавливает все элементы выбранными
+       * @see removeItemsSelection
+       * @see removeItemsSelectionAll
+       * @see getSelected
+       * @see addItemsSelection
+       * @see multiselect
        */
       setSelectedItemsAll : function() {
          if (this._dataSet) {
@@ -123,6 +159,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       /**
        * Получает индексы выбранных элементов
+       * @see selectedKeys
+       * @see setSelectedKeys
+       * @see addItemsSelection
+       * @see multiselect
        */
       getSelectedKeys : function() {
          return this._options.selectedKeys;
@@ -131,6 +171,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       /**
        * Добавить элементы в набор выбранных
        * @param idArray
+       * @see setSelectedKeys
+       * @see getSelectedKeys
+       * @see setSelectedItemsAll
+       * @see removeItemsSelection
+       * @see removeItemsSelectionAll
+       * @see multiselect
        */
       addItemsSelection : function(idArray) {
          if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
@@ -161,6 +207,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       /**
        * Удаляет элементы из набора выбранных
        * @param idArray
+       * @see removeItemsSelectionAll
+       * @see getSelectedKeys
+       * @see allowEmptySelection
        */
       removeItemsSelection : function(idArray) {
          if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
@@ -183,6 +232,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       /**
        * Убрать все элементы из набора выбранных
+       * @see removeItemsSelection
+       * @see getSelectedKeys
+       * @see toggleItemsSelectionAll
+       * @see allowEmptySelection
        */
       removeItemsSelectionAll : function() {
          this.setSelectedKeys([]);
@@ -191,6 +244,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       /**
        * Меняет состояние элементов на противоположное
        * @param idArray
+       * @see getSelectedKeys
+       * @see setSelectedKeys
+       * @see toggleItemsSelectionAll
+       * @see multiselect
        */
       toggleItemsSelection : function(idArray) {
          if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
@@ -227,6 +284,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       /**
        * Меняет состояние выбранности всех элементов на противоположное
+       * @see removeItemsSelectionAll
+       * @see toggleItemsSelection
+       * @see multiselect
+       * @see allowEmptySelection
        */
       toggleItemsSelectionAll : function() {
          if (this._dataSet) {
