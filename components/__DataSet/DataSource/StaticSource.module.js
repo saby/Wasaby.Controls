@@ -68,6 +68,14 @@ define('js!SBIS3.CONTROLS.StaticSource', [
       },
 
       update: function (record) {
+         if (!record.isCreated()) {
+            var key = record.getKey();
+            if (!key) {
+               record.set(record.getKeyField(), $ws.helpers.randomId('k'));
+            }
+            record.setCreated(true);
+         }
+         record.setChanged(false);
          var def = new $ws.proto.Deferred();
          def.callback(true);
          return def;

@@ -241,6 +241,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
          init: function () {
             ListViewDS.superclass.init.call(this);
+            var localPageSize = $ws.helpers.getLocalStorageValue('ws-page-size');
+            this._options.pageSize = !this._options.ignoreLocalPageSize  && localPageSize ? localPageSize : this._options.pageSize;
             // запросим данные из источника
             this.reload();
          },
@@ -717,8 +719,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          //------------------------Paging---------------------
          _processPaging: function(){
             if (!this._pager) {
-               var localPageSize = $ws.helpers.getLocalStorageValue('ws-page-size');
-               this._options.pageSize = !this._options.ignoreLocalPageSize  && localPageSize ? localPageSize : this._options.pageSize;
                var more = this._dataSet.getMetaData().more,
                      hasNextPage = this._hasNextPage(more),
                      pagingOptions ={

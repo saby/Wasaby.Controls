@@ -1,15 +1,23 @@
 define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], function(FloatArea) {
    /**
     * Миксин, умеющий отображать выдающий вниз блок.
-    * Задается контент (протектед методом каким-то) и методы которые позволяют открывать, закрывать блок.
+    * Задаётся контент и методы, позволяющие открывать, закрывать блок.
     * @mixin SBIS3.CONTROLS.PickerMixin
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
    var PickerMixin = /** @lends SBIS3.CONTROLS.PickerMixin.prototype */{
       $protected: {
          _picker : null,
          _border : 0,
          _options: {
+             /**
+              * @cfg {String} Имя css-класса, который будет применён к контейнеру выпадающего блока.
+              * @example
+              * <pre>
+              *     <option name="pickerClassName">control-MyComboBox__ComboBox__position</option>
+              * </pre>
+              */
             pickerClassName : ''
          }
       },
@@ -74,7 +82,13 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
       },
 
       /**
-       * Показывает выпадающий блок
+       * Метод показывает выпадающий блок.
+       * @example
+       * <pre>
+       *     MenuButton.subscribe('onActivated', function(){
+       *        MenuButton.showPicker();
+       *     })
+       * </pre>
        * @see hidePicker
        * @see togglePicker
        */
@@ -87,7 +101,13 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
          this._picker.show();
       },
       /**
-       * Скрывает выпадающий блок
+       * Метод скрывает выпадающий блок.
+       * @example
+       * <pre>
+       *     ComboBox.subscribe('onFocusOut', function(){
+       *        ComboBox.hidePicker();
+       *     })
+       * </pre>
        * @see showPicker
        * @see togglePicker
        */
@@ -99,7 +119,13 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
          this._picker.hide();
       },
      /**
-      * Изменяет состояние выпадающего блока на противоположное (скрывает/показывает)
+      * Метод изменяет состояние выпадающего блока на противоположное (скрывает/показывает).
+      * @example
+      * <pre>
+      *    ComboBox.bind('click', function(){
+      *       ComboBox.togglePicker();
+      *    })
+      * </pre>
       * @sse showPicker
       * @see hidePicker
       */
