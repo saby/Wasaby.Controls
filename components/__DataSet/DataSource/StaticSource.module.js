@@ -2,21 +2,21 @@
  * Created by as.manuylov on 10.11.14.
  */
 define('js!SBIS3.CONTROLS.StaticSource', [
-   'js!SBIS3.CONTROLS.IDataSource',
+   'js!SBIS3.CONTROLS.BaseSource',
    'js!SBIS3.CONTROLS.Record',
    'js!SBIS3.CONTROLS.DataSet'
-], function (IDataSource, Record, DataSet) {
+], function (BaseSource, Record, DataSet) {
    'use strict';
 
    /**
-    * Класс, реализующий интерфейс IDataSource, для работы с массивами как с источником данных.
+    * Класс для работы с массивами, как с источником данных.
     * @author Мануйлов Андрей
     * @public
     * @class SBIS3.CONTROLS.StaticSource
-    * @extends SBIS3.CONTROLS.IDataSource
+    * @extends SBIS3.CONTROLS.BaseSource
     */
 
-   return IDataSource.extend({
+   return BaseSource.extend({
       $protected: {
          _initialDataSet: undefined,
          _options: {
@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.StaticSource', [
             dataFilterCallback: null
          }
       },
-	  
+
       $constructor: function (cfg) {
          // неявно создадим начальный датасет, с которым будем работать дальше
          this._initialDataSet = new DataSet({
@@ -68,6 +68,14 @@ define('js!SBIS3.CONTROLS.StaticSource', [
       },
 
       update: function (record) {
+         if (!record.isCreated()) {
+            var key = record.getKey();
+            if (!key) {
+               record.set(record.getKeyField(), $ws.helpers.randomId('k'));
+            }
+            record.setCreated(true);
+         }
+         record.setChanged(false);
          var def = new $ws.proto.Deferred();
          def.callback(true);
          return def;

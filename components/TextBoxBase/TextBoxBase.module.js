@@ -152,6 +152,16 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
 
       _drawText: function() {
 
+      },
+
+      getValue : function() {
+         $ws.single.ioc.resolve('ILogger').log('getValue()', 'getValue is deprecated. Use getText()');
+         return this.getText();
+      },
+
+      setValue : function(txt) {
+         $ws.single.ioc.resolve('ILogger').log('setValue()', 'setValue is deprecated. Use setText()');
+         this.setText(txt)
       }
    });
 

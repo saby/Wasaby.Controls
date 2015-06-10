@@ -747,7 +747,7 @@ function(BaseControl, dotTpl){
          for (var i = 0, len = this._options.filterFields.length; i < len; i++) {
             var filter = this._options.filterFields[i];
             if (filter.type == 'ctx') {
-               this._filters[filter.name] = this.getLinkedContext().getValue(filter.name);
+               this._filters[filter.name] = this.getLinkedContext().getValue(filter.value);
             }
          }
       },

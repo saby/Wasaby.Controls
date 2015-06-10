@@ -13,6 +13,8 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
     * @extends $ws.proto.CompoundControl
     * @control
     * @category Decorate
+    * @public
+    * @author Чистякова Алёна Дмитриевна
     */
 
    var Pager = CompoundControl.extend(/** @lends $ws.proto.Paging.prototype */{
@@ -22,14 +24,8 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
        * Происходит при смене текущей страницы: при клике по номеру страницы или стрелке перехода на другую страницу.
        * @param {$ws.proto.EventObject} Дескриптор события.
        * @param {Number} number номер новой страницы
-       * @param {$ws.proto.Deferred} deferred для режима частичной постраничной навигации.
        * Необходимо вызвать функцию на успех с аргументом типа Boolean: есть ли следующая страница.
        * @example
-       * <pre>
-       *    paging.subscribe('onPageChange', function(event, pageNumber){
-       *       $ws.single.ControlStorage.getByName('table').setPage(page);
-       *    });
-       * </pre>
        */
       $protected: {
          _dotTplFn: dotTplFn,
@@ -37,11 +33,7 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
             ignoreLocalPageSize : false,
             pagingOptions: {}
          },
-         _fddData: {
-            keys: [10, 20, 25, 50, 100, 200, 500, 1000],
-            values: [10, 20, 25, 50, 100, 200, 500, 1000]
-
-         },
+         _fddDataKeys: [10, 20, 25, 50, 100, 200, 500, 1000],
          _paging : undefined,
          _fdd: undefined,
          _lastNumRecords: undefined,
@@ -61,13 +53,24 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
       },
       init: function(){
          var self = this,
+               numPageSize = parseInt(this._options.pageSize, 10),
+               sortNumber = function(a, b) {
+                  return a - b;
+               },
+               fddData = {},
                opener;
          Pager.superclass.init.call(this);
          this._fdd = this.getChildControlByName('controls-Pager_comboBox');
+         //Если переданный pageSize не входит в стандартный набор - добавим и отсортируем по возрастанию
+         if (Array.indexOf(this._fddDataKeys, numPageSize) < 0){
+            this._fddDataKeys.push(numPageSize);
+            this._fddDataKeys.sort(sortNumber);
+         }
+         fddData.keys = this._fddDataKeys;
+         fddData.values = this._fddDataKeys;
          //TODO подписаться на изменение проперти в контексте. Пока Витя не допилил - подписываюсь на комбобокс
-         this._fdd.setData(this._fddData);
-         //TODO Проблема! Нужно чтобы pageSize на момент создания Pager был синхронизирован с pageSize ьраузера и localStorage
-         this._fdd.setValue(this._options.pageSize);
+         this._fdd.setData(fddData);
+         this._fdd.setValue(numPageSize);
          this._fdd.subscribe('onValueChange', function(event, value){
             //TODO может менять pageSize модно будет в фильтре?
             self._options.pageSize = value;

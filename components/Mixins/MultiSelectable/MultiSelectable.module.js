@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       $constructor: function() {
          this._publish('onSelectedItemsChange');
          if (this._options.selectedItems) {
-            console.log('c 3.7.3 свойство selectedItems перестанет работать. Используйте свойство selectedKeys');
+            $ws.single.ioc.resolve('ILogger').log('selectedItems', 'c 3.7.3 метод selectedItems перестанет работать. Используйте метод selectedKeys');
             this._options.selectedKeys = this._options.selectedItems;
          }
          if (this._options.selectedKeys) {
@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        */
       setSelectedItems: function(idArray) {
          //TODO изменить логику на установку выбранных элементов
-         console.log('c 3.7.3 метод setSelectedItems перестанет работать. Используйте метод setSelectedKeys');
+         $ws.single.ioc.resolve('ILogger').log('setSelectedItems', 'c 3.7.3 метод setSelectedItems перестанет работать. Используйте метод setSelectedKeys');
          this.setSelectedKeys(idArray);
       },
 
@@ -103,7 +103,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        */
       getSelectedItems: function() {
          //TODO изменить логику на получение выбранных элементов
-         console.log('c 3.7.3 метод getSelectedItems перестанет работать. Используйте метод getSelectedKeys');
+         $ws.single.ioc.resolve('ILogger').log('getSelectedItems', 'c 3.7.3 метод getSelectedItems перестанет работать. Используйте метод setSelectedKeys');
          return this.getSelectedKeys();
       },
 

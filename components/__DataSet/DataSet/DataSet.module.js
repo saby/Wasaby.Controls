@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          var self = this;
          var mark = function (key) {
             var record = self.getRecordByKey(key);
-            record.toggleStateDeleted(true);
+            record.setDeleted(true);
          };
 
          if (key instanceof Array) {
@@ -112,11 +112,13 @@ define('js!SBIS3.CONTROLS.DataSet', [
          var length = this.getCount();
          var data;
 
+         this._byId = {};
          for (var i = 0; i < length; i++) {
             data = this.getStrategy().at(this._rawData, i);
             this._byId[this.getRecordKeyByIndex(i)] = new Record({
                strategy: this.getStrategy(),
                raw: data,
+               isCreated: true,//считаем, что сырые данные пришли из реального источника
                keyField: this._keyField,
                onChangeHandler: this._onRecordChange.bind(this)
             });
@@ -199,11 +201,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
                }
 
                if (merge) {
-                  //FixME: надо смержить свойства как то в existing.... + отслеживать состояние
-                  $ws.core.merge(existing.getRaw(), record.getRaw());
+                  existing.merge(record);
                }
-
-               records[i] = existing;
 
                // если это новый рекорд, добавим его в 'toAdd'
             } else if (add) {
@@ -211,7 +210,6 @@ define('js!SBIS3.CONTROLS.DataSet', [
                this._addReference(record);
             }
 
-            record = existing || record;
             recordMap[key] = true;
          }
 
@@ -226,7 +224,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
             if (toRemove.length) {
                //TODO: тут не надо их помечать как удаленными. а вырезать из DataSet
                //this._removeReference(toRemove);
-               //this.removeRecord(toRemove);
+               this.removeRecord(toRemove);
             }
          }
 
@@ -285,7 +283,14 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @param record
        */
       push: function (record) {
-         this._addRecords(record);
+        if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Record')){
+          record = new Record({
+            strategy: this.getStrategy(),
+            raw: record,
+            keyField: this._options.keyField
+          })
+        }
+        this._addRecords(record);
       },
 
       /**
@@ -341,7 +346,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
       /**
        *
        * @param iterateCallback
-       * @param status {'all'|'deleted'|'changed'} по умолчанию все, кроме удаленных
+       * @param status {'all'|'created'|'deleted'|'changed'} по умолчанию все, кроме удаленных
        */
       each: function (iterateCallback, status) {
          if (!this._isLoaded) {
@@ -356,18 +361,23 @@ define('js!SBIS3.CONTROLS.DataSet', [
                case 'all':
                   iterateCallback.call(this, record);
                   break;
+               case 'created':
+                  if (record.isCreated()) {
+                     iterateCallback.call(this, record);
+                  }
+                  break;
                case 'deleted':
-                  if (record.getMarkStatus() == 'deleted') {
+                  if (record.isDeleted()) {
                      iterateCallback.call(this, record);
                   }
                   break;
                case 'changed':
-                  if (record.getMarkStatus() == 'changed') {
+                  if (record.isChanged()) {
                      iterateCallback.call(this, record);
                   }
                   break;
                default :
-                  if (record.getMarkStatus() !== 'deleted') {
+                  if (!record.isDeleted()) {
                      iterateCallback.call(this, record);
                   }
             }
@@ -444,31 +454,16 @@ define('js!SBIS3.CONTROLS.DataSet', [
             curParentId = null,
             parents = [],
             curLvl = 0;
-         do {
+         this._indexTree = {};
             this.each(function (record) {
                var parentKey = self.getParentKey(record, field);
                parentKey = (typeof parentKey != 'undefined') ? parentKey : null;
-               if ((parentKey) === curParentId) {
-                  parents.push({record: record, lvl: curLvl});
-
                   if (!this._indexTree.hasOwnProperty(parentKey)) {
                      this._indexTree[parentKey] = [];
                   }
 
                   this._indexTree[parentKey].push(record.getKey());
-               }
-
             }, false);
-
-            if (parents.length) {
-               var a = Array.remove(parents, 0);
-               curParentId = a[0]['record'].getKey();
-               curLvl = a[0].lvl + 1;
-            }
-            else {
-               curParentId = undefined;
-            }
-         } while (typeof curParentId != 'undefined');
       },
 
       filter: function (filterCallback) {
