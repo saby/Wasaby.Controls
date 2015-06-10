@@ -1,88 +1,111 @@
 define('js!SBIS3.CONTROLS.PathSelector', [
-   'js!SBIS3.CORE.CompoundControl'
-], function (CompoundControl) {
+   'js!SBIS3.CORE.CompoundControl',
+   'js!SBIS3.CONTROLS.DSMixin',
+   'html!SBIS3.CONTROLS.PathSelector',
+   'html!SBIS3.CONTROLS.PathSelector/resources/pointTpl',
+], function (CompoundControl, DSMixin, dotTpl, pointTpl) {
    'use strict';
 
-   var PathSelector = CompoundControl.extend({
+   var PathSelector = CompoundControl.extend([DSMixin], {
       $protected: {
-         _pathContainer: undefined,
-         _path: [],
+         _dotTplFn: dotTpl,
          _options: {
-            dataSet: null,
-            rootNodeId: null,
-            titleColumn: ''
+            linkedView: null,
+            keyField: 'id'
          }
       },
 
       $constructor: function () {
-         this._publish('onPathChange');
-         this._pathContainer = this.getContainer().find('.controls-HierarchyDataGrid__PathSelector__block');
-      },
-
-      _redraw: function(){
-         var path = this._path;
-         this._pathContainer.empty();
-         for (var i = 0; i < path.length; i++){
-            this._drawPoint(i, i === path.length - 1);
+         var self = this;
+         if (this._options.linkedView){
+            this._options.linkedView.subscribe('onSetRoot', function(event, dataSet, id){
+               self._rootChangeHandler(dataSet, id);
+            }, this);
          }
-      },
 
-      _drawPoint: function(index, last){
-         var point = $('<span class="controls-HierarchyDataGrid__PathSelector__block__point hover-target" style="cursor:pointer">' +
-                           '<a>' + this._path[index]['title'] +
-                              '<span class="' + this._path[index]['icon'] +'"style="top: 2px; position: relative;"><span>' + 
-                           '</a>' + 
-                       '</span>'),
-            arrow = $('<span class="controls-HierarchyDataGrid__PathSelector__block__arrow"></span>'),
-            container = this._pathContainer,
-            self = this;
-         point.data('index', this._path[index - 1] ? index - 1 : this._options.rootNodeId);
-         if (!last) {
-            arrow.addClass('icon-16 icon-Back icon-primary action-hover');
-         } else {
-            arrow.addClass('icon-24');
-            point.addClass('controls-HierarchyDataGrid__PathSelector__block-last')
-         }
-         point.prepend(arrow);
-         point.bind('click', function(e){
-            self._onMouseClick(e);
+         this._container.bind('mousedown', function(e){
+            var target = $(e.target),
+            point = target.closest('.controls-PathSelector__point');
+            if (point.length) {
+               self._onPointClick(point.data('parentId'));
+            }
          });
-         container.prepend(point);
+
+         //инициализируем dataSet
+         this.setItems([]);
       },
 
-      _onMouseClick: function (e) {
-         var target = $(e.target).closest('.controls-HierarchyDataGrid__PathSelector__block__point'),
-            index = target.data('index'),
-            id =  index !== null ? this._path[index].id : null,
-            title = index !== null ? this._path[index].title : '';
-            this._onPointClick(index, id, title, event);
+      //придрот что бы фэйковый див не ломал :first-child стили
+      _moveFocusToFakeDiv: function() {
+
       },
 
-      _onPointClick: function (index, id, title, event) {
-         if (index !== undefined) {
-            index = index || 0;
-            var count = this._path.length - index - 1;
-            if (id != null){
-               for (var j = 0; j < count; ++j) {
-                  this._path.pop();
-               }
-            } else {
-               this._path = [];
+      setLinkedView: function(view){
+         if (this._options.linkedView){
+            this._options.linkedView.unsubscribe('onSetRoot', this._rootChangeHandler);
+         }
+         this._options.linkedView = view;
+         this._options.linkedView.subscribe('onSetRoot', function(event, dataSet, id){
+               self._rootChangeHandler(dataSet, id);
+            }, this);
+      },
+
+      _rootChangeHandler: function(dataSet, key){
+         if (key){
+            var displayField = this._options.linkedView._options.displayField, //Как то не очень
+               hierField = this._options.linkedView._options.hierField, //И это не очень
+               record = dataSet.getRecordByKey(key),
+               parentId = record ? dataSet.getParentKey(record, hierField) : null,
+               title = record ? record.get(displayField) : '';
+
+            //Пушим ноды только если таких еще нет TODO: возможно проверка не нужна, так как датасет мержит рекорды
+            if (!this._dataSet.getRecordByKey(key)) {
+               this._dataSet.push({'title': title, 'parentId': parentId, 'id': key});
             }
          }
          this._redraw();
-         this._notify('onPathChange', id);
       },
 
-      push: function (node) {
-         if (!this._path.length){
-            this._path.push(node);
-         } else if (this._path[this._path.length - 1].id != node.id){
-               this._path.push(node);
-            }
-         this._redraw();
-      }
+      _getItemTemplate: function(){
+         return pointTpl;
+      },
 
+      _addItemAttributes: function(container, item){
+         var self = this;
+         container.data('parentId', item.get('parentId'))
+         if (item.last){
+            $('.controls-PathSelector__arrow', point).removeClass('icon-Back icon-16 icon-primary action-hover');
+            point.addClass('controls-PathSelector__point-last');
+         }
+         PathSelector.superclass._addItemAttributes.apply(this, arguments);
+      },
+
+      _appendItemTemplate: function (item, targetContainer, itemBuildedTpl) {
+         targetContainer.prepend(itemBuildedTpl);
+      },
+
+      /**
+       * Обработчик клика на пункт пути
+       * id - id по которому нужно перейти
+       * удаляет пункт на который кликнули и все до него (глубже по иерархии)
+       */
+      _onPointClick: function(id){
+         var last = this._dataSet.getCount() - 1,
+            record = this._dataSet.at(last);
+            while (true) {
+               this._dataSet.removeRecord(record.getKey());
+               record = this._dataSet.at(last);
+               //TODO: следующие четыре строчки выпилить когда будет нормальный sync в StaticSource
+               delete this._dataSet._byId[record.getKey()];
+               delete this._dataSet._byId[record._cid];
+               this._dataSet._rawData.splice(last, 1);
+               this._dataSet._indexId.splice(last, 1);
+               last--;
+               if (record.get('parentId') == id) break;
+               record = this._dataSet.at(last);
+            }
+         this._options.linkedView.setCurrentRoot(id);
+      }
    });
 
    return PathSelector;

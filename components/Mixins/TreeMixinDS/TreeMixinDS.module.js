@@ -73,12 +73,20 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
 
       before: {
          openNode: function () {
-            if (this._options.expand) {
-               this._filter = this._filter || {};
-               this._filter['Разворот'] = 'С разворотом';
-               this._filter['ВидДерева'] = 'Узлы и листья';
-            }
+
          }
+      },
+
+      openNode: function (key) {
+         if (this._options.expand) {
+            this._filter = this._filter || {};
+            this._filter['Разворот'] = 'С разворотом';
+            this._filter['ВидДерева'] = 'Узлы и листья';
+         }
+         var self = this;
+         this._loadNode(key).addCallback(function (dataSet) {
+            self._nodeDataLoaded(key, dataSet);
+         });
       },
 
       _loadNode : function(key) {
@@ -124,10 +132,13 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
 
       },
 
-      _drawItemsCallback: function() {
-         if (this._options.expand) {
-            $('.js-controls-TreeView__expand', this._container.get(0)).addClass('controls-TreeView__expand__open')
-         }
+      around: {
+        _drawItemsCallback: function (parentFunc) {
+          if (this._options.expand) {
+              $('.js-controls-TreeView__expand', this._container.get(0)).addClass('controls-TreeView__expand__open')
+          }
+          parentFunc.call(this);
+        }
       },
 
       _elemClickHandlerInternal: function (id, data, target) {
