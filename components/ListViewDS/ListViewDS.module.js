@@ -7,12 +7,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.DSMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
+      'js!SBIS3.CONTROLS.Selectable',
+      'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.ItemActionsGroup',
       'html!SBIS3.CONTROLS.ListViewDS',
       'js!SBIS3.CONTROLS.CommonHandlers',
       'js!SBIS3.CONTROLS.Pager'
    ],
-   function (CompoundControl, DSMixin, MultiSelectable, ItemActionsGroup, dotTplFn, CommonHandlers, Pager) {
+   function (CompoundControl, DSMixin, MultiSelectable, Selectable, DataBindMixin, ItemActionsGroup, dotTplFn, CommonHandlers, Pager) {
 
       'use strict';
 
@@ -32,7 +34,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        * @author Крайнов Дмитрий Олегович
        */
 
-      var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
+      var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, Selectable, DataBindMixin, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
          _dotTplFn: dotTplFn,
           /**
            * @event onChangeHoveredItem При переводе курсора мыши на другую запись
@@ -354,6 +356,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          /* +++++++++++++++++++++++++++ */
 
          _elemClickHandler: function (id, data, target) {
+            this.setSelectedKey(id);
             if (this._options.multiselect) {
                //TODO: оставить только js класс
                if ($(target).hasClass('js-controls-ListView__itemCheckBox') || $(target).hasClass('controls-ListView__itemCheckBox')) {
@@ -387,10 +390,15 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
 
          _drawSelectedItems: function (idArray) {
-            $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
+            $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__multiSelected');
             for (var i = 0; i < idArray.length; i++) {
-               $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).addClass('controls-ListView__item__selected');
+               $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).addClass('controls-ListView__item__multiSelected');
             }
+         },
+
+         _drawSelectedItem: function(id){
+            $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
+            $(".controls-ListView__item[data-id='" + id + "']", this._container).addClass('controls-ListView__item__selected');
          },
           /**
            * Перезагружает набор записей представления данных с последующим обновлением отображения.
@@ -562,6 +570,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                this._loadBeforeScrollAppears();
             }
             this._drawSelectedItems(this._options.selectedKeys);
+            this._drawSelectedItem(this._options.selectedKey);
          },
          //-----------------------------------infiniteScroll------------------------
          //TODO Сделать подгрузку вверх
