@@ -68,6 +68,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
                }
                else {
                   self._drawItem(record, at);
+                  self._drawItemsCallback();
                }
             }
          });
@@ -82,16 +83,28 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
       },
 
       _addItemAttributes : function(container, item) {
-         TreeDataGrid.superclass._addItemAttributes.call(this, container, item);
-         var parentKey = this._dataSet.getParentKey(item, this._options.hierField);
-         container.attr('data-parent', parentKey);
-         /*TODO пока придрот*/
-         if (typeof parentKey != 'undefined' && parentKey !== null) {
-            var
-               parentCont = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._container.get(0)).get(0),
-               parentWrappersCount = $('.controls-TreeView__hierWrapper', parentCont).length;
+          TreeDataGrid.superclass._addItemAttributes.call(this, container, item);
+          var parentKey = this._dataSet.getParentKey(item, this._options.hierField),
+            parentContainer = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._container.get(0)).get(0);
+          container.attr('data-parent', parentKey);
+          /*TODO пока придрот*/
+          if (typeof parentKey != 'undefined' && parentKey !== null && parentContainer) {
+            var parentWrappersCount = $('.controls-TreeView__hierWrapper', parentContainer).length;
             for (var i = 0; i <= parentWrappersCount; i++) {
               $('.controls-TreeView__expand', container).before('<div class="controls-TreeView__hierWrapper"></div>');
+            }
+         }
+      },
+
+      _elemClickHandlerInternal: function (id, data, target) {
+         var nodeID = $(target).closest('.controls-ListView__item').data('id');
+         if ($(target).hasClass('js-controls-TreeView__expand') && $(target).hasClass('has-child')) {
+            this.toggleNode(nodeID);
+         }
+         else {
+            if (data.get(this._options.hierField+'@')) {
+               var self = this;
+               self.setCurrentRoot(nodeID);
             }
          }
       }

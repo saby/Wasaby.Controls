@@ -1891,7 +1891,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ListView.controls-ListView__multiselect .controls-ListView__itemCheckBox {
   display: inline-block;
 }
-.controls-ListView.controls-ListView__multiselect .controls-ListView__item__selected .controls-ListView__itemCheckBox {
+.controls-ListView.controls-ListView__multiselect .controls-ListView__item__multiSelected .controls-ListView__itemCheckBox {
   background: url('img/CheckBox-sprite.png') 0 -32px;
 }
 .controls-ListView .controls-ListView-scrollIndicator {
@@ -1974,10 +1974,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr {
   background: transparent;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected {
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__multiSelected {
   background-color: transparent;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__selected .controls-DataGrid__td {
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__multiSelected .controls-DataGrid__td {
   color: inherit;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__hoveredItem {
@@ -2082,29 +2082,45 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid__addInPlace-container {
   padding-left: 8px;
 }
-.controls-Pager {
-  float: right;
-  height: 28px;
+.controls-PathSelector {
+  min-height: 27px;
 }
-.controls-Pager .controls-text {
-  line-height: 20px;
-  font-size: 11px;
-  padding-top: 2px;
-  color: #919191;
+.controls-PathSelector__point {
+  cursor: pointer;
+  position: relative;
+  top: -1px;
 }
-.controls-Pager .controls-Pager-block {
-  float: right;
+.controls-PathSelector__point:hover .controls-PathSelector__title {
+  color: #FF7033;
 }
-.controls-Pager .controls-Pager-block-amount {
-  padding: 5px 6px 6px 1px;
+.controls-PathSelector__point:hover .controls-PathSelector__arrow {
+  color: #FF7033!important;
 }
-.controls-Pager .controls-Pager-block-paging {
-  padding: 4px 0 0 6px;
+.controls-PathSelector__point:first-child {
+  top: 0;
 }
-.controls-Pager .controls-Pager__pageSize-container select,
-.controls-Pager .controls-Pager__pageSize-container .custom-select.asLink {
-  font-size: 11px;
-  text-decoration: underline;
+.controls-PathSelector__point:first-child .controls-PathSelector__title {
+  font-size: 15px;
+}
+.controls-PathSelector__point:first-child .controls-PathSelector__arrow {
+  background: url('img/path-filter-icon-back.png') 0 -1px;
+  height: 24px;
+  width: 24px;
+  top: 7px;
+}
+.controls-PathSelector__point:first-child .controls-PathSelector__arrow::before {
+  content: '';
+}
+.controls-PathSelector__point:first-child:hover .controls-PathSelector__arrow {
+  background-position: 0 23px;
+}
+.controls-PathSelector__title {
+  color: #0055BB;
+  padding-right: 1px;
+}
+.controls-PathSelector__arrow {
+  position: relative;
+  top: 2px;
 }
 .controls-UnitEditor__fieldWrapper {
   margin-right: 34px;
@@ -2252,6 +2268,9 @@ input[type="reset"]::-moz-focus-inner {
   right: 38px;
   top: 8px;
 }
+.controls-MoveDialog {
+  overflow-y: auto !important;
+}
 .controls-PrintMassDialog {
   left: 12px;
 }
@@ -2275,9 +2294,6 @@ input[type="reset"]::-moz-focus-inner {
   margin-top: 8px;
   position: absolute;
   right: 40px;
-}
-.controls-MoveDialog {
-  overflow-y: auto !important;
 }
 .controls-ProgressBar {
   height: 17px;
@@ -2383,6 +2399,17 @@ input[type="reset"]::-moz-focus-inner {
   height: 0;
   left: 0;
   overflow: visible;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing {
+  background: #00c795;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing .controls-DataGrid__th {
+  color: inherit;
+  background-color: #00c795;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing .controls-DataGrid__td {
+  color: #ffffff;
+  background-color: #00c795;
 }
 .controls-FastDataFilter {
   display: inline-block;

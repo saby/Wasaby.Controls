@@ -1,9 +1,8 @@
 define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
    'js!SBIS3.CONTROLS.DataGrid',
    'js!SBIS3.CONTROLS.hierarchyMixin',
-   'js!SBIS3.CONTROLS.PathSelector',
    'html!SBIS3.CONTROLS.HierarchyDataGrid/resources/rowTpl'
-], function (DataGrid, hierarchyMixin, PathSelector, rowTpl) {
+], function (DataGrid, hierarchyMixin, rowTpl) {
    'use strict';
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
@@ -28,65 +27,54 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
 
    var HierarchyDataGrid = DataGrid.extend([hierarchyMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
       $protected: {
-         _pathSelector: undefined,
          _rowTpl: rowTpl
       },
 
       $constructor: function () {
+        this._publish('onSetRoot')
          //чтобы не добавлять новый шаблон модуля просто добавим класс тут
          this.getContainer().addClass('controls-HierarchyDataGrid');
       },
 
       _dataLoadedCallback: function () {
-         if (!this._pathSelector) {
-            this._drawPathSelector();
-         }
          HierarchyDataGrid.superclass._dataLoadedCallback.call(this, arguments);
-      },
-
-      _drawPathSelector: function () {
-         var pathSelectorContainer = $('<div class="controls-HierarchyDataGrid__PathSelector"><div class="controls-HierarchyDataGrid__PathSelector__block"></div></div>');
-
-         this.getContainer().prepend(pathSelectorContainer);
-
-         this._pathSelector = new PathSelector({
-            element: pathSelectorContainer,
-            dataSet: this._dataSet,
-            handlers: {
-               'onPathChange': this._onPathSelectorChange.bind(this)
-            },
-            rootNodeId: this._options.root
-         });
-      },
-
-
-      _nodeDataLoaded: function (key, dataSet) {
-         var record;
-         if (record = this._dataSet.getRecordByKey(key)) {
-            var title = record.get(this._options.displayField);
-            HierarchyDataGrid.superclass._nodeDataLoaded.call(this, key, dataSet);
-            this._pathSelector.push({
-               'title': title,
-               'id': this._curRoot
-            });
-         } else {
-            HierarchyDataGrid.superclass._nodeDataLoaded.call(this, key, dataSet);
-         }
-      },
-
-      _onPathSelectorChange: function (event, id) {
-         this.openNode(id);
       },
 
       _elemClickHandlerInternal: function (id, data, target) {
          if (data.get(this._options.hierField+'@')) {
             var nodeID = $(target).closest('.controls-ListView__item').data('id');
-            this.toggleNode(nodeID);
+            this.setCurrentRoot(nodeID);
          }
-      }
+      },
 
+      setCurrentRoot: function(key) {
+        var self = this,
+          record = this._dataSet.getRecordByKey(key),
+          parentKey = record ? this._dataSet.getParentKey(record, this._options.hierField) : null,
+          hierarchy =[];
+          hierarchy.push(key);
+
+        while (parentKey != null){
+          hierarchy.push(parentKey);
+          record = this._dataSet.getRecordByKey(parentKey);
+          parentKey = record ? this._dataSet.getParentKey(record, this._options.hierField) : null;
+        }
+        for (var i = hierarchy.length - 1; i >= 0; i--){
+          this._notify('onSetRoot', this._dataSet, hierarchy[i]);
+        }
+        this._loadNode(key).addCallback(function(dataSet) {
+          if (!self._dataSet){
+            self._dataSet = dataSet;
+          } else {
+            self._dataSet.setRawData(dataSet.getRawData());
+          }
+          self._dataLoadedCallback();
+          self._notify('onDataLoad', dataSet);
+          self._curRoot = key;
+          self._redraw();
+         })
+      }
    });
 
    return HierarchyDataGrid;
-
 });
