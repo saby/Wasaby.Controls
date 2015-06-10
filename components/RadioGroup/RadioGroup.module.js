@@ -14,6 +14,8 @@ function(RadioGroupBase, dotTpl) {
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @control
     * @public
+    * @author Крайнов Дмитрий Олегович
+    * @demo SBIS3.CONTROLS.Demo.MyRadioGroup
     * @initial
     * <component data-component='SBIS3.CONTROLS.RadioGroup'>
     *    <option name="displayField">title</option>
@@ -29,6 +31,15 @@ function(RadioGroupBase, dotTpl) {
     *       </options>
     *    </options>
     * </component>
+    * @cssModifier controls-ButtonGroup__vertical Для вертикального расположения элементов в группе.
+    *
+    * @ignoreOptions className extendedTooltip handlers linkedContext
+    *
+    * @ignoreMethods applyState applyEmptyState getClassName findParent getEventHandlers  getEvents getExtendedTooltip
+    * @ignoreMethods getOwner getOwnerId getTopParent getUserData makeOwnerName hasEvent hasEventHandlers once setOwner
+    * @ignoreMethods sendCommand setClassName setExtendedTooltip setStateKey setUserData subscribe unsubscribe
+    *
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onTooltipContentRequest
     */
 
    var RadioGroup = RadioGroupBase.extend( /** @lends SBIS3.CONTROLS.RadioGroup.prototype */ {
