@@ -2562,6 +2562,3 @@ input[type="reset"]::-moz-focus-inner {
   background-position: left top;
   background-repeat: repeat-y;
 }
-.controls-ListView__multiselect .controls-DataGrid__td:first-child {
-  background: none;
-}
