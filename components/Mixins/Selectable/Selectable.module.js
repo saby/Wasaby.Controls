@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
       $constructor: function() {
          this._publish('onSelectedItemChange');
          if (this._options.selectedItem) {
-            console.log('c 3.7.3 свойство selectedItem перестанет работать. Используйте свойство selectedKey');
+            $ws.single.ioc.resolve('ILogger').log('selectedItem', 'c 3.7.3 свойство selectedItem перестанет работать. Используйте свойство selectedKey');
             this._options.selectedKey = this._options.selectedItem;
          }
          else {
@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
        */
       setSelectedItem: function(id) {
          //TODO изменить логику на установку выбранного элемента
-         console.log('c 3.7.3 метод setSelectedItem перестанет работать. Используйте метод setSelectedKey');
+         $ws.single.ioc.resolve('ILogger').log('setSelectedItem', 'c 3.7.3 метод setSelectedItem перестанет работать. Используйте метод setSelectedKey');
          this.setSelectedKey(id);
       },
 
@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
        */
       getSelectedItem : function() {
          //TODO изменить логику на возврат выбранного элемента
-         console.log('c 3.7.3 метод getSelectedItem перестанет работать. Используйте метод getSelectedKey');
+         $ws.single.ioc.resolve('ILogger').log('getSelectedItem', 'c 3.7.3 метод getSelectedItem перестанет работать. Используйте метод getSelectedKey');
          return this.getSelectedKey();
       },
       /**
