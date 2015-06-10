@@ -56,11 +56,11 @@
 @button-padding:                          0 8px;
 @button-margin:                           auto;
 @button-border-radius:                    2px;
-@button-icon-top-offset:                  6px;                      // top offset of 16x16 icon
+@button-icon-top-offset:                  7px;                      // top offset of 16x16 icon
 @button-icon-left-offset:                 8px;
 @button-icon-gap:                         4px;                      // gap between icon and text
 @button-icon-text-margin:                 0 8px 0 28px;             // margin of text following 16x16 icon
-@button-icon-big-top-offset:              1px;                      // top offset of 24x24 icon
+@button-icon-big-top-offset:              2px;                      // top offset of 24x24 icon
 @button-icon-big-left-offset:             @button-icon-left-offset;
 @button-icon-big-text-margin:             0 8px 0 36px;             // margin of text following 24x24 icon
 @button-text-margin:                      0 8px;
@@ -71,7 +71,8 @@
 
 // Normal default button
 @button-text-color:                       @gray-color;
-@button-border:                           1px solid @gray-light-color;
+@button-border-width:                     1px;
+@button-border:                           @button-border-width solid @gray-light-color;
 @button-shadow:                           none;
 @button-bg:                               @default-color;
 
@@ -116,10 +117,10 @@
 @button-big-padding:                      15px 20px;
 @button-big-margin:                       @button-margin;
 @button-big-border-radius:                6px;
-@button-big-icon-top-offset:              17px;                             // top offset of 16x16 icon
+@button-big-icon-top-offset:              19px;                             // top offset of 16x16 icon
 @button-big-icon-left-offset:             20px;
 @button-big-icon-text-margin:             0 20px 0 40px;                    // margin of text following 16x16 icon
-@button-big-icon-big-top-offset:          14px;                             // top offset of 24x24 icon
+@button-big-icon-big-top-offset:          16px;                             // top offset of 24x24 icon
 @button-big-icon-big-left-offset:         @button-big-icon-left-offset;
 @button-big-icon-big-text-margin:         0 20px 0 48px;                    // margin of text following 24x24 icon
 @button-big-text-margin:                  0 20px;
@@ -182,6 +183,7 @@
 
 // Normal default button
 @button-checked-text-color:               @button-active-text-color;
+@button-checked-border-width:             @button-border-width;
 @button-checked-border:                   @button-active-border;
 @button-checked-shadow:                   @button-active-shadow;
 @button-checked-bg:                       @button-active-bg;

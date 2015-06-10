@@ -101,29 +101,20 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button .controls-Button__icon {
   position: absolute;
+  left: 11px;
   top: 3px;
-  left: 12px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button .controls-Button__icon {
-    top: 4px;
-  }
 }
 .controls-Button .controls-Button__icon + .controls-Button__text {
-  margin: 0 12px 0 32px;
-  margin-left: 32px;
+  margin-right: 11px;
+  margin-left: 31px;
 }
 .controls-Button .controls-Button__icon.icon-24 {
+  left: 11px;
   top: -2px;
 }
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button .controls-Button__icon.icon-24 {
-    top: -1px;
-  }
-}
 .controls-Button .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin: 0 12px 0 40px;
-  margin-left: 40px;
+  margin-right: 11px;
+  margin-left: 39px;
 }
 .controls-Button.controls-Button__primary {
   color: #000000;
@@ -202,30 +193,20 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-Button__big .controls-Button__icon {
   position: absolute;
+  left: 23px;
   top: 14px;
-  left: 24px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button.controls-Button__big .controls-Button__icon {
-    top: 15px;
-  }
 }
 .controls-Button.controls-Button__big .controls-Button__icon + .controls-Button__text {
-  margin: 0 24px 0 44px;
-  margin-left: 44px;
+  margin-right: 23px;
+  margin-left: 43px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
+  left: 23px;
   top: 11px;
-  left: 24px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-    top: 12px;
-  }
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin: 0 24px 0 52px;
-  margin-left: 52px;
+  margin-right: 23px;
+  margin-left: 51px;
 }
 .controls-Button.controls-Button__big.controls-Button__primary {
   color: #000000;
@@ -288,16 +269,16 @@ input[type="reset"]::-moz-focus-inner {
 }
 @-moz-document url-prefix() {
   .controls-Button .controls-Button__icon {
-    top: 4px;
+    top: 3px;
   }
   .controls-Button .controls-Button__icon.icon-24 {
-    top: -1px;
+    top: -2px;
   }
   .controls-Button.controls-Button__big .controls-Button__icon {
-    top: 15px;
+    top: 14px;
   }
   .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-    top: 12px;
+    top: 11px;
   }
 }
 .controls-ButtonGroup .controls-ListView__item {
@@ -345,60 +326,54 @@ input[type="reset"]::-moz-focus-inner {
   margin-right: 11px;
 }
 .controls-Button.controls-Checked__checked .controls-Button__icon {
+  left: 10px;
   top: 2px;
-  left: 11px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button.controls-Checked__checked .controls-Button__icon {
-    top: 3px;
-  }
 }
 .controls-Button.controls-Checked__checked .controls-Button__icon + .controls-Button__text {
-  margin-left: 31px;
-  margin-right: 11px;
+  margin-right: 10px;
+  margin-left: 30px;
 }
 .controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 {
+  left: 10px;
   top: -3px;
-  left: 11px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 {
-    top: -2px;
-  }
 }
 .controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin-left: 39px;
-  margin-right: 11px;
+  margin-right: 10px;
+  margin-left: 38px;
 }
 .controls-Button__big.controls-Checked__checked .controls-Button__text {
   margin-left: 23px;
   margin-right: 23px;
 }
 .controls-Button__big.controls-Checked__checked .controls-Button__icon {
+  left: 22px;
   top: 13px;
-  left: 23px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button__big.controls-Checked__checked .controls-Button__icon {
-    top: 14px;
-  }
 }
 .controls-Button__big.controls-Checked__checked .controls-Button__icon + .controls-Button__text {
-  margin-left: 43px;
-  margin-right: 23px;
+  margin-right: 22px;
+  margin-left: 42px;
 }
 .controls-Button__big.controls-Checked__checked .controls-Button__icon.icon-24 {
+  left: 22px;
   top: 10px;
-  left: 23px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button__big.controls-Checked__checked .controls-Button__icon.icon-24 {
-    top: 11px;
-  }
 }
 .controls-Button__big.controls-Checked__checked .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin-left: 51px;
-  margin-right: 23px;
+  margin-right: 22px;
+  margin-left: 50px;
+}
+@-moz-document url-prefix() {
+  .controls-Button.controls-Checked__checked .controls-Button__icon {
+    top: 2px;
+  }
+  .controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 {
+    top: -3px;
+  }
+  .controls-Button.controls-Checked__checked.controls-Button__big .controls-Button__icon {
+    top: 13px;
+  }
+  .controls-Button.controls-Checked__checked.controls-Button__big .controls-Button__icon.icon-24 {
+    top: 10px;
+  }
 }
 .controls-IconButton {
   cursor: pointer;
@@ -847,7 +822,7 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   margin: -1px 0 0;
-  border-width: 1px;
+  border-width: 2px;
   border-style: solid;
   border-color: #cccccc;
   -webkit-box-shadow: none;
@@ -864,7 +839,7 @@ input[type="reset"]::-moz-focus-inner {
   content: ' ';
   position: absolute;
   top: 3px;
-  right: 0;
+  right: 5px;
   width: 16px;
   height: 16px;
   -webkit-box-sizing: border-box;
@@ -879,7 +854,7 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
-  background: url('img/MenuExpand.png') 0 -16px no-repeat;
+  background: url('img/MenuExpand.png') 0 0 no-repeat;
 }
 .controls-Menu__Popup .controls-Menu__submenu {
   display: block;
@@ -913,7 +888,7 @@ input[type="reset"]::-moz-focus-inner {
   width: auto;
   height: 24px;
   line-height: 24px;
-  padding: 0 16px 0 8px;
+  padding: 0 26px 0 8px;
   color: #000000;
   background: #ffffff;
 }
@@ -948,15 +923,15 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   width: 8px;
   height: 6px;
-  right: 10px;
-  top: 11px;
+  right: 9px;
+  top: 10px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   border-width: 0;
   border-style: solid;
   border-color: transparent;
-  background: transparent url('img/MenuButton-arrowDown.png') 0 0;
+  background: transparent url('img/MenuButton-arrowDown.png') 0 26px;
 }
 .controls-Button.controls-MenuButton:hover .controls-MenuButton__arrowDown {
   border-width: 0;
@@ -980,17 +955,17 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
-  background: transparent url('img/MenuButton-arrowDown__primary.png') 0 0;
+  background: transparent url('img/MenuButton-arrowDown.png') 0 26px;
 }
 .controls-Button.controls-MenuButton.controls-Button__primary:hover.ws-disabled .controls-MenuButton__arrowDown {
-  background: transparent url('img/MenuButton-arrowDown.png') 0 0;
+  background: transparent url('img/MenuButton-arrowDown.png') 0 26px;
   border-color: transparent;
 }
 .controls-Button.controls-MenuButton.controls-Button__primary:hover .controls-MenuButton__arrowDown {
   border-width: 0;
   border-style: solid;
   border-color: transparent;
-  background: transparent url('img/MenuButton-arrowDown__primary.png') 0 0;
+  background: transparent url('img/MenuButton-arrowDown.png') 0 26px;
 }
 .controls-Button.controls-MenuButton.controls-Button__primary.controls-Checked__checked .controls-MenuButton__arrowDown,
 .controls-Button.controls-MenuButton.controls-Button__primary.controls-Click__active .controls-MenuButton__arrowDown {
@@ -1018,6 +993,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuButton.controls-Checked__checked .controls-Button__icon + .controls-Button__text {
   margin-right: 22px;
 }
+.controls-MenuButton.controls-Checked__checked .controls-MenuButton__arrowDown {
+  top: 9px;
+  right: 8px;
+}
 .controls-MenuButton__header {
   display: inline-block;
   position: absolute;
@@ -1036,22 +1015,22 @@ input[type="reset"]::-moz-focus-inner {
   width: 12px;
   height: 30px;
   margin: 0;
-  background: transparent url('img/MenuButton-header.png') 0 196px;
+  background: transparent url('img/MenuButton-header.png') 0 209px;
 }
 .controls-MenuButton__header.controls-MenuButton__header-revert-horizontal .controls-MenuButton__headerLeft {
-  width: 22px;
+  width: 28px;
   height: 30px;
-  background: transparent url('img/MenuButton-header.png') 0 168px;
+  background: transparent url('img/MenuButton-header.png') 0 179px;
 }
 .controls-MenuButton__header.controls-MenuButton__header-revert-horizontal .controls-MenuButton__headerRight {
   width: 12px;
   height: 30px;
-  background: transparent url('img/MenuButton-header.png') 0 140px;
+  background: transparent url('img/MenuButton-header.png') 0 149px;
 }
 .controls-MenuButton__header.controls-MenuButton__header-revert-horizontal.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerLeft {
-  width: 22px;
+  width: 28px;
   height: 30px;
-  background: transparent url('img/MenuButton-header.png') 0 45px;
+  background: transparent url('img/MenuButton-header.png') 0 49px;
 }
 .controls-MenuButton__header.controls-MenuButton__header-revert-horizontal.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerRight {
   width: 12px;
@@ -1064,12 +1043,12 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuButton__header.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerLeft {
   width: 12px;
   height: 30px;
-  background: transparent url('img/MenuButton-header.png') 0 72px;
+  background: transparent url('img/MenuButton-header.png') 0 80px;
 }
 .controls-MenuButton__header.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerRight {
-  width: 22px;
+  width: 28px;
   height: 30px;
-  background: transparent url('img/MenuButton-header.png') 0 101px;
+  background: transparent url('img/MenuButton-header.png') 0 110px;
 }
 .controls-MenuButton__header.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerCenter {
   vertical-align: top;
@@ -1083,10 +1062,10 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuButton__header .controls-MenuButton__headerRight {
   display: inline-block;
-  width: 22px;
+  width: 28px;
   height: 30px;
   margin: 0 0 0 -5px;
-  background: transparent url('img/MenuButton-header.png') 0 1px;
+  background: transparent url('img/MenuButton-header.png') 0 -1px;
 }
 .controls-MenuButton__Menu {
   margin-top: 4px;
@@ -1117,7 +1096,7 @@ input[type="reset"]::-moz-focus-inner {
   text-decoration: underline;
 }
 .controls-MenuLink.ws-enabled:hover .controls-MenuLink__arrowDown {
-  background: transparent url('img/MenuButton-arrowDown.png') 0 6px;
+  background: transparent url('img/MenuButton-arrowDown.png') 0 13px;
 }
 .controls-MenuLink .controls-MenuLink__arrowDown {
   position: absolute;
@@ -1126,7 +1105,7 @@ input[type="reset"]::-moz-focus-inner {
   height: 6px;
   right: 0;
   top: 10px;
-  background: transparent url('img/MenuButton-arrowDown.png') 0 0;
+  background: transparent url('img/MenuButton-arrowDown.png') 0 26px;
   border-width: 0;
   border-style: solid;
   border-color: transparent;
@@ -2442,6 +2421,9 @@ input[type="reset"]::-moz-focus-inner {
   right: 38px;
   top: 8px;
 }
+.controls-MoveDialog {
+  overflow-y: auto !important;
+}
 .controls-PrintMassDialog {
   left: 12px;
 }
@@ -2465,9 +2447,6 @@ input[type="reset"]::-moz-focus-inner {
   margin-top: 8px;
   position: absolute;
   right: 40px;
-}
-.controls-MoveDialog {
-  overflow-y: auto !important;
 }
 .controls__filterButton {
   height: 40px;
@@ -2684,6 +2663,17 @@ input[type="reset"]::-moz-focus-inner {
   height: 0;
   left: 0;
   overflow: visible;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing {
+  background: #f3f3f3;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing .controls-DataGrid__th {
+  color: inherit;
+  background-color: #f3f3f3;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing .controls-DataGrid__td {
+  color: inherit;
+  background-color: #f3f3f3;
 }
 .controls-editInPlace {
   position: absolute;

@@ -504,7 +504,7 @@
             },
             {
                id : 9,
-               title : 'Поросенок',
+               title : 'Длинный-длинный пункт меню, самый длинный',
                icon : 'sprite:icon-16 icon-Successful icon-done'
             },
             {

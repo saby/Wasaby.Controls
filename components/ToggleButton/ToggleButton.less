@@ -34,27 +34,11 @@
     }
 
     .controls-Button__icon {
-      top: @button-checked-icon-top-offset - 1px;         // this rule is for IE, see normal overrides for Chrome and Firefox below
-      left: @button-checked-icon-left-offset;
-      @media screen and (-webkit-min-device-pixel-ratio: 0) {
-        top: @button-checked-icon-top-offset;             // normal override for Chrome
-      }
-      & + .controls-Button__text {
-        margin-left: @button-checked-text-margin-left + 16px + @button-icon-gap;
-        margin-right: @button-checked-text-margin-right;
-      }
+      .button-mixin(@button-icon-top-offset; @button-icon-left-offset; 16px; @button-checked-border-width; @button-text-margin-left; @button-text-margin-right);
     }
 
     .controls-Button__icon.icon-24 {
-      top: @button-checked-icon-big-top-offset - 1px;         // this rule is for IE, see normal overrides for Chrome and Firefox below
-      left: @button-checked-icon-big-left-offset;
-      @media screen and (-webkit-min-device-pixel-ratio: 0) {
-        top: @button-checked-icon-big-top-offset;             // normal override for Chrome
-      }
-      & + .controls-Button__text {
-        margin-left: @button-checked-text-margin-left + 24px + @button-icon-gap;
-        margin-right: @button-checked-text-margin-right;
-      }
+      .button-mixin(@button-icon-big-top-offset, @button-icon-big-left-offset, 24px, @button-checked-border-width, @button-text-margin-left, @button-text-margin-right);
     }
   }
 }
@@ -65,26 +49,31 @@
     margin-right: @button-big-checked-text-margin-right;
   }
   .controls-Button__icon {
-    top: @button-big-checked-icon-top-offset - 1px;         // this rule is for IE, see normal overrides for Chrome and Firefox below
-    left: @button-big-checked-icon-left-offset;
-    @media screen and (-webkit-min-device-pixel-ratio: 0) {
-      top: @button-big-checked-icon-top-offset;             // normal override for Chrome
-    }
-    & + .controls-Button__text {
-      margin-left: @button-big-checked-text-margin-left + 16px + @button-icon-gap;
-      margin-right: @button-big-checked-text-margin-right;
-    }
+    .button-mixin(@button-big-icon-top-offset, @button-big-icon-big-left-offset, 16px, @button-checked-border-width, @button-big-text-margin-left, @button-big-text-margin-right);
   }
   .controls-Button__icon.icon-24 {
-    top: @button-big-checked-icon-big-top-offset - 1px;         // this rule is for IE, see normal overrides for Chrome and Firefox below
-    left: @button-big-checked-icon-big-left-offset;
-    @media screen and (-webkit-min-device-pixel-ratio: 0) {
-      top: @button-big-checked-icon-big-top-offset;             // normal override for Chrome
+    .button-mixin(@button-big-icon-big-top-offset, @button-big-icon-big-left-offset, 24px, @button-checked-border-width, @button-big-text-margin-left, @button-big-text-margin-right);
+  }
+}
+
+@-moz-document url-prefix() {
+  .controls-Button.controls-Checked__checked {
+    .controls-Button__icon {
+      top: @button-icon-top-offset - @button-checked-border-width;
+
+      &.icon-24 {
+        top: @button-icon-big-top-offset - @button-checked-border-width;
+      }
     }
-    & + .controls-Button__text {
-      margin-left: @button-big-checked-text-margin-left + 24px + @button-icon-gap;
-      margin-right: @button-big-checked-text-margin-right;
+
+    &.controls-Button__big {
+      .controls-Button__icon {
+        top: @button-big-icon-top-offset - @button-checked-border-width;
+
+        &.icon-24 {
+          top: @button-big-icon-big-top-offset - @button-checked-border-width;
+        }
+      }
     }
   }
-
 }

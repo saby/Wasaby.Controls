@@ -101,28 +101,19 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button .controls-Button__icon {
   position: absolute;
-  top: 19px;
   left: 8px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button .controls-Button__icon {
-    top: 20px;
-  }
+  top: 20px;
 }
 .controls-Button .controls-Button__icon + .controls-Button__text {
-  margin: 0 8px 0 28px;
+  margin-right: 8px;
   margin-left: 28px;
 }
 .controls-Button .controls-Button__icon.icon-24 {
-  top: 14px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button .controls-Button__icon.icon-24 {
-    top: 15px;
-  }
+  left: 8px;
+  top: 15px;
 }
 .controls-Button .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin: 0 8px 0 36px;
+  margin-right: 8px;
   margin-left: 36px;
 }
 .controls-Button.controls-Button__primary {
@@ -202,29 +193,19 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-Button__big .controls-Button__icon {
   position: absolute;
-  top: 19px;
   left: 8px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button.controls-Button__big .controls-Button__icon {
-    top: 20px;
-  }
+  top: 20px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon + .controls-Button__text {
-  margin: 0 8px 0 28px;
+  margin-right: 8px;
   margin-left: 28px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-  top: 14px;
   left: 8px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-    top: 15px;
-  }
+  top: 15px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin: 0 8px 0 36px;
+  margin-right: 8px;
   margin-left: 36px;
 }
 .controls-Button.controls-Button__big.controls-Button__primary {
@@ -345,60 +326,54 @@ input[type="reset"]::-moz-focus-inner {
   margin-right: 8px;
 }
 .controls-Button.controls-Checked__checked .controls-Button__icon {
-  top: 19px;
   left: 8px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button.controls-Checked__checked .controls-Button__icon {
-    top: 20px;
-  }
+  top: 20px;
 }
 .controls-Button.controls-Checked__checked .controls-Button__icon + .controls-Button__text {
-  margin-left: 28px;
   margin-right: 8px;
+  margin-left: 28px;
 }
 .controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 {
-  top: 14px;
   left: 8px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 {
-    top: 15px;
-  }
+  top: 15px;
 }
 .controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin-left: 36px;
   margin-right: 8px;
+  margin-left: 36px;
 }
 .controls-Button__big.controls-Checked__checked .controls-Button__text {
   margin-left: 8px;
   margin-right: 8px;
 }
 .controls-Button__big.controls-Checked__checked .controls-Button__icon {
-  top: 19px;
   left: 8px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button__big.controls-Checked__checked .controls-Button__icon {
-    top: 20px;
-  }
+  top: 20px;
 }
 .controls-Button__big.controls-Checked__checked .controls-Button__icon + .controls-Button__text {
-  margin-left: 28px;
   margin-right: 8px;
+  margin-left: 28px;
 }
 .controls-Button__big.controls-Checked__checked .controls-Button__icon.icon-24 {
-  top: 14px;
   left: 8px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button__big.controls-Checked__checked .controls-Button__icon.icon-24 {
-    top: 15px;
-  }
+  top: 15px;
 }
 .controls-Button__big.controls-Checked__checked .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin-left: 36px;
   margin-right: 8px;
+  margin-left: 36px;
+}
+@-moz-document url-prefix() {
+  .controls-Button.controls-Checked__checked .controls-Button__icon {
+    top: 20px;
+  }
+  .controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 {
+    top: 15px;
+  }
+  .controls-Button.controls-Checked__checked.controls-Button__big .controls-Button__icon {
+    top: 20px;
+  }
+  .controls-Button.controls-Checked__checked.controls-Button__big .controls-Button__icon.icon-24 {
+    top: 15px;
+  }
 }
 .controls-IconButton {
   cursor: pointer;
@@ -1017,6 +992,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuButton.controls-Checked__checked .controls-Button__text,
 .controls-MenuButton.controls-Checked__checked .controls-Button__icon + .controls-Button__text {
   margin-right: 30px;
+}
+.controls-MenuButton.controls-Checked__checked .controls-MenuButton__arrowDown {
+  top: 24px;
+  right: 12px;
 }
 .controls-MenuButton__header {
   display: inline-block;
@@ -2236,6 +2215,9 @@ input[type="reset"]::-moz-focus-inner {
   right: 38px;
   top: 8px;
 }
+.controls-MoveDialog {
+  overflow-y: auto !important;
+}
 .controls-PrintMassDialog {
   left: 12px;
 }
@@ -2259,9 +2241,6 @@ input[type="reset"]::-moz-focus-inner {
   margin-top: 8px;
   position: absolute;
   right: 40px;
-}
-.controls-MoveDialog {
-  overflow-y: auto !important;
 }
 .controls-ProgressBar {
   height: 17px;
@@ -2367,6 +2346,17 @@ input[type="reset"]::-moz-focus-inner {
   height: 0;
   left: 0;
   overflow: visible;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing {
+  background: #f2f2f2;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing .controls-DataGrid__th {
+  color: inherit;
+  background-color: #f2f2f2;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing .controls-DataGrid__td {
+  color: #333333;
+  background-color: #f2f2f2;
 }
 .controls-FastDataFilter {
   display: inline-block;

@@ -13,8 +13,8 @@
       display: inline-block;
       width: @menu-button-arrow-width;
       height: @menu-button-arrow-height;
-      right: @menu-button-arrow-right-offset;
-      top: @menu-button-arrow-top-offset;
+      right: @menu-button-arrow-right-offset - @button-border-width;
+      top: @menu-button-arrow-top-offset - @button-border-width;
       .box-sizing(border-box);
       border-width: @menu-button-arrow-border-width;
       border-style: @menu-button-arrow-border-style;
@@ -108,6 +108,10 @@
   &.controls-Checked__checked {
     .controls-Button__text, .controls-Button__icon + .controls-Button__text {
       margin-right: @menu-button-checked-text-right-margin; //this margin reserve space for arrow-down icon
+    }
+    .controls-MenuButton__arrowDown {
+      top: @menu-button-arrow-top-offset - @button-checked-border-width;
+      right: @menu-button-arrow-right-offset - @button-checked-border-width;
     }
   }
 }
