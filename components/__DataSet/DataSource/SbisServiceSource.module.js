@@ -15,6 +15,14 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
     * @public
     * @class SBIS3.CONTROLS.SbisServiceSource
     * @extends SBIS3.CONTROLS.BaseSource
+    * @example
+    * <pre>
+    *     var dataSource = new SbisServiceSource({
+    *         service: {
+    *             name: 'Товар'
+    *         }
+    *     });
+    * </pre>
     */
 
    return BaseSource.extend({
@@ -90,6 +98,23 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       /**
        * Вызов создания записи в источнике данных методом, указанным в опции {@link createMethodName}.
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет SBIS3.CONTROLS.Record.
+       * @example
+       * <pre>
+       *     var dataSource = new SbisServiceSource({
+       *         service: {
+       *             name: 'Товар'
+       *         }
+       *     });
+       *     dataSource.create().addCallback(function(record) {
+       *         var raw = record.getRaw();
+       *         var key = record.getKey();
+       *         record.set('Наименование', 'Тест ' + (new Date()).toString());
+       *         dataSource.update(record).addCallback(function(success) {
+       *             var raw = record.getRaw();
+       *             var key = record.getKey();
+       *         });
+       *     });
+       * </pre>
        * @see createMethodName
        */
       create: function () {
@@ -111,15 +136,12 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
          }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             var record = new Record({
                strategy: self.getStrategy(),
-               raw: res
-               //TODO: на БЛ приходит не тип идентификатор, а целое число
-               //keyField: self.getStrategy().getKey(res)
+               raw: res,
+               keyField: self.getStrategy().getKey(res)
             });
             def.callback(record);
          }, function (error) {
-            if (typeof(window) != 'undefined') {
-               console['log'](error);
-            }
+            $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
             throw new Error('Не удалось выполнить метод create');
          });
          return def;
@@ -129,6 +151,18 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
        * Метод для {@link readMethodName чтения} записи её по идентификатору.
        * @param {Number} id Идентификатор записи.
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт SBIS3.CONTROLS.Record.
+       * @example
+       * <pre>
+       *     var dataSource = new SbisServiceSource({
+       *         service: {
+       *             name: 'Товар'
+       *         }
+       *     });
+       *     dataSource.read(1).addCallback(function(record) {
+       *         var key = record.getKey();
+       *         var name = record.get('Наименование');
+       *     });
+       * </pre>
        * @see readMethodName
        */
       read: function (id) {
@@ -139,14 +173,14 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             'ИмяМетода': 'Список'
          }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             var record = new Record({
-               'strategy': self.getStrategy(),
-               'raw': res
+               strategy: self.getStrategy(),
+               raw: res,
+               keyField: self.getStrategy().getKey(res),
+               isCreated: true
             });
             def.callback(record);
          }, function (error) {
-            if (typeof(window) != 'undefined') {
-               console['log'](error);
-            }
+            $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
             throw new Error('Не удалось выполнить метод read');
          });
          return def;
@@ -156,6 +190,21 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
        * Вызов обновления записи на БЛ методом, указанным в опции {@link updateMethodName}.
        * @param (SBIS3.CONTROLS.Record) record Изменённая запись.
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт Boolean - результат успешности выполнения операции.
+       * @example
+       * <pre>
+       *     var dataSource = new SbisServiceSource({
+       *         service: {
+       *             name: 'Товар'
+       *         }
+       *     });
+       *     dataSource.read(1).addCallback(function(record) {
+       *         var raw = record.getRaw();
+       *         record.set('Наименование', 'Тест ' + (new Date()).toString());
+       *         dataSource.update(record).addCallback(function(success) {
+       *             var raw = record.getRaw();
+       *         });
+       *     });
+       * </pre>
        * @see updateMethodName
        */
       update: function (record) {
@@ -165,11 +214,15 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             rec = strategy.prepareRecordForUpdate(record);
 
          self._BL.call(self._options.updateMethodName, {'Запись': rec}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
+            if (!record.isCreated()) {
+               record.set(record.getKeyField(), res);
+               record.setCreated(true);
+            }
+            record.setChanged(false);
+
             def.callback(true);
          }, function (error) {
-            if (typeof(window) != 'undefined') {
-               console['log'](error);
-            }
+            $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
             throw new Error('Не удалось выполнить метод update');
          });
 
@@ -207,6 +260,19 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
        * @param {Number} offset Смещение начала выборки.
        * @param {Number} limit Количество возвращаемых записей.
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет SBIS3.CONTROLS.DataSet - набор отобранных элементов.
+       * @example
+       * <pre>
+       *     var dataSource = new SbisServiceSource({
+       *         service: {
+       *             name: 'Товар'
+       *         }
+       *     });
+       *     dataSource.query({
+       *         'Наименование': 'Процессор'
+       *     }).addCallback(function(dataSet) {
+       *         //Что-то делаем с dataSet
+       *     });
+       * </pre>
        * @see queryMethodName
        */
       query: function (filter, sorting, offset, limit) {
@@ -232,9 +298,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             });
             def.callback(DS);
          }, function (error) {
-            if (typeof(window) != 'undefined') {
-               console['log'](error);
-            }
+            $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
             throw new Error('Не удалось выполнить метод query');
          });
 

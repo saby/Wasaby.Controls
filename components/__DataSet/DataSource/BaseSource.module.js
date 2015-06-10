@@ -124,11 +124,14 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
        * @returns {$ws.proto.Deferred|undefined} Асинхронный результат выполнения. В колбэке придет результат выполненной операции.
        */
       _syncRecord: function (record) {
-         var mark = record.getMarkStatus(),
-             syncResult;
-         if (mark == 'deleted') {
-            syncResult = this.destroy(record.getKey());
-         } else if (mark == 'changed') {
+         var syncResult;
+         if (record.isDeleted()) {
+            //Удаляем запись, если она уже есть в источнике.
+            if (record.isCreated()) {
+               syncResult = this.destroy(record.getKey());
+            }
+         } else if (!record.isCreated() || record.isChanged()) {
+            //Обновление, в т.ч. записи, полученной не из источника
             syncResult = this.update(record);
          }
 
