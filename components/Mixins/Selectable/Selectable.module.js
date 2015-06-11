@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
         */
       getNextItemIndex: function() {
          var
-            current = parseInt(this.getSelectedIndex(), 10),
+            current = parseInt(this.getSelectedKey(), 10),
             next = this._dataSet.getRecordByKey(current + 1);
          return next !== undefined ? next.getKey() : false;
       },
@@ -136,7 +136,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
         */
       getPrevItemIndex: function() {
          var
-            current = parseInt(this.getSelectedIndex(), 10),
+            current = parseInt(this.getSelectedKey(), 10),
             prev = this._dataSet.getRecordByKey(current - 1);
          return prev !== undefined ? prev.getKey() : false;
       },

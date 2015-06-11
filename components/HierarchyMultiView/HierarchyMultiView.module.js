@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.HierarchyData
                }
             } else {
                this._notify('onItemClick', id, data, target);
-               this.setSelectedIndexes([id]);
+               this.setSelectedKeys([id]);
                if (this._options.elemClickHandler) {
                   this._options.elemClickHandler.call(this, id, data, target);
                }
