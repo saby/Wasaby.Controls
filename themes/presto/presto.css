@@ -1867,6 +1867,41 @@ input[type="reset"]::-moz-focus-inner {
   overflow: hidden;
   position: relative;
 }
+.controls-ListView .controls-ListView__item,
+.controls-DataGrid .controls-ListView__item {
+  overflow: hidden;
+  position: relative;
+}
+.controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox,
+.controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox {
+  background: transparent;
+}
+.controls-ListView .controls-ListView__EmptyData {
+  width: 100%;
+  color: #aaaaaa;
+  text-align: center;
+}
+.controls-ListView .controls-ListView__itemCheckBox {
+  width: 16px;
+  height: 16px;
+  background: none;
+  cursor: pointer;
+  display: none;
+}
+.controls-ListView.controls-ListView__multiselect .controls-ListView__itemCheckBox {
+  display: inline-block;
+}
+.controls-ListView.controls-ListView__multiselect .controls-ListView__item__multiSelected .controls-ListView__itemCheckBox {
+  background: transparent url('img/checkbox.png') -2px -5px;
+}
+.controls-ListView .controls-ListView-scrollIndicator {
+  display: block;
+  background: url('img/ajax-loader-indicator.gif') 0 0 no-repeat;
+  margin: 0 auto !important;
+  top: 50%!important;
+  height: 32px;
+  width: 32px;
+}
 .controls-ListView > .controls-TreeView__childContainer {
   display: block;
 }
