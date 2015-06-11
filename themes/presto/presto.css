@@ -1022,6 +1022,11 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #aaaaaa;
   background: #ffffff;
 }
+@-moz-document url-prefix() {
+  .controls-Button.controls-MenuButton {
+    padding-bottom: 3px;
+  }
+}
 .controls-MenuLink {
   position: relative;
   color: #ffcc99;
