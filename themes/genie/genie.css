@@ -1022,6 +1022,11 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #d1d1d1;
   background: #ffffff;
 }
+@-moz-document url-prefix() {
+  .controls-Button.controls-MenuButton {
+    padding-bottom: 3px;
+  }
+}
 .controls-MenuLink {
   position: relative;
   color: #00c795;
@@ -2508,7 +2513,4 @@ input[type="reset"]::-moz-focus-inner {
   background-image: url('img/rowSelect.png');
   background-position: left top;
   background-repeat: repeat-y;
-}
-.controls-ListView__multiselect .controls-DataGrid__td:first-child {
-  background: none;
 }
