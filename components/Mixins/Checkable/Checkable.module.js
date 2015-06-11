@@ -7,6 +7,14 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
     */
 
    var Checkable = /**@lends SBIS3.CONTROLS.Checkable.prototype  */{
+       /**
+        * @event onCheckedChange При изменении активности кнопки
+        * @param {$ws.proto.EventObject} Дескриптор события.
+        * @param {Boolean} checked Признак активности кнопки.
+        * @see checked
+        * @see setChecked
+        * @see isChecked
+        */
       $protected: {
          _options: {
             /**
@@ -21,6 +29,8 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
              *     <option name="checked">true</option>
              * </pre>
              * @see setChecked
+             * @see onCheckedChange
+             * @see isChecked
              */
             checked: false
          }
@@ -40,6 +50,7 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
        * </pre>
        * @see checked
        * @see isChecked
+       * @see onCheckedChange
        * @see setValue
        */
       setChecked: function(flag) {
@@ -58,6 +69,7 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
        * </ul>
        * @see checked
        * @see setChecked
+       * @see onCheckedChange
        * @see getValue
        */
       isChecked: function() {
