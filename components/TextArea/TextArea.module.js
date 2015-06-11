@@ -8,6 +8,19 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
     * @extends SBIS3.CONTROLS.TextBoxBase
     * @control
     * @public
+    * @author Черёмушкин Илья
+    * @css controls-TextArea Класс для изменения отображения текста в многострочном поле ввода.
+    *
+    * @ignoreOptions independentContext contextRestriction className
+    *
+    * @ignoreMethods applyEmptyState applyState findParent getAlignment getEventHandlers getEvents getExtendedTooltip
+    * @ignoreMethods getId getLinkedContext getMinHeight getMinSize getMinWidth getOwner getOwnerId getParentByClass
+    * @ignoreMethods getParentByName getParentByWindow getStateKey getTopParent getUserData hasEvent hasEventHandlers
+    * @ignoreMethods isDestroyed isSubControl makeOwnerName once sendCommand setOwner setStateKey setUserData setValue
+    * @ignoreMethods subscribe unbind unsubscribe getClassName setClassName
+    *
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
+    * @ignoreEvents onReady
     */
 
    var TextArea = TextBoxBase.extend( /** @lends SBIS3.CONTROLS.TextArea.prototype */ {
@@ -15,17 +28,51 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          _dotTplFn: dotTplFn,
          _inputField: null,
          _options: {
+             /**
+              * @cfg {String} Текст подсказки внутри поля ввода
+              * @remark
+              * Заданный в этой опции текст отображается внутри многостояного поля ввода до момента получения фокуса.
+              * @example
+              * <pre>
+              *     <option name="placeholder">Введите ФИО полностью</option>
+              * </pre>
+              * @see setPlaceholder
+              */
+             placeholder: '',
             /**
-             * @cfg {Number} Количество строк
+             * @cfg {Number} Минимальное количество строк
+             * @example
+             * <pre>
+             *     <option name="minLinesCount">2</option>
+             * </pre>
+             * @remark
+             * Многострочное поле ввода построится с указанным в данной опции количеством строк.
+             * @see autoResize
              */
             minLinesCount: 0,
             /**
-             * @typedef {Object} autoResize
-             * @property {Boolean} state включен/выключен
-             * @property {Number} maxLinesCount максимальное количество строк
+             * @typedef {Object} AutoResize
+             * @property {Boolean} [state=false] Включёно/выключено автоматическое подстраивание по высоте.
+             * @property {Number} maxLinesCount Максимальное количество строк.
              */
             /**
-             * @cfg {autoResize} авторесайз по высоте, если текст не помещается
+             * @cfg {AutoResize[]} Автоматическое подстраивание по высоте, если текст не помещается
+             * @example
+             * <pre>
+             *    <options name="autoResize">
+             *        <option name="state">true</option>
+             *        <option name="maxLinesCount">10</option>
+             *    </options>
+             * </pre>
+             * @remark
+             * В данной опции можно:
+             * <ul>
+             *    <li>включить автоматическое увеличение высоты многострочного поля ввода при нехватке строк;</li>
+             *    <li>задать максимальное количество строк.</li>
+             * </ul>
+             * По достижению максимального количества строк поле ввода больше не будет увеличиваться по высоте, и
+             * появится вертикальная полоса прокрутки.
+             * @see minLinesCount
              */
             autoResize: {}
          }
@@ -94,12 +141,27 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
             TextArea.superclass.setText.call(this, newText);
          }
       },
-
+       /**
+        * Установить подсказку, отображаемую внутри многострочного поля ввода.
+        * Метод установки или замены текста подсказки, заданного опцией {@link placeholder}.
+        * @param {String} text Текст подсказки.
+        * @example
+        * <pre>
+        *     if (control.getText() == "") {
+        *        control.setPlaceholder("Введите ФИО полностью");
+        *     }
+        * </pre>
+        * @see placeholder
+        */
       setPlaceholder: function(text){
          TextArea.superclass.setPlaceholder.call(this, text);
          this._inputField.attr('placeholder', text);
       },
-
+       /**
+        * Метод установки минимального количества строк.
+        * @param count Количество строк, меньше которого высота не уменьшается.
+        * @see minLinesCount
+        */
       setMinLinesCount: function(count) {
          var cnt = parseInt(count, 10);
          this._options.minLinesCount = cnt;
