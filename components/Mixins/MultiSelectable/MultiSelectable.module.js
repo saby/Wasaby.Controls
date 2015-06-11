@@ -8,9 +8,13 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
    var MultiSelectable = /**@lends SBIS3.CONTROLS.MultiSelectable.prototype  */{
        /**
-        * @event onSelectedItemsChange
-        *
+        * @event onSelectedItemsChange При смене выбранных элементов коллекции
+        * @param {$ws.proto.EventObject} Дескриптор события.
         * @param idArray Массив выбранных элементов.
+        * @example
+        * <pre>
+        *
+        * </pre>
         * @see selectedKeys
         * @see setSelectedKeys
         * @see setSelectedItemsAll
@@ -44,6 +48,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
              * @see allowEmptySelection
              * @see setSelectedKeys
              * @see getSelectedKeys
+             * @see addItemsSelection
+             * @see removeItemsSelection
+             * @see removeItemsSelectionAll
+             * @see toggleItemsSelection
+             * @see toggleItemsSelectionAll
              */
             selectedKeys : [],
             /**
@@ -59,6 +68,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
               * </pre>
               * @see selectedKeys
               * @see removeItemsSelectionAll
+              * @see removeItemsSelection
+              * @see toggleItemsSelection
+              * @see toggleItemsSelectionAll
               */
             allowEmptySelection : true
          }
@@ -109,7 +121,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       /**
        * Устанавливает выбранные элементы по id
-       * @param idArray Массив идентификаторов выбранных элементов.
+       * @param {Array} idArray Массив идентификаторов выбранных элементов.
+       * @example
+       * <pre>
+       *     setSelectedKeys: {1, 3, 5}
+       * </pre>
        * @see getSelectedKeys
        * @see removeItemsSelection
        * @see addItemsSelection
@@ -139,10 +155,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       /**
-       * Устанавливает все элементы выбранными
+       * Устанавливает все элементы выбранными.
+       * @see selectedKeys
        * @see removeItemsSelection
        * @see removeItemsSelectionAll
-       * @see getSelected
+       * @see getSelectedKeys
        * @see addItemsSelection
        * @see multiselect
        */
@@ -158,7 +175,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       /**
-       * Получает индексы выбранных элементов
+       * Получает индентификаторы выбранных элементов.
        * @see selectedKeys
        * @see setSelectedKeys
        * @see addItemsSelection
@@ -169,8 +186,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       /**
-       * Добавить элементы в набор выбранных
-       * @param idArray
+       * Добавить указанные элементы в набор выбранных.
+       * @param {Array} idArray Массив идентификаторов добавляемых к выбранным элементов.
        * @see setSelectedKeys
        * @see getSelectedKeys
        * @see setSelectedItemsAll
@@ -205,8 +222,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       /**
-       * Удаляет элементы из набора выбранных
-       * @param idArray
+       * Удаляет указанные элементы из набора выбранных.
+       * @param {Array} idArray Массив идентификаторов элементов к удалению из выбранных.
        * @see removeItemsSelectionAll
        * @see getSelectedKeys
        * @see allowEmptySelection
@@ -231,7 +248,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       /**
-       * Убрать все элементы из набора выбранных
+       * Убрать все элементы из набора выбранных.
        * @see removeItemsSelection
        * @see getSelectedKeys
        * @see toggleItemsSelectionAll
@@ -242,8 +259,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       /**
-       * Меняет состояние элементов на противоположное
-       * @param idArray
+       * Меняет состояние выбранности указанных элементов на противоположное.
+       * @param {Array} idArray Массив идентификаторов элементов для инвертирования отметки.
        * @see getSelectedKeys
        * @see setSelectedKeys
        * @see toggleItemsSelectionAll
@@ -283,7 +300,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       /**
-       * Меняет состояние выбранности всех элементов на противоположное
+       * Меняет состояние выбранности всех элементов на противоположное.
        * @see removeItemsSelectionAll
        * @see toggleItemsSelection
        * @see multiselect
