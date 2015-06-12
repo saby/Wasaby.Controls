@@ -1,8 +1,10 @@
 <div>
    <label data-lmtype="Label" class="ws-Label ws-Label-titleLeft demo-MyCheckBoxGroup__position">
       <span data-lmchild="label-title" class="ws-Label-title">
+         
          Группа недоступна для взаимодействия:
-      </span>
+      
+         </span>
       <component data-component="SBIS3.CONTROLS.CheckBoxGroup" name="CheckBoxGroup 1" class="ws-Label-content">
          <options name="items" type="array">
             <options>
@@ -16,16 +18,16 @@
          </options>
          <option name="keyField">id</option>
          <option name="displayField">title</option>
-         <options name="selectedKeys">
-            <option name="content">1</option>
-         </options>
+         <options name="selectedKeys" type="array"></options>
          <option name="enabled">false</option>
       </component>
    </label>
    <label data-lmtype="Label" class="ws-Label ws-Label-titleLeft demo-MyCheckBoxGroup__position">
       <span data-lmchild="label-title" class="ws-Label-title">
+         
          Группа с выбором только одного значения:
-      </span>
+      
+         </span>
       <component data-component="SBIS3.CONTROLS.CheckBoxGroup" name="CheckBoxGroup 2" class="ws-Label-content">
          <options name="items" type="array">
             <options>
@@ -43,10 +45,8 @@
       </component>
    </label>
    <label data-lmtype="Label" class="ws-Label ws-Label-titleLeft demo-MyCheckBoxGroup__position">
-      <span data-lmchild="label-title" class="ws-Label-title">
-         Группа с множественным выбором:
-      </span>
-      <component data-component="SBIS3.CONTROLS.CheckBoxGroup" name="CheckBoxGroup 3" class="ws-Label-content">
+      <span data-lmchild="label-title" class="ws-Label-title">Вертикально расположенная группа с множественным выбором:</span>
+      <component data-component="SBIS3.CONTROLS.CheckBoxGroup" name="CheckBoxGroup 3" class="ws-Label-content controls-ButtonGroup__vertical">
          <options name="items" type="array">
             <options>
                <option name="id" type="string">1</option>
