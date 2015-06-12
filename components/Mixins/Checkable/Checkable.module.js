@@ -11,6 +11,17 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
         * @event onCheckedChange При изменении активности кнопки
         * @param {$ws.proto.EventObject} Дескриптор события.
         * @param {Boolean} checked Признак активности кнопки.
+        * @example
+        * <pre>
+        *     var checkValue = function() {
+        *        if (this.isChecked()) {
+        *           buttonSend.setEnabled(true);
+        *        } else {
+        *           buttonSend.setEnabled(false);
+        *        }
+        *     }
+        *     checkBox.subscribe('onCheckedChange', checkValue);
+        * </pre>
         * @see checked
         * @see setChecked
         * @see isChecked
@@ -45,7 +56,7 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
        * @param {Boolean} flag Признак состояния кнопки true/false.
        * @example
        * <pre>
-       *     var btn = this.getChildControlByName(("myButton");
+       *     var btn = this.getChildControlByName("myButton");
        *        btn.setChecked(true);
        * </pre>
        * @see checked
@@ -62,11 +73,23 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
 
       /**
        * Признак текущего состояния кнопки.
+       * @remark
        * Возможные значения:
        * <ul>
        *    <li>true - кнопка нажата/ чекбокс с галочкой/ радиокнопка выбрана;</li>
        *    <li>false - кнопка не нажата/ чекбокс пустой/ радиокнопка пустая.</li>
        * </ul>
+       * @example
+       * <pre>
+       *     var checkValue = function() {
+       *        if (this.isChecked()) {
+       *           buttonSend.setEnabled(true);
+       *        } else {
+       *           buttonSend.setEnabled(false);
+       *        }
+       *     }
+       *     checkBox.subscribe('onCheckedChange', checkValue);
+       * </pre>
        * @see checked
        * @see setChecked
        * @see onCheckedChange
