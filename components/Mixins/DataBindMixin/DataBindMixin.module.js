@@ -31,10 +31,7 @@ define('js!SBIS3.CONTROLS.DataBindMixin', ['js!SBIS3.CORE.AttributeCfgParser'], 
          * Если указать несуществующее поле, то метод ничего не сделает.
          * @param {String} field Поле контекста.
          * @param {String} value Новое значение.
-         * @example
-         * <pre>
-         *
-         * </pre>
+         * @noShow
          */
       saveToContext: function(field, value){
          if (this._dataBind[field]) {
