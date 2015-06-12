@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
     *    <li>{@link SBIS3.CONTROLS.TextArea#minLinesCount минимальное}</li>
     *    <li>и {@link SBIS3.CONTROLS.TextArea#autoResize.minLinesCount максимальное} количества отображаемых строк,</li>
     *    <li>{@link SBIS3.CONTROLS.TextArea#autoResize автоматическое изменение количества строк}.</li>
-    * </li>
+    * </ul>
     * @class SBIS3.CONTROLS.TextArea
     * @extends SBIS3.CONTROLS.TextBoxBase
     * @control
