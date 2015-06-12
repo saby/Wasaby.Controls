@@ -139,7 +139,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _keyboardHover: function(e) {
          var newItemIndex = this[e.which === $ws._const.key.down ? 'getNextItemIndex' : 'getPrevItemIndex']();
          if (newItemIndex !== false) {
-            this.setSelectedIndex(newItemIndex);
+            this.setSelectedKey(newItemIndex);
          }
          return false;
       },
