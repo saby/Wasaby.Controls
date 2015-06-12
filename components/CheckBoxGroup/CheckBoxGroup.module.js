@@ -30,6 +30,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
     *    <option name="keyField">id</option>
     *    <option name="displayField">title</option>
     * </component>
+    * @cssModifier controls-ButtonGroup__vertical Для вертикального расположения элементов в группе.
     */
 
    var CheckBoxGroup = CheckBoxGroupBase.extend( /** @lends SBIS3.CONTROLS.CheckBoxGroup.prototype */ {
