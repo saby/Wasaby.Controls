@@ -400,27 +400,55 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _drawItem: function (item, at) {
          var
-               groupBy = this._options.groupBy,
             targetContainer,
-            itemInstance,
-            isGroup;
+            itemInstance;
+         //Запускаем группировку если она есть
+         this._group(item, at);
+
+         targetContainer = this._getTargetContainer(item);
+         itemInstance = this._createItemInstance(item, targetContainer, at);
+         this._addItemAttributes(itemInstance, item);
+         this._appendItemTemplate(item, targetContainer, itemInstance, at);
+      },
+      /**
+       *
+       * @param item
+       * @param at
+       */
+      _group: function(item, at){
+         var
+               groupBy = this._options.groupBy,
+               tplOptions = {
+                  columns : $ws.core.clone(this._options.columns),
+                  multiselect : this._options.multiselect,
+                  hierField: this._options.hierField + '@'
+               },
+               targetContainer,
+               itemInstance,
+               isGroup;
          if (!Object.isEmpty(groupBy)){
             isGroup = groupBy.method.apply(this, [item, at]);
             if (isGroup){
                targetContainer = this._getTargetContainer(item);
-               itemInstance = this._buildTplItem(item, groupBy.template(item));
+               tplOptions.item = item;
+               tplOptions.colspan = this._options.columns.length + this._options.multiselect;
+               itemInstance = this._buildTplItem(item, groupBy.template(tplOptions));
                if (groupBy.render && typeof groupBy.render === 'function') {
                   itemInstance = groupBy.render.apply(this, [item, itemInstance]);
                }
                this._appendItemTemplate(item, targetContainer, itemInstance, at);
             }
          }
-         targetContainer = this._getTargetContainer(item);
-         itemInstance = this._createItemInstance(item, targetContainer, at);
-         this._addItemAttributes(itemInstance, item);
-         this._appendItemTemplate(item, targetContainer, itemInstance, at);
       },
-
+      /**
+       *
+       * @param group
+       */
+      setGrouping : function(group){
+         //TODO может перерисовку надо по-другому делать
+         this._options.groupBy = group;
+         this._redraw();
+      },
       _getItemTemplate: function () {
          throw new Error('Method _getItemTemplate() must be implemented');
       },
