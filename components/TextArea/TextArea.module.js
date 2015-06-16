@@ -168,6 +168,12 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
        /**
         * Метод установки минимального количества строк.
         * @param count Количество строк, меньше которого высота не уменьшается.
+        * @example
+        * <pre>
+        *     if (textArea.getText().length > 300) {
+        *        textArea.setMinLinesCount(7);
+        *     }
+        * </pre>
         * @see minLinesCount
         */
       setMinLinesCount: function(count) {
