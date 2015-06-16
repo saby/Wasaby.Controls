@@ -10,7 +10,11 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
        /**
         * @event onCheckedChange При изменении активности кнопки
         * @param {$ws.proto.EventObject} Дескриптор события.
-        * @param {Boolean} checked Признак активности кнопки.
+        * @param {Boolean} checked Признак состояния:
+        * <ul>
+        *    <li>true - кнопка нажата/ чекбокс с галочкой/ радиокнопка выбрана;</li>
+        *    <li>false - кнопка не нажата/ чекбокс пустой/ радиокнопка пустая.</li>
+        * </ul>
         * @example
         * <pre>
         *     var checkValue = function() {
@@ -29,7 +33,7 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
       $protected: {
          _options: {
             /**
-             * @cfg {Boolean} Признак активности кнопки в начальном состоянии
+             * @cfg {Boolean} Состояние кнопки до взаимодействия с ней пользователем
              * Возмозможные значения:
              * <ul>
              *    <li>true - кнопка нажата/ чекбокс с галочкой/ радиокнопка выбрана;</li>
