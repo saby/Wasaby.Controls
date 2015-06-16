@@ -743,6 +743,10 @@ function(BaseControl, dotTpl){
          }
       },
 
+      canAcceptFocus: function(){
+        return false;
+      },
+
       _updateFiltersFromContext : function() {
          for (var i = 0, len = this._options.filterFields.length; i < len; i++) {
             var filter = this._options.filterFields[i];
