@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        /**
         * @event onSelectedItemsChange При смене выбранных элементов коллекции
         * @param {$ws.proto.EventObject} Дескриптор события.
-        * @param idArray Массив выбранных элементов.
+        * @param {Array.<String>} idArray Массив ключей выбранных элементов.
         * @example
         * <pre>
         *     var itemsChanged = function() {
