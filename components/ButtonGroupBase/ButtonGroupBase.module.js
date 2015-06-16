@@ -26,22 +26,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', ['js!SBIS3.CORE.CompoundControl', 'j
       $constructor: function() {
          this._container.removeClass('ws-area');
       },
-       /**
-        * Метод устанавливает доступность контрола для взаимодействия с ним.
-        * @param {Boolean} enabled Доступен ли контрол для взаимодействия с ним.
-        * Возможные значения:
-        * <ul>
-        *    <li>true - контрол доступен;</li>
-        *    <li>false - контрол не доступен для взаимодействия, внешне отличается от доступного.</li>
-        * </ul>
-        * @example
-        * Если поле ввода (TextBox) отмечено ошибкой валидации, то кнопка (btn) не доступна для клика.
-        * <pre>
-        *    btn.subscribe('onReady', function() {
-        *       this.setEnabled(!TextBox.isMarked());
-        *    });
-        * </pre>
-        */
+
       setEnabled: function(enabled) {
         ButtonGroupBase.superclass.setEnabled.call(this, enabled);
         var itemsInstances = this.getItemsInstances();
