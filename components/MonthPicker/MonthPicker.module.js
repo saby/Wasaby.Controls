@@ -19,13 +19,15 @@ define(
 
    /**
     * Контрол выбор месяца и года, или только года, с выпадающей вниз панелью.
-    * Не наследуется от поля ввода, потому что там в принципе не требуется текстовый ввод
+    * Не наследуется от поля ввода, потому что там в принципе не требуется текстовый ввод.
     * @class SBIS3.CONTROLS.MonthPicker
     * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @control
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyMonthPicker
+    * @author Крайнов Дмитрий Олегович
+    *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
     */
@@ -33,34 +35,60 @@ define(
    var MonthPicker = Control.Control.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.MonthPicker.prototype */{
       _dropdownTpl: DropdownTpl,
       _dotTplFn: dotTplFn,
-
+       /**
+        * @event onDateChange Срабатывает при изменении даты.
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {String} date Дата.
+        * @example
+        * <pre>
+        *    var dateChangeFn = function(event) {
+        *       if (this.getDate().getTime() < minDate.getTime()) {
+        *          buttonSend.setEnabled(false);
+        *          title.setText('Указана прошедшая дата: проверьте нет ли ошибки');
+        *       }
+        *    };
+        *    monthPicker.subscribe('onDateChange', dateChangeFn);
+        * </pre>
+        * @see setText
+        * @see setValue
+        */
       $protected: {
          _options: {
+
             /**
-             * @typedef {Object} ModeEnum
-             * @variant month только месяц
-             * @variant year месяц и год
-             */
-            /**
-             * @cfg {ModeEnum} ввод только месяца или месяца и года (month/year)
+             * @cfg {String} Режим ввода
+             * @remark
+             * Значение данной опции влияет на отображение контрола и выводимые им данные:
+             * <ul>
+             *    <li>только год,</li>
+             *    <li>месяц и год.</li>
+             * </ul>
              * @example
              * <pre>
              *     <option name="mode">year</option>
              * </pre>
+             * @variant month только месяц
+             * @variant year месяц и год
              */
             mode: 'month',
             /**
-             * @cfg {String|Date} Значение для установки по умолчанию (в последствии в нем хранится текущее значение)
+             * @cfg {String|Date} Значение для установки по умолчанию (в последствии в нём хранится текущее значение)
+             * @remark
              * Строка должна быть формата [MM.]YYYY (месяц -- одна или две цифры, год -- от 1-ой до 4-х цифр)
              * В зависимости от режима работы, установленного в mode, возьмутся месяц и год, либо только год.
              * В дальнейшем используется для хранения текущего значения.
              * Значение всегда хранится с нулевым временем 00:00:00, и, в случае режима года, хранится первый день
-             * первого месяца, а в режиме месяца -- первый день данного месяца
+             * первого месяца, а в режиме месяца - первый день данного месяца.
+             * @example
+             * <pre>
+             *     <option name="date">2015-03-26T21:00:00.000Z</option>
+             * </pre>
              */
             date: '',
             /**
              * @cfg {String} формат визуального отображения месяца
-             * TODO на данный момент нигде не используется
+             * TODO проверить необходимость данной опции, определиться в рамках 3.7.3
+             * @example
              */
             monthFormat: ''
          },
@@ -172,8 +200,13 @@ define(
       },
 
       /**
-       * Установить режим ввода (месяц / месяц,год)
-       * @param {String} mode
+       * Метод установки/замены режим ввода (месяц / месяц,год)
+       * @param {String} mode Режим ввода. Возможные значения:
+       * <ul>
+       *    <li>только год,</li>
+       *    <li>месяц и год.</li>
+       * </ul>
+       * @see mode
        */
       setMode: function(mode){
          if( mode == 'year' || mode == 'month' ){
@@ -191,6 +224,12 @@ define(
 
       /**
        * Установить текущий месяц/год
+       * @see setNext
+       * @see setPrev
+       * @see getNextDate
+       * @see date
+       * @see setDate
+       * @see getDate
        */
       setToday: function() {
          this.setDate(new Date());
@@ -201,6 +240,8 @@ define(
        * Отличается от приватного метода _setDate тем, что генерирует событие
        * Может принимает либо строку формата 'число.число' или 'число', либо объект типа Date.
        * @param value Строка или дата
+       * @see date
+       * @see getDate
        */
       setDate: function(value) {
          value = value ? value : new Date();
@@ -343,6 +384,10 @@ define(
        * В случае года, возвращает дату 1-ого дня 1-ого месяца данного года.
        * В случае месяца и года, возвращает дату 1-ого дня данного месяца данного года
        * @returns {Date|*} Текущая дата
+       * @see setDate
+       * @see date
+       * @see getTextDate
+       * @see getInterval
        */
       getDate: function(){
          return this._options.date;
@@ -351,17 +396,33 @@ define(
       /**
        * Взовращает дату в виде строки формата 'YYYY-MM-DD'
        * @returns {string}
+       * @see date
+       * @see setDate
+       * @see getDate
+       * @see getInterval
        */
       getTextDate: function(){
          return this._options.date.toSQL();
       },
 
       /**
-       * Возвращает интервал даты (массив из двух дат), где, в случае 'месац, год':
-       * начало интервала - первый день данного месяца данного года, конец - последний день данного месяца данного года с временем 23:59:59
+       * Возвращает интервал даты
+       * @remark
+       * В случае 'месяц, год':
+       * <ul>
+       *    <li>начало интервала - первый день данного месяца данного года,
+       *    <li>конец - последний день данного месяца данного года с временем 23:59:59.</li>
+       * <ul>
        * а в случае режима 'год':
-       * начало интервала - первый день данного года, конец - последний день данного года с временем 23:59:59
-       * @returns {*[]}
+       * <ul>
+       *    <li>начало интервала - первый день данного года,</li>
+       *    <li>конец - последний день данного года с временем 23:59:59.</li>
+       * </ul>
+       * @returns {*[]} Массив из двух дат в зависимости от режима ввода размах составляет либо месяц, либо год.
+       * @see date
+       * @see setDate
+       * @see getDate
+       * @see getTextDate
        */
       getInterval: function(){
          var
@@ -379,6 +440,7 @@ define(
        *    <li>года, если передан только параметр year</li>
        *    <li>месяца, если переданы оба параметра year и month</li>
        * </ul>
+       * @remark
        * с временем 00:00:00.000 (полночь, то есть абсолютное начало данного дня).
        * БАГ: если требуется получить первый день в январе, и если первое января в этом году выпадает на среду, тогда
        * время в дате возвратится некорректно из-за бага с переходом на летнее/зимнее время
