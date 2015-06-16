@@ -3,14 +3,13 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
    'use strict';
 
    /**
-    * Класс, определяющий многострочное поле ввода с возможностью задать количество строк, столбцов, включить авторесайз
     * Многострочное поле ввода - это текстовое поле с автовысотой.
-    * Данное поле автоматически меняет высоту в зависимости от количества введённой информации.
-    * Для многострочного поля ввода настраиваются:
+    * Данное поле может автоматически менять высоту в зависимости от количества введённой информации.
+    * Для контрола настраиваются:
     * <ul>
     *    <li>{@link SBIS3.CONTROLS.TextArea#minLinesCount минимальное}</li>
     *    <li>и {@link SBIS3.CONTROLS.TextArea#autoResize.minLinesCount максимальное} количества отображаемых строк,</li>
-    *    <li>{@link SBIS3.CONTROLS.TextArea#autoResize автоматическое изменение количества строк}.</li>
+    *    <li>{@link SBIS3.CONTROLS.TextArea#autoResize.state автоматическое ли изменение количества строк}.</li>
     * </ul>
     * @class SBIS3.CONTROLS.TextArea
     * @extends SBIS3.CONTROLS.TextBoxBase
@@ -39,7 +38,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
              /**
               * @cfg {String} Текст подсказки внутри поля ввода
               * @remark
-              * Заданный в этой опции текст отображается внутри многостояного поля ввода до момента получения фокуса.
+              * Заданный в этой опции текст отображается внутри многострочного поля ввода до начала ввода.
               * @example
               * <pre>
               *     <option name="placeholder">Введите ФИО полностью</option>
