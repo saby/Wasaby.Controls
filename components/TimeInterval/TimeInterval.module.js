@@ -14,7 +14,7 @@ define(
 
       /**
        * Контрол предназначен для ввода информации о количестве времени с точностью от дня до минуты.
-       * Можно вводить только значения особого формата даты.
+       * Можно вводить только значения особого формата даты ISO_8601 с точностью от дней до минут.
        * @class SBIS3.CONTROLS.TimeInterval
        * @extends SBIS3.CONTROLS.FormattedTextBoxBase
        * @control
@@ -25,7 +25,7 @@ define(
 
       var TimeInterval = FormattedTextBoxBase.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.TimeInterval.prototype */{
           /**
-           * @event onChangeInterval Срабатывает при изменении даты.
+           * @event onChangeInterval Срабатывает при изменении временного интервала.
            * @param {$ws.proto.EventObject} eventObject Дескриптор события.
            * @param {String} interval Количество времени.
            * @example
@@ -104,12 +104,17 @@ define(
                 * @variant 'HHH:II'
                 * @variant 'DDDD:HH'
                 * @variant 'DDD:HH'
+                * @see interval
+                * @see setInterval
+                * @see setDays
+                * @see setHours
+                * @see setMinutes
                 */
                mask: 'DD:HH',
                /**
-                * @cfg {String} Интервал
+                * @cfg {String} Временной интервал
                 * @remark
-                * В качестве значения опция принимает строку вида: P*DT*H*M, где
+                * В качестве значения опция принимает строку вида: P*DT*H*M, где:
                 * <ul>
                 *    <li>P - обозначение начала задания даты. Значение опции всегда должно начинаться с этого символа,
                 *    даже при необходимости задать только время;</li>
@@ -150,6 +155,13 @@ define(
          /**
           * Устанавливаем количество дней.
           * @param days Дни в интервале.
+          * @see interval
+          * @see mask
+          * @see setInterval
+          * @see setHours
+          * @see setMinutes
+          * @see getInterval
+          * @see onChangeInterval
           */
          setDays: function (days) {
             this._setSection(days, "days");
@@ -157,6 +169,13 @@ define(
          /**
           * Устанавливаем количество часов.
           * @param hours Часы в интервале.
+          * @see interval
+          * @see mask
+          * @see setInterval
+          * @see setDays
+          * @see setMinutes
+          * @see getInterval
+          * @see onChangeInterval
           */
          setHours: function (hours) {
             this._setSection(hours, "hours");
@@ -164,6 +183,13 @@ define(
          /**
           * Устанавливаем количество минут.
           * @param minutes Минуты в интервале.
+          * @see interval
+          * @see mask
+          * @see setInterval
+          * @see setDays
+          * @see setHours
+          * @see getInterval
+          * @see onChangeInterval
           */
          setMinutes: function (minutes) {
             this._setSection(minutes, "minutes");
@@ -183,12 +209,24 @@ define(
 
          /**
           * Установить интервал.
-          * @param {String} interval Количество времени.
+          * @param {String} interval Количество времени. В качестве значения принимает строку вида 'P*DT*H*M', где:
+          * <ul>
+          *    <li>P - обозначение начала задания даты. Строка всегда должна начинаться с этого символа,
+          *    даже при необходимости задать только время;</li>
+          *    <li>D - указывает на то, что стоящее перед этим символом число является количеством дней;</li>
+          *    <li>T - обозначение начала задания времени;</li>
+          *    <li>H - ставится после количества часов;</li>
+          *    <li>M - ставится после количества минут.</li>
+          * </ul>
+          * Можно передать, например, строку 'PT1530M', при маске 'HH:II' будет установлено значение 25:30,
+          * а при маске 'DD:HH:II' - 01:01:30.
           * @see interval
           * @see getInterval
           * @see setDays
           * @see setHours
           * @see setMinutes
+          * @see mask
+          * @see onChangeInterval
           */
          setInterval: function ( interval ) {
             this.timeInterval.set(interval);
@@ -196,7 +234,15 @@ define(
             this._notify('onChangeInterval', this.timeInterval.getValue());
          },
          /**
-          * Получить интервал.
+          * Метод получения интервала, заданного либо опцией {@link interval}, либо методом {@link setInterval} возвращает
+          * значение строкой вида 'P*DT*H*M', где:
+          * <ul>
+          *    <li>P - обозначение начала задания даты;</li>
+          *    <li>D - указывает на то, что стоящее перед этим символом число является количеством дней;</li>
+          *    <li>T - обозначение начала задания времени;</li>
+          *    <li>H - число перед этим символом является количеством часов;</li>
+          *    <li>M - счисло перед этим символом является количеством минут.</li>
+          * </ul>
           * @see interval
           * @see setInterval
           */
