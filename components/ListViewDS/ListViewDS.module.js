@@ -74,7 +74,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _dotItemTpl: null,
             _itemsContainer: null,
             _actsContainer: null,
-            _mouseOnItemActions: false,
             _hoveredItem: {
                target: null,
                key: null,
@@ -220,7 +219,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                if (e.which == 1) {
                   var $target = $(e.target),
                       target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
-                  if (target.length && $.contains(self._getItemsContainer()[0], target[0])) {
+                  if (target.length && this._isViewElement(target)) {
                      var id = target.data('id'), data = self._dataSet.getRecordByKey(id);
                      self._elemClickHandler(id, data, e.target);
                   }
@@ -248,12 +247,11 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
 
          _checkTargetContainer: function(target) {
-            if(!this._options.showPaging) {
-               return false;
-            }
-            return this._pager && $.contains(this._pager.getContainer()[0], target[0]);
+            return this._options.showPaging && this._pager && $.contains(this._pager.getContainer()[0], target[0]);
          },
-
+         _isViewElement: function(elem) {
+            return $.contains(this._getItemsContainer()[0], elem[0]);
+         },
          /**
           * Обрабатывает перемещения мышки на элемент представления
           * @param e
@@ -261,30 +259,28 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           */
          _mouseMoveHandler: function(e) {
             var $target = $(e.target),
+                containerCords,
+                targetCords,
                 target,
                 targetKey;
-            //Если увели мышку на оперции по ховеру, то делать ничего не надо
-            if(this._mouseOnItemActions) {
-               return;
-            }
-            //Если увели мышку с контейнера с элементами(например на шапку), нужно об этом посигналить
+
             if (this._checkTargetContainer($target)) {
                this._mouseLeaveHandler();
                return;
             }
             target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
-            if (target.length) {
+            if (target.length && this._isViewElement(target)) {
                targetKey = target.data('id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
-                  var cords = this._container[0].getBoundingClientRect(),
-                      targetCords = target[0].getBoundingClientRect();
+                  containerCords = this._container[0].getBoundingClientRect();
+                  targetCords = target[0].getBoundingClientRect();
                   this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
                   this._hoveredItem = {
                      key: targetKey,
                      container: target.addClass('controls-ListView__hoveredItem'),
                      position: {
-                        top: targetCords.top - cords.top,
-                        left: targetCords.left - cords.left
+                        top: targetCords.top - containerCords.top,
+                        left: targetCords.left - containerCords.left
                      },
                      size: {
                         height: target[0].offsetHeight,
@@ -294,12 +290,22 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   this._notify('onChangeHoveredItem', this._hoveredItem);
                   this._onChangeHoveredItem(this._hoveredItem);
                }
-            } else if (!this._hoveredEditInPlace($target)) {
+            } else if (!this._isHoverControl($target)) {
                this._mouseLeaveHandler();
             }
          },
-         _hoveredEditInPlace: function($target) {
-            return false;
+         /**
+          * Проверяет, относится ли переданный элемент, к контролам которые отображаются по ховеру на элементе.
+          * @param {jQuery} $target
+          * @returns {boolean}
+          * @private
+          */
+         _isHoverControl: function($target) {
+            var itemActionsContainer = this._itemActionsGroup && this._itemActionsGroup.getContainer();
+            return itemActionsContainer &&
+                     ( itemActionsContainer[0] === $target[0] ||
+                       $.contains(itemActionsContainer[0], $target[0]) ||
+                       this._itemActionsGroup.isItemActionsMenuVisible() );
          },
          /**
           * Обрабатывает уведение мышки с элемента представления
@@ -325,7 +331,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                if (target.container) {
                   this._showItemActions(target);
                } else {
-                  //Если открыто меню опций, то скрывать опции не надо
                   if(this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
                      this._itemActionsGroup.hideItemActions();
                   }
@@ -482,19 +487,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           */
          _initItemActions: function() {
             this._itemActionsGroup = this._drawItemActions();
-            this._itemActionsGroup
-               .getContainer()
-               .bind('mousemove mouseleave', this._itemActionsHoverHandler.bind(this))
-         },
-         /**
-          * Обрабатывает приход/уход мыши на операции строки
-          * Нужен чтобы нормально работал ховер
-          */
-         _itemActionsHoverHandler: function(e) {
-            this._mouseOnItemActions = e.type === 'mousemove';
-            if (!this._itemActionsGroup.isItemActionsMenuVisible()) {
-               this._itemActionsGroup.hoverImitation(e.type === 'mousemove');
-            }
          },
          /**
           * Метод получения операций над записью.

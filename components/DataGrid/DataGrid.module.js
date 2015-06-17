@@ -181,7 +181,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
       },
 
       _checkTargetContainer: function(target) {
-         return this._thead.length && $.contains(this._thead[0], target[0]) ||
+         return this._options.showHead && this._thead.length && $.contains(this._thead[0], target[0]) ||
                 this._addInPlaceButton && $.contains(this._addInPlaceButton.getContainer().parent()[0], target[0]) ||
                 DataGrid.superclass._checkTargetContainer.apply(this, arguments);
       },
@@ -221,8 +221,9 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
       },
 
-      _hoveredEditInPlace: function($target) {
-         return this._editInPlace && $.contains(this._editInPlace.getContainer()[0], $target[0]);
+      _isHoverControl: function($target) {
+         return DataGrid.superclass._isHoverControl.apply(this, arguments) ||
+                this._editInPlace && $.contains(this._editInPlace.getContainer()[0], $target[0]);
       },
 
       _drawItemsCallback: function () {
