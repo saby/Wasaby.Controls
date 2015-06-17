@@ -489,11 +489,15 @@ define(
     * В конечный контролл передается маска с помощью опции mask. Управляющие символы в маске, определяющие,
     * какие символы могут вводиться, определяются предназначением контролла.
     * @class SBIS3.CONTROLS.FormattedTextBoxBase
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CONTROLS.TextBoxBase
     * @public
     */
 
    var FormattedTextBoxBase = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.FormattedTextBoxBase.prototype */ {
+       /**
+        * @event onInputFinished По окончании ввода
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        */
       $protected: {
          /**
           * Html-элемент, в который будет добавлена динамически создаваемая, в зависимости от маски, html-разметка
@@ -506,7 +510,7 @@ define(
           */
          _maskReplacer: '_',
          /**
-          * Набор допустимых управляющих символов в маске. Задаются отдельно в каждом контролле в зависимости от контекста.
+          * Набор допустимых управляющих символов в маске. Задаются отдельно в каждом контроле в зависимости от контекста.
           * Пример:
           *       Для контролла DatePicker это: Y(год), M(месяц), D(день), H(час), I(минута), S(секунда), U(доля секунды).
           * Каждому допустимому символу ставится в соответствие основной
@@ -795,10 +799,19 @@ define(
          this.formatModel._options.newPosition = this.formatModel._options.cursorPosition.position;
       },
       /**
-       * Установить значение в поле. Значение вводится в точности с маской, включая разделяющие символы
-       * Пример. Если маска 'd(ddd)ddd-dd-dd', то setText('8(111)888-11-88')
-       * @param text Строка нового значения
+       * Установить значение в поле.
+       * @remark
+       * Значение вводится в точности с маской, включая разделяющие символы.
+       * При передаче строки, не соответствующей маске, значение не проставится.
+       * Например, при маске '+d (ddd) ddd - dd - dd' в передаваемом значении нужно не забыть проставить пробелы.
+       * @param {String} text Строка нового значения.
        * @protected
+       * @example
+       * <pre>
+       *     //если маска 'd(ddd)ddd-dd-dd', то следует задать значение вида
+       *     this.setText('8(111)888-11-88');
+       * </pre>
+       * @see setMask
        */
       setText: function(text) {
          this.formatModel.setText(text, this._maskReplacer);
