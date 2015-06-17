@@ -45,7 +45,6 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
          self._picker.subscribe('onClose', function(){
             self._container.removeClass('controls-Picker__show');
          });
-         self._setWidth();
          container.hover(function(){
             self._picker.getContainer().addClass('controls-Picker__owner__hover');
          }, function () {
@@ -59,7 +58,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
          var pickerConfig = this._setPickerConfig();
          pickerConfig.parent = this.getParent();
          pickerConfig.context = this.getParent() ? this.getParent().getLinkedContext() : {};
-         pickerConfig.target = this._container;
+         pickerConfig.target = pickerConfig.target || this._container;
          pickerConfig.element = pickerContainer;
          return new FloatArea(pickerConfig);
       },
@@ -97,7 +96,6 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
             this._initializePicker();
          }
          this._container.addClass('controls-Picker__show');
-         this._setWidth();
          this._picker.show();
       },
       /**
@@ -142,13 +140,6 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
                this.showPicker();
             }
          }
-      },
-
-      _setWidth: function(){
-         var self = this;
-         this._picker.getContainer().css({
-            'min-width': self._container.outerWidth() - this._border/*ширина бордеров*/
-         });
       },
 
       _setPickerContent: function () {
