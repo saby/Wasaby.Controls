@@ -28,8 +28,17 @@ define(
     * @demo SBIS3.CONTROLS.Demo.MyMonthPicker
     * @author Крайнов Дмитрий Олегович
     *
-    * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
+    * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
+    * @ignoreOptions extendedTooltip
+    *
+    * @ignoreMethods applyEmptyState applyState getClassName getEventHandlers getEvents getExtendedTooltip getOwnerId
+    * @ignoreMethods getLinkedContext getOwner getStateKey getUserData hasEvent hasEventHandlers makeOwnerName once
+    * @ignoreMethods sendCommand setClassName setExtendedTooltip setOpener setStateKey setUserData subscribe unsubscribe
+    * @ignoreMethods subscribeOnceTo unbind
+    *
+    * @ignoreEvents onChange onClick onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onStateChange
+    * @ignoreEvents onTooltipContentRequest
     */
 
    var MonthPicker = Control.Control.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.MonthPicker.prototype */{
@@ -74,7 +83,7 @@ define(
             /**
              * @cfg {String|Date} Значение для установки по умолчанию (в последствии в нём хранится текущее значение)
              * @remark
-             * Строка должна быть формата [MM.]YYYY (месяц -- одна или две цифры, год -- от 1-ой до 4-х цифр)
+             * Строка должна быть формата [MM.]YYYY (месяц - одна или две цифры, год - от 1-ой до 4-х цифр)
              * В зависимости от режима работы, установленного в mode, возьмутся месяц и год, либо только год.
              * В дальнейшем используется для хранения текущего значения.
              * Значение всегда хранится с нулевым временем 00:00:00, и, в случае режима года, хранится первый день
@@ -88,7 +97,6 @@ define(
             /**
              * @cfg {String} формат визуального отображения месяца
              * TODO проверить необходимость данной опции, определиться в рамках 3.7.3
-             * @example
              */
             monthFormat: ''
          },
