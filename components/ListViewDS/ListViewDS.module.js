@@ -219,7 +219,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                if (e.which == 1) {
                   var $target = $(e.target),
                       target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
-                  if (target.length && this._isViewElement(target)) {
+                  if (target.length && self._isViewElement(target)) {
                      var id = target.data('id'), data = self._dataSet.getRecordByKey(id);
                      self._elemClickHandler(id, data, e.target);
                   }
@@ -295,7 +295,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
          },
          /**
-          * Проверяет, относится ли переданный элемент, к контролам которые отображаются по ховеру на элементе.
+          * Проверяет, относится ли переданный элемент,
+          * к контролам которые отображаются по ховеру.
           * @param {jQuery} $target
           * @returns {boolean}
           * @private
@@ -328,13 +329,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           */
          _onChangeHoveredItem: function(target) {
             if(this._options.itemsActions.length) {
-               if (target.container) {
-                  this._showItemActions(target);
-               } else {
-                  if(this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
-                     this._itemActionsGroup.hideItemActions();
-                  }
-               }
+               target.container ? this._showItemActions(target) : this._hideItemActions();
             }
          },
 
@@ -462,6 +457,11 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
             this._itemActionsGroup.applyItemActions();
             this._itemActionsGroup.showItemActions(this._hoveredItem, this._getItemActionsPosition(this._hoveredItem));
+         },
+         _hideItemActions: function() {
+            if(this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
+               this._itemActionsGroup.hideItemActions();
+            }
          },
          _getItemActionsPosition: function(item) {
             return {
