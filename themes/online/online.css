@@ -2477,6 +2477,12 @@ input[type="reset"]::-moz-focus-inner {
 .controls__filterButton__picker {
   background: #f7f3f0 !important;
 }
+.controls__filterButton__picker .controls__filterButton__content {
+  margin-top: 5px;
+}
+.controls__filterButton__picker .controls__filterButton__content .controls__filterButton__templatedArea {
+  width: 347px;
+}
 .controls__filterButton__picker .controls__filterButton__header {
   height: 40px;
   min-width: 230px;
@@ -2514,6 +2520,10 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls__filterButton__picker.controls__filterButton-left .controls-PopupMixin__closeButton {
   -webkit-transform: scale(-1, 1);
+}
+.warehouse-NomenclatureDataGrid__fieldLink .ws-FieldLink__link {
+  width: 80px;
+  text-align: left;
 }
 .controls-ProgressBar {
   height: 17px;
