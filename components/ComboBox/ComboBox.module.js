@@ -380,6 +380,25 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
+      showPicker: function(){
+        ComboBox.superclass.showPicker.call(this);
+        this._setWidth();
+      },
+
+      _initializePicker: function(){
+        ComboBox.superclass._initializePicker.call(this);
+        this._setWidth();
+      },
+
+      _setWidth: function(){
+         var self = this;
+         if (self._picker._options.target){
+           this._picker.getContainer().css({
+              'min-width': self._picker._options.target.outerWidth() - this._border/*ширина бордеров*/
+           });
+         }
+      },
+
       //TODO заглушка
       /**
        * @noShow
