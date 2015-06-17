@@ -573,7 +573,7 @@ function(BaseControl, dotTpl){
          }
       },
 
-      canAcceptFocus: function(){
+      canAcceptFocus : function() {
         return false;
       },
 
