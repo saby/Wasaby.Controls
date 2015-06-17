@@ -2147,6 +2147,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   position: relative;
   top: -1px;
+  display: inline-block;
 }
 .controls-PathSelector__point:hover .controls-PathSelector__title {
   color: #FF7033;
@@ -2164,7 +2165,7 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/path-filter-icon-back.png') 0 -1px;
   height: 24px;
   width: 24px;
-  top: 7px;
+  top: 5px;
 }
 .controls-PathSelector__point:first-child .controls-PathSelector__arrow::before {
   content: '';
@@ -2172,13 +2173,40 @@ input[type="reset"]::-moz-focus-inner {
 .controls-PathSelector__point:first-child:hover .controls-PathSelector__arrow {
   background-position: 0 23px;
 }
-.controls-PathSelector__title {
+.controls-PathSelector .controls-PathSelector__title {
   color: #0055BB;
   padding-right: 1px;
+  display: inline-block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 300px;
 }
-.controls-PathSelector__arrow {
+.controls-PathSelector .controls-PathSelector__arrow {
   position: relative;
-  top: 2px;
+}
+.controls-PathSelector .controls-PathSelector__itemsContainer {
+  display: inline-block;
+}
+.controls-PathSelector .controls-PathSelector__dots .controls-PathSelector__title {
+  margin-left: -3px;
+}
+.controls-PathSelector .controls-PathSelector__dots:hover .controls-PathSelector__title {
+  text-decoration: underline;
+  color: #FF7033;
+}
+.controls-PathSelector.controls-PathSelector__picker .controls-PathSelector__point {
+  display: block;
+}
+.controls-PathSelector .controls-PathSelector__hierWrapper {
+  height: 13px;
+  width: 14px;
+  display: inline-block;
+}
+.controls-PathSelector .controls-PathSelector__hierWrapper:last-child {
+  background: url('img/pathSelector__hierWrapper.png') no-repeat;
+  position: relative;
+  top: -3px;
 }
 .controls-UnitEditor__fieldWrapper {
   margin-right: 34px;

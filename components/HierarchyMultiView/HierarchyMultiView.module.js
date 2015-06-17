@@ -27,6 +27,11 @@ define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.TreeDataGrid'
             } else {
                this._notify('onItemClick', id, data, target);
                this.setSelectedKeys([id]);
+               var nodeID = $(target).closest('.controls-ListView__item').data('id');
+                  var rec = this._dataSet.getRecordByKey(nodeID);
+                  if (rec.get(this._options.hierField + '@')) {
+                     this.setCurrentRoot(nodeID);
+                  }
                if (this._options.elemClickHandler) {
                   this._options.elemClickHandler.call(this, id, data, target);
                }

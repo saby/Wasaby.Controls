@@ -4,6 +4,7 @@
 		cursor: pointer;
 		position: relative;
 		top: -1px;
+		display: inline-block;
 		&:hover{
 			.controls-PathSelector__title{
 				color: #FF7033;
@@ -24,7 +25,7 @@
 				background: url('img/path-filter-icon-back.png') 0 -1px;
 				height: 24px;
 				width: 24px;
-				top: 7px;
+				top: 5px;
 			}
 			&:hover{
 				.controls-PathSelector__arrow{
@@ -33,14 +34,51 @@
 			}
 		}
 	}
-}
 
-.controls-PathSelector__title{
-	color: #0055BB;
-	padding-right: 1px;
-}
+	.controls-PathSelector__title{
+		color: #0055BB;
+		padding-right: 1px;
+		display: inline-block;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+		max-width: 300px;
+	}
 
-.controls-PathSelector__arrow{
-	position: relative;
-	top: 2px;
+	.controls-PathSelector__arrow{
+		position: relative;
+	}
+
+	.controls-PathSelector__itemsContainer{
+		display: inline-block;
+	}
+
+	.controls-PathSelector__dots{
+		.controls-PathSelector__title{
+			margin-left: -3px;
+		}	
+		&:hover{
+			.controls-PathSelector__title{
+				text-decoration: underline;
+				color: #FF7033;
+			}
+		}
+	}
+
+	&.controls-PathSelector__picker{
+		.controls-PathSelector__point{
+			display: block;
+		}
+	}
+
+	.controls-PathSelector__hierWrapper{
+		height: 13px;
+		width: 14px;
+		display: inline-block;
+		&:last-child{
+			background: url('img/pathSelector__hierWrapper.png') no-repeat;
+			position: relative;
+  			top: -3px;
+		}
+	}
 }
