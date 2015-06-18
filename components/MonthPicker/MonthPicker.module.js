@@ -241,6 +241,7 @@ define(
 
       /**
        * Установить текущий месяц/год
+       * @protected
        * @see setNext
        * @see setPrev
        * @see getNextDate
@@ -370,6 +371,7 @@ define(
 
       /**
        * Установить следующий месяц/год
+       * @protected
        */
       setNext: function() {
          this._changeDate(1);
@@ -377,6 +379,7 @@ define(
 
       /**
        * Установить предыдущий месяц/год
+       * @protected
        */
       setPrev: function() {
          this._changeDate(-1);
