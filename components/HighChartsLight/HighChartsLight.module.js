@@ -573,6 +573,9 @@ function(BaseControl, dotTpl){
          }
       },
 
+      canAcceptFocus : function() {
+        return false;
+      },
 
       _drawHighChart : function() {
          this.getContainer().highcharts(this._options.highChartOptions);

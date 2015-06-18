@@ -100,6 +100,12 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
                      this._linkedView._filter['onlyNotSelling'] = true;
                   }
                }
+               if(ctrlName === 'ТипНоменклатуры') {
+                  txtValue = controls[i].getValue();
+                  if(txtValue) {
+                     this._linkedView._filter['ТипНоменклатуры'] = txtValue;
+                  }
+               }
             }
          }
          this.hidePicker();
@@ -113,6 +119,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          this._picker.getContainer().addClass('controls__filterButton-' + this._options.filterAlign);
          this._picker.getChildControlByName('clearFilterButton').subscribe('onActivated', this.resetFilter.bind(this));
          this._picker.getChildControlByName('applyFilterButton').subscribe('onActivated', this.applyFilter.bind(this));
+         this._picker.addNodeToHierarchyManager(this._picker.getChildControlByName('ТипНоменклатуры').getSuggest());
       },
 
       _drawItemsCallback: function() {
@@ -127,11 +134,11 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          var
             filterName = item.get('filter'),
             control = this._picker && this._picker.getChildControlByName(filterName),
-            value = control && control.getSelectedKeys && control.getSelectedKeys();
-         if (value && this._initialControlsValues[control.getName()] !== value[0]) {
+            value = control && ((control.getSelectedKeys && control.getSelectedKeys()) || (control.getValue() && control.getValue()));
+         if (value && this._initialControlsValues[control.getName()] !== ((value.length && value[0]) || value)) {
             return '<component data-component="SBIS3.CONTROLS.Link">' +
-               '<option name="caption">' + control.getText() + '</option>' +
-               '</component>';
+                   '<option name="caption">' + (control.getText ? control.getText() : control.getStringValue()) + '</option>' +
+                   '</component>';
          } else {
             return '';
          }
@@ -172,13 +179,19 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
       },
       _setControlValue: function(control, value) {
          if($ws.helpers.instanceOfModule(control, 'SBIS3.CONTROLS.DropDownList')) {
-            control.setSelectedKeys([value || 0]);
+            control.setSelectedKeys((Array.isArray(value) ? value : [value]) || [0]);
+         }
+         if($ws.helpers.instanceOfModule(control, 'SBIS3.CORE.FieldLink')) {
+            control.setValue(value);
          }
       },
       _getControlValue: function(control) {
          var result;
          if($ws.helpers.instanceOfModule(control, 'SBIS3.CONTROLS.DropDownList')) {
             result = control.getSelectedKeys();
+         }
+         if($ws.helpers.instanceOfModule(control, 'SBIS3.CORE.FieldLink')) {
+            result = control.getValue();
          }
          return result;
       },
