@@ -647,6 +647,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          }
       },
 
+      addNodeToHierarchyManager: function(component) {
+         ControlHierarchyManager.addNode(component, component.getParent());
+      },
+
       //Рассчитать расстояния от таргета до границ экрана с учетом собственного положения попапа
       //Нужно для расчета размеров если не влезаем в экран
       //TODO: Можно придумать алгоритм получше

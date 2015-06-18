@@ -463,7 +463,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
                   }
 
                   this._indexTree[parentKey].push(record.getKey());
-            }, false);
+            }, 'all');
       },
 
       filter: function (filterCallback) {
