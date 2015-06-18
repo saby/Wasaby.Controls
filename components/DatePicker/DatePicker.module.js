@@ -21,11 +21,14 @@ define(
     * @control
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyDatePicker
-    * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
-    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
+    * @author Крайнов Дмитрий Олегович
     */
 
    var DatePicker = FormattedTextBoxBase.extend([PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
+       /**
+        * @event onDateChange
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        */
       $protected: {
          _dotTplFn: dotTplFn,
          /**
