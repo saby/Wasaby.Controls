@@ -2097,10 +2097,13 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 13px !important;
 }
 .controls-DataGrid__td .controls-TreeView__hierWrapper {
-  height: 20px;
-  width: 20px;
+  height: 16px;
+  width: 24px;
   display: inline-block;
   float: left;
+}
+.controls-DataGrid__td .controls-TreeView__hierWrapper:first-child {
+  width: 27px;
 }
 .controls-DataGrid__td:hover .controls-TreeView__expand--inside {
   display: inline-block;
