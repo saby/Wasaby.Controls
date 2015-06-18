@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
             itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
 
-         this._dataSet.merge(dataSet);
+         this._dataSet.merge(dataSet, {remove: false});
          this._dataSet._reindexTree(this._options.hierField);
 
          dataSet.each(function (record) {
