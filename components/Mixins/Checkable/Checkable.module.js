@@ -8,7 +8,8 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
 
    var Checkable = /**@lends SBIS3.CONTROLS.Checkable.prototype  */{
        /**
-        * @event onCheckedChange При изменении активности кнопки
+        * @event onCheckedChange При изменении состояния кнопки
+        * Событие срабатывает при нажатии на кнопку, выставления/снятия флажка, выборе радиокнопки.
         * @param {$ws.proto.EventObject} Дескриптор события.
         * @param {Boolean} checked Признак состояния:
         * <ul>
