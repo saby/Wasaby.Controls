@@ -1080,6 +1080,11 @@ input[type="reset"]::-moz-focus-inner {
     padding-bottom: 3px;
   }
 }
+@media \0screen {
+  .controls-Button.controls-MenuButton .controls-MenuButton__arrowDown {
+    top: 9px;
+  }
+}
 .controls-MenuLink {
   position: relative;
   color: #00c795;
