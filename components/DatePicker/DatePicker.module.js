@@ -15,6 +15,16 @@ define(
    'use strict';
 
    /**
+    * Поле ввода даты/времени.
+    * Данный контрол предназначен для осуществления ввода информации о дате и времени.
+    * В зависимости от {@link mask маски} возвожен ввод:
+    * <ol>
+    *    <li>только даты,</li>
+    *    <li>только времени,</li>
+    *    <li>даты и времени.</li>
+    * </ol>
+    * Осуществить ввод информации можно как с клавиатуры, так и выбором на календаре, который открывается кликом по
+    * соответствующей иконке.
     * Можно вводить только значения особого формата даты.
     * @class SBIS3.CONTROLS.DatePicker
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
@@ -28,6 +38,16 @@ define(
        /**
         * @event onDateChange
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @example
+        * <pre>
+        *    var dateChangeFn = function(event) {
+        *       if (this.getDate().getTime() < minDate.getTime()) {
+        *          buttonSend.setEnabled(false);
+        *          title.setText('Указана прошедшая дата: проверьте нет ли ошибки');
+        *       }
+        *    };
+        *    datePicker.subscribe('onDateChange', dateChangeFn);
+        * </pre>
         */
       $protected: {
          _dotTplFn: dotTplFn,
@@ -94,8 +114,20 @@ define(
           */
          _options: {
             /**
-             * @cfg {String} Формат отображения даты, на базе которой будет создана html-разметка и в соответствии с которой
-             * будет определён весь функционал. Должна представлять собой одну из масок в массиве допустимых маск.
+             * @cfg {String} Формат отображения данных
+             * @remark
+             * На базе формата, заданного в этой опции, будет создана html-разметка, в соответствии с которой
+             * определяется весь функционал. Необходимо выбрать одну из масок в массиве допустимых значений.
+             * Допустимые символы в маске:
+             * <ol>
+             *    <li>D(day) - календарный день.</li>
+             *    <li>M(month) - месяц.</li>
+             *    <li>Y(year) - год.</li>
+             *    <li>H(hour) - час.</li>
+             *    <li>I - минута</li>
+             *    <li>S(second) - секунда.</li>
+             *    <li>U - доля секунды.</li>
+             * </ol>
              * @example
              * <pre>
              *     <option name="mask">HH:II:SS.UUU</option>
@@ -126,6 +158,7 @@ define(
              * @variant 'YYYY',
              * @variant 'MM/YYYY'
              * @see date
+             * @see isCalendarIconShow
              */
             mask: 'DD.MM.YY',
             /**
@@ -135,16 +168,22 @@ define(
              *     <option name="date">2015-03-07T21:00:00.000Z</option>
              * </pre>
              * @see isCalendarIconShow
+             * @see onDateChange
+             * @see setDate
+             * @see getDate
              */
             date: null,
             /**
-             * @cfg {Boolean} Показана ли иконка календарика. По умолчанию true. Если маска представляет собой только время,
-             * то автоматически (точнее в методе _checkTypeOfMask) становится false.
+             * @cfg {Boolean} Показана ли иконка календарика.
+             * @remark
+             * Если {@link mask маска} представляет собой только время, то автоматически иконка календарика прячется, т.е. значение
+             * опции самостоятельно сменится на false.
              * @example
              * <pre>
              *     <option name="isCalendarIconShown">false</option>
              * </pre>
              * @see date
+             * @see mask
              */
             isCalendarIconShown: true
          }
@@ -258,8 +297,11 @@ define(
       },
 
       /**
-       * Установить дату. Публичный метод. Отличается от приватного метода тем, что генерирует событие.
+       * Установить дату. Публичный метод.
+       * Отличается от приватного метода тем, что генерирует событие.
        * @param date
+       * @see date
+       * @see onDateChange
        */
       setDate: function (date) {
          this._setDate(date);
@@ -292,10 +334,7 @@ define(
 
          this._drawDate();
       },
-      /**
-       * Переопределенный метод из TextBoxBase
-       * @param value
-       */
+
       setValue: function (value) {
          value = value ? value : '';
 
@@ -313,6 +352,9 @@ define(
       /**
        * Получить дату
        * @returns {Date|*|SBIS3.CONTROLS.DatePicker._options.date}
+       * @see date
+       * @see setDate
+       * @see onDateChange
        */
       getDate: function() {
         return this._options.date;
