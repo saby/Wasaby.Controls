@@ -214,6 +214,15 @@ define(
        *    <li>только год,</li>
        *    <li>месяц и год.</li>
        * </ul>
+       * @example
+       * <pre>
+       *     //при отключении месяцев и повторном включении месяц не сохраняется
+       *     if (showMonths) {
+       *        monthPicker.setMode('month');
+       *     } else {
+       *        monthPicker.setMode('year');
+       *     }
+       * </pre>
        * @see mode
        */
       setMode: function(mode){
@@ -247,7 +256,13 @@ define(
        * Установить дату по полученному значению. Публичный метод.
        * Отличается от приватного метода _setDate тем, что генерирует событие
        * Может принимает либо строку формата 'число.число' или 'число', либо объект типа Date.
-       * @param value Строка или дата
+       * @param value Строка или дата.
+       * @example
+       * <pre>
+       *    //Зададим март 2016
+       *    var startDate = new Date(2016,02);
+       *    monthPicker.setDate(startDate);
+       * </pre>
        * @see date
        * @see getDate
        */
@@ -389,9 +404,17 @@ define(
 
       /**
        * Возвращает текущее значение даты.
+       * @remark
        * В случае года, возвращает дату 1-ого дня 1-ого месяца данного года.
-       * В случае месяца и года, возвращает дату 1-ого дня данного месяца данного года
-       * @returns {Date|*} Текущая дата
+       * В случае месяца и года, возвращает дату 1-ого дня данного месяца данного года.
+       * @returns {Date|*} Текущая дата.
+       * @example
+       * <pre>
+       *     //прибавим 1 год, сохранив месяц
+       *     var myDate = monthPicker.getDate();
+       *     myDate.setFullYear(oldDate.getFullYear() + 1);
+       *     monthPicker.setDate(myDate);
+       * </pre>
        * @see setDate
        * @see date
        * @see getTextDate
@@ -402,8 +425,13 @@ define(
       },
 
       /**
-       * Взовращает дату в виде строки формата 'YYYY-MM-DD'
-       * @returns {string}
+       * Возвращает дату в виде строки формата 'YYYY-MM-DD'.
+       * @returns {String} Строковое представление текущего значения даты.
+       * @example
+       * <pre>
+       *     var strDate = monthPicker.getTextDate();
+       *     title.setText('Отчет на дату: '+strDate);
+       * </pre>
        * @see date
        * @see setDate
        * @see getDate
@@ -414,7 +442,7 @@ define(
       },
 
       /**
-       * Возвращает интервал даты
+       * Возвращает временной интервал.
        * @remark
        * В случае 'месяц, год':
        * <ul>
@@ -426,7 +454,14 @@ define(
        *    <li>начало интервала - первый день данного года,</li>
        *    <li>конец - последний день данного года с временем 23:59:59.</li>
        * </ul>
-       * @returns {*[]} Массив из двух дат в зависимости от режима ввода размах составляет либо месяц, либо год.
+       * @returns {*|[]} Массив из двух дат. В зависимости от режима ввода размах составляет либо месяц, либо год.
+       * @example
+       * <pre>
+       *     var dateInterval = monthPicker.getInterval();
+       *     var strFrom = dateInterval[0].toISOString().substring(0, 10);
+       *     var strTo   = dateInterval[1].toISOString().substring(0, 10);
+       *     title.setText('Отчет на период с ' + strFrom + ' по ' + strTo);
+       * </pre>
        * @see date
        * @see setDate
        * @see getDate
