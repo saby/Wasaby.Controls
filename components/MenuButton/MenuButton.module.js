@@ -163,6 +163,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       },
 
       _initializePicker: function(){
+         MenuButton.superclass._initializePicker.call(this);
          this._setWidth();
       },
 
