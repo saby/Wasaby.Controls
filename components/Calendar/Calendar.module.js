@@ -6,11 +6,12 @@ define(
    [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.ControlHierarchyManager',
+      'js!SBIS3.CONTROLS.Utils.DateUtil',
       'html!SBIS3.CONTROLS.Calendar/resources/CalendarTableBody',
       'html!SBIS3.CONTROLS.Calendar',
       'js!SBIS3.CONTROLS.MonthPicker'
    ],
-   function (CompoundControl, ControlHierarchyManager, CalendarTableBodyTpl, dotTplFn) {
+   function (CompoundControl, ControlHierarchyManager, DateUtil, CalendarTableBodyTpl, dotTplFn) {
 
       'use strict';
 
@@ -58,11 +59,14 @@ define(
             this.monthControl = this.getChildControlByName('MonthPicker');
 
             // Первоначальная установка даты
-            if ( this._options.date && this._options.date instanceof Date ){
+            /*if ( this._options.date && this._options.date instanceof Date ){
                this._setDate(this._options.date);
             }
             else {
                this._setDate(new Date());
+            }*/
+            if (this._options.date) {
+               this._setDate(this._options.date);
             }
 
             // Изменение даты с помощью дочернего контролла MonthPicker
@@ -165,26 +169,34 @@ define(
          },
 
          /**
-          * Установить дату по переданному объекту Date. Приватный метод
-          * @param date
+          * Установить дату
+          * @param {Date|string} дата
           * @private
           */
          _setDate: function(date){
-            if( date instanceof Date ){
-               // Зануляем время
-               date.setHours(0, 0, 0, 0);
-               // Обновляем значение даты
+            var isCorrect = false;
+            if (date instanceof Date) {
                this._options.date = date;
-               // Устанавливаем дату в дочерний контролл MonthPicker
-               this.monthControl._setDate(date);
-               // Обновляем таблицу календарных дней
-               this._refreshCalendarTable();
-               // Обновляем активный день
-               this._refreshActiveDay();
+               isCorrect = true;
+            } else if (typeof date == 'string') {
+               //convert ISO-date to Date
+               this._options.date = DateUtil.dateFromIsoString(date);
+               if (DateUtil.isValidDate(this._options.date)) {
+                  isCorrect = true;
+               }
             }
-            else {
-               throw new Error('Дата должна быть в формате Date()');
+            if ( ! isCorrect) {
+               this._options.date = null;
+               throw new Error('Calendar. Неверный формат даты');
             }
+            // Зануляем время
+            this._options.date.setHours(0, 0, 0, 0);
+            // Устанавливаем дату в дочерний контролл MonthPicker
+            this.monthControl._setDate(this._options.date);
+            // Обновляем таблицу календарных дней
+            this._refreshCalendarTable();
+            // Обновляем активный день
+            this._refreshActiveDay();
          },
 
          /**
