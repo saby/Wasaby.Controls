@@ -162,6 +162,10 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          });
       },
 
+      _initializePicker: function(){
+         this._setWidth();
+      },
+
       _setPickerContent: function(){
          var self = this;
          this._picker.subscribe('onClose', function(){
