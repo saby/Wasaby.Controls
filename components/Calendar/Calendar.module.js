@@ -59,14 +59,10 @@ define(
             this.monthControl = this.getChildControlByName('MonthPicker');
 
             // Первоначальная установка даты
-            /*if ( this._options.date && this._options.date instanceof Date ){
-               this._setDate(this._options.date);
-            }
-            else {
-               this._setDate(new Date());
-            }*/
             if (this._options.date) {
                this._setDate(this._options.date);
+            } else {
+               this._setDate(new Date());
             }
 
             // Изменение даты с помощью дочернего контролла MonthPicker
