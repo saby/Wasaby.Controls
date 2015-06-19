@@ -74,6 +74,7 @@ define(
                  * </pre>
                  * @see setDate
                  * @see getDate
+                 * @see onDateChange
                  */
                 date: undefined
             }
@@ -230,8 +231,8 @@ define(
          },
 
          /**
-          * Получить текущее значение даты.
-          * @returns {date}
+          * Метод получения текущего значения даты.
+          * @returns {String} Значение даты в формате ISO 8601.
           * @see date
           * @see setDate
           * @see onDateChange

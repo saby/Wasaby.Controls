@@ -297,11 +297,12 @@ define(
       },
 
       /**
-       * Установить дату.
-       * Отличается от приватного метода тем, что генерирует событие.
-       * @param date
+       * Метод установки\замены даты.
+       * @param {Date} date Новая дата.
        * @see date
+       * @see getDate
        * @see onDateChange
+       * @see mask
        */
       setDate: function (date) {
          this._setDate(date);
@@ -350,8 +351,8 @@ define(
       },
 
       /**
-       * Получить дату
-       * @returns {Date|*|SBIS3.CONTROLS.DatePicker._options.date}
+       * Метод получения текущего значения даты.
+       * @returns {String} Значение даты в формате ISO 8601.
        * @see date
        * @see setDate
        * @see onDateChange
