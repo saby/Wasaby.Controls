@@ -185,7 +185,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       _setPickerConfig: function () {
          return {
             corner: 'tl',
-            target: this,
             horizontalAlign: {
                side: 'left'
             },
