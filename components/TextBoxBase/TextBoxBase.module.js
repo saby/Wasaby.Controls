@@ -82,6 +82,10 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
       $constructor: function() {
          this._publish('onTextChange');
          this._options.text = (this._options.text) ? this._options.text.toString() : '';
+         this.subscribe('onTextChange', function () {
+            //снимаем выделение валидатора на время ввода
+            this.clearMark();
+         });
       },
 
       /**
