@@ -7,9 +7,10 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
    'html!SBIS3.CONTROLS.FilterButtonNew/FilterAreaTemplate',
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.DSMixin',
+   'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.Button'
-], function(CompoundControl, dotTplFn, dotTplForPicker, PickerMixin, DSMixin) {
+], function(CompoundControl, dotTplFn, dotTplForPicker, PickerMixin, DSMixin, ControlHierarchyManager) {
 
    var FilterButtonNew = CompoundControl.extend([PickerMixin, DSMixin],{
       _dotTplFn: dotTplFn,
@@ -114,12 +115,13 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
       },
 
       _setPickerContent: function() {
+         var suggest = this._picker.getChildControlByName('ТипНоменклатуры').getSuggest();
          this._currentControlsValues = this._getControlsValues();
          this._initialControlsValues = $ws.core.clone(this._currentControlsValues);
          this._picker.getContainer().addClass('controls__filterButton-' + this._options.filterAlign);
          this._picker.getChildControlByName('clearFilterButton').subscribe('onActivated', this.resetFilter.bind(this));
          this._picker.getChildControlByName('applyFilterButton').subscribe('onActivated', this.applyFilter.bind(this));
-         this._picker.addNodeToHierarchyManager(this._picker.getChildControlByName('ТипНоменклатуры').getSuggest());
+         ControlHierarchyManager.addNode(suggest, suggest.getParent());
       },
 
       _drawItemsCallback: function() {
