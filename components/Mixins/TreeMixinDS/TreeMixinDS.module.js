@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
 
       _loadNode : function(key) {
          /*TODO проверка на что уже загружали*/
-         var filter = this._filter || {};
+         var filter = $ws.core.clone(this._filter) || {};
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
