@@ -2238,10 +2238,10 @@ input[type="reset"]::-moz-focus-inner {
   min-height: 128px;
   margin: -4px 0 0 -1px;
 }
-.controls-MultiView .controls-MultiView__tileItem:hover {
+.controls-MultiView .controls-MultiView__tileItem.controls-ListView__hoveredItem {
   background: #f3f3f3;
 }
-.controls-MultiView .controls-MultiView__tileItem:hover .controls-MultiView__tileImg {
+.controls-MultiView .controls-MultiView__tileItem.controls-ListView__hoveredItem .controls-MultiView__tileImg {
   box-shadow: 1px 2px 4px #aaaaaa;
 }
 .controls-MultiView .controls-MultiView__tileItem.controls-ListView__folder {
