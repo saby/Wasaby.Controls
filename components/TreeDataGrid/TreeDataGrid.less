@@ -12,6 +12,12 @@
     float: left;
   }
 
+  .controls-TreeView__editArrow{
+    display: none;
+    position: relative;
+    top: 2px;
+  }
+
   &:hover {
 
     .controls-TreeView__expand--inside {
@@ -22,3 +28,8 @@
   }
 }
 
+.controls-ListView__hoveredItem{
+  .controls-TreeView__editArrow{
+    display: inline-block;
+  }
+}
