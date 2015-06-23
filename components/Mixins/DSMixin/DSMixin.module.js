@@ -123,7 +123,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             emptyHTML: ''
          },
-         _loader: null
+         _loader: null,
+         _groupByResult : {}
       },
 
       $constructor: function () {
@@ -320,6 +321,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _redraw: function () {
+         var emptyHTML;
          if (this._dataSet) {
             this._clearItems();
             var records = this._getRecordsForRedraw(),
@@ -336,11 +338,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _getRecordsForRedraw : function() {
-         var records = [];
-         this._dataSet.each(function (record) {
-            records.push(record);
-         });
-         return records;
+         return this._dataSet._getRecords();
       },
 
       _drawItems: function (records, at) {
@@ -348,8 +346,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             self = this,
             curAt = at;
          if (records && records.length > 0) {
+            this._applyGroup(records, at);
             for (var i = 0; i < records.length; i++) {
-
                this._drawItem(records[i], curAt);
 
                if (curAt && curAt.at) {
@@ -361,6 +359,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                self._drawItemsCallback();
             });
          }
+         this._groupByResult = {};
       },
 
 
@@ -403,7 +402,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             targetContainer,
             itemInstance;
          //Запускаем группировку если она есть
-         this._group(item, at);
+         this._drawGroup(item, at);
 
          targetContainer = this._getTargetContainer(item);
          itemInstance = this._createItemInstance(item, targetContainer, at);
@@ -415,7 +414,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * @param item
        * @param at
        */
-      _group: function(item, at){
+      _drawGroup: function(item, at){
          var
                groupBy = this._options.groupBy,
                tplOptions = {
@@ -424,21 +423,23 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   hierField: this._options.hierField + '@'
                },
                targetContainer,
-               itemInstance,
-               isGroup;
-         if (!Object.isEmpty(groupBy)){
-            isGroup = groupBy.method.apply(this, [item, at]);
-            if (isGroup){
-               targetContainer = this._getTargetContainer(item);
-               tplOptions.item = item;
-               tplOptions.colspan = this._options.columns.length + this._options.multiselect;
-               itemInstance = this._buildTplItem(item, groupBy.template(tplOptions));
-               if (groupBy.render && typeof groupBy.render === 'function') {
-                  itemInstance = groupBy.render.apply(this, [item, itemInstance]);
-               }
-               this._appendItemTemplate(item, targetContainer, itemInstance, at);
+               itemInstance;
+         if (this._groupByResult.hasOwnProperty(item.getKey())){
+            targetContainer = this._getTargetContainer(item);
+            tplOptions.item = item;
+            tplOptions.colspan = this._options.columns.length + this._options.multiselect;
+            itemInstance = this._buildTplItem(item, groupBy.template(tplOptions));
+            if (groupBy.render && typeof groupBy.render === 'function') {
+               itemInstance = groupBy.render.apply(this, [item, itemInstance]);
             }
+            this._appendItemTemplate(item, targetContainer, itemInstance, at);
          }
+      },
+      /**
+       * must be implemented
+       * @private
+       */
+      _applyGroup: function(){
       },
       /**
        *
