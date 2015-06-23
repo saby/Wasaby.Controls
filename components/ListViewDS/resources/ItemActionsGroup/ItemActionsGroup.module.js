@@ -95,13 +95,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             });
          },
          /**
-          * Иммитирует ховер, когда мышку увели на операции над записью
-          * @param show
-          */
-         hoverImitation: function(show) {
-            this._activeItem[show ? 'addClass' : 'removeClass']('controls-ItemActions__activeItem');
-         },
-         /**
           * Показывает меню для операций над записью
           */
          showItemActionsMenu: function() {
