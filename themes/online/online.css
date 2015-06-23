@@ -1080,6 +1080,11 @@ input[type="reset"]::-moz-focus-inner {
     padding-bottom: 3px;
   }
 }
+@media \0screen {
+  .controls-Button.controls-MenuButton .controls-MenuButton__arrowDown {
+    top: 7px;
+  }
+}
 .controls-MenuLink {
   position: relative;
   color: #0055bb;
@@ -2145,10 +2150,13 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 13px !important;
 }
 .controls-DataGrid__td .controls-TreeView__hierWrapper {
-  height: 20px;
-  width: 20px;
+  height: 16px;
+  width: 24px;
   display: inline-block;
   float: left;
+}
+.controls-DataGrid__td .controls-TreeView__hierWrapper:first-child {
+  width: 27px;
 }
 .controls-DataGrid__td:hover .controls-TreeView__expand--inside {
   display: inline-block;
@@ -2230,10 +2238,10 @@ input[type="reset"]::-moz-focus-inner {
   min-height: 128px;
   margin: -4px 0 0 -1px;
 }
-.controls-MultiView .controls-MultiView__tileItem:hover {
+.controls-MultiView .controls-MultiView__tileItem.controls-ListView__hoveredItem {
   background: #f3f3f3;
 }
-.controls-MultiView .controls-MultiView__tileItem:hover .controls-MultiView__tileImg {
+.controls-MultiView .controls-MultiView__tileItem.controls-ListView__hoveredItem .controls-MultiView__tileImg {
   box-shadow: 1px 2px 4px #aaaaaa;
 }
 .controls-MultiView .controls-MultiView__tileItem.controls-ListView__folder {
@@ -2335,6 +2343,30 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/pathSelector__hierWrapper.png') no-repeat;
   position: relative;
   top: -3px;
+}
+.controls-Pager {
+  float: right;
+  height: 28px;
+}
+.controls-Pager .controls-text {
+  line-height: 20px;
+  font-size: 11px;
+  padding-top: 2px;
+  color: #999999;
+}
+.controls-Pager .controls-Pager-block {
+  float: right;
+}
+.controls-Pager .controls-Pager-block-amount {
+  padding: 5px 6px 6px 1px;
+}
+.controls-Pager .controls-Pager-block-paging {
+  padding: 4px 0 0 6px;
+}
+.controls-Pager .controls-Pager__pageSize-container select,
+.controls-Pager .controls-Pager__pageSize-container .custom-select.asLink {
+  font-size: 11px;
+  text-decoration: underline;
 }
 .controls-operations-panel {
   /*TODO придрот (2 important), чтобы перебить высоту ws-area*/

@@ -38,7 +38,11 @@ define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.TreeDataGrid'
             }
          }
       },
-
+      _updateEditInPlaceDisplay: function() {
+         if(this.getViewMode() === 'table') {
+            HierarchyMultiView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
+         }
+      },
       _getTargetContainer: function (item) {
          if (this.getViewMode() != 'table' && item.get(this._options.hierField + '@')) {
             return  $('.controls-MultiView__foldersContainer',this._container);

@@ -140,7 +140,6 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
          return retval;
       },
       /**
-       * <wiTag group="Данные">
        * Функция валидации контрола.
        * Проверит все валидаторы, как встроенные, так и пользовательские.
        * В случае неудачи отметит контрол сообщением об ошибке валидации.
@@ -271,7 +270,6 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
          this._prevValidationResult = !this.isMarked();
       },
       /**
-       * <wiTag group="Отображение">
        * Метод маркирует контрол как непрошедший валидацию.
        * Не проводит валидацию, просто подсвечивает контрол.
        * @param {Array|String} s Сообщение об ошибке.
