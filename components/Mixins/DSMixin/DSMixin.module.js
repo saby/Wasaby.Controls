@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               * </pre>
               * @see keyField
               */
-            items: undefined,
+            items: [],
             /**
              * @cfg {DataSource} Набор исходных данных, по которому строится отображение
              * @see setDataSource
