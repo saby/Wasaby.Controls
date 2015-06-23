@@ -15,10 +15,12 @@
   .controls-TreeView__hierWrapper:first-child{
     width: @tree-view-hier-wrapper-first-width;
   }
-
-
   &:hover {
-
+    .controls-TreeView__editArrow{
+      display: none;
+      position: relative;
+      top: 2px;
+    }
     .controls-TreeView__expand--inside {
       display: inline-block;
       height: 14px;
@@ -27,3 +29,8 @@
   }
 }
 
+.controls-ListView__hoveredItem{
+  .controls-TreeView__editArrow{
+    display: inline-block;
+  }
+}

@@ -27,7 +27,10 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
 
    var TreeDataGrid = HierarchyDataGrid.extend([TreeMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
       $protected: {
-         _rowTpl : rowTpl
+         _rowTpl : rowTpl,
+         _options: {
+           arrowActivatedHandler: undefined;
+         }
       },
 
       $constructor: function() {
@@ -104,7 +107,9 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
             this.toggleNode(nodeID);
          }
          else {
-            if (data.get(this._options.hierField+'@')) {
+          if($(target).hasClass('js-controls-TreeView__editArrow')){
+            this._options.arrowActivatedHandler.apply(this, arguments);
+          } else if (data.get(this._options.hierField+'@')) {
                var self = this;
                self.setCurrentRoot(nodeID);
             }
