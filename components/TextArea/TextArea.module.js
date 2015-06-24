@@ -63,20 +63,6 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
                }
             }, 100)
          });
-
-         //FIXME костыль для авторесайза TextArea, которые были скрыты и стали видимы
-         //TODO возможно это позволит отказаться от _resizeTextArea() в EditAtPlace, нужно тестировать
-         //отслеживаем видимость элемента, чтобы пересчитать autosize при его появлении
-         var channel = $ws.helpers.trackElement(this._inputField, true);
-         channel.subscribe('onVisible', function(event, visible) {
-            if ( visible  &&  '_wasVisible' in self  &&  self._wasVisible == false) {
-               self._inputField.data('autosize', false).autosize();
-            }
-            //ресайзим только тех, что были скрыти и стали видимы. Изначально видимые работают верно.
-            if ( !('_wasVisible' in self)) {
-               self._wasVisible = visible;
-            }
-         });
       },
 
       init :function(){

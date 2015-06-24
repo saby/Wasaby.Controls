@@ -1474,6 +1474,7 @@ input[type="reset"]::-moz-focus-inner {
   border-style: solid;
   border-color: #666666;
   background: transparent;
+  padding: 0 5px;
 }
 .controls-TextArea .controls-TextArea__inputField {
   font: inherit;
@@ -1482,7 +1483,6 @@ input[type="reset"]::-moz-focus-inner {
   width: 100%;
   height: 100%;
   line-height: 40px !important;
-  padding: 0 5px;
   resize: none;
   border: none;
   background: transparent;
