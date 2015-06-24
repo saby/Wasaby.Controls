@@ -146,8 +146,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       setText: function (text) {
          ComboBox.superclass.setText.call(this, text);
-         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text);
+         this._drawNotEditablePlaceholder(text);
+         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder);
          this._setKeyByText();
+      },
+
+      _drawNotEditablePlaceholder: function (text) {
+         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).toggleClass('controls-ComboBox__fieldNotEditable__placeholder', !text);
       },
 
       _drawSelectedItem: function (key) {
@@ -169,11 +174,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   var newText = item.get(self._options.displayField);
                   if (newText != self._options.text) {
                      ComboBox.superclass.setText.call(self, newText);
+                     self._drawNotEditablePlaceholder(newText);
                      $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(newText);
                   }
                }
                else {
                   ComboBox.superclass.setText.call(self, '');
+                  self._drawNotEditablePlaceholder('');
                   $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text('');
                }
                if (self._picker) {

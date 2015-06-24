@@ -760,13 +760,16 @@
          new ComboBox({
             element: 'comboBox1',
             editable: false,
-            items: comboItems
+            items: comboItems,
+            placeholder : 'Вводи годноту'
          });
 
          new ComboBox({
             element: 'comboBox2',
             editable: true,
-            items: comboItems
+            items: comboItems,
+            placeholder : 'Вводи годноту'
+
          });
 
          new ComboBox({
