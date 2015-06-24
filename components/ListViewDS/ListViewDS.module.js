@@ -210,7 +210,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _isLoadBeforeScrollAppears : true,
             _infiniteScrollContainer: null,
             _pageChangeDeferred : undefined,
-            _pager : undefined
+            _pager : undefined,
+            _previousGroupBy : undefined
          },
 
          $constructor: function () {
@@ -243,15 +244,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             ListViewDS.superclass.init.call(this);
             var localPageSize = $ws.helpers.getLocalStorageValue('ws-page-size');
             this._options.pageSize = !this._options.ignoreLocalPageSize  && localPageSize ? localPageSize : this._options.pageSize;
-            // запросим данные из источника
-            if (!Object.isEmpty(this._options.groupBy)){
-               if (!this._options.groupBy.hasOwnProperty('method')){
-                  this._options.groupBy.method = this._groupByDefaultMethod;
-               }
-               if (!this._options.groupBy.hasOwnProperty('template')){
-                  this._options.groupBy.template = this._getGroupTpl();
-               }
-            }
+            this.setGroup(this._options.groupBy, false);
             this.reload();
          },
 
@@ -828,48 +821,17 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
          },
          //------------------------GroupBy---------------------
-         _groupByDefaultMethod: function(records){
-            var result = {},
-               curField, record, prev;
-            for (var i = 0; i < records.length; i++){
-               record = records[i];
-               curField = record.get(this._options.groupBy.field);
-               if (curField !== prev) {
-                  result[record.getKey()] = true;
-               }
-               prev = curField;
-            }
+         _groupByDefaultMethod: function(record){
+            var curField = record.get(this._options.groupBy.field),
+                  result = curField !== this._previousGroupBy;
+            this._previousGroupBy = curField;
             return result;
          },
          _getGroupTpl : function(){
             return this._options.groupBy.template || groupByTpl;
          },
-         _applyGroup: function(records, at){
-            var  groupBy = this._options.groupBy;
-            if (!Object.isEmpty(groupBy)){
-               this._groupByResult =  groupBy.method.apply(this, [records, at]);
-            }
-         },
-         _highlightData: function(data, highlightText){
-            if(highlightText && data && typeof(data) === 'string')
-               data = data.replace(new RegExp(highlightText, 'gi'), '<span class="ws-browser-highlight">$&</span>');
-            return data;
-         },
-         /**
-          * <wiTag group="Отображение">
-          * Убирает подсветку с таблицы.
-          * Может убрать подсветку сразу или только при следующем отображении в зависимости от значения параметра instant.
-          * @param {Boolean} [instant=false] Нужно ли применять изменения сразу же или только после перерисовки
-          * @example
-          * <pre>
-          *    tableView.clearTextHighlight()
-          * </pre>
-          */
-         clearTextHighlight: function(instant){
-            this._highlight = '';
-            if(instant){
-               this.refresh();
-            }
+         _groupDefaultRender: function(elem){
+            return elem;
          },
          destroy: function() {
             if (this.isInfiniteScroll()){

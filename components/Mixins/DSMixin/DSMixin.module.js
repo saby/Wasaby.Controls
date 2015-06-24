@@ -123,8 +123,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             emptyHTML: ''
          },
-         _loader: null,
-         _groupByResult : {}
+         _loader: null
       },
 
       $constructor: function () {
@@ -323,6 +322,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _redraw: function () {
          var emptyHTML;
          if (this._dataSet) {
+            this._destroySearchPathSelectors();
             this._clearItems();
             var records = this._getRecordsForRedraw(),
               container = this._getItemsContainer();
@@ -336,7 +336,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._drawItems(records);
          }
       },
-
+      _destroySearchPathSelectors: function(){
+      },
       _getRecordsForRedraw : function() {
          return this._dataSet._getRecords();
       },
@@ -346,7 +347,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             self = this,
             curAt = at;
          if (records && records.length > 0) {
-            this._applyGroup(records, at);
             for (var i = 0; i < records.length; i++) {
                this._drawItem(records[i], curAt);
 
@@ -359,7 +359,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                self._drawItemsCallback();
             });
          }
-         this._groupByResult = {};
       },
 
 
@@ -401,19 +400,28 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var
             targetContainer,
             itemInstance;
-         //Запускаем группировку если она есть
-         this._drawGroup(item, at);
-
-         targetContainer = this._getTargetContainer(item);
-         itemInstance = this._createItemInstance(item, targetContainer, at);
-         this._addItemAttributes(itemInstance, item);
-         this._appendItemTemplate(item, targetContainer, itemInstance, at);
+         //Запускаем группировку если она есть. Иногда рещультат попадает в группровку и тогда отрисовывать item не надо
+         if (this._group(item, at) !== false) {
+            targetContainer = this._getTargetContainer(item);
+            itemInstance = this._createItemInstance(item, targetContainer, at);
+            this._addItemAttributes(itemInstance, item);
+            this._appendItemTemplate(item, targetContainer, itemInstance, at);
+         }
       },
       /**
        *
        * @param item
        * @param at
        */
+      _group: function(item, at){
+         var groupBy = this._options.groupBy;
+         if (!Object.isEmpty(groupBy)){
+            if (groupBy.method.apply(this, [item, at])){
+               this._drawGroup(item, at)
+            }
+         }
+         return true;
+      },
       _drawGroup: function(item, at){
          var
                groupBy = this._options.groupBy,
@@ -424,31 +432,48 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                },
                targetContainer,
                itemInstance;
-         if (this._groupByResult.hasOwnProperty(item.getKey())){
-            targetContainer = this._getTargetContainer(item);
-            tplOptions.item = item;
-            tplOptions.colspan = this._options.columns.length + this._options.multiselect;
-            itemInstance = this._buildTplItem(item, groupBy.template(tplOptions));
-            if (groupBy.render && typeof groupBy.render === 'function') {
-               itemInstance = groupBy.render.apply(this, [item, itemInstance]);
-            }
-            this._appendItemTemplate(item, targetContainer, itemInstance, at);
+         targetContainer = this._getTargetContainer(item);
+         tplOptions.item = item;
+         tplOptions.colspan = this._options.columns.length + this._options.multiselect;
+         itemInstance = this._buildTplItem(item, groupBy.template(tplOptions));
+         if (groupBy.render && typeof groupBy.render === 'function') {
+            itemInstance = groupBy.render.apply(this, [item, itemInstance]);
          }
+         this._appendItemTemplate(item, targetContainer, itemInstance, at);
       },
       /**
-       * must be implemented
-       * @private
-       */
-      _applyGroup: function(){
-      },
-      /**
-       *
+       * Установка группировки элементов. Если нужно, чтобы стандартаная группировка для этого элемента не вызывалась -
+       * нужно обязательно переопределить(передать) все опции (field, method, template, render) иначе в группировку запишутся стандартные параметры.
        * @param group
+       * @param redraw
        */
-      setGrouping : function(group){
+      setGroup : function(group, redraw){
          //TODO может перерисовку надо по-другому делать
          this._options.groupBy = group;
-         this._redraw();
+         // запросим данные из источника
+         if (!Object.isEmpty(this._options.groupBy)){
+            if (!this._options.groupBy.hasOwnProperty('method')){
+               this._options.groupBy.method = this._groupByDefaultMethod;
+            }
+            if (!this._options.groupBy.hasOwnProperty('template')){
+               this._options.groupBy.template = this._getGroupTpl();
+            }
+            if (!this._options.groupBy.hasOwnProperty('render')){
+               this._options.groupBy.template = this._groupDefaultRender();
+            }
+         }
+         if (redraw){
+            this._redraw();
+         }
+      },
+      _groupByDefaultMethod: function(){
+         throw new Error('Method _groupByDefaultMethod() must be implemented');
+      },
+      _getGroupTpl : function(){
+         throw new Error('Method _getGroupTpl() must be implemented');
+      },
+      _groupDefaultRender: function(){
+         throw new Error('Method _groupDefaultRender() must be implemented');
       },
       _getItemTemplate: function () {
          throw new Error('Method _getItemTemplate() must be implemented');
