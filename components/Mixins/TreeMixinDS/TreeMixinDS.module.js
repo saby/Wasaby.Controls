@@ -22,7 +22,12 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
       },
 
       $constructor : function() {
+         this._filter = this._filter || {};
          delete (this._filter[this._options.hierField]);
+         if (this._options.expand) {
+            this._filter['Разворот'] = 'С разворотом';
+            this._filter['ВидДерева'] = 'Узлы и листья';
+         }
       },
 
       _getRecordsForRedraw: function() {
