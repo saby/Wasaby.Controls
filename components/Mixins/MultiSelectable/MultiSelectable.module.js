@@ -157,7 +157,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                this._setFirstItemAsSelected();
             }
             this._drawSelectedItems(this._options.selectedKeys);
-            this._notifySelectedItem(this._options.selectedKeys);
+            this._notifySelectedItems(this._options.selectedKeys);
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -242,7 +242,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                this._setFirstItemAsSelected();
             }
             this._drawSelectedItems(this._options.selectedKeys);
-            this._notifySelectedItem(this._options.selectedKeys);
+            this._notifySelectedItems(this._options.selectedKeys);
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -275,7 +275,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                this._setFirstItemAsSelected();
             }
             this._drawSelectedItems(this._options.selectedKeys);
-            this._notifySelectedItem(this._options.selectedKeys);
+            this._notifySelectedItems(this._options.selectedKeys);
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -338,7 +338,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                      this._setFirstItemAsSelected();
                   }
                   this._drawSelectedItems(this._options.selectedKeys);
-                  this._notifySelectedItem(this._options.selectedKeys);
+                  this._notifySelectedItems(this._options.selectedKeys);
                }
             }
          }
@@ -375,7 +375,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
          /*Method must be implemented*/
       },
 
-      _notifySelectedItem : function(idArray) {
+      _notifySelectedItems : function(idArray) {
          this._notify('onSelectedItemsChange', idArray);
       },
 
