@@ -1,0 +1,56 @@
+@search-background:             #F2F2F2;
+@search-padding:                0 24px 0 16px;
+@search-border-radius:          10px;
+@search-border-color:           @search-background;
+@search-buttons-wrapper-width:  22px + 22px;
+
+.controls-SearchForm {
+  .border-radius(@search-border-radius);
+  border-color: @search-border-color;
+  background: @search-background;
+
+  &.controls-TextBox {
+    &:hover, &.ws-has-focus {
+      border-color: @search-border-color;
+      background: @search-background;
+    }
+  }
+
+  &.controls-TextBox .controls-TextBox__fieldWrapper {
+    margin: 0 @search-buttons-wrapper-width 0 16px;
+    padding: 0;
+  }
+
+  .controls-TextBox__afterFieldWrapper {
+    width: @search-buttons-wrapper-width;
+  }
+}
+
+.controls-SearchForm__search, .controls-SearchForm__reset {
+  display: block;
+  float: right;
+  text-decoration: none;
+}
+
+.controls-SearchForm__search {
+  width: 22px;
+  height: 22px;
+  &:before {
+    content: "\e623";
+    vertical-align: middle;
+    margin-left: 3px;
+  }
+}
+
+.controls-SearchForm__reset {
+  padding: 3px;
+  .controls-SearchForm__resetIcon {
+    width: 16px;
+    height: 16px;
+    background: @edit-at-place-cancel-button-bg;
+  }
+  &:hover .controls-SearchForm__resetIcon {
+    background: @edit-at-place-cancel-button-hover-bg;
+  }
+}
+

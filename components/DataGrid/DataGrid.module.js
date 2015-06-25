@@ -100,7 +100,8 @@ define('js!SBIS3.CONTROLS.DataGrid',
              */
             editInPlace: {
                enabled: false,
-               addInPlace: false
+               addInPlace: false,
+               moveFocusEvent: undefined
             },
             /**
              * @cfg {Number} Частичный скролл
@@ -168,20 +169,23 @@ define('js!SBIS3.CONTROLS.DataGrid',
             element: $('<div>').appendTo(this._container.find('.controls-DataGrid__table')),
             dataSet: this._dataSet,
             ignoreFirstColumn: this._options.multiselect,
+            moveFocusEvent: this._options.editInPlace.moveFocusEvent,
             dataSource: this._dataSource
          });
       },
       
       _onChangeHoveredItem: function(hoveredItem) {
+         this._updateEditInPlaceDisplay(hoveredItem);
+         DataGrid.superclass._onChangeHoveredItem.apply(this, arguments);
+      },
+      _updateEditInPlaceDisplay: function(hoveredItem) {
          if (this._options.editInPlace.enabled && this._options.columns && this._options.columns.length) {
             this._initEditInPlace();
             this._editInPlace.updateDisplay(hoveredItem);
          }
-         DataGrid.superclass._onChangeHoveredItem.apply(this, arguments);
       },
-
       _checkTargetContainer: function(target) {
-         return this._thead.length && $.contains(this._thead[0], target[0]) ||
+         return this._options.showHead && this._thead.length && $.contains(this._thead[0], target[0]) ||
                 this._addInPlaceButton && $.contains(this._addInPlaceButton.getContainer().parent()[0], target[0]) ||
                 DataGrid.superclass._checkTargetContainer.apply(this, arguments);
       },
@@ -221,8 +225,9 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
       },
 
-      _hoveredEditInPlace: function($target) {
-         return this._editInPlace && $.contains(this._editInPlace.getContainer()[0], $target[0]);
+      _isHoverControl: function($target) {
+         return DataGrid.superclass._isHoverControl.apply(this, arguments) ||
+                this._editInPlace && $.contains(this._editInPlace.getContainer()[0], $target[0]);
       },
 
       _drawItemsCallback: function () {

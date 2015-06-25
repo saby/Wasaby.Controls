@@ -21,6 +21,14 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
          }
       },
 
+      $constructor : function() {
+         this._filter = this._filter || {};
+         delete (this._filter[this._options.hierField]);
+         if (this._options.expand) {
+            this._filter['Разворот'] = 'С разворотом';
+            this._filter['ВидДерева'] = 'Узлы и листья';
+         }
+      },
 
       _getRecordsForRedraw: function() {
          /*Получаем только рекорды с parent = curRoot*/
@@ -29,7 +37,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
             records = [];
          if (this._options.expand) {
             this.hierIterate(this._dataSet, function (record) {
-               if (this._options.displayType == 'folders') {
+               if (self._options.displayType == 'folders') {
                   if (record.get(self._options.hierField + '@')) {
                      records.push(record);
                   }
@@ -91,7 +99,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
 
       _loadNode : function(key) {
          /*TODO проверка на что уже загружали*/
-         var filter = this._filter || {};
+         var filter = $ws.core.clone(this._filter) || {};
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';

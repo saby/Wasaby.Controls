@@ -1536,6 +1536,54 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextArea.controls-TextArea__autoheight {
   height: auto !important;
 }
+.controls-SearchForm {
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border-color: #f2f2f2;
+  background: #f2f2f2;
+}
+.controls-SearchForm.controls-TextBox:hover,
+.controls-SearchForm.controls-TextBox.ws-has-focus {
+  border-color: #f2f2f2;
+  background: #f2f2f2;
+}
+.controls-SearchForm.controls-TextBox .controls-TextBox__fieldWrapper {
+  margin: 0 44px 0 16px;
+  padding: 0;
+}
+.controls-SearchForm .controls-TextBox__afterFieldWrapper {
+  width: 44px;
+}
+.controls-SearchForm__search,
+.controls-SearchForm__reset {
+  display: block;
+  float: right;
+  text-decoration: none;
+}
+.controls-SearchForm__search {
+  width: 22px;
+  height: 22px;
+}
+.controls-SearchForm__search:before {
+  content: "\e623";
+  vertical-align: middle;
+  margin-left: 3px;
+}
+.controls-SearchForm__reset {
+  padding: 3px;
+}
+.controls-SearchForm__reset .controls-SearchForm__resetIcon {
+  width: 16px;
+  height: 16px;
+  background: url('img/cancelIcon-sprite.png') 0 -32px no-repeat;
+}
+.controls-SearchForm__reset:hover .controls-SearchForm__resetIcon {
+  background: url('img/cancelIcon-sprite.png') 0 -16px no-repeat;
+}
 .controls-DatePicker {
   border: none !important;
   background: transparent !important;
@@ -2199,10 +2247,10 @@ input[type="reset"]::-moz-focus-inner {
   min-height: 128px;
   margin: -4px 0 0 -1px;
 }
-.controls-MultiView .controls-MultiView__tileItem:hover {
+.controls-MultiView .controls-MultiView__tileItem.controls-ListView__hoveredItem {
   background: #f3f3f3;
 }
-.controls-MultiView .controls-MultiView__tileItem:hover .controls-MultiView__tileImg {
+.controls-MultiView .controls-MultiView__tileItem.controls-ListView__hoveredItem .controls-MultiView__tileImg {
   box-shadow: 1px 2px 4px #aaaaaa;
 }
 .controls-MultiView .controls-MultiView__tileItem.controls-ListView__folder {
@@ -2304,6 +2352,30 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/pathSelector__hierWrapper.png') no-repeat;
   position: relative;
   top: -3px;
+}
+.controls-Pager {
+  float: right;
+  height: 28px;
+}
+.controls-Pager .controls-text {
+  line-height: 20px;
+  font-size: 11px;
+  padding-top: 2px;
+  color: #999999;
+}
+.controls-Pager .controls-Pager-block {
+  float: right;
+}
+.controls-Pager .controls-Pager-block-amount {
+  padding: 5px 6px 6px 1px;
+}
+.controls-Pager .controls-Pager-block-paging {
+  padding: 4px 0 0 6px;
+}
+.controls-Pager .controls-Pager__pageSize-container select,
+.controls-Pager .controls-Pager__pageSize-container .custom-select.asLink {
+  font-size: 11px;
+  text-decoration: underline;
 }
 .controls-operations-panel {
   /*TODO придрот (2 important), чтобы перебить высоту ws-area*/
