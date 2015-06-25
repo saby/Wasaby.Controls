@@ -10,9 +10,9 @@ define('js!SBIS3.CONTROLS.FilterButton',
    'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.Button'
    ],
-   function(CompoundControl, dotTplFn, dotTplForPicker, PickerMixin, DSMixin) {
+   function(CompoundControl, dotTplFn, dotTplForPicker, PickerMixin) {
 
-   var FilterButtonNew = CompoundControl.extend([PickerMixin, DSMixin],{
+   var FilterButtonNew = CompoundControl.extend([PickerMixin],{
       _dotTplFn: dotTplFn,
       _dotTplPicker: dotTplForPicker,
       $protected: {
