@@ -2165,12 +2165,19 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid__td .controls-TreeView__hierWrapper:first-child {
   width: 27px;
 }
+.controls-DataGrid__td .controls-TreeView__hierWrapper:first-child {
+  width: 27px;
+}
 .controls-DataGrid__td .controls-TreeView__editArrow {
   display: none;
   position: relative;
   top: 2px;
 }
 .controls-DataGrid__td:hover .controls-TreeView__expand--inside {
+  display: inline-block;
+  height: 14px;
+}
+.controls-DataGrid__td .controls-TreeView__expand--inside {
   display: inline-block;
   height: 14px;
 }
