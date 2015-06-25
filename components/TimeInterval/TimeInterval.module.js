@@ -30,7 +30,13 @@ define(
            * @param {String} interval Количество времени.
            * @example
            * <pre>
-           *
+           *     var prevInterval = timeInterval.getInterval();
+           *     var onChangeIntervalFn = function(event, interval) {
+           *        if (prevInterval != interval) {
+           *           buttonUpdate.setEnabled(true);
+           *        }
+           *     };
+           *     timeInterval.subscribe('onChangeInterval', onChangeIntervalFn);
            * </pre>
            * @see interval
            * @see mask
@@ -157,6 +163,10 @@ define(
          /**
           * Устанавливаем количество дней.
           * @param days Дни в интервале.
+          * @example
+          * <pre>
+          *     timeInterval.setDays(2);
+          * </pre>
           * @see interval
           * @see mask
           * @see setInterval
@@ -171,6 +181,10 @@ define(
          /**
           * Устанавливаем количество часов.
           * @param hours Часы в интервале.
+          * @example
+          * <pre>
+          *     timeInterval.setHours(30);
+          * </pre>
           * @see interval
           * @see mask
           * @see setInterval
@@ -185,6 +199,10 @@ define(
          /**
           * Устанавливаем количество минут.
           * @param minutes Минуты в интервале.
+          * @example
+          * <pre>
+          *     timeInterval.setMinutes(50);
+          * </pre>
           * @see interval
           * @see mask
           * @see setInterval
@@ -222,6 +240,20 @@ define(
           * </ul>
           * Можно передать, например, строку 'PT1530M', при маске 'HH:II' будет установлено значение 25:30,
           * а при маске 'DD:HH:II' - 01:01:30.
+          * @example
+          * Зададим значение 2 дня 30 часов и 50 минут, вывод зависит от маски.
+          * Массивом - важен порядок:
+          * <pre>
+          *     timeInterval.setInterval([2,30,50]);
+          * </pre>
+          * Строкой:
+          * <pre>
+          *     timeInterval.setInterval('P2DT30H50M');
+          * </pre>
+          * Объектом:
+          * <pre>
+          *     timeInterval.setInterval({days:2, hours:30, minutes: 50});
+          * </pre>
           * @see interval
           * @see getInterval
           * @see setDays
@@ -245,6 +277,11 @@ define(
           *    <li>H - число перед этим символом является количеством часов;</li>
           *    <li>M - счисло перед этим символом является количеством минут.</li>
           * </ul>
+          * @example
+          * <pre>
+          *     var interval = timeInterval.getInterval();
+          *     textInterval.setText(interval);
+          * </pre>
           * @see interval
           * @see setInterval
           */
