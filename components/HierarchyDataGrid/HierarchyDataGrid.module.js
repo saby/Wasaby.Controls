@@ -30,7 +30,10 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
       $protected: {
          _rowTpl: rowTpl,
          _searchGrouping : {},
-         _pathSelectors : []
+         _pathSelectors : [],
+         _lastParent : undefined,
+         _lastDrawn : undefined,
+         _lastPath : []
       },
 
       $constructor: function () {
@@ -58,73 +61,87 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
             this.setCurrentRoot(nodeID);
          }
       },
-      _groupByDefaultSearchMethod: function(records, noClear){
+      reload: function(){
+         this._lastParent = undefined;
+         this._lastDrawn = undefined;
+         this._lastPath = [];
+         HierarchyDataGrid.superclass.reload.apply(this, arguments);
+      },
+      _drawItems: function(){
+         this._lastParent = this._curRoot;
+         this._lastDrawn = undefined;
+         this._lastPath = [];
+         HierarchyDataGrid.superclass._drawItems.apply(this, arguments);
+      },
+      _groupByDefaultMethod: function(record, at){
          //TODO lastParent - curRoot - правильно?. 2. Данные всегда приходят в правильном порядке?
-         var lastParent = this._curRoot,
-               lastDrawn,//Последний нарисанованный
-               key,
-               record,
+         var key,
                curRecRoot,
-               kInd = -1,
-               lastPath = [];
-         if (!noClear) {
-            this._clearItems();//delete
-         }
-         for (var i = 0; i < records.length; i++) {
-            record = records[i];
-            key = record.getKey();
-            curRecRoot = record.get(this._options.hierField);
-            if (curRecRoot[0] === lastParent){
-               //Лист
-               if (record.get(this._options.hierField + '@') !== true){
-                  //Нарисуем путь до листа, если пришли из папки
-                  if (lastDrawn !== 'leaf') {
-                     this._drawPS(lastPath, record);
-                  }
-                  lastDrawn = 'leaf';
-                  this._drawItem(record);//delete
-               } else { //папка
-                  lastDrawn = undefined;
-                  lastPath.push(record);
-                  lastParent = key;
-               }
-            } else {//другой кусок иерархии
-               //Если текущий раздел у записи есть в lastPath, то возьмем все элементы до этого ключа
+               drawItem = false,
                kInd = -1;
-               for (var k = 0; k < lastPath.length; k++) {
-                  if (lastPath[k].getKey() === curRecRoot[0]){
-                     kInd = k;
-                     break;
-                  }
+         if (this._lastParent === undefined) {
+            this._lastParent = this._curRoot;
+         }
+         key = record.getKey();
+         curRecRoot = record.get(this._options.hierField);
+         if (curRecRoot[0] === this._lastParent){
+            //Лист
+            if (record.get(this._options.hierField + '@') !== true){
+               //Нарисуем путь до листа, если пришли из папки
+               if (this._lastDrawn !== 'leaf' && this._lastPath.length) {
+                  this._drawGroup(record, at);
                }
-               //Если текущий раздел есть в lastpath его надо нарисовать
-               if (  lastDrawn !== 'leaf') {
-                  this._drawPS(lastPath, record);
-               }
-               lastDrawn = undefined;
-               lastPath = kInd >= 0 ? lastPath.slice(0, kInd + 1) : [];
-               //Лист
-               if (record.get(this._options.hierField + '@') !== true){
-                  this._drawPS(lastPath, record);
-                  this._drawItem(record);//delete
-                  lastDrawn = 'leaf';
-                  lastParent = curRecRoot[0];
-               } else {//папка
-                  lastDrawn = undefined;
-                  lastPath.push(record);
-                  lastParent = key;
+               this._lastDrawn = 'leaf';
+               drawItem = true;
+               //this._drawItem(record);//delete
+            } else { //папка
+               this._lastDrawn = undefined;
+               this._lastPath.push(record);
+               this._lastParent = key;
+            }
+         } else {//другой кусок иерархии
+            //Если текущий раздел у записи есть в lastPath, то возьмем все элементы до этого ключа
+            kInd = -1;
+            for (var k = 0; k < this._lastPath.length; k++) {
+               if (this._lastPath[k].getKey() === curRecRoot[0]){
+                  kInd = k;
+                  break;
                }
             }
+            //Если текущий раздел есть в this._lastPath его надо нарисовать
+            if (  this._lastDrawn !== 'leaf' && this._lastPath.length) {
+               this._drawGroup(record, at);
+            }
+            this._lastDrawn = undefined;
+            this._lastPath = kInd >= 0 ? this._lastPath.slice(0, kInd + 1) : [];
+            //Лист
+            if (record.get(this._options.hierField + '@') !== true){
+               if ( this._lastPath.length) {
+                  this._drawGroup(record, at);
+               }
+               drawItem = true;
+               //this._drawItem(record);//delete
+               this._lastDrawn = 'leaf';
+               this._lastParent = curRecRoot[0];
+            } else {//папка
+               this._lastDrawn = undefined;
+               this._lastPath.push(record);
+               this._lastParent = key;
+            }
          }
+         return {
+            drawItem : drawItem,
+            drawGroup: false
+         };
       },
-      _drawPS:function(path, record){
+      _groupByDefaultRender: function(item, container){
+         this._drawPS(this._lastPath, item, container);
+         return container;
+      },
+      _drawPS:function(path, record, container){
          if (path.length) {
-            var targetContainer = this._getTargetContainer(record),
-                  elem;
-            //TODO Сделать номральным шаблоном группировки!
-            var itemTr = $('<tr class="controls-DataGrid__tr controls-ListView__item controls-HierarchyDataGrid__path"><td class="controls-DataGrid__td" colspan="' + (this._options.columns.length + this._options.multiselect) +'"></td></tr>');
-            targetContainer.append(itemTr);
-            itemTr.find('td').append(elem = $('<div/>'));
+            var elem;
+            container.find('td').append(elem = $('<div/>'));
 
             var ps = new PathSelector({
                //items : this._createPathItemsDS(lastPath),
@@ -134,6 +151,9 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
             });
             ps.setItems(this._createPathItemsDS(path));
             this._pathSelectors.push(ps);
+         } else{
+            //если пути нет, то группировку надо бы убить...
+            container.remove();
          }
 
       },
@@ -154,9 +174,6 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
          }
          this._pathSelectors = [];
       },
-      _groupByDefaultSearchRender : function(){
-         //TODO отрисовать крошки и сделать hightlight
-      },
 
       setCurrentRoot: function(key) {
         var self = this,
@@ -164,7 +181,6 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
           parentKey = record ? this._dataSet.getParentKey(record, this._options.hierField) : null,
           hierarchy =[];
           hierarchy.push(key);
-        this._destroySearchPathSelectors();
         while (parentKey != null){
           hierarchy.push(parentKey);
           record = this._dataSet.getRecordByKey(parentKey);

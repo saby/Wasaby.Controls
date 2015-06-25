@@ -410,17 +410,28 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
       /**
        *
+       * Из метода группировки можно вернуть Boolean - рисовать ли группировку
+       * или Объект - {
+       *    drawItem - рисовать ли текущую запись
+       *    drawGroup - рисовавть ли группировку перед текущей записью
+       * }
        * @param item
        * @param at
        */
       _group: function(item, at){
-         var groupBy = this._options.groupBy;
+         var groupBy = this._options.groupBy,
+               resultGroup,
+               drawGroup,
+               drawItem = true;
          if (!Object.isEmpty(groupBy)){
-            if (groupBy.method.apply(this, [item, at])){
+            resultGroup = groupBy.method.apply(this, [item, at]);
+            drawGroup = typeof resultGroup === 'boolean' ? resultGroup : (resultGroup instanceof Object && resultGroup.hasOwnProperty('drawGroup') ? !!resultGroup.drawGroup : false);
+            drawItem = resultGroup instanceof Object && resultGroup.hasOwnProperty('drawItem') ? !!resultGroup.drawItem : true;
+            if (drawGroup){
                this._drawGroup(item, at)
             }
          }
-         return true;
+         return drawItem;
       },
       _drawGroup: function(item, at){
          var
@@ -436,10 +447,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          tplOptions.item = item;
          tplOptions.colspan = this._options.columns.length + this._options.multiselect;
          itemInstance = this._buildTplItem(item, groupBy.template(tplOptions));
-         if (groupBy.render && typeof groupBy.render === 'function') {
-            itemInstance = groupBy.render.apply(this, [item, itemInstance]);
-         }
          this._appendItemTemplate(item, targetContainer, itemInstance, at);
+         //Сначала положим в дом, потом будем звать рендеры, иначе контролы, которые могут создать в рендере неправмльно поймут свою ширину
+         if (groupBy.render && typeof groupBy.render === 'function') {
+            groupBy.render.apply(this, [item, itemInstance]);
+         }
+
       },
       /**
        * Установка группировки элементов. Если нужно, чтобы стандартаная группировка для этого элемента не вызывалась -
@@ -454,13 +467,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (!Object.isEmpty(this._options.groupBy)){
             if (!this._options.groupBy.hasOwnProperty('method')){
                this._options.groupBy.method = this._groupByDefaultMethod;
+               if (!this._options.groupBy.hasOwnProperty('template')){
+                  this._options.groupBy.template = this._getGroupTpl();
+               }
+               if (!this._options.groupBy.hasOwnProperty('render')){
+                  this._options.groupBy.render = this._groupByDefaultRender;
+               }
             }
-            if (!this._options.groupBy.hasOwnProperty('template')){
-               this._options.groupBy.template = this._getGroupTpl();
-            }
-            if (!this._options.groupBy.hasOwnProperty('render')){
-               this._options.groupBy.template = this._groupDefaultRender();
-            }
+
          }
          if (redraw){
             this._redraw();
@@ -472,8 +486,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _getGroupTpl : function(){
          throw new Error('Method _getGroupTpl() must be implemented');
       },
-      _groupDefaultRender: function(){
-         throw new Error('Method _groupDefaultRender() must be implemented');
+      _groupByDefaultRender: function(){
+         throw new Error('Method _groupByDefaultRender() must be implemented');
       },
       _getItemTemplate: function () {
          throw new Error('Method _getItemTemplate() must be implemented');

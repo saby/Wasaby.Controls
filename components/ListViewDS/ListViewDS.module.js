@@ -830,8 +830,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          _getGroupTpl : function(){
             return this._options.groupBy.template || groupByTpl;
          },
-         _groupDefaultRender: function(elem){
-            return elem;
+         _groupByDefaultRender: function(item, container){
+            return container;
          },
          destroy: function() {
             if (this.isInfiniteScroll()){
