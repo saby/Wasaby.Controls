@@ -21,6 +21,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
          }
       },
 
+      $constructor : function() {
+         delete (this._filter[this._options.hierField]);
+      },
 
       _getRecordsForRedraw: function() {
          /*Получаем только рекорды с parent = curRoot*/
@@ -29,7 +32,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
             records = [];
          if (this._options.expand) {
             this.hierIterate(this._dataSet, function (record) {
-               if (this._options.displayType == 'folders') {
+               if (self._options.displayType == 'folders') {
                   if (record.get(self._options.hierField + '@')) {
                      records.push(record);
                   }
