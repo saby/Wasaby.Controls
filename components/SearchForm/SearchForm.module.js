@@ -62,10 +62,10 @@ define('js!SBIS3.CONTROLS.SearchForm', [
             }
          });
          $('.js-controls-SearchForm__reset', this.getContainer().get(0)).click(function() {
-            self.reset();
+            self.resetSearch();
          });
          $('.js-controls-SearchForm__search', this.getContainer().get(0)).click(function() {
-            self.startSearch();
+            self.applySearch();
          });
       },
 
