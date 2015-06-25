@@ -1422,6 +1422,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
   display: none;
 }
+.controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable__placeholder {
+  color: #eeeeee !important;
+}
 .controls-ComboBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
   position: absolute;
   text-decoration: none;
@@ -1995,7 +1998,6 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 8px 0 8px 8px;
   border-style: solid;
   border-color: transparent transparent transparent #ffb366;
-  background: transparent;
 }
 .controls-TreeView__expand.controls-TreeView__expand__open {
   width: auto;
@@ -2010,7 +2012,6 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 8px 8px 0 8px;
   border-style: solid;
   border-color: #ffb366 transparent transparent transparent;
-  background: transparent;
 }
 .controls-TreeView__expand + .controls-TreeView__itemContent {
   margin: 0 0 0 20px;
