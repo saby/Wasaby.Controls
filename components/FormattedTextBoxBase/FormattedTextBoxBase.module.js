@@ -493,7 +493,7 @@ define(
     *    <li>L - заглавная буква.</li>
     *    <li>l - строчная буква.</li>
     *    <li>x - буква или цифра.</li>
-    *    <li>"/", "-", ":", " " - разделители.</li>
+    *    <li>"/", "-", ":", " ", "." - разделители.</li>
     * </ol>
     * @class SBIS3.CONTROLS.FormattedTextBoxBase
     * @extends SBIS3.CONTROLS.TextBoxBase
@@ -504,6 +504,26 @@ define(
        /**
         * @event onInputFinished По окончании ввода
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @example
+        * По завершению ввода добавим в конец маски группу из 3 цифр
+        * <pre>
+        *     formattedTextBox.setMask('dd(dd)');
+        *     var maskReplacer = '_';
+        *     var onInputFinishedFn = function() {
+        *        var text = formattedTextBox.formatModel.getText(maskReplacer);
+        *        if (text.length == 6) {
+        *           formattedTextBox.setMask('dd(dd)ddd');
+        *           //новый текст должен точно совпадать с маской, поэтому добавляем к нему символы маски
+        *           formattedTextBox.setText(text+'___');
+        *           formattedTextBox.setCursor(4,0);
+        *        }
+        *     }
+        *     formattedTextBox.subscribe('onInputFinished', onInputFinishedFn);
+        * </pre>
+        * @see setMask
+        * @see onInputFinished
+        * @see setCursor
+        * @see setText
         */
       $protected: {
          /**
@@ -795,9 +815,30 @@ define(
 
       /**
        * Установка курсора в заданную позицию
-       * @param groupNum - номер контейнера
-       * @param position - позиция в контейнере
-       * @returns {boolean}
+       * @remark
+       * Задание положения курсора может требоваться при динамической смене маски, например, по мере ввода значений.
+       * В остальных случаях управлять положением курсора не требуется.
+       * @param {Number} groupNum Номер контейнера.
+       * @param {Number} position Позиция в контейнере.
+       * @returns {Boolean} Положение курсора.
+       * @example
+       * По завершению ввода добавим в конец маски группу из 3 цифр
+       * <pre>
+       *     formattedTextBox.setMask('dd(dd)');
+       *     var maskReplacer = '_';
+       *     var onInputFinishedFn = function() {
+       *        var text = formattedTextBox.formatModel.getText(maskReplacer);
+       *        if (text.length == 6) {
+       *           formattedTextBox.setMask('dd(dd)ddd');
+       *           //новый текст должен точно совпадать с маской, поэтому добавляем к нему символы маски
+       *           formattedTextBox.setText(text+'___');
+       *           formattedTextBox.setCursor(4,0);
+       *        }
+       *     }
+       *     formattedTextBox.subscribe('onInputFinished', onInputFinishedFn);
+       * </pre>
+       * @see setMask
+       * @see onInputFinished
        */
       setCursor: function(groupNum, position) {
          if (!this.formatModel.setCursor(groupNum, position)) {
@@ -820,6 +861,8 @@ define(
        *     this.setText('8(111)888-11-88');
        * </pre>
        * @see setMask
+       * @see onInputFinished
+       * @see setCursor
        */
       setText: function(text) {
          this.formatModel.setText(text, this._maskReplacer);
@@ -828,8 +871,15 @@ define(
       },
 
       /**
-       * Задает маску в модель и обновляет html
-       * @param mask маска строкой, например 'dd:dd', 'HH:MM'
+       * Задает маску в модель и обновляет html.
+       * @param {String} mask Маска строкой, например 'dd:dd', 'HH:MM'
+       * @example
+       * Зададим маску для паспорта
+       * <pre>
+       *     formattedTextBox.setMask('dd dd dddddd');
+       * </pre>
+       * @see setText
+       * @see setCursor
        */
       setMask: function(mask) {
          var self = this;
