@@ -31,6 +31,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                   dataSource: undefined,
                   dataSet: undefined,
                   addInPlaceButton: undefined,
+                  moveFocusEvent: undefined,
                   ignoreFirstColumn: false
                },
                //Редактируемая область
@@ -64,6 +65,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                      columns: this._options.columns,
                      element: $('<div id="' + id + '"></div>').appendTo(this._container),
                      visible: false,
+                     focusCatch: this._focusCatch.bind(this),
+                     moveFocus: this._moveFocus.bind(this),
                      handlers: {
                         onMouseDown: isMobileBrowser ? undefined : this._areaHandlers.onMouseDownEditInPlace
                      }
@@ -84,6 +87,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                   this.showEditing(this._areas.first.hovered ? 'first' : 'second');
                }
             },
+            /**
+             * Показать редактирование по месту
+             * @param area {$|String} Принимает два типа значений:
+             * 1. jQuery-объект. В этом случае считаем, что передан Target и позиционируем текущее редактирование по месту относительно переданного Target.
+             * 2. String. В этому случае считаем, что передано имя объекта-конфигурации области редактирования по месту.
+             */
             showEditing: function(area) {
                if (this._editing) {
                   this.finishEditing(this._areas[this._editing]);
@@ -183,6 +192,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                   editingArea.target = null;
                }
             },
+            /**
+             * Функция позволяет узнать, выполняется ли сейчас редактирование по месту
+             * @returns {boolean} Выполняется редактирование по месту, или нет
+             */
             isEditing: function() {
                return !!this._editing;
             },
@@ -203,34 +216,69 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
              */
             _onKeyDown: function(e) {
                var
-                  key = e.which,
-                  newTarget,
-                  area,
-                  viewingArea;
+                  key = e.which;
                if (key === $ws._const.key.esc) {
-                  this.finishEditing();
                   e.stopImmediatePropagation();
                   e.preventDefault();
+                  this.finishEditing();
                } else if (key === $ws._const.key.enter || key === $ws._const.key.down || key === $ws._const.key.up) {
-                  area = this._areas[this._editing];
-                  newTarget = $('[data-id="' + area.record.getKey() + '"]')[key === $ws._const.key.down || key === $ws._const.key.enter ? 'next' : 'prev']('.controls-ListView__item');
-                  if (newTarget.length) {
-                     this.finishEditing(true, true);
-                     area.target = newTarget;
-                     area.record = this._options.dataSet.getRecordByKey(newTarget.data('id'));
-                     //Если будем редактировать строку, на которую наведена мышь, то скрываем вторую область
-                     viewingArea = this._areas[this._editing === 'first' ? 'second' : 'first'];
-                     if (viewingArea.editInPlace.isVisible() && viewingArea.record == area.record) {
-                        viewingArea.editInPlace.hide();
-                     }
-                     this._updateArea(area);
-                     e.stopImmediatePropagation();
-                     e.preventDefault();
-                  } else if (key === $ws._const.key.enter) {
-                     this.finishEditing(true);
-                  }
+                  e.stopImmediatePropagation();
+                  e.preventDefault();
+                  this._editNextTarget(key === $ws._const.key.down || key === $ws._const.key.enter, key === $ws._const.key.enter);
                }
             },
+            /**
+             * Метод позволяет запустить редактирование следующей/предыдущей записи
+             * @param editNextRow Запускать редактирование следующей записи (при false - предыдущей)
+             * @param closeIfLast Завершать редактирование по месту, если текущая запись является последней
+             * @param activateFirstControl Вызывать активацию первого контрола (по z-index) - нужно, когда перемещаемся по KEY.TAB
+             * @private
+             */
+            _editNextTarget: function(editNextRow, closeIfLast, activateFirstControl) {
+               var
+                  viewingArea,
+                  area = this._areas[this._editing],
+                  newTarget = $('[data-id="' + area.record.getKey() + '"]')[editNextRow ? 'next' : 'prev']('.controls-ListView__item');
+               if (newTarget.length) {
+                  this.finishEditing(true, true);
+                  area.target = newTarget;
+                  area.record = this._options.dataSet.getRecordByKey(newTarget.data('id'));
+                  //Если будем редактировать строку, на которую наведена мышь, то скрываем вторую область
+                  viewingArea = this._areas[this._editing === 'first' ? 'second' : 'first'];
+                  if (viewingArea.editInPlace.isVisible() && viewingArea.record == area.record) {
+                     viewingArea.editInPlace.hide();
+                  }
+                  this._updateArea(area);
+                  if (activateFirstControl) {
+                     area.editInPlace.activateFirstControl();
+                  }
+               } else if (closeIfLast) {
+                  this.finishEditing(true);
+               }
+            },
+            /**
+             * Обработчик потери фокуса областью редактирования по месту
+             * @param event
+             * @private
+             */
+            _focusCatch: function(event) {
+               if (event.which === $ws._const.key.tab && !event.shiftKey) {
+                  this._editNextTarget(true, true, true);
+               }
+            },
+            /**
+             * Обработчик перемещения фокуса внутри редактирования по месту
+             * @private
+             */
+            _moveFocus: function() {
+               if (typeof this._options.moveFocusEvent === 'function') {
+                  this._options.moveFocusEvent(this._editing ? this._areas[this._editing].record : null);
+               }
+            },
+            /**
+             * Метод для скрытия областей редактирования по месту
+             * @private
+             */
             _hideEditInPlace: function() {
                if (isMobileBrowser) {
                   this._areas.first.editInPlace.hide();
