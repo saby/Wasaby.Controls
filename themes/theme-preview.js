@@ -639,6 +639,7 @@
          'js!SBIS3.CONTROLS.MonthPicker',
          'js!SBIS3.CONTROLS.NumberTextBox',
          'js!SBIS3.CONTROLS.ComboBox',
+         'js!SBIS3.CONTROLS.SearchForm',
          'js!SBIS3.CONTROLS.TextArea',
          'js!SBIS3.CORE.AreaAbstract',
          'js!SBIS3.CONTROLS.EditAtPlace',
@@ -651,6 +652,7 @@
          MonthPicker,
          NumberTextBox,
          ComboBox,
+         SearchForm,
          TextArea,
          AreaAbstract,
          EditAtPlace,
@@ -777,6 +779,16 @@
             editable: false,
             items: comboItems,
             enabled: false
+         });
+
+         new SearchForm({
+            element: 'searchForm',
+            placeholder: "Введите что-нибудь"
+         });
+
+         new SearchForm({
+            element: 'searchForm2',
+            placeholder: "Введите наименование"
          });
 
          new TextArea({
