@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
             self.reset();
          });
          $('.js-controls-SearchForm__search', this.getContainer().get(0)).click(function() {
-            self.apply();
+            self.startSearch();
          });
       },
 
@@ -84,7 +84,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
        * @see reset
        * @see countStart
        */
-      apply: function() {
+      startSearch: function() {
          this._notify('onSearchStart', this.getText());
       },
 
