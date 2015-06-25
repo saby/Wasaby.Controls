@@ -171,6 +171,10 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
           parentKey = record ? this._dataSet.getParentKey(record, this._options.hierField) : null,
           hierarchy =[];
           hierarchy.push(key);
+         //Сбросим группировку при проваливаниии в крошки
+         if (this._defaultGroup){
+            this.setGroup({});
+         }
         while (parentKey != null){
           hierarchy.push(parentKey);
           record = this._dataSet.getRecordByKey(parentKey);

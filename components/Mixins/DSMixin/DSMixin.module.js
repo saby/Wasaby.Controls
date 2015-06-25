@@ -123,7 +123,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             emptyHTML: ''
          },
-         _loader: null
+         _loader: null,
+         _defaultGroup : false //Установлена группировка по умолчанию (платформенная)
       },
 
       $constructor: function () {
@@ -466,6 +467,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          // запросим данные из источника
          if (!Object.isEmpty(this._options.groupBy)){
             if (!this._options.groupBy.hasOwnProperty('method')){
+               this._defaultGroup = true;
                this._options.groupBy.method = this._groupByDefaultMethod;
                if (!this._options.groupBy.hasOwnProperty('template')){
                   this._options.groupBy.template = this._getGroupTpl();
