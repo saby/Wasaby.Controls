@@ -401,7 +401,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var
             targetContainer,
             itemInstance;
-         //Запускаем группировку если она есть. Иногда рещультат попадает в группровку и тогда отрисовывать item не надо
+         //Запускаем группировку если она есть. Иногда результат попадает в группровку и тогда отрисовывать item не надо
          if (this._group(item, at) !== false) {
             targetContainer = this._getTargetContainer(item);
             itemInstance = this._createItemInstance(item, targetContainer, at);
