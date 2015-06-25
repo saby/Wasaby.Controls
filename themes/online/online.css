@@ -1422,6 +1422,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
   display: none;
 }
+.controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable__placeholder {
+  color: #cccccc !important;
+}
 .controls-ComboBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
   position: absolute;
   text-decoration: none;
@@ -1985,32 +1988,30 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   width: 16px;
   height: 16px;
-  margin: 0 3px 0 0;
+  margin: 0 7px 0 0;
   border-width: 0;
   border-style: none;
   border-color: transparent;
-  background: url('img/Tree_expand.png') 0 0 no-repeat;
+  background: url('img/Tree_expand.png') 4px 0 no-repeat;
 }
 .controls-TreeView__expand:hover {
   border-width: 0;
   border-style: none;
   border-color: transparent;
-  background: url('img/Tree_expand.png') 0 0 no-repeat;
 }
 .controls-TreeView__expand.controls-TreeView__expand__open {
   width: 16px;
   height: 16px;
-  margin: 0 3px 0 0;
+  margin: 0 7px 0 0;
   border-width: 0;
   border-style: none;
   border-color: transparent;
-  background: url('img/Tree_expand.png') 0 -16px no-repeat;
+  background: url('img/Tree_expand.png') 4px -16px no-repeat;
 }
 .controls-TreeView__expand.controls-TreeView__expand__open:hover {
   border-width: 0;
   border-style: none;
   border-color: transparent;
-  background: url('img/Tree_expand.png') 0 -16px no-repeat;
 }
 .controls-TreeView__expand + .controls-TreeView__itemContent {
   margin: 0 0 0 15px;
@@ -2158,9 +2159,17 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid__td .controls-TreeView__hierWrapper:first-child {
   width: 27px;
 }
+.controls-DataGrid__td .controls-TreeView__editArrow {
+  display: none;
+  position: relative;
+  top: 2px;
+}
 .controls-DataGrid__td:hover .controls-TreeView__expand--inside {
   display: inline-block;
   height: 14px;
+}
+.controls-ListView__hoveredItem .controls-TreeView__editArrow {
+  display: inline-block;
 }
 .controls-HierarchyDataGrid__expand {
   height: 20px;
