@@ -27,7 +27,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             $protected: {
                _options: {
                   columns: [],
-                  focusCatch: undefined
+                  focusCatch: undefined,
+                  moveFocus: undefined
                },
                _firstField: undefined,
                _fields: {}
