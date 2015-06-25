@@ -45,17 +45,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
              *     <option name="placeholder">Введите ФИО полностью</option>
              * </pre>
              */
-            placeholder: '',
-            /**
-             * @cfg {Number} При каком колчистве символов начинать поиск
-             * @example
-             * <pre>
-             *     <option name="countStart">5</option>
-             * </pre>
-             * @see apply
-             * @see reset
-             */
-            countStart: null
+            placeholder: ''
          }
       },
 
@@ -81,18 +71,17 @@ define('js!SBIS3.CONTROLS.SearchForm', [
 
       /**
        * Начать поиск с тем текстом, что введен
-       * @see reset
-       * @see countStart
+       * @see resetSearch
        */
-      startSearch: function() {
+      applySearch: function() {
          this._notify('onSearchStart', this.getText());
       },
 
       /**
        * Сбросить поиск
-       * @see apply
+       * @see applySearch
        */
-      reset: function(){
+      resetSearch: function(){
          $('.js-controls-SearchForm__reset', this.getContainer().get(0)).hide();
          this.setText('');
          this._notify('onReset');
