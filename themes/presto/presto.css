@@ -2029,6 +2029,7 @@ input[type="reset"]::-moz-focus-inner {
   border-style: solid;
   border-color: transparent;
   background: #4e5762;
+  table-layout: fixed;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell,
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th.controls-DataGrid__notScrolledCell {
@@ -2120,6 +2121,11 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px 0 0;
   border-style: solid;
   border-color: #F5F5F5;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid-cell-overflow-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
   padding-left: 10px;
