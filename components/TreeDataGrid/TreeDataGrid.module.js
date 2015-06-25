@@ -27,7 +27,10 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
 
    var TreeDataGrid = HierarchyDataGrid.extend([TreeMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
       $protected: {
-         _rowTpl : rowTpl
+         _rowTpl : rowTpl,
+         _options: {
+           arrowActivatedHandler: undefined
+         }
       },
 
       $constructor: function() {
@@ -40,7 +43,9 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
             itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
 
-         this._dataSet.merge(dataSet);
+         //при раскрытии узла по стрелке приходит новый датасет, в котором только содержимое узла
+         //поэтому удалять из текущего датасета ничего не нужно, только добавить новое.
+         this._dataSet.merge(dataSet, {remove: false});
          this._dataSet._reindexTree(this._options.hierField);
 
          dataSet.each(function (record) {
@@ -102,7 +107,11 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
             this.toggleNode(nodeID);
          }
          else {
-            if (data.get(this._options.hierField+'@')) {
+          if($(target).hasClass('js-controls-TreeView__editArrow')){
+            if (this._options.arrowActivatedHandler) {
+              this._options.arrowActivatedHandler.apply(this, arguments);
+            }
+          } else if (data.get(this._options.hierField+'@')) {
                var self = this;
                self.setCurrentRoot(nodeID);
             }
