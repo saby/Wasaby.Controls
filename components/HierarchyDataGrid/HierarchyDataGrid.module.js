@@ -29,7 +29,6 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
    var HierarchyDataGrid = DataGrid.extend([hierarchyMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
       $protected: {
          _rowTpl: rowTpl,
-         _searchGrouping : {},
          _pathSelectors : [],
          _lastParent : undefined,
          _lastDrawn : undefined,
@@ -40,15 +39,6 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
         this._publish('onSetRoot');
          //чтобы не добавлять новый шаблон модуля просто добавим класс тут
          this.getContainer().addClass('controls-HierarchyDataGrid');
-         this._searchGrouping = {
-            'field' : this._options.hierField + '@',
-            'method' : this._groupByDefaultMethod,
-            'render' : function(item, container){
-               //here all records Before  this flag
-               container.find('.controls-DataGrid__td').text('Сгруппировано по flag! в рендере');
-               return container;
-            }
-         }
       },
 
       _dataLoadedCallback: function () {
