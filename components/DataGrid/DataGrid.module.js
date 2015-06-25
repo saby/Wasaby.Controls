@@ -100,7 +100,8 @@ define('js!SBIS3.CONTROLS.DataGrid',
              */
             editInPlace: {
                enabled: false,
-               addInPlace: false
+               addInPlace: false,
+               moveFocusEvent: undefined
             },
             /**
              * @cfg {Number} Частичный скролл
@@ -168,15 +169,16 @@ define('js!SBIS3.CONTROLS.DataGrid',
             element: $('<div>').appendTo(this._container.find('.controls-DataGrid__table')),
             dataSet: this._dataSet,
             ignoreFirstColumn: this._options.multiselect,
+            moveFocusEvent: this._options.editInPlace.moveFocusEvent,
             dataSource: this._dataSource
          });
       },
       
       _onChangeHoveredItem: function(hoveredItem) {
-         this._updateEditInPlaceDisplay();
+         this._updateEditInPlaceDisplay(hoveredItem);
          DataGrid.superclass._onChangeHoveredItem.apply(this, arguments);
       },
-      _updateEditInPlaceDisplay: function() {
+      _updateEditInPlaceDisplay: function(hoveredItem) {
          if (this._options.editInPlace.enabled && this._options.columns && this._options.columns.length) {
             this._initEditInPlace();
             this._editInPlace.updateDisplay(hoveredItem);
