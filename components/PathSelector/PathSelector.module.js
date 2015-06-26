@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
    'js!SBIS3.CONTROLS.DSMixin',
    'js!SBIS3.CONTROLS.PickerMixin',
    'html!SBIS3.CONTROLS.PathSelector',
-   'html!SBIS3.CONTROLS.PathSelector/resources/pointTpl',
+   'html!SBIS3.CONTROLS.PathSelector/resources/pointTpl'
 ], function (CompoundControl, DSMixin, PickerMixin, dotTpl, pointTpl) {
    'use strict';
 
@@ -18,6 +18,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
    var PathSelector = CompoundControl.extend([DSMixin, PickerMixin], {
       $protected: {
          _dotTplFn: dotTpl,
+         _resizeTimeout: null,
          _options: {
             linkedView: null,
             keyField: 'id',
@@ -28,6 +29,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       $constructor: function () {
+         this._publish('onPointClick');
          var self = this;
          if (this._options.linkedView) {
             this._subscribeOnSetRoot();
@@ -36,7 +38,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._resizeHandler, this);
 
          //TODO: сделано на mousedown так как контрол херит клик
-         this._container.bind('mousedown', function (e) {
+         this._container.bind('mouseup', function (e) {
             self._clickHandler(e);
          });
          //инициализируем dataSet
@@ -44,11 +46,11 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       _resizeHandler: function () {
-         var points = $('.controls-PathSelector__point', this._container),
-            targetContainer = this._getTargetContainer();
-         if (targetContainer.width() < this._container.width()) {
-            points.first('ws-hidden').removeClass('ws-hidden');
-         }
+         clearTimeout(this._resizeTimeout);
+         var self = this;
+         this._resizeTimeout = setTimeout(function() {
+            self._redraw();
+         }, 100);
       },
 
       _clickHandler: function (e) {
@@ -97,7 +99,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       _setPickerContent: function () {
          var self = this;
          this._redrawDropdown();
-         this._picker._container.bind('mousedown', function (e) {
+         this._picker._container.bind('mouseup', function (e) {
             self._clickHandler(e);
          })
       },
@@ -200,6 +202,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
        * удаляет пункт на который кликнули и все до него (глубже по иерархии)
        */
       _onPointClick: function (id) {
+         this._notify('onPointClick')
          var last = this._dataSet.getCount() - 1,
             record = this._dataSet.at(last);
          while (true) {
