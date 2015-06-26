@@ -26,8 +26,8 @@ define('js!SBIS3.CONTROLS.SearchForm', [
        * @event onReset При нажатии кнопки отмена (крестик)
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        */
+      _dotTplFn : dotTplFn,
       $protected: {
-         _dotTplFn : dotTplFn,
          _options: {
             afterFieldWrapper: buttonsTpl,
             /**

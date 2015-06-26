@@ -1626,7 +1626,8 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-SearchForm__search:before {
   content: "\e623";
-  vertical-align: middle;
+  display: inline-block;
+  line-height: 22px;
   margin-left: 3px;
 }
 .controls-SearchForm__reset {
