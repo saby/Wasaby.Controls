@@ -161,7 +161,13 @@ define('js!SBIS3.CONTROLS.DataGrid',
             this._createEditInPlace();
          }
       },
-
+      setDataSource: function(ds) {
+         DataGrid.superclass.setDataSource.apply(this, arguments);
+         if (this._options.editInPlace.enabled && this._editInPlace) {
+            this._editInPlace.destroy();
+            this._editInPlace = null;
+         }
+      },
       _createEditInPlace: function() {
          this._editInPlace = new EditInPlaceController({
             columns: this._options.columns,

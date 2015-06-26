@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             self._clickHandler(e);
          });
          //инициализируем dataSet
-         this.setItems(this._options.items);
+         this.setItems(this._options.items || []);
       },
 
       _resizeHandler: function () {
@@ -202,7 +202,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
        * удаляет пункт на который кликнули и все до него (глубже по иерархии)
        */
       _onPointClick: function (id) {
-         this._notify('onPointClick')
+         this._notify('onPointClick');
          var last = this._dataSet.getCount() - 1,
             record = this._dataSet.at(last);
          while (true) {
