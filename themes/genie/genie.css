@@ -1122,6 +1122,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuLink__Menu {
   margin-left: -9px;
+  margin-bottom: 0;
   background: #ffffff;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {

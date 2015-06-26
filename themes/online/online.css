@@ -1121,7 +1121,8 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent;
 }
 .controls-MenuLink__Menu {
-  margin-left: -9px;
+  margin-left: -10px;
+  margin-bottom: 5px;
   background: #ffffff;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
