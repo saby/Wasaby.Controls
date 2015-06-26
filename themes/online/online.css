@@ -2077,6 +2077,7 @@ input[type="reset"]::-moz-focus-inner {
   border-style: solid;
   border-color: transparent;
   background: #ffffff;
+  table-layout: fixed;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell,
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th.controls-DataGrid__notScrolledCell {
@@ -2169,6 +2170,11 @@ input[type="reset"]::-moz-focus-inner {
   border-style: solid;
   border-color: #F5F5F5;
 }
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid-cell-overflow-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
   padding-left: 12px;
 }
@@ -2185,7 +2191,7 @@ input[type="reset"]::-moz-focus-inner {
   font-size: 15px;
 }
 .controls-DataGrid .controls-DataGrid__td__checkBox {
-  width: 16px;
+  width: 24px;
   padding-right: 0!important;
 }
 .controls-DataGrid .controls-DataGrid__td__checkBox .controls-ListView__itemCheckBox {
@@ -2207,12 +2213,19 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid__td .controls-TreeView__hierWrapper:first-child {
   width: 27px;
 }
+.controls-DataGrid__td .controls-TreeView__hierWrapper:first-child {
+  width: 27px;
+}
 .controls-DataGrid__td .controls-TreeView__editArrow {
   display: none;
   position: relative;
   top: 2px;
 }
 .controls-DataGrid__td:hover .controls-TreeView__expand--inside {
+  display: inline-block;
+  height: 14px;
+}
+.controls-DataGrid__td .controls-TreeView__expand--inside {
   display: inline-block;
   height: 14px;
 }
