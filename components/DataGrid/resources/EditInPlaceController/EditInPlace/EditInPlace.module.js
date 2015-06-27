@@ -74,7 +74,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                         items.push({ title: value, id: key })
                      });
                      field.setItems(items);
-                     field.setText(record.get(field.getName()));
+                     field.setSelectedKey(record.get(field.getName()));
                   } else {
                      methodName =
                         $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.CheckBox') ? 'setChecked' :
@@ -91,9 +91,10 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                var methodName;
                $ws.helpers.forEach(this._fields, function(field, name) {
                   methodName =
-                     $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.NumberTextBox') ? 'getNumericValue' :
-                        $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'getText' :
-                           'getValue';
+                     $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.ComboBox') ? 'getSelectedKey' :
+                        $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.NumberTextBox') ? 'getNumericValue' :
+                           $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'getText' :
+                              'getValue';
                   this._record.set(name, field[methodName]());
                }, this);
             },
