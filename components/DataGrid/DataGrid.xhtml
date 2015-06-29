@@ -11,7 +11,7 @@
       <thead class="controls-DataGrid__thead{{?it.showHead === false}} ws-hidden{{?}}">
          <tr>
          {{?it.multiselect}}
-            <th class="controls-DataGrid__td__checkBox"></th>
+            <th class="controls-DataGrid__td__checkBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}"></th>
          {{?}}
          {{~it.columns :column:index}}
              <th class="controls-DataGrid__th{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}">{{=column.title}}</th>
