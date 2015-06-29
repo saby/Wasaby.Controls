@@ -70,6 +70,9 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          var
             records = [],
             self = this;
+         if (!Object.isEmpty(this._options.groupBy)) {
+            return this._dataSet._getRecords();
+         }
          this._dataSet.each(function (record) {
             if (self._dataSet.getParentKey(record, self._options.hierField) == self._curRoot) {
                if (self._options.displayType == 'folders') {
