@@ -76,6 +76,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                      field.setItems(items);
                      field.setSelectedKey(record.get(field.getName()));
                   } else {
+                     //todo избавиться от перебора методов для разных типов полей
                      methodName =
                         $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.CheckBox') ? 'setChecked' :
                            $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'setText' :
@@ -90,6 +91,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             applyChanges: function() {
                var methodName;
                $ws.helpers.forEach(this._fields, function(field, name) {
+                  //todo избавиться от перебора методов для разных типов полей
                   methodName =
                      $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.ComboBox') ? 'getSelectedKey' :
                         $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.NumberTextBox') ? 'getNumericValue' :
