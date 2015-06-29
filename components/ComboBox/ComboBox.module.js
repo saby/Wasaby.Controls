@@ -117,8 +117,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             e.stopPropagation();
             return false;
          });
-         if (this._options.selectedKey) {
-            this._drawSelectedItem(this._options.selectedKey); } else {
+
+         var key = this._options.selectedKey;
+         if (key !== undefined && key !== null) {
+            this._drawSelectedItem(this._options.selectedKey);
+         } else {
             /*TODO следующая строчка должна быть в Selector*/
             this._options.selectedKey = null;
             if (this._options.text) {
@@ -264,6 +267,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _notifySelectedItem: function (key) {
          var text = this.getText();
          this._notify('onSelectedItemChange', key, text);
+         this._notify('onPropertyChanged');
       },
 
       _setPickerContent: function () {
@@ -376,11 +380,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             if (noItems) {
                self._options.selectedKey = null;
                self._notifySelectedItem(null);
-               self._drawSelectedItem(null);            }
-
+               self._drawSelectedItem(null);
+            }
          });
-
-
       },
 
       _clearItems : function() {
