@@ -9,11 +9,11 @@ define('js!SBIS3.CONTROLS.RadioButtonBase', ['js!SBIS3.CONTROLS.ButtonBase', 'js
 
    /**
     * Поведенческий класс, определяющий поведение одной(!!) радиокнопки. Нельзя использовать как отдельный контрол.
-    * Работает только в составе группы радиокнопок. При клике, если состояние не checked, то проставить true, иначе ничего не делать.
+    * Работает только в составе группы радиокнопок.
+    * При клике, если состояние не checked, то проставить true, иначе ничего не делать.
     * @class SBIS3.CONTROLS.RadioButtonBase
     * @extends SBIS3.CONTROLS.ButtonBase
     * @public
-    * @author Крайнов Дмитрий Олегович
     */
 
    var RadioButtonBase = ButtonBase.extend([Checkable], /** @lends SBIS3.CONTROLS.RadioButtonBase.prototype */ {

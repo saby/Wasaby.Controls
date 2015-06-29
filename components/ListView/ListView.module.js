@@ -21,7 +21,6 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
        * @public
-       * @author Черёмушкин Илья
        */
 
       var ListView = CompoundControl.extend([CollectionMixin, MultiSelectable], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
