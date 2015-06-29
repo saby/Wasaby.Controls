@@ -20,11 +20,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     *     <options name="items" type="array">
     *        <options>
     *            <option name="key">1</option>
-    *            <option name="title">Пункт1</option>
+    *            <option name="caption">Пункт1</option>
     *         </options>
     *         <options>
     *            <option name="key">2</option>
-    *            <option name="title">Пункт2</option>
+    *            <option name="caption">Пункт2</option>
     *         </options>
     *      </options>
     *      <option name="keyField">key</option>
@@ -42,25 +42,34 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _dotTplFn: dotTplFn,
       /**
        * @typedef {Object} ItemsComboBox
-       * @property {String} title Текст пункта меню.
+       * @property {String} caption Текст пункта меню.
        * @property {String} key Ключ пункта меню.
        */
       /**
        * @cfg {ItemsComboBox[]} Набор исходных данных, по которому строится отображение
        * @name SBIS3.CONTROLS.ComboBox#items
+       * @remark
+       * !Важно: данные для выпадающего списка можно задать либо в этой опции,
+       * либо через источник данных методом {@link setDataSource}.
        * @example
-       * <pre>
+       * <pre class="brush:xml">
        *     <options name="items" type="array">
        *        <options>
        *            <option name="key">1</option>
-       *            <option name="title">Пункт1</option>
+       *            <option name="caption">Пункт1</option>
        *         </options>
        *         <options>
        *            <option name="key">2</option>
-       *            <option name="title">Пункт2</option>
+       *            <option name="caption">Пункт2</option>
        *         </options>
        *      </options>
+       *      <!--необходимо указать какое из наших полей является ключевым-->
+       *      <option name="keyField">key</option>
        * </pre>
+       * @see keyField
+       * @see displayField
+       * @see setDataSource
+       * @see getDataSource
        */
 
       $protected: {
@@ -78,18 +87,25 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              *         </div>
              *     </option>
              * </pre>
-             * @TextMultiline
+             * @items
              */
             itemTemplate: '',
             afterFieldWrapper: arrowTpl,
             /**
              * @cfg {Boolean} Возможность ручного ввода текста
+             * @remark
+             * При включённой опции в случае отсутствия среди пунктов выпадающего списка нужного можно контрол позволяет
+             * задать своё значение вводом с клавиатуры.
              * @example
              * <pre>
              *     <option name="editable">false</option>
              * </pre>
+             * @see items
              * @see isEditable
              * @see setEditable
+             * @see textTransform
+             * @see inputRegExp
+             * @see maxLength
              */
             editable: true,
             /**
