@@ -6,9 +6,10 @@ define('js!SBIS3.CONTROLS.DataGrid',
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.EditInPlaceController',
       'js!SBIS3.CONTROLS.Link',
-      'js!SBIS3.CONTROLS.DragAndDropMixin'
+      'js!SBIS3.CONTROLS.DragAndDropMixin',
+      'is!browser?html!SBIS3.CONTROLS.DataGrid/resources/DataGridGroupBy'
    ],
-   function(ListView, dotTplFn, rowTpl, MarkupTransformer, EditInPlaceController, Link, DragAndDropMixin) {
+   function(ListView, dotTplFn, rowTpl, MarkupTransformer, EditInPlaceController, Link, DragAndDropMixin, groupByTpl) {
    'use strict';
       /* TODO: Надо считать высоту один раз, а не делать константой */
       var
@@ -470,6 +471,10 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
       _getLeftOfItemContainer : function(container) {
          return $(".controls-DataGrid__td", container.get(0)).first();
+      },
+      //------------------------GroupBy---------------------
+      _getGroupTpl : function(){
+         return this._options.groupBy.template || groupByTpl;
       },
 
       destroy: function() {

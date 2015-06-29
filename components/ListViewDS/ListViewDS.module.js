@@ -12,9 +12,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
       'js!SBIS3.CONTROLS.ItemActionsGroup',
       'html!SBIS3.CONTROLS.ListViewDS',
       'js!SBIS3.CONTROLS.CommonHandlers',
-      'js!SBIS3.CONTROLS.Pager'
+      'js!SBIS3.CONTROLS.Pager',
+      'is!browser?html!SBIS3.CONTROLS.ListViewDS/resources/ListViewGroupBy'
    ],
-   function (CompoundControl, DSMixin, MultiSelectable, Selectable, DataBindMixin, ItemActionsGroup, dotTplFn, CommonHandlers, Pager) {
+   function (CompoundControl, DSMixin, MultiSelectable, Selectable, DataBindMixin, ItemActionsGroup, dotTplFn, CommonHandlers, Pager, groupByTpl) {
 
       'use strict';
 
@@ -209,7 +210,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _isLoadBeforeScrollAppears : true,
             _infiniteScrollContainer: null,
             _pageChangeDeferred : undefined,
-            _pager : undefined
+            _pager : undefined,
+            _previousGroupBy : undefined
          },
 
          $constructor: function () {
@@ -242,7 +244,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             ListViewDS.superclass.init.call(this);
             var localPageSize = $ws.helpers.getLocalStorageValue('ws-page-size');
             this._options.pageSize = !this._options.ignoreLocalPageSize  && localPageSize ? localPageSize : this._options.pageSize;
-            // запросим данные из источника
+            this.setGroupBy(this._options.groupBy, false);
             this.reload();
          },
 
@@ -421,6 +423,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                //После релоада придется заново догружать данные до появлени скролла
                this._isLoadBeforeScrollAppears = true;
             }
+            this._previousGroupBy = undefined;
             ListViewDS.superclass.reload.apply(this, arguments);
          },
 
@@ -816,6 +819,19 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if(this.getPage() === -1) {
                this._offset = more - this._options.pageSize;
             }
+         },
+         //------------------------GroupBy---------------------
+         _groupByDefaultMethod: function(record){
+            var curField = record.get(this._options.groupBy.field),
+                  result = curField !== this._previousGroupBy;
+            this._previousGroupBy = curField;
+            return result;
+         },
+         _getGroupTpl : function(){
+            return this._options.groupBy.template || groupByTpl;
+         },
+         _groupByDefaultRender: function(item, container){
+            return container;
          },
          destroy: function() {
             if (this.isInfiniteScroll()){
