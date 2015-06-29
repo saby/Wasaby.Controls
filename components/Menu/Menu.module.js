@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.Menu', [
       /**
        * @event onMenuItemActivate При активации пункта меню
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {String} ID Идентификатор нажатого пункта.
+       * @param {String} id Идентификатор нажатого пункта.
        * @example
        * При выборе пункта меню данный ключ ставится в значение комбобокса
        * <pre>
@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.Menu', [
        /**
         * @typedef {Object} ItemsMenu
         * @property {String} id Идентификатор.
-        * @property {String} title Текст пункта меню.
+        * @property {String} caption Текст пункта меню.
         * @property {String} icon Иконка пункта меню.
         * @property {String} parent Идентификатор родительского пункта меню. Опция задаётся для подменю.
         * @editor icon ImageEditor
@@ -53,20 +53,24 @@ define('js!SBIS3.CONTROLS.Menu', [
         *     <options name="items" type="array">
         *        <options>
         *            <option name="id">1</option>
-        *            <option name="title">Пункт1</option>
+        *            <option name="caption">Пункт1</option>
         *         </options>
         *         <options>
         *            <option name="id">2</option>
-        *            <option name="title">Пункт2</option>
+        *            <option name="caption">Пункт2</option>
         *         </options>
         *         <options>
         *            <option name="id">3</option>
-        *            <option name="title">ПунктПодменю</option>
+        *            <option name="caption">ПунктПодменю</option>
         *            <option name="parent">2</option>
         *            <option name="icon">sprite:icon-16 icon-Birthday icon-primary</option>
         *         </options>
         *      </options>
         * </pre>
+        * @see displayField
+        * @see keyField
+        * @see hierField
+        * @see onMenuItemActivate
         */
 
       $protected: {
@@ -273,19 +277,24 @@ define('js!SBIS3.CONTROLS.Menu', [
         * <pre>
         *    menu.addSubMenu(id, [
         *       {
-        *          title: 'save',
+        *          caption: 'save',
         *          icon: "sprite:icon-16 icon-Save icon-primary",
         *          id: "save",
         *          parent: 1
         *       },
         *       {
-        *          title: 'print',
+        *          caption: 'print',
         *          icon: "sprite:icon-16 icon-Print icon-primary",
         *          id: "print",
         *          parent: 1
         *       }
         *    ]);
         * </pre>
+        * @see items
+        * @see hierField
+        * @see keyField
+        * @see destroySubMenu
+        * @see hasSubMenu
         */
       addSubMenu : function(pointsArr, id) {
          for (var i = 0; i < pointsArr.length; i++) {
@@ -294,6 +303,10 @@ define('js!SBIS3.CONTROLS.Menu', [
          }
          this._drawItems();
       },
+       /**
+        * Метод разрушению подменю по идентификатору.
+        * @param {String|Number} id
+        */
       destroySubMenu : function(id) {
          var childItems = this._items.getChildItems(id);
          for (var i = 0; i < childItems.length; i++) {
@@ -301,11 +314,20 @@ define('js!SBIS3.CONTROLS.Menu', [
          }
          this._drawItems();
       },
-
+       /**
+        * Метод получения признака существования подменю
+        * @param id
+        * @returns {*}
+        */
       hasSubMenu : function(id) {
          return this._items.hasChild(id)
       },
-
+       /**
+        * Метод замены текста пункта меню
+        * @param {String|Number} id Идентификатор пункта меню.
+        * @param {String} title Новый текст пункта меню.
+        * @see items
+        */
       setItemTitle : function(id, title) {
          var item = this._items.getItem(id);
          item.title = title;
