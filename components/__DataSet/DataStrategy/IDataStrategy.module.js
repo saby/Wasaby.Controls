@@ -6,7 +6,6 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
 
    /**
     * Интерфейс предназначен для унификации работы с исходными данными датасорсов
-    * @author Мануйлов Андрей
     * @public
     */
 

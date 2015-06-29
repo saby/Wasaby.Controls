@@ -11,11 +11,9 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
 
    /**
     * Класс для работы с бизнес-логикой СБИС, как с источником данных.
-    * @author Мануйлов Андрей
     * @public
     * @class SBIS3.CONTROLS.SbisServiceSource
     * @extends SBIS3.CONTROLS.BaseSource
-    * @example
     * <pre>
     *     var dataSource = new SbisServiceSource({
     *         service: {
