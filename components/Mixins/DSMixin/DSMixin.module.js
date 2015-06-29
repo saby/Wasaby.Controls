@@ -123,8 +123,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             emptyHTML: ''
          },
-         _loader: null,
-         _defaultGroup : false //Установлена группировка по умолчанию (платформенная)
+         _loader: null
       },
 
       $constructor: function () {
@@ -461,20 +460,19 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * @param group
        * @param redraw
        */
-      setGroup : function(group, redraw){
+      setGroupBy : function(group, redraw){
          //TODO может перерисовку надо по-другому делать
          this._options.groupBy = group;
          // запросим данные из источника
          if (!Object.isEmpty(this._options.groupBy)){
             if (!this._options.groupBy.hasOwnProperty('method')){
-               this._defaultGroup = true;
                this._options.groupBy.method = this._groupByDefaultMethod;
-               if (!this._options.groupBy.hasOwnProperty('template')){
-                  this._options.groupBy.template = this._getGroupTpl();
-               }
-               if (!this._options.groupBy.hasOwnProperty('render')){
-                  this._options.groupBy.render = this._groupByDefaultRender;
-               }
+            }
+            if (!this._options.groupBy.hasOwnProperty('template')){
+               this._options.groupBy.template = this._getGroupTpl();
+            }
+            if (!this._options.groupBy.hasOwnProperty('render')){
+               this._options.groupBy.render = this._groupByDefaultRender;
             }
 
          }

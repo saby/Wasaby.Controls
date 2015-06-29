@@ -2,8 +2,9 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
    'js!SBIS3.CONTROLS.DataGrid',
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'html!SBIS3.CONTROLS.HierarchyDataGrid/resources/rowTpl',
-   'js!SBIS3.CONTROLS.PathSelector'
-], function (DataGrid, hierarchyMixin, rowTpl, PathSelector) {
+   'js!SBIS3.CONTROLS.PathSelector',
+   'is!browser?html!SBIS3.CONTROLS.DataGrid/resources/DataGridGroupBy'
+], function (DataGrid, hierarchyMixin, rowTpl, PathSelector, groupByTpl) {
    'use strict';
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
@@ -63,7 +64,49 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
          this._lastPath = [];
          HierarchyDataGrid.superclass._drawItems.apply(this, arguments);
       },
-      _groupByDefaultMethod: function(record, at){
+
+      setCurrentRoot: function(key) {
+        var self = this,
+          record = this._dataSet.getRecordByKey(key),
+          parentKey = record ? this._dataSet.getParentKey(record, this._options.hierField) : null,
+          hierarchy =[];
+          hierarchy.push(key);
+        while (parentKey != null){
+          hierarchy.push(parentKey);
+          record = this._dataSet.getRecordByKey(parentKey);
+          parentKey = record ? this._dataSet.getParentKey(record, this._options.hierField) : null;
+        }
+        for (var i = hierarchy.length - 1; i >= 0; i--){
+          this._notify('onSetRoot', this._dataSet, hierarchy[i]);
+        }
+        this._loadNode(key).addCallback(function(dataSet) {
+          if (!self._dataSet){
+            self._dataSet = dataSet;
+          } else {
+            self._dataSet.setRawData(dataSet.getRawData());
+          }
+          self._dataLoadedCallback();
+          self._notify('onDataLoad', dataSet);
+          self._curRoot = key;
+          self._redraw();
+         })
+      },
+      getSearchGroupBy: function(field){
+         return {
+            field: field,
+            template : groupByTpl,
+            method : this._searchMethod.bind(this),
+            render : this._searchRender.bind(this)
+         }
+      },
+      //----------------- defaultSearch group
+      /**
+       * Метод поиска по умолчанию
+       * @param record
+       * @param at
+       * @returns {{drawItem: boolean, drawGroup: boolean}}
+       */
+      _searchMethod: function(record, at){
          //TODO lastParent - curRoot - правильно?. 2. Данные всегда приходят в правильном порядке?
          var key,
                curRecRoot,
@@ -124,13 +167,14 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
             drawGroup: false
          };
       },
-      _groupByDefaultRender: function(item, container){
-         this._drawPS(this._lastPath, item, container);
+      _searchRender: function(item, container){
+         this._drawPathSelector(this._lastPath, item, container);
          return container;
       },
-      _drawPS:function(path, record, container){
+      _drawPathSelector:function(path, record, container){
          if (path.length) {
-            var elem;
+            var self = this,
+                  elem;
             container.find('td').append(elem = $('<div/>'));
 
             var ps = new PathSelector({
@@ -139,7 +183,10 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
                linkedView : this,
                items: this._createPathItemsDS(path)
             });
-            ps.setItems(this._createPathItemsDS(path));
+            ps.once('onPointClick', function(){
+               self._destroySearchPathSelectors();
+               self.setGroupBy({});
+            });
             this._pathSelectors.push(ps);
          } else{
             //если пути нет, то группировку надо бы убить...
@@ -163,37 +210,6 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
             this._pathSelectors[i].destroy();
          }
          this._pathSelectors = [];
-      },
-
-      setCurrentRoot: function(key) {
-        var self = this,
-          record = this._dataSet.getRecordByKey(key),
-          parentKey = record ? this._dataSet.getParentKey(record, this._options.hierField) : null,
-          hierarchy =[];
-          hierarchy.push(key);
-         //Сбросим группировку при проваливаниии в крошки
-         if (this._defaultGroup){
-            this.setGroup({});
-         }
-        while (parentKey != null){
-          hierarchy.push(parentKey);
-          record = this._dataSet.getRecordByKey(parentKey);
-          parentKey = record ? this._dataSet.getParentKey(record, this._options.hierField) : null;
-        }
-        for (var i = hierarchy.length - 1; i >= 0; i--){
-          this._notify('onSetRoot', this._dataSet, hierarchy[i]);
-        }
-        this._loadNode(key).addCallback(function(dataSet) {
-          if (!self._dataSet){
-            self._dataSet = dataSet;
-          } else {
-            self._dataSet.setRawData(dataSet.getRawData());
-          }
-          self._dataLoadedCallback();
-          self._notify('onDataLoad', dataSet);
-          self._curRoot = key;
-          self._redraw();
-         })
       }
    });
 
