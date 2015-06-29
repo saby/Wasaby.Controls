@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
                this._setFirstItemAsSelected();
             }
          }
-         this._drawSelectedItem();
+         this._drawSelectedItem(this.getSelectedKey());
       },
 
       /**
@@ -102,7 +102,6 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
          if (!this._options.selectedKey && this._options.allowEmptySelection == false) {
             this._setFirstItemAsSelected();
          }
-         this.saveToContext('SelectedItem', this._options.selectedKey); //TODO: Перенести отсюда
          this._drawSelectedItem(this._options.selectedKey);
          this._notifySelectedItem(this._options.selectedKey);
       },
@@ -172,6 +171,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
       _notifySelectedItem : function(id) {
          //TODO: может тут указать, что метод надо переопредить чтобы текст передавать и пр.?
          this._notify('onSelectedItemChange', id);
+         this._notify('onPropertyChanged');
       },
 
       _dataLoadedCallback : function(){
