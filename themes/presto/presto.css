@@ -1907,7 +1907,6 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 8px 0 8px 8px;
   border-style: solid;
   border-color: transparent transparent transparent #ffb366;
-  background: transparent;
 }
 .controls-TreeView__expand.controls-TreeView__expand__open {
   width: auto;
@@ -1922,7 +1921,6 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 8px 8px 0 8px;
   border-style: solid;
   border-color: #ffb366 transparent transparent transparent;
-  background: transparent;
 }
 .controls-TreeView__expand + .controls-TreeView__itemContent {
   margin: 0 0 0 20px;

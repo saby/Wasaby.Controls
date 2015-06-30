@@ -1,5 +1,5 @@
-.controls-MultiView {
-  .controls-MultiView__listItem {
+.controls-CompositeView {
+  .controls-CompositeView__listItem {
     height: @data-grid-cell-height;
     line-height: @data-grid-cell-height;
     padding: @data-grid-cell-padding;
@@ -13,13 +13,13 @@
       width: 229px;
       height: 190px;
       border: none;
-      .controls-MultiView__tileImg {
+      .controls-CompositeView__tileImg {
         display: block;
         width: 120px;
         height: 120px;
         margin: @multiView-tile-item-image-margin;
       }
-      .controls-MultiView__tileTitle {
+      .controls-CompositeView__tileTitle {
         font-weight: 600;
         font-size: 15px;
         color: #313e78;
@@ -27,27 +27,27 @@
         margin-top: @multiView-tile-item-text-margin;
       }
       &:hover {
-        .controls-MultiView__tileTitle {
+        .controls-CompositeView__tileTitle {
           text-decoration: underline;
         }
       }
     }
   }
 
-  .controls-MultiView__listItem-defaultFolderImage {
+  .controls-CompositeView__listItem-defaultFolderImage {
     background: @multiView-default-folder-bg;
   }
 
-  .controls-MultiView__listItem-defaultItemImage {
+  .controls-CompositeView__listItem-defaultItemImage {
     background: @multiView-default-item-bg;
   }
 
-  &.controls-MultiView-tile {
-    .controls-MultiView__itemsContainer {
+  &.controls-CompositeView-tile {
+    .controls-CompositeView__itemsContainer {
       padding: @multiView-tile-itemsContainer-padding;
     }
   }
-  &.controls-MultiView-tile, &.controls-MultiView-list {
+  &.controls-CompositeView-tile, &.controls-CompositeView-list {
     .controls-ItemActions {
       width: @list-view-actions-width;
       height: @list-view-actions-height-multiView;
@@ -66,7 +66,7 @@
     left: @multiView-check-box-left;
     top: @multiView-check-box-top;
   }
-  .controls-MultiView__tileItem {
+  .controls-CompositeView__tileItem {
     display: inline-block;
     cursor: pointer;
     text-align: left;
@@ -76,7 +76,7 @@
     margin: @multiView-tile-item-margin;
     &.controls-ListView__hoveredItem {
       background: @data-grid-row-hover-bg;
-      .controls-MultiView__tileImg {
+      .controls-CompositeView__tileImg {
         box-shadow: @multiView-tile-item-image-box-shadow;
       }
     }
@@ -84,19 +84,19 @@
       width: 229px;
       height: 190px;
       border: none;
-      .controls-MultiView__tileImg {
+      .controls-CompositeView__tileImg {
         display: block;
         width: 120px;
         height: 120px;
         margin: @multiView-tile-item-image-margin;
       }
-      .controls-MultiView__tileTitle {
+      .controls-CompositeView__tileTitle {
         font-weight: 600;
         font-size: 15px;
         color: #313e78;
       }
       &:hover {
-        .controls-MultiView__tileTitle {
+        .controls-CompositeView__tileTitle {
           text-decoration: underline;
         }
       }
@@ -104,11 +104,11 @@
     &.controls-ListView__item__multiSelected {
       background: @multiView-tile-selected-item-bg;
     }
-    .controls-MultiView__tileImg {
+    .controls-CompositeView__tileImg {
       display: block;
       margin: @multiView-tile-item-image-margin;
     }
-    .controls-MultiView__tileTitle {
+    .controls-CompositeView__tileTitle {
       font-family: Tahoma;
       margin-top: @multiView-tile-item-text-margin;
       font-size: 15px;
@@ -117,4 +117,3 @@
   }
 
 }
-

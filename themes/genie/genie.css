@@ -1942,7 +1942,6 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 6px 0 6px 6px;
   border-style: solid;
   border-color: transparent transparent transparent #353535;
-  background: transparent;
 }
 .controls-TreeView__expand.controls-TreeView__expand__open {
   width: auto;
@@ -1957,7 +1956,6 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 6px 6px 0 6px;
   border-style: solid;
   border-color: #353535 transparent transparent transparent;
-  background: transparent;
 }
 .controls-TreeView__expand + .controls-TreeView__itemContent {
   margin: 0 0 0 15px;
