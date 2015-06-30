@@ -108,6 +108,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
       },
        /**
         * Метод получения идентификатора следующего элемента.
+        * @param key Идентификатор элемента
         * @returns {*|String} Идентификатор следующего элемента.
         * @example
         * <pre>
@@ -127,6 +128,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
       },
        /**
         * Метод получения идентификатора предыдущего элемента
+        * @param key Идентификатор элемента
         * @returns {*|String} Идентификатор предыдущего элемента.
         * @example
         * <pre>
