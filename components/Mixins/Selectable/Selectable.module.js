@@ -111,10 +111,10 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
         * @returns {*|String} Идентификатор следующего элемента.
         * @example
         * <pre>
-        *     var key = myComboBox.getNextItemIndex();
+        *     var key = myComboBox.getNextItemKey();
         *     myComboBox.setSelectedKey(key);
         * </pre>
-        * @see  getPrevItemIndex
+        * @see  getPreviousItemKey
         */
       getNextItemKey: function(key) {
         var indexId = this._dataSet._indexId,
@@ -130,12 +130,12 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
         * @returns {*|String} Идентификатор предыдущего элемента.
         * @example
         * <pre>
-        *     var key = myComboBox.getPrevItemIndex();
+        *     var key = myComboBox.getPreviousItemKey();
         *     if (key !== 'old') {
         *        myComboBox.setSelectedKey(key);
         *     }
         * </pre>
-        * @see getNextItemIndex
+        * @see getNextItemKey
         */
       getPreviousItemKey: function(key) {
          var indexId = this._dataSet._indexId,
