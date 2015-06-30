@@ -241,8 +241,15 @@ define(
       },
 
       /**
-       * Установить текущий месяц/год
-       * @protected
+       * Установить текущий месяц/год.
+       * @example
+       * <pre>
+       *     var buttonToday = this.getChildControlByName("myButtonToday");
+       *     var activatedFn = function() {
+       *        monthPicker.setToday();
+       *     };
+       *     buttonToday.subscribe('onActivated', activatedFn);
+       * </pre>
        * @see setNext
        * @see setPrev
        * @see getNextDate
@@ -371,16 +378,30 @@ define(
       },
 
       /**
-       * Установить следующий месяц/год
-       * @protected
+       * Установить следующий месяц/год.
+       * @example
+       * <pre>
+       *     var buttonNext = this.getChildControlByName("myButtonNext");
+       *     var activatedFn = function() {
+       *        monthPicker.setNext();
+       *     };
+       *     buttonNext.subscribe('onActivated', activatedFn);
+       * </pre>
        */
       setNext: function() {
          this._changeDate(1);
       },
 
       /**
-       * Установить предыдущий месяц/год
-       * @protected
+       * Установить предыдущий месяц/год.
+       * @example
+       * <pre>
+       *     var buttonPrev = this.getChildControlByName("myButtonPrev");
+       *     var activatedFn = function() {
+       *        monthPicker.setPrev();
+       *     };
+       *     buttonPrev.subscribe('onActivated', activatedFn);
+       * </pre>
        */
       setPrev: function() {
          this._changeDate(-1);
