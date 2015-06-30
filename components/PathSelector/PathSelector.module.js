@@ -36,11 +36,6 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          }
 
          $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._resizeHandler, this);
-
-         //TODO: сделано на mousedown так как контрол херит клик
-         this._container.bind('mouseup', function (e) {
-            self._clickHandler(e);
-         });
          //инициализируем dataSet
          this.setItems(this._options.items || []);
       },
@@ -53,19 +48,19 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          }, 100);
       },
 
-      _clickHandler: function (e) {
-         if (e.which == 1) {
-            var target = $(e.target),
-               point = target.closest('.js-controls-PathSelector__point');
-            if (point.hasClass('controls-PathSelector__dots', this._container)) {
-               if (this._picker) {
-                  this._picker.setTarget(point)
-               }
-               this.togglePicker();
-               this._redrawDropdown();
-            } else if (point.length) {
-               this._onPointClick(point.data(this._options.dirField));
+      _onClickHandler: function (e) {
+         PathSelector.superclass._onClickHandler.apply(this, arguments);
+
+         var target = $(e.target),
+             point = target.closest('.js-controls-PathSelector__point');
+         if (point.hasClass('controls-PathSelector__dots')) {
+            if (this._picker) {
+               this._picker.setTarget(point)
             }
+            this.togglePicker();
+            this._redrawDropdown();
+         } else if (point.length) {
+            this._onPointClick(point.data(this._options.dirField));
          }
       },
 
