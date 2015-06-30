@@ -8,7 +8,6 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
    /**
     * Класс "Набор данных"
-    * @author Мануйлов Андрей
     * @public
     */
 

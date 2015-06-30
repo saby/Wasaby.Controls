@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
     * </component>
     * @public
     * @category Buttons
+    *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
     * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment

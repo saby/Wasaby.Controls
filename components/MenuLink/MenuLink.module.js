@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @public
     * @category Buttons
+    *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
     * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment

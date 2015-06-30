@@ -6,7 +6,6 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
 
    /**
     * Базовый источник данных
-    * @author Мануйлов Андрей
     * @public
     */
 

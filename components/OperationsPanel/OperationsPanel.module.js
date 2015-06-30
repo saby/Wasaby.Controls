@@ -17,7 +17,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * @extends $ws.proto.CompoundControl
     * @control
     * @public
-    * @author Сухоручкин Андрей
     * @ignoreOptions contextRestriction independentContext
     * @initial
     * <component data-component='SBIS3.CONTROLS.OperationsPanel' style="height: 30px;">
