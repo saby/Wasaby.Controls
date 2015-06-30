@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.Menu', [
        /**
         * @typedef {Object} ItemsMenu
         * @property {String} id Идентификатор.
-        * @property {String} caption Текст пункта меню.
+        * @property {String} title Текст пункта меню.
         * @property {String} icon Иконка пункта меню.
         * @property {String} parent Идентификатор родительского пункта меню. Опция задаётся для подменю.
         * @editor icon ImageEditor
@@ -53,15 +53,15 @@ define('js!SBIS3.CONTROLS.Menu', [
         *     <options name="items" type="array">
         *        <options>
         *            <option name="id">1</option>
-        *            <option name="caption">Пункт1</option>
+        *            <option name="title">Пункт1</option>
         *         </options>
         *         <options>
         *            <option name="id">2</option>
-        *            <option name="caption">Пункт2</option>
+        *            <option name="title">Пункт2</option>
         *         </options>
         *         <options>
         *            <option name="id">3</option>
-        *            <option name="caption">ПунктПодменю</option>
+        *            <option name="title">ПунктПодменю</option>
         *            <option name="parent">2</option>
         *            <option name="icon">sprite:icon-16 icon-Birthday icon-primary</option>
         *         </options>
@@ -277,13 +277,13 @@ define('js!SBIS3.CONTROLS.Menu', [
         * <pre>
         *    menu.addSubMenu(id, [
         *       {
-        *          caption: 'save',
+        *          title: 'save',
         *          icon: "sprite:icon-16 icon-Save icon-primary",
         *          id: "save",
         *          parent: 1
         *       },
         *       {
-        *          caption: 'print',
+        *          title: 'print',
         *          icon: "sprite:icon-16 icon-Print icon-primary",
         *          id: "print",
         *          parent: 1
