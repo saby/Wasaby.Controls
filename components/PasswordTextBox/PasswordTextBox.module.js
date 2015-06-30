@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!
     * @demo SBIS3.CONTROLS.Demo.MyPasswordTextBox
     * @public
     * @category Inputs
+    *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol textTransform
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
     *

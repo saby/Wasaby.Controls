@@ -32,7 +32,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        * @control
        * @public
        * @demo SBIS3.CONTROLS.Demo.MyListViewDS
-       * @author Крайнов Дмитрий Олегович
        */
 
       var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, Selectable, DataBindMixin, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {

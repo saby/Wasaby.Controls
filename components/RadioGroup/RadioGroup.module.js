@@ -14,7 +14,6 @@ function(RadioGroupBase, dotTpl) {
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @control
     * @public
-    * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyRadioGroup
     * @initial
     * <component data-component='SBIS3.CONTROLS.RadioGroup'>
@@ -31,6 +30,7 @@ function(RadioGroupBase, dotTpl) {
     *       </options>
     *    </options>
     * </component>
+    *
     * @cssModifier controls-ButtonGroup__vertical Для вертикального расположения элементов в группе.
     *
     * @ignoreOptions className extendedTooltip handlers linkedContext

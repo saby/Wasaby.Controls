@@ -4,7 +4,6 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
     * Задаётся контент и методы, позволяющие открывать, закрывать блок.
     * @mixin SBIS3.CONTROLS.PickerMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
     */
    var PickerMixin = /** @lends SBIS3.CONTROLS.PickerMixin.prototype */{
       $protected: {
@@ -17,6 +16,9 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
               * <pre>
               *     <option name="pickerClassName">control-MyComboBox__ComboBox__position</option>
               * </pre>
+              * @remark
+              * Класс необходимо создать в файле компонента с расширением .css.
+              * Стили из этого класса применятся к выпадающему блоку.
               */
             pickerClassName : ''
          }

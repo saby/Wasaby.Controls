@@ -12,8 +12,6 @@ define('js!SBIS3.CONTROLS.SearchForm', [
     * @extends SBIS3.CONTROLS.TextBox
     * @public
     * @control
-    *
-    * @author Крайнов Дмитрий Олегович
     */
 
    var SearchForm = TextBox.extend(/** @lends SBIS3.CONTROLS.SearchForm.prototype */ {
