@@ -26,7 +26,6 @@ define(
     * @control
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyMonthPicker
-    * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
@@ -265,7 +264,7 @@ define(
        * Установить дату по полученному значению. Публичный метод.
        * Отличается от приватного метода _setDate тем, что генерирует событие
        * Может принимает либо строку формата 'число.число' или 'число', либо объект типа Date.
-       * @param value Строка или дата.
+       * @param {String|Date} value Значение в виде строки или формата даты.
        * @example
        * <pre>
        *    //Зададим март 2016

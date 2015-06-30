@@ -31,7 +31,6 @@ define(
     * @control
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyDatePicker
-    * @author Крайнов Дмитрий Олегович
     */
 
    var DatePicker = FormattedTextBoxBase.extend([PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
@@ -290,7 +289,7 @@ define(
          }
       },
 
-      /**
+     /**
       * В добавление к проверкам и обновлению опции text, необходимо обновить поле _date
       * @param text
       * @private
@@ -304,6 +303,12 @@ define(
       /**
        * Метод установки/замены даты.
        * @param {Date} date Новая дата.
+       * @example
+       * <pre>
+       *    //Зададим март 2016
+       *    var startDate = new Date(2016,02);
+       *    datePicker.setDate(startDate);
+       * </pre>
        * @see date
        * @see getDate
        * @see onDateChange
@@ -358,6 +363,11 @@ define(
       /**
        * Метод получения текущего значения даты.
        * @returns {String} Значение даты в формате ISO 8601.
+       * @example
+       * <pre>
+       *     var date = datePicker.getDate();
+       *     textBox.setText(date);
+       * </pre>
        * @see date
        * @see setDate
        * @see onDateChange
