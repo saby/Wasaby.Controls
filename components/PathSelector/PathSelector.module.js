@@ -202,9 +202,9 @@ define('js!SBIS3.CONTROLS.PathSelector', [
        * удаляет пункт на который кликнули и все до него (глубже по иерархии)
        */
       _onPointClick: function (id) {
-         this._notify('onPointClick');
          var last = this._dataSet.getCount() - 1,
             record = this._dataSet.at(last);
+         this._notify('onPointClick');
          while (true) {
             this._dataSet.removeRecord(record.getKey());
             record = this._dataSet.at(last);

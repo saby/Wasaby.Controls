@@ -128,6 +128,35 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               */
             pageSize: null,
             /**
+             * @typedef {Object} GroupBy
+             * @property {String} field Поле записи
+             * @property {Function} method Метод группировки
+             * @property {String} template Шаблон вёрстки
+             * @property {Function} render Функция визуализации             
+             */
+            /**
+             * @cfg {GroupBy} Настройка группировки записей 
+             * @remark
+             * Если задать только поле записи(field), то будет группировать по типу лесенки (Пример 1).
+             * Т.е. перед каждым блоком с одинаковыми данными будет создавать блок, для которого можно указать шаблон
+             * Внимание! Для правильной работы группировки данные уже должны прийти отсортированные!
+             * @example
+             * 1:
+             * <pre>
+             *    <options name="groupBy">
+             *        <option name="field">ДатаВремя</option>
+             *    </options>
+             * </pre>
+             * Пример с указанием метода группировки:
+             * <pre>
+             *    <options name="groupBy">
+             *        <option name="field">ДатаВремя</option>
+             *         <option name="method" type="function">js!SBIS3.CONTROLS.Demo.MyListViewDS:prototype.myGroupBy</option>
+             *    </options>
+             * </pre>
+             */
+            groupBy : {},
+            /**            
              * @cfg {String|HTMLElement|jQuery} Что отображается при отсутствии данных
              * @example
              * <pre>
@@ -137,6 +166,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * Опция задаёт текст, отображаемый как при абсолютном отсутствии данных, так и в результате фильтрации.
              * @see items
              * @see setDataSource
+             * @see groupBy
              */
             emptyHTML: ''
          },
@@ -362,7 +392,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _redraw: function () {
+         var emptyHTML;
          if (this._dataSet) {
+            this._destroySearchPathSelectors();
             this._clearItems();
             var records = this._getRecordsForRedraw(),
               container = this._getItemsContainer();
@@ -376,13 +408,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._drawItems(records);
          }
       },
-
+      _destroySearchPathSelectors: function(){
+      },
       _getRecordsForRedraw : function() {
-         var records = [];
-         this._dataSet.each(function (record) {
-            records.push(record);
-         });
-         return records;
+         return this._dataSet._getRecords();
       },
 
       _drawItems: function (records, at) {
@@ -391,7 +420,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             curAt = at;
          if (records && records.length > 0) {
             for (var i = 0; i < records.length; i++) {
-
                this._drawItem(records[i], curAt);
 
                if (curAt && curAt.at) {
@@ -444,12 +472,95 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var
             targetContainer,
             itemInstance;
-         targetContainer = this._getTargetContainer(item);
-         itemInstance = this._createItemInstance(item, targetContainer, at);
-         this._addItemAttributes(itemInstance, item);
-         this._appendItemTemplate(item, targetContainer, itemInstance, at);
+         //Запускаем группировку если она есть. Иногда результат попадает в группровку и тогда отрисовывать item не надо
+         if (this._group(item, at) !== false) {
+            targetContainer = this._getTargetContainer(item);
+            itemInstance = this._createItemInstance(item, targetContainer, at);
+            this._addItemAttributes(itemInstance, item);
+            this._appendItemTemplate(item, targetContainer, itemInstance, at);
+         }
       },
+      /**
+       *
+       * Из метода группировки можно вернуть Boolean - рисовать ли группировку
+       * или Объект - {
+       *    drawItem - рисовать ли текущую запись
+       *    drawGroup - рисовавть ли группировку перед текущей записью
+       * }
+       * @param item
+       * @param at
+       */
+      _group: function(item, at){
+         var groupBy = this._options.groupBy,
+               resultGroup,
+               drawGroup,
+               drawItem = true;
+         if (!Object.isEmpty(groupBy)){
+            resultGroup = groupBy.method.apply(this, [item, at]);
+            drawGroup = typeof resultGroup === 'boolean' ? resultGroup : (resultGroup instanceof Object && resultGroup.hasOwnProperty('drawGroup') ? !!resultGroup.drawGroup : false);
+            drawItem = resultGroup instanceof Object && resultGroup.hasOwnProperty('drawItem') ? !!resultGroup.drawItem : true;
+            if (drawGroup){
+               this._drawGroup(item, at)
+            }
+         }
+         return drawItem;
+      },
+      _drawGroup: function(item, at){
+         var
+               groupBy = this._options.groupBy,
+               tplOptions = {
+                  columns : $ws.core.clone(this._options.columns),
+                  multiselect : this._options.multiselect,
+                  hierField: this._options.hierField + '@'
+               },
+               targetContainer,
+               itemInstance;
+         targetContainer = this._getTargetContainer(item);
+         tplOptions.item = item;
+         tplOptions.colspan = this._options.columns.length + this._options.multiselect;
+         itemInstance = this._buildTplItem(item, groupBy.template(tplOptions));
+         this._appendItemTemplate(item, targetContainer, itemInstance, at);
+         //Сначала положим в дом, потом будем звать рендеры, иначе контролы, которые могут создать в рендере неправмльно поймут свою ширину
+         if (groupBy.render && typeof groupBy.render === 'function') {
+            groupBy.render.apply(this, [item, itemInstance]);
+         }
 
+      },
+      /**
+       * Установка группировки элементов. Если нужно, чтобы стандартаная группировка для этого элемента не вызывалась -
+       * нужно обязательно переопределить(передать) все опции (field, method, template, render) иначе в группировку запишутся стандартные параметры.
+       * @param group
+       * @param redraw
+       */
+      setGroupBy : function(group, redraw){
+         //TODO может перерисовку надо по-другому делать
+         this._options.groupBy = group;
+         // запросим данные из источника
+         if (!Object.isEmpty(this._options.groupBy)){
+            if (!this._options.groupBy.hasOwnProperty('method')){
+               this._options.groupBy.method = this._groupByDefaultMethod;
+            }
+            if (!this._options.groupBy.hasOwnProperty('template')){
+               this._options.groupBy.template = this._getGroupTpl();
+            }
+            if (!this._options.groupBy.hasOwnProperty('render')){
+               this._options.groupBy.render = this._groupByDefaultRender;
+            }
+
+         }
+         if (redraw){
+            this._redraw();
+         }
+      },
+      _groupByDefaultMethod: function(){
+         throw new Error('Method _groupByDefaultMethod() must be implemented');
+      },
+      _getGroupTpl : function(){
+         throw new Error('Method _getGroupTpl() must be implemented');
+      },
+      _groupByDefaultRender: function(){
+         throw new Error('Method _groupByDefaultRender() must be implemented');
+      },
       _getItemTemplate: function () {
          throw new Error('Method _getItemTemplate() must be implemented');
       },
@@ -460,11 +571,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _createItemInstance: function (item, targetContainer, at) {
+         return this._buildTplItem(item, this._getItemTemplate(item));
+      },
+      _buildTplItem: function(item, itemTpl){
          var
-            buildedTpl,
-            dotTemplate,
-            itemTpl = this._getItemTemplate(item);
-
+               buildedTpl,
+               dotTemplate;
          if (typeof itemTpl == 'string') {
             dotTemplate = itemTpl;
          }
