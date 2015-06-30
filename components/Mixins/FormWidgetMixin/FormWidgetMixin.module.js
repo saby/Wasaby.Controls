@@ -5,7 +5,6 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
     * или заполнении контролов значениями из БЛ. В каждом контроле методы должны быть определены
     * @mixin SBIS3.CONTROLS.FormWidgetMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
     */
    var FormWidgetMixin = /** @lends SBIS3.CONTROLS.FormWidgetMixin.prototype */{
        /**
@@ -140,7 +139,6 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
          return retval;
       },
       /**
-       * <wiTag group="Данные">
        * Функция валидации контрола.
        * Проверит все валидаторы, как встроенные, так и пользовательские.
        * В случае неудачи отметит контрол сообщением об ошибке валидации.
@@ -271,7 +269,6 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
          this._prevValidationResult = !this.isMarked();
       },
       /**
-       * <wiTag group="Отображение">
        * Метод маркирует контрол как непрошедший валидацию.
        * Не проводит валидацию, просто подсвечивает контрол.
        * @param {Array|String} s Сообщение об ошибке.

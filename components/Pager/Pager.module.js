@@ -14,7 +14,6 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
     * @control
     * @category Decorate
     * @public
-    * @author Чистякова Алёна Дмитриевна
     */
 
    var Pager = CompoundControl.extend(/** @lends $ws.proto.Paging.prototype */{

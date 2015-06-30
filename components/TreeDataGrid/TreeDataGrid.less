@@ -1,16 +1,19 @@
 .controls-DataGrid__td {
+   .controls-TreeView__expand--inside {
+      display: none;
+      line-height: 13px !important;
+   }
 
-  .controls-TreeView__expand--inside {
-    display: none;
-    line-height: 13px !important;
-  }
+   .controls-TreeView__hierWrapper {
+      height: @tree-view-hier-wrapper-height;
+      width: @tree-view-hier-wrapper-width;
+      display: inline-block;
+      float: left;
+   }
 
-  .controls-TreeView__hierWrapper{
-    height: @tree-view-hier-wrapper-height;
-    width: @tree-view-hier-wrapper-width;
-    display: inline-block;
-    float: left;
-  }
+   .controls-TreeView__hierWrapper:first-child {
+      width: @tree-view-hier-wrapper-first-width;
+   }
 
   .controls-TreeView__hierWrapper:first-child{
     width: @tree-view-hier-wrapper-first-width;
@@ -26,10 +29,14 @@
       height: 14px;
     }
   }
+  .controls-TreeView__expand--inside {
+    display: inline-block;
+    height: 14px;
+  }
 }
 
-.controls-ListView__hoveredItem{
-  .controls-TreeView__editArrow{
-    display: inline-block;
-  }
+.controls-ListView__hoveredItem {
+   .controls-TreeView__editArrow {
+      display: inline-block;
+   }
 }

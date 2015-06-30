@@ -13,6 +13,21 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @mixes SBIS3.CONTROLS.MultiSelectable
     * @extends SBIS3.CONTROLS.ButtonGroupBase
+    *
+    * @ignoreOptions contextRestriction independentContext
+    *
+    * @ignoreMethods activate activateFirstControl activateLastControl addPendingOperation changeControlTabIndex
+    * @ignoreMethods destroyChild detectNextActiveChildControl disableActiveCtrl findParent focusCatch getActiveChildControl
+    * @ignoreMethods getChildControlById getChildControlByName getChildControls getClassName getContext getEventBusOf
+    * @ignoreMethods getEventHandlers getEvents getExtendedTooltip getImmediateChildControls getLinkedContext getStateKey
+    * @ignoreMethods getNearestChildControlByName getOpener getOwner getOwnerId hasActiveChildControl hasEvent hasEventHandlers
+    * @ignoreMethods hasChildControlByName isAllReady isDestroyed isReady moveFocus registerChildControl waitChildControlByName
+    * @ignoreMethods registerDefaultButton sendCommand setActive setChildActive setClassName setExtendedTooltip setOpener
+    * @ignoreMethods setOwner setSize setStateKey storeActiveChild subscribe subscribeOnceTo unbind unregisterChildControl
+    * @ignoreMethods unregisterDefaultButton unsubscribe waitAllPendingOperations waitChildControlById moveToTop
+    *
+    * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onDestroy onDragIn
+    * @ignoreEvents onDragMove onDragOut onDragStart onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     */
 
    var CheckBoxGroupBase = ButtonGroupBase.extend([MultiSelectable], /** @lends SBIS3.CONTROLS.CheckBoxGroupBase.prototype */ {

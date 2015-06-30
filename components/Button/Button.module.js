@@ -1,22 +1,19 @@
-/**
- * Модуль 'Компонент кнопка'.
- * Можно настроить:
- * <ol>
- *    <li>{@link $ws.proto.Control#allowChangeEnable возможность изменения доступности кнопки};</li>
- *    <li>{@link SBIS3.CONTROLS.ButtonBase#caption текст на кнопке};</li>
- *    <li>{@link $ws.proto.Control#enabled возможность взаимодействия с кнопкой};</li>
- *    <li>{@link SBIS3.CONTROLS.IconMixin#icon иконку на кнопке};</li>
- *    <li>{@link primary по умолчанию ли кнопка};</li>
- *    <li>{@link $ws.proto.Control#visible видимость кнопки};</li>
- * </ol>
- * @description
- */
+
 define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.Button'], function(ButtonBase, dotTplFn) {
 
    'use strict';
 
    /**
     * Контрол, отображающий обычную кнопку
+    * Можно настроить:
+    * <ol>
+    *    <li>{@link $ws.proto.Control#allowChangeEnable возможность изменения доступности кнопки};</li>
+    *    <li>{@link SBIS3.CONTROLS.ButtonBase#caption текст на кнопке};</li>
+    *    <li>{@link $ws.proto.Control#enabled возможность взаимодействия с кнопкой};</li>
+    *    <li>{@link SBIS3.CONTROLS.IconMixin#icon иконку на кнопке};</li>
+    *    <li>{@link primary по умолчанию ли кнопка};</li>
+    *    <li>{@link $ws.proto.Control#visible видимость кнопки};</li>
+    * </ol>
     * @class SBIS3.CONTROLS.Button
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
@@ -27,6 +24,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
     * </component>
     * @public
     * @category Buttons
+    *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
     * @ignoreOptions subcontrol verticalAlignment
@@ -36,15 +34,15 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
     * @ignoreMethods focusCatch getActiveChildControl getChildControlById getChildControlByName getChildControls
     * @ignoreMethods getClassName getContext getEventBusOf getEventHandlers getEvents getExtendedTooltip getOpener
     * @ignoreMethods getImmediateChildControls getLinkedContext getNearestChildControlByName getOwner getOwnerId
-    * @ignoreMethods getReadyDeferred getStateKey getTabindex getUserData getValue hasActiveChildControl hasChildControlByName
+    * @ignoreMethods getReadyDeferred getStateKey getUserData getValue hasActiveChildControl hasChildControlByName
     * @ignoreMethods hasEventHandlers isActive isAllReady isDestroyed isMarked isReady makeOwnerName setOwner setSize
     * @ignoreMethods markControl moveFocus moveToTop once registerChildControl registerDefaultButton saveToContext
     * @ignoreMethods sendCommand setActive setChildActive setClassName setExtendedTooltip setOpener setStateKey activate
-    * @ignoreMethods setTabindex setTooltip setUserData setValidators setValue storeActiveChild subscribe unregisterChildControl
+    * @ignoreMethods setTooltip setUserData setValidators setValue storeActiveChild subscribe unregisterChildControl
     * @ignoreMethods unregisterDefaultButton unsubscribe validate waitAllPendingOperations waitChildControlById waitChildControlByName
     *
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
-    * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
+    * @ignoreEvents onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     *
     * @cssModifier controls-Button__light Контурная кнопка.

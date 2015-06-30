@@ -101,27 +101,20 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button .controls-Button__icon {
   position: absolute;
-  top: 19px;
   left: 8px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button .controls-Button__icon {
-    top: 20px;
-  }
+  top: 20px;
 }
 .controls-Button .controls-Button__icon + .controls-Button__text {
-  margin: 0 8px 0 28px;
+  margin-right: 8px;
+  margin-left: 28px;
 }
 .controls-Button .controls-Button__icon.icon-24 {
-  top: 14px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button .controls-Button__icon.icon-24 {
-    top: 15px;
-  }
+  left: 8px;
+  top: 15px;
 }
 .controls-Button .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin: 0 8px 0 36px;
+  margin-right: 8px;
+  margin-left: 36px;
 }
 .controls-Button.controls-Button__primary {
   color: #333333;
@@ -200,28 +193,20 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-Button__big .controls-Button__icon {
   position: absolute;
-  top: 19px;
   left: 8px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button.controls-Button__big .controls-Button__icon {
-    top: 20px;
-  }
+  top: 20px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon + .controls-Button__text {
-  margin: 0 8px 0 28px;
+  margin-right: 8px;
+  margin-left: 28px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-  top: 14px;
   left: 8px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-    top: 15px;
-  }
+  top: 15px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin: 0 8px 0 36px;
+  margin-right: 8px;
+  margin-left: 36px;
 }
 .controls-Button.controls-Button__big.controls-Button__primary {
   color: #333333;
@@ -335,6 +320,60 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-shadow: none;
   box-shadow: none;
   background: #ffe6cc;
+}
+.controls-Button.controls-Checked__checked .controls-Button__text {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+.controls-Button.controls-Checked__checked .controls-Button__icon {
+  left: 8px;
+  top: 20px;
+}
+.controls-Button.controls-Checked__checked .controls-Button__icon + .controls-Button__text {
+  margin-right: 8px;
+  margin-left: 28px;
+}
+.controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 {
+  left: 8px;
+  top: 15px;
+}
+.controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 + .controls-Button__text {
+  margin-right: 8px;
+  margin-left: 36px;
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__text {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__icon {
+  left: 8px;
+  top: 20px;
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__icon + .controls-Button__text {
+  margin-right: 8px;
+  margin-left: 28px;
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__icon.icon-24 {
+  left: 8px;
+  top: 15px;
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__icon.icon-24 + .controls-Button__text {
+  margin-right: 8px;
+  margin-left: 36px;
+}
+@-moz-document url-prefix() {
+  .controls-Button.controls-Checked__checked .controls-Button__icon {
+    top: 20px;
+  }
+  .controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 {
+    top: 15px;
+  }
+  .controls-Button.controls-Checked__checked.controls-Button__big .controls-Button__icon {
+    top: 20px;
+  }
+  .controls-Button.controls-Checked__checked.controls-Button__big .controls-Button__icon.icon-24 {
+    top: 15px;
+  }
 }
 .controls-IconButton {
   cursor: pointer;
@@ -789,6 +828,12 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
 }
 .controls-Menu__Popup .controls-Menu__hasChild:after {
   content: ' ';
@@ -944,6 +989,14 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuButton .controls-Button__icon + .controls-Button__text {
   margin-right: 30px;
 }
+.controls-MenuButton.controls-Checked__checked .controls-Button__text,
+.controls-MenuButton.controls-Checked__checked .controls-Button__icon + .controls-Button__text {
+  margin-right: 30px;
+}
+.controls-MenuButton.controls-Checked__checked .controls-MenuButton__arrowDown {
+  top: 24px;
+  right: 12px;
+}
 .controls-MenuButton__header {
   display: inline-block;
   position: absolute;
@@ -1069,6 +1122,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuLink__Menu {
   margin-left: -9px;
+  margin-bottom: 0;
   background: #ffffff;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
@@ -1368,6 +1422,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
   display: none;
+}
+.controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable__placeholder {
+  color: #eeeeee !important;
 }
 .controls-ComboBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
   position: absolute;
@@ -1876,6 +1933,41 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-ListView__item {
   overflow: hidden;
   position: relative;
+}
+.controls-ListView .controls-ListView__item,
+.controls-DataGrid .controls-ListView__item {
+  overflow: hidden;
+  position: relative;
+}
+.controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox,
+.controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox {
+  background: transparent;
+}
+.controls-ListView .controls-ListView__EmptyData {
+  width: 100%;
+  color: #aaaaaa;
+  text-align: center;
+}
+.controls-ListView .controls-ListView__itemCheckBox {
+  width: 16px;
+  height: 16px;
+  background: none;
+  cursor: pointer;
+  display: none;
+}
+.controls-ListView.controls-ListView__multiselect .controls-ListView__itemCheckBox {
+  display: inline-block;
+}
+.controls-ListView.controls-ListView__multiselect .controls-ListView__item__multiSelected .controls-ListView__itemCheckBox {
+  background: transparent url('img/checkbox.png') -2px -5px;
+}
+.controls-ListView .controls-ListView-scrollIndicator {
+  display: block;
+  background: url('img/ajax-loader-indicator.gif') 0 0 no-repeat;
+  margin: 0 auto !important;
+  top: 50%!important;
+  height: 32px;
+  width: 32px;
 }
 .controls-ListView > .controls-TreeView__childContainer {
   display: block;

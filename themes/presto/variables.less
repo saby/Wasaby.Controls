@@ -58,16 +58,21 @@
 @button-border-radius:                    0;
 @button-icon-top-offset:                  20px;                     // top offset of 16x16 icon
 @button-icon-left-offset:                 8px;
+@button-icon-gap:                         4px;                      // gap between icon and text
 @button-icon-text-margin:                 0 8px 0 28px;             // margin of text following 16x16 icon
 @button-icon-big-top-offset:              15px;                     // top offset of 24x24 icon
+@button-icon-big-left-offset:             @button-icon-left-offset;
 @button-icon-big-text-margin:             0 8px 0 36px;             // margin of text following 24x24 icon
 @button-text-margin:                      0 8px 0 8px;
+@button-text-margin-left:                 8px;
+@button-text-margin-right:                8px;
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
 
 // Normal default button
 @button-text-color:                       @black-color;
-@button-border:                           0 none;
+@button-border-width:                     0;
+@button-border:                           @button-border-width none;
 @button-shadow:                           none;
 @button-bg:                               @default-color;
 
@@ -119,6 +124,8 @@
 @button-big-icon-big-left-offset:         @button-big-icon-left-offset;
 @button-big-icon-big-text-margin:         @button-icon-big-text-margin;     // margin of text following 24x24 icon
 @button-big-text-margin:                  0 8px 0 8px;
+@button-big-text-margin-left:             8px;
+@button-big-text-margin-right:            @button-big-text-margin-left;
 @button-big-text-padding:                 0;
 @button-big-empty-text-margin:            @button-empty-text-margin;
 
@@ -176,9 +183,16 @@
 
 // Normal default button
 @button-checked-text-color:               @button-active-text-color;
+@button-checked-border-width:             @button-border-width;
 @button-checked-border:                   @button-active-border;
 @button-checked-shadow:                   @button-active-shadow;
 @button-checked-bg:                       @button-active-bg;
+@button-checked-text-margin-left:         @button-text-margin-left;
+@button-checked-text-margin-right:        @button-text-margin-right;
+@button-checked-icon-top-offset:          @button-icon-top-offset;
+@button-checked-icon-left-offset:         @button-icon-left-offset;
+@button-checked-icon-big-top-offset:      @button-icon-big-top-offset;
+@button-checked-icon-big-left-offset:     @button-icon-big-left-offset;
 
 // Normal primary button
 @button-primary-checked-text-color:       @button-primary-active-text-color;
@@ -191,6 +205,12 @@
 @button-big-checked-border:               @button-big-active-border;
 @button-big-checked-shadow:               @button-big-active-shadow;
 @button-big-checked-bg:                   @button-big-active-bg;
+@button-big-checked-text-margin-left:     @button-big-text-margin-left;
+@button-big-checked-text-margin-right:    @button-big-text-margin-right;
+@button-big-checked-icon-top-offset:      @button-big-icon-top-offset;
+@button-big-checked-icon-left-offset:     @button-big-icon-left-offset;
+@button-big-checked-icon-big-top-offset:  @button-big-icon-big-top-offset;
+@button-big-checked-icon-big-left-offset: @button-big-icon-big-left-offset;
 
 // Big primary button
 @button-big-primary-checked-text-color:   @button-big-primary-active-text-color;
@@ -487,6 +507,7 @@
 @menu-border-width:                       1px;
 @menu-border-style:                       solid;
 @menu-border-color:                       @gray-color;
+@menu-border-radius:                      0;
 @menu-shadow:                             none;
 
 @menu-expand-width:                       8px;
@@ -554,6 +575,7 @@
 
 // Default menu button
 @menu-button-text-right-margin:                         30px;                   //this margin reserve space for arrow-down icon
+@menu-button-checked-text-right-margin:                 @menu-button-text-right-margin;
 @menu-button-arrow-spritesheet:                         '';
 
 @menu-button-arrow-border-width:                        8px 8px 0 8px;
@@ -670,6 +692,7 @@
 
 // Menu
 @menu-link-menu-left-margin:              -9px;
+@menu-link-menu-margin-bottom:            0;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
 
 // Menu header
