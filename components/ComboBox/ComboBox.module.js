@@ -20,11 +20,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     *     <options name="items" type="array">
     *        <options>
     *            <option name="key">1</option>
-    *            <option name="caption">Пункт1</option>
+    *            <option name="title">Пункт1</option>
     *         </options>
     *         <options>
     *            <option name="key">2</option>
-    *            <option name="caption">Пункт2</option>
+    *            <option name="title">Пункт2</option>
     *         </options>
     *      </options>
     *      <option name="keyField">key</option>
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _dotTplFn: dotTplFn,
       /**
        * @typedef {Object} ItemsComboBox
-       * @property {String} caption Текст пункта меню.
+       * @property {String} title Текст пункта меню.
        * @property {String} key Ключ пункта меню.
        */
       /**
@@ -56,11 +56,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        *     <options name="items" type="array">
        *        <options>
        *            <option name="key">1</option>
-       *            <option name="caption">Пункт1</option>
+       *            <option name="title">Пункт1</option>
        *         </options>
        *         <options>
        *            <option name="key">2</option>
-       *            <option name="caption">Пункт2</option>
+       *            <option name="title">Пункт2</option>
        *         </options>
        *      </options>
        *      <!--необходимо указать какое из наших полей является ключевым-->
