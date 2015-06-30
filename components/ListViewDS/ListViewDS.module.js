@@ -218,20 +218,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          $constructor: function () {
             var self = this;
             this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
-            this._container.mouseup(function (e) {
-               if (e.which == 1) {
-                  var $target = $(e.target),
-                     target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
-                  if (target.length && self._isViewElement(target)) {
-                     var id = target.data('id'), data = self._dataSet.getRecordByKey(id);
-                     self._elemClickHandler(id, data, e.target);
-                  }
-                  if (self._options.multiselect && $target.length && $target.hasClass('controls-DataGrid__th__checkBox')){
-                    $target.hasClass('controls-DataGrid__th__checkBox__checked') ? self.setSelectedKeys([]) :self.setSelectedItemsAll();
-                    $target.toggleClass('controls-DataGrid__th__checkBox__checked');
-                  }
-               }
-            });
             this._container.mousemove(this._mouseMoveHandler.bind(this))
                .mouseleave(this._mouseLeaveHandler.bind(this));
             if (this.isInfiniteScroll()) {
@@ -273,6 +259,21 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
          _isViewElement: function (elem) {
             return $.contains(this._getItemsContainer()[0], elem[0]);
+         },
+         _onClickHandler: function(e) {
+            ListViewDS.superclass._onClickHandler.apply(this, arguments);
+            var $target = $(e.target),
+                target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item'),
+                id;
+
+            if (target.length && this._isViewElement(target)) {
+               id = target.data('id');
+               this._elemClickHandler(id, this._dataSet.getRecordByKey(id), e.target);
+            }
+            if (self._options.multiselect && $target.length && $target.hasClass('controls-DataGrid__th__checkBox')){
+               $target.hasClass('controls-DataGrid__th__checkBox__checked') ? self.setSelectedKeys([]) :self.setSelectedItemsAll();
+               $target.toggleClass('controls-DataGrid__th__checkBox__checked');
+            }            
          },
          /**
           * Обрабатывает перемещения мышки на элемент представления
@@ -380,28 +381,26 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          /* +++++++++++++++++++++++++++ */
 
          _elemClickHandler: function (id, data, target) {
+            var $target = $(target),
+                elClickHandler = this._options.elemClickHandler;
+
             this.setSelectedKey(id);
             if (this._options.multiselect) {
                //TODO: оставить только js класс
-               if ($(target).hasClass('js-controls-ListView__itemCheckBox') || $(target).hasClass('controls-ListView__itemCheckBox')) {
-                  var key = $(target).closest('.controls-ListView__item').data('id');
-                  this.toggleItemsSelection([key]);
+               if ($target.hasClass('js-controls-ListView__itemCheckBox') || $target.hasClass('controls-ListView__itemCheckBox')) {
+                  this.toggleItemsSelection([$target.closest('.controls-ListView__item').data('id')]);
                }
                else {
                   this._notify('onItemClick', id, data, target);
                   this._elemClickHandlerInternal(data, id, target);
-                  if (this._options.elemClickHandler) {
-                     this._options.elemClickHandler.call(this, id, data, target);
-                  }
+                  elClickHandler && elClickHandler.call(this, id, data, target);
                }
             }
             else {
                this.setSelectedKeys([id]);
                this._notify('onItemClick', id, data, target);
                this._elemClickHandlerInternal(data, id, target);
-               if (this._options.elemClickHandler) {
-                  this._options.elemClickHandler.call(this, id, data, target);
-               }
+               elClickHandler && elClickHandler.call(this, id, data, target);
             }
          },
 

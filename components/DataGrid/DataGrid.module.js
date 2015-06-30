@@ -421,13 +421,18 @@ define('js!SBIS3.CONTROLS.DataGrid',
         */
        setColumns : function(columns) {
           var headerTr = $('<tr>'),
-              docFragmentForColGroup = document.createDocumentFragment();
+              docFragmentForColGroup = document.createDocumentFragment(),
+              isPartScrollUsed = this._options.startScrollColumn !== undefined;
 
           this._thead.find('.controls-DataGrid__th').eq(0).parent().remove();
           this._colgroup.empty();
           if (this._options.multiselect) {
-             headerTr.append('<th class="controls-DataGrid__th controls-DataGrid__td__checkBox">' +
-                                '<span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></span>' +
+             headerTr.append('<th class="controls-DataGrid__th' +
+             (isPartScrollUsed ?
+                this._options.startScrollColumn === 0 ?
+                   ' controls-DataGrid__scrolledCell' :
+                   ' controls-DataGrid__notScrolledCell' : '') +
+             		 ' controls-DataGrid__td__checkBox"><span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></span>' +
                               '</th>');
              docFragmentForColGroup.appendChild($('<col width="24px">')[0]);
           }
@@ -438,8 +443,10 @@ define('js!SBIS3.CONTROLS.DataGrid',
              docFragmentForColGroup.appendChild(column);
              headerTr.append(
                 $('<th class="controls-DataGrid__th' +
-                (this._options.startScrollColumn !== undefined ? this._options.startScrollColumn <= i ?
-                      ' controls-DataGrid__scrolledCell' : ' controls-DataGrid__notScrolledCell' : '')
+                (isPartScrollUsed ?
+                   this._options.startScrollColumn <= i ?
+                      ' controls-DataGrid__scrolledCell' :
+                      ' controls-DataGrid__notScrolledCell' : '')
                 + '"></th>').text(columns[i].title));
           }
 
