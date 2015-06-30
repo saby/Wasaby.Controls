@@ -363,6 +363,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see onDataLoad
         */
       setItems: function (items) {
+         //TODO Сделать метод для очистки всех Items, ибо setItems([]) - не очевидно
          var
             item = items[0],
             keyField;
@@ -390,7 +391,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _redraw: function () {
          var emptyHTML;
          if (this._dataSet) {
-            this._destroySearchPathSelectors();
             this._clearItems();
             var records = this._getRecordsForRedraw(),
               container = this._getItemsContainer();
