@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.TreeDataGrid', 'js!SBIS3.CONTROLS.MultiViewMixin'], function(TreeDataGrid, MultiViewMixin) {
+define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.TreeDataGrid', 'js!SBIS3.CONTROLS.CompositeViewMixin'], function(TreeDataGrid, MultiViewMixin) {
    'use strict';
 
    var HierarchyMultiView = TreeDataGrid.extend([MultiViewMixin],/** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.HierarchyMultiView', ['js!SBIS3.CONTROLS.TreeDataGrid'
       },
       _getTargetContainer: function (item) {
          if (this.getViewMode() != 'table' && item.get(this._options.hierField + '@')) {
-            return  $('.controls-MultiView__foldersContainer',this._container);
+            return  $('.controls-CompositeView__foldersContainer',this._container);
          }
          return this._getItemsContainer();
       },
