@@ -362,7 +362,7 @@ define(
 
       /**
        * Метод получения текущего значения даты.
-       * @returns {String} Значение даты в формате ISO 8601.
+       * @returns {Date|String} Начальное значение даты, с которой откроется контрол.
        * @example
        * <pre>
        *     var date = datePicker.getDate();
