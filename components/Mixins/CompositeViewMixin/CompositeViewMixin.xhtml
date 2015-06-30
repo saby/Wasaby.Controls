@@ -1,6 +1,6 @@
-<div class="controls-MultiView controls-DataGrid controls-ListView{{?it.multiselect !== false}} controls-ListView__multiselect{{?}}">
-   <div class="controls-MultiView__itemsContainer ws-hidden">
-      <div class="controls-MultiView__foldersContainer"></div>
+<div class="controls-CompositeView controls-DataGrid controls-ListView{{?it.multiselect !== false}} controls-ListView__multiselect{{?}}">
+   <div class="controls-CompositeView__itemsContainer ws-hidden">
+      <div class="controls-CompositeView__foldersContainer"></div>
    </div>
    <table class="controls-DataGrid__table">
       <colgroup class="controls-DataGrid__colgroup">
@@ -14,7 +14,7 @@
       <thead class="controls-DataGrid__thead{{?it.showHead === false}} ws-hidden{{?}}">
       <tr>
          {{?it.multiselect}}
-         <th class="controls-DataGrid__td__checkBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}"></th>
+         <th class="controls-DataGrid__th controls-DataGrid__td__checkBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}"><span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox controls-DataGrid__th__checkBox"></span></th>
          {{?}}
          {{~it.columns :column:index}}
          <th class="controls-DataGrid__th{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}">{{=column.title}}</th>
