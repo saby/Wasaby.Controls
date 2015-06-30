@@ -108,37 +108,45 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
       },
        /**
         * Метод получения идентификатора следующего элемента.
+        * @param key Идентификатор элемента
         * @returns {*|String} Идентификатор следующего элемента.
         * @example
         * <pre>
-        *     var key = myComboBox.getNextItemIndex();
+        *     var key = myComboBox.getNextItemKey();
         *     myComboBox.setSelectedKey(key);
         * </pre>
-        * @see  getPrevItemIndex
+        * @see  getPreviousItemKey
         */
-      getNextItemIndex: function() {
-         var
-            current = parseInt(this.getSelectedKey(), 10),
-            next = this._dataSet.getRecordByKey(current + 1);
-         return next !== undefined ? next.getKey() : false;
+      getNextItemKey: function(key) {
+        var indexId = this._dataSet._indexId,
+          length = indexId.length;
+        for (var i = 0; i < length; i++){
+          if (indexId[i] == key){
+            return indexId[i + 1] || null ;
+          }
+        }
       },
        /**
         * Метод получения идентификатора предыдущего элемента
+        * @param key Идентификатор элемента
         * @returns {*|String} Идентификатор предыдущего элемента.
         * @example
         * <pre>
-        *     var key = myComboBox.getPrevItemIndex();
+        *     var key = myComboBox.getPreviousItemKey();
         *     if (key !== 'old') {
         *        myComboBox.setSelectedKey(key);
         *     }
         * </pre>
-        * @see getNextItemIndex
+        * @see getNextItemKey
         */
-      getPrevItemIndex: function() {
-         var
-            current = parseInt(this.getSelectedKey(), 10),
-            prev = this._dataSet.getRecordByKey(current - 1);
-         return prev !== undefined ? prev.getKey() : false;
+      getPreviousItemKey: function(key) {
+         var indexId = this._dataSet._indexId,
+          length = indexId.length;
+        for (var i = 0; i < length; i++){
+          if (indexId[i] == key){
+            return indexId[i - 1] || null ;
+          }
+        }
       },
 
       /**

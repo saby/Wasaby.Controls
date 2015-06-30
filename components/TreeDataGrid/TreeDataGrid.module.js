@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          }
       },
 
-      _elemClickHandlerInternal: function (id, data, target) {
+      _elemClickHandlerInternal: function (data, id, target) {
          var nodeID = $(target).closest('.controls-ListView__item').data('id');
          if ($(target).hasClass('js-controls-TreeView__expand') && $(target).hasClass('has-child')) {
             this.toggleNode(nodeID);
