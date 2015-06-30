@@ -426,7 +426,9 @@ define('js!SBIS3.CONTROLS.DataGrid',
           this._thead.find('.controls-DataGrid__th').eq(0).parent().remove();
           this._colgroup.empty();
           if (this._options.multiselect) {
-             headerTr.append('<th class="controls-DataGrid__th"></th>');
+             headerTr.append('<th class="controls-DataGrid__th controls-DataGrid__td__checkBox">' +
+                                '<span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></span>' +
+                              '</th>');
              docFragmentForColGroup.appendChild($('<col width="24px">')[0]);
           }
           this._options.columns = columns;

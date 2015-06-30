@@ -6,9 +6,11 @@
          <col{{?column.width}} width="{{=column.width}}" {{?}}/>
          {{~}}
       </colgroup>
-      <thead class="controls-DataGrid__thead{{?it.showHead === false}} ws-hidden{{?}}">
+      <thead class="controls-DataGrid__th controls-DataGrid__thead{{?it.showHead === false}} ws-hidden{{?}}">
          <tr>
-         <th class="controls-DataGrid__td__checkBox"></th>
+         {{?it.multiselect}}
+            <th class="controls-DataGrid__th controls-DataGrid__td__checkBox"><span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox controls-DataGrid__th__checkBox"></span></th>
+         {{?}}
          {{~it.columns :column:index}}
             <th class="controls-DataGrid__th">{{=column.title}}</th>
          {{~}}

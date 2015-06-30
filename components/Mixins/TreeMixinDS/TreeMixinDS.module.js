@@ -149,7 +149,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
         }
       },
 
-      _elemClickHandlerInternal: function (id, data, target) {
+      _elemClickHandlerInternal: function (data, id, target) {
          if ($(target).hasClass('js-controls-TreeView__expand') && $(target).hasClass('has-child')) {
             var nodeID = $(target).closest('.controls-ListView__item').data('id');
             this.toggleNode(nodeID);

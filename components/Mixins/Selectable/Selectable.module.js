@@ -116,11 +116,14 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
         * </pre>
         * @see  getPrevItemIndex
         */
-      getNextItemIndex: function() {
-         var
-            current = parseInt(this.getSelectedKey(), 10),
-            next = this._dataSet.getRecordByKey(current + 1);
-         return next !== undefined ? next.getKey() : false;
+      getNextItemKey: function(key) {
+        var indexId = this._dataSet._indexId,
+          length = indexId.length;
+        for (var i = 0; i < length; i++){
+          if (indexId[i] == key){
+            return indexId[i + 1] || null ;
+          }
+        }
       },
        /**
         * Метод получения идентификатора предыдущего элемента
@@ -134,11 +137,14 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
         * </pre>
         * @see getNextItemIndex
         */
-      getPrevItemIndex: function() {
-         var
-            current = parseInt(this.getSelectedKey(), 10),
-            prev = this._dataSet.getRecordByKey(current - 1);
-         return prev !== undefined ? prev.getKey() : false;
+      getPreviousItemKey: function(key) {
+         var indexId = this._dataSet._indexId,
+          length = indexId.length;
+        for (var i = 0; i < length; i++){
+          if (indexId[i] == key){
+            return indexId[i - 1] || null ;
+          }
+        }
       },
 
       /**
