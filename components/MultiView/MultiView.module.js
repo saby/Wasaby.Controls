@@ -1,14 +1,6 @@
-define('js!SBIS3.CONTROLS.MultiView', ['js!SBIS3.CONTROLS.DataGrid', 'js!SBIS3.CONTROLS.MultiViewMixin'], function(DataGrid, MultiViewMixin) {
+define('js!SBIS3.CONTROLS.MultiView', ['js!SBIS3.CONTROLS.CompositeView'], function(CompositeView) {
    'use strict';
-
-   var MultiView = DataGrid.extend([MultiViewMixin],/** @lends SBIS3.CONTROLS.DataGrid.prototype*/ {
-
-      $protected: {
-
-      }
-
-   });
-
-   return MultiView;
+   $ws.single.ioc.resolve('ILogger').log('MultiView', 'Класс MultiView устарел, используйте CompositeView');
+   return CompositeView;
 
 });
