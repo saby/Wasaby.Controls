@@ -208,11 +208,11 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _infiniteScrollOffset: null,
             _allowInfiniteScroll: true,
             _scrollIndicatorHeight: 32,
-            _isLoadBeforeScrollAppears: true,
-            _infiniteScrollContainer: null,
-            _pageChangeDeferred: undefined,
-            _pager: undefined,
-            _previousGroupBy: undefined
+            _isLoadBeforeScrollAppears : true,
+            _infiniteScrollContainer: [],
+            _pageChangeDeferred : undefined,
+            _pager : undefined,
+            _previousGroupBy : undefined
          },
 
          $constructor: function () {
@@ -439,7 +439,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           */
          reload: function () {
             if (this.isInfiniteScroll()) {
-               this._loadingIndicator = undefined;
+               //this._loadingIndicator = undefined;
                this._hasScrollMore = true;
                this._infiniteScrollOffset = this._offset;
                //После релоада придется заново догружать данные до появлени скролла
@@ -662,10 +662,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                scrollHeight = Math.max(docBody.scrollHeight, docElem.scrollHeight);
             return (clientHeight + scrollTop >= scrollHeight - this._scrollIndicatorHeight);//Учитываем отступ снизу на высоту картинки индикатора загрузки
          },
-         _loadBeforeScrollAppears: function () {
-            var elem = this._infiniteScrollContainer.length ? this._infiniteScrollContainer.get(0) : $('body').get(0);
+         _loadBeforeScrollAppears: function(){
+            var elem = this._infiniteScrollContainer.length ? this._infiniteScrollContainer.get(0) : $('body').get(0),
+                  windowHeight = $(window).height();
             // Было: this._dataSet.getCount() <= parseInt(($(window).height() /  32 ) + 10 , 10
-            if (this._isLoadBeforeScrollAppears && !(elem.scrollHeight > $(window).height() + this._scrollIndicatorHeight)) {
+            if (this._isLoadBeforeScrollAppears &&
+                  (!(elem.scrollHeight > windowHeight + this._scrollIndicatorHeight)) || //Если на странице появился скролл
+                  this._container.height() < windowHeight){ // или высота таблицы меньше высоты окна
                this._nextLoad();
             } else {
                this._isLoadBeforeScrollAppears = false;
@@ -706,6 +709,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (allow && !noLoad) {
                this._nextLoad();
                return;
+            }
+            //НА саом деле если во время infiniteScroll произошла ошибка загрузки, я о ней не смогу узнать, но при выключении нужно убрать индикатор
+            if (!allow && this._loadingIndicator && this._loadingIndicator.is(':visible')){
+               this._cancelLoading();
             }
             this._removeLoadingIndicator();
          },
