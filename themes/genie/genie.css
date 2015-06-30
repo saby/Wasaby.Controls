@@ -1954,6 +1954,9 @@ input[type="reset"]::-moz-focus-inner {
   background: none;
   cursor: pointer;
   display: none;
+  position: absolute;
+  left: 3px;
+  top: 5px;
 }
 .controls-ListView.controls-ListView__multiselect .controls-ListView__itemCheckBox {
   display: inline-block;
@@ -2110,6 +2113,13 @@ input[type="reset"]::-moz-focus-inner {
   color: #919191;
   background-color: transparent;
 }
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox {
+  margin: -3px 0 0 4px;
+  background: url('img/CheckBox-sprite.png') 0 -16px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-DataGrid__th__checkBox__checked {
+  background: url('img/CheckBox-sprite.png') 0 -32px;
+}
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
   cursor: pointer;
@@ -2160,7 +2170,6 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   position: relative;
   top: -1px;
-  display: inline-block;
 }
 .controls-PathSelector__point:hover .controls-PathSelector__title {
   color: #FF7033;
@@ -2201,12 +2210,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-PathSelector .controls-PathSelector__itemsContainer {
   display: inline-block;
 }
-.controls-PathSelector .controls-PathSelector__dots .controls-PathSelector__title {
+.controls-PathSelector .controls-PathSelector__dots {
   margin-left: -3px;
 }
-.controls-PathSelector .controls-PathSelector__dots:hover .controls-PathSelector__title {
-  text-decoration: underline;
-  color: #FF7033;
+.controls-PathSelector .controls-PathSelector__dots .controls-PathSelector__title {
+  margin-left: -3px;
 }
 .controls-PathSelector.controls-PathSelector__picker .controls-PathSelector__point {
   display: block;

@@ -149,7 +149,7 @@ define('js!SBIS3.CONTROLS.StaticSource', [
                   //Если установлен фильтр-callback - используем его результат, иначе - проверяем полное совпадение значений
                   var callbackResult = this._options.dataFilterCallback ? this._options.dataFilterCallback(filterField, dataValue, filterValue) : undefined;
                   if (callbackResult === undefined) {
-                     filterMatch = ((typeof dataValue == 'undefined') || (dataValue && dataValue == filterValue));
+                     filterMatch = ((typeof dataValue == 'undefined') || ((typeof dataValue != 'undefined') && dataValue == filterValue));
                   } else {
                      filterMatch = callbackResult;
                   }

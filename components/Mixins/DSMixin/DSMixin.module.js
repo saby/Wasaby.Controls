@@ -194,20 +194,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                items = [];
             }
             var
-               item = items[0],
-               keyField;
-            if (this._options.keyField) {
-               keyField = this._options.keyField;
-            }
-            else {
-               if (item && Object.prototype.toString.call(item) === '[object Object]') {
-                  keyField = Object.keys(item)[0];
-               }
+               item = items[0];
+            if (!this._options.keyField) {
+              if (item && Object.prototype.toString.call(item) === '[object Object]') {
+                this._options.keyField = Object.keys(item)[0];
+              }
             }
             this._dataSource = new StaticSource({
                data: items,
                strategy: new ArrayStrategy(),
-               keyField: keyField
+               keyField: this._options.keyField
             });
          }
       },
