@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @example
         * <pre>
         *     myComboBox.subscribe('onDataLoad', function(eventObject) {
-        *        caption.setText('Загрузка прошла успешно');
+        *        TextBox.setText('Загрузка прошла успешно');
         *     });
         * </pre>
         * @see items
@@ -348,14 +348,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         *     setItems: [
         *        {
         *           id: 1,
-        *           caption: 'Сообщения'
+        *           title: 'Сообщения'
         *        },{
         *           id: 2,
-        *           caption: 'Прочитанные',
+        *           title: 'Прочитанные',
         *           parent: 1
         *        },{
         *           id: 3,
-        *           caption: 'Непрочитанные',
+        *           title: 'Непрочитанные',
         *           parent: 1
         *        }
         *     ]
