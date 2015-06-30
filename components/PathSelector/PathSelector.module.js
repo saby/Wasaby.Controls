@@ -19,6 +19,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       $protected: {
          _dotTplFn: dotTpl,
          _resizeTimeout: null,
+         _rootHandler: undefined,
          _options: {
             linkedView: null,
             keyField: 'id',
@@ -71,9 +72,10 @@ define('js!SBIS3.CONTROLS.PathSelector', [
 
       _subscribeOnSetRoot: function () {
          var self = this;
-         this._options.linkedView.subscribe('onSetRoot', function (event, dataSet, id) {
+         this._rootHandler = function (event, dataSet, id) {
             self._rootChangeHandler(dataSet, id);
-         }, this);
+         }
+         this._options.linkedView.subscribe('onSetRoot', this._rootHandler, this);
       },
 
       _setPickerConfig: function () {
@@ -95,14 +97,14 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          var self = this;
          this._redrawDropdown();
          this._picker._container.bind('mouseup', function (e) {
-            self._clickHandler(e);
+            self._onClickHandler(e);
          })
       },
 
       setLinkedView: function (view) {
          var self = this;
          if (this._options.linkedView) {
-            this._options.linkedView.unsubscribe('onSetRoot', this._rootChangeHandler);
+            this._options.linkedView.unsubscribe('onSetRoot', this._rootHandler);
          }
          this._options.linkedView = view;
          this._subscribeOnSetRoot();
@@ -214,6 +216,12 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             record = this._dataSet.at(last);
          }
          this._options.linkedView.setCurrentRoot(id);
+      },
+
+      destroy: function(){
+      	PathSelector.superclass.destroy.call(this);
+      	this._options.linkedView.unsubscribe('onSetRoot', this._rootHandler);
+      	$ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._resizeHandler, this);
       }
    });
 
