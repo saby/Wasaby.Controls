@@ -194,6 +194,11 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
          }
 
       },
+      _isViewElement: function(elem) {
+         return HierarchyDataGrid.superclass._isViewElement.apply(this, arguments)
+                && !elem.hasClass('controls-HierarchyDataGrid__path')
+                && !(elem.wsControl() instanceof PathSelector);
+      },
       _createPathItemsDS: function(pathRecords){
          var dsItems = [];
          for (var i = 0; i < pathRecords.length; i++){

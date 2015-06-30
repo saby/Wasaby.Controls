@@ -49,31 +49,37 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          this._dataSet._reindexTree(this._options.hierField);
 
          dataSet.each(function (record) {
-            var targetContainer = self._getTargetContainer(record);
-            if (targetContainer) {
-               /*TODO пока придрот для определения позиции вставки*/
-               var
-                  parentContainer = $('.controls-ListView__item[data-id="'+key+'"]', self._getItemsContainer().get(0)),
-                  allContainers = $('.controls-ListView__item', self._getItemsContainer().get(0)),
-                  at = {at: 0};
-               for (var i = 0; i < allContainers.length; i++) {
-                  if (allContainers[i] == parentContainer.get(0)) {
-                     at = {at : i + 1};
-                  } else
-                  if ($(allContainers[i]).data('parent') == parentContainer.data('id')){
-                     at.at ++;
-                  }
-               }
-               /**/
-               if (self._options.displayType == 'folders') {
-                  if (record.get(self._options.hierField + '@')) {
-                     self._drawItem(record, at);
-                  }
+            var
+               recKey = record.getKey(),
+               parKey = self._dataSet.getParentKey(record, self._options.hierField),
+               targetContainer = self._getTargetContainer(record);
 
-               }
-               else {
-                  self._drawItem(record, at);
-                  self._drawItemsCallback();
+            if (!$('.controls-ListView__item[data-id="'+recKey+'"]', self._getItemsContainer().get(0)).length) {
+
+               if (targetContainer) {
+                  /*TODO пока придрот для определения позиции вставки*/
+                  var
+                     parentContainer = $('.controls-ListView__item[data-id="' + parKey + '"]', self._getItemsContainer().get(0)),
+                     allContainers = $('.controls-ListView__item', self._getItemsContainer().get(0)),
+                     at = {at: 0};
+                  for (var i = 0; i < allContainers.length; i++) {
+                     if (allContainers[i] == parentContainer.get(0)) {
+                        at = {at: i + 1};
+                     } else if ($(allContainers[i]).data('parent') == parentContainer.data('id')) {
+                        at.at++;
+                     }
+                  }
+                  /**/
+                  if (self._options.displayType == 'folders') {
+                     if (record.get(self._options.hierField + '@')) {
+                        self._drawItem(record, at);
+                     }
+
+                  }
+                  else {
+                     self._drawItem(record, at);
+                     self._drawItemsCallback();
+                  }
                }
             }
          });

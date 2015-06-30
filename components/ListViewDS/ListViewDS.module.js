@@ -286,6 +286,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                target,
                targetKey;
 
+
+            //TODO Переписать без костыльных проверок
             if (this._checkTargetContainer($target)) {
                this._mouseLeaveHandler();
                return;
