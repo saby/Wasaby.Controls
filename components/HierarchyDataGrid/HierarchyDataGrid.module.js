@@ -58,11 +58,12 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
          this._lastPath = [];
          HierarchyDataGrid.superclass.reload.apply(this, arguments);
       },
-      _drawItems: function(){
+      _clearItems : function(){
          this._lastParent = this._curRoot;
          this._lastDrawn = undefined;
          this._lastPath = [];
-         HierarchyDataGrid.superclass._drawItems.apply(this, arguments);
+         this._destroySearchPathSelectors();
+         HierarchyDataGrid.superclass._clearItems.apply(this, arguments);
       },
 
       setCurrentRoot: function(key) {
@@ -184,7 +185,6 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
                items: this._createPathItemsDS(path)
             });
             ps.once('onPointClick', function(){
-               self._destroySearchPathSelectors();
                self.setGroupBy({});
             });
             this._pathSelectors.push(ps);
