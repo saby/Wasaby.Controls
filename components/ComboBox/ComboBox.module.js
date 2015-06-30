@@ -134,7 +134,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             return false;
          });
          if (this._options.selectedKey) {
-            this._drawSelectedItem(this._options.selectedKey);         } else {
+            this._drawSelectedItem(this._options.selectedKey); } else {
             /*TODO следующая строчка должна быть в Selector*/
             this._options.selectedKey = null;
             if (this._options.text) {
@@ -153,11 +153,20 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _keyboardHover: function(e) {
-         var newItemIndex = this[e.which === $ws._const.key.down ? 'getNextItemIndex' : 'getPrevItemIndex']();
-         if (newItemIndex !== false) {
-            this.setSelectedKey(newItemIndex);
-         }
-         return false;
+        var items = $('.controls-ListView__item', this._container),
+            selectedKey = this.getSelectedKey(),
+            selectedItem = $('.controls-ComboBox__itemRow__selected', this._picker._c),
+            nextItem = (selectedKey) ? selectedItem.next('.controls-ListView__item') : items.eq(0),
+            previousItem = (selectedKey) ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
+            
+            //навигация по стрелкам
+           if (e.which === $ws._const.key.up) {
+             previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
+           } else if (e.which === $ws._const.key.down) {
+             nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+           }
+
+           return false;
       },
 
       setText: function (text) {
