@@ -15,7 +15,8 @@ define(
       'use strict';
 
       /**
-       * Календарь
+       * Календарь имеет соответствубщее названию контрола визуальное отображение.
+       * Предназначен для задания даты путём выбора.
        * @class SBIS3.CONTROLS.Calendar
        * @extends $ws.proto.CompoundControl
        * @control
@@ -231,7 +232,7 @@ define(
 
          /**
           * Метод получения текущего значения даты.
-          * @returns {String} Значение даты в формате ISO 8601.
+          * @returns {Date} Значение даты в формате ISO 8601.
           * @example
           * <pre>
           *     var date = this.getChildControlByName('Calendar').getDate();
