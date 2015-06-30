@@ -21,7 +21,6 @@ define(
        * @control
        * @public
        * @demo SBIS3.CONTROLS.Demo.MyCalendar
-       * @author Крайнов Дмитрий Олегович
        *
        * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className
        * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
@@ -233,6 +232,11 @@ define(
          /**
           * Метод получения текущего значения даты.
           * @returns {String} Значение даты в формате ISO 8601.
+          * @example
+          * <pre>
+          *     var date = this.getChildControlByName('Calendar').getDate();
+          *     textBox.setText(date);
+          * </pre>
           * @see date
           * @see setDate
           * @see onDateChange
