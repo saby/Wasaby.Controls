@@ -269,8 +269,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                id = target.data('id');
                this._elemClickHandler(id, this._dataSet.getRecordByKey(id), e.target);
             }
-            if (self._options.multiselect && $target.length && $target.hasClass('controls-DataGrid__th__checkBox')){
-               $target.hasClass('controls-DataGrid__th__checkBox__checked') ? self.setSelectedKeys([]) :self.setSelectedItemsAll();
+            if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGrid__th__checkBox')){
+               $target.hasClass('controls-DataGrid__th__checkBox__checked') ? this.setSelectedKeys([]) : this.setSelectedItemsAll();
                $target.toggleClass('controls-DataGrid__th__checkBox__checked');
             }            
          },
