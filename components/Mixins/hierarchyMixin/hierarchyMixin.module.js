@@ -32,6 +32,12 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       setHierField: function (hierField) {
          this._options.hierField = hierField;
       },
+      /**
+       * Получить название поля иерархии
+       */
+      getHierField : function(){
+         return this._options.hierField;
+      },
 
       // обход происходит в том порядке что и пришли
       hierIterate: function (DataSet, iterateCallback, status) {
@@ -101,6 +107,13 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        */
       setRoot: function (root) {
 
+      },
+      /**
+       * Получить текущий корень иерархии
+       * @returns {*}
+       */
+      getCurrentRoot : function(){
+         return this._curRoot;
       },
 
       /**

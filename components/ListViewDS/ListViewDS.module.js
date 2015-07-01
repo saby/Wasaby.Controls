@@ -632,7 +632,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (this._allowInfiniteScroll && this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._isLoading()) {
                this._addLoadingIndicator();
                this._loader = this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset + this._limit, this._limit).addCallback(function (dataSet) {
-                  self._loader = null;//_cancelLoading?
+                  //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
+                  //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
+                  self._loader = null;
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                   if (self._hasNextPage(dataSet.getMetaData().more)) {
                      self._infiniteScrollOffset += self._limit;

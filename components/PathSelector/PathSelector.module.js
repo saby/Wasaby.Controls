@@ -74,7 +74,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          var self = this;
          this._rootHandler = function (event, dataSet, id) {
             self._rootChangeHandler(dataSet, id);
-         }
+         };
          this._options.linkedView.subscribe('onSetRoot', this._rootHandler, this);
       },
 
@@ -220,7 +220,9 @@ define('js!SBIS3.CONTROLS.PathSelector', [
 
       destroy: function(){
       	PathSelector.superclass.destroy.call(this);
-      	this._options.linkedView.unsubscribe('onSetRoot', this._rootHandler);
+         if (this._options.linkedView) {
+      	   this._options.linkedView.unsubscribe('onSetRoot', this._rootHandler);
+         }
       	$ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._resizeHandler, this);
       }
    });
