@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
                   self._dataSet.removeRecord(idArray);
                   self._dataSource.sync(self._dataSet);
                   self.removeItemsSelection(isArray ? idArray : [idArray]);
-                  self._redraw();
+                  self.reload();
                }
             })
          }
