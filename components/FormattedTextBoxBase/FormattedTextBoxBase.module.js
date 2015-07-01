@@ -892,7 +892,9 @@ define(
             //вывалится ошибка при вызове getSelection, ловим ее здесь.
             try {
                self._keyPressHandler(18);
-            } catch(ex) {}
+            } catch(ex) {
+               $ws.single.ioc.resolve('ILogger').log('FormattedTextBox', ex.message);
+            }
          }, 0);
       }
 
