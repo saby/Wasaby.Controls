@@ -94,12 +94,15 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
       },
 
       _addItemAttributes : function(container, item) {
-          TreeDataGrid.superclass._addItemAttributes.call(this, container, item);
-          var parentKey = this._dataSet.getParentKey(item, this._options.hierField),
-            parentContainer = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._container.get(0)).get(0);
-          container.attr('data-parent', parentKey);
-          /*TODO пока придрот*/
-          if (typeof parentKey != 'undefined' && parentKey !== null && parentContainer) {
+         TreeDataGrid.superclass._addItemAttributes.call(this, container, item);
+         if (item.get(this._options.hierField + '@')){
+         	container.addClass('controls-ListView__folder');
+         }
+         var parentKey = this._dataSet.getParentKey(item, this._options.hierField),
+         	parentContainer = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._container.get(0)).get(0);
+         container.attr('data-parent', parentKey);
+         /*TODO пока придрот*/
+         if (typeof parentKey != 'undefined' && parentKey !== null && parentContainer) {
             var parentWrappersCount = $('.controls-TreeView__hierWrapper', parentContainer).length;
             for (var i = 0; i <= parentWrappersCount; i++) {
               $('.controls-TreeView__expand', container).before('<div class="controls-TreeView__hierWrapper"></div>');
