@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], function(FloatArea) {
    /**
     * Миксин, умеющий отображать выдающий вниз блок.
-    * Задается контент (протектед методом каким-то) и методы которые позволяют открывать, закрывать блок.
+    * Задаётся контент и методы, позволяющие открывать, закрывать блок.
     * @mixin SBIS3.CONTROLS.PickerMixin
     * @public
     */
@@ -10,6 +10,16 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
          _picker : null,
          _border : 0,
          _options: {
+             /**
+              * @cfg {String} Имя css-класса, который будет применён к контейнеру выпадающего блока.
+              * @example
+              * <pre>
+              *     <option name="pickerClassName">control-MyComboBox__ComboBox__position</option>
+              * </pre>
+              * @remark
+              * Класс необходимо создать в файле компонента с расширением .css.
+              * Стили из этого класса применятся к выпадающему блоку.
+              */
             pickerClassName : ''
          }
       },
@@ -37,7 +47,6 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
          self._picker.subscribe('onClose', function(){
             self._container.removeClass('controls-Picker__show');
          });
-         self._setWidth();
          container.hover(function(){
             self._picker.getContainer().addClass('controls-Picker__owner__hover');
          }, function () {
@@ -51,7 +60,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
          var pickerConfig = this._setPickerConfig();
          pickerConfig.parent = this.getParent();
          pickerConfig.context = this.getParent() ? this.getParent().getLinkedContext() : {};
-         pickerConfig.target = this._container;
+         pickerConfig.target = pickerConfig.target || this._container;
          pickerConfig.element = pickerContainer;
          return new FloatArea(pickerConfig);
       },
@@ -74,7 +83,13 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
       },
 
       /**
-       * Показывает выпадающий блок
+       * Метод показывает выпадающий блок.
+       * @example
+       * <pre>
+       *     MenuButton.subscribe('onActivated', function(){
+       *        MenuButton.showPicker();
+       *     })
+       * </pre>
        * @see hidePicker
        * @see togglePicker
        */
@@ -83,11 +98,16 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
             this._initializePicker();
          }
          this._container.addClass('controls-Picker__show');
-         this._setWidth();
          this._picker.show();
       },
       /**
-       * Скрывает выпадающий блок
+       * Метод скрывает выпадающий блок.
+       * @example
+       * <pre>
+       *     ComboBox.subscribe('onFocusOut', function(){
+       *        ComboBox.hidePicker();
+       *     })
+       * </pre>
        * @see showPicker
        * @see togglePicker
        */
@@ -99,7 +119,13 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
          this._picker.hide();
       },
      /**
-      * Изменяет состояние выпадающего блока на противоположное (скрывает/показывает)
+      * Метод изменяет состояние выпадающего блока на противоположное (скрывает/показывает).
+      * @example
+      * <pre>
+      *    ComboBox.bind('click', function(){
+      *       ComboBox.togglePicker();
+      *    })
+      * </pre>
       * @sse showPicker
       * @see hidePicker
       */
@@ -116,13 +142,6 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
                this.showPicker();
             }
          }
-      },
-
-      _setWidth: function(){
-         var self = this;
-         this._picker.getContainer().css({
-            'min-width': self._container.outerWidth() - this._border/*ширина бордеров*/
-         });
       },
 
       _setPickerContent: function () {

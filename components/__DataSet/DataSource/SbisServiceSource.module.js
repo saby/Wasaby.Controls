@@ -2,22 +2,28 @@
  * Created by as.manuylov on 10.11.14.
  */
 define('js!SBIS3.CONTROLS.SbisServiceSource', [
-   'js!SBIS3.CONTROLS.IDataSource',
+   'js!SBIS3.CONTROLS.BaseSource',
    'js!SBIS3.CONTROLS.Record',
    'js!SBIS3.CONTROLS.DataSet',
    'js!SBIS3.CONTROLS.SbisJSONStrategy'
-], function (IDataSource, Record, DataSet, SbisJSONStrategy) {
+], function (BaseSource, Record, DataSet, SbisJSONStrategy) {
    'use strict';
 
    /**
-    * Класс, реализующий интерфейс IDataSource, для работы с бизнес-логикой СБИС как с источником данных.
-    * @author Мануйлов Андрей
+    * Класс для работы с бизнес-логикой СБИС, как с источником данных.
     * @public
     * @class SBIS3.CONTROLS.SbisServiceSource
-    * @extends SBIS3.CONTROLS.IDataSource
+    * @extends SBIS3.CONTROLS.BaseSource
+    * <pre>
+    *     var dataSource = new SbisServiceSource({
+    *         service: {
+    *             name: 'Товар'
+    *         }
+    *     });
+    * </pre>
     */
 
-   return IDataSource.extend({
+   return BaseSource.extend({
       $protected: {
          _options: {
              /**
@@ -70,60 +76,71 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
          /**
           * @cfg {$ws.proto.ClientBLObject} Объект, который умеет ходить на бизнес-логику
           */
-         _BL: undefined
+         _BL: undefined,
+         /**
+          * @cfg {$ws.proto.ClientBLObject} Объект, который используется для смены порядковых номеров на бизнес-логике
+          */
+         _orderBL: undefined,
+         /**
+          * @cfg {String} Имя объекта бизнес-логики
+          */
+         _object: undefined
       },
+
       $constructor: function (cfg) {
          this._BL = new $ws.proto.ClientBLObject(cfg.service);
+         this._object = cfg.service;
          this._options.strategy = cfg.strategy || new SbisJSONStrategy();
-      },
-       /**
-        * Метод синхронизирует набор данных с источником данных.
-        * @param dataSet Набор данных.
-        */
-      sync: function (dataSet) {
-         var self = this,
-            syncCompleteDef = new $ws.proto.ParallelDeferred(),
-            changedRecords = [];
-         dataSet.each(function (record) {
-            if (record.getMarkStatus() == 'changed') {
-               syncCompleteDef.push(self.update(record));
-               changedRecords.push(record);
-            }
-            if (record.getMarkStatus() == 'deleted') {
-               syncCompleteDef.push(self.destroy(record.getKey()));
-               changedRecords.push(record);
-            }
-         }, 'all');
-
-         syncCompleteDef.done().getResult().addCallback(function () {
-            self._notify('onDataSync', changedRecords);
-         });
       },
 
       /**
        * Вызов создания записи в источнике данных методом, указанным в опции {@link createMethodName}.
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет js!SBIS3.CONTROLS.Record.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет SBIS3.CONTROLS.Record.
+       * @example
+       * <pre>
+       *     var dataSource = new SbisServiceSource({
+       *         service: {
+       *             name: 'Товар'
+       *         }
+       *     });
+       *     dataSource.create().addCallback(function(record) {
+       *         var raw = record.getRaw();
+       *         var key = record.getKey();
+       *         record.set('Наименование', 'Тест ' + (new Date()).toString());
+       *         dataSource.update(record).addCallback(function(success) {
+       *             var raw = record.getRaw();
+       *             var key = record.getKey();
+       *         });
+       *     });
+       * </pre>
        * @see createMethodName
        */
       create: function () {
          var self = this,
             def = new $ws.proto.Deferred();
+         //todo Выпилить адовый костыль для создания черновика, как только решится вопрос на стороне БЛ
+         //(задание https://inside.tensor.ru/opendoc.html?guid=a886eecb-c2a0-4628-8919-a395be42dbbb)
          self._BL.call(self._options.crateMethodName, {
-            'Фильтр': null,
+            'Фильтр': {
+               d: [
+                  true
+               ],
+               s: [{
+                  n: 'ВызовИзБраузера',
+                  t: 'Логическое'
+               }]
+            },
             'ИмяМетода': null
          }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             var record = new Record({
                strategy: self.getStrategy(),
-               raw: res
-               //TODO: на БЛ приходит не тип идентификатор, а целое число
-               //keyField: self.getStrategy().getKey(res)
+               raw: res,
+               keyField: self.getStrategy().getKey(res)
             });
             def.callback(record);
          }, function (error) {
-            if (typeof(window) != 'undefined') {
-               console['log'](error);
-            }
-            throw new Error('Не удалось выпонить метод create');
+            $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
+            throw new Error('Не удалось выполнить метод create');
          });
          return def;
       },
@@ -131,7 +148,19 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       /**
        * Метод для {@link readMethodName чтения} записи её по идентификатору.
        * @param {Number} id Идентификатор записи.
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт js!SBIS3.CONTROLS.Record.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт SBIS3.CONTROLS.Record.
+       * @example
+       * <pre>
+       *     var dataSource = new SbisServiceSource({
+       *         service: {
+       *             name: 'Товар'
+       *         }
+       *     });
+       *     dataSource.read(1).addCallback(function(record) {
+       *         var key = record.getKey();
+       *         var name = record.get('Наименование');
+       *     });
+       * </pre>
        * @see readMethodName
        */
       read: function (id) {
@@ -142,15 +171,15 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             'ИмяМетода': 'Список'
          }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             var record = new Record({
-               'strategy': self.getStrategy(),
-               'raw': res
+               strategy: self.getStrategy(),
+               raw: res,
+               keyField: self.getStrategy().getKey(res),
+               isCreated: true
             });
             def.callback(record);
          }, function (error) {
-            if (typeof(window) != 'undefined') {
-               console['log'](error);
-            }
-            throw new Error('Не удалось выпонить метод read');
+            $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
+            throw new Error('Не удалось выполнить метод read');
          });
          return def;
       },
@@ -158,8 +187,22 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       /**
        * Вызов обновления записи на БЛ методом, указанным в опции {@link updateMethodName}.
        * @param (SBIS3.CONTROLS.Record) record Изменённая запись.
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
-       * В колбэке придёт Boolean - результат успешности выполнения операции.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт Boolean - результат успешности выполнения операции.
+       * @example
+       * <pre>
+       *     var dataSource = new SbisServiceSource({
+       *         service: {
+       *             name: 'Товар'
+       *         }
+       *     });
+       *     dataSource.read(1).addCallback(function(record) {
+       *         var raw = record.getRaw();
+       *         record.set('Наименование', 'Тест ' + (new Date()).toString());
+       *         dataSource.update(record).addCallback(function(success) {
+       *             var raw = record.getRaw();
+       *         });
+       *     });
+       * </pre>
        * @see updateMethodName
        */
       update: function (record) {
@@ -169,12 +212,16 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             rec = strategy.prepareRecordForUpdate(record);
 
          self._BL.call(self._options.updateMethodName, {'Запись': rec}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
+            if (!record.isCreated()) {
+               record.set(record.getKeyField(), res);
+               record.setCreated(true);
+            }
+            record.setChanged(false);
+
             def.callback(true);
          }, function (error) {
-            if (typeof(window) != 'undefined') {
-               console['log'](error);
-            }
-            throw new Error('Не удалось выпонить метод update');
+            $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
+            throw new Error('Не удалось выполнить метод update');
          });
 
          return def;
@@ -183,8 +230,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       /**
        * Вызов удаления записи из БЛ методом, указанным в опции {@link destroyMethodName}.
        * @param {Array | Number} id Идентификатор записи или массив идентификаторов.
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
-       * В колбэке придет Boolean - результат успешности выполнения операции.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт Boolean - результат успешности выполнения операции.
        * @see destroyMethodName
        */
       destroy: function (id) {
@@ -197,7 +243,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             if (typeof(window) != 'undefined') {
                console['log'](error);
             }
-            throw new Error('Не удалось выпонить метод destroy');
+            throw new Error('Не удалось выполнить метод destroy');
          });
 
          return def;
@@ -208,11 +254,23 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
        * @remark
        * Возможно применение фильтрации, сортировки и выбора определенного количества записей с заданной позиции.
        * @param {Object} filter Параметры фильтрации вида - {property1: value, property2: value}.
-       * @param {Array} sorting Параметры сортировки вида - [{property1: 'ASC'},{property2: 'DESC'}].
+       * @param {Array} sorting Параметры сортировки вида - [{property1: 'ASC'}, {property2: 'DESC'}].
        * @param {Number} offset Смещение начала выборки.
        * @param {Number} limit Количество возвращаемых записей.
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
-       * В колбэке придет js!SBIS3.CONTROLS.DataSet - набор отобранных элементов.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет SBIS3.CONTROLS.DataSet - набор отобранных элементов.
+       * @example
+       * <pre>
+       *     var dataSource = new SbisServiceSource({
+       *         service: {
+       *             name: 'Товар'
+       *         }
+       *     });
+       *     dataSource.query({
+       *         'Наименование': 'Процессор'
+       *     }).addCallback(function(dataSet) {
+       *         //Что-то делаем с dataSet
+       *     });
+       * </pre>
        * @see queryMethodName
        */
       query: function (filter, sorting, offset, limit) {
@@ -238,14 +296,49 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             });
             def.callback(DS);
          }, function (error) {
-            if (typeof(window) != 'undefined') {
-               console['log'](error);
-            }
-            throw new Error('Не удалось выпонить метод query');
+            $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
+            throw new Error('Не удалось выполнить метод query');
          });
 
          return def;
 
+      },
+      /**
+       * Метод перемещения записи к другому родителю и смены порядковых номеров
+       * @param {SBIS3.CONTROLS.Record} record - запись, которую необходимо перенести
+       * @param {String} hierField - имя колонки с иерархией
+       * @param {Number} parentKey - ключ нового родителя для записи
+       * @param {Object} orderDetails - детали смены порядковых номеров. Объект со свойствами after и before: после или перед какой записью нужно вставить перемещаемую.
+       */
+      move: function (record, hierField, parentKey, orderDetails) {
+         if(orderDetails){
+            return this._changeOrder(record, hierField, parentKey, orderDetails);
+         } else if(parentKey){
+            //сменить родителя
+            record.set(hierField, parentKey);
+            return this.update(record);
+         } else {
+            throw new Error('Не передано достаточно информации для перемещения');
+         }
+      },
+      _changeOrder: function(record, hierField, parentKey, orderDetails){
+         var self = this,
+            strategy = this.getStrategy(),
+            def = new $ws.proto.Deferred(),
+            params = strategy.prepareOrderParams(this._object, record, hierField, orderDetails),
+            suffix = orderDetails.after ? 'После' : 'До';
+         if(!this._orderBL){
+            this._orderBL = new $ws.proto.BLObject('ПорядковыйНомер');
+         }
+         self._orderBL.call('Вставить' + suffix, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
+            def.callback(true);
+         }, function (error) {
+            if (typeof(window) != 'undefined') {
+               console['log'](error);
+            }
+            throw new Error('Не удалось выполнить метод update');
+         });
+         return def;
       }
 
    });

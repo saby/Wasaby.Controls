@@ -23,14 +23,16 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
     * </component>
     * @public
     * @category Inputs
+    *
     * @ignoreOptions icon extendedTooltip independentContext contextRestriction isContainerInsideParent stateKey subcontrol
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment owner
     *
+    * @ignoreMethods activate activateFirstControl activateLastControl addPendingOperation changeControlTabIndex
     * @ignoreMethods applyEmptyState applyState findParent getAlignment getEventHandlers getEvents getExtendedTooltip
     * @ignoreMethods getId getLinkedContext getMinHeight getMinSize getMinWidth getOwner getOwnerId getParentByClass
     * @ignoreMethods getParentByName getParentByWindow getStateKey getTopParent getUserData hasEvent hasEventHandlers
     * @ignoreMethods isDestroyed isSubControl makeOwnerName once sendCommand setOwner setStateKey setUserData setValue
-    * @ignoreMethods subscribe unbind unsubscribe unsubscribeFrom
+    * @ignoreMethods subscribe unbind unsubscribe
     *
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
     * @ignoreEvents onBeforeShow onAfterShow onBeforeLoad onAfterLoad onBeforeControlsLoad onKeyPressed onResize
@@ -41,6 +43,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
       $protected: {
          _dotTplFn : dotTplFn,
          _checkBoxCaption: null,
+         _keysWeHandle: [$ws._const.key.space],
          _options: {
             /**
              * @cfg {Boolean} Наличие неопределённого состояния
@@ -66,19 +69,19 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
             this._options.checked = (this._options.checked === false || this._options.checked === true) ? this._options.checked : null;
          }
       },
-     /**
-      * Установить текст подписи флага.
-      * @param {String} captionTxt Текст подписи флага.
-      * @example
-      * Из массива names установить подписи каждому флагу.
-      * <pre>
-      *    //names - массив с названиями товаров
-      *    //flags - массив объектов-флагов
-      *    $ws.helpers.forEach(names, function(name, index) {
+      /**
+       * Установить текст подписи флага.
+       * @param {String} captionTxt Текст подписи флага.
+       * @example
+       * Из массива names установить подписи каждому флагу.
+       * <pre>
+       *    //names - массив с названиями товаров
+       *    //flags - массив объектов-флагов
+       *    $ws.helpers.forEach(names, function(name, index) {
       *       flags[index].setCaption(name);
       *    });
-      * </pre>
-      */
+       * </pre>
+       */
       setCaption: function(captionTxt){
          CheckBox.superclass.setCaption.call(this,captionTxt);
          if (captionTxt) {
@@ -87,6 +90,13 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
          else {
             this._checkBoxCaption.empty().addClass('ws-hidden');
          }
+      },
+
+      _keyboardHover: function(e) {
+         if (e.which === $ws._const.key.space) {
+            this.setChecked(!this.isChecked());
+         }
+         return false;
       },
 
       /**

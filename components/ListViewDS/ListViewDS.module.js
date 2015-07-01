@@ -7,13 +7,20 @@ define('js!SBIS3.CONTROLS.ListViewDS',
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.DSMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
+      'js!SBIS3.CONTROLS.Selectable',
+      'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.ItemActionsGroup',
       'html!SBIS3.CONTROLS.ListViewDS',
-      'js!SBIS3.CONTROLS.CommonHandlers'
+      'js!SBIS3.CONTROLS.CommonHandlers',
+      'js!SBIS3.CONTROLS.Pager',
+      'is!browser?html!SBIS3.CONTROLS.ListViewDS/resources/ListViewGroupBy'
    ],
-   function (CompoundControl, DSMixin, MultiSelectable, ItemActionsGroup, dotTplFn, CommonHandlers) {
+   function (CompoundControl, DSMixin, MultiSelectable, Selectable, DataBindMixin, ItemActionsGroup, dotTplFn, CommonHandlers, Pager, groupByTpl) {
 
       'use strict';
+
+      var
+         ITEMS_ACTIONS_HEIGHT = 20;
 
       /**
        * Контрол, отображающий внутри себя набор однотипных сущностей.
@@ -25,28 +32,27 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        * @control
        * @public
        * @demo SBIS3.CONTROLS.Demo.MyListViewDS
-       * @author Крайнов Дмитрий Олегович
        */
 
-      var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
-
-          /**
-           * @event onChangeHoveredItem При переводе курсора мыши на другую запись
-           * @remark
-           * Событие срабатывает при смене записи под курсором мыши.
-           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-           * @param {Object} hoveredItem Объект
-           * @param {Number|String} hoveredItem.key ключ элемента представления данных
-           * @param {jQuery|false} hoveredItem.container элемент представления данных
-           * @param {Object} hoveredItem.position координаты контейнера элемента
-           * @param {Number} hoveredItem.top отступ сверху
-           * @param {Number} hoveredItem.left отступ слева
-           * @param {Object} hoveredItem.size размеры контейнера элемента
-           * @param {Number} hoveredItem.height высота
-           * @param {Number} hoveredItem.width ширина
-           * @example
-           * <pre>
-           *     DataGrid.subscribe('onChangeHoveredItem', function(hoveredItem) {
+      var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, Selectable, DataBindMixin, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
+         _dotTplFn: dotTplFn,
+         /**
+          * @event onChangeHoveredItem При переводе курсора мыши на другую запись
+          * @remark
+          * Событие срабатывает при смене записи под курсором мыши.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Object} hoveredItem Объект
+          * @param {Number|String} hoveredItem.key ключ элемента представления данных
+          * @param {jQuery|false} hoveredItem.container элемент представления данных
+          * @param {Object} hoveredItem.position координаты контейнера элемента
+          * @param {Number} hoveredItem.top отступ сверху
+          * @param {Number} hoveredItem.left отступ слева
+          * @param {Object} hoveredItem.size размеры контейнера элемента
+          * @param {Number} hoveredItem.height высота
+          * @param {Number} hoveredItem.width ширина
+          * @example
+          * <pre>
+          *     DataGrid.subscribe('onChangeHoveredItem', function(hoveredItem) {
            *        var actions = DataGrid.getItemsActions(),
            *        instances = actions.getItemsInstances();
            *
@@ -57,27 +63,26 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            *           }
            *        }
            *     });
-           * </pre>
-           * @see itemsActions
-           * @see setItemsActions
-           * @see getItemsActions
-           */
+          * </pre>
+          * @see itemsActions
+          * @see setItemsActions
+          * @see getItemsActions
+          */
 
          $protected: {
-            _floatCheckBox : null,
-            _dotTplFn: dotTplFn,
+            _floatCheckBox: null,
             _dotItemTpl: null,
             _itemsContainer: null,
             _actsContainer: null,
-            _mouseOnItemActions: false,
             _hoveredItem: {
                target: null,
                key: null,
                position: null,
                size: null
             },
+            _keysWeHandle: [$ws._const.key.up, $ws._const.key.down],
             _itemActionsGroup: null,
-               _options: {
+            _options: {
                /**
                 * @faq Почему нет флажков при включенной опции {@link SBIS3.CONTROLS.ListViewDS#multiselect multiselect}?
                 * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
@@ -140,13 +145,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 *     </option>
                 * </pre>
                 * @see setItemsActions
-                */   
+                */
                itemsActions: [{
                   name: 'delete',
                   icon: 'sprite:icon-16 icon-Erase icon-error',
                   tooltip: 'Удалить',
                   isMainAction: true,
-                  onActivated: function(item) {
+                  onActivated: function (item) {
                      this.deleteRecords(item.data('id'));
                   }
                }],
@@ -194,33 +199,26 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 * @see isInfiniteScroll
                 * @see setInfiniteScroll
                 */
-               infiniteScroll: false
+               infiniteScroll: false,
+               ignoreLocalPageSize: false
             },
             _loadingIndicator: undefined,
-            _hasScrollMore : true,
+            _hasScrollMore: true,
             _infiniteScrollOffset: null,
             _allowInfiniteScroll: true,
             _scrollIndicatorHeight: 32,
             _isLoadBeforeScrollAppears : true,
-            _infiniteScrollContainer: null
+            _infiniteScrollContainer: [],
+            _pageChangeDeferred : undefined,
+            _pager : undefined,
+            _previousGroupBy : undefined
          },
 
          $constructor: function () {
             var self = this;
-            this._publish('onChangeHoveredItem');
-
-            this._container.mouseup(function (e) {
-               if (e.which == 1) {
-                  var $target = $(e.target),
-                      target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
-                  if (target.length) {
-                     var id = target.data('id');
-                     self._elemClickHandler(id, self._dataSet.getRecordByKey(id), e.target);
-                  }
-               }
-            });
+            this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
             this._container.mousemove(this._mouseMoveHandler.bind(this))
-                           .mouseleave(this._mouseLeaveHandler.bind(this));
+               .mouseleave(this._mouseLeaveHandler.bind(this));
             if (this.isInfiniteScroll()) {
                this._infiniteScrollContainer = this._container.closest('.controls-ListView__infiniteScroll');
                if (this._infiniteScrollContainer.length) {
@@ -234,38 +232,79 @@ define('js!SBIS3.CONTROLS.ListViewDS',
 
          init: function () {
             ListViewDS.superclass.init.call(this);
-            var self = this;
-            // запросим данные из источника
+            var localPageSize = $ws.helpers.getLocalStorageValue('ws-page-size');
+            this._options.pageSize = !this._options.ignoreLocalPageSize && localPageSize ? localPageSize : this._options.pageSize;
+            this.setGroupBy(this._options.groupBy, false);
             this.reload();
+         },
+         _keyboardHover: function (e) {
+            var items = $('.controls-ListView__item', this._container),
+               selectedKey = this.getSelectedKey(),
+               selectedItem = $('.controls-ListView__item__selected', this._container),
+               nextItem = (selectedKey) ? selectedItem.next('.controls-ListView__item') : items.eq(0),
+               previousItem = (selectedKey) ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
+
+            //навигация по стрелкам
+            if (e.which === $ws._const.key.up) {
+               previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
+            } else if (e.which === $ws._const.key.down) {
+               nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+            }
+
+            return false;
+         },
+         _checkTargetContainer: function (target) {
+            return this._options.showPaging && this._pager && $.contains(this._pager.getContainer()[0], target[0]);
+         },
+         _isViewElement: function (elem) {
+            return $.contains(this._getItemsContainer()[0], elem[0]);
+         },
+         _onClickHandler: function(e) {
+            ListViewDS.superclass._onClickHandler.apply(this, arguments);
+            var $target = $(e.target),
+                target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item'),
+                id;
+
+            if (target.length && this._isViewElement(target)) {
+               id = target.data('id');
+               this._elemClickHandler(id, this._dataSet.getRecordByKey(id), e.target);
+            }
+            if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGrid__th__checkBox')){
+               $target.hasClass('controls-DataGrid__th__checkBox__checked') ? this.setSelectedKeys([]) : this.setSelectedItemsAll();
+               $target.toggleClass('controls-DataGrid__th__checkBox__checked');
+            }            
          },
          /**
           * Обрабатывает перемещения мышки на элемент представления
           * @param e
           * @private
           */
-         _mouseMoveHandler: function(e) {
+         _mouseMoveHandler: function (e) {
             var $target = $(e.target),
+               containerCords,
+               targetCords,
                target,
                targetKey;
-            //Если увели мышку на оперции по ховеру, то делать ничего не надо
-            if(this._mouseOnItemActions) {
-               return;
-            }
-            //Если увели мышку с контейнера с элементами(например на шапку), нужно об этом посигналить
-            if($target.closest('.controls-DataGrid__thead').length) {
+
+
+            //TODO Переписать без костыльных проверок
+            if (this._checkTargetContainer($target)) {
                this._mouseLeaveHandler();
                return;
             }
             target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
-            if (target.length) {
+            if (target.length && this._isViewElement(target)) {
                targetKey = target.data('id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
+                  containerCords = this._container[0].getBoundingClientRect();
+                  targetCords = target[0].getBoundingClientRect();
+                  this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
                   this._hoveredItem = {
                      key: targetKey,
-                     container: target,
+                     container: target.addClass('controls-ListView__hoveredItem'),
                      position: {
-                        top: target[0].offsetTop,
-                        left: target[0].offsetLeft
+                        top: targetCords.top - containerCords.top,
+                        left: targetCords.left - containerCords.left
                      },
                      size: {
                         height: target[0].offsetHeight,
@@ -275,13 +314,30 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   this._notify('onChangeHoveredItem', this._hoveredItem);
                   this._onChangeHoveredItem(this._hoveredItem);
                }
+            } else if (!this._isHoverControl($target)) {
+               this._mouseLeaveHandler();
             }
+         },
+         /**
+          * Проверяет, относится ли переданный элемент,
+          * к контролам которые отображаются по ховеру.
+          * @param {jQuery} $target
+          * @returns {boolean}
+          * @private
+          */
+         _isHoverControl: function ($target) {
+            var itemActionsContainer = this._itemActionsGroup && this._itemActionsGroup.getContainer();
+            return itemActionsContainer &&
+               ( itemActionsContainer[0] === $target[0] ||
+               $.contains(itemActionsContainer[0], $target[0]) ||
+               this._itemActionsGroup.isItemActionsMenuVisible() );
          },
          /**
           * Обрабатывает уведение мышки с элемента представления
           * @private
           */
-         _mouseLeaveHandler: function() {
+         _mouseLeaveHandler: function () {
+            this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
             this._hoveredItem = {
                container: null,
                key: null,
@@ -295,20 +351,13 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * Обработчик на смену выделенного элемента представления
           * @private
           */
-         _onChangeHoveredItem: function(hoveredItem) {
-           if(this._options.itemsActions.length) {
-              if(hoveredItem.container) {
-                 this._showItemActions();
-              } else {
-                 //Если открыто меню опций, то скрывать опции не надо
-                 if(this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
-                    this._itemActionsGroup.hideItemActions();
-                 }
-              }
-           }
+         _onChangeHoveredItem: function (target) {
+            if (this._options.itemsActions.length) {
+               target.container ? this._showItemActions(target) : this._hideItemActions();
+            }
          },
 
-         /**        
+         /**
           * Установить что отображается при отсутствии записей.
           * @param html Содержимое блока.
           * @example
@@ -324,78 +373,93 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             return this._options.itemTemplate;
          },
 
-         _getItemsContainer : function() {
+         _getItemsContainer: function () {
             return $(".controls-ListView__itemsContainer", this._container.get(0))
          },
 
          /* +++++++++++++++++++++++++++ */
 
          _elemClickHandler: function (id, data, target) {
+            var $target = $(target),
+                elClickHandler = this._options.elemClickHandler;
+
+            this.setSelectedKey(id);
             if (this._options.multiselect) {
-               if ($(target).hasClass('controls-ListView__itemCheckBox')) {
-                  var key = $(target).closest('.controls-ListView__item').data('id');
-                  this.toggleItemsSelection([key]);
+               //TODO: оставить только js класс
+               if ($target.hasClass('js-controls-ListView__itemCheckBox') || $target.hasClass('controls-ListView__itemCheckBox')) {
+                  this.toggleItemsSelection([$target.closest('.controls-ListView__item').data('id')]);
                }
                else {
-                  if (this._options.elemClickHandler) {
-                     this._options.elemClickHandler.call(this, id, data, target);
-                  }
+                  this._notify('onItemClick', id, data, target);
+                  this._elemClickHandlerInternal(data, id, target);
+                  elClickHandler && elClickHandler.call(this, id, data, target);
                }
             }
             else {
-               this.setSelectedIndexes([id]);
-               if (this._options.elemClickHandler) {
-                  this._options.elemClickHandler.call(this, id, data, target);
-               }
+               this.setSelectedKeys([id]);
+               this._notify('onItemClick', id, data, target);
+               this._elemClickHandlerInternal(data, id, target);
+               elClickHandler && elClickHandler.call(this, id, data, target);
             }
          },
+
+         _elemClickHandlerInternal: function (data, id, target) {
+
+         },
+
 
          _getItemActionsContainer: function (id) {
             return $(".controls-ListView__item[data-id='" + id + "']", this._container.get(0));
          },
 
          _drawSelectedItems: function (idArray) {
-            $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
+            $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__multiSelected');
             for (var i = 0; i < idArray.length; i++) {
-               $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).addClass('controls-ListView__item__selected');
+               $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).addClass('controls-ListView__item__multiSelected');
             }
          },
-          /**
-           * Перезагружает набор записей представления данных с последующим обновлением отображения.
-           * @example
-           * <pre>
-           *    var btn = new Button({
+
+         _drawSelectedItem: function (id) {
+            $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
+            $(".controls-ListView__item[data-id='" + id + "']", this._container).addClass('controls-ListView__item__selected');
+         },
+         /**
+          * Перезагружает набор записей представления данных с последующим обновлением отображения.
+          * @example
+          * <pre>
+          *    var btn = new Button({
            *         element: "buttonReload",
            *         caption: 'reload offset: 450'
            *    }).subscribe('onActivated', function(event, id){
            *           //При нажатии на кнопку перезагрузим DataGrid  с 450ой записи
            *           DataGridBL.reload(DataGridBL._filter, DataGridBL._sorting, 450, DataGridBL._limit);
            *    });
-           * </pre>
-           */
-         reload: function(){
+          * </pre>
+          */
+         reload: function () {
             if (this.isInfiniteScroll()) {
-               this._loadingIndicator = undefined;
+               //this._loadingIndicator = undefined;
                this._hasScrollMore = true;
                this._infiniteScrollOffset = this._offset;
                //После релоада придется заново догружать данные до появлени скролла
                this._isLoadBeforeScrollAppears = true;
             }
+            this._previousGroupBy = undefined;
             ListViewDS.superclass.reload.apply(this, arguments);
          },
 
-          /**
-           * Метод установки/замены обработчика клика по строке.
-           * @param method Имя новой функции обработчика клика по строке.
-           * @example
-           * <pre>
-           *     var myElemClickHandler = function(id, data, target){
+         /**
+          * Метод установки/замены обработчика клика по строке.
+          * @param method Имя новой функции обработчика клика по строке.
+          * @example
+          * <pre>
+          *     var myElemClickHandler = function(id, data, target){
            *        console.log(id, data, target)
            *     }
-           *     dataGrid.setElemClickHandler(myElemClickHandler);
-           * </pre>
-           * @see elemClickHandler
-           */
+          *     dataGrid.setElemClickHandler(myElemClickHandler);
+          * </pre>
+          * @see elemClickHandler
+          */
          setElemClickHandler: function (method) {
             this._options.elemClickHandler = method;
          },
@@ -407,23 +471,33 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * Показывает оперцаии над записью для элемента
           * @private
           */
-         _showItemActions: function() {
+         _showItemActions: function () {
             //Создадим операции над записью, если их нет
             this.getItemsActions();
 
             //Если показывается меню, то не надо позиционировать операции над записью
-            if(this._itemActionsGroup.isItemActionsMenuVisible()) {
+            if (this._itemActionsGroup.isItemActionsMenuVisible()) {
                return;
             }
-
             this._itemActionsGroup.applyItemActions();
-            this._itemActionsGroup.showItemActions(this._hoveredItem);
+            this._itemActionsGroup.showItemActions(this._hoveredItem, this._getItemActionsPosition(this._hoveredItem));
+         },
+         _hideItemActions: function () {
+            if (this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
+               this._itemActionsGroup.hideItemActions();
+            }
+         },
+         _getItemActionsPosition: function (item) {
+            return {
+               top: item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
+               right: this._container[0].offsetWidth - (item.position.left + item.size.width)
+            };
          },
          /**
           * Создаёт операции над записью
           * @private
           */
-         _drawItemActions: function() {
+         _drawItemActions: function () {
             return new ItemActionsGroup({
                items: this._options.itemsActions,
                element: this._container.find('> .controls-ListView__itemActions-container'),
@@ -435,21 +509,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * Инициализирует операции над записью
           * @private
           */
-         _initItemActions: function() {
+         _initItemActions: function () {
             this._itemActionsGroup = this._drawItemActions();
-            this._itemActionsGroup
-               .getContainer()
-               .bind('mousemove mouseleave', this._itemActionsHoverHandler.bind(this))
-         },
-         /**
-          * Обрабатывает приход/уход мыши на операции строки
-          * Нужен чтобы нормально работал ховер
-          */
-         _itemActionsHoverHandler: function(e) {
-            this._mouseOnItemActions = e.type === 'mousemove';
-            if (!this._itemActionsGroup.isItemActionsMenuVisible()) {
-               this._itemActionsGroup.hoverImitation(e.type === 'mousemove');
-            }
          },
          /**
           * Метод получения операций над записью.
@@ -471,8 +532,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @see itemsActions
           * @see setItemActions
           */
-         getItemsActions: function() {
-            if(!this._itemActionsGroup && this._options.itemsActions.length) {
+         getItemsActions: function () {
+            if (!this._itemActionsGroup && this._options.itemsActions.length) {
                this._initItemActions();
             }
             return this._itemActionsGroup;
@@ -512,7 +573,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @see getItemsActions
           * @see getHoveredItem
           */
-         setItemsActions: function(items) {
+         setItemsActions: function (items) {
             this._options.itemsActions = items;
             this.getItemsActions().setItems(items);
          },
@@ -524,99 +585,96 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (this.isInfiniteScroll()) {
                this._loadBeforeScrollAppears();
             }
-            this._drawSelectedItems(this._options.selectedIndexes);
-         },
-         destroy: function() {
-            if (this.isInfiniteScroll()){
-               if (this._infiniteScrollContainer.length) {
-                  this._infiniteScrollContainer.unbind('.wsInfiniteScroll');
-               } else {
-                  $(window).unbind('.wsInfiniteScroll');
-               }
-            }
-            ListViewDS.superclass.destroy.call(this);
+            this._drawSelectedItems(this._options.selectedKeys);
+            this._drawSelectedItem(this._options.selectedKey);
          },
          //-----------------------------------infiniteScroll------------------------
          //TODO Сделать подгрузку вверх
          //TODO (?) избавиться от _allowInfiniteScroll - пусть все будет завязано на опцию infiniteScroll
-          /**
-           * Используется ли подгрузка по скроллу.
-           * @returns {Boolean} Возможные значения:
-           * <ol>
-           *    <li>true - используется подгрузка по скроллу;</li>
-           *    <li>false - не используется.</li>
-           * </ol>
-           * @example
-           * Переключим режим управления скроллом:
-           * <pre>
-           *     listView.setInfiniteScroll(!listView.isInfiniteScroll());
-           * </pre>
-           * @see infiniteScroll
-           * @see setInfiniteScroll
-           */
-         isInfiniteScroll : function(){
+         /**
+          * Используется ли подгрузка по скроллу.
+          * @returns {Boolean} Возможные значения:
+          * <ol>
+          *    <li>true - используется подгрузка по скроллу;</li>
+          *    <li>false - не используется.</li>
+          * </ol>
+          * @example
+          * Переключим режим управления скроллом:
+          * <pre>
+          *     listView.setInfiniteScroll(!listView.isInfiniteScroll());
+          * </pre>
+          * @see infiniteScroll
+          * @see setInfiniteScroll
+          */
+         isInfiniteScroll: function () {
             return this._options.infiniteScroll;
          },
          /**
           *  Общая проверка и загрузка данных для всех событий по скроллу
           */
-         _loadChecked: function(result){
+         _loadChecked: function (result) {
             if (result) {
                this._nextLoad();
             }
          },
-         _onWindowScroll: function(event){
+         _onWindowScroll: function (event) {
             this._loadChecked(this._isBottomOfPage());
          },
          //TODO Проверить, когда появятся контейнеры со скроллом. Возможно нужно смотреть не на offset
-         _onInfiniteContainerScroll: function(){
-            this._loadChecked(this._infiniteScrollContainer.scrollTop() + this._scrollIndicatorHeight >= this._loadingIndicator.offset().top );
+         _onInfiniteContainerScroll: function () {
+            this._loadChecked(this._infiniteScrollContainer.scrollTop() + this._scrollIndicatorHeight >= this._loadingIndicator.offset().top);
          },
 
-         _nextLoad: function(){
+         _nextLoad: function () {
             var self = this, records;
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (this._allowInfiniteScroll && this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._isLoading()) {
                this._addLoadingIndicator();
-               this._loader = this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset  + this._limit, this._limit).addCallback(function (dataSet) {
+               this._loader = this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset + this._limit, this._limit).addCallback(function (dataSet) {
                   self._loader = null;//_cancelLoading?
-                  //Если данные пришли, нарисуем
-                  if (dataSet.getCount()) {
-                     records = dataSet._getRecords();
-                     self._dataSet.merge(dataSet);
-                     self._drawItems(records);
-                  }
-                  if (self._hasNextPage(dataSet.getMetaData().more)){
+                  //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
+                  if (self._hasNextPage(dataSet.getMetaData().more)) {
                      self._infiniteScrollOffset += self._limit;
                   } else {
                      self._hasScrollMore = false;
                      self._removeLoadingIndicator();
                   }
-               }).addErrback(function(error){
+                  //Если данные пришли, нарисуем
+                  if (dataSet.getCount()) {
+                     records = dataSet._getRecords();
+                     self._dataSet.merge(dataSet);
+                     self._drawItems(records);
+                     self._dataLoadedCallback();
+                  }
+
+               }).addErrback(function (error) {
                   //Здесь при .cancel приходит ошибка вида DeferredCanceledError
                   return error;
                });
             }
          },
-         _isBottomOfPage : function() {
+         _isBottomOfPage: function () {
             var docBody = document.body,
                docElem = document.documentElement,
-               clientHeight = Math.min (docBody.clientHeight, docElem.clientHeight),
-               scrollTop = Math.max (docBody.scrollTop, docElem.scrollTop),
-               scrollHeight = Math.max (docBody.scrollHeight, docElem.scrollHeight);
+               clientHeight = Math.min(docBody.clientHeight, docElem.clientHeight),
+               scrollTop = Math.max(docBody.scrollTop, docElem.scrollTop),
+               scrollHeight = Math.max(docBody.scrollHeight, docElem.scrollHeight);
             return (clientHeight + scrollTop >= scrollHeight - this._scrollIndicatorHeight);//Учитываем отступ снизу на высоту картинки индикатора загрузки
          },
          _loadBeforeScrollAppears: function(){
-            var elem = this._infiniteScrollContainer.length ? this._infiniteScrollContainer.get(0) : $('body').get(0);
+            var elem = this._infiniteScrollContainer.length ? this._infiniteScrollContainer.get(0) : $('body').get(0),
+                  windowHeight = $(window).height();
             // Было: this._dataSet.getCount() <= parseInt(($(window).height() /  32 ) + 10 , 10
-            if (this._isLoadBeforeScrollAppears && !(elem.scrollHeight > $(window).height() + this._scrollIndicatorHeight)){
+            if (this._isLoadBeforeScrollAppears &&
+                  (!(elem.scrollHeight > windowHeight + this._scrollIndicatorHeight)) || //Если на странице появился скролл
+                  this._container.height() < windowHeight){ // или высота таблицы меньше высоты окна
                this._nextLoad();
             } else {
                this._isLoadBeforeScrollAppears = false;
             }
          },
-         _addLoadingIndicator: function(){
-            if (!this._loadingIndicator ) {
+         _addLoadingIndicator: function () {
+            if (!this._loadingIndicator) {
                this._loadingIndicator = this._container.find('.controls-ListView-scrollIndicator');
                this._scrollIndicatorHeight = this._loadingIndicator.height();
             }
@@ -626,8 +684,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * Удаляет индикатор загрузки
           * @private
           */
-         _removeLoadingIndicator: function(){
-            if( this._loadingIndicator && !this._loader){
+         _removeLoadingIndicator: function () {
+            if (this._loadingIndicator && !this._loader) {
                this._loadingIndicator.addClass('ws-hidden');
             }
          },
@@ -645,11 +703,15 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @see infiniteScroll
           * @see isInfiniteScroll
           */
-         setInfiniteScroll: function(allow, noLoad){
+         setInfiniteScroll: function (allow, noLoad) {
             this._allowInfiniteScroll = allow;
             if (allow && !noLoad) {
                this._nextLoad();
                return;
+            }
+            //НА саом деле если во время infiniteScroll произошла ошибка загрузки, я о ней не смогу узнать, но при выключении нужно убрать индикатор
+            if (!allow && this._loadingIndicator && this._loadingIndicator.is(':visible')){
+               this._cancelLoading();
             }
             this._removeLoadingIndicator();
          },
@@ -668,8 +730,146 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @see itemsActions
           * @see getItemActions
           */
-         getHoveredItem: function() {
-           return this._hoveredItem;
+         getHoveredItem: function () {
+            return this._hoveredItem;
+         },
+         _dataLoadedCallback: function () {
+            if (this._options.showPaging) {
+               this._processPaging();
+               this._updateOffset();
+            }
+         },
+         //------------------------Paging---------------------
+         _processPaging: function () {
+            if (!this._pager) {
+               var more = this._dataSet.getMetaData().more,
+                  hasNextPage = this._hasNextPage(more),
+                  pagingOptions = {
+                     recordsPerPage: this._options.pageSize || more,
+                     currentPage: 1,
+                     recordsCount: more,
+                     pagesLeftRight: 3,
+                     onlyLeftSide: typeof more === 'boolean', // (this._options.display.usePaging === 'parts')
+                     rightArrow: hasNextPage
+                  },
+                  self = this;
+
+               this._pager = new Pager({
+                  pageSize: this._options.pageSize,
+                  opener: this,
+                  ignoreLocalPageSize: this._options.ignoreLocalPageSize,
+                  element: this.getContainer().find('.controls-Pager-container'),
+                  allowChangeEnable: false, //Запрещаем менять состояние, т.к. он нужен активный всегда
+                  pagingOptions: pagingOptions,
+                  handlers: {
+                     'onPageChange': function (event, pageNum, deferred) {
+                        self._setPageSave(pageNum);
+                        self.setPage(pageNum - 1);
+                        self._pageChangeDeferred = deferred;
+                     }
+                  }
+               });
+            }
+            this._updatePaging();
+         },
+         /**
+          * Метод обработки интеграции с пейджингом
+          */
+         _updatePaging: function () {
+            var more = this._dataSet.getMetaData().more,
+               nextPage = this.isInfiniteScroll() ? this._hasScrollMore : this._hasNextPage(more),
+               numSelected = 0;
+            if (this._pager) {
+               //Если данных в папке нет, не рисуем Pager
+               this._pager.getContainer().toggleClass('ws-hidden', !this._dataSet.getCount());
+               var pageNum = this._pager.getPaging().getPage();
+               if (this._pageChangeDeferred) { // только когда меняли страницу
+                  this._pageChangeDeferred.callback([this.getPage() + 1, nextPage, nextPage]);//смотреть в DataSet мб ?
+                  this._pageChangeDeferred = undefined;
+               }
+               //Если на странице больше нет записей - то устанавливаем предыдущую (если это возможно)
+               if (this._dataSet.getCount() === 0 && pageNum > 1) {
+                  this._pager.getPaging().setPage(1); //чтобы не перезагружать поставим 1ую. было : pageNum - 1
+               }
+               this._pager.getPaging().update(this.getPage(this.isInfiniteScroll() ? this._infiniteScrollOffset + this._options.pageSize : this._offset) + 1, more, nextPage);
+               if (this._options.multiselect) {
+                  numSelected = this.getSelectedKeys().length;
+               }
+               this._pager.updateAmount(this._dataSet.getCount(), nextPage, numSelected);
+            }
+         },
+         /**
+          * Установить страницу по её номеру.
+          * @remark
+          * Метод установки номера страницы, с которой нужно открыть представление данных.
+          * Работает при использовании постраничной навигации.
+          * @param num Номер страницы.
+          * @example
+          * <pre>
+          *    if(dataGrid.getPage() > 0)
+          *       dataGrid.setPage(0);
+          * </pre>
+          * @see getPage
+          * @see paging
+          */
+         setPage: function (pageNumber, noLoad) {
+            pageNumber = parseInt(pageNumber, 10);
+            var offset = this._offset;
+            if (this._options.showPaging) {
+               this._offset = this._options.pageSize * pageNumber;
+               if (!noLoad && this._offset !== offset) {
+                  this.reload();
+               }
+            }
+         },
+
+         /**
+          * Получить номер текущей страницы.
+          * @remark
+          * Метод получения номера текущей страницы представления данных.
+          * Работает при использовании постраничной навигации.
+          * @example
+          * <pre>
+          *    if(dataGrid.getPage() > 0)
+          *       dataGrid.setPage(0);
+          * </pre>
+          * @see paging
+          * @see setPage
+          * @param {Number} [offset] - если передать, то номер страницы рассчитается от него
+          */
+         getPage: function (offset) {
+            var offset = offset || this._offset;
+            return Math.ceil(offset / this._options.pageSize);
+         },
+         _updateOffset: function () {
+            var more = this._dataSet.getMetaData().more,
+               nextPage = this._hasNextPage(more);
+            if (this.getPage() === -1) {
+               this._offset = more - this._options.pageSize;
+            }
+         },
+         //------------------------GroupBy---------------------
+         _groupByDefaultMethod: function (record) {
+            var curField = record.get(this._options.groupBy.field),
+               result = curField !== this._previousGroupBy;
+            this._previousGroupBy = curField;
+            return result;
+         },
+         _getGroupTpl: function () {
+            return this._options.groupBy.template || groupByTpl;
+         },
+         _groupByDefaultRender: function (item, container) {
+            return container;
+         },
+         destroy: function () {
+            if (this.isInfiniteScroll()) {
+               if (this._infiniteScrollContainer.length) {
+                  this._infiniteScrollContainer.unbind('.wsInfiniteScroll');
+               } else {
+                  $(window).unbind('.wsInfiniteScroll');
+               }
+            }
+            ListViewDS.superclass.destroy.call(this);
          }
       });
 

@@ -21,7 +21,6 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
        * @public
-       * @author Черёмушкин Илья
        */
 
       var ListView = CompoundControl.extend([CollectionMixin, MultiSelectable], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
@@ -109,7 +108,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _elemClickHandler : function(id, data) {
-            this.setSelectedIndexes([id]);
+            this.setSelectedKeys([id]);
             if (this._options.elemClickHandler) {
                var parent = this.getParent();
                this._options.elemClickHandler.call(this, id, data);
@@ -144,8 +143,8 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _drawSelectedItems : function(idArray) {
-            $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
-            $(".controls-ListView__item[data-id='" + idArray[0] + "']", this._container).addClass('controls-ListView__item__selected');
+            $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__multiSelected');
+            $(".controls-ListView__item[data-id='" + idArray[0] + "']", this._container).addClass('controls-ListView__item__multiSelected');
          },
 
          setElemClickHandler : function(method){

@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * Кнопка с выпадающим меню
     * @class SBIS3.CONTROLS.MenuButton
     * @extends SBIS3.CONTROLS.Button
-	* @demo SBIS3.CONTROLS.Demo.MyMenuButton Пример кнопки с выпадающим меню
+    * @demo SBIS3.CONTROLS.Demo.MyMenuButton Пример кнопки с выпадающим меню
     * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuButton'>
@@ -26,9 +26,22 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * @category Buttons
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.CollectionMixin
+    * @mixes SBIS3.CONTROLS.TreeMixin
+    *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
     * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment
+    *
+    * @ignoreMethods activate activateFirstControl activateLastControl addPendingOperation changeControlTabIndex
+    * @ignoreMethods applyEmptyState applyState findParent getAlignment getEventHandlers getEvents getExtendedTooltip
+    * @ignoreMethods getId getLinkedContext getMinHeight getMinSize getMinWidth getOwner getOwnerId getParentByClass
+    * @ignoreMethods getParentByName getParentByWindow getStateKey getTopParent getUserData hasEvent hasEventHandlers
+    * @ignoreMethods isDestroyed isSubControl makeOwnerName once sendCommand setOwner setStateKey setUserData setValue
+    * @ignoreMethods subscribe unbind unsubscribe
+    *
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
+    * @ignoreEvents onBeforeShow onAfterShow onBeforeLoad onAfterLoad onBeforeControlsLoad onKeyPressed onResize
+    * @ignoreEvents onFocusIn onFocusOut onReady onDragIn onDragStart onDragStop onDragMove onDragOut
     */
 
    var MenuButton = Button.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
@@ -59,7 +72,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
 
       destroy: function(){
          MenuButton.superclass.destroy.call(this);
-         this._header.remove();
+         if(this._header)
+            this._header.remove();
       },
 
       _initMenu: function(){
@@ -76,7 +90,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
 
       _onAlignmentChangeHandler: function(alignment){
          var right = alignment.horizontalAlign.side == 'right',
-            bottom = alignment.verticalAlign.side == 'bottom';
+             bottom = alignment.verticalAlign.side == 'bottom';
          this._header.toggleClass('controls-MenuButton__header-revert-horizontal', right).toggleClass('controls-MenuButton__header-revert-vertical', bottom);
          if (right){
             this._header.css('left', this._container.offset().left - 16);
@@ -94,11 +108,18 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          }
       },
 
+      //TODO в 3.7.2 ждать починки от Вити
+      setEnabled: function (enabled) {
+         MenuButton.superclass.setEnabled.apply(this, arguments);
+         if (this._picker) {
+            this._picker.setEnabled(enabled);
+         }
+      },
       _clickHandler: function(){
          if (this.getItems().getItemsCount() > 1) {
             this._container.addClass('controls-Checked__checked');
-            this._header.toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
             this.togglePicker();
+            this._header.toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
          } else {
             if (this.getItems().getItemsCount() == 1) {
                var id = this.getItems().getKey(this.getItems().getNextItem());
@@ -110,19 +131,9 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
        * Скрывает/показывает меню у кнопки
        */
       togglePicker: function(){
-          if (!this._header) {
-             this._header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
-                                  <i class="controls-MenuButton__headerLeft"></i>\
-                                  <i class="controls-MenuButton__headerCenter"></i>\
-                                  <i class="controls-MenuButton__headerRight"></i>\
-                               </span>');
-             $('.controls-MenuButton__headerCenter', this._header).width(this._container.outerWidth() - 23);
-             this._header.css({
-                width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
-                height: this._container.outerHeight()
-             });
-             $('body').append(this._header);
-          }
+         if (!this._header) {
+            this._createHeader();
+         }
          MenuButton.superclass.togglePicker.call(this);
          this._header.css({
             left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 16,
@@ -131,11 +142,30 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          });
       },
 
+      _createHeader: function(){
+         this._header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
+                                  <i class="controls-MenuButton__headerLeft"></i>\
+                                  <i class="controls-MenuButton__headerCenter"></i>\
+                                  <i class="controls-MenuButton__headerRight"></i>\
+                               </span>');
+         $('.controls-MenuButton__headerCenter', this._header).width(this._container.outerWidth() - 23);
+         this._header.css({
+            width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
+            height: this._container.outerHeight()
+         });
+         $('body').append(this._header);
+      },
+
       _setWidth: function(){
          var self = this;
          this._picker.getContainer().css({
             'min-width': self._container.outerWidth() - this._border + 18 //ширина выступающей части обводки
          });
+      },
+
+      _initializePicker: function(){
+         MenuButton.superclass._initializePicker.call(this);
+         this._setWidth();
       },
 
       _setPickerContent: function(){

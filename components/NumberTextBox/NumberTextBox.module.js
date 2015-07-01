@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     * <component data-component='SBIS3.CONTROLS.NumberTextBox'>
     *     <option name="text">0</option>
     * </component>
+    *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol textTransform
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
     *
@@ -33,7 +34,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     * @ignoreMethods getId getLinkedContext getMinHeight getMinSize getMinWidth getOwner getOwnerId getParentByClass
     * @ignoreMethods getParentByName getParentByWindow getStateKey getTopParent getUserData hasEvent hasEventHandlers
     * @ignoreMethods isDestroyed isSubControl makeOwnerName once sendCommand setOwner setStateKey setUserData setValue
-    * @ignoreMethods subscribe unbind unsubscribe unsubscribeFrom
+    * @ignoreMethods subscribe unbind unsubscribe
     *
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
     * @ignoreEvents onReady
@@ -284,7 +285,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
                (this._options.delimiters && this._getIntegersCount(currentVal) % 3 == 0) ? newCaretPosition+=2 : newCaretPosition++;
                currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);
             } else {
-               currentVal = currentVal.substr(0, b - 1) + symbol + currentVal.substr(e);
+               currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);
                newCaretPosition++;
             }
          } else

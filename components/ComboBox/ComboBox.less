@@ -1,5 +1,6 @@
 .controls-ComboBox {
   cursor: @combo-box-cursor;
+  line-height: normal;
 
   .controls-TextBox__fieldWrapper {
     position: relative;
@@ -12,6 +13,9 @@
 
       &.controls-ComboBox__fieldNotEditable {
         display: none;
+      }
+      &.controls-ComboBox__fieldNotEditable__placeholder {
+         color: @text-box-placeholder-color;
       }
     }
   }

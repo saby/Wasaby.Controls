@@ -13,8 +13,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
    function(ButtonGroupBaseDS, IconButton, Link, ContextMenu, dotTplFn) {
 
       'use strict';
-      var
-         ITEMS_ACTIONS_HEIGHT = 20;
 
       var ItemActionsGroup = ButtonGroupBaseDS.extend( /** @lends SBIS3.CONTROLS.ItemActionsGroup.prototype */ {
          $protected: {
@@ -26,10 +24,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             _itemActionsHiddenButton: [],
             _activeItem: undefined,
             _options: {
-               /**
-                * Количество записей, которые можно показать не в меню
-                */
-               itemActionsOverflow: 3
+
             }
          },
 
@@ -42,21 +37,12 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          applyItemActions: function() {
             var onlyMain = true,
-                itemsInstances = this.getItemsInstances(),
-                overFlow = false,
-                show = false,
-                count = 0;
+               itemsInstances = this.getItemsInstances(),
+               show = false;
 
             for(var i in itemsInstances) {
                if(itemsInstances.hasOwnProperty(i)) {
-                  onlyMain &= this._itemActionsButtons[i]['isMainAction'];
-                  if(itemsInstances[i].isVisible() && !overFlow) {
-                     count++;
-                     overFlow = count > this._options.itemActionsOverflow;
-                  }
-                  //Если кнопок больше чем itemActionsOverflow или кнопка не главная, то нужно их скрыть
-                  //и показать в меню
-                  show = !(overFlow || !this._itemActionsButtons[i]['isMainAction']);
+                  show = this._itemActionsButtons[i]['isMainAction'] && itemsInstances[i].isVisible();
                   //Если видимость кнопки не изменилась, то делать ничего не будем
                   if(this._itemActionsButtons[i]['isVisible'] !== show) {
                      itemsInstances[i].getContainer()[0].style.display = show ? 'inline-block' : 'none';
@@ -64,7 +50,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   }
                }
             }
-            this._itemActionsMenuButton[0].style.display = (!onlyMain || overFlow ? 'inline-block' : 'none');
+            this._itemActionsMenuButton[0].style.display = (!onlyMain ? 'inline-block' : 'none');
          },
          /**
           * Создаёт меню для операций над записью
@@ -109,22 +95,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             });
          },
          /**
-          * Иммитирует ховер, когда мышку увели на операции над записью
-          * @param show
-          */
-         hoverImitation: function(show) {
-            this._activeItem[show ? 'addClass' : 'removeClass']('controls-ItemActions__activeItem');
-         },
-         /**
-          * Задаёт количество записей, которые показываются на строке(не прячутся в меню)
-          * @param {Number} amount
-          */
-         setItemsActionsOverFlow: function(amount) {
-            if(typeof amount === 'number') {
-               this._options.itemActionsOverflow = amount;
-            }
-         },
-         /**
           * Показывает меню для операций над записью
           */
          showItemActionsMenu: function() {
@@ -152,9 +122,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          /**
           * Показывает операции над записью
           */
-         showItemActions: function(hoveredItem) {
+         showItemActions: function(hoveredItem, position) {
             this._activeItem = hoveredItem.container;
-            this._container[0].style.top = hoveredItem.position.top + ((hoveredItem.size.height > ITEMS_ACTIONS_HEIGHT) ? hoveredItem.size.height - ITEMS_ACTIONS_HEIGHT : 0 ) + 'px';
+            this._container[0].style.top = position.top + 'px';
+            this._container[0].style.right = position.right + 'px';
             this._container[0].style.display = 'block';
          },
          /**
@@ -188,7 +159,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          _itemActivatedHandler: function(item) {
             this.hideItemActions();
-            this._itemActionsButtons[item]['handler'].call(this.getParent(), this._activeItem);
+            this._itemActionsButtons[item]['handler'].apply(this.getParent(), [this._activeItem, this._activeItem.data('id')]);
          },
 
          _getItemTemplate : function(item) {

@@ -9,12 +9,15 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CON
 
    /**
     * Контрол переключатель. Переключатель - это особый контрол, который наследуется прямо от базового класса.
-    * Во-первых, это не кнопка и не чекбокс, т.к. переключатель имеет два текстовых обозначения, и два различных состояния (кнопка - только caption).
-    * Во-вторых это не группа радиобаттонов, т.к. в группе динамический набор сущностей, количеством и содержимым которых можно управлять, а в переключателе всегда две, строго определенных.
+    * Во-первых, это не кнопка и не чекбокс, т.к. переключатель имеет два текстовых обозначения, и два различных
+    * состояния (кнопка - только caption).
+    * Во-вторых это не группа радиобаттонов, т.к. в группе динамический набор сущностей, количеством и содержимым
+    * которых можно управлять, а в переключателе всегда две, строго определенных.
     * Данный класс поведенческий.
     * @class SBIS3.CONTROLS.SwitcherBase
     * @extends $ws.proto.Control
     * @public
+    *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner stateKey
     * @ignoreOptions subcontrol verticalAlignment parent

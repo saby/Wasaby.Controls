@@ -35,12 +35,16 @@
     right: @menu-link-arrow-right-offset;
     top: @menu-link-arrow-top-offset;
     background: @menu-link-arrow-bg;
+    border-width: @menu-link-border-width;
+    border-style: @menu-link-border-style;
+    border-color: @menu-link-border-color
   }
 }
 
 // Menu
 .controls-MenuLink__Menu {
   margin-left: @menu-link-menu-left-margin;
+  margin-bottom: @menu-link-menu-margin-bottom;//TODO margin-top игнорирует, поэтому задаю bottom (считается для top)
   background: @menu-link-menu-bg;
 
   .controls-MenuLink__header {

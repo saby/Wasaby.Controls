@@ -8,7 +8,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    'js!SBIS3.CONTROLS.CollectionMixin',
    /*TODO это должна подключать не панель а прекладники, потом убрать*/
    'js!SBIS3.CONTROLS.OperationDelete',
-   'js!SBIS3.CONTROLS.OperationsMark'
+   'js!SBIS3.CONTROLS.OperationsMark',
+   'js!SBIS3.CONTROLS.OperationMove'
 ], function(Control, dotTplFn, PickerMixin, CollectionMixin) {
    /**
     * SBIS3.CONTROLS.OperationsPanel
@@ -16,7 +17,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * @extends $ws.proto.CompoundControl
     * @control
     * @public
-    * @author Сухоручкин Андрей
     * @ignoreOptions contextRestriction independentContext
     * @initial
     * <component data-component='SBIS3.CONTROLS.OperationsPanel' style="height: 30px;">
@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
         * @see getLinkedView
         */
       setLinkedView: function(linkedView) {
-         if ($ws.helpers.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
+         if (linkedView && $ws.helpers.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
             this._reassignView(linkedView);
             this.togglePicker();
             this._setMode();
@@ -172,7 +172,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          this._blocks.wrapper.toggleClass('controls__operations-panel__mass-mode',  !currentMode).toggleClass('controls__operations-panel__selection-mode',  currentMode);
       },
       isHaveSelectedItems: function() {
-         return !!this.getLinkedView().getSelectedItems().length;
+         return !!this.getLinkedView().getSelectedKeys().length;
       },
       _setVisibleMarkBlock: function() {
          this._blocks.markOperations.toggleClass('ws-hidden', !this._options.linkedView._options.multiselect);
@@ -184,7 +184,12 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       _setPickerConfig: function () {
          return {
             corner: 'tl',
-            target: this
+            horizontalAlign: {
+               side: 'left'
+            },
+            verticalAlign: {
+               side: 'top'
+            }
          };
       },
       _getTargetContainer: function(item) {

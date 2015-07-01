@@ -16,8 +16,6 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       },
 
       $constructor: function() {
-         //TODO возможно кнопка печати может стать кнопкой меню, в зависимости от набора отчетов на печать
-         this._view = this.getParent().getLinkedView();
       },
       /**
        * Can be implemented
@@ -26,7 +24,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          PrintUnloadBase.superclass._clickHandler.apply(this, arguments);
       },
       _prepareOperation: function(title){
-         var selectedItems = this._view.getSelectedItems(),
+         var selectedItems = this._getView().getSelectedKeys(),
                selectedItemsObj = {},
                ds;
          if (!selectedItems.length) {
@@ -35,18 +33,21 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
             for (var i = 0, len = selectedItems.length; i < len; i++){
                selectedItemsObj[selectedItems[i]] = true;
             }
-            ds = this._view._dataSet.filter(function(item){
+            ds = this._getView()._dataSet.filter(function(item){
                return selectedItemsObj[item.getKey()];
             });
             this._applyOperation(ds);
          }
       },
+      _getView: function(){
+         return this._options.linkedView;
+      },
       _processMassOperations:function(title){
-         var numOfRecords = this._view._dataSet.getCount(),
+         var numOfRecords = this._getView()._dataSet.getCount(),
             num = 0,
             self = this,
-            ds = this._view._dataSet;
-         if (this._view._hasNextPage(this._view._dataSet.getMetaData().more)) {
+            ds = this._getView()._dataSet;
+         if (this._getView()._hasNextPage(this._getView()._dataSet.getMetaData().more)) {
             //Показать диалог выбора записей
             new Dialog ({
                opener : this,
@@ -55,7 +56,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
                resizable: false,
                handlers: {
                   onBeforeShow: function(){
-                     //this.getLinkedContext().setValue('NumOfRecords', self._view._dataSet.getCount()); Хочется, чтобы было так
+                     //this.getLinkedContext().setValue('NumOfRecords', self._getView()._dataSet.getCount()); Хочется, чтобы было так
                      //TODO Но пришлось сделать так:
                      this.getChildControlByName('controls-MassAmountSelector').getContext().setValue('NumOfRecords', numOfRecords);
                   },
@@ -63,7 +64,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
                      if(selectedNumRecords > numOfRecords){
                         $ws.helpers.question('Операция займет продолжительное время. Провести операцию?', {}, self).addCallback(function(answer){
                            if (answer) {
-                              self._view._dataSource.query(self._view._filter, self._view._sorting, 0, selectedNumRecords).addCallback(function (dataSet) {
+                              self._getView()._dataSource.query(self._getView()._filter, self._getView()._sorting, 0, selectedNumRecords).addCallback(function (dataSet) {
                                  self._applyOperation(dataSet);
                               });
                            }
@@ -73,7 +74,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
                            num = 0;
                            //TODO здесь должен быть не filter, а что-то типа .range - получение первых N записей
                            //Выберем selectedNumRecords записей из dataSet
-                           ds = self._view._dataSet.filter(function(){
+                           ds = self._getView()._dataSet.filter(function(){
                               return num++ < selectedNumRecords;
                            });
                         }
@@ -89,8 +90,8 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
 
       },
       _applyOperation : function(dataSet){
-         //Скроем панель с массовыми операциями
-         this.getTopParent().hidePicker();
+         //Снимем выделение
+         this._getView().removeItemsSelectionAll();
          this.applyOperation(dataSet);
       },
       /**

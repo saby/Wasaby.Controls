@@ -6,7 +6,6 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
 
    /**
     * Интерфейс предназначен для унификации работы с исходными данными датасорсов
-    * @author Мануйлов Андрей
     * @public
     */
 
@@ -64,6 +63,10 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
         */
       getMetaData: function(data) {
          return {};
+      },
+
+      getParentKey: function (rawKey) {
+         /*Method must be implemented*/
       },
 
       getEmptyRawData: function () {

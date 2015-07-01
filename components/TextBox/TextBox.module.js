@@ -26,7 +26,8 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyTextBox
     * @category Inputs
-    * @ignoreOptions independentContext contextRestriction extendedTooltip
+    *
+    * @ignoreOptions independentContext contextRestriction extendedTooltip className
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
     * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment
     *
@@ -34,7 +35,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
     * @ignoreMethods getId getLinkedContext getMinHeight getMinSize getMinWidth getOwner getOwnerId getParentByClass
     * @ignoreMethods getParentByName getParentByWindow getStateKey getTopParent getUserData hasEvent hasEventHandlers
     * @ignoreMethods isDestroyed isSubControl makeOwnerName once sendCommand setOwner setStateKey setUserData setValue
-    * @ignoreMethods subscribe unbind unsubscribe unsubscribeFrom
+    * @ignoreMethods subscribe unbind unsubscribe getClassName setClassName
     *
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
     * @ignoreEvents onReady
@@ -63,6 +64,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             textTransform: 'none',
             /**
              * @cfg {Boolean} Выделять или нет текст в поле при получении фокуса
+             * @remark
              * Возможные значения при получении полем фокуса:
              * <ul>
              *    <li>true - выделять текст;</li>
@@ -76,6 +78,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             selectOnClick: false,
             /**
              * @cfg {String} Текст подсказки внутри поля ввода
+             * @remark
              * Данный текст отображается внутри поля до момента получения фокуса.
              * @example
              * <pre>
@@ -86,7 +89,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             placeholder: '',
             /**
              * @cfg {String} Фильтр ввода
-             * <wiTag group="Управление">
+             * @remark
              * Каждый вводимый символ будет проверяться на соответсвие указанному в этой опции регулярному выражению.
              * Несоответсвующие символы невозможно напечатать.
              * @example
@@ -227,6 +230,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
        /**
         * Переводит фокус на контрол.
         * @param active Признак наличия фокуса.
+        * @remark
         * Возможные значения:
         * <ol>
         *    <li>true - перевести фокус на контрол. Если фокус ранее находился на другом элементе, то произойдёт событие {@link $ws.proto.Control#onFocusIn}.

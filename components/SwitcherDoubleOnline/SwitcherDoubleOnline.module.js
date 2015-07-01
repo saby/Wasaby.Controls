@@ -21,6 +21,7 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
     * @control
     * @demo SBIS3.CONTROLS.Demo.MySwitcherDoubleOnline
     * @public
+    *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner stateKey
     * @ignoreOptions subcontrol verticalAlignment parent

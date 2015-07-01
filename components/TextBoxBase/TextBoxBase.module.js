@@ -9,8 +9,17 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @public
     *
-    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth extendedTooltip horizontalAlignment
-    * @ignoreOptions isContainerInsideParent owner stateKey subcontrol validators verticalAlignment
+    * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className
+    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
+    * @ignoreOptions extendedTooltip
+    *
+    * @ignoreMethods applyEmptyState applyState getClassName getEventHandlers getEvents getExtendedTooltip getOwnerId
+    * @ignoreMethods getLinkedContext getOwner getStateKey getUserData hasEvent hasEventHandlers makeOwnerName once
+    * @ignoreMethods sendCommand setClassName setExtendedTooltip setOpener setStateKey setUserData subscribe unsubscribe
+    * @ignoreMethods subscribeOnceTo unbind
+    *
+    * @ignoreEvents onChange onClick onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onStateChange
+    * @ignoreEvents onTooltipContentRequest
     */
 
    var TextBoxBase = Control.Control.extend([FormWidgetMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.TextBoxBase.prototype*/ {
@@ -82,6 +91,10 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
       $constructor: function() {
          this._publish('onTextChange');
          this._options.text = (this._options.text) ? this._options.text.toString() : '';
+         this.subscribe('onTextChange', function () {
+            //снимаем выделение валидатора на время ввода
+            this.clearMark();
+         });
       },
 
       /**
@@ -152,6 +165,16 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
 
       _drawText: function() {
 
+      },
+
+      getValue : function() {
+         $ws.single.ioc.resolve('ILogger').log('getValue()', 'getValue is deprecated. Use getText()');
+         return this.getText();
+      },
+
+      setValue : function(txt) {
+         $ws.single.ioc.resolve('ILogger').log('setValue()', 'setValue is deprecated. Use setText()');
+         this.setText(txt)
       }
    });
 

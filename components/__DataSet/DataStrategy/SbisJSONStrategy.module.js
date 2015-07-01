@@ -6,7 +6,6 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
     /**
      *
      * Позволяет работать с массивом объектов на бизнес-логике.
-     * @author Мануйлов Андрей
      * @public
      */
 
@@ -23,11 +22,15 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
          var s = data.s,
             index;
          for (var i = 0, l = s.length; i < l; i++) {
-            if (s[i]['t'] == 'Идентификатор') {
+            if (s[i]['n'][0] == '@') {
                index = i;
                break;
             }
          }
+         if (index === undefined) {
+            index = 0;
+         }
+         
          return s[index]['n'];
       },
 
@@ -168,6 +171,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
          */
       getMetaData: function (data) {
          return {
+            results : data.r,
             more: data.n
          }
       },
@@ -176,6 +180,11 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
         * @param filter
         * @returns {{d: Array, s: Array}}
         */
+      getParentKey: function (record, rawKey) {
+         // так как c БЛ приходит массив
+         return record.get(rawKey)[0];
+      },
+
       prepareFilterParam: function (filter) {
          // настройка объекта фильтрации для отправки на БЛ
          var filterParam = {
@@ -252,7 +261,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
                'd': [
                   numPage,
                   limit,
-                  true
+                  offset >= 0 //Если offset отрицательный, то грузится последняя страница
                ],
                's': [
                   {'n': 'Страница', 't': 'Число целое'},
@@ -283,7 +292,22 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
 
       getEmptyRawData: function () {
          return {d: [], s: []};
-      }
+      },
+
+       preprareOrderParams: function(object, record, hierField, orderDetails){
+          var params = {
+             'Объект': object,
+             'ИдО': record.getKey(),
+             'ПорядковыйНомер': orderDetails.column || 'ПорНомер',
+             'Иерархия': hierField
+          };
+          if(orderDetails.after){
+             params['ИдОПосле'] = orderDetails.after;
+          } else {
+             params['ИдОДо'] = orderDetails.before;
+          }
+          return params;
+       }
 
    });
 

@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора.
-    * По умолчанию позволяет вручную вводить значение.
+    * По умолчанию позволяет {@link editable вручную вводить значение}.
     * @class SBIS3.CONTROLS.ComboBox
     * @extends SBIS3.CONTROLS.TextBox
     * @control
@@ -36,7 +36,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.Selectable
-    * @ignoreOptions independentContext contextRestriction extendedTooltip
     */
 
    var ComboBox = TextBox.extend([PickerMixin, DSMixin, Selectable, DataBindMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
@@ -49,8 +48,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       /**
        * @cfg {ItemsComboBox[]} Набор исходных данных, по которому строится отображение
        * @name SBIS3.CONTROLS.ComboBox#items
+       * @remark
+       * !Важно: данные для выпадающего списка можно задать либо в этой опции,
+       * либо через источник данных методом {@link setDataSource}.
        * @example
-       * <pre>
+       * <pre class="brush:xml">
        *     <options name="items" type="array">
        *        <options>
        *            <option name="key">1</option>
@@ -61,10 +63,17 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        *            <option name="title">Пункт2</option>
        *         </options>
        *      </options>
+       *      <!--необходимо указать какое из наших полей является ключевым-->
+       *      <option name="keyField">key</option>
        * </pre>
+       * @see keyField
+       * @see displayField
+       * @see setDataSource
+       * @see getDataSource
        */
 
       $protected: {
+         _keysWeHandle: [$ws._const.key.up, $ws._const.key.down],
          _options: {
             /**
              * @cfg {String} Шаблон отображения каждого элемента коллекции
@@ -78,18 +87,25 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              *         </div>
              *     </option>
              * </pre>
-             * @TextMultiline
+             * @items
              */
             itemTemplate: '',
             afterFieldWrapper: arrowTpl,
             /**
              * @cfg {Boolean} Возможность ручного ввода текста
+             * @remark
+             * При включённой опции в случае отсутствия среди пунктов выпадающего списка нужного контрол позволяет
+             * задать своё значение вводом с клавиатуры.
              * @example
              * <pre>
              *     <option name="editable">false</option>
              * </pre>
+             * @see items
              * @see isEditable
              * @see setEditable
+             * @see textTransform
+             * @see inputRegExp
+             * @see maxLength
              */
             editable: true,
             /**
@@ -113,11 +129,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._options.displayField = 'title';
          }
 
-         if (this._options.selectedIndex) {
-            this._drawSelectedItem(this._options.selectedIndex);
-         } else {
+         this._container.keyup(function(e) {
+            e.stopPropagation();
+            return false;
+         });
+         if (this._options.selectedKey) {
+            this._drawSelectedItem(this._options.selectedKey); } else {
             /*TODO следующая строчка должна быть в Selector*/
-            this._options.selectedIndex = null;
+            this._options.selectedKey = null;
             if (this._options.text) {
                this._setKeyByText();
             }
@@ -133,10 +152,32 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          })
       },
 
+      _keyboardHover: function(e) {
+        var items = $('.controls-ListView__item', this._container),
+            selectedKey = this.getSelectedKey(),
+            selectedItem = $('.controls-ComboBox__itemRow__selected', this._picker._c),
+            nextItem = (selectedKey) ? selectedItem.next('.controls-ListView__item') : items.eq(0),
+            previousItem = (selectedKey) ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
+            
+            //навигация по стрелкам
+           if (e.which === $ws._const.key.up) {
+             previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
+           } else if (e.which === $ws._const.key.down) {
+             nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+           }
+
+           return false;
+      },
+
       setText: function (text) {
          ComboBox.superclass.setText.call(this, text);
-         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text);
+         this._drawNotEditablePlaceholder(text);
+         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder);
          this._setKeyByText();
+      },
+
+      _drawNotEditablePlaceholder: function (text) {
+         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).toggleClass('controls-ComboBox__fieldNotEditable__placeholder', !text);
       },
 
       _drawSelectedItem: function (key) {
@@ -158,11 +199,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   var newText = item.get(self._options.displayField);
                   if (newText != self._options.text) {
                      ComboBox.superclass.setText.call(self, newText);
+                     self._drawNotEditablePlaceholder(newText);
                      $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(newText);
                   }
                }
                else {
                   ComboBox.superclass.setText.call(self, '');
+                  self._drawNotEditablePlaceholder('');
                   $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text('');
                }
                if (self._picker) {
@@ -183,11 +226,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawItemsCallback : function() {
-         this._drawSelectedItem(this._options.selectedIndex);
+         this._drawSelectedItem(this._options.selectedKey);
       },
 
-      _addItemClasses : function(container, key) {
-         ComboBox.superclass._addItemClasses.call(this, container, key);
+      _addItemAttributes : function(container, item) {
+         ComboBox.superclass._addItemAttributes.call(this, container, item);
          container.addClass('controls-ComboBox__itemRow').addClass('js-controls-ComboBox__itemRow');
       },
 
@@ -210,9 +253,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._picker.getContainer().mouseup(function (e) {
             var row = $(e.target).closest('.js-controls-ComboBox__itemRow');
             if (row.length) {
-               self.setSelectedIndex($(row).attr('data-id'));
+               self.setSelectedKey($(row).attr('data-id'));
                self.hidePicker();
             }
+            e.stopPropagation();
          });
          //TODO: кажется неочевидное место, возможно как то автоматизировать
          this._picker.getContainer().addClass('controls-ComboBox__picker');
@@ -251,7 +295,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          /*описываем здесь поведение стрелок вверх и вниз*/
          /*
          var self = this,
-            current = self.getSelectedIndex();
+            current = self.getSelectedKey();
          if (e.which == 40 || e.which == 38) {
             e.preventDefault();
          }
@@ -263,13 +307,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             newItem = self.getItems().getPreviousItem(current);
          }
          if (newItem) {
-            self.setSelectedIndex(this._items.getKey(newItem));
+            self.setSelectedKey(this._items.getKey(newItem));
          }
          if (e.which == 13) {
             this.hidePicker();
          }
-         */
-      },
+         */      },
 
 
       _keyUpBind: function (e) {
@@ -285,7 +328,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          /*устанавливаем ключ, когда текст изменен извне*/
          var
             selKey,
-            oldKey = this._options.selectedIndex,
+            oldKey = this._options.selectedKey,
             self = this,
             filterFieldObj = {};
 
@@ -296,21 +339,18 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             DataSet.each(function (item) {
                noItems = false;
                selKey = item.getKey();
-               self._options.selectedIndex = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
+               self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
                //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
-               if (oldKey !== self._options.selectedIndex) { // при повторном индексе null не стреляет событием
-                  self._notifySelectedItem(self._options.selectedIndex);
-                  self._drawSelectedItem(self._options.selectedIndex);
+               if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
+                  self._notifySelectedItem(self._options.selectedKey);
+                  self._drawSelectedItem(self._options.selectedKey);
                }
             });
 
             if (noItems) {
-               if (self._options.selectedIndex !== null) {
-                  self._options.selectedIndex = null;
-                  self._notifySelectedItem(null);
-                  self._drawSelectedItem(null);
-               }
-            }
+               self._options.selectedKey = null;
+               self._notifySelectedItem(null);
+               self._drawSelectedItem(null);            }
 
          });
 
@@ -329,33 +369,44 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._picker.recalcPosition();
          }
          else {
-            this._drawSelectedItem(this._options.selectedIndex);
+            this._drawSelectedItem(this._options.selectedKey);
          }
       },
-       /**
-        * Метод установки/изменения возможности ручного ввода.
-        * @param editable Возможность ручного ввода.
-        * @example
-        * <pre>
-        *     myComboBox.setEditable(false);
-        * </pre>
-        * @see isEditable
-        * @see editable
-        */
+      /**
+       * Метод установки/изменения возможности ручного ввода.
+       * @remark
+       * Возможные значения:
+       * <ul>
+       *    <li>true - в случае отсутствия среди имеющихся пунктов нужного можнно ввести значение с клавиатуры;</li>
+       *    <li>false - значение можно задать только выбором из списка существующих.</li>
+       * </ul>
+       * @param {Boolean} editable Возможность ручного ввода.
+       * @example
+       * <pre>
+       *     myComboBox.setEditable(false);
+       * </pre>
+       * @see isEditable
+       * @see editable
+       */
       setEditable: function (editable) {
          this._options.editable = editable;
          this._container.toggleClass('controls-ComboBox__editable-false', editable === false);
       },
-       /**
-        * Признак возможности ручного ввода.
-        * @returns {Boolean} Возможен ли ручной ввод.
-        * @example
-        * <pre>
-        *     myComboBox.isEditable();
-        * </pre>
-        * @see editable
-        * @see setEditable
-        */
+      /**
+       * Признак возможности ручного ввода.@remark
+       * Возможные значения:
+       * <ul>
+       *    <li>true - в случае отсутствия среди имеющихся пунктов нужного можнно ввести значение с клавиатуры;</li>
+       *    <li>false - значение можно задать только выбором из списка существующих.</li>
+       * </ul>
+       * @returns {Boolean} Возможен ли ручной ввод.
+       * @example
+       * <pre>
+       *     myComboBox.isEditable();
+       * </pre>
+       * @see editable
+       * @see setEditable
+       */
       isEditable: function () {
          return this._options.editable;
       },
@@ -372,11 +423,30 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
+      showPicker: function(){
+        ComboBox.superclass.showPicker.call(this);
+        this._setWidth();
+      },
+
+      _initializePicker: function(){
+        ComboBox.superclass._initializePicker.call(this);
+        this._setWidth();
+      },
+
+      _setWidth: function(){
+         var self = this;
+         if (self._picker._options.target){
+           this._picker.getContainer().css({
+              'min-width': self._picker._options.target.outerWidth() - this._border/*ширина бордеров*/
+           });
+         }
+      },
+
       //TODO заглушка
-       /**
-        * @noShow
-        * @returns {$ws.proto.Deferred}
-        */
+      /**
+       * @noShow
+       * @returns {$ws.proto.Deferred}
+       */
       reviveComponents : function() {
          var def = new $ws.proto.Deferred();
          def.callback();

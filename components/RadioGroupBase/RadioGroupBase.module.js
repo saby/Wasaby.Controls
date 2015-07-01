@@ -24,20 +24,20 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBaseDS
 
       _drawItemsCallback : function() {
          RadioGroupBase.superclass._drawItemsCallback.call(this);
-         if (this._options.selectedIndex) {
-            this._drawSelectedItem(this._options.selectedIndex);
+         if (this._options.selectedKey) {
+            this._drawSelectedItem(this._options.selectedKey);
          }
       },
 
       _itemActivatedHandler : function(key) {
-         this.setSelectedIndex(key);
+         this.setSelectedKey(key);
       },
 
       _drawSelectedItem : function(id) {
          var controls = this.getItemsInstances();
          for (var i in controls) {
             if (controls.hasOwnProperty(i)) {
-               if (!id) {
+               if (!id && id != 0) {
                   controls[i].setChecked(false);
                }
                else {

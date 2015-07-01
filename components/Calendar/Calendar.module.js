@@ -6,26 +6,54 @@ define(
    [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.ControlHierarchyManager',
+      'js!SBIS3.CONTROLS.Utils.DateUtil',
       'html!SBIS3.CONTROLS.Calendar/resources/CalendarTableBody',
       'html!SBIS3.CONTROLS.Calendar',
       'js!SBIS3.CONTROLS.MonthPicker'
    ],
-   function (CompoundControl, ControlHierarchyManager, CalendarTableBodyTpl, dotTplFn) {
+   function (CompoundControl, ControlHierarchyManager, DateUtil, CalendarTableBodyTpl, dotTplFn) {
 
       'use strict';
 
       /**
-       * Календарь
+       * Календарь имеет соответствубщее названию контрола визуальное отображение.
+       * Предназначен для задания даты путём выбора.
        * @class SBIS3.CONTROLS.Calendar
-       * @extends SBIS3.CORE.CompoundControl
+       * @extends $ws.proto.CompoundControl
        * @control
        * @public
        * @demo SBIS3.CONTROLS.Demo.MyCalendar
-       * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
+       *
+       * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className
        * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
+       * @ignoreOptions extendedTooltip
+       *
+       * @ignoreMethods applyEmptyState applyState getClassName getEventHandlers getEvents getExtendedTooltip getOwnerId
+       * @ignoreMethods getLinkedContext getOwner getStateKey getUserData hasEvent hasEventHandlers makeOwnerName once
+       * @ignoreMethods sendCommand setClassName setExtendedTooltip setOpener setStateKey setUserData subscribe unsubscribe
+       * @ignoreMethods subscribeOnceTo unbind
+       *
+       * @ignoreEvents onChange onClick onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onStateChange
+       * @ignoreEvents onTooltipContentRequest
        */
 
       var Calendar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Calendar.prototype */{
+          /**
+           * @event onDateChange Срабатывает при изменении даты.
+           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+           * @param {String} date Дата.
+           * @example
+           * <pre>
+           *    calendar.subscribe('onDateChange', function(event, selectedDate){
+           *       // если выбрали 23е февраля, то сообщим об этом
+           *       if(selectedDate.getDay() === 23 && selectedDate.getMonth() === 1){
+           *          $ws.core.alert("Вы выбрали праздничный день!");
+           *       }
+           *    });
+           * </pre>
+           * @see setDate
+           * @see date
+           */
          $protected: {
             _dotTplFn: dotTplFn,
             _CalendarTableBodyTpl: CalendarTableBodyTpl,
@@ -38,9 +66,18 @@ define(
              */
             _options: {
                /**
-                * @cfg {Date} Значение даты в формате Date Object
-                */
-               date: undefined
+                 * @cfg {Date|String} Начальное значение даты, с которой откроется календарь
+                 * @remark
+                 * Строка должна быть формата ISO 8601.
+                 * @example
+                 * <pre>
+                 *     <option name="date">2015-03-07T21:00:00.000Z</option>
+                 * </pre>
+                 * @see setDate
+                 * @see getDate
+                 * @see onDateChange
+                 */
+                date: undefined
             }
          },
 
@@ -58,10 +95,9 @@ define(
             this.monthControl = this.getChildControlByName('MonthPicker');
 
             // Первоначальная установка даты
-            if ( this._options.date && this._options.date instanceof Date ){
+            if (this._options.date) {
                this._setDate(this._options.date);
-            }
-            else {
+            } else {
                this._setDate(new Date());
             }
 
@@ -155,8 +191,15 @@ define(
          },
 
          /**
-          * Установить дату по переданному объекту Date. Публичный метод.
-          * Отличается от приватного метода тем, что генерирует событие.
+          * Метод установки/замены даты.
+          * @param {Date} Новая дата.
+          * @example
+          * <pre>
+          *     this.getChildControlByName('Calendar').setDate(new Date(2008, 07, 08));
+          * </pre>
+          * @see date
+          * @see getDate
+          * @see onDateChange
           */
          setDate: function(date){
             date = date ? date : new Date();
@@ -165,31 +208,47 @@ define(
          },
 
          /**
-          * Установить дату по переданному объекту Date. Приватный метод
-          * @param date
+          * Установить дату
+          * @param {Date|string} дата
           * @private
           */
          _setDate: function(date){
-            if( date instanceof Date ){
-               // Зануляем время
-               date.setHours(0, 0, 0, 0);
-               // Обновляем значение даты
+            var isCorrect = false;
+            if (date instanceof Date) {
                this._options.date = date;
-               // Устанавливаем дату в дочерний контролл MonthPicker
-               this.monthControl._setDate(date);
-               // Обновляем таблицу календарных дней
-               this._refreshCalendarTable();
-               // Обновляем активный день
-               this._refreshActiveDay();
+               isCorrect = true;
+            } else if (typeof date == 'string') {
+               //convert ISO-date to Date
+               this._options.date = DateUtil.dateFromIsoString(date);
+               if (DateUtil.isValidDate(this._options.date)) {
+                  isCorrect = true;
+               }
             }
-            else {
-               throw new Error('Дата должна быть в формате Date()');
+            if ( ! isCorrect) {
+               this._options.date = null;
+               throw new Error('Calendar. Неверный формат даты');
             }
+            // Зануляем время
+            this._options.date.setHours(0, 0, 0, 0);
+            // Устанавливаем дату в дочерний контролл MonthPicker
+            this.monthControl._setDate(this._options.date);
+            // Обновляем таблицу календарных дней
+            this._refreshCalendarTable();
+            // Обновляем активный день
+            this._refreshActiveDay();
          },
 
          /**
-          * Получить текущее значение даты
-          * @returns {date}
+          * Метод получения текущего значения даты.
+          * @returns {Date} Значение даты в формате ISO 8601.
+          * @example
+          * <pre>
+          *     var date = this.getChildControlByName('Calendar').getDate();
+          *     textBox.setText(date);
+          * </pre>
+          * @see date
+          * @see setDate
+          * @see onDateChange
           */
          getDate: function(){
             return this._options.date;

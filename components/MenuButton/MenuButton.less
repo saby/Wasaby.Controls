@@ -13,8 +13,8 @@
       display: inline-block;
       width: @menu-button-arrow-width;
       height: @menu-button-arrow-height;
-      right: @menu-button-arrow-right-offset;
-      top: @menu-button-arrow-top-offset;
+      right: @menu-button-arrow-right-offset - @button-border-width;
+      top: @menu-button-arrow-top-offset - @button-border-width;
       .box-sizing(border-box);
       border-width: @menu-button-arrow-border-width;
       border-style: @menu-button-arrow-border-style;
@@ -104,6 +104,15 @@
 .controls-MenuButton {
   .controls-Button__text, .controls-Button__icon + .controls-Button__text {
     margin-right: @menu-button-text-right-margin; //this margin reserve space for arrow-down icon
+  }
+  &.controls-Checked__checked {
+    .controls-Button__text, .controls-Button__icon + .controls-Button__text {
+      margin-right: @menu-button-checked-text-right-margin; //this margin reserve space for arrow-down icon
+    }
+    .controls-MenuButton__arrowDown {
+      top: @menu-button-arrow-top-offset - @button-checked-border-width;
+      right: @menu-button-arrow-right-offset - @button-checked-border-width;
+    }
   }
 }
 
@@ -198,4 +207,20 @@
   border-style: @menu-button-menu-border-style;
   border-color: @menu-button-menu-border-color;
   background: @menu-button-menu-bg;
+}
+
+@-moz-document url-prefix() {
+  .controls-Button.controls-MenuButton {
+    padding-bottom: 3px;
+  }
+}
+
+//Правка смещения для стрелки в ie8. ! В режиме эмуляции ie8 проблемы не видно, только в настоящем ie8
+@ie8: \0screen;
+@media @ie8 {
+  .controls-Button.controls-MenuButton {
+    .controls-MenuButton__arrowDown {
+      top: @menu-button-arrow-top-offset - 4px;
+    }
+  }
 }

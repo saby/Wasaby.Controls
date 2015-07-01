@@ -7,6 +7,26 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
     * @public
     */
    var FormWidgetMixin = /** @lends SBIS3.CONTROLS.FormWidgetMixin.prototype */{
+       /**
+        * @event onValidate При смене выбранных элементов
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Boolean} vResult.result Результат.
+        * @param {Array} vResult.errors Ошибки.
+        * @param {String} previousStatus Предыдущее состоянии валидации.
+        * @example
+        * Если поле ввода (TextBox) успешно прошло валидацию, то сделать кнопку (btn) доступной для взаимодействия.
+        * <pre>
+        *    TextBox.subscribe('onValidate', function(eventObject, validationResult) {
+        *       btn.setEnabled(validationResult);
+        *    });
+        * </pre>
+        * @see validators
+        * @see getValidators
+        * @see setValidators
+        * @see markControl
+        * @see clearMark
+        * @see validate
+        */
       $protected: {
          _validationErrorCount: 0,
          _validating: false,
@@ -28,6 +48,12 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
              * @cfg {Validator[]} Валидаторы контрола
              * Массив объектов, описывающих функции валидации.
              * @group Validation
+             * @see validators
+             * @see getValidators
+             * @see setValidators
+             * @see markControl
+             * @see clearMark
+             * @see onValidate
              */
             validators: []
          }
@@ -113,7 +139,6 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
          return retval;
       },
       /**
-       * <wiTag group="Данные">
        * Функция валидации контрола.
        * Проверит все валидаторы, как встроенные, так и пользовательские.
        * В случае неудачи отметит контрол сообщением об ошибке валидации.
@@ -131,6 +156,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
        * @see setValidators
        * @see markControl
        * @see clearMark
+       * @see onValidate
        */
       validate: function () {
          var
@@ -243,13 +269,12 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
          this._prevValidationResult = !this.isMarked();
       },
       /**
-       * <wiTag group="Отображение">
        * Метод маркирует контрол как непрошедший валидацию.
        * Не проводит валидацию, просто подсвечивает контрол.
        * @param {Array|String} s Сообщение об ошибке.
        * @param {Boolean} showInfoBox Показывать инфобокс сразу(true) или по ховеру(false)
        * @example
-       * Уведомить регистрируещегося пользователя, если введённый логин уже используется.
+       * Уведомить регистрирующегося пользователя, если введённый логин уже используется.
        * <pre>
        *    fieldString.subscribe('onChange', function(eventObject, value) {
        *       //создаём объект бизнес-логики
@@ -267,6 +292,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
        * @see clearMark
        * @see isMarked
        * @see validate
+       * @see onValidate
        */
       markControl: function (s, showInfoBox) {
          var
@@ -282,13 +308,13 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
        * <wiTag group="Отображение">
        * Снять отметку об ошибке валидации.
        * @example
-       * Для поля ввода (fieldString) определено необязательное условие: первый символ должен быть заглавной буквой.
+       * Для поля ввода (TextBox) определено необязательное условие: первый символ должен быть заглавной буквой.
        * Когда поле не соответствует этому условию, оно маркируется как непрошедшее валидацию.
        * Если пользователь не желает изменять регистр первой буквы, то при клике на кнопку (button) снимется маркировка с поля ввода.
        * <pre>
        *    //является ли первая буква строки заглавной
        *    var upperCase = true;
-       *    fieldString.subscribe('onValidate', function(eventObject, value) {
+       *    TextBox.subscribe('onValidate', function(eventObject, value) {
        *       if (value) {
        *          //проверка первого символа строки
        *          upperCase = /^[А-Я].*$/.test(this.getValue());
@@ -298,14 +324,15 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
        *          button.show();
        *       }
        *    });
-       *    button.subscribe('onClick', function() {
-       *       fieldString.clearMark();
+       *    button.subscribe('onActivated', function() {
+       *       TextBox.clearMark();
        *       this.hide();
        *    });
        * </pre>
        * @see markControl
        * @see isMarked
        * @see validate
+       * @see onValidate
        */
       clearMark: function () {
          if (this._validationErrorCount) {
@@ -337,6 +364,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
        * @see markControl
        * @see clearMark
        * @see validate
+       * @see onValidate
        */
       isMarked: function () {
          return !!this._validationErrorCount;
@@ -359,49 +387,36 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
        * <pre>
        *    //описываем два валидатора
        *    var validators = [{
-        *       validator: function() {
-        *          var value = this.getValue();
-        *          return value !== null && value !== '';
-        *       },
-        *       errorMessage: 'Поле не может быть пустым. Введите значение!'
-        *    },{
-        *       //otherFieldName - имя любого другого поля ввода, с которым производим сравнение
-        *       validator: function(otherFieldName) {
-        *          //controlParent - родительский контрол для двух полей
-        *          return this.getValue() !== controlParent.getChildControlByName(otherFieldName).getValue();
-        *       },
-        *       params: [otherFieldName],
-        *       errorMessage: 'Значения полей не могут совпадать!',
-        *       noFailOnError: true
-        *    }];
+       *       validator: function() {
+       *          var value = this.getValue();
+       *          return value !== null && value !== '';
+       *       },
+       *       errorMessage: 'Поле не может быть пустым. Введите значение!'
+       *    },{
+       *       //otherFieldName - имя любого другого поля ввода, с которым производим сравнение
+       *       validator: function(otherFieldName) {
+       *          //controlParent - родительский контрол для двух полей
+       *          return this.getValue() !== controlParent.getChildControlByName(otherFieldName).getValue();
+       *       },
+       *       params: [otherFieldName],
+       *       errorMessage: 'Значения полей не могут совпадать!',
+       *       noFailOnError: true
+       *    }];
        *    fieldString.subscribe('onReady', function() {
-        *       if (this.getValidators().length == 0)
-        *          this.setValidators(validators);
-        *    });
+       *       if (this.getValidators().length == 0)
+       *          this.setValidators(validators);
+       *    });
        * </pre>
        * @see validators
        * @see getValidators
        * @see validate
+       * @see onValidate
        */
       setValidators: function (validators) {
          if (validators && Object.prototype.toString.apply(validators) == '[object Array]') {
             this._options.validators = validators;
          }
-      },
-      /**
-       * Установить значение
-       * @param val значение
-       */
-      setValue: function (val) {
-
-      },
-      /**
-       * Получить значение
-       */
-      getValue: function () {
-
       }
-
    };
 
    return FormWidgetMixin;

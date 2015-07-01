@@ -1,3 +1,12 @@
+.button-mixin(@icon-top, @icon-left, @icon-width, @border-width, @margin-left, @margin-right) {
+  left: @icon-left - @border-width;
+  top: @icon-top - @border-width;
+  & + .controls-Button__text {
+    margin-right: @margin-right - @border-width;
+    margin-left: @margin-left + @icon-width + @button-icon-gap - @border-width;
+  }
+}
+
 // Normal default button
 .controls-Button {
   position: relative;
@@ -47,25 +56,10 @@
   // Button's icon
   .controls-Button__icon {
     position: absolute;
-    top: @button-icon-top-offset - 1px;         // this rule is for IE, see normal overrides for Chrome and Firefox below
-    left: @button-icon-left-offset;
-    @media screen and (-webkit-min-device-pixel-ratio: 0) {
-      top: @button-icon-top-offset;             // normal override for Chrome
-    }
-
-    & + .controls-Button__text {
-      margin: @button-icon-text-margin;
-    }
+    .button-mixin(@button-icon-top-offset; @button-icon-left-offset; 16px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
 
     &.icon-24 {
-      top: @button-icon-big-top-offset - 1px;   // this rule is for IE, see normal overrides for Chrome and Firefox below
-      @media screen and (-webkit-min-device-pixel-ratio: 0) {
-        top: @button-icon-big-top-offset;       // normal override for Chrome
-      }
-
-      & + .controls-Button__text {
-        margin: @button-icon-big-text-margin;
-      }
+      .button-mixin(@button-icon-big-top-offset; @button-icon-big-left-offset; 24px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
     }
   }
 
@@ -137,26 +131,10 @@
     // Button's icon
     .controls-Button__icon {
       position: absolute;
-      top: @button-big-icon-top-offset - 1px;         // this rule is for IE, see normal overrides for Chrome and Firefox below
-      left: @button-big-icon-left-offset;
-      @media screen and (-webkit-min-device-pixel-ratio: 0) {
-        top: @button-big-icon-top-offset;             // normal override for Chrome
-      }
-
-      & + .controls-Button__text {
-        margin: @button-big-icon-text-margin;
-      }
+      .button-mixin(@button-big-icon-top-offset; @button-big-icon-left-offset; 16px; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
 
       &.icon-24 {
-        top: @button-big-icon-big-top-offset - 1px;   // this rule is for IE, see normal overrides for Chrome and Firefox below
-        left: @button-big-icon-big-left-offset;
-        @media screen and (-webkit-min-device-pixel-ratio: 0) {
-          top: @button-big-icon-big-top-offset;       // normal override for Chrome
-        }
-
-        & + .controls-Button__text {
-          margin: @button-big-icon-big-text-margin;
-        }
+        .button-mixin(@button-big-icon-big-top-offset; @button-big-icon-big-left-offset; 24px; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
       }
     }
 
@@ -206,7 +184,7 @@
   }
 }
 
-.controls-Button__ellispis .controls-Button__text {
+.controls-Button__ellipsis .controls-Button__text {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -221,19 +199,19 @@
 @-moz-document url-prefix() {
   .controls-Button {
     .controls-Button__icon {
-      top: @button-icon-top-offset;
+      top: @button-icon-top-offset - @button-border-width;
 
       &.icon-24 {
-        top: @button-icon-big-top-offset;
+        top: @button-icon-big-top-offset - @button-border-width;
       }
     }
 
     &.controls-Button__big {
       .controls-Button__icon {
-        top: @button-big-icon-top-offset;
+        top: @button-big-icon-top-offset - @button-border-width;
 
         &.icon-24 {
-          top: @button-big-icon-big-top-offset;
+          top: @button-big-icon-big-top-offset - @button-border-width;
         }
       }
     }
