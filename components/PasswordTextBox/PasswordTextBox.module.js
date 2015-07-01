@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!
     * @class SBIS3.CONTROLS.PasswordTextBox
     * @extends SBIS3.CONTROLS.TextBox
     * @control
+    * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyPasswordTextBox
     * @public
     * @category Inputs

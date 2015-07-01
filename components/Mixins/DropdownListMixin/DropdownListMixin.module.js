@@ -6,6 +6,7 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
         /**
          * @mixin SBIS3.CONTROLS.DropdownListMixin
          * @public
+         * @author Крайнов Дмитрий Олегович
          */
         'use strict';
 

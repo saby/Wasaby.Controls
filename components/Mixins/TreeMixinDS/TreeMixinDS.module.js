@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
+    * @author Крайнов Дмитрий Олегович
     */
    var TreeMixinDS = /** @lends SBIS3.CONTROLS.TreeMixinDS.prototype */{
       $protected: {

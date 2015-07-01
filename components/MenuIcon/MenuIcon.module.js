@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
     * </component>
     * @extends SBIS3.CONTROLS.ToggleButton
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @category Buttons
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators

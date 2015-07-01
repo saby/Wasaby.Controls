@@ -29,6 +29,7 @@ define(
     * @class SBIS3.CONTROLS.DatePicker
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
     * @control
+    * @author Крайнов Дмитрий Олегович
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyDatePicker
     */

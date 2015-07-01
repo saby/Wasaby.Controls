@@ -27,6 +27,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        * Умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
        * @class SBIS3.CONTROLS.ListViewDS
        * @extends $ws.proto.Control
+       * @author Крайнов Дмитрий Олегович
        * @mixes SBIS3.CONTROLS.DSMixin
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control

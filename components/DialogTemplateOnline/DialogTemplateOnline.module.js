@@ -13,6 +13,7 @@ define('js!SBIS3.Engine.DialogTemplateOnline', ['js!SBIS3.CONTROLS.DialogTemplat
     * @extends SBIS3.CONTROLS.DialogTemplate
     * @control
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var DialogTemplateOnline = DialogTemplate.extend( /** @lends SBIS3.Engine.DialogTemplateOnline.prototype*/ {

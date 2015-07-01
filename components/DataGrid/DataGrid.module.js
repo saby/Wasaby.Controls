@@ -20,6 +20,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
     * @extends SBIS3.CONTROLS.ListView
     * @control
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyDataGrid
     * @initial
     * <component data-component='SBIS3.CONTROLS.DataGrid'>

@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @class SBIS3.CONTROLS.ComboBox
     * @extends SBIS3.CONTROLS.TextBox
     * @control
+    * @author Крайнов Дмитрий Олегович
     * @public
     * @initial
     * <component data-component='SBIS3.CONTROLS.ComboBox'>

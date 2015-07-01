@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
     * @mixin SBIS3.CONTROLS.DSMixin
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var DSMixin = /**@lends SBIS3.CONTROLS.DSMixin.prototype  */{

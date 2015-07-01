@@ -13,6 +13,7 @@ function(RadioGroupBase, dotTpl) {
     * @extends SBIS3.CONTROLS.RadioGroupBase
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @control
+    * @author Крайнов Дмитрий Олегович
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyRadioGroup
     * @initial

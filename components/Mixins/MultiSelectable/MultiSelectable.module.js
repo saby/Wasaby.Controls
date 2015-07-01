@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
     * @mixin SBIS3.CONTROLS.MultiSelectable
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var MultiSelectable = /**@lends SBIS3.CONTROLS.MultiSelectable.prototype  */{
