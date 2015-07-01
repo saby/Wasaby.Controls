@@ -1,7 +1,9 @@
 define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
-   // только работа с иерархией + методы для отображения
-
+   /**
+    * только работа с иерархией + методы для отображения
+    * @mixin SBIS3.CONTROLS.hierarchyMixin
+    */
    var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
       $protected: {
          _curRoot: null,
