@@ -490,8 +490,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _addItemAttributes: function (container, item) {
-         var isFolder = (item.get(this._options.hierField + '@')) ? 'controls-ListView__folder' : '';
-         container.attr('data-id', item.getKey()).addClass('controls-ListView__item ' + isFolder);
+         container.attr('data-id', item.getKey()).addClass('controls-ListView__item');
       },
 
       _createItemInstance: function (item, targetContainer, at) {
