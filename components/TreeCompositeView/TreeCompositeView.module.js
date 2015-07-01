@@ -38,6 +38,12 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGrid',
             }
          }
       },
+      _addItemAttributes: function (container, item) {
+      	TreeCompositeView.superclass._addItemAttributes.apply(this, arguments);
+         if (item.get(this._options.hierField + '@')){
+         	container.addClass('controls-ListView__folder');
+         }
+      },
       _updateEditInPlaceDisplay: function() {
          if(this.getViewMode() === 'table') {
             TreeCompositeView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
