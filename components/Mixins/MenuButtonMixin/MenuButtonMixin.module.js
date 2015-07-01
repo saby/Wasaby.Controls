@@ -23,6 +23,10 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
         */
       $protected: {
          _options: {
+            /**
+             * @cfg {String} Поле иерархии
+             */
+            hierField : null
          }
       },
 
