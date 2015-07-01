@@ -2577,6 +2577,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls__filterButton__picker {
   background: #f7f3f0 !important;
+  border: 2px solid #e4e4e4;
 }
 .controls__filterButton__picker .controls__filterButton__content {
   margin-top: 5px;
