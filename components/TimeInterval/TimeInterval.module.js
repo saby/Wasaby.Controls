@@ -19,6 +19,8 @@ define(
        * @extends SBIS3.CONTROLS.FormattedTextBoxBase
        * @control
        * @demo SBIS3.CONTROLS.Demo.MyTimeInterval
+       * @public
+       * @author Крайнов Дмитрий Олегович
        */
 
       var TimeInterval = FormattedTextBoxBase.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.TimeInterval.prototype */{
