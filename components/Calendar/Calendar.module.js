@@ -22,6 +22,7 @@ define(
        * @extends $ws.proto.CompoundControl
        * @control
        * @public
+       * @author Крайнов Дмитрий Олегович
        * @demo SBIS3.CONTROLS.Demo.MyCalendar
        *
        * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className

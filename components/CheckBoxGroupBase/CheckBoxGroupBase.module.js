@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @mixes SBIS3.CONTROLS.MultiSelectable
     * @extends SBIS3.CONTROLS.ButtonGroupBase
+    * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions contextRestriction independentContext
     *

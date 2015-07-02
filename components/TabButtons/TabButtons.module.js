@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
     * @class SBIS3.CONTROLS.TabButtons
     * @extends SBIS3.CONTROLS.RadioGroupBase
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var TabButtons = RadioGroupBase.extend( /** @lends SBIS3.CONTROLS.TabButtons.prototype */ {

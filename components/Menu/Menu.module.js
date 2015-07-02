@@ -18,6 +18,7 @@ define('js!SBIS3.CONTROLS.Menu', [
     * Контрол, отображающий меню, всплывающее в определенном месте страницы
     * @class SBIS3.CONTROLS.Menu
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @extends SBIS3.CONTROLS.ButtonGroupBase
     * @mixes SBIS3.CONTROLS.TreeMixin
     */

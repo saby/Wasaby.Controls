@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
     * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @public
+    * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment

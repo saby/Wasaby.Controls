@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
     * </component>
     * @public
     * @category Buttons
+    * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey

@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного.
     * @mixin SBIS3.CONTROLS.Selectable
+    * @author Крайнов Дмитрий Олегович
     * @public
     */
 
