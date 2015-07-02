@@ -1967,6 +1967,13 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TreeView__expand__leaf:hover {
   background: none !important;
 }
+.controls-DataGrid.controls-DataGrid__PartScroll__animation .controls-DataGrid__PartScroll__thumb,
+.controls-DataGrid.controls-DataGrid__PartScroll__animation .controls-DataGrid__scrolledCell {
+  -webkit-transition: left 0.5s;
+  -moz-transition: left 0.5s;
+  -ms-transition: left 0.5s;
+  -o-transition: left 0.5s;
+}
 .controls-DataGrid .controls-DataGrid__table {
   width: 100%;
   position: relative;

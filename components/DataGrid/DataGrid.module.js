@@ -13,7 +13,8 @@ define('js!SBIS3.CONTROLS.DataGrid',
    'use strict';
       /* TODO: Надо считать высоту один раз, а не делать константой */
       var
-         ITEMS_ACTIONS_HEIGHT = 20;
+         ITEMS_ACTIONS_HEIGHT = 20,
+         ANIMATION_DURATION = 500;
    /**
     * Контрол, отображающий набор данных в виде в таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.DataGrid
@@ -158,6 +159,10 @@ define('js!SBIS3.CONTROLS.DataGrid',
                self._getItemsContainer().find('.controls-ListView__item[data-id="' + record.getKey() + '"]')
                   .empty()
                   .append($(self._getItemTemplate(record)).children());
+               if(self._isPartScrollVisible) {
+                  self._findMovableCells();
+                  self._dragMove(null, {left: self._currentScrollPosition});
+               }
             });
             this._createEditInPlace();
          }
@@ -247,7 +252,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
                needShowScroll ?
                   this._showPartScroll() : this._hidePartScroll();
 
-            this._movableElems = this._findMovableCells();
+            this._findMovableCells();
          }
          DataGrid.superclass._drawItemsCallback.call(this);
       },
@@ -276,9 +281,35 @@ define('js!SBIS3.CONTROLS.DataGrid',
       },
 
       _dragEnd: function() {
+         this._animationAtDragEnd();
          $ws._const.$body.removeClass('ws-unSelectable');
          this._thumb.removeClass('controls-DataGrid__PartScroll__thumb-clicked');
          this._scrollingNow = false;
+      },
+
+      _animationAtDragEnd: function() {
+         //Найдём элемент, который нужно доскролить
+         var arrowRect = this._arrowLeft[0].getBoundingClientRect(),
+             elemToScroll = document.elementFromPoint(arrowRect.left + arrowRect.width / 2, arrowRect.top + arrowRect.height + 1),
+             elemRect,
+             elemWidth,
+             delta;
+
+         //Если нашли, то расчитаем куда и на сколько нам скролить
+         if(elemToScroll) {
+            elemRect = elemToScroll.getBoundingClientRect();
+            delta = arrowRect.right - elemRect.left;
+            elemWidth = elemToScroll.offsetWidth;
+
+            //Подключим анимацию
+            this._container.addClass('controls-DataGrid__PartScroll__animation');
+            this._dragMove(null, {left: this._currentScrollPosition - ((delta > elemWidth / 2  ? - (elemWidth - delta) : delta) / this._partScrollRatio)});
+
+            //Тут приходится делать таймаут, чтобы правильно прошло выключение-включение анимации
+            setTimeout(function() {
+               this._container.removeClass('controls-DataGrid__PartScroll__animation')
+            }.bind(this), ANIMATION_DURATION);
+         }
       },
 
       _getDragContainer: function() {
@@ -290,10 +321,10 @@ define('js!SBIS3.CONTROLS.DataGrid',
       },
 
       _dragMove: function(event, cords) {
-         var correctCords = this._checkThumbPosition(cords),
-             movePosition = -correctCords*this._partScrollRatio;
+         this._currentScrollPosition = this._checkThumbPosition(cords);
+         var movePosition = -this._currentScrollPosition*this._partScrollRatio;
 
-         this._setThumbPosition(correctCords);
+         this._setThumbPosition(this._currentScrollPosition);
          for(var i= 0, len = this._movableElems.length; i < len; i++) {
             this._movableElems[i].style.left = movePosition + 'px';
          }
@@ -328,7 +359,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
       },
 
       _findMovableCells: function() {
-         return this._container.find('.controls-DataGrid__scrolledCell');
+         this._movableElems = this._container.find('.controls-DataGrid__scrolledCell');
       },
 
       _checkThumbPosition: function(cords) {

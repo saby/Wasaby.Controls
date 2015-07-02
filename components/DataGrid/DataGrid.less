@@ -2,7 +2,13 @@
    .controls-ListView__item {
       &:extend(.controls-ListView .controls-ListView__item all);
    }
-   
+
+  &.controls-DataGrid__PartScroll__animation {
+    .controls-DataGrid__PartScroll__thumb,
+    .controls-DataGrid__scrolledCell {
+      .transition(left 0.5s);
+    }
+  }
    .controls-DataGrid__table {
       width: 100%;
       position: relative;

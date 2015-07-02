@@ -44,13 +44,13 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGrid',
          return this._getItemsContainer();
       },
       _getItemActionsPosition: function(hoveredItem) {
-         var viewMode = this.getViewMode(),
-             itemActions = this.getItemsActions().getContainer(),
-             height = itemActions[0].offsetHeight || itemActions.height();
+         var itemActions = this.getItemsActions().getContainer(),
+             height = itemActions[0].offsetHeight || itemActions.height(),
+             isTableView = this.getViewMode() === 'table';
 
          return {
-            top: hoveredItem.position.top + ((viewMode !== 'tile' && viewMode !== 'list') ? (hoveredItem.size.height > height ? hoveredItem.size.height - height : 0) : 0),
-            right: viewMode === 'table' ? 0 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
+            top: hoveredItem.position.top + ((isTableView) ? (hoveredItem.size.height > height ? hoveredItem.size.height - height : 0) : 0),
+            right: isTableView ? 0 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
          };
       }
 
