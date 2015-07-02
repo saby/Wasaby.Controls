@@ -28,13 +28,19 @@ define(
        * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
        * @ignoreOptions extendedTooltip
        *
+       * @ignoreMethods activate activateFirstControl activateLastControl addPendingOperation changeControlTabIndex
+       * @ignoreMethods destroyChild detectNextActiveChildControl disableActiveCtrl focusCatch getActiveChildControl
+       * @ignoreMethods getChildControlById getChildControlByName getChildControls getContext getEventBusOf moveFocus
+       * @ignoreMethods getImmediateChildControls getNearestChildControlByName getOpener getReadyDeferred isAllReady
        * @ignoreMethods applyEmptyState applyState getClassName getEventHandlers getEvents getExtendedTooltip getOwnerId
        * @ignoreMethods getLinkedContext getOwner getStateKey getUserData hasEvent hasEventHandlers makeOwnerName once
        * @ignoreMethods sendCommand setClassName setExtendedTooltip setOpener setStateKey setUserData subscribe unsubscribe
-       * @ignoreMethods subscribeOnceTo unbind setProperties setProperty getProperty
+       * @ignoreMethods subscribeOnceTo unbind setProperties setProperty getProperty moveToTop registerChildControl
+       * @ignoreMethods registerDefaultButton setChildActive setSize storeActiveChild unregisterChildControl
+       * @ignoreMethods unregisterDefaultButton waitAllPendingOperations waitChildControlById waitChildControlByName
        *
        * @ignoreEvents onChange onClick onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onStateChange
-       * @ignoreEvents onTooltipContentRequest onPropertyChanged
+       * @ignoreEvents onTooltipContentRequest onPropertyChanged onActivate onBeforeControlsLoad onResize
        */
 
       var Calendar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Calendar.prototype */{
