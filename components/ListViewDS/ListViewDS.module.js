@@ -640,7 +640,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
                      records = dataSet._getRecords();
-                     self._dataSet.merge(dataSet);
+                     self._dataSet.merge(dataSet, {remove: false});
                      self._drawItems(records);
                      self._dataLoadedCallback();
                   }
