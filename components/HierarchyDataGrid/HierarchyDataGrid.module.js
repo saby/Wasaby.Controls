@@ -179,12 +179,12 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
             container.find('td').append(elem = $('<div/>'));
 
             var ps = new PathSelector({
-               //items : this._createPathItemsDS(lastPath),
                element : elem,
-               linkedView : this,
                items: this._createPathItemsDS(path)
             });
             ps.once('onPointClick', function(){
+               //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onPOintClick'), а вотом выполняется setCurrentRoot
+               this.setLinkedView(self);
                self.setGroupBy({});
             });
             this._pathSelectors.push(ps);
