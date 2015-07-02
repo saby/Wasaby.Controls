@@ -165,15 +165,6 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 */
                itemsDragNDrop: false,
                /**
-                * @cfg {String|jQuery|HTMLElement} Отображение при отсутствии записей
-                * @example
-                * <pre>
-                *     <option name="emptyHTML">Нет данных</option>
-                * </pre>
-                * @see setEmptyHTML
-                */
-               emptyHTML: null,
-               /**
                 * @cfg {Function} Обработчик клика на элемент
                 * @example
                 * <option name="elemClickHandler">MyElemClickHandler</option>
