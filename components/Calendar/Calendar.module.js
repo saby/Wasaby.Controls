@@ -16,7 +16,7 @@ define(
       'use strict';
 
       /**
-       * Календарь имеет соответствубщее названию контрола визуальное отображение.
+       * Календарь имеет соответствующее названию контрола визуальное отображение.
        * Предназначен для задания даты путём выбора.
        * @class SBIS3.CONTROLS.Calendar
        * @extends $ws.proto.CompoundControl
@@ -31,10 +31,10 @@ define(
        * @ignoreMethods applyEmptyState applyState getClassName getEventHandlers getEvents getExtendedTooltip getOwnerId
        * @ignoreMethods getLinkedContext getOwner getStateKey getUserData hasEvent hasEventHandlers makeOwnerName once
        * @ignoreMethods sendCommand setClassName setExtendedTooltip setOpener setStateKey setUserData subscribe unsubscribe
-       * @ignoreMethods subscribeOnceTo unbind
+       * @ignoreMethods subscribeOnceTo unbind setProperties setProperty getProperty
        *
        * @ignoreEvents onChange onClick onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onStateChange
-       * @ignoreEvents onTooltipContentRequest
+       * @ignoreEvents onTooltipContentRequest onPropertyChanged
        */
 
       var Calendar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Calendar.prototype */{
