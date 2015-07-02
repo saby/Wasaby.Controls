@@ -20,6 +20,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          _dotTplFn: dotTpl,
          _resizeTimeout: null,
          _rootHandler: undefined,
+         _dropdownWidth: null,
          _options: {
             linkedView: null,
             keyField: 'id',
@@ -31,7 +32,6 @@ define('js!SBIS3.CONTROLS.PathSelector', [
 
       $constructor: function () {
          this._publish('onPointClick');
-         var self = this;
          if (this._options.linkedView) {
             this._subscribeOnSetRoot();
          }
@@ -56,10 +56,12 @@ define('js!SBIS3.CONTROLS.PathSelector', [
              point = target.closest('.js-controls-PathSelector__point');
          if (point.hasClass('controls-PathSelector__dots')) {
             if (this._picker) {
-               this._picker.setTarget(point)
+               this._picker.setTarget(point);
             }
             this.togglePicker();
-            this._redrawDropdown();
+            if (this._picker.isVisible()) {
+               this._redrawDropdown();
+            }
          } else if (point.length) {
             this._onPointClick(point.data(this._options.dirField));
          }
@@ -98,11 +100,10 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          this._redrawDropdown();
          this._picker._container.bind('mouseup', function (e) {
             self._onClickHandler(e);
-         })
+         });
       },
 
       setLinkedView: function (view) {
-         var self = this;
          if (this._options.linkedView) {
             this._options.linkedView.unsubscribe('onSetRoot', this._rootHandler);
          }
@@ -133,6 +134,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       _redrawDropdown: function () {
          var self = this;
          if (this._picker) {
+            var width = this._picker._container.width();
             this._picker._container.empty();
             this._dataSet.each(function (record) {
                var point = $('<div class="controls-MenuItem js-controls-PathSelector__point"></div>').html(record.get(self._options.displayField))
@@ -145,7 +147,11 @@ define('js!SBIS3.CONTROLS.PathSelector', [
                      point.prepend('<div class="controls-PathSelector__hierWrapper"></div>');
                   }
                }
-            })
+            });
+            if (width !== this._dropdownWidth) {
+               this._picker.recalcPosition(true);
+               this._dropdownWidth = width;
+            }
          }
       },
 
@@ -170,7 +176,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          //скрываем пункты левее троеточия пока не уберемся в контейнер
          for (i; i > 1; i--) {
             if (targetContainer.width() < this._container.width() || i == 1) {
-               break
+               break;
             }
             points[i - 1].className += ' ws-hidden';
          }
@@ -185,7 +191,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       _addItemAttributes: function (container, item) {
-         container.data(this._options.dirField, item.get(this._options.dirField))
+         container.data(this._options.dirField, item.get(this._options.dirField));
          PathSelector.superclass._addItemAttributes.apply(this, arguments);
       },
 
