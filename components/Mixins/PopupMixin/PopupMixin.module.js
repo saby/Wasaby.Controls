@@ -29,6 +29,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
     * компонентов (диалоговые окна, плавающие панели, подсказки).
     * При подмешивании этого миксина в контрол он вырезается из своего местоположения и вставляется в Body.
     * @mixin SBIS3.CONTROLS.PopupMixin
+    * @author Крайнов Дмитрий Олегович
     * @public
     */
    var PopupMixin = /** @lends SBIS3.CONTROLS.PopupMixin.prototype */ {

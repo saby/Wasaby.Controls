@@ -12,6 +12,7 @@ function(BaseControl, dotTpl){
     * @class HighChartsLight
     * @extends $ws.proto.Control
     * @control
+    * @author Крайнов Дмитрий Олегович
     * @public
     * @category Table
     * @designTime actions /design/design

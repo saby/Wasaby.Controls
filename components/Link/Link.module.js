@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
     *    <option name='caption' value='Ссылка'></option>
     * </component>
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @category Buttons
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators

@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
     * @extends SBIS3.CONTROLS.TextBoxBase
     * @control
     * @public
-    * @author Черёмушкин Илья
+    * @author Крайнов Дмитрий Олегович
     * @css controls-TextArea Класс для изменения отображения текста в многострочном поле ввода.
     *
     * @ignoreOptions independentContext contextRestriction className

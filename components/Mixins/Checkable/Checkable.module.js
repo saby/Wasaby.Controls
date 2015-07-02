@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного
     * @mixin SBIS3.CONTROLS.Checkable
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var Checkable = /**@lends SBIS3.CONTROLS.Checkable.prototype  */{

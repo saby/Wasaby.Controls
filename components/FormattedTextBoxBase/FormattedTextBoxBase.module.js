@@ -16,6 +16,7 @@ define(
        * @param position позиция замещаемого символа
        * @param character новый символ
        * @private
+       * @author Крайнов Дмитрий Олегович
        */
       _replaceCharacter = function(container, position, character) {
          var buffer = container.nodeValue.split('');

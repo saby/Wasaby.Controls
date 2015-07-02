@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.DialogTemplate', ['js!SBIS3.CORE.Control'], function(C
     * @class SBIS3.CONTROLS.DialogTemplate
     * @public
     * @extends $ws.proto.Control
+    * @author Крайнов Дмитрий Олегович
     */
 
    var DialogTemplate = Control.Control.extend( /** @lends SBIS3.CONTROLS.DialogTemplate.prototype*/ {

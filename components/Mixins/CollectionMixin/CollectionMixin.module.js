@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
     * @mixin SBIS3.CONTROLS.CollectionMixin
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var CollectionMixin = /**@lends SBIS3.CONTROLS.CollectionMixin.prototype  */{

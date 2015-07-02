@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.Control', ['js!SBIS3.CORE.Control'], function(Control)
     * @class SBIS3.CONTROLS.Control
     * @public
     * @extends $ws.proto.Control
+    * @author Крайнов Дмитрий Олегович
     */
 
    return Control.Control.extend( /** @lends SBIS3.CONTROLS.Control.prototype */{

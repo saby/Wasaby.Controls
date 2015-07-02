@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
     * @extends SBIS3.CONTROLS.DataGrid
     * @mixes SBIS3.CONTROLS.hierarchyMixin
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.TreeDataGrid'>

@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
     * @public
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @extends $ws.proto.CompoundControl
+    * @author Крайнов Дмитрий Олегович
     */
 
    var ButtonGroupBase = CompoundControl.extend([DSMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBase.prototype */ {
