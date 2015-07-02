@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
                if (indexTree[childKeys[i]]) {
                   curLvl++;
                   hierIterate(childKeys[i]);
-                  curLvl--
+                  curLvl--;
                }
             }
          };
@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
 
       _getRecordsForRedraw: function() {
-         return this._getRecordsForRedrawCurFolder()
+         return this._getRecordsForRedrawCurFolder();
       },
 
       _getRecordsForRedrawCurFolder: function() {
@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       },
 
       getParentKey: function (DataSet, record) {
-         return this._dataSet.getParentKey(record, this._options.hierField)
+         return this._dataSet.getParentKey(record, this._options.hierField);
       },
 
       /* отображение */
@@ -117,31 +117,44 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       getCurrentRoot : function(){
          return this._curRoot;
       },
-
-      /**
+		
+		/**
        * Раскрыть определенный узел
        * @param {String} key Идентификатор раскрываемого узла
        */
-      openNode: function (key) {
-         var self = this;
-         this._loadNode(key).addCallback(function (dataSet) {
-            self._nodeDataLoaded(key, dataSet);
-         });
-      },
-
-      _loadNode : function(key) {
+		setCurrentRoot: function(key) {
+        	var self = this,
+          	record = this._dataSet.getRecordByKey(key),
+          	parentKey = record ? this._dataSet.getParentKey(record, this._options.hierField) : null,
+          	hierarchy =[];
+          	hierarchy.push(key);
+        	while (parentKey !== null){
+          	hierarchy.push(parentKey);
+          	record = this._dataSet.getRecordByKey(parentKey);
+          	parentKey = record ? this._dataSet.getParentKey(record, this._options.hierField) : null;
+        	}
+        	for (var i = hierarchy.length - 1; i >= 0; i--){
+          	this._notify('onSetRoot', this._dataSet, hierarchy[i]);
+        	}
          /*TODO проверка на что уже загружали*/
          var filter = this._filter || {};
          filter[this._options.hierField] = key;
          this._filter = filter;
          //узел грузим с 0-ой страницы
          this._offset = 0;
-         return this._dataSource.query(filter, undefined, this._offset, this._limit);
+        	this._dataSource.query(filter, undefined, this._offset, this._limit).addCallback(function(dataSet) {
+          	if (!self._dataSet){
+            	self._dataSet = dataSet;
+          	} else {
+            	self._dataSet.setRawData(dataSet.getRawData());
+          	}
+          	self._dataLoadedCallback();
+          	self._notify('onDataLoad', dataSet);
+          	self._curRoot = key;
+          	self._redraw();
+         });
       },
-
-      toggleNode: function(key) {
-         this.openNode(key);
-      },
+      
       _dropPageSave: function(){
          var root = this._options.root;
          this._pageSaver = {};
