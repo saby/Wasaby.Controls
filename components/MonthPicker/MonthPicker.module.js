@@ -35,10 +35,10 @@ define(
     * @ignoreMethods applyEmptyState applyState getClassName getEventHandlers getEvents getExtendedTooltip getOwnerId
     * @ignoreMethods getLinkedContext getOwner getStateKey getUserData hasEvent hasEventHandlers makeOwnerName once
     * @ignoreMethods sendCommand setClassName setExtendedTooltip setOpener setStateKey setUserData subscribe unsubscribe
-    * @ignoreMethods subscribeOnceTo unbind
+    * @ignoreMethods subscribeOnceTo unbind setProperties setProperty getProperty
     *
     * @ignoreEvents onChange onClick onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onStateChange
-    * @ignoreEvents onTooltipContentRequest
+    * @ignoreEvents onTooltipContentRequest onPropertyChanged
     */
 
    var MonthPicker = Control.Control.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.MonthPicker.prototype */{

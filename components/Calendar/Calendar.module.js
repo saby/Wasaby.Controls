@@ -16,7 +16,7 @@ define(
       'use strict';
 
       /**
-       * Календарь имеет соответствубщее названию контрола визуальное отображение.
+       * Календарь имеет соответствующее названию контрола визуальное отображение.
        * Предназначен для задания даты путём выбора.
        * @class SBIS3.CONTROLS.Calendar
        * @extends $ws.proto.CompoundControl
@@ -29,13 +29,19 @@ define(
        * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
        * @ignoreOptions extendedTooltip
        *
+       * @ignoreMethods activate activateFirstControl activateLastControl addPendingOperation changeControlTabIndex
+       * @ignoreMethods destroyChild detectNextActiveChildControl disableActiveCtrl focusCatch getActiveChildControl
+       * @ignoreMethods getChildControlById getChildControlByName getChildControls getContext getEventBusOf moveFocus
+       * @ignoreMethods getImmediateChildControls getNearestChildControlByName getOpener getReadyDeferred isAllReady
        * @ignoreMethods applyEmptyState applyState getClassName getEventHandlers getEvents getExtendedTooltip getOwnerId
        * @ignoreMethods getLinkedContext getOwner getStateKey getUserData hasEvent hasEventHandlers makeOwnerName once
        * @ignoreMethods sendCommand setClassName setExtendedTooltip setOpener setStateKey setUserData subscribe unsubscribe
-       * @ignoreMethods subscribeOnceTo unbind
+       * @ignoreMethods subscribeOnceTo unbind setProperties setProperty getProperty moveToTop registerChildControl
+       * @ignoreMethods registerDefaultButton setChildActive setSize storeActiveChild unregisterChildControl
+       * @ignoreMethods unregisterDefaultButton waitAllPendingOperations waitChildControlById waitChildControlByName
        *
        * @ignoreEvents onChange onClick onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onStateChange
-       * @ignoreEvents onTooltipContentRequest
+       * @ignoreEvents onTooltipContentRequest onPropertyChanged onActivate onBeforeControlsLoad onResize
        */
 
       var Calendar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Calendar.prototype */{
