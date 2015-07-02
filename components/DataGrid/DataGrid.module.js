@@ -178,7 +178,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
          this._editInPlace = new EditInPlaceController({
             columns: this._options.columns,
             addInPlaceButton: this._addInPlaceButton,
-            element: $('<div>').appendTo(this._container.find('.controls-DataGrid__table')),
+            element: $('<div>').insertBefore(this._container.find('.controls-DataGrid__table')),
             dataSet: this._dataSet,
             ignoreFirstColumn: this._options.multiselect,
             moveFocusEvent: this._options.editInPlace.moveFocusEvent,
@@ -298,7 +298,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
          //Если нашли, то расчитаем куда и на сколько нам скролить
          if(elemToScroll) {
             elemRect = elemToScroll.getBoundingClientRect();
-            delta = arrowRect.right - elemRect.left;
+            delta = arrowRect.left - elemRect.left;
             elemWidth = elemToScroll.offsetWidth;
 
             //Подключим анимацию
