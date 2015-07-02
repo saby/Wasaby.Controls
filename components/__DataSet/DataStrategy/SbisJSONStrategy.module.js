@@ -172,9 +172,9 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
          */
       getMetaData: function (data) {
          return {
-            results : data.r,
+            results: data.r,
             more: data.n
-         }
+         };
       },
        /**
         *

@@ -162,6 +162,7 @@ define('js!SBIS3.CONTROLS.StaticSource', [
          return $ws.proto.Deferred.success(new DataSet({
             strategy: this.getStrategy(),
             data: data,
+            meta: this.getStrategy().getMetaData(this._options.data),
             keyField: this._options.keyField
          }));
       },
