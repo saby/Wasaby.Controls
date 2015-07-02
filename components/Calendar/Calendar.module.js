@@ -41,7 +41,8 @@ define(
        * @ignoreMethods unregisterDefaultButton waitAllPendingOperations waitChildControlById waitChildControlByName
        *
        * @ignoreEvents onChange onClick onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onStateChange
-       * @ignoreEvents onTooltipContentRequest onPropertyChanged onActivate onBeforeControlsLoad onResize
+       * @ignoreEvents onTooltipContentRequest onPropertyChanged onActivate onBeforeControlsLoad onResize onAfterLoad
+       * @ignoreOptions onAfterShow onBeforeLoad onBeforeShow onReady onStateChanged
        */
 
       var Calendar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Calendar.prototype */{
@@ -54,7 +55,7 @@ define(
            *    calendar.subscribe('onDateChange', function(event, selectedDate){
            *       // если выбрали 23е февраля, то сообщим об этом
            *       if(selectedDate.getDay() === 23 && selectedDate.getMonth() === 1){
-           *          $ws.core.alert("Вы выбрали праздничный день!");
+           *          $ws.core.alert("Вы выбрали праздничный день - «День защитника Отечества»");
            *       }
            *    });
            * </pre>
