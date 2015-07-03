@@ -13,7 +13,8 @@ define('js!SBIS3.CONTROLS.DataGrid',
    'use strict';
       /* TODO: Надо считать высоту один раз, а не делать константой */
       var
-         ITEMS_ACTIONS_HEIGHT = 20;
+         ITEMS_ACTIONS_HEIGHT = 20,
+         ANIMATION_DURATION = 500; //Продолжительность анимации скрола заголовков
    /**
     * Контрол, отображающий набор данных в виде в таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.DataGrid
@@ -51,7 +52,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
             left: 0,
             right: 0
          },
-         _currentThumbPosition: undefined,            //Контейнер скроллбара
+         _currentScrollPosition: undefined,           //Текущее положение частичного скрола заголовков
          _scrollingNow: false,                        //Флаг обозаначающий, происходит ли в данный момент скролирование элементов
          _options: {
             /**
@@ -158,6 +159,10 @@ define('js!SBIS3.CONTROLS.DataGrid',
                self._getItemsContainer().find('.controls-ListView__item[data-id="' + record.getKey() + '"]')
                   .empty()
                   .append($(self._getItemTemplate(record)).children());
+               if(self._isPartScrollVisible) {
+                  self._findMovableCells();
+                  self._moveThumbAndColumns({left: self._currentScrollPosition});
+               }
             });
             this._createEditInPlace();
          }
@@ -173,7 +178,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
          this._editInPlace = new EditInPlaceController({
             columns: this._options.columns,
             addInPlaceButton: this._addInPlaceButton,
-            element: $('<div>').appendTo(this._container.find('.controls-DataGrid__table')),
+            element: $('<div>').insertBefore(this._container.find('.controls-DataGrid__table')),
             dataSet: this._dataSet,
             ignoreFirstColumn: this._options.multiselect,
             moveFocusEvent: this._options.editInPlace.moveFocusEvent,
@@ -182,7 +187,9 @@ define('js!SBIS3.CONTROLS.DataGrid',
       },
       
       _onChangeHoveredItem: function(hoveredItem) {
-         this._updateEditInPlaceDisplay(hoveredItem);
+         if(!this.isNowScrollingPartScroll()) {
+            this._updateEditInPlaceDisplay(hoveredItem);
+         }
          DataGrid.superclass._onChangeHoveredItem.apply(this, arguments);
       },
       _updateEditInPlaceDisplay: function(hoveredItem) {
@@ -239,7 +246,16 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
       _drawItemsCallback: function () {
          if(this._options.startScrollColumn !== undefined) {
-            var needShowScroll = this._isPartScrollNeeded();
+
+          /* Т.к. у таблицы стиль table-layout:fixed, то в случае,
+             когда суммарная ширина фиксированных колонок шире родительского контейнера,
+             колонка с резиновой шириной скукоживается до 0,
+             потому что table-layout:fixed игнорирует минимальную ширину колонки.
+             Поэтому мы вынуждены посчитать... и установить минимальную ширину на всю таблицу целиком.
+             В этом случае плавающая ширина скукоживаться не будет.
+             Пример можно посмотреть в реестре номенклатур. */
+            this._setColumnWidthForPartScroll();
+            var needShowScroll = this._isTableWide();
 
             this._isPartScrollVisible ?
                needShowScroll ?
@@ -247,10 +263,14 @@ define('js!SBIS3.CONTROLS.DataGrid',
                needShowScroll ?
                   this._showPartScroll() : this._hidePartScroll();
 
-            this._movableElems = this._findMovableCells();
+            this._findMovableCells();
          }
          DataGrid.superclass._drawItemsCallback.call(this);
       },
+      // <editor-fold desc="PartScrollBlock">
+
+      //TODO Нужно вынести в отдельный класс(контроллер?), чтобы не смешивать все drag-and-drop'ы в кучу
+
       /************************/
       /*   Частичный скролл   */
       /***********************/
@@ -261,6 +281,28 @@ define('js!SBIS3.CONTROLS.DataGrid',
          this.initializeDragAndDrop();
       },
 
+
+      _setColumnWidthForPartScroll: function() {
+         var tds = this._getItemsContainer().find('.controls-DataGrid__tr').eq(0).find('.controls-DataGrid__td'),
+            columns = this.getColumns(),
+            tdIndex,
+            minWidth;
+
+         /* если у нас включается прокрутка заголовкой,
+            то минимальная ширина ужимается до заданного значения,
+            и в этом режиме можно просто поставить width,
+            т.к. в режиме table-layout:fixed учитывается только width */
+         if(tds.length) {
+            for (var i = 0; i < columns.length; i++) {
+               tdIndex = this._options.multiselect ? i + 1 : i;
+               minWidth = columns[i].minWidth && parseInt(columns[i].minWidth, 10);
+               if (minWidth && tds[tdIndex]&& tds[tdIndex].offsetWidth < minWidth) {
+                  this._colgroup.find('col')[tdIndex].width = minWidth + 'px';
+               }
+            }
+         }
+      },
+
       _dragStart: function() {
          $ws._const.$body.addClass('ws-unSelectable');
          this._scrollingNow = true;
@@ -268,7 +310,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
       _arrowClickHandler: function(isRightArrow) {
          var shift = (this._getWithinElem()[0].offsetWidth/100)*5;
-         this._dragMove(false, {left: (parseInt(this._thumb[0].style.left) || 0) + (isRightArrow ?  -shift : shift)});
+         this._moveThumbAndColumns({left: (parseInt(this._thumb[0].style.left) || 0) + (isRightArrow ?  -shift : shift)});
       },
 
       _thumbClickHandler: function() {
@@ -276,9 +318,42 @@ define('js!SBIS3.CONTROLS.DataGrid',
       },
 
       _dragEnd: function() {
+         this._animationAtPartScrollDragEnd();
          $ws._const.$body.removeClass('ws-unSelectable');
          this._thumb.removeClass('controls-DataGrid__PartScroll__thumb-clicked');
          this._scrollingNow = false;
+      },
+
+      /*
+       * Анимация по окончании скрола заголовков
+       * Используется для того, чтобы в редактировании по месту не было обрезков при прокрутке
+       */
+      _animationAtPartScrollDragEnd: function() {
+         if(this._currentScrollPosition === this._stopMovingCords.right) {
+            return;
+         }
+         //Найдём элемент, который нужно доскролить
+         var arrowRect = this._arrowLeft[0].getBoundingClientRect(),
+             elemToScroll = document.elementFromPoint(arrowRect.left + arrowRect.width / 2, arrowRect.top + arrowRect.height + 1),
+             elemRect,
+             elemWidth,
+             delta;
+
+         //Если нашли, то расчитаем куда и на сколько нам скролить
+         if(elemToScroll) {
+            elemRect = elemToScroll.getBoundingClientRect();
+            delta = arrowRect.left - elemRect.left;
+            elemWidth = elemToScroll.offsetWidth;
+
+            //Подключим анимацию
+            this._container.addClass('controls-DataGrid__PartScroll__animation');
+            this._moveThumbAndColumns({left: this._currentScrollPosition - ((delta > elemWidth / 2  ? - (elemWidth - delta) : delta) / this._partScrollRatio)});
+
+            //Тут приходится делать таймаут, чтобы правильно прошло выключение-включение анимации
+            setTimeout(function() {
+               this._container.removeClass('controls-DataGrid__PartScroll__animation')
+            }.bind(this), ANIMATION_DURATION);
+         }
       },
 
       _getDragContainer: function() {
@@ -290,10 +365,14 @@ define('js!SBIS3.CONTROLS.DataGrid',
       },
 
       _dragMove: function(event, cords) {
-         var correctCords = this._checkThumbPosition(cords),
-             movePosition = -correctCords*this._partScrollRatio;
+         this._moveThumbAndColumns(cords);
+      },
 
-         this._setThumbPosition(correctCords);
+      _moveThumbAndColumns: function(cords) {
+         this._currentScrollPosition = this._checkThumbPosition(cords);
+         var movePosition = -this._currentScrollPosition*this._partScrollRatio;
+
+         this._setThumbPosition(this._currentScrollPosition);
          for(var i= 0, len = this._movableElems.length; i < len; i++) {
             this._movableElems[i].style.left = movePosition + 'px';
          }
@@ -328,7 +407,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
       },
 
       _findMovableCells: function() {
-         return this._container.find('.controls-DataGrid__scrolledCell');
+         this._movableElems = this._container.find('.controls-DataGrid__scrolledCell');
       },
 
       _checkThumbPosition: function(cords) {
@@ -353,7 +432,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
               .toggleClass('icon-primary action-hover', enable);
       },
 
-      _isPartScrollNeeded: function() {
+      _isTableWide: function() {
          return this._container[0].offsetWidth < this._getItemsContainer()[0].offsetWidth;
       },
 
@@ -372,14 +451,14 @@ define('js!SBIS3.CONTROLS.DataGrid',
          }
       },
 
-      isNowScrolling: function() {
+      isNowScrollingPartScroll: function() {
          return this._scrollingNow;
       },
 
       /*******************************/
       /*  Конец частичного скролла   */
       /*******************************/
-
+      // </editor-fold>
        /**
         * Метод получения текущего описания колонок представления данных.
         * @returns {*|columns} Описание набора колонок.
@@ -466,7 +545,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
          };
       },
       _showItemActions: function() {
-         if(!this.isNowScrolling()) {
+         if(!this.isNowScrollingPartScroll()) {
             DataGrid.superclass._showItemActions.call(this);
          }
       },
