@@ -244,6 +244,11 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
       _drawItemsCallback: function () {
          if(this._options.startScrollColumn !== undefined) {
+
+            /* Требуется установить ширину столбцам с заданной минимальной шириной
+               в случае, когда у таблицы table-layout:fixed и она по ширине больше контейнера.
+               Это сделано для того, чтобы не скукоживались столбцы с заданной минимальной шириной
+               и корректно работал частичный скролл. Пример можно посмотреть в реестре номенклатур. */
             this._setWidth();
             var needShowScroll = this._isTableWide();
 
