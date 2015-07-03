@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
              *    <li>false - обычная кнопка.</li>
              * </ul>
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="primary">true</option>
              * </pre>
              * @see isPrimary
