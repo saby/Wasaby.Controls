@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
              *    <li>false - нет неопределённого состояния.</li>
              * </ul>
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *    <option name="threeState">true</option>
              * </pre>
              */
