@@ -7,10 +7,11 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
    /**
     * Интерфейс предназначен для унификации работы с исходными данными датасорсов
     * @author Мануйлов Андрей
+    * @class SBIS3.CONTROLS.IDataStrategy
     * @public
     */
 
-   return $ws.core.extend({}, {
+   return $ws.core.extend({}, /** @lends SBIS3.CONTROLS.IDataStrategy.prototype */{
       $protected: {},
       $constructor: function () {
       },
