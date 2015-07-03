@@ -10,7 +10,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора.
-    * По умолчанию позволяет {@link editable вручную вводить значение}.
+    * Для работы контрола необходим источник данных, его можно задать либо в опции {@link items}, либо методом {@link setDataSource}.
+    * Среди полей источника данных необходимо указать какое является ключевым - {@link keyField}, и из какого поля будем
+    * отображать данные в выпадающий блок - {@link displayField}.
+    * При отсутствии данных на бизнес-логике будет выведен текст опции {@link emptyHTML}.
+    * Контрол по умолчанию позволяет {@link editable вручную вводить значение}.
     * @class SBIS3.CONTROLS.ComboBox
     * @extends SBIS3.CONTROLS.TextBox
     * @control
@@ -70,7 +74,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        * @see keyField
        * @see displayField
        * @see setDataSource
-       * @see getDataSource
+       * @see getDataSet
        */
 
       $protected: {
@@ -79,7 +83,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             /**
              * @cfg {String} Шаблон отображения каждого элемента коллекции
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="itemTemplate">
              *         <div data-key="{{=it.item.getKey()}}" class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow">
              *             <div class="genie-colorComboBox__itemTitle">
@@ -98,7 +102,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              * При включённой опции в случае отсутствия среди пунктов выпадающего списка нужного контрол позволяет
              * задать своё значение вводом с клавиатуры.
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="editable">false</option>
              * </pre>
              * @see items
@@ -394,7 +398,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._container.toggleClass('controls-ComboBox__editable-false', editable === false);
       },
       /**
-       * Признак возможности ручного ввода.@remark
+       * Признак возможности ручного ввода.
+       * @remark
        * Возможные значения:
        * <ul>
        *    <li>true - в случае отсутствия среди имеющихся пунктов нужного можнно ввести значение с клавиатуры;</li>
