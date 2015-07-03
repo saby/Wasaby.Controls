@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
       //TODO: вынести данную логику в MenuLink
       showPicker: function() {
          OperationsMark.superclass.showPicker.apply(this);
-         this._picker._container.toggleClass('controls-OperationsMark-emptyCaption', !this._options.caption);
+         this._picker._container.find('.controls-MenuLink__header').toggleClass('ws-hidden', !this._options.caption);
       },
       _onMenuItemActivate: function(e, id) {
          if (this[id]) {
