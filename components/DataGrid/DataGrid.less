@@ -22,8 +22,11 @@
 
      .controls-DataGrid__td, .controls-DataGrid__th {
        &.controls-DataGrid__notScrolledCell {
-         background-color: @data-grid-partScroll-notScrolledCell-Color ;
+         background-color: @data-grid-partScroll-notScrolledCell-Color;
          z-index: 1;
+         &.controls-DataGrid__th {
+           background-color: @data-grid-partScroll-notScrolledCell-Color;
+         }
        }
      }
 
