@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
             left: 0,
             right: 0
          },
-         _currentThumbPosition: undefined,            //Контейнер скроллбара
+         _currentScrollPosition: undefined,           //Текущее положение частичного скрола
          _scrollingNow: false,                        //Флаг обозаначающий, происходит ли в данный момент скролирование элементов
          _options: {
             /**
@@ -244,7 +244,8 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
       _drawItemsCallback: function () {
          if(this._options.startScrollColumn !== undefined) {
-            var needShowScroll = this._isPartScrollNeeded();
+            this._setWidth();
+            var needShowScroll = this._isTableWide();
 
             this._isPartScrollVisible ?
                needShowScroll ?
@@ -264,6 +265,24 @@ define('js!SBIS3.CONTROLS.DataGrid',
          (this._arrowRight = this._thead.find('.controls-DataGrid__PartScroll__arrowRight')).click(this._arrowClickHandler.bind(this, false));
          (this._thumb = this._getDragContainer()).mousedown(this._thumbClickHandler.bind(this));
          this.initializeDragAndDrop();
+      },
+
+
+      _setWidth: function() {
+         var tds = this._getItemsContainer().find('.controls-DataGrid__tr').eq(0).find('.controls-DataGrid__td'),
+            columns = this.getColumns(),
+            tdIndex,
+            minWidth;
+
+         if(tds.length) {
+            for (var i = 0; i < columns.length; i++) {
+               tdIndex = this._options.multiselect ? i + 1 : i;
+               minWidth = columns[i].minWidth && parseInt(columns[i].minWidth, 10);
+               if (minWidth && tds[tdIndex].offsetWidth < minWidth) {
+                  this._colgroup.find('col')[tdIndex].width = minWidth + 'px';
+               }
+            }
+         }
       },
 
       _dragStart: function() {
@@ -288,6 +307,9 @@ define('js!SBIS3.CONTROLS.DataGrid',
       },
 
       _animationAtDragEnd: function() {
+         if(this._currentScrollPosition === this._stopMovingCords.right) {
+            return;
+         }
          //Найдём элемент, который нужно доскролить
          var arrowRect = this._arrowLeft[0].getBoundingClientRect(),
              elemToScroll = document.elementFromPoint(arrowRect.left + arrowRect.width / 2, arrowRect.top + arrowRect.height + 1),
@@ -384,7 +406,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
               .toggleClass('icon-primary action-hover', enable);
       },
 
-      _isPartScrollNeeded: function() {
+      _isTableWide: function() {
          return this._container[0].offsetWidth < this._getItemsContainer()[0].offsetWidth;
       },
 
