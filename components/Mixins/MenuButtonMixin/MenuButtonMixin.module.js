@@ -6,6 +6,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
     * @mixin SBIS3.CONTROLS.MenuButtonMixin
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
    'use strict';
 
@@ -23,6 +24,10 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
         */
       $protected: {
          _options: {
+            /**
+             * @cfg {String} Поле иерархии
+             */
+            hierField : null
          }
       },
 

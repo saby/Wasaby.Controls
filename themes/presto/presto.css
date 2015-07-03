@@ -101,27 +101,20 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button .controls-Button__icon {
   position: absolute;
-  top: 19px;
   left: 8px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button .controls-Button__icon {
-    top: 20px;
-  }
+  top: 20px;
 }
 .controls-Button .controls-Button__icon + .controls-Button__text {
-  margin: 0 8px 0 28px;
+  margin-right: 8px;
+  margin-left: 28px;
 }
 .controls-Button .controls-Button__icon.icon-24 {
-  top: 14px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button .controls-Button__icon.icon-24 {
-    top: 15px;
-  }
+  left: 8px;
+  top: 15px;
 }
 .controls-Button .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin: 0 8px 0 36px;
+  margin-right: 8px;
+  margin-left: 36px;
 }
 .controls-Button.controls-Button__primary {
   color: #333333;
@@ -200,28 +193,20 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-Button__big .controls-Button__icon {
   position: absolute;
-  top: 19px;
   left: 8px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button.controls-Button__big .controls-Button__icon {
-    top: 20px;
-  }
+  top: 20px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon + .controls-Button__text {
-  margin: 0 8px 0 28px;
+  margin-right: 8px;
+  margin-left: 28px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-  top: 14px;
   left: 8px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-    top: 15px;
-  }
+  top: 15px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin: 0 8px 0 36px;
+  margin-right: 8px;
+  margin-left: 36px;
 }
 .controls-Button.controls-Button__big.controls-Button__primary {
   color: #333333;
@@ -335,6 +320,60 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-shadow: none;
   box-shadow: none;
   background: #ffe6cc;
+}
+.controls-Button.controls-Checked__checked .controls-Button__text {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+.controls-Button.controls-Checked__checked .controls-Button__icon {
+  left: 8px;
+  top: 20px;
+}
+.controls-Button.controls-Checked__checked .controls-Button__icon + .controls-Button__text {
+  margin-right: 8px;
+  margin-left: 28px;
+}
+.controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 {
+  left: 8px;
+  top: 15px;
+}
+.controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 + .controls-Button__text {
+  margin-right: 8px;
+  margin-left: 36px;
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__text {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__icon {
+  left: 8px;
+  top: 20px;
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__icon + .controls-Button__text {
+  margin-right: 8px;
+  margin-left: 28px;
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__icon.icon-24 {
+  left: 8px;
+  top: 15px;
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__icon.icon-24 + .controls-Button__text {
+  margin-right: 8px;
+  margin-left: 36px;
+}
+@-moz-document url-prefix() {
+  .controls-Button.controls-Checked__checked .controls-Button__icon {
+    top: 20px;
+  }
+  .controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 {
+    top: 15px;
+  }
+  .controls-Button.controls-Checked__checked.controls-Button__big .controls-Button__icon {
+    top: 20px;
+  }
+  .controls-Button.controls-Checked__checked.controls-Button__big .controls-Button__icon.icon-24 {
+    top: 15px;
+  }
 }
 .controls-IconButton {
   cursor: pointer;
@@ -789,6 +828,12 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
 }
 .controls-Menu__Popup .controls-Menu__hasChild:after {
   content: ' ';
@@ -944,6 +989,14 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuButton .controls-Button__icon + .controls-Button__text {
   margin-right: 30px;
 }
+.controls-MenuButton.controls-Checked__checked .controls-Button__text,
+.controls-MenuButton.controls-Checked__checked .controls-Button__icon + .controls-Button__text {
+  margin-right: 30px;
+}
+.controls-MenuButton.controls-Checked__checked .controls-MenuButton__arrowDown {
+  top: 24px;
+  right: 12px;
+}
 .controls-MenuButton__header {
   display: inline-block;
   position: absolute;
@@ -1069,6 +1122,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuLink__Menu {
   margin-left: -9px;
+  margin-bottom: 0;
   background: #ffffff;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
@@ -1368,6 +1422,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
   display: none;
+}
+.controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable__placeholder {
+  color: #eeeeee !important;
 }
 .controls-ComboBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
   position: absolute;
@@ -1877,6 +1934,41 @@ input[type="reset"]::-moz-focus-inner {
   overflow: hidden;
   position: relative;
 }
+.controls-ListView .controls-ListView__item,
+.controls-DataGrid .controls-ListView__item {
+  overflow: hidden;
+  position: relative;
+}
+.controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox,
+.controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox {
+  background: transparent;
+}
+.controls-ListView .controls-ListView__EmptyData {
+  width: 100%;
+  color: #aaaaaa;
+  text-align: center;
+}
+.controls-ListView .controls-ListView__itemCheckBox {
+  width: 16px;
+  height: 16px;
+  background: none;
+  cursor: pointer;
+  display: none;
+}
+.controls-ListView.controls-ListView__multiselect .controls-ListView__itemCheckBox {
+  display: inline-block;
+}
+.controls-ListView.controls-ListView__multiselect .controls-ListView__item__multiSelected .controls-ListView__itemCheckBox {
+  background: transparent url('img/checkbox.png') -2px -5px;
+}
+.controls-ListView .controls-ListView-scrollIndicator {
+  display: block;
+  background: url('img/ajax-loader-indicator.gif') 0 0 no-repeat;
+  margin: 0 auto !important;
+  top: 50%!important;
+  height: 32px;
+  width: 32px;
+}
 .controls-ListView > .controls-TreeView__childContainer {
   display: block;
 }
@@ -1907,7 +1999,6 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 8px 0 8px 8px;
   border-style: solid;
   border-color: transparent transparent transparent #ffb366;
-  background: transparent;
 }
 .controls-TreeView__expand.controls-TreeView__expand__open {
   width: auto;
@@ -1922,7 +2013,6 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 8px 8px 0 8px;
   border-style: solid;
   border-color: #ffb366 transparent transparent transparent;
-  background: transparent;
 }
 .controls-TreeView__expand + .controls-TreeView__itemContent {
   margin: 0 0 0 20px;
@@ -1940,6 +2030,7 @@ input[type="reset"]::-moz-focus-inner {
   border-style: solid;
   border-color: transparent;
   background: #4e5762;
+  table-layout: fixed;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell,
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th.controls-DataGrid__notScrolledCell {
@@ -2014,10 +2105,18 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px 1px 0 1px;
   border-style: solid;
   border-color: transparent;
+  border-bottom: 1px solid #f5f5f5;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:hover {
   color: #aaaaaa;
   background-color: transparent;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox {
+  margin: -3px 0 0 4px;
+  background: transparent;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-DataGrid__th__checkBox__checked {
+  background: transparent url('img/checkbox.png') -2px -5px;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
@@ -2031,6 +2130,11 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px 0 0;
   border-style: solid;
   border-color: #F5F5F5;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid-cell-overflow-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
   padding-left: 10px;
@@ -2064,7 +2168,6 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   position: relative;
   top: -1px;
-  display: inline-block;
 }
 .controls-PathSelector__point:hover .controls-PathSelector__title {
   color: #FF7033;
@@ -2091,6 +2194,7 @@ input[type="reset"]::-moz-focus-inner {
   background-position: 0 23px;
 }
 .controls-PathSelector .controls-PathSelector__title {
+  text-decoration: none;
   color: #0055BB;
   padding-right: 1px;
   display: inline-block;
@@ -2105,12 +2209,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-PathSelector .controls-PathSelector__itemsContainer {
   display: inline-block;
 }
-.controls-PathSelector .controls-PathSelector__dots .controls-PathSelector__title {
+.controls-PathSelector .controls-PathSelector__dots {
   margin-left: -3px;
 }
-.controls-PathSelector .controls-PathSelector__dots:hover .controls-PathSelector__title {
-  text-decoration: underline;
-  color: #FF7033;
+.controls-PathSelector .controls-PathSelector__dots .controls-PathSelector__title {
+  margin-left: -3px;
 }
 .controls-PathSelector.controls-PathSelector__picker .controls-PathSelector__point {
   display: block;
@@ -2124,6 +2227,30 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/pathSelector__hierWrapper.png') no-repeat;
   position: relative;
   top: -3px;
+}
+.controls-Pager {
+  float: right;
+  height: 28px;
+}
+.controls-Pager .controls-text {
+  line-height: 20px;
+  font-size: 11px;
+  padding-top: 2px;
+  color: #999999;
+}
+.controls-Pager .controls-Pager-block {
+  float: right;
+}
+.controls-Pager .controls-Pager-block-amount {
+  padding: 5px 6px 6px 1px;
+}
+.controls-Pager .controls-Pager-block-paging {
+  padding: 4px 0 0 6px;
+}
+.controls-Pager .controls-Pager__pageSize-container select,
+.controls-Pager .controls-Pager__pageSize-container .custom-select.asLink {
+  font-size: 11px;
+  text-decoration: underline;
 }
 .controls-operations-panel {
   /*TODO придрот (2 important), чтобы перебить высоту ws-area*/

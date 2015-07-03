@@ -101,27 +101,20 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button .controls-Button__icon {
   position: absolute;
-  top: 5px;
-  left: 8px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button .controls-Button__icon {
-    top: 6px;
-  }
+  left: 7px;
+  top: 6px;
 }
 .controls-Button .controls-Button__icon + .controls-Button__text {
-  margin: 0 8px 0 28px;
+  margin-right: 7px;
+  margin-left: 27px;
 }
 .controls-Button .controls-Button__icon.icon-24 {
-  top: 0px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button .controls-Button__icon.icon-24 {
-    top: 1px;
-  }
+  left: 7px;
+  top: 1px;
 }
 .controls-Button .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin: 0 8px 0 36px;
+  margin-right: 7px;
+  margin-left: 35px;
 }
 .controls-Button.controls-Button__primary {
   color: #ffffff;
@@ -200,28 +193,20 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-Button__big .controls-Button__icon {
   position: absolute;
-  top: 16px;
-  left: 20px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button.controls-Button__big .controls-Button__icon {
-    top: 17px;
-  }
+  left: 19px;
+  top: 18px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon + .controls-Button__text {
-  margin: 0 20px 0 40px;
+  margin-right: 19px;
+  margin-left: 39px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-  top: 13px;
-  left: 20px;
-}
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-    top: 14px;
-  }
+  left: 19px;
+  top: 15px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon.icon-24 + .controls-Button__text {
-  margin: 0 20px 0 48px;
+  margin-right: 19px;
+  margin-left: 47px;
 }
 .controls-Button.controls-Button__big.controls-Button__primary {
   color: #ffffff;
@@ -290,10 +275,10 @@ input[type="reset"]::-moz-focus-inner {
     top: 1px;
   }
   .controls-Button.controls-Button__big .controls-Button__icon {
-    top: 17px;
+    top: 18px;
   }
   .controls-Button.controls-Button__big .controls-Button__icon.icon-24 {
-    top: 14px;
+    top: 15px;
   }
 }
 .controls-ButtonGroup .controls-ListView__item {
@@ -335,6 +320,60 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-shadow: none;
   box-shadow: none;
   background: #ffffff;
+}
+.controls-Button.controls-Checked__checked .controls-Button__text {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+.controls-Button.controls-Checked__checked .controls-Button__icon {
+  left: 7px;
+  top: 6px;
+}
+.controls-Button.controls-Checked__checked .controls-Button__icon + .controls-Button__text {
+  margin-right: 7px;
+  margin-left: 27px;
+}
+.controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 {
+  left: 7px;
+  top: 1px;
+}
+.controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 + .controls-Button__text {
+  margin-right: 7px;
+  margin-left: 35px;
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__text {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__icon {
+  left: 19px;
+  top: 18px;
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__icon + .controls-Button__text {
+  margin-right: 19px;
+  margin-left: 39px;
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__icon.icon-24 {
+  left: 19px;
+  top: 15px;
+}
+.controls-Button__big.controls-Checked__checked .controls-Button__icon.icon-24 + .controls-Button__text {
+  margin-right: 19px;
+  margin-left: 47px;
+}
+@-moz-document url-prefix() {
+  .controls-Button.controls-Checked__checked .controls-Button__icon {
+    top: 6px;
+  }
+  .controls-Button.controls-Checked__checked .controls-Button__icon.icon-24 {
+    top: 1px;
+  }
+  .controls-Button.controls-Checked__checked.controls-Button__big .controls-Button__icon {
+    top: 18px;
+  }
+  .controls-Button.controls-Checked__checked.controls-Button__big .controls-Button__icon.icon-24 {
+    top: 15px;
+  }
 }
 .controls-IconButton {
   cursor: pointer;
@@ -789,6 +828,12 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: 0 0 8px 1px #aaaaaa;
   -moz-box-shadow: 0 0 8px 1px #aaaaaa;
   box-shadow: 0 0 8px 1px #aaaaaa;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
 }
 .controls-Menu__Popup .controls-Menu__hasChild:after {
   content: ' ';
@@ -878,8 +923,8 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   width: 10px;
   height: 5px;
-  right: 12px;
-  top: 13px;
+  right: 11px;
+  top: 12px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -943,6 +988,14 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuButton .controls-Button__text,
 .controls-MenuButton .controls-Button__icon + .controls-Button__text {
   margin-right: 30px;
+}
+.controls-MenuButton.controls-Checked__checked .controls-Button__text,
+.controls-MenuButton.controls-Checked__checked .controls-Button__icon + .controls-Button__text {
+  margin-right: 30px;
+}
+.controls-MenuButton.controls-Checked__checked .controls-MenuButton__arrowDown {
+  top: 12px;
+  right: 11px;
 }
 .controls-MenuButton__header {
   display: inline-block;
@@ -1069,6 +1122,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuLink__Menu {
   margin-left: -9px;
+  margin-bottom: 0;
   background: #ffffff;
 }
 .controls-MenuLink__Menu .controls-MenuLink__header {
@@ -1368,6 +1422,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
   display: none;
+}
+.controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable__placeholder {
+  color: #d1d1d1 !important;
 }
 .controls-ComboBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
   position: absolute;
@@ -1887,7 +1944,8 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/CheckBox-sprite.png') 0 -16px;
 }
 .controls-ListView .controls-ListView__EmptyData {
-  width: 100%;
+  width: 100px;
+  display: inline-block;
   color: #919191;
   text-align: center;
 }
@@ -1897,6 +1955,9 @@ input[type="reset"]::-moz-focus-inner {
   background: none;
   cursor: pointer;
   display: none;
+  position: absolute;
+  left: 3px;
+  top: 5px;
 }
 .controls-ListView.controls-ListView__multiselect .controls-ListView__itemCheckBox {
   display: inline-block;
@@ -1942,7 +2003,6 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 6px 0 6px 6px;
   border-style: solid;
   border-color: transparent transparent transparent #353535;
-  background: transparent;
 }
 .controls-TreeView__expand.controls-TreeView__expand__open {
   width: auto;
@@ -1957,7 +2017,6 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 6px 6px 0 6px;
   border-style: solid;
   border-color: #353535 transparent transparent transparent;
-  background: transparent;
 }
 .controls-TreeView__expand + .controls-TreeView__itemContent {
   margin: 0 0 0 15px;
@@ -1975,6 +2034,7 @@ input[type="reset"]::-moz-focus-inner {
   border-style: solid;
   border-color: transparent;
   background: #ffffff;
+  table-layout: fixed;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell,
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th.controls-DataGrid__notScrolledCell {
@@ -2049,10 +2109,18 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px 1px 0 1px;
   border-style: solid;
   border-color: transparent;
+  border-bottom: 1px solid #f5f5f5;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:hover {
   color: #919191;
   background-color: transparent;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox {
+  margin: -3px 0 0 4px;
+  background: url('img/CheckBox-sprite.png') 0 -16px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-DataGrid__th__checkBox__checked {
+  background: url('img/CheckBox-sprite.png') 0 -32px;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
@@ -2066,6 +2134,11 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px 0 0;
   border-style: solid;
   border-color: #F5F5F5;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid-cell-overflow-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
   padding-left: 10px;
@@ -2099,7 +2172,6 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   position: relative;
   top: -1px;
-  display: inline-block;
 }
 .controls-PathSelector__point:hover .controls-PathSelector__title {
   color: #FF7033;
@@ -2126,6 +2198,7 @@ input[type="reset"]::-moz-focus-inner {
   background-position: 0 23px;
 }
 .controls-PathSelector .controls-PathSelector__title {
+  text-decoration: none;
   color: #0055BB;
   padding-right: 1px;
   display: inline-block;
@@ -2140,12 +2213,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-PathSelector .controls-PathSelector__itemsContainer {
   display: inline-block;
 }
-.controls-PathSelector .controls-PathSelector__dots .controls-PathSelector__title {
+.controls-PathSelector .controls-PathSelector__dots {
   margin-left: -3px;
 }
-.controls-PathSelector .controls-PathSelector__dots:hover .controls-PathSelector__title {
-  text-decoration: underline;
-  color: #FF7033;
+.controls-PathSelector .controls-PathSelector__dots .controls-PathSelector__title {
+  margin-left: -3px;
 }
 .controls-PathSelector.controls-PathSelector__picker .controls-PathSelector__point {
   display: block;
@@ -2159,6 +2231,30 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/pathSelector__hierWrapper.png') no-repeat;
   position: relative;
   top: -3px;
+}
+.controls-Pager {
+  float: right;
+  height: 28px;
+}
+.controls-Pager .controls-text {
+  line-height: 20px;
+  font-size: 11px;
+  padding-top: 2px;
+  color: #919191;
+}
+.controls-Pager .controls-Pager-block {
+  float: right;
+}
+.controls-Pager .controls-Pager-block-amount {
+  padding: 5px 6px 6px 1px;
+}
+.controls-Pager .controls-Pager-block-paging {
+  padding: 4px 0 0 6px;
+}
+.controls-Pager .controls-Pager__pageSize-container select,
+.controls-Pager .controls-Pager__pageSize-container .custom-select.asLink {
+  font-size: 11px;
+  text-decoration: underline;
 }
 .controls-UnitEditor__fieldWrapper {
   margin-right: 34px;

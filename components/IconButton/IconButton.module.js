@@ -18,9 +18,11 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTR
     *    <option name="icon">sprite:icon-16 icon-AddButton icon-primary</option>
     * </component>
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @category Buttons
     * @mixes SBIS3.CONTROLS.IconMixin
     * @mixes SBIS3.CONTROLS.Clickable
+    *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
     * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment

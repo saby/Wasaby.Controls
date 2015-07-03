@@ -17,6 +17,9 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
               * <pre>
               *     <option name="pickerClassName">control-MyComboBox__ComboBox__position</option>
               * </pre>
+              * @remark
+              * Класс необходимо создать в файле компонента с расширением .css.
+              * Стили из этого класса применятся к выпадающему блоку.
               */
             pickerClassName : ''
          }

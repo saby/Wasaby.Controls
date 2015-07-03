@@ -10,10 +10,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора.
-    * По умолчанию позволяет вручную вводить значение.
+    * По умолчанию позволяет {@link editable вручную вводить значение}.
     * @class SBIS3.CONTROLS.ComboBox
     * @extends SBIS3.CONTROLS.TextBox
     * @control
+    * @author Крайнов Дмитрий Олегович
     * @public
     * @initial
     * <component data-component='SBIS3.CONTROLS.ComboBox'>
@@ -48,8 +49,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       /**
        * @cfg {ItemsComboBox[]} Набор исходных данных, по которому строится отображение
        * @name SBIS3.CONTROLS.ComboBox#items
+       * @remark
+       * !Важно: данные для выпадающего списка можно задать либо в этой опции,
+       * либо через источник данных методом {@link setDataSource}.
        * @example
-       * <pre>
+       * <pre class="brush:xml">
        *     <options name="items" type="array">
        *        <options>
        *            <option name="key">1</option>
@@ -60,7 +64,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        *            <option name="title">Пункт2</option>
        *         </options>
        *      </options>
+       *      <!--необходимо указать какое из наших полей является ключевым-->
+       *      <option name="keyField">key</option>
        * </pre>
+       * @see keyField
+       * @see displayField
+       * @see setDataSource
+       * @see getDataSource
        */
 
       $protected: {
@@ -78,18 +88,25 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              *         </div>
              *     </option>
              * </pre>
-             * @TextMultiline
+             * @items
              */
             itemTemplate: '',
             afterFieldWrapper: arrowTpl,
             /**
              * @cfg {Boolean} Возможность ручного ввода текста
+             * @remark
+             * При включённой опции в случае отсутствия среди пунктов выпадающего списка нужного контрол позволяет
+             * задать своё значение вводом с клавиатуры.
              * @example
              * <pre>
              *     <option name="editable">false</option>
              * </pre>
+             * @see items
              * @see isEditable
              * @see setEditable
+             * @see textTransform
+             * @see inputRegExp
+             * @see maxLength
              */
             editable: true,
             /**
@@ -118,7 +135,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             return false;
          });
          if (this._options.selectedKey) {
-            this._drawSelectedItem(this._options.selectedKey);         } else {
+            this._drawSelectedItem(this._options.selectedKey); } else {
             /*TODO следующая строчка должна быть в Selector*/
             this._options.selectedKey = null;
             if (this._options.text) {
@@ -137,17 +154,31 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _keyboardHover: function(e) {
-         var newItemIndex = this[e.which === $ws._const.key.down ? 'getNextItemIndex' : 'getPrevItemIndex']();
-         if (newItemIndex !== false) {
-            this.setSelectedKey(newItemIndex);
-         }
-         return false;
+        var items = $('.controls-ListView__item', this._container),
+            selectedKey = this.getSelectedKey(),
+            selectedItem = $('.controls-ComboBox__itemRow__selected', this._picker._c),
+            nextItem = (selectedKey) ? selectedItem.next('.controls-ListView__item') : items.eq(0),
+            previousItem = (selectedKey) ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
+            
+            //навигация по стрелкам
+           if (e.which === $ws._const.key.up) {
+             previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
+           } else if (e.which === $ws._const.key.down) {
+             nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+           }
+
+           return false;
       },
 
       setText: function (text) {
          ComboBox.superclass.setText.call(this, text);
-         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text);
+         this._drawNotEditablePlaceholder(text);
+         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder);
          this._setKeyByText();
+      },
+
+      _drawNotEditablePlaceholder: function (text) {
+         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).toggleClass('controls-ComboBox__fieldNotEditable__placeholder', !text);
       },
 
       _drawSelectedItem: function (key) {
@@ -169,11 +200,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   var newText = item.get(self._options.displayField);
                   if (newText != self._options.text) {
                      ComboBox.superclass.setText.call(self, newText);
+                     self._drawNotEditablePlaceholder(newText);
                      $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(newText);
                   }
                }
                else {
                   ComboBox.superclass.setText.call(self, '');
+                  self._drawNotEditablePlaceholder('');
                   $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text('');
                }
                if (self._picker) {
@@ -342,7 +375,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
       /**
        * Метод установки/изменения возможности ручного ввода.
-       * @param editable Возможность ручного ввода.
+       * @remark
+       * Возможные значения:
+       * <ul>
+       *    <li>true - в случае отсутствия среди имеющихся пунктов нужного можнно ввести значение с клавиатуры;</li>
+       *    <li>false - значение можно задать только выбором из списка существующих.</li>
+       * </ul>
+       * @param {Boolean} editable Возможность ручного ввода.
        * @example
        * <pre>
        *     myComboBox.setEditable(false);
@@ -355,7 +394,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._container.toggleClass('controls-ComboBox__editable-false', editable === false);
       },
       /**
-       * Признак возможности ручного ввода.
+       * Признак возможности ручного ввода.@remark
+       * Возможные значения:
+       * <ul>
+       *    <li>true - в случае отсутствия среди имеющихся пунктов нужного можнно ввести значение с клавиатуры;</li>
+       *    <li>false - значение можно задать только выбором из списка существующих.</li>
+       * </ul>
        * @returns {Boolean} Возможен ли ручной ввод.
        * @example
        * <pre>

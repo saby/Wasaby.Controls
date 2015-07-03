@@ -12,6 +12,7 @@
       border-style: @data-grid-border-style;
       border-color: @data-grid-border-color;
       background: @data-grid-bg;
+      table-layout: @data-grid-table-layot;
 
      .controls-DataGrid__td, .controls-DataGrid__th {
        &.controls-DataGrid__notScrolledCell {
@@ -96,10 +97,18 @@
          border-width: @data-grid-header-cell-border-width;
          border-style: @data-grid-header-cell-border-style;
          border-color: @data-grid-header-cell-border-color;
-
+			border-bottom: @data-grid-header-cell-border-bottom;
+			
          &:hover {
             color: @data-grid-header-cell-hover-text-color;
             background-color: @data-grid-header-cell-hover-bg;
+         }
+         .controls-ListView__itemCheckBox{
+            margin: -3px 0 0 4px;
+            background: @check-box-icon-hover-bg;
+         }
+         .controls-DataGrid__th__checkBox__checked{
+            background: @check-box-icon-checked-bg;
          }
       }
 
@@ -116,6 +125,11 @@
          border-width: @data-grid-cell-border-width;
          border-style: @data-grid-cell-border-style;
          border-color: #F5F5F5;
+        &.controls-DataGrid-cell-overflow-ellipsis{
+           overflow: @data-grid-cell-overflow;
+           text-overflow: @data-grid-cell-text-overflow;
+           white-space: @data-grid-cell-white-spaces;
+        }
       }
       .controls-DataGrid__th:first-child {
          padding-left: @data-grid-cell-padding-side;

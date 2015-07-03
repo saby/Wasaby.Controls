@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
+    * @author Крайнов Дмитрий Олегович
     */
    var TreeMixinDS = /** @lends SBIS3.CONTROLS.TreeMixinDS.prototype */{
       $protected: {
@@ -21,6 +22,14 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
          }
       },
 
+      $constructor : function() {
+         this._filter = this._filter || {};
+         delete (this._filter[this._options.hierField]);
+         if (this._options.expand) {
+            this._filter['Разворот'] = 'С разворотом';
+            this._filter['ВидДерева'] = 'Узлы и листья';
+         }
+      },
 
       _getRecordsForRedraw: function() {
          /*Получаем только рекорды с parent = curRoot*/
@@ -29,7 +38,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
             records = [];
          if (this._options.expand) {
             this.hierIterate(this._dataSet, function (record) {
-               if (this._options.displayType == 'folders') {
+               if (self._options.displayType == 'folders') {
                   if (record.get(self._options.hierField + '@')) {
                      records.push(record);
                   }
@@ -50,7 +59,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
        * Закрыть определенный узел
        * @param {String} key Идентификатор раскрываемого узла
        */
-      closeNode: function (key) {
+      collapseNode: function (key) {
          var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.js-controls-TreeView__expand', itemCont).removeClass('controls-TreeView__expand__open');
          this._nodeClosed(key);
@@ -64,40 +73,25 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
       toggleNode: function (key) {
          var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          if ($('.js-controls-TreeView__expand', itemCont).hasClass('controls-TreeView__expand__open')) {
-            this.closeNode(key);
+            this.collapseNode(key);
          }
          else {
-            this.openNode(key);
+            this.expandNode(key);
          }
       },
 
-      before: {
-         openNode: function () {
-
-         }
-      },
-
-      openNode: function (key) {
+      expandNode: function (key) {
+         var self = this,
+          filter = $ws.core.clone(this._filter) || {};
          if (this._options.expand) {
             this._filter = this._filter || {};
-            this._filter['Разворот'] = 'С разворотом';
-            this._filter['ВидДерева'] = 'Узлы и листья';
-         }
-         var self = this;
-         this._loadNode(key).addCallback(function (dataSet) {
-            self._nodeDataLoaded(key, dataSet);
-         });
-      },
-
-      _loadNode : function(key) {
-         /*TODO проверка на что уже загружали*/
-         var filter = this._filter || {};
-         if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
          }
          filter[this._options.hierField] = key;
-         return this._dataSource.query(filter);
+         this._dataSource.query(filter).addCallback(function (dataSet) {
+            self._nodeDataLoaded(key, dataSet);
+         });
       },
 
       _nodeDataLoaded : function(key, dataSet) {
@@ -141,7 +135,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
         }
       },
 
-      _elemClickHandlerInternal: function (id, data, target) {
+      _elemClickHandlerInternal: function (data, id, target) {
          if ($(target).hasClass('js-controls-TreeView__expand') && $(target).hasClass('has-child')) {
             var nodeID = $(target).closest('.controls-ListView__item').data('id');
             this.toggleNode(nodeID);

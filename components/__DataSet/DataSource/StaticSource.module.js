@@ -10,7 +10,6 @@ define('js!SBIS3.CONTROLS.StaticSource', [
 
    /**
     * Класс для работы с массивами, как с источником данных.
-    * @author Мануйлов Андрей
     * @class SBIS3.CONTROLS.StaticSource
     * @extends SBIS3.CONTROLS.BaseSource
     * @public
@@ -143,17 +142,17 @@ define('js!SBIS3.CONTROLS.StaticSource', [
             var filterMatch = true;
 
             for (var filterField in filter) {
+               //TODO: пока параметры иерархии передаются в фильтрах делаем так
+               if (filterValue == 'С разворотом' || filterValue == 'Узлы и листья') {
+               	break;
+               }            	
                if (filter.hasOwnProperty(filterField)) {
                   var filterValue = filter[filterField],
                       dataValue = strategy.value(dataItem, filterField);
 
                   //Если установлен фильтр-callback - используем его результат, иначе - проверяем полное совпадение значений
                   var callbackResult = this._options.dataFilterCallback ? this._options.dataFilterCallback(filterField, dataValue, filterValue) : undefined;
-                  if (callbackResult === undefined) {
-                     filterMatch = dataValue == filterValue;
-                  } else {
-                     filterMatch = callbackResult;
-                  }
+                  filterMatch = callbackResult === undefined ? dataValue == filterValue : callbackResult;
                }
 
                if (!filterMatch) {

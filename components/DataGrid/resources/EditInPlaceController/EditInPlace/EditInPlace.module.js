@@ -26,7 +26,9 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             _dotTplFn: dotTplFn,
             $protected: {
                _options: {
-                  columns: []
+                  columns: [],
+                  focusCatch: undefined,
+                  moveFocus: undefined
                },
                _firstField: undefined,
                _fields: {}
@@ -72,12 +74,13 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                         items.push({ title: value, id: key })
                      });
                      field.setItems(items);
-                     field.setText(record.get(field.getName()));
+                     field.setSelectedKey(record.get(field.getName()));
                   } else {
+                     //todo избавиться от перебора методов для разных типов полей
                      methodName =
                         $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.CheckBox') ? 'setChecked' :
                            $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'setText' :
-                              'setValue'
+                              'setValue';
                      field[methodName](record.get(field.getName()));
                   }
                });
@@ -88,10 +91,12 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             applyChanges: function() {
                var methodName;
                $ws.helpers.forEach(this._fields, function(field, name) {
+                  //todo избавиться от перебора методов для разных типов полей
                   methodName =
-                     $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.NumberTextBox') ? 'getNumericValue' :
-                        $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'getText' :
-                           'getValue';
+                     $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.ComboBox') ? 'getSelectedKey' :
+                        $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.NumberTextBox') ? 'getNumericValue' :
+                           $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'getText' :
+                              'getValue';
                   this._record.set(name, field[methodName]());
                }, this);
             },
@@ -103,6 +108,17 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             _onMouseDownArea: function(event) {
                this._notify('onMouseDown', $(event.target));
                event.stopImmediatePropagation();
+            },
+            focusCatch: function(event) {
+               if (typeof this._options.focusCatch === 'function') {
+                  this._options.focusCatch(event);
+               }
+            },
+            moveFocus: function() {
+               EditInPlace.superclass.moveFocus.apply(this, arguments);
+               if (typeof this._options.moveFocus === 'function') {
+                  this._options.moveFocus();
+               }
             },
             destroy: function() {
                this._container

@@ -16,6 +16,7 @@ define(
        * @param position позиция замещаемого символа
        * @param character новый символ
        * @private
+       * @author Крайнов Дмитрий Олегович
        */
       _replaceCharacter = function(container, position, character) {
          var buffer = container.nodeValue.split('');
@@ -485,32 +486,64 @@ define(
    });
 
    /**
-    * Абстрактный класс для контроллов, в которых необходим ввод особого формата (телефон, дата, время, etc).
-    * В конечный контролл передается маска с помощью опции mask. Управляющие символы в маске, определяющие,
-    * какие символы могут вводиться, определяются предназначением контролла.
+    * Абстрактный класс для контролов, в которых необходим ввод особого формата (телефон, дата, время и дригие).
+    * В конечный контрол передается маска с помощью опции mask - будет разрешён ввод данных в контрол строго по маске.
+    * Условные обозначения основных управляющих символов:
+    * <ol>
+    *    <li>d - цифра.</li>
+    *    <li>L - заглавная буква.</li>
+    *    <li>l - строчная буква.</li>
+    *    <li>x - буква или цифра.</li>
+    *    <li>"/", "-", ":", " ", "." - разделители.</li>
+    * </ol>
     * @class SBIS3.CONTROLS.FormattedTextBoxBase
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CONTROLS.TextBoxBase
     * @public
     */
 
    var FormattedTextBoxBase = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.FormattedTextBoxBase.prototype */ {
+       /**
+        * @event onInputFinished По окончании ввода
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @example
+        * По завершению ввода добавим в конец маски группу из 3 цифр
+        * <pre>
+        *     formattedTextBox.setMask('dd(dd)');
+        *     var maskReplacer = '_';
+        *     var onInputFinishedFn = function() {
+        *        var text = formattedTextBox.formatModel.getText(maskReplacer);
+        *        if (text.length == 6) {
+        *           formattedTextBox.setMask('dd(dd)ddd');
+        *           //новый текст должен точно совпадать с маской, поэтому добавляем к нему символы маски
+        *           formattedTextBox.setText(text+'___');
+        *           formattedTextBox.setCursor(4,0);
+        *        }
+        *     }
+        *     formattedTextBox.subscribe('onInputFinished', onInputFinishedFn);
+        * </pre>
+        * @see setMask
+        * @see onInputFinished
+        * @see setCursor
+        * @see setText
+        */
       $protected: {
          /**
           * Html-элемент, в который будет добавлена динамически создаваемая, в зависимости от маски, html-разметка
           */
          _inputField: null,
          /**
-          * Символ-заполнитель, на который замещаются все управляющие символы в маске для последующего отображения на странице.
-          * В маске изначально не должны присутствовать символы-заполнители. По умолчанию -- знак нижнего подчёркивания.
-          * Нельзя использовать знак вопроса.
+          * Символ-заполнитель, на который замещаются все управляющие символы в маске для последующего отображения на
+          * странице. В маске изначально не должны присутствовать символы-заполнители. По умолчанию используется знак
+          * нижнего подчёркивания.
+          * !Важно: нельзя использовать знак вопроса.
           */
          _maskReplacer: '_',
          /**
-          * Набор допустимых управляющих символов в маске. Задаются отдельно в каждом контролле в зависимости от контекста.
+          * Набор допустимых управляющих символов в маске. Задаются отдельно в каждом контроле в зависимости от контекста.
           * Пример:
           *       Для контролла DatePicker это: Y(год), M(месяц), D(день), H(час), I(минута), S(секунда), U(доля секунды).
-          * Каждому допустимому символу ставится в соответствие основной
-          * управляющий символ, в зависимости от которого определяется, какой тип символа может вводиться.
+          * Каждому допустимому символу ставится в соответствие основной управляющий символ, в зависимости от которого
+          * определяется, какой тип символа может вводиться.
           * Условные обозначения основных управляющих символов:
           *     1. d - Цифра
           *     2. L - Заглавная буква
@@ -783,9 +816,30 @@ define(
 
       /**
        * Установка курсора в заданную позицию
-       * @param groupNum - номер контейнера
-       * @param position - позиция в контейнере
-       * @returns {boolean}
+       * @remark
+       * Задание положения курсора может требоваться при динамической смене маски, например, по мере ввода значений.
+       * В остальных случаях управлять положением курсора не требуется.
+       * @param {Number} groupNum Номер контейнера.
+       * @param {Number} position Позиция в контейнере.
+       * @returns {Boolean} Положение курсора.
+       * @example
+       * По завершению ввода добавим в конец маски группу из 3 цифр
+       * <pre>
+       *     formattedTextBox.setMask('dd(dd)');
+       *     var maskReplacer = '_';
+       *     var onInputFinishedFn = function() {
+       *        var text = formattedTextBox.formatModel.getText(maskReplacer);
+       *        if (text.length == 6) {
+       *           formattedTextBox.setMask('dd(dd)ddd');
+       *           //новый текст должен точно совпадать с маской, поэтому добавляем к нему символы маски
+       *           formattedTextBox.setText(text+'___');
+       *           formattedTextBox.setCursor(4,0);
+       *        }
+       *     }
+       *     formattedTextBox.subscribe('onInputFinished', onInputFinishedFn);
+       * </pre>
+       * @see setMask
+       * @see onInputFinished
        */
       setCursor: function(groupNum, position) {
          if (!this.formatModel.setCursor(groupNum, position)) {
@@ -795,10 +849,21 @@ define(
          this.formatModel._options.newPosition = this.formatModel._options.cursorPosition.position;
       },
       /**
-       * Установить значение в поле. Значение вводится в точности с маской, включая разделяющие символы
-       * Пример. Если маска 'd(ddd)ddd-dd-dd', то setText('8(111)888-11-88')
-       * @param text Строка нового значения
+       * Установить значение в поле.
+       * @remark
+       * Значение вводится в точности с маской, включая разделяющие символы.
+       * При передаче строки, не соответствующей маске, значение не проставится.
+       * Например, при маске '+d (ddd) ddd - dd - dd' в передаваемом значении нужно не забыть проставить пробелы.
+       * @param {String} text Строка нового значения.
        * @protected
+       * @example
+       * <pre>
+       *     //если маска 'd(ddd)ddd-dd-dd', то следует задать значение вида
+       *     this.setText('8(111)888-11-88');
+       * </pre>
+       * @see setMask
+       * @see onInputFinished
+       * @see setCursor
        */
       setText: function(text) {
          this.formatModel.setText(text, this._maskReplacer);
@@ -807,8 +872,15 @@ define(
       },
 
       /**
-       * Задает маску в модель и обновляет html
-       * @param mask маска строкой, например 'dd:dd', 'HH:MM'
+       * Задает маску в модель и обновляет html.
+       * @param {String} mask Маска строкой, например 'dd:dd', 'HH:MM'
+       * @example
+       * Зададим маску для паспорта
+       * <pre>
+       *     formattedTextBox.setMask('dd dd dddddd');
+       * </pre>
+       * @see setText
+       * @see setCursor
        */
       setMask: function(mask) {
          var self = this;
@@ -821,7 +893,9 @@ define(
             //вывалится ошибка при вызове getSelection, ловим ее здесь.
             try {
                self._keyPressHandler(18);
-            } catch(ex) {}
+            } catch(ex) {
+               $ws.single.ioc.resolve('ILogger').log('FormattedTextBox', ex.message);
+            }
          }, 0);
       }
 

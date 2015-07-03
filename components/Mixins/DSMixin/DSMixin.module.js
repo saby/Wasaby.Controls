@@ -23,6 +23,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         *        }
         *     });
         * </pre>
+        * @see items
+        * @see displayField
         */
        /**
         * @event onDataLoad При загрузке данных
@@ -31,9 +33,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @example
         * <pre>
         *     myComboBox.subscribe('onDataLoad', function(eventObject) {
-        *        title.setText('Загрузка прошла успешно');
+        *        TextBox.setText('Загрузка прошла успешно');
         *     });
         * </pre>
+        * @see items
+        * @see setDataSource
+        * @see getDataSource
         */
       $protected: {
          _itemsInstances: {},
@@ -47,25 +52,34 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          _options: {
             /**
              * @cfg {String} Поле элемента коллекции, которое является ключом
+             * @remark
+             * Выбранный элемент в коллекции задаётся указанием ключа элемента.
              * @example
              * <pre>
              *     <option name="keyField">Идентификатор</option>
              * </pre>
              * @see items
+             * @see SBIS3.CONTROLS.Selectable#selectedKey
+             * @see SBIS3.CONTROLS.Selectable#setSelectedKey
+             * @see SBIS3.CONTROLS.Selectable#getSelectedKey
              */
             keyField : null,
             /**
-             * @cfg {String} Название поля из набора, отображающее данные
+             * @cfg {String} Поле элемента коллекции, из которого отображать данные
              * @example
              * <pre>
              *     <option name="displayField">Название</option>
              * </pre>
+             * @see keyField
              */
             displayField: null,
              /**
               * @cfg {Items[]} Набор исходных данных, по которому строится отображение
+              * @remark
+              * !Важно: данные для коллекции элементов можно задать либо в этой опции,
+              * либо через источник данных методом {@link setDataSource}.
               * @example
-              * <pre>
+              * <pre class="brush:xml">
               *     <options name="items" type="array">
               *        <options>
               *            <option name="id">1</option>
@@ -78,21 +92,36 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               *         <options>
               *            <option name="id">3</option>
               *            <option name="title">ПунктПодменю</option>
+              *            <!--необходимо указать это полем иерархии для корректной работы-->
               *            <option name="parent">2</option>
               *            <option name="icon">sprite:icon-16 icon-Birthday icon-primary</option>
               *         </options>
               *      </options>
+              *      <option name="hierField">parent</option>
               * </pre>
               * @see keyField
+              * @see displayField
+              * @see setDataSource
+              * @see getDataSource
+              * @see hierField
               */
-            items: undefined,
+            items: [],
             /**
              * @cfg {DataSource} Набор исходных данных, по которому строится отображение
+             * @noShow
              * @see setDataSource
              */
             dataSource: undefined,
              /**
-              * @cfg {Number} Количество записей на странице
+              * @cfg {Number} Количество записей, запрашиваемых с источника данных
+              * @remark
+              * Опция задаёт количество записей при построении представления данных.
+              * В случае дерева и иерархии:
+              * <ul>
+              *    <li>при пейджинге по скроллу опция также задаёт количество подгружаемых записей кликом по кнопке "Ещё";</li>
+              *    <li>как листья, так и узлы являются записями, количество записей считается относительно полностью
+              *    развёрнутого представления данных. Например, узел с тремя листьями - это 4 записи.</li>
+              * </ul>
               * <pre>
               *     <option name="pageSize">10</option>
               * </pre>
@@ -100,7 +129,45 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               */
             pageSize: null,
             /**
-             * @cfg {String|HTMLElement|jQuery} что отображается при отсутствии данных 
+             * @typedef {Object} GroupBy
+             * @property {String} field Поле записи
+             * @property {Function} method Метод группировки
+             * @property {String} template Шаблон вёрстки
+             * @property {Function} render Функция визуализации             
+             */
+            /**
+             * @cfg {GroupBy} Настройка группировки записей 
+             * @remark
+             * Если задать только поле записи(field), то будет группировать по типу лесенки (Пример 1).
+             * Т.е. перед каждым блоком с одинаковыми данными будет создавать блок, для которого можно указать шаблон
+             * Внимание! Для правильной работы группировки данные уже должны прийти отсортированные!
+             * @example
+             * 1:
+             * <pre>
+             *    <options name="groupBy">
+             *        <option name="field">ДатаВремя</option>
+             *    </options>
+             * </pre>
+             * Пример с указанием метода группировки:
+             * <pre>
+             *    <options name="groupBy">
+             *        <option name="field">ДатаВремя</option>
+             *         <option name="method" type="function">js!SBIS3.CONTROLS.Demo.MyListViewDS:prototype.myGroupBy</option>
+             *    </options>
+             * </pre>
+             */
+            groupBy : {},
+            /**            
+             * @cfg {String|HTMLElement|jQuery} Что отображается при отсутствии данных
+             * @example
+             * <pre>
+             *     <option name="emptyHTML">Нет данных</option>
+             * </pre>
+             * @remark
+             * Опция задаёт текст, отображаемый как при абсолютном отсутствии данных, так и в результате фильтрации.
+             * @see items
+             * @see setDataSource
+             * @see groupBy
              */
             emptyHTML: ''
          },
@@ -128,41 +195,49 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                items = [];
             }
             var
-               item = items[0],
-               keyField;
-            if (this._options.keyField) {
-               keyField = this._options.keyField;
-            }
-            else {
-               if (item && Object.prototype.toString.call(item) === '[object Object]') {
-                  keyField = Object.keys(item)[0];
-               }
+               item = items[0];
+            if (!this._options.keyField) {
+              if (item && Object.prototype.toString.call(item) === '[object Object]') {
+                this._options.keyField = Object.keys(item)[0];
+              }
             }
             this._dataSource = new StaticSource({
                data: items,
                strategy: new ArrayStrategy(),
-               keyField: keyField
+               keyField: this._options.keyField
             });
          }
       },
        /**
-        * Метод установки либо замены источника данных, установленного опцией {@link dataSource}.
+        * Метод установки источника данных.
+        * @remark
+        * Данные могут быть заданы либо этим методом, либо опцией {@link items}.
         * @param ds Новый источник данных.
         * @example
         * <pre>
-        *     var arrayOfObj = [
-        *        {'@Заметка': 1, 'Содержимое': 'Пункт 1', 'Завершена': false},
-        *        {'@Заметка': 2, 'Содержимое': 'Пункт 2', 'Завершена': false},
-        *        {'@Заметка': 3, 'Содержимое': 'Пункт 3', 'Завершена': true}
-        *     ];
-        *     var ds1 = new StaticSource({
-        *        data: arrayOfObj,
-        *        keyField: '@Заметка',
-        *        strategy: ArrayStrategy
-        *     });
-        *     this.getChildControlByName("ComboBox 1").setDataSource(ds1);
+        *     define(
+        *     'SBIS3.MY.Demo',
+        *     'js!SBIS3.CONTROLS.StaticSource',
+        *     'js!SBIS3.CONTROLS.ArrayStrategy',
+        *     function(StaticSource, ArrayStrategy){
+        *        //коллекция элементов
+        *        var arrayOfObj = [
+        *           {'@Заметка': 1, 'Содержимое': 'Пункт 1', 'Завершена': false},
+        *           {'@Заметка': 2, 'Содержимое': 'Пункт 2', 'Завершена': false},
+        *           {'@Заметка': 3, 'Содержимое': 'Пункт 3', 'Завершена': true}
+        *        ];
+        *        //источник статических данных
+        *        var ds1 = new StaticSource({
+        *           data: arrayOfObj,
+        *           keyField: '@Заметка',
+        *           strategy: ArrayStrategy
+        *        });
+        *        this.getChildControlByName("ComboBox 1").setDataSource(ds1);
+        *     })
         * </pre>
         * @see dataSource
+        * @see onDrawItems
+        * @see onDataLoad
         */
       setDataSource: function (ds) {
          this._dataSource = ds;
@@ -181,10 +256,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * </pre>
        * @see dataSource
        * @see setDataSource
+       * @see onDrawItems
+       * @see onDataLoad
        */
       getDataSet: function() {
          return this._dataSet;
-      },       /**
+      },
+       /**
         * Метод перезагрузки данных.
         * Можно задать фильтрацию, сортировку.
         * @param {String} filter Параметры фильтрации.
@@ -217,11 +295,19 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
        /**
         * Метод установки количества элементов на одной странице.
-        * @param pageSize Количество записей.
+        * @param {Number} pageSize Количество записей.
         * @example
         * <pre>
         *     myListView.setPageSize(20);
         * </pre>
+        * @remark
+        * Метод задаёт/меняет количество записей при построении представления данных.
+        * В случае дерева и иерархии:
+        * <ul>
+        *    <li>при пейджинге по скроллу опция также задаёт количество подгружаемых записей кликом по кнопке "Ещё";</li>
+        *    <li>как листья, так и узлы являются записями, количество записей считается относительно полностью
+        *    развёрнутого представления данных. Например, узел с тремя листьями - это 4 записи.</li>
+        * </ul>
         * @see pageSize
         */
       setPageSize: function(pageSize){
@@ -252,8 +338,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._loader = null;
       },
        /**
-        * Метод установки либо замены коллекции элементов, заданной опцией {@link items}.
-        * @param {Object} items Набор исходных данных, по которому строится отображение.
+        * Метод установки либо замены коллекции элементов, заданных опцией {@link items}.
+        * @param {Object} items Набор новых данных, по которому строится отображение.
         * @example
         * <pre>
         *     setItems: [
@@ -274,8 +360,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see items
         * @see addItem
         * @see getItems
+        * @see onDrawItems
+        * @see onDataLoad
         */
       setItems: function (items) {
+         //TODO Сделать метод для очистки всех Items, ибо setItems([]) - не очевидно
          var
             item = items[0],
             keyField;
@@ -301,6 +390,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _redraw: function () {
+         var emptyHTML;
          if (this._dataSet) {
             this._clearItems();
             var records = this._getRecordsForRedraw(),
@@ -315,13 +405,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._drawItems(records);
          }
       },
-
+      _destroySearchPathSelectors: function(){
+      },
       _getRecordsForRedraw : function() {
-         var records = [];
-         this._dataSet.each(function (record) {
-            records.push(record);
-         });
-         return records;
+         return this._dataSet._getRecords();
       },
 
       _drawItems: function (records, at) {
@@ -330,7 +417,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             curAt = at;
          if (records && records.length > 0) {
             for (var i = 0; i < records.length; i++) {
-
                this._drawItem(records[i], curAt);
 
                if (curAt && curAt.at) {
@@ -383,27 +469,110 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var
             targetContainer,
             itemInstance;
-         targetContainer = this._getTargetContainer(item);
-         itemInstance = this._createItemInstance(item, targetContainer, at);
-         this._addItemAttributes(itemInstance, item);
-         this._appendItemTemplate(item, targetContainer, itemInstance, at);
+         //Запускаем группировку если она есть. Иногда результат попадает в группровку и тогда отрисовывать item не надо
+         if (this._group(item, at) !== false) {
+            targetContainer = this._getTargetContainer(item);
+            itemInstance = this._createItemInstance(item, targetContainer, at);
+            this._addItemAttributes(itemInstance, item);
+            this._appendItemTemplate(item, targetContainer, itemInstance, at);
+         }
       },
+      /**
+       *
+       * Из метода группировки можно вернуть Boolean - рисовать ли группировку
+       * или Объект - {
+       *    drawItem - рисовать ли текущую запись
+       *    drawGroup - рисовавть ли группировку перед текущей записью
+       * }
+       * @param item
+       * @param at
+       */
+      _group: function(item, at){
+         var groupBy = this._options.groupBy,
+               resultGroup,
+               drawGroup,
+               drawItem = true;
+         if (!Object.isEmpty(groupBy)){
+            resultGroup = groupBy.method.apply(this, [item, at]);
+            drawGroup = typeof resultGroup === 'boolean' ? resultGroup : (resultGroup instanceof Object && resultGroup.hasOwnProperty('drawGroup') ? !!resultGroup.drawGroup : false);
+            drawItem = resultGroup instanceof Object && resultGroup.hasOwnProperty('drawItem') ? !!resultGroup.drawItem : true;
+            if (drawGroup){
+               this._drawGroup(item, at)
+            }
+         }
+         return drawItem;
+      },
+      _drawGroup: function(item, at){
+         var
+               groupBy = this._options.groupBy,
+               tplOptions = {
+                  columns : $ws.core.clone(this._options.columns),
+                  multiselect : this._options.multiselect,
+                  hierField: this._options.hierField + '@'
+               },
+               targetContainer,
+               itemInstance;
+         targetContainer = this._getTargetContainer(item);
+         tplOptions.item = item;
+         tplOptions.colspan = this._options.columns.length + this._options.multiselect;
+         itemInstance = this._buildTplItem(item, groupBy.template(tplOptions));
+         this._appendItemTemplate(item, targetContainer, itemInstance, at);
+         //Сначала положим в дом, потом будем звать рендеры, иначе контролы, которые могут создать в рендере неправмльно поймут свою ширину
+         if (groupBy.render && typeof groupBy.render === 'function') {
+            groupBy.render.apply(this, [item, itemInstance]);
+         }
 
+      },
+      /**
+       * Установка группировки элементов. Если нужно, чтобы стандартаная группировка для этого элемента не вызывалась -
+       * нужно обязательно переопределить(передать) все опции (field, method, template, render) иначе в группировку запишутся стандартные параметры.
+       * @param group
+       * @param redraw
+       */
+      setGroupBy : function(group, redraw){
+         //TODO может перерисовку надо по-другому делать
+         this._options.groupBy = group;
+         // запросим данные из источника
+         if (!Object.isEmpty(this._options.groupBy)){
+            if (!this._options.groupBy.hasOwnProperty('method')){
+               this._options.groupBy.method = this._groupByDefaultMethod;
+            }
+            if (!this._options.groupBy.hasOwnProperty('template')){
+               this._options.groupBy.template = this._getGroupTpl();
+            }
+            if (!this._options.groupBy.hasOwnProperty('render')){
+               this._options.groupBy.render = this._groupByDefaultRender;
+            }
+
+         }
+         if (redraw){
+            this._redraw();
+         }
+      },
+      _groupByDefaultMethod: function(){
+         throw new Error('Method _groupByDefaultMethod() must be implemented');
+      },
+      _getGroupTpl : function(){
+         throw new Error('Method _getGroupTpl() must be implemented');
+      },
+      _groupByDefaultRender: function(){
+         throw new Error('Method _groupByDefaultRender() must be implemented');
+      },
       _getItemTemplate: function () {
          throw new Error('Method _getItemTemplate() must be implemented');
       },
 
       _addItemAttributes: function (container, item) {
-         var isFolder = (item.get(this._options.hierField + '@')) ? 'controls-ListView__folder' : '';
-         container.attr('data-id', item.getKey()).addClass('controls-ListView__item ' + isFolder);
+         container.attr('data-id', item.getKey()).addClass('controls-ListView__item');
       },
 
       _createItemInstance: function (item, targetContainer, at) {
+         return this._buildTplItem(item, this._getItemTemplate(item));
+      },
+      _buildTplItem: function(item, itemTpl){
          var
-            buildedTpl,
-            dotTemplate,
-            itemTpl = this._getItemTemplate(item);
-
+               buildedTpl,
+               dotTemplate;
          if (typeof itemTpl == 'string') {
             dotTemplate = itemTpl;
          }
@@ -466,9 +635,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return this._itemsInstances;
       },
        /**
-        * Метод получения элемента коллекции.
-        * @param id Идентификатор элемента коллекции.
-        * @returns {*} Возвращает элемент коллекции по указанному идентификатору.
+        * Метод получения контрола по идентификатору элемента коллекции.
+        * @param {String|Number|*} id Идентификатор элемента коллекции.
+        * @returns {*} Возвращает:
+        * <ul>
+        *    <li>для группы радиокнопок - соответствующую радиокнопку;</li>
+        *    <li>для группы флагов - соответствующий флаг;</li>
+        *    <li>для меню - соответствующий элемент меню.</li>
+        * </ul>
         * @example
         * <pre>
         *     Menu.getItemsInstance(3).setCaption('SomeNewCaption');

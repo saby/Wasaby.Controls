@@ -15,17 +15,39 @@ define(
    'use strict';
 
    /**
+    * Поле ввода даты/времени.
+    * Данный контрол предназначен для осуществления ввода информации о дате и времени.
+    * В зависимости от {@link mask маски} возвожен ввод:
+    * <ol>
+    *    <li>только даты,</li>
+    *    <li>только времени,</li>
+    *    <li>даты и времени.</li>
+    * </ol>
+    * Осуществить ввод информации можно как с клавиатуры, так и выбором на календаре, который открывается кликом по соответствующей иконке.
     * Можно вводить только значения особого формата даты.
     * @class SBIS3.CONTROLS.DatePicker
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
     * @control
+    * @author Крайнов Дмитрий Олегович
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyDatePicker
-    * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
-    * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
     */
 
    var DatePicker = FormattedTextBoxBase.extend([PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
+       /**
+        * @event onDateChange
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @example
+        * <pre>
+        *    var dateChangeFn = function(event) {
+        *       if (this.getDate().getTime() < minDate.getTime()) {
+        *          buttonSend.setEnabled(false);
+        *          title.setText('Указана прошедшая дата: проверьте нет ли ошибки');
+        *       }
+        *    };
+        *    datePicker.subscribe('onDateChange', dateChangeFn);
+        * </pre>
+        */
       $protected: {
          _dotTplFn: dotTplFn,
          /**
@@ -91,57 +113,81 @@ define(
           */
          _options: {
             /**
-             * @cfg {String} Формат отображения даты, на базе которой будет создана html-разметка и в соответствии с которой
-             * будет определён весь функционал. Должна представлять собой одну из масок в массиве допустимых маск.
+             * @cfg {String} Формат отображения данных
+             * @remark
+             * На базе формата, заданного в этой опции, будет создана html-разметка, в соответствии с которой
+             * определяется весь функционал.
+             * Необходимо выбрать одну из масок в массиве допустимых значений.
+             * Допустимые символы в маске:
+             * <ol>
+             *    <li>D(day) - календарный день.</li>
+             *    <li>M(month) - месяц.</li>
+             *    <li>Y(year) - год.</li>
+             *    <li>H(hour) - час.</li>
+             *    <li>I - минута</li>
+             *    <li>S(second) - секунда.</li>
+             *    <li>U - доля секунды.</li>
+             *    <li>".", "-", ":", "/" - разделители.</li>
+             * </ol>
              * @example
              * <pre>
              *     <option name="mask">HH:II:SS.UUU</option>
              * </pre>
-             * @variant 'DD.MM.YYYY',
-             * @variant 'DD.MM.YY',
-             * @variant 'DD.MM',
-             * @variant 'YYYY-MM-DD',
-             * @variant 'YY-MM-DD',
-             * @variant 'HH:II:SS.UUU',
-             * @variant 'HH:II:SS',
-             * @variant 'HH:II',
-             * @variant 'DD.MM.YYYY HH:II:SS.UUU',
-             * @variant 'DD.MM.YYYY HH:II:SS',
-             * @variant 'DD.MM.YYYY HH:II',
-             * @variant 'DD.MM.YY HH:II:SS.UUU',
-             * @variant 'DD.MM.YY HH:II:SS',
-             * @variant 'DD.MM.YY HH:II',
-             * @variant 'DD.MM HH:II:SS.UUU',
-             * @variant 'DD.MM HH:II:SS',
-             * @variant 'DD.MM HH:II',
-             * @variant 'YYYY-MM-DD HH:II:SS.UUU',
-             * @variant 'YYYY-MM-DD HH:II:SS',
-             * @variant 'YYYY-MM-DD HH:II',
-             * @variant 'YY-MM-DD HH:II:SS.UUU',
-             * @variant 'YY-MM-DD HH:II:SS',
-             * @variant 'YY-MM-DD HH:II',
-             * @variant 'YYYY',
+             * @variant 'DD.MM.YYYY'
+             * @variant 'DD.MM.YY'
+             * @variant 'DD.MM'
+             * @variant 'YYYY-MM-DD'
+             * @variant 'YY-MM-DD'
+             * @variant 'HH:II:SS.UUU'
+             * @variant 'HH:II:SS'
+             * @variant 'HH:II'
+             * @variant 'DD.MM.YYYY HH:II:SS.UUU'
+             * @variant 'DD.MM.YYYY HH:II:SS'
+             * @variant 'DD.MM.YYYY HH:II'
+             * @variant 'DD.MM.YY HH:II:SS.UUU'
+             * @variant 'DD.MM.YY HH:II:SS'
+             * @variant 'DD.MM.YY HH:II'
+             * @variant 'DD.MM HH:II:SS.UUU'
+             * @variant 'DD.MM HH:II:SS'
+             * @variant 'DD.MM HH:II'
+             * @variant 'YYYY-MM-DD HH:II:SS.UUU'
+             * @variant 'YYYY-MM-DD HH:II:SS'
+             * @variant 'YYYY-MM-DD HH:II'
+             * @variant 'YY-MM-DD HH:II:SS.UUU'
+             * @variant 'YY-MM-DD HH:II:SS'
+             * @variant 'YY-MM-DD HH:II'
+             * @variant 'YYYY'
              * @variant 'MM/YYYY'
              * @see date
+             * @see isCalendarIconShow
              */
             mask: 'DD.MM.YY',
             /**
-             * @cfg {Date} Дата
+             * @cfg {Date|String} Начальное значение даты, с которой откроется контрол.
+             * @remark
+             * Строка должна быть формата ISO 8601.
              * @example
              * <pre>
              *     <option name="date">2015-03-07T21:00:00.000Z</option>
              * </pre>
              * @see isCalendarIconShow
+             * @see onDateChange
+             * @see setDate
+             * @see getDate
              */
             date: null,
             /**
-             * @cfg {Boolean} Показана ли иконка календарика. По умолчанию true. Если маска представляет собой только время,
-             * то автоматически (точнее в методе _checkTypeOfMask) становится false.
+             * @cfg {Boolean} Показана ли иконка календарика.
+             * @remark
+             * Если {@link mask маска} представляет собой только время, то автоматически иконка календарика прячется, т.е. значение
+             * опции самостоятельно сменится на false.
              * @example
              * <pre>
              *     <option name="isCalendarIconShown">false</option>
              * </pre>
              * @see date
+             * @see mask
+             * @see setDate
              */
             isCalendarIconShown: true
          }
@@ -243,7 +289,7 @@ define(
          }
       },
 
-      /**
+     /**
       * В добавление к проверкам и обновлению опции text, необходимо обновить поле _date
       * @param text
       * @private
@@ -255,8 +301,18 @@ define(
       },
 
       /**
-       * Установить дату. Публичный метод. Отличается от приватного метода тем, что генерирует событие.
-       * @param date
+       * Метод установки/замены даты.
+       * @param {Date} date Новая дата.
+       * @example
+       * <pre>
+       *    //Зададим март 2016
+       *    var startDate = new Date(2016,02);
+       *    datePicker.setDate(startDate);
+       * </pre>
+       * @see date
+       * @see getDate
+       * @see onDateChange
+       * @see mask
        */
       setDate: function (date) {
          this._setDate(date);
@@ -289,10 +345,7 @@ define(
 
          this._drawDate();
       },
-      /**
-       * Переопределенный метод из TextBoxBase
-       * @param value
-       */
+
       setValue: function (value) {
          value = value ? value : '';
 
@@ -308,8 +361,16 @@ define(
       },
 
       /**
-       * Получить дату
-       * @returns {Date|*|SBIS3.CONTROLS.DatePicker._options.date}
+       * Метод получения текущего значения даты.
+       * @returns {Date|String} Начальное значение даты, с которой откроется контрол.
+       * @example
+       * <pre>
+       *     var date = datePicker.getDate();
+       *     textBox.setText(date);
+       * </pre>
+       * @see date
+       * @see setDate
+       * @see onDateChange
        */
       getDate: function() {
         return this._options.date;

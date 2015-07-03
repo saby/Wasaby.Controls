@@ -22,7 +22,9 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
     *     <option name="caption">CheckBox</option>
     * </component>
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @category Inputs
+    *
     * @ignoreOptions icon extendedTooltip independentContext contextRestriction isContainerInsideParent stateKey subcontrol
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment owner
     *

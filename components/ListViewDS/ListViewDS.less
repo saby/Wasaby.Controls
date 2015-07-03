@@ -10,7 +10,8 @@
      }
   }
    .controls-ListView__EmptyData{
-     width: 100%;
+     width: 100px;
+     display: inline-block;
      color: @gray-color;
      text-align: center;
    }
@@ -19,7 +20,10 @@
       height: 16px;
       background: none;
       cursor: pointer;
-      display: none;
+      display: none; 
+      position: absolute;
+      left: @listView-check-box-left;
+      top: @listView-check-box-top;
    }
    &.controls-ListView__multiselect {
       .controls-ListView__itemCheckBox {

@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
     * @class SBIS3.CONTROLS.TreeViewDS
     * @extends SBIS3.CONTROLS.ListViewDS
     * @mixes SBIS3.CONTROLS.TreeMixinDS
+    * @author Крайнов Дмитрий Олегович
     */
 
    var TreeViewDS = ListViewDS.extend([hierarchyMixin, TreeMixinDS], /** @lends SBIS3.CONTROLS.TreeViewDS.prototype*/ {
