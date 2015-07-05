@@ -12,10 +12,11 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
 
             $ws.helpers.question(message).addCallback(function(res) {
                if(res) {
-                  self._dataSet.removeRecord(idArray);
-                  self._dataSource.sync(self._dataSet);
                   self.removeItemsSelection(isArray ? idArray : [idArray]);
-                  self.reload();
+                  self._dataSet.removeRecord(idArray);
+                  self._dataSource.sync(self._dataSet).addCallback(function() {
+                     self.reload();
+                  });
                }
             })
          }
