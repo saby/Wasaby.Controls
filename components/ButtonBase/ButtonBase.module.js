@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTR
              * @see setCaption
              * @see getCaption
              */
-            caption: ''
+            caption: undefined
          }
       },
 
