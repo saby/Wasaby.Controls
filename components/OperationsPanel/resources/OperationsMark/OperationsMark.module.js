@@ -17,7 +17,8 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
               *     <option name="caption">Операции отметки</option>
               * </pre>
               */
-            caption: 'Отметить',
+            caption: undefined,
+            captionRender: undefined,
              /**
               * @noShow
               */
@@ -41,8 +42,8 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
       },
       $constructor: function() {
          this._createMarkCheckBox();
-         this._bindEvents();
-         this._updateMark();
+         this._setCaptionRender();
+         this.setLinkedView(this._options.linkedView);
       },
       _initItems: function(items) {
          var self = this;
@@ -64,6 +65,18 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          this._options.linkedView.subscribe('onSelectedItemsChange', this._updateMark.bind(this));
          this.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
       },
+      setLinkedView: function(linkedView) {
+         if (linkedView && $ws.helpers.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
+            this._options.linkedView = linkedView;
+            this._bindEvents();
+            this._updateMark();
+         }
+      },
+      //TODO: вынести данную логику в MenuLink
+      showPicker: function() {
+         OperationsMark.superclass.showPicker.apply(this);
+         this._picker._container.find('.controls-MenuLink__header').toggleClass('ws-hidden', !this._options.caption);
+      },
       _onMenuItemActivate: function(e, id) {
          if (this[id]) {
             this[id].apply(this);
@@ -84,10 +97,18 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
             caption;
          if (hasMarkOptions) {
             selectedCount = this._options.linkedView.getSelectedKeys().length;
-            caption = selectedCount ? 'Отмечено(' + selectedCount + ')' : 'Отметить';
+            caption = this._options.captionRender ? this._options.captionRender(selectedCount) : this._options.caption;
             this.setCaption(caption);
          }
          this.setVisible(hasMarkOptions);
+      },
+      _captionRender: function(selectedCount) {
+         return selectedCount ? 'Отмечено(' + selectedCount + ')' : 'Отметить';
+      },
+      _setCaptionRender: function() {
+         if (typeof this._options.caption !== 'string' && !this._options.captionRender) {
+            this._options.captionRender = this._captionRender;
+         }
       },
       _updateMark: function() {
          this._updateMarkButton();
