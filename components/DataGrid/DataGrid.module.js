@@ -523,11 +523,11 @@ define('js!SBIS3.CONTROLS.DataGrid',
              docFragmentForColGroup.appendChild(column);
              headerTr.append(
                 $('<th class="controls-DataGrid__th' +
-                (isPartScrollUsed ?
-                   this._options.startScrollColumn <= i ?
-                      ' controls-DataGrid__scrolledCell' :
-                      ' controls-DataGrid__notScrolledCell' : '')
-                + '"></th>').text(columns[i].title));
+                  (isPartScrollUsed ?
+                      this._options.startScrollColumn <= i ?
+                         ' controls-DataGrid__scrolledCell' :
+                         ' controls-DataGrid__notScrolledCell' : '')
+                   + '" title="' + columns[i].title + '">' + columns[i].title + '</th>'));
           }
 
           if (this._editInPlace) {
