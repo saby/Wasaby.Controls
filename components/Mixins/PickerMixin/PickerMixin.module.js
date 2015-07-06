@@ -14,12 +14,12 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
              /**
               * @cfg {String} Имя css-класса, который будет применён к контейнеру выпадающего блока.
               * @example
-              * <pre>
+              * <pre class="brush:xml">
               *     <option name="pickerClassName">control-MyComboBox__ComboBox__position</option>
               * </pre>
               * @remark
-              * Класс необходимо создать в файле компонента с расширением .css.
-              * Стили из этого класса применятся к выпадающему блоку.
+              * !Важно: при написании css-селекторов необходимо учитывать, что выпадающий блок располагается в body,
+              * а не в конейнере контрола.
               */
             pickerClassName : ''
          }

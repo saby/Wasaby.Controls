@@ -51,14 +51,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          _dotItemTpl: null,
          _options: {
             /**
-             * @cfg {String} Поле элемента коллекции, которое является ключом
+             * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
              * @remark
              * Выбранный элемент в коллекции задаётся указанием ключа элемента.
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="keyField">Идентификатор</option>
              * </pre>
              * @see items
+             * @see displayField
+             * @see setDataSource
              * @see SBIS3.CONTROLS.Selectable#selectedKey
              * @see SBIS3.CONTROLS.Selectable#setSelectedKey
              * @see SBIS3.CONTROLS.Selectable#getSelectedKey
@@ -67,10 +69,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             /**
              * @cfg {String} Поле элемента коллекции, из которого отображать данные
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="displayField">Название</option>
              * </pre>
+             * @remark
+             * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
+             * Источник данных может состоять из множества полей. В данной опции необходимо указать имя поля, данные
+             * которого нужно отобразить в выпадающем списке.
              * @see keyField
+             * @see items
+             * @see setDataSource
              */
             displayField: null,
              /**
@@ -102,7 +110,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               * @see keyField
               * @see displayField
               * @see setDataSource
-              * @see getDataSource
+              * @see getDataSet
               * @see hierField
               */
             items: [],
@@ -115,14 +123,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              /**
               * @cfg {Number} Количество записей, запрашиваемых с источника данных
               * @remark
-              * Опция задаёт количество записей при построении представления данных.
-              * В случае дерева и иерархии:
-              * <ul>
-              *    <li>при пейджинге по скроллу опция также задаёт количество подгружаемых записей кликом по кнопке "Ещё";</li>
-              *    <li>как листья, так и узлы являются записями, количество записей считается относительно полностью
-              *    развёрнутого представления данных. Например, узел с тремя листьями - это 4 записи.</li>
+              * Опция определяет количество запрашиваемых записей с источника даныых как при построении контрола, так и
+              * при осуществлении подгрузки.
+              * Для иерархических структур при пейджинге по скроллу опция также задаёт количество подгружаемых записей
+              * кликом по кнопке "Ещё".
+              * !Важно: в базе данных как листья, так и узлы являются записями. Поэтому необходимо учитывать, что в
+              * количество записей считаются и узлы, и листья. Т.е. подсчёт идёт относительно полностью развёрнутого
+              * представления данных. Например, узел с тремя листьями - это 4 записи.
               * </ul>
-              * <pre>
+              * @example
+              * <pre class="brush:xml">
               *     <option name="pageSize">10</option>
               * </pre>
               * @see setPageSize
@@ -143,13 +153,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * Внимание! Для правильной работы группировки данные уже должны прийти отсортированные!
              * @example
              * 1:
-             * <pre>
+             * <pre class="brush:xml">
              *    <options name="groupBy">
              *        <option name="field">ДатаВремя</option>
              *    </options>
              * </pre>
              * Пример с указанием метода группировки:
-             * <pre>
+             * <pre class="brush:xml">
              *    <options name="groupBy">
              *        <option name="field">ДатаВремя</option>
              *         <option name="method" type="function">js!SBIS3.CONTROLS.Demo.MyListViewDS:prototype.myGroupBy</option>
@@ -158,13 +168,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             groupBy : {},
             /**            
-             * @cfg {String|HTMLElement|jQuery} Что отображается при отсутствии данных
+             * @cfg {String|HTMLElement|jQuery} Отображаемый контент при отсутствии данных
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="emptyHTML">Нет данных</option>
              * </pre>
              * @remark
-             * Опция задаёт текст, отображаемый как при абсолютном отсутствии данных, так и в результате фильтрации.
+             * Опция задаёт текст, отображаемый как при абсолютном отсутствии данных, так и в результате {@link groupBy фильтрации}.
              * @see items
              * @see setDataSource
              * @see groupBy

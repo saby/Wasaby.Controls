@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
             /**
              * @cfg {String} Текст в поле ввода
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="text">Какой-то текст, с которым построится поле ввода</option>
              * </pre>
              * @see trim
@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
              *    <li>false - не обрезать.</li>
              * </ul>
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="trim">true</option>
              * </pre>
              * @see text
@@ -75,11 +75,13 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
              */
             trim: false,
             /**
-             * @cfg {Number} Максимальное количество символов, которое возможно ввести
+             * @cfg {Number} Максимальное количество символов, которое может содержать значение
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="maxLength">40</option>
              * </pre>
+             * @remark
+             * В случае превышения количества символов ввод не будет осуществлён.
              * @see setMaxLength
              * @see trim
              * @see text

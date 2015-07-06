@@ -178,9 +178,9 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
        * Получить идентификатор выбранного элемента.
        * @example
        * <pre>
-       *     var key = myComboBox.getPrevItemIndex();
+       *     var key = myComboBox.getSelectedKey();
        *     if (key !== 'old') {
-       *        myComboBox.setSelectedKey(key);
+       *        myComboBox.setSelectedKey(myComboBox.getNextItemKey());
        *     }
        * </pre>
        * @see selectedKey
