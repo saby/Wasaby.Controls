@@ -235,6 +235,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             ListViewDS.superclass.init.call(this);
             var localPageSize = $ws.helpers.getLocalStorageValue('ws-page-size');
             this._options.pageSize = !this._options.ignoreLocalPageSize && localPageSize ? localPageSize : this._options.pageSize;
+            if (typeof this._options.pageSize === 'string') {
+               this._options.pageSize = this._options.pageSize * 1;
+            }
             this.setGroupBy(this._options.groupBy, false);
             this.reload();
          },

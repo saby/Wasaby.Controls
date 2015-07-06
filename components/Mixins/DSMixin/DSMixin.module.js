@@ -128,8 +128,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       $constructor: function () {
          this._publish('onDrawItems', 'onDataLoad');
+         if (typeof this._options.pageSize === 'string') {
+            this._options.pageSize = this._options.pageSize * 1;
+         }
          //Для совместимости пока делаем Array
-
          if (this._options.dataSource) {
             this._dataSource = this._options.dataSource;
          }
