@@ -1907,11 +1907,9 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 8px 0 8px 8px;
   border-style: solid;
   border-color: transparent transparent transparent #ffb366;
+  background: transparent;
 }
 .controls-TreeView__expand.controls-TreeView__expand__open {
-  width: auto;
-  height: auto;
-  margin: 8px 0 0;
   border-width: 8px 8px 0 8px;
   border-style: solid;
   border-color: #ffcc99 transparent transparent transparent;
@@ -1921,6 +1919,7 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 8px 8px 0 8px;
   border-style: solid;
   border-color: #ffb366 transparent transparent transparent;
+  background: transparent;
 }
 .controls-TreeView__expand + .controls-TreeView__itemContent {
   margin: 0 0 0 20px;
@@ -2055,23 +2054,13 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px 0 0;
   border-style: solid;
   border-color: #F5F5F5;
+  vertical-align: middle;
+  box-sizing: border-box;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid-cell-overflow-ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
-  padding-left: 10px;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:last-child {
-  padding-right: 10px;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:first-child {
-  padding-left: 10px;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:last-child {
-  padding-right: 10px;
 }
 .controls-DataGrid .controls-ListView__folder {
   font-size: 15px;
