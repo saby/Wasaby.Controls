@@ -135,28 +135,18 @@
          padding: @data-grid-cell-padding;
          color: @data-grid-cell-text-color;
          background-color: @data-grid-cell-bg;
-
          border-collapse: @data-grid-border-collapse;
          border-width: @data-grid-cell-border-width;
          border-style: @data-grid-cell-border-style;
          border-color: #F5F5F5;
+         vertical-align: @data-grid-cell-vertical-align;
+         box-sizing: @data-grid-box-sizing;
+
         &.controls-DataGrid-cell-overflow-ellipsis{
            overflow: @data-grid-cell-overflow;
            text-overflow: @data-grid-cell-text-overflow;
            white-space: @data-grid-cell-white-spaces;
         }
-      }
-      .controls-DataGrid__th:first-child {
-         padding-left: @data-grid-cell-padding-side;
-      }
-      .controls-DataGrid__th:last-child {
-         padding-right: @data-grid-cell-padding-side;
-      }
-      .controls-DataGrid__td:first-child {
-         padding-left: @data-grid-cell-padding-side;
-      }
-      .controls-DataGrid__td:last-child {
-         padding-right: @data-grid-cell-padding-side;
       }
    }
 

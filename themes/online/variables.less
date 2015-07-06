@@ -1210,17 +1210,18 @@
 @tree-view-expand-cursor:                       pointer;
 
 @tree-view-expand-width:                        16px;
-@tree-view-expand-height:                       16px;
-@tree-view-expand-margin:                       0 7px 0 0;
+@tree-view-expand-height:                       20px;
+@tree-view-expand-margin:                       0 0 0 4px;
 
 @tree-view-expand-border-width:                 0;
 @tree-view-expand-border-style:                 none;
 @tree-view-expand-border-color:                 transparent;
-@tree-view-expand-bg:                           url(@tree-view-expand-spritesheet) 4px 0 no-repeat;
+@tree-view-expand-bg:                           url(@tree-view-expand-spritesheet) no-repeat;
 
 @tree-view-expand-hover-border-width:           @tree-view-expand-border-width;
 @tree-view-expand-hover-border-style:           @tree-view-expand-border-style;
 @tree-view-expand-hover-border-color:           @tree-view-expand-border-color;
+@tree-view-expand-hover-bg: 							url(@tree-view-expand-spritesheet) 0 -40px no-repeat;
 
 @tree-view-expand-open-width:                   @tree-view-expand-width;
 @tree-view-expand-open-height:                  @tree-view-expand-height;
@@ -1229,7 +1230,8 @@
 @tree-view-expand-open-border-width:            @tree-view-expand-border-width;
 @tree-view-expand-open-border-style:            @tree-view-expand-border-style;
 @tree-view-expand-open-border-color:            @tree-view-expand-border-color;
-@tree-view-expand-open-bg:                      url(@tree-view-expand-spritesheet) 4px -16px no-repeat;
+@tree-view-expand-open-bg:                      url(@tree-view-expand-spritesheet) 0 -20px no-repeat;
+@tree-view-expand-open-hover-bg: 					url(@tree-view-expand-spritesheet) 0 -60px no-repeat;
 
 @tree-view-expand-open-hover-border-width:      @tree-view-expand-open-border-width;
 @tree-view-expand-open-hover-border-style:      @tree-view-expand-open-border-style;
@@ -1238,9 +1240,8 @@
 @tree-view-item-content-margin:                 0 0 0 15px;
 
 @tree-view-child-container-padding:             0 0 0 10px;
-@tree-view-hier-wrapper-width:						24px;
-@tree-view-hier-wrapper-first-width:				27px;		
-@tree-view-hier-wrapper-height: 						16px;
+@tree-view-hier-wrapper-width:						16px;
+@tree-view-hier-wrapper-height: 						20px;
 
 
 
@@ -1286,11 +1287,13 @@
 @data-grid-header-cell-hover-text-color:        @data-grid-header-cell-text-color;
 @data-grid-header-cell-hover-bg:                @data-grid-header-cell-bg;
 
+@data-grid-box-sizing: 									border-box;
 @data-grid-cell-cursor:                         pointer;
 @data-grid-cell-text-alignment:                 @data-grid-header-cell-text-alignment;
-@data-grid-cell-height:                         16px;
-@data-grid-cell-padding:                        6px 6px;
+@data-grid-cell-height:                         30px;
+@data-grid-cell-padding:                        0;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
+@data-grid-cell-vertical-align: 						middle;
 
 @data-grid-cell-border-width:                   1px 0 0;
 @data-grid-cell-border-style:                   solid;
