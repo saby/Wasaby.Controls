@@ -2606,7 +2606,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls__filterButton__picker {
   background: #f7f3f0 !important;
-  border: 2px solid #e4e4e4;
 }
 .controls__filterButton__picker .controls__filterButton__content {
   margin-top: 5px;
@@ -2651,6 +2650,21 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls__filterButton__picker.controls__filterButton-left .controls-PopupMixin__closeButton {
   -webkit-transform: scale(-1, 1);
+}
+.controls__filterButton__picker .controls__filterButton_bottomShadow {
+  position: absolute;
+  width: 100%;
+  height: 8px;
+  left: 0;
+  background-position: left 0;
+  background: transparent url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAQCAYAAADJViUEAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAIGNIUk0AAHolAACAgwAA+f8AAIDoAABSCAABFVgAADqXAAAXb9daH5AAAADSSURBVHjabJG7EsMgDARXfsQu0qVMmzZdqvz/Rzk2hDQic8gwo0Ew2jsJDDCPARiBGbh4rMDi+QxMXmMIqPAkAqsIVXDEl/k+eK6wdjALaD3nnvsU2h3E8J8oPEixttq4AiXCKjDKbtGVcIgCKkRwPcG9N7Aw2qn4XWcAMpCAA9iBD7B5vvt9Br515peIZRGowCZgivBTnIsIHMFR4QJ8DXiIc3FVbT/1XKvzXf8uuGeBkoMNfAuPWKQgSycNWOFrBy6eK9CA9asWzqsEoRgA/AYA2x9bFDQdldMAAAAASUVORK5CYII=') no-repeat;
+}
+.controls__filterButton__picker .controls__filterButton_bottomShadow .controls__filterButton_bottomShadow-stretch {
+  background-position: 15px 0;
+  height: 8px;
+  background: transparent url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZUAAAAQCAYAAADeUeLkAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAIGNIUk0AAHolAACAgwAA+f8AAIDoAABSCAABFVgAADqXAAAXb9daH5AAAAH5SURBVHja7Jo7T8QwEIR3DgkKOkpaWkoq/v/vOlMAJ4Rin+N4H1nPSEjB7Pl1ZL5MEojIp3yr/PyMHm+pHDiWAPUyef6zxheFNUVo16jRrt/bp+X8Z8xRQ9Hmoy2stN8QkY8KLFptvWAZNeISAADaNWXnl25ZL4af9TBZi7V4n/hnN+7Z84fDniD5nlYX/V6BRgsov3+7niypeKeDI6aZydxL4JOkZD7hF4ZK5jRToi3krQKSaydYRpKKRo0lMEa/3HLgHyGaEZekJkFz595QB6Hy+id1jN7yinC/38vIPe5z82qa5kdRYaHyIvcfxtcgMvvKPMuD0bObIE2ZoqhhqDxvmH8LHr1AsQaGLNA/RVFUeKg8VoCyZZKR76PT0CmKogJA5clhTE/xrZJzzgeG60aA+UC5JkK7R597+4DCmrzq9+7T0DFE5GFRc/N4Z70k31Pv+cNpvgiwNzBcy6zPetRrQ8IaVJg4bgsWuNN+a0OiK1mmEAqJxoVTP2eB2YxxvVNT5KRyaUClBRzQlCgCbJ29gdO6IgASE/q2BI9HukIlsdSActmqpVFQFIGUNQVqPr/TBJx1WuoBi3QklguvPimKygZFBB0nwosjI8mtlV42oUOoUBRF+b3kYdn/KAjRmWSEUKEoiloz9R1NWv9Bc/v9CwAA//8DAC5q9RbSfpzgAAAAAElFTkSuQmCC') no-repeat;
+  background-size: 100% 16px;
+  margin-left: 15px;
 }
 .warehouse-NomenclatureDataGrid__fieldLink .ws-FieldLink__link {
   width: 80px;
