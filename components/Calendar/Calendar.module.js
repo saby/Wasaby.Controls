@@ -78,7 +78,7 @@ define(
                  * @remark
                  * Строка должна быть формата ISO 8601.
                  * @example
-                 * <pre>
+                 * <pre class="brush:xml">
                  *     <option name="date">2015-03-07T21:00:00.000Z</option>
                  * </pre>
                  * @see setDate

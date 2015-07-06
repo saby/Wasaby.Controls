@@ -49,7 +49,7 @@ function(RadioGroupBase, dotTpl) {
         * @cfg {SBIS3.CONTROLS.CheckBoxGroup/GroupItems.typedef[]} Набор исходных данных, по которому строится отображение
         * @name SBIS3.CONTROLS.RadioGroup#items
         * @example
-        * <pre>
+        * <pre class="brush:xml">
         *     <options name="items" type="array">
         *        <options>
         *            <option name="id">1</option>

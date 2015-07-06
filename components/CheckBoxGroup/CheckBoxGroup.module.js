@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
         * @cfg {GroupItems[]} Набор исходных данных, по которому строится отображение группы
         * @name SBIS3.CONTROLS.CheckBoxGroup#items
         * @example
-        * <pre>
+        * <pre class="brush:xml">
         *     <options name="items" type="array">
         *        <options>
         *            <option name="id">1</option>
