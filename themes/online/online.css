@@ -1994,31 +1994,30 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
   cursor: pointer;
   width: 16px;
-  height: 16px;
-  margin: 0 7px 0 0;
+  height: 20px;
+  margin: 0 0 0 4px;
   border-width: 0;
   border-style: none;
   border-color: transparent;
-  background: url('img/Tree_expand.png') 4px 0 no-repeat;
+  background: url('img/Tree_expand.png') no-repeat;
 }
 .controls-TreeView__expand:hover {
   border-width: 0;
   border-style: none;
   border-color: transparent;
+  background: url('img/Tree_expand.png') 0 -40px no-repeat;
 }
 .controls-TreeView__expand.controls-TreeView__expand__open {
-  width: 16px;
-  height: 16px;
-  margin: 0 7px 0 0;
   border-width: 0;
   border-style: none;
   border-color: transparent;
-  background: url('img/Tree_expand.png') 4px -16px no-repeat;
+  background: url('img/Tree_expand.png') 0 -20px no-repeat;
 }
 .controls-TreeView__expand.controls-TreeView__expand__open:hover {
   border-width: 0;
   border-style: none;
   border-color: transparent;
+  background: url('img/Tree_expand.png') 0 -60px no-repeat;
 }
 .controls-TreeView__expand + .controls-TreeView__itemContent {
   margin: 0 0 0 15px;
@@ -2145,31 +2144,21 @@ input[type="reset"]::-moz-focus-inner {
   position: relative;
   cursor: pointer;
   text-align: left;
-  height: 16px;
-  padding: 6px 6px;
+  height: 30px;
+  padding: 0;
   color: inherit;
   background-color: transparent;
   border-collapse: collapse;
   border-width: 1px 0 0;
   border-style: solid;
   border-color: #F5F5F5;
+  vertical-align: middle;
+  box-sizing: border-box;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid-cell-overflow-ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
-  padding-left: 12px;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:last-child {
-  padding-right: 12px;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:first-child {
-  padding-left: 12px;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:last-child {
-  padding-right: 12px;
 }
 .controls-DataGrid .controls-ListView__folder {
   font-size: 15px;
@@ -2189,13 +2178,10 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 13px !important;
 }
 .controls-DataGrid__td .controls-TreeView__hierWrapper {
-  height: 16px;
-  width: 24px;
+  height: 20px;
+  width: 16px;
   display: inline-block;
   float: left;
-}
-.controls-DataGrid__td .controls-TreeView__hierWrapper:first-child {
-  width: 27px;
 }
 .controls-DataGrid__td .controls-TreeView__editArrow {
   display: none;
@@ -2220,9 +2206,9 @@ input[type="reset"]::-moz-focus-inner {
   padding-bottom: 0px !important;
 }
 .controls-CompositeView .controls-CompositeView__listItem {
-  height: 16px;
-  line-height: 16px;
-  padding: 6px 6px;
+  height: 30px;
+  line-height: 30px;
+  padding: 0;
   cursor: pointer;
 }
 .controls-CompositeView .controls-CompositeView__listItem:hover {
