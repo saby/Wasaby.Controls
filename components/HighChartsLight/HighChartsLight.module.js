@@ -598,6 +598,7 @@ function(BaseControl, dotTpl){
          return this._options.highChartOptions;
       },
 
+      //TODO в Highcharts JS v4.1.6 есть проверка на пересечение, возможно, этот метод можно будет убрать после обновления
       staggerDataLabels: function (series) {
          //compares two datalabels and returns true if they overlap
          function isLabelOnLabel(a, b) {
@@ -617,17 +618,17 @@ function(BaseControl, dotTpl){
             if (bt > ab || bb < at) {
                return false;
             } //overlap not possible
-            if (bl > al && bl < ar) {
+            if (bl >= al && bl <= ar) {
                return true;
             }
-            if (br > al && br < ar) {
+            if (br >= al && br <= ar) {
                return true;
             }
 
-            if (bt > at && bt < ab) {
+            if (bt >= at && bt <= ab) {
                return true;
             }
-            if (bb > at && bb < ab) {
+            if (bb >= at && bb <= ab) {
                return true;
             }
 
