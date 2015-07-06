@@ -1929,13 +1929,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TreeView__expand__leaf:hover {
   background: none !important;
 }
-.controls-DataGrid.controls-DataGrid__PartScroll__animation .controls-DataGrid__PartScroll__thumb,
-.controls-DataGrid.controls-DataGrid__PartScroll__animation .controls-DataGrid__scrolledCell {
-  -webkit-transition: left 0.5s;
-  -moz-transition: left 0.5s;
-  -ms-transition: left 0.5s;
-  -o-transition: left 0.5s;
-}
 .controls-DataGrid .controls-DataGrid__table {
   width: 100%;
   position: relative;
@@ -1948,13 +1941,9 @@ input[type="reset"]::-moz-focus-inner {
   table-layout: fixed;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell,
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__thead .controls-DataGrid__th.controls-DataGrid__notScrolledCell {
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th.controls-DataGrid__notScrolledCell {
   background-color: #4e5762;
   z-index: 1;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell.controls-DataGrid__th,
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__thead .controls-DataGrid__th.controls-DataGrid__notScrolledCell.controls-DataGrid__th {
-  background-color: #4e5762;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr {
   background: transparent;
@@ -2025,6 +2014,8 @@ input[type="reset"]::-moz-focus-inner {
   border-style: solid;
   border-color: transparent;
   border-bottom: 1px solid #f5f5f5;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:hover {
   color: #aaaaaa;
@@ -2034,8 +2025,14 @@ input[type="reset"]::-moz-focus-inner {
   margin: -3px 0 0 4px;
   background: transparent;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-DataGrid__th__checkBox__checked {
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox.controls-DataGrid__th__checkBox__checked {
   background: transparent url('img/checkbox.png') -2px -5px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox.controls-DataGrid__th__checkBox__checked:hover {
+  background: transparent url('img/checkbox.png') -2px -5px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox:hover {
+  background: transparent;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;

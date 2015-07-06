@@ -1884,6 +1884,10 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox,
 .controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox {
+  background: url('img/CheckBox-sprite.png') 0 0px;
+}
+.controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover,
+.controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover {
   background: url('img/CheckBox-sprite.png') 0 -16px;
 }
 .controls-ListView .controls-ListView__EmptyData {
@@ -1902,10 +1906,16 @@ input[type="reset"]::-moz-focus-inner {
   left: 3px;
   top: 5px;
 }
+.controls-ListView .controls-ListView__itemCheckBox:hover {
+  background: url('img/CheckBox-sprite.png') 0 -16px;
+}
 .controls-ListView.controls-ListView__multiselect .controls-ListView__itemCheckBox {
   display: inline-block;
 }
 .controls-ListView.controls-ListView__multiselect .controls-ListView__item__multiSelected .controls-ListView__itemCheckBox {
+  background: url('img/CheckBox-sprite.png') 0 -32px;
+}
+.controls-ListView.controls-ListView__multiselect .controls-ListView__item__multiSelected .controls-ListView__itemCheckBox:hover {
   background: url('img/CheckBox-sprite.png') 0 -32px;
 }
 .controls-ListView .controls-ListView-scrollIndicator {
@@ -1968,13 +1978,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TreeView__expand__leaf:hover {
   background: none !important;
 }
-.controls-DataGrid.controls-DataGrid__PartScroll__animation .controls-DataGrid__PartScroll__thumb,
-.controls-DataGrid.controls-DataGrid__PartScroll__animation .controls-DataGrid__scrolledCell {
-  -webkit-transition: left 0.5s;
-  -moz-transition: left 0.5s;
-  -ms-transition: left 0.5s;
-  -o-transition: left 0.5s;
-}
 .controls-DataGrid .controls-DataGrid__table {
   width: 100%;
   position: relative;
@@ -1987,13 +1990,9 @@ input[type="reset"]::-moz-focus-inner {
   table-layout: fixed;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell,
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__thead .controls-DataGrid__th.controls-DataGrid__notScrolledCell {
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th.controls-DataGrid__notScrolledCell {
   background-color: #ffffff;
   z-index: 1;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell.controls-DataGrid__th,
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__thead .controls-DataGrid__th.controls-DataGrid__notScrolledCell.controls-DataGrid__th {
-  background-color: #ffffff;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr {
   background: transparent;
@@ -2064,6 +2063,8 @@ input[type="reset"]::-moz-focus-inner {
   border-style: solid;
   border-color: transparent;
   border-bottom: 1px solid #f5f5f5;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:hover {
   color: #919191;
@@ -2071,10 +2072,16 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox {
   margin: -3px 0 0 4px;
-  background: url('img/CheckBox-sprite.png') 0 -16px;
+  background: url('img/CheckBox-sprite.png') 0 0px;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-DataGrid__th__checkBox__checked {
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox.controls-DataGrid__th__checkBox__checked {
   background: url('img/CheckBox-sprite.png') 0 -32px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox.controls-DataGrid__th__checkBox__checked:hover {
+  background: url('img/CheckBox-sprite.png') 0 -32px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox:hover {
+  background: url('img/CheckBox-sprite.png') 0 -16px;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
