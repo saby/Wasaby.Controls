@@ -445,31 +445,31 @@ input[type="reset"]::-moz-focus-inner {
   width: 24px;
   height: 17px;
   line-height: normal;
-  background: url('img/RadioButton-sprite.png') 0 -4px;
+  background: url('img/RadioButton-sprite.png') 0 0;
 }
 .controls-RadioButton:hover .controls-RadioButton__caption {
   color: #000000;
 }
 .controls-RadioButton:hover .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -100px;
+  background: url('img/RadioButton-sprite.png') 0 -34px;
 }
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__caption {
   color: #000000;
 }
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -52px;
+  background: url('img/RadioButton-sprite.png') 0 -17px;
 }
 .controls-RadioButton.controls-Checked__checked:hover .controls-RadioButton__caption {
   color: #000000;
 }
 .controls-RadioButton.controls-Checked__checked:hover .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -52px;
+  background: url('img/RadioButton-sprite.png') 0 -17px;
 }
 .controls-RadioButton.controls-Checked__checked.ws-disabled .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -4px;
+  background: url('img/RadioButton-sprite.png') 0 -51px;
 }
 .controls-RadioButton.controls-Checked__checked.ws-disabled:hover .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -4px;
+  background: url('img/RadioButton-sprite.png') 0 -51px;
 }
 .controls-RadioButton.ws-disabled {
   cursor: default;
@@ -478,13 +478,13 @@ input[type="reset"]::-moz-focus-inner {
   color: #cccccc;
 }
 .controls-RadioButton.ws-disabled .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -4px;
+  background: url('img/RadioButton-sprite.png') 0 0;
 }
 .controls-RadioButton.ws-disabled:hover .controls-RadioButton__caption {
   color: #cccccc;
 }
 .controls-RadioButton.ws-disabled:hover .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -4px;
+  background: url('img/RadioButton-sprite.png') 0 0;
 }
 .controls-RadioGroup .controls-ListView__item {
   display: inline-block;
