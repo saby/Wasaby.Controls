@@ -510,6 +510,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
 
          if (typeof dotTemplate == 'string') {
+            //TODO: переделать (включая шаблоны) на doT.template(dotTemplate)({item: item, decorators: this._decorators})
             buildedTpl = $(MarkupTransformer(doT.template(dotTemplate)(item)));
             return buildedTpl;
          }

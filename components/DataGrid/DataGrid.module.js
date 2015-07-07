@@ -61,6 +61,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
              * @property {String} field Имя поля
              * @property {String} width Ширина колонки
              * Значение необходимо задавать для колонок с фиксированной шириной.
+             * @property {Boolean} highlight=true Подсвечивать фразу при поиске
              * @property {String} className Имя класса, который будет применён к каждой ячейке столбца
              * @property {String} captionTemplate Шаблон отображения шапки колонки
              * @property {String} cellTemplate Шаблон отображения ячейки
@@ -114,7 +115,8 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
       $constructor: function() {
          this._thead = $('.controls-DataGrid__thead', this._container.get(0));
-         this._colgroup = $('.controls-DataGrid__colgroup', this._container.get(0))
+         this._colgroup = $('.controls-DataGrid__colgroup', this._container.get(0));
+         this._checkColumns();
       },
 
       init: function() {
@@ -212,24 +214,30 @@ define('js!SBIS3.CONTROLS.DataGrid',
          if (!this._options.itemTemplate) {
 
             var rowData = {
-               columns : $ws.core.clone(this._options.columns),
+               columns: $ws.core.clone(this._options.columns),
+               decorators: this._decorators,
+               color: item.get(this._options.colorField),
                multiselect : this._options.multiselect,
                hierField: this._options.hierField + '@',
                startScrollColumn: this._options.startScrollColumn
             };
 
             for (var i = 0; i < rowData.columns.length; i++) {
-               var value;
-               if (rowData.columns[i].cellTemplate) {
-                  var cellTpl = rowData.columns[i].cellTemplate;
-                  value = MarkupTransformer(doT.template(cellTpl)({item : item, field : rowData.columns[i].field}));
-               }
-               else {
-                  value = item.get(rowData.columns[i].field);
+               var value,
+                   column = rowData.columns[i];
+               if (column.cellTemplate) {
+                  var cellTpl = column.cellTemplate;
+                  value = MarkupTransformer(doT.template(cellTpl)({
+                     item: item,
+                     field: column.field,
+                     highlight: column.highlight
+                  }));
+               } else {
+                  value = item.get(column.field);
                   value = ((value != undefined) && (value != null)) ? value : '';
                }
-               rowData.columns[i].value = value;
-               rowData.columns[i].item = item;
+               column.value = value;
+               column.item = item;
             }
             return this._rowTpl(rowData)
          }
@@ -536,8 +544,20 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
           this._colgroup.append(docFragmentForColGroup);
           this._thead.prepend(headerTr);
+          this._checkColumns();
           this._redraw();
        },
+      /**
+       * Проверяет настройки колонок, заданных опцией {@link columns}.
+       */
+      _checkColumns : function() {
+         for (var i = 0; i < this._options.columns.length; i++) {
+            var column = this._options.columns[i];
+            if (column.highlight === undefined) {
+               column.highlight =  true;
+            }
+         }
+      },
       _getItemActionsPosition: function(item) {
          return {
             top: item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
