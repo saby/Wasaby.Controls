@@ -38,20 +38,15 @@ define('js!SBIS3.CONTROLS.FilterButton',
          _linkTextFields: null,
          _filterFields: null,
          _linkTextEl: null,
-         _linkCrossEl: null,
-         _filterChanged: false
+         _linkCrossEl: null
       },
 
-      $constructor: function(cfg) {
+      $constructor: function() {
          function splitFields(fields) {
             return $ws.helpers.isPlainArray(fields) ? fields : ('' + (fields || '')).split(',');
          }
          this._linkTextFields = splitFields(this._options.linkTextFields);
          this._filterFields = splitFields(this._options.filterFields);
-
-         if (cfg.filter) {
-            this._filterChanged = true;
-         }
 
          this._container.removeClass('ws-area');
          this._linkTextEl = this._container.find('.controls__filterButton__filterLine-items');
@@ -71,9 +66,16 @@ define('js!SBIS3.CONTROLS.FilterButton',
          this._updateLink();
       },
 
+      _isFilterChanged: function() {
+         return !$ws.helpers.isEqualObject(this._options.filter, this._options.resetFilter);
+      },
+
       _updateLink: function() {
-         this._linkTextEl.text(this._options.linkText);
-         this._linkCrossEl.toggleClass('ws-hidden', !this._filterChanged);
+         var
+            changed = this._isFilterChanged(),
+            text = changed ? this._options.linkText : this._options.resetLinkText;
+         this._linkTextEl.text(text);
+         this._linkCrossEl.toggleClass('ws-hidden', !changed);
       },
 
       _syncContext: function(fromContext, syncText) {
@@ -116,7 +118,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
       },
 
       resetFilter: function() {
-         this._filterChanged = false;
          this._options.filter = this._options.resetFilter;
          this._options.linkText = this._options.resetLinkText;
 
@@ -126,8 +127,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
       },
 
       applyFilter: function() {
-         this._filterChanged = true;
-
          this.hidePicker();
 
          this._syncContext(true, true);
@@ -137,7 +136,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
       },
 
       setFilter: function(filter) {
-         this._filterChanged = true;
          this._options.filter = filter;
          this._syncContext(false, true);
          this._notify('onPropertyChanged');
