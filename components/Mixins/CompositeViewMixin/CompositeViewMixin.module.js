@@ -65,10 +65,16 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
                         }
                      }
                      else {
-                        dotTpl = doT.template('<div>{{=it.item.get(it.description)}}</div>')
+                        dotTpl = doT.template('<div style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply(it.item.get(it.description))}}</div>')
                      }
                   }
-                  resultTpl = dotTpl({item : item, description : this._options.displayField, image : this._options.imageField});
+                  resultTpl = dotTpl({
+                     item: item,
+                     decorators: this._decorators,
+                     color: item.get(this._options.colorField),
+                     description: this._options.displayField,
+                     image: this._options.imageField
+                  });
                   break;
                }
                case 'tile' : {
@@ -89,10 +95,16 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
                         } else {
                            src = '{{=it.item.get(it.image)}}'
                         }
-                        dotTpl = doT.template('<div><div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></div><img class="controls-CompositeView__tileImg" src="' + src + '"/><div class="controls-CompositeView__tileTitle">{{=it.item.get(it.description)}}</div></div>')
+                        dotTpl = doT.template('<div><div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></div><img class="controls-CompositeView__tileImg" src="' + src + '"/><div class="controls-CompositeView__tileTitle" style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply(it.item.get(it.description))}}</div></div>')
                      }
                   }
-                  resultTpl = dotTpl({item : item, description : this._options.displayField, image : this._options.imageField});
+                  resultTpl = dotTpl({
+                     item: item,
+                     decorators: this._decorators,
+                     color: item.get(this._options.colorField),
+                     description: this._options.displayField,
+                     image: this._options.imageField
+                  });
                   break;
                }
 

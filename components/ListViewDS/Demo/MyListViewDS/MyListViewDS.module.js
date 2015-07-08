@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.Demo.MyListViewDS',
          var ListView = this.getChildControlByName('ListView');
          var itemTpl = '<div class="listViewItem" style="height: 30px;">\
                            <span class="controls-ListView__itemCheckBox" ></span>\
-                           {{=it.get("title")}}\
+                           {{=it.item.get("title")}}\
                          </div>'
          ListView._options.itemTemplate = itemTpl;
          ListView.reload();

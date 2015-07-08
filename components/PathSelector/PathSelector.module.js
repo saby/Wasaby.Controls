@@ -2,9 +2,10 @@ define('js!SBIS3.CONTROLS.PathSelector', [
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.DSMixin',
    'js!SBIS3.CONTROLS.PickerMixin',
+   'js!SBIS3.CONTROLS.DecorableMixin',
    'html!SBIS3.CONTROLS.PathSelector',
    'html!SBIS3.CONTROLS.PathSelector/resources/pointTpl'
-], function (CompoundControl, DSMixin, PickerMixin, dotTpl, pointTpl) {
+], function (CompoundControl, DSMixin, PickerMixin, DecorableMixin, dotTpl, pointTpl) {
    'use strict';
 
    if (typeof window !== 'undefined') {
@@ -15,7 +16,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       });
    }
 
-   var PathSelector = CompoundControl.extend([DSMixin, PickerMixin], {
+   var PathSelector = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], {
       $protected: {
          _dotTplFn: dotTpl,
          _resizeTimeout: null,
@@ -124,6 +125,9 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             point[this._options.displayField] = title;
             point[this._options.dirField] = parentId;
             point[this._options.keyField] = key;
+            if (this._options.colorField) {
+               point[this._options.colorField] = record ? record.get(this._options.colorField) : '';
+            }
             if (!this._dataSet.getRecordByKey(point[this._options.keyField])) {
                this._dataSet.push(point);
             }
@@ -137,7 +141,16 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             var width = this._picker._container.width();
             this._picker._container.empty();
             this._dataSet.each(function (record) {
-               var point = $('<div class="controls-MenuItem js-controls-PathSelector__point"></div>').html(record.get(self._options.displayField))
+               var point = $('<div class="controls-MenuItem js-controls-PathSelector__point"></div>')
+                  .html(
+                     self._decorators.apply(
+                        record.get(self._options.displayField)
+                     )
+                  )
+                  .attr('style', self._decorators.apply(
+                     record.get(self._options.colorField),
+                     'color'
+                  ))
                   .data(self._options.dirField, record.get(self._options.dirField));
                self._picker._container.append(point);
                var previousContainer = point.prev('.js-controls-PathSelector__point', self._picker._container),
@@ -166,7 +179,8 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          if (targetContainer.width() + 30 >= this._container.width()) {
             var dots = $(pointTpl({
                title: '...',
-               dots: 'true'
+               dots: 'true',
+               decorators: this._decorators
             }));
             points.last().before(dots);
          }
