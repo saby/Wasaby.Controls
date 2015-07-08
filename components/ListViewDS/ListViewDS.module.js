@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 * <pre>
                 *     <div class="listViewItem" style="height: 30px;">\
                 *        <span class="controls-ListView__itemCheckBox"></span>\
-                *        {{=it.get("title")}}\
+                *        {{=it.item.get("title")}}\
                 *     </div>
                 * </pre>
                 * @bind SBIS3.CONTROLS.ListViewDS#itemTemplate
@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 * @example
                 * <pre>
                 *     <div class="listViewItem" style="height: 30px;">\
-                *        {{=it.get("title")}}\
+                *        {{=it.item.get("title")}}\
                 *     </div>
                 * </pre>
                 * @see multiselect

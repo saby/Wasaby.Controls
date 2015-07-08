@@ -27,6 +27,16 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', ['js!SBIS3.CONTROLS.Utils.HtmlD
       $constructor: function () {
       },
 
+      destroy: function () {
+         for (var area in this._decorators) {
+            if (this._decorators.hasOwnProperty(area)) {
+               for (var i = 0; i < this._decorators[area].length; i++) {
+                  this._decorators[area][i].destroy();
+               }
+            }
+         }
+      },
+
       /**
        * Добавляет декоратор
        * @param {SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator} decorator Декоратор

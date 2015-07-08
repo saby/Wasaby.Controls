@@ -13,7 +13,7 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
             /**
              * @cfg {String} CSS класс для подсветки
              */
-            cssClass: '',
+            cssClass: 'controls-HtmlDecorators-highlight',
 
             /**
              * @cfg {String} Метод контрола, позволяющий получить текст для подсветки

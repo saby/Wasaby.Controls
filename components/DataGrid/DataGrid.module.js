@@ -216,7 +216,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
             var rowData = {
                columns: $ws.core.clone(this._options.columns),
                decorators: this._decorators,
-               color: item.get(this._options.colorField),
+               color: this._options.colorField ? item.get(this._options.colorField) : '',
                multiselect : this._options.multiselect,
                hierField: this._options.hierField + '@',
                startScrollColumn: this._options.startScrollColumn

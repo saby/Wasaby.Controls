@@ -53,8 +53,7 @@ define('js!SBIS3.CONTROLS.DecorableMixin', [
 
          this._decorators.add(new HighlightDecorator({
             enabledGetter: 'isHighlightEnabled',
-            textGetter: 'getHighlightText',
-            cssClass: 'controls-ListView-highlight'
+            textGetter: 'getHighlightText'
          }));
 
          this._decorators.add(new ColorMarkDecorator({
@@ -63,8 +62,18 @@ define('js!SBIS3.CONTROLS.DecorableMixin', [
       },
 
       before: {
+         destroy: function () {
+            this._decorators.destroy();
+         },
          _redraw: function () {
             this._decorators.update(this);
+         }
+      },
+      after: {
+         //For DSMixin
+         _buildTplArgs: function(item, prev) {
+            prev.decorators = this._decorators;
+            prev.color = this._options.colorField ? item.get(this._options.colorField) : '';
          }
       },
 
