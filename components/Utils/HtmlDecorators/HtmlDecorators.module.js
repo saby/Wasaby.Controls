@@ -1,13 +1,9 @@
 define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', ['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (AbstractDecorator) {
    'use strict';
 
-   /**
-    * @var {Object} Вид области декорирования: текст
-    */
+   /** @constant {Object} Вид области декорирования: текст*/
    var AREA_KIND_TEXT = 'text',
-   /**
-    * @var {Object} Вид области декорирования: HTML атрибуты
-    */
+   /** @constant {Object} Вид области декорирования: HTML атрибуты*/
        AREA_KIND_ATTR = 'attr';
 
    /**

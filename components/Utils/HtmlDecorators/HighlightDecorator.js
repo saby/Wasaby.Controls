@@ -1,6 +1,3 @@
-/**
- * Created by Aa.malcev2 on 30.06.2015.
- */
 define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (AbstractDecorator) {
    'use strict';
 
