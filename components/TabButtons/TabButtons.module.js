@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
 
       _getItemTemplate : function() {
          return '<component data-component="SBIS3.CONTROLS.TabButton">' +
-            '<option name="caption">{{=it.get("title")}}</option>'+
+            '<option name="caption">{{=it.item.get("title")}}</option>'+
             '</component>';
       }
    });

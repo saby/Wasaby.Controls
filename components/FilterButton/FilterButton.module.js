@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.FilterButton', [
    'js!SBIS3.CONTROLS.FilterButtonCustomItem',
    'js!SBIS3.CONTROLS.ComboBox'
 ], function(CompoundControl, dotTplFn, PickerMixin, DSMixin, itemDotTpl) {
-   var myTpl = '<div><span style="margin-right: 5px;">Год</span><component data-component="SBIS3.CONTROLS.ComboBox" config="{{=$ws.helpers.encodeCfgAttr(it.getRaw().cfg)}}"></component></div>';
+   var myTpl = '<div><span style="margin-right: 5px;">Год</span><component data-component="SBIS3.CONTROLS.ComboBox" config="{{=$ws.helpers.encodeCfgAttr(it.item.getRaw().cfg)}}"></component></div>';
    var myItems = [ {name: '1993', title: '1993'}, {name: '1994', title: '1994'}, {name: '1995', title: '1995'}, {name: '1996', title: '1996'}, {name: '1997', title: '1997'} ];
    var items = [
       { name: 'Год', componentType: 'SBIS3.CONTROLS.ComboBox', cfg: { field: 'Год', visible: true, items: myItems} },

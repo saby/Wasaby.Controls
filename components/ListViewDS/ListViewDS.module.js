@@ -9,13 +9,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
       'js!SBIS3.CONTROLS.MultiSelectable',
       'js!SBIS3.CONTROLS.Selectable',
       'js!SBIS3.CONTROLS.DataBindMixin',
+      'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.ItemActionsGroup',
       'html!SBIS3.CONTROLS.ListViewDS',
       'js!SBIS3.CONTROLS.CommonHandlers',
       'js!SBIS3.CONTROLS.Pager',
       'is!browser?html!SBIS3.CONTROLS.ListViewDS/resources/ListViewGroupBy'
    ],
-   function (CompoundControl, DSMixin, MultiSelectable, Selectable, DataBindMixin, ItemActionsGroup, dotTplFn, CommonHandlers, Pager, groupByTpl) {
+   function (CompoundControl, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, Pager, groupByTpl) {
 
       'use strict';
 
@@ -35,7 +36,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        * @demo SBIS3.CONTROLS.Demo.MyListViewDS
        */
 
-      var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, Selectable, DataBindMixin, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
+      var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem При переводе курсора мыши на другую запись
@@ -90,7 +91,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 * <pre>
                 *     <div class="listViewItem" style="height: 30px;">\
                 *        <span class="controls-ListView__itemCheckBox"></span>\
-                *        {{=it.get("title")}}\
+                *        {{=it.item.get("title")}}\
                 *     </div>
                 * </pre>
                 * @bind SBIS3.CONTROLS.ListViewDS#itemTemplate
@@ -103,7 +104,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 * @example
                 * <pre>
                 *     <div class="listViewItem" style="height: 30px;">\
-                *        {{=it.get("title")}}\
+                *        {{=it.item.get("title")}}\
                 *     </div>
                 * </pre>
                 * @see multiselect

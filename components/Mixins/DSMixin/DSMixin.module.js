@@ -589,18 +589,22 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             dotTemplate = itemTpl;
          }
          else if (typeof itemTpl == 'function') {
-            dotTemplate = itemTpl(item);
+            dotTemplate = itemTpl(this._buildTplArgs(item));
          }
 
          if (typeof dotTemplate == 'string') {
-            buildedTpl = $(MarkupTransformer(doT.template(dotTemplate)(item)));
+            buildedTpl = $(MarkupTransformer(doT.template(dotTemplate)(this._buildTplArgs(item))));
             return buildedTpl;
          }
          else {
             throw new Error('Шаблон должен быть строкой');
          }
       },
-
+      _buildTplArgs: function(item) {
+         return {
+            item: item
+         };
+      },
       _appendItemTemplate: function (item, targetContainer, itemBuildedTpl, at) {
          if (at && (typeof at.at !== 'undefined')) {
             var atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).get(at.at);
