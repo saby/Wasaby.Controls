@@ -2495,7 +2495,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls__filterButton {
   height: 40px;
-  display: block;
+  display: inline-block;
 }
 .controls__filterButton .controls__filterButton__filterLine {
   display: inline-block;
@@ -2503,6 +2503,12 @@ input[type="reset"]::-moz-focus-inner {
   padding: 8px 8px 8px 0;
   vertical-align: top;
   text-align: center;
+}
+.controls__filterButton .controls__filterButton__filterLine-cross {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  cursor: pointer;
 }
 .controls__filterButton .controls__filterButton-button {
   width: 30px;
