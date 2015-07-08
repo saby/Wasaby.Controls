@@ -11,9 +11,11 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
 
    /**
     * Класс для работы с бизнес-логикой СБИС, как с источником данных.
-    * @public
+    * @author Мануйлов Андрей
     * @class SBIS3.CONTROLS.SbisServiceSource
     * @extends SBIS3.CONTROLS.BaseSource
+    * @public
+    * @example
     * <pre>
     *     var dataSource = new SbisServiceSource({
     *         service: {
@@ -23,7 +25,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
     * </pre>
     */
 
-   return BaseSource.extend({
+   return BaseSource.extend(/** @lends SBIS3.CONTROLS.SbisServiceSource.prototype */{
       $protected: {
          _options: {
              /**

@@ -6,10 +6,12 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
     /**
      *
      * Позволяет работать с массивом объектов на бизнес-логике.
+     * @class SBIS3.CONTROLS.SbisJSONStrategy
+     * @extends SBIS3.CONTROLS.IDataStrategy
      * @public
      */
 
-   var SbisJSONStrategy = IDataStrategy.extend({
+   var SbisJSONStrategy = IDataStrategy.extend(/** @lends SBIS3.CONTROLS.SbisJSONStrategy.prototype */{
       $protected: {},
       $constructor: function () {
       },

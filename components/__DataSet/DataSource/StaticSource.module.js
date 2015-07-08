@@ -10,12 +10,12 @@ define('js!SBIS3.CONTROLS.StaticSource', [
 
    /**
     * Класс для работы с массивами, как с источником данных.
-    * @public
     * @class SBIS3.CONTROLS.StaticSource
     * @extends SBIS3.CONTROLS.BaseSource
+    * @public
     */
 
-   return BaseSource.extend({
+   return BaseSource.extend(/** @lends SBIS3.CONTROLS.StaticSource.prototype */{
       $protected: {
          _initialDataSet: undefined,
          _options: {
