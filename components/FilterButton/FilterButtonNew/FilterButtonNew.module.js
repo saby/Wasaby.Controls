@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
       _dotTplPicker: dotTplForPicker,
       $protected: {
          _options: {
-            linkText: 'Нужно отобрать?',
+            linkText: '',
             filterAlign: 'right',
             pickerClassName: 'controls__filterButton__picker',
             items: [],
@@ -29,7 +29,15 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          _linkedView: undefined,
          _initialFilter: undefined,
          _initialControlsValues: {},
-         _currentControlsValues: {}
+         _currentControlsValues: {},
+         _nomFilters: {
+            withoutNDS: true,
+            showDeleted: true,
+            ShowOnlyDeleted: true,
+            onlySelling: true,
+            onlyNotSelling: true,
+            ТипНоменклатуры: true
+         }
       },
 
       $constructor: function() {
@@ -48,70 +56,81 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          this._linkedView = view;
          view.once('onDrawItems', this._setInitialFilter.bind(this));
       },
+
+      //Очистка фильтрации, перерисовка текста у кнопки фильтров
       resetFilter: function() {
          this._setControlsValues(this._initialControlsValues);
          this._currentControlsValues = $ws.core.clone(this._initialControlsValues);
          this.reload();
-         this._linkedView.reload($ws.core.clone(this._initialFilter));
+         for(var i in this._nomFilters) {
+            if(this._nomFilters.hasOwnProperty(i) && this._linkedView._filter.hasOwnProperty(i)) {
+               delete this._linkedView._filter[i]
+            }
+         }
+         this._linkedView.reload($ws.core.merge(this._linkedView._filter, this._initialFilter, {clone: true}));
       },
+
       showPicker: function() {
          this._setControlsValues(this._currentControlsValues);
          FilterButtonNew.superclass.showPicker.apply(this, arguments);
       },
+
+      //Применение фильтрации, перерисовка текста у кнопки фильтров
       applyFilter: function() {
          console.log('applyFilter');
          //FIXME придрот для демки
          var controls = this._picker.getChildControls(),
-            ctrlName,
-            txtValue;
+             ctrlName,
+             txtValue,
+             filter = {};
          for (var i = 0, len = controls.length; i < len; i++) {
             ctrlName = controls[i].getName();
             if(ctrlName !== 'applyFilterButton' && ctrlName !== 'clearFilterButton') {
                this._currentControlsValues[ctrlName] = this._getControlValue(controls[i]);
                if(ctrlName === 'NDS_filter') {
-                  this._linkedView._filter['withoutNDS'] = controls[i].getText() === 'Без НДС';
+                  filter['withoutNDS'] = controls[i].getText() === 'Без НДС';
                }
                if(ctrlName === 'Using_filter') {
                   txtValue = controls[i].getText();
                   if(txtValue === 'Неиспользуемые') {
-                     this._linkedView._filter['showDeleted'] = true;
-                     this._linkedView._filter['ShowOnlyDeleted'] = true;
+                     filter['showDeleted'] = true;
+                     filter['ShowOnlyDeleted'] = true;
                   }
                   if(txtValue === 'Испльзуемые') {
-                     this._linkedView._filter['showDeleted'] = false;
-                     this._linkedView._filter['ShowOnlyDeleted'] = false;
+                     filter['showDeleted'] = false;
+                     filter['ShowOnlyDeleted'] = false;
                   }
                   if(txtValue === 'Все (используемые и нет)') {
-                     this._linkedView._filter['showDeleted'] = true;
-                     this._linkedView._filter['ShowOnlyDeleted'] = false;
+                     filter['showDeleted'] = true;
+                     filter['ShowOnlyDeleted'] = false;
                   }
                }
                if(ctrlName === 'Selling_filter') {
                   txtValue = controls[i].getText();
                   if(txtValue === 'Все (для продажи и нет)') {
-                     this._linkedView._filter['onlySelling'] = false;
-                     this._linkedView._filter['onlyNotSelling'] = false;
+                     filter['onlySelling'] = false;
+                     filter['onlyNotSelling'] = false;
                   }
                   if(txtValue === 'Для продажи') {
-                     this._linkedView._filter['onlySelling'] = true;
-                     this._linkedView._filter['onlyNotSelling'] = false;
+                     filter['onlySelling'] = true;
+                     filter['onlyNotSelling'] = false;
                   }
                   if(txtValue === 'Не для продажи') {
-                     this._linkedView._filter['onlySelling'] = false;
-                     this._linkedView._filter['onlyNotSelling'] = true;
+                     filter['onlySelling'] = false;
+                     filter['onlyNotSelling'] = true;
                   }
                }
                if(ctrlName === 'ТипНоменклатуры') {
                   txtValue = controls[i].getValue();
                   if(txtValue) {
-                     this._linkedView._filter['ТипНоменклатуры'] = txtValue;
+                     filter['ТипНоменклатуры'] = txtValue;
                   }
                }
             }
          }
          this.hidePicker();
          this.reload();
-         this._linkedView.reload();
+         this._linkedView.reload($ws.core.merge(this._linkedView._filter, filter));
       },
 
       _setPickerContent: function() {
@@ -133,10 +152,10 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
       },
 
       _getItemTemplate: function(item) {
-         var
-            filterName = item.get('filter'),
-            control = this._picker && this._picker.getChildControlByName(filterName),
-            value = control && ((control.getSelectedKeys && control.getSelectedKeys()) || (control.getValue() && control.getValue()));
+         var filterName = item.get('filter'),
+             control = this._picker && this._picker.getChildControlByName(filterName),
+             value = control && ((control.getSelectedKeys && control.getSelectedKeys()) || (control.getValue() && control.getValue()));
+
          if (value && this._initialControlsValues[control.getName()] !== ((value.length && value[0]) || value)) {
             return '<component data-component="SBIS3.CONTROLS.Link">' +
                    '<option name="caption">' + (control.getText ? control.getText() : control.getStringValue()) + '</option>' +
@@ -154,6 +173,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          FilterButtonNew.superclass._clearItems.apply(this, arguments);
          this._filterLineItemsContainer.empty();
       },
+
       _setInitialFilter: function() {
          this._initialFilter = $ws.core.clone(this._linkedView._filter);
       },
