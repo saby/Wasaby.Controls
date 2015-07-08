@@ -5,12 +5,14 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
    'use strict';
 
    /**
-    * Реализация интерфеса IDataStrategy для работы с массивами.
+    * Реализация интерфейса SBIS3.CONTROLS.IDataStrategy для работы с массивами.
     * Позволяет работать с массивом объектов на статике.
+    * @class SBIS3.CONTROLS.ArrayStrategy
+    * @extends SBIS3.CONTROLS.IDataStrategy
     * @public
     */
 
-   var ArrayStrategy = IDataStrategy.extend({
+   var ArrayStrategy = IDataStrategy.extend(/** @lends SBIS3.CONTROLS.ArrayStrategy.prototype */{
       $protected: {},
       $constructor: function () {
       },

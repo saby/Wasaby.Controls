@@ -6,10 +6,12 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
 
    /**
     * Базовый источник данных
+    * @class SBIS3.CONTROLS.BaseSource
+    * @extends $ws.proto.Abstract
     * @public
     */
 
-   return $ws.proto.Abstract.extend({
+   return $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.BaseSource.prototype */{
        /**
         * @event onCreate При создании записи в источнике данных
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.

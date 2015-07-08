@@ -7,21 +7,28 @@ define('js!SBIS3.CONTROLS.DataSet', [
    'use strict';
 
    /**
-    * Класс "Набор данных"
+    * Набор данных.
+    * @class SBIS3.CONTROLS.DataSet
+    * @extends $ws.proto.Abstract
     * @public
     */
 
    /**
-    * Дефолтный набор опций при установке рекордов в датасет
-    * add - нужно ли добавлять новые рекорды
-    * remove - нужно ли удалять рекорды, которые были в датасете, но не входят в новый список рекордов
-    * merge - если рекорд уже находится в датасете, необходимо ли перезаписывать его свойства
+    * @typedef {Object} setOptions Дефолтный набор опций при установке рекордов в датасет
+    * @property {Boolean} add  нужно ли добавлять новые рекорды
+    * @property {Boolean} remove нужно ли удалять рекорды, которые были в датасете, но не входят в новый список рекордов
+    * @property {Boolean} merge если рекорд уже находится в датасете, необходимо ли перезаписывать его свойства
     */
    var setOptions = {add: true, remove: true, merge: true};
-   // Дефолтный набор опций при добавлении рекордов в датасет
+
+   /**
+    * @typedef {Object} addOptions Дефолтный набор опций при добавлении рекордов в датасет
+    * @property {Boolean} add  нужно ли добавлять новые рекорды
+    * @property {Boolean} remove нужно ли удалять рекорды, которые были в датасете, но не входят в новый список рекордов
+    */
    var addOptions = {add: true, remove: false};
 
-   var DataSet = $ws.proto.Abstract.extend({
+   var DataSet = $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.DataSet.prototype */{
       $protected: {
          _indexTree: {},
          _isLoaded: false,
