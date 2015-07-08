@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
          var hierIterate = function(root) {
             var
-               childKeys = indexTree[root];
+               childKeys = indexTree[root] || [];
             for (var i = 0; i < childKeys.length; i++) {
                var record = self._dataSet.getRecordByKey(childKeys[i]);
                iterateCallback.call(this, record, root, curLvl);
@@ -148,9 +148,9 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
           	} else {
             	self._dataSet.setRawData(dataSet.getRawData());
           	}
+            self._curRoot = key;
           	self._dataLoadedCallback();
           	self._notify('onDataLoad', dataSet);
-          	self._curRoot = key;
           	self._redraw();
          });
       },
