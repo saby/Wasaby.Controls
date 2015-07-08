@@ -143,12 +143,13 @@ define('js!SBIS3.CONTROLS.StaticSource', [
 
             for (var filterField in filter) {
                //TODO: пока параметры иерархии передаются в фильтрах делаем так
-               if (filterValue == 'С разворотом' || filterValue == 'Узлы и листья') {
-               	break;
-               }            	
+
                if (filter.hasOwnProperty(filterField)) {
-                  var filterValue = filter[filterField],
-                      dataValue = strategy.value(dataItem, filterField);
+                  var filterValue = filter[filterField];
+                  if (filterValue == 'С разворотом' || filterValue == 'Узлы и листья') {
+                     continue;
+                  }
+                  var dataValue = strategy.value(dataItem, filterField);
 
                   //Если установлен фильтр-callback - используем его результат, иначе - проверяем полное совпадение значений
                   var callbackResult = this._options.dataFilterCallback ? this._options.dataFilterCallback(filterField, dataValue, filterValue) : undefined;

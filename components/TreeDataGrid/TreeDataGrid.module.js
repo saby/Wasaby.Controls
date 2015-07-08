@@ -43,6 +43,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
             self = this,
             itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
+         this._options.openedPath[key] = true;
 
          //при раскрытии узла по стрелке приходит новый датасет, в котором только содержимое узла
          //поэтому удалять из текущего датасета ничего не нужно, только добавить новое.
@@ -90,6 +91,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          var childKeys = this._dataSet.getChildItems(key, true, this._options.hierField);
          for (var i = 0; i < childKeys.length; i++) {
             $('.controls-ListView__item[data-id="' + childKeys[i] + '"]', this._container.get(0)).remove();
+            delete(this._options.openedPath[childKeys[i]]);
          }
 
       },
@@ -99,9 +101,15 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          if (item.get(this._options.hierField + '@')){
          	container.addClass('controls-ListView__folder');
          }
-         var parentKey = this._dataSet.getParentKey(item, this._options.hierField),
+         var
+            key = item.getKey(),
+            parentKey = this._dataSet.getParentKey(item, this._options.hierField),
          	parentContainer = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._container.get(0)).get(0);
          container.attr('data-parent', parentKey);
+
+         if (this._options.openedPath[key]) {
+            $('.js-controls-TreeView__expand', container).addClass('controls-TreeView__expand__open');
+         }
          /*TODO пока придрот*/
          if (typeof parentKey != 'undefined' && parentKey !== null && parentContainer) {
             var parentWrappersCount = $('.controls-TreeView__hierWrapper', parentContainer).length;

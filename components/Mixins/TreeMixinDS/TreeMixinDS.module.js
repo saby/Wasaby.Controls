@@ -18,7 +18,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
              * Опция задаёт режим разворота.
              * @Boolean false Без разворота
              */
-            expand: false
+            expand: false,
+            openedPath : {}
          }
       },
 
@@ -62,6 +63,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
       collapseNode: function (key) {
          var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.js-controls-TreeView__expand', itemCont).removeClass('controls-TreeView__expand__open');
+         delete(this._options.openedPath[key]);
          this._nodeClosed(key);
       },
 
@@ -98,8 +100,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
          var
             self = this,
             itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-         $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
 
+         $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
+         this._options.openedPath[key] = true;
          this._dataSet.merge(dataSet);
          this._dataSet._reindexTree(this._options.hierField);
 
@@ -126,13 +129,19 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
 
       },
 
-      around: {
-        _drawItemsCallback: function (parentFunc) {
-          if (this._options.expand) {
-              $('.js-controls-TreeView__expand', this._container.get(0)).addClass('controls-TreeView__expand__open')
-          }
-          parentFunc.call(this);
-        }
+      before: {
+         _dataLoadedCallback: function () {
+            this._options.openedPath = {};
+            this._dataSet._reindexTree(this._options.hierField);
+            if (this._options.expand) {
+               var tree = this._dataSet._indexTree;
+               for (var i in tree) {
+                  if (tree.hasOwnProperty(i) && i != 'null' && i != this._curRoot) {
+                     this._options.openedPath[i] = true;
+                  }
+               }
+            }
+         }
       },
 
       _elemClickHandlerInternal: function (data, id, target) {
