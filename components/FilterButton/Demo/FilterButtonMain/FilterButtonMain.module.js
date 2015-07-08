@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.Demo.FilterButtonMain', [
                this.setValueSelf('filterJSON', JSON.stringify(filter));
             });
 
-            context.setValueSelf('filter', {});
+            context.setValueSelf('filter', {'NDS' : 1});
          }
       });
 

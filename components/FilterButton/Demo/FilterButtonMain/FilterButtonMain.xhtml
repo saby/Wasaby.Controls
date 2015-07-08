@@ -6,9 +6,12 @@
 
         <opt name="linkTextFields" value="NDSText,sellingText,usingText,nomenclatureTypeText,clientName"/>
         <opt name="linkText">Без НДС, Все (для продажи и нет), Используемые</opt>
+        <opt name="resetLinkText">Без НДС</opt>
 
         <opt name="filter" bind="filter"></opt>
-        <opt name="filterReset"></opt>
+        <opts name="resetFilter">
+          <opt name="NDS">1</opt>
+        </opts>
 
         <opt name="template">
             <component data-component="SBIS3.CONTROLS.Demo.FilterButtonFilterContent"></component>
@@ -45,6 +48,7 @@
         </options>
         <option name="emptyHTML">Нет записей</option>
         <options name="items" type="array">
+
             <options>
                 <option name="title" type="string">Один</option>
 
@@ -79,6 +83,17 @@
                 <option name="selling">1</option>
                 <option name="using">1</option>
             </options>
+           <options>
+              <option name="title" type="string">Четыре</option>
+
+              <option name="NDSText" type="string">С НДС</option>
+              <option name="sellingText">Все (для продажи и нет)</option>
+              <option name="usingText">Используемые</option>
+
+              <option name="NDS" type="string">2</option>
+              <option name="selling">2</option>
+              <option name="using">1</option>
+           </options>
         </options>
         <options name="selectedKeys" type="array">
             <option type="string">1</option>
