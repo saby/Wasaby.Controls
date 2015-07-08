@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
 
          _getItemActionsPosition: function(parentFunc, item) {
             if (this._options.viewMode == 'table') {
-               parentFunc.call(this, item);
+               return parentFunc.call(this, item);
             } else 
             return {
                top: item.position.top,
