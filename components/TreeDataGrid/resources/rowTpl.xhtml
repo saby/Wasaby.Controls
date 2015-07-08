@@ -1,4 +1,4 @@
-<tr class="controls-DataGrid__tr">
+<tr class="controls-DataGrid__tr" style="{{=it.decorators.apply(it.color, 'color')}}">
    {{?it.multiselect}}
    <td class="controls-DataGrid__td controls-DataGrid__td__checkBox js-controls-ListView__itemCheckBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}">
          <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></span>
@@ -8,9 +8,9 @@
       <td class="controls-DataGrid__td{{?column.className}} {{=column.className}}{{?}}{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}">
       	{{?index == 0}}
       		<div class="controls-TreeView__expand js-controls-TreeView__expand{{?!column.item.get(it.hierField)}} controls-TreeView__expand__leaf{{??}} has-child{{?}}"></div>
-      	{{=column.value}} {{?column.item.get(it.hierField)}} <div class="js-controls-TreeView__editArrow controls-TreeView__editArrow icon-16 icon-View icon-primary action-hover"></div> {{?}}
+      	{{=it.decorators.applyIf(column.value, column.highlight)}} {{?column.item.get(it.hierField)}} <div class="js-controls-TreeView__editArrow controls-TreeView__editArrow icon-16 icon-View icon-primary action-hover"></div> {{?}}
       	{{??}}
-      	{{=column.value}}
+      	{{=it.decorators.applyIf(column.value, column.highlight)}}
       	{{?}}
       </td>
    {{~}}
