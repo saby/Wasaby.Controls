@@ -2,8 +2,18 @@
     <div>
         <span style="margin-left:10px;font-size: 13px;font-weight: normal;font-family:Tahoma; color: #999999">Отбираются</span>
 
+        <component data-component="SBIS3.CONTROLS.TextBox" style="width:185px; margin:0 15px; vertical-align:text-top;">
+            <option name="text" bind="clientName" nonexistent=""/>
+        </component>
+    </div>
+
+    <div>
         <component data-component="SBIS3.CONTROLS.ComboBox" style="width:185px; margin:0 15px; vertical-align:text-top;">
             <options name="items" type="array">
+                <options>
+                    <option name="key" value="none"/>
+                    <option name="title">Не выбрано</option>
+                </options>
                 <options>
                     <option name="key" value="1"/>
                     <option name="title">Без НДС</option>
@@ -16,7 +26,7 @@
             <option name="keyField">key</option>
             <option name="editable">false</option>
             <option name="mode">click</option>
-            <option name="selectedKey" value="1" bind="NDS"/>
+            <option name="selectedKey" value="1" bind="NDS" nonexistent="none"/>
             <option name="text" bind="NDSText" direction="fromProperty" oneWay="true"/>
         </component>
     </div>
@@ -24,6 +34,10 @@
     <div>
         <component data-component="SBIS3.CONTROLS.ComboBox" style="width:185px; margin:5px 0px 0px 101px;">
             <options name="items" type="array">
+                <options>
+                    <option name="key" value="none"/>
+                    <option name="title">Не выбрано</option>
+                </options>
                 <options>
                     <option name="key">1</option>
                     <option name="title">Все (для продажи и нет)</option>
@@ -41,7 +55,7 @@
             <option name="editable">false</option>
             <option name="mode">click</option>
 
-            <option name="selectedKey" value="1" bind="selling"/>
+            <option name="selectedKey" value="1" bind="selling" nonexistent="none"/>
             <option name="text" bind="sellingText" direction="fromProperty" oneWay="true"/>
         </component>
     </div>
@@ -49,6 +63,10 @@
     <div>
         <component data-component="SBIS3.CONTROLS.ComboBox" style="width:185px; margin: 5px 0 0 101px;">
             <options name="items" type="array">
+                <options>
+                    <option name="key" value="none"/>
+                    <option name="title">Не выбрано</option>
+                </options>
                 <options>
                     <option name="key">1</option>
                     <option name="title">Используемые</option>
@@ -66,7 +84,7 @@
             <option name="editable">false</option>
             <option name="mode">click</option>
 
-            <option name="selectedKey" value="1" bind="using"/>
+            <option name="selectedKey" value="1" bind="using" nonexistent="none"/>
             <option name="text" bind="usingText" direction="fromProperty" oneWay="true"/>
         </component>
     </div>
