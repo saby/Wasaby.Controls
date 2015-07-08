@@ -603,7 +603,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @see setInfiniteScroll
           */
          isInfiniteScroll: function () {
-            return this._options.infiniteScroll;
+            return this._options.infiniteScroll && this._allowInfiniteScroll;
          },
          /**
           *  Общая проверка и загрузка данных для всех событий по скроллу
