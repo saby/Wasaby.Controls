@@ -4,14 +4,12 @@
 
         <opt name="filterFields" value="clientName,NDS,selling,using,nomenclatureTypeID"></opt>
 
-        <opt name="linkTextFields" value="NDSText,sellingText,usingText,nomenclatureTypeText,clientName"/>
+        <opt name="linkTextFields" value="NDSText:NDS,sellingText:selling,usingText:using,nomenclatureTypeText:nomenclatureTypeID,clientName"/>
         <opt name="linkText">Без НДС, Все (для продажи и нет), Используемые</opt>
-        <opt name="resetLinkText">Без НДС</opt>
+        <opt name="resetLinkText"></opt>
 
         <opt name="filter" bind="filter"></opt>
-        <opts name="resetFilter">
-          <opt name="NDS">1</opt>
-        </opts>
+        <opts name="resetFilter"></opts>
 
         <opt name="template">
             <component data-component="SBIS3.CONTROLS.Demo.FilterButtonFilterContent"></component>
