@@ -105,8 +105,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             homeIcon.icon = 'icon-16 icon-Home2 icon-primary action-hover';
             this._dataSet.push(homeIcon);
          }
-         var displayField = this._options.linkedView._options.displayField, //Как то не очень
-            hierField = this._options.linkedView._options.hierField; //И это не очень
+         var displayField = this._options.linkedView._options.displayField; //Как то не очень
          keys = keys instanceof Array ? keys : [keys];
          for (var i = keys.length - 1; i >= 0; i--) {
             var record = dataSet.getRecordByKey(keys[i]);
