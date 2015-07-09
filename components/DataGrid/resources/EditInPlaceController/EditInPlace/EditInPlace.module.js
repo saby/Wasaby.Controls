@@ -37,13 +37,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   childControls,
                   self = this,
                   childFocusOut = function() {
-                     var
-                        currentValue,
-                        methodName =
-                           $ws.helpers.instanceOfModule(this, 'SBIS3.CONTROLS.ComboBox') ? 'getSelectedKey' :
-                              $ws.helpers.instanceOfModule(this, 'SBIS3.CONTROLS.NumberTextBox') ? 'getNumericValue' :
-                                 $ws.helpers.instanceOfModule(this, 'SBIS3.CONTROLS.TextBox') ? 'getText' :
-                                    'getValue';
+                     var currentValue;
                      if (!self._editingRecord) {
                         self._editingRecord = self._record.clone();
                         self._editingRecord.subscribe('onChange', function (event, fieldName) {
@@ -59,7 +53,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                            }
                         });
                      }
-                     currentValue = this[methodName]();
+                     currentValue = this[self._determineGetMethodName(this)]();
                      if (currentValue !== self._editingRecord.get(this.getName())) {
                         self._editingRecord.set(this.getName(), currentValue);
                      }
@@ -112,11 +106,12 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             },
             _updateFieldsValues: function(record, ignoreFields) {
                var
-                  items = [],
-                  methodName;
+                  self = this,
+                  items;
                $ws.helpers.forEach(this._fields, function(field) {
                   if (Object.prototype.toString.call(ignoreFields) !== '[object Object]' || !ignoreFields[field.getName()]) {
                      if ($ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.ComboBox')) {
+                        items = [];
                         //todo избавиться от record.getType(field.getName()).s (получение всех возможных значений перечисляемого поля)
                         $ws.helpers.forEach(record.getType(field.getName()).s, function (value, key) {
                            items.push({title: value, id: key})
@@ -124,12 +119,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                         field.setItems(items);
                         field.setSelectedKey(record.get(field.getName()));
                      } else {
-                        //todo избавиться от перебора методов для разных типов полей
-                        methodName =
-                           $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.CheckBox') ? 'setChecked' :
-                              $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'setText' :
-                                 'setValue';
-                        field[methodName](record.get(field.getName()));
+                        field[self._determineSetMethodName(field)](record.get(field.getName()));
                      }
                   }
                });
@@ -141,31 +131,44 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                var
                   self = this,
                   result,
+                  record,
                   activeChild = this.getActiveChildControl();
                if (activeChild) {
-                  result = self._notify('onValueChange', activeChild.getName(), this._editingRecord);
+                  record  = this._editingRecord || this._record;
+                  record.set(activeChild.getName(), activeChild[this._determineGetMethodName(activeChild.getName())]());
+                  result = self._notify('onValueChange', activeChild.getName(), record);
                   if (result instanceof $ws.proto.Deferred) {
                      result.addCallback(function() {
-                        self._updateFieldsValues(this._editingRecord);
+                        self._updateFieldsValues(record);
                         self._applyChanges();
                      });
                   } else {
-                     self._updateFieldsValues(this._editingRecord);
+                     self._updateFieldsValues(record);
                      self._applyChanges();
                   }
                }
                return result;
             },
+            _determineGetMethodName: function(field) {
+               //todo избавиться от перебора методов для разных типов полей
+               var methodName =
+                  $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.ComboBox') ? 'getSelectedKey' :
+                     $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.NumberTextBox') ? 'getNumericValue' :
+                        $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'getText' :
+                           'getValue';
+               return methodName;
+            },
+            _determineSetMethodName: function(field) {
+               //todo избавиться от перебора методов для разных типов полей
+               var methodName =
+                  $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.CheckBox') ? 'setChecked' :
+                     $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'setText' :
+                        'setValue';
+               return methodName;
+            },
             _applyChanges: function() {
-               var methodName;
                $ws.helpers.forEach(this._fields, function(field, name) {
-                  //todo избавиться от перебора методов для разных типов полей
-                  methodName =
-                     $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.ComboBox') ? 'getSelectedKey' :
-                        $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.NumberTextBox') ? 'getNumericValue' :
-                           $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'getText' :
-                              'getValue';
-                  this._record.set(name, field[methodName]());
+                  this._record.set(name, field[this._determineGetMethodName(field)]());
                }, this);
             },
             /**
