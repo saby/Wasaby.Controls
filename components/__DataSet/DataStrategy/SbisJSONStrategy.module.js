@@ -147,7 +147,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
                break;
             }
          }
-         return d[index];
+         return index === undefined ? undefined : d[index];
       },
       /**
        * Получить тип поля
