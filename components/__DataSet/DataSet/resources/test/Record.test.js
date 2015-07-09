@@ -76,11 +76,11 @@ define(
 
                 });
                 context('when the field name is empty', function() {
-                    it('should throw an Error', function() {
-                        assert.throw(function() {
+                    it('should don\'t throw an Error', function() {
+                        assert.doesNotThrow(function() {
                             recordInstance.get('');
                         });
-                        assert.throw(function() {
+                        assert.doesNotThrow(function() {
                             recordInstance.get();
                         });
                     });
@@ -109,11 +109,11 @@ define(
                 });
 
                 context('when the field name is empty', function() {
-                    it('should throw an Error', function() {
-                        assert.throw(function() {
+                    it('should don\'t an Error', function() {
+                        assert.doesNotThrow(function() {
                             recordInstance.set('', 'м');
                         });
-                        assert.throw(function() {
+                        assert.doesNotThrow(function() {
                             recordInstance.set(undefined, 'м');
                         });
                     });

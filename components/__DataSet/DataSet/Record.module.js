@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
        */
       get: function (field) {
          if (!field) {
-            throw new Error('Field name is empty');
+            $ws.single.ioc.resolve('ILogger').error('Record', 'Field name is empty');
          }
          // с данными можем работать только через стратегию
          return this._strategy.value(this._raw, field);
@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
        */
       set: function (field, value) {
          if (!field) {
-            throw new Error('Field name is empty');
+            $ws.single.ioc.resolve('ILogger').error('Record', 'Field name is empty');
          }
          // с данными можем работать только через стратегию
          this._raw = this._strategy.setValue(this._raw, field, value);
@@ -172,7 +172,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
        */
       getKey: function () {
          if (!this._keyField) {
-            throw new Error('Key field is not defined');
+            $ws.single.ioc.resolve('ILogger').error('Record', 'Key field is not defined');
          }
          var key = this.get(this._keyField);
          // потому что БЛ возвращает массив для идентификатора
