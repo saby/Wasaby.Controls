@@ -868,7 +868,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-MenuButton {
   position: relative;
-  padding: 0;
+  padding: 0 0 2px 0;
 }
 .controls-Button.controls-MenuButton.controls-MenuButton__withoutMenu {
   padding: 0 8px;
