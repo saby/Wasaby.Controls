@@ -122,20 +122,20 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        * Раскрыть определенный узел
        * @param {String} key Идентификатор раскрываемого узла
        */
-		setCurrentRoot: function(key) {
-        	var self = this,
-          	record = this._dataSet.getRecordByKey(key),
-          	parentKey = record ? this._dataSet.getParentKey(record, this._options.hierField) : null,
-          	hierarchy =[];
-          	hierarchy.push(key);
-        	while (parentKey !== null){
-          	hierarchy.push(parentKey);
-          	record = this._dataSet.getRecordByKey(parentKey);
-          	parentKey = record ? this._dataSet.getParentKey(record, this._options.hierField) : null;
-        	}
-        	for (var i = hierarchy.length - 1; i >= 0; i--){
-          	this._notify('onSetRoot', this._dataSet, hierarchy[i]);
-        	}
+      setCurrentRoot: function(key) {
+         var self = this,
+            record,
+            parentKey = key || null,
+            hierarchy = [];
+         do {
+            hierarchy.push(parentKey);
+            record = this._dataSet.getRecordByKey(parentKey);
+            parentKey = record ? this._dataSet.getParentKey(record, this._options.hierField) : null;
+         } while (parentKey);
+         if (hierarchy.length == 1) {
+         	hierarchy = hierarchy[0];
+         }
+         this._notify('onSetRoot', this._dataSet, hierarchy, this._curRoot);
          /*TODO проверка на что уже загружали*/
          var filter = this._filter || {};
          filter[this._options.hierField] = key;

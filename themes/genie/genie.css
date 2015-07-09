@@ -2135,14 +2135,19 @@ input[type="reset"]::-moz-focus-inner {
 .controls-PathSelector__point:hover .controls-PathSelector__title {
   color: #FF7033;
 }
-.controls-PathSelector__point:hover .controls-PathSelector__arrow {
+.controls-PathSelector__point:hover .icon-16 {
   color: #FF7033!important;
+}
+.controls-PathSelector__point:hover:first-child .controls-PathSelector__title {
+  color: #FF7033;
 }
 .controls-PathSelector__point:first-child {
   top: 0;
 }
 .controls-PathSelector__point:first-child .controls-PathSelector__title {
   font-size: 15px;
+  color: #313E78;
+  font-weight: 700;
 }
 .controls-PathSelector__point:first-child .controls-PathSelector__arrow {
   background: url('img/path-filter-icon-back.png') 0 -1px;
@@ -2178,8 +2183,17 @@ input[type="reset"]::-moz-focus-inner {
 .controls-PathSelector .controls-PathSelector__dots .controls-PathSelector__title {
   margin-left: -3px;
 }
-.controls-PathSelector.controls-PathSelector__picker .controls-PathSelector__point {
-  display: block;
+.controls-PathSelector.controls-PathSelector__smallItems .controls-PathSelector__point:first-child .controls-PathSelector__arrow {
+  background: transparent;
+  width: 0;
+}
+.controls-PathSelector.controls-PathSelector__smallItems .controls-PathSelector__title {
+  font-size: 13px;
+  color: #0055BB;
+  font-weight: normal;
+}
+.controls-PathSelector.controls-PathSelector__smallItems .controls-PathSelector__title:hover {
+  color: #FF7033;
 }
 .controls-PathSelector .controls-PathSelector__hierWrapper {
   height: 13px;
