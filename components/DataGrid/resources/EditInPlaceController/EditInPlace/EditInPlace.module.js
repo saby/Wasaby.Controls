@@ -132,22 +132,25 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   self = this,
                   result,
                   record,
-                  activeChild = this.getActiveChildControl();
+                  activeChild = this.getActiveChildControl(),
+                  activeChildValue;
                if (activeChild) {
                   record  = this._editingRecord || this._record;
-                  record.set(activeChild.getName(), activeChild[this._determineGetMethodName(activeChild.getName())]());
-                  result = self._notify('onValueChange', activeChild.getName(), record);
-                  if (result instanceof $ws.proto.Deferred) {
-                     result.addCallback(function() {
-                        self._updateFieldsValues(record);
-                        self._applyChanges();
-                     });
-                  } else {
-                     self._updateFieldsValues(record);
-                     self._applyChanges();
+                  activeChildValue = activeChild[this._determineGetMethodName(activeChild.getName())]();
+                  if (record.get(activeChild.getName()) != activeChildValue) {
+                     record.set(activeChild.getName(), activeChildValue);
+                     result = self._notify('onValueChange', activeChild.getName(), record);
+                     if (result instanceof $ws.proto.Deferred) {
+                        result.addCallback(function () {
+                           self._updateFieldsValues(record);
+                           self._applyChanges();
+                        });
+                        return result;
+                     }
                   }
+                  self._updateFieldsValues(record);
+                  self._applyChanges();
                }
-               return result;
             },
             _determineGetMethodName: function(field) {
                //todo избавиться от перебора методов для разных типов полей
