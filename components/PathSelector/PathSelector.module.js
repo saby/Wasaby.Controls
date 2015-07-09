@@ -148,7 +148,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
                      )
                   )
                   .attr('style', self._decorators.apply(
-                     record.get(self._options.colorField),
+                     self._options.colorField ? record.get(self._options.colorField) : '',
                      'color'
                   ))
                   .data(self._options.dirField, record.get(self._options.dirField));
