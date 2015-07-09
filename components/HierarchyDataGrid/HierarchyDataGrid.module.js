@@ -155,7 +155,11 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
 
             var ps = new PathSelector({
                element : elem,
-               items: this._createPathItemsDS(path)
+               items: this._createPathItemsDS(path),
+               highlightEnabled: this._options.highlightEnabled,
+               highlightText: this._options.highlightText,
+               colorMarkEnabled: this._options.colorMarkEnabled,
+               colorField: this._options.colorField
             });
             ps.once('onPointClick', function(){
                //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onPOintClick'), а вотом выполняется setCurrentRoot
