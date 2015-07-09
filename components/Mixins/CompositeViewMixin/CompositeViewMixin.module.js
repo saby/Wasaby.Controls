@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
                   resultTpl = dotTpl({
                      item: item,
                      decorators: this._decorators,
-                     color: item.get(this._options.colorField),
+                     color: this._options.colorField ? item.get(this._options.colorField) : '',
                      description: this._options.displayField,
                      image: this._options.imageField
                   });
@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
                   resultTpl = dotTpl({
                      item: item,
                      decorators: this._decorators,
-                     color: item.get(this._options.colorField),
+                     color: this._options.colorField ? item.get(this._options.colorField) : '',
                      description: this._options.displayField,
                      image: this._options.imageField
                   });
