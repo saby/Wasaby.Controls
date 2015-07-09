@@ -62,9 +62,10 @@ define('js!SBIS3.CONTROLS.SuggestList', [
 
                 var self = this;
                 this._itemsContainer
-                    //TODO: разобраться, почему не срабатывает click
-                    .delegate('.controls-SuggestList__item', 'mouseup', function() {
-                        self.setSelectedKey($(this).attr('data-id'));
+                    .delegate('.controls-SuggestList__item', 'mouseup', function(event) {
+                       if (event.which == 1) {
+                           self.setSelectedKey($(this).attr('data-id'));
+                       }
                     });
             }
 
