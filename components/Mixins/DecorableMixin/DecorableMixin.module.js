@@ -108,13 +108,18 @@ define('js!SBIS3.CONTROLS.DecorableMixin', [
       /**
        * Устанавливает фразу для подсветки
        * @param {String} text Фраза для подсветки
+       * @param {Boolean} [redraw=true] Отрисовать DOM
        */
-      setHighlightText: function (text) {
+      setHighlightText: function (text, redraw) {
+         redraw = redraw === undefined ? true : redraw;
+
          if (this._highlightText === text) {
             return;
          }
          this._highlightText = text;
-         this._redraw();
+         if (redraw) {
+            this._redraw();
+         }
       },
 
       /**
@@ -148,13 +153,18 @@ define('js!SBIS3.CONTROLS.DecorableMixin', [
       /**
        * Устанавливает поле записи, хранящее данные об отметке цветом
        * @param {String} field Название поля
+       * @param {Boolean} [redraw=true] Отрисовать DOM
        */
-      setColorField: function (field) {
+      setColorField: function (field, redraw) {
+         redraw = redraw === undefined ? true : redraw;
+
          if (this._options.colorField === field) {
             return;
          }
          this._options.colorField = field;
-         this._redraw();
+         if (redraw) {
+            this._redraw();
+         }
       }
    };
 

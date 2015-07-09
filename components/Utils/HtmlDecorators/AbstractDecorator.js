@@ -25,6 +25,9 @@ define([], function () {
       $constructor: function () {
       },
 
+      destroy: function () {
+      },
+
       /**
        * Обновляет настройки декоратора
        * @param {Object} control Экземпляр контрола
