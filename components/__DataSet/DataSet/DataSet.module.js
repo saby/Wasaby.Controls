@@ -72,7 +72,9 @@ define('js!SBIS3.CONTROLS.DataSet', [
          var self = this;
          var mark = function (key) {
             var record = self.getRecordByKey(key);
-            record.setDeleted(true);
+            if (record) {
+               record.setDeleted(true);
+            }
          };
 
          if (key instanceof Array) {

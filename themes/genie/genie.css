@@ -2200,7 +2200,7 @@ input[type="reset"]::-moz-focus-inner {
   width: 14px;
   display: inline-block;
 }
-.controls-PathSelector .controls-PathSelector__hierWrapper:last-child {
+.controls-PathSelector .controls-PathSelector__hierWrapper:last-of-type {
   background: url('img/pathSelector__hierWrapper.png') no-repeat;
   position: relative;
   top: -3px;
@@ -2595,6 +2595,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item.controls-CustomFilterMenu__item__selected {
   display: none;
+}
+.controls-HtmlDecorators-highlight {
+  background-color: #fffece;
 }
 .controls-ComboBox__picker.controls-Picker__owner__hover {
   border-top-color: #00c795;

@@ -1,4 +1,4 @@
-<tr class="controls-DataGrid__tr">
+<tr class="controls-DataGrid__tr" style="{{=it.decorators.apply(it.color, 'color')}}">
    {{?it.multiselect}}
     <td class="controls-DataGrid__td js-controls-ListView__itemCheckBox controls-DataGrid__td__checkBox
     {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}">
@@ -11,9 +11,9 @@
       {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}">
         {{?index == 0}}
         <div class="controls-HierarchyDataGrid__expand js-controls-TreeView__expand icon-24 {{?column.item.get(it.hierField)}}icon-Folder action-hover icon-disabled has-child{{?}}"></div>
-        {{=column.value}}
+        {{=it.decorators.applyIf(column.value, column.highlight)}}
         {{??}}
-        {{=column.value}}
+        {{=it.decorators.applyIf(column.value, column.highlight)}}
         {{?}}
     </td>
     {{~}}

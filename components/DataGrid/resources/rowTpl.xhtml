@@ -1,4 +1,4 @@
-<tr class="controls-DataGrid__tr">
+<tr class="controls-DataGrid__tr" style="{{=it.decorators.apply(it.color, 'color')}}">
    {{?it.multiselect}}
     <td class="controls-DataGrid__td js-controls-ListView__itemCheckBox controls-DataGrid__td__checkBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}">
         <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"/>
@@ -9,6 +9,6 @@
                  {{? !!column.editor}} controls-DataGrid__edited-td{{?}}
                  {{?column.className}} {{=column.className}}{{?}}
                  {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}"
-            >{{=column.value}}</td>
+            >{{=it.decorators.applyIf(column.value, column.highlight)}}</td>
     {{~}}
 </tr>

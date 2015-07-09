@@ -2,9 +2,10 @@ define('js!SBIS3.CONTROLS.PathSelector', [
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.DSMixin',
    'js!SBIS3.CONTROLS.PickerMixin',
+   'js!SBIS3.CONTROLS.DecorableMixin',
    'html!SBIS3.CONTROLS.PathSelector',
    'html!SBIS3.CONTROLS.PathSelector/resources/pointTpl'
-], function(CompoundControl, DSMixin, PickerMixin, dotTpl, pointTpl) {
+], function(CompoundControl, DSMixin, PickerMixin, DecorableMixin, dotTpl, pointTpl) {
    'use strict';
 
    if (typeof window !== 'undefined') {
@@ -15,7 +16,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       });
    }
 
-   var PathSelector = CompoundControl.extend([DSMixin, PickerMixin], {
+   var PathSelector = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], {
       $protected: {
          _dotTplFn: dotTpl,
          _resizeTimeout: null,
@@ -104,7 +105,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             homeIcon[this._options.displayField] = '';
             homeIcon.icon = 'icon-16 icon-Home2 icon-primary action-hover';
             this._dataSet.push(homeIcon);
-         } 
+         }
          keys = keys instanceof Array ? keys : [keys];
          for (var i = keys.length - 1; i >= 0; i--) {
             var record = dataSet.getRecordByKey(keys[i]);
@@ -167,7 +168,13 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             this._picker._container.empty();
             this._dataSet.each(function(record) {
                if (record.get(self._options.keyField)){
-                  var point = $('<div class="controls-MenuItem js-controls-PathSelector__point"></div>').html(record.get(self._options.displayField))
+                  var point = $('<div class="controls-MenuItem js-controls-PathSelector__point"></div>');
+                     point.html(self._decorators.apply(
+                           record.get(self._options.displayField)
+                     ))
+                     .attr('style', self._decorators.apply(
+                        self._options.colorField ? record.get(self._options.colorField) : '', 'color'
+                     ))
                      .data(self._options.keyField, record.get(self._options.keyField));
                   self._picker._container.append(point);
                   var previousContainer = point.prev('.js-controls-PathSelector__point', self._picker._container),
@@ -196,9 +203,13 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          //Добавляем троеточие если пункты не убираются в контейнер
          if (targetContainer.width() + 30 >= this._container.width()) {
             var dots = $(pointTpl({
-               title: '...',
-               dots: true,
-               get: function(field) {return this[field];}
+               item: { 
+                  title: '...',
+                  dots: true,
+                  get: function(field) {return this[field];}
+               },
+               decorators: this._decorators,
+               displayField: this._options.displayField
             }));
             $(points[i]).before(dots);
          }
@@ -216,6 +227,14 @@ define('js!SBIS3.CONTROLS.PathSelector', [
 
       _getItemTemplate: function() {
          return pointTpl;
+      },
+
+      _buildTplArgs: function(item) {
+         return {
+            item: item,
+            displayField: this._options.displayField,
+            decorators: this._decorators
+         };
       },
 
       _getTargetContainer: function() {
