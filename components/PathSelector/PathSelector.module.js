@@ -35,7 +35,6 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          if (this._options.linkedView) {
             this._subscribeOnSetRoot();
          }
-
          $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._resizeHandler, this);
          //инициализируем dataSet
          this.setItems(this._options.items || []);
@@ -99,18 +98,24 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       _rootChangeHandler: function(dataSet, keys, curRoot) {
-         if (curRoot === null){
+         if (!curRoot){
             var homeIcon = {};
             homeIcon[this._options.keyField] = null;
             homeIcon[this._options.displayField] = '';
             homeIcon.icon = 'icon-16 icon-Home2 icon-primary action-hover';
             this._dataSet.push(homeIcon);
          }
+         var displayField = this._options.linkedView._options.displayField, //Как то не очень
+            hierField = this._options.linkedView._options.hierField; //И это не очень
          keys = keys instanceof Array ? keys : [keys];
          for (var i = keys.length - 1; i >= 0; i--) {
             var record = dataSet.getRecordByKey(keys[i]);
             if (record){
-               this._dataSet.push(record);
+               var point = {};
+               point[this._options.displayField] = record.get(displayField);
+               point[this._options.keyField] = record.getKey();
+               point[this._options.colorField] = record.get(this._options.colorField);
+               this._dataSet.push(point);
             }
             if (keys[i] === null) {
                this.setItems([]);
