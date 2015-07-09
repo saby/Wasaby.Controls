@@ -59,7 +59,7 @@ input[type="reset"]::-moz-focus-inner {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  font: 13px Tahoma, Geneva, sans-serif;
+  font: 13px 'TensorFont Regular', 'TensorFont';
   color: #000000;
   text-align: center;
   min-width: 24px;
@@ -1325,7 +1325,7 @@ input[type="reset"]::-moz-focus-inner {
   padding: 3px 0 0;
 }
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
-  font-style: normal;
+  font-style: 'TensorFont Regular', 'TensorFont';
   white-space: pre;
 }
 .controls-FormattedTextBox.ws-validation-error {
@@ -1730,7 +1730,7 @@ input[type="reset"]::-moz-focus-inner {
   border-spacing: 1px;
 }
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableHead {
-  font: 11px Tahoma, Geneva, sans-serif;
+  font: 11px 'TensorFont Regular', 'TensorFont';
   text-align: center;
 }
 .controls-Calendar .controls-Calendar__dayTable .controls-Calendar__tableBody {
@@ -1777,7 +1777,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   height: 16px;
   margin: 0 16px;
-  font: 700 14px/16px Tahoma, Geneva, sans-serif;
+  font: 700 14px/16px 'TensorFont Regular', 'TensorFont';
   color: #0055bb;
   text-decoration: none;
 }
@@ -1919,10 +1919,10 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent;
 }
 .controls-EditAtPlace .controls-EditAtPlace__editor .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
-  font: 13px/20px Tahoma, Geneva, sans-serif;
+  font: 13px/20px 'TensorFont Regular', 'TensorFont';
 }
 .controls-EditAtPlace .controls-EditAtPlace__editor .controls-TextArea .controls-TextArea__inputField {
-  font: 13px/20px Tahoma, Geneva, sans-serif;
+  font: 13px/20px 'TensorFont Regular', 'TensorFont';
 }
 .controls-EditAtPlace.controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace__fieldWrapper {
   display: none;
@@ -1947,10 +1947,10 @@ input[type="reset"]::-moz-focus-inner {
   background: #f8f3f1 !important;
 }
 .controls-EditAtPlace__editorOverlay .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
-  font: 13px/20px Tahoma, Geneva, sans-serif;
+  font: 13px/20px 'TensorFont Regular', 'TensorFont';
 }
 .controls-EditAtPlace__editorOverlay .controls-TextArea .controls-TextArea__inputField {
-  font: 13px/20px Tahoma, Geneva, sans-serif;
+  font: 13px/20px 'TensorFont Regular', 'TensorFont';
 }
 .controls-EditAtPlace__controlPanel {
   display: inline-block;
@@ -2249,9 +2249,6 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   height: 14px;
 }
-.controls-ListView__hoveredItem .controls-TreeView__editArrow {
-  display: inline-block;
-}
 .controls-DataGrid__td .controls-TreeView__expand--inside {
   display: inline-block;
   height: 14px;
@@ -2300,6 +2297,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder:hover .controls-CompositeView__tileTitle {
   text-decoration: underline;
+}
+.controls-CompositeView.controls-CompositeView-table .controls-Pager-container {
+  display: none;
 }
 .controls-CompositeView .controls-CompositeView__listItem-defaultFolderImage {
   background: url("img/defaultFolder.png");

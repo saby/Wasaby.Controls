@@ -1325,7 +1325,7 @@ input[type="reset"]::-moz-focus-inner {
   padding: 3px 0 0;
 }
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
-  font-style: normal;
+  font-style: Tahoma, Geneva, sans-serif;
   white-space: pre;
 }
 .controls-FormattedTextBox.ws-validation-error {

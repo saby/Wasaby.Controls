@@ -1325,7 +1325,7 @@ input[type="reset"]::-moz-focus-inner {
   padding: 12px 0 0;
 }
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
-  font-style: normal;
+  font-style: Exo2, sans-serif;
   white-space: pre;
 }
 .controls-FormattedTextBox.ws-validation-error {
@@ -1943,8 +1943,13 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox {
   background: transparent;
 }
+.controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover,
+.controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover {
+  background: transparent;
+}
 .controls-ListView .controls-ListView__EmptyData {
-  width: 100%;
+  width: 100px;
+  display: inline-block;
   color: #aaaaaa;
   text-align: center;
 }
@@ -1954,11 +1959,20 @@ input[type="reset"]::-moz-focus-inner {
   background: none;
   cursor: pointer;
   display: none;
+  position: absolute;
+  left: 3px;
+  top: 5px;
+}
+.controls-ListView .controls-ListView__itemCheckBox:hover {
+  background: transparent;
 }
 .controls-ListView.controls-ListView__multiselect .controls-ListView__itemCheckBox {
   display: inline-block;
 }
 .controls-ListView.controls-ListView__multiselect .controls-ListView__item__multiSelected .controls-ListView__itemCheckBox {
+  background: transparent url('img/checkbox.png') -2px -5px;
+}
+.controls-ListView.controls-ListView__multiselect .controls-ListView__item__multiSelected .controls-ListView__itemCheckBox:hover {
   background: transparent url('img/checkbox.png') -2px -5px;
 }
 .controls-ListView .controls-ListView-scrollIndicator {
