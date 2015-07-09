@@ -23,6 +23,13 @@ define('js!SBIS3.CONTROLS.DecorableMixin', [
             highlightEnabled: false,
 
             /**
+             * @cfg {String} Фраза для подсветки
+             * @see getHighlightText
+             * @see setHighlightText
+             */
+            highlightText: '',
+
+            /**
              * @cfg {Boolean} Использовать отметку цветом
              * @see isColorMarkEnabled
              * @see setColorMarkEnabled
@@ -40,12 +47,7 @@ define('js!SBIS3.CONTROLS.DecorableMixin', [
          /**
           * @var {SBIS3.CONTROLS.Utils.HtmlDecorators} Набор декораторов
           */
-         _decorators: undefined,
-
-         /**
-          * @var {String} Фраза для подсветки
-          */
-         _highlightText: ''
+         _decorators: undefined
       },
 
       $constructor: function () {
@@ -102,19 +104,24 @@ define('js!SBIS3.CONTROLS.DecorableMixin', [
        * @returns {String}
        */
       getHighlightText: function () {
-         return this._highlightText;
+         return this._options.highlightText;
       },
 
       /**
        * Устанавливает фразу для подсветки
        * @param {String} text Фраза для подсветки
+       * @param {Boolean} [redraw=true] Отрисовать DOM
        */
-      setHighlightText: function (text) {
-         if (this._highlightText === text) {
+      setHighlightText: function (text, redraw) {
+         redraw = redraw === undefined ? true : redraw;
+
+         if (this._options.highlightText === text) {
             return;
          }
-         this._highlightText = text;
-         this._redraw();
+         this._options.highlightText = text;
+         if (redraw) {
+            this._redraw();
+         }
       },
 
       /**
@@ -148,13 +155,18 @@ define('js!SBIS3.CONTROLS.DecorableMixin', [
       /**
        * Устанавливает поле записи, хранящее данные об отметке цветом
        * @param {String} field Название поля
+       * @param {Boolean} [redraw=true] Отрисовать DOM
        */
-      setColorField: function (field) {
+      setColorField: function (field, redraw) {
+         redraw = redraw === undefined ? true : redraw;
+
          if (this._options.colorField === field) {
             return;
          }
          this._options.colorField = field;
-         this._redraw();
+         if (redraw) {
+            this._redraw();
+         }
       }
    };
 
