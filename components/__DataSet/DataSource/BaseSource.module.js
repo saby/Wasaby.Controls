@@ -87,9 +87,12 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
              def;
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Record')) {
             def = this._syncRecord(data);
-         } else {
+         } else if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.DataSet')) {
             def = this._syncDataSet(data);
+         } else {
+            throw new Error('Invalid argument');
          }
+
          def = def || $ws.proto.Deferred.success(false);
 
          def.addCallback(function() {
@@ -113,7 +116,7 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
                syncCompleteDef.push(syncResult);
             }
          }, 'all');
-         syncCompleteDef.done();
+         syncCompleteDef.done(true);
 
          return syncCompleteDef.getResult();
       },
@@ -182,8 +185,8 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
        * Возможно применение фильтрации, сортировки и выбора определённого количества записей с заданной позиции.
        * @param {Object} filter Параметры фильтрации вида - {property1: value, property2: value}.
        * @param {Array} sorting Параметры сортировки вида - [{property1: 'ASC'}, {property2: 'DESC'}].
-       * @param {Number} offset Смещение начала выборки.
-       * @param {Number} limit Количество возвращаемых записей.
+       * @param {Number} [offset] Смещение начала выборки.
+       * @param {Number} [limit] Количество возвращаемых записей.
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт SBIS3.CONTROLS.DataSet - набор выбранных записей.
        * @see onQuery
        */

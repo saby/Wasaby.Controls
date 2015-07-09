@@ -1,0 +1,22 @@
+{
+    "mode": "local",
+    "local": {
+        "port": 4444,
+        "install": {
+            "chrome": {
+                "version": "2.15"
+            }
+        },
+        "run": {
+            "browser": "chrome",
+            "version": "2.15"
+        }
+    },
+    "remote": {
+        "url": "http://localhost:4444/wd/hub",
+        "run": {
+            "browser": "chrome",
+            "version": "2.15"
+        }
+    }
+}
