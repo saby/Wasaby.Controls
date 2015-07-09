@@ -1,0 +1,22 @@
+{
+  "execWin": "test/jscoverage/jscoverage-server.exe",
+  "execNix": "/usr/bin/jscoverage-server",
+  "docRoot": "",
+  "params": {
+    "verbose": true,
+    "port": 667,
+    "no-instrument" : [
+      "/sbis3-ws/",
+      "/node_modules/",
+      "/test/",
+      "*.test.js"
+    ],
+    "report-dir": "test/jscoverage-report"
+  },
+  "webdriver": {
+    "host": "localhost",
+    "path": "/jscoverage.html?test/unit-webdriver.html"
+  },
+  "checkerTimeout": 15000,
+  "reportTimeout": 2000
+}
