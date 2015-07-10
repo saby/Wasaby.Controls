@@ -49,9 +49,11 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                         if (result instanceof $ws.proto.Deferred) {
                            result.addCallback(function() {
                               self._updateFieldsValues(self._editingRecord);
+                              self._applyChanges();
                            });
                         } else {
                            self._updateFieldsValues(self._editingRecord);
+                           self._applyChanges();
                         }
                      }
                   };
