@@ -1490,8 +1490,17 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+.controls-TextArea .controls-TextArea__inputField::-webkit-input-placeholder {
+  color: #cccccc !important;
+}
+.controls-TextArea .controls-TextArea__inputField:-moz-placeholder {
+  color: #cccccc !important;
+}
+.controls-TextArea .controls-TextArea__inputField::-moz-placeholder {
+  color: #cccccc !important;
+}
 .controls-TextArea .controls-TextArea__inputField:-ms-input-placeholder {
-  color: #999999;
+  color: #cccccc !important;
 }
 .controls-TextArea.ws-has-focus {
   border-width: 1px;
@@ -1519,9 +1528,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextArea:hover .controls-TextArea__inputField {
   color: inherit;
-}
-.controls-TextArea:hover .controls-TextArea__inputField:-ms-input-placeholder {
-  color: #999999;
 }
 .controls-TextArea.ws-disabled {
   border-width: 1px;
@@ -2236,6 +2242,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder:hover .controls-CompositeView__tileTitle {
   text-decoration: underline;
+}
+.controls-CompositeView.controls-CompositeView-table .controls-Pager-container {
+  display: none;
 }
 .controls-CompositeView .controls-CompositeView__listItem-defaultFolderImage {
   background: url("img/defaultFolder.png");
