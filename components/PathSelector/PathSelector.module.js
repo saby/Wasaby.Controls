@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          eventsChannel.notify('onWindowResize');
       });
    }
-
+   //TODO: Переписать все к чертям 
    var PathSelector = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], {
       $protected: {
          _dotTplFn: dotTpl,
@@ -65,16 +65,16 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          }
       },
 
-      /**
+            /**
        * Обработчик клика на пункт пути
        * id - id по которому нужно перейти
        * Удалет все пункты до того на который кликнули
        * Если кликнули на первый пункт то удаляем его и переходим на уровень выше
        */
       _onPointClick: function(id) {
-         var result = this._notify('onPointClick'),
-            length = this._dataSet.getCount(),
-            last = this._dataSet.at(length - 1), newId = id;
+         var length = this._dataSet.getCount(),
+            last = this._dataSet.at(length - 1), newId = id,
+            result;
          //Нажатие на последний пункт должно вести туда же куда не предпоследний
          if (length > 1 && id == last.get(this._options.keyField)) {
             newId = this._dataSet.at(length - 2).get(this._options.keyField);
@@ -90,20 +90,28 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             this._dataSet._indexId.splice(i, 1);
             if (record.getKey() == id) break;
          }
+         result = this._notify('onPointClick', id);
          if (result !== false){
             this._options.linkedView.setCurrentRoot(newId);
-         } else {
-            this._options.linkedView.setCurrentRoot(id);
          }
+      },
+
+      _getHomeIcon: function(){
+         var homeIcon = {};
+         homeIcon[this._options.keyField] = null;
+         homeIcon[this._options.displayField] = '';
+         homeIcon.icon = 'icon-16 icon-Home2 icon-primary action-hover';
+         return homeIcon;
+      },
+
+      setItems: function(items){
+         if (items.length) { items.unshift(this._getHomeIcon()); }
+         PathSelector.superclass.setItems.call(this, items);
       },
 
       _rootChangeHandler: function(dataSet, keys, curRoot) {
          if (!curRoot){
-            var homeIcon = {};
-            homeIcon[this._options.keyField] = null;
-            homeIcon[this._options.displayField] = '';
-            homeIcon.icon = 'icon-16 icon-Home2 icon-primary action-hover';
-            this._dataSet.push(homeIcon);
+            this._dataSet.push(this._getHomeIcon());
          }
          var displayField = this._options.linkedView._options.displayField; //Как то не очень
          keys = keys instanceof Array ? keys : [keys];
