@@ -157,7 +157,8 @@ define('js!SBIS3.CONTROLS.DataGrid',
       _initEditInPlace: function() {
          var
             self = this,
-            row;
+            row,
+            debounceInterval = 10;
          if (!this._editInPlace) {
             this._dataSet.subscribe('onRecordChange', function(event, record) {
                row = self._getItemsContainer().find('.controls-ListView__item[data-id="' + record.getKey() + '"]');
@@ -168,7 +169,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
                   self._findMovableCells();
                   self._moveThumbAndColumns({left: self._currentScrollPosition});
                }
-            });
+            }.debounce(debounceInterval));
             this._createEditInPlace();
          }
       },
