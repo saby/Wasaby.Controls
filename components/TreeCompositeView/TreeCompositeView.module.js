@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGrid', 'js!SBIS3.CONTROLS.CompositeViewMixin', 'html!SBIS3.CONTROLS.CompositeViewMixin/resources/CompositeView__folderTpl'], function(TreeDataGrid, CompositeViewMixin, folderTpl) {
+define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGrid', 'js!SBIS3.CONTROLS.CompositeViewMixin', 'html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl'], function(TreeDataGrid, CompositeViewMixin, folderTpl) {
    'use strict';
 
    var TreeCompositeView = TreeDataGrid.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGrid',
                         if (!item.get(this._options.imageField)) {
                            src = item.get(this._options.hierField + '@') ? $ws._const.resourceRoot + 'SBIS3.CONTROLS/themes/online/img/defaultFolder.png' : $ws._const.resourceRoot + 'SBIS3.CONTROLS/themes/online/img/defaultItem.png';
                         } else {
-                           src = '{{=it.item.get(it.image)}}'
+                           src = '{{=it.item.get(it.image)}}';
                         }
                         dotTpl = doT.template('<div><div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></div><img class="controls-CompositeView__tileImg" src="' + src + '"/><div class="controls-CompositeView__tileTitle" style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply(it.item.get(it.description))}}</div></div>');
                      }
