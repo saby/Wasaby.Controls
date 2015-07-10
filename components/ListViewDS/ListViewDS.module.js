@@ -210,7 +210,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          $constructor: function () {
             var self = this;
             this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
-            this._container.mousemove(this._mouseMoveHandler.bind(this))
+            this._container
+               .mousemove(this._mouseMoveHandler.bind(this))
                .mouseleave(this._mouseLeaveHandler.bind(this));
             if (this.isInfiniteScroll()) {
                this._infiniteScrollContainer = this._container.closest('.controls-ListView__infiniteScroll');
@@ -333,6 +334,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @private
           */
          _mouseLeaveHandler: function () {
+            if (this._hoveredItem.container === null) {
+               return;
+            }
             this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
             this._hoveredItem = {
                container: null,

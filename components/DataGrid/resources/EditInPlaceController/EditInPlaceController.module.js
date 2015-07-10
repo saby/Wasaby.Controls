@@ -349,7 +349,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
             _onMouseMove: function(e) {
                //Если имеется отображаемая область, а мышь уведена на редактируемую, то скрываем отображаемую область
                if ((this._areas.first.hovered || this._areas.second.hovered) && this._editing && e.currentTarget.id === this._areas[this._editing].editInPlace.getContainer().attr('id')) {
+                  this._areas.first.hovered = this._areas.second.hovered = false;
                   this._areas[this._editing === 'first' ? 'second' : 'first'].target.mouseleave();
+                  this._areas[this._editing !== 'first' ? 'second' : 'first'].target.mousemove();
                }
             },
             destroy: function() {

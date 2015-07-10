@@ -37,25 +37,22 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   childControls,
                   self = this,
                   childFocusOut = function() {
-                     var currentValue;
-                     if (!self._editingRecord) {
-                        self._editingRecord = self._record.clone();
-                        self._editingRecord.subscribe('onChange', function (event, fieldName) {
-                           var
-                              record = this,
-                              result = self._notify('onValueChange', fieldName, record);
-                           if (result instanceof $ws.proto.Deferred) {
-                              result.addCallback(function() {
-                                 self._updateFieldsValues(record);
-                              });
-                           } else {
-                              self._updateFieldsValues(record);
-                           }
-                        });
-                     }
-                     currentValue = this[self._determineGetMethodName(this)]();
-                     if (currentValue !== self._editingRecord.get(this.getName())) {
+                     var
+                        result,
+                        currentValue = this[self._determineGetMethodName(this)]();
+                     if (currentValue !== (self._editingRecord ? self._editingRecord : self._record).get(this.getName())) {
+                        if (!self._editingRecord) {
+                           self._editingRecord = self._record.clone();
+                        }
                         self._editingRecord.set(this.getName(), currentValue);
+                        result = self._notify('onValueChange', this.getName(), self._editingRecord);
+                        if (result instanceof $ws.proto.Deferred) {
+                           result.addCallback(function() {
+                              self._updateFieldsValues(self._editingRecord);
+                           });
+                        } else {
+                           self._updateFieldsValues(self._editingRecord);
+                        }
                      }
                   };
                this._publish('onMouseDown', 'onValueChange');
