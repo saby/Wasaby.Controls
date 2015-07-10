@@ -158,11 +158,14 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
                highlightEnabled: this._options.highlightEnabled,
                highlightText: this._options.highlightText,
                colorMarkEnabled: this._options.colorMarkEnabled,
-               colorField: this._options.colorField
+               colorField: this._options.colorField,
+               className : 'controls-PathSelector__smallItems'
             });
-            ps.once('onPointClick', function(){
+            ps.once('onPointClick', function(event, id){
                //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onPOintClick'), а вотом выполняется setCurrentRoot
-               this.setLinkedView(self);
+               event.setResult(false);
+               //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
+               self.setCurrentRoot(id);
                self.setGroupBy({});
             });
             this._pathSelectors.push(ps);
