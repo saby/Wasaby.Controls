@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeViewMixin', 'html!SBIS3.CONTROLS.CompositeViewMixin/resources/CompositeView__folderTpl'], function(dotTplFn, folderTpl) {
+define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeViewMixin'], function(dotTplFn, folderTpl) {
    'use strict';
 
    var MultiView = {
@@ -51,62 +51,55 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
          _getItemTemplate: function(parentFnc, item) {
             var resultTpl, dotTpl;
             switch (this._options.viewMode) {
-
-               case 'table': resultTpl = parentFnc.call(this, item); break;
-               case 'list': {
-                  if (item.get(this._options.hierField + '@')) {
-                     dotTpl = folderTpl;
-                  } else {
+               case 'table':
+                  resultTpl = parentFnc.call(this, item);
+                  break;
+               case 'list':
+                  {
                      if (this._options.listTemplate) {
                         if (this._options.listTemplate instanceof Function) {
                            dotTpl = this._options.listTemplate;
                         } else {
                            dotTpl = doT.template(this._options.listTemplate);
                         }
+                     } else {
+                        dotTpl = doT.template('<div style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply(it.item.get(it.description))}}</div>');
                      }
-                     else {
-                        dotTpl = doT.template('<div style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply(it.item.get(it.description))}}</div>')
-                     }
+                     resultTpl = dotTpl({
+                        item: item,
+                        decorators: this._decorators,
+                        color: this._options.colorField ? item.get(this._options.colorField) : '',
+                        description: this._options.displayField,
+                        image: this._options.imageField
+                     });
+                     break;
                   }
-                  resultTpl = dotTpl({
-                     item: item,
-                     decorators: this._decorators,
-                     color: this._options.colorField ? item.get(this._options.colorField) : '',
-                     description: this._options.displayField,
-                     image: this._options.imageField
-                  });
-                  break;
-               }
-               case 'tile' : {
-                  if (item.get(this._options.hierField + '@')) {
-                     dotTpl = folderTpl;
-                  } else {
+               case 'tile':
+                  {
                      if (this._options.tileTemplate) {
                         if (this._options.tileTemplate instanceof Function) {
                            dotTpl = this._options.tileTemplate;
                         } else {
                            dotTpl = doT.template(this._options.tileTemplate);
                         }
-                     }
-                     else {
+                     } else {
                         var src;
                         if (!item.get(this._options.imageField)) {
-                           src = item.get(this._options.hierField + '@') ? $ws._const.resourceRoot + 'SBIS3.CONTROLS/themes/online/img/defaultFolder.png' : $ws._const.resourceRoot + 'SBIS3.CONTROLS/themes/online/img/defaultItem.png';
+                           src = $ws._const.resourceRoot + 'SBIS3.CONTROLS/themes/online/img/defaultItem.png';
                         } else {
-                           src = '{{=it.item.get(it.image)}}'
+                           src = '{{=it.item.get(it.image)}}';
                         }
-                        dotTpl = doT.template('<div><div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></div><img class="controls-CompositeView__tileImg" src="' + src + '"/><div class="controls-CompositeView__tileTitle" style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply(it.item.get(it.description))}}</div></div>')
+                        dotTpl = doT.template('<div><div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></div><img class="controls-CompositeView__tileImg" src="' + src + '"/><div class="controls-CompositeView__tileTitle" style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply(it.item.get(it.description))}}</div></div>');
                      }
+                     resultTpl = dotTpl({
+                        item: item,
+                        decorators: this._decorators,
+                        color: this._options.colorField ? item.get(this._options.colorField) : '',
+                        description: this._options.displayField,
+                        image: this._options.imageField
+                     });
+                     break;
                   }
-                  resultTpl = dotTpl({
-                     item: item,
-                     decorators: this._decorators,
-                     color: this._options.colorField ? item.get(this._options.colorField) : '',
-                     description: this._options.displayField,
-                     image: this._options.imageField
-                  });
-                  break;
-               }
 
             }
             return resultTpl;
