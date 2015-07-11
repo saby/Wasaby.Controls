@@ -868,7 +868,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-MenuButton {
   position: relative;
-  padding: 0;
+  padding: 0 0 2px 0;
 }
 .controls-Button.controls-MenuButton.controls-MenuButton__withoutMenu {
   padding: 0 12px;
@@ -879,7 +879,7 @@ input[type="reset"]::-moz-focus-inner {
   width: 8px;
   height: 6px;
   right: 10px;
-  top: 11px;
+  top: 10px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -1029,7 +1029,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 @media \0screen {
   .controls-Button.controls-MenuButton .controls-MenuButton__arrowDown {
-    top: 7px;
+    top: 6px;
   }
 }
 .controls-MenuLink {
@@ -2236,6 +2236,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder:hover .controls-CompositeView__tileTitle {
   text-decoration: underline;
+}
+.controls-CompositeView.controls-CompositeView-table .controls-Pager-container {
+  display: none;
 }
 .controls-CompositeView .controls-CompositeView__listItem-defaultFolderImage {
   background: url("img/defaultFolder.png");
