@@ -118,6 +118,9 @@
                <li>
                   <div id="MultiView"></div>
                </li>
+               <li>
+                  <div id="Suggest"></div>
+               </li>
             </ul>
          </td>
          <td>
@@ -323,11 +326,20 @@
                href: '/pages/editAtPlace.html'
             })
          });
+
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
                element: "MultiView",
                caption: 'MultiView',
                href: '/pages/MultiView.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "Suggest",
+               caption: 'Suggest',
+               href: '/pages/Suggest.html'
             })
          });
       })
