@@ -673,9 +673,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return instances[id];
       },
       //TODO Сделать публичным? И перенести в другое место
-      _hasNextPage: function (hasMore) {
+      _hasNextPage: function (hasMore, offset) {
+         offset = offset === undefined ? this._offset : offset;
          //n - приходит true, false || общее количество записей в списочном методе
-         return typeof (hasMore) !== 'boolean' ? hasMore > (this._offset + this._options.pageSize) : !!hasMore;
+         return typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore;
       },
 
       _dataLoadedCallback: function () {
