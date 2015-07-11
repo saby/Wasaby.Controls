@@ -293,7 +293,8 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
 
             var DS = new DataSet({
                strategy: strategy,
-               data: res
+               data: res,
+               meta: strategy.getMetaData(res)
             });
             def.callback(DS);
          }, function (error) {

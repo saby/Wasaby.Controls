@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          _byId: {},
          _indexId: [],
          /**
-          * @cfg {Object} исходные данные для посторения
+          * @cfg {Object} исходные данные для построения
           */
          _rawData: undefined,
          /**
@@ -51,6 +51,10 @@ define('js!SBIS3.CONTROLS.DataSet', [
               * @cfg {Object}
               */
             data: undefined,
+            /**
+             * @cfg {Object} Метаданные
+             */
+            meta: {},
             /**
              * @cfg {String} Название поля-идентификатора записи
              * При работе с БЛ значение данной опции проставляется автоматически.
@@ -394,13 +398,14 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       getMetaData: function () {
-         var meta = this.getStrategy().getMetaData(this._rawData);
-         meta.results = new Record({
-            strategy: this.getStrategy(),
-            raw: meta.results,
-            keyField: this._keyField
-         });
-         return meta;
+         if (!$ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Record')) {
+            this._options.meta.results = new Record({
+               strategy: this.getStrategy(),
+               raw: this._options.meta.results,
+               keyField: this._keyField
+            });
+         }
+         return this._options.meta;
       },
 
       /**
