@@ -26,6 +26,11 @@ function(BaseControl, dotTpl){
          _defaultOptions : {
             credits : {
                enabled : false
+            },
+            chart: {
+               events: {
+                  redraw: function() {}/*чтобы hightcharts нормально понимал как функцию*/
+               }
             }
          },
          _options: {
@@ -578,6 +583,14 @@ function(BaseControl, dotTpl){
       },
 
       _drawHighChart : function() {
+         var self = this;
+         this._options.highChartOptions.chart.events = this._options.highChartOptions.chart.events || {};
+         this._options.highChartOptions.chart.events.redraw = function () {
+            window.setTimeout(function(){
+               self.staggerDataLabels(self._chartObj.series);
+            }, 435);
+         };
+
          this.getContainer().highcharts(this._options.highChartOptions);
          this._chartObj = this.getContainer().highcharts();
          this.staggerDataLabels(this._chartObj.series);
