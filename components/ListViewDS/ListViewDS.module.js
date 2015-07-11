@@ -624,23 +624,23 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          _nextLoad: function () {
             var self = this, records;
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
-            if (this._allowInfiniteScroll && this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._isLoading()) {
+            if (this._allowInfiniteScroll && this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
                this._addLoadingIndicator();
                this._loader = this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset + this._limit, this._limit).addCallback(function (dataSet) {
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                   //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                   self._loader = null;
+                  self._removeLoadingIndicator();
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
-                  if (self._hasNextPage(dataSet.getMetaData().more)) {
+                  if (self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset)) {
                      self._infiniteScrollOffset += self._limit;
                   } else {
                      self._hasScrollMore = false;
-                     self._removeLoadingIndicator();
                   }
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
                      records = dataSet._getRecords();
-                     self._dataSet.merge(dataSet);
+                     self._dataSet.merge(dataSet, {remove: false});
                      self._drawItems(records);
                      self._dataLoadedCallback();
                   }

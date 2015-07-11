@@ -159,7 +159,7 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
       //TODO пустышка
       getMetaData: function (data) {
          return {
-            more: data.length
+            more: data ? data.length : 0
          };
       },
 
