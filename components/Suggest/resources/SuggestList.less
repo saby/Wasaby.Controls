@@ -1,0 +1,32 @@
+.controls-SuggestList {
+  &__item {
+    background: @suggest-list-item-bg;
+    border: @suggest-list-item-border;
+    border-width: @suggest-list-item-border-width;
+    color: @suggest-list-item-text-color;
+    cursor: @suggest-list-item-cursor;
+    font: @suggest-list-item-font;
+    padding: @suggest-list-item-padding;
+
+    &:first-child {
+      border-width: @suggest-list-item-first-child-border-width;
+    }
+
+    &:hover {
+      background: @suggest-list-item-hover-bg;
+      color: @suggest-list-item-hover-text-color;
+    }
+
+    &__selected {
+      background: @suggest-list-item-selected-bg;
+      color: @suggest-list-item-selected-text-color;
+    }
+  }
+
+  &__empty {
+    background: @suggest-list-empty-bg;
+    color: @suggest-list-empty-color;
+    font: @suggest-list-empty-font;
+    padding: @suggest-list-empty-padding;
+  }
+}
