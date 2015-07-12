@@ -870,6 +870,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   $(window).unbind('.wsInfiniteScroll');
                }
             }
+            if (this._pager) {
+               this._pager.destroy();
+            }
             ListViewDS.superclass.destroy.call(this);
          }
       });

@@ -162,13 +162,13 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
       /**/
       _processPaging: function() {
          var more, nextPage;
-         if (!this._treePagers['null']) {
+         if (!this._treePager) {
             more = this._dataSet.getMetaData().more;
             nextPage = this._hasNextPage(more);
             var
                container = this.getContainer().find('.controls-TreePager-container'),
                self = this;
-            this._treePagers['null'] = new TreePagingLoader({
+            this._treePager = new TreePagingLoader({
                pageSize: this._options.pageSize,
                opener: this,
                hasMore: nextPage,
@@ -182,7 +182,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
          }
          more = this._dataSet.getMetaData().more;
          nextPage = this.isInfiniteScroll() ? this._hasScrollMore : this._hasNextPage(more);
-         this._treePagers['null'].setHasMore(nextPage);
+         this._treePager.setHasMore(nextPage);
       },
 
       _folderLoad: function(id) {
@@ -207,7 +207,12 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
                self._offset += self._limit;
             }
             if (!self._hasNextPageInFolder(dataSet.getMetaData().more, id)) {
-               self._treePagers[id || 'null'].setHasMore(false);
+               if (typeof id != 'undefined') {
+                  self._treePagers[id].setHasMore(false)
+               }
+               else {
+                  self._treePager.setHasMore(false)
+               }
                self._removeLoadingIndicator();
             }
             //Если данные пришли, нарисуем
@@ -258,6 +263,13 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
 
 
       before: {
+         setCurrentRoot: function() {
+            for (var i in this._treePagers) {
+               if (this._treePagers.hasOwnProperty(i)) {
+                  this._treePagers[i].destroy();
+               }
+            }
+         },
          _dataLoadedCallback: function () {
             this._options.openedPath = {};
             this._dataSet._reindexTree(this._options.hierField);
@@ -266,6 +278,16 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
                for (var i in tree) {
                   if (tree.hasOwnProperty(i) && i != 'null' && i != this._curRoot) {
                      this._options.openedPath[i] = true;
+                  }
+               }
+            }
+         },
+         destroy : function() {
+            if (this._treePager) {
+               this._treePager.destroy();
+               for (var i in this._treePagers) {
+                  if (this._treePagers.hasOwnProperty(i)) {
+                     this._treePagers[i].destroy();
                   }
                }
             }

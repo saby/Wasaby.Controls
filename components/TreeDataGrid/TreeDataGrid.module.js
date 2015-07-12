@@ -122,6 +122,9 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          }
          /*TODO кажется как то нехорошо*/
          $('.controls-TreeDataGrid__folderToolbar[data-parent="'+key+'"]').remove();
+         if (this._treePagers[key]) {
+            this._treePagers[key].destroy();
+         }
 
       },
 
