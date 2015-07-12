@@ -207,7 +207,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
                self._offset += self._limit;
             }
             if (!self._hasNextPageInFolder(dataSet.getMetaData().more, id)) {
-               //self._treePagers[id || 'null'].setHasMore(false);
+               self._treePagers[id || 'null'].setHasMore(false);
                self._removeLoadingIndicator();
             }
             //Если данные пришли, нарисуем
