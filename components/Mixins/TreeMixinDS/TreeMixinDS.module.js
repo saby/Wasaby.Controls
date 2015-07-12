@@ -1,5 +1,27 @@
 define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
+   var TreePagingLoader = $ws.proto.Control.extend({
+      $protected :{
 
+         _options : {
+            id: null,
+            pageSize : 20,
+            hasMore : false
+         }
+      },
+      $constructor : function(){
+         this._container.addClass('controls-TreePager');
+         this.setHasMore(this._options.hasMore);
+      },
+      setHasMore: function(more) {
+         this._options.hasMore = more;
+         if (this._options.hasMore) {
+            this._container.html('Еще ' + this._options.pageSize);
+         }
+         else {
+            this._container.empty();
+         }
+      }
+   });
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
@@ -7,6 +29,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
     */
    var TreeMixinDS = /** @lends SBIS3.CONTROLS.TreeMixinDS.prototype */{
       $protected: {
+         _folderOffsets : {},
+         _treePagers : {},
+         _treePager: null,
          _options: {
             /**
              * @cfg {Boolean} При открытия узла закрывать другие
@@ -82,16 +107,21 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
          }
       },
 
-      expandNode: function (key) {
-         var self = this,
-          filter = $ws.core.clone(this._filter) || {};
+      _createTreeFilter: function(key) {
+         var filter = $ws.core.clone(this._filter) || {};
          if (this._options.expand) {
             this._filter = this._filter || {};
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
          }
          filter[this._options.hierField] = key;
-         this._dataSource.query(filter).addCallback(function (dataSet) {
+         return filter;
+      },
+
+      expandNode: function (key) {
+         var self = this;
+         this._folderOffsets[key] = 0;
+         this._dataSource.query(this._createTreeFilter(key), this._sorting, 0, this._limit).addCallback(function (dataSet) {
             self._nodeDataLoaded(key, dataSet);
          });
       },
@@ -128,6 +158,104 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
       _nodeClosed : function(key) {
 
       },
+
+      /**/
+      _processPaging: function() {
+         var more, nextPage;
+         if (!this._treePagers['null']) {
+            more = this._dataSet.getMetaData().more;
+            nextPage = this._hasNextPage(more);
+            var
+               container = this.getContainer().find('.controls-TreePager-container'),
+               self = this;
+            this._treePagers['null'] = new TreePagingLoader({
+               pageSize: this._options.pageSize,
+               opener: this,
+               hasMore: nextPage,
+               element: container,
+               handlers : {
+                  'onClick' : function(){
+                     self._folderLoad();
+                  }
+               }
+            });
+         }
+         more = this._dataSet.getMetaData().more;
+         nextPage = this.isInfiniteScroll() ? this._hasScrollMore : this._hasNextPage(more);
+         this._treePagers['null'].setHasMore(nextPage);
+      },
+
+      _folderLoad: function(id) {
+         var
+            self = this,
+            filter;
+         if (id) {
+            filter = this._createTreeFilter(id);
+         }
+         else {
+            filter = this._filter;
+         }
+         this._loader = this._dataSource.query(filter, this._sorting, (id ? this._folderOffsets[id] : this._offset) + this._limit, this._limit).addCallback(function (dataSet) {
+            //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
+            //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
+            self._loader = null;
+            //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
+            if (id) {
+               self._folderOffsets[id] += self._limit;
+            }
+            else {
+               self._offset += self._limit;
+            }
+            if (!self._hasNextPageInFolder(dataSet.getMetaData().more, id)) {
+               //self._treePagers[id || 'null'].setHasMore(false);
+               self._removeLoadingIndicator();
+            }
+            //Если данные пришли, нарисуем
+            if (dataSet.getCount()) {
+               var records = dataSet._getRecords();
+               self._dataSet.merge(dataSet);
+               self._drawItemsFolderLoad(records, id);
+               self._dataLoadedCallback();
+            }
+
+         }).addErrback(function (error) {
+            //Здесь при .cancel приходит ошибка вида DeferredCanceledError
+            return error;
+         });
+      },
+
+      _drawItemsFolderLoad: function(records) {
+         this._drawItems(records);
+      },
+
+      _createFolderPager: function(key, container, more) {
+         var
+            self = this,
+            nextPage = this._hasNextPageInFolder(more, key);
+
+         this._treePagers[key] = new TreePagingLoader({
+            pageSize: this._options.pageSize,
+            opener: this,
+            hasMore: nextPage,
+            element: container,
+            id: key,
+            handlers : {
+               'onClick' : function(){
+                  self._folderLoad(this._options.id);
+               }
+            }
+         });
+      },
+
+      _hasNextPageInFolder: function(more, id) {
+         if (!id) {
+            return this._hasNextPage(more)
+         }
+         else {
+            return typeof (more) !== 'boolean' ? more > (this._folderOffsets[id] + this._options.pageSize) : !!more;
+         }
+      },
+
 
       before: {
          _dataLoadedCallback: function () {

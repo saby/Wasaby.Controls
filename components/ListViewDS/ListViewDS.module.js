@@ -738,7 +738,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
          },
          //------------------------Paging---------------------
-         _processPaging: function () {
+         _processPaging: function() {
+            this._processPagingStandart();
+         },
+         _processPagingStandart: function () {
             if (!this._pager) {
                var more = this._dataSet.getMetaData().more,
                   hasNextPage = this._hasNextPage(more),

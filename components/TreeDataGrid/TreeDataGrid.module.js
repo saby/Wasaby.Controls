@@ -49,6 +49,10 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          this._dataSet.merge(dataSet, {remove: false});
          this._dataSet._reindexTree(this._options.hierField);
 
+         var
+            at = {at: 0},
+            allContainers;
+
          dataSet.each(function (record) {
             var
                recKey = record.getKey(),
@@ -60,9 +64,8 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
                if (targetContainer) {
                   /*TODO пока придрот для определения позиции вставки*/
                   var
-                     parentContainer = $('.controls-ListView__item[data-id="' + parKey + '"]', self._getItemsContainer().get(0)),
-                     allContainers = $('.controls-ListView__item', self._getItemsContainer().get(0)),
-                     at = {at: 0};
+                     parentContainer = $('.controls-ListView__item[data-id="' + parKey + '"]', self._getItemsContainer().get(0));
+                  allContainers = $('.controls-ListView__item', self._getItemsContainer().get(0));
                   for (var i = 0; i < allContainers.length; i++) {
                      if (allContainers[i] == parentContainer.get(0)) {
                         at = {at: i + 1};
@@ -84,6 +87,61 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
                }
             }
          });
+         /*TODO пока не очень общо создаем внутренние пэйджинги*/
+         allContainers = $('.controls-ListView__item', self._getItemsContainer().get(0));
+         var row = $('<tr class="controls-TreeDataGrid__folderToolbar">' +
+            '<td colspan="'+(this._options.columns.length+(this._options.multiselect ? 1 : 0))+'"><div class="controls-TreePager-container"></div></td>' +
+            '</tr>').attr('data-parent',key);
+         $(allContainers[at.at]).after(row);
+         var elem = $('.controls-TreePager-container', row.get(0));
+         this._createFolderPager(key, elem, dataSet.getMetaData().more);
+      },
+
+
+
+      _drawItemsFolderLoad: function(records, id) {
+         if (!id) {
+            this._drawItems(records);
+         }
+         else {
+            var self = this,
+               at = {at: 0};
+            for (var j = 0; j < records.length; j++) {
+               var record = records[j];
+               var
+                  recKey = record.getKey(),
+                  parKey = self._dataSet.getParentKey(record, self._options.hierField),
+                  targetContainer = self._getTargetContainer(record);
+
+               if (!$('.controls-ListView__item[data-id="'+recKey+'"]', self._getItemsContainer().get(0)).length) {
+
+                  if (targetContainer) {
+                     /*TODO пока придрот для определения позиции вставки*/
+                     var
+                        parentContainer = $('.controls-ListView__item[data-id="' + parKey + '"]', self._getItemsContainer().get(0)),
+                        allContainers = $('.controls-ListView__item', self._getItemsContainer().get(0));
+                     for (var i = 0; i < allContainers.length; i++) {
+                        if (allContainers[i] == parentContainer.get(0)) {
+                           at = {at: i + 1};
+                        } else if ($(allContainers[i]).data('parent') == parentContainer.data('id')) {
+                           at.at++;
+                        }
+                     }
+                     /**/
+                     if (self._options.displayType == 'folders') {
+                        if (record.get(self._options.hierField + '@')) {
+                           self._drawItem(record, at);
+                        }
+
+                     }
+                     else {
+                        self._drawItem(record, at);
+                        self._drawItemsCallback();
+                     }
+                  }
+               }
+            }
+         }
       },
 
       _nodeClosed : function(key) {
@@ -92,6 +150,8 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
             $('.controls-ListView__item[data-id="' + childKeys[i] + '"]', this._container.get(0)).remove();
             delete(this._options.openedPath[childKeys[i]]);
          }
+         /*TODO кажется как то нехорошо*/
+         $('.controls-TreeDataGrid__folderToolbar[data-parent="'+key+'"]').remove();
 
       },
 
