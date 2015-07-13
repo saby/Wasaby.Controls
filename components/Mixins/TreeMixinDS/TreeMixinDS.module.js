@@ -1,7 +1,6 @@
-define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
-   var TreePagingLoader = $ws.proto.Control.extend({
+define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Control) {
+   var TreePagingLoader = Control.Control.extend({
       $protected :{
-
          _options : {
             id: null,
             pageSize : 20,

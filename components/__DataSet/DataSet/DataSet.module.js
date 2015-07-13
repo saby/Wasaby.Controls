@@ -72,6 +72,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
             this._keyField = this.getStrategy().getKey(this._rawData);
          }
 
+         this.setMetaData(this._options.meta);
       },
 
       /**
@@ -402,15 +403,25 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
       },
 
+      /**
+       * Возвращает метаданные
+       * @returns {Array}
+       */
       getMetaData: function () {
-         if (!$ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Record')) {
-            this._options.meta.results = new Record({
-               strategy: this.getStrategy(),
-               raw: this._options.meta.results,
-               keyField: this._keyField
-            });
-         }
          return this._options.meta;
+      },
+
+      /**
+       * Устанавливает метаданные
+       * @param {Object} meta Мета-данные
+       */
+      setMetaData: function (meta) {
+         this._options.meta = meta;
+         this._options.meta.results = new Record({
+            strategy: this.getStrategy(),
+            raw: $ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Record') ? this._options.meta.results.getRaw() : this._options.meta.results,
+            keyField: this._keyField
+         });
       },
 
       /**
