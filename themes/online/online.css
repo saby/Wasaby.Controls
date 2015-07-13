@@ -2109,7 +2109,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   width: 16px;
   height: 20px;
-  margin: 0 0 0 4px;
+  margin: 0 0 0 -2px;
   border-width: 0;
   border-style: none;
   border-color: transparent;
@@ -2259,7 +2259,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   text-align: left;
   height: 30px;
-  padding: 0;
+  padding: 0 0 0 6px;
   color: inherit;
   background-color: transparent;
   border-collapse: collapse;
@@ -2329,7 +2329,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-CompositeView .controls-CompositeView__listItem {
   height: 30px;
   line-height: 30px;
-  padding: 0;
+  padding: 0 0 0 6px;
   cursor: pointer;
 }
 .controls-CompositeView .controls-CompositeView__listItem:hover {
