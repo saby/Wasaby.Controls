@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
     * @public
     */
 
-   var Record =  $ws.proto.Abstract.extend({ /** @lends SBIS3.CONTROLS.Record.prototype */{
+   var Record =  $ws.proto.Abstract.extend( /** @lends SBIS3.CONTROLS.Record.prototype */{
       $protected: {
          /**
           * @var {String|null} Клиентский идентификатор
