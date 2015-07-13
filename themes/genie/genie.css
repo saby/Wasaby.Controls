@@ -2112,6 +2112,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell,
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__thead .controls-DataGrid__th.controls-DataGrid__notScrolledCell {
   background-color: #ffffff;
+  border-left: none;
+  border-right: none;
   z-index: 1;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell.controls-DataGrid__th,
