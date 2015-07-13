@@ -228,23 +228,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       _keyPressBind: function() {
 
       },
-       /**
-        * Переводит фокус на контрол.
-        * @param active Признак наличия фокуса.
-        * @remark
-        * Возможные значения:
-        * <ol>
-        *    <li>true - перевести фокус на контрол. Если фокус ранее находился на другом элементе, то произойдёт событие {@link $ws.proto.Control#onFocusIn}.
-        *    Если фокус был на данном контроле, то откроется всплывающая подсказка.</li>
-        *    <li>false - убрать фокус с контрола. Произойдёт событие {@link $ws.proto.Control#onFocusOut}.</li>
-        * </ol>
-        */
-      setActive: function(active){
-         var firstSelect = this._isControlActive != active;
-         TextBox.superclass.setActive.apply(this, arguments);
-         if (active && firstSelect) {
-            this._inputField.get(0).focus();
-         }
+
+      _getElementToFocus: function() {
+         return this._inputField;
       },
 
       _setEnabled : function(enabled) {

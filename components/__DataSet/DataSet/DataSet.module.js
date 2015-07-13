@@ -118,12 +118,13 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       _loadFromRaw: function () {
+         var
+            self = this,
+            length,
+            data;
          this._indexId = this.getStrategy().rebuild(this._rawData, this._keyField);
          this._isLoaded = true;
-
-         var length = this.getCount();
-         var data;
-
+         length = this.getCount();
          this._byId = {};
          for (var i = 0; i < length; i++) {
             data = this.getStrategy().at(this._rawData, i);
@@ -132,7 +133,11 @@ define('js!SBIS3.CONTROLS.DataSet', [
                raw: data,
                isCreated: true,//считаем, что сырые данные пришли из реального источника
                keyField: this._keyField,
-               onChangeHandler: this._onRecordChange.bind(this)
+               handlers: {
+                  onChange: function() {
+                     self._notify('onRecordChange', this);
+                  }
+               }
             });
          }
 
@@ -324,20 +329,20 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       _prepareRecordForAdd: function (record) {
+         var
+            self = this,
+            key;
          //FixME: потому что метод создать не возвращает тип поля "идентификатор"
          record._keyField = this._keyField;
-
-         var key = record.getKey();
+         key = record.getKey();
          // не менять условие if! с БЛ идентификатор приходит как null
          if (key === undefined) {
             record.set(this._keyField, key = record._cid);
          }
-         record._onChangeHandler = this._onRecordChange.bind(this);
+         record.subscribe('onChange', function() {
+            self._notify('onRecordChange', this);
+         });
          return record;
-      },
-
-      _onRecordChange: function(record) {
-         this._notify('onRecordChange', record);
       },
 
       _addReference: function (record, options) {
