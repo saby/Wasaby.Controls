@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
             editInPlace: {
                enabled: false,
                addInPlace: false,
-               moveFocusEvent: undefined
+               onValueChange: undefined
             },
             /**
              * @cfg {Number} Частичный скролл
@@ -155,12 +155,15 @@ define('js!SBIS3.CONTROLS.DataGrid',
       },
 
       _initEditInPlace: function() {
-         var self = this;
+         var
+            self = this,
+            row;
          if (!this._editInPlace) {
             this._dataSet.subscribe('onRecordChange', function(event, record) {
-               self._getItemsContainer().find('.controls-ListView__item[data-id="' + record.getKey() + '"]')
-                  .empty()
+               row = self._getItemsContainer().find('.controls-ListView__item[data-id="' + record.getKey() + '"]');
+               row.empty()
                   .append($(self._getItemTemplate(record)).children());
+               self._addItemAttributes(row, record);
                if(self._isPartScrollVisible) {
                   self._findMovableCells();
                   self._moveThumbAndColumns({left: self._currentScrollPosition});
@@ -183,8 +186,10 @@ define('js!SBIS3.CONTROLS.DataGrid',
             element: $('<div>').insertBefore(this._container.find('.controls-DataGrid__table')),
             dataSet: this._dataSet,
             ignoreFirstColumn: this._options.multiselect,
-            moveFocusEvent: this._options.editInPlace.moveFocusEvent,
-            dataSource: this._dataSource
+            dataSource: this._dataSource,
+            handlers: this._options.editInPlace.onValueChange ? {
+               onValueChange: this._options.editInPlace.onValueChange
+            } : undefined
          });
       },
       

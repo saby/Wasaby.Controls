@@ -31,7 +31,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                   dataSource: undefined,
                   dataSet: undefined,
                   addInPlaceButton: undefined,
-                  moveFocusEvent: undefined,
                   ignoreFirstColumn: false
                },
                //Редактируемая область
@@ -43,6 +42,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                _areaHandlers: null
             },
             $constructor: function() {
+               this._publish('onValueChange');
                this._areaHandlers = {
                   onKeyDown: this._onKeyDown.bind(this),
                   onMouseDownEditInPlace: isMobileBrowser ? undefined : this._onMouseDownEditInPlace.bind(this),
@@ -60,15 +60,18 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
              * @private
              */
             _initArea: function(id) {
+               var self = this;
                return {
                   editInPlace: new EditInPlace({
                      columns: this._options.columns,
                      element: $('<div id="' + id + '"></div>').appendTo(this._container),
                      visible: false,
                      focusCatch: this._focusCatch.bind(this),
-                     moveFocus: this._moveFocus.bind(this),
                      handlers: {
-                        onMouseDown: isMobileBrowser ? undefined : this._areaHandlers.onMouseDownEditInPlace
+                        onMouseDown: isMobileBrowser ? undefined : this._areaHandlers.onMouseDownEditInPlace,
+                        onValueChange: function(event, fieldName, record) {
+                           event.setResult(self._notify('onValueChange', fieldName, record));
+                        }
                      }
                   }),
                   record: null,
@@ -231,10 +234,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
              * Метод позволяет запустить редактирование следующей/предыдущей записи
              * @param editNextRow Запускать редактирование следующей записи (при false - предыдущей)
              * @param closeIfLast Завершать редактирование по месту, если текущая запись является последней
-             * @param activateFirstControl Вызывать активацию первого контрола (по z-index) - нужно, когда перемещаемся по KEY.TAB
+             * @param activateFirstField Вызывать активацию первого контрола (по z-index) - нужно, когда перемещаемся по KEY.TAB
              * @private
              */
-            _editNextTarget: function(editNextRow, closeIfLast, activateFirstControl) {
+            _editNextTarget: function(editNextRow, closeIfLast, activateFirstField) {
                var
                   viewingArea,
                   area = this._areas[this._editing],
@@ -249,8 +252,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                      viewingArea.editInPlace.hide();
                   }
                   this._updateArea(area);
-                  if (activateFirstControl) {
-                     area.editInPlace.activateFirstControl();
+                  if (activateFirstField) {
+                     area.editInPlace.activateFirstField();
                   }
                } else if (closeIfLast) {
                   this.finishEditing(true);
@@ -264,15 +267,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
             _focusCatch: function(event) {
                if (event.which === $ws._const.key.tab && !event.shiftKey) {
                   this._editNextTarget(true, true, true);
-               }
-            },
-            /**
-             * Обработчик перемещения фокуса внутри редактирования по месту
-             * @private
-             */
-            _moveFocus: function() {
-               if (typeof this._options.moveFocusEvent === 'function') {
-                  this._options.moveFocusEvent(this._editing ? this._areas[this._editing].record : null);
                }
             },
             /**
