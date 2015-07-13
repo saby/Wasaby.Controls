@@ -180,7 +180,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             });
          }
          more = this._dataSet.getMetaData().more;
-         nextPage = this.isInfiniteScroll() ? this._hasScrollMore : this._hasNextPage(more);
+         nextPage = this._hasNextPage(more);
          this._treePager.setHasMore(nextPage);
       },
 
