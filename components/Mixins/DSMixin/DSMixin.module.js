@@ -224,6 +224,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
             if (self._dataSet) {
                self._dataSet.setRawData(dataSet.getRawData());
+               self._dataSet.setMetaData(dataSet.getMetaData());
             } else {
                self._dataSet = dataSet;
             }
