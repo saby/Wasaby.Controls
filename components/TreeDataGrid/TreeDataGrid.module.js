@@ -38,8 +38,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
       },
 
       _drawItemsFolder: function(records) {
-         var self = this,
-            at = {at: 0};
+         var self = this;
          for (var j = 0; j < records.length; j++) {
             var record = records[j];
             var
