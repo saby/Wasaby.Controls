@@ -290,8 +290,8 @@
 
 @radio-button-text-margin:                      0;
 
-@radio-button-text-color:                       @gray-color;
-@radio-button-hover-text-color:                 @black-color;
+@radio-button-text-color:                       @black-color;
+@radio-button-hover-text-color:                 @radio-button-text-color;
 
 @radio-button-checked-text-color:               @radio-button-hover-text-color;
 @radio-button-checked-hover-text-color:         @radio-button-hover-text-color;
@@ -1321,6 +1321,7 @@
 @data-grid-header-cell-padding:                 4px 6px;
 @data-grid-header-cell-padding-side:            12px;
 @data-grid-header-cell-font-size:               11px;
+@data-grid-header-cell-min-height:              28px;
 
 @data-grid-header-cell-border-width:            1px 1px 0 1px;
 @data-grid-header-cell-border-style:            solid;
@@ -1333,10 +1334,11 @@
 @data-grid-header-cell-hover-text-color:        @data-grid-header-cell-text-color;
 @data-grid-header-cell-hover-bg:                @data-grid-header-cell-bg;
 
-@data-grid-box-sizing: 									border-box;
+@data-grid-cell-box-sizing: 							border-box;
 @data-grid-cell-cursor:                         pointer;
 @data-grid-cell-text-alignment:                 @data-grid-header-cell-text-alignment;
 @data-grid-cell-height:                         30px;
+@data-grid-cell-line-height:                    19px;
 @data-grid-cell-padding:                        0 0 0 6px;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 						middle;

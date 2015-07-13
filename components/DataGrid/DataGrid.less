@@ -125,6 +125,11 @@
             	background: @check-box-icon-hover-bg;
             }
          }
+         .controls-DataGrid__th-content{
+            max-height: @data-grid-header-cell-min-height;
+            overflow: @data-grid-cell-overflow;
+            text-overflow: @data-grid-cell-text-overflow;
+         }
       }
 
       .controls-DataGrid__td {
@@ -140,7 +145,8 @@
          border-style: @data-grid-cell-border-style;
          border-color: #F5F5F5;
          vertical-align: @data-grid-cell-vertical-align;
-         box-sizing: @data-grid-box-sizing;
+         box-sizing: @data-grid-cell-box-sizing;
+         line-height: @data-grid-cell-line-height;
 
         &.controls-DataGrid-cell-overflow-ellipsis{
            overflow: @data-grid-cell-overflow;
@@ -161,6 +167,7 @@
          margin: @data-grid-checkbox-margin;
       }
    }
+
 }
 
 .controls-DataGrid__addInPlace-container {

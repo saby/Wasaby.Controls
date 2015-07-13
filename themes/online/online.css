@@ -477,7 +477,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-RadioButton .controls-RadioButton__caption {
   margin: 0;
-  color: #999999;
+  color: #000000;
 }
 .controls-RadioButton .controls-RadioButton__icon {
   display: inline-block;
@@ -2254,6 +2254,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox:hover {
   background: url('img/CheckBox.png') 0 17px;
 }
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-DataGrid__th-content {
+  max-height: 28px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
   cursor: pointer;
@@ -2268,6 +2273,7 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #F5F5F5;
   vertical-align: middle;
   box-sizing: border-box;
+  line-height: 19px;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid-cell-overflow-ellipsis {
   overflow: hidden;

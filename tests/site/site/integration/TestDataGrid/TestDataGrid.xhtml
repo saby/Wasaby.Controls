@@ -1,0 +1,74 @@
+<div style="width:800px;height:600px;">
+
+    <!--SwitcherDouble-->
+    <component data-component="SBIS3.CORE.SwitcherDouble" style="position:relative;left:18px;margin-top:10px;"
+               name="SwitcherDoubleOnline">
+        <option name="textOff">StaticSource</option>
+        <option name="textOn">SbisServiceSource</option>
+        <option name="value">true</option>
+        <option name="state">true</option>
+    </component>
+
+    <!--DataGrid-->
+    <component data-component="SBIS3.CONTROLS.DataGrid" style="position:relative;margin-top:10px;"
+               name="ТипНоменклатуры">
+        <option name="itemSelect">true</option>
+        <option name="infiniteScroll">true</option>
+        <option name="multiselect">true</option>
+        <option name="pageSize">15</option>
+        <option name="isPartScrollVisible">true</option>
+        <options name="editInPlace">
+            <option name="enabled">true</option>
+            <option name="addInPlace">true</option>
+        </options>
+        <options name="columns" type="array">
+            <options>
+                <option name="title">Содержимое</option>
+                <option name="width" type="string">400</option>
+                <option name="field">Содержимое</option>
+                <option name="fixedSize">true</option>
+                <option name="textAlign">left</option>
+                <option name="textVerticalAlign">center</option>
+                <option name="titleAlign">left</option>
+                <option name="titleVerticalAlign">center</option>
+            </options>
+            <options>
+                <option name="title">Завершена</option>
+                <option name="field">Завершена</option>
+                <option name="width" type="string">100</option>
+                <option name="fixedSize">true</option>
+                <option name="textAlign">left</option>
+                <option name="textVerticalAlign">center</option>
+                <option name="titleAlign">left</option>
+                <option name="titleVerticalAlign">center</option>
+            </options>
+            <options>
+                <option name="title">Без НДС</option>
+                <option name="field">withoutNDS</option>
+                <option name="width" type="string">100</option>
+                <option name="fixedSize">true</option>
+                <option name="textAlign">left</option>
+                <option name="textVerticalAlign">center</option>
+                <option name="titleAlign">left</option>
+                <option name="titleVerticalAlign">center</option>
+            </options>
+        </options>
+        <options name="itemsActions" type="array">
+            <options>
+                <option name="name">edit</option>
+                <option name="icon">sprite:icon-16 icon-Edit icon-primary</option>
+                <option name="isMainAction">true</option>
+                <option name="tooltip">Изменить</option>
+                <option name="onActivated" type="function">js!TestDataGrid:prototype.editRecord</option>
+            </options>
+            <options>
+                <option name="name">delete</option>
+                <option name="icon">sprite:icon-16 icon-Erase icon-error</option>
+                <option name="isMainAction">true</option>
+                <option name="tooltip">Удалить</option>
+                <option name="onActivated" type="function">js!TestDataGrid:prototype.deleteRecord</option>
+            </options>
+        </options>
+    </component>
+
+</div>

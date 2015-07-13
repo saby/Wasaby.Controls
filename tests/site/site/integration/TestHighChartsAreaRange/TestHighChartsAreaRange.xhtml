@@ -1,0 +1,43 @@
+<div style="width:800px;height:600px;">
+
+    <!--HighCharts Area Range-->
+    <component data-component="SBIS3.CONTROLS.HighCharts" name="HighCharts Area Range 1">
+        <options name="sourceData">
+            <option name="getDataType">standartBL</option>
+            <option name="methodBL">График3.Список</option>
+        </options>
+        <options name="highChartOptions">
+            <options name="title">
+                <option name="text">HighChartsAreaRange</option>
+            </options>
+            <options name="chart">
+                <option name="type">arearange</option>
+            </options>
+            <options name="colors" type="array">
+                <option>#E91E63</option>
+            </options>
+        </options>
+        <options name="wsAxis" type="array">
+            <options>
+                <option name="type">xAxis</option>
+                <option name="title">Года</option>
+                <option name="sourceField">Года</option>
+            </options>
+            <options>
+                <option name="type">yAxis</option>
+                <option name="title">Ряд</option>
+                <option name="min">0</option>
+                <option name="max">100</option>
+            </options>
+        </options>
+        <options name="wsSeries" type="array">
+            <options>
+                <option name="name">arearange</option>
+                <option name="sourceFieldX">Ряд2</option>
+                <option name="sourceFieldY">Ряд1</option>
+                <option name="sourceField_3">Года</option>
+            </options>
+        </options>
+    </component>
+
+</div>

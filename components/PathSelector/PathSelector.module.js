@@ -109,8 +109,8 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          PathSelector.superclass.setItems.call(this, items);
       },
 
-      _rootChangeHandler: function(dataSet, keys, curRoot) {
-         if (!curRoot){
+      _rootChangeHandler: function(dataSet, keys) {
+         if (!this._dataSet.getRawData().length){
             this._dataSet.push(this._getHomeIcon());
          }
          var displayField = this._options.linkedView._options.displayField; //Как то не очень
@@ -121,7 +121,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
                var point = {};
                point[this._options.displayField] = record.get(displayField);
                point[this._options.keyField] = record.getKey();
-               point[this._options.colorField] = record.get(this._options.colorField);
+               point[this._options.colorField] = this._options.colorField ? record.get(this._options.colorField) : null;
                this._dataSet.push(point);
             }
             if (keys[i] === null) {

@@ -1,7 +1,6 @@
-define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
-   var TreePagingLoader = $ws.proto.Control.extend({
+define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Control) {
+   var TreePagingLoader = Control.Control.extend({
       $protected :{
-
          _options : {
             id: null,
             pageSize : 20,
@@ -181,7 +180,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
             });
          }
          more = this._dataSet.getMetaData().more;
-         nextPage = this.isInfiniteScroll() ? this._hasScrollMore : this._hasNextPage(more);
+         nextPage = this._hasNextPage(more);
          this._treePager.setHasMore(nextPage);
       },
 
@@ -263,13 +262,6 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
 
 
       before: {
-         setCurrentRoot: function() {
-            for (var i in this._treePagers) {
-               if (this._treePagers.hasOwnProperty(i)) {
-                  this._treePagers[i].destroy();
-               }
-            }
-         },
          _dataLoadedCallback: function () {
             this._options.openedPath = {};
             this._dataSet._reindexTree(this._options.hierField);
@@ -285,10 +277,12 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
          destroy : function() {
             if (this._treePager) {
                this._treePager.destroy();
-               for (var i in this._treePagers) {
-                  if (this._treePagers.hasOwnProperty(i)) {
-                     this._treePagers[i].destroy();
-                  }
+            }
+         },
+         _clearItems: function() {
+            for (var i in this._treePagers) {
+               if (this._treePagers.hasOwnProperty(i)) {
+                  this._treePagers[i].destroy();
                }
             }
          }
@@ -300,6 +294,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [], function () {
             this.toggleNode(nodeID);
          }
       }
+
+
 
    };
 

@@ -72,6 +72,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
             this._keyField = this.getStrategy().getKey(this._rawData);
          }
 
+         this.setMetaData(this._options.meta);
       },
 
       /**
@@ -118,12 +119,13 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       _loadFromRaw: function () {
+         var
+            self = this,
+            length,
+            data;
          this._indexId = this.getStrategy().rebuild(this._rawData, this._keyField);
          this._isLoaded = true;
-
-         var length = this.getCount();
-         var data;
-
+         length = this.getCount();
          this._byId = {};
          for (var i = 0; i < length; i++) {
             data = this.getStrategy().at(this._rawData, i);
@@ -132,7 +134,11 @@ define('js!SBIS3.CONTROLS.DataSet', [
                raw: data,
                isCreated: true,//считаем, что сырые данные пришли из реального источника
                keyField: this._keyField,
-               onChangeHandler: this._onRecordChange.bind(this)
+               handlers: {
+                  onChange: function() {
+                     self._notify('onRecordChange', this);
+                  }
+               }
             });
          }
 
@@ -324,20 +330,20 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       _prepareRecordForAdd: function (record) {
+         var
+            self = this,
+            key;
          //FixME: потому что метод создать не возвращает тип поля "идентификатор"
          record._keyField = this._keyField;
-
-         var key = record.getKey();
+         key = record.getKey();
          // не менять условие if! с БЛ идентификатор приходит как null
          if (key === undefined) {
             record.set(this._keyField, key = record._cid);
          }
-         record._onChangeHandler = this._onRecordChange.bind(this);
+         record.subscribe('onChange', function() {
+            self._notify('onRecordChange', this);
+         });
          return record;
-      },
-
-      _onRecordChange: function(record) {
-         this._notify('onRecordChange', record);
       },
 
       _addReference: function (record, options) {
@@ -397,15 +403,25 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
       },
 
+      /**
+       * Возвращает метаданные
+       * @returns {Array}
+       */
       getMetaData: function () {
-         if (!$ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Record')) {
-            this._options.meta.results = new Record({
-               strategy: this.getStrategy(),
-               raw: this._options.meta.results,
-               keyField: this._keyField
-            });
-         }
          return this._options.meta;
+      },
+
+      /**
+       * Устанавливает метаданные
+       * @param {Object} meta Мета-данные
+       */
+      setMetaData: function (meta) {
+         this._options.meta = meta;
+         this._options.meta.results = new Record({
+            strategy: this.getStrategy(),
+            raw: $ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Record') ? this._options.meta.results.getRaw() : this._options.meta.results,
+            keyField: this._keyField
+         });
       },
 
       /**

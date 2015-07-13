@@ -38,13 +38,13 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
       },
 
       _drawItemsFolder: function(records) {
-         var self = this,
-            at = {at: 0};
+         var self = this;
          for (var j = 0; j < records.length; j++) {
             var record = records[j];
             var
                recKey = record.getKey(),
                parKey = self._dataSet.getParentKey(record, self._options.hierField),
+               childKeys = this._dataSet.getChildItems(parKey, true),
                targetContainer = self._getTargetContainer(record);
 
             if (!$('.controls-ListView__item[data-id="'+recKey+'"]', self._getItemsContainer().get(0)).length) {
@@ -53,23 +53,30 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
                   /*TODO пока придрот для определения позиции вставки*/
                   var
                      parentContainer = $('.controls-ListView__item[data-id="' + parKey + '"]', self._getItemsContainer().get(0)),
-                     allContainers = $('.controls-ListView__item', self._getItemsContainer().get(0));
+                     allContainers = $('.controls-ListView__item', self._getItemsContainer().get(0)),
+                     startRow = 0;
+
                   for (var i = 0; i < allContainers.length; i++) {
                      if (allContainers[i] == parentContainer.get(0)) {
-                        at = {at: i + 1};
-                     } else if ($(allContainers[i]).data('parent') == parentContainer.data('id')) {
-                        at.at++;
+                        startRow = i + 1;
+                     } else {
+                        if (childKeys.indexOf($(allContainers[i]).data('id')) >= 0) {
+                           startRow++;
+                        }
                      }
+                     /*else {
+                        if ()
+                     }*/
                   }
                   /**/
                   if (self._options.displayType == 'folders') {
                      if (record.get(self._options.hierField + '@')) {
-                        self._drawItem(record, at);
+                        self._drawItem(record, {at : startRow});
                      }
 
                   }
                   else {
-                     self._drawItem(record, at);
+                     self._drawItem(record, {at : startRow});
                      self._drawItemsCallback();
                   }
                }

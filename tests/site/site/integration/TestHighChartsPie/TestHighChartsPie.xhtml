@@ -1,0 +1,41 @@
+<div style="width:800px;height:600px;">
+
+    <!--HighCharts Pie-->
+    <component data-component="SBIS3.CONTROLS.HighCharts" name="HighCharts Pie 1">
+        <options name="sourceData">
+            <option name="getDataType">standartBL</option>
+            <option name="methodBL">График2.Список</option>
+        </options>
+        <options name="highChartOptions">
+            <options name="title">
+                <option name="text">HighChartsPie</option>
+            </options>
+            <options name="chart">
+                <option name="type">pie</option>
+            </options>
+            <options name="colors" type="array">
+                <option>#E91E63</option>
+            </options>
+        </options>
+        <options name="wsAxis" type="array">
+            <options>
+                <option name="type">xAxis</option>
+                <option name="title">Года</option>
+                <option name="sourceField">Года</option>
+            </options>
+            <options>
+                <option name="type">yAxis</option>
+                <option name="title">Доход</option>
+                <option name="sourceField">Доход</option>
+            </options>
+        </options>
+        <options name="wsSeries" type="array">
+            <options>
+                <option name="name">pie</option>
+                <option name="sourceFieldX">Года</option>
+                <option name="sourceFieldY">Доход</option>
+            </options>
+        </options>
+    </component>
+
+</div>

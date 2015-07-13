@@ -2191,6 +2191,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox:hover {
   background: transparent;
 }
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-DataGrid__th-content {
+  max-height: 28px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
   cursor: pointer;
@@ -2205,6 +2210,7 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #F5F5F5;
   vertical-align: middle;
   box-sizing: border-box;
+  line-height: 21px;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid-cell-overflow-ellipsis {
   overflow: hidden;

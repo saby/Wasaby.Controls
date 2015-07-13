@@ -136,8 +136,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          if (hierarchy.length == 1) {
          	hierarchy = hierarchy[0];
          }
-         this._notify('onSetRoot', this._dataSet, hierarchy, this._curRoot);
-         /**/
+         this._notify('onSetRoot', this._dataSet, hierarchy);
 
          var
             filter = this._filter || {};
