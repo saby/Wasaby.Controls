@@ -1,0 +1,108 @@
+<div style="width:800px;height:600px;">
+
+    <!--Button 1-->
+    <div data-lmtype="12Columns" style="overflow:hidden;height:60px;">
+        <div data-lmchild="1" class="col-xs-12" style="height:100%;">
+            <component data-component="SBIS3.CONTROLS.Button" name="Button 1">
+                <option name="caption">Главная кнопка</option>
+                <option name="primary">true</option>
+            </component>
+        </div>
+    </div>
+
+    <!--Button 2-->
+    <div data-lmtype="12Columns" style="overflow:hidden;">
+        <div data-lmchild="1" class="col-xs-12" style="height:100%;">
+            <component data-component="SBIS3.CONTROLS.Button" name="Button 2">
+                <option name="caption">Простая кнопка</option>
+                <option name="visible">false</option>
+                <option name="tooltip">443556</option>
+            </component>
+        </div>
+    </div>
+
+    <!--Button 3-->
+    <div data-lmtype="12Columns" style="overflow:hidden;height:60px;">
+        <div data-lmchild="1" class="col-xs-12" style="height:100%;">
+            <component data-component="SBIS3.CONTROLS.Button" name="Button 3">
+                <option name="caption">Неактивная кнопка</option>
+                <option name="enabled">false</option>
+            </component>
+        </div>
+    </div>
+
+    <!--IconButton 1-->
+    <div data-lmtype="12Columns" style="overflow:hidden;height:60px;">
+        <div data-lmchild="1" class="col-xs-12" style="height:100%;">
+            <component data-component="SBIS3.CONTROLS.IconButton" name="IconButton 1">
+                <option name="icon">sprite:icon-32 icon-Microphone icon-primary</option>
+            </component>
+        </div>
+    </div>
+
+    <!--Link 1-->
+    <div data-lmtype="12Columns" style="overflow:hidden;height:60px;">
+        <div data-lmchild="1" class="col-xs-12" style="height:100%;">
+            <component data-component="SBIS3.CONTROLS.Link" name="Link 1">
+                <option name="caption">Ссылка</option>
+            </component>
+        </div>
+    </div>
+
+    <!--Link 2-->
+    <div data-lmtype="12Columns" style="overflow:hidden;">
+        <div data-lmchild="1" class="col-xs-12" style="height:100%;">
+            <component data-component="SBIS3.CONTROLS.Link" name="Link 2">
+                <option name="caption">Неактивная ссылка</option>
+                <option name="visible">false</option>
+                <option name="enabled">false</option>
+            </component>
+        </div>
+    </div>
+
+    <!--Link 3-->
+    <div data-lmtype="12Columns" style="overflow:hidden;height:60px;">
+        <div data-lmchild="1" class="col-xs-12" style="height:100%;">
+            <component data-component="SBIS3.CONTROLS.Link" name="Link 3">
+                <option name="caption">Ссылка с иконкой</option>
+                <option name="icon">sprite:icon-32 icon-EmoiconCool icon-done</option>
+            </component>
+        </div>
+    </div>
+
+    <!--MenuButton 1-->
+    <div class="ws-hbox" style="height:60px;">
+        <component data-component="SBIS3.CONTROLS.MenuButton" name="MenuButton 1">
+            <option name="caption">Кнопка с меню</option>
+            <options name="items" type="array">
+                <options>
+                    <option name="id" type="string">1</option>
+                    <option name="title">Пункт1</option>
+                </options>
+                <options>
+                    <option name="id" type="string">2</option>
+                    <option name="title">Пункт2</option>
+                </options>
+            </options>
+        </component>
+    </div>
+
+    <!--MenuButton 2-->
+    <div class="ws-hbox" style="height:60px;">
+        <component data-component="SBIS3.CONTROLS.MenuButton" name="MenuButton 2">
+            <option name="caption">Кнопка с меню 2</option>
+            <options name="items" type="array">
+                <options>
+                    <option name="id" type="string">3</option>
+                    <option name="title">Пункт3</option>
+                </options>
+                <options>
+                    <option name="id" type="string">4</option>
+                    <option name="title">Пункт4</option>
+                </options>
+            </options>
+            <option name="enabled">false</option>
+        </component>
+    </div>
+
+</div>
