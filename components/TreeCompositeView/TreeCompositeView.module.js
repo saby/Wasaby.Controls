@@ -52,6 +52,10 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGrid',
             top: hoveredItem.position.top + ((isTableView) ? (hoveredItem.size.height > height ? hoveredItem.size.height - height : 0) : 0),
             right: isTableView ? 0 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
          };
+      },
+      _processPaging: function() {
+         TreeCompositeView.superclass._processPaging.call(this);
+         this._processPagingStandart();
       }
 
    });
