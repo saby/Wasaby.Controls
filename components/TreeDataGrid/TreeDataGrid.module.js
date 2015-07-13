@@ -37,20 +37,11 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
       $constructor: function() {
       },
 
-      _nodeDataLoaded : function(key, dataSet) {
-         /*TODO Копипаст с TreeView*/
-         var
-            self = this,
-            itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-         $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
-         this._options.openedPath[key] = true;
-
-         //при раскрытии узла по стрелке приходит новый датасет, в котором только содержимое узла
-         //поэтому удалять из текущего датасета ничего не нужно, только добавить новое.
-         this._dataSet.merge(dataSet, {remove: false});
-         this._dataSet._reindexTree(this._options.hierField);
-
-         dataSet.each(function (record) {
+      _drawItemsFolder: function(records) {
+         var self = this,
+            at = {at: 0};
+         for (var j = 0; j < records.length; j++) {
+            var record = records[j];
             var
                recKey = record.getKey(),
                parKey = self._dataSet.getParentKey(record, self._options.hierField),
@@ -62,8 +53,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
                   /*TODO пока придрот для определения позиции вставки*/
                   var
                      parentContainer = $('.controls-ListView__item[data-id="' + parKey + '"]', self._getItemsContainer().get(0)),
-                     allContainers = $('.controls-ListView__item', self._getItemsContainer().get(0)),
-                     at = {at: 0};
+                     allContainers = $('.controls-ListView__item', self._getItemsContainer().get(0));
                   for (var i = 0; i < allContainers.length; i++) {
                      if (allContainers[i] == parentContainer.get(0)) {
                         at = {at: i + 1};
@@ -84,7 +74,45 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
                   }
                }
             }
-         });
+         }
+      },
+
+      _nodeDataLoaded : function(key, dataSet) {
+         /*TODO Копипаст с TreeView*/
+         var
+            self = this,
+            itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
+         $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
+         this._options.openedPath[key] = true;
+
+         //при раскрытии узла по стрелке приходит новый датасет, в котором только содержимое узла
+         //поэтому удалять из текущего датасета ничего не нужно, только добавить новое.
+         this._dataSet.merge(dataSet, {remove: false});
+         this._dataSet._reindexTree(this._options.hierField);
+
+         var
+            records = dataSet._getRecords();
+
+         this._drawItemsFolder(records);
+         /*TODO пока не очень общо создаем внутренние пэйджинги*/
+         var allContainers = $('.controls-ListView__item[data-parent="'+key+'"]', self._getItemsContainer().get(0));
+         var row = $('<tr class="controls-TreeDataGrid__folderToolbar">' +
+            '<td colspan="'+(this._options.columns.length+(this._options.multiselect ? 1 : 0))+'"><div class="controls-TreePager-container"></div></td>' +
+            '</tr>').attr('data-parent',key);
+         $(allContainers.last()).after(row);
+         var elem = $('.controls-TreePager-container', row.get(0));
+         this._createFolderPager(key, elem, dataSet.getMetaData().more);
+      },
+
+
+
+      _drawItemsFolderLoad: function(records, id) {
+         if (!id) {
+            this._drawItems(records);
+         }
+         else {
+            this._drawItemsFolder(records);
+         }
       },
 
       _nodeClosed : function(key) {
@@ -92,6 +120,11 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          for (var i = 0; i < childKeys.length; i++) {
             $('.controls-ListView__item[data-id="' + childKeys[i] + '"]', this._container.get(0)).remove();
             delete(this._options.openedPath[childKeys[i]]);
+         }
+         /*TODO кажется как то нехорошо*/
+         $('.controls-TreeDataGrid__folderToolbar[data-parent="'+key+'"]').remove();
+         if (this._treePagers[key]) {
+            this._treePagers[key].destroy();
          }
 
       },

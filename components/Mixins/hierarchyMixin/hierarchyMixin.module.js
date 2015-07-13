@@ -123,7 +123,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        * @param {String} key Идентификатор раскрываемого узла
        */
       setCurrentRoot: function(key) {
-         var self = this,
+         /*Работа с хлебными крошками*/
+         var
             record,
             parentKey = key || null,
             hierarchy = [];
@@ -136,23 +137,16 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          	hierarchy = hierarchy[0];
          }
          this._notify('onSetRoot', this._dataSet, hierarchy, this._curRoot);
-         /*TODO проверка на что уже загружали*/
-         var filter = this._filter || {};
+         /**/
+
+         var
+            filter = this._filter || {};
          filter[this._options.hierField] = key;
          this._filter = filter;
          //узел грузим с 0-ой страницы
          this._offset = 0;
-        	this._dataSource.query(filter, undefined, this._offset, this._limit).addCallback(function(dataSet) {
-          	if (!self._dataSet){
-            	self._dataSet = dataSet;
-          	} else {
-            	self._dataSet.setRawData(dataSet.getRawData());
-          	}
-            self._curRoot = key;
-          	self._dataLoadedCallback();
-          	self._notify('onDataLoad', dataSet);
-          	self._redraw();
-         });
+         this._curRoot = key;
+         this.reload(filter);
       },
       
       _dropPageSave: function(){

@@ -39,6 +39,9 @@
          </tr>
       </tfoot>
    </table>
+   {{? it.showPaging}}
+      <div class="controls-TreePager-container"></div>
+   {{?}}
    {{?it.infiniteScroll}}
       <div class="controls-ListView-scrollIndicator ws-hidden"></div>
    {{?}}
