@@ -3064,3 +3064,19 @@ input[type="reset"]::-moz-focus-inner {
   background-position: left top;
   background-repeat: repeat-y;
 }
+.controls-TreePager-container {
+  float: right;
+}
+.controls-CompositeView.controls-CompositeView-tile .controls-TreePager-container,
+.controls-CompositeView.controls-CompositeView-list .controls-TreePager-container {
+  display: none;
+}
+.controls-TreePager {
+  font-size: 12px;
+  color: #0055bb;
+  cursor: pointer;
+}
+.controls-TreePager:hover {
+  text-decoration: underline;
+  color: #ff7033;
+}
