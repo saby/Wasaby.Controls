@@ -2,8 +2,19 @@
   cursor: pointer;
   vertical-align: middle;
 
-  &.controls-Button {
-    padding: 0;
-    cursor: pointer;
-  }
+   &.controls-Button {
+      padding: 0;
+      cursor: pointer;
+   }
+   &.controls-IconButton__round-border{
+      border: 1px solid @gray-light-color;
+      border-radius: 14px;
+      height: 26px;
+      width: 26px;
+      line-height: 26px!important;
+      text-align: center;
+      &:hover{
+         border-color: #587AB0;
+      }
+   }
 }

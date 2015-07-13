@@ -30,7 +30,26 @@
 
 // Menu
 .controls-MenuIcon__Menu {
-  margin-top: @menu-icon-menu-top-margin;
-  margin-left: @menu-icon-menu-left-margin;
-  background: @menu-icon-menu-bg;
+   .controls-Menu__header{
+      padding: 1px 0 0 3px;
+   }
+   .controls-MenuItem{
+      padding-left: 32px;
+   }
+   .controls-Menu__header-caption{
+      padding-left: 2px;
+      color: #FF7033;
+   }
+   margin: @menu-icon-menu-margin;
+   padding: @menu-icon-menu-padding;
+   background: @menu-icon-menu-bg;
+}
+
+.controls-IconButton__menu-no-header{
+   .controls-MenuItem{
+      padding-left: 8px;
+   }
+   .controls-Menu__header{
+      display: none;
+   }
 }

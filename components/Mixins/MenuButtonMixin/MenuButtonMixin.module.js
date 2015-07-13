@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             element: targetElement,
             target : this.getContainer(),
             items: this._items,
-            corner : 'bl',
+            corner : 'tl',
             enabled: this.isEnabled(),
             hierField: this._options.hierField,
             keyField: this._options.keyField,
@@ -57,17 +57,29 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          });
       },
 
+      _setPickerContent: function(){
+         var header = this._getHeader();
+         this._picker.getContainer().prepend(header);
+      },
+
+      _getHeader: function(){
+         //return this._dotTplFn(this._options);
+         var header = $('<div class="controls-Menu__header">');
+         header.append(this._container.clone().attr('style', ''));
+         header.append('<span class="controls-Menu__header-caption">' + this._options.caption + '</span>');
+         return header;
+      },
+
       after : {
          _initializePicker : function() {
             var self = this;
             this._picker.subscribe('onMenuItemActivate', function(e, id) {
-               self._notify('onMenuItemActivate', id)
-            })
+               self._notify('onMenuItemActivate', id);
+            });
          }
       },
 
       _drawItems : function() {
-         var self = this;
          if (this._picker) {
             this._picker.destroy();
          }

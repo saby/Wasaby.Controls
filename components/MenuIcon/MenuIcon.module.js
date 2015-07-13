@@ -51,29 +51,15 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
       _hasHeader: false,
       $protected: {
          _options: {
+            pickerClassName: 'controls-MenuIcon__Menu'
          }
       },
 
       init: function(){
          MenuIcon.superclass.init.call(this);
          this._container.addClass('controls-MenuIcon');
-         this._initMenu();
-      },
-
-      _initMenu: function(){
-         if (this.getItems().getItemsCount() > 1) {
-            if (!this._hasHeader) {
-               var header = $('<span class="controls-MenuIcon__header controls-MenuIcon__header-hidden">\
-                            <i class="controls-MenuIcon__headerLeft"></i>\
-                            <i class="controls-MenuIcon__headerRight"></i>\
-                         </span>');
-               this.getContainer().append(header);
-               this._hasHeader = true;
-            }
-         } else {
-            $('.controls-MenuIcon__header', this._container).remove();
-            this._container.removeClass('controls-Picker__show');
-            this._hasHeader = false;
+         if (this._container.hasClass('controls-IconButton__menu-no-header')){
+            this._options.pickerClassName += ' controls-IconButton__menu-no-header';
          }
       },
 
@@ -87,28 +73,6 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
                this._notify('onMenuItemActivate', id);
             }
          }
-      },
-
-      _setWidth: function(){
-         var self = this;
-         this._picker.getContainer().css({
-            'min-width': self._container.outerWidth() - this._border + 15 // для обводки кнопки
-         });
-      },
-
-      _setPickerContent: function(){
-         var self = this;
-         this._picker.subscribe('onClose', function(){
-            self._closeHandler();
-         });
-         this._picker._container.addClass('controls-MenuIcon__Menu');
-         var whiteLine = $('<span class="controls-MenuIcon__Menu-whiteLine" style="height: 1px; background: #ffffff; position: absolute; top: -1px;"></span>')
-            .width(this._container.outerWidth() + 4);
-         this._picker.getContainer().append(whiteLine);
-      },
-
-      _closeHandler: function(){
-         $('.controls-MenuIcon__header', this._container).addClass('controls-MenuIcon__header-hidden');
       }
    });
 

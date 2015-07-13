@@ -383,6 +383,17 @@ input[type="reset"]::-moz-focus-inner {
   padding: 0;
   cursor: pointer;
 }
+.controls-IconButton.controls-IconButton__round-border {
+  border: 1px solid #eeeeee;
+  border-radius: 14px;
+  height: 26px;
+  width: 26px;
+  line-height: 26px!important;
+  text-align: center;
+}
+.controls-IconButton.controls-IconButton__round-border:hover {
+  border-color: #587AB0;
+}
 .controls-TabButton {
   display: inline-block;
   cursor: pointer;
@@ -825,6 +836,7 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px;
   border-style: solid;
   border-color: #aaaaaa;
+  background-color: #ffffff;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
@@ -895,6 +907,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuItem:hover {
   color: #4e5762;
   background: #f2f2f2;
+}
+.controls-MenuItem:hover .controls-MenuItem__icon {
+  color: #FF7033!important;
 }
 .controls-MenuItem .controls-MenuItem__content {
   position: relative;
@@ -1184,9 +1199,25 @@ input[type="reset"]::-moz-focus-inner {
   background: transparent;
 }
 .controls-MenuIcon__Menu {
-  margin-top: 3px;
-  margin-left: 2px;
+  margin: -5px 0 0 5px;
+  padding: 2px 0 0 2px;
   background: #ffffff;
+}
+.controls-MenuIcon__Menu .controls-Menu__header {
+  padding: 1px 0 0 3px;
+}
+.controls-MenuIcon__Menu .controls-MenuItem {
+  padding-left: 32px;
+}
+.controls-MenuIcon__Menu .controls-Menu__header-caption {
+  padding-left: 2px;
+  color: #FF7033;
+}
+.controls-IconButton__menu-no-header .controls-MenuItem {
+  padding-left: 8px;
+}
+.controls-IconButton__menu-no-header .controls-Menu__header {
+  display: none;
 }
 .controls-TextBox {
   display: inline-block;
