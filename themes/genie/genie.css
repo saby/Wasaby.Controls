@@ -2162,6 +2162,7 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #F5F5F5;
   vertical-align: middle;
   box-sizing: border-box;
+  line-height: 21px;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid-cell-overflow-ellipsis {
   overflow: hidden;
