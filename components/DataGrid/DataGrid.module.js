@@ -525,9 +525,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
              (isPartScrollUsed ?
                 this._options.startScrollColumn === 0 ?
                    ' controls-DataGrid__scrolledCell' :
-                   ' controls-DataGrid__notScrolledCell' : '') +
-             		 ' controls-DataGrid__td__checkBox"><span class="controls-ListView__itemCheckBox controls-DataGrid__th__checkBox js-controls-ListView__itemCheckBox"></span>' +
-                              '</th>');
+                   ' controls-DataGrid__notScrolledCell"></th>' : '"></th>'));
              docFragmentForColGroup.appendChild($('<col width="24px">')[0]);
           }
           this._options.columns = columns;
