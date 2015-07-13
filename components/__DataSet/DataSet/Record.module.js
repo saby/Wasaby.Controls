@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
          /**
           * @var {SBIS3.CONTROLS.IDataStrategy} Стратегия, обеспечивающая интерфейс доступа к "сырым" данным
           */
-         _strategy: null,
+         _strategy: null
       },
 
       $constructor: function (cfg) {
