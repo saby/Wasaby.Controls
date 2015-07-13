@@ -262,13 +262,6 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
 
 
       before: {
-         setCurrentRoot: function() {
-            for (var i in this._treePagers) {
-               if (this._treePagers.hasOwnProperty(i)) {
-                  this._treePagers[i].destroy();
-               }
-            }
-         },
          _dataLoadedCallback: function () {
             this._options.openedPath = {};
             this._dataSet._reindexTree(this._options.hierField);
@@ -284,10 +277,12 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          destroy : function() {
             if (this._treePager) {
                this._treePager.destroy();
-               for (var i in this._treePagers) {
-                  if (this._treePagers.hasOwnProperty(i)) {
-                     this._treePagers[i].destroy();
-                  }
+            }
+         },
+         _clearItems: function() {
+            for (var i in this._treePagers) {
+               if (this._treePagers.hasOwnProperty(i)) {
+                  this._treePagers[i].destroy();
                }
             }
          }
@@ -299,6 +294,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             this.toggleNode(nodeID);
          }
       }
+
+
 
    };
 
