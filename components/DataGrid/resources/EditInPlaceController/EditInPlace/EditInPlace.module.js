@@ -135,7 +135,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   activeChildValue;
                if (activeChild) {
                   record  = this._editingRecord || this._record;
-                  activeChildValue = activeChild[this._determineGetMethodName(activeChild.getName())]();
+                  activeChildValue = activeChild[this._determineGetMethodName(activeChild)]();
                   if (record.get(activeChild.getName()) != activeChildValue) {
                      record.set(activeChild.getName(), activeChildValue);
                      result = self._notify('onValueChange', activeChild.getName(), record);
