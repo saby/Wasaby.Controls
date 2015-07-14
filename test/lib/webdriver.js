@@ -14,7 +14,7 @@ fromEnv(config, 'WEBDRIVER');
  */
 var Provider = function() {
     //Ручной запуск своего экземпляра selenium server
-    this._manual = config.manual === true;
+    this._manual = config.manual ? true : false;
 
     this._serverProc = undefined;
     this._driver = undefined;
