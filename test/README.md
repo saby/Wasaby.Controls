@@ -94,17 +94,21 @@
 
 Также могут оказаться полезными:
 
-`UNIT_WEBDRIVER_url_port` - порт, на котором висит http server
+`UNIT_WEBDRIVER_url_host` - хост, на котором запущен http server
+
+`WEBDRIVER_manual` - запускать локальный Selenium server вручную (или использовать готовый)
+
+`WEBDRIVER_remote_host` - хост, на котором запущен Selenium server
+
+`WEBDRIVER_remote_port` - порт, на котором запущен Selenium server
+
+`WEBDRIVER_remote_desiredCapabilities_browserName` - браузер, в котором будут проводится тесты
+
+`WEBDRIVER_remote_desiredCapabilities_version` - версия бразузера, в которой будут проводится тесты
 
 `JSCOVERAGE_params_port` - порт, на котором будет запущен jscoverage server
 
-`WEBDRIVER_port` - порт, на котором будет запущен Selenium server
-
-`WEBDRIVER_install_chrome_version` - версия Chromе, которая будет установлена
-
-`WEBDRIVER_run_browser` - браузер, в котором будут проводится тесты
-
-`WEBDRIVER_run_version` - версия браузера, в котором будут проводится тесты
+`JSCOVERAGE_webdriver_host` - хост, на который будет обращаться webdriver за отчетом jscoverage
 
 
 ✓ Abort the build if it's stuck
@@ -115,18 +119,14 @@
 ## Сборка
 +Выполнить команду Windows
 
-    npm install
-
-+Выполнить команду Windows
-
-    npm install grunt-cli
-
-+Выполнить команду Windows
+    call npm install
+    call npm install grunt-cli
 
     rem [if Node.js version installed < 10]
     if not exist test\bin\nodejs\node.exe "C:\Program Files\7-Zip\7z" x test\bin\nodejs.zip -y -otest\bin
     SET PATH=%WORKSPACE%\test\bin\nodejs;%PATH%
     rem [/if Node.js version installed < 10]
+
     node "node_modules/grunt-cli/bin/grunt" tests
 
 ## Послесборочные операции
