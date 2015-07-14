@@ -530,15 +530,15 @@ define('js!SBIS3.CONTROLS.DataGrid',
           this._options.columns = columns;
           for (var i = 0; i < columns.length; i++) {
              var column = document.createElement('col');
-             if (columns[i]['width']) column.width = columns[i]['width'];
+             if (columns[i].width) column.width = columns[i].width;
              docFragmentForColGroup.appendChild(column);
              headerTr.append(
                 $('<th class="controls-DataGrid__th' +
                   (isPartScrollUsed ?
                       this._options.startScrollColumn <= i ?
                          ' controls-DataGrid__scrolledCell' :
-                         ' controls-DataGrid__notScrolledCell' : '')
-                   + '" title="' + columns[i].title + '">' + columns[i].title + '</th>'));
+                         ' controls-DataGrid__notScrolledCell' : '') + 
+                     '" title="' + columns[i].title + '"><div class="controls-DataGrid__th-content">' + columns[i].title + '</div></th>'));
           }
 
           if (this._editInPlace) {
