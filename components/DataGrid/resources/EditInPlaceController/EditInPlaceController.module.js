@@ -273,7 +273,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                         area.editInPlace.activateFirstField();
                      }
                   };
-               if (newTarget.length) {
+               if (newTarget.length && !newTarget.hasClass('controls-ListView__folder')) {
                   result = this.finishEditing(true, true);
                   if (result instanceof $ws.proto.Deferred) {
                      result.addCallback(function() {
