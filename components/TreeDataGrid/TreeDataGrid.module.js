@@ -30,7 +30,17 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
       $protected: {
          _rowTpl : rowTpl,
          _options: {
-           arrowActivatedHandler: undefined
+            /**
+             * Разрешить проваливаться в папки
+             * Если выключено, то папки можно открывать только в виде дерева, проваливаться в них нельзя
+             * @type {Boolean}
+             */
+            allowEnterToFolder: true,
+            /**
+             * Обработчик нажатия на стрелку у папок. Если не задан, стрелка показана не будет
+             * @type {Function}
+             */
+            arrowActivatedHandler: undefined
          }
       },
 
@@ -159,19 +169,22 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          }
       },
 
-      _elemClickHandlerInternal: function (data, id, target) {
+      _elemClickHandlerInternal: function(data, id, target) {
          var nodeID = $(target).closest('.controls-ListView__item').data('id');
          if ($(target).hasClass('js-controls-TreeView__expand') && $(target).hasClass('has-child')) {
             this.toggleNode(nodeID);
-         }
-         else {
-          if($(target).hasClass('js-controls-TreeView__editArrow')){
-            if (this._options.arrowActivatedHandler) {
-              this._options.arrowActivatedHandler.apply(this, arguments);
-            }
-          } else if (data.get(this._options.hierField+'@')) {
-               var self = this;
-               self.setCurrentRoot(nodeID);
+         } else {
+            if (this._options.allowEnterToFolder){
+               if ($(target).hasClass('js-controls-TreeView__editArrow')) {
+                  if (this._options.arrowActivatedHandler) {
+                     this._options.arrowActivatedHandler.apply(this, arguments);
+                  }
+               } else if (data.get(this._options.hierField + '@')) {
+                  var self = this;
+                  self.setCurrentRoot(nodeID);
+               }
+            } else {
+               this.toggleNode(nodeID);
             }
          }
       }

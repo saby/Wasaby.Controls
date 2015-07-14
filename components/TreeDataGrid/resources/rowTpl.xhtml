@@ -6,12 +6,12 @@
    {{?}}
    {{~it.columns :column:index}}
       <td class="controls-DataGrid__td{{?column.className}} {{=column.className}}{{?}}{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}">
-      	{{?index == 0}}
-      		<div class="controls-TreeView__expand js-controls-TreeView__expand{{?!column.item.get(it.hierField)}} controls-TreeView__expand__leaf{{??}} has-child{{?}}"></div>
-      	{{=it.decorators.applyIf(column.value, column.highlight)}} {{?column.item.get(it.hierField)}} <div class="js-controls-TreeView__editArrow controls-TreeView__editArrow icon-16 icon-View icon-primary action-hover"></div> {{?}}
-      	{{??}}
-      	{{=it.decorators.applyIf(column.value, column.highlight)}}
-      	{{?}}
+         {{?index == 0}}
+            <div class="controls-TreeView__expand js-controls-TreeView__expand{{?!column.item.get(it.hierField)}} controls-TreeView__expand__leaf{{??}} has-child{{?}}"></div>
+         {{=it.decorators.applyIf(column.value, column.highlight)}} {{?column.item.get(it.hierField)}}{{?it.arrowActivatedHandler}}<div class="js-controls-TreeView__editArrow controls-TreeView__editArrow icon-16 icon-View icon-primary action-hover"></div>{{?}}{{?}}
+         {{??}}
+         {{=it.decorators.applyIf(column.value, column.highlight)}}
+         {{?}}
       </td>
    {{~}}
 </tr>
