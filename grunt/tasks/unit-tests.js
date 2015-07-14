@@ -113,7 +113,6 @@ module.exports = function(grunt) {
         'tests-setup-packages',
         'tests-list-build',
         'js',
-        'css',
         'express:development',
         'tests-run-webdriver[main]'
     ]);
@@ -147,7 +146,6 @@ module.exports = function(grunt) {
         'tests-setup-packages',
         'tests-list-build',
         'js',
-        'css',
         'express:development',
         'tests-run-coverage[main]'
     ]);
@@ -157,7 +155,6 @@ module.exports = function(grunt) {
         'tests-setup-packages',
         'tests-list-build',
         'js',
-        'css',
         'express:development',
         'tests-run-webdriver[main]',
         'tests-run-coverage[main]'
