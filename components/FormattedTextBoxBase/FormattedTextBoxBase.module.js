@@ -578,6 +578,7 @@ define(
           * Опции создаваемого контролла
           */
          _options: {
+            // ! в файле маски (FormattedTextBoxBase_mask.xhtml) не оставлять пробелы и переносы строк
             maskTemplateFn: maskTemplateFn,
             //упрощенная модель для вставки в xhtml-шаблон
             modelForMaskTpl: []
