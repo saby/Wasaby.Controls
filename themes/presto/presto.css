@@ -2000,8 +2000,13 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox {
   background: transparent;
 }
+.controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover,
+.controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover {
+  background: transparent;
+}
 .controls-ListView .controls-ListView__EmptyData {
-  width: 100%;
+  width: 100px;
+  display: inline-block;
   color: #aaaaaa;
   text-align: center;
 }
@@ -2011,11 +2016,20 @@ input[type="reset"]::-moz-focus-inner {
   background: none;
   cursor: pointer;
   display: none;
+  position: absolute;
+  left: 3px;
+  top: 5px;
+}
+.controls-ListView .controls-ListView__itemCheckBox:hover {
+  background: transparent;
 }
 .controls-ListView.controls-ListView__multiselect .controls-ListView__itemCheckBox {
   display: inline-block;
 }
 .controls-ListView.controls-ListView__multiselect .controls-ListView__item__multiSelected .controls-ListView__itemCheckBox {
+  background: transparent url('img/checkbox.png') -2px -5px;
+}
+.controls-ListView.controls-ListView__multiselect .controls-ListView__item__multiSelected .controls-ListView__itemCheckBox:hover {
   background: transparent url('img/checkbox.png') -2px -5px;
 }
 .controls-ListView .controls-ListView-scrollIndicator {
@@ -2605,9 +2619,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CustomFilterMenu .controls-CustomFilterMenu__afterCaptionWrapper .controls-CustomFilterMenu__crossIcon:hover {
   background: url('img/cancelIcon-sprite.png') 0 -19px no-repeat;
-}
-.controls-CustomFilterMenu.controls-Picker__show {
-  box-shadow: 0 0 0 1px #eeeeee;
 }
 .controls-CustomFilterMenu__picker {
   cursor: pointer;

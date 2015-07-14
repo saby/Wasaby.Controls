@@ -2675,9 +2675,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-CustomFilterMenu .controls-CustomFilterMenu__afterCaptionWrapper .controls-CustomFilterMenu__crossIcon:hover {
   background: url('img/cancelIcon-sprite.png') 0 -19px no-repeat;
 }
-.controls-CustomFilterMenu.controls-Picker__show {
-  box-shadow: 0 0 0 1px #d1d1d1;
-}
 .controls-CustomFilterMenu__picker {
   cursor: pointer;
   -webkit-border-radius: 0;
