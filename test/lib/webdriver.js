@@ -13,9 +13,6 @@ fromEnv(config, 'WEBDRIVER');
  * Точка доступа к Selenium webdriver
  */
 var Provider = function() {
-    //Ручной запуск своего экземпляра selenium server
-    this._manual = config.manual ? true : false;
-
     this._serverProc = undefined;
     this._driver = undefined;
     this._exitOnStop = false;
@@ -26,7 +23,7 @@ var Provider = function() {
  * @param {Function} done При успешном завершении операции
  */
 Provider.installServer = function(done) {
-    if (this._manual) {
+    if (config.manual) {
         config.install = config.install || {};
         config.install.logger = function (message) {
             console.log(message);
@@ -47,7 +44,7 @@ Provider.installServer = function(done) {
  * @param {Function} done При успешном завершении операции
  */
 Provider.prototype.startServer = function(done) {
-    if (this._manual) {
+    if (config.manual) {
         var self = this;
 
         selenium.start({
@@ -80,7 +77,7 @@ Provider.prototype.startServer = function(done) {
  * @param {Function} done При успешном завершении операции
  */
 Provider.prototype.stopServer = function(done) {
-    if (this._manual && this._serverProc) {
+    if (config.manual && this._serverProc) {
         var self = this;
         this._serverProc.on('close', function(code) {
             done && done(code);
