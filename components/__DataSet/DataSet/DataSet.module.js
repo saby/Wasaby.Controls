@@ -411,11 +411,21 @@ define('js!SBIS3.CONTROLS.DataSet', [
        */
       setMetaData: function (meta) {
          this._options.meta = meta;
-         this._options.meta.results = new Record({
-            strategy: this.getStrategy(),
-            raw: $ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Record') ? this._options.meta.results.getRaw() : this._options.meta.results,
-            keyField: this._keyField
-         });
+         if (this._options.meta.results) {
+            this._options.meta.results = new Record({
+               strategy: this.getStrategy(),
+               raw: $ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Record') ? this._options.meta.results.getRaw() : this._options.meta.results,
+               keyField: this._keyField
+            });
+         }
+
+         if (this._options.meta.path) {
+            this._options.meta.path = new DataSet({
+               strategy: this._options.strategy,
+               keyField: this._keyField,
+               data: $ws.helpers.instanceOfModule(this._options.meta.path, 'SBIS3.CONTROLS.DataSet') ? this._options.meta.path.getRawData() : this._options.meta.path
+            });
+         }
       },
 
       /**
