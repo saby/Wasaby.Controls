@@ -132,7 +132,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
 
          $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
          this._options.openedPath[key] = true;
-         this._dataSet.merge(dataSet);
+         this._dataSet.merge(dataSet, {remove: false});
          this._dataSet._reindexTree(this._options.hierField);
 
 
@@ -217,7 +217,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             //Если данные пришли, нарисуем
             if (dataSet.getCount()) {
                var records = dataSet._getRecords();
-               self._dataSet.merge(dataSet);
+               self._dataSet.merge(dataSet, {remove: false});
                self._drawItemsFolderLoad(records, id);
                self._dataLoadedCallback();
             }

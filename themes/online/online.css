@@ -924,7 +924,7 @@ input[type="reset"]::-moz-focus-inner {
   width: 8px;
   height: 6px;
   right: 9px;
-  top: 10px;
+  top: 9px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -994,7 +994,7 @@ input[type="reset"]::-moz-focus-inner {
   margin-right: 22px;
 }
 .controls-MenuButton.controls-Checked__checked .controls-MenuButton__arrowDown {
-  top: 9px;
+  top: 8px;
   right: 8px;
 }
 .controls-MenuButton__header {
@@ -2161,6 +2161,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell,
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__thead .controls-DataGrid__th.controls-DataGrid__notScrolledCell {
   background-color: #ffffff;
+  border-left: none;
+  border-right: none;
   z-index: 1;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell.controls-DataGrid__th,
@@ -2254,6 +2256,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox:hover {
   background: url('img/CheckBox.png') 0 17px;
 }
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-DataGrid__th-content {
+  max-height: 28px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
   cursor: pointer;
@@ -2306,9 +2313,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid__td:hover .controls-TreeView__expand--inside {
   display: inline-block;
   height: 14px;
-}
-.controls-ListView__hoveredItem .controls-TreeView__editArrow {
-  display: inline-block;
 }
 .controls-DataGrid__td .controls-TreeView__expand--inside {
   display: inline-block;
@@ -2978,9 +2982,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-CustomFilterMenu .controls-CustomFilterMenu__afterCaptionWrapper .controls-CustomFilterMenu__crossIcon:hover {
   background: url('img/cancelIcon-sprite.png') 0 -19px no-repeat;
 }
-.controls-CustomFilterMenu.controls-Picker__show {
-  box-shadow: 0 0 0 1px #cccccc;
-}
 .controls-CustomFilterMenu__picker {
   cursor: pointer;
   -webkit-border-radius: 0;
@@ -3067,7 +3068,8 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Menu__Popup {
   padding: 4px 0;
-}.controls-TreePager-container {
+}
+.controls-TreePager-container {
   float: right;
 }
 .controls-CompositeView.controls-CompositeView-tile .controls-TreePager-container,

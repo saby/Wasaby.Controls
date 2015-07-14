@@ -186,6 +186,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
             columns: this._options.columns,
             addInPlaceButton: this._addInPlaceButton,
             element: $('<div>').insertBefore(this._container.find('.controls-DataGrid__table')),
+            parent: this,
             dataSet: this._dataSet,
             ignoreFirstColumn: this._options.multiselect,
             dataSource: this._dataSource,
@@ -525,23 +526,21 @@ define('js!SBIS3.CONTROLS.DataGrid',
              (isPartScrollUsed ?
                 this._options.startScrollColumn === 0 ?
                    ' controls-DataGrid__scrolledCell' :
-                   ' controls-DataGrid__notScrolledCell' : '') +
-             		 ' controls-DataGrid__td__checkBox"><span class="controls-ListView__itemCheckBox controls-DataGrid__th__checkBox js-controls-ListView__itemCheckBox"></span>' +
-                              '</th>');
+                   ' controls-DataGrid__notScrolledCell"></th>' : '"></th>'));
              docFragmentForColGroup.appendChild($('<col width="24px">')[0]);
           }
           this._options.columns = columns;
           for (var i = 0; i < columns.length; i++) {
              var column = document.createElement('col');
-             if (columns[i]['width']) column.width = columns[i]['width'];
+             if (columns[i].width) column.width = columns[i].width;
              docFragmentForColGroup.appendChild(column);
              headerTr.append(
                 $('<th class="controls-DataGrid__th' +
                   (isPartScrollUsed ?
                       this._options.startScrollColumn <= i ?
                          ' controls-DataGrid__scrolledCell' :
-                         ' controls-DataGrid__notScrolledCell' : '')
-                   + '" title="' + columns[i].title + '">' + columns[i].title + '</th>'));
+                         ' controls-DataGrid__notScrolledCell' : '') + 
+                     '" title="' + columns[i].title + '"><div class="controls-DataGrid__th-content">' + columns[i].title + '</div></th>'));
           }
 
           if (this._editInPlace) {

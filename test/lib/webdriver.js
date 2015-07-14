@@ -5,16 +5,14 @@
 var path = require('path'),
     selenium = require('selenium-standalone'),
     fromEnv = require('./util').config.fromEnv,
-    config = require('../webdriver.json'),
-    serverConfig = config[config.mode];
+    config = require('../webdriver.json');
 
-fromEnv(serverConfig, 'WEBDRIVER');
+fromEnv(config, 'WEBDRIVER');
 
 /**
  * Точка доступа к Selenium webdriver
  */
 var Provider = function() {
-    this._local = config.mode == 'local';
     this._serverProc = undefined;
     this._driver = undefined;
     this._exitOnStop = false;
@@ -25,17 +23,20 @@ var Provider = function() {
  * @param {Function} done При успешном завершении операции
  */
 Provider.installServer = function(done) {
-    selenium.install({
-        drivers: config.local.install,
-        logger: function(message) {
+    if (config.manual) {
+        config.install = config.install || {};
+        config.install.logger = function (message) {
             console.log(message);
-        }
-    }, function(err) {
-        if (err) {
-            throw err;
-        }
+        };
+        selenium.install(config.install, function (err) {
+            if (err) {
+                throw err;
+            }
+            done();
+        });
+    } else {
         done();
-    });
+    }
 };
 
 /**
@@ -43,12 +44,12 @@ Provider.installServer = function(done) {
  * @param {Function} done При успешном завершении операции
  */
 Provider.prototype.startServer = function(done) {
-    if (this._local) {
+    if (config.manual) {
         var self = this;
 
         selenium.start({
             /*seleniumArgs: [
-             '-port ' + serverConfig.port
+             '-port ' + config.remote.port
              ]*/
         }, function(err, child) {
             if (err) {
@@ -76,7 +77,7 @@ Provider.prototype.startServer = function(done) {
  * @param {Function} done При успешном завершении операции
  */
 Provider.prototype.stopServer = function(done) {
-    if (this._serverProc) {
+    if (config.manual && this._serverProc) {
         var self = this;
         this._serverProc.on('close', function(code) {
             done && done(code);
@@ -100,12 +101,7 @@ Provider.prototype.buildDriver = function(done) {
     var webdriverio = require('webdriverio');
 
     this._driver = webdriverio
-        .remote({
-            desiredCapabilities: {
-                browserName: serverConfig.run.browser,
-                version: serverConfig.run.version
-            }
-        })
+        .remote(config.remote)
         .init(function() {
             done && done();
         });
