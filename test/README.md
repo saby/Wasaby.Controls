@@ -119,18 +119,14 @@
 ## Сборка
 +Выполнить команду Windows
 
-    npm install
-
-+Выполнить команду Windows
-
-    npm install grunt-cli
-
-+Выполнить команду Windows
+    call npm install
+    call npm install grunt-cli
 
     rem [if Node.js version installed < 10]
     if not exist test\bin\nodejs\node.exe "C:\Program Files\7-Zip\7z" x test\bin\nodejs.zip -y -otest\bin
     SET PATH=%WORKSPACE%\test\bin\nodejs;%PATH%
     rem [/if Node.js version installed < 10]
+
     node "node_modules/grunt-cli/bin/grunt" tests
 
 ## Послесборочные операции
