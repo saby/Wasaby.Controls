@@ -74,6 +74,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       return [checkText, checkText.length >= minLength];
    }
 
+   function toggleCheckBoxes(operationPanel, gridView) {
+      if (gridView._options.hideCheckBoxes && gridView._options.multiselect) {
+         gridView._container.toggleClass('controls-DataGridView__showCheckBoxes', operationPanel.isOpen())
+            .toggleClass('controls-DataGridView__hideCheckBoxes', !operationPanel.isOpen());
+      }
+   }
    /**
     * Контроллер, позволяющий связывать компоненты осуществляя базовое взаимодейтсие между ними
     * @author Крайнов Дмитрий
@@ -223,6 +229,18 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
          backButton.subscribe('onActivated', function(){
             setPreviousRoot();
+         });
+      },
+      bindOperationPanel: function(operationPanel, gridView) {
+         operationPanel._addItemOptions = function(options) {
+            options.linkedView = gridView;
+         };
+         toggleCheckBoxes(operationPanel, gridView);
+         gridView.subscribe('onSelectedItemsChange', function(event, idArray) {
+            operationPanel.setPanelState(idArray.length);
+         });
+         operationPanel.subscribe('onToggle', function() {
+            toggleCheckBoxes(operationPanel, gridView);
          });
       }
    });
