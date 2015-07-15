@@ -163,7 +163,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          var more, nextPage;
          if (!this._treePager) {
             more = this._dataSet.getMetaData().more;
-            nextPage = this._hasNextPage(more);
+            //Убираем текст "Еще n", если включена бесконечная подгрузка
+            nextPage = this.isInfiniteScroll() ? false : this._hasNextPage(more);
             var
                container = this.getContainer().find('.controls-TreePager-container'),
                self = this;
