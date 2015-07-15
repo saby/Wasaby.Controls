@@ -188,7 +188,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
         */
       getParentKey: function (record, rawKey) {
          // так как c БЛ приходит массив
-         return record.get(rawKey)[0];
+         return record.get(rawKey) instanceof Array ? record.get(rawKey)[0] : record.get(rawKey);
       },
 
       prepareFilterParam: function (filter) {

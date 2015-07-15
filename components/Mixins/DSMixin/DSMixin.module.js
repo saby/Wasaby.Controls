@@ -213,6 +213,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (this._options.pageSize) {
             this._limit = this._options.pageSize;
          }
+         var def = new $ws.proto.Deferred();
          var self = this;
          this._cancelLoading();
          this._filter = typeof(filter) != 'undefined' ? filter : this._filter;
@@ -230,8 +231,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             }
             self._dataLoadedCallback();
             //self._notify('onBeforeRedraw');
+            def.callback(dataSet);
             self._redraw();
          });
+         return def;
       },
        /**
         * Метод установки количества элементов на одной странице.
