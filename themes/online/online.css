@@ -2179,15 +2179,15 @@ input[type="reset"]::-moz-focus-inner {
   color: inherit;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__hoveredItem {
-  background: #f3f3f3;
+  background: #e9fafe;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__hoveredItem .controls-DataGrid__th {
   color: inherit;
-  background-color: #f3f3f3;
+  background-color: #e9fafe;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__hoveredItem .controls-DataGrid__td {
   color: inherit;
-  background-color: #f3f3f3;
+  background-color: #e9fafe;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container {
   position: absolute;
@@ -2338,7 +2338,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
 }
 .controls-CompositeView .controls-CompositeView__listItem:hover {
-  background: #f3f3f3;
+  background: #e9fafe;
 }
 .controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder {
   padding: 0;
@@ -2400,7 +2400,7 @@ input[type="reset"]::-moz-focus-inner {
   margin: -4px 0 0 -1px;
 }
 .controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__hoveredItem {
-  background: #f3f3f3;
+  background: #e9fafe;
 }
 .controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__hoveredItem .controls-CompositeView__tileImg {
   box-shadow: 1px 2px 4px #aaaaaa;
@@ -2849,8 +2849,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ItemActions {
   position: absolute;
   height: 20px;
-  background-color: #f3f3f3;
-  box-shadow: -2px -2px 5px #f3f3f3;
+  background-color: #e9fafe;
+  box-shadow: -2px -2px 5px #e9fafe;
   z-index: 10;
   display: none;
 }
@@ -2894,7 +2894,7 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/ItemActions-menu.png') no-repeat 0 -60px;
 }
 .controls-ItemActions__activeItem {
-  background-color: #f3f3f3 !important;
+  background-color: #e9fafe !important;
 }
 .controls-EditInPlaceController {
   position: absolute;
@@ -2905,15 +2905,15 @@ input[type="reset"]::-moz-focus-inner {
   overflow: visible;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing {
-  background: #f3f3f3;
+  background: #e9fafe;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing .controls-DataGrid__th {
   color: inherit;
-  background-color: #f3f3f3;
+  background-color: #e9fafe;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing .controls-DataGrid__td {
   color: inherit;
-  background-color: #f3f3f3;
+  background-color: #e9fafe;
 }
 .controls-editInPlace {
   position: absolute;
