@@ -66,6 +66,12 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             startChar: 3,
 
             /**
+             * @cfg {Boolean} Оставлять фокус на контроле при выборе элемента
+             * <wiTag group="Данные">
+             */
+            saveFocusOnSelect: false,
+
+            /**
              * @cfg {Boolean} Использовать выпадающий блок
              * <wiTag group="Данные">
              * true, если контрол списка сущностей находится внутри выпадающего блока.
@@ -491,6 +497,17 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       _onListItemSelect: function (id) {
          if (id === null || id === undefined) {
             return;
+         }
+
+         this.hidePicker();
+         if (!this._options.saveFocusOnSelect) {
+            var activeFound = false;
+            $ws.helpers.forEach(this._options.observableControls, function (control) {
+               if (!activeFound && control.isActive()) {
+                  control.setActive(false);
+                  activeFound = true;
+               }
+            }, this);
          }
 
          //TODO: убрать обращение к protected-членам
