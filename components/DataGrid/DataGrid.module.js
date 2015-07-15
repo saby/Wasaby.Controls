@@ -226,6 +226,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
                decorators: this._decorators,
                color: this._options.colorField ? item.get(this._options.colorField) : '',
                multiselect : this._options.multiselect,
+               arrowActivatedHandler: this._options.arrowActivatedHandler,
                hierField: this._options.hierField + '@',
                startScrollColumn: this._options.startScrollColumn
             };
