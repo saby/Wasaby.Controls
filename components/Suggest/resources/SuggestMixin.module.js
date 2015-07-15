@@ -127,10 +127,10 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              */
 
             /**
-             * @cfg {SBIS3.CORE.CompoundControl|ListControl} Конфигурация контрола списка сущностей
+             * @cfg {SBIS3.CONTROLS.DSMixin|ListControl} Конфигурация контрола списка сущностей
              * <wiTag group="Отображение">
-             * SBIS3.CORE.CompoundControl: инстанс контрола, отображающего список сущностей.
-             * Должен иметь примеси {SBIS3.CONTROLS.DSMixin}{SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable}.
+             * SBIS3.CONTROLS.DSMixin: инстанс контрола, отображающего список сущностей.
+             * Должен также иметь примеси {SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable}.
              * ListControl: Настройки контрола, отображающего список сущностей
              * При передаче настроек инстанс создается лениво - при необходимости.
              * @group Data
@@ -375,7 +375,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          var def = new $ws.proto.Deferred();
 
          if (this._list === undefined) {
-            if (this._options.list instanceof $ws.proto.Control) {
+            if ($ws.helpers.instanceOfMixin(this._options.list, 'SBIS3.CONTROLS.DSMixin')) {
                //Готовый инстанс
                this._list = this._options.list;
                this._initList();
