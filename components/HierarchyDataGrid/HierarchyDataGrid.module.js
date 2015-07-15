@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
          this._lastParent = undefined;
          this._lastDrawn = undefined;
          this._lastPath = [];
-         HierarchyDataGrid.superclass.reload.apply(this, arguments);
+         return HierarchyDataGrid.superclass.reload.apply(this, arguments);
       },
       _clearItems : function(){
          this._lastParent = this._curRoot;
