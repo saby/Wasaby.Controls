@@ -715,6 +715,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (!allow && this._loadingIndicator && this._loadingIndicator.is(':visible')){
                this._cancelLoading();
             }
+            //Убираем текст Еще 10, если включили бесконечную подгрузку
+            this.getContainer().find('.controls-TreePager-container').toggleClass('ws-hidden', allow);
             this._removeLoadingIndicator();
          },
          /**
