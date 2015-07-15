@@ -2463,16 +2463,13 @@ input[type="reset"]::-moz-focus-inner {
   font-weight: 700;
 }
 .controls-PathSelector__point:first-child .controls-PathSelector__arrow {
-  background: url('img/path-filter-icon-back.png') 0 -1px;
+  background: url('img/path-filter-icon-back.png');
   height: 24px;
   width: 24px;
   top: 5px;
 }
 .controls-PathSelector__point:first-child .controls-PathSelector__arrow::before {
   content: '';
-}
-.controls-PathSelector__point:first-child:hover .controls-PathSelector__arrow {
-  background-position: 0 23px;
 }
 .controls-PathSelector .controls-PathSelector__title {
   text-decoration: none;

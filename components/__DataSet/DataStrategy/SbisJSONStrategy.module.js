@@ -82,7 +82,11 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
             length = d.length;
          for (var i = 0; i < length; i++) {
             //FixMe: допущение что ключ на первой позиции + там массив приходит
-            _indexId[i] = d[i][0][0];
+            if (d[i][0] instanceof  Array)
+               _indexId[i] = d[i][0][0];
+            else {
+               _indexId[i] = d[i][0]
+            }
          }
          return _indexId;
       },
@@ -174,7 +178,8 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
       getMetaData: function (data) {
          return {
             results: data.r,
-            more: data.n
+            more: data.n,
+            path: data.p
          };
       },
        /**
@@ -184,7 +189,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
         */
       getParentKey: function (record, rawKey) {
          // так как c БЛ приходит массив
-         return record.get(rawKey)[0];
+         return record.get(rawKey) instanceof Array ? record.get(rawKey)[0] : record.get(rawKey);
       },
 
       prepareFilterParam: function (filter) {
