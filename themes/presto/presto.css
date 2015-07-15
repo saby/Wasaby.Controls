@@ -2166,16 +2166,13 @@ input[type="reset"]::-moz-focus-inner {
   font-weight: 700;
 }
 .controls-PathSelector__point:first-child .controls-PathSelector__arrow {
-  background: url('img/path-filter-icon-back.png') 0 -1px;
+  background: url('img/path-filter-icon-back.png');
   height: 24px;
   width: 24px;
   top: 5px;
 }
 .controls-PathSelector__point:first-child .controls-PathSelector__arrow::before {
   content: '';
-}
-.controls-PathSelector__point:first-child:hover .controls-PathSelector__arrow {
-  background-position: 0 23px;
 }
 .controls-PathSelector .controls-PathSelector__title {
   text-decoration: none;
@@ -2513,9 +2510,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CustomFilterMenu .controls-CustomFilterMenu__afterCaptionWrapper .controls-CustomFilterMenu__crossIcon:hover {
   background: url('img/cancelIcon-sprite.png') 0 -19px no-repeat;
-}
-.controls-CustomFilterMenu.controls-Picker__show {
-  box-shadow: 0 0 0 1px #eeeeee;
 }
 .controls-CustomFilterMenu__picker {
   cursor: pointer;

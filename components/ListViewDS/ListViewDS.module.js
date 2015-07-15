@@ -445,7 +445,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                this._isLoadBeforeScrollAppears = true;
             }
             this._previousGroupBy = undefined;
-            ListViewDS.superclass.reload.apply(this, arguments);
+            return ListViewDS.superclass.reload.apply(this, arguments);
          },
 
          /**

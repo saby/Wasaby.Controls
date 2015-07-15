@@ -580,7 +580,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
          if (this._editInPlace && this._editInPlace.isEditing()) {
             this._editInPlace.finishEditing();
          }
-         DataGrid.superclass.reload.apply(this, arguments);
+         return DataGrid.superclass.reload.apply(this, arguments);
       },
 
       _getLeftOfItemContainer : function(container) {

@@ -22,6 +22,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          _resizeTimeout: null,
          _rootHandler: undefined,
          _dropdownWidth: null,
+         _homeIcon: undefined,
          _options: {
             linkedView: null,
             keyField: 'id',
@@ -38,6 +39,8 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._resizeHandler, this);
          //инициализируем dataSet
          this.setItems(this._options.items || []);
+         this._homeIcon = $('.controls-PathSelector__point-home', this._container);
+         this._homeIcon.data('data-id', null); //клик по домику ведет в корень TODO: придрочено под null
       },
 
       _resizeHandler: function() {
@@ -65,7 +68,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          }
       },
 
-            /**
+      /**
        * Обработчик клика на пункт пути
        * id - id по которому нужно перейти
        * Удалет все пункты до того на который кликнули
@@ -76,8 +79,8 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             last = this._dataSet.at(length - 1), newId = id,
             result;
          //Нажатие на последний пункт должно вести туда же куда не предпоследний
-         if (length > 1 && id == last.get(this._options.keyField)) {
-            newId = this._dataSet.at(length - 2).get(this._options.keyField);
+         if (id == last.get(this._options.keyField)) {
+            newId = length > 1 ? this._dataSet.at(length - 2).get(this._options.keyField) : null;
          }
          for (var i = length - 1; i >= 0; i--) {
             var record = this._dataSet.at(i);
@@ -96,12 +99,8 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          }
       },
 
-      _getHomeIcon: function(){
-         var homeIcon = {};
-         homeIcon[this._options.keyField] = null;
-         homeIcon[this._options.displayField] = '';
-         homeIcon.icon = 'icon-16 icon-Home2 icon-primary action-hover';
-         return homeIcon;
+      _toggleHomeIcon: function(state){
+         this._homeIcon.toggleClass('ws-hidden', state);
       },
 
       setItems: function(items){
@@ -109,25 +108,18 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          PathSelector.superclass.setItems.call(this, items);
       },
 
-      _rootChangeHandler: function(dataSet, keys) {
-         if (!this._dataSet.getRawData().length){
-            this._dataSet.push(this._getHomeIcon());
-         }
-         var displayField = this._options.linkedView._options.displayField; //Как то не очень
-         keys = keys instanceof Array ? keys : [keys];
+      _rootChangeHandler: function(keys) {
          for (var i = keys.length - 1; i >= 0; i--) {
-            var record = dataSet.getRecordByKey(keys[i]);
-            if (record){
+            var key = keys[i];
+            if (key){
                var point = {};
-               point[this._options.displayField] = record.get(displayField);
-               point[this._options.keyField] = record.getKey();
-               point[this._options.colorField] = this._options.colorField ? record.get(this._options.colorField) : null;
+               point[this._options.displayField] = key.title;
+               point[this._options.keyField] = key.key;
+               point[this._options.colorField] = key.color;
                this._dataSet.push(point);
             }
-            if (keys[i] === null) {
-               this.setItems([]);
-            }
          }
+         this._toggleHomeIcon(this._dataSet.getCount() <= 0);
          this._redraw();
       },
 
@@ -136,8 +128,8 @@ define('js!SBIS3.CONTROLS.PathSelector', [
 
       _subscribeOnSetRoot: function() {
          var self = this;
-         this._rootHandler = function(event, dataSet, id, curRoot) {
-            self._rootChangeHandler(dataSet, id, curRoot);
+         this._rootHandler = function(event, keys) {
+            self._rootChangeHandler(keys);
          };
          this._options.linkedView.subscribe('onSetRoot', this._rootHandler, this);
       },
@@ -186,8 +178,8 @@ define('js!SBIS3.CONTROLS.PathSelector', [
                      ))
                      .attr('style', self._decorators.apply(
                         self._options.colorField ? record.get(self._options.colorField) : '', 'color'
-                     ))
-                     .data(self._options.keyField, record.get(self._options.keyField));
+                     ));
+                     point.data(self._options.keyField, record.get(self._options.keyField));
                   self._picker._container.append(point);
                   var previousContainer = point.prev('.js-controls-PathSelector__point', self._picker._container),
                      previousWrappersCount = $('.controls-PathSelector__hierWrapper', previousContainer).length;
