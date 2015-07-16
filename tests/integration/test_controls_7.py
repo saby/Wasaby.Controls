@@ -265,7 +265,7 @@ class TestTreeCompositeViewTable(TestCaseUI):
         tcv.table.row(contains_text='Привет').element('.controls-TreeView__expand').click()
 
         log('Проверяем, что папка раскрылась')
-        assert_that(lambda: tcv.table.rows_number, equal_to(9), 'Папка не раскрылась', and_wait())
+        assert_that(lambda: tcv.table.rows_number, equal_to(10), 'Папка не раскрылась', and_wait())
 
         root = ['Привет', 'Hello', 'Helga', 'Hola', 'Bonjour', 'Пока', 'Игра', 'Как дела', 'Тест']
         for node in root:
@@ -276,7 +276,7 @@ class TestTreeCompositeViewTable(TestCaseUI):
         tcv.table.row(contains_text='Hello').element('.controls-TreeView__expand').click()
 
         log('Проверяем, что папка раскрылась')
-        assert_that(lambda: tcv.table.rows_number, equal_to(10), 'Папка не раскрылась', and_wait())
+        assert_that(lambda: tcv.table.rows_number, equal_to(12), 'Папка не раскрылась', and_wait())
 
         root = ['Привет', 'Hello', 'Darova', 'Helga', 'Hola', 'Bonjour', 'Пока', 'Игра', 'Как дела', 'Тест']
         for node in root:
@@ -301,11 +301,11 @@ class TestTreeCompositeViewTable(TestCaseUI):
         log('Расскрываем нужные папки нажатием по треугольнику')
         tcv.table.row(contains_text='Привет').element('.controls-TreeView__expand').click()
         tcv.table.row(contains_text='Hello').element('.controls-TreeView__expand').click()
-        assert_that(lambda: tcv.table.rows_number, equal_to(10), 'Одна из папок не расскрылась', and_wait())
+        assert_that(lambda: tcv.table.rows_number, equal_to(12), 'Одна из папок не расскрылась', and_wait())
 
         log('Закрываем папку и проверяем, что она закрылась')
         tcv.table.row(contains_text='Hello').element('.controls-TreeView__expand').click()
-        assert_that(lambda: tcv.table.rows_number, equal_to(9), 'Папка Hello не закрылась', and_wait())
+        assert_that(lambda: tcv.table.rows_number, equal_to(10), 'Папка Hello не закрылась', and_wait())
 
         root = ['Привет', 'Hello', 'Helga', 'Hola', 'Bonjour', 'Пока', 'Игра', 'Как дела', 'Тест']
         for node in root:
@@ -359,7 +359,7 @@ class TestTreeCompositeViewTable(TestCaseUI):
                     'Диалог подтверждения удаления папки(запииси) не закрылся', and_wait())
 
         log('Проверяем, что папка удалилась')
-        assert_that(lambda: tcv.table.rows_number, equal_to(5),
+        assert_that(lambda: tcv.table.rows_number, equal_to(6),
                     'Кол-во записей после удаления не равно ожидаемому', and_wait())
         root = ['Привет', 'Пока', 'Игра', 'Как дела', 'Тест']
         for node in root:
@@ -397,7 +397,7 @@ class TestTreeCompositeViewTable(TestCaseUI):
                     'Диалог подтверждения удаления папки(запииси) не закрылся', and_wait())
 
         log('Проверяем, что запись удалилась')
-        assert_that(lambda: tcv.table.rows_number, equal_to(5),
+        assert_that(lambda: tcv.table.rows_number, equal_to(6),
                     'Кол-во записей после удаления не равно ожидаемому', and_wait())
         root = ['Привет', 'Пока', 'Игра', 'Как дела', 'Тест']
         for node in root:
