@@ -1,0 +1,170 @@
+<div class="sbis3-TestCompositeViewTile____test" style="width:800px;height:600px;">
+
+    <!--Switcher-->
+    <component data-component="SBIS3.CONTROLS.Switcher" name="Switcher 1">
+        <option name="stateOff">StaticSource</option>
+        <option name="stateOn">SbisServiceSource</option>
+    </component>
+
+    <!--CompositeView 1 From DB-->
+    <component data-component="SBIS3.CONTROLS.CompositeView" name="CompositeView 1">
+        <options name="columns" type="array">
+            <options>
+                <option name="title">Перевод</option>
+                <option name="field">translate</option>
+            </options>
+        </options>
+        <option name="hierField">parent</option>
+        <option name="displayField">translate</option>
+		<option name="viewMode">tile</option>
+        <options name="itemsActions" type="array">
+            <options>
+                <option name="name">moveTranslate</option>
+                <option name="icon">sprite:icon-16 icon-Move icon-primary action-hover</option>
+                <option name="isMainAction">true</option>
+                <option name="tooltip">Переместить</option>
+                <option name="onActivated" type="function">js!SBIS3.TestCompositeViewTile:prototype.moveRecord</option>
+            </options>
+            <options>
+                <option name="name">editTranslate</option>
+                <option name="icon">sprite:icon-16 icon-Edit icon-primary action-hover</option>
+                <option name="isMainAction">true</option>
+                <option name="tooltip">Изменить</option>
+                <option name="onActivated" type="function">js!SBIS3.TestCompositeViewTile:prototype.editRecord</option>
+            </options>
+            <options>
+                <option name="name">deleteTranslate</option>
+                <option name="icon">sprite:icon-16 icon-Erase icon-error action-hover</option>
+                <option name="isMainAction">true</option>
+                <option name="tooltip">Удалить</option>
+                <option name="onActivated" type="function">js!SBIS3.TestCompositeViewTile:prototype.deleteRecord
+                </option>
+            </options>
+        </options>
+    </component>
+
+    <!--CompositeView 2 From StaticSource-->
+    <component data-component="SBIS3.CONTROLS.CompositeView" name="CompositeView 2">
+        <options name="columns" type="array">
+            <options>
+                <option name="title">Перевод</option>
+                <option name="field">translate</option>
+            </options>
+        </options>
+        <option name="hierField">parent</option>
+        <option name="displayField">translate</option>
+		<option name="viewMode">tile</option>
+        <options name="items" type="array">
+            <options>
+                <option name="id">1</option>
+                <option name="translate">Привет</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id">2</option>
+                <option name="translate">Пока</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id">3</option>
+                <option name="translate">Игра</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id">4</option>
+                <option name="translate">Как дела</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id">5</option>
+                <option name="translate">Hello</option>
+                <option name="parent">1</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id">6</option>
+                <option name="translate">Helga</option>
+                <option name="parent">1</option>
+            </options>
+            <options>
+                <option name="id">7</option>
+                <option name="translate">Hola</option>
+                <option name="parent">1</option>
+            </options>
+            <options>
+                <option name="id">8</option>
+                <option name="translate">Bonjour</option>
+                <option name="parent">1</option>
+            </options>
+            <options>
+                <option name="id">9</option>
+                <option name="translate">Buy</option>
+                <option name="parent">2</option>
+            </options>
+            <options>
+                <option name="id">10</option>
+                <option name="translate">Are vuare</option>
+                <option name="parent">2</option>
+            </options>
+            <options>
+                <option name="id">11</option>
+                <option name="translate">Como esteis</option>
+                <option name="parent">2</option>
+            </options>
+            <options>
+                <option name="id">12</option>
+                <option name="translate">Game</option>
+                <option name="parent">3</option>
+            </options>
+            <options>
+                <option name="id">13</option>
+                <option name="translate">Gare</option>
+                <option name="parent">3</option>
+            </options>
+            <options>
+                <option name="id">14</option>
+                <option name="translate">Kak dela</option>
+                <option name="parent">4</option>
+            </options>
+            <options>
+                <option name="id">15</option>
+                <option name="translate">How are you</option>
+                <option name="parent">4</option>
+            </options>
+            <options>
+                <option name="id">16</option>
+                <option name="translate">Darova</option>
+                <option name="parent">5</option>
+            </options>
+            <options>
+                <option name="id">17</option>
+                <option name="translate">Тест</option>
+            </options>
+        </options>
+        <options name="itemsActions" type="array">
+            <options>
+                <option name="name">moveTranslate</option>
+                <option name="icon">sprite:icon-16 icon-Move icon-primary action-hover</option>
+                <option name="isMainAction">true</option>
+                <option name="tooltip">Переместить</option>
+                <option name="onActivated" type="function">js!SBIS3.TestCompositeViewTile:prototype.moveRecord</option>
+            </options>
+            <options>
+                <option name="name">editTranslate</option>
+                <option name="icon">sprite:icon-16 icon-Edit icon-primary action-hover</option>
+                <option name="isMainAction">true</option>
+                <option name="tooltip">Изменить</option>
+                <option name="onActivated" type="function">js!SBIS3.TestCompositeViewTile:prototype.editRecord</option>
+            </options>
+            <options>
+                <option name="name">deleteTranslate</option>
+                <option name="icon">sprite:icon-16 icon-Erase icon-error action-hover</option>
+                <option name="isMainAction">true</option>
+                <option name="tooltip">Удалить</option>
+                <option name="onActivated" type="function">js!SBIS3.TestCompositeViewTile:prototype.deleteRecord
+                </option>
+            </options>
+        </options>
+    </component>
+
+</div>

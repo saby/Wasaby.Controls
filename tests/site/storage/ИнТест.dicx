@@ -82,7 +82,61 @@
     <trigger_list/>
   </table>
 
-  <table last_changed="Дубенец Д.А." name="CompositeView" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+  <table last_changed="Дубенец Д.А." name="CompositeViewTile" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>4</max_size>
+      </format>
+    </column>
+    <column name="translate">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <column name="parent">
+      <format>
+        <type>HIERARCHY</type>
+        <on_delete>1</on_delete>
+        <nodes_field>1</nodes_field>
+        <hierarchy_name>translate</hierarchy_name>
+      </format>
+    </column>
+    <index method="btree" name="parent" null_keys="1" service="1" unique="0">
+      <column is_expressions="0" name="parent" nulls_place="LAST" sorting="ASC"/>
+      <column is_expressions="0" name="parent@" nulls_place="LAST" sorting="DESC"/>
+    </index>
+    <trigger_list/>
+  </table>
+  
+  <table last_changed="Дубенец Д.А." name="CompositeViewTable" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+    <column name="____SBIS_PRIMARY_KEY_FIELD____">
+      <format>
+        <type>IDENTIFIER</type>
+        <max_size>4</max_size>
+      </format>
+    </column>
+    <column name="translate">
+      <format>
+        <type>TEXT</type>
+      </format>
+    </column>
+    <column name="parent">
+      <format>
+        <type>HIERARCHY</type>
+        <on_delete>1</on_delete>
+        <nodes_field>1</nodes_field>
+        <hierarchy_name>translate</hierarchy_name>
+      </format>
+    </column>
+    <index method="btree" name="parent" null_keys="1" service="1" unique="0">
+      <column is_expressions="0" name="parent" nulls_place="LAST" sorting="ASC"/>
+      <column is_expressions="0" name="parent@" nulls_place="LAST" sorting="DESC"/>
+    </index>
+    <trigger_list/>
+  </table>
+  
+  <table last_changed="Дубенец Д.А." name="CompositeViewList" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">
       <format>
         <type>IDENTIFIER</type>
