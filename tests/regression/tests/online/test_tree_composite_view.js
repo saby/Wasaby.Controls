@@ -25,9 +25,10 @@ gemini.suite('SBIS3.CONTROLS.TreeCompositeView Online', function () {
                 actions.wait(1000);
             })
 
+			/*
             .capture('hovered citroen arrow', function (actions) {
                 actions.mouseMove(this.citroen_arrow);
-            })
+            })*/
 
             .capture('hovered arrow', function (actions) {
                 actions.mouseMove(this.arrow1);
@@ -68,9 +69,10 @@ gemini.suite('SBIS3.CONTROLS.TreeCompositeView Online', function () {
                 actions.mouseMove(this.tree_id1);
             })
 
+			/*
             .capture('hovered citroen arrow', function (actions) {
                 actions.mouseMove(this.citroen_arrow);
-            })
+            })*/
 
             .capture('hovered arrow', function (actions) {
                 actions.mouseMove(this.arrow1);
