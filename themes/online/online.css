@@ -59,7 +59,7 @@ input[type="reset"]::-moz-focus-inner {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  font: 13px 'TensorFont Regular', 'TensorFont', sans-serif;
+  font: 14px 'TensorFont Regular', 'TensorFont', sans-serif;
   color: #000000;
   text-align: center;
   min-width: 24px;
@@ -1919,10 +1919,10 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent;
 }
 .controls-EditAtPlace .controls-EditAtPlace__editor .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
-  font: 13px/20px 'TensorFont Regular', 'TensorFont', sans-serif;
+  font: 14px/20px 'TensorFont Regular', 'TensorFont', sans-serif;
 }
 .controls-EditAtPlace .controls-EditAtPlace__editor .controls-TextArea .controls-TextArea__inputField {
-  font: 13px/20px 'TensorFont Regular', 'TensorFont', sans-serif;
+  font: 14px/20px 'TensorFont Regular', 'TensorFont', sans-serif;
 }
 .controls-EditAtPlace.controls-EditAtPlace__fieldWrapperHidden .controls-EditAtPlace__fieldWrapper {
   display: none;
@@ -1947,10 +1947,10 @@ input[type="reset"]::-moz-focus-inner {
   background: #f8f3f1 !important;
 }
 .controls-EditAtPlace__editorOverlay .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
-  font: 13px/20px 'TensorFont Regular', 'TensorFont', sans-serif;
+  font: 14px/20px 'TensorFont Regular', 'TensorFont', sans-serif;
 }
 .controls-EditAtPlace__editorOverlay .controls-TextArea .controls-TextArea__inputField {
-  font: 13px/20px 'TensorFont Regular', 'TensorFont', sans-serif;
+  font: 14px/20px 'TensorFont Regular', 'TensorFont', sans-serif;
 }
 .controls-EditAtPlace__controlPanel {
   display: inline-block;
@@ -2973,6 +2973,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DropDownList__picker .controls-CustomFilterMenu__list .controls-CustomFilterMenu__item {
   padding: 5px;
   margin: 0;
+}
+.body {
+  font-family: 'TensorFont Regular', 'TensorFont', sans-serif;
+  font-size: 14px;
 }
 .controls-PopupMixin__closeButton {
   position: absolute;
