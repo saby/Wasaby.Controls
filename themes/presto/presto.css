@@ -1227,10 +1227,10 @@ input[type="reset"]::-moz-focus-inner {
   color: #eeeeee !important;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field:-moz-placeholder {
-  color: #eeeeee !important;
+  color: #c3c3c3 !important;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-moz-placeholder {
-  color: #eeeeee !important;
+  color: #c3c3c3 !important;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field:-ms-input-placeholder {
   color: #eeeeee !important;
@@ -1494,10 +1494,10 @@ input[type="reset"]::-moz-focus-inner {
   color: #eeeeee !important;
 }
 .controls-TextArea .controls-TextArea__inputField:-moz-placeholder {
-  color: #eeeeee !important;
+  color: #c3c3c3 !important;
 }
 .controls-TextArea .controls-TextArea__inputField::-moz-placeholder {
-  color: #eeeeee !important;
+  color: #c3c3c3 !important;
 }
 .controls-TextArea .controls-TextArea__inputField:-ms-input-placeholder {
   color: #eeeeee !important;

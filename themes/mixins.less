@@ -14,21 +14,21 @@
   user-select: @select;
 }
 
-.placeholder(@rules) {
+.placeholder() {
   &::-webkit-input-placeholder {
-    @rules();
+    color: @text-box-placeholder-color;
   }
 
   &:-moz-placeholder {
-    @rules();
+     color: darken(@text-box-placeholder-color, 17%);
   }
 
   &::-moz-placeholder {
-    @rules();
+     color: darken(@text-box-placeholder-color, 17%);
   }
 
   &:-ms-input-placeholder {
-    @rules();
+     color: @text-box-placeholder-color;
   }
 }
 
