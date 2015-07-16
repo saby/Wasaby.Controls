@@ -115,7 +115,7 @@ class TestTreeDataGrid(TestCaseUI):
         tdg.table.row(contains_text='Привет').element('.controls-TreeView__expand').click()
 
         log('Проверяем, что папка раскрылась')
-        assert_that(lambda: tdg.table.rows_number, equal_to(9), 'Папка не раскрылась', and_wait())
+        assert_that(lambda: tdg.table.rows_number, equal_to(10), 'Папка не раскрылась', and_wait())
 
         root = ['Привет', 'Hello', 'Helga', 'Hola', 'Bonjour', 'Пока', 'Игра', 'Как дела', 'Тест']
         for node in root:
@@ -126,7 +126,7 @@ class TestTreeDataGrid(TestCaseUI):
         tdg.table.row(contains_text='Hello').element('.controls-TreeView__expand').click()
 
         log('Проверяем, что папка раскрылась')
-        assert_that(lambda: tdg.table.rows_number, equal_to(10), 'Папка не раскрылась', and_wait())
+        assert_that(lambda: tdg.table.rows_number, equal_to(12), 'Папка не раскрылась', and_wait())
 
         root = ['Привет', 'Hello', 'Darova', 'Helga', 'Hola', 'Bonjour', 'Пока', 'Игра', 'Как дела', 'Тест']
         for node in root:
@@ -151,11 +151,11 @@ class TestTreeDataGrid(TestCaseUI):
         log('Расскрываем нужные папки нажатием по треугольнику')
         tdg.table.row(contains_text='Привет').element('.controls-TreeView__expand').click()
         tdg.table.row(contains_text='Hello').element('.controls-TreeView__expand').click()
-        assert_that(lambda: tdg.table.rows_number, equal_to(10), 'Одна из папок не расскрылась', and_wait())
+        assert_that(lambda: tdg.table.rows_number, equal_to(12), 'Одна из папок не расскрылась', and_wait())
 
         log('Закрываем папку и проверяем, что она закрылась')
         tdg.table.row(contains_text='Hello').element('.controls-TreeView__expand').click()
-        assert_that(lambda: tdg.table.rows_number, equal_to(9), 'Папка Hello не закрылась', and_wait())
+        assert_that(lambda: tdg.table.rows_number, equal_to(10), 'Папка Hello не закрылась', and_wait())
 
         root = ['Привет', 'Hello', 'Helga', 'Hola', 'Bonjour', 'Пока', 'Игра', 'Как дела', 'Тест']
         for node in root:
@@ -180,55 +180,6 @@ class TestTreeDataGrid(TestCaseUI):
         for node in wrong_root:
             assert_that(lambda: tdg.table.cell(contains_text=node).is_displayed is False, is_(True),
                         'Не нужная папка(запись) %s есть в TreeDataGrid' % node, and_wait())
-
-    """
-    @data(False, True)
-    def test_04_path_selector(self, value):
-        "04. Тест проверки хлебного меню у tree data grid"
-
-        tdg = None
-        if value is False:
-            tdg = TreeDataGridStatic(self)
-        if value is True:
-            tdg = TreeDataGrid(self)
-            log('Переключаемся на получение данных из БД')
-            tdg.switcher.click()
-
-        log('Проверяем, что страница готова к работе')
-        assert_that(tdg.table, is_displayed(), 'Страница не загрузилась', and_wait())
-
-        log('Переходим в первую папку')
-        tdg.table.row(contains_text='Привет').click()
-        assert_that(lambda: tdg.table.rows_number, equal_to(4), 'Не перешли в нужную папку', and_wait())
-        assert_that(lambda: tdg.path_point.count_elements, equal_to(1),
-                    'У меню должа быть одна точка перехода', and_wait())
-        assert_that(lambda: tdg.path_point.item(1).text, equal_to('Привет'),
-                    'Точка перехода должна называться Привет', and_wait())
-
-        log('Переходим во вторую папку')
-        tdg.table.row(contains_text='Hello').click()
-        assert_that(lambda: tdg.table.rows_number, equal_to(1), 'Не перешли в нужную папку', and_wait())
-        assert_that(lambda: tdg.path_point.count_elements, equal_to(2),
-                    'У меню должа быть две точки перехода', and_wait())
-        assert_that(lambda: tdg.path_point.item(1).text, equal_to('Hello'),
-                    'Точка перехода 1 должна называться Hello', and_wait())
-        assert_that(lambda: tdg.path_point.item(2).text, equal_to('Привет'),
-                    'Точка перехода 2 должна называться Привет', and_wait())
-
-        log('Переходим по точке перехода в папку которая выше')
-        tdg.path_point.item(1).click()
-        assert_that(lambda: tdg.table.rows_number, equal_to(4), 'Не перешли в нужную папку', and_wait())
-        assert_that(lambda: tdg.path_point.count_elements, equal_to(1),
-                    'У меню должа быть одна точка перехода', and_wait())
-        assert_that(lambda: tdg.path_point.item(1).text, equal_to('Привет'),
-                    'Точка перехода должна называться Привет', and_wait())
-
-        log('Переходим по точке перехода в корневую папку')
-        tdg.path_point.item(1).click()
-        assert_that(lambda: tdg.table.rows_number, equal_to(5), 'Не перешли в корневую папку', and_wait())
-        assert_that(lambda: tdg.path_point.count_elements, equal_to(0),
-                    'У меню не должно быть точек перехода в корневой папке', and_wait())
-        """
 
     @data(False, True)
     def test_04_delete_folder(self, value):
@@ -413,7 +364,7 @@ class TestTreeDataGrid(TestCaseUI):
                     'Диалог подтверждения удаления папки(запииси) не закрылся', and_wait())
 
         log('Проверяем, что папка удалилась')
-        assert_that(lambda: tdg.table.rows_number, equal_to(5),
+        assert_that(lambda: tdg.table.rows_number, equal_to(6),
                     'Кол-во записей после удаления не равно ожидаемому', and_wait())
         root = ['Привет', 'Пока', 'Игра', 'Как дела', 'Тест']
         for node in root:
@@ -451,7 +402,7 @@ class TestTreeDataGrid(TestCaseUI):
                     'Диалог подтверждения удаления папки(запииси) не закрылся', and_wait())
 
         log('Проверяем, что запись удалилась')
-        assert_that(lambda: tdg.table.rows_number, equal_to(5),
+        assert_that(lambda: tdg.table.rows_number, equal_to(6),
                     'Кол-во записей после удаления не равно ожидаемому', and_wait())
         root = ['Привет', 'Пока', 'Игра', 'Как дела', 'Тест']
         for node in root:

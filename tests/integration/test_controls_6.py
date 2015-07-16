@@ -92,35 +92,34 @@ class TestPathSelector(TestCaseUI):
         log('Переходим в первую папку')
         ps.table.row(contains_text='Привет').click()
         assert_that(lambda: ps.table.rows_number, equal_to(4), 'Не перешли в нужную папку', and_wait())
-        assert_that(lambda: ps.path_point.count_elements, equal_to(2),
-                    'У меню должа быть две точки перехода', and_wait())
-        assert_that(lambda: ps.path_point.item(1).text, equal_to('Привет'),
-                    'Точка перехода должна называться Привет', and_wait())
+        assert_that(lambda: ps.path_point.count_elements, equal_to(3),
+                    'У меню должа быть две точки перехода и одна скрытая', and_wait())
+        assert_that(lambda: ps.path_point.item(contains_text='Привет'), is_displayed(),
+                    'Нет точка перехода с названием Привет', and_wait())
 
         log('Переходим во вторую папку')
         ps.table.row(contains_text='Hello').click()
         assert_that(lambda: ps.table.rows_number, equal_to(1), 'Не перешли в нужную папку', and_wait())
-        assert_that(lambda: ps.path_point.count_elements, equal_to(3),
-                    'У меню должа быть три точки перехода', and_wait())
-        assert_that(lambda: ps.path_point.item(1).text, equal_to('Hello'),
-                    'Точка перехода 1 должна называться Hello', and_wait())
-        assert_that(lambda: ps.path_point.item(2).text, equal_to('Привет'),
-                    'Точка перехода 2 должна называться Привет', and_wait())
+        assert_that(lambda: ps.path_point.count_elements, equal_to(4),
+                    'У меню должа быть три точки перехода и одна скрытая', and_wait())
+        assert_that(lambda: ps.path_point.item(contains_text='Hello'), is_displayed(),
+                    'Нет точка перехода с названием Hello', and_wait())
+        assert_that(lambda: ps.path_point.item(contains_text='Привет'), is_displayed(),
+                    'Нет точка перехода с названием Привет', and_wait())
 
         log('Переходим по точке перехода в папку которая выше')
-        ps.path_point.item(1).click()
+        ps.path_point.item(2).click()
         assert_that(lambda: ps.table.rows_number, equal_to(4), 'Не перешли в нужную папку', and_wait())
-        assert_that(lambda: ps.path_point.count_elements, equal_to(2),
-                    'У меню должа быть две точки перехода', and_wait())
-        assert_that(lambda: ps.path_point.item(1).text, equal_to('Привет'),
-                    'Точка перехода должна называться Привет', and_wait())
+        assert_that(lambda: ps.path_point.count_elements, equal_to(3),
+                    'У меню должа быть две точки перехода и одна скрытая', and_wait())
+        assert_that(lambda: ps.path_point.item(contains_text='Привет'), is_displayed(),
+                    'Нет точка перехода с названием Привет', and_wait())
 
         log('Переходим по точке перехода в корневую папку')
-        ps.path_point.item(1).click()
+        ps.path_point.item(2).click()
         assert_that(lambda: ps.table.rows_number, equal_to(5), 'Не перешли в корневую папку', and_wait())
-        assert_that(lambda: ps.path_point.count_elements, equal_to(0),
-                    'У меню не должно быть точек перехода в корневой папке', and_wait())
-
+        assert_that(lambda: ps.path_point.count_elements, equal_to(2),
+                    'У меню не должно быть точек перехода в корневой папке и две скрытых', and_wait())
 
 if __name__ == '__main__':
     run_tests()
