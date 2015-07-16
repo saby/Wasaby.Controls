@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
       _dotTplPicker: dotTplForPicker,
       $protected: {
          _options: {
-            linkText: '',
+            linkText: 'Нужно отобрать?',
             filterAlign: 'right',
             pickerClassName: 'controls__filterButton__picker',
             items: [],
