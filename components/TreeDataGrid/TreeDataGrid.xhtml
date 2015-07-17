@@ -9,10 +9,14 @@
       <thead class="controls-DataGrid__th controls-DataGrid__thead{{?it.showHead === false}} ws-hidden{{?}}">
          <tr>
          {{?it.multiselect}}
-            <th class="controls-DataGrid__th controls-DataGrid__td__checkBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}"><span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox controls-DataGrid__th__checkBox"></span></th>
+            <th class="controls-DataGrid__th controls-DataGrid__td__checkBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}"></th>
          {{?}}
          {{~it.columns :column:index}}
-            <th class="controls-DataGrid__th{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}} {{?column.className}}{{=column.className}}{{?}}" title="{{=column.title}}">{{=column.title}}</th>
+            <th class="controls-DataGrid__th{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}} {{?column.className}}{{=column.className}}{{?}}" title="{{=column.title}}">
+                  <div class="controls-DataGrid__th-content">
+                     {{=column.title}}
+                  </div>
+               </th>
          {{~}}
          </tr>
          {{? it.startScrollColumn !== undefined }}
@@ -39,6 +43,9 @@
          </tr>
       </tfoot>
    </table>
+   {{? it.showPaging}}
+      <div class="controls-TreePager-container"></div>
+   {{?}}
    {{?it.infiniteScroll}}
       <div class="controls-ListView-scrollIndicator ws-hidden"></div>
    {{?}}

@@ -122,37 +122,42 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        * Раскрыть определенный узел
        * @param {String} key Идентификатор раскрываемого узла
        */
-		setCurrentRoot: function(key) {
-        	var self = this,
-          	record = this._dataSet.getRecordByKey(key),
-          	parentKey = record ? this._dataSet.getParentKey(record, this._options.hierField) : null,
-          	hierarchy =[];
-          	hierarchy.push(key);
-        	while (parentKey !== null){
-          	hierarchy.push(parentKey);
-          	record = this._dataSet.getRecordByKey(parentKey);
-          	parentKey = record ? this._dataSet.getParentKey(record, this._options.hierField) : null;
-        	}
-        	for (var i = hierarchy.length - 1; i >= 0; i--){
-          	this._notify('onSetRoot', this._dataSet, hierarchy[i]);
-        	}
-         /*TODO проверка на что уже загружали*/
-         var filter = this._filter || {};
+      setCurrentRoot: function(key) {
+         /*Работа с хлебными крошками*/
+         var hierarchy = this._getHierarchy(this._dataSet, key);
+         var
+            filter = this._filter || {},
+            self = this;
          filter[this._options.hierField] = key;
          this._filter = filter;
          //узел грузим с 0-ой страницы
          this._offset = 0;
-        	this._dataSource.query(filter, undefined, this._offset, this._limit).addCallback(function(dataSet) {
-          	if (!self._dataSet){
-            	self._dataSet = dataSet;
-          	} else {
-            	self._dataSet.setRawData(dataSet.getRawData());
-          	}
-            self._curRoot = key;
-          	self._dataLoadedCallback();
-          	self._notify('onDataLoad', dataSet);
-          	self._redraw();
+         this._curRoot = key;
+         this.reload(filter).addCallback(function(dataSet){
+            var path = dataSet.getMetaData().path;
+            if (hierarchy.length === 0 && path){
+               hierarchy = self._getHierarchy(path, key);
+            }
+            self._notify('onSetRoot', hierarchy);
          });
+      },
+
+      _getHierarchy: function(dataSet, key){
+         var record,
+            parentKey = key || null,
+            hierarchy = [];
+         do {
+            record = dataSet.getRecordByKey(parentKey);
+            if (record) {
+               hierarchy.push({
+                  'key': parentKey,
+                  'title' : record.get(this._options.displayField),
+                  'color' : this._options.colorField ? record.get(this._options.colorField) : ''
+               });
+            }
+            parentKey = record ? dataSet.getParentKey(record, this._options.hierField) : null;
+         } while (parentKey);
+         return hierarchy;
       },
       
       _dropPageSave: function(){

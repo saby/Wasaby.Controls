@@ -913,7 +913,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-MenuButton {
   position: relative;
-  padding: 0;
+  padding: 0 0 2px 0;
 }
 .controls-Button.controls-MenuButton.controls-MenuButton__withoutMenu {
   padding: 0 8px;
@@ -1281,10 +1281,10 @@ input[type="reset"]::-moz-focus-inner {
   color: #eeeeee !important;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field:-moz-placeholder {
-  color: #eeeeee !important;
+  color: #c3c3c3 !important;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-moz-placeholder {
-  color: #eeeeee !important;
+  color: #c3c3c3 !important;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field:-ms-input-placeholder {
   color: #eeeeee !important;
@@ -1547,8 +1547,17 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+.controls-TextArea .controls-TextArea__inputField::-webkit-input-placeholder {
+  color: #eeeeee !important;
+}
+.controls-TextArea .controls-TextArea__inputField:-moz-placeholder {
+  color: #c3c3c3 !important;
+}
+.controls-TextArea .controls-TextArea__inputField::-moz-placeholder {
+  color: #c3c3c3 !important;
+}
 .controls-TextArea .controls-TextArea__inputField:-ms-input-placeholder {
-  color: #aaaaaa;
+  color: #eeeeee !important;
 }
 .controls-TextArea.ws-has-focus {
   border-width: 1px;
@@ -1577,9 +1586,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextArea:hover .controls-TextArea__inputField {
   color: inherit;
 }
-.controls-TextArea:hover .controls-TextArea__inputField:-ms-input-placeholder {
-  color: #aaaaaa;
-}
 .controls-TextArea.ws-disabled {
   border-width: 1px;
   border-style: solid;
@@ -1592,6 +1598,57 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextArea.controls-TextArea__autoheight {
   height: auto !important;
+}
+.controls-Suggest__loadingContainer {
+  position: relative;
+}
+.controls-Suggest__loadingIndicator {
+  background: url('img/ajax-loader-indicator.gif') 0 0 no-repeat;
+  background-size: contain;
+  height: 16px;
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  width: 16px;
+}
+.controls-Suggest__picker {
+  border: 1px solid #aaaaaa;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  -webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: -1px 0 0;
+}
+.controls-SuggestList__item {
+  background: #ffffff;
+  border: solid #f5f5f5;
+  border-width: 1px 0 0 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 4px;
+}
+.controls-SuggestList__item:first-child {
+  border-width: 0;
+}
+.controls-SuggestList__item:hover {
+  background: #f3f3f3;
+  color: inherit;
+}
+.controls-SuggestList__item__selected {
+  background: #e6e6e6;
+  color: inherit;
+}
+.controls-SuggestList__empty {
+  background: #ffffff;
+  color: #666666;
+  font: inherit;
+  padding: 4px;
 }
 .controls-DatePicker {
   border: none !important;
@@ -2055,6 +2112,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell,
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__thead .controls-DataGrid__th.controls-DataGrid__notScrolledCell {
   background-color: #4e5762;
+  border-left: none;
+  border-right: none;
   z-index: 1;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell.controls-DataGrid__th,
@@ -2148,6 +2207,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox:hover {
   background: transparent;
 }
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-DataGrid__th-content {
+  max-height: 28px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
   cursor: pointer;
@@ -2162,6 +2226,7 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #F5F5F5;
   vertical-align: middle;
   box-sizing: border-box;
+  line-height: 21px;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid-cell-overflow-ellipsis {
   overflow: hidden;
@@ -2192,26 +2257,28 @@ input[type="reset"]::-moz-focus-inner {
 .controls-PathSelector__point:hover .controls-PathSelector__title {
   color: #FF7033;
 }
-.controls-PathSelector__point:hover .controls-PathSelector__arrow {
+.controls-PathSelector__point:hover .icon-16 {
   color: #FF7033!important;
+}
+.controls-PathSelector__point:hover:first-child .controls-PathSelector__title {
+  color: #FF7033;
 }
 .controls-PathSelector__point:first-child {
   top: 0;
 }
 .controls-PathSelector__point:first-child .controls-PathSelector__title {
   font-size: 15px;
+  color: #313E78;
+  font-weight: 700;
 }
 .controls-PathSelector__point:first-child .controls-PathSelector__arrow {
-  background: url('img/path-filter-icon-back.png') 0 -1px;
+  background: url('img/path-filter-icon-back.png');
   height: 24px;
   width: 24px;
   top: 5px;
 }
 .controls-PathSelector__point:first-child .controls-PathSelector__arrow::before {
   content: '';
-}
-.controls-PathSelector__point:first-child:hover .controls-PathSelector__arrow {
-  background-position: 0 23px;
 }
 .controls-PathSelector .controls-PathSelector__title {
   text-decoration: none;
@@ -2235,8 +2302,17 @@ input[type="reset"]::-moz-focus-inner {
 .controls-PathSelector .controls-PathSelector__dots .controls-PathSelector__title {
   margin-left: -3px;
 }
-.controls-PathSelector.controls-PathSelector__picker .controls-PathSelector__point {
-  display: block;
+.controls-PathSelector.controls-PathSelector__smallItems .controls-PathSelector__point:first-child .controls-PathSelector__arrow {
+  background: transparent;
+  width: 0;
+}
+.controls-PathSelector.controls-PathSelector__smallItems .controls-PathSelector__title {
+  font-size: 13px;
+  color: #0055BB;
+  font-weight: normal;
+}
+.controls-PathSelector.controls-PathSelector__smallItems .controls-PathSelector__title:hover {
+  color: #FF7033;
 }
 .controls-PathSelector .controls-PathSelector__hierWrapper {
   height: 13px;
@@ -2540,9 +2616,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CustomFilterMenu .controls-CustomFilterMenu__afterCaptionWrapper .controls-CustomFilterMenu__crossIcon:hover {
   background: url('img/cancelIcon-sprite.png') 0 -19px no-repeat;
-}
-.controls-CustomFilterMenu.controls-Picker__show {
-  box-shadow: 0 0 0 1px #eeeeee;
 }
 .controls-CustomFilterMenu__picker {
   cursor: pointer;

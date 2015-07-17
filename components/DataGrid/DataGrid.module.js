@@ -105,7 +105,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
             editInPlace: {
                enabled: false,
                addInPlace: false,
-               moveFocusEvent: undefined
+               onValueChange: undefined
             },
             /**
              * @cfg {Number} Частичный скролл
@@ -156,17 +156,21 @@ define('js!SBIS3.CONTROLS.DataGrid',
       },
 
       _initEditInPlace: function() {
-         var self = this;
+         var
+            self = this,
+            row,
+            debounceInterval = 10;
          if (!this._editInPlace) {
             this._dataSet.subscribe('onRecordChange', function(event, record) {
-               self._getItemsContainer().find('.controls-ListView__item[data-id="' + record.getKey() + '"]')
-                  .empty()
+               row = self._getItemsContainer().find('.controls-ListView__item[data-id="' + record.getKey() + '"]');
+               row.empty()
                   .append($(self._getItemTemplate(record)).children());
+               self._addItemAttributes(row, record);
                if(self._isPartScrollVisible) {
                   self._findMovableCells();
                   self._moveThumbAndColumns({left: self._currentScrollPosition});
                }
-            });
+            }.debounce(debounceInterval));
             this._createEditInPlace();
          }
       },
@@ -182,10 +186,13 @@ define('js!SBIS3.CONTROLS.DataGrid',
             columns: this._options.columns,
             addInPlaceButton: this._addInPlaceButton,
             element: $('<div>').insertBefore(this._container.find('.controls-DataGrid__table')),
+            parent: this,
             dataSet: this._dataSet,
             ignoreFirstColumn: this._options.multiselect,
-            moveFocusEvent: this._options.editInPlace.moveFocusEvent,
-            dataSource: this._dataSource
+            dataSource: this._dataSource,
+            handlers: this._options.editInPlace.onValueChange ? {
+               onValueChange: this._options.editInPlace.onValueChange
+            } : undefined
          });
       },
       
@@ -219,6 +226,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
                decorators: this._decorators,
                color: this._options.colorField ? item.get(this._options.colorField) : '',
                multiselect : this._options.multiselect,
+               arrowActivatedHandler: this._options.arrowActivatedHandler,
                hierField: this._options.hierField + '@',
                startScrollColumn: this._options.startScrollColumn
             };
@@ -519,23 +527,21 @@ define('js!SBIS3.CONTROLS.DataGrid',
              (isPartScrollUsed ?
                 this._options.startScrollColumn === 0 ?
                    ' controls-DataGrid__scrolledCell' :
-                   ' controls-DataGrid__notScrolledCell' : '') +
-             		 ' controls-DataGrid__td__checkBox"><span class="controls-ListView__itemCheckBox controls-DataGrid__th__checkBox js-controls-ListView__itemCheckBox"></span>' +
-                              '</th>');
+                   ' controls-DataGrid__notScrolledCell"></th>' : '"></th>'));
              docFragmentForColGroup.appendChild($('<col width="24px">')[0]);
           }
           this._options.columns = columns;
           for (var i = 0; i < columns.length; i++) {
              var column = document.createElement('col');
-             if (columns[i]['width']) column.width = columns[i]['width'];
+             if (columns[i].width) column.width = columns[i].width;
              docFragmentForColGroup.appendChild(column);
              headerTr.append(
                 $('<th class="controls-DataGrid__th' +
                   (isPartScrollUsed ?
                       this._options.startScrollColumn <= i ?
                          ' controls-DataGrid__scrolledCell' :
-                         ' controls-DataGrid__notScrolledCell' : '')
-                   + '" title="' + columns[i].title + '">' + columns[i].title + '</th>'));
+                         ' controls-DataGrid__notScrolledCell' : '') + 
+                     '" title="' + columns[i].title + '"><div class="controls-DataGrid__th-content">' + columns[i].title + '</div></th>'));
           }
 
           if (this._editInPlace) {
@@ -575,7 +581,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
          if (this._editInPlace && this._editInPlace.isEditing()) {
             this._editInPlace.finishEditing();
          }
-         DataGrid.superclass.reload.apply(this, arguments);
+         return DataGrid.superclass.reload.apply(this, arguments);
       },
 
       _getLeftOfItemContainer : function(container) {

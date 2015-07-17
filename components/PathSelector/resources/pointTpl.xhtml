@@ -1,4 +1,5 @@
-<span class="controls-PathSelector__point js-controls-PathSelector__point {{?it.dots}}controls-PathSelector__dots{{?}}">
+<span class="controls-PathSelector__point js-controls-PathSelector__point {{?it.item.dots}}controls-PathSelector__dots{{?}}" title="{{=it.item.get(it.displayField)}}">
 	<span class="controls-PathSelector__arrow icon-Back icon-16 icon-primary action-hover"></span>
-	<a class="controls-PathSelector__title" style="{{=it.decorators.apply(it.color, 'color')}}">{{=it.decorators.apply(it.item ? it.item.get('title') : it.title)}}</a>
+   {{?it.item.get('icon')}}<span class="{{=it.item.get('icon')}}"></span>{{?}}
+	<a class="controls-PathSelector__title" style="{{=it.decorators.apply(it.item.get('color'), 'color')}}">{{=it.decorators.apply(it.item.get(it.displayField))}}</a>
 </span>

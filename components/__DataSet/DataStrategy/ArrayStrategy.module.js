@@ -106,7 +106,7 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
        * @returns {*}
        */
       type: function (data, field) {
-         return 'Текст';
+         return field in data ? 'Текст' : undefined;
       },
        /**
         * Метод добавления записи.
@@ -116,7 +116,7 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
         */
       addRecord: function (data, record, at) {
          var rawData = record.getRaw();
-         if (at) {
+         if (at >= 0) {
             data.splice(at, 0, rawData);
          } else {
             data.push(rawData);
@@ -160,7 +160,9 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
       //TODO пустышка
       getMetaData: function (data) {
          return {
-            more: data.length
+            more: data ? data.length : 0,
+            path : [],
+            results : {}
          };
       },
 

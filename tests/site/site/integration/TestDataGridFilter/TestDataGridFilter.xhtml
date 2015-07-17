@@ -1,0 +1,144 @@
+<div style="width:800px;height:600px">
+
+    <!--SwitcherDouble-->
+    <component data-component="SBIS3.CORE.SwitcherDouble" style="position:relative;left:18px;margin-top:10px;"
+               name="SwitcherDoubleOnline">
+        <option name="textOff">StaticSource</option>
+        <option name="textOn">SbisServiceSource</option>
+        <option name="value">true</option>
+        <option name="state">true</option>
+    </component>
+
+
+    <div style="height:50px;">
+        <div class="ws-AbsoluteLayout" style="height:50px;">
+
+            <!--FilterButtonNew-->
+            <component data-component="SBIS3.CONTROLS.FilterButtonNew" name="NomenclatureFilterButton"
+                       style="position:relative;float:left;height:50px;margin-left:20px">
+                <options name="items" type="array">
+                    <options>
+                        <option name="filter">NDS_filter</option>
+                        <option name="editor">
+                            <div>
+                                <span style="margin-left:10px;font-size: 13px;font-weight: normal;font-family:Tahoma; color: #999999">Отбираются</span>
+                                <component data-component="SBIS3.CONTROLS.DropDownList" name="NDS_filter"
+                                           style="width:185px; margin:0 15px; vertical-align:text-top;">
+                                    <options name="items" type="array">
+                                        <options>
+                                            <option name="key">1</option>
+                                            <option name="title">Без НДС</option>
+                                        </options>
+                                        <options>
+                                            <option name="key">2</option>
+                                            <option name="title">С НДС</option>
+                                        </options>
+                                    </options>
+                                    <option name="keyField">key</option>
+                                    <option name="editable">false</option>
+                                    <option name="mode">click</option>
+                                </component>
+                                <component data-component="SBIS3.CORE.FieldLink" name="ТипНоменклатуры"
+                                           class="warehouse-NomenclatureDataGrid__fieldLink"
+                                           style="margin: 0 15px 6px 15px">
+                                    <option name="owner">ТипНоменклатуры.Название</option>
+                                    <option name="renderStyle">inputAndLink</option>
+                                    <option name="title">Тип</option>
+                                    <option name="linkedDisplayField">Название</option>
+                                    <option name="linkName">ТипНоменклатуры</option>
+                                    <option name="selectRecordsMode">newFloatArea</option>
+                                    <option name="selectionType">leaf</option>
+                                    <options name="dictionaries" type="array">
+                                        <opts>
+                                            <opt name="editMode">newFloatArea</opt>
+                                            <opt name="formatMethod">ТипНоменклатуры.Список</opt>
+                                            <opt name="keyField">@ТипНоменклатуры</opt>
+                                            <opt name="name">ТипНоменклатуры</opt>
+                                            <opt name="objectName">ТипНоменклатуры</opt>
+                                            <opt name="template">js!SBIS3.Warehouse.NomenclatureTypesList</opt>
+                                            <opt name="readOnly" type="boolean">false</opt>
+                                        </opts>
+                                    </options>
+                                    <options name="suggestSettings">
+                                        <option name="keyField">@ТипНоменклатуры</option>
+                                        <option name="inputTooltip">Выбрать тип</option>
+                                        <option name="tooltipInside" type="boolean">true</option>
+                                        <option name="readMethodName" type="boolean">Прочитать</option>
+                                        <options name="processField" type="array">
+                                            <option>Название</option>
+                                        </options>
+                                        <options name="filter" type="array">
+                                            <option>СтрокаПоиска</option>
+                                        </options>
+                                        <options name="display">
+                                            <option name="usePaging">full</option>
+                                            <options name="columns" type="array">
+                                                <options>
+                                                    <option name="field">Название</option>
+                                                    <option name="fixedSize" type="boolean">false</option>
+                                                    <option name="title">Название</option>
+                                                    <option name="width">89</option>
+                                                </options>
+                                            </options>
+                                        </options>
+                                        <options name="dataSource">
+                                            <options name="readerParams">
+                                                <option name="queryName">List</option>
+                                                <option name="linkedObject">ТипНоменклатуры</option>
+                                            </options>
+                                        </options>
+                                        <option name="rowsCount">5</option>
+                                    </options>
+                                </component>
+                            </div>
+                        </option>
+                    </options>
+                </options>
+                <option name="keyField">filter</option>
+            </component>
+        </div>
+    </div>
+
+    <!--DataGrid-->
+    <component data-component="SBIS3.CONTROLS.DataGrid" style="position:relative;margin-top:10px;"
+               name="ТипНоменклатуры">
+        <option name="itemSelect">true</option>
+        <option name="infiniteScroll">true</option>
+        <option name="multiselect">true</option>
+        <option name="pageSize">15</option>
+        <option name="isPartScrollVisible">true</option>
+        <options name="columns" type="array">
+            <options>
+                <option name="title">Содержимое</option>
+                <option name="width" type="string">400</option>
+                <option name="field">Содержимое</option>
+                <option name="fixedSize">true</option>
+                <option name="textAlign">left</option>
+                <option name="textVerticalAlign">center</option>
+                <option name="titleAlign">left</option>
+                <option name="titleVerticalAlign">center</option>
+            </options>
+            <options>
+                <option name="title">Завершена</option>
+                <option name="field">Завершена</option>
+                <option name="width" type="string">100</option>
+                <option name="fixedSize">true</option>
+                <option name="textAlign">left</option>
+                <option name="textVerticalAlign">center</option>
+                <option name="titleAlign">left</option>
+                <option name="titleVerticalAlign">center</option>
+            </options>
+            <options>
+                <option name="title">Без НДС</option>
+                <option name="field">withoutNDS</option>
+                <option name="width" type="string">100</option>
+                <option name="fixedSize">true</option>
+                <option name="textAlign">left</option>
+                <option name="textVerticalAlign">center</option>
+                <option name="titleAlign">left</option>
+                <option name="titleVerticalAlign">center</option>
+            </options>
+        </options>
+    </component>
+
+</div>

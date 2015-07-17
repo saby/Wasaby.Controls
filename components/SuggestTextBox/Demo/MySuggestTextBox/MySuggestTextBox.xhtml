@@ -1,0 +1,35 @@
+<div class="controls-MySuggestTextBox">
+    <p>Поле ввода с автодополнением:</p>
+    <component data-component="SBIS3.CONTROLS.SuggestTextBox" data-bind="{Text: Фамилия}">
+        <option name="placeholder">введите текст "Иванов"</option>
+        <option name="trim">true</option>
+        <options name="filterBindings" type="array">
+            <options>
+                <option name="contextField">Фамилия</option>
+                <option name="itemField">Фамилия</option>
+            </options>
+        </options>
+        <options name="list">
+            <options name="options">
+                <options name="items" type="array">
+                    <options>
+                        <option name="Ид" type="string">1</option>
+                        <option name="Фамилия">Иванов</option>
+                    </options>
+                    <options>
+                        <option name="Ид" type="string">2</option>
+                        <option name="Фамилия">Иванова</option>
+                    </options>
+                    <options>
+                        <option name="Ид" type="string">3</option>
+                        <option name="Фамилия">Петров</option>
+                    </options>
+                    <options>
+                        <option name="Ид" type="string">4</option>
+                        <option name="Фамилия">Сидоров</option>
+                    </options>
+                </options>
+            </options>
+        </options>
+    </component>
+</div>

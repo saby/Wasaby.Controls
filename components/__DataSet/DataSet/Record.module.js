@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
     * @public
     */
 
-   return $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Record.prototype */{
+   var Record =  $ws.proto.Abstract.extend( /** @lends SBIS3.CONTROLS.Record.prototype */{
       $protected: {
          /**
           * @var {String|null} Клиентский идентификатор
@@ -45,21 +45,20 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
          /**
           * @var {SBIS3.CONTROLS.IDataStrategy} Стратегия, обеспечивающая интерфейс доступа к "сырым" данным
           */
-         _strategy: null,
-
-         /**
-          * @var {Function} Обрабочик, вызываемый при изменении данных записи
-          */
-         _onChangeHandler: null
+         _strategy: null
       },
 
       $constructor: function (cfg) {
+         this._publish('onChange');
          this._strategy = cfg.strategy;
-         this._raw = cfg.raw;
+         this._raw = cfg.raw || {};
          this._isCreated = 'isCreated' in cfg ? cfg.isCreated : false;
-         this._onChangeHandler = cfg.onChangeHandler;
          this._keyField = cfg.keyField || null;
          this._cid = $ws.helpers.randomId('c');
+      },
+
+      clone: function() {
+         return new Record(this._options);
       },
 
       /**
@@ -84,6 +83,9 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
        * @returns {*}
        */
       get: function (field) {
+         if (!field) {
+            $ws.single.ioc.resolve('ILogger').error('Record', 'Field name is empty');
+         }
          // с данными можем работать только через стратегию
          return this._strategy.value(this._raw, field);
       },
@@ -94,11 +96,14 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
        * @param {*} value Новое значение
        */
       set: function (field, value) {
+         if (!field) {
+            $ws.single.ioc.resolve('ILogger').error('Record', 'Field name is empty');
+         }
          // с данными можем работать только через стратегию
          this._raw = this._strategy.setValue(this._raw, field, value);
          this._isChanged = true;
-         if (this._isChanged && this._onChangeHandler) {
-            this._onChangeHandler(this);
+         if (this._isChanged) {
+            this._notify('onChange', field);
          }
       },
 
@@ -108,7 +113,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
        * @returns {*}
        */
       getType: function (field) {
-         return field ? this._strategy.type(this._raw, field) : '';
+         return field ? this._strategy.type(this._raw, field) : undefined;
       },
 
       /**
@@ -165,6 +170,9 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
        * @returns {*}
        */
       getKey: function () {
+         if (!this._keyField) {
+            $ws.single.ioc.resolve('ILogger').error('Record', 'Key field is not defined');
+         }
          var key = this.get(this._keyField);
          // потому что БЛ возвращает массив для идентификатора
          if (key instanceof Array) {
@@ -190,4 +198,6 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
       }
 
    });
+
+   return Record;
 });

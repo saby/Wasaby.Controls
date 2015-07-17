@@ -27,15 +27,37 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             $protected: {
                _options: {
                   columns: [],
-                  focusCatch: undefined,
-                  moveFocus: undefined
+                  focusCatch: undefined
                },
                _firstField: undefined,
                _fields: {}
             },
             $constructor: function() {
-               var childControls;
-               this._publish('onMouseDown');
+               var
+                  childControls,
+                  self = this,
+                  childFocusOut = function() {
+                     var
+                        result,
+                        currentValue = this[self._determineGetMethodName(this)]();
+                     if (currentValue !== (self._editingRecord ? self._editingRecord : self._record).get(this.getName())) {
+                        if (!self._editingRecord) {
+                           self._editingRecord = self._record.clone();
+                        }
+                        self._editingRecord.set(this.getName(), currentValue);
+                        result = self._notify('onValueChange', this.getName(), self._editingRecord);
+                        if (result instanceof $ws.proto.Deferred) {
+                           result.addCallback(function() {
+                              self._updateFieldsValues(self._editingRecord);
+                              self._applyChanges();
+                           });
+                        } else {
+                           self._updateFieldsValues(self._editingRecord);
+                           self._applyChanges();
+                        }
+                     }
+                  };
+               this._publish('onMouseDown', 'onValueChange');
                this._container
                   .bind(isMobileBrowser ? 'touchend' : 'mouseup', this._onMouseDownArea.bind(this))
                   .bind('keypress keydown', this._onKeyDown);
@@ -45,9 +67,20 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                      this._firstField = childControls[0].getName();
                      $ws.helpers.forEach(childControls, function (ctrl) {
                         this._fields[ctrl.getName()] = ctrl;
+                        ctrl.subscribe('onFocusOut', childFocusOut);
                      }, this);
                   }
                });
+            },
+            hide: function() {
+               var activeChild;
+               if (this.isVisible()) {
+                  activeChild = this.getActiveChildControl();
+                  if (activeChild) {
+                     activeChild.setActive(false);
+                  }
+               }
+               EditInPlace.superclass.hide.apply(this, arguments);
             },
             _onKeyDown: function(e) {
                e.stopPropagation();
@@ -63,25 +96,30 @@ define('js!SBIS3.CONTROLS.EditInPlace',
              * @param record Record, из которого будут браться значения полей
              */
             updateFields: function(record) {
-               var
-                  items = [],
-                  methodName;
                this._record = record;
+               this._updateFieldsValues(record);
+               if (this._editingRecord) {
+                  this._editingRecord.destroy();
+                  this._editingRecord = undefined;
+               }
+            },
+            _updateFieldsValues: function(record, ignoreFields) {
+               var
+                  self = this,
+                  items;
                $ws.helpers.forEach(this._fields, function(field) {
-                  if ($ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.ComboBox')) {
-                     //todo избавиться от record.getType(field.getName()).s (получение всех возможных значений перечисляемого поля)
-                     $ws.helpers.forEach(record.getType(field.getName()).s, function(value, key) {
-                        items.push({ title: value, id: key })
-                     });
-                     field.setItems(items);
-                     field.setSelectedKey(record.get(field.getName()));
-                  } else {
-                     //todo избавиться от перебора методов для разных типов полей
-                     methodName =
-                        $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.CheckBox') ? 'setChecked' :
-                           $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'setText' :
-                              'setValue';
-                     field[methodName](record.get(field.getName()));
+                  if (Object.prototype.toString.call(ignoreFields) !== '[object Object]' || !ignoreFields[field.getName()]) {
+                     if ($ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.ComboBox')) {
+                        items = [];
+                        //todo избавиться от record.getType(field.getName()).s (получение всех возможных значений перечисляемого поля)
+                        $ws.helpers.forEach(record.getType(field.getName()).s, function (value, key) {
+                           items.push({title: value, id: key})
+                        });
+                        field.setItems(items);
+                        field.setSelectedKey(record.get(field.getName()));
+                     } else {
+                        field[self._determineSetMethodName(field)](record.get(field.getName()));
+                     }
                   }
                });
             },
@@ -89,15 +127,50 @@ define('js!SBIS3.CONTROLS.EditInPlace',
              * Сохранить значения полей области редактирования по месту
              */
             applyChanges: function() {
-               var methodName;
+               var
+                  self = this,
+                  result,
+                  record,
+                  activeChild = this.getActiveChildControl(),
+                  activeChildValue;
+               if (activeChild) {
+                  record  = this._editingRecord || this._record;
+                  activeChildValue = activeChild[this._determineGetMethodName(activeChild)]();
+                  if (record.get(activeChild.getName()) != activeChildValue) {
+                     record.set(activeChild.getName(), activeChildValue);
+                     result = self._notify('onValueChange', activeChild.getName(), record);
+                     if (result instanceof $ws.proto.Deferred) {
+                        result.addCallback(function () {
+                           self._updateFieldsValues(record);
+                           self._applyChanges();
+                        });
+                        return result;
+                     }
+                  }
+                  self._updateFieldsValues(record);
+                  self._applyChanges();
+               }
+            },
+            _determineGetMethodName: function(field) {
+               //todo избавиться от перебора методов для разных типов полей
+               var methodName =
+                  $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.ComboBox') ? 'getSelectedKey' :
+                     $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.NumberTextBox') ? 'getNumericValue' :
+                        $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'getText' :
+                           'getValue';
+               return methodName;
+            },
+            _determineSetMethodName: function(field) {
+               //todo избавиться от перебора методов для разных типов полей
+               var methodName =
+                  $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.CheckBox') ? 'setChecked' :
+                     $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'setText' :
+                        'setValue';
+               return methodName;
+            },
+            _applyChanges: function() {
                $ws.helpers.forEach(this._fields, function(field, name) {
-                  //todo избавиться от перебора методов для разных типов полей
-                  methodName =
-                     $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.ComboBox') ? 'getSelectedKey' :
-                        $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.NumberTextBox') ? 'getNumericValue' :
-                           $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'getText' :
-                              'getValue';
-                  this._record.set(name, field[methodName]());
+                  this._record.set(name, field[this._determineGetMethodName(field)]());
                }, this);
             },
             /**
@@ -112,12 +185,6 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             focusCatch: function(event) {
                if (typeof this._options.focusCatch === 'function') {
                   this._options.focusCatch(event);
-               }
-            },
-            moveFocus: function() {
-               EditInPlace.superclass.moveFocus.apply(this, arguments);
-               if (typeof this._options.moveFocus === 'function') {
-                  this._options.moveFocus();
                }
             },
             destroy: function() {

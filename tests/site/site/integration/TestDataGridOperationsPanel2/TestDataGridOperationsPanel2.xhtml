@@ -1,0 +1,119 @@
+<div style="width:800px;height:600px;">
+
+    <!--SwitcherDouble-->
+    <component data-component="SBIS3.CORE.SwitcherDouble" style="position:relative;left:18px;margin-top:10px;"
+               name="SwitcherDoubleOnline">
+        <option name="textOff">StaticSource</option>
+        <option name="textOn">SbisServiceSource</option>
+        <option name="value">true</option>
+        <option name="state">true</option>
+    </component>
+
+
+    <div style="height:50px;">
+        <div class="ws-AbsoluteLayout" style="height:50px;">
+
+            <!--OperationsPanel_1-->
+            <component data-component="SBIS3.CONTROLS.OperationsPanel" style="position:relative;height:50px;float:left;"
+                       name="OperationsPanel_1">
+                <options name="items" type="array">
+                    <options>
+                        <option name="name">delete</option>
+                        <options name="options">
+                            <option name="className">controls__operations-panel__action-type-all</option>
+                            <options name="element"></options>
+                            <options name="parent"></options>
+                        </options>
+                        <option name="componentType">js!SBIS3.CONTROLS.OperationDelete</option>
+                        <options name="type">
+                            <option name="mass">true</option>
+                            <option name="selection">true</option>
+                        </options>
+                    </options>
+                    <options>
+                        <option name="name">print</option>
+                        <options name="options">
+                            <option name="className">controls__operations-panel__action-type-all</option>
+                            <options name="element"></options>
+                            <options name="parent"></options>
+                        </options>
+                        <option name="componentType">js!SBIS3.CONTROLS.OperationPrint</option>
+                        <options name="type">
+                            <option name="mass">true</option>
+                            <option name="selection">true</option>
+                        </options>
+                    </options>
+                    <options>
+                        <option name="name">unload</option>
+                        <options name="options">
+                            <option name="className">controls__operations-panel__action-type-all</option>
+                            <options name="element"></options>
+                            <options name="parent"></options>
+                        </options>
+                        <option name="componentType">js!SBIS3.CONTROLS.OperationUnload</option>
+                        <options name="type">
+                            <option name="mass">true</option>
+                            <option name="selection">true</option>
+                        </options>
+                    </options>
+                    <options>
+                        <options name="options">
+                            <option name="className">controls__operations-panel__action-type-mark</option>
+                            <options name="element"></options>
+                            <options name="parent"></options>
+                        </options>
+                        <option name="name">markOperations</option>
+                        <options name="type">
+                            <option name="mark">true</option>
+                        </options>
+                        <option name="componentType">js!SBIS3.CONTROLS.OperationsMark</option>
+                    </options>
+                </options>
+            </component>
+
+        </div>
+    </div>
+
+    <!--DataGrid-->
+    <component data-component="SBIS3.CONTROLS.DataGrid" style="position:relative;margin-top:10px;"
+               name="ТипНоменклатуры">
+        <option name="itemSelect">true</option>
+        <option name="infiniteScroll">true</option>
+        <option name="multiselect">true</option>
+        <option name="pageSize">15</option>
+        <option name="isPartScrollVisible">true</option>
+        <options name="columns" type="array">
+            <options>
+                <option name="title">Содержимое</option>
+                <option name="width" type="string">400</option>
+                <option name="field">Содержимое</option>
+                <option name="fixedSize">true</option>
+                <option name="textAlign">left</option>
+                <option name="textVerticalAlign">center</option>
+                <option name="titleAlign">left</option>
+                <option name="titleVerticalAlign">center</option>
+            </options>
+            <options>
+                <option name="title">Завершена</option>
+                <option name="field">Завершена</option>
+                <option name="width" type="string">100</option>
+                <option name="fixedSize">true</option>
+                <option name="textAlign">left</option>
+                <option name="textVerticalAlign">center</option>
+                <option name="titleAlign">left</option>
+                <option name="titleVerticalAlign">center</option>
+            </options>
+            <options>
+                <option name="title">Без НДС</option>
+                <option name="field">withoutNDS</option>
+                <option name="width" type="string">100</option>
+                <option name="fixedSize">true</option>
+                <option name="textAlign">left</option>
+                <option name="textVerticalAlign">center</option>
+                <option name="titleAlign">left</option>
+                <option name="titleVerticalAlign">center</option>
+            </options>
+        </options>
+    </component>
+
+</div>

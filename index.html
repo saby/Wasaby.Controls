@@ -91,7 +91,7 @@
                <li>
                   <div id="ButtonGroups"></div>
                </li>
-					<li>
+               <li>
                   <div id="FieldFormat"></div>
                </li>
                <li>
@@ -118,6 +118,9 @@
                <li>
                   <div id="MultiView"></div>
                </li>
+               <li>
+                  <div id="Suggest"></div>
+               </li>
             </ul>
          </td>
          <td>
@@ -139,7 +142,10 @@
          </td>
       </tr>
       <tr>
-         <td></td>
+         <td>
+            <h3><a href="/test/unit-webdriver.html">Unit тесты</a></h3>
+            <h3><a href="/test/jscoverage-report/jscoverage.html" title="Для генерации запустить 'grunt tests-run-coverage'">Отчет о покрытии</a></h3>
+         </td>
          <td>
             <h3>Темы - демонстрация</h3>
             <ul>
@@ -320,11 +326,20 @@
                href: '/pages/editAtPlace.html'
             })
          });
+
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
                element: "MultiView",
                caption: 'MultiView',
                href: '/pages/MultiView.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "Suggest",
+               caption: 'Suggest',
+               href: '/pages/Suggest.html'
             })
          });
       })

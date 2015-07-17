@@ -31,7 +31,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                   dataSource: undefined,
                   dataSet: undefined,
                   addInPlaceButton: undefined,
-                  moveFocusEvent: undefined,
                   ignoreFirstColumn: false
                },
                //Редактируемая область
@@ -43,6 +42,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                _areaHandlers: null
             },
             $constructor: function() {
+               this._publish('onValueChange');
                this._areaHandlers = {
                   onKeyDown: this._onKeyDown.bind(this),
                   onMouseDownEditInPlace: isMobileBrowser ? undefined : this._onMouseDownEditInPlace.bind(this),
@@ -60,15 +60,18 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
              * @private
              */
             _initArea: function(id) {
+               var self = this;
                return {
                   editInPlace: new EditInPlace({
                      columns: this._options.columns,
                      element: $('<div id="' + id + '"></div>').appendTo(this._container),
                      visible: false,
                      focusCatch: this._focusCatch.bind(this),
-                     moveFocus: this._moveFocus.bind(this),
                      handlers: {
-                        onMouseDown: isMobileBrowser ? undefined : this._areaHandlers.onMouseDownEditInPlace
+                        onMouseDown: isMobileBrowser ? undefined : this._areaHandlers.onMouseDownEditInPlace,
+                        onValueChange: function(event, fieldName, record) {
+                           event.setResult(self._notify('onValueChange', fieldName, record));
+                        }
                      }
                   }),
                   record: null,
@@ -160,7 +163,28 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
              * @private
              */
             finishEditing: function(saveFields, notHide) {
-               var editingArea = this._areas[this._editing];
+               var
+                  self = this,
+                  result,
+                  editingArea = this._areas[this._editing],
+                  syncDataSource = function() {
+                     if (editingArea.addInPlace) {
+                        self._options.dataSet.push(editingArea.record);
+                     }
+                     if (self._options.addInPlaceButton) {
+                        self._options.dataSource.once('onDataSync', function () {
+                           self._options.addInPlaceButton.show();
+                        }.bind(self));
+                     }
+                     self._options.dataSource.sync(self._options.dataSet);
+                  },
+                  removeAddInPlace = function() {
+                     if (editingArea.addInPlace) {
+                        editingArea.addInPlace = false;
+                        editingArea.target.remove();
+                        editingArea.target = null;
+                     }
+                  };
                editingArea.target.removeClass('controls-editInPlace__editing');
                if (!notHide) {
                   editingArea.editInPlace.hide();
@@ -173,24 +197,19 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                }
                //Если необходимо, то сохраняем поля и перезагружаем dataSource
                if (saveFields) {
-                  editingArea.editInPlace.applyChanges();
-                  if (editingArea.addInPlace) {
-                     this._options.dataSet.push(editingArea.record);
+                  result = editingArea.editInPlace.applyChanges();
+                  if (result instanceof $ws.proto.Deferred) {
+                     result.addCallback(function() {
+                        syncDataSource();
+                        removeAddInPlace();
+                     });
+                     return result;
                   }
-                  if (this._options.addInPlaceButton) {
-                     this._options.dataSource.once('onDataSync', function () {
-                        this._options.addInPlaceButton.show();
-                     }.bind(this));
-                  }
-                  this._options.dataSource.sync(this._options.dataSet);
+                  syncDataSource();
                } else if (this._options.addInPlaceButton) {
                   this._options.addInPlaceButton.show();
                }
-               if (editingArea.addInPlace) {
-                  editingArea.addInPlace = false;
-                  editingArea.target.remove();
-                  editingArea.target = null;
-               }
+               removeAddInPlace();
             },
             /**
              * Функция позволяет узнать, выполняется ли сейчас редактирование по месту
@@ -231,26 +250,37 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
              * Метод позволяет запустить редактирование следующей/предыдущей записи
              * @param editNextRow Запускать редактирование следующей записи (при false - предыдущей)
              * @param closeIfLast Завершать редактирование по месту, если текущая запись является последней
-             * @param activateFirstControl Вызывать активацию первого контрола (по z-index) - нужно, когда перемещаемся по KEY.TAB
+             * @param activateFirstField Вызывать активацию первого контрола (по z-index) - нужно, когда перемещаемся по KEY.TAB
              * @private
              */
-            _editNextTarget: function(editNextRow, closeIfLast, activateFirstControl) {
+            _editNextTarget: function(editNextRow, closeIfLast, activateFirstField) {
                var
+                  result,
                   viewingArea,
+                  self = this,
                   area = this._areas[this._editing],
-                  newTarget = $('[data-id="' + area.record.getKey() + '"]')[editNextRow ? 'next' : 'prev']('.controls-ListView__item');
-               if (newTarget.length) {
-                  this.finishEditing(true, true);
-                  area.target = newTarget;
-                  area.record = this._options.dataSet.getRecordByKey(newTarget.data('id'));
-                  //Если будем редактировать строку, на которую наведена мышь, то скрываем вторую область
-                  viewingArea = this._areas[this._editing === 'first' ? 'second' : 'first'];
-                  if (viewingArea.editInPlace.isVisible() && viewingArea.record == area.record) {
-                     viewingArea.editInPlace.hide();
-                  }
-                  this._updateArea(area);
-                  if (activateFirstControl) {
-                     area.editInPlace.activateFirstControl();
+                  newTarget = $('[data-id="' + area.record.getKey() + '"]')[editNextRow ? 'next' : 'prev']('.controls-ListView__item'),
+                  editAnotherRow = function() {
+                     area.target = newTarget;
+                     area.record = self._options.dataSet.getRecordByKey(newTarget.data('id'));
+                     //Если будем редактировать строку, на которую наведена мышь, то скрываем вторую область
+                     viewingArea = self._areas[self._editing === 'first' ? 'second' : 'first'];
+                     if (viewingArea.editInPlace.isVisible() && viewingArea.record == area.record) {
+                        viewingArea.editInPlace.hide();
+                     }
+                     self._updateArea(area);
+                     if (activateFirstField) {
+                        area.editInPlace.activateFirstField();
+                     }
+                  };
+               if (newTarget.length && !newTarget.hasClass('controls-ListView__folder')) {
+                  result = this.finishEditing(true, true);
+                  if (result instanceof $ws.proto.Deferred) {
+                     result.addCallback(function() {
+                        editAnotherRow();
+                     });
+                  } else {
+                     editAnotherRow();
                   }
                } else if (closeIfLast) {
                   this.finishEditing(true);
@@ -264,15 +294,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
             _focusCatch: function(event) {
                if (event.which === $ws._const.key.tab && !event.shiftKey) {
                   this._editNextTarget(true, true, true);
-               }
-            },
-            /**
-             * Обработчик перемещения фокуса внутри редактирования по месту
-             * @private
-             */
-            _moveFocus: function() {
-               if (typeof this._options.moveFocusEvent === 'function') {
-                  this._options.moveFocusEvent(this._editing ? this._areas[this._editing].record : null);
                }
             },
             /**
@@ -328,7 +349,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
             _onMouseMove: function(e) {
                //Если имеется отображаемая область, а мышь уведена на редактируемую, то скрываем отображаемую область
                if ((this._areas.first.hovered || this._areas.second.hovered) && this._editing && e.currentTarget.id === this._areas[this._editing].editInPlace.getContainer().attr('id')) {
+                  this._areas.first.hovered = this._areas.second.hovered = false;
                   this._areas[this._editing === 'first' ? 'second' : 'first'].target.mouseleave();
+                  this._areas[this._editing !== 'first' ? 'second' : 'first'].target.mousemove();
                }
             },
             destroy: function() {

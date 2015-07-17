@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="WINDOWS-1251" ?>
+<repository orx_version="1.71">
+
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="CompositeViewTable" read_only="0" responsible="Дубенец Д.А.">
+    <source name="CompositeViewTable"/>
+    <generate_method name="CompositeViewTable.Записать"/>
+    <generate_method name="CompositeViewTable.История"/>
+    <generate_method name="CompositeViewTable.Копировать"/>
+    <generate_method name="CompositeViewTable.Объединить"/>
+    <generate_method name="CompositeViewTable.Прочитать"/>
+    <generate_method name="CompositeViewTable.Создать"/>
+    <declarative allfields="true" key="@CompositeViewTable" last_changed="Дубенец Д.А." name="CompositeViewTable.Список" responsible="Дубенец Д.А." type="0">
+      <source name="CompositeViewTable"/>
+      <sorting column="@CompositeViewTable" nulls_place="FIRST" order="ASC"/>
+    </declarative>
+    <generate_method name="CompositeViewTable.Удалить"/>
+  </object>
+  
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="CompositeViewList" read_only="0" responsible="Дубенец Д.А.">
+    <source name="CompositeViewList"/>
+    <generate_method name="CompositeViewList.Записать"/>
+    <generate_method name="CompositeViewList.История"/>
+    <generate_method name="CompositeViewList.Копировать"/>
+    <generate_method name="CompositeViewList.Объединить"/>
+    <generate_method name="CompositeViewList.Прочитать"/>
+    <generate_method name="CompositeViewList.Создать"/>
+    <declarative allfields="true" key="@CompositeViewList" last_changed="Дубенец Д.А." name="CompositeViewList.Список" responsible="Дубенец Д.А." type="0">
+      <source name="CompositeViewList"/>
+      <sorting column="@CompositeViewList" nulls_place="FIRST" order="ASC"/>
+    </declarative>
+    <generate_method name="CompositeViewList.Удалить"/>
+  </object>
+  
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="CompositeViewTile" read_only="0" responsible="Дубенец Д.А.">
+    <source name="CompositeViewTile"/>
+    <generate_method name="CompositeViewTile.Записать"/>
+    <generate_method name="CompositeViewTile.История"/>
+    <generate_method name="CompositeViewTile.Копировать"/>
+    <generate_method name="CompositeViewTile.Объединить"/>
+    <generate_method name="CompositeViewTile.Прочитать"/>
+    <generate_method name="CompositeViewTile.Создать"/>
+    <declarative allfields="true" key="@CompositeViewTile" last_changed="Дубенец Д.А." name="CompositeViewTile.Список" responsible="Дубенец Д.А." type="0">
+      <source name="CompositeViewTile"/>
+      <sorting column="@CompositeViewTile" nulls_place="FIRST" order="ASC"/>
+    </declarative>
+    <generate_method name="CompositeViewTile.Удалить"/>
+  </object>
+
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="PathSelector" read_only="0" responsible="Дубенец Д.А.">
+    <source name="PathSelector"/>
+    <generate_method name="PathSelector.Записать"/>
+    <generate_method name="PathSelector.История"/>
+    <generate_method name="PathSelector.Копировать"/>
+    <generate_method name="PathSelector.Объединить"/>
+    <generate_method name="PathSelector.Прочитать"/>
+    <generate_method name="PathSelector.Создать"/>
+    <declarative allfields="true" key="@PathSelector" last_changed="Дубенец Д.А." name="PathSelector.Список" responsible="Дубенец Д.А." type="0">
+      <source name="PathSelector"/>
+    </declarative>
+    <generate_method name="PathSelector.Удалить"/>
+  </object>
+
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="TreeCompositeViewList" read_only="0" responsible="Дубенец Д.А.">
+    <source name="TreeCompositeViewList"/>
+    <generate_method name="TreeCompositeViewList.Записать"/>
+    <generate_method name="TreeCompositeViewList.История"/>
+    <generate_method name="TreeCompositeViewList.Копировать"/>
+    <generate_method name="TreeCompositeViewList.Объединить"/>
+    <generate_method name="TreeCompositeViewList.Прочитать"/>
+    <generate_method name="TreeCompositeViewList.Создать"/>
+    <declarative allfields="true" key="@TreeCompositeViewList" last_changed="Дубенец Д.А." name="TreeCompositeViewList.Список" responsible="Дубенец Д.А." type="0">
+      <source name="TreeCompositeViewList"/>
+    </declarative>
+    <generate_method name="TreeCompositeViewList.Удалить"/>
+  </object>
+
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="TreeCompositeViewTable" read_only="0" responsible="Дубенец Д.А.">
+    <source name="TreeCompositeViewTable"/>
+    <generate_method name="TreeCompositeViewTable.Записать"/>
+    <generate_method name="TreeCompositeViewTable.История"/>
+    <generate_method name="TreeCompositeViewTable.Копировать"/>
+    <generate_method name="TreeCompositeViewTable.Объединить"/>
+    <generate_method name="TreeCompositeViewTable.Прочитать"/>
+    <generate_method name="TreeCompositeViewTable.Создать"/>
+    <declarative allfields="true" key="@TreeCompositeViewTable" last_changed="Дубенец Д.А." name="TreeCompositeViewTable.Список" responsible="Дубенец Д.А." type="0">
+      <source name="TreeCompositeViewTable"/>
+    </declarative>
+    <generate_method name="TreeCompositeViewTable.Удалить"/>
+  </object>
+
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="TreeCompositeViewTile" read_only="0" responsible="Дубенец Д.А.">
+    <source name="TreeCompositeViewTile"/>
+    <generate_method name="TreeCompositeViewTile.Записать"/>
+    <generate_method name="TreeCompositeViewTile.История"/>
+    <generate_method name="TreeCompositeViewTile.Копировать"/>
+    <generate_method name="TreeCompositeViewTile.Объединить"/>
+    <generate_method name="TreeCompositeViewTile.Прочитать"/>
+    <generate_method name="TreeCompositeViewTile.Создать"/>
+    <declarative allfields="true" key="@TreeCompositeViewTile" last_changed="Дубенец Д.А." name="TreeCompositeViewTile.Список" responsible="Дубенец Д.А." type="0">
+      <source name="TreeCompositeViewTile"/>
+    </declarative>
+    <generate_method name="TreeCompositeViewTile.Удалить"/>
+  </object>
+
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="TreeDataGrid" read_only="0" responsible="Дубенец Д.А.">
+    <source name="TreeDataGrid"/>
+    <generate_method name="TreeDataGrid.Записать"/>
+    <generate_method name="TreeDataGrid.История"/>
+    <generate_method name="TreeDataGrid.Копировать"/>
+    <generate_method name="TreeDataGrid.Объединить"/>
+    <generate_method name="TreeDataGrid.Прочитать"/>
+    <generate_method name="TreeDataGrid.Создать"/>
+    <declarative allfields="true" key="@TreeDataGrid" last_changed="Дубенец Д.А." name="TreeDataGrid.Список" responsible="Дубенец Д.А." type="0">
+      <source name="TreeDataGrid"/>
+    </declarative>
+    <generate_method name="TreeDataGrid.Удалить"/>
+  </object>
+
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="График" read_only="0" responsible="Дубенец Д.А.">
+    <source name="График"/>
+    <generate_method name="График.Записать"/>
+    <generate_method name="График.История"/>
+    <generate_method name="График.Копировать"/>
+    <generate_method name="График.Объединить"/>
+    <generate_method name="График.Прочитать"/>
+    <generate_method name="График.Создать"/>
+    <declarative allfields="true" key="@График" last_changed="Дубенец Д.А." name="График.Список" responsible="Дубенец Д.А." type="0">
+      <source name="График"/>
+      <sorting column="@График" nulls_place="FIRST" order="ASC"/>
+    </declarative>
+    <generate_method name="График.Удалить"/>
+  </object>
+
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="График2" read_only="0" responsible="Дубенец Д.А.">
+    <source name="График2"/>
+    <generate_method name="График2.Записать"/>
+    <generate_method name="График2.История"/>
+    <generate_method name="График2.Копировать"/>
+    <generate_method name="График2.Объединить"/>
+    <generate_method name="График2.Прочитать"/>
+    <generate_method name="График2.Создать"/>
+    <declarative allfields="true" key="@График2" last_changed="Дубенец Д.А." name="График2.Список" responsible="Дубенец Д.А." type="0">
+      <source name="График2"/>
+      <sorting column="@График2" nulls_place="FIRST" order="ASC"/>
+    </declarative>
+    <generate_method name="График2.Удалить"/>
+  </object>
+
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="График3" read_only="0" responsible="Дубенец Д.А.">
+    <source name="График3"/>
+    <generate_method name="График3.Записать"/>
+    <generate_method name="График3.История"/>
+    <generate_method name="График3.Копировать"/>
+    <generate_method name="График3.Объединить"/>
+    <generate_method name="График3.Прочитать"/>
+    <generate_method name="График3.Создать"/>
+    <declarative allfields="true" key="@График3" last_changed="Дубенец Д.А." name="График3.Список" responsible="Дубенец Д.А." type="0">
+      <source name="График3"/>
+      <sorting column="@График3" nulls_place="FIRST" order="ASC"/>
+    </declarative>
+    <generate_method name="График3.Удалить"/>
+  </object>
+
+  <object insert_on_create="0" last_changed="Крайнов Д.О." name="Заметка" read_only="0" responsible="Крайнов Д.О.">
+    <source name="Заметка"/>
+    <generate_method name="Заметка.Записать"/>
+    <generate_method name="Заметка.История"/>
+    <generate_method name="Заметка.Копировать"/>
+    <generate_method name="Заметка.Объединить"/>
+    <generate_method name="Заметка.Прочитать"/>
+    <generate_method name="Заметка.Создать"/>
+    <declarative key="@Заметка" last_changed="Митин А.Ю." name="Заметка.Список" responsible="Митин А.Ю." type="0">
+      <field>@Заметка</field>
+      <field>Содержимое</field>
+      <field>Завершена</field>
+      <field>withoutNDS</field>
+      <source name="Заметка"/>
+      <sorting column="@Заметка" nulls_place="FIRST" order="ASC"/>
+      <parameter filter_category="USER" filter_class="0" name="withoutNDS" param_type="OPTIONAL" type="TEXT"/>
+      <composite operation="AND">
+        <simple operation="EQ">
+          <left name="withoutNDS" type="PARAMETER"/>
+          <right name="withoutNDS" type="FIELD"/>
+        </simple>
+      </composite>
+    </declarative>
+    <generate_method name="Заметка.Удалить"/>
+  </object>
+
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="ЗаметкаПанельОпераций" read_only="0" responsible="Дубенец Д.А.">
+    <source name="ЗаметкаПанельОпераций"/>
+    <generate_method name="ЗаметкаПанельОпераций.Записать"/>
+    <generate_method name="ЗаметкаПанельОпераций.История"/>
+    <generate_method name="ЗаметкаПанельОпераций.Копировать"/>
+    <generate_method name="ЗаметкаПанельОпераций.Объединить"/>
+    <generate_method name="ЗаметкаПанельОпераций.Прочитать"/>
+    <generate_method name="ЗаметкаПанельОпераций.Создать"/>
+    <declarative key="@ЗаметкаПанельОпераций" last_changed="Дубенец Д.А." name="ЗаметкаПанельОпераций.Список" responsible="Дубенец Д.А." type="0">
+      <field>@ЗаметкаПанельОпераций</field>
+      <field>Содержимое</field>
+      <field>Завершена</field>
+      <field>withoutNDS</field>
+      <source name="ЗаметкаПанельОпераций"/>
+      <sorting column="@ЗаметкаПанельОпераций" nulls_place="FIRST" order="ASC"/>
+      <parameter filter_category="USER" filter_class="0" name="withoutNDS" param_type="OPTIONAL" type="TEXT"/>
+      <composite operation="AND">
+        <simple operation="EQ">
+          <left name="withoutNDS" type="PARAMETER"/>
+          <right name="withoutNDS" type="FIELD"/>
+        </simple>
+      </composite>
+    </declarative>
+    <generate_method name="ЗаметкаПанельОпераций.Удалить"/>
+  </object>
+
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="ЗаметкаПанельОпераций2" read_only="0" responsible="Дубенец Д.А.">
+    <source name="ЗаметкаПанельОпераций2"/>
+    <generate_method name="ЗаметкаПанельОпераций2.Записать"/>
+    <generate_method name="ЗаметкаПанельОпераций2.История"/>
+    <generate_method name="ЗаметкаПанельОпераций2.Копировать"/>
+    <generate_method name="ЗаметкаПанельОпераций2.Объединить"/>
+    <generate_method name="ЗаметкаПанельОпераций2.Прочитать"/>
+    <generate_method name="ЗаметкаПанельОпераций2.Создать"/>
+    <declarative key="@ЗаметкаПанельОпераций2" last_changed="Дубенец Д.А." name="ЗаметкаПанельОпераций2.Список" responsible="Дубенец Д.А." type="0">
+      <field>@ЗаметкаПанельОпераций2</field>
+      <field>Содержимое</field>
+      <field>Завершена</field>
+      <field>withoutNDS</field>
+      <source name="ЗаметкаПанельОпераций2"/>
+      <sorting column="@ЗаметкаПанельОпераций2" nulls_place="FIRST" order="ASC"/>
+      <parameter filter_category="USER" filter_class="0" name="withoutNDS" param_type="OPTIONAL" type="TEXT"/>
+      <composite operation="AND">
+        <simple operation="EQ">
+          <left name="withoutNDS" type="PARAMETER"/>
+          <right name="withoutNDS" type="FIELD"/>
+        </simple>
+      </composite>
+    </declarative>
+    <generate_method name="ЗаметкаПанельОпераций2.Удалить"/>
+  </object>
+
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="ЗаметкаРедактированиеПоМесту" read_only="0" responsible="Дубенец Д.А.">
+    <source name="ЗаметкаРедактированиеПоМесту">
+      <trigger_list/>
+    </source>
+    <generate_method name="ЗаметкаРедактированиеПоМесту.Записать"/>
+    <generate_method name="ЗаметкаРедактированиеПоМесту.История"/>
+    <generate_method name="ЗаметкаРедактированиеПоМесту.Копировать"/>
+    <generate_method name="ЗаметкаРедактированиеПоМесту.Объединить"/>
+    <generate_method name="ЗаметкаРедактированиеПоМесту.Прочитать"/>
+    <generate_method name="ЗаметкаРедактированиеПоМесту.Создать"/>
+    <declarative key="@ЗаметкаРедактированиеПоМесту" last_changed="Дубенец Д.А." name="ЗаметкаРедактированиеПоМесту.Список" responsible="Дубенец Д.А." type="0">
+      <field>@ЗаметкаРедактированиеПоМесту</field>
+      <field>Содержимое</field>
+      <field>Завершена</field>
+      <field>withoutNDS</field>
+      <source name="ЗаметкаРедактированиеПоМесту"/>
+      <sorting column="@ЗаметкаРедактированиеПоМесту" nulls_place="FIRST" order="ASC"/>
+      <parameter filter_category="USER" filter_class="0" name="withoutNDS" param_type="OPTIONAL" type="TEXT"/>
+      <composite operation="AND">
+        <simple operation="EQ">
+          <left name="withoutNDS" type="PARAMETER"/>
+          <right name="withoutNDS" type="FIELD"/>
+        </simple>
+      </composite>
+    </declarative>
+    <generate_method name="ЗаметкаРедактированиеПоМесту.Удалить"/>
+  </object>
+
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="ЗаметкаФильтр" read_only="0" responsible="Дубенец Д.А.">
+    <source name="ЗаметкаФильтр"/>
+    <generate_method name="ЗаметкаФильтр.Записать"/>
+    <generate_method name="ЗаметкаФильтр.История"/>
+    <generate_method name="ЗаметкаФильтр.Копировать"/>
+    <generate_method name="ЗаметкаФильтр.Объединить"/>
+    <generate_method name="ЗаметкаФильтр.Прочитать"/>
+    <generate_method name="ЗаметкаФильтр.Создать"/>
+    <declarative key="@ЗаметкаФильтр" last_changed="Дубенец Д.А." name="ЗаметкаФильтр.Список" responsible="Дубенец Д.А." type="0">
+      <field>@ЗаметкаФильтр</field>
+      <field>Содержимое</field>
+      <field>Завершена</field>
+      <field>withoutNDS</field>
+      <source name="ЗаметкаФильтр"/>
+      <sorting column="@ЗаметкаФильтр" nulls_place="FIRST" order="ASC"/>
+      <parameter filter_category="USER" filter_class="0" name="withoutNDS" param_type="OPTIONAL" type="TEXT"/>
+      <composite operation="AND">
+        <simple operation="EQ">
+          <left name="withoutNDS" type="PARAMETER"/>
+          <right name="withoutNDS" type="FIELD"/>
+        </simple>
+      </composite>
+    </declarative>
+    <generate_method name="ЗаметкаФильтр.Удалить"/>
+  </object>
+  
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="ЗаметкаЧастичныйСкролл" read_only="0" responsible="Дубенец Д.А.">
+    <source name="ЗаметкаЧастичныйСкролл"/>
+    <generate_method name="ЗаметкаЧастичныйСкролл.Записать"/>
+    <generate_method name="ЗаметкаЧастичныйСкролл.История"/>
+    <generate_method name="ЗаметкаЧастичныйСкролл.Копировать"/>
+    <generate_method name="ЗаметкаЧастичныйСкролл.Объединить"/>
+    <generate_method name="ЗаметкаЧастичныйСкролл.Прочитать"/>
+    <generate_method name="ЗаметкаЧастичныйСкролл.Создать"/>
+    <declarative key="@ЗаметкаЧастичныйСкролл" last_changed="Дубенец Д.А." name="ЗаметкаЧастичныйСкролл.Список" responsible="Дубенец Д.А." type="0">
+      <field>@ЗаметкаЧастичныйСкролл</field>
+      <field>Содержимое</field>
+      <field>Завершена</field>
+      <field>withoutNDS</field>
+      <source name="ЗаметкаЧастичныйСкролл"/>
+      <sorting column="@ЗаметкаЧастичныйСкролл" nulls_place="FIRST" order="ASC"/>
+      <parameter filter_category="USER" filter_class="0" name="withoutNDS" param_type="OPTIONAL" type="TEXT"/>
+      <composite operation="AND">
+        <simple operation="EQ">
+          <left name="withoutNDS" type="PARAMETER"/>
+          <right name="withoutNDS" type="FIELD"/>
+        </simple>
+      </composite>
+    </declarative>
+    <generate_method name="ЗаметкаЧастичныйСкролл.Удалить"/>
+  </object>
+
+</repository>

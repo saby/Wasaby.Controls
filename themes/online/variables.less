@@ -290,8 +290,8 @@
 
 @radio-button-text-margin:                      0;
 
-@radio-button-text-color:                       @gray-color;
-@radio-button-hover-text-color:                 @black-color;
+@radio-button-text-color:                       @black-color;
+@radio-button-hover-text-color:                 @radio-button-text-color;
 
 @radio-button-checked-text-color:               @radio-button-hover-text-color;
 @radio-button-checked-hover-text-color:         @radio-button-hover-text-color;
@@ -569,7 +569,7 @@
 @menu-button-arrow-width:                               8px;
 @menu-button-arrow-height:                              6px;
 @menu-button-arrow-right-offset:                        10px;
-@menu-button-arrow-top-offset:                          11px;
+@menu-button-arrow-top-offset:                          10px;
 
 @menu-button-arrow-padding:                             0 23px 0 12px;          // padding for menu button containing dropdown arrow
 @menu-button-no-arrow-padding:                          @button-padding;        // padding for menu button when dropdown arrow is missed
@@ -976,6 +976,52 @@
 
 
 // ----------- //
+// Suggest //
+// ----------- //
+
+@suggest-field-font:                          inherit;
+@suggest-field-text-color:                    inherit;
+
+@suggest-cursor:                              pointer;
+@suggest-disabled-cursor:                     default;
+
+@suggest-loading-spritesheet:                   'img/ajax-loader-indicator.gif';
+@suggest-loading-bg:                            url(@suggest-loading-spritesheet) 0 0 no-repeat;
+@suggest-loading-height:                        16px;
+@suggest-loading-width:                         @suggest-loading-height;
+@suggest-loading-right:                         3px;
+@suggest-loading-top:                           3px;
+
+@suggest-picker-border:                         1px solid @gray-color;
+@suggest-picker-border-radius:                  0;
+@suggest-picker-box-shadow:                     0 4px 8px rgba(0, 0, 0, 0.2);
+@suggest-picker-margin:                         -1px 0 0;
+
+@suggest-picker-item-font:                      @suggest-field-font;
+@suggest-picker-item-text-color:                @suggest-field-text-color;
+@suggest-picker-item-bg:                        @white-color;
+
+@suggest-list-item-bg:                          @suggest-picker-item-bg;
+@suggest-list-item-border:                      solid #f5f5f5;
+@suggest-list-item-border-width:                1px 0 0 0;
+@suggest-list-item-first-child-border-width:    0;
+@suggest-list-item-text-color:                  @suggest-field-font;
+@suggest-list-item-cursor:                      @suggest-cursor;
+@suggest-list-item-font:                        @suggest-picker-item-font;
+@suggest-list-item-padding:                     4px;
+@suggest-list-item-hover-bg:                    #f3f3f3;
+@suggest-list-item-hover-text-color:            @suggest-field-text-color;
+@suggest-list-item-selected-bg:                 darken(@suggest-list-item-hover-bg, 5%);
+@suggest-list-item-selected-text-color:         @suggest-picker-item-text-color;
+
+@suggest-list-empty-bg:                         @suggest-list-item-bg;
+@suggest-list-empty-color:                      @gray-dark-color;
+@suggest-list-empty-font:                       @suggest-list-item-font;
+@suggest-list-empty-padding:                    @suggest-list-item-padding;
+
+
+
+// ----------- //
 // Date picker //
 // ----------- //
 
@@ -1211,7 +1257,7 @@
 
 @tree-view-expand-width:                        16px;
 @tree-view-expand-height:                       20px;
-@tree-view-expand-margin:                       0 0 0 4px;
+@tree-view-expand-margin:                       0 0 0 -2px;
 
 @tree-view-expand-border-width:                 0;
 @tree-view-expand-border-style:                 none;
@@ -1257,7 +1303,7 @@
 @data-grid-border-color:                        transparent;
 
 @data-grid-row-bg:                              transparent;
-@data-grid-row-hover-bg:                        #F3F3F3;
+@data-grid-row-hover-bg:                        #E9FAFE;
 @data-grid-row-selected-bg:                     @data-grid-row-bg;
 
 @data-grid-row-hover-header-cell-text-color:    inherit;
@@ -1275,6 +1321,7 @@
 @data-grid-header-cell-padding:                 4px 6px;
 @data-grid-header-cell-padding-side:            12px;
 @data-grid-header-cell-font-size:               11px;
+@data-grid-header-cell-min-height:              28px;
 
 @data-grid-header-cell-border-width:            1px 1px 0 1px;
 @data-grid-header-cell-border-style:            solid;
@@ -1287,11 +1334,12 @@
 @data-grid-header-cell-hover-text-color:        @data-grid-header-cell-text-color;
 @data-grid-header-cell-hover-bg:                @data-grid-header-cell-bg;
 
-@data-grid-box-sizing: 									border-box;
+@data-grid-cell-box-sizing: 							border-box;
 @data-grid-cell-cursor:                         pointer;
 @data-grid-cell-text-alignment:                 @data-grid-header-cell-text-alignment;
 @data-grid-cell-height:                         30px;
-@data-grid-cell-padding:                        0;
+@data-grid-cell-line-height:                    19px;
+@data-grid-cell-padding:                        0 0 0 6px;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 						middle;
 

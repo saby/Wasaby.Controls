@@ -210,7 +210,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          $constructor: function () {
             var self = this;
             this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
-            this._container.mousemove(this._mouseMoveHandler.bind(this))
+            this._container
+               .mousemove(this._mouseMoveHandler.bind(this))
                .mouseleave(this._mouseLeaveHandler.bind(this));
             if (this.isInfiniteScroll()) {
                this._infiniteScrollContainer = this._container.closest('.controls-ListView__infiniteScroll');
@@ -333,6 +334,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @private
           */
          _mouseLeaveHandler: function () {
+            if (this._hoveredItem.container === null) {
+               return;
+            }
             this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
             this._hoveredItem = {
                container: null,
@@ -441,7 +445,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                this._isLoadBeforeScrollAppears = true;
             }
             this._previousGroupBy = undefined;
-            ListViewDS.superclass.reload.apply(this, arguments);
+            return ListViewDS.superclass.reload.apply(this, arguments);
          },
 
          /**
@@ -624,23 +628,23 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          _nextLoad: function () {
             var self = this, records;
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
-            if (this._allowInfiniteScroll && this._hasNextPage(this._dataSet.getMetaData().more) && this._hasScrollMore && !this._isLoading()) {
+            if (this._allowInfiniteScroll && this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
                this._addLoadingIndicator();
                this._loader = this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset + this._limit, this._limit).addCallback(function (dataSet) {
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                   //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                   self._loader = null;
+                  self._removeLoadingIndicator();
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
-                  if (self._hasNextPage(dataSet.getMetaData().more)) {
+                  if (self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset)) {
                      self._infiniteScrollOffset += self._limit;
                   } else {
                      self._hasScrollMore = false;
-                     self._removeLoadingIndicator();
                   }
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
                      records = dataSet._getRecords();
-                     self._dataSet.merge(dataSet);
+                     self._dataSet.merge(dataSet, {remove: false});
                      self._drawItems(records);
                      self._dataLoadedCallback();
                   }
@@ -711,6 +715,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (!allow && this._loadingIndicator && this._loadingIndicator.is(':visible')){
                this._cancelLoading();
             }
+            //Убираем текст Еще 10, если включили бесконечную подгрузку
+            this.getContainer().find('.controls-TreePager-container').toggleClass('ws-hidden', allow);
             this._removeLoadingIndicator();
          },
          /**
@@ -738,7 +744,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
          },
          //------------------------Paging---------------------
-         _processPaging: function () {
+         _processPaging: function() {
+            this._processPagingStandart();
+         },
+         _processPagingStandart: function () {
             if (!this._pager) {
                var more = this._dataSet.getMetaData().more,
                   hasNextPage = this._hasNextPage(more),
@@ -866,6 +875,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                } else {
                   $(window).unbind('.wsInfiniteScroll');
                }
+            }
+            if (this._pager) {
+               this._pager.destroy();
             }
             ListViewDS.superclass.destroy.call(this);
          }

@@ -30,11 +30,68 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
       $protected: {
          _rowTpl : rowTpl,
          _options: {
-           arrowActivatedHandler: undefined
+            /**
+             * Разрешить проваливаться в папки
+             * Если выключено, то папки можно открывать только в виде дерева, проваливаться в них нельзя
+             * @type {Boolean}
+             */
+            allowEnterToFolder: true,
+            /**
+             * Обработчик нажатия на стрелку у папок. Если не задан, стрелка показана не будет
+             * @type {Function}
+             */
+            arrowActivatedHandler: undefined
          }
       },
 
       $constructor: function() {
+      },
+
+      _drawItemsFolder: function(records) {
+         var self = this;
+         for (var j = 0; j < records.length; j++) {
+            var record = records[j];
+            var
+               recKey = record.getKey(),
+               parKey = self._dataSet.getParentKey(record, self._options.hierField),
+               childKeys = this._dataSet.getChildItems(parKey, true),
+               targetContainer = self._getTargetContainer(record);
+
+            if (!$('.controls-ListView__item[data-id="'+recKey+'"]', self._getItemsContainer().get(0)).length) {
+
+               if (targetContainer) {
+                  /*TODO пока придрот для определения позиции вставки*/
+                  var
+                     parentContainer = $('.controls-ListView__item[data-id="' + parKey + '"]', self._getItemsContainer().get(0)),
+                     allContainers = $('.controls-ListView__item', self._getItemsContainer().get(0)),
+                     startRow = 0;
+
+                  for (var i = 0; i < allContainers.length; i++) {
+                     if (allContainers[i] == parentContainer.get(0)) {
+                        startRow = i + 1;
+                     } else {
+                        if (childKeys.indexOf($(allContainers[i]).data('id')) >= 0) {
+                           startRow++;
+                        }
+                     }
+                     /*else {
+                        if ()
+                     }*/
+                  }
+                  /**/
+                  if (self._options.displayType == 'folders') {
+                     if (record.get(self._options.hierField + '@')) {
+                        self._drawItem(record, {at : startRow});
+                     }
+
+                  }
+                  else {
+                     self._drawItem(record, {at : startRow});
+                     self._drawItemsCallback();
+                  }
+               }
+            }
+         }
       },
 
       _nodeDataLoaded : function(key, dataSet) {
@@ -50,41 +107,29 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          this._dataSet.merge(dataSet, {remove: false});
          this._dataSet._reindexTree(this._options.hierField);
 
-         dataSet.each(function (record) {
-            var
-               recKey = record.getKey(),
-               parKey = self._dataSet.getParentKey(record, self._options.hierField),
-               targetContainer = self._getTargetContainer(record);
+         var
+            records = dataSet._getRecords();
 
-            if (!$('.controls-ListView__item[data-id="'+recKey+'"]', self._getItemsContainer().get(0)).length) {
+         this._drawItemsFolder(records);
+         /*TODO пока не очень общо создаем внутренние пэйджинги*/
+         var allContainers = $('.controls-ListView__item[data-parent="'+key+'"]', self._getItemsContainer().get(0));
+         var row = $('<tr class="controls-TreeDataGrid__folderToolbar">' +
+            '<td colspan="'+(this._options.columns.length+(this._options.multiselect ? 1 : 0))+'"><div class="controls-TreePager-container"></div></td>' +
+            '</tr>').attr('data-parent',key);
+         $(allContainers.last()).after(row);
+         var elem = $('.controls-TreePager-container', row.get(0));
+         this._createFolderPager(key, elem, dataSet.getMetaData().more);
+      },
 
-               if (targetContainer) {
-                  /*TODO пока придрот для определения позиции вставки*/
-                  var
-                     parentContainer = $('.controls-ListView__item[data-id="' + parKey + '"]', self._getItemsContainer().get(0)),
-                     allContainers = $('.controls-ListView__item', self._getItemsContainer().get(0)),
-                     at = {at: 0};
-                  for (var i = 0; i < allContainers.length; i++) {
-                     if (allContainers[i] == parentContainer.get(0)) {
-                        at = {at: i + 1};
-                     } else if ($(allContainers[i]).data('parent') == parentContainer.data('id')) {
-                        at.at++;
-                     }
-                  }
-                  /**/
-                  if (self._options.displayType == 'folders') {
-                     if (record.get(self._options.hierField + '@')) {
-                        self._drawItem(record, at);
-                     }
 
-                  }
-                  else {
-                     self._drawItem(record, at);
-                     self._drawItemsCallback();
-                  }
-               }
-            }
-         });
+
+      _drawItemsFolderLoad: function(records, id) {
+         if (!id) {
+            this._drawItems(records);
+         }
+         else {
+            this._drawItemsFolder(records);
+         }
       },
 
       _nodeClosed : function(key) {
@@ -92,6 +137,11 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          for (var i = 0; i < childKeys.length; i++) {
             $('.controls-ListView__item[data-id="' + childKeys[i] + '"]', this._container.get(0)).remove();
             delete(this._options.openedPath[childKeys[i]]);
+         }
+         /*TODO кажется как то нехорошо*/
+         $('.controls-TreeDataGrid__folderToolbar[data-parent="'+key+'"]').remove();
+         if (this._treePagers[key]) {
+            this._treePagers[key].destroy();
          }
 
       },
@@ -119,19 +169,22 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          }
       },
 
-      _elemClickHandlerInternal: function (data, id, target) {
+      _elemClickHandlerInternal: function(data, id, target) {
          var nodeID = $(target).closest('.controls-ListView__item').data('id');
          if ($(target).hasClass('js-controls-TreeView__expand') && $(target).hasClass('has-child')) {
             this.toggleNode(nodeID);
-         }
-         else {
-          if($(target).hasClass('js-controls-TreeView__editArrow')){
-            if (this._options.arrowActivatedHandler) {
-              this._options.arrowActivatedHandler.apply(this, arguments);
-            }
-          } else if (data.get(this._options.hierField+'@')) {
-               var self = this;
-               self.setCurrentRoot(nodeID);
+         } else {
+            if (this._options.allowEnterToFolder){
+               if ($(target).hasClass('js-controls-TreeView__editArrow')) {
+                  if (this._options.arrowActivatedHandler) {
+                     this._options.arrowActivatedHandler.apply(this, arguments);
+                  }
+               } else if (data.get(this._options.hierField + '@')) {
+                  var self = this;
+                  self.setCurrentRoot(nodeID);
+               }
+            } else {
+               this.toggleNode(nodeID);
             }
          }
       }
