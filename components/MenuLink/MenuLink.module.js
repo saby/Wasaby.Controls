@@ -58,13 +58,19 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
          
       },
 
-
       setCaption: function(caption){
          Link.superclass.setCaption.call(this, caption);
          $('.controls-Link__field', this._container).html(caption);
          if (this._picker){
-            $('.controls-Link__field', this._picker._container).html(caption);
+            $('.controls-Menu__header-caption', this._picker._container).html(caption);
          }
+      },
+
+      _setWidth: function(){
+         var self = this;
+         this._picker.getContainer().css({
+            'min-width': self._container.outerWidth() + 8 // + ширина стрелки
+         });
       },
 
       _clickHandler: function(){

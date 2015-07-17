@@ -3067,9 +3067,6 @@ input[type="reset"]::-moz-focus-inner {
   background-position: left top;
   background-repeat: repeat-y;
 }
-.controls-Menu__Popup {
-  padding: 4px 0;
-}
 .controls-TreePager-container {
   float: right;
 }

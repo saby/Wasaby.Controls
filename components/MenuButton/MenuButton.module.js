@@ -165,7 +165,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          var self = this;
          this._picker._oppositeCorners.tl.horizontal.top = 'tr';
          this._picker._oppositeCorners.tr.horizontal.top = 'tl';
-         this._setWidth();
          this._picker.subscribe('onDrawItems', function(){
             self._picker.recalcPosition(true);
          });
