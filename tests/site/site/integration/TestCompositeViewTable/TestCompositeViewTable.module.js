@@ -1,12 +1,13 @@
-define('js!SBIS3.TestCompositeView',
+define('js!SBIS3.TestCompositeViewTable',
     [
         'js!SBIS3.CORE.CompoundControl',
-        'html!SBIS3.TestCompositeView',
+        'js!SBIS3.CONTROLS.PathSelector',
+        'html!SBIS3.TestCompositeViewTable',
         'js!SBIS3.CONTROLS.SbisServiceSource',
-        'css!SBIS3.TestCompositeView',
+        'css!SBIS3.TestCompositeViewTable',
         'js!SBIS3.CONTROLS.CompositeView',
-        'js!SBIS3.CONTROLS.Switcher'
-    ], function (CompoundControl, dotTplFn, SbisServiceSource) {
+        "js!SBIS3.CONTROLS.Switcher"
+    ], function (CompoundControl, PathSelector, dotTplFn, SbisServiceSource) {
 
         var moduleClass = CompoundControl.extend({
 
@@ -24,8 +25,9 @@ define('js!SBIS3.TestCompositeView',
 
                 var multiView1 = this.getChildControlByName('CompositeView 1');
                 var multiView2 = this.getChildControlByName('CompositeView 2');
-                var multiViewSource = new SbisServiceSource({service: 'CompositeView'});
+                var multiViewSource = new SbisServiceSource({service: 'CompositeViewTable'});
                 multiView1.setDataSource(multiViewSource);
+
 
                 initState = this.getChildControlByName('Switcher 1').getState();
                 if (initState === "off") {
@@ -62,7 +64,7 @@ define('js!SBIS3.TestCompositeView',
         });
 
         moduleClass.webPage = {
-            outFileName: "integration_compositeview",
+            outFileName: "integration_compositeview_table",
             htmlTemplate: "/intest/pageTemplates/onlineTemplate.html"
         };
 
