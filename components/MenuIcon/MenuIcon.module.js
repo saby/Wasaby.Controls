@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.CollectionMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'html!SBIS3.CONTROLS.IconButton'], function(IconButton, ContextMenu, PickerMixin, CollectionMixin, MenuButtonMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.CollectionMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'html!SBIS3.CONTROLS.MenuIcon'], function(IconButton, ContextMenu, PickerMixin, CollectionMixin, MenuButtonMixin, dotTplFn) {
 
    'use strict';
 
@@ -58,9 +58,17 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
       init: function(){
          MenuIcon.superclass.init.call(this);
          this._container.addClass('controls-MenuIcon');
-         if (this._container.hasClass('controls-IconButton__menu-no-header')){
-            this._options.pickerClassName += ' controls-IconButton__menu-no-header';
+         if (this._container.hasClass('controls-Menu__hide-menu-header')){
+            this._options.pickerClassName += ' controls-Menu__hide-menu-header';
          }
+         if (this._container.hasClass('controls-IconButton__round-border')){
+            this._options.pickerClassName += ' controls-IconButton__round-border';
+         }
+         if (this._container.hasClass('icon-16')){
+            this._options.pickerClassName += ' controls-Menu__small-items';
+         } else if (this._container.hasClass('icon-24')){
+            this._options.pickerClassName += ' controls-Menu__big-items';
+         } 
       },
 
       _clickHandler: function () {

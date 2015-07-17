@@ -58,16 +58,25 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
       },
 
       _setPickerContent: function(){
-         var header = this._getHeader();
+         var self = this,
+            header = this._getHeader();
+         header.bind('click', function(){
+            self._onHeaderClick();
+         });
          this._picker.getContainer().prepend(header);
       },
 
       _getHeader: function(){
-         //return this._dotTplFn(this._options);
          var header = $('<div class="controls-Menu__header">');
-         header.append(this._container.clone().attr('style', ''));
+         if (this._options.icon) {
+            header.append('<i class="' + this._options.iconTemplate(this._options) + '"></i>');
+         }
          header.append('<span class="controls-Menu__header-caption">' + this._options.caption + '</span>');
          return header;
+      },
+
+      _onHeaderClick: function(){
+         this.togglePicker();
       },
 
       after : {
@@ -76,7 +85,14 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             this._picker.subscribe('onMenuItemActivate', function(e, id) {
                self._notify('onMenuItemActivate', id);
             });
-         }
+         },
+
+         //TODO в 3.7.3 ждать починки от Вити
+         setEnabled: function (enabled) {
+            if (this._picker) {
+               this._picker.setEnabled(enabled);
+            }
+         },
       },
 
       _drawItems : function() {

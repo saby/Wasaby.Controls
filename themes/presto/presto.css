@@ -124,6 +124,9 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: none;
   background: #ffcc99;
 }
+.controls-Button.controls-Button__primary .controls-Button__icon {
+  color: #393939!important;
+}
 .controls-Button.controls-Button__primary:hover {
   color: #333333;
   border: 0 none;
@@ -386,13 +389,14 @@ input[type="reset"]::-moz-focus-inner {
 .controls-IconButton.controls-IconButton__round-border {
   border: 1px solid #eeeeee;
   border-radius: 14px;
-  height: 26px;
-  width: 26px;
+  height: 28px;
+  width: 28px;
   line-height: 26px!important;
   text-align: center;
+  box-sizing: border-box;
 }
 .controls-IconButton.controls-IconButton__round-border:hover {
-  border-color: #587AB0;
+  border-color: #f2f2f2;
 }
 .controls-TabButton {
   display: inline-block;
@@ -829,38 +833,38 @@ input[type="reset"]::-moz-focus-inner {
   text-decoration: none;
 }
 .controls-Menu__Popup {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   margin: -1px 0 0;
   border-width: 1px;
   border-style: solid;
   border-color: #aaaaaa;
   background-color: #ffffff;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .controls-Menu__Popup .controls-Menu__hasChild:after {
-  content: ' ';
   position: absolute;
   top: 20px;
   right: 12px;
   width: 8px;
   height: 16px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+  content: " ";
   border-width: 8px 0 8px 8px;
   border-style: solid;
   border-color: transparent transparent transparent #ffcc99;
   background: transparent;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .controls-Menu__Popup .controls-Menu__hasChild:hover:after {
   border-width: 8px 0 8px 8px;
@@ -871,23 +875,28 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Menu__Popup .controls-Menu__submenu {
   display: block;
 }
-.controls-Menu__submenu {
-  display: none;
+.controls-Menu__Popup .controls-Menu__header {
+  box-sizing: border-box;
+  padding: 4px;
 }
-.controls-Menu__32px .controls-MenuItem {
+.controls-Menu__Popup.controls-Menu__small-items .controls-Menu__header {
+  height: 24px;
+}
+.controls-Menu__Popup.controls-Menu__small-items .controls-MenuItem {
+  height: 56px;
+}
+.controls-Menu__Popup.controls-Menu__big-items .controls-Menu__header {
+  height: 32px;
+}
+.controls-Menu__Popup.controls-Menu__big-items .controls-MenuItem {
   height: 32px;
   line-height: 32px;
 }
-.controls-Menu__32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
-  top: 0px;
-  left: 0px;
+.controls-Menu__Popup.controls-Menu__big-items .controls-MenuItem.controls-Menu__hasChild:after {
+  top: 8px;
 }
-.controls-Menu__32px .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon.icon-24 {
-  top: 0px;
-  left: 0px;
-}
-.controls-Menu__32px .controls-MenuItem.controls-Menu__hasChild:after {
-  top: 20px;
+.controls-Menu__submenu {
+  display: none;
 }
 .controls-MenuItem {
   position: relative;
@@ -909,7 +918,7 @@ input[type="reset"]::-moz-focus-inner {
   background: #f2f2f2;
 }
 .controls-MenuItem:hover .controls-MenuItem__icon {
-  color: #FF7033!important;
+  color: #ffcc99 !important;
 }
 .controls-MenuItem .controls-MenuItem__content {
   position: relative;
@@ -928,7 +937,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-MenuButton {
   position: relative;
-  padding: 0 0 2px 0;
 }
 .controls-Button.controls-MenuButton.controls-MenuButton__withoutMenu {
   padding: 0 8px;
@@ -1083,17 +1091,13 @@ input[type="reset"]::-moz-focus-inner {
   background: transparent;
 }
 .controls-MenuButton__Menu {
+  padding: 4px 0;
   margin-top: 3px;
   margin-left: 0;
   border-width: 1px;
   border-style: solid;
   border-color: #aaaaaa;
   background: #ffffff;
-}
-@-moz-document url-prefix() {
-  .controls-Button.controls-MenuButton {
-    padding-bottom: 3px;
-  }
 }
 @media \0screen {
   .controls-Button.controls-MenuButton .controls-MenuButton__arrowDown {
@@ -1120,61 +1124,64 @@ input[type="reset"]::-moz-focus-inner {
   color: #ffcc99;
   text-decoration: underline;
 }
-.controls-MenuLink.ws-enabled:hover .controls-MenuLink__arrowDown {
-  background: transparent;
-}
-.controls-MenuLink .controls-MenuLink__arrowDown {
+.controls-MenuLink .controls-MenuButton__arrowDown {
   position: absolute;
   display: inline-block;
   width: none;
   height: 6px;
   right: 0;
   top: 10px;
-  background: transparent;
   border-width: 5px 5px 0 5px;
   border-style: solid;
   border-color: #ffcc99 transparent transparent transparent;
+  font-size: 10px!important;
 }
 .controls-MenuLink__Menu {
-  margin-left: -9px;
-  margin-bottom: 0;
+  margin: 0 0 0 -9px;
   background: #ffffff;
 }
-.controls-MenuLink__Menu .controls-MenuLink__header {
-  height: none;
-}
-.controls-MenuLink__Menu .controls-MenuItem {
-  height: none;
-}
-.controls-MenuLink__Menu.controls-Menu__32px .controls-MenuLink__header {
+.controls-MenuLink__Menu.controls-Menu .controls-Menu__header {
+  padding: 6px;
   height: 32px;
 }
-.controls-MenuLink__Menu.controls-Menu__32px .controls-MenuItem {
-  height: 32px;
+.controls-MenuLink__Menu.controls-Menu .controls-Menu__header .icon-16 {
+  margin-top: 1px;
 }
-.controls-MenuLink__Menu .controls-MenuLink__header {
-  display: inline-block;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  width: 100%;
-  padding: 0 8px;
-  border-bottom: 1px solid #ededed;
-  background: #ffffff;
+.controls-MenuLink__Menu.controls-Menu .controls-Menu__header .controls-Menu__header-caption {
+  position: absolute;
+  top: 50%;
+  margin-top: -10px;
 }
-.controls-MenuLink__Menu .controls-MenuLink__header .controls-Link {
-  color: #4e5762;
-  text-decoration: none;
+.controls-MenuLink__Menu.controls-Menu .controls-MenuItem {
+  padding: 0 8px 0 26px;
 }
-.controls-MenuLink__Menu .controls-MenuLink__header .controls-Link:hover {
-  color: #4e5762;
-  text-decoration: none;
-}
-.controls-MenuLink__Menu .controls-MenuLink__header .controls-MenuLink__arrowDown {
+.controls-MenuLink__Menu .controls-MenuLink__Menu .controls-MenuLink__arrowDown {
   display: none;
 }
 .controls-MenuIcon {
   position: relative;
+  padding-right: 6px;
+}
+.controls-MenuIcon.controls-IconButton__round-border {
+  padding-right: 0;
+}
+.controls-MenuIcon.controls-IconButton__round-border .controls-MenuButton__arrowDown {
+  display: none;
+}
+.controls-MenuIcon.icon-24 .controls-MenuButton__arrowDown {
+  top: 5px;
+}
+.controls-MenuIcon .controls-MenuButton__arrowDown {
+  position: absolute;
+  display: inline-block;
+  width: none;
+  height: 6px;
+  right: -2px;
+  top: 1px;
+  border-width: 5px 5px 0 5px;
+  border-style: solid;
+  border-color: #ffcc99 transparent transparent transparent;
+  font-size: 10px!important;
 }
 .controls-MenuIcon .controls-MenuIcon__header {
   background: #ffffff;
@@ -1184,39 +1191,65 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuIcon .controls-MenuIcon__header .controls-MenuIcon__headerLeft {
   position: absolute;
-  width: 12px;
-  height: 28px;
   top: 0;
   left: 2px;
+  width: 12px;
+  height: 28px;
   background: transparent;
 }
 .controls-MenuIcon .controls-MenuIcon__header .controls-MenuIcon__headerRight {
   position: absolute;
-  width: 28px;
-  height: 28px;
   top: 0;
   left: 6px;
+  width: 28px;
+  height: 28px;
   background: transparent;
 }
 .controls-MenuIcon__Menu {
-  margin: -5px 0 0 5px;
   padding: 2px 0 0 2px;
+  margin: -5px 0 0 5px;
   background: #ffffff;
 }
-.controls-MenuIcon__Menu .controls-Menu__header {
-  padding: 1px 0 0 3px;
-}
 .controls-MenuIcon__Menu .controls-MenuItem {
-  padding-left: 32px;
+  padding-left: 24px;
 }
-.controls-MenuIcon__Menu .controls-Menu__header-caption {
-  padding-left: 2px;
-  color: #FF7033;
+.controls-Menu .controls-Menu__header {
+  position: relative;
+  cursor: pointer;
 }
-.controls-IconButton__menu-no-header .controls-MenuItem {
-  padding-left: 8px;
+.controls-Menu .controls-Menu__header .controls-Menu__header-caption {
+  position: absolute;
+  top: 50%;
+  margin-top: -8px;
+  color: #ffcc99;
+  padding-left: 4px;
 }
-.controls-IconButton__menu-no-header .controls-Menu__header {
+.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border.controls-Menu__hide-menu-header .controls-MenuItem {
+  padding: 0 8px;
+}
+.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border .controls-Menu__header {
+  height: 36px;
+}
+.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border .controls-Menu__header .icon-16 {
+  margin-top: 1px;
+  border: 1px solid #f2f2f2;
+  border-radius: 14px;
+  height: 28px;
+  width: 28px;
+  line-height: 26px!important;
+  text-align: center;
+  box-sizing: border-box;
+}
+.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border .controls-Menu__header .icon-16:hover {
+  border-color: #f2f2f2;
+}
+.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border .controls-MenuItem {
+  padding: 0 8px 0 38px;
+}
+.controls-Menu.controls-Menu__hide-menu-header {
+  padding: 4px 0;
+}
+.controls-Menu.controls-Menu__hide-menu-header .controls-Menu__header {
   display: none;
 }
 .controls-TextBox {
@@ -2286,13 +2319,13 @@ input[type="reset"]::-moz-focus-inner {
   top: -1px;
 }
 .controls-PathSelector__point:hover .controls-PathSelector__title {
-  color: #FF7033;
+  color: #ffcc99;
 }
 .controls-PathSelector__point:hover .icon-16 {
-  color: #FF7033!important;
+  color: #ffcc99 !important;
 }
 .controls-PathSelector__point:hover:first-child .controls-PathSelector__title {
-  color: #FF7033;
+  color: #ffcc99;
 }
 .controls-PathSelector__point:first-child {
   top: 0;
@@ -2343,7 +2376,7 @@ input[type="reset"]::-moz-focus-inner {
   font-weight: normal;
 }
 .controls-PathSelector.controls-PathSelector__smallItems .controls-PathSelector__title:hover {
-  color: #FF7033;
+  color: #ffcc99;
 }
 .controls-PathSelector .controls-PathSelector__hierWrapper {
   height: 13px;
