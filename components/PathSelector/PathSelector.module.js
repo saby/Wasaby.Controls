@@ -37,10 +37,10 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             this._subscribeOnSetRoot();
          }
          $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._resizeHandler, this);
-         //инициализируем dataSet
-         this.setItems(this._options.items || []);
          this._homeIcon = $('.controls-PathSelector__point-home', this._container);
          this._homeIcon.data('data-id', null); //клик по домику ведет в корень TODO: придрочено под null
+         //инициализируем dataSet
+         this.setItems(this._options.items || []);
       },
 
       _resizeHandler: function() {
@@ -100,7 +100,9 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       _toggleHomeIcon: function(state){
-         this._homeIcon.toggleClass('ws-hidden', state);
+         if (this._homeIcon){
+            this._homeIcon.toggleClass('ws-hidden', state);
+         }
       },
 
       setItems: function(items){
