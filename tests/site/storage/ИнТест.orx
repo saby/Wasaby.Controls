@@ -1,19 +1,49 @@
 <?xml version="1.0" encoding="WINDOWS-1251" ?>
 <repository orx_version="1.71">
 
-  <object insert_on_create="0" last_changed="Дубенец Д.А." name="CompositeView" read_only="0" responsible="Дубенец Д.А.">
-    <source name="CompositeView"/>
-    <generate_method name="CompositeView.Записать"/>
-    <generate_method name="CompositeView.История"/>
-    <generate_method name="CompositeView.Копировать"/>
-    <generate_method name="CompositeView.Объединить"/>
-    <generate_method name="CompositeView.Прочитать"/>
-    <generate_method name="CompositeView.Создать"/>
-    <declarative allfields="true" key="@CompositeView" last_changed="Дубенец Д.А." name="CompositeView.Список" responsible="Дубенец Д.А." type="0">
-      <source name="CompositeView"/>
-      <sorting column="@CompositeView" nulls_place="FIRST" order="ASC"/>
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="CompositeViewTable" read_only="0" responsible="Дубенец Д.А.">
+    <source name="CompositeViewTable"/>
+    <generate_method name="CompositeViewTable.Записать"/>
+    <generate_method name="CompositeViewTable.История"/>
+    <generate_method name="CompositeViewTable.Копировать"/>
+    <generate_method name="CompositeViewTable.Объединить"/>
+    <generate_method name="CompositeViewTable.Прочитать"/>
+    <generate_method name="CompositeViewTable.Создать"/>
+    <declarative allfields="true" key="@CompositeViewTable" last_changed="Дубенец Д.А." name="CompositeViewTable.Список" responsible="Дубенец Д.А." type="0">
+      <source name="CompositeViewTable"/>
+      <sorting column="@CompositeViewTable" nulls_place="FIRST" order="ASC"/>
     </declarative>
-    <generate_method name="CompositeView.Удалить"/>
+    <generate_method name="CompositeViewTable.Удалить"/>
+  </object>
+  
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="CompositeViewList" read_only="0" responsible="Дубенец Д.А.">
+    <source name="CompositeViewList"/>
+    <generate_method name="CompositeViewList.Записать"/>
+    <generate_method name="CompositeViewList.История"/>
+    <generate_method name="CompositeViewList.Копировать"/>
+    <generate_method name="CompositeViewList.Объединить"/>
+    <generate_method name="CompositeViewList.Прочитать"/>
+    <generate_method name="CompositeViewList.Создать"/>
+    <declarative allfields="true" key="@CompositeViewList" last_changed="Дубенец Д.А." name="CompositeViewList.Список" responsible="Дубенец Д.А." type="0">
+      <source name="CompositeViewList"/>
+      <sorting column="@CompositeViewList" nulls_place="FIRST" order="ASC"/>
+    </declarative>
+    <generate_method name="CompositeViewList.Удалить"/>
+  </object>
+  
+  <object insert_on_create="0" last_changed="Дубенец Д.А." name="CompositeViewTile" read_only="0" responsible="Дубенец Д.А.">
+    <source name="CompositeViewTile"/>
+    <generate_method name="CompositeViewTile.Записать"/>
+    <generate_method name="CompositeViewTile.История"/>
+    <generate_method name="CompositeViewTile.Копировать"/>
+    <generate_method name="CompositeViewTile.Объединить"/>
+    <generate_method name="CompositeViewTile.Прочитать"/>
+    <generate_method name="CompositeViewTile.Создать"/>
+    <declarative allfields="true" key="@CompositeViewTile" last_changed="Дубенец Д.А." name="CompositeViewTile.Список" responsible="Дубенец Д.А." type="0">
+      <source name="CompositeViewTile"/>
+      <sorting column="@CompositeViewTile" nulls_place="FIRST" order="ASC"/>
+    </declarative>
+    <generate_method name="CompositeViewTile.Удалить"/>
   </object>
 
   <object insert_on_create="0" last_changed="Дубенец Д.А." name="PathSelector" read_only="0" responsible="Дубенец Д.А.">

@@ -1,6 +1,6 @@
-<div class="sbis3-TestCompositeView____test" style="height:600px;width:800px;">
+<div class="sbis3-TestCompositeViewTable____test" style="width:800px;height:600px;">
 
-    <!--Switcher 1-->
+    <!--Switcher-->
     <component data-component="SBIS3.CONTROLS.Switcher" name="Switcher 1">
         <option name="stateOff">StaticSource</option>
         <option name="stateOn">SbisServiceSource</option>
@@ -22,26 +22,27 @@
                 <option name="icon">sprite:icon-16 icon-Move icon-primary action-hover</option>
                 <option name="isMainAction">true</option>
                 <option name="tooltip">Переместить</option>
-                <option name="onActivated" type="function">js!SBIS3.TestCompositeView:prototype.moveRecord</option>
+                <option name="onActivated" type="function">js!SBIS3.TestCompositeViewTable:prototype.moveRecord</option>
             </options>
             <options>
                 <option name="name">editTranslate</option>
                 <option name="icon">sprite:icon-16 icon-Edit icon-primary action-hover</option>
                 <option name="isMainAction">true</option>
                 <option name="tooltip">Изменить</option>
-                <option name="onActivated" type="function">js!SBIS3.TestCompositeView:prototype.editRecord</option>
+                <option name="onActivated" type="function">js!SBIS3.TestCompositeViewTable:prototype.editRecord</option>
             </options>
             <options>
                 <option name="name">deleteTranslate</option>
                 <option name="icon">sprite:icon-16 icon-Erase icon-error action-hover</option>
                 <option name="isMainAction">true</option>
                 <option name="tooltip">Удалить</option>
-                <option name="onActivated" type="function">js!SBIS3.TestCompositeView:prototype.deleteRecord</option>
+                <option name="onActivated" type="function">js!SBIS3.TestCompositeViewTable:prototype.deleteRecord
+                </option>
             </options>
         </options>
     </component>
 
-    <!--CompositeView 1 From StaticSource-->
+    <!--CompositeView 2 From StaticSource-->
     <component data-component="SBIS3.CONTROLS.CompositeView" name="CompositeView 2">
         <options name="columns" type="array">
             <options>
@@ -144,21 +145,22 @@
                 <option name="icon">sprite:icon-16 icon-Move icon-primary action-hover</option>
                 <option name="isMainAction">true</option>
                 <option name="tooltip">Переместить</option>
-                <option name="onActivated" type="function">js!SBIS3.TestCompositeView:prototype.moveRecord</option>
+                <option name="onActivated" type="function">js!SBIS3.TestCompositeViewTable:prototype.moveRecord</option>
             </options>
             <options>
                 <option name="name">editTranslate</option>
                 <option name="icon">sprite:icon-16 icon-Edit icon-primary action-hover</option>
                 <option name="isMainAction">true</option>
                 <option name="tooltip">Изменить</option>
-                <option name="onActivated" type="function">js!SBIS3.TestCompositeView:prototype.editRecord</option>
+                <option name="onActivated" type="function">js!SBIS3.TestCompositeViewTable:prototype.editRecord</option>
             </options>
             <options>
                 <option name="name">deleteTranslate</option>
                 <option name="icon">sprite:icon-16 icon-Erase icon-error action-hover</option>
                 <option name="isMainAction">true</option>
                 <option name="tooltip">Удалить</option>
-                <option name="onActivated" type="function">js!SBIS3.TestCompositeView:prototype.deleteRecord</option>
+                <option name="onActivated" type="function">js!SBIS3.TestCompositeViewTable:prototype.deleteRecord
+                </option>
             </options>
         </options>
     </component>
