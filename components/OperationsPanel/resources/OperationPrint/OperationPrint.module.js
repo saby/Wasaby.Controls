@@ -32,14 +32,15 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
       _clickHandler: function() {
          this._prepareOperation('Что напечатать');
       },
-      applyOperation: function(dataSet){
-         var cfg = {
-            dataSet : dataSet || this._getView()._dataSet,
-            columns: this._getView().getColumns()
-         };
-         if ( this._options.xsl ){
-            cfg.xsl = this._options.xsl;
-         }
+      /**
+       * @param columns
+       * @private
+       */
+      _notifyOnApply : function(columns){
+         return this._notify('onApplyOperation', 'print', columns);
+      },
+      applyOperation: function(dataSet, cfg){
+
          var p = new Printer(cfg);
          p.print();
       }
