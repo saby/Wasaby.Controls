@@ -4,7 +4,9 @@ module.exports = function (grunt) {
 
    var childProcess = require('child_process'),
       StringDecoder = require('string_decoder').StringDecoder,
+      path = require('path'),
       config = grunt.config('unit-tests'),
+      webdriver = require(path.join(process.cwd(), config.path + 'lib/webdriver')),
       defTimeout = config.timeout,
       runTest = function (done, name, options, args) {
          options = options || {};
@@ -49,6 +51,7 @@ module.exports = function (grunt) {
       var done = this.async(),
          pckgStack = [],
          installPackage = function (name, version, callback) {
+            grunt.log.writeln('installing package ' + name);
             childProcess.exec('npm install ' + name + '@' + version, function (err, stdout, stderr) {
                if (err) {
                   grunt.fail.fatal(err);
@@ -80,6 +83,9 @@ module.exports = function (grunt) {
 
       for (var packageName in config.packages) {
          if (config.packages.hasOwnProperty(packageName)) {
+            if (packageName === 'selenium-standalone' && !webdriver.Provider.isManualMode()) {
+               continue;
+            }
             pckgStack.push({
                name: packageName,
                ver: config.packages[packageName]
@@ -91,9 +97,7 @@ module.exports = function (grunt) {
    });
 
    grunt.registerTask('tests-setup-packages', function () {
-      var path = require('path'),
-         DriverProvider = require(path.join(process.cwd(), config.path + 'lib/webdriver')).Provider;
-      DriverProvider.installServer(this.async());
+      webdriver.Provider.installServer(this.async());
    });
 
    grunt.registerTask('tests-list-build', function () {
