@@ -116,8 +116,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       $constructor: function () {
          this._publish('onClose', 'onAlignmentChange');
          var self = this,
-            container = this._container,
-            topParent = this.getTopParent();
+            container = this._container;
          container.css({
             'position': 'absolute',
             'top': '-10000px',
@@ -128,10 +127,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          container.removeClass('ws-area');
          container.addClass('ws-hidden');
          this._isVisible = false;
-         //TODO: ДаблПридрот для того что бы панель не перекрывала дочерние попапы
-         if ($ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
-            topParent._childWindows.push(this);
-         }
          /********************************/
 
          this._initOppositeCorners();
@@ -276,8 +271,16 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
 
       moveToTop: function(){
-        this._zIndex = $ws.single.WindowManager.acquireZIndex();
-        this._container.css('z-index', this._zIndex);
+         if (this.isVisible()) {
+            $ws.single.WindowManager.releaseZIndex(this._zIndex);
+
+            this._zIndex = $ws.single.WindowManager.acquireZIndex(this._options.isModal);
+
+            $ws.single.WindowManager.setVisible(this._zIndex);
+            this._container.css('z-index', this._zIndex);
+
+            ModalOverlay.adjust();
+         }
       },
 
       //Позиционируем относительно body
@@ -742,7 +745,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                this._initOrigins = false;
             }
             this.recalcPosition();
-            this._zIndex = $ws.single.WindowManager.acquireZIndex();
+            this._zIndex = $ws.single.WindowManager.acquireZIndex(this._options.isModal);
             $ws.single.WindowManager.setVisible(this._zIndex);
             this._container.css('zIndex', this._zIndex);
          },

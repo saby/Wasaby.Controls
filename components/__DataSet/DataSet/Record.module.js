@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
    /**
     * Запись - обертка для данных
     * @author Мануйлов Андрей
+    * @class SBIS3.CONTROLS.Record
     * @public
     */
 
