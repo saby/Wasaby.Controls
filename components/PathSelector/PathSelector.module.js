@@ -104,8 +104,8 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       setItems: function(items){
-         if (items.length) { items.unshift(this._getHomeIcon()); }
          PathSelector.superclass.setItems.call(this, items);
+         this._toggleHomeIcon(items.length <= 0);
       },
 
       _rootChangeHandler: function(keys) {
