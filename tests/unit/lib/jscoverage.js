@@ -7,8 +7,8 @@ var path = require('path'),
    fs = require('fs'),
    spawn = require('child_process').spawn,
    exec = require('child_process').exec,
-   util = require('./util')
-fromEnv = util.config.fromEnv,
+   util = require('./util'),
+   fromEnv = util.config.fromEnv,
    config = require('../jscoverage.json'),
    DriverProvider = require('./webdriver').Provider,
    DriverChecker = require('./webdriver').Checker;
@@ -186,6 +186,12 @@ Loader.prototype._removeReport = function () {
  * @param {Function} done При успешном завершении операции
  */
 Loader.prototype._saveReport = function (done) {
+   var reportPath = path.resolve(
+      config.docRoot,
+      config.params['report-dir']
+   );
+   util.fs.mkdir(reportPath);
+
    var driver = this._driver;
    driver.frame('browserIframe', function () {
       var checker = new DriverChecker(driver, {

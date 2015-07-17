@@ -123,8 +123,8 @@
     call npm install grunt-cli
 
     rem [if Node.js version installed < 10]
-    if not exist test\bin\nodejs\node.exe "C:\Program Files\7-Zip\7z" x test\bin\nodejs.zip -y -otest\bin
-    SET PATH=%WORKSPACE%\test\bin\nodejs;%PATH%
+    rem if not exist tests\unit\bin\nodejs\node.exe "C:\Program Files\7-Zip\7z" x tests\unit\bin\nodejs.zip -y -otests\unit\bin
+    rem SET PATH=%WORKSPACE%\tests\unit\bin\nodejs;%PATH%
     rem [/if Node.js version installed < 10]
 
     node "node_modules/grunt-cli/bin/grunt" tests

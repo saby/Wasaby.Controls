@@ -4,6 +4,7 @@
 
 var path = require('path'),
    fs = require('fs'),
+   fsExt = require('./util').fs,
    fromEnv = require('./util').config.fromEnv,
    config = require('../unit.json');
 
@@ -123,8 +124,10 @@ report.clear = function () {
  * @param {String} contents Содержимое отчета
  */
 report.save = function (contents) {
+   var fileName = this.getFilename();
+   fsExt.mkdir(path.dirname(fileName));
    fs.writeFileSync(
-      this.getFilename(),
+      fileName,
       new Buffer(contents, 'utf8')
    );
 };

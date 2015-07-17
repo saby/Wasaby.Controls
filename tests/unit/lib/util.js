@@ -4,21 +4,31 @@
  * Утилиты
  */
 
-var sysfs = require('fs');
+var sysfs = require('fs'),
+    path = require('path'),
+   fs = {};
 
-
-exports.fs = {};
+/**
+ * Рекурсивно создает каталог
+ * @param {String} pathname Создаваемый каталог
+ */
+fs.mkdir = function(pathname, mode) {
+   if (pathname && !sysfs.existsSync(pathname)) {
+      fs.mkdir(path.dirname(pathname), mode);
+      sysfs.mkdirSync(pathname, mode);
+   }
+};
 
 /**
  * Рекурсивно удаляет каталог
  * @param {String} path Удаляемый каталог
  */
-exports.fs.rmdir = function (path) {
+fs.rmdir = function (path) {
    if (sysfs.existsSync(path)) {
       sysfs.readdirSync(path).forEach(function (file, index) {
          var curPath = path + '/' + file;
          if (sysfs.lstatSync(curPath).isDirectory()) {
-            deleteFolderRecursive(curPath);
+            fs.rmdir(curPath);
          } else {
             sysfs.unlinkSync(curPath);
          }
@@ -27,6 +37,7 @@ exports.fs.rmdir = function (path) {
    }
 };
 
+exports.fs = fs;
 
 exports.config = {};
 

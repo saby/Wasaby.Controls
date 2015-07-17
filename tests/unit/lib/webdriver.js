@@ -3,7 +3,6 @@
  */
 
 var path = require('path'),
-   selenium = require('selenium-standalone'),
    fromEnv = require('./util').config.fromEnv,
    config = require('../webdriver.json');
 
@@ -19,24 +18,33 @@ var Provider = function () {
 };
 
 /**
+ * Проверяет, запускается ли Selenium в ручном режиме
+ * @returns {Boolean}
+ */
+Provider.isManualMode = function () {
+   return config.manual ? true : false;
+};
+
+/**
  * Устанавливает Selenium сервер
  * @param {Function} done При успешном завершении операции
  */
 Provider.installServer = function (done) {
-   if (config.manual) {
-      config.install = config.install || {};
-      config.install.logger = function (message) {
-         console.log(message);
-      };
-      selenium.install(config.install, function (err) {
-         if (err) {
-            throw err;
-         }
-         done();
-      });
-   } else {
-      done();
+   if (!config.manual) {
+      return done && done();
    }
+
+   var selenium = require('selenium-standalone');
+   config.install = config.install || {};
+   config.install.logger = function (message) {
+      console.log(message);
+   };
+   selenium.install(config.install, function (err) {
+      if (err) {
+         throw err;
+      }
+      done && done();
+   });
 };
 
 /**
@@ -44,32 +52,33 @@ Provider.installServer = function (done) {
  * @param {Function} done При успешном завершении операции
  */
 Provider.prototype.startServer = function (done) {
-   if (config.manual) {
-      var self = this;
-
-      selenium.start({
-         /*seleniumArgs: [
-          '-port ' + config.remote.port
-          ]*/
-      }, function (err, child) {
-         if (err) {
-            throw new Error(err.toString());
-         }
-
-         child.stdout.on('data', function (data) {
-            console.log('provider: ' + data.toString());
-         });
-
-         child.stderr.on('data', function (data) {
-            console.log('provider: ' + data.toString());
-         });
-
-         self._serverProc = child;
-         done && done(err, child);
-      });
-   } else {
-      done && done();
+   if (!config.manual) {
+      return done && done();
    }
+
+   var self = this,
+       selenium = require('selenium-standalone');
+
+   selenium.start({
+      /*seleniumArgs: [
+       '-port ' + config.remote.port
+       ]*/
+   }, function (err, child) {
+      if (err) {
+         throw new Error(err.toString());
+      }
+
+      child.stdout.on('data', function (data) {
+         console.log('provider: ' + data.toString());
+      });
+
+      child.stderr.on('data', function (data) {
+         console.log('provider: ' + data.toString());
+      });
+
+      self._serverProc = child;
+      done && done(err, child);
+   });
 };
 
 /**
@@ -77,20 +86,19 @@ Provider.prototype.startServer = function (done) {
  * @param {Function} done При успешном завершении операции
  */
 Provider.prototype.stopServer = function (done) {
-   if (config.manual && this._serverProc) {
-      var self = this;
-      this._serverProc.on('close', function (code) {
-         done && done(code);
-
-         if (self._exitOnStop) {
-            process.exit(255);
-         }
-      });
-
-      this._serverProc.kill();
-   } else {
-      done && done();
+   if (!config.manual || !this._serverProc) {
+      return done && done();
    }
+
+   var self = this;
+   this._serverProc.on('close', function (code) {
+      done && done(code);
+
+      if (self._exitOnStop) {
+         process.exit(255);
+      }
+   });
+   this._serverProc.kill();
 };
 
 /**
