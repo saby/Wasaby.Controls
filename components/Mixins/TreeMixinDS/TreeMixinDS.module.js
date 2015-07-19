@@ -119,7 +119,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
 
       expandNode: function (key) {
          var self = this;
-         this._folderOffsets[key] = 0;
+         this._folderOffsets[key || 'null'] = 0;
          this._dataSource.query(this._createTreeFilter(key), this._sorting, 0, this._limit).addCallback(function (dataSet) {
             self._nodeDataLoaded(key, dataSet);
          });
@@ -195,7 +195,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          else {
             filter = this._filter;
          }
-         this._loader = this._dataSource.query(filter, this._sorting, (id ? this._folderOffsets[id] : this._offset) + this._limit, this._limit).addCallback(function (dataSet) {
+         this._loader = this._dataSource.query(filter, this._sorting, (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
             self._loader = null;
@@ -204,7 +204,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
                self._folderOffsets[id] += self._limit;
             }
             else {
-               self._offset += self._limit;
+               self._folderOffsets['null'] += self._limit;
             }
             if (!self._hasNextPageInFolder(dataSet.getMetaData().more, id)) {
                if (typeof id != 'undefined') {
@@ -254,7 +254,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
 
       _hasNextPageInFolder: function(more, id) {
          if (!id) {
-            return this._hasNextPage(more)
+            return typeof (more) !== 'boolean' ? more > (this._folderOffsets['null'] + this._options.pageSize) : !!more;
          }
          else {
             return typeof (more) !== 'boolean' ? more > (this._folderOffsets[id] + this._options.pageSize) : !!more;
@@ -263,6 +263,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
 
 
       before: {
+         reload : function() {
+            this._folderOffsets['null'] = 0;
+         },
          _dataLoadedCallback: function () {
             this._options.openedPath = {};
             this._dataSet._reindexTree(this._options.hierField);
