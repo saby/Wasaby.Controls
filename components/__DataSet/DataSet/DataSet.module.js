@@ -214,7 +214,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
             // если уже есть такой элемент, предотвратит его добавление и
             // если проставлена опция, то смержит свойства в текущий рекорд
 
-            if (existing = this.getRecordByKey(key)) {
+            existing = this.getRecordByKey(key);
+            if (existing) {
                if (remove) {
                   recordMap[key] = true;
                }
