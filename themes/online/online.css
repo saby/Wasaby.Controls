@@ -438,38 +438,38 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-RadioButton .controls-RadioButton__caption {
   margin: 0;
-  color: #999999;
+  color: #000000;
 }
 .controls-RadioButton .controls-RadioButton__icon {
   display: inline-block;
   width: 24px;
   height: 17px;
   line-height: normal;
-  background: url('img/RadioButton-sprite.png') 0 -4px;
+  background: url('img/RadioButton-sprite.png') 0 0;
 }
 .controls-RadioButton:hover .controls-RadioButton__caption {
   color: #000000;
 }
 .controls-RadioButton:hover .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -100px;
+  background: url('img/RadioButton-sprite.png') 0 -34px;
 }
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__caption {
   color: #000000;
 }
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -52px;
+  background: url('img/RadioButton-sprite.png') 0 -17px;
 }
 .controls-RadioButton.controls-Checked__checked:hover .controls-RadioButton__caption {
   color: #000000;
 }
 .controls-RadioButton.controls-Checked__checked:hover .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -52px;
+  background: url('img/RadioButton-sprite.png') 0 -17px;
 }
 .controls-RadioButton.controls-Checked__checked.ws-disabled .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -4px;
+  background: url('img/RadioButton-sprite.png') 0 -51px;
 }
 .controls-RadioButton.controls-Checked__checked.ws-disabled:hover .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -4px;
+  background: url('img/RadioButton-sprite.png') 0 -51px;
 }
 .controls-RadioButton.ws-disabled {
   cursor: default;
@@ -478,13 +478,13 @@ input[type="reset"]::-moz-focus-inner {
   color: #cccccc;
 }
 .controls-RadioButton.ws-disabled .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -4px;
+  background: url('img/RadioButton-sprite.png') 0 0;
 }
 .controls-RadioButton.ws-disabled:hover .controls-RadioButton__caption {
   color: #cccccc;
 }
 .controls-RadioButton.ws-disabled:hover .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -4px;
+  background: url('img/RadioButton-sprite.png') 0 0;
 }
 .controls-RadioGroup .controls-ListView__item {
   display: inline-block;
@@ -868,7 +868,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button.controls-MenuButton {
   position: relative;
-  padding: 0;
+  padding: 0 0 2px 0;
 }
 .controls-Button.controls-MenuButton.controls-MenuButton__withoutMenu {
   padding: 0 12px;
@@ -879,7 +879,7 @@ input[type="reset"]::-moz-focus-inner {
   width: 8px;
   height: 6px;
   right: 10px;
-  top: 11px;
+  top: 10px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -1029,7 +1029,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 @media \0screen {
   .controls-Button.controls-MenuButton .controls-MenuButton__arrowDown {
-    top: 7px;
+    top: 6px;
   }
 }
 .controls-MenuLink {
@@ -1227,10 +1227,10 @@ input[type="reset"]::-moz-focus-inner {
   color: #cccccc !important;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field:-moz-placeholder {
-  color: #cccccc !important;
+  color: #a1a1a1 !important;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-moz-placeholder {
-  color: #cccccc !important;
+  color: #a1a1a1 !important;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field:-ms-input-placeholder {
   color: #cccccc !important;
@@ -1474,6 +1474,7 @@ input[type="reset"]::-moz-focus-inner {
   border-style: solid;
   border-color: #eaeaea;
   background: #ffffff;
+  padding: 2px 4px 2px 4px;
 }
 .controls-TextArea .controls-TextArea__inputField {
   font: inherit;
@@ -1482,7 +1483,6 @@ input[type="reset"]::-moz-focus-inner {
   width: 100%;
   height: 100%;
   line-height: normal;
-  padding: 4px;
   resize: none;
   border: none;
   background: transparent;
@@ -1490,8 +1490,17 @@ input[type="reset"]::-moz-focus-inner {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+.controls-TextArea .controls-TextArea__inputField::-webkit-input-placeholder {
+  color: #cccccc !important;
+}
+.controls-TextArea .controls-TextArea__inputField:-moz-placeholder {
+  color: #a1a1a1 !important;
+}
+.controls-TextArea .controls-TextArea__inputField::-moz-placeholder {
+  color: #a1a1a1 !important;
+}
 .controls-TextArea .controls-TextArea__inputField:-ms-input-placeholder {
-  color: #999999;
+  color: #cccccc !important;
 }
 .controls-TextArea.ws-has-focus {
   border-width: 1px;
@@ -1520,9 +1529,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextArea:hover .controls-TextArea__inputField {
   color: inherit;
 }
-.controls-TextArea:hover .controls-TextArea__inputField:-ms-input-placeholder {
-  color: #999999;
-}
 .controls-TextArea.ws-disabled {
   border-width: 1px;
   border-style: solid;
@@ -1535,6 +1541,106 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextArea.controls-TextArea__autoheight {
   height: auto !important;
+}
+.controls-SearchForm {
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border-color: #f2f2f2;
+  background: #f2f2f2;
+}
+.controls-SearchForm.controls-TextBox:hover,
+.controls-SearchForm.controls-TextBox.ws-has-focus {
+  border-color: #f2f2f2;
+  background: #f2f2f2;
+}
+.controls-SearchForm.controls-TextBox .controls-TextBox__fieldWrapper {
+  margin: 0 44px 0 16px;
+  padding: 0;
+}
+.controls-SearchForm .controls-TextBox__afterFieldWrapper {
+  width: 44px;
+}
+.controls-SearchForm__search,
+.controls-SearchForm__reset {
+  display: block;
+  float: right;
+  text-decoration: none;
+}
+.controls-SearchForm__search.icon-16 {
+  width: 22px;
+  height: 22px;
+}
+.controls-SearchForm__search.icon-16:before {
+  content: "\e623";
+  display: inline-block;
+  line-height: 22px;
+  margin-left: 3px;
+}
+.controls-SearchForm__reset {
+  padding: 3px;
+}
+.controls-SearchForm__reset .controls-SearchForm__resetIcon {
+  width: 16px;
+  height: 16px;
+  background: url('img/cancelIcon-sprite.png') 0 -32px no-repeat;
+}
+.controls-SearchForm__reset:hover .controls-SearchForm__resetIcon {
+  background: url('img/cancelIcon-sprite.png') 0 -16px no-repeat;
+}
+.controls-Suggest__loadingContainer {
+  position: relative;
+}
+.controls-Suggest__loadingIndicator {
+  background: url('img/ajax-loader-indicator.gif') 0 0 no-repeat;
+  background-size: contain;
+  height: 16px;
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  width: 16px;
+}
+.controls-Suggest__picker {
+  border: 1px solid #999999;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  -webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: -1px 0 0;
+}
+.controls-SuggestList__item {
+  background: #ffffff;
+  border: solid #f5f5f5;
+  border-width: 1px 0 0 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 4px;
+}
+.controls-SuggestList__item:first-child {
+  border-width: 0;
+}
+.controls-SuggestList__item:hover {
+  background: #f3f3f3;
+  color: inherit;
+}
+.controls-SuggestList__item__selected {
+  background: #e6e6e6;
+  color: inherit;
+}
+.controls-SuggestList__empty {
+  background: #ffffff;
+  color: #666666;
+  font: inherit;
+  padding: 4px;
 }
 .controls-DatePicker {
   border: none !important;
@@ -1884,10 +1990,15 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox,
 .controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox {
+  background: url('img/CheckBox.png') 0 1px;
+}
+.controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover,
+.controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover {
   background: url('img/CheckBox.png') 0 17px;
 }
 .controls-ListView .controls-ListView__EmptyData {
-  width: 100%;
+  width: 100px;
+  display: inline-block;
   color: #999999;
   text-align: center;
 }
@@ -1897,11 +2008,20 @@ input[type="reset"]::-moz-focus-inner {
   background: none;
   cursor: pointer;
   display: none;
+  position: absolute;
+  left: 3px;
+  top: 5px;
+}
+.controls-ListView .controls-ListView__itemCheckBox:hover {
+  background: url('img/CheckBox.png') 0 17px;
 }
 .controls-ListView.controls-ListView__multiselect .controls-ListView__itemCheckBox {
   display: inline-block;
 }
 .controls-ListView.controls-ListView__multiselect .controls-ListView__item__multiSelected .controls-ListView__itemCheckBox {
+  background: url('img/CheckBox.png') 0 49px;
+}
+.controls-ListView.controls-ListView__multiselect .controls-ListView__item__multiSelected .controls-ListView__itemCheckBox:hover {
   background: url('img/CheckBox.png') 0 49px;
 }
 .controls-ListView .controls-ListView-scrollIndicator {
@@ -1911,6 +2031,40 @@ input[type="reset"]::-moz-focus-inner {
   top: 50%!important;
   height: 32px;
   width: 32px;
+}
+.controls-AjaxLoader {
+  background: none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.controls-AjaxLoader .controls-AjaxLoader__outer {
+  height: 36px;
+  position: relative;
+  top: 50%;
+  line-height: 30px;
+}
+.controls-AjaxLoader .controls-AjaxLoader__outer .controls-AjaxLoader__block {
+  width: 32px;
+  border: none;
+  box-shadow: none;
+  background: none repeat scroll 0 0 transparent !important;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  top: -50%;
+  padding: 2px;
+}
+.controls-AjaxLoader .controls-AjaxLoader__outer .controls-AjaxLoader__block .controls-AjaxLoader__LoadingIndicator {
+  position: absolute;
+  background: url('img/ajax-loader-indicator.gif') 0 0 no-repeat;
+  padding-left: 32px;
+  height: 32px;
 }
 .controls-ListView > .controls-TreeView__childContainer {
   display: block;
@@ -1931,31 +2085,30 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
   cursor: pointer;
   width: 16px;
-  height: 16px;
-  margin: 0 7px 0 0;
+  height: 20px;
+  margin: 0 0 0 -2px;
   border-width: 0;
   border-style: none;
   border-color: transparent;
-  background: url('img/Tree_expand.png') 4px 0 no-repeat;
+  background: url('img/Tree_expand.png') no-repeat;
 }
 .controls-TreeView__expand:hover {
   border-width: 0;
   border-style: none;
   border-color: transparent;
+  background: url('img/Tree_expand.png') 0 -40px no-repeat;
 }
 .controls-TreeView__expand.controls-TreeView__expand__open {
-  width: 16px;
-  height: 16px;
-  margin: 0 7px 0 0;
   border-width: 0;
   border-style: none;
   border-color: transparent;
-  background: url('img/Tree_expand.png') 4px -16px no-repeat;
+  background: url('img/Tree_expand.png') 0 -20px no-repeat;
 }
 .controls-TreeView__expand.controls-TreeView__expand__open:hover {
   border-width: 0;
   border-style: none;
   border-color: transparent;
+  background: url('img/Tree_expand.png') 0 -60px no-repeat;
 }
 .controls-TreeView__expand + .controls-TreeView__itemContent {
   margin: 0 0 0 15px;
@@ -1963,6 +2116,13 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TreeView__expand__leaf,
 .controls-TreeView__expand__leaf:hover {
   background: none !important;
+}
+.controls-DataGrid.controls-DataGrid__PartScroll__animation .controls-DataGrid__PartScroll__thumb,
+.controls-DataGrid.controls-DataGrid__PartScroll__animation .controls-DataGrid__scrolledCell {
+  -webkit-transition: left 0.5s;
+  -moz-transition: left 0.5s;
+  -ms-transition: left 0.5s;
+  -o-transition: left 0.5s;
 }
 .controls-DataGrid .controls-DataGrid__table {
   width: 100%;
@@ -1973,11 +2133,18 @@ input[type="reset"]::-moz-focus-inner {
   border-style: solid;
   border-color: transparent;
   background: #ffffff;
+  table-layout: fixed;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell,
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th.controls-DataGrid__notScrolledCell {
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__thead .controls-DataGrid__th.controls-DataGrid__notScrolledCell {
   background-color: #ffffff;
+  border-left: none;
+  border-right: none;
   z-index: 1;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell.controls-DataGrid__th,
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__thead .controls-DataGrid__th.controls-DataGrid__notScrolledCell.controls-DataGrid__th {
+  background-color: #ffffff;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr {
   background: transparent;
@@ -2047,41 +2214,56 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px 1px 0 1px;
   border-style: solid;
   border-color: transparent;
+  border-bottom: 1px solid #f5f5f5;
 }
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:hover {
   color: #999999;
   background-color: transparent;
 }
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox {
+  margin: -3px 0 0 4px;
+  background: url('img/CheckBox.png') 0 1px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox.controls-DataGrid__th__checkBox__checked {
+  background: url('img/CheckBox.png') 0 49px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox.controls-DataGrid__th__checkBox__checked:hover {
+  background: url('img/CheckBox.png') 0 49px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox:hover {
+  background: url('img/CheckBox.png') 0 17px;
+}
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-DataGrid__th-content {
+  max-height: 28px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
   position: relative;
   cursor: pointer;
   text-align: left;
-  height: 16px;
-  padding: 6px 6px;
+  height: 30px;
+  padding: 0 0 0 6px;
   color: inherit;
   background-color: transparent;
   border-collapse: collapse;
   border-width: 1px 0 0;
   border-style: solid;
   border-color: #F5F5F5;
+  vertical-align: middle;
+  box-sizing: border-box;
+  line-height: 19px;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:first-child {
-  padding-left: 12px;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:last-child {
-  padding-right: 12px;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:first-child {
-  padding-left: 12px;
-}
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td:last-child {
-  padding-right: 12px;
+.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid-cell-overflow-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .controls-DataGrid .controls-ListView__folder {
   font-size: 15px;
 }
 .controls-DataGrid .controls-DataGrid__td__checkBox {
-  width: 16px;
+  width: 24px;
   padding-right: 0!important;
 }
 .controls-DataGrid .controls-DataGrid__td__checkBox .controls-ListView__itemCheckBox {
@@ -2095,13 +2277,10 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 13px !important;
 }
 .controls-DataGrid__td .controls-TreeView__hierWrapper {
-  height: 16px;
-  width: 24px;
+  height: 20px;
+  width: 16px;
   display: inline-block;
   float: left;
-}
-.controls-DataGrid__td .controls-TreeView__hierWrapper:first-child {
-  width: 27px;
 }
 .controls-DataGrid__td .controls-TreeView__editArrow {
   display: none;
@@ -2121,68 +2300,70 @@ input[type="reset"]::-moz-focus-inner {
   padding-right: 6px;
   margin-top: -3px;
 }
-.controls-MultiView .controls-MultiView__listItem {
-  height: 16px;
-  line-height: 16px;
-  padding: 6px 6px;
+.controls-HierarchyDataGrid .controls-HierarchyDataGrid__path td {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+.controls-CompositeView .controls-CompositeView__listItem {
+  height: 30px;
+  line-height: 30px;
+  padding: 0 0 0 6px;
   cursor: pointer;
 }
-.controls-MultiView .controls-MultiView__listItem:hover {
+.controls-CompositeView .controls-CompositeView__listItem:hover {
   background: #f3f3f3;
 }
-.controls-MultiView .controls-MultiView__listItem.controls-ListView__folder {
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder {
   padding: 0;
   display: inline-block;
   width: 229px;
   height: 190px;
   border: none;
 }
-.controls-MultiView .controls-MultiView__listItem.controls-ListView__folder .controls-MultiView__tileImg {
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder .controls-CompositeView__tileImg {
   display: block;
   width: 120px;
   height: 120px;
   margin: 4px auto 0 auto;
 }
-.controls-MultiView .controls-MultiView__listItem.controls-ListView__folder .controls-MultiView__tileTitle {
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder .controls-CompositeView__tileTitle {
   font-weight: 600;
   font-size: 15px;
   color: #313e78;
   text-align: center;
   margin-top: 8px;
 }
-.controls-MultiView .controls-MultiView__listItem.controls-ListView__folder:hover .controls-MultiView__tileTitle {
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder:hover .controls-CompositeView__tileTitle {
   text-decoration: underline;
 }
-.controls-MultiView .controls-MultiView__listItem-defaultFolderImage {
+.controls-CompositeView.controls-CompositeView-table .controls-Pager-container {
+  display: none;
+}
+.controls-CompositeView .controls-CompositeView__listItem-defaultFolderImage {
   background: url("img/defaultFolder.png");
 }
-.controls-MultiView .controls-MultiView__listItem-defaultItemImage {
+.controls-CompositeView .controls-CompositeView__listItem-defaultItemImage {
   background: url("img/defaultItem.png");
 }
-.controls-MultiView.controls-MultiView-tile .controls-MultiView__itemsContainer {
+.controls-CompositeView.controls-CompositeView-tile .controls-CompositeView__itemsContainer {
   padding: 4px 0 0 1px;
 }
-.controls-MultiView.controls-MultiView-tile .controls-ItemActions,
-.controls-MultiView.controls-MultiView-list .controls-ItemActions {
+.controls-CompositeView.controls-CompositeView-tile .controls-ItemActions,
+.controls-CompositeView.controls-CompositeView-list .controls-ItemActions {
   width: 20px;
   height: auto;
   margin: 8px 3px 0 0;
 }
-.controls-MultiView.controls-MultiView-tile .controls-ItemActions > *,
-.controls-MultiView.controls-MultiView-list .controls-ItemActions > * {
+.controls-CompositeView.controls-CompositeView-tile .controls-ItemActions > *,
+.controls-CompositeView.controls-CompositeView-list .controls-ItemActions > * {
   margin: 0 6px 4px 0;
 }
-.controls-MultiView.controls-MultiView-tile .controls-ItemActions .controls-ItemActions__menu-button,
-.controls-MultiView.controls-MultiView-list .controls-ItemActions .controls-ItemActions__menu-button {
+.controls-CompositeView.controls-CompositeView-tile .controls-ItemActions .controls-ItemActions__menu-button,
+.controls-CompositeView.controls-CompositeView-list .controls-ItemActions .controls-ItemActions__menu-button {
   float: none;
   margin-left: -1px;
 }
-.controls-MultiView .controls-ListView__itemCheckBox {
-  position: absolute;
-  left: 3px;
-  top: 5px;
-}
-.controls-MultiView .controls-MultiView__tileItem {
+.controls-CompositeView .controls-CompositeView__tileItem {
   display: inline-block;
   cursor: pointer;
   text-align: left;
@@ -2191,39 +2372,39 @@ input[type="reset"]::-moz-focus-inner {
   min-height: 128px;
   margin: -4px 0 0 -1px;
 }
-.controls-MultiView .controls-MultiView__tileItem.controls-ListView__hoveredItem {
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__hoveredItem {
   background: #f3f3f3;
 }
-.controls-MultiView .controls-MultiView__tileItem.controls-ListView__hoveredItem .controls-MultiView__tileImg {
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__hoveredItem .controls-CompositeView__tileImg {
   box-shadow: 1px 2px 4px #aaaaaa;
 }
-.controls-MultiView .controls-MultiView__tileItem.controls-ListView__folder {
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__folder {
   width: 229px;
   height: 190px;
   border: none;
 }
-.controls-MultiView .controls-MultiView__tileItem.controls-ListView__folder .controls-MultiView__tileImg {
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__folder .controls-CompositeView__tileImg {
   display: block;
   width: 120px;
   height: 120px;
   margin: 4px auto 0 auto;
 }
-.controls-MultiView .controls-MultiView__tileItem.controls-ListView__folder .controls-MultiView__tileTitle {
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__folder .controls-CompositeView__tileTitle {
   font-weight: 600;
   font-size: 15px;
   color: #313e78;
 }
-.controls-MultiView .controls-MultiView__tileItem.controls-ListView__folder:hover .controls-MultiView__tileTitle {
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__folder:hover .controls-CompositeView__tileTitle {
   text-decoration: underline;
 }
-.controls-MultiView .controls-MultiView__tileItem.controls-ListView__item__multiSelected {
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__item__multiSelected {
   background: #e7f0f9;
 }
-.controls-MultiView .controls-MultiView__tileItem .controls-MultiView__tileImg {
+.controls-CompositeView .controls-CompositeView__tileItem .controls-CompositeView__tileImg {
   display: block;
   margin: 4px auto 0 auto;
 }
-.controls-MultiView .controls-MultiView__tileItem .controls-MultiView__tileTitle {
+.controls-CompositeView .controls-CompositeView__tileItem .controls-CompositeView__tileTitle {
   font-family: Tahoma;
   margin-top: 8px;
   font-size: 15px;
@@ -2235,34 +2416,34 @@ input[type="reset"]::-moz-focus-inner {
 .controls-PathSelector__point {
   cursor: pointer;
   position: relative;
-  top: -1px;
-  display: inline-block;
+  top: -2px;
+  line-height: 16px;
 }
 .controls-PathSelector__point:hover .controls-PathSelector__title {
   color: #FF7033;
 }
-.controls-PathSelector__point:hover .controls-PathSelector__arrow {
+.controls-PathSelector__point:hover .icon-16 {
   color: #FF7033!important;
 }
-.controls-PathSelector__point:first-child {
-  top: 0;
+.controls-PathSelector__point:hover:first-child .controls-PathSelector__title {
+  color: #FF7033;
 }
 .controls-PathSelector__point:first-child .controls-PathSelector__title {
   font-size: 15px;
+  color: #313E78;
+  font-weight: 700;
 }
 .controls-PathSelector__point:first-child .controls-PathSelector__arrow {
-  background: url('img/path-filter-icon-back.png') 0 -1px;
-  height: 24px;
-  width: 24px;
-  top: 5px;
+  background: url('img/path-filter-icon-back.png');
+  height: 22px;
+  width: 18px;
+  top: 3px;
 }
 .controls-PathSelector__point:first-child .controls-PathSelector__arrow::before {
   content: '';
 }
-.controls-PathSelector__point:first-child:hover .controls-PathSelector__arrow {
-  background-position: 0 23px;
-}
 .controls-PathSelector .controls-PathSelector__title {
+  text-decoration: none;
   color: #0055BB;
   padding-right: 1px;
   display: inline-block;
@@ -2277,22 +2458,30 @@ input[type="reset"]::-moz-focus-inner {
 .controls-PathSelector .controls-PathSelector__itemsContainer {
   display: inline-block;
 }
+.controls-PathSelector .controls-PathSelector__dots {
+  margin-left: -3px;
+}
 .controls-PathSelector .controls-PathSelector__dots .controls-PathSelector__title {
   margin-left: -3px;
 }
-.controls-PathSelector .controls-PathSelector__dots:hover .controls-PathSelector__title {
-  text-decoration: underline;
-  color: #FF7033;
+.controls-PathSelector.controls-PathSelector__smallItems .controls-PathSelector__point:first-child .controls-PathSelector__arrow {
+  background: transparent;
+  width: 0;
 }
-.controls-PathSelector.controls-PathSelector__picker .controls-PathSelector__point {
-  display: block;
+.controls-PathSelector.controls-PathSelector__smallItems .controls-PathSelector__title {
+  font-size: 13px;
+  color: #0055BB;
+  font-weight: normal;
+}
+.controls-PathSelector.controls-PathSelector__smallItems .controls-PathSelector__title:hover {
+  color: #FF7033;
 }
 .controls-PathSelector .controls-PathSelector__hierWrapper {
   height: 13px;
   width: 14px;
   display: inline-block;
 }
-.controls-PathSelector .controls-PathSelector__hierWrapper:last-child {
+.controls-PathSelector .controls-PathSelector__hierWrapper:last-of-type {
   background: url('img/pathSelector__hierWrapper.png') no-repeat;
   position: relative;
   top: -3px;
@@ -2441,6 +2630,71 @@ input[type="reset"]::-moz-focus-inner {
   margin-top: 8px;
   position: absolute;
   right: 40px;
+}
+.controls-FloatArea.controls__filterButton__picker {
+  background: #f7f3f0;
+  border: 2px solid #e4e4e4;
+}
+.controls-FloatArea.controls__filterButton__picker .controls__filterButton__templatedArea {
+  margin: 0 16px 16px 16px;
+}
+.controls-FloatArea.controls__filterButton__picker .controls__filter-button__apply-filter,
+.controls-FloatArea.controls__filterButton__picker .controls__filter-button__clear-filter {
+  float: right;
+}
+.controls-FloatArea.controls__filterButton__picker .controls__filter-button__apply-filter {
+  margin-right: 8px;
+}
+.controls-FloatArea.controls__filterButton__picker .controls__filter-button__clear-filter {
+  padding: 2px 8px 0 0;
+}
+.controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton {
+  background: transparent url('img/filterButton.png') no-repeat -30px 0;
+  margin-top: 8px;
+  width: 30px;
+  height: 24px;
+  cursor: pointer;
+}
+.controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton:hover {
+  background-position: -30px -24px;
+}
+.controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton:active {
+  background-position: -30px -48px;
+}
+.controls-FloatArea.controls__filterButton__picker .controls__filterButton__header {
+  margin: 8px 30px 0 0;
+  height: 40px;
+}
+.controls__filterButton {
+  height: 40px;
+  display: inline-block;
+}
+.controls__filterButton .controls__filterButton__filterLine {
+  display: inline-block;
+  height: 24px;
+  padding: 8px 8px 8px 0;
+  vertical-align: top;
+  text-align: center;
+}
+.controls__filterButton .controls__filterButton__filterLine-cross {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  cursor: pointer;
+}
+.controls__filterButton .controls__filterButton-button {
+  width: 30px;
+  height: 24px;
+  margin: 8px 0;
+  background: transparent url('img/filterButton.png') no-repeat;
+  display: inline-block;
+  cursor: pointer;
+}
+.controls__filterButton .controls__filterButton-button:hover {
+  background-position: 0 -24px;
+}
+.controls__filterButton .controls__filterButton-button:active {
+  background-position: 0 -48px;
 }
 .controls-ProgressBar {
   height: 17px;
@@ -2625,9 +2879,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-CustomFilterMenu .controls-CustomFilterMenu__afterCaptionWrapper .controls-CustomFilterMenu__crossIcon:hover {
   background: url('img/cancelIcon-sprite.png') 0 -19px no-repeat;
 }
-.controls-CustomFilterMenu.controls-Picker__show {
-  box-shadow: 0 0 0 1px #cccccc;
-}
 .controls-CustomFilterMenu__picker {
   cursor: pointer;
   -webkit-border-radius: 0;
@@ -2668,70 +2919,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item.controls-CustomFilterMenu__item__selected {
   display: none;
 }
-.controls-FloatArea.controls__filterButton__picker {
-  background: #f7f3f0;
-  border: 2px solid #e4e4e4;
-}
-.controls-FloatArea.controls__filterButton__picker .controls__filterButton__templatedArea {
-  margin: 0 16px 16px 16px;
-}
-.controls-FloatArea.controls__filterButton__picker .controls__filter-button__apply-filter,
-.controls-FloatArea.controls__filterButton__picker .controls__filter-button__clear-filter {
-  float: right;
-}
-.controls-FloatArea.controls__filterButton__picker .controls__filter-button__apply-filter {
-  margin-right: 8px;
-}
-.controls-FloatArea.controls__filterButton__picker .controls__filter-button__clear-filter {
-  padding: 2px 8px 0 0;
-}
-.controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton {
-  background: transparent url('img/filterButton.png') no-repeat -30px 0;
-  margin-top: 8px;
-  width: 30px;
-  height: 24px;
-  cursor: pointer;
-}
-.controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton:hover {
-  background-position: -30px -24px;
-}
-.controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton:active {
-  background-position: -30px -48px;
-}
-.controls-FloatArea.controls__filterButton__picker .controls__filterButton__header {
-  margin: 8px 30px 0 0;
-  height: 40px;
-}
-.controls__filterButton {
-  height: 40px;
-  display: inline-block;
-}
-.controls__filterButton .controls__filterButton__filterLine {
-  display: inline-block;
-  height: 24px;
-  padding: 8px 8px 8px 0;
-  vertical-align: top;
-  text-align: center;
-}
-.controls__filterButton .controls__filterButton__filterLine-cross {
-  width: 16px;
-  height: 16px;
-  display: inline-block;
-  cursor: pointer;
-}
-.controls__filterButton .controls__filterButton-button {
-  width: 30px;
-  height: 24px;
-  margin: 8px 0;
-  background: transparent url('img/filterButton.png') no-repeat;
-  display: inline-block;
-  cursor: pointer;
-}
-.controls__filterButton .controls__filterButton-button:hover {
-  background-position: 0 -24px;
-}
-.controls__filterButton .controls__filterButton-button:active {
-  background-position: 0 -48px;
+.controls-HtmlDecorators-highlight {
+  background-color: #fffece;
 }
 .controls-PopupMixin__closeButton {
   position: absolute;
@@ -2812,4 +3001,20 @@ input[type="reset"]::-moz-focus-inner {
   background-image: url('img/rowSelect.png');
   background-position: left top;
   background-repeat: repeat-y;
+}
+.controls-TreePager-container {
+  float: right;
+}
+.controls-CompositeView.controls-CompositeView-tile .controls-TreePager-container,
+.controls-CompositeView.controls-CompositeView-list .controls-TreePager-container {
+  display: none;
+}
+.controls-TreePager {
+  font-size: 12px;
+  color: #0055bb;
+  cursor: pointer;
+}
+.controls-TreePager:hover {
+  text-decoration: underline;
+  color: #ff7033;
 }
