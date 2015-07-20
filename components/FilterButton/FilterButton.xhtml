@@ -1,10 +1,10 @@
-<div class="controls__filterButton controls__filterButton-{{=it.filterAlign}}">
-    <div class="controls__filterButton__filterLine">
-       <span class="controls__filterButton__filterLine-hoverContainer">
-         <i class="controls__filterButton__filterLine-arrow icon-16 icon-DayForward icon-primary"/>
-         <span class="controls__filterButton__filterLine-items" data-bind="{text: 'sbis3-controls-filter-button/linkText'}"></span>
-       </span>
-       <i class="controls__filterButton__filterLine-cross icon-Close" data-bind="{visible: 'sbis3-controls-filter-button/changed'}" />
-    </div>
+<div class="controls__filterButton controls__filterButton-{{= it.filterAlign}}">
+    {{? it.filterLineComponent }}
+        <component data-component="{{= it.filterLineComponent}}">
+        </component>
+    {{?? it.filterLineTemplate }}
+        {{= it.filterLineTemplate }}
+    {{?}}
+
     <div class="controls__filterButton-button"></div>
 </div>

@@ -2,23 +2,74 @@
     <component data-component="SBIS3.CONTROLS.FilterButton">
         <opt name="name" value="filterButton" />
 
-        <opt name="filterFields" value="clientName,NDS,selling,using,nomenclatureTypeID"></opt>
+        <!--
+            это свойство "на выход" - для удобного получения фильтра.
+            снаружи его ставить не надо, чтобы не было противоречия с filterStructure.
+            снаружи фильтр надо ставить через filterStructure  / или всё же ставить, но тогда он изменит и filterStructure ???
+            так лучше, наверное. а filterStructure изменит его при установке - то есть они оба меняют внутр. переменную filter
+        -->
+        <opt name="filter"></opt>
 
-        <opt name="linkTextFields" value="NDSText:NDS,sellingText:selling,usingText:using,nomenclatureTypeText:nomenclatureTypeID,clientName"/>
-        <opt name="linkText">Без НДС, Все (для продажи и нет), Используемые</opt>
-        <opt name="resetLinkText"></opt>
+        <opt name="resetLinkText">Нужно отобрать?</opt>
 
-        <opt name="filter" bind="filter"></opt>
-        <opts name="resetFilter"></opts>
+        <opts name="filterStructure" type="array">
+            <opts>
+                <opt name="field">NDS</opt>
+
+                <!-- По умолчанию будет NDS, если не указано - тоже NDS -->
+                <opt name="contextValueField">NDS</opt>
+
+                <!-- По умолчанию будет NDS -->
+                <opt name="contextDescriptionField">NDSText</opt>
+
+                <!-- По умолчанию будет "ничего" - если по привязке нет, и тут нет -->
+                <opt name="description" bind="filterDescr/NDSText">Не выбрано</opt>
+
+                <opt name="value" bind="filter/NDS"></opt>
+
+                <opt name="resetValue" type="string">2</opt>
+                <opt name="resetDescription">С НДС</opt>
+            </opts>
+            <opts>
+                <opt name="field">clientName</opt>
+
+                <opt name="description" bind="filterDescr/clientName"></opt>
+
+                <opt name="value" bind="filter/clientName"></opt>
+
+                <opt name="resetValue"></opt>
+            </opts>
+            <opts>
+                <opt name="field">selling</opt>
+
+                <opt name="contextDescriptionField">sellingText</opt>
+
+                <opt name="description" bind="filterDescr/sellingText"></opt>
+
+                <opt name="value" bind="filter/selling"></opt>
+
+                <opt name="resetValue"></opt>
+            </opts>
+            <opts>
+                <opt name="field">using</opt>
+
+                <opt name="contextDescriptionField">usingText</opt>
+
+                <opt name="description" bind="filterDescr/usingText"></opt>
+
+                <opt name="value" bind="filter/using"></opt>
+
+                <opt name="resetValue"></opt>
+            </opts>
+        </opts>
 
         <opt name="template">
             <component data-component="SBIS3.CONTROLS.Demo.FilterButtonFilterContent"></component>
         </opt>
     </component>
 
-    <div>
-        <span data-bind="{html: 'filterJSON'}"></span>
-    </div>
+    <div data-bind="{html: 'filterJSON'}"></div>
+    <div data-bind="{html: 'filterDescrJSON'}"></div>
 
     <component data-component="SBIS3.CONTROLS.DataGrid" style="width: 500px; position: relative;">
         <opt name="filter" bind="filter"></opt>

@@ -15,11 +15,18 @@ define('js!SBIS3.CONTROLS.Demo.FilterButtonMain', [
             var context = this.getLinkedContext();
 
             context.subscribe('onFieldsChanged', function() {
-               var filter = this.getValue('filter');
+               var
+                  filter = this.getValue('filter'),
+                  filterDescr = this.getValue('filterDescr');
+
                this.setValueSelf('filterJSON', JSON.stringify(filter));
+               this.setValueSelf('filterDescrJSON', JSON.stringify(filterDescr));
             });
 
-            context.setValueSelf('filter', {});
+            context.setValueSelf({
+               filter: {},
+               filterDescr: {}
+            });
          }
       });
 
