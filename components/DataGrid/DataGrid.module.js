@@ -158,22 +158,32 @@ define('js!SBIS3.CONTROLS.DataGrid',
       _initEditInPlace: function() {
          var
             self = this,
-            row,
             debounceInterval = 10;
          if (!this._editInPlace) {
             this._dataSet.subscribe('onRecordChange', function(event, record) {
-               row = self._getItemsContainer().find('.controls-ListView__item[data-id="' + record.getKey() + '"]');
-               row.empty()
-                  .append($(self._getItemTemplate(record)).children());
-               self._addItemAttributes(row, record);
-               if(self._isPartScrollVisible) {
-                  self._findMovableCells();
-                  self._moveThumbAndColumns({left: self._currentScrollPosition});
-               }
+               self.redrawRow(record);
             }.debounce(debounceInterval));
             this._createEditInPlace();
          }
       },
+
+      /**
+       * Метод для перерисовки указанной записи
+       * @param record Запись, перерисовка которой осуществляется
+       */
+      redrawRow: function(record) {
+         var row = this._getItemsContainer().find('.controls-ListView__item[data-id="' + record.getKey() + '"]');
+         if (row.length) {
+            row.empty()
+               .append($(this._getItemTemplate(record)).children());
+            this._addItemAttributes(row, record);
+            if (this._isPartScrollVisible) {
+               this._findMovableCells();
+               this._moveThumbAndColumns({left: this._currentScrollPosition});
+            }
+         }
+      },
+
       setDataSource: function(ds) {
          DataGrid.superclass.setDataSource.apply(this, arguments);
          if (this._options.editInPlace.enabled && this._editInPlace) {
