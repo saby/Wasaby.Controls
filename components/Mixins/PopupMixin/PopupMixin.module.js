@@ -516,8 +516,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             oppositeSide = (this._options.horizontalAlign.side == 'left') ? 'right' : 'left';
             offset = this._getGeneralOffset(this._options.verticalAlign.side, oppositeSide, oppositeCorner);
          }
-         offset.top += (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom;
-         offset.left += (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right;
+         offset.top += (this._options.verticalAlign.offset || 0);
+         offset.left += (this._options.horizontalAlign.offset || 0);
          return offset;
       },
 

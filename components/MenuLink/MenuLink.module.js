@@ -50,30 +50,27 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
       $protected: {
          _zIndex: '',
          _options: {
+            pickerClassName: 'controls-MenuLink__Menu'
          }
       },
 
       $constructor: function() {
-         this._initMenu();
+         
       },
-
 
       setCaption: function(caption){
          Link.superclass.setCaption.call(this, caption);
          $('.controls-Link__field', this._container).html(caption);
          if (this._picker){
-            $('.controls-Link__field', this._picker._container).html(caption);
+            $('.controls-Menu__header-caption', this._picker._container).html(caption);
          }
       },
 
-      _initMenu: function(){
-         if (this.getItems().getItemsCount() > 1) {
-            $('.js-controls-MenuLink__arrowDown', this._container).show();
-            this._container.removeClass('controls-MenuLink__withoutMenu');
-         } else {
-            $('.js-controls-MenuLink__arrowDown', this._container).hide();
-            this._container.addClass('controls-MenuLink__withoutMenu');
-         }
+      _setWidth: function(){
+         var self = this;
+         this._picker.getContainer().css({
+            'min-width': self._container.outerWidth() + 8 // + ширина стрелки
+         });
       },
 
       _clickHandler: function(){
@@ -86,23 +83,8 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
                this._notify('onMenuItemActivate', id);
             }
          }
-      },
-
-      _setPickerContent: function(){
-         var self = this;
-         this._picker._container.css('margin-top', -parseInt(this._container.css('height'), 10) - 1);
-         this._picker._container.addClass('controls-MenuLink__Menu');
-         if (this._container.hasClass('controls-MenuLink__32px')){
-            this._picker._container.addClass('controls-Menu__32px');
-         }
-         var header= $('<span class="controls-MenuLink__header"></span>');
-         header.append(this._container.clone().removeAttr('style'));
-         this._picker.getContainer().prepend(header);
-         $(".controls-Link__icon", header.get(0)).addClass('icon-hover');
-         $('.controls-MenuLink__header', this._picker._container).bind('click', function(){
-            self.hidePicker();
-         });
       }
+
    });
 
    return MenuLink;
