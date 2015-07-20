@@ -116,6 +116,9 @@ define('js!SBIS3.CONTROLS.CustomFilterMenu',
                self._setResetButtonVisibility(id[0] === this._defaultId);
             }
          },
+         getDefaultId: function() {
+            return this._defaultId;
+         },
          _setCaptionText: function(text) {
             if(typeof text === 'string') {
                this._caption.text(text);
