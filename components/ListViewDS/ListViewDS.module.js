@@ -743,6 +743,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                this._updateOffset();
             }
          },
+         _toggleIndicator: function(show){
+            this._container.find('.controls-AjaxLoader').toggleClass('ws-hidden', !show);
+         },
          //------------------------Paging---------------------
          _processPaging: function() {
             this._processPagingStandart();
