@@ -2146,7 +2146,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-PathSelector__point {
   cursor: pointer;
   position: relative;
-  top: -1px;
+  top: -2px;
+  line-height: 16px;
 }
 .controls-PathSelector__point:hover .controls-PathSelector__title {
   color: #FF7033;
@@ -2157,9 +2158,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-PathSelector__point:hover:first-child .controls-PathSelector__title {
   color: #FF7033;
 }
-.controls-PathSelector__point:first-child {
-  top: 0;
-}
 .controls-PathSelector__point:first-child .controls-PathSelector__title {
   font-size: 15px;
   color: #313E78;
@@ -2167,9 +2165,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-PathSelector__point:first-child .controls-PathSelector__arrow {
   background: url('img/path-filter-icon-back.png');
-  height: 24px;
-  width: 24px;
-  top: 5px;
+  height: 22px;
+  width: 18px;
+  top: 3px;
 }
 .controls-PathSelector__point:first-child .controls-PathSelector__arrow::before {
   content: '';
