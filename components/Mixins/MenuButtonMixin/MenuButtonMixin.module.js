@@ -38,6 +38,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
       _createPicker: function(targetElement){
          return new ContextMenu({
             parent: this.getParent(),
+            opener: this,
             context: this.getParent() ? this.getParent().getLinkedContext() : {},
             element: targetElement,
             target : this.getContainer(),
@@ -101,6 +102,16 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             }
          },
       },
+
+      around: {
+         addItem : function(parentFunc, item) {
+            this._items.addItem(item);
+            if (this._picker){
+               this._drawItems();
+            }
+         },
+      },
+
 
       _drawItems : function() {
          if (this._picker) {
