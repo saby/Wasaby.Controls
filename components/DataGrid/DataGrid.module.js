@@ -55,6 +55,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
          },
          _currentScrollPosition: undefined,           //Текущее положение частичного скрола заголовков
          _scrollingNow: false,                        //Флаг обозаначающий, происходит ли в данный момент скролирование элементов
+         _partScrollRow: undefined,
          _options: {
             /**
              * @typedef {Object} Columns
@@ -295,6 +296,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
          (this._arrowLeft = this._thead.find('.controls-DataGrid__PartScroll__arrowLeft')).click(this._arrowClickHandler.bind(this, true));
          (this._arrowRight = this._thead.find('.controls-DataGrid__PartScroll__arrowRight')).click(this._arrowClickHandler.bind(this, false));
          (this._thumb = this._getDragContainer()).mousedown(this._thumbClickHandler.bind(this));
+         this._partScrollRow = this._thead.find('.controls-DataGrid__PartScroll__row');
          this.initializeDragAndDrop();
       },
 
@@ -455,14 +457,14 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
       _hidePartScroll: function() {
          if(this._isPartScrollVisible) {
-            this._getWithinElem().addClass('ws-hidden');
+            this._partScrollRow.addClass('ws-hidden');
             this._isPartScrollVisible = false;
          }
       },
 
       _showPartScroll: function() {
          if(!this._isPartScrollVisible) {
-            this._getWithinElem().removeClass('ws-hidden');
+            this._partScrollRow.removeClass('ws-hidden');
             this._updatePartScrollWidth();
             this._isPartScrollVisible = true;
          }
