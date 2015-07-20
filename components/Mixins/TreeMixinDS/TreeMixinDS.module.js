@@ -120,7 +120,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       expandNode: function (key) {
          var self = this;
          this._folderOffsets[key || 'null'] = 0;
+         this._toggleIndicator(true);
          this._dataSource.query(this._createTreeFilter(key), this._sorting, 0, this._limit).addCallback(function (dataSet) {
+            self._toggleIndicator(false);
             self._nodeDataLoaded(key, dataSet);
          });
       },
