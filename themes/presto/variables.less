@@ -1446,6 +1446,7 @@
 // CustomFilterMenu//
 // --------------- //
 @customFilterMenu-cursor:                         pointer;
+@customFilterMenu-border-color:                   #e4e4e4;
 
 @customFilterMenu-iconWidth:                      16px;
 @customFilterMenu-iconHeight:                     16px;
@@ -1461,16 +1462,19 @@
 
 @customFilterMenu-captionWrapper-margin:          0 19px 0 19px;
 @customFilterMenu-min-height:                     24px;
-@customFilterMenu-shadow-hover:                   0 0 0 1px @gray-light-color;
+@customFilterMenu-shadow-hover:                   0 0 0 1px @customFilterMenu-border-color;
 
 @customFilterMenu-picker-bg:                      @white-color;
-@customFilterMenu-picker-border:                  1px solid @gray-light-color;
-@customFilterMenu-picker-border-radius:           0;
-@customFilterMenu-picker-menu-item-padding:       4px;
-@customFilterMenu-picker-menu-item-margin:        0 8px;
+@customFilterMenu-picker-border:                  2px solid @customFilterMenu-border-color;
+@customFilterMenu-picker-head-border-radius:      5px 5px 0 0;
+@customFilterMenu-picker-list-border-radius:      0 0 5px 5px;
+@customFilterMenu-picker-list-right-border-radius:0 5px 5px 5px;
+@customFilterMenu-picker-list-left-border-radius: 5px 0 5px 5px;
+@customFilterMenu-picker-menu-item-padding:       4px 8px;
+@customFilterMenu-picker-menu-item-margin:        0;
 @customFilterMenu-picker-menu-item-color:         @white-color;
-@customFilterMenu-picker-menu-item-hover:         #E7F0F9;
-@customFilterMenu-picker-list-padding:            8px 0;
+@customFilterMenu-picker-menu-item-hover:         #E9FAFE;
+@customFilterMenu-picker-list-padding:            8px 0;//ProgressBar
 //ProgressBar
 @controls-ProgressBar-height:                       17px;
 @controls-ProgressBar-empty-bg:                     #F3F3F3;
