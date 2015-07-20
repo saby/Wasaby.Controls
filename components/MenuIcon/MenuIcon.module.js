@@ -75,10 +75,10 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
       },
 
       _clickHandler: function () {
+         this._initMenu();
          if (this.getItems().getItemsCount() > 1) {
             $('.controls-MenuIcon__header', this._container).toggleClass('controls-MenuIcon__header-hidden', this._container.hasClass('controls-Picker__show'));
             this.togglePicker();
-            this._initMenu();
          } else {
             if (this.getItems().getItemsCount() == 1) {
                var id = this.getItems().getKey(this.getItems().getNextItem());
