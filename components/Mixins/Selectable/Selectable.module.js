@@ -126,61 +126,13 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
          this._drawSelectedItem(this._options.selectedKey);
          this._notifySelectedItem(this._options.selectedKey);
       },
-       /**
-        * Метод получения идентификатора следующего элемента.
-        * @param {*|String} id Идентификатор элемента
-        * @remark
-        * Идентификаторм элемента является ключ из поля, указанного в опции {@link SBIS3.CONTROLS.DSMixin#keyField keyField}.
-        * @returns {*|String} Идентификатор следующего элемента. Если верёнт undefined, то в колекции нет выбранного элемента
-        * @example
-        * <pre>
-        *     var key = myComboBox.getNextItemKey();
-        *     myComboBox.setSelectedKey(key);
-        * </pre>
-        * @see getPreviousItemKey
-        * @see SBIS3.CONTROLS.DSMixin#keyField
-        */
-      getNextItemKey: function(key) {
-        var indexId = this._dataSet._indexId,
-          length = indexId.length;
-        for (var i = 0; i < length; i++){
-          if (indexId[i] == key){
-            return indexId[i + 1] || null ;
-          }
-        }
-      },
-       /**
-        * Метод получения идентификатора предыдущего элемента.
-        * @param {*|String} id Идентификатор элемента
-        * @remark
-        * Идентификатором элемента является ключ из поля, указанного в опции {@link SBIS3.CONTROLS.DSMixin#keyField keyField}.
-        * @returns {*|String} Идентификатор предыдущего элемента.
-        * @example
-        * <pre>
-        *     var key = myComboBox.getPreviousItemKey();
-        *     if (key !== 'old') {
-        *        myComboBox.setSelectedKey(key);
-        *     }
-        * </pre>
-        * @see getNextItemKey
-        * @see SBIS3.CONTROLS.DSMixin#keyField
-        */
-      getPreviousItemKey: function(key) {
-         var indexId = this._dataSet._indexId,
-          length = indexId.length;
-        for (var i = 0; i < length; i++){
-          if (indexId[i] == key){
-            return indexId[i - 1] || null ;
-          }
-        }
-      },
       /**
        * Получить идентификатор выбранного элемента.
        * @example
        * <pre>
        *     var key = myComboBox.getSelectedKey();
        *     if (key !== 'old') {
-       *        myComboBox.setSelectedKey(myComboBox.getNextItemKey());
+       *        myComboBox.setSelectedKey('newKey');
        *     }
        * </pre>
        * @see selectedKey
