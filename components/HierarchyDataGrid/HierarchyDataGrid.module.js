@@ -162,8 +162,13 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
                className : 'controls-PathSelector__smallItems'
             });
             ps.once('onPointClick', function(event, id){
-               //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onPOintClick'), а вотом выполняется setCurrentRoot
+               //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onPointClick'), а вотом выполняется setCurrentRoot
                event.setResult(false);
+               //TODO убрать этот костыль сброса строки поиска в 373
+               self._filter = $ws.core.merge(self._filter, {
+                  'Разворот' : 'Без разворота',
+                  'СтрокаПоиска': undefined
+               });
                //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
                self.setCurrentRoot(id);
                self.setGroupBy({});
