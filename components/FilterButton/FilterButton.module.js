@@ -90,7 +90,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
          });
 
          this._updateFilterStructure(this._options.filterStructure || {});
-         this._recalcInternalContext();
       },
 
       _updateFilterStructure: function(filterStructure, filter, descriptions) {
@@ -154,6 +153,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                return newElement;
             });
          }
+         this._recalcInternalContext();
       },
 
       _findFilterStructureElement: function(func) {
@@ -185,8 +185,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
          if (fromContext) {
             this._updateFilterStructure(undefined, context.getValue(filterPath), context.getValue(descrPath));
-
-            this._recalcInternalContext();
          } else if (pickerVisible) {
             toSet = {};
             toSet[filterPath] = this.getFilter();
@@ -210,7 +208,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
          if (!internalOnly) {
             this._updateFilterStructure(undefined, resetFilter);
-            this._recalcInternalContext();
             this._notifyFilterUpdate();
          }
       }),

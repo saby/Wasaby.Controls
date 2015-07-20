@@ -24,8 +24,11 @@ define('js!SBIS3.CONTROLS.Demo.FilterButtonMain', [
             });
 
             context.setValueSelf({
-               filter: {},
-               filterDescr: {}
+               filter: {
+               },
+               filterDescr: {
+                  NDS: 'Не выбрано'
+               }
             });
          }
       });

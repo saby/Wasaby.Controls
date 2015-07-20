@@ -23,12 +23,12 @@
                 <opt name="contextDescriptionField">NDSText</opt>
 
                 <!-- По умолчанию будет "ничего" - если по привязке нет, и тут нет -->
-                <opt name="description" bind="filterDescr/NDSText">Не выбрано</opt>
+                <opt name="description" bind="filterDescr/NDS"></opt>
 
                 <opt name="value" bind="filter/NDS"></opt>
 
-                <opt name="resetValue" type="string">2</opt>
-                <opt name="resetDescription">С НДС</opt>
+                <opt name="resetValue" type="string">1</opt>
+                <opt name="resetDescription">Без НДС</opt>
             </opts>
             <opts>
                 <opt name="field">clientName</opt>
@@ -44,7 +44,7 @@
 
                 <opt name="contextDescriptionField">sellingText</opt>
 
-                <opt name="description" bind="filterDescr/sellingText"></opt>
+                <opt name="description" bind="filterDescr/selling"></opt>
 
                 <opt name="value" bind="filter/selling"></opt>
 
@@ -55,7 +55,7 @@
 
                 <opt name="contextDescriptionField">usingText</opt>
 
-                <opt name="description" bind="filterDescr/usingText"></opt>
+                <opt name="description" bind="filterDescr/using"></opt>
 
                 <opt name="value" bind="filter/using"></opt>
 
@@ -71,7 +71,7 @@
     <div data-bind="{html: 'filterJSON'}"></div>
     <div data-bind="{html: 'filterDescrJSON'}"></div>
 
-    <component data-component="SBIS3.CONTROLS.DataGrid" style="width: 500px; position: relative;">
+    <component data-component="SBIS3.CONTROLS.DataGrid" style="width: 600px; position: relative;">
         <opt name="filter" bind="filter"></opt>
         <options name="columns" type="array">
             <options>
