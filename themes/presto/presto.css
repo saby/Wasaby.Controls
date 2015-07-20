@@ -2683,17 +2683,15 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CustomFilterMenu__picker {
   cursor: pointer;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-  -webkit-background-clip: padding-box;
-  -moz-background-clip: padding;
-  background-clip: padding-box;
+}
+.controls-CustomFilterMenu__picker .controls-CustomFilterMenu__equalsWidth .controls-CustomFilterMenu__list {
+  border-radius: 0 0 5px 5px;
 }
 .controls-CustomFilterMenu__picker .controls-CustomFilterMenu__header {
   display: inline-block;
   background: #ffffff;
-  border: 1px solid #eeeeee;
+  border: 2px solid #e4e4e4;
+  border-radius: 5px 5px 0 0;
   border-bottom: 0;
   z-index: 2;
 }
@@ -2702,21 +2700,22 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CustomFilterMenu__picker .controls-CustomFilterMenu__list {
   z-index: 1;
-  border: 1px solid #eeeeee;
+  border: 2px solid #e4e4e4;
+  border-radius: 0 5px 5px 5px;
   background: #ffffff;
-  margin-top: -1px;
+  margin-top: -2px;
   padding: 8px 0;
 }
 .controls-CustomFilterMenu__picker.controls-FloatArea {
   background: transparent;
 }
 .controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item {
-  padding: 4px;
+  padding: 4px 8px;
   background: #ffffff;
-  margin: 0 8px;
+  margin: 0;
 }
 .controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item:hover {
-  background: #e7f0f9;
+  background: #e9fafe;
 }
 .controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item.controls-CustomFilterMenu__item__selected {
   display: none;

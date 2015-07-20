@@ -37,10 +37,10 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             this._subscribeOnSetRoot();
          }
          $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._resizeHandler, this);
-         //инициализируем dataSet
-         this.setItems(this._options.items || []);
          this._homeIcon = $('.controls-PathSelector__point-home', this._container);
          this._homeIcon.data('data-id', null); //клик по домику ведет в корень TODO: придрочено под null
+         //инициализируем dataSet
+         this.setItems(this._options.items || []);
       },
 
       _resizeHandler: function() {
@@ -100,7 +100,9 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       _toggleHomeIcon: function(state){
-         this._homeIcon.toggleClass('ws-hidden', state);
+         if (this._homeIcon){
+            this._homeIcon.toggleClass('ws-hidden', state);
+         }
       },
 
       setItems: function(items){
@@ -113,7 +115,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             var key = keys[i];
             if (key){
                var point = {};
-               point[this._options.displayField] = key.title;
+               point[this._options.displayField] = $ws.helpers.escapeHtml(key.title);
                point[this._options.keyField] = key.key;
                point[this._options.colorField] = key.color;
                this._dataSet.push(point);
@@ -174,7 +176,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
                if (record.get(self._options.keyField)){
                   var point = $('<div class="controls-MenuItem js-controls-PathSelector__point"></div>');
                      point.html(self._decorators.apply(
-                           record.get(self._options.displayField)
+                           $ws.helpers.escapeHtml(record.get(self._options.displayField))
                      ))
                      .attr('style', self._decorators.apply(
                         self._options.colorField ? record.get(self._options.colorField) : '', 'color'

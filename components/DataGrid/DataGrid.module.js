@@ -242,7 +242,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
                      highlight: column.highlight
                   }));
                } else {
-                  value = item.get(column.field);
+                  value = $ws.helpers.escapeHtml(item.get(column.field));
                   value = ((value != undefined) && (value != null)) ? value : '';
                }
                column.value = value;

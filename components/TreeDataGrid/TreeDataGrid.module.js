@@ -135,7 +135,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
       _nodeClosed : function(key) {
          var childKeys = this._dataSet.getChildItems(key, true, this._options.hierField);
          for (var i = 0; i < childKeys.length; i++) {
-            $('.controls-ListView__item[data-id="' + childKeys[i] + '"]', this._container.get(0)).remove();
+            $('.controls-ListView__item[data-id="' + childKeys[i] + '"]', this._getItemsContainer().get(0)).remove();
             delete(this._options.openedPath[childKeys[i]]);
          }
          /*TODO кажется как то нехорошо*/
@@ -154,7 +154,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          var
             key = item.getKey(),
             parentKey = this._dataSet.getParentKey(item, this._options.hierField),
-         	parentContainer = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._container.get(0)).get(0);
+         	parentContainer = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._getItemsContainer().get(0)).get(0);
          container.attr('data-parent', parentKey);
 
          if (this._options.openedPath[key]) {
