@@ -21,8 +21,8 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
       _topWindow: null,
 
       addNode: function (component) {
-         var parent = component.getParent(),
-            id = component.getId(), node;
+         var parent = component.getParent() || component.getOpener(),
+             id = component.getId(), node;
          //если есть парент
          if (parent) {
             //то ищем узел этого парента по id

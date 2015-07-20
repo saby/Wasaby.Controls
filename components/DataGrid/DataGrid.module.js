@@ -454,14 +454,14 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
       _hidePartScroll: function() {
          if(this._isPartScrollVisible) {
-            this._getWithinElem().addClass('ws-hidden');
+            this._getWithinElem().parent().addClass('ws-hidden');
             this._isPartScrollVisible = false;
          }
       },
 
       _showPartScroll: function() {
          if(!this._isPartScrollVisible) {
-            this._getWithinElem().removeClass('ws-hidden');
+            this._getWithinElem().parent().removeClass('ws-hidden');
             this._updatePartScrollWidth();
             this._isPartScrollVisible = true;
          }

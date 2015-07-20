@@ -25,6 +25,8 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          },
          _filterLineItemsContainer: undefined,
          _filterLine: undefined,
+         _clearButton: undefined,
+         _applyButton: undefined,
          //FIXME придрот для демки
          _linkedView: undefined,
          _initialFilter: undefined,
@@ -37,7 +39,9 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
             onlySelling: true,
             onlyNotSelling: true,
             ТипНоменклатуры: true
-         }
+         },
+         _controlChangedValues: 0,
+         _changedControlsMap: {}
       },
 
       $constructor: function() {
@@ -67,6 +71,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
                delete this._linkedView._filter[i]
             }
          }
+         this.toggleClearButton(false);
          this._linkedView.reload($ws.core.merge(this._linkedView._filter, this._initialFilter, {clone: true}));
       },
 
@@ -74,7 +79,37 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          this._setControlsValues(this._currentControlsValues);
          FilterButtonNew.superclass.showPicker.apply(this, arguments);
       },
+      _controlValueChange: function(ctr, event, value) {
+         var ctrName = ctr.getName(),
+             ctrValue = value === null ? value : value[0];
 
+         if(ctrValue === null || ctr.getDefaultId && ctr.getDefaultId() === ctrValue) {
+            if(this._changedControlsMap[ctrName]) {
+               this._changedControlsMap[ctrName] = false;
+               if (--this._controlChangedValues === 0) {
+                  this.toggleClearButton(false);
+               }
+            }
+         } else if (!this._changedControlsMap[ctrName]) {
+            this._changedControlsMap[ctrName] = true;
+            if(++this._controlChangedValues === 1) {
+               this.toggleClearButton(true);
+            }
+         }
+      },
+      toggleClearButton: function(enabled) {
+         this._clearButton.setEnabled(!!enabled);
+      },
+      _initControlsEvents: function(controls) {
+         for(var i = 0, len = controls.length; i < len; i++) {
+            if($ws.helpers.instanceOfModule(controls[i], 'SBIS3.CONTROLS.CustomFilterMenu')) {
+               controls[i].subscribe('onSelectedItemsChange', this._controlValueChange.bind(this, controls[i]));
+            }
+            if($ws.helpers.instanceOfModule(controls[i], 'SBIS3.CORE.FieldLink')) {
+               controls[i].subscribe('onValueChange', this._controlValueChange.bind(this, controls[i]));
+            }
+         }
+      },
       //Применение фильтрации, перерисовка текста у кнопки фильтров
       applyFilter: function() {
          console.log('applyFilter');
@@ -132,15 +167,23 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          this.reload();
          this._linkedView.reload($ws.core.merge(this._linkedView._filter, filter));
       },
-
       _setPickerContent: function() {
-         var suggest = this._picker.getChildControlByName('ТипНоменклатуры').getSuggest();
+         var fieldLink = this._picker.getChildControlByName('ТипНоменклатуры'),
+             suggest = fieldLink.getSuggest();
+
+         fieldLink.subscribe('onBeforeDictionaryOpen', function() {
+            setTimeout(function() {
+               ControlHierarchyManager.addNode(fieldLink._dictionarySelector);
+            }, 0)
+         });
          this._currentControlsValues = this._getControlsValues();
          this._initialControlsValues = $ws.core.clone(this._currentControlsValues);
          this._picker.getContainer().addClass('controls__filterButton-' + this._options.filterAlign);
-         this._picker.getChildControlByName('clearFilterButton').subscribe('onActivated', this.resetFilter.bind(this));
-         this._picker.getChildControlByName('applyFilterButton').subscribe('onActivated', this.applyFilter.bind(this));
-         ControlHierarchyManager.addNode(suggest, suggest.getParent());
+         (this._clearButton = this._picker.getChildControlByName('clearFilterButton')).subscribe('onActivated', this.resetFilter.bind(this));
+         (this._applyButton = this._picker.getChildControlByName('applyFilterButton')).subscribe('onActivated', this.applyFilter.bind(this));
+         this._clearButton.setEnabled(false);
+         this._initControlsEvents(this._picker.getChildControls());
+         ControlHierarchyManager.addNode(suggest);
       },
 
       _drawItemsCallback: function() {
