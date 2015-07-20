@@ -267,7 +267,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _notifySelectedItem: function (key) {
          var text = this.getText();
          this._notify('onSelectedItemChange', key, text);
-         this._notify('onPropertyChanged');
+         this._notifyOnPropertyChanged('selectedItem');
       },
 
       _setPickerContent: function () {

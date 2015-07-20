@@ -109,7 +109,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
             this._options.text = newText;
             this._drawText(newText);
             this._notify('onTextChange', newText);
-            this._notify('onPropertyChanged', 'text', newText);
+            this._notifyOnPropertyChanged('text');
          }
       },
 
