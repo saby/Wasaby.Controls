@@ -293,8 +293,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._sorting = typeof(sorting) != 'undefined' ? sorting : this._sorting;
          this._offset = typeof(offset) != 'undefined' ? offset : this._offset;
          this._limit = typeof(limit) != 'undefined' ? limit : this._limit;
+         this._toggleIndicator(true);
          this._loader = this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
             self._notify('onDataLoad', dataSet);
+            self._toggleIndicator(false);
             self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
             if (self._dataSet) {
                self._dataSet.setRawData(dataSet.getRawData());
@@ -308,6 +310,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             self._redraw();
          });
          return def;
+      },
+      _toggleIndicator:function(){
+         /*Method must be implemented*/
       },
        /**
         * Метод установки количества элементов на одной странице.
