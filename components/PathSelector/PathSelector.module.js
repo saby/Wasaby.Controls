@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          }
          $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._resizeHandler, this);
          this._homeIcon = $('.controls-PathSelector__point-home', this._container);
-         this._homeIcon.data('data-id', null); //клик по домику ведет в корень TODO: придрочено под null
+         this._homeIcon.data('id', null); //клик по домику ведет в корень TODO: придрочено под null
          //инициализируем dataSet
          this.setItems(this._options.items || []);
       },
@@ -205,9 +205,9 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          var points = $('.controls-PathSelector__point', this._container),
             i = points.length - 2,
             targetContainer = this._getTargetContainer();
-         //30px - ширина блока с троеточием
+         //30px + 36px - ширина блока с троеточием + ширина блока с домиком
          //Добавляем троеточие если пункты не убираются в контейнер
-         if (targetContainer.width() + 30 >= this._container.width()) {
+         if (targetContainer.width() + 66 >= this._container.width()) {
             var dots = $(pointTpl({
                item: { 
                   title: '...',
