@@ -78,11 +78,19 @@ define('js!SBIS3.CONTROLS.StaticSource', [
             );
          }
 
-         this.getStrategy().addRecord(
-            this._options.data,
-            record,
-            this._getIndexByKey(record.getKey())
-         );
+         var index = this._getIndexByKey(record.getKey());
+         if (index >= 0) {
+            this.getStrategy().replaceAt(
+               this._options.data,
+               index,
+               record.getRaw()
+            );
+         } else {
+            this.getStrategy().addRecord(
+               this._options.data,
+               record
+            );
+         }
          this._map = undefined;
 
          if (!record.isCreated()) {
