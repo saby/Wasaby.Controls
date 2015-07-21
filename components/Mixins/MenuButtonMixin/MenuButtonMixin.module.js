@@ -38,7 +38,6 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
       _createPicker: function(targetElement){
          return new ContextMenu({
             parent: this.getParent(),
-            opener: this,
             context: this.getParent() ? this.getParent().getLinkedContext() : {},
             element: targetElement,
             target : this.getContainer(),
@@ -58,21 +57,40 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          });
       },
 
-      after: {
+      _setPickerContent: function(){
+         var self = this,
+            header = this._getHeader();
+         header.bind('click', function(){
+            self._onHeaderClick();
+         });
+         this._picker.getContainer().prepend(header);
+      },
+
+      _getHeader: function(){
+         var header = $('<div class="controls-Menu__header">');
+         if (this._options.icon) {
+            header.append('<i class="' + this._options.iconTemplate(this._options) + '"></i>');
+         }
+         header.append('<span class="controls-Menu__header-caption">' + this._options.caption + '</span>');
+         return header;
+      },
+
+      _onHeaderClick: function(){
+         this.togglePicker();
+      },
+
+      after : {
          _initializePicker : function() {
             var self = this;
-            this._setWidth();
             this._picker.subscribe('onMenuItemActivate', function(e, id) {
                self._notify('onMenuItemActivate', id);
             });
-         }
-      },
+         },
 
-      around: {
-         addItem : function(parentFunc, item) {
-            this._items.addItem(item);
-            if (this._picker){
-               this._drawItems();
+         //TODO в 3.7.3 ждать починки от Вити
+         setEnabled: function (enabled) {
+            if (this._picker) {
+               this._picker.setEnabled(enabled);
             }
          },
       },
@@ -83,9 +101,16 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          }
          this._initializePicker();
          this._initMenu();
-      }
+      },
+
+      addItem : function( item) {
+         this._items.addItem(item);
+         if (this._picker){
+            this._drawItems();
+         }
+      },
+
    };
 
    return MenuButtonMixin;
 });
-
