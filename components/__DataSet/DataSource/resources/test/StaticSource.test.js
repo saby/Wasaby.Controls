@@ -168,7 +168,7 @@ define(
                 });
 
                 context('when the record was not created', function() {
-                    var testRecord = function(success, record, done) {
+                    var testRecord = function(success, record, length, done) {
                         try {
                             if (!success) {
                                 throw new Error('Unsuccessful update');
@@ -181,6 +181,9 @@ define(
                             }
                             if (!record.getKey()) {
                                 throw new Error('The record should become having a key');
+                            }
+                            if (length !== data.length) {
+                                return done(new Error('The size of raw data expect to be ' + length + ' but ' + data.length + ' detected'));
                             }
                             service.read(record.getKey()).addCallbacks(function(recordToo) {
                                 if (record.get('Фамилия') !== recordToo.get('Фамилия')) {
@@ -197,10 +200,11 @@ define(
                     };
 
                     it('should create the record by 1st way', function(done) {
+                        var oldLength = data.length;
                         service.create().addCallbacks(function(record) {
                             record.set('Фамилия', 'Козлов');
                             service.update(record).addCallbacks(function(success) {
-                                testRecord(success, record, done);
+                                testRecord(success, record, 1 + oldLength, done);
                             }, function(err) {
                                 done(err);
                             });
@@ -210,14 +214,15 @@ define(
                     });
 
                     it('should create the record by 2nd way', function(done) {
-                        var record = new Record({
-                            strategy: new ArrayStrategy(),
-                            keyField: 'Ид'
-                        });
+                        var oldLength = data.length,
+                            record = new Record({
+                                strategy: new ArrayStrategy(),
+                                keyField: 'Ид'
+                            });
 
                         record.set('Фамилия', 'Овечкин');
                         service.update(record).addCallbacks(function(success) {
-                            testRecord(success, record, done);
+                            testRecord(success, record, 1 + oldLength, done);
                         }, function(err) {
                             done(err);
                         });

@@ -110,14 +110,14 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
          return field in data ? 'Текст' : undefined;
       },
        /**
-        * Метод добавления записи.
-        * @param {Array} data
-        * @param record
-        * @param at
+        * Добавляет запись
+        * @param {Array} data Массив "сырых" данных
+        * @param {SBIS3.CONTROLS.Record} record Добавляемая запись
+        * @param {Integer} [at] Позиция вставки (по умолчанию в конец)
         */
       addRecord: function (data, record, at) {
          var rawData = record.getRaw();
-         if (at >= 0) {
+         if (at !== undefined && at >= 0) {
             data.splice(at, 0, rawData);
          } else {
             data.push(rawData);

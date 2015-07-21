@@ -39,9 +39,12 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
       replaceAt: function () {
          /*Method must be implemented*/
       },
-       /**
-        * Метод добавления записи
-        */
+      /**
+       * Добавляет запись
+       * @param {Array} data Массив "сырых" данных
+       * @param {SBIS3.CONTROLS.Record} record Добавляемая запись
+       * @param {Integer} [at] Позиция вставки (по умолчанию в конец)
+       */
       addRecord: function () {
          /*Method must be implemented*/
       },
