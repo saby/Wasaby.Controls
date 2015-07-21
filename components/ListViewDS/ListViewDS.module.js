@@ -587,6 +587,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
             this._drawSelectedItems(this._options.selectedKeys);
             this._drawSelectedItem(this._options.selectedKey);
+            this._notifyOnSizeChanged(true);
          },
          //-----------------------------------infiniteScroll------------------------
          //TODO Сделать подгрузку вверх
