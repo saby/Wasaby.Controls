@@ -183,7 +183,7 @@ define(
                                 throw new Error('The record should become having a key');
                             }
                             if (length !== data.length) {
-                                return done(new Error('The size of raw data expect to be ' + length + ' but ' + data.length + ' detected'));
+                                throw new Error('The size of raw data expect to be ' + length + ' but ' + data.length + ' detected');
                             }
                             service.read(record.getKey()).addCallbacks(function(recordToo) {
                                 if (record.get('Фамилия') !== recordToo.get('Фамилия')) {
@@ -256,6 +256,22 @@ define(
                                 //ok if err == Record is not found
                                 done();
                             });
+                        }, function(err) {
+                            done(err);
+                        });
+                    });
+
+                    it('should decrease the size of raw data', function(done) {
+                        var targetLength = data.length - 1;
+                        service.destroy(existsId).addCallbacks(function() {
+                            try {
+                                if (targetLength !== data.length) {
+                                    throw new Error('The size of raw data expect to be ' + targetLength + ' but ' + data.length + ' detected');
+                                }
+                                done();
+                            } catch (err) {
+                                done(err);
+                            }
                         }, function(err) {
                             done(err);
                         });
