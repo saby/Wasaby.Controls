@@ -28,6 +28,19 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
     */
 
    var HierarchyDataGrid = DataGrid.extend([hierarchyMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
+      /**
+       * @event onSearchPathClick При клике по хлебным крошкам в режиме поиска.
+       * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {number} id ключ узла, по которму кликнули
+       * @return Если вернуть false - загрузка узла не произойдет
+       * @example
+       * <pre>
+       *    dataGrid.subscribe('onSearchPathClick', function(event){
+       *      searchForm.clearSearch();
+       *    });
+       * </pre>
+       */
       $protected: {
          _rowTpl: rowTpl,
          _pathSelectors : [],
@@ -37,7 +50,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
       },
 
       $constructor: function () {
-        this._publish('onSetRoot');
+        this._publish('onSetRoot', 'onSearchPathClick');
          //чтобы не добавлять новый шаблон модуля просто добавим класс тут
          this.getContainer().addClass('controls-HierarchyDataGrid');
       },
@@ -164,14 +177,11 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
             ps.once('onPointClick', function(event, id){
                //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onPointClick'), а вотом выполняется setCurrentRoot
                event.setResult(false);
-               //TODO убрать этот костыль сброса строки поиска в 373
-               self._filter = $ws.core.merge(self._filter, {
-                  'Разворот' : 'Без разворота',
-                  'СтрокаПоиска': undefined
-               });
-               //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
-               self.setCurrentRoot(id);
-               self.setGroupBy({});
+               if (self._notify('onSearchPathClick', id) !== false ) {
+                  //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
+                  self.setCurrentRoot(id);
+                  self.setGroupBy({});
+               }
             });
             this._pathSelectors.push(ps);
          } else{
