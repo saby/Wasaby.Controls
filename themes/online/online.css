@@ -97,7 +97,7 @@ input[type="reset"]::-moz-focus-inner {
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXBWQ6DIABAwXf/sxlj3UUJhIqKogSX+tsZ3t/Fc0fuM3DGgxg8YV85vMOvM5uzuHlksYZp1Fij+GqJUT1aCtTQIkXN0FaIpqCrPjRFRp2nlFnyB0tqP75XY7RKAAAAAElFTkSuQmCC');
 }
 .controls-Button .controls-Button__text.controls-Button__emptyCaption {
-  margin: 0 0 0 13px;
+  margin: 0 0 0 13px !important;
 }
 .controls-Button .controls-Button__icon {
   position: absolute;
@@ -196,7 +196,7 @@ input[type="reset"]::-moz-focus-inner {
   margin: 0 24px 0 24px;
 }
 .controls-Button.controls-Button__big .controls-Button__text.controls-Button__emptyCaption {
-  margin: 0 0 0 13px;
+  margin: 0 0 0 13px !important;
 }
 .controls-Button.controls-Button__big .controls-Button__icon {
   position: absolute;
@@ -1155,8 +1155,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextBox.ws-validation-error {
   border-width: 1px;
   border-style: solid;
-  border-color: #ff302b;
-  background: #fadadd;
+  border-color: #ff302b !important;
+  background: #fadadd !important;
 }
 .controls-TextBox.ws-validation-error .controls-TextBox__fieldWrapper .controls-TextBox__field {
   color: inherit;
@@ -1216,7 +1216,7 @@ input[type="reset"]::-moz-focus-inner {
   color: inherit;
   text-align: left;
   min-height: 19px;
-  line-height: 20px;
+  line-height: 20px !important;
   margin: 0;
   padding: 1px 0;
   border: none;
@@ -1224,16 +1224,16 @@ input[type="reset"]::-moz-focus-inner {
   background: transparent;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-webkit-input-placeholder {
-  color: #cccccc;
+  color: #cccccc !important;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field:-moz-placeholder {
-  color: #a1a1a1;
+  color: #a1a1a1 !important;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-moz-placeholder {
-  color: #a1a1a1;
+  color: #a1a1a1 !important;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field:-ms-input-placeholder {
-  color: #cccccc;
+  color: #cccccc !important;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-ms-clear {
   display: none;
@@ -1251,7 +1251,7 @@ input[type="reset"]::-moz-focus-inner {
   text-overflow: ellipsis;
   -ms-text-overflow: ellipsis;
   white-space: nowrap;
-  color: #cccccc;
+  color: #cccccc !important;
   font: inherit;
   padding: 3px 0 0;
   text-align: inherit;
@@ -1277,8 +1277,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-FormattedTextBox.ws-validation-error {
   border-width: 1px;
   border-style: solid;
-  border-color: #ff302b;
-  background: #fadadd;
+  border-color: #ff302b !important;
+  background: #fadadd !important;
 }
 .controls-FormattedTextBox.ws-validation-error .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
   color: inherit;
@@ -1491,16 +1491,16 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
 }
 .controls-TextArea .controls-TextArea__inputField::-webkit-input-placeholder {
-  color: #cccccc;
+  color: #cccccc !important;
 }
 .controls-TextArea .controls-TextArea__inputField:-moz-placeholder {
-  color: #a1a1a1;
+  color: #a1a1a1 !important;
 }
 .controls-TextArea .controls-TextArea__inputField::-moz-placeholder {
-  color: #a1a1a1;
+  color: #a1a1a1 !important;
 }
 .controls-TextArea .controls-TextArea__inputField:-ms-input-placeholder {
-  color: #cccccc;
+  color: #cccccc !important;
 }
 .controls-TextArea.ws-has-focus {
   border-width: 1px;
@@ -1514,8 +1514,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextArea.ws-validation-error {
   border-width: 1px;
   border-style: solid;
-  border-color: #ff302b;
-  background: #fadadd;
+  border-color: #ff302b !important;
+  background: #fadadd !important;
 }
 .controls-TextArea.ws-validation-error .controls-TextArea__inputField {
   color: inherit;
@@ -1674,8 +1674,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DatePicker.ws-validation-error > .controls-DatePicker__fieldWrapper {
   border-width: 1px;
   border-style: solid;
-  border-color: #ff302b;
-  background: #fadadd;
+  border-color: #ff302b !important;
+  background: #fadadd !important;
 }
 .controls-DatePicker:hover .controls-FormattedTextBox__fieldWrapper {
   border-width: 1px;
@@ -1706,7 +1706,7 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/DatePicker-calendar.png') -18px 0 no-repeat;
 }
 .controls-DatePicker .controls-DatePicker__calendarIcon.calendar-disabled {
-  background: url('img/DatePicker-calendar.png') -35px 0 no-repeat;
+  background: url('img/DatePicker-calendar.png') -35px 0 no-repeat !important;
 }
 .controls-DatePicker__calendar {
   -webkit-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
@@ -1882,13 +1882,10 @@ input[type="reset"]::-moz-focus-inner {
   text-indent: 0;
   white-space: pre-wrap;
   /* css-3 */
-
   white-space: -moz-pre-wrap;
   /* Mozilla, since 1999 */
-
   word-wrap: break-word;
   /* Internet Explorer 5.5+ */
-
 }
 .controls-EditAtPlace.controls-EditAtPlace__autoHeight {
   height: auto;
@@ -1947,7 +1944,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: 0 0 3px #b2b2b2;
   -moz-box-shadow: 0 0 3px #b2b2b2;
   box-shadow: 0 0 3px #b2b2b2;
-  background: #f8f3f1;
+  background: #f8f3f1 !important;
 }
 .controls-EditAtPlace__editorOverlay .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
   font: 13px/20px Tahoma, Geneva, sans-serif;
@@ -1971,7 +1968,7 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/cancelIcon-sprite.png') 0 -32px no-repeat;
 }
 .controls-EditAtPlace__controlPanel .controls-EditAtPlace__cancel:hover,
-.controls-EditAtPlaceGroup__controlPanel .controls-EditAtPlace__cancel {
+.controls-EditAtPlaceGroup__controlPanel .controls-EditAtPlace__cancel:hover {
   background: url('img/cancelIcon-sprite.png') 0 -16px no-repeat;
 }
 .controls-EditAtPlaceGroup .controls-EditAtPlace .controls-EditAtPlace__fieldWrapper.controls-EditAtPlace__textAreaWrapper {
@@ -1992,11 +1989,11 @@ input[type="reset"]::-moz-focus-inner {
   position: relative;
 }
 .controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox,
-.controls-DataGrid .controls-ListView__item .controls-ListView__itemCheckBox {
+.controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox {
   background: url('img/CheckBox.png') 0 1px;
 }
 .controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover,
-.controls-DataGrid .controls-ListView__item .controls-ListView__itemCheckBox:hover {
+.controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover {
   background: url('img/CheckBox.png') 0 17px;
 }
 .controls-ListView .controls-ListView__EmptyData {
@@ -2515,7 +2512,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-operations-panel {
   /*TODO придрот (2 important), чтобы перебить высоту ws-area*/
-
   height: 30px !important;
   width: 30px;
   overflow: visible !important;
@@ -2599,7 +2595,6 @@ input[type="reset"]::-moz-focus-inner {
   padding: 0 0 5px 0;
   width: 100%;
   /*TODO как скрыть PathSelector?*/
-
 }
 .controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid .controls-HierarchyDataGrid__PathSelector {
   display: none;
@@ -2867,7 +2862,7 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/ItemActions-menu.png') no-repeat 0 -60px;
 }
 .controls-ItemActions__activeItem {
-  background-color: #f3f3f3;
+  background-color: #f3f3f3 !important;
 }
 .controls-EditInPlaceController {
   position: absolute;
@@ -3080,7 +3075,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #ffffff;
+  background: #ffffff !important;
 }
 .controls-Button__light.ws-disabled {
   color: #cccccc;
@@ -3088,7 +3083,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #ffffff;
+  background: #ffffff !important;
 }
 .controls-ListView__item__selected .controls-DataGrid__td:first-child {
   background-image: url('img/rowSelect.png');
