@@ -53,7 +53,6 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
                opener : this,
                template: 'js!SBIS3.CONTROLS.MassAmountSelector',
                caption : title,
-               resizable: false,
                handlers: {
                   onBeforeShow: function(){
                      //this.getLinkedContext().setValue('NumOfRecords', self._getView()._dataSet.getCount()); Хочется, чтобы было так
