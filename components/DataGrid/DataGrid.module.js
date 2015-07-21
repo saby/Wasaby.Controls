@@ -179,8 +179,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
                .append($(this._getItemTemplate(record)).children());
             this._addItemAttributes(row, record);
             if (this._isPartScrollVisible) {
-               this._findMovableCells();
-               this._moveThumbAndColumns({left: this._currentScrollPosition});
+               this.updateScrollAndColumns();
             }
          }
       },
@@ -287,7 +286,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
 
             this._isPartScrollVisible ?
                needShowScroll ?
-                  this._updatePartScrollWidth() : this._hidePartScroll() :
+                  this.updateScrollAndColumns() : this._hidePartScroll() :
                needShowScroll ?
                   this._showPartScroll() : this._hidePartScroll();
 
@@ -335,6 +334,12 @@ define('js!SBIS3.CONTROLS.DataGrid',
       _dragStart: function() {
          $ws._const.$body.addClass('ws-unSelectable');
          this._scrollingNow = true;
+      },
+
+      updateScrollAndColumns: function() {
+         this._updatePartScrollWidth();
+         this._findMovableCells();
+         this._moveThumbAndColumns({left: this._currentScrollPosition});
       },
 
       _arrowClickHandler: function(isRightArrow) {

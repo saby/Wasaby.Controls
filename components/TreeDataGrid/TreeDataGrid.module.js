@@ -87,11 +87,11 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
                   }
                   else {
                      self._drawItem(record, {at : startRow});
-                     self._drawItemsCallback();
                   }
                }
             }
          }
+         self._drawItemsCallback();
       },
 
       _nodeDataLoaded : function(key, dataSet) {
