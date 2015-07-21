@@ -22,11 +22,3 @@
   background-color: white;
   cursor: text;
 }
-.controls-editInPlace .editInPlace__editor {
-  width: 100%;
-  height: 100%;
-}
-.controls-editInPlace .editInPlace__editor.controls-CheckBox {
-  text-align: center;
-  vertical-align: middle;
-}
