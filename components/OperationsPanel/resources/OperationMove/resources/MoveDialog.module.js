@@ -44,9 +44,9 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
             records,
             linkedView = this._options.linkedView,
             moveTo = this._treeView.getSelectedKeys()[0];
-         if (moveTo !== undefined) {
             records = linkedView.getSelectedKeys();
-            this._move(records, moveTo).getResult().addCallback(function() {
+         if (this._checkRecordsForMove(records, moveTo)) {
+            this._move(records, moveTo).getResult().addCallback(function () {
                linkedView.removeItemsSelectionAll();
                linkedView.openNode(moveTo);
             });
@@ -61,11 +61,19 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
             hierField = linkedView._options.hierField;
          for (var i = 0; i < records.length; i++) {
             record = linkedView._dataSet.getRecordByKey(records[i]);
-            if (record.get(linkedView._dataSet._keyField)[0] !== moveTo) {
-               deferred.push(linkedView._dataSource.move(record, hierField, [moveTo]));
-            }
+            deferred.push(linkedView._dataSource.move(record, hierField, [moveTo]));
          }
          return deferred.done();
+      },
+      _checkRecordsForMove: function(records, moveTo) {
+         if (moveTo === undefined) {
+            return false;
+         }
+         if ($.inArray(moveTo, records) !== -1) {
+            $ws.helpers.alert("Вы не можете переместить запись саму в себя!", {}, this);
+            return false;
+         }
+         return true;
       }
    });
 
