@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
       _topWindow: null,
 
       addNode: function (component) {
-         var parent = component.getParent() || component.getOpener(),
+         var parent = component.getParent() || (component.getOpener instanceof Function ? component.getOpener() : null),
              id = component.getId(), node;
          //если есть парент
          if (parent) {

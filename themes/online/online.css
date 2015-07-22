@@ -870,9 +870,6 @@ input[type="reset"]::-moz-focus-inner {
   position: relative;
   padding: 0 0 2px 0;
 }
-.controls-Button.controls-MenuButton.controls-MenuButton__withoutMenu {
-  padding: 0 12px;
-}
 .controls-Button.controls-MenuButton .controls-MenuButton__arrowDown {
   position: absolute;
   display: inline-block;
@@ -943,6 +940,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuButton .controls-Button__text,
 .controls-MenuButton .controls-Button__icon + .controls-Button__text {
   margin-right: 23px;
+}
+.controls-MenuButton.controls-MenuButton__withoutMenu .controls-Button__text,
+.controls-MenuButton.controls-MenuButton__withoutMenu .controls-Button__icon + .controls-Button__text {
+  margin: 0 12px 0 12px;
 }
 .controls-MenuButton__header {
   display: inline-block;
