@@ -3,11 +3,6 @@
   &.controls-MenuButton {
     position: relative;
     padding: 0 0 2px 0; //FF ignore padding in button, therefore we use SPAN with margin
-
-    &.controls-MenuButton__withoutMenu {
-      padding: @menu-button-no-arrow-padding;
-    }
-
     .controls-MenuButton__arrowDown {
       position: absolute;
       display: inline-block;
@@ -105,6 +100,13 @@
   .controls-Button__text, .controls-Button__icon + .controls-Button__text {
     margin-right: @menu-button-text-right-margin; //this margin reserve space for arrow-down icon
   }
+}
+.controls-MenuButton {
+   &.controls-MenuButton__withoutMenu {
+      .controls-Button__text, .controls-Button__icon + .controls-Button__text {
+         margin: @button-text-margin; //this margin reserve space for arrow-down icon
+      }
+   }
 }
 
 // Header
