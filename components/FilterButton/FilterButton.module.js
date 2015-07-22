@@ -248,7 +248,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                ctx.setValue(rootName, {
                   filterChanged: btnCtx.getValue('filterChanged'),
                   filter: this.getFilter(),
-                  description: {}
+                  description: this._mapFilterStructureByProp('description')
                });
             }.bind(this);
 

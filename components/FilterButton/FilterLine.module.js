@@ -8,7 +8,9 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
       var FilterLine = CompoundControl.extend({
          _dotTplFn: dotTplFn,
          $constructor: function() {
-            var ctx = this.getLinkedContext();
+            var
+               ctx = this.getLinkedContext(),
+               self = this;
 
             function updateContext() {
                var
@@ -28,7 +30,9 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
                } else {
                   linkText = resetLinkText;
                }
+
                ctx.setValueSelf('linkText', linkText);
+               self.toggle(!!linkText);
             }
 
             updateContext();

@@ -2676,11 +2676,34 @@ input[type="reset"]::-moz-focus-inner {
   vertical-align: top;
   text-align: center;
 }
+.controls__filterButton .controls__filterButton__filterLine-items {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  display: inline-block;
+  cursor: pointer;
+  color: #0055bb;
+  text-decoration: none;
+  text-align: center;
+  line-height: normal;
+  padding: 0;
+  box-sizing: border-box;
+}
+.controls__filterButton .controls__filterButton__filterLine-items:hover {
+  color: #ff7033;
+  text-decoration: underline;
+}
 .controls__filterButton .controls__filterButton__filterLine-cross {
   width: 16px;
   height: 16px;
   display: inline-block;
+  vertical-align: bottom;
   cursor: pointer;
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAJiS0dEAP+Hj8y/AAAACXBIWXMAAABIAAAASABGyWs+AAAAnElEQVQoz9WQMQ6CQBBFX2GI4QDcxp7CkI2lcxRrL0HPHRAbAiLZI1gRytWCwsbKsSDbrJQ2/mr+z0zy38A/SR4gawCJZxfoamXQCEAjGS/2a8FlTSsWQGzTusznKz8kZfJ6Hrjx3t83R+rFHmryKZ/ULJeMQWzVl73Y2YXXkQzVSY3uyrOvG2DWndsCOFN3C5haaOoxNdXidx/+AAnTQEYc86HTAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE1LTA0LTEwVDEwOjM2OjQxKzAzOjAwZkUzPgAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNS0wNC0xMFQxMDozNjo0MSswMzowMBcYi4IAAAAASUVORK5CYII=');
+}
+.controls__filterButton .controls__filterButton__filterLine-arrow:before {
+  line-height: normal;
+  vertical-align: sub;
 }
 .controls__filterButton .controls__filterButton-button {
   width: 30px;
