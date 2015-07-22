@@ -43,6 +43,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             for(var i in itemsInstances) {
                if(itemsInstances.hasOwnProperty(i)) {
                   show = this._itemActionsButtons[i]['isMainAction'] && itemsInstances[i].isVisible();
+                  onlyMain &= this._itemActionsButtons[i]['isMainAction'];
                   //Если видимость кнопки не изменилась, то делать ничего не будем
                   if(this._itemActionsButtons[i]['isVisible'] !== show) {
                      itemsInstances[i].getContainer()[0].style.display = show ? 'inline-block' : 'none';

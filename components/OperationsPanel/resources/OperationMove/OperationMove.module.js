@@ -2,9 +2,8 @@
  * Created by as.suhoruchkin on 02.04.2015.
  */
 define('js!SBIS3.CONTROLS.OperationMove', [
-   'js!SBIS3.CONTROLS.Link',
-   'js!SBIS3.CONTROLS.MoveDialog'
-], function(Link, MoveDialog) {
+   'js!SBIS3.CONTROLS.Link'
+], function(Link) {
 
    var OperationMove = Link.extend({
 
@@ -27,9 +26,7 @@ define('js!SBIS3.CONTROLS.OperationMove', [
       $constructor: function() {
       },
       _clickHandler: function() {
-         new MoveDialog({
-            linkedView: this._options.linkedView
-         });
+         this._options.linkedView.moveRecordsWithDialog();
       }
    });
 
