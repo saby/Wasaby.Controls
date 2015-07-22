@@ -137,6 +137,9 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             top: (this._headerAlignment.vertical == 'top') ? this._container.offset().top + 7 : this._container.offset().top - 12,
             'z-index': this._picker._container.css('z-index') + 1
          });
+         if (this._picker) {
+            this._setWidth()
+         }
       },
 
       _createHeader: function(){
