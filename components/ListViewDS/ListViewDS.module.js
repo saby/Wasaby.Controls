@@ -13,10 +13,11 @@ define('js!SBIS3.CONTROLS.ListViewDS',
       'js!SBIS3.CONTROLS.ItemActionsGroup',
       'html!SBIS3.CONTROLS.ListViewDS',
       'js!SBIS3.CONTROLS.CommonHandlers',
+      'js!SBIS3.CONTROLS.MoveHandlers',
       'js!SBIS3.CONTROLS.Pager',
       'is!browser?html!SBIS3.CONTROLS.ListViewDS/resources/ListViewGroupBy'
    ],
-   function (CompoundControl, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, Pager, groupByTpl) {
+   function (CompoundControl, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, MoveHandlers, Pager, groupByTpl) {
 
       'use strict';
 
@@ -36,7 +37,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        * @author Крайнов Дмитрий Олегович
        */
 
-      var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, CommonHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
+      var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem При переводе курсора мыши на другую запись
@@ -152,9 +153,19 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   name: 'delete',
                   icon: 'sprite:icon-16 icon-Erase icon-error',
                   tooltip: 'Удалить',
+                  title: 'Удалить',
                   isMainAction: true,
                   onActivated: function (item) {
                      this.deleteRecords(item.data('id'));
+                  }
+               },{
+                  name: 'move',
+                  icon: 'sprite:icon-16 icon-Move icon-primary action-hover',
+                  tooltip: 'Перенести',
+                  title: 'Перенести',
+                  isMainAction: false,
+                  onActivated: function (item) {
+                     this.selectedMoveTo(item.data('id'));
                   }
                }],
                /**
