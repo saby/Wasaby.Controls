@@ -2,11 +2,6 @@
   // Normal button
   &.controls-MenuButton {
     position: relative;
-
-    &.controls-MenuButton__withoutMenu {
-      padding: @menu-button-no-arrow-padding;
-    }
-
     .controls-MenuButton__arrowDown {
       position: absolute;
       display: inline-block;
@@ -113,6 +108,13 @@
       right: @menu-button-arrow-right-offset - @button-checked-border-width;
     }
   }
+}
+.controls-MenuButton {
+   &.controls-MenuButton__withoutMenu {
+      .controls-Button__text, .controls-Button__icon + .controls-Button__text {
+         margin: @button-text-margin; //this margin reserve space for arrow-down icon
+      }
+   }
 }
 
 // Header
