@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
             selectedCount = linkedView.getSelectedKeys().length;
          this.setTitle('Перенести ' + selectedCount + ' запис' + $ws.helpers.wordCaseByNumber(selectedCount, 'ей', 'ь', 'и') + ' в');
          this.getChildControlByName('MoveDialogTemplate-moveButton')
-            .subscribe('onActivated', this._moveRecords.bind(this));
+            .subscribe('onActivated', this._onMoveButtonActivated.bind(this));
          this._treeView = this.getChildControlByName('MoveDialogTemplate-TreeDataGrid')
             .subscribe('onDataLoad', this._onDataLoadHandler.bind(this));
          this._treeView.setHierField(linkedView._options.hierField);
@@ -35,45 +35,15 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          /*TODO cуперкостыль для того, чтобы если папка пустая БЛ не возвращала выборку из её предка*/
          this._treeView._filter['folderChanged'] = true;
       },
+      _onMoveButtonActivated: function() {
+         var
+            moveTo = this._treeView.getSelectedKeys()[0];
+         this._options.linkedView._selectedMoveTo(moveTo);
+         this.close();
+      },
       /*TODO тут добавить корень в дерево*/
       _onDataLoadHandler: function(event, dataSet) {
          event.setResult(dataSet);
-      },
-      _moveRecords: function() {
-         var
-            records,
-            linkedView = this._options.linkedView,
-            moveTo = this._treeView.getSelectedKeys()[0];
-            records = linkedView.getSelectedKeys();
-         if (this._checkRecordsForMove(records, moveTo)) {
-            this._move(records, moveTo).getResult().addCallback(function () {
-               linkedView.removeItemsSelectionAll();
-               linkedView.openNode(moveTo);
-            });
-         }
-         this.close();
-      },
-      _move: function(records, moveTo) {
-         var
-            record,
-            deferred = new $ws.proto.ParallelDeferred(),
-            linkedView = this._options.linkedView,
-            hierField = linkedView._options.hierField;
-         for (var i = 0; i < records.length; i++) {
-            record = linkedView._dataSet.getRecordByKey(records[i]);
-            deferred.push(linkedView._dataSource.move(record, hierField, [moveTo]));
-         }
-         return deferred.done();
-      },
-      _checkRecordsForMove: function(records, moveTo) {
-         if (moveTo === undefined) {
-            return false;
-         }
-         if ($.inArray(moveTo, records) !== -1) {
-            $ws.helpers.alert("Вы не можете переместить запись саму в себя!", {}, this);
-            return false;
-         }
-         return true;
       }
    });
 
