@@ -157,6 +157,15 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   onActivated: function (item) {
                      this.deleteRecords(item.data('id'));
                   }
+               },{
+                  name: 'move',
+                  icon: 'sprite:icon-16 icon-Move icon-primary action-hover',
+                  tooltip: 'Перенести',
+                  caption: 'Перенести',
+                  isMainAction: false,
+                  onActivated: function (item) {
+                     this.selectedMoveTo(item.data('id'));
+                  }
                }],
                /**
                 * @cfg {Boolean} Разрешено или нет перемещение элементов "Drag-and-Drop"

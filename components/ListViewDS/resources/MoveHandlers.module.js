@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
             linkedView: this
          });
       },
-      _selectedMoveTo: function(moveTo) {
+      selectedMoveTo: function(moveTo) {
          this._move(this.getSelectedKeys(), moveTo);
       },
       _move: function(records, moveTo) {
@@ -28,7 +28,13 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
          }
       },
       _checkRecordsForMove: function(records, moveTo) {
+         var record;
          if (moveTo === undefined) {
+            return false;
+         }
+         record = this._dataSet.getRecordByKey(moveTo);
+         if (!record.get(this._options.hierField + '@')) {
+            $ws.helpers.alert('Вы не можете перемещать в лист! Выберите другую запись для перемещения!', {}, this);
             return false;
          }
          if ($.inArray(moveTo, records) !== -1) {
