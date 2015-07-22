@@ -153,6 +153,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   name: 'delete',
                   icon: 'sprite:icon-16 icon-Erase icon-error',
                   tooltip: 'Удалить',
+                  title: 'Удалить',
                   isMainAction: true,
                   onActivated: function (item) {
                      this.deleteRecords(item.data('id'));
@@ -161,7 +162,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   name: 'move',
                   icon: 'sprite:icon-16 icon-Move icon-primary action-hover',
                   tooltip: 'Перенести',
-                  caption: 'Перенести',
+                  title: 'Перенести',
                   isMainAction: false,
                   onActivated: function (item) {
                      this.selectedMoveTo(item.data('id'));
