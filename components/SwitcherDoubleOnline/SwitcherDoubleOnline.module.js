@@ -63,7 +63,7 @@ define('js!SBIS3.Engine.SwitcherDoubleOnline', ['js!SBIS3.CONTROLS.SwitcherBase'
             }
          }
          else {
-            if (e.target == this._switcher.get(0)) {
+            if (e.target == this._switcher.get(0) || this._switcher.find(e.target).length) {
                SwitcherDoubleOnline.superclass._clickHandler.call(this);
             }
          }

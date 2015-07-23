@@ -760,18 +760,45 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   margin: 0 0 0 8px;
 }
-.controls-SwitcherDoubleOnline .controls-SwitcherDoubleOnline_toggle {
+.controls-SwitcherDoubleOnline .controls-SwitcherDoubleOnline__toggle {
   display: inline-block;
   cursor: pointer;
-  width: 30px;
-  height: 16px;
-  margin: 0 4px;
+  width: 48px;
+  height: 24px;
+  margin: 0 6px;
+  border: 1px solid #e4e4e4;
+  border-radius: 30px;
+  line-height: 24px;
+  position: relative;
 }
-.controls-SwitcherDoubleOnline .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-off-toggled {
-  background: transparent url('img/SwitcherDoubleOnline-sprite.png') 0 -4px no-repeat;
+.controls-SwitcherDoubleOnline .controls-SwitcherDoubleOnline__toggle.controls-SwitcherDoubleOnline-on-toggled .controls-SwitcherDoubleOnline__btn {
+  right: 5px;
+  left: auto;
 }
-.controls-SwitcherDoubleOnline .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-on-toggled {
-  background: transparent url('img/SwitcherDoubleOnline-sprite.png') 0 -28px no-repeat;
+.controls-SwitcherDoubleOnline .controls-SwitcherDoubleOnline__line {
+  position: absolute;
+  height: 2px;
+  left: 50%;
+  width: 38px;
+  margin-left: -19px;
+  margin-top: -1px;
+  top: 50%;
+  background-color: #999999;
+}
+.controls-SwitcherDoubleOnline .controls-SwitcherDoubleOnline__btn {
+  display: block;
+  position: absolute;
+  box-sizing: border-box;
+  border-style: solid;
+  background: #ffffff;
+  border-color: #0055bb;
+  border-width: 2px;
+  border-radius: 6px;
+  width: 12px;
+  height: 12px;
+  left: 5px;
+  right: auto;
+  top: 6px;
 }
 .controls-SwitcherDoubleOnline .controls-SwitcherDoubleOnline__text {
   display: inline-block;
@@ -785,31 +812,30 @@ input[type="reset"]::-moz-focus-inner {
   text-decoration: none;
 }
 .controls-SwitcherDoubleOnline .controls-SwitcherDoubleOnline__text.controls-SwitcherDoubleOnline__unselected:hover {
-  color: #999999;
-  text-decoration: none;
+  color: #0055bb;
+  text-decoration: underline;
 }
 .controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical {
   vertical-align: top;
 }
-.controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline_toggle {
+.controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline__toggle {
   display: inline-block;
   vertical-align: top;
   cursor: pointer;
-  width: 16px;
-  height: 32px;
-  margin: 0 2px 0 0;
+  width: 24px;
+  height: 48px;
+  margin: 0 12px 0 0;
 }
-.controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-off-toggled {
-  background: transparent url('img/SwitcherDoubleOnline-sprite-double.png') -16px 0 no-repeat;
+.controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline__toggle.controls-SwitcherDoubleOnline-on-toggled .controls-SwitcherDoubleOnline__btn {
+  top: 5px;
+  bottom: auto;
+  left: 6px;
 }
-.controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-on-toggled {
-  background: transparent url('img/SwitcherDoubleOnline-sprite-double.png') 0 0 no-repeat;
-}
-.controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical.ws-disabled .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-off-toggled {
-  background: transparent url('img/SwitcherDoubleOnline-sprite-double.png') -48px 0 no-repeat;
-}
-.controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical.ws-disabled .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-on-toggled {
-  background: transparent url('img/SwitcherDoubleOnline-sprite-double.png') -32px 0 no-repeat;
+.controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline__line {
+  height: 38px;
+  width: 2px;
+  margin-top: -19px;
+  margin-left: -1px;
 }
 .controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline__text-block {
   display: inline-block;
@@ -817,20 +843,40 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline__text-block .controls-SwitcherDoubleOnline__text {
   display: block;
+  height: 24px;
+  line-height: 24px;
 }
-.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline_toggle {
+.controls-SwitcherDoubleOnline.controls-SwitcherDoubleOnline-vertical .controls-SwitcherDoubleOnline__btn {
+  bottom: 5px;
+  top: auto;
+  left: 6px;
+}
+.controls-SwitcherDoubleOnline:hover .controls-SwitcherDoubleOnline__btn {
+  border-width: 4px;
+}
+.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline__toggle {
   cursor: default;
 }
-.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-off-toggled {
-  background: transparent url('img/SwitcherDoubleOnline-sprite.png') 0 -52px no-repeat;
-}
-.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline_toggle.controls-SwitcherDoubleOnline-on-toggled {
-  background: transparent url('img/SwitcherDoubleOnline-sprite.png') 0 -76px no-repeat;
+.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline__line {
+  background: #e4e4e4;
 }
 .controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline__text {
-  cursor: default;
-  color: #999999;
+  cursor: text;
+  color: #e4e4e4;
   text-decoration: none;
+}
+.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline__text:hover {
+  color: #e4e4e4;
+}
+.controls-SwitcherDoubleOnline.ws-disabled .controls-SwitcherDoubleOnline__btn {
+  border-color: #e4e4e4;
+  border-width: 2px;
+}
+.controls-SwitcherDouble__primary .controls-SwitcherDoubleOnline__btn {
+  border-color: #ff7033;
+}
+.controls-SwitcherDouble__primary .controls-SwitcherDoubleOnline__text.controls-SwitcherDoubleOnline__unselected:hover {
+  color: #ff7033;
 }
 .controls-Menu__Popup {
   margin: -1px 0 0;
