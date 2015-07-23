@@ -87,7 +87,8 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
       },
       _updateMarkCheckBox: function() {
          var view = this._options.linkedView,
-            recordsCount = view._dataSet.getCount(),
+            //TODO Подумать что делать если нет _dataSet
+            recordsCount = view._dataSet ? 0 : view._dataSet.getCount(),
             selectedCount = view.getSelectedKeys().length;
          this._markCheckBox.setChecked(selectedCount === recordsCount && recordsCount ? true : selectedCount ? null : false);
       },
