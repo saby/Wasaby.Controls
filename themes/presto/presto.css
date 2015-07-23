@@ -500,45 +500,78 @@ input[type="reset"]::-moz-focus-inner {
   height: 17px;
   line-height: normal;
   background: url('img/RadioButton-sprite.png') 0 -4px;
+  margin: 0;
+  box-sizing: border-box;
+  float: left;
+  border-style: none;
+  border-color: transparent;
+  border-width: 0;
+  border-radius: 0;
 }
 .controls-RadioButton:hover .controls-RadioButton__caption {
   color: #ffcc99;
+  text-decoration: none;
 }
 .controls-RadioButton:hover .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -100px;
+  border-width: 0;
+  border-color: transparent;
 }
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__caption {
   color: #ffffff;
+  text-decoration: none;
 }
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__icon {
   background: url('img/RadioButton-sprite.png') 0 -52px;
+  border-color: transparent;
+  border-width: 0;
 }
 .controls-RadioButton.controls-Checked__checked:hover .controls-RadioButton__caption {
   color: #ffcc99;
 }
 .controls-RadioButton.controls-Checked__checked:hover .controls-RadioButton__icon {
   background: url('img/RadioButton-sprite.png') 0 -52px;
+  border-color: transparent;
+  border-width: 0;
 }
-.controls-RadioButton.controls-Checked__checked.ws-disabled .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -4px;
+.controls-RadioButton.controls-Radio__primary.controls-Checked__checked .controls-RadioButton__icon {
+  border-color: transparent;
 }
-.controls-RadioButton.controls-Checked__checked.ws-disabled:hover .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -4px;
+.controls-RadioButton.controls-Radio__primary.controls-Checked__checked:hover .controls-RadioButton__caption {
+  color: #ffcc99;
+}
+.controls-RadioButton.controls-Radio__primary:hover .controls-RadioButton__caption {
+  color: #ffcc99;
+}
+.controls-RadioButton.controls-Radio__primary:hover .controls-RadioButton__icon {
+  border-color: transparent;
+  border-width: 0;
 }
 .controls-RadioButton.ws-disabled {
-  cursor: default;
+  cursor: text;
 }
 .controls-RadioButton.ws-disabled .controls-RadioButton__caption {
   color: #aaaaaa;
+  text-decoration: none;
 }
 .controls-RadioButton.ws-disabled .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -4px;
+  border-color: transparent;
+}
+.controls-RadioButton.ws-disabled.controls-Checked__checked .controls-RadioButton__icon {
+  border-color: transparent;
+  border-width: 0;
+}
+.controls-RadioButton.ws-disabled.controls-Checked__checked:hover .controls-RadioButton__caption {
+  color: #aaaaaa;
 }
 .controls-RadioButton.ws-disabled:hover .controls-RadioButton__caption {
   color: #aaaaaa;
 }
 .controls-RadioButton.ws-disabled:hover .controls-RadioButton__icon {
-  background: url('img/RadioButton-sprite.png') 0 -4px;
+  border-color: transparent;
+  border-width: 0;
+}
+.controls-RadioButton.ws-disabled:hover.controls-Checked__checked .controls-RadioButton__icon {
+  border-width: 0;
 }
 .controls-RadioGroup .controls-ListView__item {
   display: inline-block;
