@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
       _move: function(records, moveTo) {
          var
             record,
+            self = this,
             /*TODO переделать не на ParallelDeferred*/
             deferred = new $ws.proto.ParallelDeferred();
          if (this._checkRecordsForMove(records, moveTo)) {
@@ -21,10 +22,12 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
                record = this._dataSet.getRecordByKey(records[i]);
                deferred.push(this._dataSource.move(record, this._options.hierField, [moveTo]));
             }
-            if (deferred.done().getResult().isSuccessful()) {
-               this.removeItemsSelectionAll();
-               this.setCurrentRoot(moveTo);
-            }
+            deferred.done().getResult().addCallback(function() {
+               if (deferred.getResult().isSuccessful()) {
+                  self.removeItemsSelectionAll();
+                  self.setCurrentRoot(moveTo);
+               }
+            });
          }
       },
       _checkRecordsForMove: function(records, moveTo) {
