@@ -130,7 +130,8 @@ define('js!SBIS3.CONTROLS.StaticSource', [
          if (this._map === undefined) {
             this._reindex();
          }
-         return this._map.indexOf(key);
+         
+         return Array.indexOf(this._map, key);
       },
 
       /**
