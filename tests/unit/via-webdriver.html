@@ -1,0 +1,89 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Controls unit tests</title>
+</head>
+<body>
+<!-- Libs -->
+<script src="../../sbis3-ws/ws/ext/jquery-full.js" data-pack-name="ws"></script>
+<script src="../../sbis3-ws/ws/ext/jquery-cookie-min.js" data-pack-name="ws"></script>
+
+<!-- Mocha setup -->
+<link rel="stylesheet" href="../../node_modules/mocha/mocha.css"/>
+<div id="mocha"></div>
+<script src="../../node_modules/mocha/mocha.js"></script>
+<script src="../../node_modules/chai/chai.js"></script>
+<script>
+    mocha.setup({
+        ui: 'bdd',
+        reporter: function (runner) {
+            var query = typeof window === 'undefined' ? '?reporter=XUnit' : window.location.search,
+                    result = query.match(new RegExp("[?&]reporter=([^&]*)&?$")),
+                    reporterCode = result ? result[1] : 'HTML';
+
+            if (!(reporterCode in Mocha.reporters)) {
+                throw new Error('Reporter "' + reporterCode + '" is undefined.');
+            }
+            var reporter = new Mocha.reporters[reporterCode](runner, {});
+
+            if (reporterCode == 'XUnit') {
+                //Change XUnit output stream
+                reporter.buffer = [];
+                reporter.domElement = $('<div/>')
+                        .attr('id', 'report')
+                        .appendTo('body');
+                reporter.write = function (line) {
+                    this.buffer.push(line);
+                    this.domElement.html(this.buffer.join("\n"));
+                };
+            }
+        }
+    });
+
+    var assert = chai.assert;
+</script>
+
+<!-- WS setup -->
+<script>
+    window.wsConfig = {
+        WSRootPath: '../../sbis3-ws/ws/',
+        wsRoot: '../../sbis3-ws/ws/',
+        WSTheme: 'wi_scheme',
+        resourceRoot: '../../components',
+        nostyle: true,
+        globalConfigSupport: false
+    };
+    window.WSTheme = 'wi_scheme';
+</script>
+<script src="../../components/contents.js" data-pack-name="contents"></script>
+<script src="../../sbis3-ws/ws/ext/requirejs/require.js"></script>
+<script src="../../sbis3-ws/ws/ext/requirejs/config.js"></script>
+<script src="../../sbis3-ws/ws/lib/core.js"></script>
+<script src="../../sbis3-ws/ws/lib/Source.js"></script>
+<script src="../../sbis3-ws/ws/res/js/bootup.js" data-pack-name="ws"></script>
+
+<!-- Run tests -->
+<script>
+    requirejs.config({
+        paths: {
+            Squire: '../../node_modules/squirejs/src/Squire'
+        }
+    });
+
+    mocha.checkLeaks();
+    //mocha.globals(['jQuery']);
+    $ws.core.withComponents('Source').addCallback(function () {
+        requirejs(['../../tests/unit/list'], function () {
+            mocha.run(function () {
+                //Save jscoverage report if was run in his iframe
+                if (window.jscoverage_report) {
+                    jscoverage_report();
+                }
+
+                $('body').addClass('tests-finished');
+            });
+        });
+    });
+</script>
+</body>
+</html>
