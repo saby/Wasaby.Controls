@@ -78,7 +78,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        */
 
       $protected: {
-         _keysWeHandle: [$ws._const.key.up, $ws._const.key.down],
+         _keysWeHandle: [$ws._const.key.up, $ws._const.key.down, $ws._const.key.enter],
          _options: {
             /**
              * @cfg {String} Шаблон отображения каждого элемента коллекции
@@ -138,8 +138,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             e.stopPropagation();
             return false;
          });
-         if (this._options.selectedKey) {
-            this._drawSelectedItem(this._options.selectedKey); } else {
+
+         var key = this._options.selectedKey;
+         if (key !== undefined && key !== null) {
+            this._drawSelectedItem(this._options.selectedKey);
+         } else {
             /*TODO следующая строчка должна быть в Selector*/
             this._options.selectedKey = null;
             if (this._options.text) {
@@ -157,21 +160,70 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          })
       },
 
-      _keyboardHover: function(e) {
-        var items = $('.controls-ListView__item', this._container),
+      _keyboardHover: function (e) {
+         var
             selectedKey = this.getSelectedKey(),
-            selectedItem = $('.controls-ComboBox__itemRow__selected', this._picker._c),
-            nextItem = (selectedKey) ? selectedItem.next('.controls-ListView__item') : items.eq(0),
-            previousItem = (selectedKey) ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
-            
-            //навигация по стрелкам
-           if (e.which === $ws._const.key.up) {
-             previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
-           } else if (e.which === $ws._const.key.down) {
-             nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
-           }
+            selectedItem, nextItem, previousItem;
+         if (this._picker) {
+            var
+               items = $('.controls-ListView__item', this._picker.getContainer().get(0));
 
-           return false;
+            selectedItem = $('.controls-ComboBox__itemRow__selected', this._picker.getContainer());
+            nextItem = (selectedKey) ? selectedItem.next('.controls-ListView__item') : items.eq(0);
+            previousItem = (selectedKey) ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
+            //навигация по стрелкам
+            if (e.which === $ws._const.key.up) {
+               previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
+            } else if (e.which === $ws._const.key.down) {
+               nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+            }
+         }
+         else {
+            if (this._dataSet) {
+               var num = null, i = 0, nextRec, prevRec;
+               if (this._dataSet.getCount()) {
+                  if (selectedKey) {
+                     this._dataSet.each(function (rec) {
+                        if (rec.getKey() == selectedKey) {
+                           num = i;
+                        }
+                        i++;
+                     });
+                     if (num !== null) {
+                        if (num == 0) {
+                           nextRec = this._dataSet.at(num + 1);
+                           prevRec = this._dataSet.at(0)
+                        }
+                        else if (num == this._dataSet.getCount() - 1) {
+                           nextRec = this._dataSet.at(this._dataSet.getCount() - 1);
+                           prevRec = this._dataSet.at(num - 1)
+                        }
+                        else {
+                           nextRec = this._dataSet.at(num + 1);
+                           prevRec = this._dataSet.at(num - 1)
+                        }
+                     }
+                  }
+                  else {
+                     prevRec = this._dataSet.at(0);
+                     nextRec = this._dataSet.at(0);
+                  }
+                  if (e.which === $ws._const.key.up) {
+                     this.setSelectedKey(prevRec.getKey());
+                  } else if (e.which === $ws._const.key.down) {
+                     this.setSelectedKey(nextRec.getKey());
+                  }
+               }
+            }
+         }
+
+
+         if (e.which === $ws._const.key.enter) {
+            this.hidePicker()
+         }
+
+
+         return false;
       },
 
       setText: function (text) {
@@ -243,6 +295,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _notifySelectedItem: function (key) {
          var text = this.getText();
          this._notify('onSelectedItemChange', key, text);
+         this._notifyOnPropertyChanged('selectedItem');
       },
 
       _setPickerContent: function () {
@@ -355,11 +408,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             if (noItems) {
                self._options.selectedKey = null;
                self._notifySelectedItem(null);
-               self._drawSelectedItem(null);            }
-
+               self._drawSelectedItem(null);
+            }
          });
-
-
       },
 
       _clearItems : function() {
