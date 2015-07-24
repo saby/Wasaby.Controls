@@ -203,11 +203,12 @@ define('js!SBIS3.CONTROLS.Menu', [
 
          config.element = $('<div class="controls-Menu__Popup"></div>');
          if (this._container.hasClass('controls-Menu__32px')) {
-            config.element.addClass('controls-Menu__32px')
+            config.element.addClass('controls-Menu__32px');
          }
          config.parent = parent;
+         config.opener = typeof parent.getOpener == 'function' ? parent.getOpener() : parent;
          config.target = target;
-         return new FloatArea(config)
+         return new FloatArea(config);
       },
 
       _getSubMenuConfig : function(isFirstLevel, item) {
