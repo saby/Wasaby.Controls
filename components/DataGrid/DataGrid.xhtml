@@ -22,7 +22,7 @@
          {{~it.columns :column:index}}
              <th class="controls-DataGrid__th{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}} {{?column.className}}{{=column.className}}{{?}}" title="{{=column.title}}">
                 <div class="controls-DataGrid__th-content">
-                  {{=column.title}}
+                  {{=$ws.helpers.escapeHtml(column.title)}}
                 </div>
              </th>
          {{~}}

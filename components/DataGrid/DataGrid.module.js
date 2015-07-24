@@ -558,7 +558,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
                       this._options.startScrollColumn <= i ?
                          ' controls-DataGrid__scrolledCell' :
                          ' controls-DataGrid__notScrolledCell' : '') + 
-                     '" title="' + columns[i].title + '"><div class="controls-DataGrid__th-content">' + columns[i].title + '</div></th>'));
+                     '" title="' + columns[i].title + '"><div class="controls-DataGrid__th-content">' + $ws.helpers.escapeHtml(columns[i].title) + '</div></th>'));
           }
 
           if (this._editInPlace) {
