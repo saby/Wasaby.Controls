@@ -187,6 +187,23 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
         return (isNaN(val)) ? null : val;
       },
 
+      /**
+       * Установить количество знаков после запятой
+       * @param decimals Количество знаков после запятой
+       */
+      setDecimals: function(decimals) {
+         if (typeof decimals === 'number') {
+            this._options.decimals = decimals;
+         }
+      },
+
+      /**
+       * Получить количество знаков после запятой
+       */
+      getDecimals: function(decimals) {
+         return this._options.decimals;
+      },
+
       _formatText: function(value, fromFocusOut){
          var decimals;
          if (this._options.onlyInteger){
