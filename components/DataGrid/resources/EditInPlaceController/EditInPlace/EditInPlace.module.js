@@ -118,6 +118,9 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                         field.setItems(items);
                         field.setSelectedKey(record.get(field.getName()));
                      } else {
+                        if (record.getType(field.getName()) === 'Деньги' && $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.NumberTextBox')) {
+                           field.setDecimals(2);
+                        }
                         field[self._determineSetMethodName(field)](record.get(field.getName()));
                      }
                   }
