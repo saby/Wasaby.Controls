@@ -2310,7 +2310,7 @@ input[type="reset"]::-moz-focus-inner {
   padding: 0 0 0 6px;
   cursor: pointer;
 }
-.controls-CompositeView .controls-CompositeView__listItem:hover {
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__hoveredItem {
   background: #f3f3f3;
 }
 .controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder {
