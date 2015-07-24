@@ -120,8 +120,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
          if (newText !== this._options.text) {
             this._options.text = newText;
             this._drawText(newText);
-            this.saveToContext('Text', newText);
             this._notify('onTextChange', newText);
+            this._notifyOnPropertyChanged('text');
          }
       },
 

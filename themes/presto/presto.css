@@ -1664,57 +1664,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextArea.controls-TextArea__autoheight {
   height: auto !important;
 }
-.controls-Suggest__loadingContainer {
-  position: relative;
-}
-.controls-Suggest__loadingIndicator {
-  background: url('img/ajax-loader-indicator.gif') 0 0 no-repeat;
-  background-size: contain;
-  height: 16px;
-  position: absolute;
-  right: 3px;
-  top: 3px;
-  width: 16px;
-}
-.controls-Suggest__picker {
-  border: 1px solid #aaaaaa;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-  -webkit-background-clip: padding-box;
-  -moz-background-clip: padding;
-  background-clip: padding-box;
-  -webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  margin: -1px 0 0;
-}
-.controls-SuggestList__item {
-  background: #ffffff;
-  border: solid #f5f5f5;
-  border-width: 1px 0 0 0;
-  color: inherit;
-  cursor: pointer;
-  font: inherit;
-  padding: 4px;
-}
-.controls-SuggestList__item:first-child {
-  border-width: 0;
-}
-.controls-SuggestList__item:hover {
-  background: #f3f3f3;
-  color: inherit;
-}
-.controls-SuggestList__item__selected {
-  background: #e6e6e6;
-  color: inherit;
-}
-.controls-SuggestList__empty {
-  background: #ffffff;
-  color: #666666;
-  font: inherit;
-  padding: 4px;
-}
 .controls-DatePicker {
   border: none !important;
   background: transparent !important;
@@ -2753,8 +2702,93 @@ input[type="reset"]::-moz-focus-inner {
 .controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item.controls-CustomFilterMenu__item__selected {
   display: none;
 }
-.controls-HtmlDecorators-highlight {
-  background-color: #fffece;
+.controls-FloatArea.controls__filterButton__picker {
+  background: #f7f3f0;
+  border: 2px solid #e4e4e4;
+}
+.controls-FloatArea.controls__filterButton__picker .controls__filterButton__templatedArea {
+  margin: 0 16px 16px 16px;
+}
+.controls-FloatArea.controls__filterButton__picker .controls__filter-button__apply-filter,
+.controls-FloatArea.controls__filterButton__picker .controls__filter-button__clear-filter {
+  float: right;
+}
+.controls-FloatArea.controls__filterButton__picker .controls__filter-button__apply-filter {
+  margin-right: 8px;
+}
+.controls-FloatArea.controls__filterButton__picker .controls__filter-button__clear-filter {
+  padding: 2px 8px 0 0;
+}
+.controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton {
+  background: transparent url('img/filterButton.png') no-repeat -30px 0;
+  margin-top: 8px;
+  width: 30px;
+  height: 24px;
+  cursor: pointer;
+}
+.controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton:hover {
+  background-position: -30px -24px;
+}
+.controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton:active {
+  background-position: -30px -48px;
+}
+.controls-FloatArea.controls__filterButton__picker .controls__filterButton__header {
+  margin: 8px 30px 0 0;
+  height: 40px;
+}
+.controls__filterButton {
+  height: 40px;
+  display: inline-block;
+}
+.controls__filterButton .controls__filterButton__filterLine {
+  display: inline-block;
+  height: 24px;
+  padding: 8px 8px 8px 0;
+  vertical-align: top;
+  text-align: center;
+}
+.controls__filterButton .controls__filterButton__filterLine-items {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  display: inline-block;
+  cursor: pointer;
+  color: #0055bb;
+  text-decoration: none;
+  text-align: center;
+  line-height: normal;
+  padding: 0;
+  box-sizing: border-box;
+}
+.controls__filterButton .controls__filterButton__filterLine-items:hover {
+  color: #ff7033;
+  text-decoration: underline;
+}
+.controls__filterButton .controls__filterButton__filterLine-cross {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: bottom;
+  cursor: pointer;
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAJiS0dEAP+Hj8y/AAAACXBIWXMAAABIAAAASABGyWs+AAAAnElEQVQoz9WQMQ6CQBBFX2GI4QDcxp7CkI2lcxRrL0HPHRAbAiLZI1gRytWCwsbKsSDbrJQ2/mr+z0zy38A/SR4gawCJZxfoamXQCEAjGS/2a8FlTSsWQGzTusznKz8kZfJ6Hrjx3t83R+rFHmryKZ/ULJeMQWzVl73Y2YXXkQzVSY3uyrOvG2DWndsCOFN3C5haaOoxNdXidx/+AAnTQEYc86HTAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE1LTA0LTEwVDEwOjM2OjQxKzAzOjAwZkUzPgAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNS0wNC0xMFQxMDozNjo0MSswMzowMBcYi4IAAAAASUVORK5CYII=');
+}
+.controls__filterButton .controls__filterButton__filterLine-arrow:before {
+  line-height: normal;
+  vertical-align: sub;
+}
+.controls__filterButton .controls__filterButton-button {
+  width: 30px;
+  height: 24px;
+  margin: 8px 0;
+  background: transparent url('img/filterButton.png') no-repeat;
+  display: inline-block;
+  cursor: pointer;
+}
+.controls__filterButton .controls__filterButton-button:hover {
+  background-position: 0 -24px;
+}
+.controls__filterButton .controls__filterButton-button:active {
+  background-position: 0 -48px;
 }
 .controls-ComboBox.controls-Picker__show {
   border-width: 1px;
