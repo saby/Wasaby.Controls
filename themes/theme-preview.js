@@ -362,8 +362,7 @@
             element: 'radioGroup2',
             items: items,
             selectedItem: 1,
-            displayField: 'title',
-            enabled: false
+            displayField: 'title'
          });
 
          new Switcher({

@@ -489,6 +489,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-RadioButton {
   cursor: pointer;
   display: inline-block;
+  height: auto;
+  line-height: normal;
 }
 .controls-RadioButton .controls-RadioButton__caption {
   margin: 0 8px;

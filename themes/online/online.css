@@ -286,11 +286,11 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ButtonGroup .controls-ListView__item {
   display: inline-block;
-  margin: 0 8px 0 0;
+  margin: 0 12px 0 0;
 }
 .controls-ButtonGroup.controls-ButtonGroup__vertical .controls-ListView__item {
   display: block;
-  margin: 0 0 8px 0;
+  margin: 0 0 0 0;
 }
 .controls-Button.controls-Checked__checked.controls-Button {
   color: #000000;
@@ -489,6 +489,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-RadioButton {
   cursor: pointer;
   display: inline-block;
+  height: 24px;
+  line-height: 24px;
 }
 .controls-RadioButton .controls-RadioButton__caption {
   margin: 0;
@@ -500,7 +502,7 @@ input[type="reset"]::-moz-focus-inner {
   height: 10px;
   line-height: 10px;
   background: #ffffff;
-  margin: 3px 6px 0 0;
+  margin: 8px 6px 0 0;
   box-sizing: border-box;
   float: left;
   border-style: solid;
@@ -575,11 +577,11 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-RadioGroup .controls-ListView__item {
   display: inline-block;
-  margin: 0 8px 0 0;
+  margin: 0 12px 0 0;
 }
 .controls-RadioGroup.controls-ButtonGroup__vertical .controls-ListView__item {
   display: block;
-  margin: 0 0 8px 0;
+  margin: 0 0 0 0;
 }
 .controls-CheckBox {
   cursor: pointer;
@@ -644,14 +646,14 @@ input[type="reset"]::-moz-focus-inner {
   cursor: default;
 }
 .controls-CheckBox.ws-disabled .controls-CheckBox__caption {
-  color: #999999;
+  color: #e4e4e4;
 }
 .controls-CheckBox.ws-disabled .controls-CheckBox__icon {
   border: none;
   background: url('img/CheckBox.png') 16px 1px;
 }
 .controls-CheckBox.ws-disabled:hover .controls-CheckBox__caption {
-  color: #999999;
+  color: #e4e4e4;
 }
 .controls-CheckBox.ws-disabled:hover .controls-CheckBox__icon {
   border: none;
@@ -662,11 +664,11 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CheckBoxGroup .controls-ListView__item {
   display: inline-block;
-  margin: 0 8px 0 0;
+  margin: 0 12px 0 0;
 }
 .controls-CheckBoxGroup.controls-ButtonGroup__vertical .controls-ListView__item {
   display: block;
-  margin: 0 0 8px 0;
+  margin: 0 0 0 0;
 }
 .controls-Switcher {
   display: inline-block;
