@@ -48,6 +48,7 @@ exports.config = {};
 exports.config.fromEnv = function (config, prefix) {
    prefix = prefix ? prefix + '_' : '';
 
+   var value;
    for (var key in config) {
       if (config.hasOwnProperty(key)) {
          if (typeof config[key] == 'object') {
@@ -55,7 +56,11 @@ exports.config.fromEnv = function (config, prefix) {
          } else {
             var envKey = prefix + key;
             if (process.env[envKey] !== undefined) {
-               config[key] = process.env[envKey];
+               value = process.env[envKey];
+               if (typeof config[key] === 'boolean') {
+                  value = Number(value) !== 0;
+               }
+               config[key] = value;
             }
          }
       }
