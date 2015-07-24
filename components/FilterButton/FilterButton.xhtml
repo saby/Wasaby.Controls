@@ -1,26 +1,10 @@
-<div class="controls__filter-button controls__filter-button__default-filter controls__filter-button-{{=it.filterAlign}}">
-   <component data-component="SBIS3.CONTROLS.Link" name="filterLine" class="controls__filter-button__filter-line">
-      <option name="caption">{{=it.linkText}}</option>
-      <option name="icon">sprite: icon-16 icon-DayForward icon-primary</option>
-   </component>
-   <span class="controls__filter-button__clear" title="Очистить фильтр"></span>
-   <span class="controls__filter-button__closed"></span>
-   <div class="controls__filter-button__wrapper controls__filter-button-{{=it.filterAlign}} ws-hidden">
-      <div class="controls__filter-button__wrapper-header">
-         <div class="controls__filter-button__opened"></div>
-         <component data-component="SBIS3.CONTROLS.Button" name="applyFilterButton" class="controls__filter-button__apply-filter">
-            <option name="caption">Отобрать</option>
-         </component>
-         <component data-component="SBIS3.CONTROLS.Link" name="clearFilterButton" class="controls__filter-button__clear-filter">
-            <option name="caption">Очистить фильтр</option>
-         </component>
-      </div>
-      <div class="controls__filter-button__items-container">
-      </div>
-      {{?it.moreLinkCaption}}
-         <component data-component="SBIS3.CONTROLS.Link" name="moreFiltersButton" class="controls__filter-button__more-filters">
-            <option name="caption">{{=it.moreLinkCaption}}</option>
-         </component>
-      {{?}}
-   </div>
+<div class="controls__filterButton controls__filterButton-{{= it.filterAlign}}">
+    {{? it.filterLineComponent }}
+        <component data-component="{{= it.filterLineComponent}}">
+        </component>
+    {{?? it.filterLineTemplate }}
+        {{= it.filterLineTemplate }}
+    {{?}}
+
+    <div class="controls__filterButton-button"></div>
 </div>

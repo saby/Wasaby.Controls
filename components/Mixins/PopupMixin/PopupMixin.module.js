@@ -115,7 +115,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
 
       $constructor: function () {
-         this._publish('onClose', 'onAlignmentChange');
+         this._publish('onClose', 'onShow', 'onAlignmentChange');
          var self = this,
             container = this._container;
          container.css({
@@ -749,6 +749,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             this._zIndex = $ws.single.WindowManager.acquireZIndex(this._options.isModal);
             $ws.single.WindowManager.setVisible(this._zIndex);
             this._container.css('zIndex', this._zIndex);
+
+            this._notify('onShow');
          },
 
          hide: function () {
