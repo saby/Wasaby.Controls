@@ -61,11 +61,9 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
          var pickerConfig = this._setPickerConfig();
          pickerConfig.parent = pickerConfig.parent || this.getParent();
          pickerConfig.opener = this;
-
          if (!pickerConfig.context) {
             pickerConfig.context = this.getParent() ? this.getParent().getLinkedContext() : {};
          }
-
          pickerConfig.target = pickerConfig.target || this._container;
          pickerConfig.element = pickerContainer;
          return new FloatArea(pickerConfig);

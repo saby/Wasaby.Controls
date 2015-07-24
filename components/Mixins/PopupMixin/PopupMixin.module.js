@@ -129,7 +129,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          container.addClass('ws-hidden');
          this._isVisible = false;
          /********************************/
-
+         
          this._initOppositeCorners();
          //При ресайзе расчитываем размеры
          $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._windowChangeHandler, this);
