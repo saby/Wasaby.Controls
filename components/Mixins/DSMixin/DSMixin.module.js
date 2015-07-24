@@ -11,6 +11,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
     * @author Крайнов Дмитрий Олегович
     */
 
+   function propertyUpdateWrapper(func) {
+      return function() {
+         this.runInPropertiesUpdate(func, arguments);
+      };
+   }
+
    var DSMixin = /**@lends SBIS3.CONTROLS.DSMixin.prototype  */{
        /**
         * @event onDrawItems После отрисовки всех элементов коллекции
@@ -137,7 +143,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               * </pre>
               * @see setPageSize
               */
-            pageSize: null,
+            pageSize: undefined,
             /**
              * @typedef {Object} GroupBy
              * @property {String} field Поле записи
@@ -282,17 +288,24 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @param offset Элемент, с которого перезагружать данные.
         * @param {Number} limit Ограничение количества перезагружаемых элементов.
         */
-      reload: function (filter, sorting, offset, limit) {
+      reload: propertyUpdateWrapper(function (filter, sorting, offset, limit) {
          if (this._options.pageSize) {
             this._limit = this._options.pageSize;
          }
-         var def = new $ws.proto.Deferred();
-         var self = this;
+         var
+            def = new $ws.proto.Deferred(),
+            self = this,
+            filterChanged = typeof(filter) !== 'undefined'
+            sortingChanged = typeof(sorting) !== 'undefined',
+            offsetChanged = typeof(offset) !== 'undefined'
+            limitChanged = typeof(limit) !== 'undefined';
+
          this._cancelLoading();
-         this._filter = typeof(filter) != 'undefined' ? filter : this._filter;
-         this._sorting = typeof(sorting) != 'undefined' ? sorting : this._sorting;
-         this._offset = typeof(offset) != 'undefined' ? offset : this._offset;
-         this._limit = typeof(limit) != 'undefined' ? limit : this._limit;
+         this._filter = filterChanged ? filter : this._filter;
+         this._sorting = sortingChanged ? sorting : this._sorting;
+         this._offset = offsetChanged ? offset : this._offset;
+         this._limit = limitChanged ? limit : this._limit;
+
          this._toggleIndicator(true);
          this._loader = this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
             self._notify('onDataLoad', dataSet);
@@ -309,8 +322,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             def.callback(dataSet);
             self._redraw();
          });
+
+         this._notifyOnPropertyChanged('filter');
+         this._notifyOnPropertyChanged('sorting');
+         this._notifyOnPropertyChanged('offset');
+         this._notifyOnPropertyChanged('limit');
+
          return def;
-      },
+      }),
+
       _toggleIndicator:function(){
          /*Method must be implemented*/
       },
@@ -336,6 +356,17 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._dropPageSave();
          this.reload(this._filter, this._sorting, 0, pageSize);
       },
+
+      getFilter: function() {
+         return this._filter;
+      },
+
+      setFilter: function(filter){
+         this._filter = filter;
+         this._dropPageSave();
+         this.reload(this._filter, this._sorting, 0, this.getProperty('pageSize'));
+      },
+
       //переопределяется в HierarchyMixin
       _setPageSave: function(pageNum){
       },
