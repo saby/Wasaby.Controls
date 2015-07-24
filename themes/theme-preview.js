@@ -323,12 +323,14 @@
 
          new CheckBoxGroup({
             element: 'checkBoxGroup1',
-            items: items
+            items: items,
+            displayField: 'title'
          });
 
          new CheckBoxGroup({
             element: 'checkBoxGroup2',
-            items: items
+            items: items,
+            displayField: 'title'
          });
 
          new RadioButton({
@@ -352,13 +354,15 @@
          new RadioGroup({
             element: 'radioGroup1',
             items: items,
-            selectedItem: 1
+            selectedItem: 1,
+            displayField: 'title'
          });
 
          new RadioGroup({
             element: 'radioGroup2',
             items: items,
-            selectedItem: 1
+            selectedItem: 1,
+            displayField: 'title'
          });
 
          new Switcher({

@@ -287,9 +287,15 @@
 // ------------ //
 
 @radio-button-text-margin:                      0 8px;
+@radio-button-height:                           auto;
+@radio-button-lineheight:                       normal;
 
 @radio-button-text-color:                       @text-color;
 @radio-button-hover-text-color:                 @primary-color;
+@radio-button-hover-text-color-primary:         @radio-button-hover-text-color;
+@radio-button-hover-text-decoration:            none;
+@radio-button-hover-text-decoration-checked:    none;
+@radio-button-hover-text-decoration-disabled:   none;
 
 @radio-button-checked-text-color:               @radio-button-text-color;
 @radio-button-checked-hover-text-color:         @radio-button-hover-text-color;
@@ -315,7 +321,16 @@
 @radio-button-icon-disabled-checked-bg:         @radio-button-icon-disabled-bg;
 @radio-button-icon-disabled-checked-hover-bg:   @radio-button-icon-disabled-hover-bg;
 
-
+@radio-button-icon-margin:                      0;
+@radio-button-icon-border-style:                none;
+@radio-button-icon-border-color:                transparent;
+@radio-button-icon-border-color-checked:        @radio-button-icon-border-color;
+@radio-button-icon-border-color-disabled:       @radio-button-icon-border-color;
+@radio-button-icon-border-color-primary:        @radio-button-icon-border-color;
+@radio-button-icon-border-width:                0;
+@radio-button-icon-border-width-checked:        @radio-button-icon-border-width;
+@radio-button-icon-border-width-hover:          @radio-button-icon-border-width;
+@radio-button-icon-border-radius:               0;
 
 // ----------- //
 // Radio group //
@@ -457,45 +472,6 @@
 @switcher-on-disabled-toggle-position-bg:             @switcher-off-disabled-toggle-position-bg;
 @switcher-on-disabled-toggle-left-edge-bg:            none;
 @switcher-on-disabled-toggle-right-edge-bg:           none;
-
-
-
-// ---------------------- //
-// Double online switcher //
-// ---------------------- //
-
-@switcher-do-margin:                            0 0 0 8px;
-
-@switcher-do-toggle-cursor:                     pointer;
-@switcher-do-text-cursor:                       @switcher-do-toggle-cursor;
-@switcher-do-text-color:                        @text-color;
-@switcher-do-decoration:                        none;
-@switcher-do-unselected-text-cursor:            @switcher-do-text-cursor;
-@switcher-do-unselected-text-color:             @gray-color;
-@switcher-do-unselected-text-decoration:        none;
-
-@switcher-do-disabled-toggle-cursor:            default;
-@switcher-do-disabled-text-cursor:              @switcher-do-disabled-toggle-cursor;
-@switcher-do-disabled-text-color:               @gray-color;
-@switcher-do-disabled-text-decoration:          none;
-
-@switcher-do-horizontal-spritesheet:            '';
-@switcher-do-horizontal-toggle-width:           30px;
-@switcher-do-horizontal-toggle-height:          16px;
-@switcher-do-horizontal-toggle-margin:          0 4px;
-@switcher-do-horizontal-off-toggle-bg:          transparent;
-@switcher-do-horizontal-on-toggle-bg:           transparent;
-@switcher-do-horizontal-off-disabled-toggle-bg: transparent;
-@switcher-do-horizontal-on-disabled-toggle-bg:  transparent;
-
-@switcher-do-vertical-spritesheet:              '';
-@switcher-do-vertical-toggle-width:             16px;
-@switcher-do-vertical-toggle-height:            32px;
-@switcher-do-vertical-toggle-margin:            0 2px 0 0;
-@switcher-do-vertical-off-toggle-bg:            transparent;
-@switcher-do-vertical-on-toggle-bg:             transparent;
-@switcher-do-vertical-off-disabled-toggle-bg:   transparent;
-@switcher-do-vertical-on-disabled-toggle-bg:    transparent;
 
 
 

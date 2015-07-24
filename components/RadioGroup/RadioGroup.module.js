@@ -33,6 +33,7 @@ function(RadioGroupBase, dotTpl) {
     * </component>
     *
     * @cssModifier controls-ButtonGroup__vertical Для вертикального расположения элементов в группе.
+    * @cssModifier controls-Radio__primary акцентные кнопки
     *
     * @ignoreOptions className extendedTooltip handlers linkedContext
     *
@@ -74,8 +75,11 @@ function(RadioGroupBase, dotTpl) {
       },
 
       _getItemTemplate : function(item) {
-         var caption = item.get(this._options.displayField);
-         return '<component data-component="SBIS3.CONTROLS.RadioButton">' +
+         var
+            caption = item.get(this._options.displayField),
+            className = this._container.hasClass('controls-Radio__primary') ? ' class="controls-Radio__primary"' : '';
+
+         return '<component data-component="SBIS3.CONTROLS.RadioButton"'+className+'>' +
                '<option name="caption">'+caption+'</option>'+
             '</component>';
       }
