@@ -121,7 +121,16 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          this._createFolderPager(key, elem, dataSet.getMetaData().more);
       },
 
-
+      _keyboardHover: function(e) {
+         TreeDataGrid.superclass._keyboardHover.apply(this, arguments);
+         var selectedKey = this.getSelectedKey()
+         if (e.which === $ws._const.key.enter) {
+            var rec = this._dataSet.getRecordByKey(selectedKey);
+            if (rec.get(this._options.hierField)) {
+               this.setCurrentRoot(selectedKey);
+            }
+         }
+      },
 
       _drawItemsFolderLoad: function(records, id) {
          if (!id) {
