@@ -2354,6 +2354,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CompositeView.controls-CompositeView-tile .controls-CompositeView__itemsContainer {
   padding: 4px 0 0 1px;
+  min-height: 40px;
 }
 .controls-CompositeView.controls-CompositeView-tile .controls-ItemActions,
 .controls-CompositeView.controls-CompositeView-list .controls-ItemActions {
