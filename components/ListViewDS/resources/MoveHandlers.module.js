@@ -37,14 +37,16 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
          if (moveTo === undefined) {
             return false;
          }
-         record = this._dataSet.getRecordByKey(moveTo);
-         if (!record.get(this._options.hierField + '@')) {
-            $ws.helpers.alert('Вы не можете перемещать в лист! Выберите другую запись для перемещения!', {}, this);
-            return false;
-         }
          if ($.inArray(moveTo, records) !== -1) {
             $ws.helpers.alert("Вы не можете переместить запись саму в себя!", {}, this);
             return false;
+         }
+         if (moveTo !== null) {
+            record = this._dataSet.getRecordByKey(moveTo);
+            if (!record.get(this._options.hierField + '@')) {
+               $ws.helpers.alert('Вы не можете перемещать в лист! Выберите другую запись для перемещения!', {}, this);
+               return false;
+            }
          }
          return true;
       }
