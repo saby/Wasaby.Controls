@@ -6,6 +6,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
     * @mixin SBIS3.CONTROLS.MenuButtonMixin
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
    'use strict';
 
@@ -23,6 +24,10 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
         */
       $protected: {
          _options: {
+            /**
+             * @cfg {String} Поле иерархии
+             */
+            hierField : null
          }
       },
 
@@ -38,7 +43,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             element: targetElement,
             target : this.getContainer(),
             items: this._items,
-            corner : 'bl',
+            corner : 'tl',
             enabled: this.isEnabled(),
             hierField: this._options.hierField,
             keyField: this._options.keyField,
@@ -53,34 +58,60 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          });
       },
 
-      after: {
+      _setPickerContent: function(){
+         var self = this,
+            header = this._getHeader();
+         header.bind('click', function(){
+            self._onHeaderClick();
+         });
+         this._picker.getContainer().prepend(header);
+      },
+
+      _getHeader: function(){
+         var header = $('<div class="controls-Menu__header">');
+         if (this._options.icon) {
+            header.append('<i class="' + this._options.iconTemplate(this._options) + '"></i>');
+         }
+         header.append('<span class="controls-Menu__header-caption">' + this._options.caption + '</span>');
+         return header;
+      },
+
+      _onHeaderClick: function(){
+         this.togglePicker();
+      },
+
+      after : {
          _initializePicker : function() {
             var self = this;
             this._picker.subscribe('onMenuItemActivate', function(e, id) {
                self._notify('onMenuItemActivate', id);
             });
-         }
-      },
+         },
 
-      around: {
-         addItem: function(parentFunc, item) {
-            this._items.addItem(item);
+         //TODO в 3.7.3 ждать починки от Вити
+         setEnabled: function (enabled) {
             if (this._picker) {
-
-               this._drawItems();
+               this._picker.setEnabled(enabled);
             }
          },
       },
-      
+
       _drawItems : function() {
          if (this._picker) {
             this._picker.destroy();
          }
          this._initializePicker();
          this._initMenu();
-      }
+      },
+
+      addItem : function( item) {
+         this._items.addItem(item);
+         if (this._picker){
+            this._drawItems();
+         }
+      },
+
    };
 
    return MenuButtonMixin;
 });
-

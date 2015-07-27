@@ -10,10 +10,15 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора.
-    * По умолчанию позволяет вручную вводить значение.
+    * Для работы контрола необходим источник данных, его можно задать либо в опции {@link items}, либо методом {@link setDataSource}.
+    * Среди полей источника данных необходимо указать какое является ключевым - {@link keyField}, и из какого поля будем
+    * отображать данные в выпадающий блок - {@link displayField}.
+    * При отсутствии данных на бизнес-логике будет выведен текст опции {@link emptyHTML}.
+    * Контрол по умолчанию позволяет {@link editable вручную вводить значение}.
     * @class SBIS3.CONTROLS.ComboBox
     * @extends SBIS3.CONTROLS.TextBox
     * @control
+    * @author Крайнов Дмитрий Олегович
     * @public
     * @initial
     * <component data-component='SBIS3.CONTROLS.ComboBox'>
@@ -48,8 +53,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       /**
        * @cfg {ItemsComboBox[]} Набор исходных данных, по которому строится отображение
        * @name SBIS3.CONTROLS.ComboBox#items
+       * @remark
+       * !Важно: данные для выпадающего списка можно задать либо в этой опции,
+       * либо через источник данных методом {@link setDataSource}.
        * @example
-       * <pre>
+       * <pre class="brush:xml">
        *     <options name="items" type="array">
        *        <options>
        *            <option name="key">1</option>
@@ -60,7 +68,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        *            <option name="title">Пункт2</option>
        *         </options>
        *      </options>
+       *      <!--необходимо указать какое из наших полей является ключевым-->
+       *      <option name="keyField">key</option>
        * </pre>
+       * @see keyField
+       * @see displayField
+       * @see setDataSource
+       * @see getDataSet
        */
 
       $protected: {
@@ -69,7 +83,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             /**
              * @cfg {String} Шаблон отображения каждого элемента коллекции
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="itemTemplate">
              *         <div data-key="{{=it.item.getKey()}}" class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow">
              *             <div class="genie-colorComboBox__itemTitle">
@@ -78,18 +92,25 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              *         </div>
              *     </option>
              * </pre>
-             * @TextMultiline
+             * @items
              */
             itemTemplate: '',
             afterFieldWrapper: arrowTpl,
             /**
              * @cfg {Boolean} Возможность ручного ввода текста
+             * @remark
+             * При включённой опции в случае отсутствия среди пунктов выпадающего списка нужного контрол позволяет
+             * задать своё значение вводом с клавиатуры.
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="editable">false</option>
              * </pre>
+             * @see items
              * @see isEditable
              * @see setEditable
+             * @see textTransform
+             * @see inputRegExp
+             * @see maxLength
              */
             editable: true,
             /**
@@ -117,8 +138,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             e.stopPropagation();
             return false;
          });
-         if (this._options.selectedKey) {
-            this._drawSelectedItem(this._options.selectedKey); } else {
+
+         var key = this._options.selectedKey;
+         if (key !== undefined && key !== null) {
+            this._drawSelectedItem(this._options.selectedKey);
+         } else {
             /*TODO следующая строчка должна быть в Selector*/
             this._options.selectedKey = null;
             if (this._options.text) {
@@ -204,8 +228,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       setText: function (text) {
          ComboBox.superclass.setText.call(this, text);
-         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text);
+         this._drawNotEditablePlaceholder(text);
+         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder);
          this._setKeyByText();
+      },
+
+      _drawNotEditablePlaceholder: function (text) {
+         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).toggleClass('controls-ComboBox__fieldNotEditable__placeholder', !text);
       },
 
       _drawSelectedItem: function (key) {
@@ -227,11 +256,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   var newText = item.get(self._options.displayField);
                   if (newText != self._options.text) {
                      ComboBox.superclass.setText.call(self, newText);
+                     self._drawNotEditablePlaceholder(newText);
                      $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(newText);
                   }
                }
                else {
                   ComboBox.superclass.setText.call(self, '');
+                  self._drawNotEditablePlaceholder('');
                   $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text('');
                }
                if (self._picker) {
@@ -264,6 +295,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _notifySelectedItem: function (key) {
          var text = this.getText();
          this._notify('onSelectedItemChange', key, text);
+         this._notifyOnPropertyChanged('selectedItem');
       },
 
       _setPickerContent: function () {
@@ -376,11 +408,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             if (noItems) {
                self._options.selectedKey = null;
                self._notifySelectedItem(null);
-               self._drawSelectedItem(null);            }
-
+               self._drawSelectedItem(null);
+            }
          });
-
-
       },
 
       _clearItems : function() {
@@ -400,7 +430,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
       /**
        * Метод установки/изменения возможности ручного ввода.
-       * @param editable Возможность ручного ввода.
+       * @remark
+       * Возможные значения:
+       * <ul>
+       *    <li>true - в случае отсутствия среди имеющихся пунктов нужного можнно ввести значение с клавиатуры;</li>
+       *    <li>false - значение можно задать только выбором из списка существующих.</li>
+       * </ul>
+       * @param {Boolean} editable Возможность ручного ввода.
        * @example
        * <pre>
        *     myComboBox.setEditable(false);
@@ -414,6 +450,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
       /**
        * Признак возможности ручного ввода.
+       * @remark
+       * Возможные значения:
+       * <ul>
+       *    <li>true - в случае отсутствия среди имеющихся пунктов нужного можнно ввести значение с клавиатуры;</li>
+       *    <li>false - значение можно задать только выбором из списка существующих.</li>
+       * </ul>
        * @returns {Boolean} Возможен ли ручной ввод.
        * @example
        * <pre>

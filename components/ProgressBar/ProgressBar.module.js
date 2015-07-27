@@ -7,13 +7,16 @@ define('js!SBIS3.CONTROLS.ProgressBar', ['html!SBIS3.CONTROLS.ProgressBar', 'js!
     * @class SBIS3.CONTROLS.ProgressBar
     * @extends $ws.proto.Control
     * @control
+    * @author Крайнов Дмитрий Олегович
     * @initial
     * <component data-component='SBIS3.CONTROLS.ProgressBar'>
     * </component>
     * @public
     * @category Buttons
+    *
     * @cssModifier controls-ProgressBar_align-left отображение процентов слева
     * @cssModifier controls-ProgressBar_align-right отображение процентов справа
+    *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
     * @ignoreOptions subcontrol verticalAlignment

@@ -21,6 +21,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
     * @extends SBIS3.CONTROLS.ListView
     * @control
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyDataGrid
     * @initial
     * <component data-component='SBIS3.CONTROLS.DataGrid'>
@@ -143,7 +144,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
          if (this._options.multiselect) {
             tr += '<td class="controls-DataGrid__td"></td>';
          }
-         for (var i in this._options.columns) {
+         for (var i = 0; i < this._options.columns.length; i++) {
             tr += '<td class="controls-DataGrid__td"></td>';
          }
          tr += '</tr>';

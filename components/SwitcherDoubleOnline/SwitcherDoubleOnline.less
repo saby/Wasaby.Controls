@@ -1,100 +1,153 @@
 .controls-SwitcherDoubleOnline {
-  display: inline-block;
-  margin: @switcher-do-margin;
+   display: inline-block;
+   margin: @switcher-do-margin;
 
-  .controls-SwitcherDoubleOnline_toggle {
-    display: inline-block;
-    cursor: @switcher-do-toggle-cursor;
-    width: @switcher-do-horizontal-toggle-width;
-    height: @switcher-do-horizontal-toggle-height;
-    margin: @switcher-do-horizontal-toggle-margin;
-
-    &.controls-SwitcherDoubleOnline-off-toggled {
-      background: @switcher-do-horizontal-off-toggle-bg;
-    }
-
-    &.controls-SwitcherDoubleOnline-on-toggled {
-      background: @switcher-do-horizontal-on-toggle-bg;
-    }
-  }
-
-  .controls-SwitcherDoubleOnline__text {
-    display: inline-block;
-    cursor: @switcher-do-text-cursor;
-    color: @switcher-do-text-color;
-    text-decoration: @switcher-do-decoration;
-
-    &.controls-SwitcherDoubleOnline__unselected {
-      cursor: @switcher-do-unselected-text-cursor;
-      color: @switcher-do-unselected-text-color;
-      text-decoration: @switcher-do-unselected-text-decoration;
-
-      &:hover {
-        color: @switcher-do-unselected-text-color;
-        text-decoration: @switcher-do-unselected-text-decoration;
-      }
-    }
-  }
-
-  &.controls-SwitcherDoubleOnline-vertical {
-    vertical-align: top;
-
-    .controls-SwitcherDoubleOnline_toggle {
+   .controls-SwitcherDoubleOnline__toggle {
       display: inline-block;
-      vertical-align: top;
       cursor: @switcher-do-toggle-cursor;
-      width: @switcher-do-vertical-toggle-width;
-      height: @switcher-do-vertical-toggle-height;
-      margin: @switcher-do-vertical-toggle-margin;
-
-      &.controls-SwitcherDoubleOnline-off-toggled {
-        background: @switcher-do-vertical-off-toggle-bg;
-      }
-
+      width: @switcher-do-horizontal-toggle-width;
+      height: @switcher-do-horizontal-toggle-height;
+      margin: @switcher-do-horizontal-toggle-margin;
+      border: @switcher-do-border;
+      border-radius: @switcher-do-border-radius;
+      line-height: @switcher-do-horizontal-toggle-height;
+      position: relative;
       &.controls-SwitcherDoubleOnline-on-toggled {
-        background: @switcher-do-vertical-on-toggle-bg;
+         .controls-SwitcherDoubleOnline__btn {
+            right: @switcher-do-horizontal-btn-margin;
+            left: auto;
+         }
       }
-    }
+   }
+   .controls-SwitcherDoubleOnline__line {
+      position: absolute;
+      height: 2px;
+      left: 50%;
+      width: @switcher-do-horizontal-line-width;
+      margin-left: -@switcher-do-horizontal-line-width / 2;
+      margin-top: -1px;
+      top: 50%;
+      background-color: @gray-color;
+   }
+   .controls-SwitcherDoubleOnline__btn {
+      display: block;
+      position: absolute;
+      box-sizing: border-box;
+      border-style: solid;
+      background: @switcher-do-horizontal-btn-bg-color;
+      border-color: @switcher-do-horizontal-btn-color;
+      border-width: @switcher-do-horizontal-btn-border-width;
+      border-radius: @switcher-do-horizontal-btn-radius;
 
-    &.ws-disabled {
-      .controls-SwitcherDoubleOnline_toggle {
-        &.controls-SwitcherDoubleOnline-off-toggled {
-          background: @switcher-do-vertical-off-disabled-toggle-bg;
-        }
+      width: @switcher-do-horizontal-btn-size;
+      height: @switcher-do-horizontal-btn-size;
+      left: @switcher-do-horizontal-btn-margin;
+      right: auto;
+      top: (@switcher-do-horizontal-toggle-height - @switcher-do-horizontal-btn-size) / 2;
+   }
 
-        &.controls-SwitcherDoubleOnline-on-toggled {
-          background: @switcher-do-vertical-on-disabled-toggle-bg;
-        }
-      }
-    }
-
-    .controls-SwitcherDoubleOnline__text-block {
+   .controls-SwitcherDoubleOnline__text {
       display: inline-block;
-      height: 100%;
+      cursor: @switcher-do-text-cursor;
+      color: @switcher-do-text-color;
+      text-decoration: @switcher-do-decoration;
+
+      &.controls-SwitcherDoubleOnline__unselected {
+         cursor: @switcher-do-unselected-text-cursor;
+         color: @switcher-do-unselected-text-color;
+         text-decoration: @switcher-do-unselected-text-decoration;
+
+         &:hover {
+            color: @switcher-do-horizontal-btn-color;
+            text-decoration: @switcher-do-unselected-text-decoration-hover;
+         }
+      }
+
+   }
+
+   &.controls-SwitcherDoubleOnline-vertical {
+      vertical-align: top;
+
+      .controls-SwitcherDoubleOnline__toggle {
+         display: inline-block;
+         vertical-align: top;
+         cursor: @switcher-do-toggle-cursor;
+         width: @switcher-do-vertical-toggle-width;
+         height: @switcher-do-vertical-toggle-height;
+         margin: @switcher-do-vertical-toggle-margin;
+         &.controls-SwitcherDoubleOnline-on-toggled {
+            .controls-SwitcherDoubleOnline__btn {
+               top: @switcher-do-horizontal-btn-margin;
+               bottom: auto;
+               left: (@switcher-do-vertical-toggle-width - @switcher-do-horizontal-btn-size) / 2;
+            }
+         }
+
+      }
+      .controls-SwitcherDoubleOnline__line {
+         height: @switcher-do-horizontal-line-width;
+         width: 2px;
+         margin-top: -@switcher-do-horizontal-line-width / 2;
+         margin-left: -1px;
+      }
+
+      .controls-SwitcherDoubleOnline__text-block {
+         display: inline-block;
+         height: 100%;
+
+         .controls-SwitcherDoubleOnline__text {
+            display: block;
+            height: @switcher-do-vertical-toggle-height / 2;
+            line-height: @switcher-do-vertical-toggle-height / 2;
+         }
+      }
+      .controls-SwitcherDoubleOnline__btn {
+         bottom: @switcher-do-horizontal-btn-margin;
+         top: auto;
+         left: (@switcher-do-vertical-toggle-width - @switcher-do-horizontal-btn-size) / 2;
+      }
+   }
+
+   &:hover {
+      .controls-SwitcherDoubleOnline__btn {
+         border-width: @switcher-do-horizontal-btn-border-width-hover;
+      }
+   }
+
+   &.ws-disabled {
+      .controls-SwitcherDoubleOnline__toggle {
+         cursor: @switcher-do-disabled-toggle-cursor;
+
+      }
+      .controls-SwitcherDoubleOnline__line {
+         background: @gray-light-color;
+      }
 
       .controls-SwitcherDoubleOnline__text {
-        display: block;
+         cursor: @switcher-do-disabled-text-cursor;
+         color: @switcher-do-disabled-text-color;
+         text-decoration: @switcher-do-disabled-text-decoration;
+         &:hover {
+            color: @switcher-do-disabled-text-color;
+         }
       }
-    }
-  }
+      .controls-SwitcherDoubleOnline__btn {
+         border-color: @switcher-do-horizontal-btn-color-disabled;
+         border-width: @switcher-do-horizontal-btn-border-width;
+      }
+   }
 
-  &.ws-disabled {
-    .controls-SwitcherDoubleOnline_toggle {
-      cursor: @switcher-do-disabled-toggle-cursor;
-
-      &.controls-SwitcherDoubleOnline-off-toggled {
-        background: @switcher-do-horizontal-off-disabled-toggle-bg;
+}
+.controls-SwitcherDouble__primary {
+   .controls-SwitcherDoubleOnline__btn {
+      border-color: @switcher-do-horizontal-btn-color-primary;
+   }
+   .controls-SwitcherDoubleOnline__text {
+      &.controls-SwitcherDoubleOnline__unselected {
+         &:hover {
+            color: @switcher-do-horizontal-btn-color-primary;
+         }
       }
 
-      &.controls-SwitcherDoubleOnline-on-toggled {
-        background: @switcher-do-horizontal-on-disabled-toggle-bg;
-      }
-    }
-
-    .controls-SwitcherDoubleOnline__text {
-      cursor: @switcher-do-disabled-text-cursor;
-      color: @switcher-do-disabled-text-color;
-      text-decoration: @switcher-do-disabled-text-decoration;
-    }
-  }
+   }
 }

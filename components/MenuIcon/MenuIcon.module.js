@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.CollectionMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'html!SBIS3.CONTROLS.IconButton'], function(IconButton, ContextMenu, PickerMixin, CollectionMixin, MenuButtonMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.CollectionMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'html!SBIS3.CONTROLS.MenuIcon'], function(IconButton, ContextMenu, PickerMixin, CollectionMixin, MenuButtonMixin, dotTplFn) {
 
    'use strict';
 
@@ -23,7 +23,9 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
     * </component>
     * @extends SBIS3.CONTROLS.ToggleButton
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @category Buttons
+    *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
     * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment
@@ -41,6 +43,7 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
     *
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.CollectionMixin
+    * @mixes SBIS3.CONTROLS.MenuButtonMixin
     */
 
    var MenuIcon = IconButton.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuIcon.prototype */ {
@@ -48,34 +51,27 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
       _hasHeader: false,
       $protected: {
          _options: {
+            pickerClassName: 'controls-MenuIcon__Menu'
          }
       },
 
       init: function(){
          MenuIcon.superclass.init.call(this);
          this._container.addClass('controls-MenuIcon');
-         this._initMenu();
-      },
-
-      _initMenu: function(){
-         if (this.getItems().getItemsCount() > 1) {
-            if (!this._hasHeader) {
-               var header = $('<span class="controls-MenuIcon__header controls-MenuIcon__header-hidden">\
-                            <i class="controls-MenuIcon__headerLeft"></i>\
-                            <i class="controls-MenuIcon__headerRight"></i>\
-                         </span>');
-               this.getContainer().append(header);
-               this._hasHeader = true;
-            }
-         } else {
-            $('.controls-MenuIcon__header', this._container).remove();
-            this._container.removeClass('controls-Picker__show');
-            this._hasHeader = false;
+         if (this._container.hasClass('controls-Menu__hide-menu-header')){
+            this._options.pickerClassName += ' controls-Menu__hide-menu-header';
          }
+         if (this._container.hasClass('controls-IconButton__round-border')){
+            this._options.pickerClassName += ' controls-IconButton__round-border';
+         }
+         if (this._container.hasClass('icon-16')){
+            this._options.pickerClassName += ' controls-Menu__small-items';
+         } else if (this._container.hasClass('icon-24')){
+            this._options.pickerClassName += ' controls-Menu__big-items';
+         } 
       },
 
       _clickHandler: function () {
-         this._initMenu();
          if (this.getItems().getItemsCount() > 1) {
             $('.controls-MenuIcon__header', this._container).toggleClass('controls-MenuIcon__header-hidden', this._container.hasClass('controls-Picker__show'));
             this.togglePicker();
@@ -85,28 +81,6 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
                this._notify('onMenuItemActivate', id);
             }
          }
-      },
-
-      _setWidth: function(){
-         var self = this;
-         this._picker.getContainer().css({
-            'min-width': self._container.outerWidth() - this._border + 15 // для обводки кнопки
-         });
-      },
-
-      _setPickerContent: function(){
-         var self = this;
-         this._picker.subscribe('onClose', function(){
-            self._closeHandler();
-         });
-         this._picker._container.addClass('controls-MenuIcon__Menu');
-         var whiteLine = $('<span class="controls-MenuIcon__Menu-whiteLine" style="height: 1px; background: #ffffff; position: absolute; top: -1px;"></span>')
-            .width(this._container.outerWidth() + 4);
-         this._picker.getContainer().append(whiteLine);
-      },
-
-      _closeHandler: function(){
-         $('.controls-MenuIcon__header', this._container).addClass('controls-MenuIcon__header-hidden');
       }
    });
 

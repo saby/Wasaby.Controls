@@ -6,12 +6,11 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
 
    /**
     * Запись - обертка для данных
-    * @author Мануйлов Андрей
     * @class SBIS3.CONTROLS.Record
     * @public
     */
 
-   var Record =  $ws.proto.Abstract.extend({
+   var Record =  $ws.proto.Abstract.extend( /** @lends SBIS3.CONTROLS.Record.prototype */{
       $protected: {
          /**
           * @var {String|null} Клиентский идентификатор
