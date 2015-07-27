@@ -103,8 +103,11 @@
 }
 .controls-MenuButton {
    &.controls-MenuButton__withoutMenu {
-      .controls-Button__text, .controls-Button__icon + .controls-Button__text {
-         margin: @button-text-margin; //this margin reserve space for arrow-down icon
+      .controls-Button__text {
+         margin: @button-text-margin;
+      }
+      .controls-Button__icon + .controls-Button__text {
+         margin: @button-icon-text-margin; //this margin reserve space for arrow-down icon
       }
    }
 }

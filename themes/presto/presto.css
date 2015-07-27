@@ -941,9 +941,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuButton .controls-Button__icon + .controls-Button__text {
   margin-right: 30px;
 }
-.controls-MenuButton.controls-MenuButton__withoutMenu .controls-Button__text,
-.controls-MenuButton.controls-MenuButton__withoutMenu .controls-Button__icon + .controls-Button__text {
+.controls-MenuButton.controls-MenuButton__withoutMenu .controls-Button__text {
   margin: 0 8px 0 8px;
+}
+.controls-MenuButton.controls-MenuButton__withoutMenu .controls-Button__icon + .controls-Button__text {
+  margin: 0 8px 0 28px;
 }
 .controls-MenuButton__header {
   display: inline-block;
