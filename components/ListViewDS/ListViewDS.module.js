@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                position: null,
                size: null
             },
-            _keysWeHandle: [$ws._const.key.up, $ws._const.key.down],
+            _keysWeHandle: [$ws._const.key.up, $ws._const.key.down, $ws._const.key.space, $ws._const.key.enter],
             _itemActionsGroup: null,
             _options: {
                /**
@@ -256,6 +256,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (e.which === $ws._const.key.up) {
                previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
             } else if (e.which === $ws._const.key.down) {
+               nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+            }
+            if (e.which === $ws._const.key.space) {
+               this.toggleItemsSelection([selectedKey]);
                nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
             }
 
