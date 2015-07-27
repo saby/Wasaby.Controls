@@ -1682,6 +1682,7 @@ input[type="reset"]::-moz-focus-inner {
   padding: 2px 4px 2px 4px;
 }
 .controls-TextArea .controls-TextArea__inputField {
+  overflow: hidden;
   font: inherit;
   color: inherit;
   display: block;
