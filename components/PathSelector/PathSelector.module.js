@@ -27,6 +27,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             linkedView: null,
             keyField: 'id',
             displayField: 'title',
+            itemTemplate: pointTpl,
             pickerClassName: 'controls-Menu__Popup controls-PathSelector'
          }
       },
@@ -232,7 +233,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       _getItemTemplate: function() {
-         return pointTpl;
+         return this._options.itemTemplate;
       },
 
       _buildTplArgs: function(item) {
