@@ -13,11 +13,14 @@
       width: 229px;
       height: 190px;
       border: none;
-      .controls-CompositeView__tileImg {
+      .controls-CompositeView__tileImg-container {
         display: block;
         width: 120px;
         height: 120px;
         margin: @multiView-tile-item-image-margin;
+        .controls-CompositeView__tileImg {
+           width: 120px;
+         }
       }
       .controls-CompositeView__tileTitle {
         font-weight: 600;
@@ -29,6 +32,9 @@
       &:hover {
         .controls-CompositeView__tileTitle {
           text-decoration: underline;
+        }
+        .controls-CompositeView__tileImg-container{
+          box-shadow: 1px 2px 4px #aaa;
         }
       }
     }
@@ -81,11 +87,14 @@
       width: 229px;
       height: 190px;
       border: none;
-      .controls-CompositeView__tileImg {
+      .controls-CompositeView__tileImg-container {
         display: block;
         width: 120px;
         height: 120px;
         margin: @multiView-tile-item-image-margin;
+        .controls-CompositeView__tileImg {
+           width: 120px;
+         }
       }
       .controls-CompositeView__tileTitle {
         font-weight: 600;
@@ -95,6 +104,9 @@
       &:hover {
         .controls-CompositeView__tileTitle {
           text-decoration: underline;
+        }
+        .controls-CompositeView__tileImg-container{
+          box-shadow: 1px 2px 4px #aaa;
         }
       }
     }
