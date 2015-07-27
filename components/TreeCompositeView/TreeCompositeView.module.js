@@ -112,7 +112,8 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGrid',
 
          return {
             top: hoveredItem.position.top + ((isTableView) ? (hoveredItem.size.height > height ? hoveredItem.size.height - height : 0) : 0),
-            right: isTableView ? 0 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
+            //TODO right = 5 hotFix для того чтобы меню разворачивалось в нужную сторону
+            right: isTableView ? 5 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
          };
       },
       _processPaging: function() {
