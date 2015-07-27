@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          _currentControlsValues: {},
          _nomFilters: {
             withoutNDS: true,
-            showDeleted: true,
+            ShowDeleted: true,
             ShowOnlyDeleted: true,
             onlySelling: true,
             onlyNotSelling: true,
@@ -128,15 +128,15 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
                if(ctrlName === 'Using_filter') {
                   txtValue = controls[i].getText();
                   if(txtValue === 'Неиспользуемые') {
-                     filter['showDeleted'] = true;
+                     filter['ShowDeleted'] = true;
                      filter['ShowOnlyDeleted'] = true;
                   }
                   if(txtValue === 'Испльзуемые') {
-                     filter['showDeleted'] = false;
+                     filter['ShowDeleted'] = false;
                      filter['ShowOnlyDeleted'] = false;
                   }
                   if(txtValue === 'Все (используемые и нет)') {
-                     filter['showDeleted'] = true;
+                     filter['ShowDeleted'] = true;
                      filter['ShowOnlyDeleted'] = false;
                   }
                }
