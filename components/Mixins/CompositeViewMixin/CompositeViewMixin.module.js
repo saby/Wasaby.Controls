@@ -22,6 +22,19 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
       $constructor: function() {
          this._drawViewMode(this._options.mode);
          this._container.addClass('controls-CompositeView-' + this._options.viewMode);
+         var self = this;
+
+         this.subscribe('onDrawItems', function(){
+            if (self._options.viewMode == 'tile'){
+               self._calculateTileWidth();
+            }
+         });
+         //TODO:Нужен какой то общий канал для ресайза окна
+         $(window).bind('resize', function(){
+            if (self._options.viewMode == 'tile'){
+               self._calculateTileWidth();
+            }
+         });
       },
 
       setViewMode: function(mode) {
@@ -44,6 +57,27 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
          else {
             $('.controls-CompositeView__itemsContainer', this._container.get(0)).removeClass('ws-hidden');
             $('.controls-DataGrid__table', this._container.get(0)).addClass('ws-hidden');
+         }
+      },
+
+      _calculateTileWidth: function(){
+         var itemsContainer = this._getItemsContainer(),
+            tiles = $('.controls-CompositeView__tileItem:not(.controls-ListView__folder)', itemsContainer), 
+            folders = $('.controls-ListView__folder', itemsContainer);
+         this._calcWidth(tiles);
+         this._calcWidth(folders);
+      },
+
+      _calcWidth: function(tiles){
+         if (tiles.length){
+            var oldWidth = $(tiles[0]).width(),
+               itemsContainerWidth =  this._getItemsContainer().outerWidth(),
+               tilesCount = Math.floor(itemsContainerWidth / oldWidth),
+               newTileWidth = itemsContainerWidth / tilesCount;
+               
+            if (itemsContainerWidth - tiles.length * oldWidth < oldWidth) {
+               tiles.outerWidth(newTileWidth);
+            }
          }
       },
 
