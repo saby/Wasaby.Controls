@@ -2527,11 +2527,14 @@ input[type="reset"]::-moz-focus-inner {
   height: 190px;
   border: none;
 }
-.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder .controls-CompositeView__tileImg {
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder .controls-CompositeView__tileImg-container {
   display: block;
   width: 120px;
   height: 120px;
   margin: 4px auto 0 auto;
+}
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder .controls-CompositeView__tileImg-container .controls-CompositeView__tileImg {
+  width: 120px;
 }
 .controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder .controls-CompositeView__tileTitle {
   font-weight: 600;
@@ -2542,6 +2545,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder:hover .controls-CompositeView__tileTitle {
   text-decoration: underline;
+}
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder:hover .controls-CompositeView__tileImg-container {
+  box-shadow: 1px 2px 4px #aaa;
 }
 .controls-CompositeView.controls-CompositeView-table .controls-Pager-container {
   display: none;
@@ -2590,11 +2596,14 @@ input[type="reset"]::-moz-focus-inner {
   height: 190px;
   border: none;
 }
-.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__folder .controls-CompositeView__tileImg {
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__folder .controls-CompositeView__tileImg-container {
   display: block;
   width: 120px;
   height: 120px;
   margin: 4px auto 0 auto;
+}
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__folder .controls-CompositeView__tileImg-container .controls-CompositeView__tileImg {
+  width: 120px;
 }
 .controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__folder .controls-CompositeView__tileTitle {
   font-weight: 600;
@@ -2603,6 +2612,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__folder:hover .controls-CompositeView__tileTitle {
   text-decoration: underline;
+}
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__folder:hover .controls-CompositeView__tileImg-container {
+  box-shadow: 1px 2px 4px #aaa;
 }
 .controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__item__multiSelected {
   background: #e7f0f9;
