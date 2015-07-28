@@ -119,6 +119,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
                point[this._options.displayField] = $ws.helpers.escapeHtml(key.title);
                point[this._options.keyField] = key.key;
                point[this._options.colorField] = key.color;
+               point.data = key.data;
                this._dataSet.push(point);
             }
          }
