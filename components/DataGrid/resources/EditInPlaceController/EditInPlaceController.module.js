@@ -366,6 +366,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                }
                this._areas.first.editInPlace.destroy();
                this._areas.first = null;
+               EditInPlaceController.superclass.destroy.apply(this, arguments);
             }
          });
 
