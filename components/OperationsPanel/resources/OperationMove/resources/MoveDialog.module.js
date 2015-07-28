@@ -59,7 +59,6 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
       _onRootClick: function(event) {
          this._treeView._container.find('.controls-ListView__folder').toggleClass('ws-hidden');
          this._rootBlock.toggleClass('ws-hidden').find('.controls-TreeView__expand').toggleClass('controls-TreeView__expand__open');
-         //this._rootBlock.find('.controls-TreeView__expand').toggleClass('controls-TreeView__expand__open');
          this._treeView.setSelectedKey(null);
          event.stopPropagation();
       }
