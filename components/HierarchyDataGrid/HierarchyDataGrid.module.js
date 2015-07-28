@@ -179,8 +179,16 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
                event.setResult(false);
                if (self._notify('onSearchPathClick', id) !== false ) {
                   //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
-                  self.setCurrentRoot(id);
+                  /*TODO для Алены. Временный фикс, потому что так удалось починить*/
+                  var filter = $ws.core.merge(self._filter, {
+                     'Разворот' : 'Без разворота',
+                     'СтрокаПоиска': undefined
+                  });
+                  self.setInfiniteScroll(false, true);
                   self.setGroupBy({});
+                  self.setHighlightText('', false);
+                  self._filter = filter;
+                  self.setCurrentRoot(id);
                }
             });
             this._pathSelectors.push(ps);
