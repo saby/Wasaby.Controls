@@ -15,7 +15,8 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
             template: 'js!SBIS3.CONTROLS.MoveDialogTemplate',
             cssClassName: 'controls-MoveDialog'
          },
-         _treeView: undefined
+         _treeView: undefined,
+         _rootBlock: undefined
       },
       $constructor: function() {
          this.subscribe('onReady', this._onReady.bind(this));
@@ -50,9 +51,17 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          event.setResult(dataSet);
       },
       _createRoot: function() {
-         var tr = $('<tr class="controls-DataGrid__tr controls-ListView__item controls-ListView__folder" style="" data-id="null"><td class="controls-DataGrid__td controls-MoveDialog__root"><div class="controls-TreeView__expand js-controls-TreeView__expand has-child controls-TreeView__expand__open"></div>Корень</td></tr>');
-         tr.prependTo(this._treeView._container.find('tbody'));
+         this._rootBlock = $('<tr class="controls-DataGrid__tr controls-ListView__item controls-ListView__folder" style="" data-id="null"><td class="controls-DataGrid__td controls-MoveDialog__root"><div class="controls-TreeView__expand js-controls-TreeView__expand has-child controls-TreeView__expand__open"></div>Корень</td></tr>');
+         this._rootBlock.bind('click', this._onRootClick.bind(this));
+         this._rootBlock.prependTo(this._treeView._container.find('tbody'));
          this._treeView.setSelectedKey(null);
+      },
+      _onRootClick: function(event) {
+         this._treeView._container.find('.controls-ListView__folder').toggleClass('ws-hidden');
+         this._rootBlock.toggleClass('ws-hidden').find('.controls-TreeView__expand').toggleClass('controls-TreeView__expand__open');
+         //this._rootBlock.find('.controls-TreeView__expand').toggleClass('controls-TreeView__expand__open');
+         this._treeView.setSelectedKey(null);
+         event.stopPropagation();
       }
    });
 

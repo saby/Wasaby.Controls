@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
          }
          if (moveTo !== null) {
             record = this._dataSet.getRecordByKey(moveTo);
-            if (!record.get(this._options.hierField + '@')) {
+            if (record && !record.get(this._options.hierField + '@')) {
                $ws.helpers.alert('Вы не можете перемещать в лист! Выберите другую запись для перемещения!', {}, this);
                return false;
             }
