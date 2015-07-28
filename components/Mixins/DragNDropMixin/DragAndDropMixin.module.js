@@ -1,86 +1,166 @@
-/**
- * Created by am.gerasimov on 26.05.2015.
- */
 define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
+   'use strict';
+
+   if (typeof window !== 'undefined') {
+      var EventBusChannel = $ws.single.EventBus.channel('DragAndDropChannel');
+
+      $(document).bind('mouseup', function(e) {
+         EventBusChannel.notify('onMouseup', e);
+      });
+
+      $(document).bind('mousemove', function(e) {
+         EventBusChannel.notify('onMousemove', e);
+      });
+   }
+
    var DragAndDropMixin = {
       $protected: {
-         _dragContainer: undefined,
-         _withinElement: undefined,
-         _shift: {
-            x: 0,
-            y: 0
-         }
+         _moveBeginX: null,
+         _moveBeginY: null,
+         _shiftX: null,
+         _shiftY: null,
+         //флаг сигнализирующий о том что юзер начал сдвиг
+         _isShifted: false,
+         //текущий перемещаемый объект
+         _currentComponent: null,
+         //константа показывающая на сколько надо сдвинуть мышь, чтобы началось перемещение
+         _constShiftLimit: 3,
+
+         _avatar: null,
+         _position: null,
+         _lines: []
       },
-      initializeDragAndDrop: function() {
+
+      $constructor: function() {
          var self = this;
-         this._dragContainer = this._getDragContainer();
+         self._publish('onDragMove');
+         $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMouseup', this.onMouseup, this);
+         $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMousemove', this.onMousemove, this);
+      },
 
-         /* Запросим, относительно чего, мы двигаем элемент, иначе просто body */
-         this._withinElement = this._getWithinElem() || $(document.body);
+      onMouseup: function(buse, e) {
+         //роняем компонент
+         //определяем droppable контейнер
+         if (this._isShifted) {
+            var droppable = this._findDragDropContainer(e, e.target);
 
-         /* Выключим браузерный drag-n-drop */
-         this._dragContainer[0].ondragstart = function() {
-            return false;
-         };
-         this._dragContainer
-            .addClass('draggable')
-            .mousedown(function(e) {
-
-               /* Если нажали не левой клавишей мыши, то не будем обрабатывать перенос */
-               if(e.which !== 1) return;
-
-               self._dragStart(e);
-               self._setStartPosition(e, this);
-               $ws._const.$doc.bind('mousemove.dragNDrop', self._moveAt.bind(self));
-               $ws._const.$doc.bind('mouseup.dragNDrop', self._moveEnd.bind(self));
-            });
-      },
-      _moveAt: function(e) {
-         this._dragMove(e,{top: e.pageY - this._shift.y, left: e.pageX - this._shift.x});
-      },
-      _moveEnd: function(e) {
-         $ws._const.$doc.unbind('.dragNDrop');
-         this._dragEnd(e);
-      },
-      _getCords: function(elem) {
-         var elemCords = elem.getBoundingClientRect(),
-            withinElemCords = this._withinElement[0].getBoundingClientRect();
-
-         return {
-            top: elemCords.top + pageYOffset - withinElemCords.top,
-            left: elemCords.left + pageXOffset - withinElemCords.left
-         };
-      },
-      _setStartPosition: function(e, elem) {
-         var position = this._getCords(elem),
-            style = window.getComputedStyle ? getComputedStyle(elem, "") : elem.currentStyle;
-
-         this._shift.x = e.pageX - position.left + parseInt(style.marginLeft);
-         this._shift.y = e.pageY - position.top + parseInt(style.marginTop);
-      },
-      _getDragContainer: function() {
-         throw new Error('Method _getDragContainer() must be implemented');
-      },
-      _getWithinElem: function() {
-         /* Method must be implemented */
-      },
-      _dragMove: function() {
-         /* Method must be implemented */
-      },
-      _dragEnd: function () {
-         /* Method must be implemented */
-      },
-      _dragStart: function () {
-         /* Method must be implemented */
-      },
-      before: {
-         destroy: function () {
-            if(this._dragContainer) {
-               this._dragContainer.unbind('mousedown');
-               this._dragContainer = null;
+            if (droppable) {
+               this._callDropHandler(e, droppable);
             }
+
+            this._endDropDown();
          }
+
+         this._currentComponent = null;
+
+         if (this._avatar) {
+            this._avatar = null;
+         }
+
+         this._position = null;
+         $('body').removeClass('dragdropBody cantDragDrop');
+      },
+
+      onMousemove: function(buse, e) {
+         // Если нет выделенных компонентов, то уходим
+         if (!this._currentComponent) {
+            return;
+         }
+         var 
+            // определяем droppable контейнер
+            movable = this._findDragDropContainer(e, e.target);
+         if (!this._isShifted) {
+            //начало переноса
+            var moveX = e.pageX - this._moveBeginX,
+               moveY = e.pageY - this._moveBeginY;
+            //начинаем движение только если сдвинули сильно
+            if ((Math.abs(moveX) < this._constShiftLimit) && (Math.abs(moveY) < this._constShiftLimit)) {
+               return;
+            }
+            this._beginDropDown(e, movable);
+         }
+
+         $('body').addClass('dragdropBody');
+         //двигаем компонент
+         if (movable) {
+            this._callMoveHandler(e, movable);
+         } else {
+            this._callMoveOutHandler(e);
+         }
+
+         return false;
+      },
+
+      //текущий активный компонент, либо по gdi (если переносим)
+      //либо отдаем тип, если создаем из палитры
+      setCurrentElement: function(e, elementConfig) {
+         //координаты с которых начато движение
+         this._moveBeginX = e.pageX;
+         this._moveBeginY = e.pageY;
+
+         this._currentComponent = elementConfig;
+
+         this._isShifted = false;
+         this._dropCache();
+      },
+
+      _dropCache: function() {},
+
+      getCurrentElement: function() {
+         return this._currentComponent;
+      },
+
+      _beginDropDown: function() {
+         this._isShifted = true;
+      },
+
+      _endDropDown: function() {
+         this._isShifted = false;
+      },
+
+      _callMoveHandlerStandart: function(e, element) {
+         var target = this.getCurrentElement();
+         if (!this._containerCoords) {
+            this._containerCoords = {
+               x: this._moveBeginX - parseInt(target.css('left'), 10),
+               y: this._moveBeginY - parseInt(target.css('top'), 10)
+            };
+         }
+         target.css({
+            top: e.pageY - this._containerCoords.y,
+            left: e.pageX - this._containerCoords.x
+         });
+      },
+
+      _callMoveHandler: function(e, element) {
+         throw new Error('Method _callMoveHandler must be implemented');
+      },
+      _callMoveOutHandler: function(e) {
+         throw new Error('Method callMoveOutHandler must be implemented');
+      },
+      _callDropHandlerStandart: function(e, element) {
+         this._containerCoords = null;
+      },
+      _callDropHandler: function(e, element) {
+         throw new Error('Method _callDropHandler must be implemented');
+      },
+
+      _findDragDropContainerStandart: function(e, target) {
+         var elem = target;
+         while (elem !== null && (!($(elem).hasClass('genie-dragdrop')))) {
+            elem = elem.parentNode;
+         }
+         return elem;
+      },
+
+      _findDragDropContainer: function(e, target) {
+         return this._findDragDropContainerStandart(e, target);
+      },
+      //отвлавливает ли контейнер drag'n'drop внутри себя
+      isDragDropContainer: function(element) {
+         return $(element).hasClass('genie-dragdrop');
       }
    };
+
    return DragAndDropMixin;
 });
