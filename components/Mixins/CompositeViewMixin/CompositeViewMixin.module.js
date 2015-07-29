@@ -4,6 +4,8 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
    var MultiView = {
       _dotTplFn : dotTplFn,
       $protected: {
+         _tileWidth: null,
+         _folderWidth: null,
          _options: {
             /**
              * @cfg {Object} Режим отображения
@@ -64,14 +66,19 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
          var itemsContainer = this._getItemsContainer(),
             tiles = $('.controls-CompositeView__tileItem:not(.controls-ListView__folder)', itemsContainer), 
             folders = $('.controls-ListView__folder', itemsContainer);
-         this._calcWidth(tiles);
-         this._calcWidth(folders);
+         if (!this._tileWidth) { 
+            this._tileWidth = $(tiles[0]).width();
+         }
+         if (!this._folderWidth) {
+            this._folderWidth = $(folders[0]).width();
+         }
+         this._calcWidth(tiles, this._tileWidth);
+         this._calcWidth(folders, this._folderWidth);
       },
 
-      _calcWidth: function(tiles){
+      _calcWidth: function(tiles, oldWidth){
          if (tiles.length){
-            var oldWidth = $(tiles[0]).width(),
-               itemsContainerWidth =  this._getItemsContainer().outerWidth(),
+            var itemsContainerWidth =  this._getItemsContainer().outerWidth(),
                tilesCount = Math.floor(itemsContainerWidth / oldWidth),
                newTileWidth = itemsContainerWidth / tilesCount;
                
