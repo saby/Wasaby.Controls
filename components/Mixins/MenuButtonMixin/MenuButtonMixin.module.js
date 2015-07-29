@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
 
                this._drawItems();
             }
-         },
+         }
       },
       
       _drawItems : function() {
