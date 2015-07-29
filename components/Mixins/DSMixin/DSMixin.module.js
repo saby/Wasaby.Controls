@@ -173,7 +173,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * </pre>
              */
             groupBy : {},
-            /**            
+            /**
+             * @cfg {Function} Пользовательский метод добавления атрибутов на элементы коллекции
+             */
+            userItemAttributes : null,
+            /**
              * @cfg {String|HTMLElement|jQuery} Отображаемый контент при отсутствии данных
              * @example
              * <pre class="brush:xml">
@@ -183,7 +187,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * Опция задаёт текст, отображаемый как при абсолютном отсутствии данных, так и в результате {@link groupBy фильтрации}.
              * @see items
              * @see setDataSource
-             * @see groupBy
+             * @see groupBy* @cfg {Function} Пользовательский метод добавления атрибутов на элементы коллекции
              */
             emptyHTML: ''
          },
@@ -616,6 +620,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _addItemAttributes: function (container, item) {
          container.attr('data-id', item.getKey()).addClass('controls-ListView__item');
+         if (this._options.userItemAttributes && this._options.userItemAttributes instanceof Function) {
+            this._options.userItemAttributes(container, item);
+         }
       },
 
       _createItemInstance: function (item, targetContainer, at) {

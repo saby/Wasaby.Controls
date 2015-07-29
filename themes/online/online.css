@@ -2822,6 +2822,12 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid .controls-TreeDataGrid__folderToolbar {
   display: none;
 }
+.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid .controls-DataGrid__table .controls-DataGrid__td {
+  padding-left: 22px;
+}
+.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid .controls-DataGrid__table .controls-MoveDialog__root {
+  padding-left: 6px;
+}
 .controls-MoveDialogTemplate__activateMove {
   position: absolute;
   right: 38px;
