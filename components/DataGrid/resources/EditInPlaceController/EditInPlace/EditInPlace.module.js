@@ -39,21 +39,24 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   childFocusOut = function() {
                      var
                         result,
+                        currentValue;
+                     if (this.isVisible()) {
                         currentValue = this[self._determineGetMethodName(this)]();
-                     if (currentValue !== (self._editingRecord ? self._editingRecord : self._record).get(this.getName())) {
-                        if (!self._editingRecord) {
-                           self._editingRecord = self._record.clone();
-                        }
-                        self._editingRecord.set(this.getName(), currentValue);
-                        result = self._notify('onValueChange', this.getName(), self._editingRecord);
-                        if (result instanceof $ws.proto.Deferred) {
-                           result.addCallback(function() {
+                        if (currentValue !== (self._editingRecord ? self._editingRecord : self._record).get(this.getName())) {
+                           if (!self._editingRecord) {
+                              self._editingRecord = self._record.clone();
+                           }
+                           self._editingRecord.set(this.getName(), currentValue);
+                           result = self._notify('onValueChange', this.getName(), self._editingRecord);
+                           if (result instanceof $ws.proto.Deferred) {
+                              result.addCallback(function () {
+                                 self._updateFieldsValues(self._editingRecord);
+                                 self._applyChanges();
+                              });
+                           } else {
                               self._updateFieldsValues(self._editingRecord);
                               self._applyChanges();
-                           });
-                        } else {
-                           self._updateFieldsValues(self._editingRecord);
-                           self._applyChanges();
+                           }
                         }
                      }
                   };
@@ -71,16 +74,6 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                      }, this);
                   }
                });
-            },
-            hide: function() {
-               var activeChild;
-               if (this.isVisible()) {
-                  activeChild = this.getActiveChildControl();
-                  if (activeChild) {
-                     activeChild.setActive(false);
-                  }
-               }
-               EditInPlace.superclass.hide.apply(this, arguments);
             },
             _onKeyDown: function(e) {
                e.stopPropagation();
