@@ -2601,6 +2601,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ItemActions__activeItem {
   background-color: #00c795 !important;
 }
+.controls-ItemActions__activeItem .controls-DataGrid__notScrolledCell {
+  background-color: #00c795 !important;
+}
 .controls-EditInPlaceController {
   position: absolute;
   width: 100%;
