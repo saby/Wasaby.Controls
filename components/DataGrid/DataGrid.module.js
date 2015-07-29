@@ -568,7 +568,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
           this._colgroup.append(docFragmentForColGroup);
           this._thead.prepend(headerTr);
           this._checkColumns();
-          this._redraw();
+          this.reload();
        },
       /**
        * Проверяет настройки колонок, заданных опцией {@link columns}.
