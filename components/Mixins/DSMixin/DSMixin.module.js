@@ -119,6 +119,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             groupBy : {},
             /**
+             * @cfg {Function} Пользовательский метод добавления атрибутов на элементы коллекции
+             */
+            userItemAttributes : null,
+            /**
              * @cfg {String|HTMLElement|jQuery} что отображается при отсутствии данных 
              */
             emptyHTML: ''
@@ -502,6 +506,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _addItemAttributes: function (container, item) {
          container.attr('data-id', item.getKey()).addClass('controls-ListView__item');
+         if (this._options.userItemAttributes && this._options.userItemAttributes instanceof Function) {
+            this._options.userItemAttributes(container, item);
+         }
       },
 
       _createItemInstance: function (item, targetContainer, at) {
