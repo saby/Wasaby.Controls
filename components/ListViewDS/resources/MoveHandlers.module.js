@@ -25,8 +25,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
             deferred.done().getResult().addCallback(function() {
                if (deferred.getResult().isSuccessful()) {
                   self.removeItemsSelectionAll();
-                  //TODO hotFix
-                  self.reload();
                   self.setCurrentRoot(moveTo);
                }
             });
