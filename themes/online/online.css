@@ -97,7 +97,7 @@ input[type="reset"]::-moz-focus-inner {
   background: #cbd5e5;
 }
 .controls-Button .controls-Button__text.controls-Button__emptyCaption {
-  margin: 0 0 0 13px !important;
+  margin: 0 0 0 13px;
 }
 .controls-Button .controls-Button__icon {
   position: absolute;
@@ -149,7 +149,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #ffffff !important;
+  background: #ffffff;
 }
 .controls-Button.controls-Button__big {
   font: italic normal 18px 'Cambria', Georgia, serif;
@@ -192,7 +192,7 @@ input[type="reset"]::-moz-focus-inner {
   margin: 0 24px 0 24px;
 }
 .controls-Button.controls-Button__big .controls-Button__text.controls-Button__emptyCaption {
-  margin: 0 0 0 13px !important;
+  margin: 0 0 0 13px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon {
   position: absolute;
@@ -241,7 +241,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #ffffff !important;
+  background: #ffffff;
 }
 .controls-Button.controls-Button__big.ws-disabled {
   color: #e4e4e4;
@@ -249,7 +249,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #ffffff !important;
+  background: #ffffff;
 }
 .controls-Button.ws-disabled {
   cursor: default;
@@ -258,7 +258,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #ffffff !important;
+  background: #ffffff;
 }
 .controls-Button__ellipsis .controls-Button__text,
 .controls-Link.controls-Button__ellipsis {
@@ -1357,8 +1357,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextBox.ws-validation-error {
   border-width: 1px;
   border-style: solid;
-  border-color: #ff302b !important;
-  background: #fadadd !important;
+  border-color: #ff302b;
+  background: #fadadd;
 }
 .controls-TextBox.ws-validation-error .controls-TextBox__fieldWrapper .controls-TextBox__field {
   color: inherit;
@@ -1418,7 +1418,7 @@ input[type="reset"]::-moz-focus-inner {
   color: inherit;
   text-align: left;
   min-height: 19px;
-  line-height: 20px !important;
+  line-height: 20px;
   margin: 0;
   padding: 1px 0;
   border: none;
@@ -1426,16 +1426,16 @@ input[type="reset"]::-moz-focus-inner {
   background: transparent;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-webkit-input-placeholder {
-  color: #e4e4e4 !important;
+  color: #e4e4e4;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field:-moz-placeholder {
-  color: #b9b9b9 !important;
+  color: #b9b9b9;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-moz-placeholder {
-  color: #b9b9b9 !important;
+  color: #b9b9b9;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field:-ms-input-placeholder {
-  color: #e4e4e4 !important;
+  color: #e4e4e4;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-ms-clear {
   display: none;
@@ -1453,7 +1453,7 @@ input[type="reset"]::-moz-focus-inner {
   text-overflow: ellipsis;
   -ms-text-overflow: ellipsis;
   white-space: nowrap;
-  color: #e4e4e4 !important;
+  color: #e4e4e4;
   font: inherit;
   padding: 3px 0 0;
   text-align: inherit;
@@ -1479,8 +1479,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-FormattedTextBox.ws-validation-error {
   border-width: 1px;
   border-style: solid;
-  border-color: #ff302b !important;
-  background: #fadadd !important;
+  border-color: #ff302b;
+  background: #fadadd;
 }
 .controls-FormattedTextBox.ws-validation-error .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
   color: inherit;
@@ -1572,7 +1572,7 @@ input[type="reset"]::-moz-focus-inner {
   display: none;
 }
 .controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable__placeholder {
-  color: #e4e4e4 !important;
+  color: #e4e4e4;
 }
 .controls-ComboBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
   position: absolute;
@@ -1697,16 +1697,16 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
 }
 .controls-TextArea .controls-TextArea__inputField::-webkit-input-placeholder {
-  color: #e4e4e4 !important;
+  color: #e4e4e4;
 }
 .controls-TextArea .controls-TextArea__inputField:-moz-placeholder {
-  color: #b9b9b9 !important;
+  color: #b9b9b9;
 }
 .controls-TextArea .controls-TextArea__inputField::-moz-placeholder {
-  color: #b9b9b9 !important;
+  color: #b9b9b9;
 }
 .controls-TextArea .controls-TextArea__inputField:-ms-input-placeholder {
-  color: #e4e4e4 !important;
+  color: #e4e4e4;
 }
 .controls-TextArea.ws-has-focus {
   border-width: 1px;
@@ -1720,8 +1720,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextArea.ws-validation-error {
   border-width: 1px;
   border-style: solid;
-  border-color: #ff302b !important;
-  background: #fadadd !important;
+  border-color: #ff302b;
+  background: #fadadd;
 }
 .controls-TextArea.ws-validation-error .controls-TextArea__inputField {
   color: inherit;
@@ -1880,8 +1880,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DatePicker.ws-validation-error > .controls-DatePicker__fieldWrapper {
   border-width: 1px;
   border-style: solid;
-  border-color: #ff302b !important;
-  background: #fadadd !important;
+  border-color: #ff302b;
+  background: #fadadd;
 }
 .controls-DatePicker:hover .controls-FormattedTextBox__fieldWrapper {
   border-width: 1px;
@@ -1912,7 +1912,7 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/DatePicker-calendar.png') -18px 0 no-repeat;
 }
 .controls-DatePicker .controls-DatePicker__calendarIcon.calendar-disabled {
-  background: url('img/DatePicker-calendar.png') -35px 0 no-repeat !important;
+  background: url('img/DatePicker-calendar.png') -35px 0 no-repeat;
 }
 .controls-DatePicker__calendar {
   -webkit-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
@@ -2088,10 +2088,13 @@ input[type="reset"]::-moz-focus-inner {
   text-indent: 0;
   white-space: pre-wrap;
   /* css-3 */
+
   white-space: -moz-pre-wrap;
   /* Mozilla, since 1999 */
+
   word-wrap: break-word;
   /* Internet Explorer 5.5+ */
+
 }
 .controls-EditAtPlace.controls-EditAtPlace__autoHeight {
   height: auto;
@@ -2150,7 +2153,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: 0 0 3px #b2b2b2;
   -moz-box-shadow: 0 0 3px #b2b2b2;
   box-shadow: 0 0 3px #b2b2b2;
-  background: #f8f3f1 !important;
+  background: #f8f3f1;
 }
 .controls-EditAtPlace__editorOverlay .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
   font: 14px/20px 'TensorFont Regular', 'TensorFont', sans-serif;
@@ -2174,7 +2177,7 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/cancelIcon-sprite.png') 0 -32px no-repeat;
 }
 .controls-EditAtPlace__controlPanel .controls-EditAtPlace__cancel:hover,
-.controls-EditAtPlaceGroup__controlPanel .controls-EditAtPlace__cancel:hover {
+.controls-EditAtPlaceGroup__controlPanel .controls-EditAtPlace__cancel {
   background: url('img/cancelIcon-sprite.png') 0 -16px no-repeat;
 }
 .controls-EditAtPlaceGroup .controls-EditAtPlace .controls-EditAtPlace__fieldWrapper.controls-EditAtPlace__textAreaWrapper {
@@ -2195,11 +2198,11 @@ input[type="reset"]::-moz-focus-inner {
   position: relative;
 }
 .controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox,
-.controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox {
+.controls-DataGrid .controls-ListView__item .controls-ListView__itemCheckBox {
   background: url('img/CheckBox.png') 0 1px;
 }
 .controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover,
-.controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover {
+.controls-DataGrid .controls-ListView__item .controls-ListView__itemCheckBox:hover {
   background: url('img/CheckBox.png') 0 17px;
 }
 .controls-ListView .controls-ListView__EmptyData {
@@ -2735,6 +2738,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-operations-panel {
   /*TODO придрот (2 important), чтобы перебить высоту ws-area*/
+
   height: 30px !important;
   width: 30px;
   overflow: visible !important;
@@ -2818,6 +2822,7 @@ input[type="reset"]::-moz-focus-inner {
   padding: 0 0 5px 0;
   width: 100%;
   /*TODO скрываем подгрузку (ещё null)*/
+
 }
 .controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid .controls-TreeDataGrid__folderToolbar {
   display: none;
@@ -2984,7 +2989,7 @@ input[type="reset"]::-moz-focus-inner {
   right: -40px;
 }
 .ws-disabled .controls-ProgressBar__progress {
-  background: #ffffff !important;
+  background: #ffffff;
 }
 .ws-disabled .controls-ProgressBar__value {
   color: #e4e4e4;
@@ -3037,7 +3042,7 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/ItemActions-menu.png') no-repeat 0 -60px;
 }
 .controls-ItemActions__activeItem {
-  background-color: #e9fafe !important;
+  background-color: #e9fafe;
 }
 .controls-EditInPlaceController {
   position: absolute;
