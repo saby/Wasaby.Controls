@@ -176,7 +176,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
          var key = this.get(this._keyField);
          // потому что БЛ возвращает массив для идентификатора
          if (key instanceof Array) {
-            return key[0];
+            return key.length > 1 ? key.join(',') : key[0];
          }
          return key;
       },

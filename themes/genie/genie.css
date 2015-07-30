@@ -2307,6 +2307,32 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGrid__addInPlace-container {
   padding-left: 8px;
 }
+.controls-DataGrid__td .controls-TreeView__expand--inside {
+  display: none;
+  line-height: 13px !important;
+}
+.controls-DataGrid__td .controls-TreeView__hierWrapper {
+  height: 20px;
+  width: 20px;
+  display: inline-block;
+  float: left;
+}
+.controls-DataGrid__td .controls-TreeView__editArrow {
+  display: none;
+  position: relative;
+  top: 2px;
+}
+.controls-DataGrid__td:hover .controls-TreeView__expand--inside {
+  display: inline-block;
+  height: 14px;
+}
+.controls-DataGrid__td .controls-TreeView__expand--inside {
+  display: inline-block;
+  height: 14px;
+}
+.controls-ListView__hoveredItem .controls-TreeView__editArrow {
+  display: inline-block;
+}
 .controls-PathSelector {
   min-height: 27px;
 }
