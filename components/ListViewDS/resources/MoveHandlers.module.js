@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
          var
             record,
             self = this,
-            /**TODO переделать не на ParallelDeferred*/
+            /*TODO переделать не на ParallelDeferred*/
             deferred = new $ws.proto.ParallelDeferred();
          if (this._checkRecordsForMove(records, moveTo)) {
             for (var i = 0; i < records.length; i++) {
