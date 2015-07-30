@@ -226,6 +226,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          this.setSelectedKey(id);
          this.setCurrentElement(e, this._getDragItems(id));
          e.preventDefault();
+         e.stopPropagation();
       },
       _callMoveOutHandler: function() {
       },
