@@ -30,6 +30,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   focusCatch: undefined
                },
                _firstField: undefined,
+               //Храним тут состояние того, что фокус потерян из-за скрытия компонента
+               _lostFocusOnHide: false,
                _fields: {}
             },
             $constructor: function() {
@@ -40,7 +42,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                      var
                         result,
                         currentValue;
-                     if (this.isVisible()) {
+                     if (self.isVisible() && !self._lostFocusOnHide) {
                         currentValue = this[self._determineGetMethodName(this)]();
                         if (currentValue !== (self._editingRecord ? self._editingRecord : self._record).get(this.getName())) {
                            if (!self._editingRecord) {
@@ -58,6 +60,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                               self._applyChanges();
                            }
                         }
+                     } else {
+                        self._lostFocusOnHide = false;
                      }
                   };
                this._publish('onMouseDown', 'onValueChange');
@@ -163,6 +167,17 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                      $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'setText' :
                         'setValue';
                return methodName;
+            },
+            hide: function() {
+               var activeChild;
+               if (this.isVisible()) {
+                  this._lostFocusOnHide = true;
+                  activeChild = this.getActiveChildControl();
+                  if (activeChild) {
+                     activeChild.setActive(false);
+                  }
+               }
+               EditInPlace.superclass.hide.apply(this, arguments);
             },
             _applyChanges: function() {
                $ws.helpers.forEach(this._fields, function(field, name) {
