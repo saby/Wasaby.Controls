@@ -60,8 +60,6 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                               self._applyChanges();
                            }
                         }
-                     } else {
-                        self._lostFocusOnHide = false;
                      }
                   };
                this._publish('onMouseDown', 'onValueChange');
@@ -171,10 +169,11 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             hide: function() {
                var activeChild;
                if (this.isVisible()) {
-                  this._lostFocusOnHide = true;
                   activeChild = this.getActiveChildControl();
                   if (activeChild) {
+                     this._lostFocusOnHide = true;
                      activeChild.setActive(false);
+                     this._lostFocusOnHide = false;
                   }
                }
                EditInPlace.superclass.hide.apply(this, arguments);
