@@ -2766,16 +2766,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ComboBox__picker .controls-ComboBox__itemRow.controls-ComboBox__itemRow__selected {
   font-weight: bold;
 }
-.controls-Button.controls-Button__secondRow {
-  white-space: normal;
-  line-height: 21px;
-  padding-top: 8px;
-}
-.controls-Button.controls-Button__thirdRow {
-  white-space: normal;
-  line-height: 18px;
-  padding-top: 2px;
-}
 .controls-Button {
   white-space: normal;
 }
