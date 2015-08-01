@@ -2314,10 +2314,10 @@ input[type="reset"]::-moz-focus-inner {
   font-family: Tahoma, Geneva, sans-serif;
   font-size: 10px;
 }
-.controls-DragNDrop__started .controls-ListView__folder.controls-ListView__hoveredItem {
+.dragdropBody .controls-ListView__folder.controls-ListView__hoveredItem:not(.controls-ListView__item__selected) {
   background: #9fd3fe !important;
 }
-.controls-DragNDrop__started .controls-ListView__folder.controls-ListView__hoveredItem > td {
+.dragdropBody .controls-ListView__folder.controls-ListView__hoveredItem:not(.controls-ListView__item__selected) > td {
   background: #9fd3fe !important;
 }
 .controls-HierarchyDataGrid__expand {
