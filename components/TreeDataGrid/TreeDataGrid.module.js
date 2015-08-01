@@ -224,52 +224,56 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          var
             target = $(e.target),
             id = target.closest('.controls-ListView__item').data('id');
-         this.setSelectedKey(id);
-         this.setCurrentElement(e, this._getDragItems(id));
+         if (id) {
+            this.setSelectedKey(id);
+            this.setCurrentElement(e, this._getDragItems(id));
+         }
          e.preventDefault();
-         e.stopPropagation();
       },
       _callMoveOutHandler: function() {
       },
       _callMoveHandler: function(e) {
          if (!this._containerCoords) {
             this._containerCoords = {
-               x: this._moveBeginX - parseInt(this._flowObject.css('left'), 10),
-               y: this._moveBeginY - parseInt(this._flowObject.css('top'), 10)
+               x: this._moveBeginX - parseInt(this._avatar.css('left'), 10),
+               y: this._moveBeginY - parseInt(this._avatar.css('top'), 10)
             };
          }
-         this._flowObject.css({
+         this._avatar.css({
             top: e.pageY - this._containerCoords.y,
             left: e.pageX - this._containerCoords.x
          });
+         this._hideItemActions();
       },
-      _createDragObject: function(e){
+      _createAvatar: function(e){
          var count = this.getCurrentElement().length;
-         this._flowObject = $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>')
+         this._avatar = $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>')
             .css({
-               'left': e.clientX + 5,
-               'top': e.clientY + 5
+               'left': window.scrollX + e.clientX + 5,
+               'top': window.scrollY + e.clientY + 5
             }).appendTo($('body'));
-
       },
       _callDropHandler: function(e) {
          var
             target = $(e.target),
             keys = this.getCurrentElement(),
             moveTo = target.closest('.controls-ListView__item').data('id');
+         //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
+         if (this.getSelectedKey() === moveTo) {
+            this._elemClickHandler = function() {
+               this._elemClickHandler = TreeDataGrid.superclass._elemClickHandler;
+            }
+         }
          this._move(keys, moveTo);
       },
       _beginDropDown: function(e) {
          this._isShifted = true;
-         this._createDragObject(e);
-         this._getItemsContainer().addClass('controls-DragNDrop__started');
+         this._createAvatar(e);
       },
       _endDropDown: function() {
          this._containerCoords = null;
+         this._avatar.remove();
          this._isShifted = false;
-         this._flowObject.remove();
-         this._flowObject = null;
-         this._getItemsContainer().removeClass('controls-DragNDrop__started');
       }
       /*DRAG_AND_DROP END*/
    });
