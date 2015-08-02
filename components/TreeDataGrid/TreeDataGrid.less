@@ -49,12 +49,14 @@
    font-size: 10px;
 }
 
-.controls-DragNDrop__started {
+.dragdropBody {
    .controls-ListView__folder {
       &.controls-ListView__hoveredItem {
-         background: @drag-and-drop-hover-bg;
-         > td {
+         &:not(.controls-ListView__item__selected) {
             background: @drag-and-drop-hover-bg;
+            > td {
+               background: @drag-and-drop-hover-bg;
+            }
          }
       }
    }
