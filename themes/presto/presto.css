@@ -2323,6 +2323,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid {
   padding: 0 0 5px 0;
+  min-height: 50px;
   width: 100%;
   /*TODO скрываем подгрузку (ещё null)*/
 }
@@ -2463,6 +2464,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ItemActions__activeItem {
   background-color: #f3f3f3;
+}
+.controls-ItemActions__activeItem .controls-DataGrid__notScrolledCell {
+  background-color: #f3f3f3 !important;
 }
 .controls-EditInPlaceController {
   position: absolute;
