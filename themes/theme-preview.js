@@ -691,10 +691,10 @@
             enabled: false
          });
 
-         new FormattedTextBox({
+         new DatePicker({
             element: 'formattedTextBox1',
             text: '15:00:00',
-            mask: 'dd:dd:dd'
+            mask: 'HH:II:SS'
          });
 
          new FormattedTextBox({

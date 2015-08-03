@@ -387,7 +387,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
 }
 .controls-IconButton.controls-IconButton__round-border {
-  border: 1px solid #e4e4e4;
+  border: 1px solid #999999;
   border-radius: 14px;
   height: 28px;
   width: 28px;
@@ -1867,6 +1867,9 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent transparent #eaeaea transparent;
   background: #ffffff;
 }
+.controls-DatePicker .controls-FormattedTextBox__fieldWrapper.controls-DatePicker__fieldWrapper__calendar-false {
+  margin: 0;
+}
 .controls-DatePicker.ws-has-focus .controls-FormattedTextBox__fieldWrapper {
   border-width: 1px;
   border-style: solid;
@@ -3070,7 +3073,7 @@ input[type="reset"]::-moz-focus-inner {
   background-color: #e9fafe !important;
 }
 .controls-ItemActions__activeItem .controls-DataGrid__notScrolledCell {
-  background-color: #f3f3f3 !important;
+  background-color: #e9fafe !important;
 }
 .controls-EditInPlaceController {
   position: absolute;
