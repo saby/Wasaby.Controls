@@ -3,17 +3,17 @@
 
 @gray-dark-color:                         #666;
 @gray-color:                              #999;
-@gray-light-color:                        #ccc;
+@gray-light-color:                        #E4E4E4 ;
 
-@default-color:                           transparent;
-@primary-color:                           transparent;
+@default-color:                           #587AB0;
+@primary-color:                           #ff7033;
 @secondary-color:                         transparent;
 
 @bg:                                      transparent;
 @text-color:                              @black-color;
 
-@font-basic-name:                         Tahoma, Geneva, sans-serif;
-@font-basic-size:                         13px;
+@font-basic-name:                         'TensorFont Regular', 'TensorFont', sans-serif;
+@font-basic-size:                         14px;
 @font-basic-line-height:                  20px;
 
 
@@ -29,7 +29,7 @@
 @link-line-height:                        normal;
 @link-padding:                            0;
 
-@link-hover-text-color:                   #ff7033;
+@link-hover-text-color:                   @primary-color;
 @link-hover-text-decoration:              underline;
 
 @link-active-text-color:                  @link-hover-text-color;
@@ -58,50 +58,55 @@
 @button-border-radius:                    16px;
 @button-icon-top-offset:                  4px;                      // top offset of 16x16 icon
 @button-icon-left-offset:                 12px;
+@button-icon-gap:                         4px;                      // gap between icon and text
 @button-icon-text-margin:                 0 12px 0 32px;            // margin of text following 16x16 icon
-@button-icon-big-top-offset:              0;                        // top offset of 24x24 icon
+@button-icon-big-top-offset:              0;                         // top offset of 24x24 icon
+@button-icon-big-left-offset:             @button-icon-left-offset;
 @button-icon-big-text-margin:             0 12px 0 40px;            // margin of text following 24x24 icon
 @button-text-margin:                      0 12px 0 12px;
+@button-text-margin-left:                 12px;
+@button-text-margin-right:                12px;
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
 
 // Normal default button
 @button-text-color:                       @black-color;
-@button-border:                           1px transparent;
-@button-shadow:                           inset 0 -1px 1px #afacab;
-@button-bg:                               url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXB2xKCIABAwfP/X+ekhWAYiXhjYGAwtTd3+V8/zqNw7Jm9JEqO5BRI0RPDSvALfpvYFsc6W2Y3MFnDOPRYo/l+OoxW9O8WrQSdfKJEjXw9EE11A2vvQIELisuiAAAAAElFTkSuQmCC');
+@button-border-width:                     1px;
+@button-border:                           @button-border-width solid @default-color;
+@button-shadow:                           none;
+@button-bg:                               @white-color;
 
 @button-hover-text-color:                 @button-text-color;
 @button-hover-border:                     @button-border;
-@button-hover-shadow:                     inset 0 -1px 1px #919090;
-@button-hover-bg:                         url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAVElEQVQYVwXB2RJAIABA0fv/n2hNEi0oqonx4By+WnlL4cmZmhLlvsgxkkLgOk/isRO853CO3Rq82bDritGabVFoNbNIiZoEUoxM44DoO4aupW+bH5+uQdm94t5JAAAAAElFTkSuQmCC');
+@button-hover-shadow:                     @button-shadow;
+@button-hover-bg:                         #E9FAFE;
 
 @button-active-text-color:                @button-text-color;
 @button-active-border:                    @button-border;
-@button-active-shadow:                    inset 0 1px 1px #939292;
-@button-active-bg:                        url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAWklEQVQYVwXBWQ6DIABAwXf/sxlj3UUJhIqKogSX+tsZ3t/Fc0fuM3DGgxg8YV85vMOvM5uzuHlksYZp1Fij+GqJUT1aCtTQIkXN0FaIpqCrPjRFRp2nlFnyB0tqP75XY7RKAAAAAElFTkSuQmCC');
+@button-active-shadow:                    @button-shadow;
+@button-active-bg:                        #cbd5e5;
 
 // Normal primary button
-@button-primary-text-color:               @white-color;
-@button-primary-border:                   1px transparent;
-@button-primary-shadow:                   inset 0 -1px 1px #c0401e;
-@button-primary-bg:                       url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAGtJREFUGFcBYACf/wD9sn8A/K57APupdwD6pXMA+qFvAPmdawD4mWgA+JRkAPeQYAD2jFwA9YhYAPWEVQD0gFEA83tNAPN3SQDyc0UA8W9BAPFrPgDwZzoA72M2AO5eMgDuWi4A7VYqAOxSJrQMKtPRuIzAAAAAAElFTkSuQmCC');
+@button-primary-text-color:               @button-text-color;
+@button-primary-border:                   1px solid @link-hover-text-color;
+@button-primary-shadow:                   @button-shadow;
+@button-primary-bg:                       #fff;
 
 @button-primary-hover-text-color:         @button-primary-text-color;
 @button-primary-hover-border:             @button-primary-border;
-@button-primary-hover-shadow:             inset 0 -1px 1px #a15823;
-@button-primary-hover-bg:                 url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAGtJREFUGFcBYACf/wD8wYIA+7x9APq3eAD5s3QA+K5vAPeqagD2pWUA9aFgAPScXADzmFcA8pNSAPGOTgDwikkA74VEAO6BPwDtfDoA7Hc2AOtzMQDqbiwA6WooAOhlIwDnYB4A5lwZAOVXFMyDKrhOhVNDAAAAAElFTkSuQmCC');
+@button-primary-hover-shadow:             @button-primary-shadow;
+@button-primary-hover-bg:                 #fdecd9;
 
 @button-primary-active-text-color:        @button-primary-text-color;
 @button-primary-active-border:            @button-primary-border;
-@button-primary-active-shadow:            inset 0 1px 1px #8e5f42;
-@button-primary-active-bg:                url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAGtJREFUGFcBYACf/wD+om4A/J5qAPuZZgD6lWIA+ZFeAPiNWgD3iVYA9oVSAPWBTgD0fUoA83hGAPJ0QwDxcD8A72w7AO5oNwDtZDMA7GAvAOtcKwDqVycA6VMjAOhPHwDnSxsA5kcYAOVDFBcJJ2BPy3aDAAAAAElFTkSuQmCC');
+@button-primary-active-shadow:            @button-primary-shadow;
+@button-primary-active-bg:                #fdd2c0;
 
 // Normal disabled button
 @button-disabled-text-color:              @gray-light-color;
-@button-disabled-border:                  @button-border;
-@button-disabled-shadow:                  inset 0 -1px 1px #bbbbba;
-@button-disabled-bg:                      url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAYCAIAAAC0rgCNAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAARUlEQVQYVxXDCRIAEQwAwfn/Y9cRQcSxdFVzzmHvzVrrnsx5u+M+GOM2w6xjvdHbW2lVqfoWtAgqQpGM5ISkSH5jIIXvByxNRX+NbFFRAAAAAElFTkSuQmCC');
+@button-disabled-border:                  1px solid @button-disabled-text-color;
+@button-disabled-shadow:                  @button-shadow;
+@button-disabled-bg:                      @white-color !important;
 
 
 
@@ -121,45 +126,47 @@
 @button-big-icon-big-left-offset:         @button-big-icon-left-offset;
 @button-big-icon-big-text-margin:         0 24px 0 52px;                    // margin of text following 24x24 icon
 @button-big-text-margin:                  0 24px 0 24px;
+@button-big-text-margin-left:             24px;
+@button-big-text-margin-right:            @button-big-text-margin-left;
 @button-big-text-padding:                 0;
 @button-big-empty-text-margin:            @button-empty-text-margin;
 
 @button-big-text-color:                   @button-text-color;
 @button-big-border:                       @button-border;
 @button-big-shadow:                       @button-shadow;
-@button-big-bg:                           url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTFH80I3AAAAjklEQVQYVx3DVxKDIABAwXf/26WoKDasKCh2zV9Mdmb5XDvXuXEeK8e+/O/bzLZObItjvS/zyDINzM4yOYMb70PPaDsGqxmMxvYtpm8wXU2va7q2Qrcluilo64KmUvecusyoirtKKVVCkceoTKJSSZ5GZElIFgtSKUhkQBL5xKGHFB6ReBMFL0L/ifj1Hl+0S4EyIQKdsQAAAABJRU5ErkJggg==');
+@button-big-bg:                           @button-bg;
 
 @button-big-hover-text-color:             @button-big-text-color;
 @button-big-hover-border:                 @button-big-border;
 @button-big-hover-shadow:                 @button-hover-shadow;
-@button-big-hover-bg:                     url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAINJREFUGFcdw1cSgyAAQMF3/xvGiojYkWZJ+Qi6M8vvuvieJ5/jeL73nSvG5xkCR/Ac3rM7R3SWaC1h2/B3Y3Bmxa7psrAtM2ZOp4l1GlnG+8A89Ez9XTNqzdB1qaJXCq1adCvppETJBtUIWiGQokbWFU0qqhJRFtRpVeRUeUaZFtnrD2rdg354PlYsAAAAAElFTkSuQmCC');
+@button-big-hover-bg:                     @button-hover-bg;
 
 @button-big-active-text-color:            @button-big-text-color;
 @button-big-active-border:                @button-big-border;
 @button-big-active-shadow:                @button-active-shadow;
-@button-big-active-bg:                    url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAJNJREFUGFcNw1USgzAAQMF3/6tVcAiugWDB6W/ZmeV3H9zXznVunMfKuS8cu2bfNNs6sy0Tqx5Z5gE99+ipZx4V09Ax9u1TMqiGvmtQbY2SFZ0saZsCWefIKqcpM+oipSoSqjymzCKKNCJPwqcgiwPSyCcJPRLhEQuXKHAIfZvQsxCuSeCY+I6Bb3/xrA+u+cYxXn8Tm385Ml6/+QAAAABJRU5ErkJggg==');
+@button-big-active-bg:                    @button-active-bg;
 
 // Big primary button
 @button-big-primary-text-color:           @button-primary-text-color;
-@button-big-primary-border:               @button-big-border;
+@button-big-primary-border:               @button-primary-border;
 @button-big-primary-shadow:               @button-primary-shadow;
-@button-big-primary-bg:                   url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMZJREFUGFcFwQ1HAwEAgOH3zzTJTJLMZDOTJGmbmplzpvV9ambmnNlKkmRmbCKTJEkk6Xftvu92H7ux52H+f0P01yH6bRP9KMy+ZWZfLcLPJuFHg/C9TvB2TfAqEYwv8V/O8Z9P8UfHeMMjvEEVry8y7QlMnyq4j2XchxLu/SHOXRHntoDT3cdu72Eru9jyDlZrG6u5hdXIYdazmFcZTCmNcbGJcZZCP0mi1zbQq+to4hqasIpWSaCW46ilFdSDZSbFGJP80gKLzlU+l/UpHgAAAABJRU5ErkJggg==');
+@button-big-primary-bg:                   @button-primary-bg;
 
 @button-big-primary-hover-text-color:     @button-big-primary-text-color;
 @button-big-primary-hover-border:         @button-big-primary-border;
 @button-big-primary-hover-shadow:         @button-big-primary-shadow;
-@button-big-primary-hover-bg:             url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMtJREFUGFcBwAA//wD8wYIA+75/APu8fQD6unsA+rd4APm1dgD5s3QA+LFxAPiubwD3rGwA96pqAPanaAD2pWUA9aNjAPWhYAD0nl4A9JxcAPOaWQDzmFcA8pVVAPKTUgDxkVAA8Y5OAPCMSwDwikkA74hGAO+FRADug0IA7oE/AO1+PQDtfDoA7Ho4AOx3NgDrdTMA63MxAOpxLwDqbiwA6WwqAOlqKADoZyUA6GUjAOdjIADnYB4A5l4cAOZcGQDlWRcA5VcUAORVEuAhVOdbDqsIAAAAAElFTkSuQmCC');
+@button-big-primary-hover-bg:             @button-primary-hover-bg;
 
 @button-big-primary-active-text-color:    @button-big-primary-text-color;
 @button-big-primary-active-border:        @button-big-primary-border;
 @button-big-primary-active-shadow:        @button-active-shadow;
-@button-big-primary-active-bg:            url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAMlJREFUGFcFwYtmQgEAgOH/GVKUWJKZSWYmmSRJpbWttmqbHEmSJEkmkcxMMpNMJmNm9myd7vdO95p9H3+/afY/KXbfSXZfCbafcbb1GJuPKJtahPV7mHVVYFUJsXp7YPl6x6IcYFG6Zf7iY/58jfR0iVS8YFZwM8s7meYcTB/tTLI2Jhkr47SFUcrMKHnOMGFiGDcyiJ0xiJ7Sj5zQDxvoCXp6oWO690d0g4d0/DraN1raXg2tqwNaHjVNt4qmS4noUCDa5TRssn8T6U5Ugnh02QAAAABJRU5ErkJggg==');
+@button-big-primary-active-bg:            @button-primary-active-bg;
 
 // Big disabled button
 @button-big-disabled-text-color:          @button-disabled-text-color;
 @button-big-disabled-border:              @button-disabled-border;
 @button-big-disabled-shadow:              @button-disabled-shadow;
-@button-big-disabled-bg:                  url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAwCAIAAABfUYfWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAFVJREFUGFc9wwkOgDAIBMD9/2OtLb2AHgaqTjLYe2Ot9Z9zvgfG+CqGKtQLVATiGcIncwd329Bts9W3aouvxWZfsqWTCJnSmSLoG2+f7B18tOFCDNcDpuCK5d42KGsAAAAASUVORK5CYII=');
+@button-big-disabled-bg:                  @button-disabled-bg;
 
 
 
@@ -167,8 +174,8 @@
 // Button group //
 // ------------ //
 
-@button-group-horizontal-item-margin:     0 8px 0 0;
-@button-group-vertical-item-margin:       0 0 8px 0;
+@button-group-horizontal-item-margin:     0 12px 0 0;
+@button-group-vertical-item-margin:       0 0 0 0;
 
 
 
@@ -177,26 +184,39 @@
 // ------------- //
 
 // Normal default button
-@button-checked-text-color:               #c00;
-@button-checked-border:                   @button-active-border;
+@button-checked-text-color:               @button-text-color;
+@button-checked-border-width:             2px;
+@button-checked-border:                   @button-checked-border-width solid @default-color;
 @button-checked-shadow:                   @button-active-shadow;
 @button-checked-bg:                       @button-active-bg;
+@button-checked-text-margin-left:         @button-text-margin-left - 1px;
+@button-checked-text-margin-right:        @button-text-margin-right - 1px;
+@button-checked-icon-top-offset:          3px;
+@button-checked-icon-left-offset:         @button-icon-left-offset - 1px;
+@button-checked-icon-big-top-offset:      @button-icon-big-top-offset - 1px;
+@button-checked-icon-big-left-offset:     @button-icon-big-left-offset - 1px;
 
 // Normal primary button
 @button-primary-checked-text-color:       @button-primary-active-text-color;
-@button-primary-checked-border:           @button-primary-active-border;
+@button-primary-checked-border:           2px solid @link-hover-text-color;
 @button-primary-checked-shadow:           @button-primary-active-shadow;
 @button-primary-checked-bg:               @button-primary-active-bg;
 
 // Big default button
 @button-big-checked-text-color:           @button-checked-text-color;
-@button-big-checked-border:               @button-big-active-border;
+@button-big-checked-border:               @button-checked-border;
 @button-big-checked-shadow:               @button-big-active-shadow;
 @button-big-checked-bg:                   @button-big-active-bg;
+@button-big-checked-text-margin-left:     @button-big-text-margin-left - 1px;
+@button-big-checked-text-margin-right:    @button-big-text-margin-right - 1px;
+@button-big-checked-icon-top-offset:      @button-big-icon-top-offset - 1px;
+@button-big-checked-icon-left-offset:     @button-big-icon-left-offset - 1px;
+@button-big-checked-icon-big-top-offset:  @button-big-icon-big-top-offset - 1px;
+@button-big-checked-icon-big-left-offset: @button-big-icon-big-left-offset - 1px;
 
 // Big primary button
 @button-big-primary-checked-text-color:   @button-big-primary-active-text-color;
-@button-big-primary-checked-border:       @button-big-primary-active-border;
+@button-big-primary-checked-border:       @button-primary-checked-border;
 @button-big-primary-checked-shadow:       @button-big-primary-active-shadow;
 @button-big-primary-checked-bg:           @button-big-primary-active-bg;
 
@@ -269,35 +289,50 @@
 // ------------ //
 
 @radio-button-text-margin:                      0;
+@radio-button-height:                           24px;
+@radio-button-lineheight:                       @radio-button-height;
 
 @radio-button-text-color:                       @black-color;
-@radio-button-hover-text-color:                 @radio-button-text-color;
+@radio-button-hover-text-color:                 @link-text-color;
+@radio-button-hover-text-color-primary:         @link-hover-text-color;
+@radio-button-hover-text-decoration:            underline;
+@radio-button-hover-text-decoration-checked:    none;
+@radio-button-hover-text-decoration-disabled:   none;
 
-@radio-button-checked-text-color:               @radio-button-hover-text-color;
-@radio-button-checked-hover-text-color:         @radio-button-hover-text-color;
+@radio-button-checked-text-color:               @radio-button-text-color;
+@radio-button-checked-hover-text-color:         @radio-button-text-color;
 
 @radio-button-disabled-text-color:              @gray-light-color;
-@radio-button-disabled-hover-text-color:        @radio-button-disabled-text-color;
+@radio-button-disabled-hover-text-color:        @gray-light-color;
 
-@radio-button-icon-width:                       24px;
-@radio-button-icon-height:                      17px;
-@radio-button-icon-line-height:                 normal;
+@radio-button-icon-width:                       10px;
+@radio-button-icon-height:                      10px;
+@radio-button-icon-line-height:                 @radio-button-icon-height;
 
 @radio-button-icon-spritesheet:                 'img/RadioButton-sprite.png';
 
-@radio-button-icon-bg:                          url(@radio-button-icon-spritesheet) 0 0;
-@radio-button-icon-hover-bg:                    url(@radio-button-icon-spritesheet) 0 -34px;
+@radio-button-icon-bg:                          @white-color;
+@radio-button-icon-hover-bg:                    @radio-button-icon-bg;
 
-@radio-button-icon-checked-bg:                  url(@radio-button-icon-spritesheet) 0 -17px;
-@radio-button-icon-checked-hover-bg:            @radio-button-icon-checked-bg;
+@radio-button-icon-checked-bg:                  @radio-button-icon-bg;
+@radio-button-icon-checked-hover-bg:            @radio-button-icon-bg;
 
 @radio-button-icon-disabled-bg:                 @radio-button-icon-bg;
-@radio-button-icon-disabled-hover-bg:           @radio-button-icon-disabled-bg;
+@radio-button-icon-disabled-hover-bg:           @radio-button-icon-bg;
 
-@radio-button-icon-disabled-checked-bg:         url(@radio-button-icon-spritesheet) 0 -51px;
-@radio-button-icon-disabled-checked-hover-bg:   url(@radio-button-icon-spritesheet) 0 -51px;
+@radio-button-icon-disabled-checked-bg:         @radio-button-icon-bg;
+@radio-button-icon-disabled-checked-hover-bg:   @radio-button-icon-bg;
 
-
+@radio-button-icon-margin:                      8px 6px 0 0;
+@radio-button-icon-border-style:                solid;
+@radio-button-icon-border-color:                @gray-color;
+@radio-button-icon-border-color-checked:        @link-text-color;
+@radio-button-icon-border-color-disabled:       @gray-light-color;
+@radio-button-icon-border-color-primary:        @link-hover-text-color;
+@radio-button-icon-border-width:                1px;
+@radio-button-icon-border-width-checked:        2px;
+@radio-button-icon-border-width-hover:          3px;
+@radio-button-icon-border-radius:               5px;
 
 // ----------- //
 // Radio group //
@@ -323,7 +358,7 @@
 @check-box-third-state-text-color:              @check-box-text-color;
 @check-box-third-state-hover-text-color:        @check-box-hover-text-color;
 
-@check-box-disabled-text-color:                 @gray-color;
+@check-box-disabled-text-color:                 @gray-light-color;
 @check-box-disabled-hover-text-color:           @check-box-disabled-text-color;
 
 @check-box-icon-width:                          16px;
@@ -455,30 +490,37 @@
 @switcher-do-unselected-text-cursor:            @switcher-do-text-cursor;
 @switcher-do-unselected-text-color:             @gray-color;
 @switcher-do-unselected-text-decoration:        none;
+@switcher-do-unselected-text-decoration-hover:  underline;
 
 @switcher-do-disabled-toggle-cursor:            default;
-@switcher-do-disabled-text-cursor:              @switcher-do-disabled-toggle-cursor;
-@switcher-do-disabled-text-color:               @gray-color;
+@switcher-do-disabled-text-cursor:              text;
+@switcher-do-disabled-text-color:               @gray-light-color;
 @switcher-do-disabled-text-decoration:          none;
 
-@switcher-do-horizontal-spritesheet:            'img/SwitcherDoubleOnline-sprite.png';
-@switcher-do-horizontal-toggle-width:           30px;
-@switcher-do-horizontal-toggle-height:          16px;
-@switcher-do-horizontal-toggle-margin:          0 4px;
-@switcher-do-horizontal-off-toggle-bg:          transparent url(@switcher-do-horizontal-spritesheet) 0 -4px no-repeat;
-@switcher-do-horizontal-on-toggle-bg:           transparent url(@switcher-do-horizontal-spritesheet) 0 -28px no-repeat;
-@switcher-do-horizontal-off-disabled-toggle-bg: transparent url(@switcher-do-horizontal-spritesheet) 0 -52px no-repeat;
-@switcher-do-horizontal-on-disabled-toggle-bg:  transparent url(@switcher-do-horizontal-spritesheet) 0 -76px no-repeat;
+@switcher-do-horizontal-toggle-width:           48px;
+@switcher-do-horizontal-toggle-height:          24px;
+@switcher-do-horizontal-toggle-margin:          0 6px;
 
-@switcher-do-vertical-spritesheet:              'img/SwitcherDoubleOnline-sprite-double.png';
-@switcher-do-vertical-toggle-width:             16px;
-@switcher-do-vertical-toggle-height:            32px;
-@switcher-do-vertical-toggle-margin:            0 2px 0 0;
-@switcher-do-vertical-off-toggle-bg:            transparent url(@switcher-do-vertical-spritesheet) -16px 0 no-repeat;
-@switcher-do-vertical-on-toggle-bg:             transparent url(@switcher-do-vertical-spritesheet) 0 0 no-repeat;
-@switcher-do-vertical-off-disabled-toggle-bg:   transparent url(@switcher-do-vertical-spritesheet) -48px 0 no-repeat;
-@switcher-do-vertical-on-disabled-toggle-bg:    transparent url(@switcher-do-vertical-spritesheet) -32px 0 no-repeat;
+@switcher-do-vertical-toggle-width:             24px;
+@switcher-do-vertical-toggle-height:            48px;
+@switcher-do-vertical-toggle-margin:            0 12px 0 0;
 
+@switcher-do-border:                            1px solid @gray-light-color;
+@switcher-do-border-radius:                     30px;
+
+@switcher-do-horizontal-line-width:             38px;
+@switcher-do-horizontal-line-color:             @gray-color;
+@switcher-do-horizontal-disabled-line-color:    @gray-light-color;
+
+@switcher-do-horizontal-btn-color:              @link-text-color;
+@switcher-do-horizontal-btn-size:               12px;
+@switcher-do-horizontal-btn-border-width:       2px;
+@switcher-do-horizontal-btn-radius:             6px;
+@switcher-do-horizontal-btn-margin:             5px;
+@switcher-do-horizontal-btn-bg-color:           @white-color;
+@switcher-do-horizontal-btn-color-disabled:     @gray-light-color;
+@switcher-do-horizontal-btn-color-primary:      @primary-color;
+@switcher-do-horizontal-btn-border-width-hover: 4px;
 
 
 // ---- //
@@ -486,16 +528,17 @@
 // ---- //
 
 @menu-margin:                             -1px 0 0;
-@menu-border-width:                       1px;
+@menu-border-width:                       2px;
 @menu-border-style:                       solid;
 @menu-border-color:                       @gray-light-color;
+@menu-border-radius:                      4px;
 @menu-shadow:                             none;
 
 @menu-expand-width:                       16px;
 @menu-expand-height:                      16px;
-@menu-expand-top-offset:                  3px;
+@menu-expand-top-offset:                  4px;
 @menu-expand-top-offset32:                7px;
-@menu-expand-right-offset:                0;
+@menu-expand-right-offset:                5px;
 @menu-expand-spritesheet:                'img/MenuExpand.png';
 
 @menu-expand-border-width:                0;
@@ -506,8 +549,12 @@
 @menu-expand-hover-border-width:          @menu-expand-border-width;
 @menu-expand-hover-border-style:          @menu-expand-border-style;
 @menu-expand-hover-border-color:          @menu-expand-border-color;
-@menu-expand-hover-bg:                    url(@menu-expand-spritesheet) 0 -16px no-repeat;
+@menu-expand-hover-bg:                    url(@menu-expand-spritesheet) 0 0 no-repeat;
 
+@menu-header-height:                      24px;
+@menu-big-header-height:                  32px;
+@menu-header-box-sizing:                  border-box;
+@menu-header-padding:                     4px;
 
 
 // --------- //
@@ -516,28 +563,28 @@
 @menu-item-cursor:                        pointer;
 @menu-item-width:                         auto;
 @menu-item-height:                        24px;
+@menu-big-item-height:                    32px;
 @menu-item-line-height:                   @menu-item-height;
-@menu-item-padding:                       0 16px 0 8px;
+@menu-item-padding:                       0 26px 0 8px;
 
 @menu-item-text-color:                    @black-color;
 @menu-item-bg:                            @white-color;
 
 @menu-item-hover-text-color:              @menu-item-text-color;
-@menu-item-hover-bg:                      #e7f0f9;
+@menu-item-hover-bg:                      #E9FAFE;
 
 @menu-item-icon-top-offset:               0px;
 @menu-item-icon-top-offset-big:           0px;
 @menu-item-icon-left-offset:              0px;
-@menu-item-icon-left-offset-big:           0px;
+@menu-item-icon-left-offset-big:          0px;
 
-@menu-item-icon24-top-offset:               -4px;
-@menu-item-icon24-top-offset-big:           -4px;
+@menu-item-icon24-top-offset:             -4px;
+@menu-item-icon24-top-offset-big:         -4px;
 
-@menu-item-icon24-left-offset:              -3px;
-@menu-item-icon24-left-offset-big:           -3px;
+@menu-item-icon24-left-offset:            -3px;
+@menu-item-icon24-left-offset-big:        -3px;
 
 @menu-item-text-margin:                   0 0 0 22px;
-
 
 
 
@@ -555,12 +602,13 @@
 
 // Default menu button
 @menu-button-text-right-margin:                         23px;                   //this margin reserve space for arrow-down icon
+@menu-button-checked-text-right-margin:                 @menu-button-text-right-margin - 1px;
 @menu-button-arrow-spritesheet:                         'img/MenuButton-arrowDown.png';
 
 @menu-button-arrow-border-width:                        0;
 @menu-button-arrow-border-style:                        solid;
 @menu-button-arrow-border-color:                        transparent;
-@menu-button-arrow-bg:                                  transparent url(@menu-button-arrow-spritesheet) 0 0;
+@menu-button-arrow-bg:                                  transparent url(@menu-button-arrow-spritesheet) 0 26px;
 
 @menu-button-arrow-hover-border-width:                  @menu-button-arrow-border-width;
 @menu-button-arrow-hover-border-style:                  @menu-button-arrow-border-style;
@@ -581,7 +629,7 @@
 @menu-button-primary-arrow-border-width:                @menu-button-arrow-border-width;
 @menu-button-primary-arrow-border-style:                @menu-button-arrow-border-style;
 @menu-button-primary-arrow-border-color:                @menu-button-arrow-border-color;
-@menu-button-primary-arrow-bg:                          transparent url(@menu-button-primary-arrow-spritesheet) 0 0;
+@menu-button-primary-arrow-bg:                          transparent url(@menu-button-arrow-spritesheet) 0 26px;
 
 @menu-button-primary-arrow-hover-border-width:          @menu-button-primary-arrow-border-width;
 @menu-button-primary-arrow-hover-border-style:          @menu-button-primary-arrow-border-style;
@@ -600,12 +648,13 @@
 @menu-button-arrow-disabled-border-width:               @menu-button-arrow-border-width;
 @menu-button-arrow-disabled-border-style:               @menu-button-arrow-border-style;
 @menu-button-arrow-disabled-border-color:               @menu-button-arrow-border-color;
-@menu-button-arrow-disabled-bg:                         @menu-button-arrow-bg;
+@menu-button-arrow-disabled-bg:                         transparent url(@menu-button-arrow-spritesheet) 0 0;
 
 // Menu
-@menu-button-menu-top-margin:                           4px;
+@menu-button-menu-top-margin:                           36px;
 @menu-button-menu-left-margin:                          0;
-@menu-button-menu-border-width:                         1px;
+@menu-button-menu-padding:                              4px 0;   
+@menu-button-menu-border-width:                         2px;
 @menu-button-menu-border-style:                         @menu-border-style;
 @menu-button-menu-border-color:                         @menu-border-color;
 @menu-button-menu-bg:                                   @white-color;
@@ -614,12 +663,12 @@
 @menu-button-header-spritesheet:                        'img/MenuButton-header.png';
 
 @menu-button-header-left-width:                         12px;
-@menu-button-header-left-height:                        28px;
+@menu-button-header-left-height:                        30px;
 @menu-button-header-left-margin:                        0;
-@menu-button-header-left-bg:                            transparent url(@menu-button-header-spritesheet) 0 196px;
-@menu-button-header-right-bg-revert-horizontal:         transparent url(@menu-button-header-spritesheet) 0 140px;
-@menu-button-header-right-bg-revert-vertical:           transparent url(@menu-button-header-spritesheet) 0 101px;
-@menu-button-header-right-bg-revert-vertical-horizontal:transparent url(@menu-button-header-spritesheet) 0 15px;
+@menu-button-header-left-bg:                            transparent url(@menu-button-header-spritesheet) 0 214px;
+@menu-button-header-right-bg-revert-horizontal:         transparent url(@menu-button-header-spritesheet) 0 154px;
+@menu-button-header-right-bg-revert-vertical:           transparent url(@menu-button-header-spritesheet) 0 115px;
+@menu-button-header-right-bg-revert-vertical-horizontal:transparent url(@menu-button-header-spritesheet) 0 22px;
 
 @menu-button-header-center-width:                       auto;
 @menu-button-header-center-height:                      4px;
@@ -627,12 +676,12 @@
 @menu-button-header-center-bg:                          @white-color;
 
 @menu-button-header-right-width:                        28px;
-@menu-button-header-right-height:                       28px;
+@menu-button-header-right-height:                       30px;
 @menu-button-header-right-margin:                       0 0 0 -5px;
-@menu-button-header-right-bg:                           transparent url(@menu-button-header-spritesheet) 0 0;
-@menu-button-header-left-bg-revert-horizontal:          transparent url(@menu-button-header-spritesheet) 0 168px;
-@menu-button-header-left-bg-revert-vertical:            transparent url(@menu-button-header-spritesheet) 0 72px;
-@menu-button-header-left-bg-revert-vertical-horizontal: transparent url(@menu-button-header-spritesheet) 0 45px;
+@menu-button-header-right-bg:                           transparent url(@menu-button-header-spritesheet) 0 -1px;
+@menu-button-header-left-bg-revert-horizontal:          transparent url(@menu-button-header-spritesheet) 0 184px;
+@menu-button-header-left-bg-revert-vertical:            transparent url(@menu-button-header-spritesheet) 0 85px;
+@menu-button-header-left-bg-revert-vertical-horizontal: transparent url(@menu-button-header-spritesheet) 0 54px;
 
 
 
@@ -645,8 +694,8 @@
 
 @menu-link-arrow-width:                   8px;
 @menu-link-arrow-height:                  6px;
-@menu-link-arrow-right-offset:            0;
-@menu-link-arrow-top-offset:              10px;
+@menu-link-arrow-right-offset:            2px;
+@menu-link-arrow-top-offset:              4px;
 @menu-link-arrow-top-offset-big:          14px;
 @menu-link-line-height:                   24px;
 
@@ -662,7 +711,7 @@
 
 @menu-link-hover-text-color:              @link-hover-text-color;
 @menu-link-hover-text-decoration:         @link-hover-text-decoration;
-@menu-link-hover-arrow-bg:                @menu-button-arrow-hover-bg;
+@menu-link-hover-arrow-bg:                transparent url(@menu-button-arrow-spritesheet) 0 13px;
 
 @menu-link-checked-text-color:            @menu-link-hover-text-color;
 @menu-link-checked-text-decoration:       none;
@@ -671,16 +720,11 @@
 @menu-link-checked-hover-text-decoration: @menu-link-checked-text-decoration;
 
 // Menu
-@menu-link-menu-left-margin:              -9px;
+@menu-link-menu-margin:                   -5px 0 0 -8px;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
 
 // Menu header
-@menu-link-header-width:                  100%;
-@menu-link-header-height:                 24px;
-@menu-link-header-height-big:             32px;
-@menu-link-header-padding:                0 8px;
-@menu-link-header-bottom-border:          1px solid #ededed;
-@menu-link-header-bg:                     @menu-link-menu-bg;
+@menu-link-header-padding:                6px;
 
 
 
@@ -689,8 +733,8 @@
 // --------- //
 
 // Menu
-@menu-icon-menu-top-margin:               3px;
-@menu-icon-menu-left-margin:              2px;
+@menu-icon-menu-margin:                   -6px 0 0 -6px;
+@menu-icon-menu-padding:                  0;
 @menu-icon-menu-bg:                       @menu-button-menu-bg;
 
 // Menu header
@@ -1280,7 +1324,7 @@
 @data-grid-border-color:                        transparent;
 
 @data-grid-row-bg:                              transparent;
-@data-grid-row-hover-bg:                        #F3F3F3;
+@data-grid-row-hover-bg:                        #E9FAFE;
 @data-grid-row-selected-bg:                     @data-grid-row-bg;
 
 @data-grid-row-hover-header-cell-text-color:    inherit;
@@ -1427,6 +1471,7 @@
 // CustomFilterMenu//
 // --------------- //
 @customFilterMenu-cursor:                         pointer;
+@customFilterMenu-border-color:                   @gray-light-color;
 
 @customFilterMenu-iconWidth:                      16px;
 @customFilterMenu-iconHeight:                     16px;
@@ -1442,26 +1487,35 @@
 
 @customFilterMenu-captionWrapper-margin:          0 19px 0 19px;
 @customFilterMenu-min-height:                     24px;
-@customFilterMenu-shadow-hover:                   0 0 0 1px @gray-light-color;
+@customFilterMenu-shadow-hover:                   0 0 0 1px @customFilterMenu-border-color;
 
 @customFilterMenu-picker-bg:                      @white-color;
-@customFilterMenu-picker-border:                  1px solid @gray-light-color;
-@customFilterMenu-picker-border-radius:           0;
-@customFilterMenu-picker-menu-item-padding:       4px;
-@customFilterMenu-picker-menu-item-margin:        0 8px;
+@customFilterMenu-picker-border:                  2px solid @customFilterMenu-border-color;
+@customFilterMenu-picker-head-border-radius:      5px 5px 0 0;
+@customFilterMenu-picker-list-border-radius:      0 0 5px 5px;
+@customFilterMenu-picker-list-right-border-radius:0 5px 5px 5px;
+@customFilterMenu-picker-list-left-border-radius: 5px 0 5px 5px;
+@customFilterMenu-picker-menu-item-padding:       4px 8px;
+@customFilterMenu-picker-menu-item-margin:        0;
 @customFilterMenu-picker-menu-item-color:         @white-color;
-@customFilterMenu-picker-menu-item-hover:         #E7F0F9;
+@customFilterMenu-picker-menu-item-hover:         #E9FAFE;
 @customFilterMenu-picker-list-padding:            8px 0;//ProgressBar
 //ProgressBar
-@controls-ProgressBar-height:                       17px;
-@controls-ProgressBar-empty-bg:                     #F3F3F3;
-@controls-ProgressBar-progress-bg:                  #A2E68C;
-@controls-ProgressBar-progress-bg-grad:             linear-gradient(to top, #8DCF66, #B6F5A9);
-@controls-ProgressBar-border-radius:                8px;
-@controls-ProgressBar-side-space:                   40px;
+@controls-ProgressBar-height:                     17px;
+@controls-ProgressBar-empty-bg:                   #F3F3F3;
+@controls-ProgressBar-progress-bg:                #A2E68C;
+@controls-ProgressBar-progress-bg-grad:           linear-gradient(to top, #8DCF66, #B6F5A9);
+@controls-ProgressBar-border-radius:              8px;
+@controls-ProgressBar-side-space:                 40px;
 
 //Pager
-@controls-Pager-amount-text : #999999;
+@controls-Pager-amount-text : @gray-color;//FilterButton
+@controls-filterButton-picker-bg:                 #f7f3f0;
+@controls-filterButton-picker-border:             2px solid #e4e4e4;
+@controls-filterButton-button:                    url('img/filterButton.png') no-repeat;
+@controls-filterButton-button-height:             24px;
+@controls-filterButton-button-width:              30px;
+@controls-filterButton-height:                    40px;
 
 //DragNDropObject
 @drag-and-drop-object-bg:                          transparent url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABHtJREFUeNqsV19MI0UY/7Zd0yJthRa8StJqjwgx2BKokBgTUSEUuT7wIJcjZ4xCcpdgfPDBF5N79MmY+MgdiZw+EMnFF+IfTMQcR0w4oAKVSIocBVFS6zW97baUttuu863dTbfdFrrXSb7M9Jv5vvnNb34zs6U2NjZ4ePxyu6ur6z01gZTP5+O7u7vLDuB5vqKPLAAoihJAuN3uqkHQuVyu7GTUj28AeH6uCIJlWejo6IDDw8N319bW2mmavl0wbJcwc7cSAA0CwGRo4XAYAoGAYLD8OvDP9EkTiWNEE32xWAwaGxvBZrMByfVyfX19v8vlgmw2i7/bCMOvncmAmNAUHoFM4x0wPRiB41w3WF+8gbPAq1/+DkyEAeYhA8FPPLIEyADGm81mSCQSuIjLVqt1L5lMgsPhgFAo9Oz6+nqbVqv15UMihJUDRQARzgkt8beBt1+CwEMvXMj7l955oew2IYDp6WkozNPT0yPUBAjU1dUJIIxGI0PA7RG9WAgrQPRyINMABicNH8Fx7FNg+SvQ0EBLfs+dIMRjcYg/Isb8b6HPR4T+8fFxGTiiA6E+OTkRapPJBMhGNBp1EbB7eb1YVldXobe394DGvRKRWywWSOhvgIG0yV5K/oW3njv3CRHz4XbMz89D4QJ1Op2gF/QhiJWVlRPZFhCawGAwKE6gNJmSH/Nt/s2C1fkKuO0Nkn9nZwe2t7eL9WKTAdjc3BRWkMlkgOM4yYp/F/owHm1iYkIC0NliKAGHeZX0IgPQ2dlZ1SWk5Md8/lACslwWODyKpO5xmIV+Jb3IROj3+1UzgMkxB7aPfHelVXq9XglYMXicS8aA0+lUdR0XMzA0NKToV9KLDABRpoCqGhPj+/v7paSzs7NS3/DwsNBP7gLA81+sF9kxtNvtqvdf7MN8Y2NjJeObm5thcHCwhBUZA/gWYFtEL1rxb9En7jnWooDx9+LiohRDbjyJgZmZmRK9yESIKNXsf6Ef8w0MDJT4m5qawOPxVGaAYRjZqsTVKrULazR8eMSkW1tbUl9ra6vgJ1exwEyxXuSvIbm31Z7/wlXhc1w8Hm9ZcveX6IVWOh5qQYgAgsGgNBG+iFjH43Hhpi3WS1kAlUAwbAKW1/wQ2D+CVDpTMsb34N7Hit9/1NEHhif1S2lKd+slZ/txiQjPAyL0bwS++mYBTlNpNd+gxmg65f1+8Ze+aJS5TijYld0DZ4F4xLDwxdfzaieXAbl3/9ebF1vMVxW3oByQn5bvCy9ajYox+Ff4mgzAU/9YiDRJgyP7hXW+Dfn2b/4PgcvoawWA5Er1yT7LmQuRsoOTp6cQS3xGWimoYTHKAJxVMpk01LoIAObm5s43OssJHxm1KuQPFUtPTk5SSp1TU1PXRkdHZb4/Do7fDx7+6aoVAL1et0SX61Ri5mmzcXl/n2sjLDy2ErUaDXvR5rhFVRNEWHFzvKbtux8WbhKARrWTa8jkl94cuk5TuV1NNYHIiobndjvan7/6BK39NstxLIffhuc0HI9xGI95MN9/AgwAe9CKFRkrHCkAAAAASUVORK5CYII=') no-repeat;

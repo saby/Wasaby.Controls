@@ -24,8 +24,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
     * @extends SBIS3.CONTROLS.TextBoxBase
     * @control
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyTextBox
     * @category Inputs
+    *
     * @ignoreOptions independentContext contextRestriction extendedTooltip className
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
     * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment
@@ -52,7 +54,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             /**
              * @cfg {String} Форматирование регистра текста
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="textTransform">uppercase</option>
              * </pre>
              * @variant uppercase Все символы верхним регистром.
@@ -63,35 +65,37 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             textTransform: 'none',
             /**
              * @cfg {Boolean} Выделять или нет текст в поле при получении фокуса
+             * @remark
              * Возможные значения при получении полем фокуса:
              * <ul>
              *    <li>true - выделять текст;</li>
              *    <li>false - не выделять.</li>
              * </ul>
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="selectOnClick">true</option>
              * </pre>
              */
             selectOnClick: false,
             /**
              * @cfg {String} Текст подсказки внутри поля ввода
+             * @remark
              * Данный текст отображается внутри поля до момента получения фокуса.
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="placeholder">Введите ФИО полностью</option>
              * </pre>
              * @see setPlaceholder
              */
             placeholder: '',
             /**
-             * @cfg {String} Фильтр ввода
-             * <wiTag group="Управление">
+             * @cfg {String} Регулярное выражение, в соответствии с которым будет осуществляться ввод
+             * @remark
              * Каждый вводимый символ будет проверяться на соответсвие указанному в этой опции регулярному выражению.
              * Несоответсвующие символы невозможно напечатать.
              * @example
              * Разрешим ввод только цифр:
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="inputRegExp">/^\d+$/</option>
              * </pre>
              */

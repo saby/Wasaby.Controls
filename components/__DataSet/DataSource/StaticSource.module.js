@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.StaticSource', [
 
    /**
     * Класс для работы с массивами, как с источником данных.
-    * @author Мануйлов Андрей
     * @class SBIS3.CONTROLS.StaticSource
     * @extends SBIS3.CONTROLS.BaseSource
     * @public

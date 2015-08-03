@@ -7,8 +7,8 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного.
     * @mixin SBIS3.CONTROLS.Selectable
-    * @public
     * @author Крайнов Дмитрий Олегович
+    * @public
     */
 
    var Selectable = /**@lends SBIS3.CONTROLS.Selectable.prototype  */{
@@ -23,17 +23,25 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
         *     })
         * </pre>
         * @see selectedKey
+        * @see setSelectedKey
+        * @see getSelectedKey
+        * @see SBIS3.CONTROLS.DSMixin#keyField
         */
       $protected: {
          _options: {
             /**
              * @cfg {String} Идентификатор выбранного элемента
+             * @remark
+             * Для задания выбранного элемента необходимо указать значение {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элемента коллекции.
              * @example
              * <pre>
              *     <option name="selectedKey">3</option>
              * </pre>
              * @see setSelectedKey
              * @see getSelectedKey
+             * @see allowEmptySelection
+             * @see SBIS3.CONTROLS.DSMixin#keyField
+             * @see onSelectedItemChange
              */
             selectedKey: null,
             /**
@@ -47,6 +55,14 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
               * <pre>
               *     <option name="allowEmptySelection">false</option>
               * </pre>
+              * @remark
+              * Опция нужна, например, для создания пустой группы радиокнопок - без выбранного элемента.
+              * При этом после задания значения вернуть коллекцию к состоянию без выбранного элемента можно только
+              * методом {@link setSelectedKey}.
+              * @see selectedKey
+              * @see setSelectedKey
+              * @see getSelectedKey
+              * @see SBIS3.CONTROLS.DSMixin#keyField
               */
             allowEmptySelection : true
          }
@@ -63,7 +79,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
                this._setFirstItemAsSelected();
             }
          }
-         this._drawSelectedItem();
+         this._drawSelectedItem(this.getSelectedKey());
       },
 
       /**
@@ -87,79 +103,41 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
          return this.getSelectedKey();
       },
       /**
-       * Установить выбранный элемент по индексу
+       * Установить выбранный элемент по идентификатору
+       * @remark
+       * Для возвращения коллекции к состоянию без выбранного элемента нужно передать null.
        * @param {String} id Идентификатор элемента, который нужно установить в качестве выбранного.
        * @example
        * <pre>
        *     var newKey = (someValue > 0) ? 'positive' : 'negative';
        *     myComboBox.setSelectedKey(newKey);
        * </pre>
-       * @see selectedItem
+       * @see selectedKey
        * @see getSelectedKey
+       * @see SBIS3.CONTROLS.DSMixin#keyField
+       * @see onSelectedItemChange
        */
       setSelectedKey : function(id) {
          this._options.selectedKey = id;
          if (!this._options.selectedKey && this._options.allowEmptySelection == false) {
             this._setFirstItemAsSelected();
          }
-         this.saveToContext('SelectedItem', this._options.selectedKey); //TODO: Перенести отсюда
          this._drawSelectedItem(this._options.selectedKey);
          this._notifySelectedItem(this._options.selectedKey);
       },
-       /**
-        * Метод получения идентификатора следующего элемента.
-        * @param key Идентификатор элемента
-        * @returns {*|String} Идентификатор следующего элемента.
-        * @example
-        * <pre>
-        *     var key = myComboBox.getNextItemKey();
-        *     myComboBox.setSelectedKey(key);
-        * </pre>
-        * @see  getPreviousItemKey
-        */
-      getNextItemKey: function(key) {
-        var indexId = this._dataSet._indexId,
-          length = indexId.length;
-        for (var i = 0; i < length; i++){
-          if (indexId[i] == key){
-            return indexId[i + 1] || null ;
-          }
-        }
-      },
-       /**
-        * Метод получения идентификатора предыдущего элемента
-        * @param key Идентификатор элемента
-        * @returns {*|String} Идентификатор предыдущего элемента.
-        * @example
-        * <pre>
-        *     var key = myComboBox.getPreviousItemKey();
-        *     if (key !== 'old') {
-        *        myComboBox.setSelectedKey(key);
-        *     }
-        * </pre>
-        * @see getNextItemKey
-        */
-      getPreviousItemKey: function(key) {
-         var indexId = this._dataSet._indexId,
-          length = indexId.length;
-        for (var i = 0; i < length; i++){
-          if (indexId[i] == key){
-            return indexId[i - 1] || null ;
-          }
-        }
-      },
-
       /**
-       * Получить индекс выбранного элемента
+       * Получить идентификатор выбранного элемента.
        * @example
        * <pre>
-       *     var key = myComboBox.getPrevItemIndex();
+       *     var key = myComboBox.getSelectedKey();
        *     if (key !== 'old') {
-       *        myComboBox.setSelectedKey(key);
+       *        myComboBox.setSelectedKey('newKey');
        *     }
        * </pre>
-       * @see selectedItem
+       * @see selectedKey
        * @see setSelectedKey
+       * @see onSelectedItemChange
+       * @see SBIS3.CONTROLS.DSMixin#keyField
        */
       getSelectedKey : function() {
          return this._options.selectedKey;
@@ -172,6 +150,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
       _notifySelectedItem : function(id) {
          //TODO: может тут указать, что метод надо переопредить чтобы текст передавать и пр.?
          this._notify('onSelectedItemChange', id);
+         this._notify('onPropertyChanged');
       },
 
       _dataLoadedCallback : function(){

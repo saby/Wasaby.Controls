@@ -8,7 +8,6 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
    /**
     * Набор данных.
-    * @author Мануйлов Андрей
     * @class SBIS3.CONTROLS.DataSet
     * @extends $ws.proto.Abstract
     * @public
@@ -199,7 +198,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
             /*TODO какая то лажа с клонами*/
             var newRec = [];
             for (var j = 0; j < records.length; j++) {
-               newRec.push($ws.core.clone(records[j]));
+               newRec.push((records[j].clone && typeof records[j].clone == 'function') ? records[j].clone() : $ws.core.clone(records[j]));
             }
          }
          var i, l, key, record, existing;

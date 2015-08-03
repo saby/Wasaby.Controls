@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
     * @public
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @extends $ws.proto.CompoundControl
+    * @author Крайнов Дмитрий Олегович
     */
 
    var ButtonGroupBase = CompoundControl.extend([DSMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBase.prototype */ {
@@ -36,12 +37,14 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
          this.reload();
       },
 
-      setEnabled: function(enabled) {
-        ButtonGroupBase.superclass.setEnabled.call(this, enabled);
-        var itemsInstances = this.getItemsInstances();
-        for (var i in itemsInstances){
-          itemsInstances[i].setEnabled(enabled);
-        }
+      setEnabled: function (enabled) {
+         ButtonGroupBase.superclass.setEnabled.call(this, enabled);
+         var itemsInstances = this.getItemsInstances();
+         for (var i in itemsInstances) {
+            if (itemsInstances.hasOwnProperty(i)) {
+               itemsInstances[i].setEnabled(enabled);
+            }
+         }
       },      
 
       _drawItemsCallback : function(){
