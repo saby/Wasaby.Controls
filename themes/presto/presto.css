@@ -387,7 +387,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
 }
 .controls-IconButton.controls-IconButton__round-border {
-  border: 1px solid #eeeeee;
+  border: 1px solid #aaaaaa;
   border-radius: 14px;
   height: 28px;
   width: 28px;
@@ -1644,6 +1644,9 @@ input[type="reset"]::-moz-focus-inner {
   border-style: solid;
   border-color: transparent transparent #666666 transparent;
   background: transparent;
+}
+.controls-DatePicker .controls-FormattedTextBox__fieldWrapper.controls-DatePicker__fieldWrapper__calendar-false {
+  margin: 0;
 }
 .controls-DatePicker.ws-has-focus .controls-FormattedTextBox__fieldWrapper {
   border-width: 1px;
