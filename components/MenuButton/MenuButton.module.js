@@ -171,6 +171,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          this._picker.subscribe('onDrawItems', function(){
             self._picker.recalcPosition(true);
          });
+         this._initMenu();
       },
 
       _setPickerContent: function(){
