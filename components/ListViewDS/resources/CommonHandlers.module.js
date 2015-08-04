@@ -10,11 +10,11 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
                message = isArray &&  idArray.length !== 1 ? "Удалить записи?" : "Удалить текущую запись?",
                self = this;
 
-            $ws.helpers.question(message).addCallback(function(res) {
+            return $ws.helpers.question(message).addCallback(function(res) {
                if(res) {
                   self._dataSet.removeRecord(idArray);
                   self.removeItemsSelection(isArray ? idArray : [idArray]);
-                  self._dataSource.sync(self._dataSet).addCallback(function() {
+                  return self._dataSource.sync(self._dataSet).addCallback(function() {
                      self.reload();
                   });
                }
