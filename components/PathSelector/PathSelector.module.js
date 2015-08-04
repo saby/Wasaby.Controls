@@ -206,10 +206,12 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          $('.controls-PathSelector__dots', this._container).remove();
          var points = $('.controls-PathSelector__point', this._container),
             i = points.length - 2,
-            targetContainer = this._getTargetContainer();
-         //30px + 36px - ширина блока с троеточием + ширина блока с домиком
+            targetContainer = this._getTargetContainer(),
+            targetContainerWidth = targetContainer.width(),
+            containerWidth = this._container.width();
+         //36px - ширина блока с домиком
          //Добавляем троеточие если пункты не убираются в контейнер
-         if (targetContainer.width() + 66 >= this._container.width()) {
+         if ((targetContainerWidth + 36 >= containerWidth) && points.length > 3) {
             var dots = $(pointTpl({
                item: { 
                   title: '...',
@@ -226,10 +228,16 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          }
          //скрываем пункты левее троеточия пока не уберемся в контейнер
          for (i; i > 1; i--) {
-            if (targetContainer.width() < this._container.width() || i == 1) {
+            if (targetContainerWidth < containerWidth || i == 1) {
                break;
             }
             points[i - 1].className += ' ws-hidden';
+         }
+         //Если после всех манипуляций все еще не убираемся в контейнер, будем обрезать текст
+         if (targetContainerWidth + 36 >= containerWidth) {
+            var first = (targetContainerWidth - 66) / 3;
+            $('.controls-PathSelector__title', points[0]).css('max-width', first * 2 - 20);
+            $('.controls-PathSelector__title', points[points.length - 2]).css('max-width', first - 60);
          }
       },
 
