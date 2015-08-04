@@ -63,7 +63,14 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
             $('.controls-DataGrid__table', this._container.get(0)).addClass('ws-hidden');
          }
       },
-
+      _isAllowInfiniteScroll : function(){
+         var allow = this._options.viewMode === 'table';
+         //TODO сделать красивее. тут отключать индикатор - это костыль
+         if (!allow){
+            this._removeLoadingIndicator();
+         }
+         return allow;
+      },
       _calculateTileWidth: function(){
          var itemsContainer = this._getItemsContainer(),
             tiles = $('.controls-CompositeView__tileItem:not(.controls-ListView__folder)', itemsContainer), 
