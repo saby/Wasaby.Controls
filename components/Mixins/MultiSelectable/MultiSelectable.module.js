@@ -253,6 +253,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       _dataLoadedCallback : function(){
          if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
+            this._setFirstItemAsSelected();
          }
       },
 
