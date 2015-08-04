@@ -94,7 +94,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
        * @param at
        * @returns {{drawItem: boolean, drawGroup: boolean}}
        */
-      _searchMethod: function(record, at){
+      _searchMethod: function(record, at, last){
          //TODO lastParent - curRoot - правильно?. 2. Данные всегда приходят в правильном порядке?
          var key,
                curRecRoot,
@@ -119,6 +119,12 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
                this._lastDrawn = undefined;
                this._lastPath.push(record);
                this._lastParent = key;
+               //Если мы уже в последней записи в иерархии, то нужно отрисовать крошки и сбросить сохраненный путь
+               if (last) {
+                  this._drawGroup(record, at);
+                  this._lastPath = [];
+                  this._lastParent = this._curRoot;
+               }
             }
          } else {//другой кусок иерархии
             //Если текущий раздел у записи есть в lastPath, то возьмем все элементы до этого ключа

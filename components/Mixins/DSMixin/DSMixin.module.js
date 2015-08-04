@@ -359,7 +359,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             curAt = at;
          if (records && records.length > 0) {
             for (var i = 0; i < records.length; i++) {
-               this._drawItem(records[i], curAt);
+               this._drawItem(records[i], curAt, i === records.length - 1);
 
                if (curAt && curAt.at) {
                   curAt.at++;
@@ -407,12 +407,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return this._container;
       },
 
-      _drawItem: function (item, at) {
+      _drawItem: function (item, at, last) {
          var
             targetContainer,
             itemInstance;
          //Запускаем группировку если она есть. Иногда результат попадает в группровку и тогда отрисовывать item не надо
-         if (this._group(item, at) !== false) {
+         if (this._group(item, at, last) !== false) {
             targetContainer = this._getTargetContainer(item);
             itemInstance = this._createItemInstance(item, targetContainer, at);
             this._addItemAttributes(itemInstance, item);
@@ -429,22 +429,22 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * @param item
        * @param at
        */
-      _group: function(item, at){
+      _group: function(item, at, last){
          var groupBy = this._options.groupBy,
                resultGroup,
                drawGroup,
                drawItem = true;
          if (!Object.isEmpty(groupBy)){
-            resultGroup = groupBy.method.apply(this, [item, at]);
+            resultGroup = groupBy.method.apply(this, [item, at, last]);
             drawGroup = typeof resultGroup === 'boolean' ? resultGroup : (resultGroup instanceof Object && resultGroup.hasOwnProperty('drawGroup') ? !!resultGroup.drawGroup : false);
             drawItem = resultGroup instanceof Object && resultGroup.hasOwnProperty('drawItem') ? !!resultGroup.drawItem : true;
             if (drawGroup){
-               this._drawGroup(item, at)
+               this._drawGroup(item, at, last)
             }
          }
          return drawItem;
       },
-      _drawGroup: function(item, at){
+      _drawGroup: function(item, at, last){
          var
                groupBy = this._options.groupBy,
                tplOptions = {
@@ -461,7 +461,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._appendItemTemplate(item, targetContainer, itemInstance, at);
          //Сначала положим в дом, потом будем звать рендеры, иначе контролы, которые могут создать в рендере неправмльно поймут свою ширину
          if (groupBy.render && typeof groupBy.render === 'function') {
-            groupBy.render.apply(this, [item, itemInstance]);
+            groupBy.render.apply(this, [item, itemInstance, last]);
          }
 
       },

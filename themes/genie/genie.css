@@ -2461,6 +2461,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid {
   padding: 0 0 5px 0;
+  min-height: 50px;
   width: 100%;
   /*TODO скрываем подгрузку (ещё null)*/
 }
@@ -2600,6 +2601,9 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/ItemActions-menu.png') no-repeat 0 -60px;
 }
 .controls-ItemActions__activeItem {
+  background-color: #00c795 !important;
+}
+.controls-ItemActions__activeItem .controls-DataGrid__notScrolledCell {
   background-color: #00c795 !important;
 }
 .controls-EditInPlaceController {

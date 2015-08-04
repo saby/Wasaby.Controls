@@ -1,8 +1,9 @@
 define('js!SBIS3.CONTROLS.TreeDataGrid', [
    'js!SBIS3.CONTROLS.HierarchyDataGrid',
    'js!SBIS3.CONTROLS.TreeMixinDS',
+   'js!SBIS3.CONTROLS.DragNDropMixin',
    'html!SBIS3.CONTROLS.TreeDataGrid/resources/rowTpl'
-], function(HierarchyDataGrid, TreeMixin, rowTpl) {
+], function(HierarchyDataGrid, TreeMixin, DragNDropMixin, rowTpl) {
    'use strict';
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
@@ -26,7 +27,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
     * </component>
     */
 
-   var TreeDataGrid = HierarchyDataGrid.extend([TreeMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
+   var TreeDataGrid = HierarchyDataGrid.extend([TreeMixin, DragNDropMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
       $protected: {
          _rowTpl : rowTpl,
          _options: {
@@ -40,11 +41,21 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
              * Обработчик нажатия на стрелку у папок. Если не задан, стрелка показана не будет
              * @type {Function}
              */
-            arrowActivatedHandler: undefined
-         }
+            arrowActivatedHandler: undefined,
+            /**
+             * Разрешить перемещать элементы с помощью DragAndDrop
+             * @type {Boolean}
+             */
+            allowDragNDropMove: true
+         },
+         _dragStartHandler: undefined
       },
 
       $constructor: function() {
+         if (this._options.allowDragNDropMove) {
+            this._dragStartHandler = this._onDragStart.bind(this);
+            this._getItemsContainer().bind('mousedown', this._dragStartHandler);
+         }
       },
 
       _drawItemsFolder: function(records) {
@@ -196,7 +207,74 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
                this.toggleNode(nodeID);
             }
          }
+      },
+      /*DRAG_AND_DROP START*/
+      _findDragDropContainer: function() {
+         return this._getItemsContainer();
+      },
+      _getDragItems: function(key) {
+         var keys = this._options.multiselect ? $ws.core.clone(this.getSelectedKeys()) : [];
+         if ($.inArray(key, keys) < 0) {
+            keys.push(key);
+         }
+         return keys;
+      },
+      _onDragStart: function(e) {
+         var
+            target = $(e.target),
+            id = target.closest('.controls-ListView__item').data('id');
+         if (id) {
+            this.setSelectedKey(id);
+            this.setCurrentElement(e, this._getDragItems(id));
+         }
+         e.preventDefault();
+      },
+      _callMoveOutHandler: function() {
+      },
+      _callMoveHandler: function(e) {
+         if (!this._containerCoords) {
+            this._containerCoords = {
+               x: this._moveBeginX - parseInt(this._avatar.css('left'), 10),
+               y: this._moveBeginY - parseInt(this._avatar.css('top'), 10)
+            };
+         }
+         this._avatar.css({
+            top: e.pageY - this._containerCoords.y,
+            left: e.pageX - this._containerCoords.x
+         });
+         this._hideItemActions();
+      },
+      _createAvatar: function(e){
+         var count = this.getCurrentElement().length;
+         this._avatar = $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>')
+            .css({
+               'left': window.scrollX + e.clientX + 5,
+               'top': window.scrollY + e.clientY + 5
+            }).appendTo($('body'));
+      },
+      _callDropHandler: function(e) {
+         var
+            target = $(e.target),
+            keys = this.getCurrentElement(),
+            moveTo = target.closest('.controls-ListView__item').data('id');
+         //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
+         if (this.getSelectedKey() === moveTo) {
+            this._elemClickHandler = function() {
+               this._elemClickHandler = TreeDataGrid.superclass._elemClickHandler;
+            }
+         }
+         this._move(keys, moveTo);
+      },
+      _beginDropDown: function(e) {
+         this._isShifted = true;
+         this._createAvatar(e);
+      },
+      _endDropDown: function() {
+         this._containerCoords = null;
+         this._avatar.remove();
+         this._isShifted = false;
       }
+      /*DRAG_AND_DROP END*/
    });
 
    return TreeDataGrid;

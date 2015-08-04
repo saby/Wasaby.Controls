@@ -30,6 +30,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   focusCatch: undefined
                },
                _firstField: undefined,
+               //Храним тут состояние того, что фокус потерян из-за скрытия компонента
+               _lostFocusOnHide: false,
                _fields: {}
             },
             $constructor: function() {
@@ -39,21 +41,24 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   childFocusOut = function() {
                      var
                         result,
+                        currentValue;
+                     if (self.isVisible() && !self._lostFocusOnHide) {
                         currentValue = this[self._determineGetMethodName(this)]();
-                     if (currentValue !== (self._editingRecord ? self._editingRecord : self._record).get(this.getName())) {
-                        if (!self._editingRecord) {
-                           self._editingRecord = self._record.clone();
-                        }
-                        self._editingRecord.set(this.getName(), currentValue);
-                        result = self._notify('onValueChange', this.getName(), self._editingRecord);
-                        if (result instanceof $ws.proto.Deferred) {
-                           result.addCallback(function() {
+                        if (currentValue !== (self._editingRecord ? self._editingRecord : self._record).get(this.getName())) {
+                           if (!self._editingRecord) {
+                              self._editingRecord = self._record.clone();
+                           }
+                           self._editingRecord.set(this.getName(), currentValue);
+                           result = self._notify('onValueChange', this.getName(), self._editingRecord);
+                           if (result instanceof $ws.proto.Deferred) {
+                              result.addCallback(function () {
+                                 self._updateFieldsValues(self._editingRecord);
+                                 self._applyChanges();
+                              });
+                           } else {
                               self._updateFieldsValues(self._editingRecord);
                               self._applyChanges();
-                           });
-                        } else {
-                           self._updateFieldsValues(self._editingRecord);
-                           self._applyChanges();
+                           }
                         }
                      }
                   };
@@ -71,16 +76,6 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                      }, this);
                   }
                });
-            },
-            hide: function() {
-               var activeChild;
-               if (this.isVisible()) {
-                  activeChild = this.getActiveChildControl();
-                  if (activeChild) {
-                     activeChild.setActive(false);
-                  }
-               }
-               EditInPlace.superclass.hide.apply(this, arguments);
             },
             _onKeyDown: function(e) {
                e.stopPropagation();
@@ -170,6 +165,18 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                      $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'setText' :
                         'setValue';
                return methodName;
+            },
+            hide: function() {
+               var activeChild;
+               if (this.isVisible()) {
+                  activeChild = this.getActiveChildControl();
+                  if (activeChild) {
+                     this._lostFocusOnHide = true;
+                     activeChild.setActive(false);
+                     this._lostFocusOnHide = false;
+                  }
+               }
+               EditInPlace.superclass.hide.apply(this, arguments);
             },
             _applyChanges: function() {
                $ws.helpers.forEach(this._fields, function(field, name) {

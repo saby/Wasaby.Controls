@@ -30,3 +30,34 @@
     display: inline-block;
   }
 }
+.controls-DragNDrop__draggedItem {
+   position: absolute;
+   width: @drag-and-drop-object-width;
+   height: @drag-and-drop-object-height;
+   background: @drag-and-drop-object-bg;
+   text-align: center;
+}
+
+.controls-DragNDrop__draggedCount {
+   display: inline-block;
+   width: @drag-and-drop-count-width;
+   height: @drag-and-drop-count-height;
+   line-height: @drag-and-drop-count-height;
+   margin: @drag-and-drop-count-margin;
+   color: @white-color;
+   font-family: @font-basic-name;
+   font-size: 10px;
+}
+
+.dragdropBody {
+   .controls-ListView__folder {
+      &.controls-ListView__hoveredItem {
+         &:not(.controls-ListView__item__selected) {
+            background: @drag-and-drop-hover-bg;
+            > td {
+               background: @drag-and-drop-hover-bg;
+            }
+         }
+      }
+   }
+}
