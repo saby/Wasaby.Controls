@@ -119,6 +119,134 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGrid',
       _processPaging: function() {
          TreeCompositeView.superclass._processPaging.call(this);
          this._processPagingStandart();
+      },
+      /*
+       TODO НЕ ИСПОЛЬЗОВАТЬ БЕЗ САМОЙ КРАЙНЕЙ НЕОБХОДИМОСТИ!
+       Метод для частичной перезагрузки (обработка только переданных элементов).
+       Сделано в качестве временного решения (для номенклатуры).
+       При правильном разделении функционала данный метод не нужен (пользователь будет лишь менять данные в DataSet, а View будет сам перерисовываться).
+      */
+      partialyReload: function(items) {
+         var
+            self = this,
+            filter,
+            currentDataSet,
+            currentRecord,
+            needRedraw,
+            parentBranch,
+            dependentRecords,
+            recordsGroup = {},
+            branchesData = {},
+            container = this.getContainer(),
+            //Метод формирования полного списка зависимостей
+            findDependentRecords = function(key, parentKey) {
+               var
+                  findDependents = function(key, parentKey) {
+                     var
+                        result = {
+                           key: key,
+                           $row: container.find('[data-id="' + key + '"]'),
+                           childs: []
+                        };
+                     if (parentKey !== undefined) {
+                        result.parentKey = parentKey;
+                     }
+                     if (result.$row.hasClass('controls-ListView__folder')) {
+                        container.find('.controls-ListView__item[data-parent="' + key + '"]').each(function (idx, row) {
+                           var rowKey = row.getAttribute('data-id');
+                           result.childs.push(findDependents(rowKey, key));
+                        });
+                     }
+                     return result;
+                  };
+               return findDependents(key, parentKey);
+            },
+            //Метод удаляет или перерисовывает переданную строку
+            removeOrRedraw = function(dataSet, row, recordOffset) {
+               var record = needRedraw ? dataSet.getRecordByKey(row.key) : false;
+               //Если запись найдена в обновленном DataSet, то перерисовываем её
+               if (record) {
+                  currentDataSet.getRecordByKey(row.key).merge(record);
+                  self.redrawRow(record);
+               } else { //Иначе - удаляем запись
+                  currentDataSet.removeRecord(row.key);
+                  row.$row.remove();
+                  //Если количество записей в текущем DataSet меньше, чем в обновленном, то добавляем в него недостающую запись
+                  if (needRedraw && currentDataSet.getCount() < dataSet.getCount()) {
+                     record = dataSet.getRecordByKey(dataSet.getRecordKeyByIndex(dataSet.getCount() - recordOffset));
+                     currentDataSet.addRecord(record);
+                     self._drawItems([record]);
+                  }
+               }
+            },
+            //Метод для удаления и перерисовки
+            removeAndRedraw = function(row, recordOffset) {
+               //Если есть дочерние, то для каждого из них тоже зовем removeAndRedraw
+               if (row.childs && row.childs.length) {
+                  $ws.helpers.forEach(row.childs, function(childRow, idx) {
+                     removeAndRedraw(childRow, row.childs.length - idx);
+                  });
+                  //Если не нужна перерисовка, то просто удалим строку
+                  if (!needRedraw) {
+                     removeOrRedraw(null, row, recordOffset);
+                  } else {
+                     getBranch(row.parentKey).addCallback(function(dataSet) {
+                        removeOrRedraw(dataSet, row, recordOffset);
+                     });
+                  }
+               } else {
+                  getBranch(row.parentKey).addCallback(function(dataSet) {
+                     removeOrRedraw(dataSet, row, recordOffset);
+                  });
+               }
+            },
+            //Получаем данные ветки (ищем в branchesData или запрашиваем с БЛ)
+            getBranch = function(branchId) {
+               if (branchesData[branchId]) {
+                  return new $ws.proto.Deferred()
+                     .addCallback(function() {
+                        return branchesData[branchId];
+                     })
+                     .callback();
+               } else {
+                  filter['Раздел'] = branchId === 'null' ? null : branchId;
+                  return self._dataSource.query(filter, self._sorting, 0, (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit)
+                     .addCallback(function(dataSet) {
+                        branchesData[branchId] = dataSet;
+                        return dataSet;
+                     });
+               }
+            };
+         $ws.helpers.toggleIndicator(true);
+         if (items) {
+            currentDataSet = this.getDataSet();
+            filter = $ws.core.clone(this._filter);
+            //Группируем записи по веткам (чтобы как можно меньше запросов делать)
+            $ws.helpers.forEach(items, function(item) {
+               //todo Сделать опредение родительского ключа через DataSet
+               parentBranch = container.find('[data-id="' + item + '"]').attr('data-parent') || 'null';
+               if (!recordsGroup[parentBranch]) {
+                  recordsGroup[parentBranch] = [];
+               }
+               recordsGroup[parentBranch].push(item);
+            });
+            $ws.helpers.forEach(recordsGroup, function(branch, branchId) {
+               //Загружаем содержимое веток
+               getBranch(branchId)
+                  .addCallback(function(branchDataSet) {
+                     $ws.helpers.forEach(branch, function(record, idx) {
+                        currentRecord = currentDataSet.getRecordByKey(record);
+                        dependentRecords = findDependentRecords(record, branchId);
+                        needRedraw = !!branchDataSet.getRecordByKey(record);
+                        //Удаляем то, что надо удалить и перерисовываем то, что надо перерисовать
+                        removeAndRedraw(dependentRecords, branch.length - idx);
+                     })
+                  })
+                  .addBoth(function() {
+                     $ws.helpers.toggleIndicator(false);
+                  });
+            });
+         }
       }
 
    });
