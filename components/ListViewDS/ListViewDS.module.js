@@ -760,7 +760,18 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
          },
          _toggleIndicator: function(show){
-            this._container.find('.controls-AjaxLoader').toggleClass('ws-hidden', !show);
+            this._showedLoading = show;
+            var self = this;
+            if (show) {
+               setTimeout(function(){
+                  if (self._showedLoading) {
+                     self._container.find('.controls-AjaxLoader').toggleClass('ws-hidden', false);
+                  }
+               }, 750);
+            }
+            else {
+               self._container.find('.controls-AjaxLoader').toggleClass('ws-hidden', true);
+            }
          },
          //------------------------Paging---------------------
          _processPaging: function() {
