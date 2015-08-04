@@ -12,15 +12,15 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
 
             return $ws.helpers.question(message).addCallback(function(res) {
                if(res) {
-                  if ($ws.helpers.instanceOfModule(self, 'SBIS3.CONTROLS.TreeCompositeView') && self.getViewMode() === 'table') {
-                     self.partialyReload(isArray ? idArray : [idArray]);
-                  } else {
-                     self._dataSet.removeRecord(idArray);
-                     self.removeItemsSelection(isArray ? idArray : [idArray]);
-                     return self._dataSource.sync(self._dataSet).addCallback(function () {
+                  self._dataSet.removeRecord(idArray);
+                  self.removeItemsSelection(isArray ? idArray : [idArray]);
+                  return self._dataSource.sync(self._dataSet).addCallback(function () {
+                     if ($ws.helpers.instanceOfModule(self, 'SBIS3.CONTROLS.TreeCompositeView') && self.getViewMode() === 'table') {
+                        self.partialyReload(isArray ? idArray : [idArray]);
+                     } else {
                         self.reload();
-                     });
-                  }
+                     }
+                  });
                }
             })
          }

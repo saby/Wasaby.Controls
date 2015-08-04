@@ -642,9 +642,11 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
 
          _nextLoad: function () {
-            var self = this, records;
+            var self = this,
+                  loadAllowed  = this._isAllowInfiniteScroll(),
+                  records;
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
-            if (this._allowInfiniteScroll && this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
+            if (loadAllowed && this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
                this._addLoadingIndicator();
                this._loader = this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset + this._limit, this._limit).addCallback(function (dataSet) {
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
@@ -670,6 +672,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                   return error;
                });
             }
+         },
+         _isAllowInfiniteScroll : function(){
+            return this._allowInfiniteScroll;
          },
          _isBottomOfPage: function () {
             var docBody = document.body,
@@ -760,7 +765,18 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             }
          },
          _toggleIndicator: function(show){
-            this._container.find('.controls-AjaxLoader').toggleClass('ws-hidden', !show);
+            this._showedLoading = show;
+            var self = this;
+            if (show) {
+               setTimeout(function(){
+                  if (self._showedLoading) {
+                     self._container.find('.controls-AjaxLoader').toggleClass('ws-hidden', false);
+                  }
+               }, 750);
+            }
+            else {
+               self._container.find('.controls-AjaxLoader').toggleClass('ws-hidden', true);
+            }
          },
          //------------------------Paging---------------------
          _processPaging: function() {
