@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
          });
       },
       selectedMoveTo: function(moveTo) {
-         this._move(this.getSelectedKeys(), moveTo);
+         this._move(this._selectedRecords, moveTo);
       },
       _move: function(records, moveTo) {
          var
@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
             deferred = new $ws.proto.ParallelDeferred();
          if (this._checkRecordsForMove(records, moveTo)) {
             for (var i = 0; i < records.length; i++) {
-               record = this._dataSet.getRecordByKey(records[i]);
+               record = typeof records[i] === 'number' ? this._dataSet.getRecordByKey(records[i]) : records[i];
                deferred.push(this._dataSource.move(record, this._options.hierField, [moveTo]));
             }
             deferred.done().getResult().addCallback(function() {
@@ -31,13 +31,17 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
          }
       },
       _checkRecordsForMove: function(records, moveTo) {
-         var record;
+         var
+            record,
+            keyField = this._dataSet._keyField;
          if (moveTo === undefined) {
             return false;
          }
-         if ($.inArray(moveTo, records) !== -1) {
-            $ws.helpers.alert("Вы не можете переместить запись саму в себя!", {}, this);
-            return false;
+         for (var i = 0; i < records.length; i++) {
+            if (typeof records[i] === 'number' && records[i] === moveTo || typeof records[i] === 'object' && records[i].get(keyField)[0] === moveTo) {
+               $ws.helpers.alert("Вы не можете переместить запись саму в себя!", {}, this);
+               return false;
+            }
          }
          if (moveTo !== null) {
             record = this._dataSet.getRecordByKey(moveTo);

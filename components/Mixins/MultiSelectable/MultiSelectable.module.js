@@ -35,7 +35,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
              */
             selectedItems : [],
             allowEmptySelection : true
-         }
+         },
+         _selectedRecords: []
       },
 
       $constructor: function() {
@@ -49,6 +50,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                if (!this._options.multiselect) {
                   this._options.selectedKeys = this._options.selectedKeys.slice(0, 1);
                }
+               this._setSelectedRecords(this._options.selectedKeys);
             }
             else {
                throw new Error('Argument must be instance of Array');
@@ -92,9 +94,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                else {
                   this._options.selectedKeys = idArray.slice(0, 1);
                }
+               this._setSelectedRecords(this._options.selectedKeys);
             }
             else {
                this._options.selectedKeys = [];
+               this._selectedRecords = [];
             }
             if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
                this._setFirstItemAsSelected();
@@ -133,12 +137,17 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @param idArray
        */
       addItemsSelection : function(idArray) {
+         var record;
          if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
             if (idArray.length) {
                if (this._options.multiselect) {
                   for (var i = 0; i < idArray.length; i++) {
                      if (this._options.selectedKeys.indexOf(idArray[i]) < 0) {
                         this._options.selectedKeys.push(idArray[i]);
+                        record = this._getRecordFromDataSet(idArray[i]);
+                        if (record) {
+                           this._selectedRecords.push(record);
+                        }
                      }
                   }
                }
@@ -163,11 +172,19 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @param idArray
        */
       removeItemsSelection : function(idArray) {
+         var record;
          if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
             for (var i = idArray.length - 1; i >= 0; i--) {
                var index = this._options.selectedKeys.indexOf(idArray[i]);
                if (index >= 0) {
                   Array.remove(this._options.selectedKeys, index);
+                  record = this._getRecordFromDataSet(idArray[i]);
+                  if (record) {
+                     index = this._selectedRecords.indexOf(record);
+                     if (index >= 0) {
+                        Array.remove(this._selectedRecords, index);
+                     }
+                  }
                }
             }
             if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
@@ -257,7 +274,27 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
          if (this._dataSet) {
             var firstKey = this._dataSet.at(0).getKey();
             this._options.selectedKeys = [firstKey];
+            this._setSelectedRecords([firstKey]);
          }
+      },
+
+      _setSelectedRecords: function(idArray) {
+         var self = this,
+            record;
+         this._selectedRecords = [];
+         $.each(idArray, function(id, key) {
+            record = self._getRecordFromDataSet(key);
+            if (record) {
+               self._selectedRecords.push(record);
+            }
+         });
+      },
+      _getRecordFromDataSet: function(key) {
+         var record;
+         if (this._dataSet) {
+            record = this._dataSet.getRecordByKey(key);
+         }
+         return record;
       }
    };
 
