@@ -210,7 +210,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGrid',
                      .callback();
                } else {
                   filter['Раздел'] = branchId === 'null' ? null : branchId;
-                  return self._dataSource.query(filter, self._sorting, 0, (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit)
+                  return self._dataSource.query(filter, self._sorting, 0, self._limit !== undefined ? (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit : undefined)
                      .addCallback(function(dataSet) {
                         branchesData[branchId] = dataSet;
                         return dataSet;
