@@ -157,9 +157,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
                }
                if(ctrlName === 'ТипНоменклатуры') {
                   txtValue = controls[i].getValue();
-                  if(txtValue) {
-                     filter['ТипНоменклатуры'] = txtValue;
-                  }
+                  filter['ТипНоменклатуры'] = txtValue ? txtValue : null;
                }
             }
          }
