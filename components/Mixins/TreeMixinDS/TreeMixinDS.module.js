@@ -160,7 +160,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
 
       },
 
-      /**/
+      /* здесь добавляется запись "Еще 50" в корень таблицы, но сейчас мы включаем подгрузку по скроллу в папках, значит этот код не нужен
       _processPaging: function() {
          var more, nextPage;
          if (!this._treePager) {
@@ -186,7 +186,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          nextPage = this._hasNextPage(more);
          this._treePager.setHasMore(nextPage);
       },
-
+       */
       _folderLoad: function(id) {
          var
             self = this,
