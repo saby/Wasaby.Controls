@@ -38,7 +38,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
             return false;
          }
          for (var i = 0; i < records.length; i++) {
-            if (typeof records[i] === 'number' && records[i] === moveTo || typeof records[i] === 'object' && records[i].get(keyField)[0] === moveTo) {
+            if (typeof records[i] === 'number' && records[i] === moveTo ||
+                typeof records[i] === 'object' && records[i].get(keyField)[0] === moveTo) {
                $ws.helpers.alert("Вы не можете переместить запись саму в себя!", {}, this);
                return false;
             }
