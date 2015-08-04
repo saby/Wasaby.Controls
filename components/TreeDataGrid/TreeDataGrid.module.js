@@ -125,16 +125,28 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          /*TODO пока не очень общо создаем внутренние пэйджинги*/
          var allContainers = $('.controls-ListView__item[data-parent="'+key+'"]', self._getItemsContainer().get(0));
          var row = $('<tr class="controls-TreeDataGrid__folderToolbar">' +
-            '<td colspan="'+(this._options.columns.length+(this._options.multiselect ? 1 : 0))+'"><div class="controls-TreePager-container"></div></td>' +
+            '<td colspan="'+(this._options.columns.length+(this._options.multiselect ? 1 : 0))+'"><div style="overflow:hidden" class="controls-TreeDataGrid__folderToolbarContainer"><div class="controls-TreePager-container"></div></div></td>' +
             '</tr>').attr('data-parent',key);
          $(allContainers.last()).after(row);
+         this._resizeFolderToolbars();
          var elem = $('.controls-TreePager-container', row.get(0));
          this._createFolderPager(key, elem, dataSet.getMetaData().more);
       },
 
+      _onResizeHandler: function() {
+         TreeDataGrid.superclass._onResizeHandler.apply(this, arguments);
+         this._resizeFolderToolbars();
+      },
+
+      _resizeFolderToolbars: function() {
+         var toolbars = $('.controls-TreeDataGrid__folderToolbarContainer', this._container.get(0));
+         var width = this._container.width();
+         toolbars.width(width);
+      },
+
       _keyboardHover: function(e) {
          TreeDataGrid.superclass._keyboardHover.apply(this, arguments);
-         var selectedKey = this.getSelectedKey()
+         var selectedKey = this.getSelectedKey();
          if (e.which === $ws._const.key.enter) {
             var rec = this._dataSet.getRecordByKey(selectedKey);
             if (rec.get(this._options.hierField)) {

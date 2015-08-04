@@ -2294,6 +2294,9 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   height: 14px;
 }
+.controls-TreeDataGrid__folderToolbarContainer {
+  overflow: hidden;
+}
 .controls-ListView__hoveredItem .controls-TreeView__editArrow {
   display: inline-block;
 }
