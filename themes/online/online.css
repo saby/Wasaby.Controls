@@ -2608,12 +2608,13 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CompositeView .controls-CompositeView__tileItem {
   display: inline-block;
+  vertical-align: top;
   cursor: pointer;
   text-align: left;
   border: 1px solid #e7f0f9;
   min-width: 128px;
   min-height: 128px;
-  margin: -4px 0 0 -1px;
+  margin: -1px 0 0 -1px;
 }
 .controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__hoveredItem {
   background: #e9fafe;
