@@ -201,7 +201,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          target = $(target);
          var config = this._getSubMenuConfig(isFirstLevel, item);
 
-         config.element = $('<div class="controls-Menu__Popup"></div>');
+         config.element = $('<div class="controls-Menu__Popup controls-Menu__SubMenuPopup"></div>');
          if (this._container.hasClass('controls-Menu__32px')) {
             config.element.addClass('controls-Menu__32px');
          }

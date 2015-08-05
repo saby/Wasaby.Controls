@@ -792,6 +792,8 @@ input[type="reset"]::-moz-focus-inner {
   background: none;
 }
 .controls-Menu__Popup {
+  font: 13px Tahoma, Geneva, sans-serif;
+  padding: 4px 0;
   margin: -1px 0 0;
   border-width: 1px;
   border-style: solid;
@@ -856,6 +858,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Menu__submenu {
   display: none;
+}
+.controls-Menu__SubMenuPopup {
+  margin: -1px 0 0;
 }
 .controls-MenuItem {
   position: relative;
@@ -2407,7 +2412,6 @@ input[type="reset"]::-moz-focus-inner {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  max-width: 300px;
 }
 .controls-PathSelector .controls-PathSelector__arrow {
   position: relative;
