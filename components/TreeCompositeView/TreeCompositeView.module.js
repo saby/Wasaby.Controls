@@ -3,6 +3,15 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGrid',
 
    var TreeCompositeView = TreeDataGrid.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
 
+      $protected: {
+         _options: {
+            /**
+             * Шаблон, используемый при отрисовке папки
+             */
+            folderTemplate: undefined
+         }
+      },
+
       _elemClickHandler: function (id, data, target) {
          var $target = $(target),
              nodeID,
@@ -38,7 +47,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGrid',
                case 'table': resultTpl = TreeCompositeView.superclass._getItemTemplate.call(this, item); break;
                case 'list': {
                   if (item.get(this._options.hierField + '@')) {
-                     dotTpl = folderTpl;
+                     dotTpl = this._options.folderTemplate ? this._options.folderTemplate : folderTpl;
                   } else {
                      if (this._options.listTemplate) {
                         if (this._options.listTemplate instanceof Function) {
@@ -62,7 +71,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGrid',
                }
                case 'tile' : {
                   if (item.get(this._options.hierField + '@')) {
-                     dotTpl = folderTpl;
+                     dotTpl = this._options.folderTemplate ? this._options.folderTemplate : folderTpl;
                   } else {
                      if (this._options.tileTemplate) {
                         if (this._options.tileTemplate instanceof Function) {
