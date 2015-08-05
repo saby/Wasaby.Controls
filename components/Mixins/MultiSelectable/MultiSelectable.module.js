@@ -82,7 +82,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
               * @see toggleItemsSelectionAll
               */
             allowEmptySelection : true
-         }
+         },
+         _selectedRecords: []
       },
 
       $constructor: function() {
@@ -96,6 +97,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                if (!this._options.multiselect) {
                   this._options.selectedKeys = this._options.selectedKeys.slice(0, 1);
                }
+               this._setSelectedRecords();
             }
             else {
                throw new Error('Argument must be instance of Array');
@@ -104,6 +106,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
          else {
             if (this._options.allowEmptySelection == false) {
                this._setFirstItemAsSelected();
+               this._setSelectedRecords();
             }
          }
       },
@@ -377,6 +380,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       _notifySelectedItems : function(idArray) {
+         this._setSelectedRecords();
          this._notify('onSelectedItemsChange', idArray);
       },
 
@@ -391,6 +395,19 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             var firstKey = this._dataSet.at(0).getKey();
             this._options.selectedKeys = [firstKey];
          }
+      },
+
+      _setSelectedRecords: function() {
+         var
+            self = this,
+            record;
+         this._selectedRecords = [];
+         $.each(this._options.selectedKeys, function(id, key) {
+            record = self._dataSet.getRecordByKey(key);
+            if (record) {
+               self._selectedRecords.push(record);
+            }
+         });
       }
    };
 
