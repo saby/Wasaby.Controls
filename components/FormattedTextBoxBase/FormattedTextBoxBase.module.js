@@ -74,7 +74,7 @@ define(
        * @private
        */
       _moveCursor = function(container, position) {
-         if ($ws._const.browser.isIE) {
+         if ($ws._const.browser.isIE  &&  $ws._const.browser.IEVersion < 12) { //в Edge (ie12) не работает createTextRange
             var rng = document.body.createTextRange();
             rng.moveToElementText(container.parentNode);
             rng.move('character', position);
