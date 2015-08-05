@@ -914,6 +914,8 @@ input[type="reset"]::-moz-focus-inner {
   color: #ff7033;
 }
 .controls-Menu__Popup {
+  font: 15px 'TensorFont Regular', 'TensorFont', sans-serif;
+  padding: 4px 0;
   margin: -1px 0 0;
   border-width: 2px;
   border-style: solid;
@@ -978,6 +980,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Menu__submenu {
   display: none;
+}
+.controls-Menu__SubMenuPopup {
+  margin: -6px 0 0 0;
 }
 .controls-MenuItem {
   position: relative;
@@ -1163,7 +1168,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuButton__header .controls-MenuButton__headerCenter {
   display: inline-block;
   width: auto;
-  height: 4px;
+  height: 13px;
   margin: 0;
   background: #ffffff;
 }
@@ -2620,7 +2625,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   text-align: left;
   border: 1px solid #e7f0f9;
-  min-width: 128px;
+  min-width: 200px;
   min-height: 128px;
   margin: -1px 0 0 -1px;
 }
@@ -2663,7 +2668,7 @@ input[type="reset"]::-moz-focus-inner {
   margin: 4px auto 0 auto;
 }
 .controls-CompositeView .controls-CompositeView__tileItem .controls-CompositeView__tileTitle {
-  font-family: Tahoma, Geneva, sans-serif;
+  font-family: 'TensorFont Regular', 'TensorFont', sans-serif;
   margin-top: 8px;
   font-size: 15px;
   text-align: center;
@@ -2708,7 +2713,6 @@ input[type="reset"]::-moz-focus-inner {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  max-width: 300px;
 }
 .controls-PathSelector .controls-PathSelector__arrow {
   position: relative;
