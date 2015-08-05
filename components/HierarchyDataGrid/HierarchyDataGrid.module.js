@@ -154,6 +154,12 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
                this._lastDrawn = undefined;
                this._lastPath.push(record);
                this._lastParent = key;
+               //Если мы уже в последней записи в иерархии, то нужно отрисовать крошки и сбросить сохраненный путь
+               if (last) {
+                  this._drawGroup(record, at);
+                  this._lastPath = [];
+                  this._lastParent = this._curRoot;
+               }
             }
          }
          return {
