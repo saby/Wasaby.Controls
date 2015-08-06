@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
     * @class SBIS3.CONTROLS.ArrayStrategy
     * @extends SBIS3.CONTROLS.IDataStrategy
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var ArrayStrategy = IDataStrategy.extend(/** @lends SBIS3.CONTROLS.ArrayStrategy.prototype */{

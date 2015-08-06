@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.Demo.FilterButtonMain', [
       'js!SBIS3.CONTROLS.DataGrid',
       'css!SBIS3.CONTROLS.Demo.FilterButtonMain',
       'js!SBIS3.CONTROLS.Demo.FilterButtonFilterContent',
-      'js!SBIS3.CONTROLS.Demo.FilterButtonMocks',
+      'js!SBIS3.CONTROLS.Demo.FilterButtonMocks'
    ],
    function(CompoundControl, FilterButton, MainTpl) {
       var Main = CompoundControl.extend({

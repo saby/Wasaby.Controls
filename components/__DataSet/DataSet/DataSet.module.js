@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
     * @class SBIS3.CONTROLS.DataSet
     * @extends $ws.proto.Abstract
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    /**

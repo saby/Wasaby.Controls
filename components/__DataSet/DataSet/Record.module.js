@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
     * Запись - обертка для данных
     * @class SBIS3.CONTROLS.Record
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var Record =  $ws.proto.Abstract.extend( /** @lends SBIS3.CONTROLS.Record.prototype */{

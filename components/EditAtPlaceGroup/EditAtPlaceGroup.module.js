@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
        * @control
        * @public
        * @category Inputs
-       * @mixes SBIS3.CONTROLS._PickerMixin
+       * @mixes SBIS3.CONTROLS.PickerMixin
        * @author Крайнов Дмитрий Олегович
        */
 

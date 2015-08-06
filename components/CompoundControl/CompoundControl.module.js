@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.CompoundControl', ['js!SBIS3.CORE.CompoundControl'], f
     * @extends $ws.proto.Control
     */
 
-   return Control.extend( /** @lends SBIS3.CONTROLS.Control.prototype */{
+   return Control.extend( /** @lends SBIS3.CONTROLS.CompoundControl.prototype */{
       $protected: {
          _options : {
             /**

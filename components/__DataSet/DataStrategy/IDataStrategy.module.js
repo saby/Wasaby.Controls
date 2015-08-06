@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.IDataStrategy', [], function () {
     * Интерфейс предназначен для унификации работы с исходными данными датасорсов
     * @class SBIS3.CONTROLS.IDataStrategy
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    return $ws.core.extend({}, /** @lends SBIS3.CONTROLS.IDataStrategy.prototype */{

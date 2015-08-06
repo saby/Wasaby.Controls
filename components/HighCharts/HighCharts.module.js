@@ -36,6 +36,7 @@ function(BaseControl, dotTpl){
     * @extends $ws.proto.Control
     * @control
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @category Table
     * @designTime actions /design/design
     * @initial
