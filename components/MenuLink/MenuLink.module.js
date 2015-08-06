@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
 
    /**
     * Контрол, отображающий кнопку в виде ссылки и выпадающее из нее меню
-    * @class SBIS3.Engine.MenuLink
+    * @class SBIS3.CONTROLS.MenuLink
 	* @demo SBIS3.CONTROLS.Demo.MyMenuLink
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
     * @ignoreEvents onFocusIn onFocusOut onReady onDragIn onDragStart onDragStop onDragMove onDragOut
     */
 
-   var MenuLink = Link.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.Engine.Link.prototype */ {
+   var MenuLink = Link.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuLink.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _zIndex: '',

@@ -182,7 +182,7 @@ define(
    /**
     * Класс для модели форматного поля
     */
-   var FormatModel = $ws.core.extend({}, /** @lends $ws.proto.FormatModel.prototype */{
+   var FormatModel = $ws.core.extend({}, {
       $protected: {
          _options: {
             /* позиция курсора: храним индекс группы в модели + позцию символа в ней. */
@@ -499,6 +499,7 @@ define(
     * @class SBIS3.CONTROLS.FormattedTextBoxBase
     * @extends SBIS3.CONTROLS.TextBoxBase
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var FormattedTextBoxBase = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.FormattedTextBoxBase.prototype */ {

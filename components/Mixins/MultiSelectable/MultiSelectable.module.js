@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
     * @author Крайнов Дмитрий Олегович
     */
 
-   var MultiSelectable = /**@lends SBIS3.CONTROLS.MultiSelectable.prototype  */{
+   var MultiSelectable = {
        /**
         * @event onSelectedItemsChange При смене выбранных элементов коллекции
         * @param {$ws.proto.EventObject} Дескриптор события.

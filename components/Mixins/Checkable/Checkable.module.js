@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
     * @author Крайнов Дмитрий Олегович
     */
 
-   var Checkable = /**@lends SBIS3.CONTROLS.Checkable.prototype  */{
+   var Checkable = {
        /**
         * @event onCheckedChange При изменении состояния кнопки
         * Событие срабатывает при нажатии на кнопку, выставления/снятия флажка, выборе радиокнопки.

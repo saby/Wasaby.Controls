@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.DataBindMixin', ['js!SBIS3.CORE.AttributeCfgParser'], 
      * @public
      * @author Крайнов Дмитрий Олегович
      */
-    var DataBindMixin = /**@lends SBIS3.CONTROLS.DataBindMixin.prototype  */{
+    var DataBindMixin = {
       $protected : {
          _dataBind : {}
       },

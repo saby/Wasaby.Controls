@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
     * @author Крайнов Дмитрий Олегович
     */
 
-   var IconMixin = /**@lends SBIS3.CONTROLS.IconMixin.prototype  */{
+   var IconMixin = {
       $protected: {
          _iconClass: '',
          _options: {

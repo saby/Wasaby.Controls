@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [], function() {
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var TreeMixin = /** @lends SBIS3.CONTROLS.TreeMixin.prototype */{
+   var TreeMixin = {
       $protected: {
          _openedPath : [],
          _ulClass : 'controls-TreeView__list',

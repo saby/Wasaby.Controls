@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.StaticSource', [
     * @class SBIS3.CONTROLS.StaticSource
     * @extends SBIS3.CONTROLS.BaseSource
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    return BaseSource.extend(/** @lends SBIS3.CONTROLS.StaticSource.prototype */{

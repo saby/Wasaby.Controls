@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
     * @public
     */
 
-   var Selectable = /**@lends SBIS3.CONTROLS.Selectable.prototype  */{
+   var Selectable = {
        /**
         * @event onSelectedItemChange При смене выбранных элементов
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.

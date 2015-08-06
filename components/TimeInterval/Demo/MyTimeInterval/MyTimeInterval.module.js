@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.Demo.MyTimeInterval', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Demo.MyTimeInterval', 'css!SBIS3.CONTROLS.Demo.MyTimeInterval', 'js!SBIS3.DemoCode.DateTime', 'js!SBIS3.CONTROLS.TimeInterval'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.CONTROLS.Demo.MyTimeInterval', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Demo.MyTimeInterval', 'css!SBIS3.CONTROLS.Demo.MyTimeInterval', 'js!SBIS3.CONTROLS.TimeInterval'], function(CompoundControl, dotTplFn) {
    /**
     * SBIS3.CONTROLS.Demo.MyTimeInterval
     * @class SBIS3.CONTROLS.Demo.MyTimeInterval
