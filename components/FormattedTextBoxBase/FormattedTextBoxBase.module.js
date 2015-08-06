@@ -182,7 +182,7 @@ define(
    /**
     * Класс для модели форматного поля
     */
-   var FormatModel = $ws.core.extend({}, {
+   var FormatModel = $ws.core.extend({}, /** @lends $ws.proto.FormatModel.prototype */{
       $protected: {
          _options: {
             /* позиция курсора: храним индекс группы в модели + позцию символа в ней. */

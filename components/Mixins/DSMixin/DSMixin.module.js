@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       };
    }
 
-   var DSMixin = {
+   var DSMixin = /**@lends SBIS3.CONTROLS.DSMixin.prototype  */{
        /**
         * @event onDrawItems После отрисовки всех элементов коллекции
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.

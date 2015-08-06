@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
     */
    'use strict';
 
-   var MenuButtonMixin = {
+   var MenuButtonMixin = /**@lends SBIS3.CONTROLS.MenuButtonMixin.prototype  */{
        /**
         * @event onMenuItemActivate При активации пункта меню
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.

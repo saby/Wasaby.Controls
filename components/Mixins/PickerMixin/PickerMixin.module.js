@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var PickerMixin = {
+   var PickerMixin = /** @lends SBIS3.CONTROLS.PickerMixin.prototype */{
       $protected: {
          _picker : null,
          _border : 0,

@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
     * @author Крайнов Дмитрий Олегович
     */
 
-   var CollectionMixin = {
+   var CollectionMixin = /**@lends SBIS3.CONTROLS.CollectionMixin.prototype  */{
       /**
        * @event onDrawItems После отрисовки всех элементов
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.

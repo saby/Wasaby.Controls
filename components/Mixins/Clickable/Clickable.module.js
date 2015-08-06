@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
     * @author Крайнов Дмитрий Олегович
     */
 
-   var Clickable = {
+   var Clickable = /**@lends SBIS3.CONTROLS.Clickable.prototype  */{
       /**
        * @event onActivated При активации кнопки (клик мышкой, кнопки клавиатуры)
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.

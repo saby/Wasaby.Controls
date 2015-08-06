@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
     * @author Крайнов Дмитрий Олегович
     * @public
     */
-   var PopupMixin = {
+   var PopupMixin = /** @lends SBIS3.CONTROLS.PopupMixin.prototype */ {
       $protected: {
          _targetSizes: {},
          _containerSizes: {},

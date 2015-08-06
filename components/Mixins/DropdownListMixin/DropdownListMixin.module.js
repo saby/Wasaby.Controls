@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
          */
         'use strict';
 
-        var DropdownListMixin = {
+        var DropdownListMixin = /**@lends SBIS3.CONTROLS.DropdownListMixin.prototype  */{
             $protected: {
                 _options: {
                    /**

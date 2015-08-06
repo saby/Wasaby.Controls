@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.DecorableMixin', [
     * @author Мальцев Алексей Александрович
     */
 
-   var DecorableMixin = {
+   var DecorableMixin = /** @lends SBIS3.CONTROLS.DecorableMixin.prototype */{
       $protected: {
          _options: {
             /**

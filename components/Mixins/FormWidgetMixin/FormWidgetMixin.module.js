@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var FormWidgetMixin = {
+   var FormWidgetMixin = /** @lends SBIS3.CONTROLS.FormWidgetMixin.prototype */{
        /**
         * @event onValidate При смене выбранных элементов
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
