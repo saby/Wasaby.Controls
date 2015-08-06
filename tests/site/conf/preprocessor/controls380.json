@@ -1,8 +1,8 @@
 {
-  "root": "C:\\inetpub\\InTestControls373",
-  "uid": "controls373",
+  "root": "C:\\inetpub\\InTestControls380",
+  "uid": "controls380",
   "protocol": "http",
-  "port": 2173,
+  "port": 2171,
   "scale": "auto",
   "checkrights": false,
   "loglevel": 5,
@@ -17,7 +17,7 @@
 	  "backend": {
 		"protocol": "http",
 		"host": "localhost",
-		"port": 173,
+		"port": 171,
 		"path": ""
 	  }
     }
