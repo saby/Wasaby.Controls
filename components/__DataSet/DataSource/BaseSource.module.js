@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
     * @class SBIS3.CONTROLS.BaseSource
     * @extends $ws.proto.Abstract
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    return $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.BaseSource.prototype */{

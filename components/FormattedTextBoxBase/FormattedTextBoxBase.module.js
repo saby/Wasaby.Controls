@@ -499,6 +499,7 @@ define(
     * @class SBIS3.CONTROLS.FormattedTextBoxBase
     * @extends SBIS3.CONTROLS.TextBoxBase
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var FormattedTextBoxBase = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.FormattedTextBoxBase.prototype */ {

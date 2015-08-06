@@ -92,7 +92,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              *         </div>
              *     </option>
              * </pre>
-             * @items
              */
             itemTemplate: '',
             afterFieldWrapper: arrowTpl,

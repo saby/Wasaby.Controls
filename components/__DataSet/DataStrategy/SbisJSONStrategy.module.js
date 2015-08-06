@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
      * @class SBIS3.CONTROLS.SbisJSONStrategy
      * @extends SBIS3.CONTROLS.IDataStrategy
      * @public
+     * @author Крайнов Дмитрий Олегович
      */
 
    var SbisJSONStrategy = IDataStrategy.extend(/** @lends SBIS3.CONTROLS.SbisJSONStrategy.prototype */{

@@ -6,6 +6,7 @@ define('js!SBIS3.CONTROLS.AdapterJSON', ['js!SBIS3.CONTROLS.AdapterBase'], funct
     * @class SBIS3.CONTROLS.AdapterJSON
     * @extends SBIS3.CONTROLS.AdapterBase
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    return AdapterBase.extend(/** @lends SBIS3.CONTROLS.AdapterJSON.prototype */{

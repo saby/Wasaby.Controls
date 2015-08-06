@@ -2,6 +2,7 @@ define ('js!SBIS3.CONTROLS.Collection', [], function(){
     /**
      * @class SBIS3.CONTROLS.Collection
      * @public
+     * @author Крайнов Дмитрий Олегович
      * @extends $ws.proto.Abstract
      */
    return $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.Collection.prototype */{

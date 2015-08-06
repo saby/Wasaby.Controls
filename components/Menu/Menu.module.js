@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.Menu', [
        /**
         * @cfg {ItemsMenu[]} Набор исходных данных, по которому строится отображение
         * @name SBIS3.CONTROLS.Menu#items
-        * @description
+        * @description Набор исходных данных, по которому строится отображение
         * @example
         * <pre>
         *     <options name="items" type="array">
