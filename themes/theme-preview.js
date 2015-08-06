@@ -108,6 +108,19 @@
             caption: 'Default toggle button'
          });
 
+         new ToggleButton({
+            element: 'bigToggleButton16',
+            caption: 'Toggle button icon 16',
+            icon: 'sprite:icon-16 icon-Alert icon-primary',
+            primary: true
+         });
+
+         new ToggleButton({
+            element: 'bigToggleButton24',
+            caption: 'Toggle button icon 24',
+            icon: 'sprite:icon-24 icon-Alert icon-primary'
+         });
+
          new Button({
             element: 'bigEllipsisDefaultButton',
             caption: 'Default button'
@@ -142,6 +155,20 @@
             element: 'normalPrimaryToggleButton',
             caption: 'Primary toggle button',
             primary: true
+         });
+
+         new ToggleButton({
+            element: 'normalTogglePrimaryButton16',
+            caption: 'Primary toggle button icon 16',
+            primary: true,
+            icon: 'sprite:icon-16 icon-Alert icon-attention'
+         });
+
+         new ToggleButton({
+            element: 'normalTogglePrimaryButton24',
+            caption: 'Primary toggle button icon 24',
+            primary: true,
+            icon: 'sprite:icon-24 icon-Alert icon-attention'
          });
 
          new Button({
@@ -201,54 +228,6 @@
             caption: 'Primary button 24x24',
             primary: true,
             icon: 'sprite:icon-24 icon-Alert icon-attention'
-         });
-
-         new Button({
-            element: 'lightDefaultButton',
-            caption: 'Light default button'
-         });
-
-         new Button({
-            element: 'lightDisabledDefaultButton',
-            caption: 'Light default button',
-            enabled: false
-         });
-
-         new Button({
-            element: 'lightEllipsisDefaultButton',
-            caption: 'Light default button'
-         });
-
-         new Button({
-            element: 'lightDefaultButton16',
-            caption: 'Light default button 16x16',
-            icon: 'sprite:icon-16 icon-Alert icon-primary'
-         });
-
-         new Button({
-            element: 'lightPrimaryButton',
-            caption: 'Light primary button',
-            primary: true
-         });
-
-         new Button({
-            element: 'lightDisabledPrimaryButton',
-            caption: 'Light primary button',
-            primary: true,
-            enabled: false
-         });
-
-         new Button({
-            element: 'lightEllipsisPrimaryButton',
-            caption: 'Light primary button',
-            primary: true
-         });
-
-         new Button({
-            element: 'lightPrimaryButton16',
-            caption: 'Light primary button 16x16',
-            primary: true,
-            icon: 'sprite:icon-16 icon-Alert icon-primary'
          });
 
          new IconButton({
@@ -344,12 +323,14 @@
 
          new CheckBoxGroup({
             element: 'checkBoxGroup1',
-            items: items
+            items: items,
+            displayField: 'title'
          });
 
          new CheckBoxGroup({
             element: 'checkBoxGroup2',
-            items: items
+            items: items,
+            displayField: 'title'
          });
 
          new RadioButton({
@@ -373,13 +354,15 @@
          new RadioGroup({
             element: 'radioGroup1',
             items: items,
-            selectedItem: 1
+            selectedItem: 1,
+            displayField: 'title'
          });
 
          new RadioGroup({
             element: 'radioGroup2',
             items: items,
-            selectedItem: 1
+            selectedItem: 1,
+            displayField: 'title'
          });
 
          new Switcher({
@@ -525,7 +508,7 @@
             },
             {
                id : 9,
-               title : 'Поросенок',
+               title : 'Длинный-длинный пункт меню, самый длинный',
                icon : 'sprite:icon-16 icon-Successful icon-done'
             },
             {
@@ -708,10 +691,10 @@
             enabled: false
          });
 
-         new FormattedTextBox({
+         new DatePicker({
             element: 'formattedTextBox1',
             text: '15:00:00',
-            mask: 'dd:dd:dd'
+            mask: 'HH:II:SS'
          });
 
          new FormattedTextBox({
@@ -783,13 +766,16 @@
          new ComboBox({
             element: 'comboBox1',
             editable: false,
-            items: comboItems
+            items: comboItems,
+            placeholder : 'Вводи годноту'
          });
 
          new ComboBox({
             element: 'comboBox2',
             editable: true,
-            items: comboItems
+            items: comboItems,
+            placeholder : 'Вводи годноту'
+
          });
 
          new ComboBox({

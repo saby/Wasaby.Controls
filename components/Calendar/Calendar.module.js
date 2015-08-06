@@ -16,17 +16,52 @@ define(
       'use strict';
 
       /**
-       * Календарь
+       * Календарь имеет соответствующее названию контрола визуальное отображение.
+       * Предназначен для задания даты путём выбора.
        * @class SBIS3.CONTROLS.Calendar
-       * @extends SBIS3.CORE.CompoundControl
+       * @extends $ws.proto.CompoundControl
        * @control
        * @public
+       * @author Крайнов Дмитрий Олегович
        * @demo SBIS3.CONTROLS.Demo.MyCalendar
-       * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
+       *
+       * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className
        * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
+       * @ignoreOptions extendedTooltip
+       *
+       * @ignoreMethods activate activateFirstControl activateLastControl addPendingOperation changeControlTabIndex
+       * @ignoreMethods destroyChild detectNextActiveChildControl disableActiveCtrl focusCatch getActiveChildControl
+       * @ignoreMethods getChildControlById getChildControlByName getChildControls getContext getEventBusOf moveFocus
+       * @ignoreMethods getImmediateChildControls getNearestChildControlByName getOpener getReadyDeferred isAllReady
+       * @ignoreMethods applyEmptyState applyState getClassName getEventHandlers getEvents getExtendedTooltip getOwnerId
+       * @ignoreMethods getLinkedContext getOwner getStateKey getUserData hasEvent hasEventHandlers makeOwnerName once
+       * @ignoreMethods sendCommand setClassName setExtendedTooltip setOpener setStateKey setUserData subscribe unsubscribe
+       * @ignoreMethods subscribeOnceTo unbind setProperties setProperty getProperty moveToTop registerChildControl
+       * @ignoreMethods registerDefaultButton setChildActive setSize storeActiveChild unregisterChildControl
+       * @ignoreMethods unregisterDefaultButton waitAllPendingOperations waitChildControlById waitChildControlByName
+       *
+       * @ignoreEvents onChange onClick onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onStateChange
+       * @ignoreEvents onTooltipContentRequest onPropertyChanged onActivate onBeforeControlsLoad onResize onAfterLoad
+       * @ignoreOptions onAfterShow onBeforeLoad onBeforeShow onReady onStateChanged
        */
 
       var Calendar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Calendar.prototype */{
+          /**
+           * @event onDateChange Срабатывает при изменении даты.
+           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+           * @param {String} date Дата.
+           * @example
+           * <pre>
+           *    calendar.subscribe('onDateChange', function(event, selectedDate){
+           *       // если выбрали 23е февраля, то сообщим об этом
+           *       if(selectedDate.getDay() === 23 && selectedDate.getMonth() === 1){
+           *          $ws.core.alert("Вы выбрали праздничный день - «День защитника Отечества»");
+           *       }
+           *    });
+           * </pre>
+           * @see setDate
+           * @see date
+           */
          $protected: {
             _dotTplFn: dotTplFn,
             _CalendarTableBodyTpl: CalendarTableBodyTpl,
@@ -39,9 +74,18 @@ define(
              */
             _options: {
                /**
-                * @cfg {Date} Значение даты в формате Date Object
-                */
-               date: undefined
+                 * @cfg {Date|String} Начальное значение даты, с которой откроется календарь
+                 * @remark
+                 * Строка должна быть формата ISO 8601.
+                 * @example
+                 * <pre class="brush:xml">
+                 *     <option name="date">2015-03-07T21:00:00.000Z</option>
+                 * </pre>
+                 * @see setDate
+                 * @see getDate
+                 * @see onDateChange
+                 */
+                date: undefined
             }
          },
 
@@ -155,8 +199,15 @@ define(
          },
 
          /**
-          * Установить дату по переданному объекту Date. Публичный метод.
-          * Отличается от приватного метода тем, что генерирует событие.
+          * Метод установки/замены даты.
+          * @param {Date} Новая дата.
+          * @example
+          * <pre>
+          *     this.getChildControlByName('Calendar').setDate(new Date(2008, 07, 08));
+          * </pre>
+          * @see date
+          * @see getDate
+          * @see onDateChange
           */
          setDate: function(date){
             date = date ? date : new Date();
@@ -196,8 +247,16 @@ define(
          },
 
          /**
-          * Получить текущее значение даты
-          * @returns {date}
+          * Метод получения текущего значения даты.
+          * @returns {Date} Значение даты в формате ISO 8601.
+          * @example
+          * <pre>
+          *     var date = this.getChildControlByName('Calendar').getDate();
+          *     textBox.setText(date);
+          * </pre>
+          * @see date
+          * @see setDate
+          * @see onDateChange
           */
          getDate: function(){
             return this._options.date;

@@ -14,6 +14,7 @@
 
 @font-basic-name:                         Tahoma, Geneva, sans-serif;
 @font-basic-size:                         13px;
+@font-popup-size:                         13px;
 @font-basic-line-height:                  20px;
 
 
@@ -56,18 +57,23 @@
 @button-padding:                          0 8px;
 @button-margin:                           auto;
 @button-border-radius:                    2px;
-@button-icon-top-offset:                  6px;                      // top offset of 16x16 icon
+@button-icon-top-offset:                  7px;                      // top offset of 16x16 icon
 @button-icon-left-offset:                 8px;
+@button-icon-gap:                         4px;                      // gap between icon and text
 @button-icon-text-margin:                 0 8px 0 28px;             // margin of text following 16x16 icon
-@button-icon-big-top-offset:              1px;                      // top offset of 24x24 icon
+@button-icon-big-top-offset:              2px;                      // top offset of 24x24 icon
+@button-icon-big-left-offset:             @button-icon-left-offset;
 @button-icon-big-text-margin:             0 8px 0 36px;             // margin of text following 24x24 icon
 @button-text-margin:                      0 8px;
+@button-text-margin-left:                 8px;
+@button-text-margin-right:                8px;
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
 
 // Normal default button
 @button-text-color:                       @gray-color;
-@button-border:                           1px solid @gray-light-color;
+@button-border-width:                     1px;
+@button-border:                           @button-border-width solid @gray-light-color;
 @button-shadow:                           none;
 @button-bg:                               @default-color;
 
@@ -112,13 +118,15 @@
 @button-big-padding:                      15px 20px;
 @button-big-margin:                       @button-margin;
 @button-big-border-radius:                6px;
-@button-big-icon-top-offset:              17px;                             // top offset of 16x16 icon
+@button-big-icon-top-offset:              19px;                             // top offset of 16x16 icon
 @button-big-icon-left-offset:             20px;
 @button-big-icon-text-margin:             0 20px 0 40px;                    // margin of text following 16x16 icon
-@button-big-icon-big-top-offset:          14px;                             // top offset of 24x24 icon
+@button-big-icon-big-top-offset:          16px;                             // top offset of 24x24 icon
 @button-big-icon-big-left-offset:         @button-big-icon-left-offset;
 @button-big-icon-big-text-margin:         0 20px 0 48px;                    // margin of text following 24x24 icon
 @button-big-text-margin:                  0 20px;
+@button-big-text-margin-left:             20px;
+@button-big-text-margin-right:            @button-big-text-margin-left;
 @button-big-text-padding:                 11px 0 0;
 @button-big-empty-text-margin:            @button-empty-text-margin;
 
@@ -176,9 +184,16 @@
 
 // Normal default button
 @button-checked-text-color:               @button-active-text-color;
+@button-checked-border-width:             @button-border-width;
 @button-checked-border:                   @button-active-border;
 @button-checked-shadow:                   @button-active-shadow;
 @button-checked-bg:                       @button-active-bg;
+@button-checked-text-margin-left:         @button-text-margin-left;
+@button-checked-text-margin-right:        @button-text-margin-right;
+@button-checked-icon-top-offset:          @button-icon-top-offset;
+@button-checked-icon-left-offset:         @button-icon-left-offset;
+@button-checked-icon-big-top-offset:      @button-icon-big-top-offset;
+@button-checked-icon-big-left-offset:     @button-icon-big-left-offset;
 
 // Normal primary button
 @button-primary-checked-text-color:       @button-primary-active-text-color;
@@ -191,6 +206,12 @@
 @button-big-checked-border:               @button-big-active-border;
 @button-big-checked-shadow:               @button-big-active-shadow;
 @button-big-checked-bg:                   @button-big-active-bg;
+@button-big-checked-text-margin-left:     @button-big-text-margin-left;
+@button-big-checked-text-margin-right:    @button-big-text-margin-right;
+@button-big-checked-icon-top-offset:      @button-big-icon-top-offset;
+@button-big-checked-icon-left-offset:     @button-big-icon-left-offset;
+@button-big-checked-icon-big-top-offset:  @button-big-icon-big-top-offset;
+@button-big-checked-icon-big-left-offset: @button-big-icon-big-left-offset;
 
 // Big primary button
 @button-big-primary-checked-text-color:   @button-big-primary-active-text-color;
@@ -267,9 +288,15 @@
 // ------------ //
 
 @radio-button-text-margin:                      0 8px;
+@radio-button-height:                           auto;
+@radio-button-lineheight:                       normal;
 
 @radio-button-text-color:                       @black-color;
 @radio-button-hover-text-color:                 @primary-color;
+@radio-button-hover-text-color-primary:         @radio-button-hover-text-color;
+@radio-button-hover-text-decoration:            none;
+@radio-button-hover-text-decoration-checked:    none;
+@radio-button-hover-text-decoration-disabled:   none;
 
 @radio-button-checked-text-color:               @radio-button-text-color;
 @radio-button-checked-hover-text-color:         @radio-button-hover-text-color;
@@ -295,8 +322,16 @@
 @radio-button-icon-disabled-checked-bg:         url(@radio-button-icon-spritesheet) 0 -48px;
 @radio-button-icon-disabled-checked-hover-bg:   @radio-button-icon-disabled-checked-bg;
 
-
-
+@radio-button-icon-margin:                      0;
+@radio-button-icon-border-style:                none;
+@radio-button-icon-border-color:                transparent;
+@radio-button-icon-border-color-checked:        @radio-button-icon-border-color;
+@radio-button-icon-border-color-disabled:       @radio-button-icon-border-color;
+@radio-button-icon-border-color-primary:        @radio-button-icon-border-color;
+@radio-button-icon-border-width:                0;
+@radio-button-icon-border-width-checked:        @radio-button-icon-border-width;
+@radio-button-icon-border-width-hover:          @radio-button-icon-border-width;
+@radio-button-icon-border-radius:               0;
 // ----------- //
 // Radio group //
 // ----------- //
@@ -484,9 +519,12 @@
 // ---- //
 
 @menu-margin:                             -1px 0 0;
+@menu-subpopup-margin:                    @menu-margin;
+@menu-padding:                            4px 0;
 @menu-border-width:                       1px;
 @menu-border-style:                       solid;
 @menu-border-color:                       @gray-light-color;
+@menu-border-radius:                      0;
 @menu-shadow:                             0 0 8px 1px #aaa;
 
 @menu-expand-width:                       16px;
@@ -506,7 +544,10 @@
 @menu-expand-hover-border-color:          @menu-expand-border-color;
 @menu-expand-hover-bg:                    url(@menu-expand-spritesheet) 0 -16px no-repeat;
 
-
+@menu-header-height:                      24px;
+@menu-big-header-height:                  32px;
+@menu-header-box-sizing:                  border-box;
+@menu-header-padding:                     4px;
 
 // --------- //
 // Menu item //
@@ -514,6 +555,7 @@
 @menu-item-cursor:                        pointer;
 @menu-item-width:                         auto;
 @menu-item-height:                        24px;
+@menu-big-item-height:                    32px;
 @menu-item-line-height:                   @menu-item-height;
 @menu-item-padding:                       0 16px 0 8px;
 
@@ -553,6 +595,7 @@
 
 // Default menu button
 @menu-button-text-right-margin:                         30px;                   //this margin reserve space for arrow-down icon
+@menu-button-checked-text-right-margin:                 @menu-button-text-right-margin;
 @menu-button-arrow-spritesheet:                         '';
 
 @menu-button-arrow-border-width:                        5px 5px 0 5px;
@@ -603,6 +646,7 @@
 // Menu
 @menu-button-menu-top-margin:                           3px;
 @menu-button-menu-left-margin:                          0;
+@menu-button-menu-padding:                              4px 0;   
 @menu-button-menu-border-width:                         @menu-border-width;
 @menu-button-menu-border-style:                         @menu-border-style;
 @menu-button-menu-border-color:                         @menu-border-color;
@@ -668,17 +712,11 @@
 @menu-link-checked-hover-text-decoration: @menu-link-checked-text-decoration;
 
 // Menu
-@menu-link-menu-left-margin:              -9px;
+@menu-link-menu-margin:                   0 0 0 -9px;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
 
 // Menu header
-@menu-link-header-width:                  100%;
-@menu-link-header-height:                 24px;
-@menu-link-header-height-big:             32px;
-@menu-link-header-padding:                0 8px;
-@menu-link-header-bottom-border:          1px solid #ededed;
-@menu-link-header-bg:                     @menu-link-menu-bg;
-
+@menu-link-header-padding:                6px;
 
 
 // --------- //
@@ -686,8 +724,8 @@
 // --------- //
 
 // Menu
-@menu-icon-menu-top-margin:               3px;
-@menu-icon-menu-left-margin:              2px;
+@menu-icon-menu-margin:                   -5px 0 0 -5px;
+@menu-icon-menu-padding:                  2px 0 0 2px;
 @menu-icon-menu-bg:                       @menu-button-menu-bg;
 
 // Menu header
@@ -1420,6 +1458,7 @@
 // CustomFilterMenu//
 // --------------- //
 @customFilterMenu-cursor:                         pointer;
+@customFilterMenu-border-color:                   #e4e4e4;
 
 @customFilterMenu-iconWidth:                      16px;
 @customFilterMenu-iconHeight:                     16px;
@@ -1435,26 +1474,37 @@
 
 @customFilterMenu-captionWrapper-margin:          0 19px 0 19px;
 @customFilterMenu-min-height:                     24px;
-@customFilterMenu-shadow-hover:                   0 0 0 1px @gray-light-color;
+@customFilterMenu-shadow-hover:                   0 0 0 1px @customFilterMenu-border-color;
 
 @customFilterMenu-picker-bg:                      @white-color;
-@customFilterMenu-picker-border:                  1px solid @gray-light-color;
-@customFilterMenu-picker-border-radius:           0;
-@customFilterMenu-picker-menu-item-padding:       4px;
-@customFilterMenu-picker-menu-item-margin:        0 8px;
+@customFilterMenu-picker-border:                  2px solid @customFilterMenu-border-color;
+@customFilterMenu-picker-head-border-radius:      5px 5px 0 0;
+@customFilterMenu-picker-list-border-radius:      0 0 5px 5px;
+@customFilterMenu-picker-list-right-border-radius:0 5px 5px 5px;
+@customFilterMenu-picker-list-left-border-radius: 5px 0 5px 5px;
+@customFilterMenu-picker-menu-item-padding:       4px 8px;
+@customFilterMenu-picker-menu-item-margin:        0;
 @customFilterMenu-picker-menu-item-color:         @white-color;
-@customFilterMenu-picker-menu-item-hover:         #E7F0F9;
-@customFilterMenu-picker-list-padding:            8px 0;
+@customFilterMenu-picker-menu-item-hover:         #E9FAFE;
+@customFilterMenu-picker-list-padding:            8px 0;//ProgressBar
 //ProgressBar
-@controls-ProgressBar-height:                       17px;
-@controls-ProgressBar-empty-bg:                     #F3F3F3;
-@controls-ProgressBar-progress-bg:                  #A2E68C;
-@controls-ProgressBar-progress-bg-grad:             linear-gradient(to top, #8DCF66, #B6F5A9);
-@controls-ProgressBar-border-radius:                8px;
-@controls-ProgressBar-side-space:                   40px;
+@controls-ProgressBar-height:                     17px;
+@controls-ProgressBar-empty-bg:                   #F3F3F3;
+@controls-ProgressBar-progress-bg:                #A2E68C;
+@controls-ProgressBar-progress-bg-grad:           linear-gradient(to top, #8DCF66, #B6F5A9);
+@controls-ProgressBar-border-radius:              8px;
+@controls-ProgressBar-side-space:                 40px;
 
 //Pager
-@controls-Pager-amount-text : @gray-color;
+@controls-Pager-amount-text :                     #999999;
+
+//FilterButton
+@controls-filterButton-picker-bg:                 #f7f3f0;
+@controls-filterButton-picker-border:             2px solid #e4e4e4;
+@controls-filterButton-button:                    url('img/filterButton.png') no-repeat;
+@controls-filterButton-button-height:             24px;
+@controls-filterButton-button-width:              30px;
+@controls-filterButton-height:                    40px;
 
 //DragNDropObject
 @drag-and-drop-object-bg:                          transparent url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABHtJREFUeNqsV19MI0UY/7Zd0yJthRa8StJqjwgx2BKokBgTUSEUuT7wIJcjZ4xCcpdgfPDBF5N79MmY+MgdiZw+EMnFF+IfTMQcR0w4oAKVSIocBVFS6zW97baUttuu863dTbfdFrrXSb7M9Jv5vvnNb34zs6U2NjZ4ePxyu6ur6z01gZTP5+O7u7vLDuB5vqKPLAAoihJAuN3uqkHQuVyu7GTUj28AeH6uCIJlWejo6IDDw8N319bW2mmavl0wbJcwc7cSAA0CwGRo4XAYAoGAYLD8OvDP9EkTiWNEE32xWAwaGxvBZrMByfVyfX19v8vlgmw2i7/bCMOvncmAmNAUHoFM4x0wPRiB41w3WF+8gbPAq1/+DkyEAeYhA8FPPLIEyADGm81mSCQSuIjLVqt1L5lMgsPhgFAo9Oz6+nqbVqv15UMihJUDRQARzgkt8beBt1+CwEMvXMj7l955oew2IYDp6WkozNPT0yPUBAjU1dUJIIxGI0PA7RG9WAgrQPRyINMABicNH8Fx7FNg+SvQ0EBLfs+dIMRjcYg/Isb8b6HPR4T+8fFxGTiiA6E+OTkRapPJBMhGNBp1EbB7eb1YVldXobe394DGvRKRWywWSOhvgIG0yV5K/oW3njv3CRHz4XbMz89D4QJ1Op2gF/QhiJWVlRPZFhCawGAwKE6gNJmSH/Nt/s2C1fkKuO0Nkn9nZwe2t7eL9WKTAdjc3BRWkMlkgOM4yYp/F/owHm1iYkIC0NliKAGHeZX0IgPQ2dlZ1SWk5Md8/lACslwWODyKpO5xmIV+Jb3IROj3+1UzgMkxB7aPfHelVXq9XglYMXicS8aA0+lUdR0XMzA0NKToV9KLDABRpoCqGhPj+/v7paSzs7NS3/DwsNBP7gLA81+sF9kxtNvtqvdf7MN8Y2NjJeObm5thcHCwhBUZA/gWYFtEL1rxb9En7jnWooDx9+LiohRDbjyJgZmZmRK9yESIKNXsf6Ef8w0MDJT4m5qawOPxVGaAYRjZqsTVKrULazR8eMSkW1tbUl9ra6vgJ1exwEyxXuSvIbm31Z7/wlXhc1w8Hm9ZcveX6IVWOh5qQYgAgsGgNBG+iFjH43Hhpi3WS1kAlUAwbAKW1/wQ2D+CVDpTMsb34N7Hit9/1NEHhif1S2lKd+slZ/txiQjPAyL0bwS++mYBTlNpNd+gxmg65f1+8Ze+aJS5TijYld0DZ4F4xLDwxdfzaieXAbl3/9ebF1vMVxW3oByQn5bvCy9ajYox+Ff4mgzAU/9YiDRJgyP7hXW+Dfn2b/4PgcvoawWA5Er1yT7LmQuRsoOTp6cQS3xGWimoYTHKAJxVMpk01LoIAObm5s43OssJHxm1KuQPFUtPTk5SSp1TU1PXRkdHZb4/Do7fDx7+6aoVAL1et0SX61Ri5mmzcXl/n2sjLDy2ErUaDXvR5rhFVRNEWHFzvKbtux8WbhKARrWTa8jkl94cuk5TuV1NNYHIiobndjvan7/6BK39NstxLIffhuc0HI9xGI95MN9/AgwAe9CKFRkrHCkAAAAASUVORK5CYII=') no-repeat;

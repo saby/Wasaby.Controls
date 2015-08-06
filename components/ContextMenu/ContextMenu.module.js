@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.ContextMenu', ['js!SBIS3.CONTROLS.Menu', 'js!SBIS3.CON
     * @class SBIS3.CONTROLS.ContextMenu
     * @control
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS.CollectionMixin
     */
@@ -32,6 +33,10 @@ define('js!SBIS3.CONTROLS.ContextMenu', ['js!SBIS3.CONTROLS.Menu', 'js!SBIS3.CON
       },
       _onMenuConfig : function(config) {
          return config;
+      },
+      _drawItemsCallback: function() {
+         ContextMenu.superclass._drawItemsCallback.apply(this, arguments);
+         this.recalcPosition(true);
       }
    });
 

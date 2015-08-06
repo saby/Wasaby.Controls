@@ -13,12 +13,38 @@ define(
       'use strict';
 
       /**
-       * Можно вводить только значения особого формата даты.
+       * Контрол предназначен для ввода информации о количестве времени с точностью от дня до минуты.
+       * Можно вводить только значения особого формата даты ISO_8601 с точностью от дней до минут.
        * @class SBIS3.CONTROLS.TimeInterval
        * @extends SBIS3.CONTROLS.FormattedTextBoxBase
+       * @control
+       * @demo SBIS3.CONTROLS.Demo.MyTimeInterval
+       * @public
+       * @author Крайнов Дмитрий Олегович
        */
 
       var TimeInterval = FormattedTextBoxBase.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.TimeInterval.prototype */{
+          /**
+           * @event onChangeInterval Срабатывает при изменении временного интервала.
+           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+           * @param {String} interval Количество времени.
+           * @example
+           * <pre>
+           *     var prevInterval = timeInterval.getInterval();
+           *     var onChangeIntervalFn = function(event, interval) {
+           *        if (prevInterval != interval) {
+           *           buttonUpdate.setEnabled(true);
+           *        }
+           *     };
+           *     timeInterval.subscribe('onChangeInterval', onChangeIntervalFn);
+           * </pre>
+           * @see interval
+           * @see mask
+           * @see setInterval
+           * @see setDays
+           * @see setHours
+           * @see setMinutes
+           */
          $protected: {
             _dotTplFn: dotTplFn,
             /**
@@ -61,16 +87,61 @@ define(
              */
             _options: {
                /**
-                * @cfg {String} Формат отображения даты, на базе которой будет создана html-разметка и в соответствии с которой
-                * будет определён весь функционал. Должна представлять собой одну из масок в массиве допустимых маск.
-                * <wiTag group="Отображение" page=1>
-                * @variant 'DD:HH:II',
-                * @variant 'DD:HH',
-                * @variant 'HH:II',
+                * @cfg {String} Формат отображения данных
+                * @remark
+                * На базе формата, заданного в этой опции, будет создана html-разметка, в соответствии с которой
+                * определяется весь функционал.
+                * Необходимо выбрать одну из масок в массиве допустимых значений.
+                * Допустимые символы в маске:
+                * <ol>
+                *    <li>D(day) - календарный день.</li>
+                *    <li>H(hour) - час.</li>
+                *    <li>I - минута.</li>
+                *    <li>":" - используется в качестве разделителя.</li>
+                * </ol>
+                * @example
+                * <pre>
+                *     <option name="mask">DD:HH:II</option>
+                * </pre>
+                * @variant 'DD:HH:II'
+                * @variant 'DD:HH'
+                * @variant 'HH:II'
+                * @variant 'DDDD:HH:II'
+                * @variant 'DDD:HH:II'
+                * @variant 'HHHH:II'
+                * @variant 'HHH:II'
+                * @variant 'DDDD:HH'
+                * @variant 'DDD:HH'
+                * @see interval
+                * @see setInterval
+                * @see setDays
+                * @see setHours
+                * @see setMinutes
                 */
                mask: 'DD:HH',
                /**
-                * Интервал
+                * @cfg {String} Временной интервал
+                * @remark
+                * В качестве значения опция принимает строку вида: P*DT*H*M, где:
+                * <ul>
+                *    <li>P - обозначение начала задания даты. Значение опции всегда должно начинаться с этого символа,
+                *    даже при необходимости задать только время;</li>
+                *    <li>D - указывает на то, что стоящее перед этим символом число является количеством дней;</li>
+                *    <li>T - обозначение начала задания времени;</li>
+                *    <li>H - ставится после количества часов;</li>
+                *    <li>M - ставится после количества минут.</li>
+                * </ul>
+                * @example
+                * <pre>
+                *    <option name="interval">PT20H0M</option>
+                * </pre>
+                * @see mask
+                * @see onChangeInterval
+                * @see setInterval
+                * @see getInterval
+                * @see setDays
+                * @see setHours
+                * @see setMinutes
                 */
                interval: undefined
             }
@@ -90,22 +161,55 @@ define(
             this.subscribe('onInputFinished',self._updateTextByTimeInterval);
          },
          /**
-          * Устанавливаем кол-во дней
-          * @param days
+          * Устанавливаем количество дней.
+          * @param days Дни в интервале.
+          * @example
+          * <pre>
+          *     timeInterval.setDays(2);
+          * </pre>
+          * @see interval
+          * @see mask
+          * @see setInterval
+          * @see setHours
+          * @see setMinutes
+          * @see getInterval
+          * @see onChangeInterval
           */
          setDays: function (days) {
             this._setSection(days, "days");
          },
          /**
-          * Устанавливаем кол-во часов
-          * @param hours
+          * Устанавливаем количество часов.
+          * @param hours Часы в интервале.
+          * @example
+          * <pre>
+          *     timeInterval.setHours(30);
+          * </pre>
+          * @see interval
+          * @see mask
+          * @see setInterval
+          * @see setDays
+          * @see setMinutes
+          * @see getInterval
+          * @see onChangeInterval
           */
          setHours: function (hours) {
             this._setSection(hours, "hours");
          },
          /**
-          * Устанавливаем кол-во минут
-          * @param minutes
+          * Устанавливаем количество минут.
+          * @param minutes Минуты в интервале.
+          * @example
+          * <pre>
+          *     timeInterval.setMinutes(50);
+          * </pre>
+          * @see interval
+          * @see mask
+          * @see setInterval
+          * @see setDays
+          * @see setHours
+          * @see getInterval
+          * @see onChangeInterval
           */
          setMinutes: function (minutes) {
             this._setSection(minutes, "minutes");
@@ -125,7 +229,38 @@ define(
 
          /**
           * Установить интервал.
-          * @param interval
+          * @param {String} interval Количество времени. В качестве значения принимает строку вида 'P*DT*H*M', где:
+          * <ul>
+          *    <li>P - обозначение начала задания даты. Строка всегда должна начинаться с этого символа,
+          *    даже при необходимости задать только время;</li>
+          *    <li>D - указывает на то, что стоящее перед этим символом число является количеством дней;</li>
+          *    <li>T - обозначение начала задания времени;</li>
+          *    <li>H - ставится после количества часов;</li>
+          *    <li>M - ставится после количества минут.</li>
+          * </ul>
+          * Можно передать, например, строку 'PT1530M', при маске 'HH:II' будет установлено значение 25:30,
+          * а при маске 'DD:HH:II' - 01:01:30.
+          * @example
+          * Зададим значение 2 дня 30 часов и 50 минут, вывод зависит от маски.
+          * Массивом - важен порядок:
+          * <pre>
+          *     timeInterval.setInterval([2,30,50]);
+          * </pre>
+          * Строкой:
+          * <pre>
+          *     timeInterval.setInterval('P2DT30H50M');
+          * </pre>
+          * Объектом:
+          * <pre>
+          *     timeInterval.setInterval({days:2, hours:30, minutes: 50});
+          * </pre>
+          * @see interval
+          * @see getInterval
+          * @see setDays
+          * @see setHours
+          * @see setMinutes
+          * @see mask
+          * @see onChangeInterval
           */
          setInterval: function ( interval ) {
             this.timeInterval.set(interval);
@@ -133,7 +268,22 @@ define(
             this._notify('onChangeInterval', this.timeInterval.getValue());
          },
          /**
-          * Получить интервал
+          * Метод получения интервала, заданного либо опцией {@link interval}, либо методом {@link setInterval} возвращает
+          * значение строкой вида 'P*DT*H*M', где:
+          * <ul>
+          *    <li>P - обозначение начала задания даты;</li>
+          *    <li>D - указывает на то, что стоящее перед этим символом число является количеством дней;</li>
+          *    <li>T - обозначение начала задания времени;</li>
+          *    <li>H - число перед этим символом является количеством часов;</li>
+          *    <li>M - счисло перед этим символом является количеством минут.</li>
+          * </ul>
+          * @example
+          * <pre>
+          *     var interval = timeInterval.getInterval();
+          *     textInterval.setText(interval);
+          * </pre>
+          * @see interval
+          * @see setInterval
           */
          getInterval: function(){
             return this.timeInterval.getValue();
@@ -157,10 +307,7 @@ define(
          _hasMaskSection: function(section){
             return this._options.mask.indexOf(section) > -1;
          },
-         /**
-          * Устанавливаем текст и обновляем интервал
-          * @param text
-          */
+
          setText: function(text){
             text = this._getTextCorrespondingToMask(text);
             TimeInterval.superclass.setText.apply(this, [text]);

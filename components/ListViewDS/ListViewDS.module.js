@@ -29,12 +29,12 @@ define('js!SBIS3.CONTROLS.ListViewDS',
        * Умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
        * @class SBIS3.CONTROLS.ListViewDS
        * @extends $ws.proto.Control
+       * @author Крайнов Дмитрий Олегович
        * @mixes SBIS3.CONTROLS.DSMixin
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
        * @public
        * @demo SBIS3.CONTROLS.Demo.MyListViewDS
-       * @author Крайнов Дмитрий Олегович
        */
 
       var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
@@ -282,7 +282,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                this._elemClickHandler(id, this._dataSet.getRecordByKey(id), e.target);
             }
             if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGrid__th__checkBox')){
-               $target.hasClass('controls-DataGrid__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
+               $target.hasClass('controls-DataGrid__th__checkBox__checked') ? this.setSelectedKeys([]) : this.setSelectedItemsAll();
                $target.toggleClass('controls-DataGrid__th__checkBox__checked');
             }            
          },

@@ -43,9 +43,9 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
              */
             arrowActivatedHandler: undefined,
             /**
-             * Разрешить перемещать элементы с помощью DragAndDrop
-             * @type {Boolean}
-             */
+            * Разрешить перемещать элементы с помощью DragAndDrop
+            * @type {Boolean}
+            */
             allowDragNDropMove: true
          },
          _dragStartHandler: undefined
@@ -212,11 +212,12 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
                      this._options.arrowActivatedHandler.apply(this, arguments);
                   }
                } else if (data.get(this._options.hierField + '@')) {
-                  var self = this;
-                  self.setCurrentRoot(nodeID);
+                  this.setCurrentRoot(nodeID);
                }
             } else {
-               this.toggleNode(nodeID);
+               if (data.get(this._options.hierField + '@')) {
+                  this.toggleNode(nodeID);
+               }
             }
          }
       },

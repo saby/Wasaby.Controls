@@ -4,9 +4,35 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
     * @mixin SBIS3.CONTROLS.MultiSelectable
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var MultiSelectable = /**@lends SBIS3.CONTROLS.MultiSelectable.prototype  */{
+       /**
+        * @event onSelectedItemsChange При смене выбранных элементов коллекции
+        * @param {$ws.proto.EventObject} Дескриптор события.
+        * @param {Array.<String>} idArray Массив ключей выбранных элементов.
+        * @example
+        * <pre>
+        *     var itemsChanged = function() {
+        *        var count = this.getSelectedKeys().length;
+        *        if (count < 1) {
+        *           info.setText('Выберите хотя бы 1 вариант');
+        *        } else {
+        *           info.setText('');
+        *        }
+        *     }
+        *     checkBoxGroup.subscribe('onSelectedItemsChange', itemsChanged);
+        * </pre>
+        * @see selectedKeys
+        * @see setSelectedKeys
+        * @see setSelectedItemsAll
+        * @see addItemsSelection
+        * @see removeItemsSelection
+        * @see removeItemsSelectionAll
+        * @see toggleItemsSelection
+        * @see toggleItemsSelectionAll
+        */
       $protected: {
          _options: {
             /**
@@ -28,12 +54,33 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
              *     </options>
              * </pre>
              * @see multiselect
+             * @see allowEmptySelection
+             * @see setSelectedKeys
+             * @see getSelectedKeys
+             * @see addItemsSelection
+             * @see removeItemsSelection
+             * @see removeItemsSelectionAll
+             * @see toggleItemsSelection
+             * @see toggleItemsSelectionAll
              */
             selectedKeys : [],
             /**
              * TODO Выбранные элементы
+             * @deprecated Будет удалено с 3.7.3. Используйте {@link selectedKeys}.
              */
             selectedItems : [],
+             /**
+              * @cfg {Boolean} Разрешить отсутствие выбранного элемента в группе
+              * @example
+              * <pre>
+              *     <option name="allowEmptySelection">false</option>
+              * </pre>
+              * @see selectedKeys
+              * @see removeItemsSelectionAll
+              * @see removeItemsSelection
+              * @see toggleItemsSelection
+              * @see toggleItemsSelectionAll
+              */
             allowEmptySelection : true
          },
          _selectedRecords: []
@@ -41,7 +88,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       $constructor: function() {
          this._publish('onSelectedItemsChange');
-         if (this._options.selectedItems) {
+         if (this._options.selectedItems && this._options.selectedItems.length) {
             $ws.single.ioc.resolve('ILogger').log('selectedItems', 'c 3.7.3 метод selectedItems перестанет работать. Используйте метод selectedKeys');
             this._options.selectedKeys = this._options.selectedItems;
          }
@@ -66,6 +113,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       /**
        * Метод-заглушка. Будет переделан на установку самих элементов, а не их id
+       * @deprecated Будет удалено с 3.7.3. Используйте {@link setSelectedKeys}.
        */
       setSelectedItems: function(idArray) {
          //TODO изменить логику на установку выбранных элементов
@@ -75,6 +123,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       /**
        * Метод-заглушка. Будет переделан на получение самих элементов, а не их id
+       * @deprecated Будет удалено с 3.7.3. Используйте {@link getSelectedKeys}.
        */
       getSelectedItems: function() {
          //TODO изменить логику на получение выбранных элементов
@@ -83,8 +132,17 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       /**
-       * Устанавливает выбранные элементы по id
-       * @param idArray
+       * Устанавливает выбранные элементы по id.
+       * @param {Array} idArray Массив идентификаторов выбранных элементов.
+       * @example
+       * <pre>
+       *    if (!checkBoxGroup.getSelectedKeys().length) {
+       *       checkBoxGroup.setSelectedKeys([1,3]);
+       *    }
+       * </pre>
+       * @see getSelectedKeys
+       * @see removeItemsSelection
+       * @see addItemsSelection
        */
       setSelectedKeys : function(idArray) {
          if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
@@ -111,7 +169,19 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       /**
-       * Устанавливает все элементы выбранными
+       * Устанавливает все элементы выбранными.
+       * @example
+       * <pre>
+       *     if (checkBox.isChecked()) {
+       *        checkBoxGroup.setSelectedItemsAll();
+       *     }
+       * </pre>
+       * @see selectedKeys
+       * @see removeItemsSelection
+       * @see removeItemsSelectionAll
+       * @see getSelectedKeys
+       * @see addItemsSelection
+       * @see multiselect
        */
       setSelectedItemsAll : function() {
          if (this._dataSet) {
@@ -125,15 +195,38 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       /**
-       * Получает индексы выбранных элементов
+       * Получает индентификаторы выбранных элементов.
+       * @example
+       * <pre>
+       *    if (!checkBoxGroup.getSelectedKeys().length) {
+       *       checkBoxGroup.setSelectedKeys([1,3]);
+       *    }
+       * </pre>
+       * @see selectedKeys
+       * @see setSelectedKeys
+       * @see addItemsSelection
+       * @see multiselect
        */
       getSelectedKeys : function() {
          return this._options.selectedKeys;
       },
 
       /**
-       * Добавить элементы в набор выбранных
-       * @param idArray
+       * Добавить указанные элементы в набор выбранных.
+       * @param {Array} idArray Массив идентификаторов добавляемых к выбранным элементов.
+       * @example
+       * <pre>
+       *    var keys = checkBoxGroup.getSelectedKeys();
+       *    if (keys.indexOf(1)) {
+       *       checkBoxGroup.addItemsSelection([2]);
+       *    }
+       * </pre>
+       * @see setSelectedKeys
+       * @see getSelectedKeys
+       * @see setSelectedItemsAll
+       * @see removeItemsSelection
+       * @see removeItemsSelectionAll
+       * @see multiselect
        */
       addItemsSelection : function(idArray) {
          if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
@@ -162,8 +255,17 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       /**
-       * Удаляет элементы из набора выбранных
-       * @param idArray
+       * Удаляет указанные элементы из набора выбранных.
+       * @param {Array} idArray Массив идентификаторов элементов к удалению из выбранных.
+       * @example
+       * <pre>
+       *     if (checkBox.isChecked()) {
+       *        checkBoxGroup.removeItemsSelection([2]);
+       *     }
+       * </pre>
+       * @see removeItemsSelectionAll
+       * @see getSelectedKeys
+       * @see allowEmptySelection
        */
       removeItemsSelection : function(idArray) {
          if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
@@ -185,15 +287,36 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       /**
-       * Убрать все элементы из набора выбранных
+       * Убрать все элементы из набора выбранных.
+       * @example
+       * <pre>
+       *     if (checkBoxGroup.getSelectedKeys().indexOf(3))  {
+       *        checkBoxGroup.removeItemsSelectionAll();
+       *        checkBoxGroup.setSelectedKeys([3]);
+       *     }
+       * </pre>
+       * @see removeItemsSelection
+       * @see getSelectedKeys
+       * @see toggleItemsSelectionAll
+       * @see allowEmptySelection
        */
       removeItemsSelectionAll : function() {
          this.setSelectedKeys([]);
       },
 
       /**
-       * Меняет состояние элементов на противоположное
-       * @param idArray
+       * Меняет состояние выбранности указанных элементов на противоположное.
+       * @param {Array} idArray Массив идентификаторов элементов для инвертирования отметки.
+       * @example
+       * <pre>
+       *     if (needToggle) {
+       *        checkBoxGroup.toggleItemsSelection([2,3]);
+       *     }
+       * </pre>
+       * @see getSelectedKeys
+       * @see setSelectedKeys
+       * @see toggleItemsSelectionAll
+       * @see multiselect
        */
       toggleItemsSelection : function(idArray) {
          if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
@@ -229,7 +352,17 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       /**
-       * Меняет состояние выбранности всех элементов на противоположное
+       * Меняет состояние выбранности всех элементов на противоположное.
+       * @example
+       * <pre>
+       *     if (checkBoxGroup.getSelectedKeys().count == 0) {
+       *        checkBoxGroup.toggleItemsSelectionAll();
+       *     }
+       * </pre>
+       * @see removeItemsSelectionAll
+       * @see toggleItemsSelection
+       * @see multiselect
+       * @see allowEmptySelection
        */
       toggleItemsSelectionAll : function() {
          if (this._dataSet) {

@@ -18,6 +18,7 @@ define('js!SBIS3.CONTROLS.Menu', [
     * Контрол, отображающий меню, всплывающее в определенном месте страницы
     * @class SBIS3.CONTROLS.Menu
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @extends SBIS3.CONTROLS.ButtonGroupBase
     * @mixes SBIS3.CONTROLS.TreeMixin
     */
@@ -26,7 +27,7 @@ define('js!SBIS3.CONTROLS.Menu', [
       /**
        * @event onMenuItemActivate При активации пункта меню
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {String} ID Идентификатор нажатого пункта.
+       * @param {String} id Идентификатор нажатого пункта.
        * @example
        * При выборе пункта меню данный ключ ставится в значение комбобокса
        * <pre>
@@ -67,6 +68,10 @@ define('js!SBIS3.CONTROLS.Menu', [
         *         </options>
         *      </options>
         * </pre>
+        * @see displayField
+        * @see keyField
+        * @see hierField
+        * @see onMenuItemActivate
         */
 
       $protected: {
@@ -196,7 +201,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          target = $(target);
          var config = this._getSubMenuConfig(isFirstLevel, item);
 
-         config.element = $('<div class="controls-Menu__Popup"></div>');
+         config.element = $('<div class="controls-Menu__Popup controls-Menu__SubMenuPopup"></div>');
          if (this._container.hasClass('controls-Menu__32px')) {
             config.element.addClass('controls-Menu__32px');
          }
@@ -287,6 +292,11 @@ define('js!SBIS3.CONTROLS.Menu', [
         *       }
         *    ]);
         * </pre>
+        * @see items
+        * @see hierField
+        * @see keyField
+        * @see destroySubMenu
+        * @see hasSubMenu
         */
       addSubMenu : function(pointsArr, id) {
          for (var i = 0; i < pointsArr.length; i++) {
@@ -295,6 +305,10 @@ define('js!SBIS3.CONTROLS.Menu', [
          }
          this._drawItems();
       },
+       /**
+        * Метод разрушению подменю по идентификатору.
+        * @param {String|Number} id
+        */
       destroySubMenu : function(id) {
          var childItems = this._items.getChildItems(id);
          for (var i = 0; i < childItems.length; i++) {
@@ -302,11 +316,20 @@ define('js!SBIS3.CONTROLS.Menu', [
          }
          this._drawItems();
       },
-
+       /**
+        * Метод получения признака существования подменю
+        * @param id
+        * @returns {*}
+        */
       hasSubMenu : function(id) {
          return this._items.hasChild(id)
       },
-
+       /**
+        * Метод замены текста пункта меню
+        * @param {String|Number} id Идентификатор пункта меню.
+        * @param {String} title Новый текст пункта меню.
+        * @see items
+        */
       setItemTitle : function(id, title) {
          var item = this._items.getItem(id);
          item.title = title;
