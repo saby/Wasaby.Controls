@@ -331,11 +331,16 @@
 @radio-button-icon-border-color-disabled:       @gray-light-color;
 @radio-button-icon-border-color-primary:        @link-hover-text-color;
 @radio-button-icon-border-width:                1px;
-@radio-button-icon-border-width-checked:        2px;
-@radio-button-icon-border-width-hover:          3px;
 @radio-button-icon-border-radius:               5px;
 
-// ----------- //
+@radio-button-dot-size:                         4px;
+@radio-button-dot-radius:                       @radio-button-dot-size / 2;
+@radio-button-dot-color:                        @radio-button-icon-border-color-checked;
+@radio-button-dot-color-primary:                @radio-button-icon-border-color-primary;
+@radio-button-dot-color-disabled:               @radio-button-icon-border-color-disabled;
+@radio-button-dot-margin:                       (@radio-button-icon-width - @radio-button-dot-size) / 2  - @radio-button-icon-border-width;
+
+   // ----------- //
 // Radio group //
 // ----------- //
 

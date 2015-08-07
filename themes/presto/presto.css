@@ -510,13 +510,18 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 0;
   border-radius: 0;
 }
+.controls-RadioButton .controls-RadioButton__icon::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: transparent;
+  margin: 10px;
+  border-radius: 2px;
+  display: none;
+}
 .controls-RadioButton:hover .controls-RadioButton__caption {
   color: #ffcc99;
   text-decoration: none;
-}
-.controls-RadioButton:hover .controls-RadioButton__icon {
-  border-width: 0;
-  border-color: transparent;
 }
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__caption {
   color: #ffffff;
@@ -525,7 +530,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__icon {
   background: url('img/RadioButton-sprite.png') 0 -52px;
   border-color: transparent;
-  border-width: 0;
+}
+.controls-RadioButton.controls-Checked__checked .controls-RadioButton__icon::before {
+  display: block;
 }
 .controls-RadioButton.controls-Checked__checked:hover .controls-RadioButton__caption {
   color: #ffcc99;
@@ -533,20 +540,18 @@ input[type="reset"]::-moz-focus-inner {
 .controls-RadioButton.controls-Checked__checked:hover .controls-RadioButton__icon {
   background: url('img/RadioButton-sprite.png') 0 -52px;
   border-color: transparent;
-  border-width: 0;
 }
 .controls-RadioButton.controls-Radio__primary.controls-Checked__checked .controls-RadioButton__icon {
   border-color: transparent;
+}
+.controls-RadioButton.controls-Radio__primary.controls-Checked__checked .controls-RadioButton__icon::before {
+  background: transparent;
 }
 .controls-RadioButton.controls-Radio__primary.controls-Checked__checked:hover .controls-RadioButton__caption {
   color: #ffcc99;
 }
 .controls-RadioButton.controls-Radio__primary:hover .controls-RadioButton__caption {
   color: #ffcc99;
-}
-.controls-RadioButton.controls-Radio__primary:hover .controls-RadioButton__icon {
-  border-color: transparent;
-  border-width: 0;
 }
 .controls-RadioButton.ws-disabled {
   cursor: text;
@@ -560,7 +565,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-RadioButton.ws-disabled.controls-Checked__checked .controls-RadioButton__icon {
   border-color: transparent;
-  border-width: 0;
+}
+.controls-RadioButton.ws-disabled.controls-Checked__checked .controls-RadioButton__icon::before {
+  background: transparent;
 }
 .controls-RadioButton.ws-disabled.controls-Checked__checked:hover .controls-RadioButton__caption {
   color: #aaaaaa;
@@ -570,10 +577,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-RadioButton.ws-disabled:hover .controls-RadioButton__icon {
   border-color: transparent;
-  border-width: 0;
-}
-.controls-RadioButton.ws-disabled:hover.controls-Checked__checked .controls-RadioButton__icon {
-  border-width: 0;
 }
 .controls-RadioGroup .controls-ListView__item {
   display: inline-block;
