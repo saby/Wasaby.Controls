@@ -286,7 +286,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ButtonGroup .controls-ListView__item {
   display: inline-block;
-  margin: 0 12px 0 0;
+  margin: 0;
 }
 .controls-ButtonGroup.controls-ButtonGroup__vertical .controls-ListView__item {
   display: block;
@@ -493,7 +493,7 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 24px;
 }
 .controls-RadioButton .controls-RadioButton__caption {
-  margin: 0;
+  margin: 0 6px 0 0;
   color: #000000;
 }
 .controls-RadioButton .controls-RadioButton__icon {
@@ -502,7 +502,7 @@ input[type="reset"]::-moz-focus-inner {
   height: 10px;
   line-height: 10px;
   background: #ffffff;
-  margin: 8px 6px 0 0;
+  margin: 8px 6px 0 6px;
   box-sizing: border-box;
   float: left;
   border-style: solid;
@@ -580,7 +580,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-RadioGroup .controls-ListView__item {
   display: inline-block;
-  margin: 0 12px 0 0;
+  margin: 0;
 }
 .controls-RadioGroup.controls-ButtonGroup__vertical .controls-ListView__item {
   display: block;
@@ -667,7 +667,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CheckBoxGroup .controls-ListView__item {
   display: inline-block;
-  margin: 0 12px 0 0;
+  margin: 0;
 }
 .controls-CheckBoxGroup.controls-ButtonGroup__vertical .controls-ListView__item {
   display: block;
