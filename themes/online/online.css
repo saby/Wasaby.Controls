@@ -286,7 +286,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ButtonGroup .controls-ListView__item {
   display: inline-block;
-  margin: 0 12px 0 0;
+  margin: 0;
 }
 .controls-ButtonGroup.controls-ButtonGroup__vertical .controls-ListView__item {
   display: block;
@@ -493,7 +493,7 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 24px;
 }
 .controls-RadioButton .controls-RadioButton__caption {
-  margin: 0;
+  margin: 0 6px 0 0;
   color: #000000;
 }
 .controls-RadioButton .controls-RadioButton__icon {
@@ -502,7 +502,7 @@ input[type="reset"]::-moz-focus-inner {
   height: 10px;
   line-height: 10px;
   background: #ffffff;
-  margin: 8px 6px 0 0;
+  margin: 8px 6px 0 6px;
   box-sizing: border-box;
   float: left;
   border-style: solid;
@@ -510,13 +510,18 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 1px;
   border-radius: 5px;
 }
+.controls-RadioButton .controls-RadioButton__icon::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: #0055bb;
+  margin: 2px;
+  border-radius: 2px;
+  display: none;
+}
 .controls-RadioButton:hover .controls-RadioButton__caption {
   color: #0055bb;
   text-decoration: underline;
-}
-.controls-RadioButton:hover .controls-RadioButton__icon {
-  border-width: 3px;
-  border-color: #0055bb;
 }
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__caption {
   color: #000000;
@@ -525,7 +530,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-RadioButton.controls-Checked__checked .controls-RadioButton__icon {
   background: #ffffff;
   border-color: #0055bb;
-  border-width: 2px;
+}
+.controls-RadioButton.controls-Checked__checked .controls-RadioButton__icon::before {
+  display: block;
 }
 .controls-RadioButton.controls-Checked__checked:hover .controls-RadioButton__caption {
   color: #000000;
@@ -533,20 +540,18 @@ input[type="reset"]::-moz-focus-inner {
 .controls-RadioButton.controls-Checked__checked:hover .controls-RadioButton__icon {
   background: #ffffff;
   border-color: #0055bb;
-  border-width: 2px;
 }
 .controls-RadioButton.controls-Radio__primary.controls-Checked__checked .controls-RadioButton__icon {
   border-color: #ff7033;
+}
+.controls-RadioButton.controls-Radio__primary.controls-Checked__checked .controls-RadioButton__icon::before {
+  background: #ff7033;
 }
 .controls-RadioButton.controls-Radio__primary.controls-Checked__checked:hover .controls-RadioButton__caption {
   color: #000000;
 }
 .controls-RadioButton.controls-Radio__primary:hover .controls-RadioButton__caption {
   color: #ff7033;
-}
-.controls-RadioButton.controls-Radio__primary:hover .controls-RadioButton__icon {
-  border-color: #ff7033;
-  border-width: 3px;
 }
 .controls-RadioButton.ws-disabled {
   cursor: text;
@@ -560,7 +565,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-RadioButton.ws-disabled.controls-Checked__checked .controls-RadioButton__icon {
   border-color: #e4e4e4;
-  border-width: 2px;
+}
+.controls-RadioButton.ws-disabled.controls-Checked__checked .controls-RadioButton__icon::before {
+  background: #e4e4e4;
 }
 .controls-RadioButton.ws-disabled.controls-Checked__checked:hover .controls-RadioButton__caption {
   color: #e4e4e4;
@@ -570,14 +577,10 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-RadioButton.ws-disabled:hover .controls-RadioButton__icon {
   border-color: #e4e4e4;
-  border-width: 1px;
-}
-.controls-RadioButton.ws-disabled:hover.controls-Checked__checked .controls-RadioButton__icon {
-  border-width: 2px;
 }
 .controls-RadioGroup .controls-ListView__item {
   display: inline-block;
-  margin: 0 12px 0 0;
+  margin: 0;
 }
 .controls-RadioGroup.controls-ButtonGroup__vertical .controls-ListView__item {
   display: block;
@@ -664,7 +667,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CheckBoxGroup .controls-ListView__item {
   display: inline-block;
-  margin: 0 12px 0 0;
+  margin: 0;
 }
 .controls-CheckBoxGroup.controls-ButtonGroup__vertical .controls-ListView__item {
   display: block;

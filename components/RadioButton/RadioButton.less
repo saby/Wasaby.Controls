@@ -22,17 +22,21 @@
       border-color: @radio-button-icon-border-color;
       border-width: @radio-button-icon-border-width;
       border-radius: @radio-button-icon-border-radius;
+      &::before {
+         content: '';
+         width: @radio-button-dot-size;
+         height: @radio-button-dot-size;
+         background: @radio-button-dot-color;
+         margin: @radio-button-dot-margin;
+         border-radius: @radio-button-dot-radius;
+         display: none;
+      }
    }
 
    &:hover {
       .controls-RadioButton__caption {
          color: @radio-button-hover-text-color;
          text-decoration: @radio-button-hover-text-decoration;
-      }
-
-      .controls-RadioButton__icon {
-         border-width: @radio-button-icon-border-width-hover;
-         border-color: @radio-button-icon-border-color-checked;
       }
    }
 
@@ -45,7 +49,9 @@
       .controls-RadioButton__icon {
          background: @radio-button-icon-checked-bg;
          border-color: @radio-button-icon-border-color-checked;
-         border-width: @radio-button-icon-border-width-checked;
+         &::before {
+            display: block;
+         }
       }
 
       &:hover {
@@ -56,7 +62,6 @@
          .controls-RadioButton__icon {
             background: @radio-button-icon-checked-hover-bg;
             border-color: @radio-button-icon-border-color-checked;
-            border-width: @radio-button-icon-border-width-checked;
          }
       }
 
@@ -69,6 +74,9 @@
       &.controls-Checked__checked {
          .controls-RadioButton__icon {
             border-color: @radio-button-icon-border-color-primary;
+            &::before {
+               background: @radio-button-icon-border-color-primary;
+            }
          }
          &:hover {
             .controls-RadioButton__caption {
@@ -80,10 +88,6 @@
       &:hover {
          .controls-RadioButton__caption {
             color: @radio-button-hover-text-color-primary;
-         }
-         .controls-RadioButton__icon {
-            border-color: @radio-button-icon-border-color-primary;
-            border-width: @radio-button-icon-border-width-hover;
          }
       }
    }
@@ -97,11 +101,14 @@
 
       .controls-RadioButton__icon {
          border-color: @radio-button-icon-border-color-disabled;
+
       }
       &.controls-Checked__checked {
          .controls-RadioButton__icon {
             border-color: @radio-button-icon-border-color-disabled;
-            border-width: @radio-button-icon-border-width-checked;
+            &::before {
+               background: @radio-button-icon-border-color-disabled;
+            }
          }
          &:hover {
             .controls-RadioButton__caption {
@@ -117,12 +124,6 @@
 
          .controls-RadioButton__icon {
             border-color: @radio-button-icon-border-color-disabled;
-            border-width: @radio-button-icon-border-width;
-         }
-         &.controls-Checked__checked {
-            .controls-RadioButton__icon {
-               border-width: @radio-button-icon-border-width-checked;
-            }
          }
       }
    }

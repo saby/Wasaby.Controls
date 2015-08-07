@@ -175,7 +175,7 @@
 // Button group //
 // ------------ //
 
-@button-group-horizontal-item-margin:     0 12px 0 0;
+@button-group-horizontal-item-margin:     0;
 @button-group-vertical-item-margin:       0 0 0 0;
 
 
@@ -289,7 +289,7 @@
 // Radio button //
 // ------------ //
 
-@radio-button-text-margin:                      0;
+@radio-button-text-margin:                      0 6px 0 0;
 @radio-button-height:                           24px;
 @radio-button-lineheight:                       @radio-button-height;
 
@@ -310,8 +310,6 @@
 @radio-button-icon-height:                      10px;
 @radio-button-icon-line-height:                 @radio-button-icon-height;
 
-@radio-button-icon-spritesheet:                 'img/RadioButton-sprite.png';
-
 @radio-button-icon-bg:                          @white-color;
 @radio-button-icon-hover-bg:                    @radio-button-icon-bg;
 
@@ -324,18 +322,23 @@
 @radio-button-icon-disabled-checked-bg:         @radio-button-icon-bg;
 @radio-button-icon-disabled-checked-hover-bg:   @radio-button-icon-bg;
 
-@radio-button-icon-margin:                      8px 6px 0 0;
+@radio-button-icon-margin:                      8px 6px 0 6px;
 @radio-button-icon-border-style:                solid;
 @radio-button-icon-border-color:                @gray-color;
 @radio-button-icon-border-color-checked:        @link-text-color;
 @radio-button-icon-border-color-disabled:       @gray-light-color;
 @radio-button-icon-border-color-primary:        @link-hover-text-color;
 @radio-button-icon-border-width:                1px;
-@radio-button-icon-border-width-checked:        2px;
-@radio-button-icon-border-width-hover:          3px;
 @radio-button-icon-border-radius:               5px;
 
-// ----------- //
+@radio-button-dot-size:                         4px;
+@radio-button-dot-radius:                       @radio-button-dot-size / 2;
+@radio-button-dot-color:                        @radio-button-icon-border-color-checked;
+@radio-button-dot-color-primary:                @radio-button-icon-border-color-primary;
+@radio-button-dot-color-disabled:               @radio-button-icon-border-color-disabled;
+@radio-button-dot-margin:                       (@radio-button-icon-width - @radio-button-dot-size) / 2  - @radio-button-icon-border-width;
+
+   // ----------- //
 // Radio group //
 // ----------- //
 
