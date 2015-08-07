@@ -493,7 +493,7 @@ input[type="reset"]::-moz-focus-inner {
   line-height: normal;
 }
 .controls-RadioButton .controls-RadioButton__caption {
-  margin: 0 8px;
+  margin: 0;
   color: #ffffff;
 }
 .controls-RadioButton .controls-RadioButton__icon {
@@ -502,7 +502,7 @@ input[type="reset"]::-moz-focus-inner {
   height: 18px;
   line-height: normal;
   background: transparent;
-  margin: 0 0 0 8px;
+  margin: 0 8px 0 0;
   box-sizing: border-box;
   float: left;
   border-style: solid;
