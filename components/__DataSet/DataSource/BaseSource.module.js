@@ -135,6 +135,8 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
             if (record.isCreated()) {
                syncResult = this.destroy(record.getKey()).addCallback(function() {
                   record.setCreated(false);
+               }).addErrback(function(){
+                  record.setDeleted(false);
                });
             }
          } else if (!record.isCreated() || record.isChanged()) {
