@@ -314,7 +314,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             newCaretPosition++;
          } else { // точка в выделении
             currentVal = currentVal.substr(0, b) + symbol + '.' + ((this._options.decimals > 0) ? this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
-            newCaretPosition = currentVal.indexOf('.') - 1;
+            newCaretPosition = currentVal.indexOf('.');
          }
          currentVal = currentVal.replace(/\s/g, '');
          this._setText(currentVal);
