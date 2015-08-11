@@ -387,7 +387,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
 }
 .controls-IconButton.controls-IconButton__round-border {
-  border: 1px solid #919191;
+  border: 1px solid #cccccc;
   border-radius: 14px;
   height: 28px;
   width: 28px;
@@ -1200,7 +1200,13 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Menu.controls-Menu__small-items.controls-IconButton__round-border .controls-Menu__header {
   height: 36px;
 }
-.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border .controls-Menu__header .icon-16 {
+.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border .controls-MenuItem {
+  padding: 0 8px 0 38px;
+}
+.controls-Menu .controls-Menu__header {
+  height: 36px;
+}
+.controls-Menu .controls-Menu__header .icon-16 {
   margin-top: 1px;
   border: 1px solid #f1f1f1;
   border-radius: 14px;
@@ -1210,11 +1216,21 @@ input[type="reset"]::-moz-focus-inner {
   text-align: center;
   box-sizing: border-box;
 }
-.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border .controls-Menu__header .icon-16:hover {
+.controls-Menu .controls-Menu__header .icon-16:hover {
   border-color: #f1f1f1;
 }
-.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border .controls-MenuItem {
-  padding: 0 8px 0 38px;
+.controls-Menu .controls-Menu__header .icon-24 {
+  margin-top: 1px;
+  border: 1px solid #f1f1f1;
+  border-radius: 14px;
+  height: 28px;
+  width: 28px;
+  line-height: 26px!important;
+  text-align: center;
+  box-sizing: border-box;
+}
+.controls-Menu .controls-Menu__header .icon-24:hover {
+  border-color: #f1f1f1;
 }
 .controls-Menu.controls-Menu__hide-menu-header {
   padding: 4px 0;
