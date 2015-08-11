@@ -387,7 +387,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
 }
 .controls-IconButton.controls-IconButton__round-border {
-  border: 1px solid #999999;
+  border: 1px solid #cccccc;
   border-radius: 14px;
   height: 28px;
   width: 28px;
@@ -972,7 +972,7 @@ input[type="reset"]::-moz-focus-inner {
   height: 24px;
 }
 .controls-Menu__Popup.controls-Menu__big-items .controls-Menu__header {
-  height: 32px;
+  height: 33px;
 }
 .controls-Menu__Popup.controls-Menu__big-items .controls-MenuItem {
   height: 32px;
@@ -1234,7 +1234,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuLink__Menu.controls-Menu .controls-Menu__header {
   padding: 6px;
-  height: 32px;
+  height: 33px;
 }
 .controls-MenuLink__Menu.controls-Menu .controls-Menu__header .icon-16 {
   margin-top: 1px;
@@ -1242,7 +1242,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuLink__Menu.controls-Menu .controls-Menu__header .controls-Menu__header-caption {
   position: absolute;
   top: 50%;
-  margin-top: -10px;
+  margin-top: -10.5px;
 }
 .controls-MenuLink__Menu.controls-Menu .controls-MenuItem {
   padding: 0 8px 0 26px;
@@ -1320,9 +1320,15 @@ input[type="reset"]::-moz-focus-inner {
   padding: 0 8px;
 }
 .controls-Menu.controls-Menu__small-items.controls-IconButton__round-border .controls-Menu__header {
-  height: 36px;
+  height: 37px;
 }
-.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border .controls-Menu__header .icon-16 {
+.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border .controls-MenuItem {
+  padding: 0 8px 0 38px;
+}
+.controls-Menu .controls-Menu__header {
+  height: 37px;
+}
+.controls-Menu .controls-Menu__header .icon-16 {
   margin-top: 1px;
   border: 1px solid #587ab0;
   border-radius: 14px;
@@ -1332,11 +1338,21 @@ input[type="reset"]::-moz-focus-inner {
   text-align: center;
   box-sizing: border-box;
 }
-.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border .controls-Menu__header .icon-16:hover {
+.controls-Menu .controls-Menu__header .icon-16:hover {
   border-color: #587ab0;
 }
-.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border .controls-MenuItem {
-  padding: 0 8px 0 38px;
+.controls-Menu .controls-Menu__header .icon-24 {
+  margin-top: 1px;
+  border: 1px solid #587ab0;
+  border-radius: 14px;
+  height: 28px;
+  width: 28px;
+  line-height: 26px!important;
+  text-align: center;
+  box-sizing: border-box;
+}
+.controls-Menu .controls-Menu__header .icon-24:hover {
+  border-color: #587ab0;
 }
 .controls-Menu.controls-Menu__hide-menu-header {
   padding: 4px 0;
