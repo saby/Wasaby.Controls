@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
    /*методы для поиска*/
-   function startSearch(text, gridView, PathSelector, searchParamName) {
+   function startSearch(text, gridView, BreadCrumbs, searchParamName) {
       if (text) {
          var filter = $ws.core.merge(gridView._filter, {
             'Разворот': 'С разворотом',
@@ -13,17 +13,17 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
          if (this._firstSearch) {
             this._lastRoot = gridView.getCurrentRoot();
-            this._pathDSRawData = $ws.core.clone(PathSelector.getDataSet().getRawData());
+            this._pathDSRawData = $ws.core.clone(BreadCrumbs.getDataSet().getRawData());
          }
          this._firstSearch = false;
          this._searchReload = true;
          // TODO нафиг это надо
-         PathSelector.setItems([]);
+         BreadCrumbs.setItems([]);
 
          gridView.reload(filter, gridView._sorting, 0);
       }
    }
-   function resetGroup(gridView, searchParamName) {
+   function resetGroup(gridView, searchParamName, BreadCrumbs) {
       //Если мы ничего не искали, то и сбрасывать нечего
       if (this._firstSearch) {
          return;
@@ -41,12 +41,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       if (this._searchReload ) {
          //Нужно поменять фильтр и загрузить нужный корень.
          //TODO менять фильтр в контексте, когда появятся data-binding'и
-         filter[gridView.getHierField()] = self._lastRoot;
+         filter[gridView.getHierField()] = this._lastRoot;
          //dataGrid._filter = filter;
          //dataGrid.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
          gridView.reload(filter, gridView._sorting, 0);
-         PathSelector.getDataSet().setRawData(this._pathDSRawData);
-         PathSelector._redraw();
+         BreadCrumbs.getDataSet().setRawData(this._pathDSRawData);
+         BreadCrumbs._redraw();
       } else {
          //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
          gridView._filter = filter;
@@ -86,13 +86,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          _firstSearch: true,
          _lastViewMode: null
       },
-      bindSearchGrid : function(searchForm, gridView, PathSelector, searchParamName) {
+      bindSearchGrid : function(searchForm, gridView, BreadCrumbs, searchParamName) {
          var self = this;
          this._lastRoot = gridView.getCurrentRoot();
          searchForm.subscribe('onTextChange', function(event, text){
             var checkedText = isSearchValid(text, 3);
             if (checkedText[1]) {
-               startSearch.call(self, this.getText(), gridView, PathSelector, searchParamName);
+               startSearch.call(self, this.getText(), gridView, BreadCrumbs, searchParamName);
             }
             if (!checkedText[0]) {
                resetGroup.call(self, gridView, searchParamName);
@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          //Перед переключением в крошках в режиме поиска сбросим фильтр поиска
          gridView.subscribe('onSearchPathClick', breakSearch);
       },
-      bindSearchComposite: function(searchForm, compositeView, PathSelector, searchParamName) {
+      bindSearchComposite: function(searchForm, compositeView, BreadCrumbs, searchParamName) {
          this.bindSearchGrid.apply(this, arguments);
          var self = this;
          compositeView.subscribe('onDataLoad', function(){
@@ -120,8 +120,31 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             } else if (self._lastViewMode) {
                this.setViewMode(self._lastViewMode);
             }
-         })
+         });
+      },
+
+      bindBreadCrumbs: function(breadCrumbs, hierarchyGridView){
+         hierarchyGridView.subscribe('onSetRoot', function(event, keys){
+            for (var i = keys.length - 1; i >= 0; i--) {
+               var key = keys[i];
+               if (key){
+                  var point = {};
+                  point[this._options.displayField] = $ws.helpers.escapeHtml(key.title);
+                  point[this._options.keyField] = key.key;
+                  point[this._options.colorField] = key.color;
+                  point.data = key.data;
+                  this._dataSet.push(point);
+               }
+            }
+            this._toggleHomeIcon(this._dataSet.getCount() <= 0);
+            this._redraw();
+         }.bind(breadCrumbs));
+
+         breadCrumbs.subscribe('onItemClick', function(event, id){
+            hierarchyGridView.setCurrentRoot(id);
+         });
       }
+
    });
 
    return ComponentBinder;

@@ -1,44 +1,39 @@
-define('js!SBIS3.CONTROLS.PathSelector', [
+define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.DSMixin',
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.DecorableMixin',
-   'html!SBIS3.CONTROLS.PathSelector',
-   'html!SBIS3.CONTROLS.PathSelector/resources/pointTpl'
+   'html!SBIS3.CONTROLS.BreadCrumbs',
+   'html!SBIS3.CONTROLS.BreadCrumbs/resources/pointTpl'
 ], function(CompoundControl, DSMixin, PickerMixin, DecorableMixin, dotTpl, pointTpl) {
    'use strict';
 
    if (typeof window !== 'undefined') {
-      var eventsChannel = $ws.single.EventBus.channel('PathSelectorChannel');
+      var eventsChannel = $ws.single.EventBus.channel('BreadCrumbsChannel');
 
       $(window).bind('resize', function() {
          eventsChannel.notify('onWindowResize');
       });
    }
    //TODO: Переписать все к чертям 
-   var PathSelector = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], {
+   var BreadCrumbs = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], {
       $protected: {
          _dotTplFn: dotTpl,
          _resizeTimeout: null,
-         _rootHandler: undefined,
          _dropdownWidth: null,
          _homeIcon: undefined,
          _options: {
-            linkedView: null,
             keyField: 'id',
             displayField: 'title',
             itemTemplate: pointTpl,
-            pickerClassName: 'controls-Menu__Popup controls-PathSelector'
+            pickerClassName: 'controls-Menu__Popup controls-BreadCrumbs'
          }
       },
 
       $constructor: function() {
-         this._publish('onPointClick');
-         if (this._options.linkedView) {
-            this._subscribeOnSetRoot();
-         }
+         this._publish('onItemClick');
          $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._resizeHandler, this);
-         this._homeIcon = $('.controls-PathSelector__point-home', this._container);
+         this._homeIcon = $('.controls-BreadCrumbs__crumb-home', this._container);
          this._homeIcon.data('id', null); //клик по домику ведет в корень TODO: придрочено под null
          //инициализируем dataSet
          this.setItems(this._options.items || []);
@@ -53,10 +48,10 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       _onClickHandler: function(e) {
-         PathSelector.superclass._onClickHandler.apply(this, arguments);
+         BreadCrumbs.superclass._onClickHandler.apply(this, arguments);
          var target = $(e.target),
-            point = target.closest('.js-controls-PathSelector__point');
-         if (point.hasClass('controls-PathSelector__dots')) {
+            point = target.closest('.js-controls-BreadCrumbs__crumb');
+         if (point.hasClass('controls-BreadCrumbs__dots')) {
             if (this._picker) {
                this._picker.setTarget(point);
             }
@@ -77,12 +72,8 @@ define('js!SBIS3.CONTROLS.PathSelector', [
        */
       _onPointClick: function(id) {
          var length = this._dataSet.getCount(),
-            last = this._dataSet.at(length - 1), newId = id,
-            result;
+            last = this._dataSet.at(length - 1);
          //Нажатие на последний пункт должно вести туда же куда не предпоследний
-         if (id == last.get(this._options.keyField)) {
-            newId = length > 1 ? this._dataSet.at(length - 2).get(this._options.keyField) : null;
-         }
          for (var i = length - 1; i >= 0; i--) {
             var record = this._dataSet.at(i);
             if (record.getKey() !== last.getKey() && record.getKey() == id) break;
@@ -94,10 +85,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             this._dataSet._indexId.splice(i, 1);
             if (record.getKey() == id) break;
          }
-         result = this._notify('onPointClick', id);
-         if (result !== false){
-            this._options.linkedView.setCurrentRoot(newId);
-         }
+         this._notify('onItemClick', id);
       },
 
       _toggleHomeIcon: function(state){
@@ -107,40 +95,16 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       setItems: function(items){
-         PathSelector.superclass.setItems.call(this, items);
+         BreadCrumbs.superclass.setItems.call(this, items);
          this._toggleHomeIcon(items.length <= 0);
-      },
-
-      _rootChangeHandler: function(keys) {
-         for (var i = keys.length - 1; i >= 0; i--) {
-            var key = keys[i];
-            if (key){
-               var point = {};
-               point[this._options.displayField] = $ws.helpers.escapeHtml(key.title);
-               point[this._options.keyField] = key.key;
-               point[this._options.colorField] = key.color;
-               point.data = key.data;
-               this._dataSet.push(point);
-            }
-         }
-         this._toggleHomeIcon(this._dataSet.getCount() <= 0);
-         this._redraw();
       },
 
       //TODO: придрот что бы фэйковый див не ломал :first-child стили
       _moveFocusToFakeDiv: function() {},
 
-      _subscribeOnSetRoot: function() {
-         var self = this;
-         this._rootHandler = function(event, keys) {
-            self._rootChangeHandler(keys);
-         };
-         this._options.linkedView.subscribe('onSetRoot', this._rootHandler, this);
-      },
-
       _setPickerConfig: function() {
          return {
-            target: $('.controls-PathSelector__dots', this._container),
+            target: $('.controls-BreadCrumbs__dots', this._container),
             corner: 'bl',
             verticalAlign: {
                side: 'top'
@@ -161,14 +125,6 @@ define('js!SBIS3.CONTROLS.PathSelector', [
          });
       },
 
-      setLinkedView: function(view) {
-         if (this._options.linkedView) {
-            this._options.linkedView.unsubscribe('onSetRoot', this._rootHandler);
-         }
-         this._options.linkedView = view;
-         this._subscribeOnSetRoot();
-      },
-
       _redrawDropdown: function() {
          var self = this;
          if (this._picker) {
@@ -176,7 +132,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             this._picker._container.empty();
             this._dataSet.each(function(record) {
                if (record.get(self._options.keyField)){
-                  var point = $('<div class="controls-MenuItem js-controls-PathSelector__point"></div>');
+                  var point = $('<div class="controls-MenuItem js-controls-BreadCrumbs__crumb"></div>');
                      point.html(self._decorators.apply(
                            $ws.helpers.escapeHtml(record.get(self._options.displayField))
                      ))
@@ -185,11 +141,11 @@ define('js!SBIS3.CONTROLS.PathSelector', [
                      ));
                      point.data(self._options.keyField, record.get(self._options.keyField));
                   self._picker._container.append(point);
-                  var previousContainer = point.prev('.js-controls-PathSelector__point', self._picker._container),
-                     previousWrappersCount = $('.controls-PathSelector__hierWrapper', previousContainer).length;
+                  var previousContainer = point.prev('.js-controls-BreadCrumbs__crumb', self._picker._container),
+                     previousWrappersCount = $('.controls-BreadCrumbs__hierWrapper', previousContainer).length;
                   if (previousContainer.length) {
                      for (var i = 0; i <= previousWrappersCount; i++) {
-                        point.prepend('<div class="controls-PathSelector__hierWrapper"></div>');
+                        point.prepend('<div class="controls-BreadCrumbs__hierWrapper"></div>');
                      }
                   }
                }
@@ -202,11 +158,11 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       _redraw: function() {
-         PathSelector.superclass._redraw.call(this);
-         $('.controls-PathSelector__dots', this._container).remove();
+         BreadCrumbs.superclass._redraw.call(this);
+         $('.controls-BreadCrumbs__dots', this._container).remove();
          var targetContainer = this._getTargetContainer(),
             containerWidth = this._container.width(),
-            points = $('.controls-PathSelector__point', targetContainer),
+            points = $('.controls-BreadCrumbs__crumb', targetContainer),
             i = points.length - 1;
          if (points.length){
             points[i].className += ' ws-hidden';
@@ -236,10 +192,10 @@ define('js!SBIS3.CONTROLS.PathSelector', [
             if ((targetContainer.width() + 30 > containerWidth)) {
                var third = (containerWidth - 60) / 3;
                if (points.length > 2){
-                  $('.controls-PathSelector__title', points[0]).css('max-width', third * 2 - 20);
-                  $('.controls-PathSelector__title', points[points.length - 2]).css('max-width', third - 60);
+                  $('.controls-BreadCrumbs__title', points[0]).css('max-width', third * 2 - 20);
+                  $('.controls-BreadCrumbs__title', points[points.length - 2]).css('max-width', third - 60);
                } else {
-                  $('.controls-PathSelector__title', points[0]).css('max-width', containerWidth - 60);
+                  $('.controls-BreadCrumbs__title', points[0]).css('max-width', containerWidth - 60);
                }
             }
          }
@@ -262,12 +218,12 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       _getTargetContainer: function() {
-         return $('.controls-PathSelector__itemsContainer', this._container);
+         return $('.controls-BreadCrumbs__itemsContainer', this._container);
       },
 
       _addItemAttributes: function(container, item) {
          container.data(this._options.keyField, item.get(this._options.keyField));
-         PathSelector.superclass._addItemAttributes.apply(this, arguments);
+         BreadCrumbs.superclass._addItemAttributes.apply(this, arguments);
       },
 
       _appendItemTemplate: function(item, targetContainer, itemBuildedTpl) {
@@ -275,13 +231,10 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       destroy: function() {
-         PathSelector.superclass.destroy.call(this);
-         if (this._options.linkedView) {
-            this._options.linkedView.unsubscribe('onSetRoot', this._rootHandler);
-         }
+         BreadCrumbs.superclass.destroy.call(this);
          $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._resizeHandler, this);
       }
    });
 
-   return PathSelector;
+   return BreadCrumbs;
 });

@@ -1,25 +1,25 @@
-.controls-PathSelector {
+.controls-BreadCrumbs {
 	min-height: 27px;
-	&__point{
+	&__crumb{
 		cursor: pointer;
 		position: relative;
       line-height: 16px;
 		&:hover{
-			.controls-PathSelector__title{
+			.controls-BreadCrumbs__title{
 				color: #FF7033;
 			}
 			.icon-16{
 				color: #FF7033!important;
 			}
          &:first-child{
-            .controls-PathSelector__title{
+            .controls-BreadCrumbs__title{
                color: #FF7033;
             }
          }
 		}
 	}
 
-	.controls-PathSelector__title{
+	.controls-BreadCrumbs__title{
 		text-decoration: none;
 		color: #0055BB;
 		padding-right: 1px;
@@ -29,24 +29,24 @@
 		overflow: hidden;
 	}
 
-	.controls-PathSelector__arrow{
+	.controls-BreadCrumbs__arrow{
 		position: relative;
 	}
 
-	.controls-PathSelector__itemsContainer{
+	.controls-BreadCrumbs__itemsContainer{
 		display: inline-block;
       height: 16px;
 	}
 
-	.controls-PathSelector__dots{
+	.controls-BreadCrumbs__dots{
 		margin-left: -3px;
-		.controls-PathSelector__title{
+		.controls-BreadCrumbs__title{
 			margin-left: -3px;
 		}
 	}
 
-   &.controls-PathSelector__smallItems{
-      .controls-PathSelector__title{
+   &.controls-BreadCrumbs__smallItems{
+      .controls-BreadCrumbs__title{
          &:hover{
             color: #FF7033;
          }
@@ -56,12 +56,12 @@
       }
    }  
 
-	.controls-PathSelector__hierWrapper{
+	.controls-BreadCrumbs__hierWrapper{
 		height: 13px;
 		width: 14px;
 		display: inline-block;
 		&:last-of-type{
-			background: url('img/pathSelector__hierWrapper.png') no-repeat;
+			background: url('img/BreadCrumbs_hierWrapper.png') no-repeat;
 			position: relative;
   			top: -3px;
 		}

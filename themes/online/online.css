@@ -2462,24 +2462,24 @@ input[type="reset"]::-moz-focus-inner {
   font-size: 15px;
   text-align: center;
 }
-.controls-PathSelector {
+.controls-BreadCrumbs {
   min-height: 27px;
 }
-.controls-PathSelector__point {
+.controls-BreadCrumbs__crumb {
   cursor: pointer;
   position: relative;
   line-height: 16px;
 }
-.controls-PathSelector__point:hover .controls-PathSelector__title {
+.controls-BreadCrumbs__crumb:hover .controls-BreadCrumbs__title {
   color: #FF7033;
 }
-.controls-PathSelector__point:hover .icon-16 {
+.controls-BreadCrumbs__crumb:hover .icon-16 {
   color: #FF7033!important;
 }
-.controls-PathSelector__point:hover:first-child .controls-PathSelector__title {
+.controls-BreadCrumbs__crumb:hover:first-child .controls-BreadCrumbs__title {
   color: #FF7033;
 }
-.controls-PathSelector .controls-PathSelector__title {
+.controls-BreadCrumbs .controls-BreadCrumbs__title {
   text-decoration: none;
   color: #0055BB;
   padding-right: 1px;
@@ -2488,34 +2488,34 @@ input[type="reset"]::-moz-focus-inner {
   white-space: nowrap;
   overflow: hidden;
 }
-.controls-PathSelector .controls-PathSelector__arrow {
+.controls-BreadCrumbs .controls-BreadCrumbs__arrow {
   position: relative;
 }
-.controls-PathSelector .controls-PathSelector__itemsContainer {
+.controls-BreadCrumbs .controls-BreadCrumbs__itemsContainer {
   display: inline-block;
   height: 16px;
 }
-.controls-PathSelector .controls-PathSelector__dots {
+.controls-BreadCrumbs .controls-BreadCrumbs__dots {
   margin-left: -3px;
 }
-.controls-PathSelector .controls-PathSelector__dots .controls-PathSelector__title {
+.controls-BreadCrumbs .controls-BreadCrumbs__dots .controls-BreadCrumbs__title {
   margin-left: -3px;
 }
-.controls-PathSelector.controls-PathSelector__smallItems .controls-PathSelector__title {
+.controls-BreadCrumbs.controls-BreadCrumbs__smallItems .controls-BreadCrumbs__title {
   font-size: 13px;
   color: #0055BB;
   font-weight: normal;
 }
-.controls-PathSelector.controls-PathSelector__smallItems .controls-PathSelector__title:hover {
+.controls-BreadCrumbs.controls-BreadCrumbs__smallItems .controls-BreadCrumbs__title:hover {
   color: #FF7033;
 }
-.controls-PathSelector .controls-PathSelector__hierWrapper {
+.controls-BreadCrumbs .controls-BreadCrumbs__hierWrapper {
   height: 13px;
   width: 14px;
   display: inline-block;
 }
-.controls-PathSelector .controls-PathSelector__hierWrapper:last-of-type {
-  background: url('img/pathSelector__hierWrapper.png') no-repeat;
+.controls-BreadCrumbs .controls-BreadCrumbs__hierWrapper:last-of-type {
+  background: url('img/BreadCrumbs_hierWrapper.png') no-repeat;
   position: relative;
   top: -3px;
 }
