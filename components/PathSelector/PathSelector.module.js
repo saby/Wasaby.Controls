@@ -204,39 +204,46 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       _redraw: function() {
          PathSelector.superclass._redraw.call(this);
          $('.controls-PathSelector__dots', this._container).remove();
-         var points = $('.controls-PathSelector__point', this._container),
-            i = points.length - 2,
-            targetContainer = this._getTargetContainer(),
-            containerWidth = this._container.width();
-         //36px - ширина блока с домиком
-         //Добавляем троеточие если пункты не убираются в контейнер
-         if ((targetContainer.width() + 36 >= containerWidth) && points.length > 3) {
-            var dots = $(pointTpl({
-               item: { 
-                  title: '...',
-                  dots: true,
-                  get: function(field) {return this[field];}
-               },
-               decorators: this._decorators,
-               displayField: this._options.displayField
-            }));
-            $(points[i]).before(dots);
+         var targetContainer = this._getTargetContainer(),
+            containerWidth = this._container.width(),
+            points = $('.controls-PathSelector__point', targetContainer),
+            i = points.length - 1;
+         if (points.length){
+            //36px - ширина блока с домиком
+            //Добавляем троеточие если пункты не убираются в контейнер
+            if ((targetContainer.width() + 58 >= containerWidth) && points.length > 2) {
+               var dots = $(pointTpl({
+                  item: { 
+                     title: '...',
+                     dots: true,
+                     get: function(field) {return this[field];}
+                  },
+                  decorators: this._decorators,
+                  displayField: this._options.displayField
+               }));
+               $(points[i]).before(dots);
+            }
+            //скрываем пункты левее троеточия пока не уберемся в контейнер
+            for (i = points.length; i > 0; i--) {
+               points[i - 1].className += ' ws-hidden';
+               if (targetContainer.width() + 20 < containerWidth || i == 1) {
+                  break;
+               }
+            }
+            //Если после всех манипуляций все еще не убираемся в контейнер, будем обрезать текст
+            if ((targetContainer.width() + 36 >= containerWidth)) {
+               var first = (containerWidth - 60) / 3;
+               if (points.length > 2){
+                  $('.controls-PathSelector__title', points[0]).css('max-width', first * 2 - 20);
+                  $('.controls-PathSelector__title', points[points.length - 1]).css('max-width', first - 60);
+               } else {
+                  $('.controls-PathSelector__title', points[0]).css('max-width', containerWidth - points[0].offsetWidth - 60);
+               }
+            }
          }
+
          if (this._picker) {
             this.hidePicker();
-         }
-         //скрываем пункты левее троеточия пока не уберемся в контейнер
-         for (i; i > 1; i--) {
-            if (targetContainer.width() < containerWidth || i == 1) {
-               break;
-            }
-            points[i - 1].className += ' ws-hidden';
-         }
-         //Если после всех манипуляций все еще не убираемся в контейнер, будем обрезать текст
-         if (targetContainer.width() + 36 >= containerWidth) {
-            var first = (targetContainer.width() - 66) / 3;
-            $('.controls-PathSelector__title', points[0]).css('max-width', first * 2 - 20);
-            $('.controls-PathSelector__title', points[points.length - 2]).css('max-width', first - 60);
          }
       },
 
@@ -262,7 +269,7 @@ define('js!SBIS3.CONTROLS.PathSelector', [
       },
 
       _appendItemTemplate: function(item, targetContainer, itemBuildedTpl) {
-         targetContainer.prepend(itemBuildedTpl);
+         targetContainer.append(itemBuildedTpl);
       },
 
       destroy: function() {
