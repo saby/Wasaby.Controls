@@ -1186,6 +1186,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Menu .controls-Menu__header {
   position: relative;
   cursor: pointer;
+  font-size: 14px;
 }
 .controls-Menu .controls-Menu__header .controls-Menu__header-caption {
   position: absolute;
