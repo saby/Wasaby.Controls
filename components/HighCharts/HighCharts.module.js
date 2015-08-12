@@ -985,7 +985,9 @@ function(BaseControl, dotTpl){
                   resultDef.callback();
                }
             }
-            resultDef.errback('Пользовательский обработчик получения данных не является функцией')
+            else {
+               resultDef.errback('Пользовательский обработчик получения данных не является функцией')
+            }
          }
          return resultDef;
       },
