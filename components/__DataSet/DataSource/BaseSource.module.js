@@ -133,10 +133,12 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
          if (record.isDeleted()) {
             //Удаляем запись, если она уже есть в источнике.
             if (record.isCreated()) {
-               syncResult = this.destroy(record.getKey()).addCallback(function() {
+               syncResult = this.destroy(record.getKey()).addCallback(function(res) {
                   record.setCreated(false);
-               }).addErrback(function(){
+                  return res;
+               }).addErrback(function(err){
                   record.setDeleted(false);
+                  return err;
                });
             }
          } else if (!record.isCreated() || record.isChanged()) {
