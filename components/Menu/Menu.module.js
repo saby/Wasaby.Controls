@@ -105,7 +105,8 @@ define('js!SBIS3.CONTROLS.Menu', [
       _getAddOptions : function(item) {
          return {
             caption : item.title,
-            icon : item.icon
+            icon : item.icon,
+            className: item.className
          }
       },
 
