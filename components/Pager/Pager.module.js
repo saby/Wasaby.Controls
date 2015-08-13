@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
          this._updateLocalStorageValue();
       },
       _updateLocalStorageValue: function(){
-         if (!this._options.ignoreLocalPageSize) {
+         if (!this._options.ignoreLocalPageSize && this._options.pageSize <= 100) {
             $ws.helpers.setLocalStorageValue('ws-page-size', this._options.pageSize);
          }
       },
