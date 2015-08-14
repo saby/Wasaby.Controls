@@ -1073,6 +1073,9 @@ input[type="reset"]::-moz-focus-inner {
   .controls-Button.controls-MenuButton .controls-MenuButton__arrowDown {
     top: 9px;
   }
+  .controls-MenuButton__header {
+    display: none;
+  }
 }
 .controls-MenuLink {
   position: relative;
@@ -1186,7 +1189,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Menu .controls-Menu__header {
   position: relative;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
 }
 .controls-Menu .controls-Menu__header .controls-Menu__header-caption {
   position: absolute;
@@ -2718,11 +2721,24 @@ input[type="reset"]::-moz-focus-inner {
 .ws-disabled .controls-ProgressBar__value {
   color: #919191;
 }
+/* �������� ����� ��� ����� ������ */
+.controls-ListView .controls-ItemActions {
+  background-color: transparent;
+  box-shadow: none;
+}
+.controls-ListView.controls-DataGrid .controls-ItemActions {
+  background-color: #00c795;
+  box-shadow: -2px -2px 5px #00c795;
+}
+.controls-ListView.controls-DataGrid .controls-ItemActions__activeItem {
+  background-color: #00c795 !important;
+}
+.controls-ListView.controls-DataGrid .controls-ItemActions__activeItem .controls-DataGrid__notScrolledCell {
+  background-color: #00c795 !important;
+}
 .controls-ItemActions {
   position: absolute;
   height: 20px;
-  background-color: #00c795;
-  box-shadow: -2px -2px 5px #00c795;
   z-index: 10;
   display: none;
 }
@@ -2764,12 +2780,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ItemActions__menu-container .controls-PopupMixin__closeButton:hover {
   background: url('img/ItemActions-menu.png') no-repeat 0 -60px;
-}
-.controls-ItemActions__activeItem {
-  background-color: #00c795 !important;
-}
-.controls-ItemActions__activeItem .controls-DataGrid__notScrolledCell {
-  background-color: #00c795 !important;
 }
 .controls-EditInPlaceController {
   position: absolute;
