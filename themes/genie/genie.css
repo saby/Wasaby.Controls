@@ -2721,7 +2721,7 @@ input[type="reset"]::-moz-focus-inner {
 .ws-disabled .controls-ProgressBar__value {
   color: #919191;
 }
-/* �������� ����� ��� ����� ������ */
+/* Цветовая схема для опций записи */
 .controls-ListView .controls-ItemActions {
   background-color: transparent;
   box-shadow: none;
