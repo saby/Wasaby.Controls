@@ -164,6 +164,18 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          }
       },
 
+      destroyFolderToolbar: function(id) {
+         var
+            container = $('.controls-TreeDataGrid__folderToolbar[data-parent="' + id + '"]', this._container.get(0));
+         if (container.length) {
+            var pagerContainer = $('.controls-TreePager-container', container.get(0));
+            if (pagerContainer.length) {
+               pagerContainer.wsControl().destroy();
+            }
+            container.remove();
+         }
+      },
+
       _nodeClosed : function(key) {
          var childKeys = this._dataSet.getChildItems(key, true, this._options.hierField);
          for (var i = 0; i < childKeys.length; i++) {
