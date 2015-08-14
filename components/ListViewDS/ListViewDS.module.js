@@ -280,7 +280,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGrid__th__checkBox')){
                $target.hasClass('controls-DataGrid__th__checkBox__checked') ? this.setSelectedKeys([]) : this.setSelectedItemsAll();
                $target.toggleClass('controls-DataGrid__th__checkBox__checked');
-            }            
+            }
          },
          /**
           * Обрабатывает перемещения мышки на элемент представления
@@ -585,8 +585,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @see getHoveredItem
           */
          setItemsActions: function (items) {
-            this._options.itemsActions = items;
             this.getItemsActions().setItems(items);
+            this._options.itemsActions = items;
          },
          //**********************************//
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
