@@ -92,7 +92,9 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
                if (w != self._cachedW || h != self._cachedH) {
                   self._cachedW = w;
                   self._cachedH = h;
-                  self._inputField.autosize();
+                  self._inputField.autosize({
+                     callback: self._textAreaResize.bind(self)
+                  });
                }
             });
 
@@ -140,6 +142,17 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          if (this._options.autoResize.state) {
             this._inputField.trigger('autosize.resize');
          }
+      },
+
+      _textAreaResize : function() {
+         this._notifyOnSizeChanged(this, this);
+      },
+
+      destroy: function() {
+         if (this._options.autoResize.state) {
+            this._inputField instanceof $ && this._inputField.trigger('autosize.destroy');
+         }
+         TextArea.superclass.destroy.apply(this, arguments);
       }
    });
 
