@@ -1034,6 +1034,9 @@ input[type="reset"]::-moz-focus-inner {
   .controls-Button.controls-MenuButton .controls-MenuButton__arrowDown {
     top: 6px;
   }
+  .controls-MenuButton__header {
+    display: none;
+  }
 }
 .controls-MenuLink {
   position: relative;
@@ -1478,6 +1481,9 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #eaeaea;
   background: #ffffff;
   padding: 2px 4px 2px 4px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .controls-TextArea .controls-TextArea__inputField {
   font: inherit;
@@ -2414,7 +2420,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   text-align: left;
   border: 1px solid #e7f0f9;
-  min-width: 128px;
+  min-width: 200px;
   min-height: 128px;
   margin: -1px 0 0 -1px;
 }
@@ -2502,7 +2508,6 @@ input[type="reset"]::-moz-focus-inner {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  max-width: 300px;
 }
 .controls-PathSelector .controls-PathSelector__arrow {
   position: relative;
