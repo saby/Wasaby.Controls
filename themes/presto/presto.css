@@ -2570,11 +2570,24 @@ input[type="reset"]::-moz-focus-inner {
 .ws-disabled .controls-ProgressBar__value {
   color: #aaaaaa;
 }
+/* Цветовая схема для опций записи */
+.controls-ListView .controls-ItemActions {
+  background-color: transparent;
+  box-shadow: none;
+}
+.controls-ListView.controls-DataGrid .controls-ItemActions {
+  background-color: #f2f2f2;
+  box-shadow: -2px -2px 5px #f3f3f3;
+}
+.controls-ListView.controls-DataGrid .controls-ItemActions__activeItem {
+  background-color: #f3f3f3;
+}
+.controls-ListView.controls-DataGrid .controls-ItemActions__activeItem .controls-DataGrid__notScrolledCell {
+  background-color: #f3f3f3 !important;
+}
 .controls-ItemActions {
   position: absolute;
   height: 20px;
-  background-color: #f2f2f2;
-  box-shadow: -2px -2px 5px #f3f3f3;
   z-index: 10;
   display: none;
 }
@@ -2616,12 +2629,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ItemActions__menu-container .controls-PopupMixin__closeButton:hover {
   background: url('img/ItemActions-menu.png') no-repeat 0 -60px;
-}
-.controls-ItemActions__activeItem {
-  background-color: #f3f3f3;
-}
-.controls-ItemActions__activeItem .controls-DataGrid__notScrolledCell {
-  background-color: #f3f3f3 !important;
 }
 .controls-EditInPlaceController {
   position: absolute;
