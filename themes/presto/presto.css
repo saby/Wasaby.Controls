@@ -1073,6 +1073,9 @@ input[type="reset"]::-moz-focus-inner {
   .controls-Button.controls-MenuButton .controls-MenuButton__arrowDown {
     top: 20px;
   }
+  .controls-MenuButton__header {
+    display: none;
+  }
 }
 .controls-MenuLink {
   position: relative;
@@ -1583,9 +1586,12 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #666666;
   background: transparent;
   padding: 0 5px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .controls-TextArea .controls-TextArea__inputField {
-  overflow: hidden;
+  overflow: auto;
   font: inherit;
   color: inherit;
   display: block;
