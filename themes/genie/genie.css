@@ -1586,9 +1586,12 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #d1d1d1;
   background: #ffffff;
   padding: 6px 7px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .controls-TextArea .controls-TextArea__inputField {
-  overflow: hidden;
+  overflow: auto;
   font: inherit;
   color: inherit;
   display: block;
