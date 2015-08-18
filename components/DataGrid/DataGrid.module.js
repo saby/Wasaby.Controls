@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.DataGrid',
    /**
     * Контрол, отображающий набор данных в виде в таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.DataGrid
-    * @extends SBIS3.CONTROLS.ListView
+    * @extends SBIS3.CONTROLS.ListViewDS
     * @control
     * @public
     * @author Крайнов Дмитрий Олегович
