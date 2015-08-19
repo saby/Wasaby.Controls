@@ -26,21 +26,21 @@
       margin: -5px 0 0 -6px;
       &.controls-Menu__hide-menu-header{
          .controls-MenuItem{
-            padding: 0 8px;
+            padding: @menu-item-default-padding;
          }
       }
       .controls-Menu__header{
          height: 32px;
          .icon-16{
-
             .round-button-mixin(@default-color);
          }
          .icon-24{
             .round-button-mixin(@default-color);
          }
-         .controls-MenuItem{
-            padding: 0 16px 0 36px;
-         }
+      }
+
+      .controls-MenuItem{
+         padding: @menu-item-big-padding;
       }
    }
 }

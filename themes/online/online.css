@@ -431,8 +431,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Menu.controls-IconButton__round-border .controls-Menu__header .icon-24:hover {
   border-color: #587ab0;
 }
-.controls-Menu.controls-IconButton__round-border .controls-Menu__header .controls-MenuItem {
-  padding: 0 16px 0 36px;
+.controls-Menu.controls-IconButton__round-border .controls-MenuItem {
+  padding: 0 8px 0 36px;
 }
 .controls-TabButton {
   display: inline-block;
@@ -1022,7 +1022,7 @@ input[type="reset"]::-moz-focus-inner {
   width: auto;
   height: 26px;
   line-height: 26px;
-  padding: 0 26px 0 8px;
+  padding: 0 8px;
   color: #000000;
   background: #ffffff;
 }
@@ -1174,7 +1174,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuButton__header.controls-MenuButton__header-revert-horizontal.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerRight {
   width: 12px;
   height: 30px;
-  background: transparent url('img/MenuButton-header.png') 0 22px;
+  background: transparent url('img/MenuButton-header.png') 0 27px;
 }
 .controls-MenuButton__header.controls-MenuButton__header-revert-horizontal.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerCenter {
   vertical-align: top;
@@ -1273,7 +1273,7 @@ input[type="reset"]::-moz-focus-inner {
   margin-top: -10px;
 }
 .controls-MenuLink__Menu.controls-Menu .controls-MenuItem {
-  padding: 0 8px 0 26px;
+  padding: 0 8px 0 24px;
 }
 .controls-MenuLink__Menu .controls-MenuLink__Menu .controls-MenuLink__arrowDown {
   display: none;
@@ -1331,7 +1331,7 @@ input[type="reset"]::-moz-focus-inner {
   background: #ffffff;
 }
 .controls-MenuIcon__Menu .controls-MenuItem {
-  padding: 0 16px 0 24px;
+  padding: 0 8px 0 24px;
 }
 .controls-Menu .controls-Menu__header {
   position: relative;
@@ -1352,7 +1352,7 @@ input[type="reset"]::-moz-focus-inner {
   height: 32px;
 }
 .controls-Menu.controls-Menu__big-header .controls-MenuItem {
-  padding: 0 16px 0 32px;
+  padding: 0 8px 0 32px;
 }
 .controls-Menu.controls-Menu__hide-menu-header {
   padding: 4px 0;
