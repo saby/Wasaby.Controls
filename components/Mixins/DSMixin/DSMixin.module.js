@@ -461,7 +461,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._drawItems(records);
          }
       },
-      _destroySearchPathSelectors: function(){
+      _destroySearchBreadCrumbs: function(){
       },
       _getRecordsForRedraw : function() {
          return this._dataSet._getRecords();

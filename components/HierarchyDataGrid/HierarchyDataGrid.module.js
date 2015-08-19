@@ -2,9 +2,9 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
    'js!SBIS3.CONTROLS.DataGrid',
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'html!SBIS3.CONTROLS.HierarchyDataGrid/resources/rowTpl',
-   'js!SBIS3.CONTROLS.PathSelector',
+   'js!SBIS3.CONTROLS.BreadCrumbs',
    'is!browser?html!SBIS3.CONTROLS.DataGrid/resources/DataGridGroupBy'
-], function (DataGrid, hierarchyMixin, rowTpl, PathSelector, groupByTpl) {
+], function (DataGrid, hierarchyMixin, rowTpl, BreadCrumbs, groupByTpl) {
    'use strict';
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
        */
       $protected: {
          _rowTpl: rowTpl,
-         _pathSelectors : [],
+         _breadCrumbs : [],
          _lastParent : undefined,
          _lastDrawn : undefined,
          _lastPath : []
@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
          this._lastParent = this._curRoot;
          this._lastDrawn = undefined;
          this._lastPath = [];
-         this._destroySearchPathSelectors();
+         this._destroySearchBreadCrumbs();
          HierarchyDataGrid.superclass._clearItems.apply(this, arguments);
       },
 
@@ -169,26 +169,26 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
          };
       },
       _searchRender: function(item, container){
-         this._drawPathSelector(this._lastPath, item, container);
+         this._drawBreadCrumbs(this._lastPath, item, container);
          return container;
       },
-      _drawPathSelector:function(path, record, container){
+      _drawBreadCrumbs:function(path, record, container){
          if (path.length) {
             var self = this,
                   elem;
             container.find('td').append(elem = $('<div/>'));
 
-            var ps = new PathSelector({
+            var ps = new BreadCrumbs({
                element : elem,
                items: this._createPathItemsDS(path),
                highlightEnabled: this._options.highlightEnabled,
                highlightText: this._options.highlightText,
                colorMarkEnabled: this._options.colorMarkEnabled,
                colorField: this._options.colorField,
-               className : 'controls-PathSelector__smallItems'
+               className : 'controls-BreadCrumbs__smallItems'
             });
-            ps.once('onPointClick', function(event, id){
-               //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onPointClick'), а вотом выполняется setCurrentRoot
+            ps.once('onItemClick', function(event, id){
+               //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onBreadCrumbClick'), а вотом выполняется setCurrentRoot
                event.setResult(false);
                if (self._notify('onSearchPathClick', id) !== false ) {
                   //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
@@ -204,7 +204,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
                   self.setCurrentRoot(id);
                }
             });
-            this._pathSelectors.push(ps);
+            this._breadCrumbs.push(ps);
          } else{
             //если пути нет, то группировку надо бы убить...
             container.remove();
@@ -214,7 +214,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
       _isViewElement: function(elem) {
          return HierarchyDataGrid.superclass._isViewElement.apply(this, arguments)
                 && !elem.hasClass('controls-HierarchyDataGrid__path')
-                && !(elem.wsControl() instanceof PathSelector);
+                && !(elem.wsControl() instanceof BreadCrumbs);
       },
       _createPathItemsDS: function(pathRecords){
          var dsItems = [];
@@ -227,11 +227,11 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
          }
          return dsItems;
       },
-      _destroySearchPathSelectors: function(){
-         for (var i =0; i < this._pathSelectors.length; i++){
-            this._pathSelectors[i].destroy();
+      _destroySearchBreadCrumbs: function(){
+         for (var i =0; i < this._breadCrumbs.length; i++){
+            this._breadCrumbs[i].destroy();
          }
-         this._pathSelectors = [];
+         this._breadCrumbs = [];
       }
    });
 

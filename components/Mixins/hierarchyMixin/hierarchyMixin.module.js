@@ -123,9 +123,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        * @param {String} key Идентификатор раскрываемого узла
        */
       setCurrentRoot: function(key) {
-         /*Работа с хлебными крошками*/
-         var hierarchy = this._getHierarchy(this._dataSet, key);
-         var
+         var hierarchy = this._getHierarchy(this._dataSet, key),
+            record = this._dataSet.getRecordByKey(key),
             filter = this._filter || {},
             self = this;
          filter[this._options.hierField] = key;
@@ -135,10 +134,11 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          this._curRoot = key;
          this.reload(filter).addCallback(function(dataSet){
             var path = dataSet.getMetaData().path;
-            if (hierarchy.length === 0 && path){
+            if (!record && path){
                hierarchy = self._getHierarchy(path, key);
+               record = path.getRecordByKey(key);
             }
-            self._notify('onSetRoot', hierarchy);
+            self._notify('onSetRoot', key, hierarchy);
          });
       },
 
@@ -150,7 +150,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             record = dataSet.getRecordByKey(parentKey);
             if (record) {
                hierarchy.push({
-                  'key': parentKey,
+                  'id': parentKey,
                   'title' : record.get(this._options.displayField),
                   'color' : this._options.colorField ? record.get(this._options.colorField) : '',
                   'data' : record
