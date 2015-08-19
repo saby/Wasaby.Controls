@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
       $constructor: function() {
          this._publish('onItemClick');
-         $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._resizeHandler, this);
+         $ws.single.EventBus.channel('BreadCrumbsChannel').subscribe('onWindowResize', this._resizeHandler, this);
          this._homeIcon = $('.controls-BreadCrumbs__crumb-home', this._container);
          this._homeIcon.data('id', null); //клик по домику ведет в корень TODO: придрочено под null
          //инициализируем dataSet
@@ -60,32 +60,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                this._redrawDropdown();
             }
          } else if (point.length) {
-            this._onPointClick(point.data(this._options.keyField));
+            this._notify('onItemClick', point.data(this._options.keyField));
          }
-      },
-
-      /**
-       * Обработчик клика на пункт пути
-       * id - id по которому нужно перейти
-       * Удалет все пункты до того на который кликнули
-       * Если кликнули на первый пункт то удаляем его и переходим на уровень выше
-       */
-      _onPointClick: function(id) {
-         var length = this._dataSet.getCount(),
-            last = this._dataSet.at(length - 1);
-         //Нажатие на последний пункт должно вести туда же куда не предпоследний
-         for (var i = length - 1; i >= 0; i--) {
-            var record = this._dataSet.at(i);
-            if (record.getKey() !== last.getKey() && record.getKey() == id) break;
-            this._dataSet.removeRecord(record.getKey());
-            //TODO: убрать следующие 4 строчки когда будет нормальное удаление рекордов при sync'е StaticSource'а
-            delete this._dataSet._byId[record.getKey()];
-            delete this._dataSet._byId[record._cid];
-            this._dataSet._rawData.splice(i, 1);
-            this._dataSet._indexId.splice(i, 1);
-            if (record.getKey() == id) break;
-         }
-         this._notify('onItemClick', id);
       },
 
       _toggleHomeIcon: function(state){
@@ -125,6 +101,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          });
       },
 
+      //TODO: переделать на компонент (TreeListView?)
       _redrawDropdown: function() {
          var self = this;
          if (this._picker) {
@@ -164,11 +141,11 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             containerWidth = this._container.width(),
             points = $('.controls-BreadCrumbs__crumb', targetContainer),
             i = points.length - 1;
+         
          if (points.length){
-            points[i].className += ' ws-hidden';
-            //36px - ширина блока с домиком
+            //20px - ширина блока с домиком
             //Добавляем троеточие если пункты не убираются в контейнер
-            if ((targetContainer.width() + 58 >= containerWidth) && points.length > 2) {
+            if ((targetContainer.width() + 20 >= containerWidth) && points.length > 2) {
                var dots = $(pointTpl({
                   item: {
                      title: '...',
@@ -180,22 +157,24 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                }));
                $(points[i - 1]).before(dots);
                //скрываем пункты левее троеточия пока не уберемся в контейнер
-               for (i; i > 2; i--) {
+               for (i; i > 1; i--) {
                   if (targetContainer.width() + 20 < containerWidth || i == 1) {
                      break;
                   }
-                  points[i - 2].className += ' ws-hidden';
+                  points[i - 1].className += ' ws-hidden';
                }
             }
             
             //Если после всех манипуляций все еще не убираемся в контейнер, будем обрезать текст
+            points = $('.controls-BreadCrumbs__crumb:not(.ws-hidden)', this._container);
+
             if ((targetContainer.width() + 30 > containerWidth)) {
                var third = (containerWidth - 60) / 3;
                if (points.length > 2){
                   $('.controls-BreadCrumbs__title', points[0]).css('max-width', third * 2 - 20);
                   $('.controls-BreadCrumbs__title', points[points.length - 2]).css('max-width', third - 60);
                } else {
-                  $('.controls-BreadCrumbs__title', points[0]).css('max-width', containerWidth - 60);
+                  $('.controls-BreadCrumbs__title', points[1]).css('max-width', containerWidth - $(points[0]).width() - 60);
                }
             }
          }
