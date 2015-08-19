@@ -166,7 +166,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
 
       destroyFolderToolbar: function(id) {
          var
-            container = $('.controls-TreeDataGrid__folderToolbar[data-parent="' + id + '"]', this._container.get(0));
+            container = $('.controls-TreeDataGrid__folderToolbar' + (id ? '[data-parent="' + id + '"]' : ''), this._container.get(0));
          if (container.length) {
             var pagerContainer = $('.controls-TreePager-container', container.get(0));
             if (pagerContainer.length) {
