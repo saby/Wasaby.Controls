@@ -2529,12 +2529,12 @@ input[type="reset"]::-moz-focus-inner {
   font-style: normal;
   line-height: 24px;
   color: #313e78;
+  overflow: hidden;
 }
 .controls-BackButton .controls-BackButton__arrow {
   display: inline-block;
   width: 24px;
   height: 23px;
-  vertical-align: bottom;
   background: url('img/path-filter-icon-back.png');
 }
 .controls-BackButton:hover .controls-BackButton__caption {
