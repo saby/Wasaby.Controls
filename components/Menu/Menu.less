@@ -38,27 +38,9 @@
       box-sizing: @menu-header-box-sizing;
       padding: @menu-header-padding;
    }
-   &.controls-Menu__small-items {
-      .controls-Menu__header {
-         height: @menu-header-height;
-      }
-      .controls-MenuItem {
-         height: @menu-item-height;
-      }
-   }
-   &.controls-Menu__big-items {
-      .controls-Menu__header {
-         height: @menu-big-header-height;
-      }
-      .controls-MenuItem {
-         height: @menu-big-item-height;
-         line-height: @menu-big-item-height;
-         &.controls-Menu__hasChild {
-            &:after {
-               top: 8px;
-            }
-         }
-      }
+   .controls-MenuItem {
+      height: @menu-item-height;
+      padding: @menu-item-default-padding;
    }
 }
 

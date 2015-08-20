@@ -64,10 +64,8 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
          if (this._container.hasClass('controls-IconButton__round-border')){
             this._options.pickerClassName += ' controls-IconButton__round-border';
          }
-         if (this._container.hasClass('icon-16')){
-            this._options.pickerClassName += ' controls-Menu__small-items';
-         } else if (this._container.hasClass('icon-24')){
-            this._options.pickerClassName += ' controls-Menu__big-items';
+         if (this._container.hasClass('icon-24')){
+            this._options.pickerClassName += ' controls-Menu__big-header';
          } 
       },
 

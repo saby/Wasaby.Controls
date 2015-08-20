@@ -38,7 +38,7 @@
 @link-active-text-decoration:             none;
 
 @link-icon-vertical-alignment:            middle;
-@link-icon-margin:                        -2px 0 0;
+@link-icon-margin:                        -3px 0 0;
 
 @link-field-margin:                       0;
 @link-icon-field-margin:                  0 0 0 4px;
@@ -538,7 +538,7 @@
 @menu-border-width:                       2px;
 @menu-border-style:                       solid;
 @menu-border-color:                       @gray-light-color;
-@menu-border-radius:                      4px;
+@menu-border-radius:                      6px;
 @menu-shadow:                             none;
 
 @menu-expand-width:                       16px;
@@ -559,7 +559,7 @@
 @menu-expand-hover-bg:                    url(@menu-expand-spritesheet) 0 0 no-repeat;
 
 @menu-header-height:                      24px;
-@menu-big-header-height:                  33px;
+@menu-big-header-height:                  32px;
 @menu-header-box-sizing:                  border-box;
 @menu-header-padding:                     4px;
 
@@ -569,10 +569,12 @@
 // --------- //
 @menu-item-cursor:                        pointer;
 @menu-item-width:                         auto;
-@menu-item-height:                        24px;
-@menu-big-item-height:                    32px;
+@menu-item-height:                        26px;
 @menu-item-line-height:                   @menu-item-height;
-@menu-item-padding:                       0 26px 0 8px;
+@menu-item-default-padding:               0 8px;
+@menu-item-small-padding:                 0 8px 0 24px;
+@menu-item-average-padding:               0 8px 0 32px;
+@menu-item-big-padding:                   0 8px 0 36px;
 
 @menu-item-text-color:                    @black-color;
 @menu-item-bg:                            @white-color;
@@ -658,7 +660,7 @@
 @menu-button-arrow-disabled-bg:                         transparent url(@menu-button-arrow-spritesheet) 0 0;
 
 // Menu
-@menu-button-menu-top-margin:                           36px;
+@menu-button-menu-top-margin:                           31px;
 @menu-button-menu-left-margin:                          0;
 @menu-button-menu-padding:                              4px 0;   
 @menu-button-menu-border-width:                         2px;
@@ -673,12 +675,12 @@
 @menu-button-header-left-height:                        30px;
 @menu-button-header-left-margin:                        0;
 @menu-button-header-left-bg:                            transparent url(@menu-button-header-spritesheet) 0 214px;
-@menu-button-header-right-bg-revert-horizontal:         transparent url(@menu-button-header-spritesheet) 0 154px;
+@menu-button-header-right-bg-revert-horizontal:         transparent url(@menu-button-header-spritesheet) -2px 154px;
 @menu-button-header-right-bg-revert-vertical:           transparent url(@menu-button-header-spritesheet) 0 115px;
-@menu-button-header-right-bg-revert-vertical-horizontal:transparent url(@menu-button-header-spritesheet) 0 22px;
+@menu-button-header-right-bg-revert-vertical-horizontal:transparent url(@menu-button-header-spritesheet) 0 27px;
 
 @menu-button-header-center-width:                       auto;
-@menu-button-header-center-height:                      13px;
+@menu-button-header-center-height:                      7px;
 @menu-button-header-center-margin:                      0;
 @menu-button-header-center-bg:                          @white-color;
 
@@ -728,6 +730,7 @@
 
 // Menu
 @menu-link-menu-margin:                   -5px 0 0 -8px;
+@menu-link-menu-padding:                  0 0 4px 0;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
 
 // Menu header
@@ -741,7 +744,7 @@
 
 // Menu
 @menu-icon-menu-margin:                   -6px 0 0 -6px;
-@menu-icon-menu-padding:                  0;
+@menu-icon-menu-padding:                  0 0 4px 0;
 @menu-icon-menu-bg:                       @menu-button-menu-bg;
 
 // Menu header
