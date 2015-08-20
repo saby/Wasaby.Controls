@@ -398,6 +398,42 @@ input[type="reset"]::-moz-focus-inner {
 .controls-IconButton.controls-IconButton__round-border:hover {
   border-color: #f2f2f2;
 }
+.controls-Menu.controls-IconButton__round-border {
+  margin: -5px 0 0 -6px;
+}
+.controls-Menu.controls-IconButton__round-border.controls-Menu__hide-menu-header .controls-MenuItem {
+  padding: 0 8px;
+}
+.controls-Menu.controls-IconButton__round-border .controls-Menu__header {
+  height: 32px;
+}
+.controls-Menu.controls-IconButton__round-border .controls-Menu__header .icon-16 {
+  border: 1px solid #f2f2f2;
+  border-radius: 14px;
+  height: 28px;
+  width: 28px;
+  line-height: 26px!important;
+  text-align: center;
+  box-sizing: border-box;
+}
+.controls-Menu.controls-IconButton__round-border .controls-Menu__header .icon-16:hover {
+  border-color: #f2f2f2;
+}
+.controls-Menu.controls-IconButton__round-border .controls-Menu__header .icon-24 {
+  border: 1px solid #f2f2f2;
+  border-radius: 14px;
+  height: 28px;
+  width: 28px;
+  line-height: 26px!important;
+  text-align: center;
+  box-sizing: border-box;
+}
+.controls-Menu.controls-IconButton__round-border .controls-Menu__header .icon-24:hover {
+  border-color: #f2f2f2;
+}
+.controls-Menu.controls-IconButton__round-border .controls-MenuItem {
+  padding: 0 8px 0 36px;
+}
 .controls-TabButton {
   display: inline-block;
   cursor: pointer;
@@ -843,21 +879,9 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
   padding: 4px;
 }
-.controls-Menu__Popup.controls-Menu__small-items .controls-Menu__header {
-  height: 24px;
-}
-.controls-Menu__Popup.controls-Menu__small-items .controls-MenuItem {
+.controls-Menu__Popup .controls-MenuItem {
   height: 56px;
-}
-.controls-Menu__Popup.controls-Menu__big-items .controls-Menu__header {
-  height: 32px;
-}
-.controls-Menu__Popup.controls-Menu__big-items .controls-MenuItem {
-  height: 32px;
-  line-height: 32px;
-}
-.controls-Menu__Popup.controls-Menu__big-items .controls-MenuItem.controls-Menu__hasChild:after {
-  top: 8px;
+  padding: 0 8px;
 }
 .controls-Menu__submenu {
   display: none;
@@ -876,7 +900,7 @@ input[type="reset"]::-moz-focus-inner {
   width: auto;
   height: 56px;
   line-height: 56px;
-  padding: 0 32px 0 16px;
+  padding: 0 8px;
   color: #ffffff;
   background: #4e5762;
 }
@@ -1112,6 +1136,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuLink__Menu {
   margin: 0 0 0 -9px;
   background: #ffffff;
+  padding: 0;
 }
 .controls-MenuLink__Menu.controls-Menu .controls-Menu__header {
   padding: 6px;
@@ -1126,7 +1151,7 @@ input[type="reset"]::-moz-focus-inner {
   margin-top: -10px;
 }
 .controls-MenuLink__Menu.controls-Menu .controls-MenuItem {
-  padding: 0 8px 0 26px;
+  padding: 0 8px 0 24px;
 }
 .controls-MenuLink__Menu .controls-MenuLink__Menu .controls-MenuLink__arrowDown {
   display: none;
@@ -1184,7 +1209,7 @@ input[type="reset"]::-moz-focus-inner {
   background: #ffffff;
 }
 .controls-MenuIcon__Menu .controls-MenuItem {
-  padding-left: 24px;
+  padding: 0 8px 0 24px;
 }
 .controls-Menu .controls-Menu__header {
   position: relative;
@@ -1198,43 +1223,14 @@ input[type="reset"]::-moz-focus-inner {
   color: #ffcc99;
   padding-left: 4px;
 }
-.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border.controls-Menu__hide-menu-header .controls-MenuItem {
-  padding: 0 8px;
-}
-.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border .controls-Menu__header {
-  height: 36px;
-}
-.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border .controls-MenuItem {
-  padding: 0 8px 0 38px;
-}
 .controls-Menu .controls-Menu__header {
-  height: 36px;
+  height: 24px;
 }
-.controls-Menu .controls-Menu__header .icon-16 {
-  margin-top: 1px;
-  border: 1px solid #f2f2f2;
-  border-radius: 14px;
-  height: 28px;
-  width: 28px;
-  line-height: 26px!important;
-  text-align: center;
-  box-sizing: border-box;
+.controls-Menu.controls-Menu__big-header .controls-Menu__header {
+  height: 32px;
 }
-.controls-Menu .controls-Menu__header .icon-16:hover {
-  border-color: #f2f2f2;
-}
-.controls-Menu .controls-Menu__header .icon-24 {
-  margin-top: 1px;
-  border: 1px solid #f2f2f2;
-  border-radius: 14px;
-  height: 28px;
-  width: 28px;
-  line-height: 26px!important;
-  text-align: center;
-  box-sizing: border-box;
-}
-.controls-Menu .controls-Menu__header .icon-24:hover {
-  border-color: #f2f2f2;
+.controls-Menu.controls-Menu__big-header .controls-MenuItem {
+  padding: 0 8px 0 32px;
 }
 .controls-Menu.controls-Menu__hide-menu-header {
   padding: 4px 0;
