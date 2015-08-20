@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       $constructor: function() {
          this._publish('onSelectedItemsChange');
-         if (this._options.selectedItems) {
+         if (this._options.selectedItems && this._options.selectedItems.length) {
             $ws.single.ioc.resolve('ILogger').log('selectedItems', 'c 3.7.3 метод selectedItems перестанет работать. Используйте метод selectedKeys');
             this._options.selectedKeys = this._options.selectedItems;
          }
