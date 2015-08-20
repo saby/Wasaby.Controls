@@ -55,8 +55,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @param {Number} hoveredItem.width ширина
           * @example
           * <pre>
-          *     DataGrid.subscribe('onChangeHoveredItem', function(hoveredItem) {
-           *        var actions = DataGrid.getItemsActions(),
+          *     DataGridView.subscribe('onChangeHoveredItem', function(hoveredItem) {
+           *        var actions = DataGridView.getItemsActions(),
            *        instances = actions.getItemsInstances();
            *
            *        for (var i in instances) {
@@ -281,9 +281,9 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                id = target.data('id');
                this._elemClickHandler(id, this._dataSet.getRecordByKey(id), e.target);
             }
-            if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGrid__th__checkBox')){
-               $target.hasClass('controls-DataGrid__th__checkBox__checked') ? this.setSelectedKeys([]) : this.setSelectedItemsAll();
-               $target.toggleClass('controls-DataGrid__th__checkBox__checked');
+            if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox')){
+               $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
+               $target.toggleClass('controls-DataGridView__th__checkBox__checked');
             }
          },
          /**
@@ -377,7 +377,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @param html Содержимое блока.
           * @example
           * <pre>
-          *     dataGrid.setEmptyHTML('Нет записей');
+          *     DataGridView.setEmptyHTML('Нет записей');
           * </pre>
           * @see emptyHTML
           */
@@ -446,8 +446,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
            *         element: "buttonReload",
            *         caption: 'reload offset: 450'
            *    }).subscribe('onActivated', function(event, id){
-           *           //При нажатии на кнопку перезагрузим DataGrid  с 450ой записи
-           *           DataGridBL.reload(DataGridBL._filter, DataGridBL._sorting, 450, DataGridBL._limit);
+           *           //При нажатии на кнопку перезагрузим DataGridView  с 450ой записи
+           *           DataGridViewBL.reload(DataGridViewBL._filter, DataGridViewBL._sorting, 450, DataGridViewBL._limit);
            *    });
           * </pre>
           */
@@ -471,7 +471,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           *     var myElemClickHandler = function(id, data, target){
            *        console.log(id, data, target)
            *     }
-          *     dataGrid.setElemClickHandler(myElemClickHandler);
+          *     DataGridView.setElemClickHandler(myElemClickHandler);
           * </pre>
           * @see elemClickHandler
           */
@@ -532,8 +532,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @returns {Array} Массив операций над записью.
           * @example
           * <pre>
-          *     DataGrid.subscribe('onChangeHoveredItem', function(hoveredItem) {
-          *        var actions = DataGrid.getItemsActions(),
+          *     DataGridView.subscribe('onChangeHoveredItem', function(hoveredItem) {
+          *        var actions = DataGridView.getItemsActions(),
           *        instances = actions.getItemsInstances();
           *
           *        for (var i in instances) {
@@ -565,7 +565,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @param {String} items.isMainOption На строке ли кнопка (или в меню).
           * @example
           * <pre>
-          *     dataGrid.setItemsActions([{
+          *     DataGridView.setItemsActions([{
           *        name: 'delete',
           *        icon: 'sprite:icon-16 icon-Erase icon-error',
           *        title: 'Удалить',
@@ -848,8 +848,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * @param num Номер страницы.
           * @example
           * <pre>
-          *    if(dataGrid.getPage() > 0)
-          *       dataGrid.setPage(0);
+          *    if(DataGridView.getPage() > 0)
+          *       DataGridView.setPage(0);
           * </pre>
           * @see getPage
           * @see paging
@@ -872,8 +872,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
           * Работает при использовании постраничной навигации.
           * @example
           * <pre>
-          *    if(dataGrid.getPage() > 0)
-          *       dataGrid.setPage(0);
+          *    if(DataGridView.getPage() > 0)
+          *       DataGridView.setPage(0);
           * </pre>
           * @see paging
           * @see setPage
