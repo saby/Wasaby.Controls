@@ -86,15 +86,21 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
             this._cachedH = this._inputField.height();
 
             var trg = $ws.helpers.trackElement(this._container, true);
+
+            this._inputField.autosize({
+               callback: self._textAreaResize.bind(self)
+            });
             trg.subscribe('onVisible', function (event, visible) {
-               var w = self._inputField.width();
-               var h = self._inputField.height();
-               if (w != self._cachedW || h != self._cachedH) {
-                  self._cachedW = w;
-                  self._cachedH = h;
-                  self._inputField.autosize({
-                     callback: self._textAreaResize.bind(self)
-                  });
+               if (visible) {
+                  var w = self._inputField.width();
+                  var h = self._inputField.height();
+                  if (w != self._cachedW || h != self._cachedH) {
+                     self._cachedW = w;
+                     self._cachedH = h;
+                     self._inputField.autosize({
+                        callback: self._textAreaResize.bind(self)
+                     });
+                  }
                }
             });
 
@@ -138,7 +144,9 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
       },
 
       _drawText: function(text) {
-         this._inputField.val(text || '');
+         if (this._inputField.val() != text) {
+            this._inputField.val(text || '');
+         }
          if (this._options.autoResize.state) {
             this._inputField.trigger('autosize.resize');
          }
