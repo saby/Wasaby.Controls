@@ -147,7 +147,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             this._compatPlaceholder.toggle(!text);
          }
          if (this._inputField.val() != text) {
-            this._inputField.val(text);
+            this._inputField.val(text || '');
          }
       },
 
