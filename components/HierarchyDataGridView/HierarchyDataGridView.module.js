@@ -1,20 +1,20 @@
-define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
-   'js!SBIS3.CONTROLS.DataGrid',
+define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
+   'js!SBIS3.CONTROLS.DataGridView',
    'js!SBIS3.CONTROLS.hierarchyMixin',
-   'html!SBIS3.CONTROLS.HierarchyDataGrid/resources/rowTpl',
+   'html!SBIS3.CONTROLS.HierarchyDataGridView/resources/rowTpl',
    'js!SBIS3.CONTROLS.PathSelector',
-   'is!browser?html!SBIS3.CONTROLS.DataGrid/resources/DataGridGroupBy'
-], function (DataGrid, hierarchyMixin, rowTpl, PathSelector, groupByTpl) {
+   'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy'
+], function (DataGridView, hierarchyMixin, rowTpl, PathSelector, groupByTpl) {
    'use strict';
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
-    * @class SBIS3.CONTROLS.TreeDataGrid
-    * @extends SBIS3.CONTROLS.DataGrid
+    * @class SBIS3.CONTROLS.TreeDataGridView
+    * @extends SBIS3.CONTROLS.DataGridView
     * @mixes SBIS3.CONTROLS.TreeMixin
     * @public
     * @control
     * @initial
-    * <component data-component='SBIS3.CONTROLS.TreeDataGrid'>
+    * <component data-component='SBIS3.CONTROLS.TreeDataGridView'>
     *    <options name="columns" type="array">
     *       <options>
     *          <option name="title">Поле 1</option>
@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
     * </component>
     */
 
-   var HierarchyDataGrid = DataGrid.extend([hierarchyMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
+   var HierarchyDataGridView = DataGridView.extend([hierarchyMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
       /**
        * @event onSearchPathClick При клике по хлебным крошкам в режиме поиска.
        * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
        * @return Если вернуть false - загрузка узла не произойдет
        * @example
        * <pre>
-       *    dataGrid.subscribe('onSearchPathClick', function(event){
+       *    DataGridView.subscribe('onSearchPathClick', function(event){
        *      searchForm.clearSearch();
        *    });
        * </pre>
@@ -52,11 +52,11 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
       $constructor: function () {
         this._publish('onSetRoot', 'onSearchPathClick');
          //чтобы не добавлять новый шаблон модуля просто добавим класс тут
-         this.getContainer().addClass('controls-HierarchyDataGrid');
+         this.getContainer().addClass('controls-HierarchyDataGridView');
       },
 
       _dataLoadedCallback: function () {
-         HierarchyDataGrid.superclass._dataLoadedCallback.call(this, arguments);
+         HierarchyDataGridView.superclass._dataLoadedCallback.call(this, arguments);
       },
 
       _elemClickHandlerInternal: function (data, id, target) {
@@ -69,14 +69,14 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
          this._lastParent = undefined;
          this._lastDrawn = undefined;
          this._lastPath = [];
-         return HierarchyDataGrid.superclass.reload.apply(this, arguments);
+         return HierarchyDataGridView.superclass.reload.apply(this, arguments);
       },
       _clearItems : function(){
          this._lastParent = this._curRoot;
          this._lastDrawn = undefined;
          this._lastPath = [];
          this._destroySearchPathSelectors();
-         HierarchyDataGrid.superclass._clearItems.apply(this, arguments);
+         HierarchyDataGridView.superclass._clearItems.apply(this, arguments);
       },
 
       getSearchGroupBy: function(field){
@@ -211,8 +211,8 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
 
       },
       _isViewElement: function(elem) {
-         return HierarchyDataGrid.superclass._isViewElement.apply(this, arguments)
-                && !elem.hasClass('controls-HierarchyDataGrid__path')
+         return HierarchyDataGridView.superclass._isViewElement.apply(this, arguments)
+                && !elem.hasClass('controls-HierarchyDataGridView__path')
                 && !(elem.wsControl() instanceof PathSelector);
       },
       _createPathItemsDS: function(pathRecords){
@@ -234,5 +234,5 @@ define('js!SBIS3.CONTROLS.HierarchyDataGrid', [
       }
    });
 
-   return HierarchyDataGrid;
+   return HierarchyDataGridView;
 });

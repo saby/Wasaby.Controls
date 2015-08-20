@@ -144,7 +144,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                container.style.height = height - 4 + 'px';
                if (updateWidth) {
                   divIdx = 0;
-                  tds = $target.find('.controls-DataGrid__td');
+                  tds = $target.find('.controls-DataGridView__td');
                   divs = $container.find('> div');
                   $ws.helpers.forEach(this._options.columns, function(col, idx) {
                      if (col.editor) {
