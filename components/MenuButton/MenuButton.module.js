@@ -148,7 +148,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
                                   <i class="controls-MenuButton__headerCenter"></i>\
                                   <i class="controls-MenuButton__headerRight"></i>\
                                </span>');
-         $('.controls-MenuButton__headerCenter', this._header).width(this._container.outerWidth() - 27);
+         $('.controls-MenuButton__headerCenter', this._header).width(this._container.outerWidth() - 26);
          this._header.css({
             width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
             height: this._container.outerHeight()
@@ -162,7 +162,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             'min-width': self._container.outerWidth() - this._border + 18 //ширина выступающей части обводки
          });
          if (this._header) {
-            $('.controls-MenuButton__headerCenter', this._header).width(this._container.outerWidth() - 27);
+            $('.controls-MenuButton__headerCenter', this._header).width(this._container.outerWidth() - 26);
          }
       },
 
