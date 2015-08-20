@@ -1993,21 +1993,21 @@ input[type="reset"]::-moz-focus-inner {
   margin: 4px;
 }
 .controls-ListView .controls-ListView__item,
-.controls-DataGrid .controls-ListView__item {
+.controls-DataGridView .controls-ListView__item {
   overflow: hidden;
   position: relative;
 }
 .controls-ListView .controls-ListView__item,
-.controls-DataGrid .controls-ListView__item {
+.controls-DataGridView .controls-ListView__item {
   overflow: hidden;
   position: relative;
 }
 .controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox,
-.controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox {
+.controls-DataGridView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox {
   background: transparent;
 }
 .controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover,
-.controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover {
+.controls-DataGridView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover {
   background: transparent;
 }
 .controls-ListView .controls-ListView__EmptyData {
@@ -2131,19 +2131,19 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TreeView__expand__leaf:hover {
   background: none !important;
 }
-.controls-DataGrid.controls-DataGrid__scrollingNow .controls-DataGrid__thead .controls-DataGrid__scrolledCell {
+.controls-DataGridView.controls-DataGridView__scrollingNow .controls-DataGridView__thead .controls-DataGridView__scrolledCell {
   cursor: -moz-grabbing !important;
   cursor: -webkit-grabbing !important;
   cursor: grabbing !important;
 }
-.controls-DataGrid.controls-DataGrid__PartScroll__animation .controls-DataGrid__PartScroll__thumb,
-.controls-DataGrid.controls-DataGrid__PartScroll__animation .controls-DataGrid__scrolledCell {
+.controls-DataGridView.controls-DataGridView__PartScroll__animation .controls-DataGridView__PartScroll__thumb,
+.controls-DataGridView.controls-DataGridView__PartScroll__animation .controls-DataGridView__scrolledCell {
   -webkit-transition: left 0.5s;
   -moz-transition: left 0.5s;
   -ms-transition: left 0.5s;
   -o-transition: left 0.5s;
 }
-.controls-DataGrid .controls-DataGrid__table {
+.controls-DataGridView .controls-DataGridView__table {
   width: 100%;
   position: relative;
   border-spacing: 0;
@@ -2154,53 +2154,53 @@ input[type="reset"]::-moz-focus-inner {
   background: #4e5762;
   table-layout: fixed;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell,
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__thead .controls-DataGrid__th.controls-DataGrid__notScrolledCell {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__td.controls-DataGridView__notScrolledCell,
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__thead .controls-DataGridView__th.controls-DataGridView__notScrolledCell {
   background-color: #4e5762;
   border-left: none;
   border-right: none;
   z-index: 1;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell.controls-DataGrid__th,
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__thead .controls-DataGrid__th.controls-DataGrid__notScrolledCell.controls-DataGrid__th {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__td.controls-DataGridView__notScrolledCell.controls-DataGridView__th,
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__thead .controls-DataGridView__th.controls-DataGridView__notScrolledCell.controls-DataGridView__th {
   background-color: #4e5762;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__scrolledCell,
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__thead .controls-DataGrid__th.controls-DataGrid__scrolledCell {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__td.controls-DataGridView__scrolledCell,
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__thead .controls-DataGridView__th.controls-DataGridView__scrolledCell {
   cursor: pointer;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr {
   background: transparent;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__multiSelected {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__item__multiSelected {
   background-color: transparent;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__multiSelected .controls-DataGrid__td {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__item__multiSelected .controls-DataGridView__td {
   color: inherit;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__hoveredItem {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__hoveredItem {
   background: #f2f2f2;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__hoveredItem .controls-DataGrid__th {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__hoveredItem .controls-DataGridView__th {
   color: inherit;
   background-color: #f2f2f2;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__hoveredItem .controls-DataGrid__td {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__hoveredItem .controls-DataGridView__td {
   color: #333333;
   background-color: #f2f2f2;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__PartScroll__container {
   position: absolute;
   height: 1px;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__arrowLeft {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__PartScroll__container .controls-DataGridView__PartScroll__arrowLeft {
   position: relative;
   float: left;
   top: -12px;
   z-index: 2;
   cursor: pointer;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__arrowRight {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__PartScroll__container .controls-DataGridView__PartScroll__arrowRight {
   position: relative;
   float: right;
   top: -12px;
@@ -2208,7 +2208,7 @@ input[type="reset"]::-moz-focus-inner {
   left: 4px;
   cursor: pointer;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__thumb {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__PartScroll__container .controls-DataGridView__PartScroll__thumb {
   height: 3px;
   width: 96px;
   margin-left: 20px;
@@ -2218,12 +2218,12 @@ input[type="reset"]::-moz-focus-inner {
   position: absolute;
   cursor: pointer;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__thumb:hover,
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__thumb.controls-DataGrid__PartScroll__thumb-clicked {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__PartScroll__container .controls-DataGridView__PartScroll__thumb:hover,
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__PartScroll__container .controls-DataGridView__PartScroll__thumb.controls-DataGridView__PartScroll__thumb-clicked {
   height: 6px;
   top: -1px;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__th {
   position: relative;
   font-weight: normal;
   cursor: default;
@@ -2239,29 +2239,29 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent;
   border-bottom: 1px solid #f5f5f5;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:hover {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__th:hover {
   color: #aaaaaa;
   background-color: transparent;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__th .controls-ListView__itemCheckBox {
   margin: -3px 0 0 4px;
   background: transparent;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox.controls-DataGrid__th__checkBox__checked {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__th .controls-ListView__itemCheckBox.controls-DataGridView__th__checkBox__checked {
   background: transparent url('img/checkbox.png') -2px -5px;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox.controls-DataGrid__th__checkBox__checked:hover {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__th .controls-ListView__itemCheckBox.controls-DataGridView__th__checkBox__checked:hover {
   background: transparent url('img/checkbox.png') -2px -5px;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox:hover {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__th .controls-ListView__itemCheckBox:hover {
   background: transparent;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-DataGrid__th-content {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__th .controls-DataGridView__th-content {
   max-height: 28px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__td {
   position: relative;
   cursor: pointer;
   text-align: left;
@@ -2277,22 +2277,22 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
   line-height: 21px;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid-cell-overflow-ellipsis {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__td.controls-DataGridView-cell-overflow-ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.controls-DataGrid .controls-ListView__folder {
+.controls-DataGridView .controls-ListView__folder {
   font-size: 15px;
 }
-.controls-DataGrid .controls-DataGrid__td__checkBox {
+.controls-DataGridView .controls-DataGridView__td__checkBox {
   width: 16px;
   padding-right: 0!important;
 }
-.controls-DataGrid .controls-DataGrid__td__checkBox .controls-ListView__itemCheckBox {
+.controls-DataGridView .controls-DataGridView__td__checkBox .controls-ListView__itemCheckBox {
   margin: 0;
 }
-.controls-DataGrid__addInPlace-container {
+.controls-DataGridView__addInPlace-container {
   padding-left: 8px;
 }
 .controls-PathSelector {
@@ -2472,19 +2472,19 @@ input[type="reset"]::-moz-focus-inner {
 .controls__operations-panel__wrapper .controls__operations-panel__action-type-all {
   margin: 0 4px;
 }
-.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid {
+.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGridView {
   padding: 0 0 5px 0;
   min-height: 50px;
   width: 100%;
   /*TODO скрываем подгрузку (ещё null)*/
 }
-.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid .controls-TreeDataGrid__folderToolbar {
+.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGridView .controls-TreeDataGridView__folderToolbar {
   display: none;
 }
-.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid .controls-DataGrid__table .controls-DataGrid__td {
+.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGridView .controls-DataGridView__table .controls-DataGridView__td {
   padding-left: 22px;
 }
-.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid .controls-DataGrid__table .controls-MoveDialog__root {
+.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGridView .controls-DataGridView__table .controls-MoveDialog__root {
   padding-left: 6px;
 }
 .controls-MoveDialogTemplate__activateMove {
@@ -2566,7 +2566,7 @@ input[type="reset"]::-moz-focus-inner {
 .ws-disabled .controls-ProgressBar__value {
   color: #aaaaaa;
 }
-/* Цветовая схема для опций записи */
+/* �������� ����� ��� ����� ������ */
 .controls-ListView .controls-ItemActions {
   background-color: transparent;
   box-shadow: none;
@@ -2626,6 +2626,12 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ItemActions__menu-container .controls-PopupMixin__closeButton:hover {
   background: url('img/ItemActions-menu.png') no-repeat 0 -60px;
 }
+.controls-ItemActions__activeItem {
+  background-color: #f3f3f3;
+}
+.controls-ItemActions__activeItem .controls-DataGridView__notScrolledCell {
+  background-color: #f3f3f3 !important;
+}
 .controls-EditInPlaceController {
   position: absolute;
   width: 100%;
@@ -2634,14 +2640,14 @@ input[type="reset"]::-moz-focus-inner {
   left: 0;
   overflow: visible;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-editInPlace__editing {
   background: #f2f2f2;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing .controls-DataGrid__th {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-editInPlace__editing .controls-DataGridView__th {
   color: inherit;
   background-color: #f2f2f2;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing .controls-DataGrid__td {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-editInPlace__editing .controls-DataGridView__td {
   color: #333333;
   background-color: #f2f2f2;
 }

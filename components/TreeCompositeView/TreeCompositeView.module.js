@@ -1,7 +1,7 @@
-define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGrid', 'js!SBIS3.CONTROLS.CompositeViewMixin', 'html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl'], function(TreeDataGrid, CompositeViewMixin, folderTpl) {
+define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridView', 'js!SBIS3.CONTROLS.CompositeViewMixin', 'html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl'], function(TreeDataGridView, CompositeViewMixin, folderTpl) {
    'use strict';
 
-   var TreeCompositeView = TreeDataGrid.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
+   var TreeCompositeView = TreeDataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
 
       $protected: {
          _options: {
