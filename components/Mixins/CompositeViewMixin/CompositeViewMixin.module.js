@@ -55,12 +55,12 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
                         .toggleClass('controls-CompositeView-list', mode == 'list')
                         .toggleClass('controls-CompositeView-tile', mode == 'tile');
          if (this._options.viewMode == 'table') {
-            $('.controls-DataGrid__table', this._container.get(0)).removeClass('ws-hidden');
+            $('.controls-DataGridView__table', this._container.get(0)).removeClass('ws-hidden');
             $('.controls-CompositeView__itemsContainer', this._container.get(0)).addClass('ws-hidden');
          }
          else {
             $('.controls-CompositeView__itemsContainer', this._container.get(0)).removeClass('ws-hidden');
-            $('.controls-DataGrid__table', this._container.get(0)).addClass('ws-hidden');
+            $('.controls-DataGridView__table', this._container.get(0)).addClass('ws-hidden');
          }
       },
       _isAllowInfiniteScroll : function(){

@@ -918,13 +918,13 @@
          'js!SBIS3.CONTROLS.AdapterJSON',
          'js!SBIS3.CONTROLS.ListView',
          'js!SBIS3.CONTROLS.TreeView',
-         'js!SBIS3.CONTROLS.DataGrid'
+         'js!SBIS3.CONTROLS.DataGridView'
       ], function (
          Collection,
          AdapterJSON,
          ListView,
          TreeView,
-         DataGrid
+         DataGridView
       ) {
 
          var items = [{
@@ -981,8 +981,8 @@
             }]
          });
 
-         new DataGrid({
-            element: 'dataGrid',
+         new DataGridView({
+            element: 'DataGridView',
             items: items,
             itemSelect: true,
             columns: [{
