@@ -1,20 +1,20 @@
-define('js!SBIS3.CONTROLS.TreeDataGrid', [
-   'js!SBIS3.CONTROLS.HierarchyDataGrid',
+define('js!SBIS3.CONTROLS.TreeDataGridView', [
+   'js!SBIS3.CONTROLS.HierarchyDataGridView',
    'js!SBIS3.CONTROLS.TreeMixinDS',
    'js!SBIS3.CONTROLS.DragNDropMixin',
-   'html!SBIS3.CONTROLS.TreeDataGrid/resources/rowTpl'
-], function(HierarchyDataGrid, TreeMixin, DragNDropMixin, rowTpl) {
+   'html!SBIS3.CONTROLS.TreeDataGridView/resources/rowTpl'
+], function(HierarchyDataGridView, TreeMixin, DragNDropMixin, rowTpl) {
    'use strict';
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
-    * @class SBIS3.CONTROLS.TreeDataGrid
-    * @extends SBIS3.CONTROLS.DataGrid
+    * @class SBIS3.CONTROLS.TreeDataGridView
+    * @extends SBIS3.CONTROLS.DataGridView
     * @mixes SBIS3.CONTROLS.TreeMixinDS
     * @public
     * @author Крайнов Дмитрий Олегович
     * @control
     * @initial
-    * <component data-component='SBIS3.CONTROLS.TreeDataGrid'>
+    * <component data-component='SBIS3.CONTROLS.TreeDataGridView'>
     *    <options name="columns" type="array">
     *       <options>
     *          <option name="title">Поле 1</option>
@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
     * </component>
     */
 
-   var TreeDataGrid = HierarchyDataGrid.extend([TreeMixin, DragNDropMixin], /** @lends SBIS3.CONTROLS.TreeDataGrid.prototype*/ {
+   var TreeDataGridView = HierarchyDataGridView.extend([TreeMixin, DragNDropMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
       $protected: {
          _rowTpl : rowTpl,
          _options: {
@@ -124,8 +124,8 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          this._drawItemsFolder(records);
          /*TODO пока не очень общо создаем внутренние пэйджинги*/
          var allContainers = $('.controls-ListView__item[data-parent="'+key+'"]', self._getItemsContainer().get(0));
-         var row = $('<tr class="controls-TreeDataGrid__folderToolbar">' +
-            '<td colspan="'+(this._options.columns.length+(this._options.multiselect ? 1 : 0))+'"><div style="overflow:hidden" class="controls-TreeDataGrid__folderToolbarContainer"><div class="controls-TreePager-container"></div></div></td>' +
+         var row = $('<tr class="controls-TreeDataGridView__folderToolbar">' +
+            '<td colspan="'+(this._options.columns.length+(this._options.multiselect ? 1 : 0))+'"><div style="overflow:hidden" class="controls-TreeDataGridView__folderToolbarContainer"><div class="controls-TreePager-container"></div></div></td>' +
             '</tr>').attr('data-parent',key);
          $(allContainers.last()).after(row);
          this._resizeFolderToolbars();
@@ -134,18 +134,18 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
       },
 
       _onResizeHandler: function() {
-         TreeDataGrid.superclass._onResizeHandler.apply(this, arguments);
+         TreeDataGridView.superclass._onResizeHandler.apply(this, arguments);
          this._resizeFolderToolbars();
       },
 
       _resizeFolderToolbars: function() {
-         var toolbars = $('.controls-TreeDataGrid__folderToolbarContainer', this._container.get(0));
+         var toolbars = $('.controls-TreeDataGridView__folderToolbarContainer', this._container.get(0));
          var width = this._container.width();
          toolbars.width(width);
       },
 
       _keyboardHover: function(e) {
-         TreeDataGrid.superclass._keyboardHover.apply(this, arguments);
+         TreeDataGridView.superclass._keyboardHover.apply(this, arguments);
          var selectedKey = this.getSelectedKey();
          if (e.which === $ws._const.key.enter) {
             var rec = this._dataSet.getRecordByKey(selectedKey);
@@ -166,7 +166,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
 
       destroyFolderToolbar: function(id) {
          var
-            container = $('.controls-TreeDataGrid__folderToolbar[data-parent="' + id + '"]', this._container.get(0));
+            container = $('.controls-TreeDataGridView__folderToolbar[data-parent="' + id + '"]', this._container.get(0));
          if (container.length) {
             var pagerContainer = $('.controls-TreePager-container', container.get(0));
             if (pagerContainer.length) {
@@ -183,7 +183,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
             delete(this._options.openedPath[childKeys[i]]);
          }
          /*TODO кажется как то нехорошо*/
-         $('.controls-TreeDataGrid__folderToolbar[data-parent="'+key+'"]').remove();
+         $('.controls-TreeDataGridView__folderToolbar[data-parent="'+key+'"]').remove();
          if (this._treePagers[key]) {
             this._treePagers[key].destroy();
          }
@@ -191,7 +191,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
       },
 
       _addItemAttributes : function(container, item) {
-         TreeDataGrid.superclass._addItemAttributes.call(this, container, item);
+         TreeDataGridView.superclass._addItemAttributes.call(this, container, item);
          if (item.get(this._options.hierField + '@')){
          	container.addClass('controls-ListView__folder');
          }
@@ -285,7 +285,7 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
          //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
          if (this.getSelectedKey() === moveTo) {
             this._elemClickHandler = function() {
-               this._elemClickHandler = TreeDataGrid.superclass._elemClickHandler;
+               this._elemClickHandler = TreeDataGridView.superclass._elemClickHandler;
             }
          }
          this._move(keys, moveTo);
@@ -302,6 +302,6 @@ define('js!SBIS3.CONTROLS.TreeDataGrid', [
       /*DRAG_AND_DROP END*/
    });
 
-   return TreeDataGrid;
+   return TreeDataGridView;
 
 });
