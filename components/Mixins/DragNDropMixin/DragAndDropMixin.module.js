@@ -2,11 +2,16 @@
  * Created by am.gerasimov on 26.05.2015.
  */
 define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
+
+   var isMobile = $ws._const.browser.isMobileSafari || $ws._const.browser.isMobileAndroid,
+       eventBinder = document.addEventListener ? 'addEventListener' : 'attachEvent',
+       eventUnBinder = document.removeEventListener ? 'removeEventListener' : 'detachEvent';
+
    var DragAndDropMixin = {
       $protected: {
          _dragContainer: undefined,
          _withinElement: undefined,
-         _shift: {
+         _startPosition: {
             x: 0,
             y: 0
          }
@@ -22,16 +27,48 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
          this._toggleNativeDragNDrop(false);
 
          /* Навесим класс и обработчики, необходимые для работы drag-n-drop'а */
-         this._dragContainers.addClass('draggable')
-                             .mousedown(this._mouseDownHandler.bind(this));
+         this._dragContainers.addClass('draggable');
+         isMobile ? this._toggleTouchStartEvent(true) : this._toggleMouseStartEvent(true);
       },
 
+      /*
+       * Навешивает обработчики начала перемещения необходимые для работы на мобильных устройствах
+       */
+      _toggleTouchStartEvent: function (bind) {
+         for(var i = 0, len = this._dragContainers.length; i < len; i++) {
+            this._dragContainers[i][bind ? eventBinder : eventUnBinder]('touchstart', this._startEventHandler.bind(this));
+         }
+      },
+
+      /*
+       * Навешивает обработчики начала перемещения необходимые для работы на PC
+       */
+      _toggleMouseStartEvent: function(bind) {
+         this._dragContainers[bind ? 'bind' : 'unbind']('mousedown', this._startEventHandler.bind(this));
+      },
+
+      /*
+       * Навешивает обработчики движения необходимые для работы на мобильных устройствах
+       */
+      _bindTouchMoveEvent: function() {
+         document[eventBinder]('touchmove', this._moveAt.bind(this), false);
+         document[eventBinder]('touchend', this._moveEnd.bind(this), false);
+         document[eventBinder]('touchcancel', this._moveEnd.bind(this), false);
+      },
+
+      /*
+       * Навешивает обработчики движения мыши необходимые для работы на PC
+       */
+      _bindMouseMoveEvent: function() {
+         $ws._const.$doc.bind('mousemove.dragNDrop', this._moveAt.bind(this));
+         $ws._const.$doc.bind('mouseup.dragNDrop', this._moveEnd.bind(this));
+      },
       /**
        * Обновляет drag-N-Drop, заного ищет элементы, навешивает обработчики
        */
       updateDragAndDrop: function() {
          if(this._dragContainers.length) {
-             this._dragContainers.unbind('mousedown', this._mouseDownHandler.bind(this));
+            this._dragContainersUnbind();
          }
          this._toggleNativeDragNDrop(true);
          this.initializeDragAndDrop();
@@ -51,32 +88,37 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
       /*
        * Обработчик нажатия мыши на переносимый элемент
        */
-      _mouseDownHandler: function(e) {
+      _startEventHandler: function(e) {
          /* Если нажали не левой клавишей мыши, то не будем обрабатывать перенос */
-         if(e.which !== 1) return;
+         if(isMobile ? e.touches.length > 1 : e.which !== 1) return;
 
          /* Найдём родителя, относительно которого происходит позиционирование */
          this._withinElement = e.target.offsetParent;
 
          this._dragStart(e);
          this._setStartPosition(e, e.target);
-         $ws._const.$doc.bind('mousemove.dragNDrop', this._moveAt.bind(this));
-         $ws._const.$doc.bind('mouseup.dragNDrop', this._moveEnd.bind(this));
+         isMobile ? this._bindTouchMoveEvent() : this._bindMouseMoveEvent();
       },
-
 
       /**
        * Сообщает координаты мыши в метод dragMove
        */
       _moveAt: function(e) {
-         this._dragMove(e,{top: e.pageY - this._shift.y, left: e.pageX - this._shift.x});
+         var eventCords = isMobile ? e.touches[0] : e;
+         this._dragMove(e,{top: eventCords.pageY - this._startPosition.y, left: eventCords.pageX - this._startPosition.x});
       },
 
       /**
        * Отписывается от событий, вызывает метод dragEnd
        */
       _moveEnd: function(e) {
-         $ws._const.$doc.unbind('.dragNDrop');
+         if(isMobile) {
+            document[eventUnBinder]('touchmove', this._moveAt.bind(this));
+            document[eventUnBinder]('touchend', this._moveEnd.bind(this));
+            document[eventUnBinder]('touchcancel', this._moveEnd.bind(this));
+         } else {
+            $ws._const.$doc.unbind('.dragNDrop');
+         }
          this._dragEnd(e);
       },
 
@@ -85,7 +127,7 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
        */
       _getCords: function(elem) {
          var elemCords = elem.getBoundingClientRect(),
-            withinElemCords = this._withinElement.getBoundingClientRect();
+             withinElemCords = this._withinElement.getBoundingClientRect();
 
          return {
             top: elemCords.top + pageYOffset - withinElemCords.top,
@@ -93,12 +135,18 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
          };
       },
 
+      _dragContainersUnbind: function() {
+         isMobile ? this._toggleTouchStartEvent(false) : this._toggleMouseStartEvent(false);
+      },
+
+      /* Cчитает координаты с которых началось движение */
       _setStartPosition: function(e, elem) {
          var position = this._getCords(elem),
-             style = window.getComputedStyle ? getComputedStyle(elem, "") : elem.currentStyle;
+             style = window.getComputedStyle ? getComputedStyle(elem, "") : elem.currentStyle,
+             eventCords = isMobile ? e.touches[0] : e;
 
-         this._shift.x = e.pageX - position.left + parseInt(style.marginLeft);
-         this._shift.y = e.pageY - position.top + parseInt(style.marginTop);
+         this._startPosition.x = eventCords.pageX - position.left + parseInt(style.marginLeft);
+         this._startPosition.y = eventCords.pageY - position.top + parseInt(style.marginTop);
       },
 
       _getDragContainer: function() {
@@ -119,7 +167,7 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
       before: {
          destroy: function () {
             if(this._dragContainers.length) {
-               this._dragContainers.unbind('mousedown');
+               this._dragContainersUnbind();
                this._dragContainers = null;
             }
          }
