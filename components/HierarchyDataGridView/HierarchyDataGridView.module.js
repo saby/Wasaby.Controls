@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
    'html!SBIS3.CONTROLS.HierarchyDataGridView/resources/rowTpl',
    'js!SBIS3.CONTROLS.BreadCrumbs',
    'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy'
-], function (DataGridView, hierarchyMixin, rowTpl, PathSelector, groupByTpl) {
+], function (DataGridView, hierarchyMixin, rowTpl, BreadCrumbs, groupByTpl) {
    'use strict';
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
