@@ -902,7 +902,7 @@
       require([
          'js!SBIS3.CONTROLS.Collection',
          'js!SBIS3.CONTROLS.AdapterJSON',
-         'js!SBIS3.CONTROLS.ListView',
+         'js!SBIS3.CONTROLS.ListViewOld',
          'js!SBIS3.CONTROLS.TreeView',
          'js!SBIS3.CONTROLS.DataGridView'
       ], function (

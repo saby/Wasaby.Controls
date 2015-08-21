@@ -1,19 +1,19 @@
 define('js!SBIS3.CONTROLS.TreeViewDS', [
-   'js!SBIS3.CONTROLS.ListViewDS',
+   'js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'js!SBIS3.CONTROLS.TreeMixinDS',
    'js!SBIS3.CORE.MarkupTransformer'
-], function (ListViewDS, hierarchyMixin, TreeMixinDS, MarkupTransformer) {
+], function (ListView, hierarchyMixin, TreeMixinDS, MarkupTransformer) {
    'use strict';
    /**
     * Контрол, отображающий данные имеющие иерархическую структуру. Позволяет отобразить данные в произвольном виде с возможностью открыть или закрыть отдельные узлы
     * @class SBIS3.CONTROLS.TreeViewDS
-    * @extends SBIS3.CONTROLS.ListViewDS
+    * @extends SBIS3.CONTROLS.ListView
     * @mixes SBIS3.CONTROLS.TreeMixinDS
     * @author Крайнов Дмитрий Олегович
     */
 
-   var TreeViewDS = ListViewDS.extend([hierarchyMixin, TreeMixinDS], /** @lends SBIS3.CONTROLS.TreeViewDS.prototype*/ {
+   var TreeViewDS = ListView.extend([hierarchyMixin, TreeMixinDS], /** @lends SBIS3.CONTROLS.TreeViewDS.prototype*/ {
       $protected: {
          _options: {
             //FixME: так как приходит набор от листвью. пока он не нужен
