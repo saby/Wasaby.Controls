@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          this.setTitle('Перенести ' + selectedCount + ' запис' + $ws.helpers.wordCaseByNumber(selectedCount, 'ей', 'ь', 'и') + ' в');
          this.getChildControlByName('MoveDialogTemplate-moveButton')
             .subscribe('onActivated', this._onMoveButtonActivated.bind(this));
-         this._treeView = this.getChildControlByName('MoveDialogTemplate-TreeDataGrid')
+         this._treeView = this.getChildControlByName('MoveDialogTemplate-TreeDataGridView')
             .subscribe('onDataLoad', this._onDataLoadHandler.bind(this));
          this._treeView.setHierField(linkedView._options.hierField);
          this._treeView.setColumns([{ field: linkedView._options.displayField }]);
@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          event.setResult(dataSet);
       },
       _createRoot: function() {
-         this._rootBlock = $('<tr class="controls-DataGrid__tr controls-ListView__item controls-ListView__folder" style="" data-id="null"><td class="controls-DataGrid__td controls-MoveDialog__root"><div class="controls-TreeView__expand js-controls-TreeView__expand has-child controls-TreeView__expand__open"></div>Корень</td></tr>');
+         this._rootBlock = $('<tr class="controls-DataGridView__tr controls-ListView__item controls-ListView__folder" style="" data-id="null"><td class="controls-DataGridView__td controls-MoveDialog__root"><div class="controls-TreeView__expand js-controls-TreeView__expand has-child controls-TreeView__expand__open"></div>Корень</td></tr>');
          this._rootBlock.bind('click', this._onRootClick.bind(this));
          this._rootBlock.prependTo(this._treeView._container.find('tbody'));
          this._treeView.setSelectedKey(null);

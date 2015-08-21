@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
    function propertyUpdateWrapper(func) {
       return function() {
-         this.runInPropertiesUpdate(func, arguments);
+         return this.runInPropertiesUpdate(func, arguments);
       };
    }
 
@@ -168,7 +168,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * <pre class="brush:xml">
              *    <options name="groupBy">
              *        <option name="field">ДатаВремя</option>
-             *         <option name="method" type="function">js!SBIS3.CONTROLS.Demo.MyListViewDS:prototype.myGroupBy</option>
+             *         <option name="method" type="function">js!SBIS3.CONTROLS.Demo.MyListView:prototype.myGroupBy</option>
              *    </options>
              * </pre>
              */
@@ -292,16 +292,17 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @param offset Элемент, с которого перезагружать данные.
         * @param {Number} limit Ограничение количества перезагружаемых элементов.
         */
-      reload: /*propertyUpdateWrapper(*/function (filter, sorting, offset, limit) {
+      reload: propertyUpdateWrapper(function (filter, sorting, offset, limit) {
          if (this._options.pageSize) {
             this._limit = this._options.pageSize;
          }
+
          var
             def = new $ws.proto.Deferred(),
             self = this,
-            filterChanged = typeof(filter) !== 'undefined'
+            filterChanged = typeof(filter) !== 'undefined',
             sortingChanged = typeof(sorting) !== 'undefined',
-            offsetChanged = typeof(offset) !== 'undefined'
+            offsetChanged = typeof(offset) !== 'undefined',
             limitChanged = typeof(limit) !== 'undefined';
 
          this._cancelLoading();
@@ -333,7 +334,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._notifyOnPropertyChanged('limit');
 
          return def;
-      }/*)*/,
+      }),
 
       _toggleIndicator:function(){
          /*Method must be implemented*/

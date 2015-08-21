@@ -1,7 +1,7 @@
-define('js!SBIS3.CONTROLS.CompositeView', ['js!SBIS3.CONTROLS.DataGrid', 'js!SBIS3.CONTROLS.CompositeViewMixin'], function(DataGrid, CompositeViewMixin) {
+define('js!SBIS3.CONTROLS.CompositeView', ['js!SBIS3.CONTROLS.DataGridView', 'js!SBIS3.CONTROLS.CompositeViewMixin'], function(DataGridView, CompositeViewMixin) {
    'use strict';
 
-   var CompositeView = DataGrid.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.DataGrid.prototype*/ {
+   var CompositeView = DataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
 
       $protected: {
 

@@ -32,7 +32,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Link .controls-Link__icon {
   vertical-align: middle;
-  margin: -2px 0 0;
+  margin: -3px 0 0;
 }
 .controls-Link .controls-Link__field {
   margin: 0;
@@ -397,6 +397,42 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-IconButton.controls-IconButton__round-border:hover {
   border-color: #587ab0;
+}
+.controls-Menu.controls-IconButton__round-border {
+  margin: -5px 0 0 -6px;
+}
+.controls-Menu.controls-IconButton__round-border.controls-Menu__hide-menu-header .controls-MenuItem {
+  padding: 0 8px;
+}
+.controls-Menu.controls-IconButton__round-border .controls-Menu__header {
+  height: 32px;
+}
+.controls-Menu.controls-IconButton__round-border .controls-Menu__header .icon-16 {
+  border: 1px solid #587ab0;
+  border-radius: 14px;
+  height: 28px;
+  width: 28px;
+  line-height: 26px!important;
+  text-align: center;
+  box-sizing: border-box;
+}
+.controls-Menu.controls-IconButton__round-border .controls-Menu__header .icon-16:hover {
+  border-color: #587ab0;
+}
+.controls-Menu.controls-IconButton__round-border .controls-Menu__header .icon-24 {
+  border: 1px solid #587ab0;
+  border-radius: 14px;
+  height: 28px;
+  width: 28px;
+  line-height: 26px!important;
+  text-align: center;
+  box-sizing: border-box;
+}
+.controls-Menu.controls-IconButton__round-border .controls-Menu__header .icon-24:hover {
+  border-color: #587ab0;
+}
+.controls-Menu.controls-IconButton__round-border .controls-MenuItem {
+  padding: 0 8px 0 36px;
 }
 .controls-TabButton {
   display: inline-block;
@@ -965,21 +1001,9 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
   padding: 4px;
 }
-.controls-Menu__Popup.controls-Menu__small-items .controls-Menu__header {
-  height: 24px;
-}
-.controls-Menu__Popup.controls-Menu__small-items .controls-MenuItem {
-  height: 24px;
-}
-.controls-Menu__Popup.controls-Menu__big-items .controls-Menu__header {
-  height: 33px;
-}
-.controls-Menu__Popup.controls-Menu__big-items .controls-MenuItem {
-  height: 32px;
-  line-height: 32px;
-}
-.controls-Menu__Popup.controls-Menu__big-items .controls-MenuItem.controls-Menu__hasChild:after {
-  top: 8px;
+.controls-Menu__Popup .controls-MenuItem {
+  height: 26px;
+  padding: 0 8px;
 }
 .controls-Menu__submenu {
   display: none;
@@ -996,9 +1020,9 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
   cursor: pointer;
   width: auto;
-  height: 24px;
-  line-height: 24px;
-  padding: 0 26px 0 8px;
+  height: 26px;
+  line-height: 26px;
+  padding: 0 8px;
   color: #000000;
   background: #ffffff;
 }
@@ -1140,7 +1164,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuButton__header.controls-MenuButton__header-revert-horizontal .controls-MenuButton__headerRight {
   width: 12px;
   height: 30px;
-  background: transparent url('img/MenuButton-header.png') 0 154px;
+  background: transparent url('img/MenuButton-header.png') -2px 154px;
 }
 .controls-MenuButton__header.controls-MenuButton__header-revert-horizontal.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerLeft {
   width: 28px;
@@ -1150,7 +1174,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuButton__header.controls-MenuButton__header-revert-horizontal.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerRight {
   width: 12px;
   height: 30px;
-  background: transparent url('img/MenuButton-header.png') 0 22px;
+  background: transparent url('img/MenuButton-header.png') 0 27px;
 }
 .controls-MenuButton__header.controls-MenuButton__header-revert-horizontal.controls-MenuButton__header-revert-vertical .controls-MenuButton__headerCenter {
   vertical-align: top;
@@ -1171,7 +1195,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuButton__header .controls-MenuButton__headerCenter {
   display: inline-block;
   width: auto;
-  height: 13px;
+  height: 7px;
   margin: 0;
   background: #ffffff;
 }
@@ -1184,7 +1208,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuButton__Menu {
   padding: 4px 0;
-  margin-top: 36px;
+  margin-top: 31px;
   margin-left: 0;
   border-width: 2px;
   border-style: solid;
@@ -1234,10 +1258,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuLink__Menu {
   margin: -5px 0 0 -8px;
   background: #ffffff;
+  padding: 0 0 4px 0;
 }
 .controls-MenuLink__Menu.controls-Menu .controls-Menu__header {
   padding: 6px;
-  height: 33px;
+  height: 32px;
 }
 .controls-MenuLink__Menu.controls-Menu .controls-Menu__header .icon-16 {
   margin-top: 1px;
@@ -1245,10 +1270,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuLink__Menu.controls-Menu .controls-Menu__header .controls-Menu__header-caption {
   position: absolute;
   top: 50%;
-  margin-top: -10.5px;
+  margin-top: -10px;
 }
 .controls-MenuLink__Menu.controls-Menu .controls-MenuItem {
-  padding: 0 8px 0 26px;
+  padding: 0 8px 0 24px;
 }
 .controls-MenuLink__Menu .controls-MenuLink__Menu .controls-MenuLink__arrowDown {
   display: none;
@@ -1301,12 +1326,12 @@ input[type="reset"]::-moz-focus-inner {
   background: transparent url('img/MenuButton-header.png');
 }
 .controls-MenuIcon__Menu {
-  padding: 0;
+  padding: 0 0 4px 0;
   margin: -6px 0 0 -6px;
   background: #ffffff;
 }
 .controls-MenuIcon__Menu .controls-MenuItem {
-  padding-left: 24px;
+  padding: 0 8px 0 24px;
 }
 .controls-Menu .controls-Menu__header {
   position: relative;
@@ -1320,43 +1345,14 @@ input[type="reset"]::-moz-focus-inner {
   color: #ff7033;
   padding-left: 4px;
 }
-.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border.controls-Menu__hide-menu-header .controls-MenuItem {
-  padding: 0 8px;
-}
-.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border .controls-Menu__header {
-  height: 37px;
-}
-.controls-Menu.controls-Menu__small-items.controls-IconButton__round-border .controls-MenuItem {
-  padding: 0 8px 0 38px;
-}
 .controls-Menu .controls-Menu__header {
-  height: 37px;
+  height: 24px;
 }
-.controls-Menu .controls-Menu__header .icon-16 {
-  margin-top: 1px;
-  border: 1px solid #587ab0;
-  border-radius: 14px;
-  height: 28px;
-  width: 28px;
-  line-height: 26px!important;
-  text-align: center;
-  box-sizing: border-box;
+.controls-Menu.controls-Menu__big-header .controls-Menu__header {
+  height: 32px;
 }
-.controls-Menu .controls-Menu__header .icon-16:hover {
-  border-color: #587ab0;
-}
-.controls-Menu .controls-Menu__header .icon-24 {
-  margin-top: 1px;
-  border: 1px solid #587ab0;
-  border-radius: 14px;
-  height: 28px;
-  width: 28px;
-  line-height: 26px!important;
-  text-align: center;
-  box-sizing: border-box;
-}
-.controls-Menu .controls-Menu__header .icon-24:hover {
-  border-color: #587ab0;
+.controls-Menu.controls-Menu__big-header .controls-MenuItem {
+  padding: 0 8px 0 32px;
 }
 .controls-Menu.controls-Menu__hide-menu-header {
   padding: 4px 0;
@@ -2219,21 +2215,16 @@ input[type="reset"]::-moz-focus-inner {
   margin: 4px;
 }
 .controls-ListView .controls-ListView__item,
-.controls-DataGrid .controls-ListView__item {
-  overflow: hidden;
-  position: relative;
-}
-.controls-ListView .controls-ListView__item,
-.controls-DataGrid .controls-ListView__item {
+.controls-DataGridView .controls-ListView__item {
   overflow: hidden;
   position: relative;
 }
 .controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox,
-.controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox {
+.controls-DataGridView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox {
   background: url('img/CheckBox.png') 0 1px;
 }
 .controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover,
-.controls-DataGrid .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover {
+.controls-DataGridView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover {
   background: url('img/CheckBox.png') 0 17px;
 }
 .controls-ListView .controls-ListView__EmptyData {
@@ -2357,19 +2348,19 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TreeView__expand__leaf:hover {
   background: none !important;
 }
-.controls-DataGrid.controls-DataGrid__scrollingNow .controls-DataGrid__thead .controls-DataGrid__scrolledCell {
+.controls-DataGridView.controls-DataGridView__scrollingNow .controls-DataGridView__thead .controls-DataGridView__scrolledCell {
   cursor: -moz-grabbing !important;
   cursor: -webkit-grabbing !important;
   cursor: grabbing !important;
 }
-.controls-DataGrid.controls-DataGrid__PartScroll__animation .controls-DataGrid__PartScroll__thumb,
-.controls-DataGrid.controls-DataGrid__PartScroll__animation .controls-DataGrid__scrolledCell {
+.controls-DataGridView.controls-DataGridView__PartScroll__animation .controls-DataGridView__PartScroll__thumb,
+.controls-DataGridView.controls-DataGridView__PartScroll__animation .controls-DataGridView__scrolledCell {
   -webkit-transition: left 0.5s;
   -moz-transition: left 0.5s;
   -ms-transition: left 0.5s;
   -o-transition: left 0.5s;
 }
-.controls-DataGrid .controls-DataGrid__table {
+.controls-DataGridView .controls-DataGridView__table {
   width: 100%;
   position: relative;
   border-spacing: 0;
@@ -2380,53 +2371,53 @@ input[type="reset"]::-moz-focus-inner {
   background: #ffffff;
   table-layout: fixed;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell,
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__thead .controls-DataGrid__th.controls-DataGrid__notScrolledCell {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__td.controls-DataGridView__notScrolledCell,
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__thead .controls-DataGridView__th.controls-DataGridView__notScrolledCell {
   background-color: #ffffff;
   border-left: none;
   border-right: none;
   z-index: 1;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__notScrolledCell.controls-DataGrid__th,
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__thead .controls-DataGrid__th.controls-DataGrid__notScrolledCell.controls-DataGrid__th {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__td.controls-DataGridView__notScrolledCell.controls-DataGridView__th,
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__thead .controls-DataGridView__th.controls-DataGridView__notScrolledCell.controls-DataGridView__th {
   background-color: #ffffff;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid__scrolledCell,
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__thead .controls-DataGrid__th.controls-DataGrid__scrolledCell {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__td.controls-DataGridView__scrolledCell,
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__thead .controls-DataGridView__th.controls-DataGridView__scrolledCell {
   cursor: pointer;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr {
   background: transparent;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__multiSelected {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__item__multiSelected {
   background-color: transparent;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__item__multiSelected .controls-DataGrid__td {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__item__multiSelected .controls-DataGridView__td {
   color: inherit;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__hoveredItem {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__hoveredItem {
   background: #e9fafe;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__hoveredItem .controls-DataGrid__th {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__hoveredItem .controls-DataGridView__th {
   color: inherit;
   background-color: #e9fafe;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-ListView__hoveredItem .controls-DataGrid__td {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__hoveredItem .controls-DataGridView__td {
   color: inherit;
   background-color: #e9fafe;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__PartScroll__container {
   position: absolute;
   height: 1px;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__arrowLeft {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__PartScroll__container .controls-DataGridView__PartScroll__arrowLeft {
   position: relative;
   float: left;
   top: -12px;
   z-index: 2;
   cursor: pointer;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__arrowRight {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__PartScroll__container .controls-DataGridView__PartScroll__arrowRight {
   position: relative;
   float: right;
   top: -12px;
@@ -2434,7 +2425,7 @@ input[type="reset"]::-moz-focus-inner {
   left: 4px;
   cursor: pointer;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__thumb {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__PartScroll__container .controls-DataGridView__PartScroll__thumb {
   height: 3px;
   width: 96px;
   margin-left: 20px;
@@ -2444,12 +2435,12 @@ input[type="reset"]::-moz-focus-inner {
   position: absolute;
   cursor: pointer;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__thumb:hover,
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__PartScroll__container .controls-DataGrid__PartScroll__thumb.controls-DataGrid__PartScroll__thumb-clicked {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__PartScroll__container .controls-DataGridView__PartScroll__thumb:hover,
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__PartScroll__container .controls-DataGridView__PartScroll__thumb.controls-DataGridView__PartScroll__thumb-clicked {
   height: 6px;
   top: -1px;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__th {
   position: relative;
   font-weight: normal;
   cursor: default;
@@ -2465,29 +2456,29 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent;
   border-bottom: 1px solid #f5f5f5;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th:hover {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__th:hover {
   color: #999999;
   background-color: transparent;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__th .controls-ListView__itemCheckBox {
   margin: -3px 0 0 4px;
   background: url('img/CheckBox.png') 0 1px;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox.controls-DataGrid__th__checkBox__checked {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__th .controls-ListView__itemCheckBox.controls-DataGridView__th__checkBox__checked {
   background: url('img/CheckBox.png') 0 49px;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox.controls-DataGrid__th__checkBox__checked:hover {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__th .controls-ListView__itemCheckBox.controls-DataGridView__th__checkBox__checked:hover {
   background: url('img/CheckBox.png') 0 49px;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-ListView__itemCheckBox:hover {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__th .controls-ListView__itemCheckBox:hover {
   background: url('img/CheckBox.png') 0 17px;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__th .controls-DataGrid__th-content {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__th .controls-DataGridView__th-content {
   max-height: 28px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__td {
   position: relative;
   cursor: pointer;
   text-align: left;
@@ -2503,44 +2494,44 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
   line-height: 19px;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__td.controls-DataGrid-cell-overflow-ellipsis {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__td.controls-DataGridView-cell-overflow-ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.controls-DataGrid .controls-ListView__folder {
+.controls-DataGridView .controls-ListView__folder {
   font-size: 15px;
 }
-.controls-DataGrid .controls-DataGrid__td__checkBox {
+.controls-DataGridView .controls-DataGridView__td__checkBox {
   width: 24px;
   padding-right: 0!important;
 }
-.controls-DataGrid .controls-DataGrid__td__checkBox .controls-ListView__itemCheckBox {
+.controls-DataGridView .controls-DataGridView__td__checkBox .controls-ListView__itemCheckBox {
   margin: 1px 0 0 5px;
 }
-.controls-DataGrid__addInPlace-container {
+.controls-DataGridView__addInPlace-container {
   padding-left: 8px;
 }
-.controls-DataGrid__td .controls-TreeView__expand--inside {
+.controls-DataGridView__td .controls-TreeView__expand--inside {
   display: none;
   line-height: 13px !important;
 }
-.controls-DataGrid__td .controls-TreeView__hierWrapper {
+.controls-DataGridView__td .controls-TreeView__hierWrapper {
   height: 20px;
   width: 16px;
   display: inline-block;
   float: left;
 }
-.controls-DataGrid__td .controls-TreeView__editArrow {
+.controls-DataGridView__td .controls-TreeView__editArrow {
   display: none;
   position: relative;
   top: 2px;
 }
-.controls-DataGrid__td:hover .controls-TreeView__expand--inside {
+.controls-DataGridView__td:hover .controls-TreeView__expand--inside {
   display: inline-block;
   height: 14px;
 }
-.controls-TreeDataGrid__folderToolbarContainer {
+.controls-TreeDataGridView__folderToolbarContainer {
   overflow: hidden;
 }
 .controls-ListView__hoveredItem .controls-TreeView__editArrow {
@@ -2569,13 +2560,13 @@ input[type="reset"]::-moz-focus-inner {
 .dragdropBody .controls-ListView__folder.controls-ListView__hoveredItem:not(.controls-ListView__item__selected) > td {
   background: #9fd3fe !important;
 }
-.controls-HierarchyDataGrid__expand {
+.controls-HierarchyDataGridView__expand {
   height: 20px;
   float: left;
   padding-right: 6px;
   margin-top: -3px;
 }
-.controls-HierarchyDataGrid .controls-HierarchyDataGrid__path td {
+.controls-HierarchyDataGridView .controls-HierarchyDataGridView__path td {
   padding-top: 0px !important;
   padding-bottom: 0px !important;
 }
@@ -2883,19 +2874,19 @@ input[type="reset"]::-moz-focus-inner {
 .controls-OperationsMark-checkBox {
   margin: 0 4px;
 }
-.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid {
+.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGridView {
   padding: 0 0 5px 0;
   min-height: 50px;
   width: 100%;
   /*TODO скрываем подгрузку (ещё null)*/
 }
-.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid .controls-TreeDataGrid__folderToolbar {
+.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGridView .controls-TreeDataGridView__folderToolbar {
   display: none;
 }
-.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid .controls-DataGrid__table .controls-DataGrid__td {
+.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGridView .controls-DataGridView__table .controls-DataGridView__td {
   padding-left: 22px;
 }
-.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGrid .controls-DataGrid__table .controls-MoveDialog__root {
+.controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGridView .controls-DataGridView__table .controls-MoveDialog__root {
   padding-left: 6px;
 }
 .controls-MoveDialogTemplate__activateMove {
@@ -3065,7 +3056,7 @@ input[type="reset"]::-moz-focus-inner {
 .ws-disabled .controls-ProgressBar__value {
   color: #e4e4e4;
 }
-/* Цветовая схема для опций записи */
+/* �������� ����� ��� ����� ������ */
 .controls-ListView .controls-ItemActions {
   background-color: transparent;
   box-shadow: none;
@@ -3125,6 +3116,12 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ItemActions__menu-container .controls-PopupMixin__closeButton:hover {
   background: url('img/ItemActions-menu.png') no-repeat 0 -60px;
 }
+.controls-ItemActions__activeItem {
+  background-color: #e9fafe !important;
+}
+.controls-ItemActions__activeItem .controls-DataGridView__notScrolledCell {
+  background-color: #e9fafe !important;
+}
 .controls-EditInPlaceController {
   position: absolute;
   width: 100%;
@@ -3133,14 +3130,14 @@ input[type="reset"]::-moz-focus-inner {
   left: 0;
   overflow: visible;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-editInPlace__editing {
   background: #e9fafe;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing .controls-DataGrid__th {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-editInPlace__editing .controls-DataGridView__th {
   color: inherit;
   background-color: #e9fafe;
 }
-.controls-DataGrid .controls-DataGrid__table .controls-DataGrid__tr.controls-editInPlace__editing .controls-DataGrid__td {
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-editInPlace__editing .controls-DataGridView__td {
   color: inherit;
   background-color: #e9fafe;
 }
@@ -3260,7 +3257,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-PopupMixin__closeButton:hover {
   background: url('img/cancelIcon-sprite.png') 0 -16px no-repeat;
 }
-.controls-ListView__item__selected .controls-DataGrid__td:first-child {
+.controls-ListView__item__selected .controls-DataGridView__td:first-child {
   background-image: url('img/rowSelect.png');
   background-position: left top;
   background-repeat: repeat-y;

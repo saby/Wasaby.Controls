@@ -1,1 +1,19 @@
-<div class="controls-ListView"></div>
+<div class="controls-ListView{{?it.multiselect !== false}} controls-ListView__multiselect{{?}}">
+   <div class="controls-AjaxLoader ws-hidden">
+      <div class="controls-AjaxLoader__outer">
+         <div class="controls-AjaxLoader__block">
+            <div class="controls-AjaxLoader__LoadingIndicator"></div>
+         </div>
+      </div>
+   </div>
+   <div class="controls-ListView__itemsContainer"></div>
+   {{?it.infiniteScroll}}
+      <div class="controls-ListView-scrollIndicator ws-hidden"></div>
+   {{?}}
+   {{? it.itemsActions.length}}
+      <div class="controls-ListView__itemActions-container"></div>
+   {{?}}
+   {{? it.showPaging}}
+      <div class="controls-Pager-container"></div>
+   {{?}}
+</div>

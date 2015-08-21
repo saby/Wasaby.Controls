@@ -42,8 +42,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          //Нужно поменять фильтр и загрузить нужный корень.
          //TODO менять фильтр в контексте, когда появятся data-binding'и
          filter[gridView.getHierField()] = this._lastRoot;
-         //dataGrid._filter = filter;
-         //dataGrid.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
+         //DataGridView._filter = filter;
+         //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
          gridView.reload(filter, gridView._sorting, 0);
          BreadCrumbs.getDataSet().setRawData(this._pathDSRawData);
          BreadCrumbs._redraw();

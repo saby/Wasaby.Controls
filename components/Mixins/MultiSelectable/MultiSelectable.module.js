@@ -97,7 +97,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                if (!this._options.multiselect) {
                   this._options.selectedKeys = this._options.selectedKeys.slice(0, 1);
                }
-               this._setSelectedRecords();
             }
             else {
                throw new Error('Argument must be instance of Array');
@@ -106,11 +105,16 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
          else {
             if (this._options.allowEmptySelection == false) {
                this._setFirstItemAsSelected();
-               this._setSelectedRecords();
             }
          }
       },
 
+      after : {
+         init: function () {
+            this._drawSelectedItems(this._options.selectedKeys);
+            this._setSelectedRecords();
+         }
+      },
       /**
        * Метод-заглушка. Будет переделан на установку самих элементов, а не их id
        * @deprecated Будет удалено с 3.7.3. Используйте {@link setSelectedKeys}.
