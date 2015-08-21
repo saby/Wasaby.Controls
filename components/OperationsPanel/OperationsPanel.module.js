@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
               * @cfg {js!SBIS3.CONTROLS.ListView} Связанного представление данных
               * @example
               * <pre>
-              *     <option name="linkedView">MyDataGrid</option>
+              *     <option name="linkedView">MyDataGridView</option>
               * </pre>
               * @see setLinkedView
               * @see getLinkedView
