@@ -291,6 +291,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
                   this._treePagers[i].destroy();
                }
             }
+            this.destroyFolderToolbar && this.destroyFolderToolbar();
          }
       },
 
