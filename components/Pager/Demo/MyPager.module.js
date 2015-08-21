@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.Demo.MyPager',
       [
          'js!SBIS3.CORE.CompoundControl',
          'html!SBIS3.CONTROLS.Demo.MyPager',
-         'js!SBIS3.CONTROLS.Demo.MyListViewDS',
+         'js!SBIS3.CONTROLS.Demo.MyListView',
          'js!SBIS3.CONTROLS.Pager'
       ], function(CompoundControl, dotTplFn) {
          /**
