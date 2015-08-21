@@ -63,7 +63,12 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
                this._setFirstItemAsSelected();
             }
          }
-         this._drawSelectedItem();
+      },
+
+      after : {
+         init : function() {
+            this._drawSelectedItem(this._options.selectedKey);
+         }
       },
 
       /**

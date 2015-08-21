@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * <pre>
              *    <options name="groupBy">
              *        <option name="field">ДатаВремя</option>
-             *         <option name="method" type="function">js!SBIS3.CONTROLS.Demo.MyListViewDS:prototype.myGroupBy</option>
+             *         <option name="method" type="function">js!SBIS3.CONTROLS.Demo.MyListView:prototype.myGroupBy</option>
              *    </options>
              * </pre>
              */

@@ -14,6 +14,8 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
       $protected: {
          _dotTplFn: dotTplFn,
          _inputField: null,
+         _cachedW: null,
+         _cachedH: null,
          _options: {
             /**
              * @cfg {Number} Количество строк
@@ -67,6 +69,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
 
       init :function(){
          TextArea.superclass.init.call(this);
+         var self = this;
          if (this._options.autoResize.state) {
             this._options.minLinesCount = parseInt(this._options.minLinesCount, 10);
             if (!this._options.autoResize.maxLinesCount) {
@@ -78,7 +81,29 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
             }
             this._inputField.data('minLinesCount', this._options.minLinesCount);
             this._inputField.data('maxLinesCount', this._options.autoResize.maxLinesCount);
-            this._inputField.autosize();
+
+            this._cachedW = this._inputField.width();
+            this._cachedH = this._inputField.height();
+
+            var trg = $ws.helpers.trackElement(this._container, true);
+
+            this._inputField.autosize({
+               callback: self._textAreaResize.bind(self)
+            });
+            trg.subscribe('onVisible', function (event, visible) {
+               if (visible) {
+                  var w = self._inputField.width();
+                  var h = self._inputField.height();
+                  if (w != self._cachedW || h != self._cachedH) {
+                     self._cachedW = w;
+                     self._cachedH = h;
+                     self._inputField.autosize({
+                        callback: self._textAreaResize.bind(self)
+                     });
+                  }
+               }
+            });
+
          } else {
             if (this._options.minLinesCount){
                this._inputField.attr('rows',parseInt(this._options.minLinesCount, 10));
@@ -119,10 +144,23 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
       },
 
       _drawText: function(text) {
-         this._inputField.val(text || '');
+         if (this._inputField.val() != text) {
+            this._inputField.val(text || '');
+         }
          if (this._options.autoResize.state) {
             this._inputField.trigger('autosize.resize');
          }
+      },
+
+      _textAreaResize : function() {
+         this._notifyOnSizeChanged(this, this);
+      },
+
+      destroy: function() {
+         if (this._options.autoResize.state) {
+            this._inputField instanceof $ && this._inputField.trigger('autosize.destroy');
+         }
+         TextArea.superclass.destroy.apply(this, arguments);
       }
    });
 

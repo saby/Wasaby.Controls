@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.Demo.MyTreeView',
         'html!SBIS3.CONTROLS.Demo.MyTreeView',
         'css!SBIS3.CONTROLS.Demo.MyTreeView',
         'js!SBIS3.CONTROLS.TreeView',
-        'js!SBIS3.CONTROLS.TreeDataGrid'
+        'js!SBIS3.CONTROLS.TreeDataGridView'
     ], function(CompoundControl, dotTplFn) {
     /**
      * SBIS3.CONTROLS.Demo.MyTreeView
