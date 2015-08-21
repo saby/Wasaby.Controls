@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.DataGridView',
    [
-      'js!SBIS3.CONTROLS.ListViewDS',
+      'js!SBIS3.CONTROLS.ListView',
       'html!SBIS3.CONTROLS.DataGridView',
       'html!SBIS3.CONTROLS.DataGridView/resources/rowTpl',
       'js!SBIS3.CORE.MarkupTransformer',
@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    /**
     * Контрол, отображающий набор данных в виде в таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.DataGridView
-    * @extends SBIS3.CONTROLS.ListViewDS
+    * @extends SBIS3.CONTROLS.ListView
     * @control
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyDataGridView
