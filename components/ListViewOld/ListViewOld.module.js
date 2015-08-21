@@ -2,11 +2,11 @@
  * Created by iv.cheremushkin on 14.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.ListView',
+define('js!SBIS3.CONTROLS.ListViewOld',
    ['js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.CollectionMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
-      'html!SBIS3.CONTROLS.ListView'
+      'html!SBIS3.CONTROLS.ListViewOld'
    ],
    function (CompoundControl, CollectionMixin, MultiSelectable, dotTplFn) {
 
@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.ListView',
       /**
        * Контрол, отображающий внутри себя набор однотипных сущностей.
        * Умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать их.
-       * @class SBIS3.CONTROLS.ListView
+       * @class SBIS3.CONTROLS.ListViewOld
        * @extends $ws.proto.Control
        * @mixes SBIS3.CONTROLS.CollectionMixin
        * @mixes SBIS3.CONTROLS.MultiSelectable
@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @author Черёмушкин Илья
        */
 
-      var ListView = CompoundControl.extend([CollectionMixin, MultiSelectable], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      var ListView = CompoundControl.extend([CollectionMixin, MultiSelectable], /** @lends SBIS3.CONTROLS.ListViewOld.prototype */ {
          $protected: {
             _dotTplFn: dotTplFn,
             _dotItemTpl: null,
@@ -76,6 +76,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          $constructor: function () {
+            $ws.single.ioc.resolve('ILogger').log('ListViewOld', 'ListViewOld устарел. Используйте "ListView".');
             this._items.setHierField(null);
             var self = this;
             this._container.mouseup(function(e){
