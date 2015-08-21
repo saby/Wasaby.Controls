@@ -1,0 +1,5 @@
+<span class="controls-BreadCrumbs__crumb js-controls-BreadCrumbs__crumb {{?it.item.dots}}controls-BreadCrumbs__dots{{?}}" title="{{=$ws.helpers.escapeHtml(it.item.get(it.displayField))}}">
+	<span class="controls-BreadCrumbs__arrow icon-16 icon-DayForward icon-primary action-hover"></span>
+   {{?it.item.get('icon')}}<span class="{{=it.item.get('icon')}}"></span>{{?}}
+	<a class="controls-BreadCrumbs__title" style="{{=it.decorators.apply(it.item.get('color'), 'color')}}">{{=it.decorators.apply($ws.helpers.escapeHtml(it.item.get(it.displayField)))}}</a>
+</span>
