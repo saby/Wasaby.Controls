@@ -29,12 +29,12 @@ define('js!SBIS3.CONTROLS.ListView',
        * Умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
        * @class SBIS3.CONTROLS.ListView
        * @extends $ws.proto.Control
+       * @author Крайнов Дмитрий Олегович
        * @mixes SBIS3.CONTROLS.DSMixin
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
        * @public
        * @demo SBIS3.CONTROLS.Demo.MyListView
-       * @author Крайнов Дмитрий Олегович
        */
 
       var ListView = CompoundControl.extend([DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
@@ -274,8 +274,8 @@ define('js!SBIS3.CONTROLS.ListView',
          _onClickHandler: function(e) {
             ListView.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
-                target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item'),
-                id;
+               target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item'),
+               id;
 
             if (target.length && this._isViewElement(target)) {
                id = target.data('id');
@@ -284,7 +284,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox')){
                $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
                $target.toggleClass('controls-DataGridView__th__checkBox__checked');
-            }            
+            }
          },
          /**
           * Обрабатывает перемещения мышки на элемент представления
@@ -341,8 +341,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var itemActionsContainer = this._itemActionsGroup && this._itemActionsGroup.getContainer();
             return itemActionsContainer &&
                ( itemActionsContainer[0] === $target[0] ||
-               $.contains(itemActionsContainer[0], $target[0]) ||
-               this._itemActionsGroup.isItemActionsMenuVisible() );
+                  $.contains(itemActionsContainer[0], $target[0]) ||
+                  this._itemActionsGroup.isItemActionsMenuVisible() );
          },
          /**
           * Обрабатывает уведение мышки с элемента представления
@@ -396,7 +396,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _elemClickHandler: function (id, data, target) {
             var $target = $(target),
-                elClickHandler = this._options.elemClickHandler;
+               elClickHandler = this._options.elemClickHandler;
 
             this.setSelectedKey(id);
             if (this._options.multiselect) {
@@ -589,8 +589,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see getHoveredItem
           */
          setItemsActions: function (items) {
-            this._options.itemsActions = items;
             this.getItemsActions().setItems(items);
+            this._options.itemsActions = items;
          },
          //**********************************//
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
@@ -643,8 +643,8 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _nextLoad: function () {
             var self = this,
-                  loadAllowed  = this._isAllowInfiniteScroll(),
-                  records;
+               loadAllowed  = this._isAllowInfiniteScroll(),
+               records;
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
                this._addLoadingIndicator();
@@ -686,11 +686,11 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _loadBeforeScrollAppears: function(){
             var elem = this._infiniteScrollContainer.length ? this._infiniteScrollContainer.get(0) : $('body').get(0),
-                  windowHeight = $(window).height();
+               windowHeight = $(window).height();
             // Было: this._dataSet.getCount() <= parseInt(($(window).height() /  32 ) + 10 , 10
             if (this._isLoadBeforeScrollAppears &&
-                  (!(elem.scrollHeight > windowHeight + this._scrollIndicatorHeight)) || //Если на странице появился скролл
-                  this._container.height() < windowHeight){ // или высота таблицы меньше высоты окна
+               (!(elem.scrollHeight > windowHeight + this._scrollIndicatorHeight)) || //Если на странице появился скролл
+               this._container.height() < windowHeight){ // или высота таблицы меньше высоты окна
                this._nextLoad();
             } else {
                this._isLoadBeforeScrollAppears = false;
