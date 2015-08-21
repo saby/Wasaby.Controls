@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.Demo.MyListView',
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
-            
+
          }
       },
       $constructor: function() {
@@ -25,11 +25,7 @@ define('js!SBIS3.CONTROLS.Demo.MyListView',
       init: function() {
          moduleClass.superclass.init.call(this);
          var ListView = this.getChildControlByName('ListView');
-         var itemTpl = '<div class="listViewItem" style="height: 30px;">\
-                           <span class="controls-ListView__itemCheckBox" ></span>\
-                           {{=it.item.get("title")}}\
-                         </div>'
-         ListView._options.itemTemplate = itemTpl;
+         ListView._options.itemTemplate = 'Элемент списка';
          ListView.reload();
       },
 
