@@ -1997,14 +1997,6 @@ input[type="reset"]::-moz-focus-inner {
   overflow: hidden;
   position: relative;
 }
-<<<<<<< HEAD
-.controls-ListView .controls-ListView__item,
-.controls-DataGridView .controls-ListView__item {
-  overflow: hidden;
-  position: relative;
-}
-=======
->>>>>>> 3.7.2/feature/modernDocs
 .controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox,
 .controls-DataGridView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox {
   background: transparent;
