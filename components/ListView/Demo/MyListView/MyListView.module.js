@@ -1,18 +1,18 @@
-define('js!SBIS3.CONTROLS.Demo.MyListViewDS',
+define('js!SBIS3.CONTROLS.Demo.MyListView',
     [
         'js!SBIS3.CORE.CompoundControl',
-        'html!SBIS3.CONTROLS.Demo.MyListViewDS',
-        'css!SBIS3.CONTROLS.Demo.MyListViewDS',
-        'js!SBIS3.CONTROLS.ListViewDS',
+        'html!SBIS3.CONTROLS.Demo.MyListView',
+        'css!SBIS3.CONTROLS.Demo.MyListView',
+        'js!SBIS3.CONTROLS.ListView',
         'js!SBIS3.CONTROLS.TreeView'
     ], function(CompoundControl, dotTplFn) {
    /**
-    * SBIS3.CONTROLS.Demo.MyListViewDS
-    * @class SBIS3.CONTROLS.Demo.MyListViewDS
+    * SBIS3.CONTROLS.Demo.MyListView
+    * @class SBIS3.CONTROLS.Demo.MyListView
     * @extends $ws.proto.CompoundControl
     * @control
     */
-   var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Demo.MyListViewDS.prototype */{
+   var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Demo.MyListView.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

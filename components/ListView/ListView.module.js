@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 14.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.ListViewDS',
+define('js!SBIS3.CONTROLS.ListView',
    [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.DSMixin',
@@ -11,11 +11,11 @@ define('js!SBIS3.CONTROLS.ListViewDS',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.ItemActionsGroup',
-      'html!SBIS3.CONTROLS.ListViewDS',
+      'html!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.CommonHandlers',
       'js!SBIS3.CONTROLS.MoveHandlers',
       'js!SBIS3.CONTROLS.Pager',
-      'is!browser?html!SBIS3.CONTROLS.ListViewDS/resources/ListViewGroupBy'
+      'is!browser?html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy'
    ],
    function (CompoundControl, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, MoveHandlers, Pager, groupByTpl) {
 
@@ -27,17 +27,17 @@ define('js!SBIS3.CONTROLS.ListViewDS',
       /**
        * Контрол, отображающий внутри себя набор однотипных сущностей.
        * Умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
-       * @class SBIS3.CONTROLS.ListViewDS
+       * @class SBIS3.CONTROLS.ListView
        * @extends $ws.proto.Control
        * @mixes SBIS3.CONTROLS.DSMixin
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
        * @public
-       * @demo SBIS3.CONTROLS.Demo.MyListViewDS
+       * @demo SBIS3.CONTROLS.Demo.MyListView
        * @author Крайнов Дмитрий Олегович
        */
 
-      var ListViewDS = CompoundControl.extend([DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListViewDS.prototype */ {
+      var ListView = CompoundControl.extend([DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem При переводе курсора мыши на другую запись
@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             _itemActionsGroup: null,
             _options: {
                /**
-                * @faq Почему нет флажков при включенной опции {@link SBIS3.CONTROLS.ListViewDS#multiselect multiselect}?
+                * @faq Почему нет флажков при включенной опции {@link SBIS3.CONTROLS.ListView#multiselect multiselect}?
                 * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
                 * <pre>
                 *     <div class="listViewItem" style="height: 30px;">\
@@ -95,8 +95,8 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 *        {{=it.item.get("title")}}\
                 *     </div>
                 * </pre>
-                * @bind SBIS3.CONTROLS.ListViewDS#itemTemplate
-                * @bind SBIS3.CONTROLS.ListViewDS#multiselect
+                * @bind SBIS3.CONTROLS.ListView#itemTemplate
+                * @bind SBIS3.CONTROLS.ListView#multiselect
                 */
                /**
                 * @cfg {String} Шаблон отображения каждого элемента коллекции
@@ -136,14 +136,14 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                 *           <option name="icon">sprite:icon-16 icon-Delete icon-primary</option>
                 *           <option name="isMainAction">false</option>
                 *           <option name="tooltip">Удалить</option>
-                *           <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyListViewDS:prototype.myOnActivatedHandler</option>
+                *           <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyListView:prototype.myOnActivatedHandler</option>
                 *        </options>
                 *        <options>
                 *            <option name="name">btn2</option>
                 *            <option name="icon">sprite:icon-16 icon-Trade icon-primary</option>
                 *            <option name="tooltip">Изменить</option>
                 *            <option name="isMainAction">true</option>
-                *            <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyListViewDS:prototype.myOnActivatedHandler</option>
+                *            <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyListView:prototype.myOnActivatedHandler</option>
                 *         </options>
                 *     </option>
                 * </pre>
@@ -236,7 +236,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
          },
 
          init: function () {
-            ListViewDS.superclass.init.call(this);
+            ListView.superclass.init.call(this);
             var localPageSize = $ws.helpers.getLocalStorageValue('ws-page-size');
             this._options.pageSize = !this._options.ignoreLocalPageSize && localPageSize ? localPageSize : this._options.pageSize;
             if (typeof this._options.pageSize === 'string') {
@@ -272,7 +272,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             return $.contains(this._getItemsContainer()[0], elem[0]);
          },
          _onClickHandler: function(e) {
-            ListViewDS.superclass._onClickHandler.apply(this, arguments);
+            ListView.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
                 target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item'),
                 id;
@@ -460,7 +460,7 @@ define('js!SBIS3.CONTROLS.ListViewDS',
                this._isLoadBeforeScrollAppears = true;
             }
             this._previousGroupBy = undefined;
-            return ListViewDS.superclass.reload.apply(this, arguments);
+            return ListView.superclass.reload.apply(this, arguments);
          },
 
          /**
@@ -914,10 +914,10 @@ define('js!SBIS3.CONTROLS.ListViewDS',
             if (this._pager) {
                this._pager.destroy();
             }
-            ListViewDS.superclass.destroy.call(this);
+            ListView.superclass.destroy.call(this);
          }
       });
 
-      return ListViewDS;
+      return ListView;
 
    });

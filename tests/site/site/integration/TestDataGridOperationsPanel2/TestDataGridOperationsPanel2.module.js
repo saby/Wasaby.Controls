@@ -2,7 +2,7 @@ define('js!TestDataGridOperationsPanel2',
     [
         'js!SBIS3.CORE.CompoundControl',
         'html!TestDataGridOperationsPanel2',
-        'js!SBIS3.CONTROLS.ListViewDS',
+        'js!SBIS3.CONTROLS.ListView',
         'js!SBIS3.CONTROLS.Record',
         'js!SBIS3.CONTROLS.StaticSource',
         'js!SBIS3.CONTROLS.SbisServiceSource',
@@ -16,7 +16,7 @@ define('js!TestDataGridOperationsPanel2',
         'js!SBIS3.CONTROLS.DropDownList',
         'js!SBIS3.CORE.FieldLink',
         'css!TestDataGridOperationsPanel2'
-    ], function (CompoundControl, dotTplFn, ListViewDS, Record, StaticSource, SbisServiceSource, ArrayStrategy) {
+    ], function (CompoundControl, dotTplFn, ListView, Record, StaticSource, SbisServiceSource, ArrayStrategy) {
 
         var moduleClass = CompoundControl.extend({
             _dotTplFn: dotTplFn,

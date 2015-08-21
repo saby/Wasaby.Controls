@@ -1992,11 +1992,6 @@ input[type="reset"]::-moz-focus-inner {
   overflow: hidden;
   position: relative;
 }
-.controls-ListView .controls-ListView__item,
-.controls-DataGridView .controls-ListView__item {
-  overflow: hidden;
-  position: relative;
-}
 .controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox,
 .controls-DataGridView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox {
   background: url('img/CheckBox.png') 0 1px;
