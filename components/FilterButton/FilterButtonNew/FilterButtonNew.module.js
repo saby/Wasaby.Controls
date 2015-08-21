@@ -131,7 +131,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
                      filter['ShowDeleted'] = true;
                      filter['ShowOnlyDeleted'] = true;
                   }
-                  if(txtValue === 'Испльзуемые') {
+                  if(txtValue === 'Используемые') {
                      filter['ShowDeleted'] = false;
                      filter['ShowOnlyDeleted'] = false;
                   }
