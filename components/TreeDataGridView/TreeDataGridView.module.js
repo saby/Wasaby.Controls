@@ -170,12 +170,19 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       destroyFolderToolbar: function(id) {
          var
             container = $('.controls-TreeDataGridView__folderToolbar' + (id ? '[data-parent="' + id + '"]' : ''), this._container.get(0));
-         if (container.length) {
-            var pagerContainer = $('.controls-TreePager-container', container.get(0));
-            if (pagerContainer.length) {
-               pagerContainer.wsControl().destroy();
-            }
             container.remove();
+
+         if (id) {
+            if (this._treePagers[id]) {
+               this._treePagers[id].destroy();
+            }
+         }
+         else {
+            for (var i in this._treePagers) {
+               if (this._treePagers.hasOwnProperty(i)) {
+                  this._treePagers[i].destroy();
+               }
+            }
          }
       },
 

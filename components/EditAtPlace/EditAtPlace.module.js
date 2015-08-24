@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
    function (CompoundControl, TextBox, IconButton, _PickerMixin, _DataBindMixin, Dialog, ControlHierarchyManager, dotTplFn) {
       'use strict';
       /**
+       * @noShow
        * @class SBIS3.CONTROLS.EditAtPlace
        * @extends SBIS3.CONTROLS.CompoundControl
        * @control

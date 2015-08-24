@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.Tooltip', ['js!SBIS3.CORE.Control'], function(Control)
     * @class SBIS3.CONTROLS.Tooltip
     * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS.PopupMixin
-    * @public
     */
 
    var Tooltip = Control.Control.extend( /** @lends SBIS3.CONTROLS.Tooltip.prototype*/ {
