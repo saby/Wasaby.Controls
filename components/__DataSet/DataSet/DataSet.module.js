@@ -144,9 +144,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       /**
-       * Метод получения записи по её идентификатору
-       * @returns {SBIS3.CONTROLS.Record} Возвращает рекорд.
-       * @see getRecordKeyByIndex
+       * Возвращает запись по ключу
+       * @returns {SBIS3.CONTROLS.Record}
        */
       getRecordByKey: function (key) {
          //TODO: убрал проверку (key == null), так как с БЛ ключ приходит как null для записи из метода "Создать"
@@ -156,9 +155,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return this._byId[key];
       },
        /**
-        *
+        * Возвращает запись по порядковому номеру в списке
         * @param index
-        * @returns {*}
         */
       at: function (index) {
          return this.getRecordByKey(this.getRecordKeyByIndex(index));
@@ -362,7 +360,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       /**
-       *
+       * Итератор для обхода всех записей DataSet
        * @param iterateCallback
        * @param status {'all'|'created'|'deleted'|'changed'} по умолчанию все, кроме удаленных
        */
