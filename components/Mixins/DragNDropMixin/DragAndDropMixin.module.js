@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
       },
       before: {
          destroy: function () {
-            if(this._dragContainers.length) {
+            if(this._dragContainers && this._dragContainers.length) {
                this._dragContainers.unbind('mousedown');
                this._dragContainers = null;
             }

@@ -31,12 +31,15 @@ define('js!SBIS3.CONTROLS.ListView',
        * @extends $ws.proto.Control
        * @mixes SBIS3.CONTROLS.DSMixin
        * @mixes SBIS3.CONTROLS.MultiSelectable
+       * @mixes SBIS3.CONTROLS.Selectable
+       * @mixes SBIS3.CONTROLS.DecorableMixin
+       * @mixes SBIS3.CONTROLS.DataBindMixin
        * @control
        * @public
-       * @demo SBIS3.CONTROLS.Demo.MyListView
        * @author Крайнов Дмитрий Олегович
        */
 
+      /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
       var ListView = CompoundControl.extend([DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
@@ -849,7 +852,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @remark
           * Метод установки номера страницы, с которой нужно открыть представление данных.
           * Работает при использовании постраничной навигации.
-          * @param num Номер страницы.
+          * @param pageNumber Номер страницы.
           * @example
           * <pre>
           *    if(DataGridView.getPage() > 0)
