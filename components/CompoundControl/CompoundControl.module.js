@@ -10,7 +10,6 @@ define('js!SBIS3.CONTROLS.CompoundControl', ['js!SBIS3.CORE.CompoundControl'], f
     * Базовый класс для всех контролов. Включает в себя объединенные старые классы Control и CompoundControl.
     * Объединение помогает однозначно понимать от какого класса должны наследоваться все остальные контролы.
     * @class SBIS3.CONTROLS.CompoundControl
-    * @public
     * @extends $ws.proto.Control
     */
 
