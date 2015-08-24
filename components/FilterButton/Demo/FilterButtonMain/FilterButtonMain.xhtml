@@ -14,48 +14,46 @@
 
         <opts name="filterStructure" type="array">
             <opts>
-                <opt name="field">NDS</opt>
-
                 <!-- По умолчанию будет NDS, если не указано - тоже NDS -->
-                <opt name="contextValueField">NDS</opt>
+                <opt name="internalValueField">NDS</opt>
 
                 <!-- По умолчанию будет NDS -->
-                <opt name="contextDescriptionField">NDSText</opt>
+                <opt name="internalCaptionField">NDSText</opt>
 
                 <!-- По умолчанию будет "ничего" - если по привязке нет, и тут нет -->
-                <opt name="description" bind="filterDescr/NDS"></opt>
+                <opt name="caption" bind="filterDescr/NDS"></opt>
 
                 <opt name="value" bind="filter/NDS"></opt>
 
                 <opt name="resetValue" type="string">1</opt>
-                <opt name="resetDescription">Без НДС</opt>
+                <opt name="resetCaption">Без НДС</opt>
             </opts>
             <opts>
-                <opt name="field">clientName</opt>
+                <opt name="internalValueField">clientName</opt>
 
-                <opt name="description" bind="filterDescr/clientName"></opt>
+                <opt name="caption" bind="filterDescr/clientName"></opt>
 
                 <opt name="value" bind="filter/clientName"></opt>
 
                 <opt name="resetValue"></opt>
             </opts>
             <opts>
-                <opt name="field">selling</opt>
+                <opt name="internalValueField">selling</opt>
 
-                <opt name="contextDescriptionField">sellingText</opt>
+                <opt name="internalCaptionField">sellingText</opt>
 
-                <opt name="description" bind="filterDescr/selling"></opt>
+                <opt name="caption" bind="filterDescr/selling"></opt>
 
                 <opt name="value" bind="filter/selling"></opt>
 
                 <opt name="resetValue"></opt>
             </opts>
             <opts>
-                <opt name="field">using</opt>
+                <opt name="internalValueField">using</opt>
 
-                <opt name="contextDescriptionField">usingText</opt>
+                <opt name="internalCaptionField">usingText</opt>
 
-                <opt name="description" bind="filterDescr/using"></opt>
+                <opt name="caption" bind="filterDescr/using"></opt>
 
                 <opt name="value" bind="filter/using"></opt>
 
