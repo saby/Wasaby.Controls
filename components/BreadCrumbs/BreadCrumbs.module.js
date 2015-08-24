@@ -6,6 +6,20 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'html!SBIS3.CONTROLS.BreadCrumbs',
    'html!SBIS3.CONTROLS.BreadCrumbs/resources/pointTpl'
 ], function(CompoundControl, DSMixin, PickerMixin, DecorableMixin, dotTpl, pointTpl) {
+   /**
+    * Контрол рисующий "Хлебные крошки"
+    * Пример использования - иерархические реестры
+    * @class SBIS3.CONTROLS.BreadCrumbs
+    * @extends $ws.proto.CompoundControl
+    * @control
+    * @public
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.BreadCrumbs'>
+    * </component>
+    * @mixes SBIS3.CONTROLS.DSMixin
+    * @mixes SBIS3.CONTROLS.PickerMixin
+    * @mixes SBIS3.CONTROLS.DecorableMixin
+    */
    'use strict';
 
    if (typeof window !== 'undefined') {

@@ -1,6 +1,18 @@
 define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.BackButton','js!SBIS3.CONTROLS.Link'], function(CompoundControl, dotTpl) {
    'use strict';
-
+   /**
+    * Кнопка для реализации поведения возврата назад по истории.
+    * Пример использования - иерархические реестры
+    * @class SBIS3.CONTROLS.BackButton
+    * @extends $ws.proto.CompoundControl
+    * @control
+    * @public
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.BackButton'>
+    *    <option name="caption">Назад</option>
+    * </component>
+    * @category Buttons
+    */
    var BackButton = CompoundControl.extend({
       $protected: {
          _dotTplFn: dotTpl,
@@ -15,7 +27,7 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
              * Иконка
              * @type {String}
              */
-            icon: '',
+            icon: ''
          }
       },
 
@@ -30,12 +42,19 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
          });
       },
 
+      /**
+       * Устанавливает текст кнопки
+       * @param caption Текси
+       */
       setCaption: function(caption){
          this._link.setCaption(caption);
          this._options.caption = caption;
          this._arrow.toggleClass('ws-hidden', caption === '');
       },
-
+      /**
+       * Устанавливает исконку кнопки
+       * @param icon Текси
+       */
       setIcon: function(icon){
          this._link.setIcon(icon);
          this._options.icon = icon;
