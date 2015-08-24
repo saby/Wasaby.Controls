@@ -1,4 +1,11 @@
 define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
+   /**
+    * Контроллер для осуществления базового взаимодействия между компонентами.
+    *
+    * @class SBIS3.CONTROLS.ComponentBinder
+    * @extends $ws.proto.Abstract
+    * @public
+    */
    /*методы для поиска*/
    function startSearch(text, gridView, BreadCrumbs, searchParamName) {
       if (text) {
@@ -89,6 +96,18 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          _path: []
       },
 
+      /**
+       * Метод для связывания формы строки поиска с представлением данных
+       * @param searchForm объект формы поиска
+       * @param gridView объект представления данных
+       * @param BreadCrumbs объект хлебных крошек
+       * @param searchParamName параметр фильтрации для поиска
+       * @example
+       * <pre>
+       *     myBinder = new ComponentBinder();
+       *     myBinder.bindSearchGrid(searchForm, gridView, BreadCrumbs, searchParamName);
+       * </pre>
+       */
       bindSearchGrid : function(searchForm, gridView, BreadCrumbs, searchParamName) {
          var self = this;
          this._lastRoot = gridView.getCurrentRoot();
@@ -132,6 +151,17 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          });*/
       },
 
+      /**
+       * Метод для связывания хлебных крошек с представлением данных
+       * @param breadCrumbs объект хлебных крошек
+       * @param backButton объект книпоки назад
+       * @param hierarchyGridView объект представления данных
+       * @example
+       * <pre>
+       *     myBinder = new ComponentBinder();
+       *     myBinder.bindSearchGrid(searchForm, gridView, BreadCrumbs, searchParamName);
+       * </pre>
+       */
       bindBreadCrumbs: function(breadCrumbs, backButton, hierarchyGridView){
          var self = this;
 
@@ -184,8 +214,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             if (self._path.length) self._path.splice(self._path.length - 1);
             hierarchyGridView.setCurrentRoot(previousRoot ? previousRoot[breadCrumbs._options.keyField] : null);
          });
-      },
-
+      }
    });
 
    return ComponentBinder;

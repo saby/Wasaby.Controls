@@ -2,7 +2,6 @@ define('js!SBIS3.CONTROLS.DataBindMixin', ['js!SBIS3.CORE.AttributeCfgParser'], 
    'use strict';
     /**
      * @mixin SBIS3.CONTROLS.DataBindMixin
-     * @public
      */
     var DataBindMixin = /**@lends SBIS3.CONTROLS.DataBindMixin.prototype  */{
       $protected : {
