@@ -20,7 +20,6 @@ define('js!SBIS3.CONTROLS.ListViewOld',
        * @mixes SBIS3.CONTROLS.CollectionMixin
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control
-       * @public
        * @author Черёмушкин Илья
        */
 
