@@ -25,6 +25,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     *       </options>
     *    </options>
     * </component>
+    *
+    * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView
+    * 
     */
 
    var TreeDataGridView = HierarchyDataGridView.extend([TreeMixin, DragNDropMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
