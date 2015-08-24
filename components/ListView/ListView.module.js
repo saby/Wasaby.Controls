@@ -452,7 +452,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          reload: function () {
-            if (this.isInfiniteScroll()) {
+            this._reloadInfiniteScrollParams();
+            this._previousGroupBy = undefined;
+            return ListViewDS.superclass.reload.apply(this, arguments);
+         },
+         _reloadInfiniteScrollParams : function(){
+            if (this.isInfiniteScroll() || this._isAllowInfiniteScroll()) {
                //this._loadingIndicator = undefined;
                this._hasScrollMore = true;
                this._infiniteScrollOffset = this._offset;
@@ -462,7 +467,6 @@ define('js!SBIS3.CONTROLS.ListView',
             this._previousGroupBy = undefined;
             return ListView.superclass.reload.apply(this, arguments);
          },
-
          /**
           * Метод установки/замены обработчика клика по строке.
           * @param method Имя новой функции обработчика клика по строке.
