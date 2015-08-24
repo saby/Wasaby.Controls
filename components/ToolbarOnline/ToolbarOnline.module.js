@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.ToolbarOnline', ['js!SBIS3.CONTROLS.ToolbarBase'], fun
     * Например, некоторые кнопки могут дублироваться в выпадающем списке.
     * @class SBIS3.Engine.ToolbarOnline
     * @extends SBIS3.CONTROLS.ToolbarBase
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
 

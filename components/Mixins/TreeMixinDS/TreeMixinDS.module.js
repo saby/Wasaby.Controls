@@ -240,18 +240,20 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             self = this,
             nextPage = this._hasNextPageInFolder(more, key);
 
-         this._treePagers[key] = new TreePagingLoader({
-            pageSize: this._options.pageSize,
-            opener: this,
-            hasMore: nextPage,
-            element: container,
-            id: key,
-            handlers : {
-               'onClick' : function(){
-                  self._folderLoad(this._options.id);
+         if (this._options.pageSize) {
+            this._treePagers[key] = new TreePagingLoader({
+               pageSize: this._options.pageSize,
+               opener: this,
+               hasMore: nextPage,
+               element: container,
+               id: key,
+               handlers: {
+                  'onClick': function () {
+                     self._folderLoad(this._options.id);
+                  }
                }
-            }
-         });
+            });
+         }
       },
 
       _hasNextPageInFolder: function(more, id) {

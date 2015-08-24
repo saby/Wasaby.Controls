@@ -4,7 +4,6 @@ define('js!SBIS3.CONTROLS.AdapterBase', [], function(){
    /**
     * Базовый адаптер данных
     * @class SBIS3.CONTROLS.AdapterBase
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
 

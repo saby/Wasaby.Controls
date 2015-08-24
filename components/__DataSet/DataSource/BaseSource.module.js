@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
       $protected: {
          _options: {
              /**
-              * @cfg {Object} Объект стратегии работы с данными
+              * @cfg {SBIS3.CONTROLS.IDataStrategy} Стратегия для разбора формата
               * @example
               * <pre>
               *     <option name="strategy">ArrayStrategy</option>
