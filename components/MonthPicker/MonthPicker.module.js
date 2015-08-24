@@ -175,6 +175,8 @@ define(
          this._picker.subscribe('onClose', function(){
             self._onCloseHandler();
          });
+
+         this._setWidth();
       },
 
       /**
@@ -205,6 +207,26 @@ define(
             else if( self._options.mode == 'year' ){
                self.setDate( self._getFirstDay( $(this).attr('data-key'), 0 ) );
             }
+         });
+      },
+
+      _setPickerConfig: function(){
+         return {
+            corner: 'bl',
+            verticalAlign: {
+               side: 'top'
+            },
+            horizontalAlign: {
+               side: 'left'
+            },
+            closeByExternalClick: true,
+            targetPart: true
+         };
+      },
+
+      _setWidth: function(){
+         this._picker.getContainer().css({
+            'min-width': this._container.outerWidth()
          });
       },
 
