@@ -1,26 +1,25 @@
-.tile-title {
+.MyTreeCompositeView__tile-title {
    text-align: center;
    height: 100%;
    margin: 5px;
    font-weight: 700;
 }
 
-.tile-id {
+.MyTreeCompositeView__tile-id {
    text-align: right;
    bottom: 5px;
    position: absolute;
    right: 5px;
 }
 
-.list-title {    
+.MyTreeCompositeView__list-title {    
    font-weight: 700;
-   margin-left: 15px;
-   display: inline-block;
-   vertical-align: top;
    line-height: 100px;
+   position: absolute;
+   left: 140px;
 }
 
-.list-id {
+.MyTreeCompositeView__list-id {
    right: 10px;
    bottom: 10px;
    position: absolute;
@@ -30,18 +29,22 @@
    margin-bottom: 30px;
 }
 
-.tile-image{
+.MyTreeCompositeView__tile-image{
    height: 150px;
-   padding: 5px 57px;
+   padding: 5px 27px;
 }
 
-.list-image{
+.MyTreeCompositeView__list-image{
    height: 75px;
    margin: 12px 20px;
 }
 
-.controls-CompositeView .MyCompositeView__list{
+.controls-CompositeView .MyTreeCompositeView__list{
    height: 100px;
    border: 1px solid #e4e4e4;
    margin-top: -1px;
+}
+
+.MyBackButton{
+   min-height: 27px;
 }
