@@ -16,14 +16,13 @@ define('js!SBIS3.CONTROLS.FilterButton',
       linkTextDef = 'Нужно отобрать?',
       pickerContextRootName = 'sbis3-controls-filter-button',
       filterStructureElementDef = {
-         field: null,
-         contextValueField: null,
-         contextDescriptionField: null
+         internalValueField: null,
+         internalCaptionField: null
          /* По умолчанию их нет
-         description: NonExistentValue,
+         caption: NonExistentValue,
          value: NonExistentValue,
          resetValue: NonExistentValue,
-         resetDescription: NonExistentValue,
+         resetCaption: NonExistentValue,
          */
       };
 
@@ -92,23 +91,19 @@ define('js!SBIS3.CONTROLS.FilterButton',
          this._updateFilterStructure(this._options.filterStructure || {});
       },
 
-      _updateFilterStructure: function(filterStructure, filter, descriptions) {
+      _updateFilterStructure: function(filterStructure, filter, captions) {
          if (filterStructure) {
             this._filterStructure = $ws.helpers.map(filterStructure, function(element) {
                var
                   newEl = $ws.core.clone(filterStructureElementDef);
                $ws.core.merge(newEl, element);
 
-               if (!newEl.field || typeof newEl.field !== 'string') {
-                  throw new Error('У элемента структуры должно быть поле field');
+               if (!newEl.internalValueField || typeof newEl.internalValueField !== 'string') {
+                  throw new Error('У элемента структуры должно быть поле internalValueField');
                }
 
-               if (!newEl.contextValueField) {
-                  newEl.contextValueField = newEl.field;
-               }
-
-               if (!newEl.contextDescriptionField) {
-                  newEl.contextDescriptionField = newEl.contextValueField;
+               if (!newEl.internalCaptionField) {
+                  newEl.internalCaptionField = newEl.internalValueField;
                }
 
                return newEl;
@@ -118,21 +113,21 @@ define('js!SBIS3.CONTROLS.FilterButton',
             this._filterStructure = $ws.helpers.map(this._filterStructure, function(element) {
                var
                   newElement = $ws.core.clone(element),
-                  field = newElement.field;
+                  field = newElement.internalValueField;
 
                function setDescrWithReset(descr, deleteDescr) {
                   if (('resetValue' in element && field in filter && element.resetValue === filter[field]) ||
                       (!('resetValue' in element) && !(field in filter)))
                   {
-                     if ('resetDescription' in element) {
-                        newElement.description = element.resetDescription;
+                     if ('resetCaption' in element) {
+                        newElement.caption = element.resetCaption;
                      } else {
-                        delete newElement.description;
+                        delete newElement.caption;
                      }
                   } else if (deleteDescr) {
-                     delete newElement.description;
+                     delete newElement.caption;
                   } else {
-                     newElement.description = descr;
+                     newElement.caption = descr;
                   }
                }
 
@@ -142,8 +137,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
                   delete newElement.value;
                }
 
-               if (descriptions && (field in descriptions)) {
-                  setDescrWithReset(descriptions[field]);
+               if (captions && (field in captions)) {
+                  setDescrWithReset(captions[field]);
                } else if (field in filter) {
                   setDescrWithReset(filter[field]);
                } else {
@@ -179,7 +174,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
          var
             context = this._pickerContext,
             pickerVisible = this._picker && this._picker.isVisible(),
-            descrPath = pickerContextRootName + '/description',
+            descrPath = pickerContextRootName + '/caption',
             filterPath = pickerContextRootName + '/filter',
             toSet;
 
@@ -188,7 +183,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
          } else if (pickerVisible) {
             toSet = {};
             toSet[filterPath] = this.getFilter();
-            toSet[descrPath] = this._mapFilterStructureByProp('description');
+            toSet[descrPath] = this._mapFilterStructureByProp('caption');
 
             context.setValueSelf(toSet);
          }
@@ -248,7 +243,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                ctx.setValue(rootName, {
                   filterChanged: btnCtx.getValue('filterChanged'),
                   filter: this.getFilter(),
-                  description: this._mapFilterStructureByProp('description')
+                  caption: this._mapFilterStructureByProp('caption')
                });
             }.bind(this);
 
@@ -259,18 +254,18 @@ define('js!SBIS3.CONTROLS.FilterButton',
          ctx.subscribe('onFieldNameResolution', function(event, fieldName) {
             var
                byFilter = this._findFilterStructureElement(function(element) {
-                  return element.contextValueField === fieldName;
+                  return element.internalValueField === fieldName;
                }),
-               byDescription = !byFilter && this._findFilterStructureElement(function(element) {
-                  return element.contextDescriptionField === fieldName;
+               byCaption = !byFilter && this._findFilterStructureElement(function(element) {
+                  return element.internalCaptionField === fieldName;
                });
 
             if (byFilter) {
-               event.setResult(rootName + '/filter/' + byFilter.field);
+               event.setResult(rootName + '/filter/' + byFilter.internalValueField);
             }
 
-            if (byDescription) {
-               event.setResult(rootName + '/description/' + byDescription.field);
+            if (byCaption) {
+               event.setResult(rootName + '/caption/' + byCaption.internalValueField);
             }
          }.bind(this));
 
@@ -278,7 +273,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
             var
                filter = ctx.getValue(rootName + '/filter'),
                changed = $ws.helpers.reduce(this._filterStructure, function(result, element) {
-                  return result || !isFieldResetValue(element, element.field, filter);
+                  return result || !isFieldResetValue(element, element.internalValueField, filter);
                }, false, this);
             ctx.setValueSelf(rootName + '/filterChanged', changed);
          }.bind(this));
@@ -289,10 +284,10 @@ define('js!SBIS3.CONTROLS.FilterButton',
             parent: this,
             horizontalAlign: {
                side: this._options.filterAlign
-      },
+            },
             verticalAlign: {
                side: 'bottom'
-      },
+            },
             closeButton: true,
             closeByExternalClick: true,
             context: ctx,
@@ -331,7 +326,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
       _mapFilterStructureByProp: function(prop) {
          return $ws.helpers.reduce(this._filterStructure, function(result, element) {
             if (prop in element) {
-               result[element.field] = element[prop];
+               result[element.internalValueField] = element[prop];
             }
             return result;
          }, {});
