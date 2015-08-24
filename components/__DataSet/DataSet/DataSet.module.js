@@ -1,13 +1,10 @@
-/**
- * Created by as.manuylov on 10.11.14.
- */
 define('js!SBIS3.CONTROLS.DataSet', [
    'js!SBIS3.CONTROLS.Record'
 ], function (Record) {
    'use strict';
 
    /**
-    * Набор данных.
+    * Класс для работы с набором записей.
     * @class SBIS3.CONTROLS.DataSet
     * @extends $ws.proto.Abstract
     * @public
@@ -35,21 +32,22 @@ define('js!SBIS3.CONTROLS.DataSet', [
          _isLoaded: false,
          _byId: {},
          _indexId: [],
-         /**
-          * @cfg {Object} исходные данные для построения
-          */
          _rawData: undefined,
-         /**
-          * @cfg {String} название поля-идентификатора записи
-          */
          _keyField: undefined,
          _options: {
              /**
-              * @cfg {String}
+              * @cfg {SBIS3.CONTROLS.IDataStrategy} Стратегия для разбора формата
+              * @example
+              * <pre>
+              *     <option name="strategy">ArrayStrategy</option>
+              * </pre>
+              * @variant ArrayStrategy
+              * @variant SbisJSONStrategy
+              * @see getStrategy
               */
             strategy: null,
              /**
-              * @cfg {Object}
+              * @cfg {Object} Исходные данные
               */
             data: undefined,
             /**
@@ -112,7 +110,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          }
       },
        /**
-        *
+        * Количество записей в Датасете
         * @returns {*|exports.length|Function|length|.__defineGetter__.length|Number}
         */
       getCount: function () {
@@ -146,9 +144,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       /**
-       * Метод получения записи по её идентификатору
-       * @returns {js!SBIS3.CONTROLS.Record} Возвращает рекорд.
-       * @see getRecordKeyByIndex
+       * Возвращает запись по ключу
+       * @returns {SBIS3.CONTROLS.Record}
        */
       getRecordByKey: function (key) {
          //TODO: убрал проверку (key == null), так как с БЛ ключ приходит как null для записи из метода "Создать"
@@ -158,9 +155,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return this._byId[key];
       },
        /**
-        *
+        * Возвращает запись по порядковому номеру в списке
         * @param index
-        * @returns {*}
         */
       at: function (index) {
          return this.getRecordByKey(this.getRecordKeyByIndex(index));
@@ -364,7 +360,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       /**
-       *
+       * Итератор для обхода всех записей DataSet
        * @param iterateCallback
        * @param status {'all'|'created'|'deleted'|'changed'} по умолчанию все, кроме удаленных
        */

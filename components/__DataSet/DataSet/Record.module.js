@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
    'use strict';
 
    /**
-    * Запись - обертка для данных
+    * Класс для работы с одной записью
     * @class SBIS3.CONTROLS.Record
     * @public
     * @author Крайнов Дмитрий Олегович
