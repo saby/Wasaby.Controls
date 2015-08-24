@@ -457,7 +457,7 @@ define('js!SBIS3.CONTROLS.ListView',
          reload: function () {
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
-            return ListViewDS.superclass.reload.apply(this, arguments);
+            return ListView.superclass.reload.apply(this, arguments);
          },
          _reloadInfiniteScrollParams : function(){
             if (this.isInfiniteScroll() || this._isAllowInfiniteScroll()) {
