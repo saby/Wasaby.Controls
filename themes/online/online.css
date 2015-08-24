@@ -2750,6 +2750,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-BackButton {
   display: inline-block;
   cursor: pointer;
+  min-height: 27px;
 }
 .controls-BackButton .controls-BackButton__caption {
   font-size: 16px;

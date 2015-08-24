@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
    function (CompoundControl, IconButton, PickerMixin, EditAtPlace, Dialog, ControlHierarchyManager, dotTplFn) {
       'use strict';
       /**
+       * @noShow
        * @class SBIS3.CONTROLS.EditAtPlaceGroup
        * @extends SBIS3.CORE.CompoundControl
        * @control
