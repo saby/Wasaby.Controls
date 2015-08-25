@@ -209,6 +209,9 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
                row[orderColumn] = data[i + shiftSize][orderColumn];
             }
          }
+      },
+      setParentKey: function(record, hierField, parent) {
+         record.set(hierField, parent);
       }
 
    });
