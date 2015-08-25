@@ -44,6 +44,12 @@ define('js!SBIS3.CONTROLS.Demo.MyCompositeView',
                       {'title': 'Мопс',             'id':11, 'parent@': false, 'image': 'https://tlgrm.ru/files/stickers/animals/pug.png'},
                       {'title': 'Енотик',           'id':12, 'parent@': false, 'image': 'https://tlgrm.ru/files/stickers/animals/raccoon.png'}];
 
+         var compositeView = this.getChildControlByName('MyCompositeView'),
+            radioGroup = this.getChildControlByName('RadioGroup');
+
+         compositeView._options.tileTemplate = tileTpl;
+         compositeView._options.listTemplate = listTpl;         
+         
          var source = new StaticSource({
                data: items,
                keyField: 'id',
@@ -51,15 +57,8 @@ define('js!SBIS3.CONTROLS.Demo.MyCompositeView',
             }
          );
 
-         var compositeView = this.getChildControlByName('MyCompositeView'),
-            breadCrumbs = this.getChildControlByName('MyBreadCrumbs'),
-            backButton = this.getChildControlByName('MyBackButton'),
-            radioGroup = this.getChildControlByName('RadioGroup'),
-            componentBinder = new ComponentBinder();
-
-         componentBinder.bindBreadCrumbs(breadCrumbs, backButton, compositeView);
          compositeView.setDataSource(source);
-
+         
          radioGroup.subscribe('onSelectedItemChange', function(event, key){
             switch(key) {
                case 1:
@@ -76,6 +75,10 @@ define('js!SBIS3.CONTROLS.Demo.MyCompositeView',
                   break;
             }
          });
+      },
+
+      deleteHandler: function(item){
+         this.deleteRecords(item.data('id'));
       }
    });
    return moduleClass;

@@ -26,7 +26,7 @@
 }
 
 .MyRadioGroup{
-   margin-bottom: 30px;
+   margin: 30px 0;
 }
 
 .MyTreeCompositeView__tile-image{
@@ -47,4 +47,9 @@
 
 .MyBackButton{
    min-height: 27px;
+   height: 27px;
+}
+
+.MyBreadCrumbs{
+   height: 27px;
 }
