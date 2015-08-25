@@ -317,6 +317,9 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
              params['ИдОДо'] = orderDetails.before;
           }
           return params;
+       },
+       setParentKey: function(record, hierField, parent) {
+          record.set(hierField, [parent]);
        }
 
    });
