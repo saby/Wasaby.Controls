@@ -6,13 +6,14 @@ define('js!SBIS3.CONTROLS.Demo.MyTreeCompositeView',
         'js!SBIS3.CONTROLS.ComponentBinder',
         'html!SBIS3.CONTROLS.Demo.MyTreeCompositeView/resources/tileTpl',
         'html!SBIS3.CONTROLS.Demo.MyTreeCompositeView/resources/listTpl',
+        'html!SBIS3.CONTROLS.Demo.MyTreeCompositeView/resources/folderTpl',
         'html!SBIS3.CONTROLS.Demo.MyTreeCompositeView',
         'css!SBIS3.CONTROLS.Demo.MyTreeCompositeView',
         'js!SBIS3.CONTROLS.TreeCompositeView',
         'js!SBIS3.CONTROLS.BreadCrumbs',
         'js!SBIS3.CONTROLS.BackButton',
         'js!SBIS3.CONTROLS.RadioGroup'
-    ], function(CompoundControl, StaticSource, ArrayStrategy, ComponentBinder, tileTpl, listTpl, dotTplFn) {
+    ], function(CompoundControl, StaticSource, ArrayStrategy, ComponentBinder, tileTpl, listTpl, folderTpl, dotTplFn) {
    /**
     * SBIS3.CONTROLS.Demo.MyTreeCompositeView
     * @class SBIS3.CONTROLS.Demo.MyTreeCompositeView
@@ -24,7 +25,8 @@ define('js!SBIS3.CONTROLS.Demo.MyTreeCompositeView',
       $protected: {
          _options: {
             tileTpl: tileTpl,
-            listTpl: listTpl
+            listTpl: listTpl,
+            folderTpl: folderTpl
          }
       },
 
@@ -57,6 +59,10 @@ define('js!SBIS3.CONTROLS.Demo.MyTreeCompositeView',
             radioGroup = this.getChildControlByName('RadioGroup'),
             componentBinder = new ComponentBinder();
 
+         treeCompositeView._options.tileTemplate = tileTpl;
+         treeCompositeView._options.listTemplate = listTpl;
+         treeCompositeView._options.folderTemplate = folderTpl;
+
          componentBinder.bindBreadCrumbs(breadCrumbs, backButton, treeCompositeView);
          treeCompositeView.setDataSource(source);
 
@@ -76,7 +82,10 @@ define('js!SBIS3.CONTROLS.Demo.MyTreeCompositeView',
                   break;
             }
          });
+      },
 
+      deleteHandler: function(item){
+         this.deleteRecords(item.data('id'));
       }
    });
    return moduleClass;
