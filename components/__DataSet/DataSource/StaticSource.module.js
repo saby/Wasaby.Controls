@@ -342,11 +342,11 @@ define('js!SBIS3.CONTROLS.StaticSource', [
        * @param {Object} orderDetails - детали смены порядковых номеров. Объект со свойствами after и before: после или перед какой записью нужно вставить перемещаемую. В after и before должны находиться записи
        */
       move: function (record, hierField, parentKey, orderDetails) {
-         if(parentKey || parentKey === null){
-            record.set(hierField, parentKey);
+         var strategy = this.getStrategy();
+         if (parentKey || parentKey === null) {
+            strategy.setParentKey(record, hierField, parentKey);
          }
          if(orderDetails){
-            var strategy = this.getStrategy();
             strategy.changeOrder(this._options.data, record, orderDetails);
          } else if(!parentKey && parentKey !== null){
             throw new Error('Не передано достаточно информации для перемещения');

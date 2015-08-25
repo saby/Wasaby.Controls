@@ -314,11 +314,13 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
        * @param {Object} orderDetails - детали смены порядковых номеров. Объект со свойствами after и before: после или перед какой записью нужно вставить перемещаемую.
        */
       move: function (record, hierField, parentKey, orderDetails) {
+         var strategy;
          if(orderDetails){
             return this._changeOrder(record, hierField, parentKey, orderDetails);
-         } else if(parentKey){
+         } else if(parentKey || parentKey === null){
+            strategy = this.getStrategy();
             //сменить родителя
-            record.set(hierField, parentKey);
+            strategy.setParentKey(record, hierField, parentKey);
             return this.update(record);
          } else {
             throw new Error('Не передано достаточно информации для перемещения');
