@@ -1503,6 +1503,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-ComboBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__field {
   visibility: hidden;
   position: absolute;
+  left: 0;
+  top: 0;
 }
 .controls-ComboBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
   display: inline-block;
@@ -2403,7 +2405,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-BreadCrumbs__crumb:hover .icon-16 {
   color: #FF7033!important;
 }
-.controls-BreadCrumbs__crumb:hover:first-child .controls-BreadCrumbs__title {
+.controls-BreadCrumbs__crumb:hover .controls-BreadCrumbs__title {
   color: #FF7033;
 }
 .controls-BreadCrumbs .controls-BreadCrumbs__title {
@@ -2449,7 +2451,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-BackButton {
   display: inline-block;
   cursor: pointer;
-  min-height: 27px;
 }
 .controls-BackButton .controls-BackButton__caption {
   font-size: 16px;
