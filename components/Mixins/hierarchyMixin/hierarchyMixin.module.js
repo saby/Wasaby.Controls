@@ -18,9 +18,6 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
              * @cfg {String} Поле иерархии
              */
             hierField: null,
-            /**
-             * folders/all
-             * */
             displayType : 'all'
 
          }
