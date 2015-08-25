@@ -18,8 +18,6 @@
       <option name="keyField">id</option>
       <option name="selectedKey" type="string">2</option>
    </component>
-   <component data-component="SBIS3.CONTROLS.BreadCrumbs" name="MyBreadCrumbs"></component>
-   <component data-component="SBIS3.CONTROLS.BackButton" name="MyBackButton" class="MyBackButton"></component>
    <component data-component="SBIS3.CONTROLS.CompositeView" name="MyCompositeView">
       <options name="columns" type="array">
          <options>
@@ -30,6 +28,16 @@
             <option name="title">№</option>
             <option name="width" type="string">100</option>
             <option name="field">id</option>
+         </options>
+      </options>
+      <options name="itemsActions" type="array">
+         <options>
+            <option name="name">delete</option>
+            <option name="icon">sprite:icon-16 icon-Erase icon-error</option>
+            <option name="isMainAction">true</option>
+            <option name="tooltip">Удалить</option>
+            <option name="title">Удалить</option>
+            <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyCompositeView:prototype.deleteHandler</option>
          </options>
       </options>
       <option name="viewMode">tile</option>
