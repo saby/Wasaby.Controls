@@ -1,6 +1,10 @@
 define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeViewMixin'], function(dotTplFn) {
    'use strict';
-
+   /**
+    * Позволяет контролу отображать данные в виде плитки/списка/таблицы
+    * @mixin SBIS3.CONTROLS.CompositeViewMixin
+    * @public
+    */
    var MultiView = {
       _dotTplFn : dotTplFn,
       $protected: {
