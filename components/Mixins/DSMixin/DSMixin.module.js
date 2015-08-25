@@ -123,7 +123,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             userItemAttributes : null,
             /**
-             * @cfg {String|HTMLElement|jQuery} что отображается при отсутствии данных 
+             * @cfg {String|HTMLElement|jQuery} что отображается при отсутствии данных
              */
             emptyHTML: ''
          },
@@ -540,14 +540,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
       _appendItemTemplate: function (item, targetContainer, itemBuildedTpl, at) {
          if (at && (typeof at.at !== 'undefined')) {
-            var atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).get(at.at-1);
-            if ($(atContainer).length) {
-               $(atContainer).after(itemBuildedTpl);
+            var atContainer = at.at !== 0 && $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at-1);
+            if (atContainer.length) {
+               atContainer.after(itemBuildedTpl);
             }
             else {
-               atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).get(at.at);
-               if ($(atContainer).length) {
-                  $(atContainer).before(itemBuildedTpl);
+               atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at);
+               if (atContainer.length) {
+                  atContainer.before(itemBuildedTpl);
                }
             }
          }
