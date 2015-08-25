@@ -8,13 +8,12 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
    'use strict';
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
-    * @class SBIS3.CONTROLS.TreeDataGridView
+    * @class SBIS3.CONTROLS.HierarchyDataGridView
     * @extends SBIS3.CONTROLS.DataGridView
     * @mixes SBIS3.CONTROLS.TreeMixin
-    * @public
     * @control
     * @initial
-    * <component data-component='SBIS3.CONTROLS.TreeDataGridView'>
+    * <component data-component='SBIS3.CONTROLS.HierarchyDataGridView'>
     *    <options name="columns" type="array">
     *       <options>
     *          <option name="title">Поле 1</option>
@@ -27,7 +26,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
     * </component>
     */
 
-   var HierarchyDataGridView = DataGridView.extend([hierarchyMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
+   var HierarchyDataGridView = DataGridView.extend([hierarchyMixin], /** @lends SBIS3.CONTROLS.HierarchyDataGridView.prototype*/ {
       /**
        * @event onSearchPathClick При клике по хлебным крошкам в режиме поиска.
        * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
