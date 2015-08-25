@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
     * @class SBIS3.CONTROLS.TreeDataGridView
     * @extends SBIS3.CONTROLS.DataGridView
     * @mixes SBIS3.CONTROLS.TreeMixin
-    * @public
     * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.TreeDataGridView'>

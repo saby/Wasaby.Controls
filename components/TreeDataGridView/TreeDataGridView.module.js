@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.TreeDataGridView
-    * @extends SBIS3.CONTROLS.DataGridView
+    * @extends SBIS3.CONTROLS.HierarchyDataGridView
     * @mixes SBIS3.CONTROLS.TreeMixinDS
     * @public
     * @author Крайнов Дмитрий Олегович
