@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.TreeMixinDS',
    'js!SBIS3.CONTROLS.DragNDropMixin',
    'html!SBIS3.CONTROLS.TreeDataGridView/resources/rowTpl'
-], function(HierarchyDataGridView, TreeMixin, DragNDropMixin, rowTpl) {
+], function(HierarchyDataGridView, TreeMixinDS, DragNDropMixin, rowTpl) {
    'use strict';
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * 
     */
 
-   var TreeDataGridView = HierarchyDataGridView.extend([TreeMixin, DragNDropMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
+   var TreeDataGridView = HierarchyDataGridView.extend([TreeMixinDS, DragNDropMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
       $protected: {
          _rowTpl : rowTpl,
          _options: {
