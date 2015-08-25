@@ -47,4 +47,9 @@
 
 .MyBackButton{
    min-height: 27px;
+   height: 27px;
+}
+
+.MyBreadCrumbs{
+   height: 27px;
 }

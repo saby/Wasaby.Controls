@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.BreadCrumbs', [
+define('js!SBIS3.CORE.BreadCrumbs', [
    'js!SBIS3.CONTROLS.CompoundControl',
    'js!SBIS3.CONTROLS.DSMixin',
    'js!SBIS3.CONTROLS.PickerMixin',
