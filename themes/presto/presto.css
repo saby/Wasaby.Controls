@@ -2088,7 +2088,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-BreadCrumbs__crumb:hover .icon-16 {
   color: #FF7033!important;
 }
-.controls-BreadCrumbs__crumb:hover:first-child .controls-BreadCrumbs__title {
+.controls-BreadCrumbs__crumb:hover .controls-BreadCrumbs__title {
   color: #FF7033;
 }
 .controls-BreadCrumbs .controls-BreadCrumbs__title {
@@ -2169,7 +2169,7 @@ input[type="reset"]::-moz-focus-inner {
   width: 100%;
   position: relative;
   border-spacing: 0;
-  border-collapse: collapse;
+  border-collapse: separate;
   border-width: 0;
   border-style: solid;
   border-color: transparent;
@@ -2255,11 +2255,11 @@ input[type="reset"]::-moz-focus-inner {
   color: #aaaaaa;
   font-size: 11px;
   background-color: transparent;
-  border-collapse: collapse;
+  border-collapse: separate;
   border-width: 1px 1px 0 1px;
   border-style: solid;
   border-color: transparent;
-  border-bottom: 1px solid #f5f5f5;
+  /* border-bottom: @data-grid-header-cell-border-bottom; */
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__th:hover {
   color: #aaaaaa;
@@ -2291,7 +2291,7 @@ input[type="reset"]::-moz-focus-inner {
   padding: 0 10px;
   color: inherit;
   background-color: transparent;
-  border-collapse: collapse;
+  border-collapse: separate;
   border-width: 1px 0 0;
   border-style: solid;
   border-color: #F5F5F5;
