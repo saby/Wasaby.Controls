@@ -35,19 +35,19 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          _rowTpl : rowTpl,
          _options: {
             /**
+             * @cfg {Boolean}
              * Разрешить проваливаться в папки
              * Если выключено, то папки можно открывать только в виде дерева, проваливаться в них нельзя
-             * @type {Boolean}
              */
             allowEnterToFolder: true,
             /**
+             * @cfg {Function}
              * Обработчик нажатия на стрелку у папок. Если не задан, стрелка показана не будет
-             * @type {Function}
              */
             arrowActivatedHandler: undefined,
             /**
+            * @cfg {Boolean}
             * Разрешить перемещать элементы с помощью DragAndDrop
-            * @type {Boolean}
             */
             allowDragNDropMove: true
          },
