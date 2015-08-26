@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          gridView.setHighlightText(text, false);
          gridView.setInfiniteScroll(true, true);
          gridView.setGroupBy(gridView.getSearchGroupBy());
-         gridView._container.get(0).className += ' controls-GridView__searchMode';
+         gridView._container.addClass('controls-GridView__searchMode');
          if (this._firstSearch) {
             this._lastRoot = gridView.getCurrentRoot();
             this._pathDSRawData = $ws.core.clone(BreadCrumbs.getDataSet().getRawData());
