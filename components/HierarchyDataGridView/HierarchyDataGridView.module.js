@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
     * @mixes SBIS3.CONTROLS.hierarchyMixin
     * @author Крайнов Дмитрий Олегович
     * @control
+    * @public
     * @initial
     * <component data-component='SBIS3.CONTROLS.HierarchyDataGridView'>
     *    <options name="columns" type="array">
