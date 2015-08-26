@@ -2088,7 +2088,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-BreadCrumbs__crumb:hover .icon-16 {
   color: #FF7033!important;
 }
-.controls-BreadCrumbs__crumb:hover:first-child .controls-BreadCrumbs__title {
+.controls-BreadCrumbs__crumb:hover .controls-BreadCrumbs__title {
   color: #FF7033;
 }
 .controls-BreadCrumbs .controls-BreadCrumbs__title {
