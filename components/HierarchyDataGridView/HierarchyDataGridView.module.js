@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
     * @extends SBIS3.CONTROLS.DataGridView
     * @mixes SBIS3.CONTROLS.hierarchyMixin
     * @control
+    * @public
     * @initial
     * <component data-component='SBIS3.CONTROLS.HierarchyDataGridView'>
     *    <options name="columns" type="array">
