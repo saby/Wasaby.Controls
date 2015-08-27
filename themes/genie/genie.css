@@ -283,6 +283,9 @@ input[type="reset"]::-moz-focus-inner {
   margin: 0 8px;
 }
 @-moz-document url-prefix() {
+  .controls-Button {
+    padding-bottom: 2px;
+  }
   .controls-Button .controls-Button__icon {
     top: 6px;
   }
@@ -2088,7 +2091,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-BreadCrumbs__crumb:hover .icon-16 {
   color: #FF7033!important;
 }
-.controls-BreadCrumbs__crumb:hover:first-child .controls-BreadCrumbs__title {
+.controls-BreadCrumbs__crumb:hover .controls-BreadCrumbs__title {
   color: #FF7033;
 }
 .controls-BreadCrumbs .controls-BreadCrumbs__title {
