@@ -2172,7 +2172,7 @@ input[type="reset"]::-moz-focus-inner {
   width: 100%;
   position: relative;
   border-spacing: 0;
-  border-collapse: collapse;
+  border-collapse: separate;
   border-width: 0;
   border-style: solid;
   border-color: transparent;
@@ -2258,11 +2258,11 @@ input[type="reset"]::-moz-focus-inner {
   color: #919191;
   font-size: 11px;
   background-color: transparent;
-  border-collapse: collapse;
+  border-collapse: separate;
   border-width: 1px 1px 0 1px;
   border-style: solid;
   border-color: transparent;
-  border-bottom: 1px solid #f5f5f5;
+  /* border-bottom: @data-grid-header-cell-border-bottom; */
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__th:hover {
   color: #919191;
@@ -2294,7 +2294,7 @@ input[type="reset"]::-moz-focus-inner {
   padding: 0 10px;
   color: inherit;
   background-color: transparent;
-  border-collapse: collapse;
+  border-collapse: separate;
   border-width: 1px 0 0;
   border-style: solid;
   border-color: #F5F5F5;
