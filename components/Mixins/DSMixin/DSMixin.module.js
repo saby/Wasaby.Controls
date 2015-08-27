@@ -149,10 +149,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @property {String} field Поле записи
              * @property {Function} method Метод группировки
              * @property {String} template Шаблон вёрстки
-             * @property {Function} render Функция визуализации             
+             * @property {Function} render Функция визуализации
              */
             /**
-             * @cfg {GroupBy} Настройка группировки записей 
+             * @cfg {GroupBy} Настройка группировки записей
              * @remark
              * Если задать только поле записи(field), то будет группировать по типу лесенки (Пример 1).
              * Т.е. перед каждым блоком с одинаковыми данными будет создавать блок, для которого можно указать шаблон
@@ -655,14 +655,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
       _appendItemTemplate: function (item, targetContainer, itemBuildedTpl, at) {
          if (at && (typeof at.at !== 'undefined')) {
-            var atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).get(at.at-1);
-            if ($(atContainer).length) {
-               $(atContainer).after(itemBuildedTpl);
+            var atContainer = at.at !== 0 && $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at-1);
+            if (atContainer.length) {
+               atContainer.after(itemBuildedTpl);
             }
             else {
-               atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).get(at.at);
-               if ($(atContainer).length) {
-                  $(atContainer).before(itemBuildedTpl);
+               atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at);
+               if (atContainer.length) {
+                  atContainer.before(itemBuildedTpl);
                }
             }
          }

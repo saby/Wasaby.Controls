@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.TreeMixinDS',
    'js!SBIS3.CONTROLS.DragNDropMixin',
    'html!SBIS3.CONTROLS.TreeDataGridView/resources/rowTpl'
-], function(HierarchyDataGridView, TreeMixin, DragNDropMixin, rowTpl) {
+], function(HierarchyDataGridView, TreeMixinDS, DragNDropMixin, rowTpl) {
    'use strict';
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
@@ -30,24 +30,24 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * 
     */
 
-   var TreeDataGridView = HierarchyDataGridView.extend([TreeMixin, DragNDropMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
+   var TreeDataGridView = HierarchyDataGridView.extend([TreeMixinDS, DragNDropMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
       $protected: {
          _rowTpl : rowTpl,
          _options: {
             /**
+             * @cfg {Boolean}
              * Разрешить проваливаться в папки
              * Если выключено, то папки можно открывать только в виде дерева, проваливаться в них нельзя
-             * @type {Boolean}
              */
             allowEnterToFolder: true,
             /**
+             * @cfg {Function}
              * Обработчик нажатия на стрелку у папок. Если не задан, стрелка показана не будет
-             * @type {Function}
              */
             arrowActivatedHandler: undefined,
             /**
+            * @cfg {Boolean}
             * Разрешить перемещать элементы с помощью DragAndDrop
-            * @type {Boolean}
             */
             allowDragNDropMove: true
          },

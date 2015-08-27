@@ -1,31 +1,11 @@
 define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Control) {
-   var TreePagingLoader = Control.Control.extend({
-      $protected :{
-         _options : {
-            id: null,
-            pageSize : 20,
-            hasMore : false
-         }
-      },
-      $constructor : function(){
-         this._container.addClass('controls-TreePager');
-         this.setHasMore(this._options.hasMore);
-      },
-      setHasMore: function(more) {
-         this._options.hasMore = more;
-         if (this._options.hasMore) {
-            this._container.html('Еще ' + this._options.pageSize);
-         }
-         else {
-            this._container.empty();
-         }
-      }
-   });
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
+    * @public
     * @author Крайнов Дмитрий Олегович
     */
+
    var TreeMixinDS = /** @lends SBIS3.CONTROLS.TreeMixinDS.prototype */{
       $protected: {
          _folderOffsets : {},
@@ -307,7 +287,31 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
 
 
    };
+    
+   var TreePagingLoader = Control.Control.extend({
+      $protected :{
+         _options : {
+            id: null,
+            pageSize : 20,
+            hasMore : false
+         }
+      },
+      $constructor : function(){
+         this._container.addClass('controls-TreePager');
+         this.setHasMore(this._options.hasMore);
+      },
+      setHasMore: function(more) {
+         this._options.hasMore = more;
+         if (this._options.hasMore) {
+            this._container.html('Еще ' + this._options.pageSize);
+         }
+         else {
+            this._container.empty();
+         }
+      }
+   });
 
    return TreeMixinDS;
 
 });
+

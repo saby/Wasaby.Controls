@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
    /**
     * только работа с иерархией + методы для отображения
     * @mixin SBIS3.CONTROLS.hierarchyMixin
+    * @public
     */
    var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
       $protected: {
@@ -18,9 +19,6 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
              * @cfg {String} Поле иерархии
              */
             hierField: null,
-            /**
-             * folders/all
-             * */
             displayType : 'all'
 
          }
