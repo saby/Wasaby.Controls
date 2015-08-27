@@ -1,4 +1,4 @@
-<button class="controls-MenuButton controls-Button{{?it.primary}} controls-Button__primary{{?}}{{?it.checked===true}} controls-Checked__checked{{?}}{{?(it.items && it.items.length <= 1)}} controls-MenuButton__withoutMenu{{?}}">
+<button class="controls-MenuButton controls-Button{{?it.primary}} controls-Button__primary{{?}}{{?it.checked===true}} controls-Checked__checked{{?}}{{?(it.items && it.items.length <= 1)}} controls-MenuButton__withoutMenu{{?}}"{{?it.tooltip}} title="{{=it.tooltip}}"{{?}}>
     {{?it.icon}}
     <i class="controls-Button__icon js-controls-Button__icon {{=it.iconTemplate(it)}}"></i>
     {{?}}
