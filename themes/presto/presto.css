@@ -271,6 +271,9 @@ input[type="reset"]::-moz-focus-inner {
   margin: 0 8px 0 8px;
 }
 @-moz-document url-prefix() {
+  .controls-Button {
+    padding-bottom: 3px;
+  }
   .controls-Button .controls-Button__icon {
     top: 20px;
   }
@@ -2128,6 +2131,85 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TreeView__expand__leaf:hover {
   background: none !important;
 }
+.controls-BreadCrumbs {
+  min-height: 27px;
+}
+.controls-BreadCrumbs__crumb {
+  cursor: pointer;
+  position: relative;
+  line-height: 16px;
+}
+.controls-BreadCrumbs__crumb:hover .controls-BreadCrumbs__title {
+  color: #FF7033;
+}
+.controls-BreadCrumbs__crumb:hover .icon-16 {
+  color: #FF7033!important;
+}
+.controls-BreadCrumbs__crumb:hover .controls-BreadCrumbs__title {
+  color: #FF7033;
+}
+.controls-BreadCrumbs .controls-BreadCrumbs__title {
+  text-decoration: none;
+  color: #0055BB;
+  padding-right: 1px;
+  display: inline-block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.controls-BreadCrumbs .controls-BreadCrumbs__arrow {
+  position: relative;
+}
+.controls-BreadCrumbs .controls-BreadCrumbs__itemsContainer {
+  display: inline-block;
+  height: 16px;
+}
+.controls-BreadCrumbs .controls-BreadCrumbs__dots {
+  margin-left: -3px;
+}
+.controls-BreadCrumbs .controls-BreadCrumbs__dots .controls-BreadCrumbs__title {
+  margin-left: -3px;
+}
+.controls-BreadCrumbs.controls-BreadCrumbs__smallItems .controls-BreadCrumbs__title {
+  font-size: 13px;
+  color: #0055BB;
+  font-weight: normal;
+}
+.controls-BreadCrumbs.controls-BreadCrumbs__smallItems .controls-BreadCrumbs__title:hover {
+  color: #FF7033;
+}
+.controls-BreadCrumbs .controls-BreadCrumbs__hierWrapper {
+  height: 13px;
+  width: 14px;
+  display: inline-block;
+}
+.controls-BreadCrumbs .controls-BreadCrumbs__hierWrapper:last-of-type {
+  background: url('img/BreadCrumbs_hierWrapper.png') no-repeat;
+  position: relative;
+  top: -3px;
+}
+.controls-BackButton {
+  display: inline-block;
+  cursor: pointer;
+}
+.controls-BackButton .controls-BackButton__caption {
+  font-size: 16px;
+  font-weight: 700;
+  font-style: normal;
+  line-height: 24px;
+  color: #313e78;
+  overflow: hidden;
+}
+.controls-BackButton .controls-BackButton__arrow {
+  display: inline-block;
+  width: 24px;
+  height: 23px;
+  background: url('img/path-filter-icon-back.png');
+}
+.controls-BackButton:hover .controls-BackButton__caption {
+  text-decoration: none;
+  color: #ff7033;
+}
 .controls-DataGridView.controls-DataGridView__scrollingNow .controls-DataGridView__thead .controls-DataGridView__scrolledCell {
   cursor: -moz-grabbing !important;
   cursor: -webkit-grabbing !important;
@@ -2824,6 +2906,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Button {
   white-space: normal;
+  padding-bottom: 0;
 }
 .controls-Button__text {
   line-height: 20px;
