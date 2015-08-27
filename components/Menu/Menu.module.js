@@ -118,8 +118,6 @@ define('js!SBIS3.CONTROLS.Menu', [
                }
             }
          }
-
-
       },
 
       _getTargetContainer : function(item, key, parItem, lvl) {

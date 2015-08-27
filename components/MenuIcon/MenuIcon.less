@@ -54,6 +54,24 @@
 
    background: @menu-icon-menu-bg;
    .controls-MenuItem {
-      padding: @menu-item-small-padding;
+      padding-left: @menu-item-small-padding-left;
+   }
+   &.controls-IconButton__round-border{
+      margin: -5px 0 0 -6px;
+      .controls-Menu__header{
+         height: 32px;
+         .icon-16{
+            .round-button-mixin(@default-color);
+         }
+         .icon-24{
+            .round-button-mixin(@default-color);
+         }
+      }
+      .controls-MenuItem{
+         padding: @menu-item-default-padding;
+         &.controls-Menu__hasChild{
+            padding-right: @menu-item-expand-padding-right
+         }
+      }
    }
 }

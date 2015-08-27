@@ -398,42 +398,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-IconButton.controls-IconButton__round-border:hover {
   border-color: #f2f2f2;
 }
-.controls-Menu.controls-IconButton__round-border {
-  margin: -5px 0 0 -6px;
-}
-.controls-Menu.controls-IconButton__round-border.controls-Menu__hide-menu-header .controls-MenuItem {
-  padding: 0 8px;
-}
-.controls-Menu.controls-IconButton__round-border .controls-Menu__header {
-  height: 32px;
-}
-.controls-Menu.controls-IconButton__round-border .controls-Menu__header .icon-16 {
-  border: 1px solid #f2f2f2;
-  border-radius: 14px;
-  height: 28px;
-  width: 28px;
-  line-height: 26px!important;
-  text-align: center;
-  box-sizing: border-box;
-}
-.controls-Menu.controls-IconButton__round-border .controls-Menu__header .icon-16:hover {
-  border-color: #f2f2f2;
-}
-.controls-Menu.controls-IconButton__round-border .controls-Menu__header .icon-24 {
-  border: 1px solid #f2f2f2;
-  border-radius: 14px;
-  height: 28px;
-  width: 28px;
-  line-height: 26px!important;
-  text-align: center;
-  box-sizing: border-box;
-}
-.controls-Menu.controls-IconButton__round-border .controls-Menu__header .icon-24:hover {
-  border-color: #f2f2f2;
-}
-.controls-Menu.controls-IconButton__round-border .controls-MenuItem {
-  padding: 0 8px 0 36px;
-}
 .controls-TabButton {
   display: inline-block;
   cursor: pointer;
@@ -872,6 +836,9 @@ input[type="reset"]::-moz-focus-inner {
   border-color: transparent transparent transparent #4e5762;
   background: transparent;
 }
+.controls-Menu__Popup .controls-Menu__hasChild.controls-MenuItem {
+  padding-right: 16px;
+}
 .controls-Menu__Popup .controls-Menu__submenu {
   display: block;
 }
@@ -1102,11 +1069,11 @@ input[type="reset"]::-moz-focus-inner {
   }
 }
 .controls-MenuLink {
-  position: relative;
-  color: #ffcc99;
-  text-decoration: none;
-  padding: 0 16px 0 0;
   line-height: 24px;
+  position: relative;
+  padding: 0 16px 0 0;
+  text-decoration: none;
+  color: #ffcc99;
 }
 .controls-MenuLink.controls-MenuLink__32px {
   line-height: 32px;
@@ -1118,42 +1085,42 @@ input[type="reset"]::-moz-focus-inner {
   padding: 0;
 }
 .controls-MenuLink.ws-enabled:hover {
-  color: #ffcc99;
   text-decoration: underline;
+  color: #ffcc99;
 }
 .controls-MenuLink .controls-MenuButton__arrowDown {
+  font-size: 10px!important;
   position: absolute;
+  top: 10px;
+  right: 0;
   display: inline-block;
   width: none;
   height: 6px;
-  right: 0;
-  top: 10px;
   border-width: 5px 5px 0 5px;
   border-style: solid;
   border-color: #ffcc99 transparent transparent transparent;
-  font-size: 10px!important;
 }
-.controls-MenuLink__Menu {
+.controls-Menu.controls-MenuLink__Menu {
   margin: 0 0 0 -9px;
-  background: #ffffff;
   padding: 0;
+  background: #ffffff;
 }
-.controls-MenuLink__Menu.controls-Menu .controls-Menu__header {
-  padding: 6px;
+.controls-Menu.controls-MenuLink__Menu .controls-Menu__header {
   height: 32px;
+  padding: 6px;
 }
-.controls-MenuLink__Menu.controls-Menu .controls-Menu__header .icon-16 {
+.controls-Menu.controls-MenuLink__Menu .controls-Menu__header .icon-16 {
   margin-top: 1px;
 }
-.controls-MenuLink__Menu.controls-Menu .controls-Menu__header .controls-Menu__header-caption {
+.controls-Menu.controls-MenuLink__Menu .controls-Menu__header .controls-Menu__header-caption {
   position: absolute;
   top: 50%;
   margin-top: -10px;
 }
-.controls-MenuLink__Menu.controls-Menu .controls-MenuItem {
-  padding: 0 8px 0 24px;
+.controls-Menu.controls-MenuLink__Menu .controls-MenuItem {
+  padding-left: 8px;
 }
-.controls-MenuLink__Menu .controls-MenuLink__Menu .controls-MenuLink__arrowDown {
+.controls-Menu.controls-MenuLink__Menu .controls-MenuLink__Menu .controls-MenuLink__arrowDown {
   display: none;
 }
 .controls-MenuIcon {
@@ -1209,7 +1176,43 @@ input[type="reset"]::-moz-focus-inner {
   background: #ffffff;
 }
 .controls-MenuIcon__Menu .controls-MenuItem {
-  padding: 0 8px 0 24px;
+  padding-left: 8px;
+}
+.controls-MenuIcon__Menu.controls-IconButton__round-border {
+  margin: -5px 0 0 -6px;
+}
+.controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header {
+  height: 32px;
+}
+.controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header .icon-16 {
+  border: 1px solid #f2f2f2;
+  border-radius: 14px;
+  height: 28px;
+  width: 28px;
+  line-height: 26px!important;
+  text-align: center;
+  box-sizing: border-box;
+}
+.controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header .icon-16:hover {
+  border-color: #f2f2f2;
+}
+.controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header .icon-24 {
+  border: 1px solid #f2f2f2;
+  border-radius: 14px;
+  height: 28px;
+  width: 28px;
+  line-height: 26px!important;
+  text-align: center;
+  box-sizing: border-box;
+}
+.controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header .icon-24:hover {
+  border-color: #f2f2f2;
+}
+.controls-MenuIcon__Menu.controls-IconButton__round-border .controls-MenuItem {
+  padding: 0 8px;
+}
+.controls-MenuIcon__Menu.controls-IconButton__round-border .controls-MenuItem.controls-Menu__hasChild {
+  padding-right: 16px;
 }
 .controls-Menu .controls-Menu__header {
   position: relative;
@@ -1230,7 +1233,7 @@ input[type="reset"]::-moz-focus-inner {
   height: 32px;
 }
 .controls-Menu.controls-Menu__big-header .controls-MenuItem {
-  padding: 0 8px 0 32px;
+  padding-left: 8px;
 }
 .controls-Menu.controls-Menu__hide-menu-header {
   padding: 4px 0;
