@@ -467,8 +467,6 @@ define('js!SBIS3.CONTROLS.ListView',
                //После релоада придется заново догружать данные до появлени скролла
                this._isLoadBeforeScrollAppears = true;
             }
-            this._previousGroupBy = undefined;
-            return ListView.superclass.reload.apply(this, arguments);
          },
          /**
           * Метод установки/замены обработчика клика по строке.
