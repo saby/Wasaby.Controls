@@ -572,17 +572,19 @@ define('js!SBIS3.CONTROLS.DataGridView',
         */
        setColumns : function(columns) {
           var headerTr = $('<tr>'),
-              docFragmentForColGroup = document.createDocumentFragment(),
-              isPartScrollUsed = this._options.startScrollColumn !== undefined;
+             docFragmentForColGroup = document.createDocumentFragment(),
+             isPartScrollUsed = this._options.startScrollColumn !== undefined;
 
           this._thead.find('.controls-DataGridView__th').eq(0).parent().remove();
           this._colgroup.empty();
+
+          /* Колонка для чекбокса */
           if (this._options.multiselect) {
-             headerTr.append('<th class="controls-DataGridView__th' +
-             (isPartScrollUsed ?
-                this._options.startScrollColumn === 0 ?
-                   ' controls-DataGridView__scrolledCell' :
-                   ' controls-DataGridView__notScrolledCell"></th>' : '"></th>'));
+             headerTr.append([
+                '<th class="controls-DataGridView__th ',
+                (isPartScrollUsed ? this._options.startScrollColumn === 0 ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell' : ''),
+                '"></th>'
+             ].join(''));
              docFragmentForColGroup.appendChild($('<col width="24px">')[0]);
           }
           this._options.columns = columns;
@@ -590,13 +592,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
              var column = document.createElement('col');
              if (columns[i].width) column.width = columns[i].width;
              docFragmentForColGroup.appendChild(column);
-             headerTr.append(
-                $('<th class="controls-DataGridView__th' +
-                  (isPartScrollUsed ?
-                      this._options.startScrollColumn <= i ?
-                         ' controls-DataGridView__scrolledCell' :
-                         ' controls-DataGridView__notScrolledCell' : '') +
-                     '" title="' + columns[i].title + '"><div class="controls-DataGridView__th-content">' + $ws.helpers.escapeHtml(columns[i].title) + '</div></th>'));
+             headerTr.append([
+                '<th class="controls-DataGridView__th ',
+                (columns[i].className ? columns[i].className : ''),
+                (isPartScrollUsed ? this._options.startScrollColumn <= i ? ' controls-DataGridView__scrolledCell' : ' controls-DataGridView__notScrolledCell' : ''),
+                '" title="',
+                columns[i].title,
+                '"><div class="controls-DataGridView__th-content">',
+                $ws.helpers.escapeHtml(columns[i].title),
+                '</div></th>'
+             ].join(''));
           }
 
           if (this._editInPlace) {
