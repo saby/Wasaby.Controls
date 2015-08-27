@@ -2309,6 +2309,12 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   height: 14px;
 }
+.controls-GridView__searchMode .controls-TreeView__hierWrapper {
+  width: 0;
+}
+.controls-GridView__searchMode .controls-TreeView__expand {
+  width: 0;
+}
 .controls-TreeDataGridView__folderToolbarContainer {
   overflow: hidden;
 }
