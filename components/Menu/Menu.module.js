@@ -188,8 +188,8 @@ define('js!SBIS3.CONTROLS.Menu', [
                   var mySubmenu;
                   if (self._subContainers[id]) {
                      if (!self._subMenus[id]) {
-                        self._subContainers[id].appendTo('body');
                         self._subMenus[id] = self._createSubMenu(this, parent, isFirstLevel, item);
+                        self._subContainers[id].show();
                         self._subMenus[id].getContainer().append(self._subContainers[id]);
                      }
                      mySubmenu = self._subMenus[id];
