@@ -3,14 +3,15 @@
  */
 
 define('js!SBIS3.CONTROLS.Menu', [
-   'js!SBIS3.CONTROLS.ButtonGroupBase',
+   'js!SBIS3.CONTROLS.ButtonGroupBaseDS',
    'html!SBIS3.CONTROLS.Menu',
-   'js!SBIS3.CONTROLS.TreeMixin',
+   'js!SBIS3.CONTROLS.hierarchyMixin',
+   'js!SBIS3.CONTROLS.TreeMixinDS',
    'js!SBIS3.CONTROLS.FloatArea',
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'js!SBIS3.CONTROLS.MenuItem'
 
-], function(ButtonGroupBase, dot, TreeMixin, FloatArea, ControlHierarchyManager) {
+], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, ControlHierarchyManager) {
 
    'use strict';
 
@@ -23,7 +24,7 @@ define('js!SBIS3.CONTROLS.Menu', [
     * @mixes SBIS3.CONTROLS.TreeMixin
     */
 
-   var Menu = ButtonGroupBase.extend([TreeMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
+   var Menu = ButtonGroupBase.extend([hierarchyMixin, TreeMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
       /**
        * @event onMenuItemActivate При активации пункта меню
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -87,27 +88,27 @@ define('js!SBIS3.CONTROLS.Menu', [
              * @cfg {Number} Задержка перед закрытием
              * @noShow
              */
-            hideDelay: null
+            hideDelay: null,
+            displayField : 'title',
+            expand: true
          }
       },
 
       $constructor: function() {
-         if (this._items.getItemsCount()) {
-            this._drawItems();
-         }
          this._publish('onMenuItemActivate');
       },
 
-      _getItemClass : function() {
-         return 'js!SBIS3.CONTROLS.MenuItem';
-      },
+      _getItemTemplate: function(item) {
+         var
+            caption = item.get(this._options.displayField),
+            icon = item.get('icon'),
+            className = item.get('className');
 
-      _getAddOptions : function(item) {
-         return {
-            caption : item.title,
-            icon : item.icon,
-            className: item.className
-         }
+         return '<component data-component="SBIS3.CONTROLS.MenuItem"'+className+'>' +
+            '<option name="caption">'+caption+'</option>'+
+            '<option name="icon">'+icon+'</option>'+
+            '<option name="className">'+className+'</option>'+
+            '</component>';
       },
 
       _itemActivatedHandler : function(menuItem) {
@@ -122,12 +123,12 @@ define('js!SBIS3.CONTROLS.Menu', [
 
       },
 
-      _getTargetContainer : function(item, key, parItem, lvl) {
-         if (!parItem) {
+      _getTargetContainer : function(item) {
+         var parId = this.getParentKey(this._dataSet, item);
+         if (parId === null || parId === undefined) {
             return this._container;
          }
          else {
-            var parId = this._items.getKey(parItem);
             if (!this._subContainers[parId]) {
                this._subContainers[parId] = $('<div class="controls-Menu__submenu" data-parId="' + parId + '"></div>');
                this._subContainers[parId].parentCtrl = this;
@@ -138,7 +139,7 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
       _drawItems : function() {
          this.destroySubObjects();
-         Menu.superclass._drawItems.call(this);
+         Menu.superclass._drawItems.apply(this, arguments);
       },
       _drawItemsCallback : function() {
          var
@@ -171,8 +172,8 @@ define('js!SBIS3.CONTROLS.Menu', [
                   var
                      isFirstLevel = false,
                      id = $(this).attr('data-id'),
-                     item = self._items.getItem(id),
-                     parId = self._items.getParent(item),
+                     item = self._dataSet.getRecordByKey(id),
+                     parId = self.getParentKey(self._dataSet, item),
                      parent;
                   if (parId) {
                      parent = self._subMenus[parId];
