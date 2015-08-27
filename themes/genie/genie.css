@@ -284,7 +284,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 @-moz-document url-prefix() {
   .controls-Button {
-    padding-bottom: 3px;
+    padding-bottom: 2px;
   }
   .controls-Button .controls-Button__icon {
     top: 6px;
