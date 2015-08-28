@@ -8,10 +8,9 @@ define('js!SBIS3.CONTROLS.Menu', [
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'js!SBIS3.CONTROLS.TreeMixinDS',
    'js!SBIS3.CONTROLS.FloatArea',
-   'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'js!SBIS3.CONTROLS.MenuItem'
 
-], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixinDS, FloatArea, ControlHierarchyManager) {
+], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixinDS, FloatArea) {
 
    'use strict';
 
@@ -232,8 +231,8 @@ define('js!SBIS3.CONTROLS.Menu', [
          if (isFirstLevel) {
             direction = 'down';
          }
-         if (item.direction) {
-            direction = item.direction;
+         if (item.get('direction')) {
+            direction = item.get('direction');
          }
          if (direction) {
             switch (direction) {
@@ -269,71 +268,6 @@ define('js!SBIS3.CONTROLS.Menu', [
                this._subMenus[j].destroy();
             }
          }
-      },
-      /*TODO Методы для Зуева, посмотреть в будущем нужны ли они*/
-       /**
-        * Метод добавления подменю.
-        * @param {Array} pointsArr Описание подменю.
-        * @param {String} id Идентификатор пункта меню.
-        * @example
-        * <pre>
-        *    menu.addSubMenu(id, [
-        *       {
-        *          title: 'save',
-        *          icon: "sprite:icon-16 icon-Save icon-primary",
-        *          id: "save",
-        *          parent: 1
-        *       },
-        *       {
-        *          title: 'print',
-        *          icon: "sprite:icon-16 icon-Print icon-primary",
-        *          id: "print",
-        *          parent: 1
-        *       }
-        *    ]);
-        * </pre>
-        * @see items
-        * @see hierField
-        * @see keyField
-        * @see destroySubMenu
-        * @see hasSubMenu
-        */
-      addSubMenu : function(pointsArr, id) {
-         for (var i = 0; i < pointsArr.length; i++) {
-            pointsArr[i][this._options.hierField] = id;
-            this._items.addItem(pointsArr[i]);
-         }
-         this._drawItems();
-      },
-       /**
-        * Метод разрушению подменю по идентификатору.
-        * @param {String|Number} id
-        */
-      destroySubMenu : function(id) {
-         var childItems = this._items.getChildItems(id);
-         for (var i = 0; i < childItems.length; i++) {
-            this._items.destroyItem(this._items.getKey(childItems[i]));
-         }
-         this._drawItems();
-      },
-       /**
-        * Метод получения признака существования подменю
-        * @param id
-        * @returns {*}
-        */
-      hasSubMenu : function(id) {
-         return this._items.hasChild(id)
-      },
-       /**
-        * Метод замены текста пункта меню
-        * @param {String|Number} id Идентификатор пункта меню.
-        * @param {String} title Новый текст пункта меню.
-        * @see items
-        */
-      setItemTitle : function(id, title) {
-         var item = this._items.getItem(id);
-         item.title = title;
-         this._drawItems();
       }
    });
 
