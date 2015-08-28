@@ -93,8 +93,11 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
                this._notify('onMenuItemActivate', id);
             }
          }
-      }
+      },
 
+      _dataLoadedCallback : function() {
+         this.hidePicker();
+      }
    });
 
    return MenuLink;

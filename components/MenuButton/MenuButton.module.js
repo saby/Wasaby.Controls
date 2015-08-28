@@ -187,6 +187,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             this._container.removeClass('controls-Picker__show');
             $('.controls-MenuButton__header', this._container).remove();
          }
+         this.hidePicker();
       }
    });
 

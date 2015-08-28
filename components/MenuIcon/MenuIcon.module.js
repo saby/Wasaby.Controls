@@ -80,7 +80,11 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
                this._notify('onMenuItemActivate', id);
             }
          }
+      },
+      _dataLoadedCallback : function() {
+         this.hidePicker();
       }
+
    });
 
    return MenuIcon;
