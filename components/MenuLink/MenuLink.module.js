@@ -53,8 +53,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
 
 
       init : function(){
-         this.reload(undefined,undefined,undefined,undefined,true);
-         this._initMenu();
+         this.reload();
          MenuLink.superclass.init.call(this);
       },
 
@@ -63,16 +62,6 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
          $('.controls-Link__field', this._container).html(caption);
          if (this._picker){
             $('.controls-Link__field', this._picker._container).html(caption);
-         }
-      },
-
-      _initMenu: function(){
-         if (this._dataSet.getCount() > 1) {
-            $('.js-controls-MenuLink__arrowDown', this._container).show();
-            this._container.removeClass('controls-MenuLink__withoutMenu');
-         } else {
-            $('.js-controls-MenuLink__arrowDown', this._container).hide();
-            this._container.addClass('controls-MenuLink__withoutMenu');
          }
       },
 
@@ -102,6 +91,16 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
          $('.controls-MenuLink__header', this._picker._container).bind('click', function(){
             self.hidePicker();
          });
+      },
+
+      _dataLoadedCallback : function() {
+         if (this._dataSet.getCount() > 1) {
+            $('.js-controls-MenuLink__arrowDown', this._container).show();
+            this._container.removeClass('controls-MenuLink__withoutMenu');
+         } else {
+            $('.js-controls-MenuLink__arrowDown', this._container).hide();
+            this._container.addClass('controls-MenuLink__withoutMenu');
+         }
       }
    });
 

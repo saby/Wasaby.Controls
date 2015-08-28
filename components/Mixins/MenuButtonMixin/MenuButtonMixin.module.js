@@ -85,7 +85,6 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          if (this._picker) {
             this._picker.destroy();
             this._initializePicker();
-            this._initMenu();
          }
       }
    };

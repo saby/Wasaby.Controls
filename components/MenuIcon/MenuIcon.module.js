@@ -53,30 +53,11 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
 
       init: function(){
          this._container.addClass('controls-MenuIcon');
-         this.reload(undefined,undefined,undefined,undefined,true);
-         this._initMenu();
+         this.reload();
          MenuIcon.superclass.init.call(this);
       },
 
-      _initMenu: function(){
-         if (this._dataSet.getCount() > 1) {
-            if (!this._hasHeader) {
-               var header = $('<span class="controls-MenuIcon__header controls-MenuIcon__header-hidden">\
-                            <i class="controls-MenuIcon__headerLeft"></i>\
-                            <i class="controls-MenuIcon__headerRight"></i>\
-                         </span>');
-               this.getContainer().append(header);
-               this._hasHeader = true;
-            }
-         } else {
-            $('.controls-MenuIcon__header', this._container).remove();
-            this._container.removeClass('controls-Picker__show');
-            this._hasHeader = false;
-         }
-      },
-
       _clickHandler: function () {
-         this._initMenu();
          if (this._dataSet.getCount() > 1) {
             $('.controls-MenuIcon__header', this._container).toggleClass('controls-MenuIcon__header-hidden', this._container.hasClass('controls-Picker__show'));
             this.togglePicker();
@@ -108,6 +89,23 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
 
       _closeHandler: function(){
          $('.controls-MenuIcon__header', this._container).addClass('controls-MenuIcon__header-hidden');
+      },
+
+      _dataLoadedCallback : function() {
+         if (this._dataSet.getCount() > 1) {
+            if (!this._hasHeader) {
+               var header = $('<span class="controls-MenuIcon__header controls-MenuIcon__header-hidden">\
+                            <i class="controls-MenuIcon__headerLeft"></i>\
+                            <i class="controls-MenuIcon__headerRight"></i>\
+                         </span>');
+               this.getContainer().append(header);
+               this._hasHeader = true;
+            }
+         } else {
+            $('.controls-MenuIcon__header', this._container).remove();
+            this._container.removeClass('controls-Picker__show');
+            this._hasHeader = false;
+         }
       }
    });
 
