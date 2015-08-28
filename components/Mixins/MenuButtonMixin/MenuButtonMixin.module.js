@@ -108,15 +108,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             this._picker.destroy();
             this._initializePicker();
          }
-      },
-
-      addItem : function( item) {
-         this._items.addItem(item);
-         if (this._picker){
-            this._drawItems();
-         }
       }
-
    };
 
    return MenuButtonMixin;
