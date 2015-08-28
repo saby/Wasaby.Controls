@@ -50,8 +50,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          _headerAlignment: {
             horizontal: 'left',
             vertical: 'top'
-         },
-         _options: {
          }
       },
 
