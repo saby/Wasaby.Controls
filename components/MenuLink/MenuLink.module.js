@@ -101,6 +101,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
             $('.js-controls-MenuLink__arrowDown', this._container).hide();
             this._container.addClass('controls-MenuLink__withoutMenu');
          }
+         this.hidePicker();
       }
    });
 
