@@ -422,17 +422,22 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         */
       setItems: function (items) {
          //TODO Сделать метод для очистки всех Items, ибо setItems([]) - не очевидно
-         var
-            item = items[0],
-            keyField;
+         if (items && items.length) {
+             var
+                item = items[0],
+                keyField;
 
-         if (this._options.keyField) {
-            keyField = this._options.keyField;
+             if (this._options.keyField) {
+                keyField = this._options.keyField;
+             }
+             else {
+                if (item && Object.prototype.toString.call(item) === '[object Object]') {
+                   keyField = Object.keys(item)[0];
+                }
+             }
          }
          else {
-            if (item && Object.prototype.toString.call(item) === '[object Object]') {
-               keyField = Object.keys(item)[0];
-            }
+            items = [];
          }
          this._dataSource = new StaticSource({
             data: items,

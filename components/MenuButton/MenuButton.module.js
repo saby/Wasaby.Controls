@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.CollectionMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'html!SBIS3.CONTROLS.MenuButton'], function(Button, ContextMenu, PickerMixin, CollectionMixin, MenuButtonMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'html!SBIS3.CONTROLS.MenuButton'], function(Button, ContextMenu, PickerMixin, DSMixin, MenuButtonMixin, dotTplFn) {
 
    'use strict';
 
@@ -26,8 +26,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * @author Крайнов Дмитрий Олегович
     * @category Buttons
     * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.CollectionMixin
-    * @mixes SBIS3.CONTROLS.TreeMixin
+    * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.MenuButtonMixin
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
@@ -46,7 +45,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * @ignoreEvents onFocusIn onFocusOut onReady onDragIn onDragStart onDragStop onDragMove onDragOut
     */
 
-   var MenuButton = Button.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
+   var MenuButton = Button.extend( [PickerMixin, DSMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _header: null,
@@ -61,8 +60,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
 
       init: function(){
          var self = this;
+         this.reload();
          MenuButton.superclass.init.call(this);
-         this._initMenu();
          $ws.helpers.trackElement(this._container, true).subscribe('onMove', function () {
             if (self._header) {
                self._header.css({
@@ -77,18 +76,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          MenuButton.superclass.destroy.call(this);
          if(this._header)
             this._header.remove();
-      },
-
-      _initMenu: function(){
-         if (this.getItems().getItemsCount() > 1) {
-            $('.js-controls-MenuButton__arrowDown', this._container).show();
-            this._container.removeClass('controls-MenuButton__withoutMenu');
-         } else {
-            $('.js-controls-MenuButton__arrowDown', this._container).hide();
-            this._container.addClass('controls-MenuButton__withoutMenu');
-            this._container.removeClass('controls-Picker__show');
-            $('.controls-MenuButton__header', this._container).remove();
-         }
       },
 
       _onAlignmentChangeHandler: function(alignment){
@@ -113,13 +100,13 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
 
 
       _clickHandler: function(){
-         if (this.getItems().getItemsCount() > 1) {
+         if (this._dataSet.getCount() > 1) {
             this._container.addClass('controls-Checked__checked');
             this.togglePicker();
             this._header.toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
          } else {
-            if (this.getItems().getItemsCount() == 1) {
-               var id = this.getItems().getKey(this.getItems().getNextItem());
+            if (this._dataSet.getCount() == 1) {
+               var id = this._dataSet.at(0).getKey();
                this._notify('onMenuItemActivate', id);
             }
          }
@@ -174,7 +161,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          this._picker.subscribe('onDrawItems', function(){
             self._picker.recalcPosition(true);
          });
-         this._initMenu();
       },
 
       _setPickerContent: function(){
@@ -189,6 +175,19 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          if (this._header) {
             this._header.addClass('controls-MenuButton__header-hidden');
          }
+      },
+
+      _dataLoadedCallback : function() {
+         if (this._dataSet.getCount() > 1) {
+            $('.js-controls-MenuButton__arrowDown', this._container).show();
+            this._container.removeClass('controls-MenuButton__withoutMenu');
+         } else {
+            $('.js-controls-MenuButton__arrowDown', this._container).hide();
+            this._container.addClass('controls-MenuButton__withoutMenu');
+            this._container.removeClass('controls-Picker__show');
+            $('.controls-MenuButton__header', this._container).remove();
+         }
+         this.hidePicker();
       }
    });
 
