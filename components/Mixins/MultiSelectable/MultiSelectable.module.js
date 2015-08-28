@@ -237,7 +237,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             if (idArray.length) {
                if (this._options.multiselect) {
                   for (var i = 0; i < idArray.length; i++) {
-                     if (this._options.selectedKeys.indexOf(idArray[i]) < 0) {
+                     if (this._isItemSelected(idArray[i]) < 0) {
                         this._options.selectedKeys.push(idArray[i]);
                      }
                   }
@@ -274,7 +274,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       removeItemsSelection : function(idArray) {
          if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
             for (var i = idArray.length - 1; i >= 0; i--) {
-               var index = this._options.selectedKeys.indexOf(idArray[i]);
+               var index = this._isItemSelected(idArray[i]);
                if (index >= 0) {
                   Array.remove(this._options.selectedKeys, index);
                }
@@ -327,7 +327,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             if (idArray.length) {
                if (this._options.multiselect) {
                   for (var i = 0; i < idArray.length; i++) {
-                     if (this._options.selectedKeys.indexOf(idArray[i]) < 0) {
+                     if (this._isItemSelected(idArray[i]) < 0) {
                         this.addItemsSelection([idArray[i]]);
                      }
                      else {
@@ -336,7 +336,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                   }
                }
                else {
-                  if (this._options.selectedKeys.indexOf(idArray[0]) >= 0) {
+                  if (this._isItemSelected(idArray[0]) > 0) {
                      this._options.selectedKeys = [];
                   }
                   else {
@@ -378,6 +378,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
          }
       },
 
+      _isItemSelected : function(id) {
+         //TODO пока нет определенности ключ - строка или число - надо избавиться
+         var index = this._options.selectedKeys.indexOf(id);
+         if (index < 0) {
+            index = this._options.selectedKeys.indexOf(id + '')
+         }
+         return index;
+      },
 
       _drawSelectedItems : function() {
          /*Method must be implemented*/
