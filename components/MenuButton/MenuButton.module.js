@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
 
       init: function(){
          var self = this;
-         this.reload();
+         this.reload(undefined,undefined,undefined,undefined,true);
          this._initMenu();
          MenuButton.superclass.init.call(this);
          $ws.helpers.trackElement(this._container, true).subscribe('onMove', function () {

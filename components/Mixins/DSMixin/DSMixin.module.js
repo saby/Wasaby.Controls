@@ -213,7 +213,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @param offset Элемент, с которого перезагружать данные.
         * @param {Number} limit Ограничение количества перезагружаемых элементов.
         */
-      reload: function (filter, sorting, offset, limit) {
+      reload: function (filter, sorting, offset, limit, flag) {
          if (this._options.pageSize) {
             this._limit = this._options.pageSize;
          }

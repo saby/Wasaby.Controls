@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             context: this.getParent() ? this.getParent().getLinkedContext() : {},
             element: targetElement,
             target : this.getContainer(),
-            corner : 'tl',
+            corner : 'bl',
             enabled: this.isEnabled(),
             hierField: this._options.hierField,
             keyField: this._options.keyField,
@@ -81,12 +81,12 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          }
       },
 
-      _drawItems : function() {
+      _redraw : function() {
          if (this._picker) {
             this._picker.destroy();
+            this._initializePicker();
+            this._initMenu();
          }
-         this._initializePicker();
-         this._initMenu();
       }
    };
 

@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
 
 
       init : function(){
-         this.reload();
+         this.reload(undefined,undefined,undefined,undefined,true);
          this._initMenu();
          MenuLink.superclass.init.call(this);
       },

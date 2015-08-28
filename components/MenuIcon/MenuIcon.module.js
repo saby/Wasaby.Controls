@@ -48,13 +48,12 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
       _dotTplFn: dotTplFn,
       _hasHeader: false,
       $protected: {
-         _options: {
-         }
+
       },
 
       init: function(){
          this._container.addClass('controls-MenuIcon');
-         this.reload();
+         this.reload(undefined,undefined,undefined,undefined,true);
          this._initMenu();
          MenuIcon.superclass.init.call(this);
       },
