@@ -61,7 +61,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       init: function(){
          var self = this;
          this.reload();
-         this._initMenu();
          MenuButton.superclass.init.call(this);
          $ws.helpers.trackElement(this._container, true).subscribe('onMove', function () {
             if (self._header) {
@@ -77,18 +76,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          MenuButton.superclass.destroy.call(this);
          if(this._header)
             this._header.remove();
-      },
-
-      _initMenu: function(){
-         if (this._dataSet.getCount() > 1) {
-            $('.js-controls-MenuButton__arrowDown', this._container).show();
-            this._container.removeClass('controls-MenuButton__withoutMenu');
-         } else {
-            $('.js-controls-MenuButton__arrowDown', this._container).hide();
-            this._container.addClass('controls-MenuButton__withoutMenu');
-            this._container.removeClass('controls-Picker__show');
-            $('.controls-MenuButton__header', this._container).remove();
-         }
       },
 
       _onAlignmentChangeHandler: function(alignment){
@@ -174,7 +161,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          this._picker.subscribe('onDrawItems', function(){
             self._picker.recalcPosition(true);
          });
-         this._initMenu();
       },
 
       _setPickerContent: function(){
@@ -188,6 +174,18 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          this._container.removeClass('controls-Checked__checked');
          if (this._header) {
             this._header.addClass('controls-MenuButton__header-hidden');
+         }
+      },
+
+      _dataLoadedCallback : function() {
+         if (this._dataSet.getCount() > 1) {
+            $('.js-controls-MenuButton__arrowDown', this._container).show();
+            this._container.removeClass('controls-MenuButton__withoutMenu');
+         } else {
+            $('.js-controls-MenuButton__arrowDown', this._container).hide();
+            this._container.addClass('controls-MenuButton__withoutMenu');
+            this._container.removeClass('controls-Picker__show');
+            $('.controls-MenuButton__header', this._container).remove();
          }
       }
    });
