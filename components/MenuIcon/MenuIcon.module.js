@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.CollectionMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'html!SBIS3.CONTROLS.IconButton'], function(IconButton, ContextMenu, PickerMixin, CollectionMixin, MenuButtonMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'html!SBIS3.CONTROLS.IconButton'], function(IconButton, ContextMenu, PickerMixin, DSMixin, MenuButtonMixin, dotTplFn) {
 
    'use strict';
 
@@ -40,10 +40,11 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
     * @ignoreEvents onFocusIn onFocusOut onReady onDragIn onDragStart onDragStop onDragMove onDragOut
     *
     * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.CollectionMixin
+    * @mixes SBIS3.CONTROLS.DSMixin
+    * @mixes SBIS3.CONTROLS.MenuButtonMixin
     */
 
-   var MenuIcon = IconButton.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuIcon.prototype */ {
+   var MenuIcon = IconButton.extend( [PickerMixin, DSMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuIcon.prototype */ {
       _dotTplFn: dotTplFn,
       _hasHeader: false,
       $protected: {
@@ -52,13 +53,14 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
       },
 
       init: function(){
-         MenuIcon.superclass.init.call(this);
          this._container.addClass('controls-MenuIcon');
+         this.reload();
          this._initMenu();
+         MenuIcon.superclass.init.call(this);
       },
 
       _initMenu: function(){
-         if (this.getItems().getItemsCount() > 1) {
+         if (this._dataSet.getCount() > 1) {
             if (!this._hasHeader) {
                var header = $('<span class="controls-MenuIcon__header controls-MenuIcon__header-hidden">\
                             <i class="controls-MenuIcon__headerLeft"></i>\
@@ -76,12 +78,12 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
 
       _clickHandler: function () {
          this._initMenu();
-         if (this.getItems().getItemsCount() > 1) {
+         if (this._dataSet.getCount() > 1) {
             $('.controls-MenuIcon__header', this._container).toggleClass('controls-MenuIcon__header-hidden', this._container.hasClass('controls-Picker__show'));
             this.togglePicker();
          } else {
-            if (this.getItems().getItemsCount() == 1) {
-               var id = this.getItems().getKey(this.getItems().getNextItem());
+            if (this._dataSet.getCount() == 1) {
+               var id = this._dataSet.at(0).getKey();
                this._notify('onMenuItemActivate', id);
             }
          }

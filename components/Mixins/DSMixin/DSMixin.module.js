@@ -327,6 +327,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this.reload();
       },
 
+      //TODO поддержка старого
+      getItems : function() {
+         if (this._dataSet) {
+            return this._dataSet.getRawData();
+         }
+         else {
+            return this._options.items;
+         }
+      },
+
       _drawItemsCallback: function () {
          /*Method must be implemented*/
       },

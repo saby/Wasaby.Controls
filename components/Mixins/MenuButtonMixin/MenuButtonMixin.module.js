@@ -10,24 +10,24 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
    'use strict';
 
    var MenuButtonMixin = /**@lends SBIS3.CONTROLS.MenuButtonMixin.prototype  */{
-       /**
-        * @event onMenuItemActivate При активации пункта меню
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-        * @param {String} id Идентификатор пункта меню.
-        * @example
-        * <pre>
-        *     MenuIcon.subscribe('onMenuItemActivate', function(e, id) {
+      /**
+       * @event onMenuItemActivate При активации пункта меню
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String} id Идентификатор пункта меню.
+       * @example
+       * <pre>
+       *     MenuIcon.subscribe('onMenuItemActivate', function(e, id) {
         *        alert('Вы нажали на ' + this._items.getItem(id).title)
         *     })
-        * </pre>
-        */
+       * </pre>
+       */
       $protected: {
-          _options: {
-             /**
-              * @cfg {String} Поле иерархии
-              */
-             hierField : null
-          }
+         _options: {
+            /**
+             * @cfg {String} Поле иерархии
+             */
+            hierField : null
+         }
       },
 
       $constructor: function () {
@@ -77,11 +77,11 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          addItem: function(parentFunc, item) {
             this._items.addItem(item);
             if (this._picker) {
-               this._drawItems();
+               this._redraw();
             }
          }
       },
-      
+
       _drawItems : function() {
          if (this._picker) {
             this._picker.destroy();
@@ -93,4 +93,3 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
 
    return MenuButtonMixin;
 });
-

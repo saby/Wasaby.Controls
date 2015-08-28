@@ -8,10 +8,9 @@ define('js!SBIS3.CONTROLS.Menu', [
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'js!SBIS3.CONTROLS.TreeMixinDS',
    'js!SBIS3.CONTROLS.FloatArea',
-   'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'js!SBIS3.CONTROLS.MenuItem'
 
-], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixinDS, FloatArea, ControlHierarchyManager) {
+], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixinDS, FloatArea) {
 
    'use strict';
 
