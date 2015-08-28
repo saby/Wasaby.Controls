@@ -101,13 +101,11 @@ define('js!SBIS3.CONTROLS.Menu', [
       _getItemTemplate: function(item) {
          var
             caption = item.get(this._options.displayField),
-            icon = item.get('icon'),
-            className = item.get('className');
+            icon = item.get('icon') ? '<option name="icon">' + item.get('icon') + '</option>' : '',
+            className = item.get('className') ? '<option name="className">' + item.get('className') + '</option>' : '';
 
-         return '<component data-component="SBIS3.CONTROLS.MenuItem"'+className+'>' +
-            '<option name="caption">'+caption+'</option>'+
-            '<option name="icon">'+icon+'</option>'+
-            '<option name="className">'+className+'</option>'+
+         return '<component data-component="SBIS3.CONTROLS.MenuItem">' +
+            '<option name="caption">'+caption+'</option>' + icon + className+
             '</component>';
       },
 
