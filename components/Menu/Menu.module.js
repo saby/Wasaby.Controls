@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.Menu', [
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'js!SBIS3.CONTROLS.MenuItem'
 
-], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, ControlHierarchyManager) {
+], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixinDS, FloatArea, ControlHierarchyManager) {
 
    'use strict';
 
@@ -21,10 +21,11 @@ define('js!SBIS3.CONTROLS.Menu', [
     * @public
     * @author Крайнов Дмитрий Олегович
     * @extends SBIS3.CONTROLS.ButtonGroupBase
-    * @mixes SBIS3.CONTROLS.TreeMixin
+    * @mixes SBIS3.CONTROLS.hierarchyMixin
+    * @mixes SBIS3.CONTROLS.TreeMixinDS
     */
 
-   var Menu = ButtonGroupBase.extend([hierarchyMixin, TreeMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
+   var Menu = ButtonGroupBase.extend([hierarchyMixin, TreeMixinDS], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
       /**
        * @event onMenuItemActivate При активации пункта меню
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.

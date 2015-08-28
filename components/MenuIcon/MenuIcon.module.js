@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
     * @ignoreEvents onFocusIn onFocusOut onReady onDragIn onDragStart onDragStop onDragMove onDragOut
     *
     * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.CollectionMixin
+    * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.MenuButtonMixin
     */
 
@@ -56,8 +56,6 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
       },
 
       init: function(){
-         this.reload();
-         MenuIcon.superclass.init.call(this);
          this._container.addClass('controls-MenuIcon');
          if (this._container.hasClass('controls-Menu__hide-menu-header')){
             this._options.pickerClassName += ' controls-Menu__hide-menu-header';
@@ -67,7 +65,9 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
          }
          if (this._container.hasClass('icon-24')){
             this._options.pickerClassName += ' controls-Menu__big-header';
-         } 
+         }
+         this.reload();
+         MenuIcon.superclass.init.call(this);
       },
 
       _clickHandler: function () {
