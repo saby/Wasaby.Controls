@@ -41,7 +41,6 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             context: this.getParent() ? this.getParent().getLinkedContext() : {},
             element: targetElement,
             target : this.getContainer(),
-            items: this._options.items,
             corner : 'tl',
             enabled: this.isEnabled(),
             hierField: this._options.hierField,
