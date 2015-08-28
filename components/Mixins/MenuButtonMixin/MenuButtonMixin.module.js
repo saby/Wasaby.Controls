@@ -22,8 +22,12 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
         * </pre>
         */
       $protected: {
-         _options: {
-         }
+          _options: {
+             /**
+              * @cfg {String} Поле иерархии
+              */
+             hierField : null
+          }
       },
 
       $constructor: function () {
@@ -31,14 +35,14 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
       },
 
       _createPicker: function(targetElement){
-         return new ContextMenu({
+         var menuconfig = {
             parent: this.getParent(),
             opener: this,
             context: this.getParent() ? this.getParent().getLinkedContext() : {},
             element: targetElement,
             target : this.getContainer(),
-            items: this._items,
-            corner : 'bl',
+            items: this._options.items,
+            corner : 'tl',
             enabled: this.isEnabled(),
             hierField: this._options.hierField,
             keyField: this._options.keyField,
@@ -50,7 +54,14 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             },
             closeByExternalClick: true,
             targetPart: true
-         });
+         };
+         if (this._dataSource) {
+            menuconfig.dataSource = this._dataSource;
+         }
+         else {
+            menuconfig.items = this._options.items;
+         }
+         return new ContextMenu(menuconfig);
       },
 
       after: {
@@ -66,7 +77,6 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          addItem: function(parentFunc, item) {
             this._items.addItem(item);
             if (this._picker) {
-
                this._drawItems();
             }
          }
