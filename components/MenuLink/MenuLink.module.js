@@ -66,10 +66,15 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
          }
       },
 
+      _initializePicker: function(){
+         MenuLink.superclass._initializePicker.call(this);
+         this._setWidth();
+      },
+
       _setWidth: function(){
          var self = this;
          this._picker.getContainer().css({
-            'min-width': self._container.outerWidth() + 8 // + ширина стрелки
+            'min-width': self._container.outerWidth() + 10 // + ширина стрелки
          });
       },
 

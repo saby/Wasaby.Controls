@@ -37,8 +37,6 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
             self._createRoot();
          });
          this._treeView.setDataSource(linkedView._dataSource);
-         /*TODO cуперкостыль для того, чтобы если папка пустая БЛ не возвращала выборку из её предка*/
-         this._treeView._filter['folderChanged'] = true;
       },
       _onMoveButtonActivated: function() {
          var

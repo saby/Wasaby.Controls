@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          gridView.setHighlightText(text, false);
          gridView.setInfiniteScroll(true, true);
          gridView.setGroupBy(gridView.getSearchGroupBy());
-
+         gridView._container.addClass('controls-GridView__searchMode');
          if (this._firstSearch) {
             this._lastRoot = gridView.getCurrentRoot();
             this._pathDSRawData = $ws.core.clone(BreadCrumbs.getDataSet().getRawData());
@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       gridView.setInfiniteScroll(false, true);
       gridView.setGroupBy({});
       gridView.setHighlightText('', false);
-
+      gridView._container.removeClass('controls-GridView__searchMode');
       this._firstSearch = true;
       if (this._searchReload ) {
          //Нужно поменять фильтр и загрузить нужный корень.
