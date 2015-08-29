@@ -660,7 +660,7 @@ function(BaseControl, dotTpl){
                diff, h;
 
             for (var i = 0; i < l; i++) {
-               if (s1[i].dataLabel && s2[i].dataLabel) {
+               if (s1[i].dataLabel && s2[i] && s2[i].dataLabel) {
                   diff = s1[i].dataLabel.y - s2[i].dataLabel.y;
                   h = s1[i].dataLabel.height + 2;
 
