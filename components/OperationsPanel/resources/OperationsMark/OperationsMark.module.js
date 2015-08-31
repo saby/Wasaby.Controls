@@ -93,7 +93,10 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          this._markCheckBox.setChecked(selectedCount === recordsCount && recordsCount ? true : selectedCount ? null : false);
       },
       _updateMarkButton: function() {
-         var hasMarkOptions = !!this.getItems().getItemsCount(),
+         if (!this._dataSet) {
+            this.reload();
+         }
+         var hasMarkOptions = !!this._dataSet.getCount(),
             selectedCount,
             caption;
          if (hasMarkOptions) {
