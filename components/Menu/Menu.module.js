@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.Menu', [
                }
             }
          }
-         this._notify('onMenuItemActivate', this.getContainer().attr('data-id'));
+         this._notify('onMenuItemActivate', menuItem.getContainer().attr('data-id'));
       },
 
       _getTargetContainer : function(item) {
