@@ -109,14 +109,16 @@ define('js!SBIS3.CONTROLS.Menu', [
             '</component>';
       },
 
-      _itemActivatedHandler : function(menuItem) {
-         /*if (!(menuItem.getContainer().hasClass('controls-Menu__hasChild'))) {
+      _itemActivatedHandler : function(id){
+         var menuItem = this.getItemInstance(id);
+         if (!(menuItem.getContainer().hasClass('controls-Menu__hasChild'))) {
             for (var j in this._subMenus) {
                if (this._subMenus.hasOwnProperty(j)) {
                   this._subMenus[j].hide();
                }
             }
-         }*/
+         }
+         this._notify('onMenuItemActivate', this.getContainer().attr('data-id'));
       },
 
       _getTargetContainer : function(item) {
@@ -147,14 +149,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          var
             menuItems = this.getItemsInstances(),
             self = this;
-         for (var i in menuItems) {
-            if (menuItems.hasOwnProperty(i)){
-               menuItems[i].subscribe('onActivated', function () {
-                  self._notify('onMenuItemActivate', this.getContainer().attr('data-id'));
-               });
-            }
-         }
-         for (i in this._subContainers) {
+         for (var i in this._subContainers) {
             if (this._subContainers.hasOwnProperty(i)) {
 
                var
@@ -202,7 +197,7 @@ define('js!SBIS3.CONTROLS.Menu', [
                })
             }
          }
-
+         Menu.superclass._drawItemsCallback.apply(this, arguments);
       },
       _createSubMenu : function(target, parent, isFirstLevel, item) {
          target = $(target);
