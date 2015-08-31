@@ -245,8 +245,8 @@ define('js!SBIS3.CONTROLS.ListView',
                this._options.pageSize = this._options.pageSize * 1;
             }
             this.setGroupBy(this._options.groupBy, false);
-            this.reload();
             ListView.superclass.init.call(this);
+            this.reload();
          },
          _keyboardHover: function (e) {
             var items = $('.controls-ListView__item', this._container),

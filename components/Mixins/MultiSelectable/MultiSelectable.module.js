@@ -65,7 +65,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       after : {
          init: function () {
             this._drawSelectedItems(this._options.selectedKeys);
-            this._setSelectedRecords();
          }
       },
       /**
