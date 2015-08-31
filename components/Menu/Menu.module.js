@@ -110,13 +110,13 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
 
       _itemActivatedHandler : function(menuItem) {
-         if (!(menuItem.getContainer().hasClass('controls-Menu__hasChild'))) {
+         /*if (!(menuItem.getContainer().hasClass('controls-Menu__hasChild'))) {
             for (var j in this._subMenus) {
                if (this._subMenus.hasOwnProperty(j)) {
                   this._subMenus[j].hide();
                }
             }
-         }
+         }*/
       },
 
       _getTargetContainer : function(item) {
