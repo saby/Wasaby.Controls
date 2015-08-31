@@ -175,8 +175,11 @@ define('js!SBIS3.CONTROLS.Menu', [
                      isFirstLevel = false,
                      id = $(this).attr('data-id'),
                      item = self._dataSet.getRecordByKey(id),
-                     parId = self.getParentKey(self._dataSet, item),
+                     parId = null,
                      parent;
+                  if (self._options.hierField) {
+                     parId = self.getParentKey(self._dataSet, item);
+                  }
                   if (parId) {
                      parent = self._subMenus[parId];
                   }
