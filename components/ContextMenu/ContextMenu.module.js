@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.ContextMenu', ['js!SBIS3.CONTROLS.Menu', 'js!SBIS3.CON
                }
             }
          }
-         this._notify('onMenuItemActivate', this.getContainer().attr('data-id'));
+         this._notify('onMenuItemActivate', menuItem.getContainer().attr('data-id'));
       },
       _onMenuConfig : function(config) {
          return config;
