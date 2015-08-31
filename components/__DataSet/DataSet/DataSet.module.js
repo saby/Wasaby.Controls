@@ -492,15 +492,17 @@ define('js!SBIS3.CONTROLS.DataSet', [
             parents = [],
             curLvl = 0;
          this._indexTree = {};
-            this.each(function (record) {
-               var parentKey = self.getParentKey(record, field);
+         this.each(function (record) {
+            var parentKey = null;
+            if (field) {
+               parentKey = self.getParentKey(record, field);
                parentKey = (typeof parentKey != 'undefined') ? parentKey : null;
-                  if (!this._indexTree.hasOwnProperty(parentKey)) {
-                     this._indexTree[parentKey] = [];
-                  }
-
-                  this._indexTree[parentKey].push(record.getKey());
-            }, 'all');
+            }
+            if (!this._indexTree.hasOwnProperty(parentKey)) {
+               this._indexTree[parentKey] = [];
+            }
+            this._indexTree[parentKey].push(record.getKey());
+         }, 'all');
       },
 
       filter: function (filterCallback) {

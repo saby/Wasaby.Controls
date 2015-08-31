@@ -118,6 +118,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          if (!this._header) {
             this._createHeader();
          }
+         this._setWidth();
          MenuButton.superclass.togglePicker.call(this);
          this._header.css({
             left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 12,
@@ -146,7 +147,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       _setWidth: function(){
          var self = this;
          this._picker.getContainer().css({
-            'min-width': self._container.outerWidth() - this._border + 18 //ширина выступающей части обводки
+            'min-width': self._container.outerWidth() - this._border + 20 //ширина выступающей части обводки
          });
          if (this._header) {
             $('.controls-MenuButton__headerCenter', this._header).width(this._container.outerWidth() - 26);

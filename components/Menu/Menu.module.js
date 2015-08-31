@@ -120,18 +120,23 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
 
       _getTargetContainer : function(item) {
-         var parId = this.getParentKey(this._dataSet, item);
-         if (parId === null || parId === undefined) {
+         if (!this._options.hierField) {
             return this._container;
          }
          else {
-            if (!this._subContainers[parId]) {
-               this._subContainers[parId] = $('<div class="controls-Menu__submenu" data-parId="' + parId + '"></div>').hide();
-               this._subContainers[parId].parentCtrl = this;
-               this._subContainers[parId].appendTo(this._container);
+            var parId = this.getParentKey(this._dataSet, item);
+            if (parId === null || parId === undefined) {
+               return this._container;
             }
+            else {
+               if (!this._subContainers[parId]) {
+                  this._subContainers[parId] = $('<div class="controls-Menu__submenu" data-parId="' + parId + '"></div>').hide();
+                  this._subContainers[parId].parentCtrl = this;
+                  this._subContainers[parId].appendTo(this._container);
+               }
 
-            return this._subContainers[parId];
+               return this._subContainers[parId];
+            }
          }
       },
       _drawItems : function() {
