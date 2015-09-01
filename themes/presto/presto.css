@@ -2478,24 +2478,34 @@ input[type="reset"]::-moz-focus-inner {
 .controls-BackButton {
   display: inline-block;
   cursor: pointer;
+  font-size: 18px;
+  line-height: 32px;
+  height: 32px !important;
+  font-weight: 700;
 }
 .controls-BackButton .controls-BackButton__caption {
-  font-size: 16px;
-  font-weight: 700;
   font-style: normal;
-  line-height: 24px;
   color: #313e78;
   overflow: hidden;
+  line-height: 32px;
+  margin: 0 8px 0 6px;
 }
-.controls-BackButton .controls-BackButton__arrow {
-  display: inline-block;
-  width: 24px;
-  height: 23px;
-  background: url('img/path-filter-icon-back.png');
+.controls-BackButton::before {
+  width: 10px;
+  color: #FF7033;
+  font-family: 'TensorFont Regular', TensorFont;
+  content: '\e003';
+  float: left;
+  margin-left: 8px;
 }
 .controls-BackButton:hover .controls-BackButton__caption {
   text-decoration: none;
   color: #ff7033;
+}
+.controls-BackButton.controls-BackButton__empty::before {
+  content: '';
+  width: 0;
+  margin: 0;
 }
 .controls-Pager {
   float: right;
