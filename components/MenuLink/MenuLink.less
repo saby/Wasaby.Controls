@@ -4,12 +4,6 @@
    padding: @menu-link-arrow-padding;
    text-decoration: @menu-link-text-decoration;
    color: @menu-link-text-color;
-   &.controls-MenuLink__32px {
-      line-height: 32px;
-      .controls-MenuLink__arrowDown {
-         top: @menu-link-arrow-top-offset-big;
-      }
-   }
    &.controls-MenuLink__withoutMenu {
       padding: @menu-link-no-arrow-padding;
    }
@@ -43,6 +37,10 @@
       padding: @menu-link-header-padding;
       .icon-16 {
          margin-top: 1px;
+      }
+      .icon-24{
+         position: relative;
+         top: -3px;
       }
       .controls-Menu__header-caption {
          .vertical-center-mixin(@menu-link-header-padding, @menu-big-header-height);

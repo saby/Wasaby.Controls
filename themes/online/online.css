@@ -971,6 +971,10 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
   padding: 4px;
 }
+.controls-Menu__Popup .controls-Menu__header .icon-16,
+.controls-Menu__Popup .controls-Menu__header .icon-24 {
+  padding-right: 4px;
+}
 .controls-Menu__Popup .controls-MenuItem {
   height: 26px;
   padding: 0 8px;
@@ -1200,12 +1204,6 @@ input[type="reset"]::-moz-focus-inner {
   text-decoration: none;
   color: #0055bb;
 }
-.controls-MenuLink.controls-MenuLink__32px {
-  line-height: 32px;
-}
-.controls-MenuLink.controls-MenuLink__32px .controls-MenuLink__arrowDown {
-  top: 14px;
-}
 .controls-MenuLink.controls-MenuLink__withoutMenu {
   padding: 0;
 }
@@ -1236,6 +1234,10 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-Menu.controls-MenuLink__Menu .controls-Menu__header .icon-16 {
   margin-top: 1px;
+}
+.controls-Menu.controls-MenuLink__Menu .controls-Menu__header .icon-24 {
+  position: relative;
+  top: -3px;
 }
 .controls-Menu.controls-MenuLink__Menu .controls-Menu__header .controls-Menu__header-caption {
   position: absolute;
@@ -1309,18 +1311,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header {
   height: 32px;
 }
-.controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header .icon-16 {
-  border: 1px solid #587ab0;
-  border-radius: 14px;
-  height: 28px;
-  width: 28px;
-  line-height: 26px!important;
-  text-align: center;
-  box-sizing: border-box;
-}
-.controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header .icon-16:hover {
-  border-color: #587ab0;
-}
+.controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header .icon-16,
 .controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header .icon-24 {
   border: 1px solid #587ab0;
   border-radius: 14px;
@@ -1329,9 +1320,14 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 26px!important;
   text-align: center;
   box-sizing: border-box;
+  padding-right: 0;
 }
+.controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header .icon-16:hover,
 .controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header .icon-24:hover {
   border-color: #587ab0;
+}
+.controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header .controls-Menu__header-caption {
+  padding-left: 4px;
 }
 .controls-MenuIcon__Menu.controls-IconButton__round-border .controls-MenuItem {
   padding: 0 8px;
@@ -1349,7 +1345,6 @@ input[type="reset"]::-moz-focus-inner {
   top: 50%;
   margin-top: -8px;
   color: #ff7033;
-  padding-left: 4px;
 }
 .controls-Menu .controls-Menu__header {
   height: 24px;
