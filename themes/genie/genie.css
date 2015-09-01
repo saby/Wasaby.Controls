@@ -2403,6 +2403,126 @@ input[type="reset"]::-moz-focus-inner {
 .dragdropBody .controls-ListView__folder.controls-ListView__hoveredItem:not(.controls-ListView__item__selected) > td {
   background: #9fd3fe !important;
 }
+.controls-CompositeView .controls-CompositeView__listItem {
+  height: 32px;
+  line-height: 32px;
+  padding: 0 10px;
+  cursor: pointer;
+}
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__hoveredItem {
+  background: #00c795;
+}
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder {
+  padding: 0;
+  display: inline-block;
+  width: 229px;
+  height: 190px;
+  border: none;
+}
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder .controls-CompositeView__tileImg-container {
+  display: block;
+  width: 120px;
+  height: 120px;
+  margin: 10px 40px;
+}
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder .controls-CompositeView__tileImg-container .controls-CompositeView__tileImg {
+  width: 120px;
+}
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder .controls-CompositeView__tileTitle {
+  font-weight: 600;
+  font-size: 15px;
+  color: #313e78;
+  text-align: center;
+  margin-top: 7px;
+}
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder:hover .controls-CompositeView__tileTitle {
+  text-decoration: underline;
+}
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder:hover .controls-CompositeView__tileImg-container {
+  box-shadow: 1px 2px 4px #aaa;
+}
+.controls-CompositeView.controls-CompositeView-table .controls-Pager-container {
+  display: none;
+}
+.controls-CompositeView .controls-CompositeView__listItem-defaultFolderImage {
+  background: url("img/defaultFolder.png");
+}
+.controls-CompositeView .controls-CompositeView__listItem-defaultItemImage {
+  background: url("img/defaultItem.png");
+}
+.controls-CompositeView.controls-CompositeView-tile .controls-CompositeView__itemsContainer {
+  padding: 4px 0 0 1px;
+  min-height: 40px;
+}
+.controls-CompositeView.controls-CompositeView-tile .controls-ItemActions,
+.controls-CompositeView.controls-CompositeView-list .controls-ItemActions {
+  width: 20px;
+  height: auto;
+  margin: 8px 3px 0 0;
+}
+.controls-CompositeView.controls-CompositeView-tile .controls-ItemActions > *,
+.controls-CompositeView.controls-CompositeView-list .controls-ItemActions > * {
+  margin: 0 6px 4px 0;
+}
+.controls-CompositeView.controls-CompositeView-tile .controls-ItemActions .controls-ItemActions__menu-button,
+.controls-CompositeView.controls-CompositeView-list .controls-ItemActions .controls-ItemActions__menu-button {
+  float: none;
+  margin-left: -1px;
+}
+.controls-CompositeView .controls-CompositeView__tileItem {
+  display: inline-block;
+  vertical-align: top;
+  cursor: pointer;
+  text-align: left;
+  border: 1px solid #d1d1d1;
+  min-width: 128px;
+  min-height: 128px;
+  margin: -1px 0 0 -1px;
+}
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__hoveredItem {
+  background: #00c795;
+}
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__hoveredItem .controls-CompositeView__tileImg {
+  box-shadow: 1px 2px 4px #aaaaaa;
+}
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__folder {
+  width: 229px;
+  height: 190px;
+  border: none;
+}
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__folder .controls-CompositeView__tileImg-container {
+  display: block;
+  width: 120px;
+  height: 120px;
+  margin: 10px 40px;
+}
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__folder .controls-CompositeView__tileImg-container .controls-CompositeView__tileImg {
+  width: 120px;
+}
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__folder .controls-CompositeView__tileTitle {
+  font-weight: 600;
+  font-size: 15px;
+  color: #313e78;
+}
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__folder:hover .controls-CompositeView__tileTitle {
+  text-decoration: underline;
+}
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__folder:hover .controls-CompositeView__tileImg-container {
+  box-shadow: 1px 2px 4px #aaa;
+}
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__item__multiSelected {
+  background: #e7f0f9;
+}
+.controls-CompositeView .controls-CompositeView__tileItem .controls-CompositeView__tileImg {
+  display: block;
+  margin: 10px 40px;
+}
+.controls-CompositeView .controls-CompositeView__tileItem .controls-CompositeView__tileTitle {
+  font-family: Tahoma, Geneva, sans-serif;
+  margin-top: 7px;
+  font-size: 15px;
+  text-align: center;
+}
 .controls-BreadCrumbs {
   min-height: 27px;
 }
