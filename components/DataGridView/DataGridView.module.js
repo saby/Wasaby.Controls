@@ -3,13 +3,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'js!SBIS3.CONTROLS.ListView',
       'html!SBIS3.CONTROLS.DataGridView',
       'html!SBIS3.CONTROLS.DataGridView/resources/rowTpl',
+      'html!SBIS3.CONTROLS.DataGridView/resources/headTpl',
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.EditInPlaceController',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
       'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy'
    ],
-   function(ListView, dotTplFn, rowTpl, MarkupTransformer, EditInPlaceController, Link, DragAndDropMixin, groupByTpl) {
+   function(ListView, dotTplFn, rowTpl, headTpl, MarkupTransformer, EditInPlaceController, Link, DragAndDropMixin, groupByTpl) {
    'use strict';
       /* TODO: Надо считать высоту один раз, а не делать константой */
       var
@@ -40,6 +41,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _dotTplFn : dotTplFn,
       $protected: {
          _rowTpl : rowTpl,
+         _headTpl : headTpl,
          _rowData : [],
          _editInPlace: null,
          _addInPlaceButton: null,
@@ -128,6 +130,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (this._options.editInPlace.enabled && this._options.editInPlace.addInPlace && !this._editInPlace) {
             this._initAddInPlace();
          }
+         this._buildHead();
          if(this._options.startScrollColumn !== undefined) {
             this._initPartScroll();
          }
@@ -596,56 +599,39 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
       _buildHead: function() {
-         var headerTr = document.createElement('tr'),
-             docFragmentForColGroup = document.createDocumentFragment(),
-             isPartScrollUsed = this._options.startScrollColumn !== undefined,
-             columns = this._options.columns,
-             contents = [];
-
-         this._thead.find('.controls-DataGridView__th').eq(0).parent().remove();
-         this._colgroup.empty();
-
-         /* Колонка с чекбоксом */
-         if (this._options.multiselect) {
-            contents.push([
-               '<th class="controls-DataGridView__th ',
-               (isPartScrollUsed ? this._options.startScrollColumn === 0 ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell' : ''),
-               '"></th>'
-            ].join(''));
-            docFragmentForColGroup.appendChild($('<col width="24px">')[0]);
-         }
-         for (var i = 0; i < columns.length; i++) {
-            var column = document.createElement('col');
-            if (columns[i].width) column.width = columns[i].width;
-            docFragmentForColGroup.appendChild(column);
-            contents.push([
-               '<th class="controls-DataGridView__th ',
-               (columns[i].className ? columns[i].className : ''),
-               (isPartScrollUsed ? this._options.startScrollColumn <= i ? ' controls-DataGridView__scrolledCell' : ' controls-DataGridView__notScrolledCell' : ''),
-               '" title="',
-               columns[i].title,
-               '"><div class="controls-DataGridView__th-content">',
-               $ws.helpers.escapeHtml(columns[i].title),
-               '</div></th>'
-            ].join(''));
-         }
-
-         $ws._const.browser.isIE && (!$ws._const.browser.isModernIE || $ws._const.browser.isIE9) ?
-            $(headerTr).html(contents.join('')) :     //IE8- не умеет в данном случае корректно создавать ячейки таблицы, требуется jQuery
-            headerTr.innerHTML = contents.join('');   //Этот способ предпочтительнее - он не медленнее, а иногда быстрее предыдущего на треть
-
-         if (this._editInPlace) {
-            this._editInPlace.destroy();
-            this._createEditInPlace();
-         }
-
-         this._colgroup.append(docFragmentForColGroup);
-         this._thead.prepend(headerTr);
-
-         if(isPartScrollUsed) {
-            this.updateDragAndDrop();
-         }
+         var head = this._getHeadTemplate();
+         this._thead.remove();
+         this._colgroup.remove();
+         $('.controls-DataGridView__tbody', this._container).before(head);
+         this._thead = $('.controls-DataGridView__thead', this._container.get(0));
+         this._colgroup = $('.controls-DataGridView__colgroup', this._container.get(0));
       },
+
+      _getHeadTemplate: function(){
+         var rowData = {
+            columns: $ws.core.clone(this._options.columns),
+            multiselect : this._options.multiselect,
+            startScrollColumn: this._options.startScrollColumn,
+            showHead: this._options.showHead
+         };
+
+         for (var i = 0; i < rowData.columns.length; i++) {
+            var value,
+                column = rowData.columns[i];
+            if (column.headTemplate) {
+               value = MarkupTransformer(doT.template(column.headTemplate)({
+                  column: column
+               }));
+            } else {
+               var title = $ws.helpers.escapeHtml(column.title);
+               value = '<div class="controls-DataGridView__th-content">' + title + '</div>';
+            }
+            column.value = value;
+         }
+         return this._headTpl(rowData);
+      },
+
+
       _getItemActionsPosition: function(item) {
          return {
             top: item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
