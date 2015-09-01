@@ -57,6 +57,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          _partScrollRow: undefined,                   //Строка-контейнер, в которой лежит частичный скролл
          _isHeaderScrolling: false,                   //Флаг обозначающий, проиходит ли скролл за заголовок
          _lastLeftPos: null,                          //Положение по горизонтали, нужно когда происходит скролл за заголовок
+         _newColumnsSetted: false,                    //Флаг, обозначающий, что выставлены новые колонки
          _options: {
             /**
              * @typedef {Object} Columns
@@ -184,6 +185,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
          }
       },
+      _dataLoadedCallback: function() {
+         DataGridView.superclass._dataLoadedCallback.apply(this, arguments);
+         if(this._newColumnsSetted) {
+            this._buildHead();
+         }
+      },
+
 
       setDataSource: function(ds) {
          DataGridView.superclass.setDataSource.apply(this, arguments);
@@ -571,50 +579,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
         * </pre>
         */
        setColumns : function(columns) {
-          var headerTr = $('<tr>'),
-             docFragmentForColGroup = document.createDocumentFragment(),
-             isPartScrollUsed = this._options.startScrollColumn !== undefined;
-
-          this._thead.find('.controls-DataGridView__th').eq(0).parent().remove();
-          this._colgroup.empty();
-
-          /* Колонка для чекбокса */
-          if (this._options.multiselect) {
-             headerTr.append([
-                '<th class="controls-DataGridView__th ',
-                (isPartScrollUsed ? this._options.startScrollColumn === 0 ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell' : ''),
-                '"></th>'
-             ].join(''));
-             docFragmentForColGroup.appendChild($('<col width="24px">')[0]);
-          }
           this._options.columns = columns;
-          for (var i = 0; i < columns.length; i++) {
-             var column = document.createElement('col');
-             if (columns[i].width) column.width = columns[i].width;
-             docFragmentForColGroup.appendChild(column);
-             headerTr.append([
-                '<th class="controls-DataGridView__th ',
-                (columns[i].className ? columns[i].className : ''),
-                (isPartScrollUsed ? this._options.startScrollColumn <= i ? ' controls-DataGridView__scrolledCell' : ' controls-DataGridView__notScrolledCell' : ''),
-                '" title="',
-                columns[i].title,
-                '"><div class="controls-DataGridView__th-content">',
-                $ws.helpers.escapeHtml(columns[i].title),
-                '</div></th>'
-             ].join(''));
-          }
-
-          if (this._editInPlace) {
-             this._editInPlace.destroy();
-             this._createEditInPlace();
-          }
-
-          this._colgroup.append(docFragmentForColGroup);
-          this._thead.prepend(headerTr);
-
-          if(isPartScrollUsed) {
-             this.updateDragAndDrop();
-          }
+          this._newColumnsSetted = true;
           this._checkColumns();
           this.reload();
        },
@@ -627,6 +593,57 @@ define('js!SBIS3.CONTROLS.DataGridView',
             if (column.highlight === undefined) {
                column.highlight =  true;
             }
+         }
+      },
+      _buildHead: function() {
+         var headerTr = document.createElement('tr'),
+             docFragmentForColGroup = document.createDocumentFragment(),
+             isPartScrollUsed = this._options.startScrollColumn !== undefined,
+             columns = this._options.columns,
+             contents = [];
+
+         this._thead.find('.controls-DataGridView__th').eq(0).parent().remove();
+         this._colgroup.empty();
+
+         /* Колонка с чекбоксом */
+         if (this._options.multiselect) {
+            contents.push([
+               '<th class="controls-DataGridView__th ',
+               (isPartScrollUsed ? this._options.startScrollColumn === 0 ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell' : ''),
+               '"></th>'
+            ].join(''));
+            docFragmentForColGroup.appendChild($('<col width="24px">')[0]);
+         }
+         for (var i = 0; i < columns.length; i++) {
+            var column = document.createElement('col');
+            if (columns[i].width) column.width = columns[i].width;
+            docFragmentForColGroup.appendChild(column);
+            contents.push([
+               '<th class="controls-DataGridView__th ',
+               (columns[i].className ? columns[i].className : ''),
+               (isPartScrollUsed ? this._options.startScrollColumn <= i ? ' controls-DataGridView__scrolledCell' : ' controls-DataGridView__notScrolledCell' : ''),
+               '" title="',
+               columns[i].title,
+               '"><div class="controls-DataGridView__th-content">',
+               $ws.helpers.escapeHtml(columns[i].title),
+               '</div></th>'
+            ].join(''));
+         }
+
+         $ws._const.browser.isIE && (!$ws._const.browser.isModernIE || $ws._const.browser.isIE9) ?
+            $(headerTr).html(contents.join('')) :     //IE8- не умеет в данном случае корректно создавать ячейки таблицы, требуется jQuery
+            headerTr.innerHTML = contents.join('');   //Этот способ предпочтительнее - он не медленнее, а иногда быстрее предыдущего на треть
+
+         if (this._editInPlace) {
+            this._editInPlace.destroy();
+            this._createEditInPlace();
+         }
+
+         this._colgroup.append(docFragmentForColGroup);
+         this._thead.prepend(headerTr);
+
+         if(isPartScrollUsed) {
+            this.updateDragAndDrop();
          }
       },
       _getItemActionsPosition: function(item) {
