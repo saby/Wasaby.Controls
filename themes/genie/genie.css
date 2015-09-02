@@ -1119,6 +1119,11 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Menu.controls-MenuLink__Menu .controls-MenuLink__Menu .controls-MenuLink__arrowDown {
   display: none;
 }
+@-moz-document url-prefix() {
+  .controls-Menu.controls-MenuLink__Menu .controls-Menu__header .icon-16 {
+    margin-top: 2px;
+  }
+}
 .controls-MenuIcon {
   position: relative;
   padding-right: 6px;
