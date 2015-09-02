@@ -603,6 +603,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              contents = [];
 
          this._thead.find('.controls-DataGridView__th').eq(0).parent().remove();
+         this._newColumnsSetted = false;
          this._colgroup.empty();
 
          /* Колонка с чекбоксом */
