@@ -600,6 +600,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
       _buildHead: function() {
          var head = this._getHeadTemplate();
+         this._newColumnsSetted = false;
          this._thead.remove();
          this._colgroup.remove();
          $('.controls-DataGridView__tbody', this._container).before(head);
