@@ -11,6 +11,15 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
       $(document).bind('mousemove', function(e) {
          EventBusChannel.notify('onMousemove', e);
       });
+
+      // Добавлены события для мультитач-девайсов
+      $(document).bind('touchmove', function(e) {
+         EventBusChannel.notify('onTouchMove', e);
+      });
+
+      $(document).bind('touchend', function(e) {
+         EventBusChannel.notify('onTouchEnd', e);
+      });
    }
 
    var DragAndDropMixin = {
@@ -19,6 +28,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
          _moveBeginY: null,
          _shiftX: null,
          _shiftY: null,
+
          //флаг сигнализирующий о том что юзер начал сдвиг
          _isShifted: false,
          //текущий перемещаемый объект
@@ -36,10 +46,35 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
          self._publish('onDragMove');
          $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMouseup', this.onMouseup, this);
          $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMousemove', this.onMousemove, this);
+         $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onTouchEnd', this.onTouchEnd, this);
+         $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onTouchMove', this.onTouchMove, this);
       },
 
       onMouseup: function(buse, e) {
          //роняем компонент
+         //определяем droppable контейнер
+         if (this._isShifted) {
+            var droppable = this._findDragDropContainer(e, e.target);
+
+            if (droppable) {
+               this._callDropHandler(e, droppable);
+            }
+
+            this._endDropDown();
+         }
+
+         this._currentComponent = null;
+
+         if (this._avatar) {
+            this._avatar = null;
+         }
+
+         this._position = null;
+         $('body').removeClass('dragdropBody cantDragDrop');
+      },
+
+      onTouchEnd: function(buse, e) {
+         // Версия для мультитач-девайсов
          //определяем droppable контейнер
          if (this._isShifted) {
             var droppable = this._findDragDropContainer(e, e.target);
@@ -91,13 +126,50 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
          return false;
       },
 
+      onTouchMove: function(buse, e) {
+         // Версия для мультитач-девайсов
+         // Если нет выделенных компонентов, то уходим 
+         if (!this._currentComponent) {
+            return;
+         }
+         var 
+            // определяем droppable контейнер
+            movable = this._findDragDropContainer(e, e.target);
+         if (!this._isShifted) {
+            //начало переноса
+            var moveX = e.originalEvent.touches[0].pageX - this._moveBeginX,
+               moveY = e.originalEvent.touches[0].pageY - this._moveBeginY;
+            //начинаем движение только если сдвинули сильно
+            if ((Math.abs(moveX) < this._constShiftLimit) && (Math.abs(moveY) < this._constShiftLimit)) {
+               return;
+            }
+            this._beginDropDown(e, movable);
+         }
+
+         $('body').addClass('dragdropBody');
+         //двигаем компонент
+         if (movable) {
+            this._callMoveHandler(e, movable);
+         } else {
+            this._callMoveOutHandler(e);
+         }
+
+         return false;
+      },
+
       //текущий активный компонент, либо по gdi (если переносим)
       //либо отдаем тип, если создаем из палитры
       setCurrentElement: function(e, elementConfig) {
          //координаты с которых начато движение
+         
+         // Проверим, не является ли это событие "тачем"
+         if (e.type == "touchstart") {
+            e.pageX = e.originalEvent.touches[0].pageX;
+            e.pageY = e.originalEvent.touches[0].pageY;
+         }
+
          this._moveBeginX = e.pageX;
          this._moveBeginY = e.pageY;
-
          this._currentComponent = elementConfig;
 
          this._isShifted = false;
@@ -126,6 +198,13 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
                y: this._moveBeginY - parseInt(target.css('top'), 10)
             };
          }
+   
+         // Проверим, не является ли это событие "тачем"
+         if (e.type == "touchmove") {
+            e.pageX = e.originalEvent.touches[0].pageX;
+            e.pageY = e.originalEvent.touches[0].pageY;
+         }
+         
          target.css({
             top: e.pageY - this._containerCoords.y,
             left: e.pageX - this._containerCoords.x
