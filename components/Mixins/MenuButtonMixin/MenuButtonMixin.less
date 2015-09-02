@@ -4,21 +4,12 @@
       cursor: pointer;
       font-size: @font-basic-size;
       .controls-Menu__header-caption {
-         .vertical-center-mixin(@menu-header-padding, @menu-header-height);
          color: @primary-color;
-         padding-left: 4px;
+         vertical-align: top;
       }
    }
    .controls-Menu__header {
       height: @menu-header-height;
-   }
-   &.controls-Menu__big-header{
-      .controls-Menu__header {
-         height: @menu-big-header-height;
-      }
-      .controls-MenuItem {
-         padding-left: @menu-item-average-padding-left;
-      }
    }
    &.controls-Menu__hide-menu-header {
       padding: @menu-button-menu-padding;
