@@ -849,6 +849,10 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
   padding: 4px;
 }
+.controls-Menu__Popup .controls-Menu__header .icon-16,
+.controls-Menu__Popup .controls-Menu__header .icon-24 {
+  padding-right: 4px;
+}
 .controls-Menu__Popup .controls-MenuItem {
   height: 56px;
   padding: 0 8px;
@@ -1078,12 +1082,6 @@ input[type="reset"]::-moz-focus-inner {
   text-decoration: none;
   color: #ffcc99;
 }
-.controls-MenuLink.controls-MenuLink__32px {
-  line-height: 32px;
-}
-.controls-MenuLink.controls-MenuLink__32px .controls-MenuLink__arrowDown {
-  top: 14px;
-}
 .controls-MenuLink.controls-MenuLink__withoutMenu {
   padding: 0;
 }
@@ -1108,23 +1106,23 @@ input[type="reset"]::-moz-focus-inner {
   padding: 0;
   background: #ffffff;
 }
-.controls-Menu.controls-MenuLink__Menu .controls-Menu__header {
-  height: 32px;
-  padding: 6px;
-}
 .controls-Menu.controls-MenuLink__Menu .controls-Menu__header .icon-16 {
   margin-top: 1px;
 }
-.controls-Menu.controls-MenuLink__Menu .controls-Menu__header .controls-Menu__header-caption {
-  position: absolute;
-  top: 50%;
-  margin-top: -10px;
+.controls-Menu.controls-MenuLink__Menu .controls-Menu__header .icon-24 {
+  position: relative;
+  top: -3px;
 }
 .controls-Menu.controls-MenuLink__Menu .controls-MenuItem {
   padding-left: 8px;
 }
 .controls-Menu.controls-MenuLink__Menu .controls-MenuLink__Menu .controls-MenuLink__arrowDown {
   display: none;
+}
+@-moz-document url-prefix() {
+  .controls-Menu.controls-MenuLink__Menu .controls-Menu__header .icon-16 {
+    margin-top: 2px;
+  }
 }
 .controls-MenuIcon {
   position: relative;
@@ -1151,28 +1149,6 @@ input[type="reset"]::-moz-focus-inner {
   border-color: #ffcc99 transparent transparent transparent;
   font-size: 10px!important;
 }
-.controls-MenuIcon .controls-MenuIcon__header {
-  background: #ffffff;
-}
-.controls-MenuIcon .controls-MenuIcon__header.controls-MenuIcon__header-hidden {
-  display: none;
-}
-.controls-MenuIcon .controls-MenuIcon__header .controls-MenuIcon__headerLeft {
-  position: absolute;
-  top: 0;
-  left: 2px;
-  width: 12px;
-  height: 28px;
-  background: transparent;
-}
-.controls-MenuIcon .controls-MenuIcon__header .controls-MenuIcon__headerRight {
-  position: absolute;
-  top: 0;
-  left: 6px;
-  width: 28px;
-  height: 28px;
-  background: transparent;
-}
 .controls-MenuIcon__Menu {
   padding: 2px 0 0 2px;
   margin: -5px 0 0 5px;
@@ -1181,24 +1157,14 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuIcon__Menu .controls-MenuItem {
   padding-left: 8px;
 }
+.controls-MenuIcon__Menu.controls-Menu__big-header .controls-Menu__header-caption {
+  top: 3px;
+  position: relative;
+}
 .controls-MenuIcon__Menu.controls-IconButton__round-border {
   margin: -5px 0 0 -6px;
 }
-.controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header {
-  height: 32px;
-}
-.controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header .icon-16 {
-  border: 1px solid #f2f2f2;
-  border-radius: 14px;
-  height: 28px;
-  width: 28px;
-  line-height: 26px!important;
-  text-align: center;
-  box-sizing: border-box;
-}
-.controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header .icon-16:hover {
-  border-color: #f2f2f2;
-}
+.controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header .icon-16,
 .controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header .icon-24 {
   border: 1px solid #f2f2f2;
   border-radius: 14px;
@@ -1207,9 +1173,18 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 26px!important;
   text-align: center;
   box-sizing: border-box;
+  padding-right: 0;
+  position: relative;
+  top: -2px;
+  left: -2px;
 }
+.controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header .icon-16:hover,
 .controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header .icon-24:hover {
   border-color: #f2f2f2;
+}
+.controls-MenuIcon__Menu.controls-IconButton__round-border .controls-Menu__header .controls-Menu__header-caption {
+  top: 3px;
+  position: relative;
 }
 .controls-MenuIcon__Menu.controls-IconButton__round-border .controls-MenuItem {
   padding: 0 8px;
@@ -1223,20 +1198,11 @@ input[type="reset"]::-moz-focus-inner {
   font-size: 14px;
 }
 .controls-Menu .controls-Menu__header .controls-Menu__header-caption {
-  position: absolute;
-  top: 50%;
-  margin-top: -8px;
   color: #ffcc99;
-  padding-left: 4px;
+  vertical-align: top;
 }
 .controls-Menu .controls-Menu__header {
   height: 24px;
-}
-.controls-Menu.controls-Menu__big-header .controls-Menu__header {
-  height: 32px;
-}
-.controls-Menu.controls-Menu__big-header .controls-MenuItem {
-  padding-left: 8px;
 }
 .controls-Menu.controls-Menu__hide-menu-header {
   padding: 4px 0;
