@@ -249,12 +249,12 @@ define('js!SBIS3.CONTROLS.ListView',
             this.reload();
          },
          _keyboardHover: function (e) {
-            var items = $('.controls-ListView__item', this._container),
+            var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
                selectedKey = this.getSelectedKey(),
-               selectedItem = $('.controls-ListView__item__selected', this._container),
-               nextItem = (selectedKey) ? selectedItem.next('.controls-ListView__item') : items.eq(0),
-               previousItem = (selectedKey) ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
-
+               selectedItem = $('[data-id="' + this.getSelectedKey() + '"]', this._container),
+               nextItem = (selectedKey) ? items.eq(items.index(selectedItem) + 1) : items.eq(0),
+               previousItem = (selectedKey) ? items.eq(items.index(selectedItem) - 1) : items.last();
+            console.log();
             //навигация по стрелкам
             if (e.which === $ws._const.key.up) {
                previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
@@ -265,7 +265,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this.toggleItemsSelection([selectedKey]);
                nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
             }
-
             return false;
          },
          _checkTargetContainer: function (target) {
