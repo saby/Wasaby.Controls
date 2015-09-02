@@ -4,12 +4,6 @@
    padding: @menu-link-arrow-padding;
    text-decoration: @menu-link-text-decoration;
    color: @menu-link-text-color;
-   &.controls-MenuLink__32px {
-      line-height: 32px;
-      .controls-MenuLink__arrowDown {
-         top: @menu-link-arrow-top-offset-big;
-      }
-   }
    &.controls-MenuLink__withoutMenu {
       padding: @menu-link-no-arrow-padding;
    }
@@ -39,13 +33,12 @@
    padding: @menu-link-menu-padding;
    background: @menu-link-menu-bg;
    .controls-Menu__header {
-      height: @menu-big-header-height;
-      padding: @menu-link-header-padding;
       .icon-16 {
          margin-top: 1px;
       }
-      .controls-Menu__header-caption {
-         .vertical-center-mixin(@menu-link-header-padding, @menu-big-header-height);
+      .icon-24{
+         position: relative;
+         top: -3px;
       }
    }
    .controls-MenuItem {
@@ -54,6 +47,16 @@
    .controls-MenuLink__Menu {
       .controls-MenuLink__arrowDown {
          display: none;
+      }
+   }
+}
+
+@-moz-document url-prefix() {
+   .controls-Menu.controls-MenuLink__Menu {
+      .controls-Menu__header {
+         .icon-16 {
+            margin-top: 2px;
+         }
       }
    }
 }
