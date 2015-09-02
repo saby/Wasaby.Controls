@@ -7,8 +7,8 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
     * @extends $ws.proto.CompoundControl
     * @control
     * @public
-    * @initial
     * @demo SBIS3.CONTROLS.Demo.MyBackButton
+    * @initial
     * <component data-component='SBIS3.CONTROLS.BackButton'>
     *    <option name="caption">Назад</option>
     * </component>
@@ -53,13 +53,11 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
          _link: null,
          _options:{
             /**
-             * Надпись
-             * @type {String}
+             * @cfg {String} Надпись
              */ 
             caption: '',
             /**
-             * Иконка
-             * @type {String}
+             * @cfg {String} спрайт икноки
              */
             icon: ''
          }
