@@ -3,13 +3,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'js!SBIS3.CONTROLS.ListView',
       'html!SBIS3.CONTROLS.DataGridView',
       'html!SBIS3.CONTROLS.DataGridView/resources/rowTpl',
+      'html!SBIS3.CONTROLS.DataGridView/resources/headTpl',
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.EditInPlaceController',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
       'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy'
    ],
-   function(ListView, dotTplFn, rowTpl, MarkupTransformer, EditInPlaceController, Link, DragAndDropMixin, groupByTpl) {
+   function(ListView, dotTplFn, rowTpl, headTpl, MarkupTransformer, EditInPlaceController, Link, DragAndDropMixin, groupByTpl) {
    'use strict';
       /* TODO: Надо считать высоту один раз, а не делать константой */
       var
@@ -40,6 +41,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _dotTplFn : dotTplFn,
       $protected: {
          _rowTpl : rowTpl,
+         _headTpl : headTpl,
          _rowData : [],
          _editInPlace: null,
          _addInPlaceButton: null,
@@ -57,6 +59,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          _partScrollRow: undefined,                   //Строка-контейнер, в которой лежит частичный скролл
          _isHeaderScrolling: false,                   //Флаг обозначающий, проиходит ли скролл за заголовок
          _lastLeftPos: null,                          //Положение по горизонтали, нужно когда происходит скролл за заголовок
+         _newColumnsSetted: false,                    //Флаг, обозначающий, что выставлены новые колонки
          _options: {
             /**
              * @typedef {Object} Columns
@@ -127,6 +130,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (this._options.editInPlace.enabled && this._options.editInPlace.addInPlace && !this._editInPlace) {
             this._initAddInPlace();
          }
+         this._buildHead();
          if(this._options.startScrollColumn !== undefined) {
             this._initPartScroll();
          }
@@ -184,6 +188,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
          }
       },
+      _dataLoadedCallback: function() {
+         DataGridView.superclass._dataLoadedCallback.apply(this, arguments);
+         if(this._newColumnsSetted) {
+            this._buildHead();
+         }
+      },
+
 
       setDataSource: function(ds) {
          DataGridView.superclass.setDataSource.apply(this, arguments);
@@ -571,45 +582,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
         * </pre>
         */
        setColumns : function(columns) {
-          var headerTr = $('<tr>'),
-              docFragmentForColGroup = document.createDocumentFragment(),
-              isPartScrollUsed = this._options.startScrollColumn !== undefined;
-
-          this._thead.find('.controls-DataGridView__th').eq(0).parent().remove();
-          this._colgroup.empty();
-          if (this._options.multiselect) {
-             headerTr.append('<th class="controls-DataGridView__th' +
-             (isPartScrollUsed ?
-                this._options.startScrollColumn === 0 ?
-                   ' controls-DataGridView__scrolledCell' :
-                   ' controls-DataGridView__notScrolledCell"></th>' : '"></th>'));
-             docFragmentForColGroup.appendChild($('<col width="24px">')[0]);
-          }
           this._options.columns = columns;
-          for (var i = 0; i < columns.length; i++) {
-             var column = document.createElement('col');
-             if (columns[i].width) column.width = columns[i].width;
-             docFragmentForColGroup.appendChild(column);
-             headerTr.append(
-                $('<th class="controls-DataGridView__th' +
-                  (isPartScrollUsed ?
-                      this._options.startScrollColumn <= i ?
-                         ' controls-DataGridView__scrolledCell' :
-                         ' controls-DataGridView__notScrolledCell' : '') +
-                     '" title="' + columns[i].title + '"><div class="controls-DataGridView__th-content">' + $ws.helpers.escapeHtml(columns[i].title) + '</div></th>'));
-          }
-
-          if (this._editInPlace) {
-             this._editInPlace.destroy();
-             this._createEditInPlace();
-          }
-
-          this._colgroup.append(docFragmentForColGroup);
-          this._thead.prepend(headerTr);
-
-          if(isPartScrollUsed) {
-             this.updateDragAndDrop();
-          }
+          this._newColumnsSetted = true;
           this._checkColumns();
           this.reload();
        },
@@ -624,6 +598,44 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
          }
       },
+      _buildHead: function() {
+         var head = this._getHeadTemplate();
+         this._newColumnsSetted = false;
+         this._thead.remove();
+         this._colgroup.remove();
+         $('.controls-DataGridView__tbody', this._container).before(head);
+         this._thead = $('.controls-DataGridView__thead', this._container.get(0));
+         this._colgroup = $('.controls-DataGridView__colgroup', this._container.get(0));
+         if(this._options.startScrollColumn !== undefined) {
+            this._initPartScroll();
+         }
+      },
+
+      _getHeadTemplate: function(){
+         var rowData = {
+            columns: $ws.core.clone(this._options.columns),
+            multiselect : this._options.multiselect,
+            startScrollColumn: this._options.startScrollColumn,
+            showHead: this._options.showHead
+         };
+
+         for (var i = 0; i < rowData.columns.length; i++) {
+            var value,
+                column = rowData.columns[i];
+            if (column.headTemplate) {
+               value = MarkupTransformer(doT.template(column.headTemplate)({
+                  column: column
+               }));
+            } else {
+               var title = $ws.helpers.escapeHtml(column.title);
+               value = '<div class="controls-DataGridView__th-content">' + title + '</div>';
+            }
+            column.value = value;
+         }
+         return this._headTpl(rowData);
+      },
+
+
       _getItemActionsPosition: function(item) {
          return {
             top: item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),

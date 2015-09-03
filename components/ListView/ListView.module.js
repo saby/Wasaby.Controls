@@ -239,13 +239,13 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          init: function () {
-            ListView.superclass.init.call(this);
             var localPageSize = $ws.helpers.getLocalStorageValue('ws-page-size');
             this._options.pageSize = !this._options.ignoreLocalPageSize && localPageSize ? localPageSize : this._options.pageSize;
             if (typeof this._options.pageSize === 'string') {
                this._options.pageSize = this._options.pageSize * 1;
             }
             this.setGroupBy(this._options.groupBy, false);
+            ListView.superclass.init.call(this);
             this.reload();
          },
          _keyboardHover: function (e) {
