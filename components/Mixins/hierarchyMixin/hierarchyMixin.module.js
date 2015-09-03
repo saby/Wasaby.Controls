@@ -115,7 +115,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       getCurrentRoot : function(){
          return this._curRoot;
       },
-		
+
 		/**
        * Раскрыть определенный узел
        * @param {String} key Идентификатор раскрываемого узла
@@ -130,6 +130,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          //узел грузим с 0-ой страницы
          this._offset = 0;
          this._curRoot = key;
+         this.setSelectedKey(null);
          this.reload(filter).addCallback(function(dataSet){
             var path = dataSet.getMetaData().path;
             if (!record && path){
@@ -158,7 +159,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          } while (parentKey);
          return hierarchy;
       },
-      
+
       _dropPageSave: function(){
          var root = this._options.root;
          this._pageSaver = {};
