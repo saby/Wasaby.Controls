@@ -67,9 +67,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       if (searchForm.getText()) {
          searchForm.setText('');
       }
-      //
-         // TODO нафиг это надо
-       //reportController._folderChanged = true;
    }
 
    function isSearchValid(text, minLength) {
@@ -174,12 +171,22 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             return point;
          }
 
+         function setPreviousRoot() {
+            var previousRoot = self._path[self._path.length - 1];
+
+            if(self._currentRoot !== null) {
+               self._currentRoot = previousRoot;
+               if (self._path.length) self._path.splice(self._path.length - 1);
+               hierarchyGridView.setCurrentRoot(previousRoot ? previousRoot[breadCrumbs._options.keyField] : null);
+            }
+         }
+
          hierarchyGridView.subscribe('onSetRoot', function(event, id, hier){
             for (var i = hier.length - 1; i >= 0; i--) {
                var rec = hier[i];
                if (rec){
                   var c = createBreadCrumb(rec);
-                  if (self._currentRoot) self._path.push(self._currentRoot);                  
+                  if (self._currentRoot) self._path.push(self._currentRoot);
                   self._currentRoot = c;
                }
             }
@@ -196,6 +203,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             backButton.setCaption(self._currentRoot ? $ws.helpers.escapeHtml(self._currentRoot.title) : '');
          });
 
+         hierarchyGridView.subscribe('onKeyPressed', function(event, jqEvent) {
+            if(jqEvent.which === $ws._const.key.backspace) {
+               setPreviousRoot();
+               jqEvent.preventDefault();
+            }
+         });
+
          breadCrumbs.subscribe('onItemClick', function(event, id){
                self._currentRoot = this._dataSet.getRecordByKey(id);
                self._currentRoot = self._currentRoot ? self._currentRoot.getRaw() : null;
@@ -208,11 +222,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          });
 
          backButton.subscribe('onActivated', function(){
-            var previousRoot;
-            previousRoot = self._path[self._path.length - 1];
-            self._currentRoot = previousRoot;
-            if (self._path.length) self._path.splice(self._path.length - 1);
-            hierarchyGridView.setCurrentRoot(previousRoot ? previousRoot[breadCrumbs._options.keyField] : null);
+            setPreviousRoot();
          });
       }
    });
