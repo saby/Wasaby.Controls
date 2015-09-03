@@ -43,6 +43,13 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
          $ws.single.EventBus.channel('DragAndDropChannel').subscribe('onMousemove', this.onMousemove, this);
       },
 
+      preparePageXY: function(e) {
+         if (e.type == "touchstart" || e.type == "touchmove") {
+            e.pageX = e.originalEvent.touches[0].pageX;
+            e.pageY = e.originalEvent.touches[0].pageY;
+         }
+      },
+     
       onMouseup: function(buse, e) {
          //определяем droppable контейнер
          if (this._isShifted) {
@@ -76,13 +83,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
 
          if (!this._isShifted) {
             //начало переноса
-
-            // Проверим, не является ли это событие "тачем"
-            if (e.type == "touchmove") {
-               e.pageX = e.originalEvent.touches[0].pageX;
-               e.pageY = e.originalEvent.touches[0].pageY;
-            }
-
+            this.preparePageXY(e);
             var 
                moveX = e.pageX - this._moveBeginX,
                moveY = e.pageY - this._moveBeginY;
@@ -109,13 +110,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
       //либо отдаем тип, если создаем из палитры
       setCurrentElement: function(e, elementConfig) {
          //координаты с которых начато движение
-         
-         // Проверим, не является ли это событие "тачем"
-         if (e.type == "touchstart") {
-            e.pageX = e.originalEvent.touches[0].pageX;
-            e.pageY = e.originalEvent.touches[0].pageY;
-         }
-
+         this.preparePageXY(e);
          this._moveBeginX = e.pageX;
          this._moveBeginY = e.pageY;
          this._currentComponent = elementConfig;
@@ -147,12 +142,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
             };
          }
    
-         // Проверим, не является ли это событие "тачем"
-         if (e.type == "touchmove") {
-            e.pageX = e.originalEvent.touches[0].pageX;
-            e.pageY = e.originalEvent.touches[0].pageY;
-         }
-         
+         this.preparePageXY(e);         
          target.css({
             top: e.pageY - this._containerCoords.y,
             left: e.pageX - this._containerCoords.x
