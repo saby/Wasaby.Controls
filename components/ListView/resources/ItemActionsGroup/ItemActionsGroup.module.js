@@ -165,6 +165,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._itemActionsButtons[item]['handler'].apply(this.getParent(), [this._activeItem, this._activeItem.data('id')]);
          },
 
+         canAcceptFocus: function() {
+            return false;
+         },
+
          _getItemTemplate : function(item) {
             var caption = item.get('caption');
 
