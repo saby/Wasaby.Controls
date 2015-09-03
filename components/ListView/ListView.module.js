@@ -86,7 +86,24 @@ define('js!SBIS3.CONTROLS.ListView',
                position: null,
                size: null
             },
-            _keysWeHandle: [$ws._const.key.up, $ws._const.key.down, $ws._const.key.space, $ws._const.key.enter],
+            _loadingIndicator: undefined,
+            _hasScrollMore: true,
+            _infiniteScrollOffset: null,
+            _allowInfiniteScroll: true,
+            _scrollIndicatorHeight: 32,
+            _isLoadBeforeScrollAppears : true,
+            _infiniteScrollContainer: [],
+            _pageChangeDeferred : undefined,
+            _pager : undefined,
+            _previousGroupBy : undefined,
+            _keysWeHandle: [
+               $ws._const.key.up,
+               $ws._const.key.down,
+               $ws._const.key.space,
+               $ws._const.key.enter,
+               $ws._const.key.right,
+               $ws._const.key.left
+            ],
             _itemActionsGroup: null,
             _options: {
                /**
@@ -208,17 +225,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                infiniteScroll: false,
                ignoreLocalPageSize: false
-            },
-            _loadingIndicator: undefined,
-            _hasScrollMore: true,
-            _infiniteScrollOffset: null,
-            _allowInfiniteScroll: true,
-            _scrollIndicatorHeight: 32,
-            _isLoadBeforeScrollAppears : true,
-            _infiniteScrollContainer: [],
-            _pageChangeDeferred : undefined,
-            _pager : undefined,
-            _previousGroupBy : undefined
+            }
          },
 
          $constructor: function () {
@@ -254,16 +261,21 @@ define('js!SBIS3.CONTROLS.ListView',
                selectedItem = $('[data-id="' + this.getSelectedKey() + '"]', this._container),
                nextItem = (selectedKey) ? items.eq(items.index(selectedItem) + 1) : items.eq(0),
                previousItem = (selectedKey) ? items.eq(items.index(selectedItem) - 1) : items.last();
-            console.log();
-            //навигация по стрелкам
-            if (e.which === $ws._const.key.up) {
-               previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
-            } else if (e.which === $ws._const.key.down) {
-               nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
-            }
-            if (e.which === $ws._const.key.space) {
-               this.toggleItemsSelection([selectedKey]);
-               nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+
+
+            switch (e.which) {
+               case $ws._const.key.up:
+                  previousItem = selectedKey ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
+                  previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
+                  break;
+               case $ws._const.key.down:
+                  nextItem = (selectedKey) ? selectedItem.next('.controls-ListView__item') : items.eq(0);
+                  nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+                  break;
+               case $ws._const.key.space:
+                  this.toggleItemsSelection([selectedKey]);
+                  nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+                  break;
             }
             return false;
          },

@@ -1304,6 +1304,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-NumberTextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
   text-align: left;
 }
+.controls-NumberTextBox.controls-NumberTextBox__text-align-right .controls-TextBox__field {
+  text-align: right;
+}
 .controls-NumberTextBox .controls-TextBox__afterFieldWrapper .controls-NumberTextBox__arrow {
   display: block;
   text-decoration: none;
