@@ -4,24 +4,17 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
    if (typeof window !== 'undefined') {
       var EventBusChannel = $ws.single.EventBus.channel('DragAndDropChannel');
 
-      $(document).bind('mouseup', function(e) {
-         EventBusChannel.notify('onMouseup', e);
-      });
-
-      $(document).bind('mousemove', function(e) {
-         EventBusChannel.notify('onMousemove', e);
-      });
-      
       // Добавлены события для мультитач-девайсов
       // Для обработки используются уже существующие обработчики,
       // незначительно дополненные
-      $(document).bind('touchmove', function(e) {
-         EventBusChannel.notify('onMousemove', e);
-      });
-
-      $(document).bind('touchend', function(e) {
+      $(document).bind('mouseup touchend', function(e) {
          EventBusChannel.notify('onMouseup', e);
       });
+
+      $(document).bind('mousemove touchmove', function(e) {
+         EventBusChannel.notify('onMousemove', e);
+      });
+      
    }
 
    var DragAndDropMixin = {
@@ -80,19 +73,19 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [], function() {
          var 
             // определяем droppable контейнер
             movable = this._findDragDropContainer(e, e.target);
-			
+
          if (!this._isShifted) {
             //начало переноса
-			
-			   // Проверим, не является ли это событие "тачем"
-			   if (e.type == "touchmove") {
-				   e.pageX = e.originalEvent.touches[0].pageX;
-				   e.pageY = e.originalEvent.touches[0].pageY;
-			   }
 
-			   var 
-				   moveX = e.pageX - this._moveBeginX,
-				   moveY = e.pageY - this._moveBeginY;
+            // Проверим, не является ли это событие "тачем"
+            if (e.type == "touchmove") {
+               e.pageX = e.originalEvent.touches[0].pageX;
+               e.pageY = e.originalEvent.touches[0].pageY;
+            }
+
+            var 
+               moveX = e.pageX - this._moveBeginX,
+               moveY = e.pageY - this._moveBeginY;
    
             //начинаем движение только если сдвинули сильно
             if ((Math.abs(moveX) < this._constShiftLimit) && (Math.abs(moveY) < this._constShiftLimit)) {
