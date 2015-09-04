@@ -174,10 +174,11 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
       _drawBreadCrumbs:function(path, record, container){
          if (path.length) {
             var self = this,
-                  elem;
+                  elem,
+                  groupBy = this._options.groupBy,
+                  cfg;
             container.find('td').append(elem = $('<div/>'));
-
-            var ps = new BreadCrumbs({
+            cfg = {
                element : elem,
                items: this._createPathItemsDS(path),
                highlightEnabled: this._options.highlightEnabled,
@@ -185,7 +186,11 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
                colorMarkEnabled: this._options.colorMarkEnabled,
                colorField: this._options.colorField,
                className : 'controls-BreadCrumbs__smallItems'
-            });
+            };
+            if (groupBy.hasOwnProperty('breadCrumbsTpl')){
+               cfg.itemTemplate = groupBy.breadCrumbsTpl
+            }
+            var ps = new BreadCrumbs(cfg);
             ps.once('onItemClick', function(event, id){
                //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onBreadCrumbClick'), а вотом выполняется setCurrentRoot
                event.setResult(false);
@@ -221,7 +226,8 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
             dsItems.push({
                id: pathRecords[i].getKey(),
                title: pathRecords[i].get(this._options.displayField),
-               parentId: pathRecords[i].get(this._options.hierField)[0]
+               parentId: pathRecords[i].get(this._options.hierField)[0],
+               data: pathRecords[i]
             });
          }
          return dsItems;
