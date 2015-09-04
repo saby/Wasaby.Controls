@@ -218,11 +218,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             }
             this.setItems(self._path);
             hierarchyGridView.setCurrentRoot(id);
+            hierarchyGridView.reload();
             this._toggleHomeIcon(!self._path.length);
          });
 
          backButton.subscribe('onActivated', function(){
             setPreviousRoot();
+            hierarchyGridView.reload();
          });
       }
    });
