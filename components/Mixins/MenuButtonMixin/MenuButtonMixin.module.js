@@ -77,6 +77,12 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             this._picker.destroy();
             this._initializePicker();
          }
+      },
+      /*TODO придротный метод для совместимости, надо выпилить*/
+      addItem : function(item) {
+         var items = this.getItems() || [];
+         items.push(item);
+         this.setItems(items);
       }
    };
 
