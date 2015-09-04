@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * </component>
     *
     * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView
-    * 
+    *
     */
 
    var TreeDataGridView = HierarchyDataGridView.extend([TreeMixinDS, DragNDropMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
@@ -148,15 +148,25 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _keyboardHover: function(e) {
-         TreeDataGridView.superclass._keyboardHover.apply(this, arguments);
-         var selectedKey = this.getSelectedKey();
-         if (e.which === $ws._const.key.enter) {
-            var rec = this._dataSet.getRecordByKey(selectedKey);
-            if (rec.get(this._options.hierField)) {
-               this.setCurrentRoot(selectedKey);
-               this.reload();
-            }
+         var parentResult = TreeDataGridView.superclass._keyboardHover.apply(this, arguments),
+             selectedKey = this.getSelectedKey(),
+             isBranch = this._dataSet.getRecordByKey(selectedKey).get(this._options.hierField);
+
+         switch(e.which) {
+            case $ws._const.key.enter:
+               if (isBranch) {
+                  this.setCurrentRoot(selectedKey);
+                  this.reload();
+               }
+               break;
+            case $ws._const.key.right:
+               isBranch && this.expandNode(selectedKey);
+               break;
+            case $ws._const.key.left:
+               isBranch && this.collapseNode(selectedKey);
+               break;
          }
+         return parentResult;
       },
 
       _drawItemsFolderLoad: function(records, id) {
@@ -237,7 +247,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                } else if (data.get(this._options.hierField + '@')) {
                   var self = this;
                   self.setCurrentRoot(nodeID);
-                  self.reload();           
+                  self.reload();
                }
             } else {
                this.toggleNode(nodeID);
