@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
                if (deferred.getResult().isSuccessful()) {
                   self.removeItemsSelectionAll();
                   self.setCurrentRoot(moveTo);
+                  self.reload();
                }
             });
          }

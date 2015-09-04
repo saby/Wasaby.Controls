@@ -64,6 +64,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
          if (data.get(this._options.hierField+'@')) {
             var nodeID = $(target).closest('.controls-ListView__item').data('id');
             this.setCurrentRoot(nodeID);
+            this.reload();
          }
       },
       reload: function(){
@@ -202,6 +203,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
                   self.setHighlightText('', false);
                   self._filter = filter;
                   self.setCurrentRoot(id);
+                  self.reload();
                }
             });
             this._breadCrumbs.push(ps);
