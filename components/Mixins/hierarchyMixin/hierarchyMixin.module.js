@@ -137,7 +137,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       _dataLoadedCallback: function(){
          var path = this._dataSet.getMetaData().path,
             hierarchy = this._hier;
-         if (!hierarchy.length && path.getCount()){
+         if (!hierarchy.length && path){
             hierarchy = this._getHierarchy(path, this._curRoot);
          }
          if (this._rootChanged) this._notify('onSetRoot', this._curRoot, hierarchy);
