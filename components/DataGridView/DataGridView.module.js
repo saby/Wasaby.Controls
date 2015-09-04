@@ -69,7 +69,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * Значение необходимо задавать для колонок с фиксированной шириной.
              * @property {Boolean} highlight=true Подсвечивать фразу при поиске
              * @property {String} className Имя класса, который будет применён к каждой ячейке столбца
-             * @property {String} captionTemplate Шаблон отображения шапки колонки
+             * @property {String} headTemplate Шаблон отображения шапки колонки
+             * @property {String} headTooltip высплывающая подсказка шапки колонки
              * @property {String} cellTemplate Шаблон отображения ячейки
              */
             /**
@@ -120,6 +121,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       $constructor: function() {
+         this._publish('onDrawHead');
          this._thead = $('.controls-DataGridView__thead', this._container.get(0));
          this._colgroup = $('.controls-DataGridView__colgroup', this._container.get(0));
          this._checkColumns();
@@ -585,7 +587,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
           this._options.columns = columns;
           this._newColumnsSetted = true;
           this._checkColumns();
-          this.reload();
        },
       /**
        * Проверяет настройки колонок, заданных опцией {@link columns}.
@@ -609,6 +610,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if(this._options.startScrollColumn !== undefined) {
             this._initPartScroll();
          }
+         this._notify('onDrawHead');
       },
 
       _getHeadTemplate: function(){
