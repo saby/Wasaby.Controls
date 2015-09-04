@@ -154,13 +154,16 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
          switch(e.which) {
             case $ws._const.key.enter:
-               isBranch && this.setCurrentRoot(selectedKey);
+               if (isBranch) {
+                  this.setCurrentRoot(selectedKey);
+                  this.reload();
+               }
                break;
             case $ws._const.key.right:
                isBranch && this.expandNode(selectedKey);
                break;
             case $ws._const.key.left:
-               isBranch&& this.collapseNode(selectedKey);
+               isBranch && this.collapseNode(selectedKey);
                break;
          }
          return parentResult;
@@ -244,6 +247,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                } else if (data.get(this._options.hierField + '@')) {
                   var self = this;
                   self.setCurrentRoot(nodeID);
+                  self.reload();
                }
             } else {
                this.toggleNode(nodeID);

@@ -86,6 +86,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
       setItems: function(items){
          BreadCrumbs.superclass.setItems.call(this, items);
+         this._dataSet._keyField = this._options.keyField; 
          this._toggleHomeIcon(items.length <= 0);
       },
 
