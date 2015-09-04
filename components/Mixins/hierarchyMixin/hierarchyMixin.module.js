@@ -7,7 +7,9 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
     */
    var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
       $protected: {
+         _rootChanged: true,
          _curRoot: null,
+         _hier: [],
          _options: {
             /**
              * @cfg {String} Идентификатор узла, относительно которого надо отображать данные
@@ -121,23 +123,23 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        * @param {String} key Идентификатор раскрываемого узла
        */
       setCurrentRoot: function(key) {
-         var hierarchy = this._getHierarchy(this._dataSet, key),
-            record = this._dataSet.getRecordByKey(key),
-            filter = this._filter || {},
-            self = this;
+         var filter = this._filter || {};
          filter[this._options.hierField] = key;
          this._filter = filter;
+         this._hier = this._getHierarchy(this._dataSet, key);
          //узел грузим с 0-ой страницы
          this._offset = 0;
+         this._rootChanged = this._curRoot !== key;
          this._curRoot = key;
-         this.reload(filter).addCallback(function(dataSet){
-            var path = dataSet.getMetaData().path;
-            if (!record && path){
-               hierarchy = self._getHierarchy(path, key);
-               record = path.getRecordByKey(key);
-            }
-            self._notify('onSetRoot', key, hierarchy);
-         });
+      },
+
+      _dataLoadedCallback: function(){
+         var path = this._dataSet.getMetaData().path,
+            hierarchy = this._hier;
+         if (!hierarchy.length && path.getCount()){
+            hierarchy = this._getHierarchy(path, this._curRoot);
+         }
+         if (this._rootChanged) this._notify('onSetRoot', this._curRoot, hierarchy);
       },
 
       _getHierarchy: function(dataSet, key){

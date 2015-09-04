@@ -154,6 +154,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             var rec = this._dataSet.getRecordByKey(selectedKey);
             if (rec.get(this._options.hierField)) {
                this.setCurrentRoot(selectedKey);
+               this.reload();
             }
          }
       },
@@ -236,6 +237,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                } else if (data.get(this._options.hierField + '@')) {
                   var self = this;
                   self.setCurrentRoot(nodeID);
+                  self.reload();           
                }
             } else {
                this.toggleNode(nodeID);

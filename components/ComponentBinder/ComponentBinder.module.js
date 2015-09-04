@@ -204,6 +204,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             }
             this.setItems(self._path);
             hierarchyGridView.setCurrentRoot(id);
+            hierarchyGridView.reload();
             this._toggleHomeIcon(!self._path.length);
          });
 
@@ -213,6 +214,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             self._currentRoot = previousRoot;
             if (self._path.length) self._path.splice(self._path.length - 1);
             hierarchyGridView.setCurrentRoot(previousRoot ? previousRoot[breadCrumbs._options.keyField] : null);
+            hierarchyGridView.reload();
          });
       }
    });
