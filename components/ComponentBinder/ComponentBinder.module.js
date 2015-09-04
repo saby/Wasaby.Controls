@@ -7,16 +7,20 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
     * @public
     */
    /*методы для поиска*/
-   function startSearch(text, gridView, BreadCrumbs, searchParamName) {
+   function startSearch(text, gridView, BreadCrumbs, searchParamName, searchCrumbsTpl) {
       if (text) {
          var filter = $ws.core.merge(gridView._filter, {
             'Разворот': 'С разворотом',
             'usePages': 'full'
-         });
+         }),
+         groupBy = gridView.getSearchGroupBy();
+         if (searchCrumbsTpl) {
+            groupBy['breadCrumbsTpl'] = searchCrumbsTpl;
+         }
          filter[searchParamName] = text;
          gridView.setHighlightText(text, false);
          gridView.setInfiniteScroll(true, true);
-         gridView.setGroupBy(gridView.getSearchGroupBy());
+         gridView.setGroupBy(groupBy);
          gridView._container.addClass('controls-GridView__searchMode');
          if (this._firstSearch) {
             this._lastRoot = gridView.getCurrentRoot();
@@ -99,19 +103,20 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        * @param gridView объект представления данных
        * @param BreadCrumbs объект хлебных крошек
        * @param searchParamName параметр фильтрации для поиска
+       * @param searchCrumbsTpl шаблон отрисовки элемента пути в поиске
        * @example
        * <pre>
        *     myBinder = new ComponentBinder();
        *     myBinder.bindSearchGrid(searchForm, gridView, BreadCrumbs, searchParamName);
        * </pre>
        */
-      bindSearchGrid : function(searchForm, gridView, BreadCrumbs, searchParamName) {
+      bindSearchGrid : function(searchForm, gridView, BreadCrumbs, searchParamName, searchCrumbsTpl) {
          var self = this;
          this._lastRoot = gridView.getCurrentRoot();
          searchForm.subscribe('onTextChange', function(event, text){
             var checkedText = isSearchValid(text, 3);
             if (checkedText[1]) {
-               startSearch.call(self, this.getText(), gridView, BreadCrumbs, searchParamName);
+               startSearch.call(self, this.getText(), gridView, BreadCrumbs, searchParamName, searchCrumbsTpl);
                self._path = [];
                self._currentRoot = null;
             }
@@ -123,7 +128,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          searchForm.subscribe('onSearchStart', function(event, text) {
             var checkedText = isSearchValid(text, 1);
             if (checkedText[1]) {
-               startSearch.call(self, this.getText(), gridView, searchParamName);
+               startSearch.call(self, this.getText(), gridView, searchParamName, searchCrumbsTpl);
             }
          });
          //searchForm.subscribe('onReset', resetGroup);
@@ -135,7 +140,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             breakSearch(searchForm);
          });
       },
-      bindSearchComposite: function(searchForm, compositeView, BreadCrumbs, searchParamName) {
+      bindSearchComposite: function(searchForm, compositeView, BreadCrumbs, searchParamName, searchCrumbsTpl) {
          this.bindSearchGrid.apply(this, arguments);
          /*var self = this;
          compositeView.subscribe('onDataLoad', function(){
