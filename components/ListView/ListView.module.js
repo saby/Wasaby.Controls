@@ -256,11 +256,11 @@ define('js!SBIS3.CONTROLS.ListView',
             this.reload();
          },
          _keyboardHover: function (e) {
-            var items = this._getItemsContainer().find('.controls-ListView__item'),
-                selectedKey = this.getSelectedKey(),
-                selectedItem = $('.controls-ListView__item__selected', this._container),
-                nextItem,
-                previousItem;
+            var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
+               selectedKey = this.getSelectedKey(),
+               selectedItem = $('[data-id="' + this.getSelectedKey() + '"]', this._container),
+               nextItem = (selectedKey) ? items.eq(items.index(selectedItem) + 1) : items.eq(0),
+               previousItem = (selectedKey) ? items.eq(items.index(selectedItem) - 1) : items.last();
 
 
             switch (e.which) {
@@ -277,7 +277,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
             }
-
             return false;
          },
          _checkTargetContainer: function (target) {

@@ -2388,6 +2388,7 @@ input[type="reset"]::-moz-focus-inner {
   color: #313e78;
   text-align: center;
   margin-top: 8px;
+  line-height: 30px;
 }
 .controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder:hover .controls-CompositeView__tileTitle {
   text-decoration: underline;
@@ -2423,6 +2424,26 @@ input[type="reset"]::-moz-focus-inner {
   float: none;
   margin-left: -1px;
 }
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__item__selected:not(.controls-ListView__folder),
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__item__selected.controls-ListView__folder .controls-CompositeView__tileTitle {
+  background-image: url('img/rowSelect.png');
+  background-position: left top;
+  background-repeat: repeat-y;
+}
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__item__selected .controls-CompositeView__tileTitle {
+  background-image: url('img/rowSelect.png');
+  background-position: left top;
+  background-repeat: repeat-y;
+}
+.controls-CompositeView .controls-ListView__item__selected .controls-ListView__item-title {
+  background-image: url('img/rowSelect.png');
+  background-position: left top;
+  background-repeat: repeat-y;
+}
+.controls-CompositeView .controls-ListView__item-title {
+  height: 27px;
+  line-height: 27px;
+}
 .controls-CompositeView .controls-CompositeView__tileItem {
   display: inline-block;
   vertical-align: top;
@@ -2454,6 +2475,7 @@ input[type="reset"]::-moz-focus-inner {
   width: 120px;
 }
 .controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__folder .controls-CompositeView__tileTitle {
+  line-height: 30px;
   font-weight: 600;
   font-size: 15px;
   color: #313e78;
