@@ -602,13 +602,19 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _buildHead: function() {
          var head = this._getHeadTemplate();
          this._newColumnsSetted = false;
+         this._isPartScrollVisible = false;
          this._thead.remove();
          this._colgroup.remove();
          $('.controls-DataGridView__tbody', this._container).before(head);
          this._thead = $('.controls-DataGridView__thead', this._container.get(0));
          this._colgroup = $('.controls-DataGridView__colgroup', this._container.get(0));
+         if (this._editInPlace) {
+            this._editInPlace.destroy();
+         }
+         this._createEditInPlace();
          if(this._options.startScrollColumn !== undefined) {
             this._initPartScroll();
+            this.updateDragAndDrop();
          }
          this._notify('onDrawHead');
       },
