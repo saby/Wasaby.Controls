@@ -15,9 +15,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       /* TODO: Надо считать высоту один раз, а не делать константой */
       var
          ITEMS_ACTIONS_HEIGHT = 20,
-         ANIMATION_DURATION = 500; //Продолжительность анимации скрола заголовков
+         ANIMATION_DURATION = 500; //Продолжительность анимации скролла заголовков
    /**
-    * Контрол, отображающий набор данных в виде в таблицы с несколькими колонками.
+    * Контрол, отображающий набор данных в виде таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
     * @control
@@ -55,9 +55,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
             right: 0
          },
          _currentScrollPosition: 0,                   //Текущее положение частичного скрола заголовков
-         _scrollingNow: false,                        //Флаг обозаначающий, происходит ли в данный момент скролирование элементов
+         _scrollingNow: false,                        //Флаг обозначающий, происходит ли в данный момент скролирование элементов
          _partScrollRow: undefined,                   //Строка-контейнер, в которой лежит частичный скролл
-         _isHeaderScrolling: false,                   //Флаг обозначающий, проиходит ли скролл за заголовок
+         _isHeaderScrolling: false,                   //Флаг обозначающий, происходит ли скролл за заголовок
          _lastLeftPos: null,                          //Положение по горизонтали, нужно когда происходит скролл за заголовок
          _newColumnsSetted: false,                    //Флаг, обозначающий, что выставлены новые колонки
          _options: {
@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {Boolean} highlight=true Подсвечивать фразу при поиске
              * @property {String} className Имя класса, который будет применён к каждой ячейке столбца
              * @property {String} headTemplate Шаблон отображения шапки колонки
-             * @property {String} headTooltip высплывающая подсказка шапки колонки
+             * @property {String} headTooltip Всплывающая подсказка шапки колонки
              * @property {String} cellTemplate Шаблон отображения ячейки
              */
             /**
@@ -356,7 +356,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _dragStart: function(e) {
          $ws._const.$body.addClass('ws-unSelectable');
 
-         /* Если скрол происходит перетаскиванием заголовков
+         /* Если скролл происходит перетаскиванием заголовков
             то выставим соответствующие флаги */
          this._isHeaderScrolling = $(e.currentTarget).hasClass('controls-DataGridView__th');
          if(this._isHeaderScrolling) {
@@ -395,21 +395,21 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       /*
-       * Анимация по окончании скрола заголовков
+       * Анимация по окончании скролла заголовков
        * Используется для того, чтобы в редактировании по месту не было обрезков при прокрутке
        */
       _animationAtPartScrollDragEnd: function() {
          if(this._currentScrollPosition === this._stopMovingCords.right) {
             return;
          }
-         //Найдём элемент, который нужно доскролить
+         //Найдём элемент, который нужно доскроллить
          var arrowRect = this._arrowLeft[0].getBoundingClientRect(),
              elemToScroll = document.elementFromPoint(arrowRect.left + arrowRect.width / 2, arrowRect.top + arrowRect.height + 1),
              elemRect,
              elemWidth,
              delta;
 
-         //Если нашли, то расчитаем куда и на сколько нам скролить
+         //Если нашли, то рассчитаем куда и на сколько нам скролить
          if(elemToScroll) {
             elemRect = elemToScroll.getBoundingClientRect();
             delta = arrowRect.left - elemRect.left;
@@ -474,19 +474,19 @@ define('js!SBIS3.CONTROLS.DataGridView',
              correctMargin = 0,
              notScrolledCells;
 
-         /* Найдём ширину нескролируемых колонок */
+         /* Найдём ширину нескроллируемых колонок */
          if(this._options.startScrollColumn > 0) {
             notScrolledCells = this._thead.find('tr').eq(0).find('.controls-DataGridView__notScrolledCell');
             for(var i = 0, len = notScrolledCells.length; i < len; i++) {
                correctMargin += notScrolledCells[i].offsetWidth
             }
-            /* Сдвинем контейнер скрола на ширину нескролируемых колонок */
+            /* Сдвинем контейнер скролла на ширину нескроллируемых колонок */
             scrollContainer[0].style.marginLeft = correctMargin + 'px';
          }
-         /* Проставим ширину контейнеру скрола */
+         /* Проставим ширину контейнеру скролла */
          scrollContainer[0].style.width = containerWidth - correctMargin + 'px';
 
-         /* Найдём соотношение, для того чтобы правильно двигать скролируемый контент относительно ползунка */
+         /* Найдём соотношение, для того чтобы правильно двигать скроллируемый контент относительно ползунка */
          this._partScrollRatio = (this._getItemsContainer()[0].offsetWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - 40);
          this._stopMovingCords.right = scrollContainer[0].offsetWidth - thumbWidth - 40;
       },
