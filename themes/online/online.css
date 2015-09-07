@@ -97,7 +97,7 @@ input[type="reset"]::-moz-focus-inner {
   background: #cbd5e5;
 }
 .controls-Button .controls-Button__text.controls-Button__emptyCaption {
-  margin: 0 0 0 13px !important;
+  margin: 0 0 0 13px;
 }
 .controls-Button .controls-Button__icon {
   position: absolute;
@@ -149,7 +149,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #ffffff !important;
+  background: #ffffff;
 }
 .controls-Button.controls-Button__big {
   font: italic normal 18px 'Cambria', Georgia, serif;
@@ -192,7 +192,7 @@ input[type="reset"]::-moz-focus-inner {
   margin: 0 24px 0 24px;
 }
 .controls-Button.controls-Button__big .controls-Button__text.controls-Button__emptyCaption {
-  margin: 0 0 0 13px !important;
+  margin: 0 0 0 13px;
 }
 .controls-Button.controls-Button__big .controls-Button__icon {
   position: absolute;
@@ -241,7 +241,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #ffffff !important;
+  background: #ffffff;
 }
 .controls-Button.controls-Button__big.ws-disabled {
   color: #e4e4e4;
@@ -249,7 +249,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #ffffff !important;
+  background: #ffffff;
 }
 .controls-Button.ws-disabled {
   cursor: default;
@@ -258,7 +258,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  background: #ffffff !important;
+  background: #ffffff;
 }
 .controls-Button__ellipsis .controls-Button__text,
 .controls-Link.controls-Button__ellipsis {
@@ -1353,8 +1353,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextBox.ws-validation-error {
   border-width: 1px;
   border-style: solid;
-  border-color: #ff302b !important;
-  background: #fadadd !important;
+  border-color: #ff302b;
+  background: #fadadd;
 }
 .controls-TextBox.ws-validation-error .controls-TextBox__fieldWrapper .controls-TextBox__field {
   color: inherit;
@@ -1414,7 +1414,7 @@ input[type="reset"]::-moz-focus-inner {
   color: inherit;
   text-align: left;
   min-height: 19px;
-  line-height: 20px !important;
+  line-height: 20px;
   margin: 0;
   padding: 1px 0;
   border: none;
@@ -1422,16 +1422,16 @@ input[type="reset"]::-moz-focus-inner {
   background: transparent;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-webkit-input-placeholder {
-  color: #e4e4e4 !important;
+  color: #e4e4e4;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field:-moz-placeholder {
-  color: #b9b9b9 !important;
+  color: #b9b9b9;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-moz-placeholder {
-  color: #b9b9b9 !important;
+  color: #b9b9b9;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field:-ms-input-placeholder {
-  color: #e4e4e4 !important;
+  color: #e4e4e4;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-ms-clear {
   display: none;
@@ -1449,7 +1449,7 @@ input[type="reset"]::-moz-focus-inner {
   text-overflow: ellipsis;
   -ms-text-overflow: ellipsis;
   white-space: nowrap;
-  color: #e4e4e4 !important;
+  color: #e4e4e4;
   font: inherit;
   padding: 3px 0 0;
   text-align: inherit;
@@ -1475,8 +1475,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-FormattedTextBox.ws-validation-error {
   border-width: 1px;
   border-style: solid;
-  border-color: #ff302b !important;
-  background: #fadadd !important;
+  border-color: #ff302b;
+  background: #fadadd;
 }
 .controls-FormattedTextBox.ws-validation-error .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
   color: inherit;
@@ -1571,7 +1571,7 @@ input[type="reset"]::-moz-focus-inner {
   display: none;
 }
 .controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable__placeholder {
-  color: #e4e4e4 !important;
+  color: #e4e4e4;
 }
 .controls-ComboBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
   position: absolute;
@@ -1701,16 +1701,16 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
 }
 .controls-TextArea .controls-TextArea__inputField::-webkit-input-placeholder {
-  color: #e4e4e4 !important;
+  color: #e4e4e4;
 }
 .controls-TextArea .controls-TextArea__inputField:-moz-placeholder {
-  color: #b9b9b9 !important;
+  color: #b9b9b9;
 }
 .controls-TextArea .controls-TextArea__inputField::-moz-placeholder {
-  color: #b9b9b9 !important;
+  color: #b9b9b9;
 }
 .controls-TextArea .controls-TextArea__inputField:-ms-input-placeholder {
-  color: #e4e4e4 !important;
+  color: #e4e4e4;
 }
 .controls-TextArea.ws-has-focus {
   border-width: 1px;
@@ -1724,8 +1724,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TextArea.ws-validation-error {
   border-width: 1px;
   border-style: solid;
-  border-color: #ff302b !important;
-  background: #fadadd !important;
+  border-color: #ff302b;
+  background: #fadadd;
 }
 .controls-TextArea.ws-validation-error .controls-TextArea__inputField {
   color: inherit;
@@ -1887,8 +1887,8 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DatePicker.ws-validation-error > .controls-DatePicker__fieldWrapper {
   border-width: 1px;
   border-style: solid;
-  border-color: #ff302b !important;
-  background: #fadadd !important;
+  border-color: #ff302b;
+  background: #fadadd;
 }
 .controls-DatePicker:hover .controls-FormattedTextBox__fieldWrapper {
   border-width: 1px;
@@ -1919,7 +1919,7 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/DatePicker-calendar.png') -18px 0 no-repeat;
 }
 .controls-DatePicker .controls-DatePicker__calendarIcon.calendar-disabled {
-  background: url('img/DatePicker-calendar.png') -35px 0 no-repeat !important;
+  background: url('img/DatePicker-calendar.png') -35px 0 no-repeat;
 }
 .controls-DatePicker__calendar {
   -webkit-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
@@ -2095,10 +2095,13 @@ input[type="reset"]::-moz-focus-inner {
   text-indent: 0;
   white-space: pre-wrap;
   /* css-3 */
+
   white-space: -moz-pre-wrap;
   /* Mozilla, since 1999 */
+
   word-wrap: break-word;
   /* Internet Explorer 5.5+ */
+
 }
 .controls-EditAtPlace.controls-EditAtPlace__autoHeight {
   height: auto;
@@ -2157,7 +2160,7 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-box-shadow: 0 0 3px #b2b2b2;
   -moz-box-shadow: 0 0 3px #b2b2b2;
   box-shadow: 0 0 3px #b2b2b2;
-  background: #f8f3f1 !important;
+  background: #f8f3f1;
 }
 .controls-EditAtPlace__editorOverlay .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
   font: 14px/20px 'TensorFont Regular', 'TensorFont', sans-serif;
@@ -2181,7 +2184,7 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/cancelIcon-sprite.png') 0 -32px no-repeat;
 }
 .controls-EditAtPlace__controlPanel .controls-EditAtPlace__cancel:hover,
-.controls-EditAtPlaceGroup__controlPanel .controls-EditAtPlace__cancel:hover {
+.controls-EditAtPlaceGroup__controlPanel .controls-EditAtPlace__cancel {
   background: url('img/cancelIcon-sprite.png') 0 -16px no-repeat;
 }
 .controls-EditAtPlaceGroup .controls-EditAtPlace .controls-EditAtPlace__fieldWrapper.controls-EditAtPlace__textAreaWrapper {
@@ -2197,11 +2200,11 @@ input[type="reset"]::-moz-focus-inner {
   position: relative;
 }
 .controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox,
-.controls-DataGridView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox {
+.controls-DataGridView .controls-ListView__item .controls-ListView__itemCheckBox {
   background: url('img/CheckBox.png') 0 1px;
 }
 .controls-ListView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover,
-.controls-DataGridView .controls-ListView__item.controls-ListView__hoveredItem .controls-ListView__itemCheckBox:hover {
+.controls-DataGridView .controls-ListView__item .controls-ListView__itemCheckBox:hover {
   background: url('img/CheckBox.png') 0 17px;
 }
 .controls-ListView .controls-ListView__EmptyData {
@@ -2482,9 +2485,16 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGridView .controls-DataGridView__td__checkBox {
   width: 24px;
   padding-right: 0!important;
+  overflow: hidden;
 }
 .controls-DataGridView .controls-DataGridView__td__checkBox .controls-ListView__itemCheckBox {
   margin: 1px 0 0 5px;
+}
+.controls-DataGridView.controls-DataGridView__showCheckBoxes .controls-ListView__itemCheckBox {
+  background: url('img/CheckBox.png') 0 1px;
+}
+.controls-DataGridView.controls-DataGridView__hideCheckBoxes .controls-DataGridView__colgroup col:first-child {
+  width: 4px;
 }
 .controls-DataGridView__addInPlace-container {
   padding-left: 8px;
@@ -2538,10 +2548,10 @@ input[type="reset"]::-moz-focus-inner {
   font-size: 10px;
 }
 .dragdropBody .controls-ListView__folder.controls-ListView__hoveredItem:not(.controls-ListView__item__selected) {
-  background: #9fd3fe !important;
+  background: #9fd3fe;
 }
 .dragdropBody .controls-ListView__folder.controls-ListView__hoveredItem:not(.controls-ListView__item__selected) > td {
-  background: #9fd3fe !important;
+  background: #9fd3fe;
 }
 .controls-HierarchyDataGridView__expand {
   height: 20px;
@@ -2808,63 +2818,20 @@ input[type="reset"]::-moz-focus-inner {
   font-size: 11px;
   text-decoration: underline;
 }
-.controls-operations-panel {
-  /*TODO придрот (2 important), чтобы перебить высоту ws-area*/
-  height: 30px !important;
-  width: 30px;
-  overflow: visible !important;
-}
-.controls-operations-panel .controls__operations-panel__closed {
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAYAAADtaU2/AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAr1JREFUSEu1lj1v01AUhjNUDIiJqWJADB0YGJiYGPgNDAz9BQyIgS1siIGidqFqaKpuDRESFe2AKsTAEAnBAFVLCUI0pakTO871t319/ZFQHe61bpAd33SJ+0rP9h6/Pj7n2i6RIN4h0RDOhXC4W5okzY3mbByFLhlA0XjBAHAQ3+NRedk4fur4MRSNSyh+3AKACzwqKwXgou3FEr0BKJrkJrzBfR6Vl+FFd00vgqKxMMWNVITgEo/Ki877g+FGUDTsBmhjj3lMXroXXUcWGepOCEViuIwAO45zmUfl1bfC58gO4Szqr99AuVxO+Nj4LPSMozsRICd4wWPyYrNQrUDpWwFMwsEhbG1vw9raGjxbWIC95qHQlwbZFJPEqh1e41F59c1gnobDWWimA7VaDarVKiwuLcFRBwl9aVjnPZvUeYxYsuE3emYAk6AjgZOOAuvr61CpVGClsgpdDQu9I1h4zyCnsu3f5DF5qSa+IWt4SI3MLESjHXz/0Uwe+fLyMryisxf50qgmAcUgOzwmL8UKrnYNTKiJGSfy6cvXJJjxbue90JNGQj60+36Dx+Sl6P6mqDDN7sHvZLlY6NbWNlheIPSN6Go+HPUw/FGdWzwmq66O74gK0xxKCBYXl5Ll2tioATJsoS9Nu4/hSMGbPCarbwAzXY38EhWO6CAPVl5Wk6Viy9XuyHR2Z3fbod0eyu5pq+PM8aisZB0/EhWmYUvElok9YrZc7JiIfGmOVQwtBa/ymKxONH+WduuKCtOwL04Y/01g72KRJ43EZitj3Eb+LI/KSjZIXVQ4DfSadJmSbp/wmKwULbjNXgCi4mlgx4d2qzcRyn8W6R/CDDXtjRdNi6z/7/YBj8qKmh6OFxXBCeu2h1vNpuDXR9LJFUUjtqhwGkbd0nM7z6Oy+im5b/ePHTgPDiR3j8eMqVT6B3undBuMQa3CAAAAAElFTkSuQmCC');
-}
-.controls-operations-panel .controls__operations-panel__closed:hover {
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAYAAADtaU2/AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAArZJREFUSEu1lj1oFEEUx68IFmIlFsFCLCJYRIgKYmFhJ0SwsLAIKNopaBCtkkIQKysRCzsbTRXFKoXl5VpNRCJRLyZ3uf3+uJ3d2Zn9OM/nzGZOdm/n0tzmD7/u/+4/b9+b260RmqyQuAcHQtT7Uhsly4+nPBxHPkmhagKaAqbJDRFVloeTZyhMoGp8wgiTJgAcElFFqQCHvSBpswNA1WSHCNK7IqosJ4ivu0EMVdPFDD/WTROOiKiy2Lw/OX4MVcMPwBpbFDFl2UF82uySno0iqBLH51CMEDoqosoyutFz04tgP+jCA4AzxzKCt2+knmFsFIOJ6EsRUxafhd6lqtGlMIrAJ9B/cRvg4XmAq6fAbTSkvjymx3BJonvRSRFVluHSORYO+0EMDf4+uQIwfw76186C2WxJfXl455pHlkSMXIoT1jWXwijYSCDeXAN4fBHg3gykt2ZBN3ypdwAP1xzSV7xwRsSUpbt4WrFwjxm5WYrFOkhX3+898jvTQBbnpb48uktAdciKiClL7dITHQcTZuLGkeCP7/aCGcmrBaknT9sMYccI6yKmLNUOl2WFeex6I1suHsqXDaFQ6hvQsULY0jD81tEFEVNUx8aXZYV5jJ/b2VLx5eJLFuqq1Jdnx8CwpeJlEVPUZ4CJjkU2ZYUDNANBenM2Wyq+XNGPNTY7KvUO2GXd/lL8fnMXTYmoohQbP5IV5uFLxJeJP2K+XPyayHx5tnUMTRW/FjFFtaxwknXrywrz8DdOlPzJ4P/FMk+eNp+tgvGOGU6KqKIUhyzJCseB/SZbpqzbpyKmKNWilzoWlhaPA78+rFt7wzTLr0X2hTDBTOvDReOi2P+7vS+iimKm+eGiKmjxbjXc3NiQfPq0bXJctYgnKxyHQbfs3s6JqKK+t/0PX7cRHATf2v66iBlSrfYPS+hvSyzVZNAAAAAASUVORK5CYII=');
-}
-.controls-operations-panel .controls__operations-panel__closed:active {
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAYAAADtaU2/AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAxdJREFUSEu1lj1oE2EYx4MUhyLi4CAO4qDiUMGPxUEcuviFi2MHrYtQBFEUQQdFxMGluIk4iJsgCpqmbWq1FPqVj6ZNv7wmuUsuaWrTpEku6aVtkuvj85zvkbvc28Gm/cOfDPe87y/P8/7zXhzfhyIuNOyG+/1yGgBaHDxhwbGhmdSaP5yF3XAyo35AeBPDWdU9Kr30hVa4Cxv1pJRTqtrmVYayCrtuHphMyryFO2F5WXVj1wcYzirnsHjDI2S4Cxv1hJhTyxXtDkPZ9cMfd/MW7oSlpaIHuz7BUFbhyE8Oz6YqvIWNejySrayXq68QvofhrOoei772cRaanX7QAXDqoO7Y23fcGp7DyWIQwa0MZZVzOLJvMLiYxG9I35LrxJ88VDtvAdw/B5vXjoPg+smtq3cgktWKpfJ7hDcznFVdI2KbN5ThLiYHxCwsy3HQnl0CuHcWKtfPwJRX4NbWW1gozCP4JkPZ1T8eH+QtNByUcqBM+wEengfoOA1q22UICClTTc5m4wiTK6UehrELR94yMpeqmGH1npUVUAc+6yOH2y2QeXTX9NwONhyM5tcYxi4EH+n1xjb8JhDPqU8f/4HRq2+emJ5tCYXpmLLBMHb1eqI9mHB9NLwNyILrlx4uglY72zF0CrfO8ISYhxmcUiJT+sAwVrlGpVa8yQBfHtwNyFO+kB4qCpf2/AqGbQFDx681PBVTYDZeKGK49jNUTQhs6hmLym5fnLuYHBCW9TBRqChc+ZkAhi3PrTU8gc+p26Xc+guGsgpH/JS6pXubtwGZQkRhohGrg1/1kPHqzMZzhd+Jwgp2u5ehanKOiIe6RqU1fFPBOI1tC8fTJcirZd2hxSK3xgydZN2mlY12hrLK7Y1+0wOFqaTzasRmMHU7v1BIYLf2e7p7TLqINxbgS4K70f/agNLZU7cFtXyBoWpCYBOebbjPJ3M32Y4JSp/TCA0vFoMMZVWfN/aYuvUIadsG27XeLV4W2K1WWq8eZaiaEHgY/3OpFCjeBo2YRiwurToZyioEf6FA4Q97Rz2Hxp+PxjB1cjj+AhQyH+9DAlrKAAAAAElFTkSuQmCC');
-}
-.controls-operations-panel.ws-disabled .controls__operations-panel__closed {
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAYAAADtaU2/AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAfpJREFUSEu1lj9IQmEUxUUiGiIiIqIhmsMxGhqioSEaIxqioSmkISIaIiKIpoamaGyQRnVSiMBJBEF9IuiiTaKRumdDxNe5cYnvz30S9Dzww493zuPwHkc0VCqVdsHVkDgI+QnmFLjQwkET4SpXMNescJAcgTBXmYIxAo45OAyWuMoVzEUrHCSnYJSrXMHc08JBs8o1rmBOg2EN7RyMcZUrmOtaWCQej3uxWEwR6XQ6JWV82OAaVzBHwYkWduh2u8+1Wu0DZ5VKpb4ymcyDnfGB3uYkV7mCGdHCDuVy+brX6xUrlcpnsVhUyWTyPZfL3UpZgS2ukYXAvnWDQbVavel0Oi+e56l8Pq8SicRroVC4lrIWl2CWa1zBnOGQdPMPjUbjvtVqveGsstksPblnZ3zY5RpXMCcALVG68Rc8ZR6fisC5pXsD2OcaVzC3rbADjYrGhbOisdHo7IwPc1xjCsaCFXSgMdGoaFw0MhobjU7KWuxwjSkYYXCoBR1oRPguv9KoaFwYWZ3GJmUtaDNTXGUKxooWFKER0ZhwVu12+w0ju7MzPmxyjSkY4+BMC4rgtT71+/060Ww2H6WMAA11nKtMwdjSgkGzxjWmYMyDgd/bfyD/LOIiDSrKoWGwzFWmyLCCQSL/9cHFPw3qH8h/9mDsWMEgiXKNpVDoG605p5mpg6iwAAAAAElFTkSuQmCC');
-}
-.controls__operations-panel__opened,
-.controls__operations-panel__closed {
-  display: inline-block;
-  position: absolute;
-  top: 3px;
-  left: 0;
-  width: 30px;
-  height: 24px;
-  cursor: pointer;
-}
-.controls__operations-panel__wrapper {
+.controls-operationsPanel {
+  overflow: hidden;
   line-height: 30px;
-  width: auto;
-  white-space: nowrap;
+}
+.controls-operationsPanel .controls-operationsPanel__wrapper {
   background-color: #e5ecf5;
-  padding-left: 30px;
-}
-.controls__operations-panel__wrapper:after {
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAeCAYAAAFmh2+bAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RUM1Qzk4ODZFMEUxMTFFMzk4NDBBREQ1MDNBNTE0MDAiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RUM1Qzk4ODVFMEUxMTFFMzk4NDBBREQ1MDNBNTE0MDAiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6QTZDMTQ5Q0Y3OUY0MTFFM0FGQUJDREQ2NTc1MEY5OUMiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6QTZDMTQ5RDA3OUY0MTFFM0FGQUJDREQ2NTc1MEY5OUMiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7t6k/sAAABa0lEQVR42mJ4/PrLPoYnr7/8Z2JkZGQAEgwMAAHE8P//fwamp2++7mcAEv/BXIAAYgCq+w8WB6l4+vbrfxZGBpBaBrDIbylhLkaAAGIEKwSJPHnzdR+Y9QSmiwGi6yBMlx0TiATpAmkHa4NrBwgguF0wDFb7BOQUKGBhhFgNdgiQYmViQAW/4a6DAmcWJL6jlBDXARYo30FSiOsgiAEQQAj7oQDhDZgASC+6AMhh+2ECjCAPwySlRbj/gz0OxfshKt58QbaGDd3pO9Gd3sz4FMnr4CBDknUCGwoNBwagxxghAYQkCwbP3n79jR6mLsjWAATok9pyAARhGDF4LRVMPJY3E4h38RL6oV0MOiazSb9aHmtHqe9gx13yRAsuGLg3FeRvWTDCNHwMbxaGGoybMPG0ntQwm5NPSIRskvFK+Mb8Y5bxc6zgpN1ASzSinsMqooN43gGVLyTUVuyVZXrEfnot6lQTc99Ba5J4AW0OyhmCf3mNAAAAAElFTkSuQmCC');
-  content: '\00a0';
-  position: absolute;
-  width: 8px;
   height: 30px;
-  top: 0;
+  margin-top: -30px;
 }
-.controls__operations-panel__wrapper .controls__operations-panel__opened {
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAYAAADtaU2/AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAqJJREFUSEu1lr1v00AYhxlQB9SJqWJADB0YGJiYGPgbGBj6FzAgBrayIQaKmoWK0ETdKBESFe2AIsTAUAnBAFWhBCGatPmy45w/zz6fPxqqlzvrotryNS1q8pOeKT/78Wu/TnLuuNBwsEWjAUyEIK4KTTYkiO94wQG4dPw4JAp1N5oVqqMAwJTrx3WXxoD98eOQ+LFQZYO9g7uiMH68uK0CXBCqoyAE07YbaTaJwPLGj+lFt4UqG/bBw6Tgjh/2XD8ITTYY44umGxDTDcHA4wXZdGB40VWhygbh4JmBI0AOK57Ax83PMD8/n1B5/UbaSdO3w6dCk43mhFeQRWPkBKw0mu3aLjxZWIByuQzrGxuACT+xvMvR7EDluyNU2fQcWuFXxkojaXR1WCwUoFQqwcvVVdAtLO2l6VvBnNBkozj+9Z5JD3mpZx1PVydQfFGCYrEIKysr0OqobKJQ2h2imP6m0OSjmrSqWRSYfCSv2LNcWlpKbvGPnzXQ2R2S9YYoOhloFrkmNPk0+/5mG/nALmAk76rvEynn05ev0k6arkmoageXhSafPQ3faPQIu5Wj5bYXwPr6RiLmy7W180fay2D4a0IjT0Mla80+kR+cApkOrLKl4su1uFiA3VZf2kvTNcgtocmn3sGzu4p72Dlhao0tTKujJMvFl+x5cRk6yJN2h3R1+vsbwHmhyqeukuV97RRTs6Xiy8VvOV82vnSyXhrFIA+EJp8m8mcaCiHtE6bm8O/eMP6bwH/JZJ00bGq3pfszQpUPm/rRHptakRx8Vtg5K0KTTw2haTa1cZrX63/hX0CqHtwUqnzY1PeSqQ35Cc7INvuHI1+0Wg2m2Htdb01gasF9ocqHvddzE5tap07boJeEKp+dtrv9fR/DJPjVdt/+A+qHdB6T+NCQAAAAAElFTkSuQmCC');
-}
-.controls__operations-panel__wrapper .controls__operations-panel__opened:hover {
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAYAAADtaU2/AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAppJREFUSEu1lj9oE1Ecxx2kg3QSh+IgDhUcKlQFcXBwEyo4ODgUFN0UNIhO7SCIk5OIg5uLdqri1MExzaqtSKRq0qRp7nL/c+/du3d/EuPP944Xese9JkovX/hM+d597nf3uySH9gsN+19o1IeJEMRrQpMNCeIbXtADTIvHJVFo4mhWqPYCAFPYj2uYxoD84nFJ/EyoskFe764oFI8Xt1SAI0K1F8OA6S6OtC6JwPGKx/ai60KVDftgOSng4mHP9ZPQZIMQOmrjgNg4BAsVi9GlfcuLTgtVNgYKXlooAsNlxTF4b98AnDmWECw9kHbS6N3wudBko7nhScOhseEGrDQap1IBuHoK4OF5GLy4DR6m0t4QrRuofHeEKpuOS1f4lbHSSIzaDgyunQUonYM/T64A1TvSXhrdCRaFJhvF9ec7Nh3wUsfZH03H0Lu1AHBvHuDxRYi2NthEobQ7RLH9stDko9p0TXMoMPlI6HIJ4M5ccot76+/BZHdI1huimKSvOWROaPJp6n65ZfjALmAk8aulRMohH99JO2naNqFqNzghNPlsa+hCvUOgbY6WI+Qny5TI2XJZ5Yq0l8HyV4VGnrpKVps6kR+cwtfUZKn4cvEl0382pL00bYtcFpp8arto9peCB7tjptbYwoQ/NpLl4kvWu7kAHR1Ju0PaJt36DHBYqPKpqeR1Qxs/NX/t+HIlt5wtG186WS+NYpFHQpNP0/Bn6gohrTFTc/h3bxj/TuC/ZLJOGjY13jH9GaHKh039dJtNrUgOPijsnCtCk0/VMKbZ1Na/vF7/S9tkj9EMLglVPmzq+8nUlvwEB2ST/cORL1q1ClPsva7tTGBqQUmo8mHv9eLEpjap27LocaHK51sLb35tIJgE31v4w19rKG9LVpjQrAAAAABJRU5ErkJggg==');
-}
-.controls__operations-panel__wrapper .controls__operations-panel__opened:active {
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAYAAADtaU2/AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAuxJREFUSEu1lt9LU2EYxyPCi/AqJLz0oqKLAjOQ6LIbrfA2wi6iLgJJosigmwL/geomQrqSLgokhHRLCFuK+9Gcm65Nt7Zz5nbcdG65nW1nU+fZ03OO79h526NebH3hw26ehw/P+z7nnB07KGa7uPJlLgz/gx8eKcI0fCatwm2twL6yCa7QVlNZCG+p6dzONaaqBYUtJpsQ/+aKkY2NIqwXppmKD0oHJ6xhcATSZGMjLIqZfHFnr4OpasFpWydtQmbaLZGNjbKWLr5lKj447fCEVYCfweZP64/KUQA4yVS14LSnUFqyeOJkYyMshPSFus9UfPDxGcFjhvnff8hmI5GR9wAX23RSTwbIGiPhRN6O0x5nqlpwmTomreHyrDehrfuhBMwWqNw4B/D4Muy9ugvSepasq4ILpSjbe91MxeerQxw3O0RwEY1GvK4g7PZ1ATzqgsqLHtiMxsAt0LVVpHTxA9PwwWk7EXXOt0E2VnEHklC4cx1goBPg6RWQf83Dkpgha6vgQsXVSuU0U/FBqWnKuXrktKlngwD3LuhHrFjGwB+TyToDqqzsjuLdnmAqPiiesfqTVCNH4c1zXaqR/DRK1hjBKyjj3Wridqbig49Qt215E4u1YzsYaV3Wl0kTV26ehYDpO1lnZEXKhVA8xFT1mXJGx6hGI24hg8skgfqyR1+uct8l8DqDZK2RZKY0jvLzTMUHpz4z50uqVKORJTGLS+XSl0tbMqW/F5fu8NPyrsoZVa0MM1V9zI7IOxfR+C/+aE5fLv2+cdnSQw/JOiORjYIVp77KVHwmbEL7rG8jv4BHehShRB6yyq5OLFUka4x4xOyOsl1+feCG49TD+xu5f6fNJLCWC6K4l6n44Lu6dcabSFGNzSCVLX1Eef0XSovJLg5qL3aqsVF8UTmFb7JbTMUHp26xLMZDVGMzWE0WpnHqNqbjg/J+J34eqcZGWcRFK5TKD5iqPvj3x+OP5fCd3DyW9V8Zvwtbn/8CKg4ix/tQstMAAAAASUVORK5CYII=');
-}
-.controls__operations-panel__wrapper .controls__operations-panel__actions-mark,
-.controls__operations-panel__wrapper .controls__operations-panel__actions {
+.controls-operationsPanel .controls-operationsPanel__wrapper .controls-operationsPanel__actionMark,
+.controls-operationsPanel .controls-operationsPanel__wrapper .controls-operationsPanel__actions {
   display: inline-block;
 }
-.controls__operations-panel__wrapper .controls__operations-panel__actions-mark:after {
+.controls-operationsPanel .controls-operationsPanel__wrapper .controls-operationsPanel__actionMark:after {
   margin-left: 8px;
   margin-right: 4px;
   background: #cccccc;
@@ -2875,25 +2842,45 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   line-height: 30px;
 }
-.controls__operations-panel__wrapper.controls__operations-panel__mass-mode .controls__operations-panel__action-type-selection {
+.controls-operationsPanel .controls-operationsPanel__wrapper.controls-operationsPanel__massMode .controls-operationsPanel__actionType-selection {
   display: none;
 }
-.controls__operations-panel__wrapper.controls__operations-panel__selection-mode .controls__operations-panel__action-type-mass {
+.controls-operationsPanel .controls-operationsPanel__wrapper.controls-operationsPanel__selectionMode .controls-operationsPanel__actionType-mass {
   display: none;
 }
-.controls__operations-panel__wrapper .controls__operations-panel__action-type-mass,
-.controls__operations-panel__wrapper .controls__operations-panel__action-type-selection,
-.controls__operations-panel__wrapper .controls__operations-panel__action-type-all {
+.controls-operationsPanel .controls-operationsPanel__wrapper .controls-operationsPanel__actionType-mass,
+.controls-operationsPanel .controls-operationsPanel__wrapper .controls-operationsPanel__actionType-selection,
+.controls-operationsPanel .controls-operationsPanel__wrapper .controls-operationsPanel__actionType-all {
   margin: 0 4px;
+}
+.controls-OperationsPanelButton {
+  border-radius: 7px;
+  width: 24px;
+  height: 24px;
+}
+.controls-OperationsPanelButton.ws-enabled {
+  cursor: pointer;
+}
+.controls-OperationsPanelButton.ws-enabled:hover {
+  background-color: #e6ecf5;
+}
+.controls-OperationsPanelButton .controls-OperationsPanelButton__icon {
+  position: relative;
+  left: 4px;
+  top: 4px;
+}
+.controls-OperationsPanelButton.controls-Checked__checked .controls-OperationsPanelButton__icon:before {
+  content: "\e67b";
 }
 .controls-OperationsMark-checkBox {
-  margin: 0 4px;
+  margin: 0 4px 0 8px;
 }
 .controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGridView {
   padding: 0 0 5px 0;
   min-height: 50px;
   width: 100%;
   /*TODO скрываем подгрузку (ещё null)*/
+
 }
 .controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGridView .controls-TreeDataGridView__folderToolbar {
   display: none;
@@ -3066,7 +3053,7 @@ input[type="reset"]::-moz-focus-inner {
   right: -40px;
 }
 .ws-disabled .controls-ProgressBar__progress {
-  background: #ffffff !important;
+  background: #ffffff;
 }
 .ws-disabled .controls-ProgressBar__value {
   color: #e4e4e4;
@@ -3081,7 +3068,7 @@ input[type="reset"]::-moz-focus-inner {
   box-shadow: -2px -2px 5px #e9fafe;
 }
 .controls-ListView.controls-DataGrid .controls-ItemActions__activeItem {
-  background-color: #e9fafe !important;
+  background-color: #e9fafe;
 }
 .controls-ListView.controls-DataGrid .controls-ItemActions__activeItem .controls-DataGrid__notScrolledCell {
   background-color: #e9fafe !important;
@@ -3132,7 +3119,7 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/ItemActions-menu.png') no-repeat 0 -60px;
 }
 .controls-ItemActions__activeItem {
-  background-color: #e9fafe !important;
+  background-color: #e9fafe;
 }
 .controls-ItemActions__activeItem .controls-DataGridView__notScrolledCell {
   background-color: #e9fafe !important;
