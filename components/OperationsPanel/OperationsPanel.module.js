@@ -86,8 +86,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
              /**
               * @noShow
               */
-            keyField: 'name',
-            hideCheckBoxes: true
+            keyField: 'name'
          },
          _blocks: undefined,
          _internalHandlers: undefined
@@ -118,7 +117,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          if (linkedView && $ws.helpers.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
             this._reassignView(linkedView);
             this.togglePicker();
-            this._toggleCheckBoxes(this._pickerIsVisible());
             this._setMode();
             this._setVisibleMarkBlock();
          }
@@ -147,6 +145,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          };
       },
       _onChangeSelection: function() {
+         this.togglePicker();
          this._setMode();
       },
       _bindPanelEvents: function() {
@@ -158,13 +157,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             if (!this._itemsDrawn) {
                this._drawItems();
             }
-            this._toggleCheckBoxes(true);
             OperationsPanel.superclass.showPicker.apply(this);
          }
-      },
-      hidePicker: function() {
-         this._toggleCheckBoxes(false);
-         OperationsPanel.superclass.hidePicker.apply(this);
       },
       togglePicker: function() {
          if (this.isHaveSelectedItems() !== this._pickerIsVisible()) {
@@ -249,13 +243,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
         */
       getPanelState: function() {
          return this._currentMode;
-      },
-      _toggleCheckBoxes: function(show) {
-         var linkedView = this._options.linkedView;
-         if (linkedView._options.multiselect && this._options.hideCheckBoxes) {
-            linkedView._container.toggleClass('controls-DataGridView__showCheckBoxes', !!show)
-               .toggleClass('controls-DataGridView__hideCheckBoxes', !show);
-         }
       },
       destroy: function() {
          this._options.linkedView.unsubscribe('onSelectedItemsChange', this._internalHandlers.onChangeSelection);
