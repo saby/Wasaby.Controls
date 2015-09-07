@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
       },
 
       _dataLoadedCallback : function() {
-         this.hidePicker();
+         if (this._picker) this.hidePicker();
       }
    });
 
