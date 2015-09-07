@@ -185,11 +185,11 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
             if ((targetContainer.width() + 30 > containerWidth)) {
                var third = (containerWidth - 60) / 3;
-               if (points.length > 2){
+               if (points.length >= 2){
                   $('.controls-BreadCrumbs__title', points[0]).css('max-width', third * 2 - 20);
                   $('.controls-BreadCrumbs__title', points[points.length - 1]).css('max-width', third - 60);
                } else {
-                  $('.controls-BreadCrumbs__title', points[1]).css('max-width', containerWidth - $(points[0]).width() - 60);
+                  $('.controls-BreadCrumbs__title', points[1]).css('max-width', containerWidth - 60);
                }
             }
          }
