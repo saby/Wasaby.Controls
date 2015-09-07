@@ -74,9 +74,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
              /**
               * @noShow
               */
-            keyField: 'name',
-            /*TODO куда это?*/
-            hideCheckBoxes: true
+            keyField: 'name'
          },
          _blocks: undefined
       },
