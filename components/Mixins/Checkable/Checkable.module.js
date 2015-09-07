@@ -73,7 +73,6 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
       setChecked: function(flag) {
          this._options.checked = !!flag;
          this._container.toggleClass('controls-Checked__checked', this._options.checked);
-         this.saveToContext('Checked', this._options.checked);
          this._notify('onCheckedChange', this._options.checked);
       },
 
