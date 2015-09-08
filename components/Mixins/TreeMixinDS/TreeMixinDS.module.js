@@ -278,9 +278,15 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       },
 
       _elemClickHandlerInternal: function (data, id, target) {
-         if ($(target).hasClass('js-controls-TreeView__expand') && $(target).hasClass('has-child')) {
-            var nodeID = $(target).closest('.controls-ListView__item').data('id');
+         var nodeID = $(target).closest('.controls-ListView__item').data('id');
+         if ($(target).hasClass('js-controls-TreeView__expand')) {
             this.toggleNode(nodeID);
+         }
+         else {
+            if ((this._options.allowEnterToFolder) && ((data.get(this._options.hierField + '@')))){
+               this.setCurrentRoot(nodeID);
+               this.reload();
+            }
          }
       }
 
