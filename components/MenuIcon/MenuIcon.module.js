@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
          }
       },
       _dataLoadedCallback : function() {
-         this.hidePicker();
+         if (this._picker) this.hidePicker();
       }
 
    });
