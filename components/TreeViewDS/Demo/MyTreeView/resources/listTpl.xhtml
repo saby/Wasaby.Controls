@@ -1,0 +1,4 @@
+<div class="MyTreeView__list{{?it.item.get('parent@')}} MyTreeView__list__folder{{?}}">
+   {{?it.item.get("parent@")}}<div class="controls-TreeView__expand js-controls-TreeView__expand" style="margin-right: 3px;"></div>{{?}}
+   <div class="MyTreeView__list__content"><img class="MyTreeView__list__img" src="{{=it.item.get('image')}}"/>{{=it.item.get('title')}}</div>
+</div>
