@@ -106,7 +106,9 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
             this._container.removeClass('controls-Picker__show');
             this._hasHeader = false;
          }
-         this.hidePicker();
+         if (this._picker){
+            this.hidePicker();
+         }
       }
    });
 
