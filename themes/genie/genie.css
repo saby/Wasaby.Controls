@@ -2316,10 +2316,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGridView .controls-DataGridView__td__checkBox .controls-ListView__itemCheckBox {
   margin: 3px 0 0 0;
 }
-.controls-DataGridView.controls-DataGridView__showCheckBoxes .controls-ListView__itemCheckBox {
+.controls-DataGridView.controls-DataGridView__showCheckBoxes.controls-ListView__multiselect .controls-ListView__itemCheckBox {
   background: url('img/CheckBox-sprite.png') 0 0px;
 }
-.controls-DataGridView.controls-DataGridView__hideCheckBoxes .controls-DataGridView__colgroup col:first-child {
+.controls-DataGridView.controls-DataGridView__hideCheckBoxes.controls-ListView__multiselect .controls-DataGridView__colgroup col:first-child {
   width: 4px;
 }
 .controls-DataGridView__addInPlace-container {
@@ -2410,6 +2410,7 @@ input[type="reset"]::-moz-focus-inner {
   color: #313e78;
   text-align: center;
   margin-top: 7px;
+  line-height: 32px;
 }
 .controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder:hover .controls-CompositeView__tileTitle {
   text-decoration: underline;
@@ -2445,6 +2446,26 @@ input[type="reset"]::-moz-focus-inner {
   float: none;
   margin-left: -1px;
 }
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__item__selected:not(.controls-ListView__folder),
+.controls-CompositeView .controls-CompositeView__listItem.controls-ListView__item__selected.controls-ListView__folder .controls-CompositeView__tileTitle {
+  background-image: url('img/rowSelect.png');
+  background-position: left top;
+  background-repeat: repeat-y;
+}
+.controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__item__selected .controls-CompositeView__tileTitle {
+  background-image: url('img/rowSelect.png');
+  background-position: left top;
+  background-repeat: repeat-y;
+}
+.controls-CompositeView .controls-ListView__item__selected .controls-ListView__item-title {
+  background-image: url('img/rowSelect.png');
+  background-position: left top;
+  background-repeat: repeat-y;
+}
+.controls-CompositeView .controls-ListView__item-title {
+  height: 27px;
+  line-height: 27px;
+}
 .controls-CompositeView .controls-CompositeView__tileItem {
   display: inline-block;
   vertical-align: top;
@@ -2476,6 +2497,7 @@ input[type="reset"]::-moz-focus-inner {
   width: 120px;
 }
 .controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__folder .controls-CompositeView__tileTitle {
+  line-height: 32px;
   font-weight: 600;
   font-size: 15px;
   color: #313e78;
@@ -2701,6 +2723,25 @@ input[type="reset"]::-moz-focus-inner {
 .controls-operationsPanel .controls-operationsPanel__wrapper .controls-operationsPanel__actionType-selection,
 .controls-operationsPanel .controls-operationsPanel__wrapper .controls-operationsPanel__actionType-all {
   margin: 0 4px;
+}
+.controls-OperationsPanelButton {
+  border-radius: 7px;
+  width: 24px;
+  height: 24px;
+}
+.controls-OperationsPanelButton.ws-enabled {
+  cursor: pointer;
+}
+.controls-OperationsPanelButton.ws-enabled:hover {
+  background-color: #e6ecf5;
+}
+.controls-OperationsPanelButton .controls-OperationsPanelButton__icon {
+  position: relative;
+  left: 4px;
+  top: 4px;
+}
+.controls-OperationsPanelButton.controls-Checked__checked .controls-OperationsPanelButton__icon:before {
+  content: "\e67b";
 }
 .controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGridView {
   padding: 0 0 5px 0;
