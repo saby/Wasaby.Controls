@@ -119,8 +119,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          if (!this._header) {
             this._createHeader();
          }
-         this._setWidth();
          MenuButton.superclass.togglePicker.call(this);
+         this._setWidth();
          this._header.css({
             left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 16,
             top: (this._headerAlignment.vertical == 'top') ? this._container.offset().top + 1 : this._container.offset().top - 6,
