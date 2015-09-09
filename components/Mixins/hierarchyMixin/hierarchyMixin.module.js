@@ -129,11 +129,16 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          this._hier = this._getHierarchy(this._dataSet, key);
          //узел грузим с 0-ой страницы
          this._offset = 0;
+         //TODO: нужно избавиться от флага когда будут готовы биндинги
          this._rootChanged = this._curRoot !== key;
          this._curRoot = key;
          this.setSelectedKey(null);
       },
 
+      //TODO:После каждого релоада проверяется флаг _rootChanged и если флаг взведен, 
+      //то запускается перерисовка хлебных крошек. Это сделано для того, что изначально 
+      //грид может открыться на какой то внутренней папке, где надо рисовать хлебные крошки 
+      //Избавиться от всего этого когда будут готовы биндинги
       _dataLoadedCallback: function(){
          var path = this._dataSet.getMetaData().path,
             hierarchy = this._hier;
