@@ -118,8 +118,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          if (!this._header) {
             this._createHeader();
          }
-         this._setWidth();
          MenuButton.superclass.togglePicker.call(this);
+         this._setWidth();
          this._header.css({
             left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 12,
             top: (this._headerAlignment.vertical == 'top') ? this._container.offset().top + 2 : this._container.offset().top - 7,
@@ -188,7 +188,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             this._container.removeClass('controls-Picker__show');
             $('.controls-MenuButton__header', this._container).remove();
          }
-         if (this._picker) {
+         if (this._picker){
             this.hidePicker();
          }
       }
