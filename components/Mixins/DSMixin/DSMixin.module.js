@@ -456,9 +456,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (this._dataSet) {
             this._clearItems();
             var records = this._getRecordsForRedraw(),
-              container = this._getItemsContainer();
+               container = this._getItemsContainer();
             if (!records.length && this._options.emptyHTML) {
-                emptyHTML = $('<span></span>').append(this._options.emptyHTML).addClass(' controls-ListView__EmptyData');
+                emptyHTML = $('<div/>').addClass('controls-ListView__EmptyData')
+                                       .append(this._options.emptyHTML);
               $('.controls-ListView__EmptyData', container).remove();
               container.append(emptyHTML);
             } else {
