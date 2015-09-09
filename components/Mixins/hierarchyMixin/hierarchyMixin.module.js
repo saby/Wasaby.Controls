@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
     */
    var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
       $protected: {
-         _rootChanged: true,
+         _rootChanged: false,
          _curRoot: null,
          _hier: [],
          _options: {
@@ -140,7 +140,10 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          if (!hierarchy.length && path){
             hierarchy = this._getHierarchy(path, this._curRoot);
          }
-         if (this._rootChanged) this._notify('onSetRoot', this._curRoot, hierarchy);
+         if (this._rootChanged) {
+            this._notify('onSetRoot', this._curRoot, hierarchy);
+            this._rootChanged = false;
+         }
       },
 
       _getHierarchy: function(dataSet, key){

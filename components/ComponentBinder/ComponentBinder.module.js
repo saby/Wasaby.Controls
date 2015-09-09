@@ -56,6 +56,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          //DataGridView._filter = filter;
          //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
          gridView.reload(filter, gridView._sorting, 0);
+         this._path = this._pathDSRawData;
          BreadCrumbs.getDataSet().setRawData(this._pathDSRawData);
          BreadCrumbs._redraw();
       } else {
@@ -121,6 +122,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                self._currentRoot = null;
             }
             if (!checkedText[0]) {
+               self._currentRoot = self._lastRoot;
                resetGroup.call(self, gridView, searchParamName, BreadCrumbs);
             }
          });
@@ -184,6 +186,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                if (self._path.length) self._path.splice(self._path.length - 1);
                hierarchyGridView.setCurrentRoot(previousRoot ? previousRoot[breadCrumbs._options.keyField] : null);
             }
+            hierarchyGridView.reload();
          }
 
          hierarchyGridView.subscribe('onSetRoot', function(event, id, hier){
@@ -229,7 +232,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
          backButton.subscribe('onActivated', function(){
             setPreviousRoot();
-            hierarchyGridView.reload();
          });
       }
    });
