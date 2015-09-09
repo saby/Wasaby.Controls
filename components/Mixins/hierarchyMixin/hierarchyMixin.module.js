@@ -7,7 +7,14 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
     */
    var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
       $protected: {
-         _rootChanged: true,
+         //TODO FixMe этот флаг был введен для синхронизации иерархического представления и хлебных крошек
+         //вместо того, чтобы рассылать событие о смене корня при проваливании в папку
+         //нам приходиться ждать загрузки данных, потом понимать причину загрузки данных(этот флаг)
+         //и после загрузки уже рассылать информацию о хлебных кношках, которые пришли в запросе с данными
+         //по хорошему мы должны выносить запрос данных в некий контроллер, который разложит состояние
+         //в представление данных и в хлебные кношки.
+         //В таком случае этот флаг будет не нужен
+         _rootChanged: false,
          _curRoot: null,
          _hier: [],
          _options: {
@@ -145,7 +152,10 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          if (!hierarchy.length && path){
             hierarchy = this._getHierarchy(path, this._curRoot);
          }
-         if (this._rootChanged) this._notify('onSetRoot', this._curRoot, hierarchy);
+         if (this._rootChanged) {
+            this._notify('onSetRoot', this._curRoot, hierarchy);
+            this._rootChanged = false;
+         }
       },
 
       _getHierarchy: function(dataSet, key){
