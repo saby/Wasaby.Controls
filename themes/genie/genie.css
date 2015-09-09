@@ -883,7 +883,7 @@ input[type="reset"]::-moz-focus-inner {
   background: #00c795;
 }
 .controls-MenuItem:hover .controls-MenuItem__icon {
-  color: #00c795 !important;
+  color: #ffffff;
 }
 .controls-MenuItem .controls-MenuItem__content {
   position: relative;
