@@ -308,11 +308,11 @@ define('js!SBIS3.CONTROLS.StaticSource', [
        * @returns {Array}
        */
       _applyPaging: function (data, offset, limit) {
-         if (offset === undefined && limit === undefined) {
+         offset = offset || 0;
+
+         if (offset === 0 && limit === undefined) {
             return data;
          }
-
-         offset = offset || 0;
 
          if (limit === undefined) {
             limit = this.getStrategy().getCount(data);

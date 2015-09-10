@@ -69,7 +69,10 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
         * @param newRaw
         */
       replaceAt: function (data, index, newRaw) {
-         data.d[index] = newRaw;
+         if (!data.s.length && newRaw.s.length) {
+            data.s = newRaw.s;
+         }
+         data.d[index] = newRaw.d;
       },
        /**
         *
