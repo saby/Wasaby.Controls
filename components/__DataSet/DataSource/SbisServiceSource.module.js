@@ -16,6 +16,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
     * @class SBIS3.CONTROLS.SbisServiceSource
     * @extends SBIS3.CONTROLS.BaseSource
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @example
     * <pre>
     *     var dataSource = new SbisServiceSource({

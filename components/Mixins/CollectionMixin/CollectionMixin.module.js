@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
     * @mixin SBIS3.CONTROLS.CollectionMixin
+    * @author Крайнов Дмитрий Олегович
     */
 
    var CollectionMixin = {
@@ -31,10 +32,16 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
              *     <option name="keyField">Идентификатор</option>
              * </pre>
              * @see items
+             * @see dispalyField
              */
             keyField : null,
             /**
              * @cfg {String} Название поля из набора, отображающее данные
+             *  @example
+             * <pre>
+             *     <option name="displayField">Заголовок</option>
+             * </pre>
+             * @see keyField
              */
             displayField: '',
              /**
@@ -67,6 +74,7 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
              *      </options>
              * </pre>
              * @see keyField
+             * @see displayField
              */
             items: undefined
          }

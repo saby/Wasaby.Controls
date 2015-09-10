@@ -183,8 +183,10 @@
       }
    }
    &.controls-DataGridView__showCheckBoxes {
-      .controls-ListView__itemCheckBox {
-         background: @check-box-icon-bg;
+      &.controls-ListView__multiselect {
+         .controls-ListView__itemCheckBox {
+            background: @check-box-icon-bg;
+         }
       }
    }
    &.controls-DataGridView__hideCheckBoxes {

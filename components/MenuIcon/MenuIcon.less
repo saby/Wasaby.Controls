@@ -1,36 +1,64 @@
 .controls-MenuIcon {
-  position: relative;
-
-  .controls-MenuIcon__header {
-    background: @menu-icon-header-bg;
-
-    &.controls-MenuIcon__header-hidden {
-      display: none;
-    }
-
-    .controls-MenuIcon__headerLeft {
+   position: relative;
+   padding-right: 6px;
+   &.controls-IconButton__round-border{
+      padding-right: 0;
+      .controls-MenuButton__arrowDown {
+         display: none;
+      }
+   }
+   &.icon-24{
+      .controls-MenuButton__arrowDown {
+         top: 5px;
+      }
+   }
+   .controls-MenuButton__arrowDown {
       position: absolute;
-      width: @menu-icon-header-left-width;
-      height: @menu-icon-header-left-height;
-      top: @menu-icon-header-left-top-offset;
-      left: @menu-icon-header-left-left-offset;
-      background: @menu-icon-header-left-bg;
-    }
-
-    .controls-MenuIcon__headerRight {
-      position: absolute;
-      width: @menu-icon-header-right-width;
-      height: @menu-icon-header-right-height;
-      top: @menu-icon-header-right-top-offset;
-      left: @menu-icon-header-right-left-offset;
-      background: @menu-icon-header-right-bg;
-    }
-  }
+      display: inline-block;
+      width: @menu-link-arrow-width;
+      height: @menu-link-arrow-height;
+      right: -2px;
+      top: 1px;
+      border-width: @menu-link-border-width;
+      border-style: @menu-link-border-style;
+      border-color: @menu-link-border-color;
+      font-size: 10px!important;
+   }
 }
-
 // Menu
 .controls-MenuIcon__Menu {
-  margin-top: @menu-icon-menu-top-margin;
-  margin-left: @menu-icon-menu-left-margin;
-  background: @menu-icon-menu-bg;
+   padding: @menu-icon-menu-padding;
+   margin: @menu-icon-menu-margin;
+   background: @menu-icon-menu-bg;
+   .controls-MenuItem {
+      padding-left: @menu-item-small-padding-left;
+   }
+   &.controls-Menu__big-header{
+      .controls-Menu__header-caption{
+         top: 3px;
+         position: relative;
+      }
+   }
+   &.controls-IconButton__round-border{
+      margin: -5px 0 0 -6px;
+      .controls-Menu__header{
+         .icon-16, .icon-24{
+            .round-button-mixin(@default-color);
+            padding-right: 0;
+            position: relative;
+            top: -2px;
+            left: -2px;
+         }
+         .controls-Menu__header-caption{
+            top: 3px;
+            position: relative;
+         }
+      }
+      .controls-MenuItem{
+         padding: @menu-item-default-padding;
+         &.controls-Menu__hasChild{
+            padding-right: @menu-item-expand-padding-right
+         }
+      }
+   }
 }

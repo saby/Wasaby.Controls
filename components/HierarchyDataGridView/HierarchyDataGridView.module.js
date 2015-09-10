@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
     * @class SBIS3.CONTROLS.HierarchyDataGridView
     * @extends SBIS3.CONTROLS.DataGridView
     * @mixes SBIS3.CONTROLS.hierarchyMixin
+    * @author Крайнов Дмитрий Олегович
     * @control
     * @public
     * @initial

@@ -1,0 +1,150 @@
+<div>
+    <div>
+        <span style="margin-left:10px;font-size: 13px;font-weight: normal;font-family:Tahoma; color: #999999">Отбираются</span>
+
+        <component data-component="SBIS3.CONTROLS.TextBox" style="width:185px; margin:0 15px; vertical-align:text-top;">
+            <option name="text" bind="clientName" nonexistent=""/>
+        </component>
+    </div>
+
+    <div>
+        <component data-component="SBIS3.CONTROLS.ComboBox" style="width:185px; margin:0 15px; vertical-align:text-top;">
+            <options name="items" type="array">
+                <options>
+                    <option name="key" value="none"/>
+                    <option name="title">Не выбрано</option>
+                </options>
+                <options>
+                    <option name="key" value="1"/>
+                    <option name="title">Без НДС</option>
+                </options>
+                <options>
+                    <option name="key" value="2"/>
+                    <option name="title">С НДС</option>
+                </options>
+            </options>
+            <option name="keyField">key</option>
+            <option name="displayField">title</option>
+            <option name="editable">false</option>
+            <option name="mode">click</option>
+            <option name="selectedKey" value="1" bind="NDS" nonexistent="none"/>
+            <option name="text" bind="NDSText" direction="fromProperty" oneWay="true"/>
+        </component>
+    </div>
+
+    <div>
+        <component data-component="SBIS3.CONTROLS.ComboBox" style="width:185px; margin:5px 0px 0px 101px;">
+            <options name="items" type="array">
+                <options>
+                    <option name="key" value="none"/>
+                    <option name="title">Не выбрано</option>
+                </options>
+                <options>
+                    <option name="key">1</option>
+                    <option name="title">Все (для продажи и нет)</option>
+                </options>
+                <options>
+                    <option name="key">2</option>
+                    <option name="title">Не для продажи</option>
+                </options>
+                <options>
+                    <option name="key">3</option>
+                    <option name="title">Для продажи</option>
+                </options>
+            </options>
+            <option name="keyField">key</option>
+            <option name="displayField">title</option>
+            <option name="editable">false</option>
+            <option name="mode">click</option>
+
+            <option name="selectedKey" value="1" bind="selling" nonexistent="none"/>
+            <option name="text" bind="sellingText" direction="fromProperty" oneWay="true"/>
+        </component>
+    </div>
+
+    <div>
+        <component data-component="SBIS3.CONTROLS.ComboBox" style="width:185px; margin: 5px 0 0 101px;">
+            <options name="items" type="array">
+                <options>
+                    <option name="key" value="none"/>
+                    <option name="title">Не выбрано</option>
+                </options>
+                <options>
+                    <option name="key">1</option>
+                    <option name="title">Используемые</option>
+                </options>
+                <options>
+                    <option name="key">2</option>
+                    <option name="title">Неиспользуемые</option>
+                </options>
+                <options>
+                    <option name="key">3</option>
+                    <option name="title">Все (используемые и нет)</option>
+                </options>
+            </options>
+            <option name="keyField">key</option>
+            <option name="displayField">title</option>
+            <option name="editable">false</option>
+            <option name="mode">click</option>
+
+            <option name="selectedKey" value="1" bind="using" nonexistent="none"/>
+            <option name="text" bind="usingText" direction="fromProperty" oneWay="true"/>
+        </component>
+    </div>
+
+    <div>
+        <component data-component="SBIS3.CORE.FieldLink" class="warehouse-NomenclatureDataGrid__fieldLink" style="margin: 0 15px 6px 15px">
+            <option name="renderStyle">inputAndLink</option>
+            <option name="title">Тип</option>
+            <option name="linkedDisplayField">Название</option>
+            <option name="linkName">ТипНоменклатуры</option>
+            <option name="name">ТипНоменклатуры</option>
+            <option name="selectRecordsMode">newDialog</option>
+            <option name="selectionType">leaf</option>
+            <option name="value" bind="nomenclatureTypeID" direction="fromProperty" oneWay="true"/>
+            <option name="StringValue" bind="nomenclatureTypeText" direction="fromProperty" oneWay="true"/>
+            <options name="dictionaries" type="array">
+                <options>
+                    <option name="editMode">newFloatArea</option>
+                    <option name="formatMethod">ТипНоменклатуры.Список</option>
+                    <option name="keyField">@ТипНоменклатуры</option>
+                    <option name="name">ТипНоменклатуры</option>
+                    <option name="objectName">ТипНоменклатуры</option>
+                    <option name="template">js!SBIS3.CONTROLS.Demo.FilterButtonContentLinkSelect</option>
+                    <option name="readOnly" type="boolean">false</option>
+                </options>
+            </options>
+            <options name="suggestSettings">
+                <option name="keyField">@ТипНоменклатуры</option>
+                <option name="inputTooltip">Выбрать тип</option>
+                <option name="tooltipInside" type="boolean">true</option>
+                <option name="readMethodName">Прочитать</option>
+                <options name="processField" type="array">
+                    <option>Название</option>
+                </options>
+                <options name="filter" type="array">
+                    <option>СтрокаПоиска</option>
+                </options>
+                <options name="display">
+                    <option name="usePaging">full</option>
+                    <options name="columns" type="array">
+                        <options>
+                            <option name="field">Название</option>
+                            <option name="fixedSize" type="boolean">false</option>
+                            <option name="title">Название</option>
+                            <option name="width">89</option>
+                        </options>
+                    </options>
+                </options>
+                <options name="dataSource">
+                    <options name="readerParams">
+                        <option name="queryName">List</option>
+                        <option name="linkedObject">ТипНоменклатуры</option>
+                    </options>
+                </options>
+                <option name="rowsCount">5</option>
+            </options>
+        </component>
+    </div>
+
+</div>

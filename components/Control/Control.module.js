@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.Control', ['js!SBIS3.CORE.Control'], function(Control)
     * Объединение помогает однозначно понимать от какого класса должны наследоваться все остальные контролы.
     * @class SBIS3.CONTROLS.Control
     * @extends $ws.proto.Control
+    * @author Крайнов Дмитрий Олегович
     */
 
    return Control.Control.extend( /** @lends SBIS3.CONTROLS.Control.prototype */{

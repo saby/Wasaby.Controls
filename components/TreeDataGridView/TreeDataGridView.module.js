@@ -245,12 +245,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                      this._options.arrowActivatedHandler.apply(this, arguments);
                   }
                } else if (data.get(this._options.hierField + '@')) {
-                  var self = this;
-                  self.setCurrentRoot(nodeID);
-                  self.reload();
+                  this.setCurrentRoot(nodeID);
+                  this.reload();
                }
             } else {
-               this.toggleNode(nodeID);
+               if (data.get(this._options.hierField + '@')) {
+                  this.toggleNode(nodeID);
+               }
             }
          }
       },

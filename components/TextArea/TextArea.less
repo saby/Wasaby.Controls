@@ -10,6 +10,7 @@
    .box-sizing(border-box);
 
    .controls-TextArea__inputField {
+      overflow: auto;
       font: @text-area-field-font;
       color: @text-area-field-text-color;
       display: block;
@@ -24,7 +25,6 @@
       // Internet Explorer 10+ placeholder
       .placeholder();
    }
-
    &.ws-has-focus {
       border-width: @text-area-focus-border-width;
       border-style: @text-area-focus-border-style;

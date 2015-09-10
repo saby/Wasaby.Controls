@@ -23,10 +23,12 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     *      </options>
     * </component>
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @category Buttons
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.MenuButtonMixin
+    *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
     * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment
@@ -50,6 +52,9 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          _headerAlignment: {
             horizontal: 'left',
             vertical: 'top'
+         },
+         _options: {
+            pickerClassName: 'controls-MenuButton__Menu'
          }
       },
 
@@ -61,7 +66,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             if (self._header) {
                self._header.css({
                   left: (self._headerAlignment.horizontal == 'left') ? self._container.offset().left : self._container.offset().left - 16,
-                  top: (self._headerAlignment.vertical == 'top') ? self._container.offset().top + 1 : self._container.offset().top - 6
+                  top: (self._headerAlignment.vertical == 'top') ? self._container.offset().top + 2 : self._container.offset().top - 7
                });
             }
          });
@@ -78,28 +83,22 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
              bottom = alignment.verticalAlign.side == 'bottom';
          this._header.toggleClass('controls-MenuButton__header-revert-horizontal', right).toggleClass('controls-MenuButton__header-revert-vertical', bottom);
          if (right){
-            this._header.css('left', this._container.offset().left - 16);
+            this._header.css('left', this._container.offset().left - 12);
             this._headerAlignment.horizontal = 'right';
          } else {
             this._header.css('left', this._container.offset().left);
             this._headerAlignment.horizontal = 'left';
          }
          if (bottom){
-            this._header.css('top', this._container.offset().top - 6);
+            this._header.css('top', this._container.offset().top - 7);
             this._headerAlignment.vertical = 'bottom';
          } else {
-            this._header.css('top', this._container.offset().top + 1);
+            this._header.css('top', this._container.offset().top + 2);
             this._headerAlignment.vertical = 'top';
          }
       },
 
-      //TODO в 3.7.2 ждать починки от Вити
-      setEnabled: function (enabled) {
-         MenuButton.superclass.setEnabled.apply(this, arguments);
-         if (this._picker) {
-            this._picker.setEnabled(enabled);
-         }
-      },
+
       _clickHandler: function(){
          if (this._dataSet.getCount() > 1) {
             this._container.addClass('controls-Checked__checked');
@@ -122,10 +121,13 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          MenuButton.superclass.togglePicker.call(this);
          this._setWidth();
          this._header.css({
-            left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 16,
-            top: (this._headerAlignment.vertical == 'top') ? this._container.offset().top + 1 : this._container.offset().top - 6,
-            'z-index': this._picker._container.css('z-index') + 1
+            left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 12,
+            top: (this._headerAlignment.vertical == 'top') ? this._container.offset().top + 2 : this._container.offset().top - 7,
+            'z-index': parseInt(this._picker._container.css('z-index'), 10) + 1
          });
+         if (this._picker) {
+            this._setWidth();
+         }
       },
 
       _createHeader: function(){
@@ -134,7 +136,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
                                   <i class="controls-MenuButton__headerCenter"></i>\
                                   <i class="controls-MenuButton__headerRight"></i>\
                                </span>');
-         $('.controls-MenuButton__headerCenter', this._header).width(this._container.outerWidth() - 23);
+         $('.controls-MenuButton__headerCenter', this._header).width(this._container.outerWidth() - 26);
          this._header.css({
             width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
             height: this._container.outerHeight()
@@ -147,6 +149,19 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          this._picker.getContainer().css({
             'min-width': self._container.outerWidth() - this._border + 20 //ширина выступающей части обводки
          });
+         if (this._header) {
+            $('.controls-MenuButton__headerCenter', this._header).width(this._container.outerWidth() - 26);
+         }
+      },
+
+      _initializePicker: function(){
+         MenuButton.superclass._initializePicker.call(this);
+         var self = this;
+         this._picker._oppositeCorners.tl.horizontal.top = 'tr';
+         this._picker._oppositeCorners.tr.horizontal.top = 'tl';
+         this._picker.subscribe('onDrawItems', function(){
+            self._picker.recalcPosition(true);
+         });
       },
 
       _setPickerContent: function(){
@@ -154,7 +169,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          this._picker.subscribe('onClose', function(){
             self._closeHandler();
          });
-         this._picker._container.addClass('controls-MenuButton__Menu');
       },
 
       _closeHandler: function(){

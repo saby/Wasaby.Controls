@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.TreeView', ['js!SBIS3.CONTROLS.ListViewOld', 'js!SBIS3
     * @extends SBIS3.CONTROLS.ListViewOld
     * @mixes SBIS3.CONTROLS.TreeMixin
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @control
     *
     */

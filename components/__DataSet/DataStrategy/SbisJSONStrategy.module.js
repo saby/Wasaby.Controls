@@ -6,10 +6,10 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
     /**
      *
      * Позволяет работать с массивом объектов на бизнес-логике.
-     * @author Мануйлов Андрей
      * @class SBIS3.CONTROLS.SbisJSONStrategy
      * @extends SBIS3.CONTROLS.IDataStrategy
      * @public
+     * @author Крайнов Дмитрий Олегович
      */
 
    var SbisJSONStrategy = IDataStrategy.extend(/** @lends SBIS3.CONTROLS.SbisJSONStrategy.prototype */{
@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
          for (var i = 0; i < length; i++) {
             //FixMe: допущение что ключ на первой позиции + там массив приходит
             if (d[i][0] instanceof  Array)
-               _indexId[i] = d[i][0][0];
+               _indexId[i] = d[i][0].length > 1 ? d[i][0].join(',') : d[i][0][0];
             else {
                _indexId[i] = d[i][0]
             }
@@ -188,12 +188,14 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
       },
        /**
         *
-        * @param filter
+        * @param record
+        * @param rawKey
         * @returns {{d: Array, s: Array}}
         */
       getParentKey: function (record, rawKey) {
          // так как c БЛ приходит массив
-         return record.get(rawKey) instanceof Array ? record.get(rawKey)[0] : record.get(rawKey);
+         var key = record.get(rawKey);
+         return key instanceof Array ? (key.length > 1 ? key.join(',') : key[0]) : key;
       },
 
       prepareFilterParam: function (filter) {

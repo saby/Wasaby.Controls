@@ -173,3 +173,8 @@
   -ms-transform-origin: @x @y;
   -o-transform-origin: @x @y;
 }
+.vertical-center-mixin(@padding-top, @height){
+   position: absolute;
+   top: 50%;
+   margin-top: -(@height / 2 - @padding-top);
+}

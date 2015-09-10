@@ -29,6 +29,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
     * компонентов (диалоговые окна, плавающие панели, подсказки).
     * При подмешивании этого миксина в контрол он вырезается из своего местоположения и вставляется в Body.
     * @mixin SBIS3.CONTROLS.PopupMixin
+    * @author Крайнов Дмитрий Олегович
     * @public
     */
    var PopupMixin = /** @lends SBIS3.CONTROLS.PopupMixin.prototype */ {
@@ -114,7 +115,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
 
       $constructor: function () {
-         this._publish('onClose', 'onAlignmentChange');
+         this._publish('onClose', 'onShow', 'onAlignmentChange');
          var self = this,
             container = this._container;
          container.css({
@@ -515,8 +516,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             oppositeSide = (this._options.horizontalAlign.side == 'left') ? 'right' : 'left';
             offset = this._getGeneralOffset(this._options.verticalAlign.side, oppositeSide, oppositeCorner);
          }
-         offset.top += (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom;
-         offset.left += (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right;
+         offset.top += (this._options.verticalAlign.offset || 0);
+         offset.left += (this._options.horizontalAlign.offset || 0);
          return offset;
       },
 
@@ -748,6 +749,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             this._zIndex = $ws.single.WindowManager.acquireZIndex(this._options.isModal);
             $ws.single.WindowManager.setVisible(this._zIndex);
             this._container.css('zIndex', this._zIndex);
+
+            this._notify('onShow');
          },
 
          hide: function () {

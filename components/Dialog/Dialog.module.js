@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.Dialog', ['js!SBIS3.CORE.Control'], function(Control) 
     * @class SBIS3.CONTROLS.Dialog
     * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS.PopupMixin
+    * @author Крайнов Дмитрий Олегович
     */
 
    var Dialog = Control.Control.extend( /** @lends SBIS3.CONTROLS.Dialog.prototype*/ {

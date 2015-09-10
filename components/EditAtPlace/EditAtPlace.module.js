@@ -19,7 +19,8 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
        * @control
        * @public
        * @category Inputs
-       * @mixes SBIS3.CONTROLS._PickerMixin
+       * @mixes SBIS3.CONTROLS.PickerMixin
+       * @author Крайнов Дмитрий Олегович
        */
 
       var EditAtPlace = CompoundControl.extend([_PickerMixin, _DataBindMixin], /** @lends SBIS3.CONTROLS.EditAtPlace.prototype */{

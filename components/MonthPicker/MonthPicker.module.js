@@ -19,48 +19,85 @@ define(
 
    /**
     * Контрол выбор месяца и года, или только года, с выпадающей вниз панелью.
-    * Не наследуется от поля ввода, потому что там в принципе не требуется текстовый ввод
+    * Не наследуется от поля ввода, потому что там в принципе не требуется текстовый ввод.
     * @class SBIS3.CONTROLS.MonthPicker
     * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @control
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyMonthPicker
-    * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol
+    *
+    * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
+    * @ignoreOptions extendedTooltip
+    *
+    * @ignoreMethods applyEmptyState applyState getClassName getEventHandlers getEvents getExtendedTooltip getOwnerId
+    * @ignoreMethods getLinkedContext getOwner getStateKey getUserData hasEvent hasEventHandlers makeOwnerName once
+    * @ignoreMethods sendCommand setClassName setExtendedTooltip setOpener setStateKey setUserData subscribe unsubscribe
+    * @ignoreMethods subscribeOnceTo unbind setProperties setProperty getProperty
+    *
+    * @ignoreEvents onChange onClick onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onStateChange
+    * @ignoreEvents onTooltipContentRequest onPropertyChanged
     */
 
    var MonthPicker = Control.Control.extend( [PickerMixin], /** @lends SBIS3.CONTROLS.MonthPicker.prototype */{
       _dropdownTpl: DropdownTpl,
       _dotTplFn: dotTplFn,
-
+       /**
+        * @event onDateChange Срабатывает при изменении даты.
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {String} date Дата.
+        * @example
+        * <pre>
+        *    var dateChangeFn = function(event) {
+        *       if (this.getDate().getTime() < minDate.getTime()) {
+        *          buttonSend.setEnabled(false);
+        *          title.setText('Указана прошедшая дата: проверьте нет ли ошибки');
+        *       }
+        *    };
+        *    monthPicker.subscribe('onDateChange', dateChangeFn);
+        * </pre>
+        * @see setText
+        * @see setValue
+        */
       $protected: {
          _options: {
+
             /**
-             * @typedef {Object} ModeEnum
-             * @variant month только месяц
-             * @variant year месяц и год
-             */
-            /**
-             * @cfg {ModeEnum} ввод только месяца или месяца и года (month/year)
+             * @cfg {String} Режим ввода
+             * @remark
+             * Значение данной опции влияет на отображение контрола и выводимые им данные:
+             * <ul>
+             *    <li>только год,</li>
+             *    <li>месяц и год.</li>
+             * </ul>
              * @example
              * <pre>
              *     <option name="mode">year</option>
              * </pre>
+             * @variant month только месяц
+             * @variant year месяц и год
              */
             mode: 'month',
             /**
-             * @cfg {String|Date} Значение для установки по умолчанию (в последствии в нем хранится текущее значение)
-             * Строка должна быть формата [MM.]YYYY (месяц -- одна или две цифры, год -- от 1-ой до 4-х цифр)
+             * @cfg {String|Date} Значение для установки по умолчанию
+             * @remark
+             * Строка должна быть формата ISO 8601.
              * В зависимости от режима работы, установленного в mode, возьмутся месяц и год, либо только год.
              * В дальнейшем используется для хранения текущего значения.
              * Значение всегда хранится с нулевым временем 00:00:00, и, в случае режима года, хранится первый день
-             * первого месяца, а в режиме месяца -- первый день данного месяца
+             * первого месяца, а в режиме месяца - первый день данного месяца.
+             * @example
+             * <pre>
+             *     <option name="date">2015-03-26T21:00:00.000Z</option>
+             * </pre>
              */
             date: '',
             /**
              * @cfg {String} формат визуального отображения месяца
-             * TODO на данный момент нигде не используется
+             * TODO проверить необходимость данной опции, определиться в рамках 3.7.3
+             * @noShow
              */
             monthFormat: ''
          },
@@ -194,8 +231,22 @@ define(
       },
 
       /**
-       * Установить режим ввода (месяц / месяц,год)
-       * @param {String} mode
+       * Метод установки/замены режим ввода (месяц / месяц,год)
+       * @param {String} mode Режим ввода. Возможные значения:
+       * <ul>
+       *    <li>только год,</li>
+       *    <li>месяц и год.</li>
+       * </ul>
+       * @example
+       * <pre>
+       *     //при отключении месяцев и повторном включении месяц не сохраняется
+       *     if (showMonths) {
+       *        monthPicker.setMode('month');
+       *     } else {
+       *        monthPicker.setMode('year');
+       *     }
+       * </pre>
+       * @see mode
        */
       setMode: function(mode){
          if( mode == 'year' || mode == 'month' ){
@@ -212,7 +263,21 @@ define(
       },
 
       /**
-       * Установить текущий месяц/год
+       * Установить текущий месяц/год.
+       * @example
+       * <pre>
+       *     var buttonToday = this.getChildControlByName("myButtonToday");
+       *     var activatedFn = function() {
+       *        monthPicker.setToday();
+       *     };
+       *     buttonToday.subscribe('onActivated', activatedFn);
+       * </pre>
+       * @see setNext
+       * @see setPrev
+       * @see getNextDate
+       * @see date
+       * @see setDate
+       * @see getDate
        */
       setToday: function() {
          this.setDate(new Date());
@@ -222,7 +287,15 @@ define(
        * Установить дату по полученному значению. Публичный метод.
        * Отличается от приватного метода _setDate тем, что генерирует событие
        * Может принимает либо строку формата 'число.число' или 'число', либо объект типа Date.
-       * @param value Строка или дата
+       * @param {String|Date} value Значение в виде строки или формата даты.
+       * @example
+       * <pre>
+       *    //Зададим март 2016
+       *    var startDate = new Date(2016,02);
+       *    monthPicker.setDate(startDate);
+       * </pre>
+       * @see date
+       * @see getDate
        */
       setDate: function(value) {
          value = value ? value : new Date();
@@ -327,14 +400,30 @@ define(
       },
 
       /**
-       * Установить следующий месяц/год
+       * Установить следующий месяц/год.
+       * @example
+       * <pre>
+       *     var buttonNext = this.getChildControlByName("myButtonNext");
+       *     var activatedFn = function() {
+       *        monthPicker.setNext();
+       *     };
+       *     buttonNext.subscribe('onActivated', activatedFn);
+       * </pre>
        */
       setNext: function() {
          this._changeDate(1);
       },
 
       /**
-       * Установить предыдущий месяц/год
+       * Установить предыдущий месяц/год.
+       * @example
+       * <pre>
+       *     var buttonPrev = this.getChildControlByName("myButtonPrev");
+       *     var activatedFn = function() {
+       *        monthPicker.setPrev();
+       *     };
+       *     buttonPrev.subscribe('onActivated', activatedFn);
+       * </pre>
        */
       setPrev: function() {
          this._changeDate(-1);
@@ -362,28 +451,68 @@ define(
 
       /**
        * Возвращает текущее значение даты.
+       * @remark
        * В случае года, возвращает дату 1-ого дня 1-ого месяца данного года.
-       * В случае месяца и года, возвращает дату 1-ого дня данного месяца данного года
-       * @returns {Date|*} Текущая дата
+       * В случае месяца и года, возвращает дату 1-ого дня данного месяца данного года.
+       * @returns {Date} Текущая дата.
+       * @example
+       * <pre>
+       *     //прибавим 1 год, сохранив месяц
+       *     var myDate = monthPicker.getDate();
+       *     myDate.setFullYear(oldDate.getFullYear() + 1);
+       *     monthPicker.setDate(myDate);
+       * </pre>
+       * @see setDate
+       * @see date
+       * @see getTextDate
+       * @see getInterval
        */
       getDate: function(){
          return this._options.date;
       },
 
       /**
-       * Взовращает дату в виде строки формата 'YYYY-MM-DD'
-       * @returns {string}
+       * Возвращает дату в виде строки формата 'YYYY-MM-DD'.
+       * @returns {String} Строковое представление текущего значения даты.
+       * @example
+       * <pre>
+       *     var strDate = monthPicker.getTextDate();
+       *     title.setText('Отчет на дату: '+strDate);
+       * </pre>
+       * @see date
+       * @see setDate
+       * @see getDate
+       * @see getInterval
        */
       getTextDate: function(){
          return this._options.date.toSQL();
       },
 
       /**
-       * Возвращает интервал даты (массив из двух дат), где, в случае 'месац, год':
-       * начало интервала - первый день данного месяца данного года, конец - последний день данного месяца данного года с временем 23:59:59
+       * Возвращает временной интервал.
+       * @remark
+       * В случае 'месяц, год':
+       * <ul>
+       *    <li>начало интервала - первый день данного месяца данного года,
+       *    <li>конец - последний день данного месяца данного года с временем 23:59:59.</li>
+       * <ul>
        * а в случае режима 'год':
-       * начало интервала - первый день данного года, конец - последний день данного года с временем 23:59:59
-       * @returns {*[]}
+       * <ul>
+       *    <li>начало интервала - первый день данного года,</li>
+       *    <li>конец - последний день данного года с временем 23:59:59.</li>
+       * </ul>
+       * @returns {*|[]} Массив из двух дат. В зависимости от режима ввода размах составляет либо месяц, либо год.
+       * @example
+       * <pre>
+       *     var dateInterval = monthPicker.getInterval();
+       *     var strFrom = dateInterval[0].toISOString().substring(0, 10);
+       *     var strTo   = dateInterval[1].toISOString().substring(0, 10);
+       *     title.setText('Отчет на период с ' + strFrom + ' по ' + strTo);
+       * </pre>
+       * @see date
+       * @see setDate
+       * @see getDate
+       * @see getTextDate
        */
       getInterval: function(){
          var
@@ -401,6 +530,7 @@ define(
        *    <li>года, если передан только параметр year</li>
        *    <li>месяца, если переданы оба параметра year и month</li>
        * </ul>
+       * @remark
        * с временем 00:00:00.000 (полночь, то есть абсолютное начало данного дня).
        * БАГ: если требуется получить первый день в январе, и если первое января в этом году выпадает на среду, тогда
        * время в дате возвратится некорректно из-за бага с переходом на летнее/зимнее время

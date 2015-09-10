@@ -11,6 +11,8 @@ define('js!SBIS3.Engine.NavigationAccOnline', ['js!SBIS3.CORE.Control'], functio
     * @class SBIS3.Engine.NavigationAccOnline
     * @extends $ws.proto.Control
     * @control
+    * @author Крайнов Дмитрий Олегович
+    * @public
     */
 
    var NavigationAccOnline = Control.Control.extend(/** @lends SBIS3.Engine.NavigationAccOnline.prototype */{

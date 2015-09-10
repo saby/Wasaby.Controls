@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.OperationsMark', [
    'js!SBIS3.CONTROLS.MenuLink',
-   'js!SBIS3.CONTROLS.CheckBox',
+   'js!SBIS3.CONTROLS.CheckBox'
 ], function(MenuLink, CheckBox) {
 
    /*TODO Пока что динамическое создание CheckBox, пока не слиты Control и CompaundControl!!!*/
