@@ -163,7 +163,7 @@ define('js!SBIS3.CONTROLS.StaticSource', [
        * В колбэке придёт js!SBIS3.CONTROLS.DataSet - набор отобранных элементов.
        */
       query: function (filter, sorting, offset, limit) {
-         var data = this._options.data.slice();
+         var data = $ws.core.clone(this._options.data);
          data = this._applyFilter(data, filter);
          data = this._applySorting(data, sorting);
          data = this._applyPaging(data, offset, limit);
