@@ -608,10 +608,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          $('.controls-DataGridView__tbody', this._container).before(head);
          this._thead = $('.controls-DataGridView__thead', this._container.get(0));
          this._colgroup = $('.controls-DataGridView__colgroup', this._container.get(0));
-         if (this._editInPlace) {
-            this._editInPlace.destroy();
-         }
-         this._createEditInPlace();
          if(this._options.startScrollColumn !== undefined) {
             this._initPartScroll();
             this.updateDragAndDrop();
@@ -657,8 +653,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       reload: function() {
-         if (this._editInPlace && this._editInPlace.isEditing()) {
-            this._editInPlace.finishEditing();
+         if (this._editInPlace) {
+            if (this._editInPlace.isEditing()) {
+               this._editInPlace.finishEditing();
+            }
+            //todo избавиться от этого кода, добавлено как решение для выпуска 3.7.2.200
+            //Если используется редактирование по месту, то пересоздаем его
+            this._editInPlace.destroy();
+            this._editInPlace = null;
+            this._initEditInPlace();
          }
          return DataGridView.superclass.reload.apply(this, arguments);
       },
