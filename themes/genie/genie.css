@@ -2034,10 +2034,12 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/CheckBox-sprite.png') 0 -16px;
 }
 .controls-ListView .controls-ListView__EmptyData {
-  width: 100px;
-  display: inline-block;
   color: #919191;
-  text-align: center;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin-left: 8px;
+  min-height: 33px;
 }
 .controls-ListView .controls-ListView__itemCheckBox {
   width: 16px;
@@ -2316,7 +2318,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGridView .controls-DataGridView__td__checkBox .controls-ListView__itemCheckBox {
   margin: 3px 0 0 0;
 }
-.controls-DataGridView.controls-DataGridView__showCheckBoxes.controls-ListView__multiselect .controls-ListView__itemCheckBox {
+.controls-DataGridView.controls-DataGridView__showCheckBoxes .controls-ListView__itemCheckBox {
   background: url('img/CheckBox-sprite.png') 0 0px;
 }
 .controls-DataGridView.controls-DataGridView__hideCheckBoxes.controls-ListView__multiselect .controls-DataGridView__colgroup col:first-child {
