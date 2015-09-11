@@ -259,7 +259,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                   viewingArea,
                   self = this,
                   area = this._areas[this._editing],
-                  newTarget = $('[data-id="' + area.record.getKey() + '"]')[editNextRow ? 'next' : 'prev']('.controls-ListView__item'),
+                  newTarget = $('tr[data-id="' + area.record.getKey() + '"]')[editNextRow ? 'next' : 'prev']('.controls-ListView__item'),
                   editAnotherRow = function() {
                      area.target = newTarget;
                      area.record = self._options.dataSet.getRecordByKey(newTarget.data('id'));
