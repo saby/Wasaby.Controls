@@ -258,19 +258,20 @@ define('js!SBIS3.CONTROLS.ListView',
          _keyboardHover: function (e) {
             var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
                selectedKey = this.getSelectedKey(),
-               selectedItem = $('[data-id="' + this.getSelectedKey() + '"]', this._container),
+               selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer()),
                nextItem = (selectedKey) ? items.eq(items.index(selectedItem) + 1) : items.eq(0),
                previousItem = (selectedKey) ? items.eq(items.index(selectedItem) - 1) : items.last();
 
 
             switch (e.which) {
                case $ws._const.key.up:
-                  previousItem = selectedKey ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
                   previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
                case $ws._const.key.down:
-                  nextItem = (selectedKey) ? selectedItem.next('.controls-ListView__item') : items.eq(0);
                   nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+                  break;
+               case $ws._const.key.enter:
+                  this._elemClickHandler(selectedKey, this._dataSet.getRecordByKey(selectedKey), selectedItem);
                   break;
                case $ws._const.key.space:
                   this.toggleItemsSelection([selectedKey]);

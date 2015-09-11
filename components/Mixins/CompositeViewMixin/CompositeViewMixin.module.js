@@ -80,9 +80,9 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
       },
       _calculateTileWidth: function(){
          var itemsContainer = this._getItemsContainer(),
-            tiles = $('.controls-CompositeView__tileItem:not(.controls-ListView__folder)', itemsContainer), 
+            tiles = $('.controls-CompositeView__tileItem:not(.controls-ListView__folder)', itemsContainer),
             folders = $('.controls-ListView__folder', itemsContainer);
-         if (!this._tileWidth) { 
+         if (!this._tileWidth) {
             this._tileWidth = $(tiles[0]).width();
          }
          if (!this._folderWidth) {
@@ -97,7 +97,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
             var itemsContainerWidth =  this._getItemsContainer().outerWidth(),
                tilesCount = Math.floor(itemsContainerWidth / oldWidth),
                newTileWidth = itemsContainerWidth / tilesCount;
-               
+
             if (itemsContainerWidth - tiles.length * oldWidth < oldWidth) {
                tiles.outerWidth(newTileWidth);
             }
@@ -162,10 +162,23 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
             return resultTpl;
          },
 
+         expandNode: function(parentFunc, key) {
+            if(this.getViewMode() === 'table') {
+               parentFunc.call(this, key);
+
+            }
+         },
+
+         collapseNode: function(parentFunc, key) {
+            if(this.getViewMode() === 'table') {
+               parentFunc.call(this, key);
+            }
+         },
+
          _getItemActionsPosition: function(parentFunc, item) {
             if (this._options.viewMode == 'table') {
                return parentFunc.call(this, item);
-            } else 
+            } else
             return {
                top: item.position.top,
                right: this._container[0].offsetWidth - (item.position.left + item.size.width)
