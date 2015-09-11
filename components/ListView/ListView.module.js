@@ -5,6 +5,7 @@
 define('js!SBIS3.CONTROLS.ListView',
    [
       'js!SBIS3.CORE.CompoundControl',
+      'js!SBIS3.CORE.CompoundActiveFixMixin',
       'js!SBIS3.CONTROLS.DSMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
       'js!SBIS3.CONTROLS.Selectable',
@@ -17,7 +18,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Pager',
       'is!browser?html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy'
    ],
-   function (CompoundControl, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, MoveHandlers, Pager, groupByTpl) {
+   function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, MoveHandlers, Pager, groupByTpl) {
 
       'use strict';
 
@@ -40,7 +41,7 @@ define('js!SBIS3.CONTROLS.ListView',
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
-      var ListView = CompoundControl.extend([DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem При переводе курсора мыши на другую запись
