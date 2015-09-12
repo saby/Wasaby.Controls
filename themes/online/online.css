@@ -1177,7 +1177,7 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   width: 28px;
   height: 30px;
-  margin: 0 0 0 -6px;
+  margin: 0 0 0 -5px;
   background: transparent url('img/MenuButton-header.png') 0 -1px;
 }
 .controls-MenuButton__Menu {
