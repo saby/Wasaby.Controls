@@ -2211,6 +2211,9 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
   margin-left: 8px;
   min-height: 33px;
+  position: relative;
+  top: 0;
+  left: 0;
 }
 .controls-ListView .controls-ListView__itemCheckBox {
   width: 16px;
@@ -2615,7 +2618,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CompositeView.controls-CompositeView-tile .controls-CompositeView__itemsContainer {
   padding: 4px 0 0 1px;
-  min-height: 40px;
+  /* min-height: 40px; */
 }
 .controls-CompositeView.controls-CompositeView-tile .controls-ItemActions,
 .controls-CompositeView.controls-CompositeView-list .controls-ItemActions {
