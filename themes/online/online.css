@@ -2009,10 +2009,12 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/CheckBox.png') 0 17px;
 }
 .controls-ListView .controls-ListView__EmptyData {
-  width: 100px;
-  display: inline-block;
   color: #999999;
-  text-align: center;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin-left: 8px;
+  min-height: 33px;
 }
 .controls-ListView .controls-ListView__itemCheckBox {
   width: 16px;
@@ -2414,7 +2416,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CompositeView.controls-CompositeView-tile .controls-CompositeView__itemsContainer {
   padding: 4px 0 0 1px;
-  min-height: 40px;
+  /* min-height: 40px; */
 }
 .controls-CompositeView.controls-CompositeView-tile .controls-ItemActions,
 .controls-CompositeView.controls-CompositeView-list .controls-ItemActions {

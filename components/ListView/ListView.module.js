@@ -106,6 +106,7 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws._const.key.left
             ],
             _itemActionsGroup: null,
+            _emptyData: undefined,
             _options: {
                /**
                 * @faq Почему нет флажков при включенной опции {@link SBIS3.CONTROLS.ListView#multiselect multiselect}?
@@ -253,6 +254,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._options.pageSize = this._options.pageSize * 1;
             }
             this.setGroupBy(this._options.groupBy, false);
+            this._emptyData = this._container.find('.controls-ListView__EmptyData');
             ListView.superclass.init.call(this);
             this.reload();
          },
@@ -398,7 +400,9 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see emptyHTML
           */
          setEmptyHTML: function (html) {
-
+            ListView.superclass.setEmptyHTML.apply(this, arguments);
+            this._emptyData.empty()
+                           .html(this._options.emptyHTML);
          },
          _getItemTemplate: function () {
             return this._options.itemTemplate;
@@ -795,6 +799,9 @@ define('js!SBIS3.CONTROLS.ListView',
             else {
                self._container.find('.controls-AjaxLoader').toggleClass('ws-hidden', true);
             }
+         },
+         _toggleEmptyData: function(show) {
+            this._emptyData.toggleClass('ws-hidden', !show);
          },
          //------------------------Paging---------------------
          _processPaging: function() {
