@@ -5,9 +5,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
     * @class SBIS3.CONTROLS.ComponentBinder
     * @extends $ws.proto.Abstract
     * @public
+    * @param backButton объект книпоки назад
     */
    /*методы для поиска*/
-   function startSearch(text, gridView, BreadCrumbs, searchParamName, searchCrumbsTpl) {
+   function startSearch(text, gridView, BreadCrumbs, searchParamName, searchCrumbsTpl, backButton) {
       if (text) {
          var filter = $ws.core.merge(gridView._filter, {
             'Разворот': 'С разворотом',
@@ -30,11 +31,15 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          this._searchReload = true;
          // TODO нафиг это надо
          BreadCrumbs.setItems([]);
+         //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
+         if (backButton) {
+            backButton.getContainer().css({'visibility': 'hidden'});
+         }
 
          gridView.reload(filter, gridView._sorting, 0);
       }
    }
-   function resetGroup(gridView, searchParamName, BreadCrumbs) {
+   function resetGroup(gridView, searchParamName, BreadCrumbs, backButton) {
       //Если мы ничего не искали, то и сбрасывать нечего
       if (this._firstSearch) {
          return;
@@ -59,6 +64,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          this._path = this._pathDSRawData;
          BreadCrumbs.getDataSet().setRawData(this._pathDSRawData);
          BreadCrumbs._redraw();
+         if (backButton) {
+            backButton.getContainer().css({'visibility': 'visible'});
+         }
       } else {
          //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
          gridView._filter = filter;
@@ -105,32 +113,33 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        * @param BreadCrumbs объект хлебных крошек
        * @param searchParamName параметр фильтрации для поиска
        * @param searchCrumbsTpl шаблон отрисовки элемента пути в поиске
+       * @param backButton объект книпоки назад
        * @example
        * <pre>
        *     myBinder = new ComponentBinder();
        *     myBinder.bindSearchGrid(searchForm, gridView, BreadCrumbs, searchParamName);
        * </pre>
        */
-      bindSearchGrid : function(searchForm, gridView, BreadCrumbs, searchParamName, searchCrumbsTpl) {
+      bindSearchGrid : function(searchForm, gridView, BreadCrumbs, searchParamName, searchCrumbsTpl, backButton) {
          var self = this;
          this._lastRoot = gridView.getCurrentRoot();
          searchForm.subscribe('onTextChange', function(event, text){
             var checkedText = isSearchValid(text, 3);
             if (checkedText[1]) {
-               startSearch.call(self, this.getText(), gridView, BreadCrumbs, searchParamName, searchCrumbsTpl);
+               startSearch.call(self, this.getText(), gridView, BreadCrumbs, searchParamName, searchCrumbsTpl, backButton);
                self._path = [];
                self._currentRoot = null;
             }
             if (!checkedText[0]) {
                self._currentRoot = self._lastRoot;
-               resetGroup.call(self, gridView, searchParamName, BreadCrumbs);
+               resetGroup.call(self, gridView, searchParamName, BreadCrumbs, backButton);
             }
          });
 
          searchForm.subscribe('onSearchStart', function(event, text) {
             var checkedText = isSearchValid(text, 1);
             if (checkedText[1]) {
-               startSearch.call(self, this.getText(), gridView, searchParamName, searchCrumbsTpl);
+               startSearch.call(self, this.getText(), gridView, searchParamName, searchCrumbsTpl, backButton);
             }
          });
          //searchForm.subscribe('onReset', resetGroup);
@@ -142,7 +151,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             breakSearch(searchForm);
          });
       },
-      bindSearchComposite: function(searchForm, compositeView, BreadCrumbs, searchParamName, searchCrumbsTpl) {
+      bindSearchComposite: function(searchForm, compositeView, BreadCrumbs, searchParamName, searchCrumbsTpl, backButton) {
          this.bindSearchGrid.apply(this, arguments);
          /*var self = this;
          compositeView.subscribe('onDataLoad', function(){
