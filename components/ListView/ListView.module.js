@@ -542,7 +542,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * Инициализирует операции над записью
           * @private
           */
-         _initItemActions: function () {
+         _initItemsActions: function () {
             this._itemActionsGroup = this._drawItemActions();
          },
          /**
@@ -567,7 +567,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          getItemsActions: function () {
             if (!this._itemActionsGroup && this._options.itemsActions.length) {
-               this._initItemActions();
+               this._initItemsActions();
             }
             return this._itemActionsGroup;
          },
@@ -607,8 +607,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see getHoveredItem
           */
          setItemsActions: function (items) {
-            this.getItemsActions().setItems(items);
             this._options.itemsActions = items;
+            this._itemActionsGroup ? this._itemActionsGroup.setItems(items) : this._initItemsActions();
          },
          //**********************************//
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
