@@ -245,6 +245,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _toggleIndicator:function(){
          /*Method must be implemented*/
       },
+      _toggleEmptyData:function() {
+         /*Method must be implemented*/
+      },
        /**
         * Метод установки количества элементов на одной странице.
         * @param pageSize Количество записей.
@@ -347,19 +350,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _redraw: function () {
-         var emptyHTML;
+         var records;
+
          if (this._dataSet) {
             this._clearItems();
-            var records = this._getRecordsForRedraw(),
-               container = this._getItemsContainer();
-            if (!records.length && this._options.emptyHTML) {
-                emptyHTML = $('<div/>').addClass('controls-ListView__EmptyData')
-                                       .append(this._options.emptyHTML);
-              $('.controls-ListView__EmptyData', container).remove();
-              container.append(emptyHTML);
-            } else {
-              $('.controls-ListView__EmptyData', container).remove();
-            }
+            records = this._getRecordsForRedraw();
+            this._toggleEmptyData(!records.length && this._options.emptyHTML);
             this._drawItems(records);
          }
       },
@@ -621,6 +617,18 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          offset = offset === undefined ? this._offset : offset;
          //n - приходит true, false || общее количество записей в списочном методе
          return typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore;
+      },
+      /**
+       * Установить что отображается при отсутствии записей.
+       * @param html Содержимое блока.
+       * @example
+       * <pre>
+       *     DataGridView.setEmptyHTML('Нет записей');
+       * </pre>
+       * @see emptyHTML
+       */
+      setEmptyHTML: function (html) {
+         this._options.emptyHTML = html;
       },
 
       _dataLoadedCallback: function () {
