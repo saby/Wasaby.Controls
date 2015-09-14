@@ -333,7 +333,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
 
       _setColumnWidthForPartScroll: function() {
-         var tds = this._getItemsContainer().find('.controls-DataGridView__tr').eq(0).find('.controls-DataGridView__td'),
+         var tds = this._getItemsContainer().find('.controls-DataGridView__tr[data-id]').eq(0).find('.controls-DataGridView__td'),
             columns = this.getColumns(),
             tdIndex,
             minWidth;
