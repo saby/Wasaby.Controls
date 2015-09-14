@@ -16,9 +16,10 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.CommonHandlers',
       'js!SBIS3.CONTROLS.MoveHandlers',
       'js!SBIS3.CONTROLS.Pager',
-      'is!browser?html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy'
+      'is!browser?html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
+      'is!browser?html!SBIS3.CONTROLS.ListView/resources/emptyData'
    ],
-   function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, MoveHandlers, Pager, groupByTpl) {
+   function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, MoveHandlers, Pager, groupByTpl, emptyDataTpl) {
 
       'use strict';
 
@@ -254,7 +255,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._options.pageSize = this._options.pageSize * 1;
             }
             this.setGroupBy(this._options.groupBy, false);
-            this._emptyData = this._container.find('.controls-ListView__EmptyData');
+            this._drawEmptyData();
             ListView.superclass.init.call(this);
             this.reload();
          },
@@ -401,8 +402,15 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
-            this._emptyData.empty()
-                           .html(this._options.emptyHTML);
+            if(this._emptyData.length) {
+               html ? this._emptyData.empty().html(html) : this._emptyData.remove();
+            } else if(html) {
+               this._drawEmptyData();
+            }
+         },
+         _drawEmptyData: function() {
+            var html = this._options.emptyHTML;
+            this._emptyData = html && $(emptyDataTpl({emptyHTML: html})).appendTo(this._container);
          },
          _getItemTemplate: function () {
             return this._options.itemTemplate;

@@ -2015,6 +2015,9 @@ input[type="reset"]::-moz-focus-inner {
   box-sizing: border-box;
   margin-left: 8px;
   min-height: 33px;
+  position: relative;
+  top: 0;
+  left: 0;
 }
 .controls-ListView .controls-ListView__itemCheckBox {
   width: 16px;

@@ -355,11 +355,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (this._dataSet) {
             this._clearItems();
             records = this._getRecordsForRedraw();
-
-            (!records.length && this._options.emptyHTML) ?
-               this._toggleEmptyData(true) :
-               this._toggleEmptyData(false);
-
+            this._toggleEmptyData(!records.length && this._options.emptyHTML);
             this._drawItems(records);
          }
       },
