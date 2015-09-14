@@ -23,6 +23,17 @@
    }
 }
 
+&.controls-ListView__withoutMarker {
+   .controls-ListView__item__selected {
+      .controls-DataGridView__td:first-child,
+      .controls-CompositeView__tileTitle,
+      .controls-ListView__item-title,
+      &:not(.controls-ListView__folder) {
+         background-image: none !important;
+      }
+   }
+}
+
 .controls-TreePager-container {
    float: right;
    margin-right: 2px;

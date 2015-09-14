@@ -3265,6 +3265,12 @@ input[type="reset"]::-moz-focus-inner {
   background-position: left top;
   background-repeat: repeat-y;
 }
+.controls-ListView__withoutMarker .controls-ListView__item__selected .controls-DataGridView__td:first-child,
+.controls-ListView__withoutMarker .controls-ListView__item__selected .controls-CompositeView__tileTitle,
+.controls-ListView__withoutMarker .controls-ListView__item__selected .controls-ListView__item-title,
+.controls-ListView__withoutMarker .controls-ListView__item__selected:not(.controls-ListView__folder) {
+  background-image: none !important;
+}
 .controls-TreePager-container {
   float: right;
   margin-right: 2px;
