@@ -54,7 +54,8 @@
   &.controls-CompositeView-tile {
     .controls-CompositeView__itemsContainer {
       padding: @multiView-tile-itemsContainer-padding;
-      min-height: 40px;
+      //Скорее всего не нужно 14.09.2015
+      /* min-height: 40px; */
     }
   }
   &.controls-CompositeView-tile, &.controls-CompositeView-list {
@@ -111,7 +112,7 @@
     border: @multiView-tile-item-border;
     min-width: @multiView-tile-item-min-width;
     min-height: @multiView-tile-item-min-height;
-    margin: @multiView-tile-item-margin;    
+    margin: @multiView-tile-item-margin;
     &.controls-ListView__hoveredItem {
       background: @data-grid-row-hover-bg;
       .controls-CompositeView__tileImg {
