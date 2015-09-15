@@ -809,7 +809,9 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _toggleEmptyData: function(show) {
-            this._emptyData.toggleClass('ws-hidden', !show);
+            if(this._emptyData) {
+               this._emptyData.toggleClass('ws-hidden', !show);
+            }
          },
          //------------------------Paging---------------------
          _processPaging: function() {
