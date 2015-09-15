@@ -196,12 +196,27 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          }
 
          hierarchyGridView.subscribe('onSetRoot', function(event, id, hier){
-            for (var i = hier.length - 1; i >= 0; i--) {
-               var rec = hier[i];
-               if (rec){
-                  var c = createBreadCrumb(rec);
-                  if (self._currentRoot) self._path.push(self._currentRoot);
-                  self._currentRoot = c;
+            /* 
+               TODO: Хак для того перерисовки хлебных крошек при переносе из папки в папку
+               Проверить совпадение родительского id и текущего единственный способ понять,
+               что в папку не провалились, а попали через перенос. 
+               От этого нужно избавиться как только будут новые датасорсы и не нужно будет считать пути для крошек
+            */
+            if (self._currentRoot && hier[hier.length - 1].parent != self._currentRoot.id){
+               self._currentRoot = hier[0];
+               self._path = hier.reverse();
+            } else {
+               for (var i = hier.length - 1; i >= 0; i--) {
+                  var rec = hier[i];
+                  if (rec){
+                     var c = createBreadCrumb(rec);
+                     if (self._currentRoot ) {
+                        self._path.push(self._currentRoot);
+                     } else {
+
+                     }
+                     self._currentRoot = c;
+                  }
                }
             }
 
