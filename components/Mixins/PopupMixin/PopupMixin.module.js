@@ -296,14 +296,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
          //TODO избавиться от дублирования
          if (!vAlign) {
-            offset.top = this._windowSizes.height / 2 + (offset.top) - this._containerSizes.height / 2;
+            offset.top = this._windowSizes.height / 2 + offset.top - this._containerSizes.height / 2;
          } else {
             if (vAlign == 'bottom') {
                offset.top = bodyHeight - offset.top - height;
             }
          }
          if (!hAlign) {
-            offset.left = this._windowSizes.width / 2 + (offset.left) - this._containerSizes.width / 2;
+            offset.left = this._windowSizes.width / 2 + offset.left - this._containerSizes.width / 2;
          } else {
             if (hAlign == 'right') {
                offset.left = bodyWidth - offset.left - width;
