@@ -246,10 +246,11 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                } else {
                   filter['Раздел'] = branchId === 'null' ? null : branchId;
                   var limit;
+                  //проверяем, является ли обновляемый узел корневым, если да, обновляем записи до подгруженной записи (_infiniteScrollOffset)
                   if ( String(self._curRoot) == branchId) { // т.к. null != "null"
                      limit = self._infiniteScrollOffset;
-                  } else {
-                     limit = self._limit !== undefined ? (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit : undefined;
+                  } else if (self._limit !== undefined) {
+                     limit = (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit;
                   }
                   return self._dataSource.query(filter, self._sorting, self._offset, limit)
                      .addCallback(function(dataSet) {
