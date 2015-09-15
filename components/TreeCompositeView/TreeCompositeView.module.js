@@ -245,9 +245,11 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                      .callback();
                } else {
                   filter['Раздел'] = branchId === 'null' ? null : branchId;
-                  var limit = self._limit !== undefined ? (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit : undefined;
-                  if ( !self._curRoot) {
+                  var limit;
+                  if ( String(self._curRoot) == branchId) { // т.к. null != "null"
                      limit = self._infiniteScrollOffset;
+                  } else {
+                     limit = self._limit !== undefined ? (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit : undefined;
                   }
                   return self._dataSource.query(filter, self._sorting, self._offset, limit)
                      .addCallback(function(dataSet) {
