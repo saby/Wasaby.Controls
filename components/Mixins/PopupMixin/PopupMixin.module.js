@@ -196,28 +196,23 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             if (recalcFlag) {
                this._initOrigins = true;
             }
+            this._initSizes();            
             if (this._options.target) {
-               this._initSizes();
                var offset = {
                      top: this._targetSizes.offset.top,
                      left: this._targetSizes.offset.left
                   },
-                  buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner);
+                  buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner),
+                  sign;
 
                offset = this._addOffset(offset, buff);
                offset = this._getOffsetByWindowSize(offset);
 
-               if (!this._isMovedV) {
-                  offset.top += this._margins.top - this._margins.bottom + (this._options.verticalAlign.offset || 0);
-               } else {
-                  offset.top += -this._margins.top + this._margins.bottom - (this._options.verticalAlign.offset || 0);
-               }
-               if (!this._isMovedH) {
-                  offset.left += this._margins.left - this._margins.right + (this._options.horizontalAlign.offset || 0);
-               } else {
-                  offset.left += -this._margins.left + this._margins.right - (this._options.horizontalAlign.offset || 0);
-               }
- 
+               sign = (this._isMovedV) ? -1 : 1;
+               offset.top += sign * (this._margins.top - this._margins.bottom + (this._options.verticalAlign.offset || 0));
+               sign = (this._isMovedH) ? -1 : 1;
+               offset.left += sign * (this._margins.left - this._margins.right + (this._options.horizontalAlign.offset || 0));
+               
                offset.top = this._calculateOverflow(offset, 'vertical');
                offset.left = this._calculateOverflow(offset, 'horizontal');
                this._notifyOnAlignmentChange();
@@ -227,7 +222,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                   'left': offset.left + 'px'
                });
             } else {
-               this._initSizes();
                var bodyOffset = this._bodyPositioning();
                this._container.offset(bodyOffset);
 
@@ -302,14 +296,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
          //TODO избавиться от дублирования
          if (!vAlign) {
-            offset.top = this._windowSizes.height / 2 + (this._options.verticalAlign.offset || 0) - this._containerSizes.height / 2;
+            offset.top = this._windowSizes.height / 2 + offset.top - this._containerSizes.height / 2;
          } else {
             if (vAlign == 'bottom') {
                offset.top = bodyHeight - offset.top - height;
             }
          }
          if (!hAlign) {
-            offset.left = this._windowSizes.width / 2 + (this._options.horizontalAlign.offset || 0) - this._containerSizes.width / 2;
+            offset.left = this._windowSizes.width / 2 + offset.left - this._containerSizes.width / 2;
          } else {
             if (hAlign == 'right') {
                offset.left = bodyWidth - offset.left - width;
@@ -607,7 +601,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
       _calculateOverflow: function (offset, orientation) {
          //TODO Избавиться от дублирования
-         var spaces, oppositeOffset;
+         var vOffset = this._options.verticalAlign.offset || 0,
+            hOffset = this._options.verticalAlign.offset || 0,
+            spaces, oppositeOffset;
          spaces = this._getSpaces(this._options.corner);
          if (orientation == 'vertical') {
             if (offset.top < 0) {
@@ -615,15 +611,15 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                if (spaces.top < spaces.bottom) {
                   oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
                   spaces = this._getSpaces(this._options.corner);
-                  this._container.css('height', spaces.bottom - (this._options.verticalAlign.offset || 0) - WINDOW_OFFSET - this._margins.top + this._margins.bottom);
+                  this._container.css('height', spaces.bottom - vOffset - WINDOW_OFFSET - this._margins.top + this._margins.bottom);
                   offset.top = this._targetSizes.offset.top + oppositeOffset.top;
                   this._isMovedV = !this._isMovedV;
                } else {
                   offset.top = 0;
-                  this._container.css('height', spaces.top - (this._options.verticalAlign.offset || 0) - this._margins.top + this._margins.bottom);
+                  this._container.css('height', spaces.top - vOffset - this._margins.top + this._margins.bottom);
                }
             }
-            if (this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom < spaces.bottom) {
+            if (this._containerSizes.originHeight + vOffset + this._margins.top - this._margins.bottom < spaces.bottom) {
                this._container.css('overflow-y', 'visible');
                this._container.css('height', '');
             }
@@ -636,15 +632,15 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                if (spaces.left < spaces.right) {
                   oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
                   spaces = this._getSpaces(this._options.corner);
-                  this._container.css('width', spaces.right - (this._options.horizontalAlign.offset || 0) - WINDOW_OFFSET - this._margins.left + this._margins.right);
+                  this._container.css('width', spaces.right - hOffset - WINDOW_OFFSET - this._margins.left + this._margins.right);
                   offset.left = this._targetSizes.offset.left + oppositeOffset.left;
                   this._isMovedH = !this._isMovedH;
                } else {
                   offset.left = 0;
-                  this._container.css('width', spaces.left - (this._options.horizontalAlign.offset || 0) - this._margins.left + this._margins.right);
+                  this._container.css('width', spaces.left - hOffset - this._margins.left + this._margins.right);
                }
             }
-            if (this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right < spaces.right) {
+            if (this._containerSizes.originWidth + hOffset + this._margins.left - this._margins.right < spaces.right) {
                this._container.css('overflow-x', 'visible');
                this._container.css('width', '');
             }
