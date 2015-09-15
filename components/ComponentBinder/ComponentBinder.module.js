@@ -211,7 +211,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                что в папку не провалились, а попали через перенос. 
                От этого нужно избавиться как только будут новые датасорсы и не нужно будет считать пути для крошек
             */
-            if (self._currentRoot && hier[hier.length - 1].parent != self._currentRoot.id){
+            if (self._currentRoot && hier.length && hier[hier.length - 1].parent != self._currentRoot.id){
                self._currentRoot = hier[0];
                self._path = hier.reverse();
             } else {
