@@ -119,6 +119,7 @@
 ## Сборка
 +Выполнить команду Windows
 
+    call npm config set registry http://npmregistry.sbis.ru:81/
     call npm install
     call npm install grunt-cli
 
