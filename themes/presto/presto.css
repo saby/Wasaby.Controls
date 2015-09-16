@@ -2092,6 +2092,11 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   position: relative;
   line-height: 16px;
+  margin-left: -4px;
+  color: #0055BB;
+}
+.controls-BreadCrumbs__crumb .icon-16 {
+  color: #0055bb !important;
 }
 .controls-BreadCrumbs__crumb:hover .controls-BreadCrumbs__title {
   color: #FF7033;
@@ -2110,6 +2115,7 @@ input[type="reset"]::-moz-focus-inner {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  margin-left: -4px;
 }
 .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
   position: relative;
@@ -2153,6 +2159,7 @@ input[type="reset"]::-moz-focus-inner {
   line-height: 24px;
   color: #313e78;
   overflow: hidden;
+  margin-left: -6px;
 }
 .controls-BackButton .controls-BackButton__arrow {
   display: inline-block;
