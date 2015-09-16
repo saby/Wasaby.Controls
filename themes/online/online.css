@@ -2717,6 +2717,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   position: relative;
   line-height: 16px;
+  margin-left: -4px;
 }
 .controls-BreadCrumbs__crumb:hover .controls-BreadCrumbs__title {
   color: #FF7033;
@@ -2735,6 +2736,7 @@ input[type="reset"]::-moz-focus-inner {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  margin-left: -4px;
 }
 .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
   position: relative;
@@ -2779,8 +2781,7 @@ input[type="reset"]::-moz-focus-inner {
   font-style: normal;
   color: #313e78;
   overflow: hidden;
-  line-height: 32px;
-  margin: 0 8px 0 6px;
+  margin-left: -6px;
 }
 .controls-BackButton::before {
   width: 10px;
