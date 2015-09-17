@@ -16,17 +16,19 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
    var TabButtons = RadioGroupBase.extend( /** @lends SBIS3.CONTROLS.TabButtons.prototype */ {
       $protected: {
          _options: {
-
+            direction: 'left',
+            type: 'normal'
          }
       },
 
       $constructor: function() {
-
       },
 
       _getItemTemplate : function() {
          return '<component data-component="SBIS3.CONTROLS.TabButton">' +
-            '<option name="caption">{{=it.item.get("title")}}</option>'+
+            '<option name="caption" value="{{=it.item.get(\"' + this._options.captionField + '\")}}"></option>'+
+            '<option name="direction" value="' + this._options.direction + '"></option>'+
+            '<option name="type" value="' + this._options.type + '"></option>'+
             '</component>';
       }
    });

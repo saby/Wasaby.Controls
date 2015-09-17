@@ -2,51 +2,96 @@
   display: inline-block;
   cursor: @tab-button-cursor;
   height: @tab-button-height;
-
-  .border-radius(@tab-button-border-radius);
-  border-width: @tab-button-border-width;
-  border-style: @tab-button-border-style;
-  border-color: @tab-button-border-color;
-  background: @tab-button-bg;
+  position: relative;
+  overflow: hidden;
 
   &:hover {
-    border-width: @tab-button-hover-border-width;
-    border-style: @tab-button-hover-border-style;
-    border-color: @tab-button-hover-border-color;
-    background: @tab-button-hover-bg;
+     .controls-TabButton__inner {
+        background: #F8F8F8;
+        .controls-TabButton__caption {
+        }
+     }
+     .controls-TabButton__corner {
+        background: #F8F8F8;
+     }
 
     .controls-TabButton__inner {
       .controls-TabButton__caption {
-        color: @tab-button-hover-text-color;
+         color: #FF7033;
       }
     }
   }
 
   &.controls-Checked__checked {
-    border-width: @tab-button-checked-border-width;
-    border-style: @tab-button-checked-border-style;
-    border-color: @tab-button-checked-border-color;
-    background: @tab-button-checked-bg;
-
+     z-index: 100;
+     .controls-TabButton__selected-border{
+        display: block;
+     }
     .controls-TabButton__inner {
+       background: #FFFFFF;
       .controls-TabButton__caption {
-        color: @tab-button-checked-text-color;
+         color: #000000
       }
     }
+     .controls-TabButton__corner {
+        background: #FFFFFF;
+        box-shadow: -2px 0 2px #CCCCCC;
+     }
 
     &:hover {
-      border-width: @tab-button-checked-hover-border-width;
-      border-style: @tab-button-checked-hover-border-style;
-      border-color: @tab-button-checked-hover-border-color;
-      background: @tab-button-checked-hover-bg;
 
       .controls-TabButton__inner {
         .controls-TabButton__caption {
-          color: @tab-button-checked-hover-text-color;
         }
       }
     }
   }
+
+   &.controls-TabButton__left-direction {
+      margin-left: -10px;
+      .controls-TabButton__selected-border{
+         right: 0px;
+      }
+      .controls-TabButton__inner {
+         border-right: 1px solid @customFilterMenu-border-color;
+         border-top: 1px solid @customFilterMenu-border-color;
+         position: relative;
+         z-index: 20;
+         margin-left: 19px;
+         .controls-TabButton__caption {
+            padding-left: 5px;
+            padding-right: 24px;
+         }
+      }
+      .controls-TabButton__corner {
+         transform: rotate(30deg);
+         width: 15px;
+         height: 51px;
+         border-left: 1px solid #e4e4e4;
+         top: -3px;
+         border-radius: 10px;
+         left: 6px;
+      }
+   }
+
+   .controls-TabButton__selected-border{
+      position: absolute;
+      width: 3px;
+      height: 29px;
+      background: @primary-color;
+      display: none;
+      z-index: 30;
+   }
+
+   .controls-TabButton__corner {
+      position: absolute;
+      background-color: #F2F2F2;
+      z-index: 20;
+   }
+
+   .controls-TabButton__selected-border{
+      top: 0px;
+   }
 
   .controls-TabButton__side {
     vertical-align: top;
@@ -67,44 +112,21 @@
   }
 
   .controls-TabButton__inner {
-    font: @tab-button-font;
-    color: @tab-button-text-color;
+    color: #999999;
     display: inline-block;
     height: @tab-button-inner-height;
-    background: @tab-button-inner-bg;
+    background: #F2F2F2;
+    border-radius: 4px;
 
     .controls-TabButton__caption {
-      display: inline-block;
-      height: auto;
-      vertical-align: bottom;
-      padding: @tab-button-text-padding;
-    }
-  }
-
-  &.ws-disabled {
-    cursor: @tab-button-disabled-cursor;
-    border-width: @tab-button-disabled-border-width;
-    border-style: @tab-button-disabled-border-style;
-    border-color: @tab-button-disabled-border-color;
-    background: @tab-button-disabled-bg;
-
-    .controls-TabButton__inner {
-      .controls-TabButton__caption {
-        color: @tab-button-disabled-text-color;
-      }
-    }
-
-    &.controls-Checked__checked {
-      border-width: @tab-button-disabled-checked-border-width;
-      border-style: @tab-button-disabled-checked-border-style;
-      border-color: @tab-button-disabled-checked-border-color;
-      background: @tab-button-disabled-checked-bg;
-
-      .controls-TabButton__inner {
-        .controls-TabButton__caption {
-          color: @tab-button-disabled-checked-text-color;
-        }
-      }
+       font-family: 'TensorFont Bold', TensorFont;
+       font-size: 14px;
+       font-weight: 700;
+       font-style: normal;
+       display: inline-block;
+       height: auto;
+       vertical-align: bottom;
+       padding: 6px 0 0;
     }
   }
 }
