@@ -145,7 +145,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          searchForm.subscribe('onSearchStart', function(event, text) {
             var checkedText = isSearchValid(text, 1);
             if (checkedText[1]) {
-               startSearch.call(self, this.getText(), gridView, searchParamName, searchCrumbsTpl, backButton);
+               startSearch.call(self, this.getText(), gridView, BreadCrumbs, searchParamName, searchCrumbsTpl, backButton);
             }
          });
          //searchForm.subscribe('onReset', resetGroup);
