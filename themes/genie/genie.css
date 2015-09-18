@@ -2536,7 +2536,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   position: relative;
   line-height: 16px;
-  margin-left: -4px;
+  margin-left: -1px;
 }
 .controls-BreadCrumbs__crumb:hover .controls-BreadCrumbs__title {
   color: #FF7033;
@@ -2546,6 +2546,9 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-BreadCrumbs__crumb:hover .controls-BreadCrumbs__title {
   color: #FF7033;
+}
+.controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
+  top: -1px;
 }
 .controls-BreadCrumbs .controls-BreadCrumbs__title {
   text-decoration: none;
@@ -2559,6 +2562,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
   position: relative;
+  top: -1px;
 }
 .controls-BreadCrumbs .controls-BreadCrumbs__itemsContainer {
   display: inline-block;
