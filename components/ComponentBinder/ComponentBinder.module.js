@@ -22,7 +22,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          gridView.setHighlightText(text, false);
          gridView.setInfiniteScroll(true, true);
          gridView.setGroupBy(groupBy);
-         gridView._container.addClass('controls-GridView__searchMode');
          if (this._firstSearch) {
             this._lastRoot = gridView.getCurrentRoot();
             this._pathDSRawData = $ws.core.clone(BreadCrumbs.getDataSet().getRawData());
@@ -36,7 +35,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             backButton.getContainer().css({'visibility': 'hidden'});
          }
 
-         gridView.reload(filter, gridView._sorting, 0);
+         gridView.reload(filter, gridView._sorting, 0).addCallback(function(){
+            gridView._container.addClass('controls-GridView__searchMode');
+         });
       }
    }
    function resetGroup(gridView, searchParamName, BreadCrumbs, backButton) {
@@ -52,7 +53,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       gridView.setInfiniteScroll(false, true);
       gridView.setGroupBy({});
       gridView.setHighlightText('', false);
-      gridView._container.removeClass('controls-GridView__searchMode');
       this._firstSearch = true;
       if (this._searchReload ) {
          //Нужно поменять фильтр и загрузить нужный корень.
@@ -60,7 +60,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          filter[gridView.getHierField()] = this._lastRoot;
          //DataGridView._filter = filter;
          //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
-         gridView.reload(filter, gridView._sorting, 0);
+         gridView.reload(filter, gridView._sorting, 0).addCallback(function(){
+            gridView._container.removeClass('controls-GridView__searchMode');
+         });
          this._path = this._pathDSRawData;
          BreadCrumbs.getDataSet().setRawData(this._pathDSRawData);
          BreadCrumbs._redraw();
