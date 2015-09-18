@@ -16,12 +16,12 @@ define('js!SBIS3.CONTROLS.TabButton', ['js!SBIS3.CONTROLS.RadioButtonBase', 'htm
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {
-
+            align: 'right',
+            additionalText: ''
          }
       },
 
       $constructor: function() {
-
       }
 
    });

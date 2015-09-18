@@ -1,8 +1,8 @@
-<span class="controls-TabButton{{?it.checked===true}} controls-Checked__checked{{?}}{{?it.type==='big'}}  controls-TabButton__big-font{{?}} controls-TabButton__{{=it.direction}}-direction">
-   {{?it.direction==='left'}}<div class="controls-TabButton__corner"></div>{{?}}
+<span class="controls-TabButton{{?it.checked===true}} controls-Checked__checked{{?}}{{?it.align==='left'}} controls-TabButton__left-align{{?}}">
+   <div class="controls-TabButton__corner"></div>
    <i class="controls-TabButton__selected-border"></i>
    <span class="controls-TabButton__inner">
       <span class="controls-TabButton__caption">{{?it.caption}}{{=it.caption}}{{?}}</span>
+      <span class="controls-TabButton__additional-text">{{?it.caption}}{{=it.additionalText}}{{?}}</span>
    </span>
-   {{?it.direction==='right'}}<i class="controls-TabButton__right controls-TabButton__side">&nbsp;</i>{{?}}
 </span>
