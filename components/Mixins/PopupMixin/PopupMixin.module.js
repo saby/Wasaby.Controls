@@ -748,7 +748,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                this._initOrigins = false;
             }
             this.recalcPosition();
-            this._container.css('zIndex', this._zIndex);
+            this.moveToTop();//пересчитываем, чтобы z-index был выше других панелей
 
             this._notify('onShow');
          },
