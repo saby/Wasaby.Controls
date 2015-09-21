@@ -2093,7 +2093,7 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   position: relative;
   line-height: 16px;
-  margin-left: -4px;
+  margin-left: -1px;
 }
 .controls-BreadCrumbs__crumb:hover .controls-BreadCrumbs__title {
   color: #FF7033;
