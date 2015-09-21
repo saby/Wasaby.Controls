@@ -2530,7 +2530,7 @@ input[type="reset"]::-moz-focus-inner {
   text-align: center;
 }
 .controls-BreadCrumbs {
-  min-height: 27px;
+  min-height: 24px;
 }
 .controls-BreadCrumbs__crumb {
   cursor: pointer;
@@ -2604,7 +2604,7 @@ input[type="reset"]::-moz-focus-inner {
   font-style: normal;
   color: #313e78;
   overflow: hidden;
-  margin-left: -6px;
+  margin-left: -7px;
 }
 .controls-BackButton::before {
   width: 10px;
