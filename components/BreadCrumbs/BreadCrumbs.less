@@ -2,6 +2,7 @@
 	min-height: 27px;
 	&__crumb{
 		cursor: pointer;
+      display: inline-block;
 		position: relative;
       line-height: 16px;
       margin-left: -1px;
@@ -18,8 +19,9 @@
 		}
 	}
 
-   .controls-BreadCrumbs__crumb-home{
-      top: -1px;
+   .controls-BreadCrumbs__crumb-home {
+      margin-right: 4px;
+      margin-left: 0;
    }
 
 	.controls-BreadCrumbs__title{
@@ -31,11 +33,11 @@
 		white-space: nowrap;
 		overflow: hidden;
       margin-left: -4px;
+      vertical-align: top;
 	}
 
 	.controls-BreadCrumbs__arrow{
 		position: relative;
-      top: -1px;
 	}
 
 	.controls-BreadCrumbs__itemsContainer{
