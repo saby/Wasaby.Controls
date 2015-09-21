@@ -18,6 +18,10 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
               * </pre>
               */
             caption: undefined,
+            /**
+             * @cfg {Function} Функция рендеринга заголовка кнопки, которой аргументом приходит
+             * количество выделенных записей в связанном представлении данных
+             */
             captionRender: undefined,
              /**
               * @noShow
