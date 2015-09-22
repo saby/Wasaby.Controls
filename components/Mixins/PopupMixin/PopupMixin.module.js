@@ -208,13 +208,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                offset = this._addOffset(offset, buff);
                offset = this._getOffsetByWindowSize(offset);
 
-               sign = (this._isMovedV) ? -1 : 1;
-               offset.top += sign * (this._margins.top - this._margins.bottom + (this._options.verticalAlign.offset || 0));
-               sign = (this._isMovedH) ? -1 : 1;
-               offset.left += sign * (this._margins.left - this._margins.right + (this._options.horizontalAlign.offset || 0));
-               
                offset.top = this._calculateOverflow(offset, 'vertical');
                offset.left = this._calculateOverflow(offset, 'horizontal');
+
+               sign = (this._isMovedV) ? 0 : 1;
+               offset.top += sign * (this._margins.top - this._margins.bottom + (this._options.verticalAlign.offset || 0));
+               sign = (this._isMovedH) ? 0 : 1;
+               offset.left += sign * (this._margins.left - this._margins.right + (this._options.horizontalAlign.offset || 0));
+
                this._notifyOnAlignmentChange();
 
                this._container.css({
