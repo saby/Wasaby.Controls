@@ -202,8 +202,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                      top: this._targetSizes.offset.top,
                      left: this._targetSizes.offset.left
                   },
-                  buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner),
-                  sign;
+                  buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner);
 
                offset = this._addOffset(offset, buff);
                offset = this._getOffsetByWindowSize(offset);
@@ -211,10 +210,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                offset.top = this._calculateOverflow(offset, 'vertical');
                offset.left = this._calculateOverflow(offset, 'horizontal');
 
-               sign = (this._isMovedV) ? 0 : 1;
-               offset.top += sign * (this._margins.top - this._margins.bottom + (this._options.verticalAlign.offset || 0));
-               sign = (this._isMovedH) ? 0 : 1;
-               offset.left += sign * (this._margins.left - this._margins.right + (this._options.horizontalAlign.offset || 0));
+               if ( ! this._isMovedV) {
+                  offset.top += this._margins.top - this._margins.bottom + (this._options.verticalAlign.offset || 0);
+               }
+               if ( ! this._isMovedH) {
+                  offset.left += this._margins.left - this._margins.right + (this._options.horizontalAlign.offset || 0);
+               }
 
                this._notifyOnAlignmentChange();
 
