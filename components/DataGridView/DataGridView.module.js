@@ -59,7 +59,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          _partScrollRow: undefined,                   //Строка-контейнер, в которой лежит частичный скролл
          _isHeaderScrolling: false,                   //Флаг обозначающий, проиходит ли скролл за заголовок
          _lastLeftPos: null,                          //Положение по горизонтали, нужно когда происходит скролл за заголовок
-         _newColumnsSetted: false,                    //Флаг, обозначающий, что выставлены новые колонки
          _options: {
             /**
              * @typedef {Object} Columns
@@ -122,17 +121,18 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       $constructor: function() {
          this._publish('onDrawHead');
-         this._thead = $('.controls-DataGridView__thead', this._container.get(0));
-         this._colgroup = $('.controls-DataGridView__colgroup', this._container.get(0));
          this._checkColumns();
       },
 
       init: function() {
          DataGridView.superclass.init.call(this);
+
+         this._buildHead();
+
          if (this._options.editInPlace.enabled && this._options.editInPlace.addInPlace && !this._editInPlace) {
             this._initAddInPlace();
          }
-         this._buildHead();
+
          if(this._options.startScrollColumn !== undefined) {
             this._initPartScroll();
          }
@@ -188,12 +188,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             if (this._isPartScrollVisible) {
                this.updateScrollAndColumns();
             }
-         }
-      },
-      _dataLoadedCallback: function() {
-         DataGridView.superclass._dataLoadedCallback.apply(this, arguments);
-         if(this._newColumnsSetted) {
-            this._buildHead();
          }
       },
 
@@ -337,11 +331,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          /* Посчитаем ширину всех колонок */
          for (var i = 0; i < columns.length; i++) {
-            columnsWidth += (columns[i].width && parseInt(columns[0].width)) || (columns[i].minWidth && parseInt(columns[i].minWidth)) || 0;
+            columnsWidth += (columns[i].width && parseInt(columns[i].width)) || (columns[i].minWidth && parseInt(columns[i].minWidth)) || 0;
          }
 
          /* Проставим ширину колонкам, если нужно */
-         if(columnsWidth < this._container[0].offsetWidth) {
+         if(columnsWidth > this._container[0].offsetWidth) {
             for (var j = 0; j < columns.length; j++) {
                colIndex = this._options.multiselect ? j + 1 : j;
                minWidth = columns[j].minWidth && parseInt(columns[j].minWidth, 10);
@@ -582,8 +576,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
         */
        setColumns : function(columns) {
           this._options.columns = columns;
-          this._newColumnsSetted = true;
           this._checkColumns();
+
+          if(this._options.showHead) {
+             /* Перестроим шапку только после загрузки данных,
+                чтобы таблица не прыгала, из-за того что изменилось количество и ширина колонок */
+             this.once('onDataLoad', this._buildHead.bind(this));
+          }
        },
       /**
        * Проверяет настройки колонок, заданных опцией {@link columns}.
@@ -598,10 +597,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
       _buildHead: function() {
          var head = this._getHeadTemplate();
-         this._newColumnsSetted = false;
          this._isPartScrollVisible = false;
-         this._thead.remove();
-         this._colgroup.remove();
+         this._thead && this._thead.remove();
+         this._colgroup && this._colgroup.remove();
          $('.controls-DataGridView__tbody', this._container).before(head);
          this._thead = $('.controls-DataGridView__thead', this._container.get(0));
          this._colgroup = $('.controls-DataGridView__colgroup', this._container.get(0));
@@ -623,22 +621,23 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _getHeadTemplate: function(){
          var rowData = {
-            columns: $ws.core.clone(this._options.columns),
-            multiselect : this._options.multiselect,
-            startScrollColumn: this._options.startScrollColumn,
-            showHead: this._options.showHead
-         };
+               columns: $ws.core.clone(this._options.columns),
+               multiselect : this._options.multiselect,
+               startScrollColumn: this._options.startScrollColumn,
+               showHead: this._options.showHead
+            },
+            value,
+            column;
 
          for (var i = 0; i < rowData.columns.length; i++) {
-            var value,
                 column = rowData.columns[i];
+
             if (column.headTemplate) {
                value = MarkupTransformer(doT.template(column.headTemplate)({
                   column: column
                }));
             } else {
-               var title = $ws.helpers.escapeHtml(column.title);
-               value = '<div class="controls-DataGridView__th-content">' + title + '</div>';
+               value = '<div class="controls-DataGridView__th-content">' + $ws.helpers.escapeHtml(column.title) + '</div>';
             }
             column.value = value;
          }
