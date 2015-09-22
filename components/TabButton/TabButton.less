@@ -1,158 +1,120 @@
 .controls-TabButton {
-  display: inline-block;
-  cursor: @tab-button-cursor;
-  height: @tab-button-height;
-  position: relative;
-  overflow: hidden;
-  margin-left: -10px;
-  float: right;
-
-  &:hover {
-     .controls-TabButton__inner {
-        background: #F8F8F8;
-        .controls-TabButton__caption {
-        }
-     }
-     .controls-TabButton__corner {
-        background: #F8F8F8;
-     }
-
-    .controls-TabButton__inner {
-      .controls-TabButton__caption {
-         color: #FF7033;
-      }
-    }
-  }
-
-  &.controls-Checked__checked {
-     z-index: 100;
-     .controls-TabButton__selected-border{
-        display: block;
-     }
-    .controls-TabButton__inner {
-       background: #FFFFFF;
-      .controls-TabButton__caption {
-         color: #000000
-      }
-    }
-     .controls-TabButton__corner {
-        box-shadow: -2px 0 2px #CCCCCC;
-        background: #FFFFFF;
-     }
-
-    &:hover {
-
+   display: inline-block;
+   cursor: @tab-button-cursor;
+   height: @tab-button-height;
+   position: relative;
+   overflow: hidden;
+   &:hover {
       .controls-TabButton__inner {
-        .controls-TabButton__caption {
-        }
-      }
-    }
-  }
-
-   &.controls-TabButton__left-align {
-      margin-left: -12px;
-      float: left;
-      &.controls-Checked__checked {
-         .controls-TabButton__corner {
-            box-shadow: 2px 0 2px #CCCCCC;
+         background: #F8F8F8;
+         .controls-TabButton__caption {
+            color: #FF7033;
          }
       }
-      .controls-TabButton__selected-border{
+   }
+
+   &.controls-Checked__checked {
+      z-index: 100;
+      .controls-TabButton__selected-border {
+         display: block;
+      }
+      .controls-TabButton__inner {
+         background: #FFFFFF;
+         .controls-TabButton__caption {
+            color: #000000
+         }
+      }
+   }
+
+   &.controls-TabButton__left-align {
+      float: left;
+      margin-left: -10px;
+      &:hover {
+         .controls-TabButton__corner {
+            background: url('img/TabButton.png') 0 -121px no-repeat;
+         }
+      }
+      &.controls-Checked__checked {
+         .controls-TabButton__corner {
+            background: url('img/TabButton.png') 0 -151px no-repeat;
+         }
+      }
+      .controls-TabButton__selected-border {
          left: 0px;
       }
       .controls-TabButton__inner {
          border-left: 1px solid @customFilterMenu-border-color;
-         border-top: 1px solid @customFilterMenu-border-color;
-         border-right: none;
-         position: relative;
-         z-index: 20;
-         margin-right: 24px;
-         margin-left: 0;
-         .controls-TabButton__caption {
-            padding-right: 5px;
-            padding-left: 24px;
-         }
+         padding-left: 23px;
       }
       .controls-TabButton__corner {
-         transform: rotate(-38deg);
-         width: 16px;
-         height: 66px;
-         border-right: 1px solid #e4e4e4;
-         top: -8px;
-         border-radius: 10px;
-         right: 8px;
-         left: inherit;
+         float: right;
+         background: url('img/TabButton.png') 0 -91px no-repeat;
       }
    }
 
-   .controls-TabButton__selected-border{
+   &.controls-TabButton__right-align {
+      float: right;
+      margin-right: -10px;
+      &:hover {
+         .controls-TabButton__corner {
+            background: url('img/TabButton.png') 0 -31px no-repeat;
+         }
+      }
+      &.controls-Checked__checked {
+         .controls-TabButton__corner {
+            background: url('img/TabButton.png') 0 -61px no-repeat;
+         }
+      }
+      .controls-TabButton__selected-border {
+         right: 0px;
+      }
+      .controls-TabButton__inner {
+         border-right: 1px solid @customFilterMenu-border-color;
+         padding-right: 23px;
+      }
+      .controls-TabButton__corner {
+         float: left;
+         background: url('img/TabButton.png') 0 -1px no-repeat;
+      }
+   }
+
+   .controls-TabButton__corner {
+      z-index: 20;
+      width: 24px;
+      height: 29px;
+      line-height: 29px;
+      display: inline-block;
+   }
+
+   .controls-TabButton__selected-border {
       position: absolute;
+      right: 0px;
+      top: 0px;
       width: 3px;
       height: 29px;
       background: @primary-color;
       display: none;
       z-index: 30;
-      right: 0px;
    }
 
-   .controls-TabButton__corner {
-      position: absolute;
-      background-color: #F2F2F2;
+   .controls-TabButton__inner {
+      border-top: 1px solid @customFilterMenu-border-color;
+      color: #999999;
+      display: inline-block;
+      height: @tab-button-inner-height;
+      background: #F2F2F2;
+      position: relative;
       z-index: 20;
-      transform: rotate(38deg);
-      width: 16px;
-      height: 66px;
-      border-left: 1px solid #e4e4e4;
-      top: -8px;
-      border-radius: 10px;
-      left: 8px;
+
+      .controls-TabButton__caption {
+         font-family: 'TensorFont Bold', TensorFont;
+         font-size: 14px;
+         font-weight: 700;
+         font-style: normal;
+         display: inline-block;
+         height: auto;
+         vertical-align: bottom;
+         padding: 6px 0 0;
+      }
    }
-
-   .controls-TabButton__selected-border{
-      top: 0px;
-   }
-
-  .controls-TabButton__side {
-    vertical-align: top;
-
-    display: @tab-button-side-display;
-    width: @tab-button-side-width;
-    height: @tab-button-side-height;
-
-    &.controls-TabButton__left {
-      margin: @tab-button-left-side-margin;
-      background: @tab-button-left-side-bg;
-    }
-
-    &.controls-TabButton__right {
-      margin: @tab-button-right-side-margin;
-      background: @tab-button-right-side-bg;
-    }
-  }
-
-  .controls-TabButton__inner {
-    color: #999999;
-    display: inline-block;
-    height: @tab-button-inner-height;
-    background: #F2F2F2;
-    border-radius: 4px;
-     border-right: 1px solid @customFilterMenu-border-color;
-     border-top: 1px solid @customFilterMenu-border-color;
-     position: relative;
-     z-index: 20;
-     margin-left: 24px;
-
-    .controls-TabButton__caption {
-       font-family: 'TensorFont Bold', TensorFont;
-       font-size: 14px;
-       font-weight: 700;
-       font-style: normal;
-       display: inline-block;
-       height: auto;
-       vertical-align: bottom;
-       padding: 6px 0 0;
-       padding-left: 5px;
-       padding-right: 24px;
-    }
-  }
 }

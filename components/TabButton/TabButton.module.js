@@ -22,6 +22,7 @@ define('js!SBIS3.CONTROLS.TabButton', ['js!SBIS3.CONTROLS.RadioButtonBase', 'htm
       },
 
       $constructor: function() {
+         this.getContainer().addClass('controls-TabButton__' + (this._options.align || 'right') + '-align');
       }
 
    });
