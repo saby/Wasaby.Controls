@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.TabButton', ['js!SBIS3.CONTROLS.RadioButtonBase', 'html!SBIS3.CONTROLS.TabButton'], function(RadioButtonBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.TabButton', ['js!SBIS3.CONTROLS.RadioButtonBase', 'html!SBIS3.CONTROLS.TabButton'], function (RadioButtonBase, dotTplFn) {
 
    'use strict';
    /**
@@ -12,17 +12,16 @@ define('js!SBIS3.CONTROLS.TabButton', ['js!SBIS3.CONTROLS.RadioButtonBase', 'htm
     * @extends SBIS3.CONTROLS.RadioButtonBase
     * @author Крайнов Дмитрий Олегович
     */
-   var TabButton = RadioButtonBase.extend( /** @lends SBIS3.CONTROLS.TabButton.prototype */ {
-      _dotTplFn : dotTplFn,
+   var TabButton = RadioButtonBase.extend(/** @lends SBIS3.CONTROLS.TabButton.prototype */ {
       $protected: {
          _options: {
             align: 'right',
             additionalText: ''
          }
       },
+      _dotTplFn: dotTplFn,
 
-      $constructor: function() {
-         this.getContainer().addClass('controls-TabButton__' + (this._options.align || 'right') + '-align');
+      $constructor: function () {
       }
 
    });

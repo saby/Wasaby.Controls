@@ -132,4 +132,22 @@
          }
       }
    }
+
+  &.ws-disabled, &.ws-disabled:hover, &.ws-disabled.controls-Checked__checked{
+    .controls-TabButton__inner {
+      background: transparent;
+      border: none;
+      color: #CCCCCC;
+      .controls-TabButton__caption {
+        color: #CCCCCC;
+      }
+    }
+    .controls-TabButton__corner,{
+      background: none;
+    }
+
+    .controls-TabButton__selected-border {
+      display: none;
+    }
+  }
 }
