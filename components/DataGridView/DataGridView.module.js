@@ -59,7 +59,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          _partScrollRow: undefined,                   //Строка-контейнер, в которой лежит частичный скролл
          _isHeaderScrolling: false,                   //Флаг обозначающий, происходит ли скролл за заголовок
          _lastLeftPos: null,                          //Положение по горизонтали, нужно когда происходит скролл за заголовок
-         _newColumnsSetted: false,                    //Флаг, обозначающий, что выставлены новые колонки
          _options: {
             /**
              * @typedef {Object} Columns
@@ -122,17 +121,18 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       $constructor: function() {
          this._publish('onDrawHead');
-         this._thead = $('.controls-DataGridView__thead', this._container.get(0));
-         this._colgroup = $('.controls-DataGridView__colgroup', this._container.get(0));
          this._checkColumns();
       },
 
       init: function() {
          DataGridView.superclass.init.call(this);
+
+         this._buildHead();
+
          if (this._options.editInPlace.enabled && this._options.editInPlace.addInPlace && !this._editInPlace) {
             this._initAddInPlace();
          }
-         this._buildHead();
+
          if(this._options.startScrollColumn !== undefined) {
             this._initPartScroll();
          }
@@ -188,12 +188,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             if (this._isPartScrollVisible) {
                this.updateScrollAndColumns();
             }
-         }
-      },
-      _dataLoadedCallback: function() {
-         DataGridView.superclass._dataLoadedCallback.apply(this, arguments);
-         if(this._newColumnsSetted) {
-            this._buildHead();
          }
       },
 
@@ -287,15 +281,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _drawItemsCallback: function () {
          if(this._options.startScrollColumn !== undefined) {
-
-          /* Т.к. у таблицы стиль table-layout:fixed, то в случае,
-             когда суммарная ширина фиксированных колонок шире родительского контейнера,
-             колонка с резиновой шириной скукоживается до 0,
-             потому что table-layout:fixed игнорирует минимальную ширину колонки.
-             Поэтому мы вынуждены посчитать... и установить минимальную ширину на всю таблицу целиком.
-             В этом случае плавающая ширина скукоживаться не будет.
-             Пример можно посмотреть в реестре номенклатур. */
-            this._setColumnWidthForPartScroll();
             var needShowScroll = this._isTableWide();
 
             this._isPartScrollVisible ?
@@ -333,21 +318,29 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
 
       _setColumnWidthForPartScroll: function() {
-         var tds = this._getItemsContainer().find('.controls-DataGridView__tr[data-id]').eq(0).find('.controls-DataGridView__td'),
+         var cols = this._colgroup.find('col'),
             columns = this.getColumns(),
-            tdIndex,
+            columnsWidth = 0,
+            colIndex,
             minWidth;
 
-         /* если у нас включается прокрутка заголовков,
-            то минимальная ширина ужимается до заданного значения,
-            и в этом режиме можно просто поставить width,
-            т.к. в режиме table-layout:fixed учитывается только width */
-         if(tds.length) {
-            for (var i = 0; i < columns.length; i++) {
-               tdIndex = this._options.multiselect ? i + 1 : i;
-               minWidth = columns[i].minWidth && parseInt(columns[i].minWidth, 10);
-               if (minWidth && tds[tdIndex]&& tds[tdIndex].offsetWidth < minWidth) {
-                  this._colgroup.find('col')[tdIndex].width = minWidth + 'px';
+
+         /* Если включена прокрутка заголовков и сумма ширин всех столбцов больше чем ширина контейнера таблицы,
+            то свободные столцы (без жёстко заданной ширины), могут сильно ужиматься,
+            для этого надо проставить этим столбцам ширину равную минимальной (если она передана) */
+
+         /* Посчитаем ширину всех колонок */
+         for (var i = 0; i < columns.length; i++) {
+            columnsWidth += (columns[i].width && parseInt(columns[i].width)) || (columns[i].minWidth && parseInt(columns[i].minWidth)) || 0;
+         }
+
+         /* Проставим ширину колонкам, если нужно */
+         if(columnsWidth > this._container[0].offsetWidth) {
+            for (var j = 0; j < columns.length; j++) {
+               colIndex = this._options.multiselect ? j + 1 : j;
+               minWidth = columns[j].minWidth && parseInt(columns[j].minWidth, 10);
+               if (minWidth) {
+                  cols[colIndex].width = minWidth + 'px';
                }
             }
          }
@@ -405,14 +398,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
          //Найдём элемент, который нужно доскроллить
          var arrowRect = this._arrowLeft[0].getBoundingClientRect(),
              elemToScroll = document.elementFromPoint(arrowRect.left + arrowRect.width / 2, arrowRect.top + arrowRect.height + 1),
-             elemRect,
              elemWidth,
              delta;
 
          //Если нашли, то рассчитаем куда и на сколько нам скролить
          if(elemToScroll) {
-            elemRect = elemToScroll.getBoundingClientRect();
-            delta = arrowRect.left - elemRect.left;
+            delta = arrowRect.left - elemToScroll.getBoundingClientRect().left;
             elemWidth = elemToScroll.offsetWidth;
 
             //Подключим анимацию
@@ -585,8 +576,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
         */
        setColumns : function(columns) {
           this._options.columns = columns;
-          this._newColumnsSetted = true;
           this._checkColumns();
+
+          if(this._options.showHead) {
+             /* Перестроим шапку только после загрузки данных,
+                чтобы таблица не прыгала, из-за того что изменилось количество и ширина колонок */
+             this.once('onDataLoad', this._buildHead.bind(this));
+          }
        },
       /**
        * Проверяет настройки колонок, заданных опцией {@link columns}.
@@ -601,38 +597,47 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
       _buildHead: function() {
          var head = this._getHeadTemplate();
-         this._newColumnsSetted = false;
          this._isPartScrollVisible = false;
-         this._thead.remove();
-         this._colgroup.remove();
+         this._thead && this._thead.remove();
+         this._colgroup && this._colgroup.remove();
          $('.controls-DataGridView__tbody', this._container).before(head);
          this._thead = $('.controls-DataGridView__thead', this._container.get(0));
          this._colgroup = $('.controls-DataGridView__colgroup', this._container.get(0));
          if(this._options.startScrollColumn !== undefined) {
             this._initPartScroll();
             this.updateDragAndDrop();
+
+            /* Т.к. у таблицы стиль table-layout:fixed, то в случае,
+             когда суммарная ширина фиксированных колонок шире родительского контейнера,
+             колонка с резиновой шириной скукоживается до 0,
+             потому что table-layout:fixed игнорирует минимальную ширину колонки.
+             Поэтому мы вынуждены посчитать... и установить минимальную ширину на всю таблицу целиком.
+             В этом случае плавающая ширина скукоживаться не будет.
+             Пример можно посмотреть в реестре номенклатур. */
+            this._setColumnWidthForPartScroll();
          }
          this._notify('onDrawHead');
       },
 
       _getHeadTemplate: function(){
          var rowData = {
-            columns: $ws.core.clone(this._options.columns),
-            multiselect : this._options.multiselect,
-            startScrollColumn: this._options.startScrollColumn,
-            showHead: this._options.showHead
-         };
+               columns: $ws.core.clone(this._options.columns),
+               multiselect : this._options.multiselect,
+               startScrollColumn: this._options.startScrollColumn,
+               showHead: this._options.showHead
+            },
+            value,
+            column;
 
          for (var i = 0; i < rowData.columns.length; i++) {
-            var value,
                 column = rowData.columns[i];
+
             if (column.headTemplate) {
                value = MarkupTransformer(doT.template(column.headTemplate)({
                   column: column
                }));
             } else {
-               var title = $ws.helpers.escapeHtml(column.title);
-               value = '<div class="controls-DataGridView__th-content">' + title + '</div>';
+               value = '<div class="controls-DataGridView__th-content">' + $ws.helpers.escapeHtml(column.title) + '</div>';
             }
             column.value = value;
          }
