@@ -2465,7 +2465,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   text-align: left;
   height: 30px;
-  padding: 0 6px 0 6px;
+  padding: 0 6px 0 2px;
   color: inherit;
   background-color: transparent;
   border-collapse: separate;
@@ -2571,7 +2571,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-CompositeView .controls-CompositeView__listItem {
   height: 30px;
   line-height: 30px;
-  padding: 0 6px 0 6px;
+  padding: 0 6px 0 2px;
   cursor: pointer;
 }
 .controls-CompositeView .controls-CompositeView__listItem.controls-ListView__hoveredItem {
@@ -2711,10 +2711,11 @@ input[type="reset"]::-moz-focus-inner {
   text-align: center;
 }
 .controls-BreadCrumbs {
-  min-height: 27px;
+  min-height: 24px;
 }
 .controls-BreadCrumbs__crumb {
   cursor: pointer;
+  display: inline-block;
   position: relative;
   line-height: 16px;
   margin-left: -1px;
@@ -2729,7 +2730,8 @@ input[type="reset"]::-moz-focus-inner {
   color: #FF7033;
 }
 .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-  top: -1px;
+  margin-right: 4px;
+  margin-left: 0;
 }
 .controls-BreadCrumbs .controls-BreadCrumbs__title {
   text-decoration: none;
@@ -2740,10 +2742,10 @@ input[type="reset"]::-moz-focus-inner {
   white-space: nowrap;
   overflow: hidden;
   margin-left: -4px;
+  vertical-align: top;
 }
 .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
   position: relative;
-  top: -1px;
 }
 .controls-BreadCrumbs .controls-BreadCrumbs__itemsContainer {
   display: inline-block;
@@ -2774,7 +2776,6 @@ input[type="reset"]::-moz-focus-inner {
   top: -3px;
 }
 .controls-BackButton {
-  display: inline-block;
   cursor: pointer;
   font-size: 18px;
   line-height: 32px;
@@ -2785,7 +2786,7 @@ input[type="reset"]::-moz-focus-inner {
   font-style: normal;
   color: #313e78;
   overflow: hidden;
-  margin-left: -6px;
+  margin-left: -7px;
 }
 .controls-BackButton::before {
   width: 10px;
