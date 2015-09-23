@@ -422,8 +422,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TabButton.controls-Checked__checked .controls-TabButton__inner {
   background: #FFFFFF;
-}
-.controls-TabButton.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__caption {
   color: #000000;
 }
 .controls-TabButton.controls-TabButton__left-align {
@@ -442,6 +440,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TabButton.controls-TabButton__left-align .controls-TabButton__inner {
   border-left: 1px solid #e4e4e4;
   padding-left: 23px;
+  border-top-left-radius: 3px;
 }
 .controls-TabButton.controls-TabButton__left-align .controls-TabButton__corner {
   float: right;
@@ -463,6 +462,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TabButton.controls-TabButton__right-align .controls-TabButton__inner {
   border-right: 1px solid #e4e4e4;
   padding-right: 23px;
+  border-top-right-radius: 3px;
 }
 .controls-TabButton.controls-TabButton__right-align .controls-TabButton__corner {
   float: left;
@@ -503,6 +503,15 @@ input[type="reset"]::-moz-focus-inner {
   height: auto;
   vertical-align: bottom;
   padding: 6px 0 0;
+}
+.controls-TabButton.controls-TabButton__big-size .controls-TabButton__inner .controls-TabButton__caption {
+  padding-top: 3px;
+  font-size: 18px;
+}
+.controls-TabButton.controls-TabButton__big-size .controls-TabButton__inner .controls-TabButton__additional-text {
+  font-family: 'TensorFont Regular', TensorFont;
+  font-weight: 400;
+  font-size: 15px;
 }
 .controls-RadioButton {
   cursor: pointer;

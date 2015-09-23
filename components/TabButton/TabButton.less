@@ -20,9 +20,7 @@
       }
       .controls-TabButton__inner {
          background: #FFFFFF;
-         .controls-TabButton__caption {
-            color: #000000
-         }
+         color: #000000
       }
    }
 
@@ -45,6 +43,7 @@
       .controls-TabButton__inner {
          border-left: 1px solid @customFilterMenu-border-color;
          padding-left: 23px;
+         border-top-left-radius: 3px;
       }
       .controls-TabButton__corner {
          float: right;
@@ -71,6 +70,7 @@
       .controls-TabButton__inner {
          border-right: 1px solid @customFilterMenu-border-color;
          padding-right: 23px;
+         border-top-right-radius: 3px
       }
       .controls-TabButton__corner {
          float: left;
@@ -115,6 +115,21 @@
          height: auto;
          vertical-align: bottom;
          padding: 6px 0 0;
+      }
+   }
+
+   &.controls-TabButton__big-size{
+      .controls-TabButton__inner {
+         .controls-TabButton__caption {
+            padding-top: 3px;
+            font-size: 18px;
+         }
+
+         .controls-TabButton__additional-text{
+            font-family: 'TensorFont Regular', TensorFont;
+            font-weight: 400;
+            font-size: 15px;
+         }
       }
    }
 }
