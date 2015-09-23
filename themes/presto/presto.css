@@ -513,6 +513,28 @@ input[type="reset"]::-moz-focus-inner {
   font-weight: 400;
   font-size: 15px;
 }
+.controls-TabButton.ws-disabled .controls-TabButton__inner,
+.controls-TabButton.ws-disabled:hover .controls-TabButton__inner,
+.controls-TabButton.ws-disabled.controls-Checked__checked .controls-TabButton__inner {
+  background: transparent;
+  border: none;
+  color: #CCCCCC;
+}
+.controls-TabButton.ws-disabled .controls-TabButton__inner .controls-TabButton__caption,
+.controls-TabButton.ws-disabled:hover .controls-TabButton__inner .controls-TabButton__caption,
+.controls-TabButton.ws-disabled.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__caption {
+  color: #CCCCCC;
+}
+.controls-TabButton.ws-disabled .controls-TabButton__corner,
+.controls-TabButton.ws-disabled:hover .controls-TabButton__corner,
+.controls-TabButton.ws-disabled.controls-Checked__checked .controls-TabButton__corner {
+  background: none;
+}
+.controls-TabButton.ws-disabled .controls-TabButton__selected-border,
+.controls-TabButton.ws-disabled:hover .controls-TabButton__selected-border,
+.controls-TabButton.ws-disabled.controls-Checked__checked .controls-TabButton__selected-border {
+  display: none;
+}
 .controls-RadioButton {
   cursor: pointer;
   display: inline-block;
