@@ -1080,6 +1080,9 @@ input[type="reset"]::-moz-focus-inner {
   margin-left: -9px;
   background: #ffffff;
 }
+.controls-MenuLink__Menu.controls-Menu__hide-menu-header .controls-MenuLink__header {
+  display: none;
+}
 .controls-MenuLink__Menu .controls-MenuLink__header {
   height: 24px;
 }

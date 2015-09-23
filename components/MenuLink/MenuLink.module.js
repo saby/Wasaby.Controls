@@ -55,6 +55,9 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
       init : function(){
          this.reload();
          MenuLink.superclass.init.call(this);
+         if (this._container.hasClass('controls-Menu__hide-menu-header')){
+            this._options.pickerClassName += ' controls-Menu__hide-menu-header';
+         }
       },
 
       setCaption: function(caption){
