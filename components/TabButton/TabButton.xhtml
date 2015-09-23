@@ -1,8 +1,8 @@
-<span class="controls-TabButton{{?it.checked===true}} controls-Checked__checked{{?}}">
+<span class="controls-TabButton{{?it.checked===true}} controls-Checked__checked{{?}}{{? it.additionalText || it.size === 'big'}} controls-TabButton__big-size{{?}}">
    <div class="controls-TabButton__corner"></div>
    <i class="controls-TabButton__selected-border"></i>
    <div class="controls-TabButton__inner">
       <span class="controls-TabButton__caption">{{?it.caption}}{{=it.caption}}{{?}}</span>
-      <span class="controls-TabButton__additional-text">{{?it.caption}}{{=it.additionalText}}{{?}}</span>
+      <span class="controls-TabButton__additional-text">{{?it.additionalText}}{{=it.additionalText}}{{?}}</span>
    </div>
 </span>
