@@ -23,8 +23,9 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
     *        resource: 'СообщениеОтКлиента',
     *        modelIdField: '@СообщениеОтКлиента',
     *        queryMethodName: 'СписокОбщий',
-    *        formatForRead: 'СообщениеОтКлиента.Список'
-    *        readMethodName: 'Прочитать'
+    *        readMethodName: 'ПрочитатьПоКлиенту',
+    *        updateMethodName: 'ЗаписатьСПроверкой',
+    *        destroyMethodName:'Удалить'
     *     });
     * </pre>
     */
