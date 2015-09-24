@@ -94,6 +94,25 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
       disableItem: function (id) {
          this.setItemEnabled(id, false);
       },
+      /**
+       * <wiTag group="Управление">
+       * Метод редактирования контента
+       * @param {Function} mutator Функция с одним аргументом - контейнером контрола
+       *
+       * @example
+       * tabs.editContent(function(container) {
+       *    container.addClass('ws-some-class');
+       * });
+       */
+      editContent: function(mutator) {
+         if (typeof mutator == 'function') {
+            try {
+               mutator(this.getContainer());
+            }
+            catch (e){
+            }
+         }
+      },
       enableItem: function (id) {
          this.setItemEnabled(id, true);
       },
@@ -103,11 +122,11 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
       getCurrentItemControl: function () {
          var currentTabId = this.getCurrentItem();
          if (currentTabId) {
-            return this._getItemContainerById(currentTabId);
+            return this._getItemById(currentTabId);
          }
       },
       getItemContainer: function (id) {
-         var tabButton = this._getItemContainerById(id);
+         var tabButton = this._getItemById(id);
          if (tabButton) {
             return tabButton.getContainer();
          }
@@ -127,13 +146,13 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
        *     tabButtons.insertItemAfter({id: 'id1', title: 'Tab 1'}, 'id2');
        * </pre>
        */
-      insertItemAfter: function (newTab, tabId) {
+      insertItemAfter: function (tab, tabId) {
          var items = this.getItems(),
-             afterTabPosition = this._getItemContainerPosition(tabId);
-         if (!afterTabPosition) {
+             afterTabPosition = this._getItemPosition(tabId);
+         if (afterTabPosition < 0) {
             return;
          }
-         items.splice(afterTabPosition, 0, newTab);
+         items.splice(afterTabPosition, 0, tab);
          this.reload();
          this._notify('onItemAdded', tab.id, tab);
       },
@@ -143,8 +162,8 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
          this._notify('onItemAdded', tab.id, tab);
       },
       removeItem: function (id) {
-         var tabPosition = this._getItemContainerPosition(id);
-         if (!tabPosition) {
+         var tabPosition = this._getItemPosition(id);
+         if (tabPosition < 0) {
             return;
          }
          this._options.items.splice(tabPosition, 1);
@@ -152,37 +171,39 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
          this._notify('onItemRemoved', id);
       },
       setCurrentItem: function(id, pushState, skipInvisibility, noActive){
-         var tabButton = this._getItemContainerById(id);
+         var tabButton = this._getItemById(id);
          if (!tabButton){
             return;
          }
          if (tabButton.isVisible() || skipInvisibility){
-            this.setSelectedItem(id);
+            this.setSelectedKey(id);
             tabButton.setEnabled(!noActive);
          }
       },
       setItemAlignment: function (id, align) {
-         var itemPosition = this._getItemContainerPosition(id);
-         if (itemPosition) {
-            this._options.items[itemPosition].align = align;
+         var itemPosition = this._getItemPosition(id);
+         if (itemPosition < 0) {
+            return;
          }
+         this._options.items[itemPosition].align = align;
          this.reload();
       },
       setItemEnabled: function (tabId, enabled) {
-         var tabButton = this._getItemContainerById(tabId);
+         var tabButton = this._getItemById(tabId);
          if (tabButton) {
             tabButton.setEnabled(enabled);
          }
       },
       setItemId: function (oldId, newId) {
-         var itemPosition = this._getItemContainerPosition(oldId);
-         if (itemPosition) {
-            this._options.items[itemPosition].id = newId;
+         var itemPosition = this._getItemPosition(oldId);
+         if (itemPosition < 0) {
+            return;
          }
+         this._options.items[itemPosition].id = newId;
          this.reload();
       },
       setItemVisible: function (id, visible) {
-         var tabButton = this._getItemContainerById(id);
+         var tabButton = this._getItemById(id);
          if (tabButton) {
             tabButton.setVisible(visible);
          }
@@ -190,7 +211,7 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
       showItem: function (id) {
          this.setItemVisible(id, true);
       },
-      _getItemContainerById: function (id) {
+      _getItemById: function (id) {
          var controls = this.getChildControls();
          for (var i in controls) {
             if (controls.hasOwnProperty(i) && controls[i].getContainer().data('id') == id) {
@@ -198,7 +219,7 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
             }
          }
       },
-      _getItemContainerPosition: function (tabId) {
+      _getItemPosition: function (tabId) {
          var position;
          $.each(this.getItems(), function (i, tab) {
             if (tab.id == tabId) {
@@ -210,7 +231,7 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
 
       _beforeShowFirstItem: function () {
          var newSelectedTabId = this._notify('onBeforeShowFirstItem', this._options.selectedItem);
-         if (newSelectedTabId && this._getItemContainerPosition(newSelectedTabId) > -1) {
+         if (newSelectedTabId && this._getItemPosition(newSelectedTabId) > -1) {
             this.setSelectedItem(newSelectedTabId);
          }
       },
