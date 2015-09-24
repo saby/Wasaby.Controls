@@ -29,9 +29,14 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          },
 
          $constructor: function() {
-            this._createItemActionMenu();
-         },
+            var self = this;
 
+            this._itemActionsMenuButton = this._container
+               .find('.controls-ItemActions__menu-button')
+               .click(function() {
+                  self.showItemActionsMenu();
+               });
+         },
          /**
           * Изменяет операции над строкой до нужного состояния - скрывает / показывает кнопки
           */
@@ -62,15 +67,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          _createItemActionMenu: function() {
             var self = this;
 
-            this._itemActionsMenuButton = this._container
-               .find('.controls-ItemActions__menu-button')
-               .click(function() {
-                  self.showItemActionsMenu();
-               });
-
             this._itemActionsMenu = new ContextMenu({
                element: $('> .controls-ItemActions__menu-container', this._container[0]),
                items: this._options.items,
+               keyField: this._options.keyField,
                parent: this,
                target:  this._itemActionsMenuButton,
                corner: 'br',
@@ -101,6 +101,11 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * Показывает меню для операций над записью
           */
          showItemActionsMenu: function() {
+            /* Создадим меню операций над записью, если его ещё нет */
+            if(!this._itemActionsMenu) {
+               this._createItemActionMenu();
+            }
+
             this._onBeforeMenuShowHandler();
             this._itemActionsMenu.show();
             this._activeItem.addClass('controls-ItemActions__activeItem');
@@ -138,7 +143,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          setItems: function(items) {
             this._itemActionsButtons ={};
-            this._itemActionsMenu.setItems(items);
+            this._itemActionsMenu && this._itemActionsMenu.setItems(items);
             ItemActionsGroup.superclass.setItems.apply(this, arguments);
          },
          /**
@@ -190,6 +195,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          destroy: function() {
             this._itemActionsButtons = {};
             this._activeItem = undefined;
+            this._itemActionsMenuButton.unbind('click');
             this._itemActionsMenuButton = undefined;
             ItemActionsGroup.superclass.destroy.apply(this, arguments);
          }
