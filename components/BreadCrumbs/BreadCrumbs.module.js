@@ -183,13 +183,15 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             //Если после всех манипуляций все еще не убираемся в контейнер, будем обрезать текст
             points = $('.controls-BreadCrumbs__crumb:not(.ws-hidden)', targetContainer);
 
-            if ((targetContainer.width() + 30 > containerWidth)) {
-               var third = (containerWidth - 60) / 3;
-               if (points.length > 2){
-                  $('.controls-BreadCrumbs__title', points[0]).css('max-width', third * 2 - 20);
-                  $('.controls-BreadCrumbs__title', points[points.length - 1]).css('max-width', third - 60);
+            //Минимум остается первая и последняя хлебная крошка
+            //20px - ширина блока с домиком
+            //60px - блок с домиком + стрелка + троеточие
+            if ((targetContainer.width() + 20 >= containerWidth)) {
+               var halfWidth = (containerWidth - 60) / 2;
+               if (points.length >= 2){
+                  $('.controls-BreadCrumbs__title', points).css('max-width', halfWidth);
                } else {
-                  $('.controls-BreadCrumbs__title', points[1]).css('max-width', containerWidth - $(points[0]).width() - 60);
+                  $('.controls-BreadCrumbs__title', points).css('max-width', containerWidth - 60);
                }
             }
          }
