@@ -136,10 +136,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             if (checkedText[1]) {
                startSearch.call(self, this.getText(), gridView, BreadCrumbs, searchParamName, searchCrumbsTpl, backButton);
                self._path = [];
-               self._currentRoot = null;
             }
             if (!checkedText[0]) {
-               self._currentRoot = self._lastRoot;
                resetGroup.call(self, gridView, searchParamName, BreadCrumbs, backButton);
             }
          });
