@@ -111,6 +111,7 @@
       background: #F2F2F2;
       position: relative;
       z-index: 20;
+      line-height: 29px;
 
       .controls-TabButton__caption {
          font-family: 'TensorFont Bold', TensorFont;
@@ -120,14 +121,16 @@
          display: inline-block;
          height: auto;
          vertical-align: bottom;
-         padding: 6px 0 0;
+      }
+
+      .controls-TabButton__icon{
+         line-height: 29px!important;
       }
    }
 
    &.controls-TabButton__big-size{
       .controls-TabButton__inner {
          .controls-TabButton__caption {
-            padding-top: 3px;
             font-size: 18px;
          }
 

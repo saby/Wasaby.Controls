@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.TabButton', ['js!SBIS3.CONTROLS.RadioButtonBase', 'html!SBIS3.CONTROLS.TabButton'], function (RadioButtonBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.TabButton', ['js!SBIS3.CONTROLS.RadioButtonBase', 'html!SBIS3.CONTROLS.TabButton', 'js!SBIS3.CONTROLS.EditAtPlace'], function (RadioButtonBase, dotTplFn, wartest) {
 
    'use strict';
    /**

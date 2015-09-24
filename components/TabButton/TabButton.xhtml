@@ -2,7 +2,13 @@
    <div class="controls-TabButton__corner"></div>
    <div class="controls-TabButton__selected-border"></div>
    <div class="controls-TabButton__inner">
+      {{?it.iconClass}}<span class="controls-TabButton__icon {{=it.iconClass}}"></span>{{?}}
       <span class="controls-TabButton__caption">{{?it.caption}}{{=it.caption}}{{?}}</span>
       <span class="controls-TabButton__additional-text">{{?it.additionalText}}{{=it.additionalText}}{{?}}</span>
+      <!--<span>-->
+          <!--<component data-component="SBIS3.CONTROLS.EditAtPlace" data-bind="{Text: poh}" name="poh" style="width: 390px;">-->
+            <!--<option name="editorTpl"><component data-component="SBIS3.CONTROLS.TextBox" data-bind="{Text: poh}"></component></option>\-->
+          <!--</component>-->
+      <!--</span>-->
    </div>
 </div>
