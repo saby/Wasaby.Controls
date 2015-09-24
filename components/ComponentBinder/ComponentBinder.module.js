@@ -60,9 +60,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          filter[gridView.getHierField()] = this._lastRoot;
          //DataGridView._filter = filter;
          //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
-         gridView.reload(filter, gridView._sorting, 0).addCallback(function(){
-            gridView._container.removeClass('controls-GridView__searchMode');
-         });
+         gridView.reload(filter, gridView._sorting, 0);
          this._path = this._pathDSRawData;
          BreadCrumbs.getDataSet().setRawData(this._pathDSRawData);
          BreadCrumbs._redraw();
@@ -73,6 +71,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
          gridView._filter = filter;
       }
+      //При любом релоаде из режима поиска нужно снять класс
+      gridView.once('onDataLoad', function(){
+         gridView._container.removeClass('controls-GridView__searchMode');
+      });
    }
 
    function breakSearch(searchForm){
