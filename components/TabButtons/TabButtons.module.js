@@ -15,19 +15,6 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
 
    var TabButtons = RadioGroupBase.extend(/** @lends SBIS3.CONTROLS.TabButtons.prototype */ {
       /**
-       * @event onItemChange При смене активной закладки
-       * Событие срабатывает по смене закладки (в том числе и при загрузке первой).
-       * @param {$ws.proto.EventObject} event Дескриптор события.
-       * @param {String} id Идентификатор открытой закладки.
-       * @example
-       * <pre>
-       *    tab.subscribe('onItemChange', function(event, id) {
-       *        alert('Выбрана закладка с идентификатором ' + id);
-       *    });
-       * </pre>
-       * @see onBeforeShowFirstItem
-       */
-      /**
        * @event onItemAdded При добавлении вкладки
        * Присходит при добавлении вкладки одним из методов {@link appendItem}, {@link prependItem}, {@link insertItemAfter}.
        * @param {$ws.proto.EventObject} event Дескриптор события.
@@ -73,15 +60,12 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
       },
 
       $constructor: function () {
-         this._publish('onItemChange', 'onItemAdded', 'onItemRemoved', 'onBeforeShowFirstItem');
+         this._publish('onItemAdded', 'onItemRemoved', 'onBeforeShowFirstItem');
 
          if (!this._options.hasMarker) {
             this.getContainer().addClass('controls-TabButton__whithout-marker');
          }
          this.subscribe('onInit', this._beforeShowFirstItem);
-         this.subscribe('onSelectedItemChange', function (event, id) {
-            this._notify('onItemChange', id);
-         }.bind(this));
       },
       appendItem: function (item) {
          this._options.items.push(item);
@@ -232,13 +216,13 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
       _beforeShowFirstItem: function () {
          var newSelectedTabId = this._notify('onBeforeShowFirstItem', this._options.selectedItem);
          if (newSelectedTabId && this._getItemPosition(newSelectedTabId) > -1) {
-            this.setSelectedItem(newSelectedTabId);
+            this.setSelectedKey(newSelectedTabId);
          }
       },
 
       _getItemTemplate: function () {
          return '<component data-component="SBIS3.CONTROLS.TabButton">' +
-            '<option name="caption" value="{{=it.item.get(\"' + this._options.captionField + '\")}}"></option>' +
+            '<option name="caption" value="{{=it.item.get(\"' + this._options.displayField + '\")}}"></option>' +
             '<option name="additionalText" value="{{=it.item.get(\'additionalText\')}}"></option>' +
             '{{?it.item.get(\'size\')}}<option name="size" value="{{=it.item.get(\'size\')}}"></option>{{?}}' +
             '{{?it.item.get(\'align\')}}<option name="align" value="{{=it.item.get(\'align\')}}"></option>{{?}}' +

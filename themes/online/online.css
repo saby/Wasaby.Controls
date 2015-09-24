@@ -428,6 +428,9 @@ input[type="reset"]::-moz-focus-inner {
   float: left;
   margin-left: -10px;
 }
+.controls-TabButton.controls-TabButton__left-align:first-child {
+  margin-left: 0;
+}
 .controls-TabButton.controls-TabButton__left-align:hover .controls-TabButton__corner {
   background: url('img/TabButton.png') 0 -121px no-repeat;
 }
@@ -449,6 +452,9 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TabButton.controls-TabButton__right-align {
   float: right;
   margin-right: -10px;
+}
+.controls-TabButton.controls-TabButton__right-align:first-child {
+  margin-right: 0;
 }
 .controls-TabButton.controls-TabButton__right-align:hover .controls-TabButton__corner {
   background: url('img/TabButton.png') 0 -31px no-repeat;
