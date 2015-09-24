@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!SBIS3.CONTROLS.TabButton', 'css!SBIS3.CONTROLS.TabButtons'], function (RadioGroupBase, TabButton) {
+define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!SBIS3.CONTROLS.TabButton', 'html!SBIS3.CONTROLS.TabButtons', 'css!SBIS3.CONTROLS.TabButtons', 'html!SBIS3.CONTROLS.TabButton'], function (RadioGroupBase, TabButton, TabButtonTpl) {
 
    'use strict';
 
@@ -58,6 +58,7 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
             hasMarker: true
          }
       },
+      _dotTplFn: TabButtonTpl,
 
       $constructor: function () {
          this._publish('onItemAdded', 'onItemRemoved', 'onBeforeShowFirstItem');
@@ -78,6 +79,8 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
       disableItem: function (id) {
          this.setItemEnabled(id, false);
       },
+
+      //TODO нужен ли этот метод?
       /**
        * <wiTag group="Управление">
        * Метод редактирования контента
@@ -154,6 +157,7 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
          this.reload();
          this._notify('onItemRemoved', id);
       },
+      //TODO  нужен ли pushState?
       setCurrentItem: function(id, pushState, skipInvisibility, noActive){
          var tabButton = this._getItemById(id);
          if (!tabButton){
@@ -165,12 +169,7 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
          }
       },
       setItemAlignment: function (id, align) {
-         var itemPosition = this._getItemPosition(id);
-         if (itemPosition < 0) {
-            return;
-         }
-         this._options.items[itemPosition].align = align;
-         this.reload();
+         this._changeItemConfig(id, 'align', align);
       },
       setItemEnabled: function (tabId, enabled) {
          var tabButton = this._getItemById(tabId);
@@ -179,12 +178,7 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
          }
       },
       setItemId: function (oldId, newId) {
-         var itemPosition = this._getItemPosition(oldId);
-         if (itemPosition < 0) {
-            return;
-         }
-         this._options.items[itemPosition].id = newId;
-         this.reload();
+         this._changeItemConfig(oldId, 'id', newId);
       },
       setItemVisible: function (id, visible) {
          var tabButton = this._getItemById(id);
@@ -192,8 +186,24 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
             tabButton.setVisible(visible);
          }
       },
+      setItemTitle: function(id, title){
+         this._changeItemConfig(id, this._options.displayField, title);
+      },
+      setItemIcon: function(id, iconClass){
+         this._changeItemConfig(id, 'iconClass', iconClass);
+      },
       showItem: function (id) {
          this.setItemVisible(id, true);
+      },
+      _changeItemConfig: function(id, field, value){
+         var itemPosition = this._getItemPosition(id),
+            itemConfig;
+         if (itemPosition < 0) {
+            return;
+         }
+         itemConfig = this.getItems()[itemPosition];
+         itemConfig[field] = value;
+         this.reload();
       },
       _getItemById: function (id) {
          var controls = this.getChildControls();
@@ -224,6 +234,7 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
          return '<component data-component="SBIS3.CONTROLS.TabButton">' +
             '<option name="caption" value="{{=it.item.get(\"' + this._options.displayField + '\")}}"></option>' +
             '<option name="additionalText" value="{{=it.item.get(\'additionalText\')}}"></option>' +
+            '{{?it.item.get(\'iconClass\')}}<option name="iconClass" value="{{=it.item.get(\'iconClass\')}}"></option>{{?}}' +
             '{{?it.item.get(\'size\')}}<option name="size" value="{{=it.item.get(\'size\')}}"></option>{{?}}' +
             '{{?it.item.get(\'align\')}}<option name="align" value="{{=it.item.get(\'align\')}}"></option>{{?}}' +
             '{{?it.item.get(\'name\')}}<option name="name" value="{{=it.item.get(\'name\')}}"></option>{{?}}' +
