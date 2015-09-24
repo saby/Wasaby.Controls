@@ -71,8 +71,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
          gridView._filter = filter;
       }
-      //Пока так. В 3.7.3 сделано нормально
-      //Проблема с deffered у reload
+      //При любом релоаде из режима поиска нужно снять класс
       gridView.once('onDataLoad', function(){
          gridView._container.removeClass('controls-GridView__searchMode');
       });
