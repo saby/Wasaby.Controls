@@ -63,10 +63,11 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
       $constructor: function () {
          this._publish('onItemAdded', 'onItemRemoved', 'onBeforeShowFirstItem');
 
-         if (!this._options.hasMarker) {
-            this.getContainer().addClass('controls-TabButton__whithout-marker');
-         }
-         this.subscribe('onInit', this._beforeShowFirstItem);
+         this.subscribe('onInit', function(){
+            this._beforeShowFirstItem();
+            this._findSideItems();
+            this._toggleMarker(!this._options.hasMarker);
+         }.bind(this));
       },
       appendItem: function (item) {
          this._options.items.push(item);
@@ -192,6 +193,22 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
       setItemIcon: function(id, iconClass){
          this._changeItemConfig(id, 'iconClass', iconClass);
       },
+      setItemTemplate: function(id, tpl, config){
+         var item = this._getItemById(id),
+            tplContainer = item && item.getContainer().find('.controls-TabButton__inner');
+         if (!item){
+            return;
+         }
+         tplContainer.html(tpl(config));
+      },
+
+      //TODO возможно ненужные методы
+      showMarker: function(){
+         this._toggleMarker(false);
+      },
+      hideMarker: function(){
+         this._toggleMarker(true);
+      },
       showItem: function (id) {
          this.setItemVisible(id, true);
       },
@@ -228,6 +245,14 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
          if (newSelectedTabId && this._getItemPosition(newSelectedTabId) > -1) {
             this.setSelectedKey(newSelectedTabId);
          }
+      },
+
+      _findSideItems: function(){
+         this.getContainer().find('.controls-TabButton__left-align:first, .controls-TabButton__right-align:first').addClass('controls-TabButton__side-item');
+      },
+
+      _toggleMarker: function(toggle){
+         this.getContainer().toggleClass('controls-TabButton__whithout-marker', toggle)
       },
 
       _getItemTemplate: function () {
