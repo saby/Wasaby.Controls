@@ -117,6 +117,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             e.stopPropagation();
             return false;
          });
+         //Для инициализации dataSet
          this.reload();
          if (this._options.selectedKey) {
             this._drawSelectedItem(this._options.selectedKey); } else {
