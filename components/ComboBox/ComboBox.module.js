@@ -137,6 +137,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             e.stopPropagation();
             return false;
          });
+         //Для инициализации dataSet
          this.reload();
          var key = this._options.selectedKey;
          if (key !== undefined && key !== null) {
