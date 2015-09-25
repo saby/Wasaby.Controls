@@ -635,7 +635,8 @@ define('js!SBIS3.CONTROLS.ListView',
             this._drawSelectedItems(this._options.selectedKeys);
             this._drawSelectedItem(this._options.selectedKey);
 
-            /* Если после отрисовки выделенный элемент пропал, посигналим об этом */
+            /* Если после перерисовки выделенный элемент удалился из DOM дерава,
+               то событие mouseLeave не сработает, поэтому вызовем руками метод */
             if(hoveredItem && !$.contains(this._getItemsContainer()[0], hoveredItem[0])) {
                this._mouseLeaveHandler();
             }
