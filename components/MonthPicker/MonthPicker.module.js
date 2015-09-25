@@ -93,13 +93,7 @@ define(
              *     <option name="date">2015-03-26T21:00:00.000Z</option>
              * </pre>
              */
-            date: '',
-            /**
-             * @cfg {String} формат визуального отображения месяца
-             * TODO проверить необходимость данной опции, определиться в рамках 3.7.3
-             * @noShow
-             */
-            monthFormat: ''
+            date: ''
          },
          /**
           * Массив месяцев
@@ -297,52 +291,35 @@ define(
        * @see date
        * @see getDate
        */
-      setDate: function(value) {
-         value = value ? value : new Date();
-         this._setDate(value);
+      setDate: function(date) {
+         this._setDate(date);
          this._notify('onDateChange', this._options.date);
       },
 
       /**
        * Установить дату по полученному значению. Приватный метод. Может принимает либо строку
-       * формата 'число.число' или 'число', либо объект типа Date.
-       * @param value Строка или дата
+       * формата ISO либо объект типа Date.
+       * @param date Строка или дата
        * @private
        */
-      _setDate: function(value){
-         if( value instanceof Date ){
-            this._setDateByDateObject(value);
-         }
-         else if( typeof value == 'string' ){
-            this._setDateByString(value);
-         }
-      },
-
-      /**
-       * Установить дату по переданной строке.
-       * Проверить ее на корректность [MM.]YYYY и установить, иначе породить исключение.
-       * Нумерация месяцев начинается с единицы
-       * @param value
-       * @private
-       */
-      _setDateByString: function(value){
-         var checkResult = /^(?:(\d{1,2})\.)?(\d{1,4})$/.exec(value),
-            isCorrect = false;
-
-         if ( checkResult ){
-            this._setDateByDateObject(this._getFirstDay( parseInt(checkResult[2], 10), parseInt(checkResult[1], 10) - 1 || 0 ));
+      _setDate: function (date) {
+         var isCorrect = false;
+         if (date instanceof Date) {
+            this._options.date = date;
             isCorrect = true;
-         } else if (typeof value == 'string') {
+         } else if (typeof date == 'string') {
             //convert ISO-date to Date
-            this._options.date = DateUtil.dateFromIsoString(value);
+            this._options.date = DateUtil.dateFromIsoString(date);
             if (DateUtil.isValidDate(this._options.date)) {
-               this._setDateByDateObject(this._options.date);
                isCorrect = true;
             }
          }
          if ( ! isCorrect) {
+            this._options.date = null;
             throw new Error('MonthPicker. Неверный формат даты');
          }
+
+         this._setDateByDateObject(this._options.date);
       },
 
       /**
