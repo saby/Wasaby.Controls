@@ -627,11 +627,19 @@ define('js!SBIS3.CONTROLS.ListView',
          //*********************************//
 
          _drawItemsCallback: function () {
+            var hoveredItem = this._hoveredItem.container;
+
             if (this.isInfiniteScroll()) {
                this._loadBeforeScrollAppears();
             }
             this._drawSelectedItems(this._options.selectedKeys);
             this._drawSelectedItem(this._options.selectedKey);
+
+            /* Если после отрисовки выделенный элемент пропал, посигналим об этом */
+            if(hoveredItem && !$.contains(this._getItemsContainer()[0], hoveredItem[0])) {
+               this._mouseLeaveHandler();
+            }
+
             this._notifyOnSizeChanged(true);
          },
          //-----------------------------------infiniteScroll------------------------
