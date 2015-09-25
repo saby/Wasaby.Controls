@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!SBIS3.CONTROLS.TabButton', 'html!SBIS3.CONTROLS.TabButtons', 'css!SBIS3.CONTROLS.TabButtons', 'html!SBIS3.CONTROLS.TabButton'], function (RadioGroupBase, TabButton, TabButtonTpl) {
+define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'html!SBIS3.CONTROLS.TabButtons', 'css!SBIS3.CONTROLS.TabButtons', 'js!SBIS3.CONTROLS.TabButton'], function (RadioGroupBase, TabButtonTpl) {
 
    'use strict';
 
@@ -69,14 +69,26 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
             this._toggleMarker(!this._options.hasMarker);
          }.bind(this));
       },
+      /**
+       * <wiTag group="Управление">
+       * Добавляет вкладку в конец списка
+       * @param item
+       */
       appendItem: function (item) {
          this._options.items.push(item);
          this.reload();
          this._notify('onItemAdded', item.id, item);
       },
+      /**
+       * Применение пустого состояния. Поставил закладку по-умолчанию или никакую (если не была задана)
+       */
       applyEmptyState: function () {
          this.setSelectedKey(this.getCurrentItem());
       },
+      /**
+       * <wiTag group="Управление">
+       * @param {String} id Идентификатор вкладки
+       */
       disableItem: function (id) {
          this.setItemEnabled(id, false);
       },
@@ -101,33 +113,59 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
             }
          }
       },
+      /**
+       * <wiTag group="Управление">
+       * @param {String} id Идентификатор вкладки
+       */
       enableItem: function (id) {
          this.setItemEnabled(id, true);
       },
+      /**
+       * <wiTag group="Управление">
+       * Возвращает идентификатор текущей вкладки
+       * @returns {String} Идентификатор текущей вкладки.
+       */
       getCurrentItem: function () {
          return this._options.selectedItem;
       },
+      /**
+       * Возвращает контрол в активной закладке, если есть.
+       * @returns {Object}
+       */
       getCurrentItemControl: function () {
          var currentTabId = this.getCurrentItem();
          if (currentTabId) {
             return this._getItemById(currentTabId);
          }
       },
+      /**
+       * Возвращает контейнер вкладки
+       * @param {String} id Идентификатор вкладки
+       * @returns {JQuery}
+       */
       getItemContainer: function (id) {
          var tabButton = this._getItemById(id);
          if (tabButton) {
             return tabButton.getContainer();
          }
       },
+      /**
+       * Возвращает конфигурацию вкладок
+       * @returns {Object}
+       */
       getItems: function () {
          return this._options.items;
       },
+      /**
+       * Скрыть вкладку
+       * @param {String} id Идентификатор вкладки
+       */
       hideItem: function (id) {
          this.setItemVisible(id, false);
       },
       /**
        * Добавляет вкладку после указанной вкладки
-       * @param {Object} newTab Конфигурация новой вкладки
+       * @param {Object} tab Конфигурация новой вкладки
        * @param {String} tabId ID вкладки после которой вставлять
        * @example
        * <pre>
@@ -144,11 +182,21 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
          this.reload();
          this._notify('onItemAdded', tab.id, tab);
       },
-      prependItem: function (tab) {
-         this._options.items.unshift(tab);
+      /**
+       * <wiTag group="Управление">
+       * Добавляет вкладку в начало списка
+       * @param item
+       */
+      prependItem: function (item) {
+         this._options.items.unshift(item);
          this.reload();
-         this._notify('onItemAdded', tab.id, tab);
+         this._notify('onItemAdded', item.id, item);
       },
+      /**
+       * <wiTag group="Управление">
+       * Удаляет вкладку
+       * @param id
+       */
       removeItem: function (id) {
          var tabPosition = this._getItemPosition(id);
          if (tabPosition < 0) {
@@ -158,8 +206,17 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
          this.reload();
          this._notify('onItemRemoved', id);
       },
-      //TODO  нужен ли pushState?
+      /**
+       * <wiTag group="Управление">
+       * Установить текущую вкладку
+       * @param {String} id Идентификатор вкладки
+       * @param {Boolean} [pushState=false] Записать состояние в историю браузера
+       * @param {Boolean} [skipInvisibility=false] Дает возможность установить активной невидимую вкладку
+       * @param {Boolean} [noActive] Активировать или нет контрол на установленной вкладке. По-умолчанию активируется.
+       */
       setCurrentItem: function(id, pushState, skipInvisibility, noActive){
+         //TODO  нужен ли pushState?
+
          var tabButton = this._getItemById(id);
          if (!tabButton){
             return;
@@ -169,30 +226,71 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
             tabButton.setEnabled(!noActive);
          }
       },
+      /**
+       * <wiTag group="Управление">
+       * Удаляет вкладку
+       * @param id Идентификатор вкладки
+       * @param align расположение вкладки. Значения 'left' или 'right'
+       */
       setItemAlignment: function (id, align) {
          this._changeItemConfig(id, 'align', align);
       },
-      setItemEnabled: function (tabId, enabled) {
-         var tabButton = this._getItemById(tabId);
+      /**
+       * <wiTag group="Управление">
+       * Включает или выключает вкладку. Она видима но не может быть переключена.
+       * @param {String} id Идентификатор вкладки
+       * @param {Boolean} state Состояние
+       */
+      setItemEnabled: function (id, state) {
+         var tabButton = this._getItemById(id);
          if (tabButton) {
-            tabButton.setEnabled(enabled);
+            tabButton.setEnabled(state);
          }
       },
+      /* Устанавливает id закладки
+       * @param {String} oldId старый id
+       * @param {String} newId новый id
+       */
       setItemId: function (oldId, newId) {
          this._changeItemConfig(oldId, 'id', newId);
       },
-      setItemVisible: function (id, visible) {
+      /**
+       * <wiTag group="Управление">
+       * Скрывает или показывает вкладку в зависимости от параметра state
+       * @param {String} id Идентификатор вкладки
+       * @param {Boolean} state Состояние
+       */
+      setItemVisible: function (id, state) {
          var tabButton = this._getItemById(id);
          if (tabButton) {
-            tabButton.setVisible(visible);
+            tabButton.setVisible(state);
          }
       },
+      /**
+       * <wiTag group="Управление">
+       * Установить текст закладки
+       * @param {String} id ID закладки, которую надо переименовать
+       * @param {String} title Новое имя
+       */
       setItemTitle: function(id, title){
          this._changeItemConfig(id, this._options.displayField, title);
       },
+      /**
+       * <wiTag group="Управление">
+       * Установить иконку
+       * @param {String} id ID закладки, которую надо переименовать
+       * @param {String} iconClass css класс иконки
+       */
       setItemIcon: function(id, iconClass){
          this._changeItemConfig(id, 'iconClass', iconClass);
       },
+      /**
+       * <wiTag group="Управление">
+       * Установить шаблон вкладки
+       * @param {String} id ID закладки, которую надо переименовать
+       * @param {String} tpl шаблон
+       * @param {String} config конфигурация шаблона
+       */
       setItemTemplate: function(id, tpl, config){
          var item = this._getItemById(id),
             tplContainer = item && item.getContainer().find('.controls-TabButton__inner');
@@ -201,16 +299,19 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'js!
          }
          tplContainer.html(tpl(config));
       },
-
+      /**
+       * Показать вкладку
+       * @param {String} id Идентификатор вкладки
+       */
+      showItem: function (id) {
+         this.setItemVisible(id, true);
+      },
       //TODO возможно ненужные методы
       showMarker: function(){
          this._toggleMarker(false);
       },
       hideMarker: function(){
          this._toggleMarker(true);
-      },
-      showItem: function (id) {
-         this.setItemVisible(id, true);
       },
       _changeItemConfig: function(id, field, value){
          var itemPosition = this._getItemPosition(id),
