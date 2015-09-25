@@ -383,6 +383,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
       },
 
+      /**
+       * Сигналит о том, что отрисовка набора закончена
+       */
       _notifyOnDrawItems: function() {
          this._notify('onDrawItems');
          this._drawItemsCallback();
