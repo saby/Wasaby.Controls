@@ -2355,9 +2355,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-GridView__searchMode .controls-TreeView__hierWrapper {
   width: 0;
 }
-.controls-GridView__searchMode .controls-TreeView__expand {
-  width: 0;
-}
 .controls-TreeDataGridView__folderToolbarContainer {
   overflow: hidden;
 }
@@ -2596,16 +2593,16 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-BackButton {
   cursor: pointer;
+  display: inline-block;
   font-size: 18px;
-  line-height: 32px;
-  height: 32px !important;
+  line-height: 26px;
   font-weight: 700;
 }
 .controls-BackButton .controls-BackButton__caption {
   font-style: normal;
   color: #313e78;
   overflow: hidden;
-  margin-left: -7px;
+  vertical-align: top;
 }
 .controls-BackButton::before {
   width: 10px;
