@@ -317,12 +317,20 @@ define('js!SBIS3.CONTROLS.DataSet', [
       insert: function (record, at) {
          this._addRecords(record, {at: at});
       },
-
+      /**
+       * Устанавливает данные в DataSet.
+       * @param data {Object} Объект содержащий набор записе, формат объекта
+       * должен соответсвовать текущей стратегии работы с данными.
+       * @see strategy
+       */
       setRawData: function(data) {
          this._rawData = data;
          this._loadFromRaw();
       },
-
+      /**
+       * Возвращает данные "как есть", в том виде в каком они были установлены например.
+       * @returns {Object}
+       */
       getRawData: function() {
          return this._rawData;
       },
