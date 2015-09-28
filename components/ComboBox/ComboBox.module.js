@@ -137,7 +137,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             e.stopPropagation();
             return false;
          });
-
+         //Для инициализации dataSet
+         this.reload();
          var key = this._options.selectedKey;
          if (key !== undefined && key !== null) {
             this._drawSelectedItem(this._options.selectedKey);
@@ -157,7 +158,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   self.togglePicker();
                }
             }
-         })
+         });
       },
 
       _keyboardHover: function (e) {
