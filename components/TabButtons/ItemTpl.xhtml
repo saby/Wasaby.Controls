@@ -1,0 +1,8 @@
+<component data-component="SBIS3.CONTROLS.TabButton">
+    <option name="caption" value="{{=it.displayField}}"></option>
+    {{?it.item.getRaw().hasOwnProperty('additionalText') == true}}<option name="iconClass" value="{{=it.item.get('additionalText')}}"></option>{{?}}
+    {{?it.item.getRaw().hasOwnProperty('iconClass')}}<option name="iconClass" value="{{=it.item.get('iconClass')}}"></option>{{?}}
+    {{?it.item.getRaw().hasOwnProperty('size')}}<option name="size" value="{{=it.item.get('size')}}"></option>{{?}}
+    {{?it.item.getRaw().hasOwnProperty('align')}}<option name="align" value="{{=it.item.get('align')}}"></option>{{?}}
+    {{?it.item.getRaw().hasOwnProperty('name')}}<option name="name" value="{{=it.item.get('name')}}"></option>{{?}}
+</component>
