@@ -1,9 +1,9 @@
 <component data-component="SBIS3.CONTROLS.TabButton">
     <option name="caption" value="{{=it.displayField}}"></option>
-    {{var itemRaws=it.item.getRaw();}}
-    {{?itemRaws.hasOwnProperty('additionalText')}}<option name="additionalText" value="{{=it.item.get('additionalText')}}"></option>{{?}}
-    {{?itemRaws.hasOwnProperty('iconClass')}}<option name="iconClass" value="{{=it.item.get('iconClass')}}"></option>{{?}}
-    {{?itemRaws.hasOwnProperty('size')}}<option name="size" value="{{=it.item.get('size')}}"></option>{{?}}
-    {{?itemRaws.hasOwnProperty('align')}}<option name="align" value="{{=it.item.get('align')}}"></option>{{?}}
-    {{?itemRaws.hasOwnProperty('name')}}<option name="name" value="{{=it.item.get('name')}}"></option>{{?}}
+    {{var itemRaws = it.item.getRaw();}}
+    {{for (i in itemRaws) {}}
+    {{?itemRaws.hasOwnProperty(i)}}
+        <option name="{{=i}}" value="{{=itemRaws[i]}}"></option>
+    {{?}}
+    {{}}}
 </component>
