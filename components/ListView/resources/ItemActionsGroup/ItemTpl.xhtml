@@ -1,0 +1,6 @@
+{{var caption = it.item.get('caption'); }}
+
+<component data-component="{{? caption }}SBIS3.CONTROLS.Link{{??}}SBIS3.CONTROLS.IconButton{{?}}">
+    <option name="allowChangeEnabled" type="boolean">{{= !!it.item.get('allowChangeEnabled') }}</option>
+    {{? caption}}<option name="caption">{{= caption }}</option>{{??}}<option name="icon">{{= it.item.get('icon') }}</option>{{?}}
+</component>
