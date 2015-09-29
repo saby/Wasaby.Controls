@@ -69,17 +69,18 @@ define(
       applyEmptyState: function () {
          this.setSelectedKey(this._options.defaultKey);
       },
+      toggleMarker: function(toggle){
+         this.getContainer().toggleClass('controls-TabButton__whithout-marker', toggle)
+      },
       _beforeShowFirstItem: function () {
          var newSelectedTabId = this._notify('onBeforeShowFirstItem', this._options.selectedItem);
          if (this.getItemInstance(newSelectedTabId)) {
             this.setSelectedKey(newSelectedTabId);
          }
       },
-
       _findSideItems: function(){
          this.getContainer().find('.controls-TabButton__left-align:first, .controls-TabButton__right-align:first').addClass('controls-TabButton__side-item');
       },
-
       _getItemTemplate: function (item) {
          var displayField = this._options.displayField;
          return this._options.itemTemplate.call(this,
