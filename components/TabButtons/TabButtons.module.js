@@ -104,18 +104,7 @@ define(
       getSelectedItemControl: function () {
          var currentTabId = this.getSelectedKey();
          if (currentTabId) {
-            return this._getItemById(currentTabId);
-         }
-      },
-      /**
-       * Возвращает контейнер вкладки
-       * @param {String} id Идентификатор вкладки
-       * @returns {JQuery}
-       */
-      getItemContainer: function (id) {
-         var tabButton = this._getItemById(id);
-         if (tabButton) {
-            return tabButton.getContainer();
+            return this.getItemInstance(currentTabId);
          }
       },
       /**
@@ -137,7 +126,7 @@ define(
       insertItemAfter: function (tab, tabId) {
          var items = this.getItems(),
              afterTabPosition = this._getItemPosition(tabId);
-         if (afterTabPosition < 0) {
+         if (~afterTabPosition) {
             return;
          }
          items.splice(afterTabPosition, 0, tab);
@@ -161,7 +150,7 @@ define(
        */
       removeItem: function (id) {
          var tabPosition = this._getItemPosition(id);
-         if (tabPosition < 0) {
+         if (~tabPosition) {
             return;
          }
          this._options.items.splice(tabPosition, 1);
@@ -179,7 +168,7 @@ define(
       setCurrentItem: function(id, pushState, skipInvisibility, noActive){
          //TODO  нужен ли pushState?
 
-         var tabButton = this._getItemById(id);
+         var tabButton = this.getItemInstance(id);
          if (!tabButton){
             return;
          }
@@ -204,7 +193,7 @@ define(
        * @param {Boolean} state Состояние
        */
       setItemEnabled: function (id, state) {
-         var tabButton = this._getItemById(id);
+         var tabButton = this.getItemInstance(id);
          if (tabButton) {
             tabButton.setEnabled(state);
          }
@@ -223,7 +212,7 @@ define(
        * @param {Boolean} state Состояние
        */
       setItemVisible: function (id, state) {
-         var tabButton = this._getItemById(id);
+         var tabButton = this.getItemInstance(id);
          if (tabButton) {
             tabButton.setVisible(state);
          }
@@ -254,7 +243,7 @@ define(
        * @param {String} config конфигурация шаблона
        */
       setItemTemplate: function(id, tpl, config){
-         var item = this._getItemById(id),
+         var item = this.getItemInstance(id),
             tplContainer = item && item.getContainer().find('.controls-TabButton__inner');
          if (!item){
             return;
@@ -267,23 +256,15 @@ define(
       _changeItemConfig: function(id, field, value){
          var itemPosition = this._getItemPosition(id),
             itemConfig;
-         if (itemPosition < 0) {
+         if (~itemPosition) {
             return;
          }
          itemConfig = this.getItems()[itemPosition];
          itemConfig[field] = value;
          this.reload();
       },
-      _getItemById: function (id) {
-         var controls = this.getChildControls();
-         for (var i in controls) {
-            if (controls.hasOwnProperty(i) && controls[i].getContainer().data('id') == id) {
-               return controls[i];
-            }
-         }
-      },
       _getItemPosition: function (tabId) {
-         var position;
+         var position = -1;
          $.each(this.getItems(), function (i, tab) {
             if (tab.id == tabId) {
                position = i;
@@ -294,7 +275,7 @@ define(
 
       _beforeShowFirstItem: function () {
          var newSelectedTabId = this._notify('onBeforeShowFirstItem', this._options.selectedItem);
-         if (newSelectedTabId && this._getItemPosition(newSelectedTabId) > -1) {
+         if (newSelectedTabId && ~this._getItemPosition(newSelectedTabId)) {
             this.setSelectedKey(newSelectedTabId);
          }
       },
