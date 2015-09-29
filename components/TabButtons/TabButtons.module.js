@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'html!SBIS3.CONTROLS.TabButtons', 'css!SBIS3.CONTROLS.TabButtons', 'js!SBIS3.CONTROLS.TabButton'], function (RadioGroupBase, TabButtonTpl) {
+define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'html!SBIS3.CONTROLS.TabButtons', 'html!SBIS3.CONTROLS.TabButtons/ItemTpl', 'js!SBIS3.CONTROLS.EditAtPlace', 'css!SBIS3.CONTROLS.TabButtons', 'js!SBIS3.CONTROLS.TabButton'], function (RadioGroupBase, TabButtonsTpl, ItemTpl, EditAtPlace) {
 
    'use strict';
 
@@ -55,10 +55,11 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'htm
       $protected: {
          _options: {
             type: 'normal',
-            hasMarker: true
+            hasMarker: true,
+            itemTemplate: ItemTpl
          }
       },
-      _dotTplFn: TabButtonTpl,
+      _dotTplFn: TabButtonsTpl,
 
       $constructor: function () {
          this._publish('onItemAdded', 'onItemRemoved', 'onBeforeShowFirstItem');
@@ -356,15 +357,10 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'htm
          this.getContainer().toggleClass('controls-TabButton__whithout-marker', toggle)
       },
 
-      _getItemTemplate: function () {
-         return '<component data-component="SBIS3.CONTROLS.TabButton">' +
-            '<option name="caption" value="{{=it.item.get(\"' + this._options.displayField + '\")}}"></option>' +
-            '<option name="additionalText" value="{{=it.item.get(\'additionalText\')}}"></option>' +
-            '{{?it.item.get(\'iconClass\')}}<option name="iconClass" value="{{=it.item.get(\'iconClass\')}}"></option>{{?}}' +
-            '{{?it.item.get(\'size\')}}<option name="size" value="{{=it.item.get(\'size\')}}"></option>{{?}}' +
-            '{{?it.item.get(\'align\')}}<option name="align" value="{{=it.item.get(\'align\')}}"></option>{{?}}' +
-            '{{?it.item.get(\'name\')}}<option name="name" value="{{=it.item.get(\'name\')}}"></option>{{?}}' +
-            '</component>';
+      _getItemTemplate: function (item) {
+         var displayField = this._options.displayField,
+            caption = item.get(displayField);
+         return this._options.itemTemplate.call(this, {item: item, displayField: caption})
       }
    });
    return TabButtons;
