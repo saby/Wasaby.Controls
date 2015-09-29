@@ -53,14 +53,14 @@ define(
       _dotTplFn: TabButtonsTpl,
 
       $constructor: function () {
-         this._publish('onItemAdded', 'onItemRemoved', 'onBeforeShowFirstItem');
+         this._publish('onBeforeShowFirstItem');
 
          this._options.defaultKey = this._options.selectedKey;
+
          this.subscribe('onInit', function(){
             this._beforeShowFirstItem();
             this.toggleMarker(!this._options.hasMarker);
          }.bind(this));
-
          this.subscribe('onDrawItems', this._findSideItems);
       },
       /**
@@ -68,13 +68,6 @@ define(
        */
       applyEmptyState: function () {
          this.setSelectedKey(this._options.defaultKey);
-      },
-      /**
-       * Возвращает активную вкладку, если есть.
-       * @returns {Object}
-       */
-      getSelectedItemControl: function () {
-         return this.getItemInstance(this.getSelectedKey());
       },
       /**
        * <wiTag group="Управление">
@@ -158,13 +151,13 @@ define(
          if (~itemPosition) {
             return;
          }
-         itemConfig = this.getItems()[itemPosition];
+         itemConfig = this._options.items[itemPosition];
          itemConfig[field] = value;
          this.reload();
       },
       _getItemPosition: function (tabId) {
          var position = -1;
-         $.each(this.getItems(), function (i, tab) {
+         $.each(this._options.items, function (i, tab) {
             if (tab.id == tabId) {
                position = i;
             }
@@ -174,7 +167,7 @@ define(
 
       _beforeShowFirstItem: function () {
          var newSelectedTabId = this._notify('onBeforeShowFirstItem', this._options.selectedItem);
-         if (newSelectedTabId && ~this._getItemPosition(newSelectedTabId)) {
+         if (this.getItemInstance(newSelectedTabId)) {
             this.setSelectedKey(newSelectedTabId);
          }
       },
