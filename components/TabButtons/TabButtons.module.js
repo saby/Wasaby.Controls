@@ -24,23 +24,6 @@ define(
 
    var TabButtons = RadioGroupBase.extend(/** @lends SBIS3.CONTROLS.TabButtons.prototype */ {
       /**
-       * @event onItemAdded При добавлении вкладки
-       * Присходит при добавлении вкладки одним из методов {@link appendItem}, {@link prependItem}, {@link insertItemAfter}.
-       * @param {$ws.proto.EventObject} event Дескриптор события.
-       * @param {String} id Идентификатор добавленной закладки.
-       * @param {Object} spec Описание закладки.
-       * @see appendItem
-       * @see prependItem
-       * @see insertItemAfter
-       */
-      /**
-       * @event onItemRemoved При удалении закладки
-       * Присоходит при удалении закладки методом {@link removeItem}.
-       * @param {$ws.proto.EventObject} event Дескриптор события
-       * @param {String} id Идентификатор удаленной закладки.
-       * @see removeItem
-       */
-      /**
        * @event onBeforeShowFirstItem Выбор активной закладки
        * Происходит перед показом закладок, может быть использовано для смены закладки, открытой по умолчанию.
        * @param {$ws.proto.EventObject} event Дескриптор события.
@@ -58,8 +41,6 @@ define(
        *        }
        *     });
        * </pre>
-       * @see onItemChange
-       * @see selectedItem
        */
       $protected: {
          _options: {
@@ -77,19 +58,10 @@ define(
          this._options.defaultKey = this._options.selectedKey;
          this.subscribe('onInit', function(){
             this._beforeShowFirstItem();
-            this._findSideItems();
             this.toggleMarker(!this._options.hasMarker);
          }.bind(this));
-      },
-      /**
-       * <wiTag group="Управление">
-       * Добавляет вкладку в конец списка
-       * @param item
-       */
-      appendItem: function (item) {
-         this._options.items.push(item);
-         this.reload();
-         this._notify('onItemAdded', item.id, item);
+
+         this.subscribe('onDrawItems', this._findSideItems);
       },
       /**
        * Применение пустого состояния. Поставил закладку по-умолчанию или никакую (если не была задана)
@@ -98,84 +70,11 @@ define(
          this.setSelectedKey(this._options.defaultKey);
       },
       /**
-       * Возвращает контрол в активной закладке, если есть.
+       * Возвращает активную вкладку, если есть.
        * @returns {Object}
        */
       getSelectedItemControl: function () {
-         var currentTabId = this.getSelectedKey();
-         if (currentTabId) {
-            return this.getItemInstance(currentTabId);
-         }
-      },
-      /**
-       * Возвращает конфигурацию вкладок
-       * @returns {Object}
-       */
-      getItems: function () {
-         return this._options.items;
-      },
-      /**
-       * Добавляет вкладку после указанной вкладки
-       * @param {Object} tab Конфигурация новой вкладки
-       * @param {String} tabId ID вкладки после которой вставлять
-       * @example
-       * <pre>
-       *     tabButtons.insertItemAfter({id: 'id1', title: 'Tab 1'}, 'id2');
-       * </pre>
-       */
-      insertItemAfter: function (tab, tabId) {
-         var items = this.getItems(),
-             afterTabPosition = this._getItemPosition(tabId);
-         if (~afterTabPosition) {
-            return;
-         }
-         items.splice(afterTabPosition, 0, tab);
-         this.reload();
-         this._notify('onItemAdded', tab.id, tab);
-      },
-      /**
-       * <wiTag group="Управление">
-       * Добавляет вкладку в начало списка
-       * @param item
-       */
-      prependItem: function (item) {
-         this._options.items.unshift(item);
-         this.reload();
-         this._notify('onItemAdded', item.id, item);
-      },
-      /**
-       * <wiTag group="Управление">
-       * Удаляет вкладку
-       * @param id
-       */
-      removeItem: function (id) {
-         var tabPosition = this._getItemPosition(id);
-         if (~tabPosition) {
-            return;
-         }
-         this._options.items.splice(tabPosition, 1);
-         this.reload();
-         this._notify('onItemRemoved', id);
-      },
-      /**
-       * <wiTag group="Управление">
-       * Установить текущую вкладку
-       * @param {String} id Идентификатор вкладки
-       * @param {Boolean} [pushState=false] Записать состояние в историю браузера
-       * @param {Boolean} [skipInvisibility=false] Дает возможность установить активной невидимую вкладку
-       * @param {Boolean} [noActive] Активировать или нет контрол на установленной вкладке. По-умолчанию активируется.
-       */
-      setCurrentItem: function(id, pushState, skipInvisibility, noActive){
-         //TODO  нужен ли pushState?
-
-         var tabButton = this.getItemInstance(id);
-         if (!tabButton){
-            return;
-         }
-         if (tabButton.isVisible() || skipInvisibility){
-            this.setSelectedKey(id);
-            tabButton.setEnabled(!noActive);
-         }
+         return this.getItemInstance(this.getSelectedKey());
       },
       /**
        * <wiTag group="Управление">
