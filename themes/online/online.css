@@ -1128,7 +1128,7 @@ input[type="reset"]::-moz-focus-inner {
   width: 12px;
   height: 30px;
   margin: 0;
-  background: transparent url('img/MenuButton-header.png') 0 214px;
+  background: transparent url('img/MenuButton-header.png') 0 213px;
 }
 .controls-MenuButton__header.controls-MenuButton__header-revert-horizontal .controls-MenuButton__headerLeft {
   width: 28px;
@@ -1169,7 +1169,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuButton__header .controls-MenuButton__headerCenter {
   display: inline-block;
   width: auto;
-  height: 7px;
+  height: 8px;
   margin: 0;
   background: #ffffff;
 }

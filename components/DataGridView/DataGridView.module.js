@@ -254,8 +254,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
                var value,
                    column = rowData.columns[i];
                if (column.cellTemplate) {
-                  var cellTpl = column.cellTemplate;
-                  value = MarkupTransformer(doT.template(cellTpl)({
+                  var cellTpl;
+                  if ((typeof column.cellTemplate == 'string') && (column.cellTemplate.indexOf('html!') == 0)) {
+                     cellTpl = require(column.cellTemplate);
+                  }
+                  else {
+                     cellTpl = doT.template(column.cellTemplate);
+                  }
+                  value = MarkupTransformer((cellTpl)({
                      item: item,
                      field: column.field,
                      highlight: column.highlight
