@@ -127,42 +127,18 @@ define(
       setItemIcon: function(id, iconClass){
          this._changeItemConfig(id, 'iconClass', iconClass);
       },
-      /**
-       * <wiTag group="Управление">
-       * Установить шаблон вкладки
-       * @param {String} id ID закладки, которую надо переименовать
-       * @param {String} tpl шаблон
-       * @param {String} config конфигурация шаблона
-       */
-      setItemTemplate: function(id, tpl, config){
-         var item = this.getItemInstance(id),
-            tplContainer = item && item.getContainer().find('.controls-TabButton__inner');
-         if (!item){
-            return;
-         }
-         tplContainer.html(tpl(config));
-      },
       toggleMarker: function(toggle){
          this.getContainer().toggleClass('controls-TabButton__whithout-marker', toggle)
       },
       _changeItemConfig: function(id, field, value){
-         var itemPosition = this._getItemPosition(id),
-            itemConfig;
-         if (~itemPosition) {
+         var dataSet = this.getDataSet(),
+            itemRecord = dataSet.getRecordByKey(id);
+         if (!itemRecord){
             return;
          }
-         itemConfig = this._options.items[itemPosition];
-         itemConfig[field] = value;
-         this.reload();
-      },
-      _getItemPosition: function (tabId) {
-         var position = -1;
-         $.each(this._options.items, function (i, tab) {
-            if (tab.id == tabId) {
-               position = i;
-            }
-         });
-         return position;
+         itemRecord.set(field, value);
+         dataSet.push(itemRecord);
+         this._redraw();
       },
 
       _beforeShowFirstItem: function () {
@@ -177,9 +153,13 @@ define(
       },
 
       _getItemTemplate: function (item) {
-         var displayField = this._options.displayField,
-            caption = item.get(displayField);
-         return this._options.itemTemplate.call(this, {item: item, displayField: caption})
+         var displayField = this._options.displayField;
+         return this._options.itemTemplate.call(this,
+            {
+               item: item,
+               displayField: item.get(displayField)
+            }
+         );
       }
    });
    return TabButtons;
