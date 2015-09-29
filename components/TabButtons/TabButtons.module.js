@@ -74,11 +74,11 @@ define(
       $constructor: function () {
          this._publish('onItemAdded', 'onItemRemoved', 'onBeforeShowFirstItem');
 
-         this._options.defaultKey = this._options.selectedKey();
+         this._options.defaultKey = this._options.selectedKey;
          this.subscribe('onInit', function(){
             this._beforeShowFirstItem();
             this._findSideItems();
-            this._toggleMarker(!this._options.hasMarker);
+            this.toggleMarker(!this._options.hasMarker);
          }.bind(this));
       },
       /**
