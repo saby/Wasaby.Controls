@@ -482,13 +482,19 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   curAt.at++;
                }
             }
-            this.reviveComponents().addCallback(function () {
-               self._notify('onDrawItems');
-               self._drawItemsCallback();
-            });
+            this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this));
+         } else {
+            this._notifyOnDrawItems();
          }
       },
 
+      /**
+       * Сигналит о том, что отрисовка набора закончена
+       */
+      _notifyOnDrawItems: function() {
+         this._notify('onDrawItems');
+         this._drawItemsCallback();
+      },
 
       _clearItems: function (container) {
          container = container || this._getItemsContainer();
