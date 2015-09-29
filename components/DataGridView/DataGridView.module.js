@@ -210,7 +210,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             dataSource: this._dataSource,
             editFieldFocusHandler: this._editFieldFocusHandler.bind(this),
             handlers: {
-               onValueChange: this._options.editInPlace.onValueChange ? this._options.editInPlace.onValueChange : undefined
+               onValueChange: this._options.editInPlace.onValueChange
             }
          });
       },
