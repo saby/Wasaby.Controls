@@ -1275,7 +1275,13 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper,
 .controls-DatePicker .controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
-  margin: 0 21px 0 0;
+  margin-right: 21px;
+}
+.controls-TextBox .controls-TextBox__beforeFieldWrapper {
+  position: relative;
+  float: left;
+  min-height: 38px;
+  height: 100%;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper {
   position: relative;

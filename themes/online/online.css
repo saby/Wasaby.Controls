@@ -1397,7 +1397,13 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper,
 .controls-DatePicker .controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
-  margin: 0 19px 0 0;
+  margin-right: 19px;
+}
+.controls-TextBox .controls-TextBox__beforeFieldWrapper {
+  position: relative;
+  float: left;
+  min-height: 19px;
+  height: 100%;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper {
   position: relative;
@@ -3333,6 +3339,59 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item.controls-CustomFilterMenu__item__selected {
   display: none;
+}
+.controls-FieldLink__cross {
+  height: 16px;
+  width: 16px;
+  display: inline-block;
+  position: relative;
+  top: 2px;
+  background: url('img/cancelIcon-sprite.png') 0 -32px no-repeat;
+}
+.controls-FieldLink__cross:hover {
+  background: url('img/cancelIcon-sprite.png') 0 -16px no-repeat;
+}
+.controls-FieldLink__picker {
+  max-height: 500px;
+  min-height: 16px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  height: auto;
+  overflow: auto;
+  border: 1px solid #999;
+  background: #fff;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+}
+.controls-FieldLink__picker .controls-FieldLink__inputLink,
+.controls-FieldLink .controls-FieldLink__inputLink {
+  display: inline-block;
+  position: relative;
+  padding-left: 4px;
+}
+.controls-FieldLink {
+  display: inline-block;
+}
+.controls-FieldLink .controls-FieldLink__Link {
+  padding: 2px 8px 0 0;
+  float: left;
+}
+.controls-FieldLink .controls-TextBox__fieldWrapper {
+  float: left;
+}
+.controls-FieldLink .controls-FieldLink__TextBox {
+  display: block;
+  overflow: hidden;
+  float: left;
+}
+.controls-FieldLink .controls-FieldLink__TextBox .controls-TextBox__beforeFieldWrapper .controls-FieldLink__showAllLink {
+  position: relative;
+  float: left;
+  padding-right: 3px;
+}
+.controls-FieldLink .controls-FieldLink__TextBox .controls-TextBox__beforeFieldWrapper .controls-FieldLink__linksWrapper {
+  display: inline-block;
 }
 .controls-HtmlDecorators-highlight {
   background-color: #fffece;
