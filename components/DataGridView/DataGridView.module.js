@@ -333,18 +333,22 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _scrollToEditControl: function(ctrl) {
          var ctrlOffset = ctrl.getContainer()[0].getBoundingClientRect(),
              tableOffset = this._container[0].getBoundingClientRect(),
-             leftScrollPos = tableOffset.left + this._stopMovingCords.left;
+             leftScrollPos = tableOffset.left + this._stopMovingCords.left,
+             leftOffset;
+
 
          /* Если контрол находится за пределами таблицы(скрыт) справа, то проскролим ячейки так, чтобы его было видно */
          if(ctrlOffset.right > tableOffset.right) {
-            this._moveThumbAndColumns({left: this._currentScrollPosition + (ctrlOffset.right - tableOffset.right)/this._partScrollRatio});
-            this._updateEditInPlaceDisplay(undefined, true);
-            return;
+            leftOffset = this._currentScrollPosition + (ctrlOffset.right - tableOffset.right)/this._partScrollRatio;
          }
 
          /* Если контрол находится за пределами таблицы(скрыт) слева, то проскролим ячейки так, чтобы его было видно */
-         if(ctrlOffset.left < (leftScrollPos)) {
-            this._moveThumbAndColumns({left: this._currentScrollPosition - (leftScrollPos - ctrlOffset.left)/this._partScrollRatio});
+         if(!leftOffset && ctrlOffset.left < leftScrollPos) {
+            leftOffset = this._currentScrollPosition - (leftScrollPos - ctrlOffset.left)/this._partScrollRatio;
+         }
+
+         if(leftOffset) {
+            this._moveThumbAndColumns({left: leftOffset});
             this._updateEditInPlaceDisplay(undefined, true);
          }
       },
