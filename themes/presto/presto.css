@@ -2696,14 +2696,14 @@ input[type="reset"]::-moz-focus-inner {
   background-color: transparent;
   box-shadow: none;
 }
-.controls-ListView.controls-DataGrid .controls-ItemActions {
+.controls-ListView.controls-DataGridView .controls-ItemActions {
   background-color: #f2f2f2;
   box-shadow: -2px -2px 5px #f3f3f3;
 }
-.controls-ListView.controls-DataGrid .controls-ItemActions__activeItem {
+.controls-ListView.controls-DataGridView .controls-ItemActions__activeItem {
   background-color: #f3f3f3;
 }
-.controls-ListView.controls-DataGrid .controls-ItemActions__activeItem .controls-DataGrid__notScrolledCell {
+.controls-ListView.controls-DataGridView .controls-ItemActions__activeItem .controls-DataGrid__notScrolledCell {
   background-color: #f3f3f3 !important;
 }
 .controls-ItemActions {
@@ -2766,7 +2766,7 @@ input[type="reset"]::-moz-focus-inner {
   overflow: visible;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-editInPlace__editing {
-  background: #f2f2f2;
+  background: transparent;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-editInPlace__editing .controls-DataGridView__th {
   color: inherit;

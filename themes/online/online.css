@@ -1657,7 +1657,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox__picker .controls-ComboBox__itemRow.controls-ComboBox__itemRow__selected {
   color: inherit;
-  background: #dce8f6;
+  background: #f3f3f3;
 }
 .controls-ComboBox__picker .controls-ComboBox__itemRow:hover {
   color: inherit;
@@ -1843,7 +1843,7 @@ input[type="reset"]::-moz-focus-inner {
   color: inherit;
 }
 .controls-SuggestList__item__selected {
-  background: #dce8f6;
+  background: #f3f3f3;
   color: inherit;
 }
 .controls-SuggestList__empty {
@@ -2372,7 +2372,7 @@ input[type="reset"]::-moz-focus-inner {
   background: transparent;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__item__multiSelected {
-  background-color: transparent;
+  background-color: #f3f3f3;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__item__multiSelected .controls-DataGridView__td {
   color: inherit;
@@ -3070,14 +3070,14 @@ input[type="reset"]::-moz-focus-inner {
   background-color: transparent;
   box-shadow: none;
 }
-.controls-ListView.controls-DataGrid .controls-ItemActions {
+.controls-ListView.controls-DataGridView .controls-ItemActions {
   background-color: #f0f5fb;
   box-shadow: -2px -2px 5px #f0f5fb;
 }
-.controls-ListView.controls-DataGrid .controls-ItemActions__activeItem {
+.controls-ListView.controls-DataGridView .controls-ItemActions__activeItem {
   background-color: #f0f5fb !important;
 }
-.controls-ListView.controls-DataGrid .controls-ItemActions__activeItem .controls-DataGrid__notScrolledCell {
+.controls-ListView.controls-DataGridView .controls-ItemActions__activeItem .controls-DataGrid__notScrolledCell {
   background-color: #f0f5fb !important;
 }
 .controls-ItemActions {
@@ -3140,7 +3140,7 @@ input[type="reset"]::-moz-focus-inner {
   overflow: visible;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-editInPlace__editing {
-  background: #f0f5fb;
+  background: #f3f3f3;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-editInPlace__editing .controls-DataGridView__th {
   color: inherit;
