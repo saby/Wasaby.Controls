@@ -47,6 +47,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             enabled: this.isEnabled(),
             hierField: this._options.hierField,
             keyField: this._options.keyField,
+            displayField: this._options.displayField || 'title',
             verticalAlign: {
                side: 'top'
             },
@@ -114,6 +115,36 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          var items = this.getItems() || [];
          items.push(item);
          this.setItems(items);
+      },
+
+      /**
+       * Задает имя поля отображения
+       * @param displayField
+       * @example
+       * <pre>
+       *     menuButton.setDisplayField('Название');
+       *     var ds = new SbisServiceSource({service: 'Заметка', queryMethodName: 'МойСписок'});//заменяем стандартное имя метода 'Список'
+       *     menuButton.setDataSource(ds);
+       * </pre>
+       * @see displayField
+       */
+      setDisplayField: function(displayField) {
+         this._options.displayField = displayField;
+      },
+
+      /**
+       * Задает имя поля иерархии
+       * @param hierField
+       * @example
+       * <pre>
+       *     menuButton.setHierField('Родитель');
+       *     var ds = new SbisServiceSource({service: 'Заметка'});
+       *     menuButton.setDataSource(ds);
+       * </pre>
+       * @see hierField
+       */
+      setHierField: function(hierField) {
+         this._options.hierField = hierField;
       }
    };
 
