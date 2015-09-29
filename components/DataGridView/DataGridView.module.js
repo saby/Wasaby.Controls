@@ -337,13 +337,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
              leftOffset;
 
 
-         /* Если контрол находится за пределами таблицы(скрыт) справа, то проскролим ячейки так, чтобы его было видно */
+         /* Если контрол находится за пределами таблицы(скрыт) справа или слева, то проскролим ячейки так, чтобы его было видно */
          if(ctrlOffset.right > tableOffset.right) {
             leftOffset = this._currentScrollPosition + (ctrlOffset.right - tableOffset.right)/this._partScrollRatio;
-         }
-
-         /* Если контрол находится за пределами таблицы(скрыт) слева, то проскролим ячейки так, чтобы его было видно */
-         if(!leftOffset && ctrlOffset.left < leftScrollPos) {
+         } else if(ctrlOffset.left < leftScrollPos){
             leftOffset = this._currentScrollPosition - (leftScrollPos - ctrlOffset.left)/this._partScrollRatio;
          }
 
