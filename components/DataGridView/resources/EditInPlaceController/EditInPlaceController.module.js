@@ -31,7 +31,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                   dataSource: undefined,
                   dataSet: undefined,
                   addInPlaceButton: undefined,
-                  ignoreFirstColumn: false
+                  ignoreFirstColumn: false,
+                  editFieldFocusHandler: undefined
                },
                //Редактируемая область
                _editing: null,
@@ -67,6 +68,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                      element: $('<div id="' + id + '"></div>').appendTo(this._container),
                      visible: false,
                      focusCatch: this._focusCatch.bind(this),
+                     editFieldFocusHandler: this._options.editFieldFocusHandler,
                      handlers: {
                         onMouseDown: isMobileBrowser ? undefined : this._areaHandlers.onMouseDownEditInPlace,
                         onValueChange: function(event, fieldName, record) {
@@ -117,8 +119,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                this._areas[this._editing].target.addClass('controls-editInPlace__editing');
                this._areas[this._editing].hovered = false;
                this._areas[this._editing].editInPlace.getContainer().mousemove(this._onMouseMove.bind(this));
-               //Это убирает класс hovered со строки, над которой editInPlace и скрывает опции записи (если те имеются)
-               this._areas[this._editing].target.mouseleave();
                this._areas[this._editing].editInPlace.getContainer().bind('keyup', this._areaHandlers.onKeyDown);
                $ws._const.$win.bind(isMobileBrowser ? 'touchend' : 'mouseup', this._areaHandlers.onMouseDown);
             },
@@ -311,34 +311,38 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
             /**
              * Обновить отображение редактирования по месту
              * @param {Object} target Элемент, для которого отображается редактирование по месту
+             * @param {Boolean} recalcPos Выполнять принудительный пересчёт позиции редактирования по месту
              * @private
              */
-            updateDisplay: function(target) {
-               var
-                  hoveredArea,
-                  record;
-               if (!target.container) {
-                  this._hideEditInPlace();
-               } else {
-                  record = this._options.dataSet.getRecordByKey(target.key);
-                  if (!record || record.get('Раздел@')) {
+            updateDisplay: function(target, recalcPos) {
+               var hoveredArea,
+                   record;
+               if (target) {
+                  if (!target.container) {
                      this._hideEditInPlace();
-                  } else if (!this._editing || this._areas[this._editing].record.getKey() !== target.key) {
-                     if (isMobileBrowser) {
-                        if (this._editing) {
-                           this.finishEditing(true, true);
-                        } else {
-                           this._editing = 'first';
+                  } else {
+                     record = this._options.dataSet.getRecordByKey(target.key);
+                     if (!record || record.get('Раздел@')) {
+                        this._hideEditInPlace();
+                     } else if (!this._editing || this._areas[this._editing].record.getKey() !== target.key) {
+                        if (isMobileBrowser) {
+                           if (this._editing) {
+                              this.finishEditing(true, true);
+                           } else {
+                              this._editing = 'first';
+                           }
+                           this._areas[this._editing].editInPlace.getContainer().bind('keyup', this._areaHandlers.onKeyDown);
                         }
-                        this._areas[this._editing].editInPlace.getContainer().bind('keyup', this._areaHandlers.onKeyDown);
+                        hoveredArea = this._areas[this._editing === 'first' && !isMobileBrowser ? 'second' : 'first'];
+                        hoveredArea.target = target.container;
+                        hoveredArea.record = record;
+                        hoveredArea.hovered = true;
+                        this._updateArea(hoveredArea, !hoveredArea.editInPlace.isVisible());
+                        hoveredArea.editInPlace.show();
                      }
-                     hoveredArea = this._areas[this._editing === 'first' && !isMobileBrowser ? 'second' : 'first'];
-                     hoveredArea.target = target.container;
-                     hoveredArea.record = record;
-                     hoveredArea.hovered = true;
-                     this._updateArea(hoveredArea, !hoveredArea.editInPlace.isVisible());
-                     hoveredArea.editInPlace.show();
                   }
+               } else if (recalcPos && this._editing) {
+                  this._updateArea(this._areas[this._editing], true);
                }
             },
             /**
