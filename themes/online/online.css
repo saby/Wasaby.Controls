@@ -2106,7 +2106,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   width: 16px;
   height: 20px;
-  margin: 0 0 0 -2px;
+  margin: 0 1px 0 -2px;
   border-width: 0;
   border-style: none;
   border-color: transparent;
