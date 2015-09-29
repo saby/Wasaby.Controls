@@ -1,8 +1,17 @@
 /**
  * Created by iv.cheremushkin on 13.08.2014.
  */
-
-define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'html!SBIS3.CONTROLS.TabButtons', 'html!SBIS3.CONTROLS.TabButtons/ItemTpl', 'js!SBIS3.CONTROLS.EditAtPlace', 'css!SBIS3.CONTROLS.TabButtons', 'js!SBIS3.CONTROLS.TabButton'], function (RadioGroupBase, TabButtonsTpl, ItemTpl, EditAtPlace) {
+define(
+   'js!SBIS3.CONTROLS.TabButtons',
+   [
+      'js!SBIS3.CONTROLS.RadioGroupBase',
+      'html!SBIS3.CONTROLS.TabButtons',
+      'html!SBIS3.CONTROLS.TabButtons/ItemTpl',
+      'js!SBIS3.CONTROLS.EditAtPlace',
+      'css!SBIS3.CONTROLS.TabButtons',
+      'js!SBIS3.CONTROLS.TabButton'
+   ],
+   function (RadioGroupBase, TabButtonsTpl, ItemTpl, EditAtPlace) {
 
    'use strict';
 
@@ -56,6 +65,7 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'htm
          _options: {
             type: 'normal',
             hasMarker: true,
+            defaultKey: undefined,
             itemTemplate: ItemTpl
          }
       },
@@ -64,6 +74,7 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'htm
       $constructor: function () {
          this._publish('onItemAdded', 'onItemRemoved', 'onBeforeShowFirstItem');
 
+         this._options.defaultKey = this._options.selectedKey();
          this.subscribe('onInit', function(){
             this._beforeShowFirstItem();
             this._findSideItems();
@@ -84,57 +95,14 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'htm
        * Применение пустого состояния. Поставил закладку по-умолчанию или никакую (если не была задана)
        */
       applyEmptyState: function () {
-         this.setSelectedKey(this.getCurrentItem());
-      },
-      /**
-       * <wiTag group="Управление">
-       * @param {String} id Идентификатор вкладки
-       */
-      disableItem: function (id) {
-         this.setItemEnabled(id, false);
-      },
-
-      //TODO нужен ли этот метод?
-      /**
-       * <wiTag group="Управление">
-       * Метод редактирования контента
-       * @param {Function} mutator Функция с одним аргументом - контейнером контрола
-       *
-       * @example
-       * tabs.editContent(function(container) {
-       *    container.addClass('ws-some-class');
-       * });
-       */
-      editContent: function(mutator) {
-         if (typeof mutator == 'function') {
-            try {
-               mutator(this.getContainer());
-            }
-            catch (e){
-            }
-         }
-      },
-      /**
-       * <wiTag group="Управление">
-       * @param {String} id Идентификатор вкладки
-       */
-      enableItem: function (id) {
-         this.setItemEnabled(id, true);
-      },
-      /**
-       * <wiTag group="Управление">
-       * Возвращает идентификатор текущей вкладки
-       * @returns {String} Идентификатор текущей вкладки.
-       */
-      getCurrentItem: function () {
-         return this._options.selectedItem;
+         this.setSelectedKey(this._options.defaultKey);
       },
       /**
        * Возвращает контрол в активной закладке, если есть.
        * @returns {Object}
        */
-      getCurrentItemControl: function () {
-         var currentTabId = this.getCurrentItem();
+      getSelectedItemControl: function () {
+         var currentTabId = this.getSelectedKey();
          if (currentTabId) {
             return this._getItemById(currentTabId);
          }
@@ -156,13 +124,6 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'htm
        */
       getItems: function () {
          return this._options.items;
-      },
-      /**
-       * Скрыть вкладку
-       * @param {String} id Идентификатор вкладки
-       */
-      hideItem: function (id) {
-         this.setItemVisible(id, false);
       },
       /**
        * Добавляет вкладку после указанной вкладки
@@ -300,19 +261,8 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'htm
          }
          tplContainer.html(tpl(config));
       },
-      /**
-       * Показать вкладку
-       * @param {String} id Идентификатор вкладки
-       */
-      showItem: function (id) {
-         this.setItemVisible(id, true);
-      },
-      //TODO возможно ненужные методы
-      showMarker: function(){
-         this._toggleMarker(false);
-      },
-      hideMarker: function(){
-         this._toggleMarker(true);
+      toggleMarker: function(toggle){
+         this.getContainer().toggleClass('controls-TabButton__whithout-marker', toggle)
       },
       _changeItemConfig: function(id, field, value){
          var itemPosition = this._getItemPosition(id),
@@ -351,10 +301,6 @@ define('js!SBIS3.CONTROLS.TabButtons', ['js!SBIS3.CONTROLS.RadioGroupBase', 'htm
 
       _findSideItems: function(){
          this.getContainer().find('.controls-TabButton__left-align:first, .controls-TabButton__right-align:first').addClass('controls-TabButton__side-item');
-      },
-
-      _toggleMarker: function(toggle){
-         this.getContainer().toggleClass('controls-TabButton__whithout-marker', toggle)
       },
 
       _getItemTemplate: function (item) {
