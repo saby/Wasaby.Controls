@@ -5,6 +5,7 @@
 define('js!SBIS3.CONTROLS.ListView',
    [
       'js!SBIS3.CORE.CompoundControl',
+      'js!SBIS3.CORE.CompoundActiveFixMixin',
       'js!SBIS3.CONTROLS.DSMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
       'js!SBIS3.CONTROLS.Selectable',
@@ -15,9 +16,10 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.CommonHandlers',
       'js!SBIS3.CONTROLS.MoveHandlers',
       'js!SBIS3.CONTROLS.Pager',
-      'is!browser?html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy'
+      'is!browser?html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
+      'is!browser?html!SBIS3.CONTROLS.ListView/resources/emptyData'
    ],
-   function (CompoundControl, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, MoveHandlers, Pager, groupByTpl) {
+   function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, MoveHandlers, Pager, groupByTpl, emptyDataTpl) {
 
       'use strict';
 
@@ -40,7 +42,7 @@ define('js!SBIS3.CONTROLS.ListView',
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
-      var ListView = CompoundControl.extend([DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem При переводе курсора мыши на другую запись
@@ -105,6 +107,7 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws._const.key.left
             ],
             _itemActionsGroup: null,
+            _emptyData: undefined,
             _options: {
                /**
                 * @faq Почему нет флажков при включенной опции {@link SBIS3.CONTROLS.ListView#multiselect multiselect}?
@@ -252,25 +255,27 @@ define('js!SBIS3.CONTROLS.ListView',
                this._options.pageSize = this._options.pageSize * 1;
             }
             this.setGroupBy(this._options.groupBy, false);
+            this._drawEmptyData();
             ListView.superclass.init.call(this);
             this.reload();
          },
          _keyboardHover: function (e) {
             var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
                selectedKey = this.getSelectedKey(),
-               selectedItem = $('[data-id="' + this.getSelectedKey() + '"]', this._container),
+               selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer()),
                nextItem = (selectedKey) ? items.eq(items.index(selectedItem) + 1) : items.eq(0),
                previousItem = (selectedKey) ? items.eq(items.index(selectedItem) - 1) : items.last();
 
 
             switch (e.which) {
                case $ws._const.key.up:
-                  previousItem = selectedKey ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
                   previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
                case $ws._const.key.down:
-                  nextItem = (selectedKey) ? selectedItem.next('.controls-ListView__item') : items.eq(0);
                   nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+                  break;
+               case $ws._const.key.enter:
+                  this._elemClickHandler(selectedKey, this._dataSet.getRecordByKey(selectedKey), selectedItem);
                   break;
                case $ws._const.key.space:
                   this.toggleItemsSelection([selectedKey]);
@@ -396,7 +401,16 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see emptyHTML
           */
          setEmptyHTML: function (html) {
-
+            ListView.superclass.setEmptyHTML.apply(this, arguments);
+            if(this._emptyData.length) {
+               html ? this._emptyData.empty().html(html) : this._emptyData.remove();
+            } else if(html) {
+               this._drawEmptyData();
+            }
+         },
+         _drawEmptyData: function() {
+            var html = this._options.emptyHTML;
+            this._emptyData = html && $(emptyDataTpl({emptyHTML: html})).appendTo(this._container);
          },
          _getItemTemplate: function () {
             return this._options.itemTemplate;
@@ -540,7 +554,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * Инициализирует операции над записью
           * @private
           */
-         _initItemActions: function () {
+         _initItemsActions: function () {
             this._itemActionsGroup = this._drawItemActions();
          },
          /**
@@ -565,7 +579,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          getItemsActions: function () {
             if (!this._itemActionsGroup && this._options.itemsActions.length) {
-               this._initItemActions();
+               this._initItemsActions();
             }
             return this._itemActionsGroup;
          },
@@ -605,19 +619,28 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see getHoveredItem
           */
          setItemsActions: function (items) {
-            this.getItemsActions().setItems(items);
             this._options.itemsActions = items;
+            this._itemActionsGroup ? this._itemActionsGroup.setItems(items) : this._initItemsActions();
          },
          //**********************************//
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
          //*********************************//
 
          _drawItemsCallback: function () {
+            var hoveredItem = this._hoveredItem.container;
+
             if (this.isInfiniteScroll()) {
                this._loadBeforeScrollAppears();
             }
             this._drawSelectedItems(this._options.selectedKeys);
             this._drawSelectedItem(this._options.selectedKey);
+
+            /* Если после перерисовки выделенный элемент удалился из DOM дерава,
+               то событие mouseLeave не сработает, поэтому вызовем руками метод */
+            if(hoveredItem && !$.contains(this._getItemsContainer()[0], hoveredItem[0])) {
+               this._mouseLeaveHandler();
+            }
+
             this._notifyOnSizeChanged(true);
          },
          //-----------------------------------infiniteScroll------------------------
@@ -792,6 +815,11 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             else {
                self._container.find('.controls-AjaxLoader').toggleClass('ws-hidden', true);
+            }
+         },
+         _toggleEmptyData: function(show) {
+            if(this._emptyData) {
+               this._emptyData.toggleClass('ws-hidden', !show);
             }
          },
          //------------------------Paging---------------------

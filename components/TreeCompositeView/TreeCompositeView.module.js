@@ -245,7 +245,14 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                      .callback();
                } else {
                   filter['Раздел'] = branchId === 'null' ? null : branchId;
-                  return self._dataSource.query(filter, self._sorting, self._offset, self._limit !== undefined ? (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit : undefined)
+                  var limit;
+                  //проверяем, является ли обновляемый узел корневым, если да, обновляем записи до подгруженной записи (_infiniteScrollOffset)
+                  if ( String(self._curRoot) == branchId  &&  self._infiniteScrollOffset) { // т.к. null != "null", _infiniteScrollOffset проверяем на случай, если нет подгрузки по скроллу
+                     limit = self._infiniteScrollOffset;
+                  } else if (self._limit !== undefined) {
+                     limit = (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit;
+                  }
+                  return self._dataSource.query(filter, self._sorting, self._offset, limit)
                      .addCallback(function(dataSet) {
                         branchesData[branchId] = dataSet;
                         return dataSet;

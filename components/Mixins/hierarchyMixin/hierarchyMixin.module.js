@@ -159,21 +159,24 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       },
 
       _getHierarchy: function(dataSet, key){
-         var record,
-            parentKey = key || null,
+         var record, parentKey,
             hierarchy = [];
-         do {
-            record = dataSet.getRecordByKey(parentKey);
-            if (record) {
-               hierarchy.push({
-                  'id': parentKey,
-                  'title' : record.get(this._options.displayField),
-                  'color' : this._options.colorField ? record.get(this._options.colorField) : '',
-                  'data' : record
-               });
-            }
-            parentKey = record ? dataSet.getParentKey(record, this._options.hierField) : null;
-         } while (parentKey);
+         if (dataSet){
+            do {
+               record = dataSet.getRecordByKey(key);
+               parentKey = record ? dataSet.getParentKey(record, this._options.hierField) : null;
+               if (record) {
+                  hierarchy.push({
+                     'id': key || null,
+                     'parent' : parentKey,
+                     'title' : record.get(this._options.displayField),
+                     'color' : this._options.colorField ? record.get(this._options.colorField) : '',
+                     'data' : record
+                  });
+               }
+               key = parentKey;
+            } while (key);
+         }
          return hierarchy;
       },
 

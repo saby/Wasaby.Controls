@@ -1128,7 +1128,7 @@ input[type="reset"]::-moz-focus-inner {
   width: 12px;
   height: 30px;
   margin: 0;
-  background: transparent url('img/MenuButton-header.png') 0 214px;
+  background: transparent url('img/MenuButton-header.png') 0 213px;
 }
 .controls-MenuButton__header.controls-MenuButton__header-revert-horizontal .controls-MenuButton__headerLeft {
   width: 28px;
@@ -1169,7 +1169,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuButton__header .controls-MenuButton__headerCenter {
   display: inline-block;
   width: auto;
-  height: 7px;
+  height: 8px;
   margin: 0;
   background: #ffffff;
 }
@@ -2205,10 +2205,15 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/CheckBox.png') 0 17px;
 }
 .controls-ListView .controls-ListView__EmptyData {
-  width: 100px;
-  display: inline-block;
   color: #999999;
-  text-align: center;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin-left: 8px;
+  min-height: 33px;
+  position: relative;
+  top: 0;
+  left: 0;
 }
 .controls-ListView .controls-ListView__itemCheckBox {
   width: 16px;
@@ -2460,7 +2465,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   text-align: left;
   height: 30px;
-  padding: 0 6px 0 6px;
+  padding: 0 6px 0 2px;
   color: inherit;
   background-color: transparent;
   border-collapse: separate;
@@ -2487,11 +2492,14 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGridView .controls-DataGridView__td__checkBox .controls-ListView__itemCheckBox {
   margin: 1px 0 0 5px;
 }
-.controls-DataGridView.controls-DataGridView__showCheckBoxes.controls-ListView__multiselect .controls-ListView__itemCheckBox {
+.controls-DataGridView.controls-DataGridView__showCheckBoxes .controls-ListView__itemCheckBox {
   background: url('img/CheckBox.png') 0 1px;
 }
 .controls-DataGridView.controls-DataGridView__hideCheckBoxes.controls-ListView__multiselect .controls-DataGridView__colgroup col:first-child {
   width: 4px;
+}
+.controls-DataGridView.controls-DataGridView__hideCheckBoxes.controls-ListView__multiselect .controls-ListView__itemCheckBox {
+  display: none;
 }
 .controls-DataGridView__addInPlace-container {
   padding-left: 8px;
@@ -2516,9 +2524,6 @@ input[type="reset"]::-moz-focus-inner {
   height: 14px;
 }
 .controls-GridView__searchMode .controls-TreeView__hierWrapper {
-  width: 0;
-}
-.controls-GridView__searchMode .controls-TreeView__expand {
   width: 0;
 }
 .controls-TreeDataGridView__folderToolbarContainer {
@@ -2563,7 +2568,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-CompositeView .controls-CompositeView__listItem {
   height: 30px;
   line-height: 30px;
-  padding: 0 6px 0 6px;
+  padding: 0 6px 0 2px;
   cursor: pointer;
 }
 .controls-CompositeView .controls-CompositeView__listItem.controls-ListView__hoveredItem {
@@ -2610,7 +2615,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CompositeView.controls-CompositeView-tile .controls-CompositeView__itemsContainer {
   padding: 4px 0 0 1px;
-  min-height: 40px;
+  /* min-height: 40px; */
 }
 .controls-CompositeView.controls-CompositeView-tile .controls-ItemActions,
 .controls-CompositeView.controls-CompositeView-list .controls-ItemActions {
@@ -2703,12 +2708,14 @@ input[type="reset"]::-moz-focus-inner {
   text-align: center;
 }
 .controls-BreadCrumbs {
-  min-height: 27px;
+  min-height: 24px;
 }
 .controls-BreadCrumbs__crumb {
   cursor: pointer;
+  display: inline-block;
   position: relative;
   line-height: 16px;
+  margin-left: -1px;
 }
 .controls-BreadCrumbs__crumb:hover .controls-BreadCrumbs__title {
   color: #FF7033;
@@ -2719,6 +2726,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-BreadCrumbs__crumb:hover .controls-BreadCrumbs__title {
   color: #FF7033;
 }
+.controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
+  margin-right: 4px;
+  margin-left: 0;
+}
 .controls-BreadCrumbs .controls-BreadCrumbs__title {
   text-decoration: none;
   color: #0055BB;
@@ -2727,6 +2738,8 @@ input[type="reset"]::-moz-focus-inner {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  margin-left: -4px;
+  vertical-align: top;
 }
 .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
   position: relative;
@@ -2760,19 +2773,17 @@ input[type="reset"]::-moz-focus-inner {
   top: -3px;
 }
 .controls-BackButton {
-  display: inline-block;
   cursor: pointer;
+  display: inline-block;
   font-size: 18px;
-  line-height: 32px;
-  height: 32px !important;
+  line-height: 26px;
   font-weight: 700;
 }
 .controls-BackButton .controls-BackButton__caption {
   font-style: normal;
   color: #313e78;
   overflow: hidden;
-  line-height: 32px;
-  margin: 0 8px 0 6px;
+  vertical-align: top;
 }
 .controls-BackButton::before {
   width: 10px;

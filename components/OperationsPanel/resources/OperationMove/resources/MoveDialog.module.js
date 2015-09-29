@@ -36,6 +36,11 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          this._treeView.subscribe('onDrawItems', function() {
             self._createRoot();
          });
+         if ($ws.helpers.instanceOfModule(linkedView._dataSource, 'SBIS3.CONTROLS.SbisServiceSource')) {
+            this._treeView._filter['ВидДерева'] = "Только узлы";
+            //TODO: костыль написан специально для нуменклатуры, чтобы не возвращалась выборка всех элементов при заходе в пустую папку
+            this._treeView._filter['folderChanged'] = true;
+         }
          this._treeView.setDataSource(linkedView._dataSource);
       },
       _onMoveButtonActivated: function() {
