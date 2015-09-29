@@ -311,14 +311,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
             /**
              * Обновить отображение редактирования по месту
              * @param {Object} target Элемент, для которого отображается редактирование по месту
-             * @param {Boolean} recalcPos Запускает принудительный пересчёт позиции редактирования по месту
+             * @param {Boolean} recalcPos Выполнять принудительный пересчёт позиции редактирования по месту
              * @private
              */
             updateDisplay: function(target, recalcPos) {
                var hoveredArea,
                    record;
-
-               if(target) {
+               if (target) {
                   if (!target.container) {
                      this._hideEditInPlace();
                   } else {
@@ -343,8 +342,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                      }
                   }
                } else if (recalcPos && this._editing) {
-                  hoveredArea = this._areas[this._editing];
-                  this._updateArea(hoveredArea, true);
+                  this._updateArea(this._areas[this._editing], true);
                }
             },
             /**
