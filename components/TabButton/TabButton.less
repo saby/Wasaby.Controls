@@ -1,162 +1,162 @@
 .controls-TabButton {
-   display: inline-block;
+   display: @tab-button-display;
    cursor: @tab-button-cursor;
    height: @tab-button-height;
-   position: relative;
-   overflow: hidden;
+   position: @tab-button-position;
+   overflow: @tab-button-overflow;
    &:hover {
       .controls-TabButton__inner {
-         background: #F8F8F8;
+         background: @tab-button-hover-inner-bg;
          .controls-TabButton__caption {
-            color: #FF7033;
+            color: @tab-button-hover-inner-caption-color;
          }
       }
    }
 
    &.controls-Checked__checked {
-      z-index: 100;
+      z-index: @tab-button-checked-zindex;
       .controls-TabButton__selected-border {
-         display: block;
+         display: @tab-button-checked-selected-border-display;
       }
       .controls-TabButton__inner {
-         background: #FFFFFF;
-         color: #000000
+         background: @tab-button-checked-inner-bg;
+         color: @tab-button-checked-inner-color;
       }
    }
 
    &.controls-TabButton__left-align {
-      float: left;
-      margin-left: -10px;
+      float: @tab-button-left-float;
+      margin-left: @tab-button-items-margin;
       &.controls-TabButton__side-item{
-         margin-left: 0;
+         margin-left: @tab-button-left-side-item-margin-left;
       }
       &:hover {
          .controls-TabButton__corner {
-            background: url('img/TabButton.png') 0 -121px no-repeat;
+            background: @tab-button-hover-left-corner-bg;
          }
       }
       &.controls-Checked__checked {
          .controls-TabButton__corner {
-            background: url('img/TabButton.png') 0 -151px no-repeat;
+            background: @tab-button-checked-left-corner-bg;
          }
       }
       .controls-TabButton__selected-border {
-         left: 0px;
+         left: @tab-button-left-selected-border-left;
       }
       .controls-TabButton__inner {
-         border-left: 1px solid @customFilterMenu-border-color;
-         padding-left: 23px;
-         border-top-left-radius: 3px;
+         border-left: @tab-button-left-inner-border-left;
+         padding-left: @tab-button-left-inner-padding-left;
+         border-top-left-radius: @tab-button-left-inner-border-top-left-radius;
       }
       .controls-TabButton__corner {
-         float: right;
-         background: url('img/TabButton.png') 0 -91px no-repeat;
+         float: @tab-button-left-corner-float;
+         background: @tab-button-left-corner-bg;
       }
    }
 
    &.controls-TabButton__right-align {
-      float: right;
-      margin-right: -10px;
+      float: @tab-button-right-float;
+      margin-right: @tab-button-items-margin;
       &.controls-TabButton__side-item{
-         margin-right: 0;
+         margin-right: @tab-button-right-side-item-margin-right;
       }
       &:hover {
          .controls-TabButton__corner {
-            background: url('img/TabButton.png') 0 -31px no-repeat;
+            background: @tab-button-hover-right-corner-bg;
          }
       }
       &.controls-Checked__checked {
          .controls-TabButton__corner {
-            background: url('img/TabButton.png') 0 -61px no-repeat;
+            background: @tab-button-checked-right-corner-bg;
          }
       }
       .controls-TabButton__selected-border {
-         right: 0px;
+         right: @tab-button-right-selected-border-right;
       }
       .controls-TabButton__inner {
-         border-right: 1px solid @customFilterMenu-border-color;
-         padding-right: 23px;
-         border-top-right-radius: 3px
+         border-right: @tab-button-right-inner-border-right;
+         padding-right: @tab-button-right-inner-padding-right;
+         border-top-right-radius: @tab-button-right-inner-border-top-right-radius;
       }
       .controls-TabButton__corner {
-         float: left;
-         background: url('img/TabButton.png') 0 -1px no-repeat;
+         float: @tab-button-right-corner-float;
+         background: @tab-button-right-corner-bg;
       }
    }
 
    .controls-TabButton__corner {
-      z-index: 20;
-      width: 24px;
-      height: 29px;
-      line-height: 29px;
-      display: inline-block;
+      z-index: @tab-button-corner-z-index;
+      width: @tab-button-corner-width;
+      height: @tab-button-corner-height;
+      line-height: @tab-button-corner-line-height;
+      display: @tab-button-corner-display;
    }
 
    .controls-TabButton__selected-border {
-      position: absolute;
-      right: 0px;
-      top: 0px;
-      width: 3px;
-      height: 29px;
-      background: @primary-color;
-      display: none;
-      z-index: 30;
+      position: @tab-button-selected-border-position;
+      right: @tab-button-selected-border-right;
+      top: @tab-button-selected-border-top;
+      width: @tab-button-selected-border-width;
+      height: @tab-button-selected-border-height;
+      background: @tab-button-selected-border-bg;
+      display: @tab-button-selected-border-display;
+      z-index: @tab-button-selected-border-z-index;
    }
 
    .controls-TabButton__inner {
-      border-top: 1px solid @customFilterMenu-border-color;
-      color: #999999;
-      display: inline-block;
+      border-top: @tab-button-inner-border-top;
+      color: @tab-button-inner-color;
+      display: @tab-button-inner-display;
       height: @tab-button-inner-height;
-      background: #F2F2F2;
-      position: relative;
-      z-index: 20;
-      line-height: 29px;
+      background: @tab-button-inner-bg;
+      position: @tab-button-inner-position;
+      z-index: @tab-button-inner-z-index;
+      line-height: @tab-button-inner-line-height;
 
       .controls-TabButton__caption {
-         font-family: 'TensorFont Bold', TensorFont;
-         font-size: 14px;
-         font-weight: 700;
-         font-style: normal;
-         display: inline-block;
-         height: auto;
-         vertical-align: bottom;
+         font-family: @tab-button-inner-caption-font-family;
+         font-size: @tab-button-inner-caption-font-size;
+         font-weight: @tab-button-inner-caption-font-weight;
+         font-style: @tab-button-inner-caption-font-style;
+         display: @tab-button-inner-caption-display;
+         height: @tab-button-inner-caption-height;
+         vertical-align: @tab-button-inner-caption-vertical-align;
       }
 
       .controls-TabButton__icon{
-         line-height: 29px!important;
+         line-height: @tab-button-inner-icon-line-height;
       }
    }
 
    &.controls-TabButton__big-size{
       .controls-TabButton__inner {
          .controls-TabButton__caption {
-            font-size: 18px;
+            font-size: @tab-button-big-inner-caption-font-size;
          }
 
          .controls-TabButton__additional-text{
-            font-family: 'TensorFont Regular', TensorFont;
-            font-weight: 400;
-            font-size: 15px;
+            font-family: @tab-button-big-inner-additional-font-family;
+            font-weight: @tab-button-big-inner-additional-font-weight;
+            font-size: @tab-button-big-inner-additional-font-size;
          }
       }
    }
 
   &.ws-disabled, &.ws-disabled:hover, &.ws-disabled.controls-Checked__checked{
     .controls-TabButton__inner {
-      background: transparent;
-      border: none;
-      color: #CCCCCC;
+      background: @tab-button-disabled-inner-bg;
+      border: @tab-button-disabled-inner-border;
+      color: @tab-button-disabled-inner-color;
       .controls-TabButton__caption {
-        color: #CCCCCC;
+        color: @tab-button-disabled-inner-caption-color;
       }
     }
     .controls-TabButton__corner,{
-      background: none;
+      background: @tab-button-disabled-corner-bg;
     }
 
     .controls-TabButton__selected-border {
-      display: none;
+      display: @tab-button-disabled-selected-border-display;
     }
   }
 }

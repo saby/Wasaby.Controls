@@ -229,63 +229,87 @@
 // ---------- //
 
 @tab-button-cursor:                             pointer;
-@tab-button-disabled-cursor:                    default;
+@tab-button-display:                            inline-block;
+@tab-button-position:                           relative;
+@tab-button-overflow:                           hidden;
+@tab-button-items-margin:                       -10px;
 
-@tab-button-font:                               italic bold 18px Cambria, sans-serif;
-@tab-button-height:                             29px;
-@tab-button-side-display:                       inline-block;
-@tab-button-side-width:                         19px;
-@tab-button-side-height:                        @tab-button-height;
-@tab-button-inner-height:                       @tab-button-height;
-@tab-button-text-padding:                       3px 0 0;
-@tab-button-border-radius:                      0;
+@tab-button-hover-inner-bg:                     #F8F8F8;
+@tab-button-hover-inner-caption-color:          #FF7033;
 
-@tab-button-text-color:                         @black-color;
-@tab-button-border-width:                       0;
-@tab-button-border-style:                       solid;
-@tab-button-border-color:                       transparent;
-@tab-button-bg:                                 transparent;
-
-@tab-button-hover-text-color:                   @tab-button-text-color;
-@tab-button-hover-border-width:                 @tab-button-border-width;
-@tab-button-hover-border-style:                 @tab-button-border-style;
-@tab-button-hover-border-color:                 @tab-button-border-color;
-@tab-button-hover-bg:                           @tab-button-bg;
-
-@tab-button-checked-text-color:                 @tab-button-text-color;
-@tab-button-checked-border-width:               @tab-button-border-width;
-@tab-button-checked-border-style:               @tab-button-border-style;
-@tab-button-checked-border-color:               @tab-button-border-color;
-@tab-button-checked-bg:                         @tab-button-bg;
-
-@tab-button-checked-hover-text-color:           @tab-button-hover-text-color;
-@tab-button-checked-hover-border-width:         @tab-button-border-width;
-@tab-button-checked-hover-border-style:         @tab-button-border-style;
-@tab-button-checked-hover-border-color:         @tab-button-border-color;
-@tab-button-checked-hover-bg:                   @tab-button-bg;
-
-@tab-button-disabled-text-color:                @gray-color;
-@tab-button-disabled-border-width:              @tab-button-border-width;
-@tab-button-disabled-border-style:              @tab-button-border-style;
-@tab-button-disabled-border-color:              @tab-button-border-color;
-@tab-button-disabled-bg:                        @tab-button-bg;
-
-@tab-button-disabled-checked-text-color:        @tab-button-disabled-text-color;
-@tab-button-disabled-checked-border-width:      @tab-button-disabled-border-width;
-@tab-button-disabled-checked-border-style:      @tab-button-disabled-border-style;
-@tab-button-disabled-checked-border-color:      @tab-button-disabled-border-color;
-@tab-button-disabled-checked-bg:                @tab-button-bg;
-
-@tab-button-left-side-margin:                   0 -4px 0 0;
-@tab-button-left-side-bg:                       url('img/tabButtonLeft.png') no-repeat;
-
-@tab-button-right-side-margin:                  0 0 0 -4px;
-@tab-button-right-side-bg:                      url('img/tabButtonRight.png') no-repeat;
-
-@tab-button-inner-bg:                           url('img/tabButtonInner.png');
+@tab-button-checked-zindex:                     100;
+@tab-button-checked-selected-border-display:    block;
+@tab-button-checked-inner-color:                #000000;
+@tab-button-checked-inner-bg:                   #FFFFFF;
 
 
+@tab-button-left-float:                         left;
+@tab-button-left-side-item-margin-left:         0;
+@tab-button-left-selected-border-left:          0;
+@tab-button-left-inner-border-left:             1px solid @customFilterMenu-border-color;
+@tab-button-left-inner-padding-left:            23px;
+@tab-button-left-inner-border-top-left-radius:  3px;
+@tab-button-left-corner-float:                  right;
+@tab-button-left-corner-bg:                     url('img/TabButton.png') 0 -91px no-repeat;
+@tab-button-hover-left-corner-bg:               url('img/TabButton.png') 0 -121px no-repeat;
+@tab-button-checked-left-corner-bg:             url('img/TabButton.png') 0 -151px no-repeat;
 
+@tab-button-right-float:                         right;
+@tab-button-right-side-item-margin-right:        @tab-button-left-side-item-margin-left;
+@tab-button-right-selected-border-right:         @tab-button-left-selected-border-left;
+@tab-button-right-inner-border-right:            @tab-button-left-inner-border-left;
+@tab-button-right-inner-padding-right:           @tab-button-left-inner-padding-left;
+@tab-button-right-inner-border-top-right-radius: @tab-button-left-inner-border-top-left-radius;
+@tab-button-right-corner-float:                  @tab-button-left-corner-float;
+@tab-button-right-corner-bg:                     url('img/TabButton.png') 0 -1px no-repeat;
+@tab-button-hover-right-corner-bg:               url('img/TabButton.png') 0 -31px no-repeat;
+@tab-button-checked-right-corner-bg:             url('img/TabButton.png') 0 -61px no-repeat;
+
+@tab-button-corner-z-index:                      20;
+@tab-button-corner-width:                        24px;
+@tab-button-corner-height:                       29px;
+@tab-button-corner-line-height:                  29px;
+@tab-button-corner-display:                      @tab-button-display;
+
+@tab-button-selected-border-position:            absolute;
+@tab-button-selected-border-right:               0px;
+@tab-button-selected-border-top:                 0px;
+@tab-button-selected-border-width:               3px;
+@tab-button-selected-border-height:              29px;
+@tab-button-selected-border-bg:                  @primary-color;
+@tab-button-selected-border-display:             none;
+@tab-button-selected-border-z-index:             30;
+
+@tab-button-inner-border-top:                    1px solid @customFilterMenu-border-color;
+@tab-button-inner-color:                         #999999;
+@tab-button-inner-display:                       @tab-button-display;
+@tab-button-inner-height:                        @tab-button-inner-height;
+@tab-button-inner-bg:                            #F2F2F2;
+@tab-button-inner-position:                      relative;
+@tab-button-inner-z-index:                       20;
+@tab-button-inner-line-height:                   29px;
+
+@tab-button-inner-caption-font-family:           'TensorFont Bold', TensorFont;
+@tab-button-inner-caption-font-size:             14px;
+@tab-button-inner-caption-font-weight:           700;
+@tab-button-inner-caption-font-style:            normal;
+@tab-button-inner-caption-display:               @tab-button-display;
+@tab-button-inner-caption-height:                auto;
+@tab-button-inner-caption-vertical-align:        bottom;
+
+@tab-button-inner-icon-line-height:              29px!important;
+
+@tab-button-big-inner-caption-font-size:         18px;
+@tab-button-big-inner-additional-font-family:    'TensorFont Regular', TensorFont;
+@tab-button-big-inner-additional-font-weight:    400;
+@tab-button-big-inner-additional-font-size:      15px;
+
+@tab-button-disabled-inner-bg:                   transparent;
+@tab-button-disabled-inner-border:               none;
+@tab-button-disabled-inner-color:                #CCCCCC;
+@tab-button-disabled-inner-caption-color:        @tab-button-disabled-inner-color;
+@tab-button-disabled-corner-bg:                  none;
+@tab-button-disabled-selected-border-display:    none;
 // ------------ //
 // Radio button //
 // ------------ //
