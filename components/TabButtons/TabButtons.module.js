@@ -70,7 +70,7 @@ define(
          this.setSelectedKey(this._options.defaultKey);
       },
       toggleMarker: function(toggle){
-         this.getContainer().toggleClass('controls-TabButton__whithout-marker', toggle)
+         this.getContainer().toggleClass('controls-TabButton__without-marker', toggle)
       },
       _beforeShowFirstItem: function () {
          var newSelectedTabId = this._notify('onBeforeShowFirstItem', this._options.selectedItem);
