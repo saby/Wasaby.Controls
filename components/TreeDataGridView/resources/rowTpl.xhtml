@@ -1,3 +1,4 @@
+{{var isBranch;}}
 <tr class="controls-DataGridView__tr" style="{{=it.decorators.apply(it.color, 'color')}}">
    {{?it.multiselect}}
    <td class="controls-DataGridView__td controls-DataGridView__td__checkBox js-controls-ListView__itemCheckBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
@@ -5,12 +6,28 @@
    </td>
    {{?}}
    {{~it.columns :column:index}}
+      {{isBranch = column.item.get(it.hierField);}}
       <td class="controls-DataGridView__td{{?column.className}} {{=column.className}}{{?}}{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
          {{?index == 0}}
-            <div class="controls-TreeView__expand js-controls-TreeView__expand{{?!column.item.get(it.hierField)}} controls-TreeView__expand__leaf{{??}} has-child{{?}}"></div>
-         {{=it.decorators.applyIf(column.value, column.highlight)}} {{?column.item.get(it.hierField)}}{{?it.arrowActivatedHandler}}<div class="js-controls-TreeView__editArrow controls-TreeView__editArrow icon-16 icon-View icon-primary action-hover"></div>{{?}}{{?}}
+            <div class="controls-TreeView__expand js-controls-TreeView__expand{{?!isBranch}} controls-TreeView__expand__leaf{{??}} has-child{{?}}"></div>
+            {{?isBranch}}
+               <div class="controls-TreeView__ellipsis-wrapper">
+                  <div class="controls-TreeView__ellipsis-container">
+                     <span>{{=it.decorators.applyIf(column.value, column.highlight)}}</span>
+                        {{?it.arrowActivatedHandler}}<div class="js-controls-TreeView__editArrow controls-TreeView__editArrow icon-16 icon-View icon-primary action-hover"></div>{{?}}
+                  </div>
+                  {{?it.arrowActivatedHandler}}
+                     <div class="controls-TreeView__ellipsis-copyArrow">
+                        <span>&#133;</span>
+                        <div class="js-controls-TreeView__editArrow controls-TreeView__editArrow icon-16 icon-View icon-primary action-hover"></div>
+                     </div>
+                  {{?}}
+               </div>
+            {{??}}
+               <span>{{=it.decorators.applyIf(column.value, column.highlight)}}</span>
+            {{?}}
          {{??}}
-         {{=it.decorators.applyIf(column.value, column.highlight)}}
+            <span>{{=it.decorators.applyIf(column.value, column.highlight)}}</span>
          {{?}}
       </td>
    {{~}}
