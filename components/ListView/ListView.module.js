@@ -267,13 +267,16 @@ define('js!SBIS3.CONTROLS.ListView',
             this._container
                .mousemove(this._mouseMoveHandler.bind(this))
                .mouseleave(this._mouseLeaveHandler.bind(this));
+            this._onWindowScrollHandler = this._onWindowScroll.bind(this);
             if (this.isInfiniteScroll()) {
-               this._infiniteScrollContainer = this._container.closest('.controls-ListView__infiniteScroll');
-               if (this._infiniteScrollContainer.length) {
+               //Создадим индикатор скрытым
+               this._addLoadingIndicator();
+               this._removeLoadingIndicator();
+               if (!this._isHeightGrowable()) {
                   //TODO Данный функционал пока не протестирован, проверить, когда появтся скроллы в контейнерах
-                  this._infiniteScrollContainer.bind('scroll.wsInfiniteScroll', this._onInfiniteContainerScroll.bind(this));
+                  this.getContainer().bind('scroll.wsInfiniteScroll', this._onContainerScroll.bind(this));
                } else {
-                  $(window).bind('scroll.wsInfiniteScroll', this._onWindowScroll.bind(this));
+                  $(window).bind('scroll.wsInfiniteScroll', this._onWindowScrollHandler);
                }
             }
          },
@@ -713,11 +716,13 @@ define('js!SBIS3.CONTROLS.ListView',
          _onWindowScroll: function (event) {
             this._loadChecked(this._isBottomOfPage());
          },
-         //TODO Проверить, когда появятся контейнеры со скроллом. Возможно нужно смотреть не на offset
-         _onInfiniteContainerScroll: function () {
-            this._loadChecked(this._infiniteScrollContainer.scrollTop() + this._scrollIndicatorHeight >= this._loadingIndicator.offset().top);
+         _onContainerScroll: function () {
+            this._loadChecked(this._loadingIndicator.offset().top - this.getContainer().offset().top < this.getContainer().height());
          },
-
+         _isHeightGrowable: function() {
+            //В новых компонентах никто пока не смотрит на verticalAlignment
+            return this._options.autoHeight;/*&& this._verticalAlignment !== 'Stretch';*/
+         },
          _nextLoad: function () {
             var self = this,
                loadAllowed  = this._isAllowInfiniteScroll(),
@@ -729,12 +734,15 @@ define('js!SBIS3.CONTROLS.ListView',
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                   //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                   self._loader = null;
-                  self._removeLoadingIndicator();
+                  if (self._isHeightGrowable()) {
+                     self._removeLoadingIndicator();
+                  }
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                   if (self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset)) {
                      self._infiniteScrollOffset += self._limit;
                   } else {
                      self._hasScrollMore = false;
+                     self._removeLoadingIndicator();
                   }
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
@@ -762,12 +770,12 @@ define('js!SBIS3.CONTROLS.ListView',
             return (clientHeight + scrollTop >= scrollHeight - this._scrollIndicatorHeight);//Учитываем отступ снизу на высоту картинки индикатора загрузки
          },
          _loadBeforeScrollAppears: function(){
-            var elem = this._infiniteScrollContainer.length ? this._infiniteScrollContainer.get(0) : $('body').get(0),
-               windowHeight = $(window).height();
-            // Было: this._dataSet.getCount() <= parseInt(($(window).height() /  32 ) + 10 , 10
-            if (this._isLoadBeforeScrollAppears &&
-               (!(elem.scrollHeight > windowHeight + this._scrollIndicatorHeight)) || //Если на странице появился скролл
-               this._container.height() < windowHeight){ // или высота таблицы меньше высоты окна
+            var  windowHeight = $(window).height(),
+                  checkHeights = this._isHeightGrowable() ?
+                     (!($('body').get(0).scrollHeight > windowHeight + this._scrollIndicatorHeight)) || (this._container.height() < windowHeight) :
+                     this._container.height() >= this._container.find('> table').height();
+            //Если на странице появился скролл и мы достигли дна скролла
+            if (this._isLoadBeforeScrollAppears && checkHeights){
                this._nextLoad();
             } else {
                this._isLoadBeforeScrollAppears = false;
@@ -840,6 +848,12 @@ define('js!SBIS3.CONTROLS.ListView',
                this._processPaging();
                this._updateOffset();
             }
+            if (this.isInfiniteScroll()) {
+               if (!this._hasNextPage(this._dataSet.getMetaData().more)) {
+                  this._removeLoadingIndicator();
+               }
+            }
+
          },
          _toggleIndicator: function(show){
             this._showedLoading = show;
@@ -995,10 +1009,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          destroy: function () {
             if (this.isInfiniteScroll()) {
-               if (this._infiniteScrollContainer.length) {
-                  this._infiniteScrollContainer.unbind('.wsInfiniteScroll');
+               if (this._isHeightGrowable()) {
+                  this.getContainer().unbind('.wsInfiniteScroll');
                } else {
-                  $(window).unbind('.wsInfiniteScroll');
+                  $(window).unbind('scroll.wsInfiniteScroll', this._onWindowScrollHandler);
                }
             }
             if (this._pager) {
