@@ -229,7 +229,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
          return {
             corner: this._options.filterAlign === 'right' ? 'tr' : 'tl',
             horizontalAlign: {
-               side: this._options.filterAlign === 'right' ? 'left' : 'right'
+               side: this._options.filterAlign
             },
             verticalAlign: {
                side: 'top'
