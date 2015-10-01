@@ -2516,12 +2516,39 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGridView__td .controls-TreeView__editArrow {
   display: none;
+  visibility: hidden;
   position: relative;
   top: 2px;
 }
 .controls-DataGridView__td:hover .controls-TreeView__expand--inside {
   display: inline-block;
   height: 14px;
+}
+.controls-ListView__folder.controls-ListView__hoveredItem .controls-DataGridView__td .controls-TreeView__ellipsis-copyArrow {
+  background-color: #f3f3f3;
+  -webkit-box-shadow: -6px 2px 8px -2px #f3f3f3;
+  -moz-box-shadow: -6px 2px 8px -2px #f3f3f3;
+  box-shadow: -6px 2px 8px -2px #f3f3f3;
+}
+.controls-ListView__folder .controls-TreeView__ellipsis-wrapper {
+  overflow: hidden;
+  height: 19px;
+}
+.controls-ListView__folder .controls-TreeView__ellipsis-wrapper .controls-TreeView__ellipsis-container {
+  float: left;
+}
+.controls-ListView__folder .controls-TreeView__ellipsis-wrapper .controls-TreeView__ellipsis-copyArrow {
+  float: right;
+  position: relative;
+  top: -19px;
+  padding: 0 0 0 3px;
+  background-color: #ffffff;
+  -webkit-box-shadow: -6px 2px 8px -2px #ffffff;
+  -moz-box-shadow: -6px 2px 8px -2px #ffffff;
+  box-shadow: -6px 2px 8px -2px #ffffff;
+}
+.controls-ListView__folder .controls-TreeView__ellipsis-wrapper .controls-TreeView__ellipsis-copyArrow .controls-TreeView__editArrow {
+  display: inline-block;
 }
 .controls-GridView__searchMode .controls-TreeView__hierWrapper {
   width: 0;
@@ -2531,6 +2558,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ListView__hoveredItem .controls-TreeView__editArrow {
   display: inline-block;
+  visibility: visible;
 }
 .controls-DragNDrop__draggedItem {
   position: absolute;

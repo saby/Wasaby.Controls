@@ -10,9 +10,10 @@
       display: inline-block;
       float: left;
    }
-   
+
   .controls-TreeView__editArrow{
     display: none;
+    visibility: hidden;
     position: relative;
     top: 2px;
   }
@@ -22,6 +23,38 @@
       height: 14px;
     }
   }
+}
+
+.controls-ListView__folder {
+
+   &.controls-ListView__hoveredItem {
+
+      .controls-DataGridView__td {
+
+         .controls-TreeView__ellipsis-copyArrow {
+            background-color: @data-grid-row-hover-bg;
+            .box-shadow(@tree-view-ellipsis-copyArrow-shadow @data-grid-row-hover-bg);
+         }
+      }
+   }
+
+   .controls-TreeView__ellipsis-wrapper {
+      overflow: hidden;
+      height: @tree-view-ellipsis-wrapper-height;
+
+      .controls-TreeView__ellipsis-copyArrow {
+         float: right;
+         position: relative;
+         top: -@tree-view-ellipsis-wrapper-height;
+         padding: @tree-view-ellipsis-copyArrow-padding;
+         background-color: @white-color;
+         .box-shadow(@tree-view-ellipsis-copyArrow-shadow @white-color);
+
+         .controls-TreeView__editArrow {
+            display: inline-block;
+         }
+      }
+   }
 }
 .controls-GridView__searchMode{
    .controls-TreeView__hierWrapper{
@@ -33,9 +66,10 @@
    overflow: hidden;
 }
 
-.controls-ListView__hoveredItem {
+.controls-ListView__hoveredItem{
    .controls-TreeView__editArrow {
       display: inline-block;
+      visibility: visible;
    }
 }
 .controls-DragNDrop__draggedItem {
