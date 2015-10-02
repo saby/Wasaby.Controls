@@ -2,7 +2,7 @@
     <option name="caption" value="{{=it.displayField}}"></option>
     {{var itemRaws = it.item.getRaw();}}
     {{for (i in itemRaws) {}}
-    {{?itemRaws.hasOwnProperty(i)}}
+    {{?(itemRaws.hasOwnProperty(i) && i !== 'content')}}
         <option name="{{=i}}" value="{{=itemRaws[i]}}"></option>
     {{?}}
     {{}}}
