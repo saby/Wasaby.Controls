@@ -2,7 +2,13 @@
  * Created by iv.cheremushkin on 14.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.SwitchableArea', ['js!SBIS3.CORE.Control'], function(Control) {
+define('js!SBIS3.CONTROLS.SwitchableArea', [
+   'js!SBIS3.CORE.CompoundControl',
+   'html!SBIS3.CONTROLS.SwitchableArea',
+   'html!SBIS3.CONTROLS.SwitchableArea/AreaTpl',
+   'js!SBIS3.CONTROLS.DSMixin',
+   'js!SBIS3.CONTROLS.Selectable'
+], function(CompoundControl, dotTplFn, AreaTpl, DSMixin, Selectable) {
 
    'use strict';
 
@@ -17,7 +23,8 @@ define('js!SBIS3.CONTROLS.SwitchableArea', ['js!SBIS3.CORE.Control'], function(C
     * @mixes SBIS3.CONTROLS.Selectable
     */
 
-   var SwitchableArea = Control.Control.extend( /** @lends SBIS3.CONTROLS.SwitchableArea.prototype */ {
+   var SwitchableArea = CompoundControl.extend([DSMixin, Selectable], /** @lends SBIS3.CONTROLS.SwitchableArea.prototype */ {
+      _dotTplFn : dotTplFn,
       $protected: {
          _options: {
             /**
@@ -33,12 +40,28 @@ define('js!SBIS3.CONTROLS.SwitchableArea', ['js!SBIS3.CORE.Control'], function(C
              * Режим работы компонента
              * @cfg {LoadTypeEnum}
              */
-            loadType : 'cached'
+            loadType : 'cached',
+            itemTemplate: AreaTpl
          }
       },
 
       $constructor: function() {
 
+      },
+
+      init: function() {
+         SwitchableArea.superclass.init.call(this);
+         this.reload();
+      },
+
+      _getItemTemplate: function (item) {
+         var displayField = this._options.displayField;
+         return this._options.itemTemplate.call(this,
+            {
+               item: item,
+               displayField: item.get(displayField)
+            }
+         );
       },
 
       /**
