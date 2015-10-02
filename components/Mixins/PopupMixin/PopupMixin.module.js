@@ -530,7 +530,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             tr: {
                horizontal: {
                   top: 'tl',
-                  bottom: 'tl'
+                  bottom: 'tr'
                },
                vertical: {
                   left: 'br',

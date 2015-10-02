@@ -27,7 +27,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             $protected: {
                _options: {
                   columns: [],
-                  focusCatch: undefined
+                  focusCatch: undefined,
+                  editFieldFocusHandler: undefined
                },
                _firstField: undefined,
                //Храним тут состояние того, что фокус потерян из-за скрытия компонента
@@ -61,6 +62,11 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                            }
                         }
                      }
+                  },
+                  childFocusIn = function() {
+                     if (self.isVisible()) {
+                        self._options.editFieldFocusHandler && self._options.editFieldFocusHandler(this);
+                     }
                   };
                this._publish('onMouseDown', 'onValueChange');
                this._container
@@ -73,6 +79,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                      $ws.helpers.forEach(childControls, function (ctrl) {
                         this._fields[ctrl.getName()] = ctrl;
                         ctrl.subscribe('onFocusOut', childFocusOut);
+                        ctrl.subscribe('onFocusIn', childFocusIn);
                      }, this);
                   }
                });

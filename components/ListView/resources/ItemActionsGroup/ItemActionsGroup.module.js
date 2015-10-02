@@ -8,9 +8,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
       'js!SBIS3.CONTROLS.IconButton',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.ContextMenu',
-      'html!SBIS3.CONTROLS.ItemActionsGroup'
+      'html!SBIS3.CONTROLS.ItemActionsGroup',
+      'html!SBIS3.CONTROLS.ItemActionsGroup/ItemTpl'
    ],
-   function(ButtonGroupBaseDS, IconButton, Link, ContextMenu, dotTplFn) {
+   function(ButtonGroupBaseDS, IconButton, Link, ContextMenu, dotTplFn, dotTplFnForItem) {
 
       'use strict';
 
@@ -170,21 +171,13 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          },
 
          _getItemTemplate : function(item) {
-            var caption = item.get('caption');
-
             this._itemActionsButtons[item.get('name')] = {
                isMainAction : item.get('isMainAction'),
                handler: item.get('onActivated'),
                isVisible: true
             };
 
-            return caption ?
-            '<component data-component="SBIS3.CONTROLS.Link">' +
-               '<option name="caption">' + caption + '</option>' +
-            '</component>' :
-            '<component data-component="SBIS3.CONTROLS.IconButton">' +
-               '<option name="icon">' + item.get('icon') + '</option>' +
-            '</component>';
+            return dotTplFnForItem;
          },
 
          destroy: function() {
