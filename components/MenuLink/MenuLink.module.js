@@ -85,7 +85,6 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
 
       _clickHandler: function(){
          if (this._dataSet.getCount() > 1) {
-            this._container.addClass('controls-Checked__checked');
             this.togglePicker();
          } else {
             if (this._dataSet.getCount() == 1) {
