@@ -507,16 +507,17 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             }
          }
          this._itemsInstances = {};
+         if (container.length){
+            var itemsContainers = $('.controls-ListView__item', container.get(0));
+            /*Удаляем вложенные компоненты*/
+            $('[data-component]', itemsContainers).each(function (i, item) {
+               var inst = $(item).wsControl();
+               inst.destroy();
+            });
 
-         var itemsContainers = $(".controls-ListView__item", container.get(0));
-         /*Удаляем вложенные компоненты*/
-         $('[data-component]', itemsContainers).each(function (i, item) {
-            var inst = $(item).wsControl();
-            inst.destroy();
-         });
-
-         /*Удаляем сами items*/
-         itemsContainers.remove();
+            /*Удаляем сами items*/
+            itemsContainers.remove();
+         }
       },
 
       //метод определяющий в какой контейнер разместить определенный элемент
