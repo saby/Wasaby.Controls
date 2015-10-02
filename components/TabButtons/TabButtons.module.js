@@ -7,11 +7,9 @@ define(
       'js!SBIS3.CONTROLS.RadioGroupBase',
       'html!SBIS3.CONTROLS.TabButtons',
       'html!SBIS3.CONTROLS.TabButtons/ItemTpl',
-      'js!SBIS3.CONTROLS.EditAtPlace',
-      'css!SBIS3.CONTROLS.TabButtons',
       'js!SBIS3.CONTROLS.TabButton'
    ],
-   function (RadioGroupBase, TabButtonsTpl, ItemTpl, EditAtPlace) {
+   function (RadioGroupBase, TabButtonsTpl, ItemTpl) {
 
    'use strict';
 
