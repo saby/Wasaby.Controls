@@ -8,99 +8,72 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
     * @param backButton объект книпоки назад
     */
    /*методы для поиска*/
-   function startHierSearch(text, searchParamName, searchCrumbsTpl) {
+   function startSearch(text, gridView, BreadCrumbs, searchParamName, searchCrumbsTpl, backButton) {
       if (text) {
-         var filter = $ws.core.merge(this._options.view._filter, {
+         var filter = $ws.core.merge(gridView._filter, {
             'Разворот': 'С разворотом',
             'usePages': 'full'
          }),
-         view = this._options.view,
-         groupBy = view.getSearchGroupBy();
+         groupBy = gridView.getSearchGroupBy();
          if (searchCrumbsTpl) {
-            groupBy.breadCrumbsTpl = searchCrumbsTpl;
+            groupBy['breadCrumbsTpl'] = searchCrumbsTpl;
          }
          filter[searchParamName] = text;
-         view.setHighlightText(text, false);
-         view.setInfiniteScroll(true, true);
-         view.setGroupBy(groupBy);
+         gridView.setHighlightText(text, false);
+         gridView.setInfiniteScroll(true, true);
+         gridView.setGroupBy(groupBy);
          if (this._firstSearch) {
-            this._lastRoot = view.getCurrentRoot();
-            if (this._options.breadCrumbs){
-               this._pathDSRawData = $ws.core.clone(this._options.breadCrumbs.getDataSet().getRawData());
-            }
+            this._lastRoot = gridView.getCurrentRoot();
+            this._pathDSRawData = $ws.core.clone(BreadCrumbs.getDataSet().getRawData());
          }
          this._firstSearch = false;
          this._searchReload = true;
          // TODO нафиг это надо
-         this._options.breadCrumbs.setItems([]);
+         BreadCrumbs.setItems([]);
          //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
-         if (this._options.backButton) {
-            this._options.backButton.getContainer().css({'visibility': 'hidden'});
+         if (backButton) {
+            backButton.getContainer().css({'visibility': 'hidden'});
          }
 
-         view.reload(filter, view._sorting, 0).addCallback(function(){
-            view._container.addClass('controls-GridView__searchMode');
+         gridView.reload(filter, gridView._sorting, 0).addCallback(function(){
+            gridView._container.addClass('controls-GridView__searchMode');
          });
       }
    }
-
-   function startSearch(text, searchParamName){
-      if (text){
-         var view = this._options.view,
-         filter = $ws.core.merge(view._filter, {
-            'usePages': 'full'
-         });
-         filter[searchParamName] = text;
-         view.setHighlightText(text, false);
-         view.setInfiniteScroll(true, true);
-         view.reload(filter, view._sorting, 0);
-      }
-   }
-
-   function resetSearch(searchParamName){
-      var view = this._options.view;
-      delete (view._filter[searchParamName]);
-      view.setHighlightText('', false);
-      view.reload(view._filter, view._sorting, 0);
-   }
-
-   function resetGroup(searchParamName) {
+   function resetGroup(gridView, searchParamName, BreadCrumbs, backButton) {
       //Если мы ничего не искали, то и сбрасывать нечего
       if (this._firstSearch) {
          return;
       }
-      var view = this._options.view,
-      filter = $ws.core.merge(view._filter, {
+      var filter = $ws.core.merge(gridView._filter, {
          'Разворот' : 'Без разворота'
       });
       delete (filter[searchParamName]);
 
-      view.setInfiniteScroll(false, true);
-      view.setGroupBy({});
-      view.setHighlightText('', false);
+      gridView.setInfiniteScroll(false, true);
+      gridView.setGroupBy({});
+      gridView.setHighlightText('', false);
       this._firstSearch = true;
       if (this._searchReload ) {
          //Нужно поменять фильтр и загрузить нужный корень.
          //TODO менять фильтр в контексте, когда появятся data-binding'и
-         filter[view.getHierField()] = this._lastRoot;
+         filter[gridView.getHierField()] = this._lastRoot;
          //DataGridView._filter = filter;
          //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
-         view.reload(filter, view._sorting, 0);
+         gridView.reload(filter, gridView._sorting, 0);
          this._path = this._pathDSRawData;
-         if (this._options.breadCrumbs){
-            this._options.breadCrumbs.getDataSet().setRawData(this._pathDSRawData);
-            this._options.breadCrumbs._redraw();
-         }
-         if (this._options.backButton) {
-            this._options.backButton.getContainer().css({'visibility': 'visible'});
+         BreadCrumbs.getDataSet().setRawData(this._pathDSRawData);
+         BreadCrumbs._redraw();
+         if (backButton) {
+            backButton.getContainer().css({'visibility': 'visible'});
          }
       } else {
          //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
-         view._filter = filter;
+         gridView._filter = filter;
       }
       //При любом релоаде из режима поиска нужно снять класс
-      view.once('onDataLoad', function(){
-         view._container.removeClass('controls-GridView__searchMode');
+      gridView.once('onDataLoad', function(){
+         gridView._container.removeClass('controls-GridView__searchMode');
       });
    }
 
@@ -140,91 +113,53 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          _pathDSRawData : undefined,
          _firstSearch: true,
          _lastViewMode: null,
-         _path: [],
-         _options: {
-            /**
-             * @cfg объект представления данных
-             */
-            view: undefined,
-            /**
-             * @cfg объект хлебных крошек
-             */            
-            breadCrumbs: undefined,
-            /**
-             * @cfg объект кнопки назад
-             */                
-            backButton: undefined,
-            /**
-             * @cfg объект строки поиска
-             */                
-            searchForm: undefined,
-            /**
-             * @cfg объект панели массовых операций
-             */                
-            operationPanel: undefined
-         }
+         _path: []
       },
 
       /**
-       * Метод для связывания формы строки поиска с представлением данных.
-       * для работы необходимо задать опциию view  
+       * Метод для связывания формы строки поиска с представлением данных
+       * @param searchForm объект формы поиска
+       * @param gridView объект представления данных
+       * @param BreadCrumbs объект хлебных крошек
        * @param searchParamName параметр фильтрации для поиска
        * @param searchCrumbsTpl шаблон отрисовки элемента пути в поиске
-       * @param [searchForm] объект формы поиска
+       * @param backButton объект книпоки назад
        * @example
        * <pre>
        *     myBinder = new ComponentBinder();
-       *     myBinder.bindSearchGrid('СтрокаПоиска');
+       *     myBinder.bindSearchGrid(searchForm, gridView, BreadCrumbs, searchParamName);
        * </pre>
        */
-      bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm) {
-         var self = this,
-         view = this._options.view,
-         hierarchy = $ws.helpers.instanceOfModule(view, 'SBIS3.CONTROLS.HierarchyDataGridView');
-         searchForm = searchForm || this._options.searchForm;
-         if (hierarchy){
-            this._lastRoot = view.getCurrentRoot();
-            //searchForm.subscribe('onReset', resetGroup);
-            view.subscribe('onSetRoot', function(){
-               breakSearch(searchForm);
-            });
-            //Перед переключением в крошках в режиме поиска сбросим фильтр поиска
-            view.subscribe('onSearchPathClick', function(){
-               breakSearch(searchForm);
-            });
-         }
-      
+      bindSearchGrid : function(searchForm, gridView, BreadCrumbs, searchParamName, searchCrumbsTpl, backButton) {
+         var self = this;
+         this._lastRoot = gridView.getCurrentRoot();
          searchForm.subscribe('onTextChange', function(event, text){
             var checkedText = isSearchValid(text, 3);
             if (checkedText[1]) {
-               if (hierarchy) {
-                  startHierSearch.call(self, text, searchParamName, searchCrumbsTpl);
-                  self._path = [];
-               } else {
-                  startSearch.call(self, text, searchParamName);
-               }
+               startSearch.call(self, this.getText(), gridView, BreadCrumbs, searchParamName, searchCrumbsTpl, backButton);
+               self._path = [];
             }
             if (!checkedText[0]) {
-               if (hierarchy) {
-                  resetGroup.call(self, searchParamName);
-               } else {
-                  resetSearch.call(self, searchParamName);
-               }
+               resetGroup.call(self, gridView, searchParamName, BreadCrumbs, backButton);
             }
          });
-         
+
          searchForm.subscribe('onSearchStart', function(event, text) {
             var checkedText = isSearchValid(text, 1);
             if (checkedText[1]) {
-               if (hierarchy) {
-                  startHierSearch.call(self, text, searchParamName);
-               } else {
-                  startSearch.call(self, text, searchParamName);
-               }
+               startSearch.call(self, this.getText(), gridView, BreadCrumbs, searchParamName, searchCrumbsTpl, backButton);
             }
-         });         
+         });
+         //searchForm.subscribe('onReset', resetGroup);
+         gridView.subscribe('onSetRoot', function(){
+            breakSearch(searchForm);
+         });
+         //Перед переключением в крошках в режиме поиска сбросим фильтр поиска
+         gridView.subscribe('onSearchPathClick', function(){
+            breakSearch(searchForm);
+         });
       },
-      bindSearchComposite: function(searchParamName, searchCrumbsTpl, searchForm) {
+      bindSearchComposite: function(searchForm, compositeView, BreadCrumbs, searchParamName, searchCrumbsTpl, backButton) {
          this.bindSearchGrid.apply(this, arguments);
          /*var self = this;
          compositeView.subscribe('onDataLoad', function(){
@@ -239,25 +174,17 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
       /**
        * Метод для связывания хлебных крошек с представлением данных
-       * для работы необходимо задать опциию view  
-       * @param [breadCrumbs] объект хлебных крошек
-       * @param [backButton] объект книпоки назад
+       * @param breadCrumbs объект хлебных крошек
+       * @param backButton объект книпоки назад
+       * @param hierarchyGridView объект представления данных
        * @example
        * <pre>
-       *     myBinder = new ComponentBinder({
-       *        view: myGridView,
-       *        breadCrumbs: myBreadCrumbs,
-       *        backButton: myBackButton
-       *     });
-       *     myBinder.bindBreadCrumbs();
+       *     myBinder = new ComponentBinder();
+       *     myBinder.bindSearchGrid(searchForm, gridView, BreadCrumbs, searchParamName);
        * </pre>
        */
-      bindBreadCrumbs: function(breadCrumbs, backButton){
-         var self = this,
-         view = this._options.view;
-
-         backButton = backButton || this._options.backButton;
-         breadCrumbs = breadCrumbs || this._options.breadCrumbs;
+      bindBreadCrumbs: function(breadCrumbs, backButton, hierarchyGridView){
+         var self = this;
 
          function createBreadCrumb(data){
             var point = {};
@@ -274,13 +201,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             if(self._currentRoot !== null) {
                self._currentRoot = previousRoot;
                if (self._path.length) self._path.splice(self._path.length - 1);
-               view.setCurrentRoot(previousRoot ? previousRoot[breadCrumbs._options.keyField] : null);
+               hierarchyGridView.setCurrentRoot(previousRoot ? previousRoot[breadCrumbs._options.keyField] : null);
             }
-            view.reload();
+            hierarchyGridView.reload();
          }
 
-         view.subscribe('onSetRoot', function(event, id, hier){
-            var i;
+         hierarchyGridView.subscribe('onSetRoot', function(event, id, hier){
             /* 
                TODO: Хак для того перерисовки хлебных крошек при переносе из папки в папку
                Проверить совпадение родительского id и текущего единственный способ понять,
@@ -291,7 +217,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                self._currentRoot = hier[0];
                self._path = hier.reverse();
             } else {
-               for (i = hier.length - 1; i >= 0; i--) {
+               for (var i = hier.length - 1; i >= 0; i--) {
                   var rec = hier[i];
                   if (rec){
                      var c = createBreadCrumb(rec);
@@ -317,7 +243,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             backButton.setCaption(self._currentRoot ? $ws.helpers.escapeHtml(self._currentRoot.title) : '');
          });
 
-         view.subscribe('onKeyPressed', function(event, jqEvent) {
+         hierarchyGridView.subscribe('onKeyPressed', function(event, jqEvent) {
             if(jqEvent.which === $ws._const.key.backspace) {
                setPreviousRoot();
                jqEvent.preventDefault();
@@ -331,8 +257,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                self._path = [];
             }
             this.setItems(self._path);
-            view.setCurrentRoot(id);
-            view.reload();
+            hierarchyGridView.setCurrentRoot(id);
+            hierarchyGridView.reload();
             this._toggleHomeIcon(!self._path.length);
          });
 
@@ -340,30 +266,16 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             setPreviousRoot();
          });
       },
-      /**
-       * Метод для связывания панели массовых оперций с представлением данных
-       * для работы необходимо задать опциию view
-       * @param hideCheckBoxes {Boolean} флаг, показывающий, скрывать checkBox'ы для отметки записей
-       * @param [operationPanel] объект панели массовых операций
-       * в представлении данных вместе с панелью или нет.
-       * @example
-       * <pre>
-       *     myBinder = new ComponentBinder();
-       *     myBinder.bindOperationPanel(true);
-       * </pre>
-       */
-      bindOperationPanel: function(hideCheckBoxes, operationPanel) {
-         var view = this._options.view;
-         operationPanel = operationPanel || this._options.operationPanel;
+      bindOperationPanel: function(operationPanel, gridView, hideCheckBoxes) {
          operationPanel._addItemOptions = function(options) {
-            options.linkedView = view;
+            options.linkedView = gridView;
          };
-         toggleCheckBoxes(operationPanel, view, hideCheckBoxes);
-         view.subscribe('onSelectedItemsChange', function(event, idArray) {
+         toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes);
+         gridView.subscribe('onSelectedItemsChange', function(event, idArray) {
             operationPanel.setPanelState(idArray.length);
          });
          operationPanel.subscribe('onToggle', function() {
-            toggleCheckBoxes(operationPanel, view, hideCheckBoxes);
+            toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes);
          });
       }
    });
