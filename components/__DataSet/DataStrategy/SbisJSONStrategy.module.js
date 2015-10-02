@@ -103,6 +103,11 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
       addRecord: function (data, record, at) {
          var rawData = record.getRaw();
          var d = data['d'];
+
+         if (!data.s.length && rawData.s.length) {
+            data.s = rawData.s;
+         }
+
          if (at !== undefined && at >= 0) {
             d.splice(at, 0, rawData['d']);
          } else {
