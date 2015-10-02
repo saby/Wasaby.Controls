@@ -2345,12 +2345,36 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGridView__td .controls-TreeView__editArrow {
   display: none;
+  visibility: hidden;
   position: relative;
   top: 2px;
 }
 .controls-DataGridView__td:hover .controls-TreeView__expand--inside {
   display: inline-block;
   height: 14px;
+}
+.controls-ListView__folder.controls-ListView__hoveredItem .controls-DataGridView__td .controls-TreeView__ellipsis-copyArrow {
+  background-color: #00c795;
+  -webkit-box-shadow: -6px 2px 8px -2px #00c795;
+  -moz-box-shadow: -6px 2px 8px -2px #00c795;
+  box-shadow: -6px 2px 8px -2px #00c795;
+}
+.controls-ListView__folder .controls-TreeView__ellipsis-wrapper {
+  overflow: hidden;
+  height: 19px;
+}
+.controls-ListView__folder .controls-TreeView__ellipsis-wrapper .controls-TreeView__ellipsis-copyArrow {
+  float: right;
+  position: relative;
+  top: -19px;
+  padding: 0 0 0 3px;
+  background-color: #ffffff;
+  -webkit-box-shadow: -6px 2px 8px -2px #ffffff;
+  -moz-box-shadow: -6px 2px 8px -2px #ffffff;
+  box-shadow: -6px 2px 8px -2px #ffffff;
+}
+.controls-ListView__folder .controls-TreeView__ellipsis-wrapper .controls-TreeView__ellipsis-copyArrow .controls-TreeView__editArrow {
+  display: inline-block;
 }
 .controls-GridView__searchMode .controls-TreeView__hierWrapper {
   width: 0;
@@ -2360,6 +2384,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ListView__hoveredItem .controls-TreeView__editArrow {
   display: inline-block;
+  visibility: visible;
 }
 .controls-DragNDrop__draggedItem {
   position: absolute;
@@ -2595,7 +2620,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   display: inline-block;
   font-size: 18px;
-  line-height: 26px;
+  line-height: 24px;
   font-weight: 700;
 }
 .controls-BackButton .controls-BackButton__caption {
@@ -2603,6 +2628,7 @@ input[type="reset"]::-moz-focus-inner {
   color: #313e78;
   overflow: hidden;
   vertical-align: top;
+  padding-left: 8px;
 }
 .controls-BackButton::before {
   width: 10px;
@@ -2610,7 +2636,7 @@ input[type="reset"]::-moz-focus-inner {
   font-family: 'TensorFont Regular', TensorFont;
   content: '\e003';
   float: left;
-  margin-left: 8px;
+  margin-left: 6px;
 }
 .controls-BackButton:hover .controls-BackButton__caption {
   text-decoration: none;

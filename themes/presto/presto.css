@@ -2493,7 +2493,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   display: inline-block;
   font-size: 18px;
-  line-height: 26px;
+  line-height: 24px;
   font-weight: 700;
 }
 .controls-BackButton .controls-BackButton__caption {
@@ -2501,6 +2501,7 @@ input[type="reset"]::-moz-focus-inner {
   color: #313e78;
   overflow: hidden;
   vertical-align: top;
+  padding-left: 8px;
 }
 .controls-BackButton::before {
   width: 10px;
@@ -2508,7 +2509,7 @@ input[type="reset"]::-moz-focus-inner {
   font-family: 'TensorFont Regular', TensorFont;
   content: '\e003';
   float: left;
-  margin-left: 8px;
+  margin-left: 6px;
 }
 .controls-BackButton:hover .controls-BackButton__caption {
   text-decoration: none;

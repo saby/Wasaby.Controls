@@ -2525,17 +2525,14 @@ input[type="reset"]::-moz-focus-inner {
   height: 14px;
 }
 .controls-ListView__folder.controls-ListView__hoveredItem .controls-DataGridView__td .controls-TreeView__ellipsis-copyArrow {
-  background-color: #f3f3f3;
-  -webkit-box-shadow: -6px 2px 8px -2px #f3f3f3;
-  -moz-box-shadow: -6px 2px 8px -2px #f3f3f3;
-  box-shadow: -6px 2px 8px -2px #f3f3f3;
+  background-color: #e9fafe;
+  -webkit-box-shadow: -6px 2px 8px -2px #e9fafe;
+  -moz-box-shadow: -6px 2px 8px -2px #e9fafe;
+  box-shadow: -6px 2px 8px -2px #e9fafe;
 }
 .controls-ListView__folder .controls-TreeView__ellipsis-wrapper {
   overflow: hidden;
   height: 19px;
-}
-.controls-ListView__folder .controls-TreeView__ellipsis-wrapper .controls-TreeView__ellipsis-container {
-  float: left;
 }
 .controls-ListView__folder .controls-TreeView__ellipsis-wrapper .controls-TreeView__ellipsis-copyArrow {
   float: right;
@@ -2804,7 +2801,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   display: inline-block;
   font-size: 18px;
-  line-height: 26px;
+  line-height: 24px;
   font-weight: 700;
 }
 .controls-BackButton .controls-BackButton__caption {
@@ -2812,6 +2809,7 @@ input[type="reset"]::-moz-focus-inner {
   color: #313e78;
   overflow: hidden;
   vertical-align: top;
+  padding-left: 8px;
 }
 .controls-BackButton::before {
   width: 10px;
@@ -2819,7 +2817,7 @@ input[type="reset"]::-moz-focus-inner {
   font-family: 'TensorFont Regular', TensorFont;
   content: '\e003';
   float: left;
-  margin-left: 8px;
+  margin-left: 6px;
 }
 .controls-BackButton:hover .controls-BackButton__caption {
   text-decoration: none;
