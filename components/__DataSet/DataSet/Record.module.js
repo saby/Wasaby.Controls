@@ -84,9 +84,6 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
        * @returns {*}
        */
       get: function (field) {
-         if (!field) {
-            $ws.single.ioc.resolve('ILogger').error('Record', 'Field name is empty');
-         }
          // с данными можем работать только через стратегию
          return this._strategy.value(this._raw, field);
       },
