@@ -19,10 +19,12 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
     * @author Крайнов Дмитрий Олегович
     * @example
     * <pre>
-    *     var dataSource = new SbisServiceSource({
-    *         service: {
-    *             name: 'Товар'
-    *         }
+    *     var dataSource = new SbisService({
+    *        resource: 'СообщениеОтКлиента',
+    *        modelIdField: '@СообщениеОтКлиента',
+    *        queryMethodName: 'СписокОбщий',
+    *        formatForRead: 'СообщениеОтКлиента.Список'
+    *        readMethodName: 'Прочитать'
     *     });
     * </pre>
     */
