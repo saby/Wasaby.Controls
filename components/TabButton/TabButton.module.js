@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.TabButton',
       _dotTplFn: dotTplFn,
 
       $constructor: function () {
-         this._createEditAtPlace();
+         //this._createEditAtPlace();
          this._setTabButtonTemplate();
       },
       _createEditAtPlace: function(){
