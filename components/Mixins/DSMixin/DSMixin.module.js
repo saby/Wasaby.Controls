@@ -482,7 +482,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   curAt.at++;
                }
             }
-            this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this));
+            this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
+               throw e;
+            });
          } else {
             this._notifyOnDrawItems();
          }
