@@ -404,15 +404,15 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TabButton {
   display: inline-block;
   cursor: pointer;
-  height: 21px;
+  height: 29px;
   position: relative;
   overflow: hidden;
 }
 .controls-TabButton:hover .controls-TabButton__inner {
-  background: #F8F8F8;
+  background: #f8f8f8;
 }
 .controls-TabButton:hover .controls-TabButton__inner .controls-TabButton__caption {
-  color: #FF7033;
+  color: #ff7033;
 }
 .controls-TabButton.controls-Checked__checked {
   z-index: 100;
@@ -421,7 +421,7 @@ input[type="reset"]::-moz-focus-inner {
   display: block;
 }
 .controls-TabButton.controls-Checked__checked .controls-TabButton__inner {
-  background: #FFFFFF;
+  background: #ffffff;
   color: #000000;
 }
 .controls-TabButton.controls-TabButton__left-align {
@@ -438,7 +438,7 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/TabButton.png') 0 -151px no-repeat;
 }
 .controls-TabButton.controls-TabButton__left-align .controls-TabButton__selected-border {
-  left: 0px;
+  left: 0;
 }
 .controls-TabButton.controls-TabButton__left-align .controls-TabButton__inner {
   border-left: 1px solid #e4e4e4;
@@ -463,7 +463,7 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/TabButton.png') 0 -61px no-repeat;
 }
 .controls-TabButton.controls-TabButton__right-align .controls-TabButton__selected-border {
-  right: 0px;
+  right: 0;
 }
 .controls-TabButton.controls-TabButton__right-align .controls-TabButton__inner {
   border-right: 1px solid #e4e4e4;
@@ -495,8 +495,8 @@ input[type="reset"]::-moz-focus-inner {
   border-top: 1px solid #e4e4e4;
   color: #999999;
   display: inline-block;
-  height: 21px;
-  background: #F2F2F2;
+  height: 29px;
+  background: #f2f2f2;
   position: relative;
   z-index: 20;
   line-height: 29px;
@@ -511,7 +511,7 @@ input[type="reset"]::-moz-focus-inner {
   vertical-align: bottom;
 }
 .controls-TabButton .controls-TabButton__inner .controls-TabButton__icon {
-  line-height: 29px!important;
+  line-height: 29px !important;
 }
 .controls-TabButton.controls-TabButton__big-size .controls-TabButton__inner .controls-TabButton__caption {
   font-size: 18px;
@@ -526,12 +526,12 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TabButton.ws-disabled.controls-Checked__checked .controls-TabButton__inner {
   background: transparent;
   border: none;
-  color: #CCCCCC;
+  color: #cccccc;
 }
 .controls-TabButton.ws-disabled .controls-TabButton__inner .controls-TabButton__caption,
 .controls-TabButton.ws-disabled:hover .controls-TabButton__inner .controls-TabButton__caption,
 .controls-TabButton.ws-disabled.controls-Checked__checked .controls-TabButton__inner .controls-TabButton__caption {
-  color: #CCCCCC;
+  color: #cccccc;
 }
 .controls-TabButton.ws-disabled .controls-TabButton__corner,
 .controls-TabButton.ws-disabled:hover .controls-TabButton__corner,
@@ -541,6 +541,34 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TabButton.ws-disabled .controls-TabButton__selected-border,
 .controls-TabButton.ws-disabled:hover .controls-TabButton__selected-border,
 .controls-TabButton.ws-disabled.controls-Checked__checked .controls-TabButton__selected-border {
+  display: none;
+}
+.controls-TabButtons {
+  height: 29px;
+  overflow: hidden;
+}
+.controls-TabButtons.controls-TabButton__marker.controls-Checked__checked .controls-TabButton__selected-border {
+  display: block;
+}
+.controls-TabButtons.controls-TabButton__marker.controls-TabButton__left-align .controls-TabButton__selected-border {
+  left: 0;
+}
+.controls-TabButtons.controls-TabButton__marker.controls-TabButton__right-align .controls-TabButton__selected-border {
+  right: 0;
+}
+.controls-TabButtons.controls-TabButton__marker .controls-TabButton__selected-border {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 3px;
+  height: 29px;
+  background: #00c795;
+  display: none;
+  z-index: 30;
+}
+.controls-TabButtons.controls-TabButton__marker.ws-disabled .controls-TabButton__selected-border,
+.controls-TabButtons.controls-TabButton__marker.ws-disabled:hover .controls-TabButton__selected-border,
+.controls-TabButtons.controls-TabButton__marker.ws-disabled.controls-Checked__checked .controls-TabButton__selected-border {
   display: none;
 }
 .controls-RadioButton {
@@ -1960,6 +1988,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-EditAtPlace {
   border: none;
+  background: transparent;
 }
 .controls-EditAtPlace:hover,
 .controls-EditAtPlace.ws-disabled {
