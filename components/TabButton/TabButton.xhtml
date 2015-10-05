@@ -4,7 +4,7 @@
    <div class="controls-TabButton__inner">
       {{?it.editable}}
         <component data-component="SBIS3.CONTROLS.EditAtPlace" name="poh" style="width: 390px;">
-            <option name="text" bind="poh">{{=it.caption}}</option>
+            <option name="text" bind="poh" value="{{=it.caption}}"></option>
             <option name="editorTpl">
                 <component data-component="SBIS3.CONTROLS.TextBox">
                     <option name="text" bind="poh"></option>

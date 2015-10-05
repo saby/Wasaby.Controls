@@ -84,7 +84,7 @@ define(
          return this._options.itemTemplate.call(this,
             {
                item: item,
-               displayField: item.get(displayField)
+               caption: item.get(displayField)
             }
          );
       }
