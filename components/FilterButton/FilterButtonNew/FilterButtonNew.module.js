@@ -227,6 +227,8 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
                tpl += this._options.items[i].editor;
             }
          }
+
+         // FIXME эта кнопка фильтров удалена в 3.7.3, но проблема в popUp миксине осталась
          return {
 	         corner: 'tl',
 	         horizontalAlign: {
