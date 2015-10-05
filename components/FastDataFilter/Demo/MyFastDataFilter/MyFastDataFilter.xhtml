@@ -1,0 +1,26 @@
+<div>
+   <component id="fastDataFilter" data-component="SBIS3.CONTROLS.FastDataFilter" class="FilterButtonMain FastDataFilter">
+      <opt name="name" value="FastDataFilter"></opt>
+      <opt name="keyField" value="name"></opt>
+      <opt name="filter"></opt>
+
+      <opts name="filterStructure" type="array">
+         <opts>
+            <!-- По умолчанию будет key, если не указано - тоже key -->
+            <opt name="internalValueField">key</opt>
+
+            <!-- По умолчанию будет titleText -->
+            <opt name="internalCaptionField">titleText</opt>
+
+            <!-- По умолчанию будет "ничего" - если по привязке нет, и тут нет -->
+            <opt name="caption" bind="filterDescr/key"></opt>
+
+            <opt name="value" bind="filter/title"></opt>
+
+            <opt name="resetValue" type="integer">0</opt>
+            <opt name="resetCaption">Заголовок</opt>
+         </opts>
+      </opts>
+   </component>
+   <div id="FilterButtonMain" data-component="SBIS3.CONTROLS.Demo.FilterButtonMain" class="FilterButtonMain"></div>
+</div>

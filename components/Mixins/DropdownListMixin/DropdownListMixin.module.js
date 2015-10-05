@@ -30,7 +30,11 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
             _getItemTemplate: function (item) {
                 var title = item.get(this._options.displayField);
                 if (this._options.itemTemplate) {
-                    return this._options.itemTemplate.call(this, {item: item, title: title})
+                    return this._options.itemTemplate.call(this, {
+                       item: item,
+                       title: title,
+                       multiselect : this._options.multiselect
+                    })
                 }
                 else {
                     return '<div>' + title + '</div>';
@@ -43,18 +47,23 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
                 this._picker.getContainer().mousedown(function (e) {
                     e.stopPropagation();
                 });
-                this._picker.getContainer().bind('mouseup', function (e) {
-                    var row = $(e.target).closest('.' + self._getItemClass());
-                    if (row.length) {
-                        self.setSelectedKeys([row.data('id')]);
-                        self.hidePicker();
-                    }
-                });
+                this._picker.getContainer().bind('mouseup', this._clickItemHandler.bind(this));
+                this._picker.getContainer().bind('dblclick', this._dblClickItemHandler.bind(this));
             },
-
-            _getItemClass: function() {
+           _clickItemHandler : function (e) {
+              var row = $(e.target).closest('.' + self._getItemClass());
+              if (row.length && (e.button === ($ws._const.browser.isIE8 ? 1 : 0))) {
+                 self.setSelectedKeys([row.data('id')]);
+                 self.hidePicker();
+              }
+            },
+           _dblClickItemHandler : function(){
+              e.stopImmediatePropagation();
+              /*Method can be implemented*/
+           },
+           _getItemClass: function() {
                 /*Method must be implemented*/
-            }
+           }
         };
 
         return DropdownListMixin;

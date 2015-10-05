@@ -64,10 +64,52 @@
     background: @customFilterMenu-picker-menu-item-color;
     margin: @customFilterMenu-picker-menu-item-margin;
     &:hover {
-      background: @customFilterMenu-picker-menu-item-hover;
+       background: @customFilterMenu-picker-menu-item-hover;
+       .controls-CustomFilterMenu__itemCheckBox {
+          visibility: visible;
+       }
     }
     &.controls-CustomFilterMenu__item__selected {
       display: none;
     }
   }
+   .controls-CustomFilterMenu__footer{
+
+      line-height: 24px;
+      padding-left: 8px;
+      .controls-CustomFilterMenuFooter_hasMore{
+         float: right;
+         padding-right: 8px;
+         padding-top: 3px;
+      }
+   }
+   .controls-CustomFilterMenu__multiselect {
+      padding-left: 16px;
+      &.controls-CustomFilterMenu__item__selected {
+         display: block;
+      }
+      &.controls-CustomFilterMenu__item__selected .controls-CustomFilterMenu__itemCheckBox{
+         background: @check-box-icon-checked-bg-pathFilter;
+         visibility: visible;
+      }
+      &.controls-ListView__defaultItem.controls-CustomFilterMenu__item__selected,
+      &.controls-ListView__defaultItem{
+         font-weight: bold;
+         & .controls-CustomFilterMenu__itemCheckBox{
+            visibility: hidden;
+
+         }
+      }
+
+      .controls-CustomFilterMenu__itemCheckBox {
+         width: 16px;
+         height: 16px;
+         background: none;
+         cursor: pointer;
+         display: inline-block;
+         background: @check-box-icon-bg-pathFilter;
+         visibility: hidden;
+      }
+   }
+
 }

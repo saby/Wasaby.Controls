@@ -447,7 +447,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getItemsContainer: function () {
-            return $(".controls-ListView__itemsContainer", this._container.get(0))
+            return $(".controls-ListView__itemsContainer", this._container.get(0));
          },
 
          /* +++++++++++++++++++++++++++ */
