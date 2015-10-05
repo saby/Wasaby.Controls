@@ -67,10 +67,6 @@ define('js!SBIS3.CONTROLS.TreeView', ['js!SBIS3.CONTROLS.ListViewOld', 'js!SBIS3
          return curList;
       },
 
-      _getItemActionsContainer : function(id) {
-         return $('.controls-TreeView__item:first', $(".controls-ListView__item[data-id='" + id + "']", this._container.get(0)));
-      },
-
       /**
        * Раскрыть определенный узел
        * @param {String} key Идентификатор раскрываемого узла
