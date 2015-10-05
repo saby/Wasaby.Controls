@@ -1,1 +1,7 @@
-<div class="controls-SwitchableArea"></div>
+<div class="ws-SwitchableArea">
+   {{ var defaultArea = it.defaultArea || null;}}
+   {{~it.items :item:index}}
+      {{=it.areaTemplate({ outer: it, item: item, index: index, defaultArea: defaultArea === item.id})}}
+      {{ if (defaultArea === item.id) { defaultArea = null } }}
+   {{~}}
+</div>

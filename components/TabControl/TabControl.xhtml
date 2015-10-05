@@ -1,19 +1,15 @@
 <div class="controls-TabControl">
-    <p>controls-TabControl</p>
     <component data-component="SBIS3.CONTROLS.TabButtons" name="TabButtons">
-        <option name="items">{{=it.items}}</option>
+        <option name="items" bind="sbis3-controls-tab-control/items" oneWay="true"></option>
         <option name="selectedKey">{{=it.selectedKey}}</option>
         <option name="displayField">{{=it.displayField}}</option>
+        <option name="keyField">{{=it.keyField}}</option>
     </component>
-    <div class="controls-SwitchableArea">
-        <p>controls-SwitchableArea</p>
-        <div class="controls-SwitchableArea__items">
-            <p>items</p>
-            {{~it.items :item:index}}
-            <div  class="controls-SwitchableArea__itemContainer">
-                <p>itemContainer</p>
-            </div>
-            {{~}}
-        </div>
-    </div>
+    <component data-component="SBIS3.CONTROLS.SwitchableArea" name="SwitchableArea">
+        <option name="items" bind="sbis3-controls-tab-control/items" oneWay="true"></option>
+        <option name="displayField">{{=it.displayField}}</option>
+        <option name="keyField">{{=it.keyField}}</option>
+        <option name="loadType">{{=it.loadType}}</option>
+        <option name="defaultArea">{{=it.defaultArea}}</option>
+    </component>
 </div>
