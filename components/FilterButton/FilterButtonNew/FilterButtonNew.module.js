@@ -228,7 +228,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
             }
          }
 
-         // FIXME эта кнопка фильтров удалена в 3.7.3, но проблема в popUp миксине осталась
+         // FIXME эта кнопка фильтров удалена в 3.7.3, но проблема в popUp миксине с разворотом у края экрана осталась
          return {
 	         corner: 'tl',
 	         horizontalAlign: {
