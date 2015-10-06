@@ -272,8 +272,8 @@ define('js!SBIS3.CONTROLS.ListView',
                //Создадим индикатор скрытым
                this._addLoadingIndicator();
                this._removeLoadingIndicator();
+               //В зависимости от настроек высоты подписываемся либо на скролл у окна, либо у контейнера
                if (!this._isHeightGrowable()) {
-                  //TODO Данный функционал пока не протестирован, проверить, когда появтся скроллы в контейнерах
                   this.getContainer().bind('scroll.wsInfiniteScroll', this._onContainerScroll.bind(this));
                } else {
                   $(window).bind('scroll.wsInfiniteScroll', this._onWindowScrollHandler);
@@ -719,6 +719,11 @@ define('js!SBIS3.CONTROLS.ListView',
          _onContainerScroll: function () {
             this._loadChecked(this._loadingIndicator.offset().top - this.getContainer().offset().top < this.getContainer().height());
          },
+         /**
+          * Проверка на автовысоту у ListView. Аналог из TableView
+          * @returns {*}
+          * @private
+          */
          _isHeightGrowable: function() {
             //В новых компонентах никто пока не смотрит на verticalAlignment
             return this._options.autoHeight;/*&& this._verticalAlignment !== 'Stretch';*/
@@ -734,6 +739,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                   //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                   self._loader = null;
+                  /*Леша Мальцев добавил скрытие индикатора, но на контейнерах с фиксированной высотой это чревато неправильным определением  offset от индикатора
+                  * Т.е. можем не определить, что доскроллили до низа страницы. индикатор должен юыть виден, пока не загрузим все данные
+                  */
                   if (self._isHeightGrowable()) {
                      self._removeLoadingIndicator();
                   }
@@ -770,6 +778,11 @@ define('js!SBIS3.CONTROLS.ListView',
             return (clientHeight + scrollTop >= scrollHeight - this._scrollIndicatorHeight);//Учитываем отступ снизу на высоту картинки индикатора загрузки
          },
          _loadBeforeScrollAppears: function(){
+            /**
+             * Если у нас автовысота, то подгружать данные надо пока размер контейнера не привысит размеры экрана (контейнера window)
+             * Если же высота фиксированная, то подгружать данные в этой функции будем пока высота контейнера(ту, что фиксированно задали) не станет меньше высоты таблицы(table),
+             * т.е. пока не появится скролл внутри контейнера
+             */
             var  windowHeight = $(window).height(),
                   checkHeights = this._isHeightGrowable() ?
                      (!($('body').get(0).scrollHeight > windowHeight + this._scrollIndicatorHeight)) || (this._container.height() < windowHeight) :
