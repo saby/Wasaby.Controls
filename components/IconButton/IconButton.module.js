@@ -51,8 +51,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
          }
       },
 
-      setIcon: function(icon){
-         IconButton.superclass.setIcon.call(this, icon);
+      _drawIcon: function(icon){
          this._container.removeClass().addClass('controls-IconButton ' + this._iconClass);
       },
 

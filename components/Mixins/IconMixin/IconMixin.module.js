@@ -54,6 +54,7 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
                this._iconClass = iconPath;
             }
          }
+         this._drawIcon(iconPath);
       },
 
       /**
@@ -71,6 +72,9 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
        */
       getIcon: function() {
          return this._options.icon;
+      },
+      _drawIcon: function(icon) {
+
       }
    };
 
