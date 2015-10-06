@@ -78,6 +78,7 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
       showPicker: function() {
          this._setControlsValues(this._currentControlsValues);
          FilterButtonNew.superclass.showPicker.apply(this, arguments);
+	      this._picker.getContainer().css('marginLeft', '5px');
       },
       _controlValueChange: function(ctr, event, value) {
          var ctrName = ctr.getName(),
@@ -226,17 +227,22 @@ define('js!SBIS3.CONTROLS.FilterButtonNew', [
                tpl += this._options.items[i].editor;
             }
          }
+
+         // FIXME эта кнопка фильтров удалена в 3.7.3, но проблема в popUp миксине с разворотом у края экрана осталась
          return {
-            corner: this._options.filterAlign === 'right' ? 'tr' : 'tl',
-            horizontalAlign: {
-               side: this._options.filterAlign
-            },
-            verticalAlign: {
-               side: 'top'
-            },
-            closeButton: true,
-            closeByExternalClick: true,
-            template: dotTplForPicker.call(this, {template: tpl})
+	         corner: 'tl',
+	         horizontalAlign: {
+		         side: 'right',
+		         offset: 25
+	         },
+	         verticalAlign: {
+		         side: 'top',
+		         offset: -8
+	         },
+	         closeButton: true,
+	         target: this._container.find('.controls__filterButton-button'),
+	         closeByExternalClick: true,
+	         template: dotTplForPicker.call(this, {template: tpl})
          };
       },
       _setControlValue: function(control, value) {
