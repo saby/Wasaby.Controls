@@ -44,8 +44,8 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
 
       },
 
-      _notifyOnActivated : function() {
-         this._notify('onActivated');
+      _notifyOnActivated : function(originalEvent) {
+         this._notify('onActivated', originalEvent);
       },
 
       instead : {
@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
             if (this.isEnabled()) {
                this._container.removeClass('controls-Click__active');
                this._clickHandler(e);
-               this._notifyOnActivated();
+               this._notifyOnActivated(e);
             }
          }
       }
