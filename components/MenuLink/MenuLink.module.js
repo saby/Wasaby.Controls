@@ -107,6 +107,24 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
          if (this._picker){
             this.hidePicker();
          }
+      },
+
+      _drawIcon: function(icon) {
+         var
+            $icon = $('.controls-Link__icon', this._container.get(0)),
+            $caption = $('.controls-Link__field', this._container.get(0));
+         if (icon) {
+            if ($icon.length) {
+               $icon.get(0).className = 'controls-Link__icon ' + this._iconClass;
+            }
+            else {
+               $icon = $('<i class="controls-Link__icon ' + this._iconClass + '"></i>');
+               $caption.before($icon);
+            }
+         }
+         else {
+            $icon.remove();
+         }
       }
    });
 

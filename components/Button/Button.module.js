@@ -144,8 +144,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
         *    btn.setIcon('sprite:icon16 icon-Alert icon-done');
         * </pre>
         */
-      setIcon: function(icon) {
-         Button.superclass.setIcon.call(this, icon);
+      _drawIcon: function(icon) {
          var content,
              caption = $(".js-controls-Button__text", this._container.get(0)).html();
          if (!icon) {
