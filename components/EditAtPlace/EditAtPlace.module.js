@@ -52,8 +52,8 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             this._container.removeClass('ws-area');
             if (this._options.displayAsEditor || !this._options.editInPopup) {
                $('[data-component]', this._container).width(this._container.width());
-               if (this._container.attr('bind')) {
-                  $('[data-component]', this._container).attr('bind', this._container.attr('bind'));
+               if (this._container.attr('data-bind')) {
+                  $('[data-component]', this._container).attr('data-bind', this._container.attr('data-bind'));
                }
             }
             this.subscribe('onTextChange', function(event, text){
@@ -163,7 +163,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
          _setPickerContent: function () {
             var self = this;
             this._picker.getContainer().addClass('controls-EditAtPlace__editorOverlay');
-            $('[data-component]', this._picker.getContainer()).attr('bind', this._container.attr('bind'));
+            $('[data-component]', this._picker.getContainer()).attr('data-bind', this._container.attr('data-bind'));
             $('[data-component]', this._picker.getContainer()).width(this._container.width());
             this._picker.reviveComponents();
             this._addControlPanel(this._picker._container);
@@ -334,15 +334,12 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                }
             });
          },
-
-
-
          _keyPressHandler: function (e) {
             switch (e.which) {
-               case 13: {
+               /*case 13: {
                   this._applyEdit();
                }
-               break;
+               break;*/
                case 27: {
                   this._cancelEdit();
                   e.stopPropagation();
@@ -357,7 +354,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             var oldText = this._options.text;
             this._options.text = text || '';
             if (oldText !== this._options.text) {
-               this._notifyOnPropertyChanged('text');
+               this.saveToContext('Text', text);
                this._notify('onTextChange', this._options.text);
             }
             if (text) {
