@@ -450,11 +450,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
          },
 
-
-         _getItemActionsContainer: function (id) {
-            return $(".controls-ListView__item[data-id='" + id + "']", this._container.get(0));
-         },
-
          _drawSelectedItems: function (idArray) {
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__multiSelected');
             for (var i = 0; i < idArray.length; i++) {
@@ -543,12 +538,23 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _drawItemActions: function () {
+            var actionsContainer = this._container.find('> .controls-ListView__itemActions-container');
             return new ItemActionsGroup({
                items: this._options.itemsActions,
-               element: this._container.find('> .controls-ListView__itemActions-container'),
+               element: this._getItemActionsContainer(),
                keyField: 'name',
                parent: this
             });
+         },
+         /**
+          * Возвращает контейнер для операций над записью
+          * @returns {*}
+          * @private
+          */
+         _getItemActionsContainer: function() {
+            var actionsContainer = this._container.find('> .controls-ListView__itemActions-container');
+
+            return actionsContainer.length ? actionsContainer : $('<div class="controls-ListView__itemActions-container"/>').appendTo(this._container);
          },
          /**
           * Инициализирует операции над записью
