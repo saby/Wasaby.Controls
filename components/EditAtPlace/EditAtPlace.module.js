@@ -334,12 +334,15 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                }
             });
          },
+
+
+
          _keyPressHandler: function (e) {
             switch (e.which) {
                /*case 13: {
                   this._applyEdit();
                }
-               break;*/
+                  break;*/
                case 27: {
                   this._cancelEdit();
                   e.stopPropagation();
