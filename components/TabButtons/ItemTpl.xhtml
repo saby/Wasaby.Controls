@@ -3,7 +3,9 @@
     {{var itemRaws = it.item.getRaw();}}
     {{for (i in itemRaws) {}}
     {{?itemRaws.hasOwnProperty(i)}}
-        <option name="{{=i}}" value="{{=itemRaws[i]}}"></option>
+        <option name="{{=i}}">
+            {{=itemRaws[i]}}
+        </option>
     {{?}}
     {{}}}
 </component>

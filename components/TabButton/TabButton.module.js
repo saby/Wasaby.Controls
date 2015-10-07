@@ -16,9 +16,44 @@ define('js!SBIS3.CONTROLS.TabButton',
    var TabButton = RadioButtonBase.extend(/** @lends SBIS3.CONTROLS.TabButton.prototype */ {
       $protected: {
          _options: {
+            /**
+             * @cfg {String} С какой стороны контейнера отображать вкладку
+             * @variant right с правой стороы
+             * @variant left с левой стороны
+             * @example
+             * <pre>
+             *     <option name="align">left</option>
+             * </pre>
+             */
             align: 'right',
-            additionalText: '',
+            /**
+             * @cfg {Boolean} Увеличенный шрифт для текста
+             * @example
+             * <pre>
+             *     <option name="largeFont">false</option>
+             * </pre>
+             */
+            largeFont: false,
+            /**
+             * @cfg {Boolean} Редактируемая вкладка
+             * @example
+             * <pre>
+             *     <option name="editable">false</option>
+             * </pre>
+             */
             editable: false,
+            /**
+             * @cfg {HTML} Шаблон, отображаемый внутри вкладки
+             * @example
+             * <pre>
+             *    <option name="template">
+             *       <component data-component="SBIS3.CONTROLS.Link" class="controls-BackButton__caption" name="BackButton-caption">\
+             *          <option name="caption">Ссылка</option>\
+             *          <option name="name">lk</option>\
+             *       </component>
+             *    </option>
+             * </pre>
+             */
             template: tabContentTpl
          }
       },
