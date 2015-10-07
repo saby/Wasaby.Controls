@@ -1,9 +1,15 @@
+/* global define, $ws */
+
 /**
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.RadioGroup', ['js!SBIS3.CONTROLS.RadioGroupBase','html!SBIS3.CONTROLS.RadioGroup', 'js!SBIS3.CONTROLS.RadioButton'],
-function(RadioGroupBase, dotTpl) {
+define('js!SBIS3.CONTROLS.RadioGroup', [
+   'js!SBIS3.CONTROLS.RadioGroupBaseNew',
+   'js!SBIS3.CONTROLS.Data.Utils',
+   'html!SBIS3.CONTROLS.RadioGroup',
+   'js!SBIS3.CONTROLS.RadioButton'
+], function(RadioGroupBase, Utils, dotTpl) {
 
    'use strict';
 
@@ -45,6 +51,7 @@ function(RadioGroupBase, dotTpl) {
     */
 
    var RadioGroup = RadioGroupBase.extend( /** @lends SBIS3.CONTROLS.RadioGroup.prototype */ {
+      _moduleName: 'SBIS3.CONTROLS.RadioGroup',
       _dotTplFn : dotTpl,
        /**
         * @cfg {SBIS3.CONTROLS.CheckBoxGroup/GroupItems.typedef[]} Набор исходных данных, по которому строится отображение
@@ -67,21 +74,17 @@ function(RadioGroupBase, dotTpl) {
         *      </options>
         * </pre>
         */
+       init: function() {
+          this._initView();
+       },
 
-      $protected: {
-         _options: {
-
-         }
-      },
-
-      _getItemTemplate : function(item) {
-         var
-            caption = item.get(this._options.displayField),
-            className = this._container.hasClass('controls-Radio__primary') ? ' class="controls-Radio__primary"' : '';
-
-         return '<component data-component="SBIS3.CONTROLS.RadioButton"'+className+'>' +
-               '<option name="caption">'+caption+'</option>'+
-            '</component>';
+      _getItemTemplate: function () {
+          return (function (data) {
+             var caption = Utils.getItemPropertyValue(data.item, this._options.displayField);
+             return '<component data-component="SBIS3.CONTROLS.RadioButton">' +
+                '<option name="caption">' + caption + '</option>' +
+                '</component>';
+          }).bind(this);
       }
    });
 

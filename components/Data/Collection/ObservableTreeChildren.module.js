@@ -1,0 +1,25 @@
+/* global define, $ws */
+define('js!SBIS3.CONTROLS.Data.Collection.ObservableTreeChildren', [
+   'js!SBIS3.CONTROLS.Data.Collection.TreeChildren',
+   'js!SBIS3.CONTROLS.Data.Collection.ObservableTreeItem',
+   'js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin',
+   'js!SBIS3.CONTROLS.Data.Collection.ObservableTreeChildrenMixin'
+], function (TreeChildren, ObservableTreeItem, ObservableListMixin, ObservableTreeChildrenMixin) {
+   'use strict';
+
+   /**
+    * Коллекция дочерних элементов узла дерева, в которой можно отслеживать изменения.
+    * @class SBIS3.CONTROLS.Data.Collection.ObservableTreeChildren
+    * @extends SBIS3.CONTROLS.Data.Collection.TreeChildren
+    * @mixes SBIS3.CONTROLS.Data.Collection.ObservableListMixin
+    * @mixes SBIS3.CONTROLS.Data.Collection.ObservableTreeChildrenMixin
+    * @public
+    * @author Мальцев Алексей
+    */
+
+   var ObservableTreeChildren = TreeChildren.extend([ObservableListMixin, ObservableTreeChildrenMixin], /** @lends SBIS3.CONTROLS.Data.Collection.TreeChildren.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.Data.Collection.ObservableTreeChildren'
+   });
+
+   return ObservableTreeChildren;
+});

@@ -1,0 +1,15 @@
+<div class="{{=it.class}}" id="{{=it.id}}">
+    {{?it.items.length}}
+        {{~it.items :item}}
+            {{?item.containerTag}}
+                <{{=item.containerTag}} class="{{=item.containerClass}}" id="{{=item.id}}">
+            {{?}}
+
+                {{=item.template(item.data)}}
+
+            {{?item.containerTag}}
+                </{{=item.containerTag}}>
+            {{?}}
+        {{~}}
+    {{?}}
+</div>

@@ -1,0 +1,15 @@
+<div class="{{=it.class}}">
+    {{~it.items :item}}
+        {{?item.containerTag}}
+            <{{=item.containerTag}} class="{{=item.containerClass}}" data-hash="{{=item.hash}}">
+        {{?}}
+        {{=item.template(item)}}
+        {{?item.containerTag}}
+            </{{=item.containerTag}}>
+        {{?}}
+    {{~}}
+
+    {{?it.emptyHTML}}
+        <div class="{{=it.emptyClass}}{{=it.items.length ? ' ws-hidden' : ''}}">{{=it.emptyHTML}}</div>
+    {{?}}
+</div>

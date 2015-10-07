@@ -1,0 +1,48 @@
+<div class="controls-DataGridView controls-ListView{{?it.multiselect !== false}} controls-ListView__multiselect{{?}}">
+   <table class="controls-DataGridView__table">
+      <colgroup class="controls-DataGridView__colgroup">
+         {{?it.multiselect}}<col width="24px" />{{?}}
+         {{~it.columns :column:index}}
+            <col{{?column.width}} width="{{=column.width}}" {{?}}/>
+         {{~}}
+      </colgroup>
+      <thead class="controls-DataGridView__thead{{?it.showHead === false}} ws-hidden{{?}}">
+         <tr>
+            {{?it.multiselect}}
+               <th class="controls-DataGridView__th controls-DataGridView__td__checkBox {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}"></th>
+            {{?}}
+            {{~it.columns :column:index}}
+               <th class="controls-DataGridView__th{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}} {{?column.className}}{{=column.className}}{{?}}" title="{{?column.headTooltip}}{{=column.headTooltip}}{{??}}{{=column.title}}{{?}}">
+                  {{=column.template(column)}}
+               </th>
+            {{~}}
+         </tr>
+         {{? it.startScrollColumn !== undefined }}
+            <tr>
+               <th class="controls-DataGridView__PartScroll__row ws-hidden" colspan="{{=it.columns.length}}">
+                  <div class="controls-DataGridView__PartScroll__container">
+                     <i class="controls-DataGridView__PartScroll__arrowLeft icon-24 icon-DayBackward  icon-disabled" />
+                     <div class="controls-DataGridView__PartScroll__thumb" />
+                     <i class="controls-DataGridView__PartScroll__arrowRight icon-24 icon-DayForward icon-primary action-hover" />
+                  </div>
+               </th>
+            </tr>
+         {{?}}
+      </thead>
+      <tbody class="controls-DataGridView__tbody {{=it.class}}">
+          {{~it.items :item}}
+             {{=item.template(item)}}
+          {{~}}
+      </tbody>
+      <tfoot class="controls-DataGridView__tfoot ws-hidden">
+         <tr>
+            {{?it.multiselect}}
+                <td class="controls-DataGridView__td__checkBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}"></td>
+            {{?}}
+            {{~it.columns :column:index}}
+                <td class="controls-DataGridView__td {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}"></td>
+            {{~}}
+         </tr>
+      </tfoot>
+   </table>
+</div>

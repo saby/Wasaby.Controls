@@ -92,11 +92,20 @@
                   <div id="ButtonGroups"></div>
                </li>
                <li>
+                  <div id="ButtonGroupsNew"></div>
+               </li>
+               <li>
                   <div id="FieldFormat"></div>
+               </li>
+               <li>
+                  <div id="ListControl"></div>
                </li>
                <li>
                   <div id="Views"></div>
                </li>
+                <li>
+                    <div id="ViewsNew"></div>
+                </li>
                 <li>
                     <div id="ViewsScroll"></div>
                 </li>
@@ -118,6 +127,9 @@
                <li>
                   <div id="MultiView"></div>
                </li>
+                <li>
+                    <div id="MultiViewNew"></div>
+                </li>
                <li>
                   <div id="Suggest"></div>
                </li>
@@ -266,9 +278,26 @@
 
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
+               element: "ButtonGroupsNew",
+               caption: 'Button groups new',
+               href: '/pages/ButtonGroupsNew.html'
+            })
+         });
+
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
                element: "FieldFormat",
                caption: 'FieldFormat',
                href: '/pages/FieldFormat.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "ListControl",
+               caption: 'ListControl',
+               href: '/pages/ListControl.html'
             })
          });
 
@@ -279,6 +308,13 @@
                href: '/pages/Views.html'
             })
          });
+          require(["js!SBIS3.CONTROLS.Link"], function (r) {
+              new r({
+                  element: "ViewsNew",
+                  caption: 'ViewsNew',
+                  href: '/pages/ViewsNew.html'
+              })
+          });
           require(["js!SBIS3.CONTROLS.Link"], function (r) {
               new r({
                   element: "ViewsScroll",
@@ -334,6 +370,14 @@
                href: '/pages/MultiView.html'
             })
          });
+
+          require(["js!SBIS3.CONTROLS.Link"], function (r) {
+              new r({
+                  element: "MultiViewNew",
+                  caption: 'MultiViewNew',
+                  href: '/pages/MultiViewNew.html'
+              })
+          });
 
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({

@@ -1,0 +1,186 @@
+/* global define, console, doT, $ws, $, require */
+define('js!SBIS3.CONTROLS.MenuNewView', [
+   'js!SBIS3.CONTROLS.TreeControl.TreeView',
+   'js!SBIS3.CONTROLS.FloatArea',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function(TreeView, FloatArea, DataUtils) {
+   'use strict';
+   /**
+    * Представление для меню
+    * @class SBIS3.CONTROLS.MenuView
+    * @extends SBIS3.CONTROLS.TreeControl.TreeView
+    * @public
+    * @author Крайнов Дмитрий Олегович
+    */
+   var MenuView = TreeView.extend(/** @lends SBIS3.CONTROLS.MenuView.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.MenuView',
+      $protected: {
+         _rootNodeСssClass: 'controls-MenuNew',
+         _subMenuСssClass: 'controls-MenuNew__Popup controls-MenuNew__SubMenuPopup',
+         _itemHasChildClass: ' controls-MenuNew__hasChild',
+         _сssPrefix: 'controls-MenuNew__',
+         _subContainers: {},
+         _subMenus: {},
+         _itemContainerTag: 'div'
+      },
+      $constructor: function() {
+         this._publish('onSubMenuLoaded');
+      },
+      destroy: function() {
+         MenuView.superclass.destroy.call(this);
+         this.destroySubObjects();
+      },
+      // region public
+      destroySubObjects: function() {
+         $ws.helpers.forEeach(this._subMenus, function(subMenu) {
+            subMenu.destroy();
+         });
+         this._subMenus = {};
+         this._subContainers = {};
+      },
+      setNodeExpanded: function(node, expanded) {
+         if(expanded && node.getChildren().getCount()) {
+            var hash = node.getHash();
+            if(this._subMenus[hash]) {
+               this._subMenus[hash].show();
+            }
+            else {
+               this.renderNode(node);
+            }
+         }
+      },
+      renderNode: function(node) {
+         var targetContainer = this._getTreeItemContainer(node),
+            hash = node.getHash(),
+            area = this._createSubMenu(targetContainer, node);
+         area.getContainer().html(this._execTemplate(
+            this._options.template,
+            this._getRenderData(node)
+         ));
+         this._attachEventHandlers(area.getContainer());
+         area.show();
+         this._subMenus[hash] = area;
+      },
+      getComponents: function(node) {
+         var components = [];
+         if(node) {
+            node.find('[data-component]').each(function(i, item) {
+               components.push($(item).wsControl());
+            });
+         }
+         else {
+            components = this.getComponents(this.getRootNode());
+            var self = this;
+            $ws.helpers.forEach(this._subMenus, function(area) {
+               components = components.concat(self.getComponents(area.getContainer()));
+            });
+         }
+         return components;
+      },
+      /**
+       * Возвращает список всех построеных всплывающих меню
+       * @returns {Object}
+       */
+      getSubMenus: function() {
+         return this._subMenus;
+      },
+      /**
+       * возвращает css класс контейнера элемента
+       * @returns {String}
+       */
+      getItemContainerClass: function() {
+         return this._сssPrefix + this._itemContainerCssClass;
+      },
+      /**
+       * скрывает все всплывающие меню
+       */
+      hideSubMenus: function() {
+         var menus = this.getSubMenus();
+         $ws.helpers.forEeach(menus, function(subMenu) {
+            subMenu.hide();
+         });
+      },
+      // endregion public
+      //region protected
+      _getItemRenderData: function(item, index, level) {
+         level = level || 0;
+         var itemData = TreeView.superclass._getItemRenderData.call(this, item, index);
+         if($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Collection.ITreeItem')) {
+            itemData.level = level;
+            if(item.isNode()) {
+               var expandClass = ' ' + this._сssPrefix + (item.isExpanded()?this._treeExpandedСssClass:this._treeCollapsedСssClass);
+               itemData.containerClass += expandClass + ' ' + this._itemHasChildClass;
+               itemData.expanded = item.isExpanded();
+            }
+         }
+         return itemData;
+      },
+      _createSubMenu: function(target, item) {
+         target = $(target);
+         var config,
+            parent,
+            isFirstLevel = true,
+            parentHash = item.getParent().getHash();
+         if(this._subMenus.hasOwnProperty(parentHash)) {
+            parent = this._subMenus[parentHash];
+            isFirstLevel = false;
+            target = target.find('.controls-MenuItem');
+         }
+         else {
+            parent = this.getRootNode().wsControl();
+         }
+         config = this._getSubMenuConfig(isFirstLevel, item);
+         config.element = $('<div/>').addClass(this._rootNodeСssClass +' '+this._subMenuСssClass);
+         config.parent = parent;
+         config.opener = typeof parent.getOpener == 'function' ? parent.getOpener() : parent;
+         config.target = target;
+         return new FloatArea(config);
+      },
+      _getSubMenuConfig: function(isFirstLevel, item) {
+         var config = {
+            corner: 'tr',
+            verticalAlign: {
+               side: 'top'
+            },
+            horizontalAlign: {
+               side: 'left'
+            },
+            closeByExternalOver: true,
+            targetPart: true
+         };
+         config = this._onMenuConfig(config, isFirstLevel, item);
+         return config;
+      },
+
+      _onMenuConfig: function(config, isFirstLevel, item) {
+         var direction = DataUtils.getItemPropertyValue(item.getContents(), 'direction');
+         if(!direction && isFirstLevel) {
+            direction = 'down';
+         }
+         if(direction) {
+            switch(direction) {
+               case 'down' :
+               {
+                  config.corner = 'bl';
+                  break;
+               }
+               case 'up' :
+               {
+                  config.corner = 'tl';
+                  config.verticalAlign.side = 'bottom';
+                  break;
+               }
+               case 'right' :
+               {
+                  config.corner = 'tl';
+                  config.horizontalAlign.side = 'right';
+                  break;
+               }
+            }
+         }
+         return config;
+      }
+      //endregion protected
+   });
+   return MenuView;
+});

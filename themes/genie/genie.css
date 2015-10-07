@@ -863,6 +863,75 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Menu__SubMenuPopup {
   margin: -1px 0 0;
 }
+.controls-MenuNew__Popup {
+  font: 13px Tahoma, Geneva, sans-serif;
+  padding: 4px 0;
+  margin: -1px 0 0;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d1d1d1;
+  background-color: #ffffff;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  -webkit-box-shadow: 0 0 8px 1px #aaaaaa;
+  -moz-box-shadow: 0 0 8px 1px #aaaaaa;
+  box-shadow: 0 0 8px 1px #aaaaaa;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.controls-MenuNew__Popup .controls-MenuNew__hasChild .controls-MenuItem {
+  padding-right: 16px;
+}
+.controls-MenuNew__Popup .controls-MenuNew__hasChild .controls-MenuItem:after {
+  position: absolute;
+  top: 3px;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  content: " ";
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: url('img/MenuExpand.png') 0 0 no-repeat;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.controls-MenuNew__Popup .controls-MenuNew__hasChild .controls-MenuItem:hover:after {
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  background: url('img/MenuExpand.png') 0 -16px no-repeat;
+}
+.controls-MenuNew__Popup .controls-MenuNew__submenu {
+  display: block;
+}
+.controls-MenuNew__Popup .controls-MenuNew__header {
+  box-sizing: border-box;
+  padding: 4px;
+}
+.controls-MenuNew__Popup .controls-MenuNew__header .icon-16,
+.controls-MenuNew__Popup .controls-MenuNew__header .icon-24 {
+  padding-right: 4px;
+}
+.controls-MenuNew__Popup .controls-MenuItem {
+  height: 24px;
+  padding: 0 8px;
+}
+.controls-MenuNew__Popup .controls-MenuNew__item {
+  height: 24px;
+}
+.controls-MenuNew__submenu {
+  display: none;
+}
+.controls-MenuNew__SubMenuPopup {
+  margin: -1px 0 0;
+}
 .controls-MenuItem {
   position: relative;
   display: block;
@@ -1212,21 +1281,21 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox {
   display: inline-block;
+  height: 24px;
+  color: #353535;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d1d1d1;
+  background: #ffffff;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  height: 24px;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
-  border-width: 1px;
-  border-style: solid;
-  border-color: #d1d1d1;
-  background: #ffffff;
-  color: #353535;
 }
 .controls-TextBox.ws-validation-error {
   border-width: 1px;
@@ -1269,9 +1338,9 @@ input[type="reset"]::-moz-focus-inner {
   position: relative;
   float: right;
   width: 16px;
+  height: 100%;
   min-height: 19px;
   margin: 0 2px 0 0;
-  height: 100%;
 }
 .controls-TextBox .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper,
 .controls-DatePicker .controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
@@ -1279,25 +1348,25 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox .controls-TextBox__fieldWrapper {
   position: relative;
-  padding: 0 7px;
   height: 100%;
+  padding: 0 7px;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+  font: inherit;
+  line-height: 20px !important;
   width: 100%;
   height: 100%;
-  font: inherit;
-  color: inherit;
-  text-align: left;
   min-height: 19px;
-  line-height: 20px !important;
   margin: 0;
   padding: 1px 0;
+  text-align: left;
+  color: inherit;
   border: none;
   outline: none;
   background: transparent;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-webkit-input-placeholder {
   color: #d1d1d1 !important;
@@ -1319,18 +1388,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-TextBox__field-lowercase {
   text-transform: lowercase;
-}
-.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__placeholder {
-  position: absolute;
-  top: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -ms-text-overflow: ellipsis;
-  white-space: nowrap;
-  color: #d1d1d1 !important;
-  font: inherit;
-  padding: 3px 0 0;
-  text-align: inherit;
 }
 .controls-FormattedTextBox {
   display: inline-block;
@@ -1446,6 +1503,7 @@ input[type="reset"]::-moz-focus-inner {
   display: none;
   overflow: hidden;
   text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
   white-space: nowrap;
 }
 .controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable__placeholder {
@@ -2159,6 +2217,48 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TreeView__expand__leaf:hover {
   background: none !important;
 }
+.controls-ListView__treeLeverage {
+  float: left;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  cursor: pointer;
+  width: auto;
+  height: auto;
+  margin: 3px 0 0 3px;
+  border-width: 6px 0 6px 6px;
+  border-style: solid;
+  border-color: transparent transparent transparent #353535;
+  background: transparent;
+}
+.controls-ListView__treeLeverage:hover {
+  border-width: 6px 0 6px 6px;
+  border-style: solid;
+  border-color: transparent transparent transparent #353535;
+  background: transparent;
+}
+.controls-ListView__treeLeverage + .controls-TreeView__itemContent {
+  margin: 0 0 0 15px;
+}
+.controls-ListView__items-treeChildren {
+  list-style: none;
+  padding: 0 0 0 15px;
+}
+.controls-ListView__itemContainer-treeNodeCollapsed > .controls-ListView__items-treeChildren {
+  display: none;
+}
+.controls-ListView__itemContainer-treeNodeExpanded > .controls-ListView__treeItem > .controls-ListView__treeLeverage {
+  border-width: 6px 6px 0 6px;
+  border-style: solid;
+  border-color: #353535 transparent transparent transparent;
+  background: transparent;
+}
+.controls-ListView__itemContainer-treeNodeExpanded > .controls-ListView__treeItem > .controls-ListView__treeLeverage:hover {
+  border-width: 6px 6px 0 6px;
+  border-style: solid;
+  border-color: #353535 transparent transparent transparent;
+  background: transparent;
+}
 .controls-DataGridView.controls-DataGridView__scrollingNow .controls-DataGridView__thead .controls-DataGridView__scrolledCell {
   cursor: -moz-grabbing !important;
   cursor: -webkit-grabbing !important;
@@ -2333,6 +2433,17 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGridView__addInPlace-container {
   padding-left: 8px;
 }
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__item__hovered {
+  background: #00c795;
+}
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__item__hovered .controls-DataGridView__th {
+  color: inherit;
+  background-color: #00c795;
+}
+.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__item__hovered .controls-DataGridView__td {
+  color: #ffffff;
+  background-color: #00c795;
+}
 .controls-DataGridView__td .controls-TreeView__expand--inside {
   display: none;
   line-height: 13px !important;
@@ -2345,12 +2456,36 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGridView__td .controls-TreeView__editArrow {
   display: none;
+  visibility: hidden;
   position: relative;
   top: 2px;
 }
 .controls-DataGridView__td:hover .controls-TreeView__expand--inside {
   display: inline-block;
   height: 14px;
+}
+.controls-ListView__folder.controls-ListView__hoveredItem .controls-DataGridView__td .controls-TreeView__ellipsis-copyArrow {
+  background-color: #00c795;
+  -webkit-box-shadow: -6px 2px 8px -2px #00c795;
+  -moz-box-shadow: -6px 2px 8px -2px #00c795;
+  box-shadow: -6px 2px 8px -2px #00c795;
+}
+.controls-ListView__folder .controls-TreeView__ellipsis-wrapper {
+  overflow: hidden;
+  height: 19px;
+}
+.controls-ListView__folder .controls-TreeView__ellipsis-wrapper .controls-TreeView__ellipsis-copyArrow {
+  float: right;
+  position: relative;
+  top: -19px;
+  padding: 0 0 0 3px;
+  background-color: #ffffff;
+  -webkit-box-shadow: -6px 2px 8px -2px #ffffff;
+  -moz-box-shadow: -6px 2px 8px -2px #ffffff;
+  box-shadow: -6px 2px 8px -2px #ffffff;
+}
+.controls-ListView__folder .controls-TreeView__ellipsis-wrapper .controls-TreeView__ellipsis-copyArrow .controls-TreeView__editArrow {
+  display: inline-block;
 }
 .controls-GridView__searchMode .controls-TreeView__hierWrapper {
   width: 0;
@@ -2360,6 +2495,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ListView__hoveredItem .controls-TreeView__editArrow {
   display: inline-block;
+  visibility: visible;
 }
 .controls-DragNDrop__draggedItem {
   position: absolute;
