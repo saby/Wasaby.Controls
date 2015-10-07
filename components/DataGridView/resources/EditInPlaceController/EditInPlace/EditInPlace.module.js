@@ -162,7 +162,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.ComboBox') ? 'getSelectedKey' :
                      $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.NumberTextBox') ? 'getNumericValue' :
                         $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.TextBox') ? 'getText' :
-                           'getValue';
+                           $ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.CheckBox') ? 'isChecked' :
+                              'getValue';
                return methodName;
             },
             _determineSetMethodName: function(field) {
