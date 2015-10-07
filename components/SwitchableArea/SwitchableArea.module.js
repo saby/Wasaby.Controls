@@ -1,3 +1,4 @@
+/* На основе SBIS3.CORE.SwitchableArea */
 define('js!SBIS3.CONTROLS.SwitchableArea', [
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.SwitchableArea/SwitchableAreaItem',
@@ -82,6 +83,8 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
             handleItemContentChanged: this._handleItemContentChanged.bind(this)
          };
 
+         //если в опциях были заданы, то построим
+         this._createAreasByItems(this._options.items);
       },
       init: function(){
          SwitchableArea.superclass.init.call(this);
@@ -105,7 +108,7 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
                {
                   autoHeight: this._options.autoHeight,
                   parent: this,
-                  element: this.getContainer().children('.ws-SwitchableArea__item[data-for="' + itemObj.id + '"]')
+                  element: $('<div class="ws-SwitchableArea__item" data-for="' + itemObj.id + '">').appendTo(this.getContainer())
                },
                itemObj));
          areaItem.subscribe('onIdChanged', this._bindedHandlers.handleItemIdChanged);
@@ -162,8 +165,13 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
                areaItem = this._createSwitchableAreaItem(items[i]),
                areaId = areaItem.getId(),
                isVisible = this._options.defaultArea === areaId;
-            //this._options.items[i] = areaItem;
+            var itemObj = {
+               id: areaItem.getId(),
+               content: areaItem.getContent()
+            };
             this._areaItems[i] = areaItem;
+            //построим разметку
+            $ws.helpers.replaceContainer(areaItem.getContainer(), this._buildMarkup(areaTplFn, { outer: this._options, item: itemObj, index: this._getItemIndexById(areaId) }));
             // делаем видимой только дефолтную область
             if (isVisible || this._options.loadType === 'all') {
                areaItem.loadChildControls();
@@ -180,8 +188,6 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
          this._areaItems = $ws.helpers.collection(this._areaItems);
       },
       setItems: function(items) {
-         //debugger;
-         console.log(items.length);
          this._options.items = items;
          this._createAreasByItems(this._options.items);
       },

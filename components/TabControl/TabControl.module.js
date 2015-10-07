@@ -2,8 +2,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.TabControl',
    'js!SBIS3.CONTROLS.SwitchableArea',
-   'js!SBIS3.CONTROLS.TabButtons',
-   'js!SBIS3.CONTROLS.Link'
+   'js!SBIS3.CONTROLS.TabButtons'
 ], function(CompoundControl, dotTplFn) {
 
    'use strict';
@@ -21,6 +20,8 @@ define('js!SBIS3.CONTROLS.TabControl', [
    var TabControl = CompoundControl.extend( /** @lends SBIS3.CONTROLS.TabControl.prototype */ {
       _dotTplFn : dotTplFn,
       $protected: {
+         _tabButtons: null,
+         _switchableArea: null,
          _options: {
             selectedKey: null,
             displayField: null,
@@ -35,14 +36,13 @@ define('js!SBIS3.CONTROLS.TabControl', [
 
       init: function() {
          TabControl.superclass.init.call(this);
-         this._tabButtons = this.getChildControlByName('TabButtons');
-         this._tabButtons.subscribe('onSelectedItemChange', this._onSelectedItemChange);
          this._switchableArea = this.getChildControlByName('SwitchableArea');
+         this._tabButtons = this.getChildControlByName('TabButtons');
+         this._tabButtons.subscribe('onSelectedItemChange', this._onSelectedItemChange.bind(this));
       },
 
-      _onSelectedItemChange: function() {
-         //console.log('onSelectedItemChange 2');
-
+      _onSelectedItemChange: function(event, id) {
+         this._switchableArea.setActiveArea(id);
       }
    });
 
