@@ -1,20 +1,15 @@
-<div class="controls-TabButton controls-TabButton__{{=it.align}}-align{{?it.checked===true}} controls-Checked__checked{{?}}{{? it.additionalText || it.size === 'big'}} controls-TabButton__big-size{{?}}">
+<div class="controls-TabButton controls-TabButton__{{=it.align}}-align{{?it.checked===true}} controls-Checked__checked{{?}}{{? it.largeFont === true}} controls-TabButton__large-font{{?}}">
    <div class="controls-TabButton__corner"></div>
    <div class="controls-TabButton__selected-border"></div>
    <div class="controls-TabButton__inner">
       {{?it.editable}}
-        <component data-component="SBIS3.CONTROLS.EditAtPlace" name="poh" style="width: 390px;">
-            <option name="text" bind="poh" value="{{=it.caption}}"></option>
-            <option name="editorTpl">
-                <component data-component="SBIS3.CONTROLS.TextBox">
-                    <option name="text" bind="poh"></option>
-                </component>
-            </option>
-        </component>
+
       {{??}}
-      {{?it.iconClass}}<span class="controls-TabButton__icon {{=it.iconClass}}"></span>{{?}}
-      <span class="controls-TabButton__caption">{{?it.caption}}{{=it.caption}}{{?}}</span>
-      <span class="controls-TabButton__additional-text">{{?it.additionalText}}{{=it.additionalText}}{{?}}</span>
+       {{? typeof it.template == 'function'}}
+          {{=it.template({caption: it.caption})}}
+       {{??}}
+          {{=it.template}}
+       {{?}}
       {{?}}
    </div>
 </div>
