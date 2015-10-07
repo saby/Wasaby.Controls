@@ -209,10 +209,9 @@ define(
           * @see getDate
           * @see onDateChange
           */
-         setDate: function(date){
-            date = date ? date : new Date();
+         setDate: function(date) {
             this._setDate(date);
-            this._notify('onDateChange', date);
+            this._notify('onDateChange', this._options.date);
          },
 
          /**

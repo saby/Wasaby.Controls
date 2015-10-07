@@ -146,7 +146,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
 
       _setWidth: function(){
          var self = this;
-         this._picker.getContainer().css({
+         this._picker && this._picker.getContainer().css({
             'min-width': self._container.outerWidth() - this._border + 20 //ширина выступающей части обводки
          });
          if (this._header) {

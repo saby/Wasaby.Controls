@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        /**
         * @event onDataLoad При загрузке данных
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-        * @param {Array} dataSet Набор данных.
+        * @param {SBIS3.CONTROLS.DataSet} dataSet Набор данных.
         * @example
         * <pre>
         *     myComboBox.subscribe('onDataLoad', function(eventObject) {
@@ -507,18 +507,19 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             }
          }
          this._itemsInstances = {};
+         if (container.length){
+            var itemsContainers = $('.controls-ListView__item', container.get(0));
+            /*Удаляем вложенные компоненты*/
+            $('[data-component]', itemsContainers).each(function (i, item) {
+               var inst = $(item).wsControl();
+               if (inst) {
+                  inst.destroy();
+               }
+            });
 
-         var itemsContainers = $(".controls-ListView__item", container.get(0));
-         /*Удаляем вложенные компоненты*/
-         $('[data-component]', itemsContainers).each(function (i, item) {
-            var inst = $(item).wsControl();
-            if (inst) {
-               inst.destroy();
-            }
-         });
-
-         /*Удаляем сами items*/
-         itemsContainers.remove();
+            /*Удаляем сами items*/
+            itemsContainers.remove();
+         }
       },
 
       //метод определяющий в какой контейнер разместить определенный элемент

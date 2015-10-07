@@ -1002,7 +1002,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuItem:hover {
   color: #000000;
-  background: #e9fafe;
+  background: #f0f5fb;
 }
 .controls-MenuItem:hover .controls-MenuItem__icon {
   color: #ff7033 !important;
@@ -1128,7 +1128,7 @@ input[type="reset"]::-moz-focus-inner {
   width: 12px;
   height: 30px;
   margin: 0;
-  background: transparent url('img/MenuButton-header.png') 0 214px;
+  background: transparent url('img/MenuButton-header.png') 0 213px;
 }
 .controls-MenuButton__header.controls-MenuButton__header-revert-horizontal .controls-MenuButton__headerLeft {
   width: 28px;
@@ -1169,7 +1169,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-MenuButton__header .controls-MenuButton__headerCenter {
   display: inline-block;
   width: auto;
-  height: 7px;
+  height: 8px;
   margin: 0;
   background: #ffffff;
 }
@@ -1657,11 +1657,11 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox__picker .controls-ComboBox__itemRow.controls-ComboBox__itemRow__selected {
   color: inherit;
-  background: #d3e3f4;
+  background: #f3f3f3;
 }
 .controls-ComboBox__picker .controls-ComboBox__itemRow:hover {
   color: inherit;
-  background: #e7f0f9;
+  background: #f0f5fb;
 }
 .controls-ComboBox__inputWrapper {
   height: 100%;
@@ -1839,11 +1839,11 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 0;
 }
 .controls-SuggestList__item:hover {
-  background: #f3f3f3;
+  background: #f0f5fb;
   color: inherit;
 }
 .controls-SuggestList__item__selected {
-  background: #e6e6e6;
+  background: #f3f3f3;
   color: inherit;
 }
 .controls-SuggestList__empty {
@@ -2372,21 +2372,21 @@ input[type="reset"]::-moz-focus-inner {
   background: transparent;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__item__multiSelected {
-  background-color: transparent;
+  background-color: #f3f3f3;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__item__multiSelected .controls-DataGridView__td {
   color: inherit;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__hoveredItem {
-  background: #e9fafe;
+  background: #f0f5fb;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__hoveredItem .controls-DataGridView__th {
   color: inherit;
-  background-color: #e9fafe;
+  background-color: #f0f5fb;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__hoveredItem .controls-DataGridView__td {
   color: inherit;
-  background-color: #e9fafe;
+  background-color: #f0f5fb;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__PartScroll__container {
   position: absolute;
@@ -2600,7 +2600,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
 }
 .controls-CompositeView .controls-CompositeView__listItem.controls-ListView__hoveredItem {
-  background: #e9fafe;
+  background: #f0f5fb;
 }
 .controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder {
   padding: 0;
@@ -2691,7 +2691,7 @@ input[type="reset"]::-moz-focus-inner {
   margin: -1px 0 0 -1px;
 }
 .controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__hoveredItem {
-  background: #e9fafe;
+  background: #f0f5fb;
 }
 .controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__hoveredItem .controls-CompositeView__tileImg {
   box-shadow: 1px 2px 4px #aaaaaa;
@@ -3098,15 +3098,15 @@ input[type="reset"]::-moz-focus-inner {
   background-color: transparent;
   box-shadow: none;
 }
-.controls-ListView.controls-DataGrid .controls-ItemActions {
-  background-color: #e9fafe;
-  box-shadow: -2px -2px 5px #e9fafe;
+.controls-ListView.controls-DataGridView .controls-ItemActions {
+  background-color: #f0f5fb;
+  box-shadow: -2px -2px 5px #f0f5fb;
 }
-.controls-ListView.controls-DataGrid .controls-ItemActions__activeItem {
-  background-color: #e9fafe !important;
+.controls-ListView.controls-DataGridView .controls-ItemActions__activeItem {
+  background-color: #f0f5fb !important;
 }
-.controls-ListView.controls-DataGrid .controls-ItemActions__activeItem .controls-DataGrid__notScrolledCell {
-  background-color: #e9fafe !important;
+.controls-ListView.controls-DataGridView .controls-ItemActions__activeItem .controls-DataGrid__notScrolledCell {
+  background-color: #f0f5fb !important;
 }
 .controls-ItemActions {
   position: absolute;
@@ -3154,10 +3154,10 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/ItemActions-menu.png') no-repeat 0 -60px;
 }
 .controls-ItemActions__activeItem {
-  background-color: #e9fafe !important;
+  background-color: #f0f5fb !important;
 }
 .controls-ItemActions__activeItem .controls-DataGridView__notScrolledCell {
-  background-color: #e9fafe !important;
+  background-color: #f0f5fb !important;
 }
 .controls-EditInPlaceController {
   position: absolute;
@@ -3168,15 +3168,15 @@ input[type="reset"]::-moz-focus-inner {
   overflow: visible;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-editInPlace__editing {
-  background: #e9fafe;
+  background: #f3f3f3;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-editInPlace__editing .controls-DataGridView__th {
   color: inherit;
-  background-color: #e9fafe;
+  background-color: #f0f5fb;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-editInPlace__editing .controls-DataGridView__td {
   color: inherit;
-  background-color: #e9fafe;
+  background-color: #f0f5fb;
 }
 .controls-editInPlace {
   position: absolute;
