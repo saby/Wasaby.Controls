@@ -43,7 +43,7 @@ define(
       $protected: {
          _options: {
             type: 'normal',
-            hasMarker: true,
+            hasMarker: false,
             defaultKey: undefined,
             itemTemplate: ItemTpl
          }
@@ -57,7 +57,7 @@ define(
 
          this.subscribe('onInit', function(){
             this._beforeShowFirstItem();
-            this.toggleMarker(!this._options.hasMarker);
+            this.toggleMarker(this._options.hasMarker);
          }.bind(this));
          this.subscribe('onDrawItems', this._findSideItems);
       },
@@ -68,7 +68,7 @@ define(
          this.setSelectedKey(this._options.defaultKey);
       },
       toggleMarker: function(toggle){
-         this.getContainer().toggleClass('controls-TabButton__without-marker', toggle)
+         this.getContainer().toggleClass('controls-TabButton__has-marker', toggle)
       },
       _beforeShowFirstItem: function () {
          var newSelectedTabId = this._notify('onBeforeShowFirstItem', this._options.selectedItem);
