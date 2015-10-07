@@ -1,15 +1,15 @@
-<div class="{{=it.class}}" id="{{=it.id}}">
-    {{?it.items.length}}
-        {{~it.items :item}}
-            {{?item.containerTag}}
-                <{{=item.containerTag}} class="{{=item.containerClass}}" id="{{=item.id}}">
-            {{?}}
+<div class="{{=it.class}}" id="{{=it.id}}" data-hash="{{=it.hash}}">
+   {{?it.items.length}}
+      {{~it.items :item}}
+         {{?item.containerTag}}
+            <{{=item.containerTag}} class="{{=item.containerClass}}" data-hash="{{=item.hash}}">
+         {{?}}
 
-                {{=item.template(item.data)}}
+         {=item.template(item)}}
 
-            {{?item.containerTag}}
-                </{{=item.containerTag}}>
-            {{?}}
-        {{~}}
-    {{?}}
+         {{?item.containerTag}}
+            </{{=item.containerTag}}>
+         {{?}}
+       {{~}}
+   {{?}}
 </div>

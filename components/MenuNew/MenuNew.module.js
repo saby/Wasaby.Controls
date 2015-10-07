@@ -1,4 +1,4 @@
-/* global define, $ws */
+/* global define, $ws, $ */
 /**
  * Created by iv.cheremushkin on 13.08.2014.
  */
@@ -36,48 +36,48 @@ define('js!SBIS3.CONTROLS.MenuNew', [
        * <pre>
        *     menu.subscribe('onMenuItemActivate', function (event, id) {
        *        comboBox.setSelectedItem(id);
-       *     }); 
+       *     });
        * </pre>
        */
 
-       /**
-        * @typedef {Object} ItemsMenu
-        * @property {String} id Идентификатор.
-        * @property {String} title Текст пункта меню.
-        * @property {String} icon Иконка пункта меню.
-        * @property {String} parent Идентификатор родительского пункта меню. Опция задаётся для подменю.
-        * @editor icon ImageEditor
-        */
-       /**
-        * @cfg {ItemsMenu[]} Набор исходных данных, по которому строится отображение
-        * @name SBIS3.CONTROLS.Menu#items
-        * @description Набор исходных данных, по которому строится отображение
-        * @example
-        * <pre>
-        *     <options name="items" type="array">
-        *        <options>
-        *            <option name="id">1</option>
-        *            <option name="title">Пункт1</option>
-        *         </options>
-        *         <options>
-        *            <option name="id">2</option>
-        *            <option name="title">Пункт2</option>
-        *         </options>
-        *         <options>
-        *            <option name="id">3</option>
-        *            <option name="title">ПунктПодменю</option>
-        *            <option name="parent">2</option>
-        *            <option name="icon">sprite:icon-16 icon-Birthday icon-primary</option>
-        *         </options>
-        *      </options>
-        * </pre>
-        * @see displayField
-        * @see keyField
-        * @see hierField
-        * @see onMenuItemActivate
-        */
+      /**
+       * @typedef {Object} ItemsMenu
+       * @property {String} id Идентификатор.
+       * @property {String} title Текст пункта меню.
+       * @property {String} icon Иконка пункта меню.
+       * @property {String} parent Идентификатор родительского пункта меню. Опция задаётся для подменю.
+       * @editor icon ImageEditor
+       */
+      /**
+       * @cfg {ItemsMenu[]} Набор исходных данных, по которому строится отображение
+       * @name SBIS3.CONTROLS.Menu#items
+       * @description Набор исходных данных, по которому строится отображение
+       * @example
+       * <pre>
+       *     <options name="items" type="array">
+       *        <options>
+       *            <option name="id">1</option>
+       *            <option name="title">Пункт1</option>
+       *         </options>
+       *         <options>
+       *            <option name="id">2</option>
+       *            <option name="title">Пункт2</option>
+       *         </options>
+       *         <options>
+       *            <option name="id">3</option>
+       *            <option name="title">ПунктПодменю</option>
+       *            <option name="parent">2</option>
+       *            <option name="icon">sprite:icon-16 icon-Birthday icon-primary</option>
+       *         </options>
+       *      </options>
+       * </pre>
+       * @see displayField
+       * @see keyField
+       * @see hierField
+       * @see onMenuItemActivate
+       */
 
-      _moduleName: 'SBIS3.CONTROLS.Menu',
+      _moduleName: 'SBIS3.CONTROLS.MenuNew',
       $protected: {
          _options: {
             /**
@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.MenuNew', [
              * @cfg {Number} Задержка перед закрытием
              * @noShow
              */
-            changeRootOnClick:false,
+            allowEnterToFolder: false,
             hideDelay: null,
             displayField : 'title',
             expand: true
@@ -115,7 +115,7 @@ define('js!SBIS3.CONTROLS.MenuNew', [
             menuItem =  view.getComponents()[id];
          if(menuItem) {
             var treeItem = menuItem.getContainer().closest('.' + view.getItemContainerClass()),
-               hash = treeItem.attr('id');
+               hash = treeItem.data('hash');
             return this.getItems().getChildByHash(hash, true);
          }
          return null;
@@ -133,14 +133,15 @@ define('js!SBIS3.CONTROLS.MenuNew', [
       //region Protected methods
       _getItemTemplate: function() {
          return (function(item) {
-            if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Collection.ITreeItem')) {
-               item = item.getContents();
+            var itemData = item.item;
+            if ($ws.helpers.instanceOfMixin(itemData, 'SBIS3.CONTROLS.Data.Collection.ITreeItem')) {
+               itemData = itemData.getContents();
             }
 
             var
-               caption = Utils.getItemPropertyValue(item, this._options.displayField),
-               icon = Utils.getItemPropertyValue(item, 'icon'),
-               className = Utils.getItemPropertyValue(item, 'className')||'';
+               caption = Utils.getItemPropertyValue(itemData, this._options.displayField),
+               icon = Utils.getItemPropertyValue(itemData, 'icon'),
+               className = Utils.getItemPropertyValue(itemData, 'className')||'';
 
             return '<component data-component="SBIS3.CONTROLS.MenuItem">' +
                '<option name="caption">' + caption + '</option>' +

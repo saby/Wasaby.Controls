@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
          }
       },
       renderNode: function(node) {
-         var targetContainer = this._getTreeItemContainer(node),
+         var targetContainer = this._getContainerByHash(node.getHash()),
             hash = node.getHash(),
             area = this._createSubMenu(targetContainer, node);
          area.getContainer().html(this._execTemplate(
@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
        */
       hideSubMenus: function() {
          var menus = this.getSubMenus();
-         $ws.helpers.forEeach(menus, function(subMenu) {
+         $ws.helpers.forEach(menus, function(subMenu) {
             subMenu.hide();
          });
       },
@@ -179,6 +179,36 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
             }
          }
          return config;
+      },
+      /*
+      * ищет контейнер по хещу в основном контейнере и подменю
+      * @params hash - хеш элемента
+      * @return {JQuery}
+      * */
+      _getContainerByHash: function(hash) {
+         var elem = $("[data-hash="+hash+"]", this.getRootNode());
+         if(elem.length > 0) {
+            return elem;
+         }
+         var subMenus = this.getSubMenus();
+         for(var h in subMenus){
+            if(subMenus.hasOwnProperty(h)) {
+               var menu = subMenus[h];
+               elem = $("[data-hash="+h+"]", menu.getContainer());
+               if(elem)
+                  return elem;
+            }
+         }
+         return $();
+
+      },
+      _getTreeChildrenContainer: function(item) {
+         var hash = item.getHash(),
+            subMenus = this.getSubMenus();
+         if(subMenus.hasOwnProperty(hash)){
+            return subMenus[hash].getContainer();
+         }
+         return $();
       }
       //endregion protected
    });

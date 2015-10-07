@@ -1,3 +1,4 @@
+/*global define, $, doT, $ws*/
 define('js!SBIS3.CONTROLS.ComboBoxNew', [
    'js!SBIS3.CONTROLS.TextBox',
    'html!SBIS3.CONTROLS.ComboBox',
@@ -145,7 +146,7 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
             return false;
          });
          var key = this._options.selectedKey;
-         if (typeof key == 'undefined' || key === null){
+         if (typeof key === 'undefined' || key === null){
             /*TODO следующая строчка должна быть в Selector*/
             this._options.selectedKey = null;
             if (this._options.text) {
@@ -193,12 +194,12 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
 
       _getItemTemplate: function() {
          return (function(item) {
-            var title= Utils.getItemPropertyValue(item,this._options.displayField);
+            var title= Utils.getItemPropertyValue(item.item, this._options.displayField);
             if(this._options.itemTemplate) {
                return doT.template(this._options.itemTemplate)({
                   item:item,
                   displayField:title
-               })
+               });
             }
             else{
                return '<div>'+title+'</div>';
@@ -210,7 +211,7 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
             item =  this.getItems().at(index);
          if (item) {
             var newText = Utils.getItemPropertyValue(item, this._options.displayField);
-            if (newText != this._options.text) {
+            if (newText !== this._options.text) {
                ComboBox.superclass.setText.call(this, newText);
                $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(newText);
                this._drawNotEditablePlaceholder(newText);
@@ -397,21 +398,21 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
       },
 
       showPicker: function() {
-        ComboBox.superclass.showPicker.call(this);
-        this._setWidth();
+         ComboBox.superclass.showPicker.call(this);
+         this._setWidth();
       },
 
       _initializePicker: function() {
-        ComboBox.superclass._initializePicker.call(this);
-        this._setWidth();
+         ComboBox.superclass._initializePicker.call(this);
+         this._setWidth();
       },
 
       _setWidth: function(){
          var self = this;
          if (self._picker._options.target) {
-           this._picker.getContainer().css({
-              'min-width': self._picker._options.target.outerWidth() - this._border/*ширина бордеров*/
-           });
+            this._picker.getContainer().css({
+               'min-width': self._picker._options.target.outerWidth() - this._border/*ширина бордеров*/
+            });
          }
       },
 

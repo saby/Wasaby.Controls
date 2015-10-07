@@ -108,9 +108,8 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
       _onItemMouseEnterOrLeave: function (event) {
          this._notify(
             'onItemHovered',
-            event.type === 'mouseenter' ?
-               $(event.currentTarget).data('hash') :
-               ''
+            $(event.currentTarget).data('hash'),
+            event.type === 'mouseenter' ? true : false
          );
       },
 
