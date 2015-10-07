@@ -2,8 +2,10 @@
     <option name="caption" value="{{=it.caption}}"></option>
     {{var itemRaws = it.item.getRaw();}}
     {{for (i in itemRaws) {}}
-    {{?(itemRaws.hasOwnProperty(i) && i !== 'content')}}
-        <option name="{{=i}}" value="{{=itemRaws[i]}}"></option>
+    {{?itemRaws.hasOwnProperty(i)}}
+        <option name="{{=i}}">
+            {{=itemRaws[i]}}
+        </option>
     {{?}}
     {{}}}
 </component>

@@ -42,10 +42,28 @@ define(
        */
       $protected: {
          _options: {
-            type: 'normal',
+            /**
+             * @cfg {Boolean} Отображение маркера у активной вкладки
+             * @example
+             * <pre>
+             *     <option name="hasMarker">true</option>
+             * </pre>
+             */
             hasMarker: false,
-            defaultKey: undefined,
-            itemTemplate: itemTpl
+            /**
+             * @cfg {String} Шаблон отображения каждого элемента коллекции
+             * @example
+             * <pre>
+             *     <div class="tabButton">
+             *        {{=it.item.get("caption")}}
+             *     </div>
+             * </pre>
+             */
+            itemTemplate: itemTpl,
+            /**
+             * @cfg {String} Ключ первоначального активного элемента
+             */
+            defaultKey: undefined
          }
       },
       _dotTplFn: TabButtonsTpl,
@@ -56,31 +74,24 @@ define(
          this._options.defaultKey = this._options.selectedKey;
 
          this.subscribe('onInit', function(){
-            this._beforeShowFirstItem();
             this.toggleMarker(this._options.hasMarker);
          }.bind(this));
          this.subscribe('onDrawItems', this._findSideItems);
       },
       /**
        * <wiTag group="Управление">
-       * Применение пустого состояния. Поставил закладку по-умолчанию или никакую (если не была задана)
+       * Применение пустого состояния. Восстанавливает первоначальную активную вкладку.
        */
       applyEmptyState: function () {
          this.setSelectedKey(this._options.defaultKey);
       },
       /**
        * <wiTag group="Управление">
-       * Включает или выключает маркер.
+       * Включает или выключает маркер у активного элемента.
        * @param {Boolean} toggle Состояние
        */
       toggleMarker: function(toggle){
          this.getContainer().toggleClass('controls-TabButton__has-marker', toggle)
-      },
-      _beforeShowFirstItem: function () {
-         var newSelectedTabId = this._notify('onBeforeShowFirstItem', this._options.selectedItem);
-         if (this.getItemInstance(newSelectedTabId)) {
-            this.setSelectedKey(newSelectedTabId);
-         }
       },
       _findSideItems: function(){
          this.getContainer().find('.controls-TabButton__left-align:first, .controls-TabButton__right-align:first').addClass('controls-TabButton__side-item');
