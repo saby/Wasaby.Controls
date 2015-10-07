@@ -417,9 +417,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TabButton.controls-Checked__checked {
   z-index: 100;
 }
-.controls-TabButton.controls-Checked__checked .controls-TabButton__selected-border {
-  display: block;
-}
 .controls-TabButton.controls-Checked__checked .controls-TabButton__inner {
   background: #ffffff;
   color: #000000;
@@ -436,9 +433,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TabButton.controls-TabButton__left-align.controls-Checked__checked .controls-TabButton__corner {
   background: url('img/TabButton.png') 0 -151px no-repeat;
-}
-.controls-TabButton.controls-TabButton__left-align .controls-TabButton__selected-border {
-  left: 0;
 }
 .controls-TabButton.controls-TabButton__left-align .controls-TabButton__inner {
   border-left: 1px solid #e4e4e4;
@@ -462,9 +456,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TabButton.controls-TabButton__right-align.controls-Checked__checked .controls-TabButton__corner {
   background: url('img/TabButton.png') 0 -61px no-repeat;
 }
-.controls-TabButton.controls-TabButton__right-align .controls-TabButton__selected-border {
-  right: 0;
-}
 .controls-TabButton.controls-TabButton__right-align .controls-TabButton__inner {
   border-right: 1px solid #e4e4e4;
   padding-right: 23px;
@@ -480,16 +471,6 @@ input[type="reset"]::-moz-focus-inner {
   height: 29px;
   line-height: 29px;
   display: inline-block;
-}
-.controls-TabButton .controls-TabButton__selected-border {
-  position: absolute;
-  right: 0px;
-  top: 0px;
-  width: 3px;
-  height: 29px;
-  background: #00c795;
-  display: none;
-  z-index: 30;
 }
 .controls-TabButton .controls-TabButton__inner {
   border-top: 1px solid #e4e4e4;
@@ -538,25 +519,25 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TabButton.ws-disabled.controls-Checked__checked .controls-TabButton__corner {
   background: none;
 }
-.controls-TabButton.ws-disabled .controls-TabButton__selected-border,
-.controls-TabButton.ws-disabled:hover .controls-TabButton__selected-border,
-.controls-TabButton.ws-disabled.controls-Checked__checked .controls-TabButton__selected-border {
-  display: none;
-}
 .controls-TabButtons {
   height: 29px;
   overflow: hidden;
 }
-.controls-TabButtons.controls-TabButton__marker.controls-Checked__checked .controls-TabButton__selected-border {
+.controls-TabButtons.controls-TabButton__has-marker .controls-Checked__checked .controls-TabButton__selected-border {
   display: block;
 }
-.controls-TabButtons.controls-TabButton__marker.controls-TabButton__left-align .controls-TabButton__selected-border {
+.controls-TabButtons.controls-TabButton__has-marker .controls-TabButton__left-align .controls-TabButton__selected-border {
   left: 0;
 }
-.controls-TabButtons.controls-TabButton__marker.controls-TabButton__right-align .controls-TabButton__selected-border {
+.controls-TabButtons.controls-TabButton__has-marker .controls-TabButton__right-align .controls-TabButton__selected-border {
   right: 0;
 }
-.controls-TabButtons.controls-TabButton__marker .controls-TabButton__selected-border {
+.controls-TabButtons.controls-TabButton__has-marker .ws-disabled .controls-TabButton__selected-border,
+.controls-TabButtons.controls-TabButton__has-marker.ws-disabled:hover .controls-TabButton__selected-border,
+.controls-TabButtons.controls-TabButton__has-marker.ws-disabled.controls-Checked__checked .controls-TabButton__selected-border {
+  display: none;
+}
+.controls-TabButtons .controls-TabButton__selected-border {
   position: absolute;
   right: 0px;
   top: 0px;
@@ -565,11 +546,6 @@ input[type="reset"]::-moz-focus-inner {
   background: #00c795;
   display: none;
   z-index: 30;
-}
-.controls-TabButtons.controls-TabButton__marker.ws-disabled .controls-TabButton__selected-border,
-.controls-TabButtons.controls-TabButton__marker.ws-disabled:hover .controls-TabButton__selected-border,
-.controls-TabButtons.controls-TabButton__marker.ws-disabled.controls-Checked__checked .controls-TabButton__selected-border {
-  display: none;
 }
 .controls-RadioButton {
   cursor: pointer;

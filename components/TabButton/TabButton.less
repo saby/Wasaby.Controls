@@ -15,9 +15,6 @@
 
    &.controls-Checked__checked {
       z-index: @tab-button-checked-zindex;
-      .controls-TabButton__selected-border {
-         display: @tab-button-checked-selected-border-display;
-      }
       .controls-TabButton__inner {
          background: @tab-button-checked-inner-bg;
          color: @tab-button-checked-inner-color;
@@ -39,9 +36,6 @@
          .controls-TabButton__corner {
             background: @tab-button-checked-left-corner-bg;
          }
-      }
-      .controls-TabButton__selected-border {
-         left: @tab-button-left-selected-border-left;
       }
       .controls-TabButton__inner {
          border-left: @tab-button-left-inner-border-left;
@@ -70,9 +64,6 @@
             background: @tab-button-checked-right-corner-bg;
          }
       }
-      .controls-TabButton__selected-border {
-         right: @tab-button-right-selected-border-right;
-      }
       .controls-TabButton__inner {
          border-right: @tab-button-right-inner-border-right;
          padding-right: @tab-button-right-inner-padding-right;
@@ -90,17 +81,6 @@
       height: @tab-button-corner-height;
       line-height: @tab-button-corner-line-height;
       display: @tab-button-corner-display;
-   }
-
-   .controls-TabButton__selected-border {
-      position: @tab-button-selected-border-position;
-      right: @tab-button-selected-border-right;
-      top: @tab-button-selected-border-top;
-      width: @tab-button-selected-border-width;
-      height: @tab-button-selected-border-height;
-      background: @tab-button-selected-border-bg;
-      display: @tab-button-selected-border-display;
-      z-index: @tab-button-selected-border-z-index;
    }
 
    .controls-TabButton__inner {
@@ -153,10 +133,6 @@
     }
     .controls-TabButton__corner,{
       background: @tab-button-disabled-corner-bg;
-    }
-
-    .controls-TabButton__selected-border {
-      display: @tab-button-disabled-selected-border-display;
     }
   }
 }
