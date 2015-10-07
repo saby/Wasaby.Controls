@@ -43,7 +43,7 @@ define(
       $protected: {
          _options: {
             /**
-             * @cfg {Boolean} Отображение маркера у активной вкладки
+             * @cfg {Boolean} Включить выделение активной вкладки
              * @example
              * <pre>
              *     <option name="hasMarker">true</option>
@@ -82,12 +82,12 @@ define(
        * <wiTag group="Управление">
        * Применение пустого состояния. Восстанавливает первоначальную активную вкладку.
        */
-      applyEmptyState: function () {
+      resetToDefaultState: function () {
          this.setSelectedKey(this._options.defaultKey);
       },
       /**
        * <wiTag group="Управление">
-       * Включает или выключает маркер у активного элемента.
+       * Включает или выключает выделение активного элемента.
        * @param {Boolean} toggle Состояние
        */
       toggleMarker: function(toggle){
