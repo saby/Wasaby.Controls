@@ -62,11 +62,17 @@ define(
          this.subscribe('onDrawItems', this._findSideItems);
       },
       /**
+       * <wiTag group="Управление">
        * Применение пустого состояния. Поставил закладку по-умолчанию или никакую (если не была задана)
        */
       applyEmptyState: function () {
          this.setSelectedKey(this._options.defaultKey);
       },
+      /**
+       * <wiTag group="Управление">
+       * Включает или выключает маркер.
+       * @param {Boolean} toggle Состояние
+       */
       toggleMarker: function(toggle){
          this.getContainer().toggleClass('controls-TabButton__has-marker', toggle)
       },
