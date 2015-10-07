@@ -1365,9 +1365,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-NumberTextBox .controls-TextBox__fieldWrapper {
   height: 100%;
 }
-.controls-NumberTextBox .controls-TextBox__fieldWrapper.controls-NumberTextBox__enable-arrow {
-  margin: 0;
-}
 .controls-NumberTextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
   text-align: left;
 }
@@ -1435,8 +1432,8 @@ input[type="reset"]::-moz-focus-inner {
   font-size: 12px;
 }
 .controls-ComboBox {
-  cursor: pointer;
   line-height: normal;
+  cursor: pointer;
 }
 .controls-ComboBox .controls-TextBox__fieldWrapper {
   position: relative;
@@ -1447,26 +1444,29 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
   display: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable__placeholder {
   color: #eeeeee !important;
 }
 .controls-ComboBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
   position: absolute;
-  text-decoration: none;
+  top: 50%;
+  right: 4px;
   display: inline-block;
   width: 16px;
   height: 8px;
-  top: 50%;
-  right: 4px;
   margin: -2px 0 0;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+  text-decoration: none;
   border-width: 8px 8px 0 8px;
   border-style: solid;
   border-color: #ffcc99 transparent transparent transparent;
   background: transparent;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .controls-ComboBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown:hover {
   text-decoration: none;
@@ -1476,14 +1476,14 @@ input[type="reset"]::-moz-focus-inner {
   background: transparent;
 }
 .controls-ComboBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__field {
-  visibility: hidden;
   position: absolute;
-  left: 0;
   top: 0;
+  left: 0;
+  visibility: hidden;
 }
 .controls-ComboBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
-  display: inline-block;
   font: inherit;
+  display: inline-block;
   color: inherit;
 }
 .controls-ComboBox.controls-ComboBox__editable-false:hover .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
@@ -1517,6 +1517,7 @@ input[type="reset"]::-moz-focus-inner {
   background: transparent;
 }
 .controls-ComboBox__picker {
+  margin: -1px 0 0;
   border: 1px solid #666666;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -1524,12 +1525,11 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
-  margin: -1px 0 0;
 }
 .controls-ComboBox__picker .controls-ComboBox__itemRow {
-  cursor: pointer;
-  padding: 11px 5px;
   font: inherit;
+  padding: 11px 5px;
+  cursor: pointer;
   color: inherit;
   background: #4e5762;
 }
@@ -2491,16 +2491,16 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-BackButton {
   cursor: pointer;
+  display: inline-block;
   font-size: 18px;
-  line-height: 32px;
-  height: 32px !important;
+  line-height: 26px;
   font-weight: 700;
 }
 .controls-BackButton .controls-BackButton__caption {
   font-style: normal;
   color: #313e78;
   overflow: hidden;
-  margin-left: -7px;
+  vertical-align: top;
 }
 .controls-BackButton::before {
   width: 10px;
