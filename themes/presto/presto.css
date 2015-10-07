@@ -1212,21 +1212,21 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox {
   display: inline-block;
+  height: 40px;
+  color: #ffffff;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent transparent #666666 transparent;
+  background: transparent;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  height: 40px;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
-  border-width: 1px;
-  border-style: solid;
-  border-color: transparent transparent #666666 transparent;
-  background: transparent;
-  color: #ffffff;
 }
 .controls-TextBox.ws-validation-error {
   border-width: 1px;
@@ -1269,9 +1269,9 @@ input[type="reset"]::-moz-focus-inner {
   position: relative;
   float: right;
   width: 20px;
+  height: 100%;
   min-height: 38px;
   margin: 0 2px 0 0;
-  height: 100%;
 }
 .controls-TextBox .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper,
 .controls-DatePicker .controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
@@ -1279,25 +1279,25 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox .controls-TextBox__fieldWrapper {
   position: relative;
-  padding: 0 5px;
   height: 100%;
+  padding: 0 5px;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+  font: inherit;
+  line-height: 40px !important;
   width: 100%;
   height: 100%;
-  font: inherit;
-  color: inherit;
-  text-align: left;
   min-height: 38px;
-  line-height: 40px !important;
   margin: 0;
   padding: 0;
+  text-align: left;
+  color: inherit;
   border: none;
   outline: none;
   background: transparent;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-webkit-input-placeholder {
   color: #eeeeee !important;
@@ -1319,18 +1319,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-TextBox__field-lowercase {
   text-transform: lowercase;
-}
-.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__placeholder {
-  position: absolute;
-  top: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -ms-text-overflow: ellipsis;
-  white-space: nowrap;
-  color: #eeeeee !important;
-  font: inherit;
-  padding: 3px 0 0;
-  text-align: inherit;
 }
 .controls-FormattedTextBox {
   display: inline-block;
@@ -1446,6 +1434,7 @@ input[type="reset"]::-moz-focus-inner {
   display: none;
   overflow: hidden;
   text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
   white-space: nowrap;
 }
 .controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable__placeholder {
