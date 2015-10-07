@@ -513,10 +513,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TabButton .controls-TabButton__inner .controls-TabButton__icon {
   line-height: 29px !important;
 }
-.controls-TabButton.controls-TabButton__big-size .controls-TabButton__inner .controls-TabButton__caption {
+.controls-TabButton.controls-TabButton__large-font .controls-TabButton__inner .controls-TabButton__caption {
   font-size: 18px;
 }
-.controls-TabButton.controls-TabButton__big-size .controls-TabButton__inner .controls-TabButton__additional-text {
+.controls-TabButton.controls-TabButton__large-font .controls-TabButton__inner .controls-TabButton__additional-text {
   font-family: 'TensorFont Regular', TensorFont;
   font-weight: 400;
   font-size: 15px;

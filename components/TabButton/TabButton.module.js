@@ -4,7 +4,7 @@
  * @description
  */
 define('js!SBIS3.CONTROLS.TabButton',
-   ['js!SBIS3.CONTROLS.RadioButtonBase', 'html!SBIS3.CONTROLS.TabButton', 'js!SBIS3.CONTROLS.EditAtPlace'], function (RadioButtonBase, dotTplFn, EditAtPlace) {
+   ['js!SBIS3.CONTROLS.RadioButtonBase', 'html!SBIS3.CONTROLS.TabButton', 'html!SBIS3.CONTROLS.TabButton/TabContentTpl'], function (RadioButtonBase, dotTplFn, tabContentTpl) {
 
    'use strict';
    /**
@@ -19,24 +19,13 @@ define('js!SBIS3.CONTROLS.TabButton',
             align: 'right',
             additionalText: '',
             editable: false,
-            template: undefined
+            template: tabContentTpl
          }
       },
       _dotTplFn: dotTplFn,
 
       $constructor: function () {
-         this._setTabButtonTemplate();
-         this.getLinkedContext().setValue('contextfield', this._options.caption);
-      },
-       _setTabButtonTemplate: function(){
-          if (!this._options.template){
-             return;
-          }
-          var element = this.getContainer().find('.controls-TabButton__inner'),
-              tpl = this.getParent()._buildTplItem({}, this._options.template);
-          element.html(tpl);
-       }
-
+      }
    });
 
    return TabButton;
