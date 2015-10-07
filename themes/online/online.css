@@ -2135,7 +2135,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-EditAtPlace {
   border: none;
-  background: transparent;
 }
 .controls-EditAtPlace:hover,
 .controls-EditAtPlace.ws-disabled {
