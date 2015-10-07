@@ -6,10 +6,10 @@ define(
    [
       'js!SBIS3.CONTROLS.RadioGroupBase',
       'html!SBIS3.CONTROLS.TabButtons',
-      'html!SBIS3.CONTROLS.TabButtons/ItemTpl',
+      'html!SBIS3.CONTROLS.TabButtons/itemTpl',
       'js!SBIS3.CONTROLS.TabButton'
    ],
-   function (RadioGroupBase, TabButtonsTpl, ItemTpl) {
+   function (RadioGroupBase, TabButtonsTpl, itemTpl) {
 
    'use strict';
 
@@ -45,7 +45,7 @@ define(
             type: 'normal',
             hasMarker: false,
             defaultKey: undefined,
-            itemTemplate: ItemTpl
+            itemTemplate: itemTpl
          }
       },
       _dotTplFn: TabButtonsTpl,
