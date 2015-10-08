@@ -153,7 +153,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Можно использовать для массовых операций.
                 * @example
                 * <pre>
-                *     <option name="itemsActions">
+                *     <options name="itemsActions" type="array">
                 *        <options>
                 *           <option name="name">btn1</option>
                 *           <option name="icon">sprite:icon-16 icon-Delete icon-primary</option>
@@ -168,7 +168,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 *            <option name="isMainAction">true</option>
                 *            <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyListView:prototype.myOnActivatedHandler</option>
                 *         </options>
-                *     </option>
+                *     </options>
                 * </pre>
                 * @see setItemsActions
                 */
@@ -624,7 +624,9 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {String} items.name Имя кнопки операции над записью.
           * @param {String} items.icon Иконка кнопки.
           * @param {String} items.caption Текст на кнопке.
-          * @param {String} items.onActivated Имя функции, задабщей действие кнопки.
+          * @param {String} items.onActivated Обработчик клика по кнопке.
+          * @param {String} items.tooltip Всплывающая подсказка.
+          * @param {String} items.title Текст кнопки в выпадающем меню.
           * @param {String} items.isMainOption На строке ли кнопка (или в меню).
           * @example
           * <pre>
