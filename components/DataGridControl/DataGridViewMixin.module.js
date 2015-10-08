@@ -67,8 +67,9 @@ define('js!SBIS3.CONTROLS.DataGridControl.DataGridViewMixin', [
                   i;
                for (i = 0; i < columns.length; i++) {
                   cell = columns[i];
-                  cell.item = item;
-                  cell.value = Utils.getItemPropertyValue(item.getContents(), columns[i].field);
+                  cell.owner = item;
+                  cell.item = item.getContents();
+                  cell.value = Utils.getItemPropertyValue(cell.item, columns[i].field);
                   if (cell.value === undefined) {
                      cell.value = '';
                   }

@@ -14,12 +14,10 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupNew', [
 
       /**
        * Контрол, отображающий группу чекбоксов
-       * *Это экспериментальный модуль, API будет меняться!*
        * @class SBIS3.CONTROLS.CheckBoxGroupNew
        * @extends SBIS3.CONTROLS.CheckBoxGroupBaseNew
        * @mixes SBIS3.CONTROLS.FormWidgetMixin
        * @control
-       * @state mutable
        * @demo SBIS3.CONTROLS.Demo.MyCheckBoxGroup
        * @public
        * @initial

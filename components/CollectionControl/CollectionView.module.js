@@ -285,6 +285,7 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
          return {
             containerTag: this._itemContainerTag,
             containerClass: this._сssPrefix + this._itemContainerCssClass,
+            owner: item,
             item: item.getContents(),
             hash: item.getHash(),
             template: this._buildTemplate(
