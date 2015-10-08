@@ -47,6 +47,8 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             enabled: this.isEnabled(),
             hierField: this._options.hierField,
             keyField: this._options.keyField,
+            //title задано для совместимости со старыми контролами, когда люди не указывали displayField
+            displayField: this._options.displayField || 'title',
             verticalAlign: {
                side: 'top'
             },
