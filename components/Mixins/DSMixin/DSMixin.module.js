@@ -372,7 +372,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       setFilter: function(filter){
          this._filter = filter;
          this._dropPageSave();
-         this.reload(this._filter, this._sorting, 0, this.getProperty('pageSize'));
+         if (this._dataSource) {
+            this.reload(this._filter, this._sorting, 0, this.getProperty('pageSize'));
+         }
       },
 
       //переопределяется в HierarchyMixin
