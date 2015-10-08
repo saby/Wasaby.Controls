@@ -516,7 +516,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             /*Удаляем вложенные компоненты*/
             $('[data-component]', itemsContainers).each(function (i, item) {
                var inst = $(item).wsControl();
-               inst.destroy();
+               if (inst) {
+                  inst.destroy();
+               }
             });
 
             /*Удаляем сами items*/
