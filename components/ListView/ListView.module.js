@@ -786,7 +786,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var  windowHeight = $(window).height(),
                   checkHeights = this._isHeightGrowable() ?
                      (!($('body').get(0).scrollHeight > windowHeight + this._scrollIndicatorHeight)) || (this._container.height() < windowHeight) :
-                     this._container.height() >= this._container.find('> table').height();
+                     this._container.height() >= this._container.find('.js-controls-View__scrollable').height();
             //Если на странице появился скролл и мы достигли дна скролла
             if (this._isLoadBeforeScrollAppears && checkHeights){
                this._nextLoad();
