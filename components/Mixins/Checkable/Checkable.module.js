@@ -104,39 +104,6 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
          return this._options.checked;
       },
 
-      /**
-       * Изменить текущее состояние кнопки.
-       * @param {Boolean} value Новое состояние.
-       * @example
-       * <pre>
-       *     var btn = this.getChildControlByName("myButton");
-       *        btn.setValue(true)
-       * </pre>
-       * @see setChecked
-       * @see getValue
-       * @see isChecked
-       */
-      setValue: function(value){
-         this.setChecked(value);
-      },
-
-      /**
-       * Возвращает текущее состояние кнопки.
-       * @returns {Boolean} Признак текущего состояния кнопки: true/false.
-       * @example
-       * <pre>
-       *     var btn = this.getChildControlByName("myButton");
-       *        btn.getValue();
-       * </pre>
-       * @see isChecked
-       * @see checked
-       * @see setChecked
-       * @see setValue
-       */
-      getValue: function(){
-         return this.isChecked();
-      },
-
       _clickHandler : function() {
          this.setChecked(!(this.isChecked()));
       }
