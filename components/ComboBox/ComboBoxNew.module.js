@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора.
+    * *Это экспериментальный модуль, API будет меняться!*
     * Для работы контрола необходим источник данных, его можно задать либо в опции {@link items}, либо методом {@link setDataSource}.
     * Среди полей источника данных необходимо указать какое является ключевым - {@link keyField}, и из какого поля будем
     * отображать данные в выпадающий блок - {@link displayField}.
@@ -25,6 +26,7 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
     * @control
     * @author Крайнов Дмитрий Олегович
     * @public
+    * @state mutable
     * @initial
     * <component data-component='SBIS3.CONTROLS.ComboBox'>
     *     <options name="items" type="array">

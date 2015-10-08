@@ -9,7 +9,6 @@ define('js!SBIS3.CONTROLS.TreeControl.TreePresenter', [
     * Презентер дерева - реализует его поведеческий аспект.
     * @class SBIS3.CONTROLS.TreeControl.TreePresenter
     * @extends SBIS3.CONTROLS.HierarchyControl.HierarchyPresenter
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
 

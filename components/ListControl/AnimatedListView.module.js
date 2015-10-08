@@ -6,10 +6,9 @@ define('js!SBIS3.CONTROLS.ListControl.AnimatedListView', [
    'use strict';
 
    /**
-    * Представление списка - реализует его визуальный аспект.
-    * @class SBIS3.CONTROLS.ListControl.ListView
+    * Представление списка с анимацией изменений.
+    * @class SBIS3.CONTROLS.ListControl.AnimatedListView
     * @extends SBIS3.CONTROLS.ListControl.ListView
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
    var AnimatedListView = ListView.extend(/** @lends SBIS3.CONTROLS.ListControl.AnimatedListView.prototype */{

@@ -5,7 +5,6 @@ define('js!SBIS3.CONTROLS.CollectionControl.ICollectionView', [], function () {
    /**
     * Интерфейс представления коллекции
     * @mixin SBIS3.CONTROLS.CollectionControl.ICollectionView
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
    return /** @lends SBIS3.CONTROLS.CollectionControl.ICollectionView.prototype */{

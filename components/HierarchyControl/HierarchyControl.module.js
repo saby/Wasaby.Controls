@@ -9,11 +9,13 @@ define('js!SBIS3.CONTROLS.HierarchyControl', [
 
    /**
     * Контрол иерархии
+    * *Это экспериментальный модуль, API будет меняться!*
     * @class SBIS3.CONTROLS.HierarchyControl
     * @extends SBIS3.CORE.CompoundControl
     * @mixes SBIS3.CONTROLS.CollectionControlMixin
     * @mixes SBIS3.CONTROLS.HierarchyControlMixin
     * @public
+    * @state mutable
     * @author Крайнов Дмитрий Олегович
     */
 

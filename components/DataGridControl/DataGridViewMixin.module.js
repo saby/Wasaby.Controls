@@ -8,7 +8,6 @@ define('js!SBIS3.CONTROLS.DataGridControl.DataGridViewMixin', [
    /**
     * Миксин, обеспечивающий рендер таблицы
     * @mixin SBIS3.CONTROLS.DataGridControl.DataGridViewMixin
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
    return /** @lends SBIS3.CONTROLS.DataGridControl.DataGridViewMixin.prototype */{

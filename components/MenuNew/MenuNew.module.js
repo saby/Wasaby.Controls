@@ -18,8 +18,10 @@ define('js!SBIS3.CONTROLS.MenuNew', [
 
    /**
     * Контрол, отображающий меню, всплывающее в определенном месте страницы
+    * *Это экспериментальный модуль, API будет меняться!*
     * @class SBIS3.CONTROLS.Menu
     * @public
+    * @state mutable
     * @author Крайнов Дмитрий Олегович
     * @extends SBIS3.CONTROLS.ButtonGroupBase
     * @mixes SBIS3.CONTROLS.HierarchyControlMixin

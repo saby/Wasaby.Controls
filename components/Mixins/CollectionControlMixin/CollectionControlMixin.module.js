@@ -7,8 +7,10 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
 
    /**
     * Миксин, задающий любому контролу поведение работы с коллекцией элементов
+    * *Это экспериментальный модуль, API будет меняться!*
     * @mixin SBIS3.CONTROLS.CollectionControlMixin
     * @public
+    * @state mutable
     * @author Крайнов Дмитрий Олегович
     */
 

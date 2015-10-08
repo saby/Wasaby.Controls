@@ -5,7 +5,6 @@ define('js!SBIS3.CONTROLS.ListControl.IListView', [], function () {
    /**
     * Интерфейс представления списка
     * @mixin SBIS3.CONTROLS.ListControl.IListView
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
    return /** @lends SBIS3.CONTROLS.ListControl.IListView.prototype */{

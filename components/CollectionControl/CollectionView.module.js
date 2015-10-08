@@ -10,7 +10,6 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
     * @class SBIS3.CONTROLS.CollectionControl.CollectionView
     * @extends $ws.proto.Abstract
     * @mixes SBIS3.CONTROLS.CollectionControl.ICollectionView
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
    return $ws.proto.Abstract.extend([ICollectionView], /** @lends SBIS3.CONTROLS.CollectionControl.CollectionView.prototype */{

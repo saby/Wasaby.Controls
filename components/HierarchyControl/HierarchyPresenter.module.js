@@ -9,7 +9,6 @@ define('js!SBIS3.CONTROLS.HierarchyControl.HierarchyPresenter', [
     * Презентер иерархии - реализует ее поведеческий аспект.
     * @class SBIS3.CONTROLS.HierarchyControl.HierarchyPresenter
     * @extends SBIS3.CONTROLS.CollectionControl.CollectionPresenter
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
 

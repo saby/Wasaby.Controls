@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.DisplayFieldMixin', [
    'use strict';
 
    /**
-    * Миксин, позволяющий вывести значение поля
+    * Миксин, позволяющий задвать свойства, в которых хранятся ключи и отображаемые значения элементов коллекции
     * @mixin SBIS3.CONTROLS.DisplayFieldMixin
     * @public
     * @author Крайнов Дмитрий Олегович

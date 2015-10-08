@@ -9,7 +9,6 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
     * Представление для меню
     * @class SBIS3.CONTROLS.MenuView
     * @extends SBIS3.CONTROLS.TreeControl.TreeView
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
    var MenuView = TreeView.extend(/** @lends SBIS3.CONTROLS.MenuView.prototype */{

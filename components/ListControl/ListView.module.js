@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
     * @class SBIS3.CONTROLS.ListControl.ListView
     * @extends SBIS3.CONTROLS.CollectionControl.CollectionView
     * @mixes SBIS3.CONTROLS.ListControl.IListView
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
    var ListView = CollectionView.extend([IListView], /** @lends SBIS3.CONTROLS.ListControl.ListView.prototype */{

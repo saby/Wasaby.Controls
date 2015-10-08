@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
     * @class SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView
     * @extends SBIS3.CONTROLS.TreeControl.TreeView
     * @mixes SBIS3.CONTROLS.DataGridControl.DataGridViewMixin
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
    var TreeDataGridView = TreeView.extend([DataGridViewMixin], /** @lends SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView.prototype */{
