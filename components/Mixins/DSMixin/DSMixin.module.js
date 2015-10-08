@@ -399,6 +399,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
          this._loader = null;
       },
+      //TODO поддержка старого - обратная совместимость
+      getItems : function() {
+         if (this._dataSet) {
+            return this._dataSet.getRawData();
+         }
+         else {
+            return this._options.items;
+         }
+      },
        /**
         * Метод установки либо замены коллекции элементов, заданных опцией {@link items}.
         * @param {Object} items Набор новых данных, по которому строится отображение.
