@@ -132,18 +132,11 @@ define(
             selection = selection.getRangeAt(0);
             this._lastSelection = selection;
          } else {
-            selection = this._lastSelection;
-            //Напрямую свойство у объекта window не меняется
-            delete selection.startOffset;
-            if (this.formatModel._options.newContainer) {
-               delete selection.startContainer;
-               selection.startContainer = this.formatModel._options.newContainer;
-               delete selection.endContainer;
-               selection.endContainer = this.formatModel._options.newContainer;
-               selection.startOffset  = this.formatModel._options.newPosition;
+            selection = this._lastSelection || selection;
+            if (selection  &&  this.formatModel._options.newContainer) {
+               selection.setStart(this.formatModel._options.newContainer, 0);
+               selection.setEnd(this.formatModel._options.newContainer, 0);
                this.formatModel._options.newContainer = undefined;
-            } else {
-               selection.startOffset = 0;
             }
          }
 
@@ -615,18 +608,17 @@ define(
             self._focusHandler();
          });
          this._inputField.keypress(function (event) {
+            //keypress учитывает расскладку, keydown - нет
+            key = event.which || event.keyCode;
             event.preventDefault();
+            self._keyPressHandler(key, 'character', event.shift);
          });
          this._inputField.keyup(function (event) {
             event.preventDefault();
          });
          this._inputField.keydown(function (event) {
+            //keydown ловит управляющие символы, keypress - нет
             key = event.which || event.keyCode;
-            // сдвиг на 48 позиций по символьной таблице для корректного определения
-            // цифровых значений на NumLock'е
-            if (key >= 96 && key <= 105) {
-               key -= 48;
-            }
             if (key == self._KEYS.HOME && !event.shiftKey) {
                event.preventDefault();
                self._keyPressHandler(key, 'home');
@@ -645,11 +637,8 @@ define(
             } else if (key == self._KEYS.ARROW_RIGHT && !event.shiftKey) {
                event.preventDefault();
                self._keyPressHandler(key, 'arrow_right');
-            } else if (!event.ctrlKey &&
-               key != self._KEYS.END && key != self._KEYS.HOME &&
-               key != self._KEYS.ARROW_LEFT && key != self._KEYS.ARROW_RIGHT) {
-               event.preventDefault();
-               self._keyPressHandler(key, 'character', event.shift);
+            } else if (event.ctrlKey && key == 88) {
+               event.preventDefault();//предотвращаем вырезание Ctrl+X
             }
          });
          this._inputField.bind('paste', function() {
