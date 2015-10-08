@@ -378,9 +378,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          if (this._options.target && this._options.closeByExternalClick) {
             var winHeight = $(window).height(),
                top = this._options.target.offset().top - $(window).scrollTop() - winHeight - WINDOW_OFFSET;
-            if (this.isVisible() && (top > 0 || -top > winHeight)) {
-               self.hide();
-            }
+            /*TODO временный фикс для решения проблемы на айпаде: открывается клавиаутра и при этом из за сдвига экрана пропадает панелька*/
+            /*if (this.isVisible() && (top > 0 || -top > winHeight)) {
+             self.hide();
+             }*/
          }
       },
 
