@@ -1,8 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.DataGridControl.DataGridViewMixin', [
    'js!SBIS3.CONTROLS.Data.Utils',
-   'html!SBIS3.CONTROLS.DataGridControl/resources/Row'
-], function (Utils, RowTemplate) {
+   'html!SBIS3.CONTROLS.DataGridControl/resources/DataGridViewItem',
+   'html!SBIS3.CONTROLS.DataGridControl/resources/DataGridViewRow'
+], function (Utils, DataGridViewItemTemplate, DataGridViewRowTemplate) {
    'use strict';
 
    /**
@@ -34,10 +35,12 @@ define('js!SBIS3.CONTROLS.DataGridControl.DataGridViewMixin', [
             columns: []
          },
 
+         _itemContainerTemplate: DataGridViewItemTemplate,
+
          /**
           * @var {Function} Шаблон строки
           */
-         _rowTemplate: RowTemplate
+         _rowTemplate: DataGridViewRowTemplate
       },
 
       around: {

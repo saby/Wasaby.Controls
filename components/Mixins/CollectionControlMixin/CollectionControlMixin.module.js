@@ -1,8 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.CollectionControlMixin', [
    'js!SBIS3.CONTROLS.CollectionControl.CollectionPresenter',
-   'js!SBIS3.CONTROLS.Data.Projection'
-], function (CollectionPresenter, Projection) {
+   'js!SBIS3.CONTROLS.Data.Projection',
+   'js!SBIS3.CONTROLS.PagerMore'
+], function (CollectionPresenter, Projection, PagerMore) {
    'use strict';
 
    /**
@@ -26,8 +27,14 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
          _options: {
             /**
              * @typedef {Object} DataSource
-             * @property {String} module Модуль, реализующий ISource, например js!SBIS3.CONTROLS.Data.Source.SbisService
+             * @property {DataSourceModule} module Модуль, реализующий ISource, например js!SBIS3.CONTROLS.Data.Source.SbisService
              * @property {Object} options Опции конструктора
+             */
+
+            /**
+             * @typedef {String} DataSourceModule
+             * @variant js!SBIS3.CONTROLS.Data.Source.SbisService Источник данных на базе сервиса БЛ СБиС
+             * @variant js!SBIS3.CONTROLS.Data.Source.Memory Источник данных в памяти
              */
 
             /**
@@ -43,7 +50,7 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
              *        </options>
              *     </options>
              * </pre>
-             * Задаем источник данных через метод:
+             * Задаем источник данных через функцию:
              * <pre>
              *     <option name="dataSource" type="function">js!MyApp.SomeEntity.Controller:prototype.getDataSource</option>
              * </pre>
@@ -51,6 +58,21 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
              * @see setDataSource
              */
             dataSource: undefined,
+
+            /**
+             * @cfg {Number} Количество записей на одну страницу, запрашиваемых с источника данных
+             * @remark
+             * Опция используется только при указании {@link dataSource}.
+             * Опция определяет количество запрашиваемых записей с источника даныых как при использовании постраничной навигации.
+             * Если указать 0, то постраничная навигация не используется.
+             * @example
+             * <pre class="brush:xml">
+             *     <option name="pageSize">10</option>
+             * </pre>
+             * @see getPageSize
+             * @see setPageSize
+             */
+            pageSize: undefined,
 
             /**
              * @cfg {Array} Коллекция, отображаемая контролом
@@ -107,6 +129,11 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
           * @var {SBIS3.CONTROLS.CollectionControl.CollectionPresenter} Презентер коллекции
           */
          _presenter: undefined,
+
+         /**
+          * @var {Object} Контрол постраничной навигации
+          */
+         _pager: undefined,
 
          /**
           * @var {Object} Дочерние визуальные компоненты
@@ -176,6 +203,35 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
          this._getPresenter().setItems(this.getItemsProjection());
 
          this.reload();
+      },
+
+      /**
+       * Возвращает количество записей, выводимое на одной странице.
+       * @returns {Number}
+       * @see pageSize
+       * @see setPageSize
+       */
+      getPageSize: function() {
+         return this._options.pageSize;
+      },
+
+      /**
+       * Устанавливает количество записей, выводимое на одной странице.
+       * @param {Number} pageSize Количество записей.
+       * @example
+       * <pre>
+       *     myListView.setPageSize(20);
+       * </pre>
+       * @see pageSize
+       * @see getPageSize
+       */
+      setPageSize: function(pageSize) {
+         if (this._options.pageSize === pageSize) {
+            return;
+         }
+         this._options.pageSize = pageSize;
+
+         this._applyPageSize();
       },
 
       /**
@@ -295,24 +351,22 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
       },
 
       /**
+       * Применяет настройки постраничной навигации
+       * @private
+       */
+      _applyPageSize: function() {
+         if (this._pager) {
+            this._pager.setPageSize(this._options.pageSize);
+         }
+      },
+
+      /**
        * Инициализирует представление и презентер
        * @private
        */
       _initView: function() {
          this._getView();
          this._initPresenter();
-      },
-
-      /**
-       * Инициализирует презентер
-       * @private
-       */
-      _initPresenter: function () {
-         var presenter = this._getPresenter();
-         presenter.setItemAction(this._callItemAction.bind(this));
-         presenter.setReviver(this.reviveComponents.bind(this));
-         presenter.setItems(this.getItemsProjection());
-         presenter.redrawCalled();
       },
 
       /**
@@ -330,7 +384,17 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
        * @private
        */
       _createView: function () {
-         return new this._viewConstructor(this._getViewOptions());
+         var view = new this._viewConstructor(this._getViewOptions());
+
+         if (this._options.pageSize > 0) {
+            this._pager = new PagerMore({
+               element: view.getPagerContainer(),
+               items: this.getItems(),
+               pageSize: this._options.pageSize
+            });
+         }
+
+         return view;
       },
 
       /**
@@ -339,7 +403,7 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
        * @private
        */
       _getViewOptions: function () {
-         return {
+         var options = {
             rootNode: this._getViewNode(),
             template: this._getViewTemplate(),
             itemTemplate: this._getItemTemplate(),
@@ -347,6 +411,20 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
             itemNodeAttributesHandler: this._options.userItemAttributes,
             emptyHTML: this._options.emptyHTML
          };
+
+         return options;
+      },
+
+      /**
+       * Инициализирует презентер
+       * @private
+       */
+      _initPresenter: function () {
+         var presenter = this._getPresenter();
+         presenter.setItemAction(this._callItemAction.bind(this));
+         presenter.setReviver(this.reviveComponents.bind(this));
+         presenter.setItems(this.getItemsProjection());
+         presenter.redrawCalled();
       },
 
       /**
@@ -421,6 +499,8 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
             this._items = items;
             this._itemsProjection = Projection.getDefaultProjection(this._items);
          }
+
+         this._applyPageSize();
 
          this._setItemsEventHandlers();
       },

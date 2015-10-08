@@ -101,7 +101,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableListMixin', [
 
             this._notify(
                'onAfterCollectionLoad',
-               mode
+               mode,
+               this
             );
 
             return err;
