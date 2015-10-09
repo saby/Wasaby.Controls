@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableListMixin', [
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения, первым аргументом придет SBIS3.CONTROLS.Data.Source.DataSet
        */
       fetch: function () {
-         return this.getSource().query(this._query);
+         return this.getSource().query(this.getQuery());
       },
 
       //endregion SBIS3.CONTROLS.Data.Query.IQueryable

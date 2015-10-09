@@ -22,7 +22,31 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTree', [
     */
 
    var LoadableTree = ObservableTreeItem.extend([IQueryable, ISourceLoadable, LoadableTreeItemMixin, TreeMixin], /** @lends SBIS3.CONTROLS.Data.Collection.LoadableTree.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Collection.LoadableTree'
+      _moduleName: 'SBIS3.CONTROLS.Data.Collection.LoadableTree',
+       $protected: {
+          _options: {
+             /**
+              * @cfg {*} Идентификатор корневого узла, который будет отправлен в запросе на получение корневых записей
+              */
+             rootNodeId: undefined
+          }
+       },
+
+      /**
+       * Возвращает идентификатор корневого узла, который будет отправлен в запросе на получение корневых записей
+       * @returns {String}
+       */
+      getRootNodeId: function () {
+         return this._options.rootNodeId;
+      },
+
+      /**
+       * Устанавливает идентификатор корневого узла, который будет отправлен в запросе на получение корневых записей
+       * @param {*} rootNodeId Идентификатор корневого узла
+       */
+      setRootNodeId: function (rootNodeId) {
+         this._options.rootNodeId = rootNodeId;
+      }
    });
 
    return LoadableTree;

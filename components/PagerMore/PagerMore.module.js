@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.ISourceLoadable} Коллекция, в которую надо добавлять записи
+             * @cfg {SBIS3.CONTROLS.Data.Collection.ISourceLoadable} Коллекция, в которую загружаются записи
              */
             items: undefined,
 
@@ -54,6 +54,31 @@ define('js!SBIS3.CONTROLS.PagerMore', [
             this._loadNext();
             return false;
          }).bind(this));
+      },
+
+      /**
+       * Возвращает коллекцию, в которую загружаются записи
+       * @returns {Number}
+       * @see items
+       * @see setItems
+       */
+      getItems: function() {
+         return this._options.items;
+      },
+
+      /**
+       * Устанавливает коллекцию, в которую загружаются записи
+       * @param {SBIS3.CONTROLS.Data.Collection.ISourceLoadable} items Коллекция
+       * @see items
+       * @see getItems
+       */
+      setItems: function(items) {
+         if (this._options.items === items) {
+            return;
+         }
+         this._options.items = items;
+
+         this._applySettings();
       },
 
       /**

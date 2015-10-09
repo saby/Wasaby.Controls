@@ -199,7 +199,9 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
       setDataSource: function (source) {
          this._options.dataSource = source;
          this._setItems(this._convertDataSourceToItems(source));
-
+         if (this._pager) {
+            this._pager.setItems(this.getItems());
+         }
          this._getPresenter().setItems(this.getItemsProjection());
       },
 
