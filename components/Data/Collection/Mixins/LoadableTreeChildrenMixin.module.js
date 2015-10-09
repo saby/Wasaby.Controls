@@ -25,6 +25,14 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeChildrenMixin', [
          _itemModule: 'SBIS3.CONTROLS.Data.Collection.LoadableTreeItem'
       },
 
+      $constructor: function () {
+         //Наследуем query от родителя, если родитель не корень
+         var parent = this.getOwner().getParent();
+         if (parent) {
+            this._query = parent.getQuery();
+         }
+      },
+
       before: {
          //region SBIS3.CONTROLS.Data.Collection.ISourceLoadable
 
@@ -33,10 +41,16 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeChildrenMixin', [
             var parentField = this._options.owner.getParentField();
             if (parentField) {
                var idField = this._options.source.getModelIdField(),
-                   idValue = idField && Utils.getItemPropertyValue(this._options.owner.getContents(), idField) || 0,
-                   where = this._query.getWhere();
-               where[parentField] = idValue;
-               this._query.where(where);
+                   idValue = idField && Utils.getItemPropertyValue(this._options.owner.getContents(), idField),
+                   where = this.getQuery().getWhere();
+               if (idValue === undefined && this._options.owner.isRoot()) {
+                   idValue = this._options.owner.getRootNodeId();
+               }
+
+               if (idValue !== undefined) {
+                   where[parentField] = idValue;
+                   this.getQuery().where(where);
+               }
             }
          }
 

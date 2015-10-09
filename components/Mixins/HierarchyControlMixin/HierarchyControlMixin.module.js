@@ -38,6 +38,12 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
             nodeField: '',
 
             /**
+             * @cfg {*} Идентификатор корневого узла, который будет отправлен в запросе на получение корневых записей
+             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Collection.LoadableTree}
+             */
+            rootNodeId: undefined,
+
+            /**
              * @cfg {String} Название поля, содержащее дочерние элементы узла. Используется только в случае, если {@link items} является массивом, для поиска в каждом элементе-узле дочерних элементов.
              * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Collection.ObservableTree}
              *
@@ -85,9 +91,9 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
       _convertDataSourceToItems: function (source) {
          return new LoadableTree({
             source: source,
-            childrenField: this._options.childrenField,
             parentField: this._options.parentField,
-            nodeField: this._options.nodeField
+            nodeField: this._options.nodeField,
+            rootNodeId: this._options.rootNodeId
          });
       },
 
@@ -99,9 +105,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
          if (items instanceof Array) {
             items = new ObservableTree({
                children: items,
-               childrenField: this._options.childrenField,
-               parentField: this._options.parentField,
-               nodeField: this._options.nodeField
+               childrenField: this._options.childrenField
             });
          }
 
