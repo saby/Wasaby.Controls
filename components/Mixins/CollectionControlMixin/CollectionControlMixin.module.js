@@ -201,8 +201,6 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
          this._setItems(this._convertDataSourceToItems(source));
 
          this._getPresenter().setItems(this.getItemsProjection());
-
-         this.reload();
       },
 
       /**
