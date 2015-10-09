@@ -25,7 +25,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
             /**
              * @cfg {String} Название поля, содержащее признак узла
              */
-            nodeField: ''
+            nodeField: '',
+
+             /**
+              * @cfg {*} Идентификатор корневого узла, который будет отправлен в запросе на получение корневых записей
+              */
+             rootNodeId: undefined
          },
 
          _childrenConstructor: undefined,
@@ -153,7 +158,23 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
        */
       setNodeField: function (name) {
          this._options.nodeField = name;
-      }
+      },
+
+       /**
+        * Возвращает идентификатор корневого узла, который будет отправлен в запросе на получение корневых записей
+        * @returns {String}
+        */
+       getRootNodeId: function () {
+           return this._options.rootNodeId;
+       },
+
+       /**
+        * Устанавливает идентификатор корневого узла, который будет отправлен в запросе на получение корневых записей
+        * @param {*} rootNodeId Идентификатор корневого узла
+        */
+       setRootNodeId: function (rootNodeId) {
+           this._options.rootNodeId = rootNodeId;
+       }
 
       //endregion Public methods
 

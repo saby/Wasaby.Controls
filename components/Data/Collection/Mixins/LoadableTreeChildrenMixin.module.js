@@ -33,10 +33,16 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeChildrenMixin', [
             var parentField = this._options.owner.getParentField();
             if (parentField) {
                var idField = this._options.source.getModelIdField(),
-                   idValue = idField && Utils.getItemPropertyValue(this._options.owner.getContents(), idField) || 0,
+                   idValue = idField && Utils.getItemPropertyValue(this._options.owner.getContents(), idField),
                    where = this._query.getWhere();
-               where[parentField] = idValue;
-               this._query.where(where);
+               if (idValue === undefined && this._options.owner.isRoot()) {
+                   idValue = this._options.owner.getRootNodeId();
+               }
+
+               if (idValue !== undefined) {
+                   where[parentField] = idValue;
+                   this._query.where(where);
+               }
             }
          }
 
