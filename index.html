@@ -86,6 +86,9 @@
                   <div id="Buttons"></div>
                </li>
                <li>
+                  <div id="ButtonsNew"></div>
+               </li>
+               <li>
                   <div id="Switchers"></div>
                </li>
                <li>
@@ -257,6 +260,14 @@
                element: "Buttons",
                caption: 'Buttons',
                href: '/pages/buttonCommonStyles.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "ButtonsNew",
+               caption: 'Buttons new',
+               href: '/pages/buttonCommonStylesNew.html'
             })
          });
 
