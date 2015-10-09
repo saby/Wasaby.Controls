@@ -269,9 +269,7 @@ define('js!SBIS3.CONTROLS.ListView',
                .mouseleave(this._mouseLeaveHandler.bind(this));
             this._onWindowScrollHandler = this._onWindowScroll.bind(this);
             if (this.isInfiniteScroll()) {
-               //Создадим индикатор скрытым
-               this._addLoadingIndicator();
-               this._removeLoadingIndicator();
+               this._createLoadingIndicator();
                //В зависимости от настроек высоты подписываемся либо на скролл у окна, либо у контейнера
                if (!this._isHeightGrowable()) {
                   this.getContainer().bind('scroll.wsInfiniteScroll', this._onContainerScroll.bind(this));
@@ -734,7 +732,7 @@ define('js!SBIS3.CONTROLS.ListView',
                records;
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
-               this._addLoadingIndicator();
+               this._showLoadingIndicator();
                this._loader = this._dataSource.query(this._filter, this._sorting, this._infiniteScrollOffset + this._limit, this._limit).addCallback(function (dataSet) {
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                   //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
@@ -743,14 +741,14 @@ define('js!SBIS3.CONTROLS.ListView',
                   * Т.е. можем не определить, что доскроллили до низа страницы. индикатор должен юыть виден, пока не загрузим все данные
                   */
                   if (self._isHeightGrowable()) {
-                     self._removeLoadingIndicator();
+                     self._hideLoadingIndicator();
                   }
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                   if (self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset)) {
                      self._infiniteScrollOffset += self._limit;
                   } else {
                      self._hasScrollMore = false;
-                     self._removeLoadingIndicator();
+                     self._hideLoadingIndicator();
                   }
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
@@ -794,10 +792,9 @@ define('js!SBIS3.CONTROLS.ListView',
                this._isLoadBeforeScrollAppears = false;
             }
          },
-         _addLoadingIndicator: function () {
+         _showLoadingIndicator: function () {
             if (!this._loadingIndicator) {
-               this._loadingIndicator = this._container.find('.controls-ListView-scrollIndicator');
-               this._scrollIndicatorHeight = this._loadingIndicator.height();
+               this._createLoadingIndicator();
             }
             this._loadingIndicator.removeClass('ws-hidden');
          },
@@ -805,10 +802,14 @@ define('js!SBIS3.CONTROLS.ListView',
           * Удаляет индикатор загрузки
           * @private
           */
-         _removeLoadingIndicator: function () {
+         _hideLoadingIndicator: function () {
             if (this._loadingIndicator && !this._loader) {
                this._loadingIndicator.addClass('ws-hidden');
             }
+         },
+         _createLoadingIndicator : function () {
+            this._loadingIndicator = this._container.find('.controls-ListView-scrollIndicator');
+            this._scrollIndicatorHeight = this._loadingIndicator.height();
          },
          /**
           * Метод изменения возможности подгрузки по скроллу.
@@ -836,7 +837,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             //Убираем текст Еще 10, если включили бесконечную подгрузку
             this.getContainer().find('.controls-TreePager-container').toggleClass('ws-hidden', allow);
-            this._removeLoadingIndicator();
+            this._hideLoadingIndicator();
          },
          /**
           * Геттер для получения текущего выделенного элемента
@@ -863,7 +864,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             if (this.isInfiniteScroll()) {
                if (!this._hasNextPage(this._dataSet.getMetaData().more)) {
-                  this._removeLoadingIndicator();
+                  this._hideLoadingIndicator();
                }
             }
 
