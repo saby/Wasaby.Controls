@@ -5,7 +5,20 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
    'js!SBIS3.CONTROLS.MenuLink',
    'js!SBIS3.CONTROLS.CheckBox'
 ], function(MenuLink, CheckBox) {
-
+   /**
+    * Операции выделения.
+    *
+    * SBIS3.CONTROLS.OperationsMark
+    * @class SBIS3.CONTROLS.OperationsMark
+    * @extends SBIS3.CONTROLS.MenuLink
+    * @control
+    * @public
+    * @author Крайнов Дмитрий Олегович
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.OperationsMark'>
+    *
+    * </component>
+    */
    /*TODO Пока что динамическое создание CheckBox, пока не слиты Control и CompaundControl!!!*/
    var OperationsMark = MenuLink.extend({
       $protected: {
@@ -61,6 +74,10 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
             this[item.name] = item.handler;
          }
       },
+      /**
+       * Добавление операции
+       * @param {Object} item Операция.
+       */
       addItem: function(item) {
          this._parseItem(item);
          OperationsMark.superclass.addItem.apply(this, [item]);
@@ -69,6 +86,10 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          this._options.linkedView.subscribe('onSelectedItemsChange', this._updateMark.bind(this));
          this.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
       },
+      /**
+       * Метод установки или замены связанного представления данных.
+       * @param {SBIS3.CONTROLS.ListView} linkedView
+       */
       setLinkedView: function(linkedView) {
          if (linkedView && $ws.helpers.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
             this._options.linkedView = linkedView;
@@ -122,12 +143,21 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          this._updateMarkButton();
          this._updateMarkCheckBox();
       },
+      /**
+       * Выбрать все элементы.
+       */
       selectCurrentPage: function() {
          this._options.linkedView.setSelectedItemsAll()
       },
+      /**
+       * Снять выделение со всех элементов.
+       */
       removeSelection: function() {
          this._options.linkedView.setSelectedItems([]);
       },
+      /**
+       * Инвертировать выделение всех элементов.
+       */
       invertSelection: function() {
          this._options.linkedView.toggleItemsSelectionAll();
       },

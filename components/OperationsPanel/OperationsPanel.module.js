@@ -165,6 +165,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                }
             });
       },
+      /**
+       * Установить видимость блока с операциями отметки.
+       * @param visible
+       */
       setVisibleMarkBlock: function(visible) {
          this._blocks.markOperations.toggleClass('ws-hidden', !visible);
       },
@@ -200,10 +204,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          OperationsPanel.superclass.setEnabled.apply(this, arguments);
          this._notify('onChangeEnabled');
       },
-       /**
-        *
-        * @returns {*}
-        */
+      /**
+       * Получить инстансы всех элементов панели массовых операций.
+       * @returns {Array}
+       */
       getItemInstance: function() {
          if (!this._itemsDrawn) {
             this._drawItems();
