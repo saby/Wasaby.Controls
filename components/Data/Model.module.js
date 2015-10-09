@@ -72,7 +72,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
       $constructor: function () {
          this.setData(this._options.data);
-
          this._options.idField = this._options.idField || '';
          this._initAdapter();
          this._publish('onChange');
@@ -93,6 +92,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       setSource: function (source) {
          this._options.source = source;
+         this._fieldsCache = {};
       },
 
       /**
@@ -109,6 +109,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       setAdapter: function (adapter) {
          this._options.adapter = adapter;
+         this._fieldsCache = {};
       },
 
       /**
@@ -137,11 +138,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       load: function() {
          this._checkSource();
-
+         var self = this;
          return this._options.source.read(this.getId()).addCallback((function(instance) {
-            this.setData(instance.getData());
-            this._setChanged(false);
-            return this;
+            self.setData(instance.getData());
+            self._setChanged(false);
+            return self;
          }).bind(this));
       },
 
@@ -152,10 +153,10 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       save: function() {
          this.validate();
          this._checkSource();
-
+         var self = this;
          return this._options.source.update(this).addCallback((function() {
-            this._setChanged(false);
-            return this;
+            self._setChanged(false);
+            return self;
          }).bind(this));
       },
 
@@ -165,11 +166,12 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       delete: function() {
          this._checkSource();
-
+         var self = this;
          return this._options.source.destroy(this.getId()).addCallback((function() {
-            this._setDeleted(true);
-            this.setStored(false);
-            return this;
+            self._fieldsCache = {};
+            self._setDeleted(true);
+            self.setStored(false);
+            return self;
          }).bind(this));
       },
 
@@ -234,6 +236,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       setData: function (data) {
          this._options.data = data || {};
+         this._fieldsCache = {};
       },
 
       /**
