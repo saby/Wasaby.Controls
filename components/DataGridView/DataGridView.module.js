@@ -87,24 +87,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
              */
             showHead : true,
             /**
-             * @typedef {Object} PagingEnum
-             * @variant no Не используется
-             * @variant part Частичная
-             * @variant full Полная
-             */
-            /**
-             * @cfg {PagingEnum} Режим постраничной навигации
-             * @remark
-             * При частичной постраничной навигации заранее неизвестно общее количество страниц.
-             * @example
-             * <pre>
-             *     <option name="paging">full</option>
-             * </pre>
-             * @see setPage
-             * @see getPage
-             */
-            paging: 'no',
-            /**
              * @cfg {Object} Редактирование по месту
              */
             editInPlace: {

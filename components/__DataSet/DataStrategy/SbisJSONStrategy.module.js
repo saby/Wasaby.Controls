@@ -217,8 +217,12 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
                      n: index,
                      t: 'Логическое'
                   });
-               }
-               else {
+               } else if (value instanceof Array) {
+                  filterParam.s.push({
+                     n: index,
+                     t: {n: 'Массив', t: 'Строка'}
+                  });
+               } else {
                   filterParam.s.push({
                      n: index,
                      t: 'Строка'
