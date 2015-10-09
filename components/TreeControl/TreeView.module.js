@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
     * @class SBIS3.CONTROLS.TreeControl.TreeView
     * @extends SBIS3.CONTROLS.HierarchyControl.HierarchyView
     * @mixes SBIS3.CONTROLS.TreeControl.ITreeView
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
    var TreeView = HierarchyView.extend([ITreeView], /** @lends SBIS3.CONTROLS.TreeControl.TreeView.prototype */{

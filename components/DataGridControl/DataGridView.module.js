@@ -10,7 +10,6 @@ define('js!SBIS3.CONTROLS.DataGridControl.DataGridView', [
     * @class SBIS3.CONTROLS.DataGridControl.DataGridView
     * @extends SBIS3.CONTROLS.ListControl.ListView
     * @mixes SBIS3.CONTROLS.DataGridControl.DataGridViewMixin
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
    var DataGridView = ListView.extend([DataGridViewMixin], /** @lends SBIS3.CONTROLS.DataGridControl.DataGridView.prototype */{

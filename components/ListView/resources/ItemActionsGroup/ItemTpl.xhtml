@@ -4,4 +4,5 @@
 <component data-component="{{? caption }}SBIS3.CONTROLS.Link{{??}}SBIS3.CONTROLS.IconButton{{?}}">
     {{? allowChangeEnable !== undefined }}<option name="allowChangeEnable" type="boolean">{{= allowChangeEnable }}</option>{{?}}
     {{? caption}}<option name="caption">{{= caption }}</option>{{??}}<option name="icon">{{= it.item.get('icon') }}</option>{{?}}
+    {{? it.item.get('tooltip') }}<option name="tooltip">{{= it.item.get('tooltip')}}</option>{{?}}
 </component>

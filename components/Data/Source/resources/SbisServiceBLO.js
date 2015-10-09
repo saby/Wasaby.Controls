@@ -17,7 +17,7 @@ define([], function () {
          * @param {Object} args Аргументы вызова
          * @returns {$ws.proto.Deferred} Асинхронный результат операции
          */
-        call: function(method, args) {
+        callMethod: function(method, args) {
             return this.call(
                method,
                args,

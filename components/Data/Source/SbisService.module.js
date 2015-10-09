@@ -100,7 +100,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       //region SBIS3.CONTROLS.Data.Source.ISource
 
       create: function () {
-         return this._provider.call(
+         return this._provider.callMethod(
             this._options.createMethodName,
             SbisAdapter.serialize({
                'Фильтр': {
@@ -117,7 +117,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       },
 
       read: function (key) {
-         return this._provider.call(
+         return this._provider.callMethod(
             this._options.readMethodName, {
                'ИдО': key,
                'ИмяМетода': this._options.formatForRead
@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       },
 
       update: function (model) {
-         return this._provider.call(
+         return this._provider.callMethod(
             this._options.updateMethodName, {
                'Запись': $ws.core.merge({
                   _type: 'record'
@@ -152,7 +152,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       },
 
       destroy: function (key) {
-         return this._provider.call(
+         return this._provider.callMethod(
             this._options.destroyMethodName, {
                'ИдО': key
             }
@@ -165,14 +165,15 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       },
 
       query: function (query) {
-         return this._provider.call(
+         var args = SbisAdapter.serialize({
+            'Фильтр': query.getWhere(),
+            'Сортировка': this._getSortingParams(query),
+            'Навигация': this._getPagingParams(query)
+         });
+         args['ДопПоля'] = [];
+         return this._provider.callMethod(
             this._options.queryMethodName,
-            SbisAdapter.serialize({
-               'ДопПоля': [],
-               'Фильтр': query.getWhere(),
-               'Сортировка': this._getSortingParams(query),
-               'Навигация': this._getPagingParams(query)
-            })
+            args
          ).addCallbacks((function (res) {
             return new DataSet({
                source: this,
@@ -186,7 +187,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       },
 
       call: function (command, data, condition) {
-         return this._provider.call(
+         return this._provider.callMethod(
             command,
             SbisAdapter.serialize(data)
          ).addCallbacks((function (res) {

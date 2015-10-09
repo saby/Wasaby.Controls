@@ -9,7 +9,6 @@ define('js!SBIS3.CONTROLS.ListControl.ListPresenter', [
     * Презентер списка элементов - реализует ее поведеческий аспект.
     * @class SBIS3.CONTROLS.ListControl.ListPresenter
     * @extends SBIS3.CONTROLS.CollectionControl.CollectionPresenter
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
 

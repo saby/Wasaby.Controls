@@ -8,7 +8,6 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionPresenter', [
     * Презентер коллекции элементов - реализует ее поведеческий аспект.
     * @class SBIS3.CONTROLS.CollectionControl.CollectionPresenter
     * @extends $ws.proto.Abstract
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
 

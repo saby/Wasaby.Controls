@@ -10,10 +10,12 @@ define('js!SBIS3.CONTROLS.RadioGroupBaseNew', ['js!SBIS3.CONTROLS.ButtonGroupBas
 
    /**
     * Контрол, реализующий поведение выбора одного из нескольких значений при помощи набора радиокнопок. Отображения не имеет.
+    * *Это экспериментальный модуль, API будет меняться!*
     * @class SBIS3.CONTROLS.RadioGroupBaseNew
     * @mixes SBIS3.CONTROLS.SelectableNew
     * @extends $ws.proto.Control
     * @public
+    * @state mutable
     * @author Крайнов Дмитрий Олегович
     */
 

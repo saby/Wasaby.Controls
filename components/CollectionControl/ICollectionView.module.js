@@ -5,7 +5,6 @@ define('js!SBIS3.CONTROLS.CollectionControl.ICollectionView', [], function () {
    /**
     * Интерфейс представления коллекции
     * @mixin SBIS3.CONTROLS.CollectionControl.ICollectionView
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
    return /** @lends SBIS3.CONTROLS.CollectionControl.ICollectionView.prototype */{
@@ -38,7 +37,7 @@ define('js!SBIS3.CONTROLS.CollectionControl.ICollectionView', [], function () {
             itemTemplateSelector: undefined,
 
             /**
-             * @cfg {String|HTMLElement|jQuery} что отображается при отсутствии данных
+             * @cfg {String|HTMLElement} Что отображается при отсутствии данных
              */
             emptyHTML: ''
          }
@@ -80,6 +79,13 @@ define('js!SBIS3.CONTROLS.CollectionControl.ICollectionView', [], function () {
        * @param {Number} target Коллекция, содержимое которой загрузилось
        */
       hideLoadingIndicator: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает узел под pager
+       */
+      getPagerContainer: function () {
          throw new Error('Method must be implemented');
       }
    };

@@ -10,7 +10,6 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
     * @class SBIS3.CONTROLS.CollectionControl.CollectionView
     * @extends $ws.proto.Abstract
     * @mixes SBIS3.CONTROLS.CollectionControl.ICollectionView
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
    return $ws.proto.Abstract.extend([ICollectionView], /** @lends SBIS3.CONTROLS.CollectionControl.CollectionView.prototype */{
@@ -69,7 +68,12 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
          /**
           * @var {String} CSS-класс узла, содержащего индикатор загрузки
           */
-         _loadingNodeCssClass: 'loading'
+         _loadingNodeCssClass: 'loading',
+
+         /**
+          * @var {String} CSS-класс узла, содержащего компонент пейджинга
+          */
+         _pagerClass: 'pager'
       },
 
       $constructor: function () {
@@ -120,6 +124,16 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
        */
       hideLoadingIndicator: function (target) {
          this._getLoadingNode(target).hide();
+      },
+
+      getPagerContainer: function () {
+         var container = this.getRootNode().find('.' + this._сssPrefix + this._pagerClass);
+         if (container.length === 0) {
+            container = $('<div/>')
+               .addClass(this._сssPrefix + this._pagerClass)
+               .insertAfter(this.getRootNode());
+         }
+         return container;
       },
 
       //endregion SBIS3.CONTROLS.CollectionControl.ICollectionView
@@ -257,7 +271,8 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
             items: this._getItemsRenderData(items),
             class: this._сssPrefix + this._itemsNodeCssClass,
             emptyClass: this._сssPrefix + this._itemsEmptyCssClass,
-            emptyHTML: this._options.emptyHTML
+            emptyHTML: this._options.emptyHTML,
+            pagerClass: this._сssPrefix + this._pagerClass
          };
       },
 
@@ -286,6 +301,7 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
          return {
             containerTag: this._itemContainerTag,
             containerClass: this._сssPrefix + this._itemContainerCssClass,
+            owner: item,
             item: item.getContents(),
             hash: item.getHash(),
             template: this._buildTemplate(
@@ -339,6 +355,11 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
                return template;
             case 'object':
                throw new Error('Template should be a string');
+            case 'string':
+               if (template.indexOf('html!') === 0) {
+                  return require(template);
+               }
+               break;
          }
 
          if (!template) {

@@ -8,8 +8,10 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
 
    /**
     * Миксин, задающий любому контролу поведение работы с деревом
+    * *Это экспериментальный модуль, API будет меняться!*
     * @mixin SBIS3.CONTROLS.TreeControlMixin
     * @public
+    * @state mutable
     * @author Крайнов Дмитрий Олегович
     */
 

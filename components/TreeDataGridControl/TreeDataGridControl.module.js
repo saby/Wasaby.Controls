@@ -11,12 +11,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl', [
 
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
+    * *Это экспериментальный модуль, API будет меняться!*
     * @class SBIS3.CONTROLS.TreeDataGridControl
     * @extends SBIS3.CORE.CompoundControl
     * @mixes SBIS3.CONTROLS.CollectionControlMixin
     * @mixes SBIS3.CONTROLS.HierarchyControlMixin
     * @mixes SBIS3.CONTROLS.TreeControlMixin
     * @public
+    * @state mutable
     * @author Крайнов Дмитрий Олегович
     */
 

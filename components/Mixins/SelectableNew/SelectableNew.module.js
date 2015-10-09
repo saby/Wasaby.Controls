@@ -1,9 +1,5 @@
 /* global define, $ws */
 
-/**
- * Created by iv.cheremushkin on 14.08.2014.
- */
-
 define('js!SBIS3.CONTROLS.SelectableNew', [
    'js!SBIS3.CONTROLS.Data.Utils'
 ], function (Utils) {
@@ -11,8 +7,10 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
 
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного.
+    * *Это экспериментальный модуль, API будет меняться!*
     * @mixin SBIS3.CONTROLS.SelectableNew
     * @public
+    * @state mutable
     * @author Крайнов Дмитрий Олегович
     */
 

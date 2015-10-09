@@ -12,10 +12,14 @@
             <div class="controls-TreeView__expand js-controls-TreeView__expand{{?!isBranch}} controls-TreeView__expand__leaf{{??}} has-child{{?}}"></div>
             {{?isBranch}}
                <div class="controls-TreeView__ellipsis-wrapper">
-                  <span>{{=it.decorators.applyIf(column.value, column.highlight)}}</span>
-                  {{?it.arrowActivatedHandler}}
-                     <div class="js-controls-TreeView__editArrow controls-TreeView__editArrow icon-16 icon-View icon-primary action-hover"></div>
-                     <!-- Чтобы стрелка показывалась, даже когда название папки не влезает в колонку, добавим дополнительный блок со стрелкой,
+                  <div class="controls-TreeView__ellipsis-container">
+                     <span>{{=it.decorators.applyIf(column.value, column.highlight)}}</span>
+                     {{?it.arrowActivatedHandler}}
+                        <div class="js-controls-TreeView__editArrow controls-TreeView__editArrow icon-16 icon-View icon-primary action-hover"></div>
+                     {{?}}
+                  </div>
+                   {{?it.arrowActivatedHandler}}
+                  <!-- Чтобы стрелка показывалась, даже когда название папки не влезает в колонку, добавим дополнительный блок со стрелкой,
                           который сместится в крайнее правое положение и отобразит многоточие и стрелку, если название не поместлось -->
                      <div class="controls-TreeView__ellipsis-copyArrow">
                         <span>&#133;</span>

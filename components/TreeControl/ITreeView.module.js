@@ -6,7 +6,6 @@ define('js!SBIS3.CONTROLS.TreeControl.ITreeView', [], function () {
     * Интерфейс представления дерева
     * @mixin SBIS3.CONTROLS.TreeControl.ITreeView
     * @implements SBIS3.CONTROLS.HierarchyControl.IHierarchyView
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
    return /** @lends SBIS3.CONTROLS.HierarchyControl.IHierarchyView.prototype */{

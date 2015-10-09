@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
          $constructor: function (cfg) {
             this._cfg = cfg;
          },
-         call: function (method, args) {
+         callMethod: function (method, args) {
             var def = new $ws.proto.Deferred(),
                meta = [
                   {'n': 'Ид', 't': 'Число целое'},

@@ -9,7 +9,6 @@ define('js!SBIS3.CONTROLS.HierarchyControl.HierarchyView', [
     * Представление иерархии - реализует ее визуальный аспект.
     * @class SBIS3.CONTROLS.HierarchyControl.HierarchyView
     * @extends SBIS3.CONTROLS.CollectionControl.ListView
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
    var HierarchyView = ListView.extend(/** @lends SBIS3.CONTROLS.ListControl.HierarchyView.prototype */{

@@ -29,6 +29,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeChildrenMixin', [
          //region SBIS3.CONTROLS.Data.Collection.ISourceLoadable
 
          load: function () {
+            //FIXME: загрузка нескольких узлов сразу
             var parentField = this._options.owner.getParentField();
             if (parentField) {
                var idField = this._options.source.getModelIdField(),

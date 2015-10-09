@@ -1,14 +1,14 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.DataGridControl.DataGridViewMixin', [
    'js!SBIS3.CONTROLS.Data.Utils',
-   'html!SBIS3.CONTROLS.DataGridControl/resources/Row'
-], function (Utils, RowTemplate) {
+   'html!SBIS3.CONTROLS.DataGridControl/resources/DataGridViewItem',
+   'html!SBIS3.CONTROLS.DataGridControl/resources/DataGridViewRow'
+], function (Utils, DataGridViewItemTemplate, DataGridViewRowTemplate) {
    'use strict';
 
    /**
     * Миксин, обеспечивающий рендер таблицы
     * @mixin SBIS3.CONTROLS.DataGridControl.DataGridViewMixin
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
    return /** @lends SBIS3.CONTROLS.DataGridControl.DataGridViewMixin.prototype */{
@@ -35,10 +35,12 @@ define('js!SBIS3.CONTROLS.DataGridControl.DataGridViewMixin', [
             columns: []
          },
 
+         _itemContainerTemplate: DataGridViewItemTemplate,
+
          /**
           * @var {Function} Шаблон строки
           */
-         _rowTemplate: RowTemplate
+         _rowTemplate: DataGridViewRowTemplate
       },
 
       around: {
@@ -68,7 +70,9 @@ define('js!SBIS3.CONTROLS.DataGridControl.DataGridViewMixin', [
                   i;
                for (i = 0; i < columns.length; i++) {
                   cell = columns[i];
-                  cell.value = Utils.getItemPropertyValue(item.getContents(), columns[i].field);
+                  cell.owner = item;
+                  cell.item = item.getContents();
+                  cell.value = Utils.getItemPropertyValue(cell.item, columns[i].field);
                   if (cell.value === undefined) {
                      cell.value = '';
                   }
