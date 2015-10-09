@@ -2474,6 +2474,9 @@ input[type="reset"]::-moz-focus-inner {
   overflow: hidden;
   height: 19px;
 }
+.controls-ListView__folder .controls-TreeView__ellipsis-wrapper .controls-TreeView__ellipsis-container {
+  float: left;
+}
 .controls-ListView__folder .controls-TreeView__ellipsis-wrapper .controls-TreeView__ellipsis-copyArrow {
   float: right;
   position: relative;
