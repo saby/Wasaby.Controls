@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
       },
       // region public
       destroySubObjects: function() {
-         $ws.helpers.forEeach(this._subMenus, function(subMenu) {
+         $ws.helpers.forEach(this._subMenus, function(subMenu) {
             subMenu.destroy();
          });
          this._subMenus = {};

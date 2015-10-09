@@ -201,7 +201,7 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
                   displayField:title
                });
             }
-            else{
+            else {
                return '<div>'+title+'</div>';
             }
          }).bind(this);
@@ -319,13 +319,13 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
             var title = Utils.getItemPropertyValue(item,displayField) ;
             if(title == text){
                selKey = Utils.getItemPropertyValue(item,keyField);
-               foundItem = item
+               foundItem = item;
             }
          });
          if(foundItem) {
             this.setSelectedKey(selKey);
          } else {
-            this.setSelectedKey()
+            this.setSelectedKey();
          }
 
       },
