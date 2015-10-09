@@ -51,12 +51,16 @@ define('js!SBIS3.CONTROLS.HierarchyControl.HierarchyView', [
 
       //endregion SBIS3.CONTROLS.HierarchyControl.IHierarchyView
 
-      //region Public methods
+      //region SBIS3.CONTROLS.CollectionControl.ICollectionView
 
       render: function (items) {
          this._levelOffset = items.getLevel();
          HierarchyView.superclass.render.call(this, items);
       },
+
+      //endregion SBIS3.CONTROLS.CollectionControl.ICollectionView
+
+      //region Public methods
 
       //endregion Public methods
 

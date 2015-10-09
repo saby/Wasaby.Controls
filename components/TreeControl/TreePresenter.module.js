@@ -1,8 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.TreeControl.TreePresenter', [
    'js!SBIS3.CONTROLS.HierarchyControl.HierarchyPresenter',
-   'js!SBIS3.CONTROLS.Data.Bind.ICollection'
-], function (HierarchyPresenter, IBindCollection) {
+   'js!SBIS3.CONTROLS.Data.Bind.ICollection',
+    'js!SBIS3.CONTROLS.PagerMore'
+], function (HierarchyPresenter, IBindCollection, PagerMore) {
    'use strict';
 
    /**
@@ -213,6 +214,14 @@ define('js!SBIS3.CONTROLS.TreeControl.TreePresenter', [
          $ws.helpers.instanceOfMixin(node, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable') &&
          (!node.isLoaded() || node.isQueryChanged())
       ) {
+         if (1 || this._options.pageSize > 0) {
+            new PagerMore({
+               element: this.getView().getPagerContainer(node),
+               items: node,
+               pageSize: this._options.pageSize || 10
+            });
+         }
+
          node.load();
       }
 

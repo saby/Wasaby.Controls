@@ -84,8 +84,9 @@ define('js!SBIS3.CONTROLS.CollectionControl.ICollectionView', [], function () {
 
       /**
        * Возвращает узел под pager
+       * @param {SBIS3.CONTROLS.Data.Projection} items Проекция коллекции
        */
-      getPagerContainer: function () {
+      getPagerContainer: function (items) {
          throw new Error('Method must be implemented');
       }
    };

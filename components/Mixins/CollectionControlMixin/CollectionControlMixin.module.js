@@ -388,7 +388,7 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
 
          if (this._options.pageSize > 0) {
             this._pager = new PagerMore({
-               element: view.getPagerContainer(),
+               element: view.getPagerContainer(this.getItemsProjection()),
                items: this.getItems(),
                pageSize: this._options.pageSize
             });

@@ -48,12 +48,32 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
          /**
           * @var {String} CSS-класс сввернутого узла
           */
-         _treeCollapsedСssClass: 'itemContainer-treeNodeCollapsed',
+         _treeCollapsedСssClass: 'itemContainer-treeNodeCollapsed'
       },
 
       $constructor: function () {
          this._publish('onLeverageClicked');
       },
+
+      //region SBIS3.CONTROLS.CollectionControl.ICollectionView
+
+      getPagerContainer: function (items) {
+         if (items.getTree().isRoot()) {
+            return TreeView.superclass.getPagerContainer.call(this, items);
+         }
+
+         var container = this._getTreeChildrenContainer(items);
+
+         var container = container.find('.' + this._сssPrefix + this._pagerClass);
+         if (container.length === 0) {
+            container = $('<div/>')
+               .addClass(this._сssPrefix + this._pagerClass)
+               .insertAfter(this.getRootNode());
+         }
+         return container;
+      },
+
+      //endregion SBIS3.CONTROLS.CollectionControl.ICollectionView
 
       //region SBIS3.CONTROLS.TreeControl.ITreeView
 

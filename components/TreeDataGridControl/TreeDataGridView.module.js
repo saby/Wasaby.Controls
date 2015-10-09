@@ -20,7 +20,39 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
          _rootNode: undefined
       },
 
-      //region Public methods
+      //region SBIS3.CONTROLS.CollectionControl.ICollectionView
+
+      addItem: function (item, at) {
+         var target = this._getTargetNode(item),
+            nextSibling = at > -1 ? item.getParent().getChildren().at(at + 1) : undefined,
+            nextSiblingContainer = this._getItemContainer(target, nextSibling),
+            template = this._getItemTemplate(item);
+         if (nextSibling && nextSibling.length) {
+            this._buildItemContainer(item, template).insertBefore(nextSibling);
+         } else {
+            this._buildItemContainer(item, template).appendTo(target);
+         }
+      },
+
+      getPagerContainer: function (items) {
+          if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.ITreeItem')) {
+            return TreeDataGridView.superclass.getPagerContainer.call(this, items);
+         }
+
+         var nodeContainer = this._getItemContainer(this._getTargetNode(items), items);
+
+         var container = nodeContainer.next('.' + this._сssPrefix + this._pagerClass);
+         if (container.length === 0) {
+            container = $('<tr><td colspan="4"><div></div></td></tr>')
+               .addClass(this._сssPrefix + this._pagerClass)
+               .insertAfter(nodeContainer);
+         }
+         return container.find('div:first');
+      },
+
+      //endregion SBIS3.CONTROLS.CollectionControl.ICollectionView
+
+      //region SBIS3.CONTROLS.TreeControl.ITreeView
 
       render: function (items) {
          this._rootNode = items;
@@ -42,9 +74,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
          this._checkTreeChildrenVisibility(node, expanded);
       },
 
-      //endregion Public methods
-
-      //region Protected methods
+      //region SBIS3.CONTROLS.TreeControl.ITreeView
 
       _getItemRenderData: function(item) {
          var itemData = TreeDataGridView.superclass._getItemRenderData.call(this, item);
