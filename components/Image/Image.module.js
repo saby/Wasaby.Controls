@@ -8,8 +8,7 @@ define('js!SBIS3.CONTROLS.Image',
       'html!SBIS3.CONTROLS.Image',
       'js!SBIS3.CORE.FileLoader',
       'js!SBIS3.CORE.Dialog',
-      'js!SBIS3.CONTROLS.Link',
-      'css!SBIS3.CONTROLS.Image'
+      'js!SBIS3.CONTROLS.Link'
    ], function(CompoundControl, dotTplFn, FileLoader, Dialog) {
 
       'use strict';
