@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeItem', [
    'js!SBIS3.CONTROLS.Data.HashableMixin',
    'js!SBIS3.CONTROLS.Data.Collection.TreeChildren',
    'js!SBIS3.CONTROLS.Data.Projection.Tree'
-], function (CollectionItem, ITreeItem, IHashable, HashableMixin, TreeChildren) {
+], function (CollectionItem, ITreeItem, IHashable, HashableMixin) {
    'use strict';
 
    /**
@@ -40,11 +40,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeItem', [
          },
 
          /**
-          * @var {Function} Конструктор коллекции дочерних элементов
-          */
-         _childrenConstructor: TreeChildren,
-
-         /**
           * @var {String} Модуль коллекции дочерних элементов
           */
          _childrenModule: 'SBIS3.CONTROLS.Data.Collection.TreeChildren',
@@ -54,10 +49,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeItem', [
 
       $constructor: function (cfg) {
          cfg = cfg || {};
-
-         if (!this._childrenConstructor) {
-            this._childrenConstructor = require('js!' + this._childrenModule);
-         }
 
          if ('node' in cfg) {
             this._options.node = !!cfg.node;
@@ -95,7 +86,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeItem', [
        * @returns {SBIS3.CONTROLS.Data.Collection.TreeChildren}
        */
       getChildren: function () {
-         return this._options.children || (this._options.children = new this._childrenConstructor({
+         return this._options.children || (this._options.children = $ws.single.ioc.resolve(this._childrenModule, {
             owner: this
          }));
       },
@@ -174,7 +165,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeItem', [
          }
 
          if (children instanceof Array) {
-            children = new this._childrenConstructor({
+            children = $ws.single.ioc.resolve(this._childrenModule, {
                owner: this,
                items: children
             });
@@ -189,6 +180,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeItem', [
 
       //endregion Protected methods
 
+   });
+
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Collection.TreeItem', function(config) {
+      return new TreeItem(config);
    });
 
    return TreeItem;

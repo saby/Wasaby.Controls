@@ -43,13 +43,11 @@ define('js!SBIS3.CONTROLS.Data.Projection', [
       if (index === -1) {
          var instance;
          if ($ws.helpers.instanceOfMixin(object, 'SBIS3.CONTROLS.Data.Collection.ITreeItem')) {
-            var TreeProjection = require('js!SBIS3.CONTROLS.Data.Projection.Tree');
-            instance = new TreeProjection({
+            instance = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Projection.Tree', {
                tree: object
             });
          } else if ($ws.helpers.instanceOfMixin(object, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            var CollectionProjection = require('js!SBIS3.CONTROLS.Data.Projection.Collection');
-            instance = new CollectionProjection({
+            instance = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Projection.Collection', {
                collection: object
             });
          } else {

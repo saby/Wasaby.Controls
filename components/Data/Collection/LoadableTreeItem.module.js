@@ -23,5 +23,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItem', [
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.LoadableTreeItem'
    });
 
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Collection.LoadableTreeItem', function(config) {
+      return new LoadableTreeItem(config);
+   });
+
    return LoadableTreeItem;
 });

@@ -205,7 +205,7 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
          }
       },
 
-      //region After- injections
+      //endregion After- injections
 
       //region Public methods
 

@@ -673,5 +673,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       }
    };
 
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.Collection', function(config) {
+      return new CollectionProjection(config);
+   });
+
    return CollectionProjection;
 });

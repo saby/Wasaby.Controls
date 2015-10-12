@@ -1,48 +1,51 @@
-/*global $ws, define, require*/
-define('js!SBIS3.CONTROLS.Data.Factory', [],
-   function () {
-   "use strict";
+/*global $ws, define*/
+define('js!SBIS3.CONTROLS.Data.Factory', [
+   'js!SBIS3.CONTROLS.Data.Source.Memory',
+   'js!SBIS3.CONTROLS.Data.Source.DataSet',
+   'js!SBIS3.CONTROLS.Data.Model'
+], function () {
+   'use strict';
+
    /**
-    * Фабрика типов - на основе сырых данных модели, создает объекты
-    * переданного типа
+    * Фабрика типов - на основе сырых данных модели создает объекты переданного типа
     * @class SBIS3.CONTROLS.Data.Factory
     * @public
     * @author Ярослав Ганшин
     */
-   return /** @lends SBIS3.CONTROLS.Data.Factory.prototype */{
+   var Factory = /** @lends SBIS3.CONTROLS.Data.Factory.prototype */{
       /***
        * Приводит значение к переданному типу
        * возможные типы:
-          DataSet - набор записей
-          Model - одна запись из выборки
-          Time  - время
-          Date - дата
-          DateTime - дата и время
-          Link - связь
-          Integer - число целое
-          Double - число вещественное
-          Money - деьги
-          Enum  - перечисляемое
-          Flags - поле флагов
-          Identity - иденификатор
-          TimeInterval - временной интервал
-          Text - текст
-          String - строка
-          Boolean - логическое
-         если передать тип не из списка значение не изменится.
+       * DataSet - набор записей
+       * Model - одна запись из выборки
+       * Time  - время
+       * Date - дата
+       * DateTime - дата и время
+       * Link - связь
+       * Integer - число целое
+       * Double - число вещественное
+       * Money - деьги
+       * Enum  - перечисляемое
+       * Flags - поле флагов
+       * Identity - иденификатор
+       * TimeInterval - временной интервал
+       * Text - текст
+       * String - строка
+       * Boolean - логическое
+       * Если передать тип не из списка, то значение не изменится.
        * @param value - значение
        * @param type - тип
        * @param adapter - адаптер, нужен для создания модели или датасета
        * @param meta - дополнительные параметры конфигурации типа данных
        * @returns {*} - приведенные
        */
-      cast: function(value, type, adapter, meta) {
-         if((value !== null && typeof value !== 'undefined') || type === 'Enum' ) {
-            switch(type) {
+      cast: function (value, type, adapter, meta) {
+         if ((value !== null && typeof value !== 'undefined') || type === 'Enum') {
+            switch (type) {
                case 'DataSet':
-                  return this.makeDataSet(value,adapter);
+                  return this.makeDataSet(value, adapter);
                case 'Model':
-                  return this.makeModel(value,adapter);
+                  return this.makeModel(value, adapter);
                case 'Time':
                case 'Date':
                case 'DateTime':
@@ -53,7 +56,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [],
                case 'Double':
                   return (typeof(value) === 'number') ? value : (isNaN(parseFloat(value)) ? null : parseFloat(value));
                case 'Money':
-                  if(meta && meta.precision) {
+                  if (meta && meta.precision) {
                      return $ws.helpers.bigNum(value).toString(meta.precision);
                   }
                   return value;
@@ -64,18 +67,18 @@ define('js!SBIS3.CONTROLS.Data.Factory', [],
                      currentValue: value //число
                   });
                case 'Flags':
-                  return this.makeFlags(value,meta);
+                  return this.makeFlags(value, meta);
                case 'Identity':
                   return $ws.helpers.parseIdentity(value);
                case 'TimeInterval':
-                  if(value instanceof $ws.proto.TimeInterval) {
+                  if (value instanceof $ws.proto.TimeInterval) {
                      return value.toString();
                   }
                   return $ws.proto.TimeInterval.toString(value);
 
                case 'Text':
                case 'String':
-                  return value+"";
+                  return value + "";
                case 'Boolean':
                   return !!value;
                default:
@@ -84,6 +87,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [],
          }
          return value;
       },
+
       /**
        * сериализует значение перед вставкой в данные
        * @param value - значение
@@ -92,11 +96,11 @@ define('js!SBIS3.CONTROLS.Data.Factory', [],
        * @param meta - дополнительные параметры конфигурации типа данных
        * @returns {*}
        */
-      serialize: function(value, type, adapter, meta) {
-         if((value === null || typeof value === 'undefined') && type !== ''){
+      serialize: function (value, type, adapter, meta) {
+         if ((value === null || typeof value === 'undefined') && type !== '') {
             return value;
          }
-         switch(type) {
+         switch (type) {
             case 'DataSet':
                if (adapter && adapter.serializeDataSet)
                   return adapter.serializeDataSet(value);
@@ -111,7 +115,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [],
             case 'DateTime':
             case 'Time':
                var serializeMode;
-               switch(type) {
+               switch (type) {
                   case 'DateTime':
                      serializeMode = true;
                      break;
@@ -136,19 +140,19 @@ define('js!SBIS3.CONTROLS.Data.Factory', [],
                return value === null ? null : parseInt(value, 10);
 
             case 'Money':
-               if(meta.precision) {
+               if (meta.precision) {
                   return $ws.helpers.bigNum(value).toString(meta.precision);
                }
                return value;
 
             case 'TimeInterval':
-               if(value instanceof $ws.proto.TimeInterval) {
+               if (value instanceof $ws.proto.TimeInterval) {
                   return value.toString();
                }
                return $ws.proto.TimeInterval.toString(value);
 
             case 'Enum':
-               if(value instanceof $ws.proto.Enum) {
+               if (value instanceof $ws.proto.Enum) {
                   return value.getCurrentValue();
                }
                return value;
@@ -157,36 +161,33 @@ define('js!SBIS3.CONTROLS.Data.Factory', [],
                return value;
          }
       },
+
       /***
        * создает модель
        * @param data - данные из поля с типом Модель
        * @param adapter - адаптер модели
        * @returns {*}
        */
-      makeModel: function(data, adapter) {
-         var Model = require('js!SBIS3.CONTROLS.Data.Model');
-         return new Model({
-            data:data,
-            adapter:adapter
+      makeModel: function (data, adapter) {
+         return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
+            data: data,
+            adapter: adapter
          });
       },
+
       /***
        * создает DataSet
        * @param data - данные из поля с типом DataSet
        * @param adapter - адаптер Датасета
        * @returns {*}
        */
-      makeDataSet: function(data, adapter) {
-         var MemorySource = require('js!SBIS3.CONTROLS.Data.Source.Memory'),
-            DataSet = require('js!SBIS3.CONTROLS.Data.Source.DataSet'),
-            Model = require('js!SBIS3.CONTROLS.Data.Model'),
-            source = new MemorySource({
-               model: Model,
+      makeDataSet: function (data, adapter) {
+         return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Source.DataSet', {
+            source: $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Source.Memory', {
+               model: $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor'),
                data: data,
                adapter: adapter
-            });
-         return new DataSet({
-            source: source,
+            }),
             data: {
                items: data,
                total: adapter.forTable().getCount(data)
@@ -195,14 +196,21 @@ define('js!SBIS3.CONTROLS.Data.Factory', [],
             totalProperty: 'total'
          });
       },
+
       /***
        * Создает модель, по метаданным
        * @param value - массив флагов
        * @param meta - параметры поля
        * @returns {*}
        */
-      makeFlags: function(value, meta) {
+      makeFlags: function (value, meta) {
          return this.makeModel(meta.makeData(value), meta.adapter);
       }
    };
+
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Factory', function () {
+      return Factory;
+   });
+
+   return Factory;
 });

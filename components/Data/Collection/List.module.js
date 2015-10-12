@@ -3,10 +3,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
    'js!SBIS3.CONTROLS.Data.Collection.IList',
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
-   'js!SBIS3.CONTROLS.Data.Collection.CollectionItem',
-   'js!SBIS3.CONTROLS.Data.Utils',
-   'js!SBIS3.CONTROLS.Data.Projection.Collection'
-], function (IList, IEnumerable, ArrayEnumerator, CollectionItem, Utils) {
+   'js!SBIS3.CONTROLS.Data.Collection.CollectionItem'
+], function (IList, IEnumerable, ArrayEnumerator) {
    'use strict';
 
    /**
@@ -18,7 +16,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
     * @author Мальцев Алексей
     */
 
-   return $ws.proto.Abstract.extend([IEnumerable, IList], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
+   var List = $ws.proto.Abstract.extend([IEnumerable, IList], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.List',
       $protected: {
          _options: {
@@ -33,11 +31,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
           * @var {SBIS3.CONTROLS.Data.Collection.CollectionItem[]} Элементы списка
           */
          _items: [],
-
-         /**
-          * @var {Function} Конструктор элемента коллекции
-          */
-         _itemConstructor: CollectionItem,
 
          /**
           * @var {String} Модуль элемента дерева
@@ -57,10 +50,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
                throw new Error('Invalid argument');
             }
             this._items = cfg.items.slice();
-         }
-
-         if (!this._itemConstructor) {
-            this._itemConstructor = require('js!' + this._itemModule);
          }
 
          for (var i = 0, count = this._items.length; i < count; i++) {
@@ -236,7 +225,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             return item;
          }
 
-         return new this._itemConstructor({
+         return $ws.single.ioc.resolve(this._itemModule, {
             contents: item
          });
       },
@@ -254,4 +243,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       //endregion Protected methods
 
    });
+
+   return List;
 });

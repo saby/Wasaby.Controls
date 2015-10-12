@@ -1,5 +1,6 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
+   'js!SBIS3.CONTROLS.Data.Collection.LoadableTreeChildren'
 ], function () {
    'use strict';
 
@@ -28,7 +29,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
             nodeField: ''
          },
 
-         _childrenConstructor: undefined,
          _childrenModule: 'SBIS3.CONTROLS.Data.Collection.LoadableTreeChildren',
 
          /**
@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
        * @returns {SBIS3.CONTROLS.Data.Collection.LoadableTreeChildren}
        */
       getChildren: function () {
-         return this._options.children || (this._options.children = new this._childrenConstructor({
+         return this._options.children || (this._options.children = $ws.single.ioc.resolve(this._childrenModule, {
             owner: this,
             source: this._options.source
          }));

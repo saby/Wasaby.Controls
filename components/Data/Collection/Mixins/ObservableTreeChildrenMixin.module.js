@@ -1,5 +1,6 @@
 /* global define, require, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.ObservableTreeChildrenMixin', [
+   'js!SBIS3.CONTROLS.Data.Collection.ObservableTreeItem'
 ], function () {
    'use strict';
 
@@ -18,7 +19,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableTreeChildrenMixin', [
              * @name owner
              */
          },
-         _itemConstructor: undefined,
+
          _itemModule: 'SBIS3.CONTROLS.Data.Collection.ObservableTreeItem'
       },
 

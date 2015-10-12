@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
    'js!SBIS3.CONTROLS.Data.HashableMixin',
    'js!SBIS3.CONTROLS.Data.Adapter.Json',
    'js!SBIS3.CONTROLS.Data.Factory'
-], function (IPropertyAccess, IHashable, HashableMixin, JsonAdapter, Factory) {
+], function (IPropertyAccess, IHashable, HashableMixin, JsonAdapter) {
    'use strict';
 
    /**
@@ -324,13 +324,19 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @returns {*}
        */
       get: function (name) {
-         if(this._fieldsCache.hasOwnProperty(name))
+         if (this._fieldsCache.hasOwnProperty(name)) {
             return this._fieldsCache[name];
+         }
 
          var adapter = this.getAdapter(),
             dataValue = adapter.get(this._options.data, name),
             data = adapter.getFullFieldData(this._options.data, name),
-            value = Factory.cast(dataValue, data.type, this._options.adapter, data.meta);//в фабрику нужно передавать полный адаптер
+            value = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Factory').cast(
+               dataValue,
+               data.type,
+               this._options.adapter,//в фабрику нужно передавать полный адаптер
+               data.meta
+            );
          this._fieldsCache[name] =  value;
          return value;
       },
@@ -352,6 +358,13 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          }
       }
       // endregion SBIS3.CONTROLS.Data.IPropertyAccess
+   });
+
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Model', function(config) {
+      return new Model(config);
+   });
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.ModelConstructor', function() {
+      return Model;
    });
 
    return Model;

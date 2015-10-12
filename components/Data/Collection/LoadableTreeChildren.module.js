@@ -28,5 +28,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeChildren', [
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.LoadableTreeChildren'
    });
 
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Collection.LoadableTreeChildren', function(config) {
+      return new LoadableTreeChildren(config);
+   });
+
    return LoadableTreeChildren;
 });

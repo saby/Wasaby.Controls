@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
             this.subscribeTo(this._view, 'onItemHovered', this._onItemHovered.bind(this));
             this.subscribeTo(this._view, 'onItemClicked', this._onItemClicked.bind(this));
             this.subscribeTo(this._view, 'onItemDblClicked', this._onItemDblClicked.bind(this));
-         },
+         }
       },
 
       //region Public methods
