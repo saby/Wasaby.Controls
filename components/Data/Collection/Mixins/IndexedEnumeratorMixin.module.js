@@ -94,7 +94,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
             item,
             value;
          this.reset();
-         while ((item = this.getNext())) {
+         while ((item = this.getNext(true))) {
             value = Utils.getItemPropertyValue(item, property);
             index[value] = [position, item];
             position++;

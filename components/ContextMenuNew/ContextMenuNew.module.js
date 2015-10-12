@@ -27,20 +27,8 @@ define('js!SBIS3.CONTROLS.ContextMenuNew', ['js!SBIS3.CONTROLS.MenuNew', 'js!SBI
          if(!item.isNode())
             this.hide();
          this._notify('onMenuItemActivate',item.getContents());
-      },
-      itemActivatedHandler : function(id) {
-         var menuItem = this.getItemInstance(id);
-         if (!(menuItem.getContainer().hasClass('controls-Menu__hasChild'))) {
-            this.hide();
+      }
 
-            for (var j in this._subMenus) {
-               if (this._subMenus.hasOwnProperty(j)) {
-                  this._subMenus[j].hide();
-               }
-            }
-         }
-         this._notify('onMenuItemActivate', menuItem.getContainer().attr('data-id'));
-      },
    });
 
    return ContextMenu;

@@ -307,7 +307,7 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
          var data = [];
          items.each(function(item, index) {
             data.push(this._getItemRenderData(item));
-         }, this);
+         }, this, false);
 
          return data;
       },

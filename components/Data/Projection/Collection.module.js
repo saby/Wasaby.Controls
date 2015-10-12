@@ -20,7 +20,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
    var CollectionProjection = Projection.extend([ICollectionProjection], /** @lends SBIS3.CONTROLS.Data.Projection.Collection.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Collection',
       $protected: {
-
+         _options:{
+            /**
+             * @cfg {Boolean} Отдавать оригинальные элементы в методах на чтение
+             */
+            unwrapOnRead: false
+         },
          /**
           * @var {*[]} Индекс исходной коллекции
           */
@@ -65,6 +70,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
           * @var {Function} Обработчик события об изменении исходной коллекции
           */
          _onSourceCollectionChange: undefined
+
       },
 
       $constructor: function () {
@@ -103,8 +109,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @returns {SBIS3.CONTROLS.Data.Collection.CollectionItem}
        * @state mutable
        */
-      at: function (index) {
-         return this._enumerator.at(index);
+      at: function (index, unwrap) {
+         return this._enumerator.at(index, unwrap);
       },
 
       //region SBIS3.CONTROLS.Data.Collection.IEnumerable
@@ -117,15 +123,16 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          return new CollectionProjectionEnumerator({
             sourceMap: this._sourceMap,
             filterMap: this._filterMap,
-            sortMap: this._sortMap
+            sortMap: this._sortMap,
+            unwrapOnRead: this._options.unwrapOnRead
          });
       },
 
-      each: function (callback, context) {
+      each: function (callback, context, unwrap) {
          var enumerator = this.getEnumerator(),
             index = 0,
             item;
-         while ((item = enumerator.getNext())) {
+         while ((item = enumerator.getNext(unwrap))) {
             callback.call(context, item, index++);
          }
       },
@@ -142,8 +149,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          return this._options.collection;
       },
 
-      getCurrent: function () {
-         return this._enumerator.getCurrent();
+      getCurrent: function (unwrap) {
+         return this._enumerator.getCurrent(unwrap);
       },
 
       setCurrent: function (item, silent) {
