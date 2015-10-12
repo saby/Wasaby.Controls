@@ -230,8 +230,24 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
             source: this,
             data: data
          });
-      }
+      },
 
+      /**
+       * Устанавливает данные в DataSet.
+       * @param data {Object} Объект содержащий набор записе, формат объекта
+       * должен соответсвовать текущей стратегии работы с данными.
+       * @see strategy
+       */
+      setRawData: function(data) {
+         this._options.data = data;
+      },
+      /**
+       * Возвращает данные "как есть", в том виде в каком они были установлены.
+       * @returns {Object}
+       */
+      getRawData: function() {
+         return this._options.data;
+      }
       //endregion Protected methods
 
    });

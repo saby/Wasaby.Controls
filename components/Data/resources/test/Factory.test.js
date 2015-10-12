@@ -162,7 +162,7 @@ define(
             });
             it('should cast link to integer', function () {
                var val = sbisModel.get('link');
-               assert.strictEqual(val,6)
+               assert.strictEqual(val,6);
             });
             it('should cast value to double', function () {
                var val = sbisModel.get('double');
@@ -192,6 +192,10 @@ define(
             it('should cast timeInterval', function () {
                var val = sbisModel.get('TimeInterval');
                assert.equal(val,'P10DT0H0M0S');
+            });
+            it('should cast flags', function () {
+               var val = sbisModel.get('flags');
+               assert.equal(true,val.get('one'));
             });
          });
          describe('.serialize()', function () {
@@ -234,7 +238,7 @@ define(
                   adapter = (new AdapterSbis),
                   dataSet = Factory.makeDataSet(data,adapter);
                sbisModelSet.set('recordSet',dataSet);
-               assert.deepEqual(getData(4),dataSet.getScalar());
+               assert.deepEqual(getData(4),dataSet.getRawData());
             });
             it('should serialize flags', function () {
                sbisModelSet.set('flags',null);

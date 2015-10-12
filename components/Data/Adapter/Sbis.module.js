@@ -171,7 +171,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
       } catch (e) {
       }
       if (DataSet && data instanceof DataSet) {
-         return $ws.core.clone(data.getScalar());
+         return $ws.core.clone(data.getRawData());
       } else if (data instanceof $ws.proto.RecordSet || data instanceof $ws.proto.RecordSetStatic) {
          return data.toJSON();
       } else {
@@ -361,16 +361,15 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
             case 'Flags':
             {
                meta.makeData = function (value) {
-                  var st = {},
+                  var st = [],
                      pairs = Object.sortedPairs(meta.s),
                      fData = [];
                   for (var pI = 0, pL = pairs.keys.length; pI < pL; pI++) {
-                     st[pI] = {
-                        type: Sbis.FIELD_TYPE.Boolean,
-                        title: pairs.values[pI],
-                        index: pairs.keys[pI]
-                     };
-                     fData[pI] = value[pI];
+                     st.push({
+                        t: Sbis.FIELD_TYPE.Boolean,
+                        n: pairs.values[pI]
+                     });
+                     fData.push(value[pI]);
                   }
                   return {
                      d: fData,
