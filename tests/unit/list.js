@@ -11,6 +11,7 @@ define([
 '../../components/Data/resources/test/Model.test',
 '../../components/Data/Source/resources/test/Memory.test',
 '../../components/Data/Source/resources/test/SbisService.test',
+'../../components/__DataSet/DataFactory/resources/DataFactory.test',
 '../../components/__DataSet/DataSet/resources/test/DataSet.test',
 '../../components/__DataSet/DataSet/resources/test/Record.test',
 '../../components/__DataSet/DataSource/resources/test/SbisServiceSource.test',

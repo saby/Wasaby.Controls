@@ -62,7 +62,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
          }
       },
       $constructor: function () {
-
+         Record = Record || require('js!SBIS3.CONTROLS.Record');
+         
          this._prepareData(this._options.data);
 
          if (this._options.keyField) {
