@@ -246,6 +246,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   }
                   var tplOptions = {
                      item: item,
+                     isNode: item.get(rowData.hierField) ? true : false,
                      field: column.field,
                      highlight: column.highlight
                   };

@@ -1,7 +1,9 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.Record', [], function () {
+define('js!SBIS3.CONTROLS.Record', [
+   'js!SBIS3.CONTROLS.DataFactory'
+], function (Factory) {
    'use strict';
 
    /**
@@ -46,10 +48,17 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
          /**
           * @var {SBIS3.CONTROLS.IDataStrategy} Стратегия, обеспечивающая интерфейс доступа к "сырым" данным
           */
-         _strategy: null
+         _strategy: null,
+         
+         /**
+          * @var {Object} Объект содержащий приведенные значения модели
+          */
+         _fieldsCache: {}
       },
 
       $constructor: function (cfg) {
+         Factory = Factory || require('js!SBIS3.CONTROLS.DataFactory');
+
          this._publish('onChange');
          this._strategy = cfg.strategy;
          this._raw = cfg.raw || {};
@@ -84,8 +93,20 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
        * @returns {*}
        */
       get: function (field) {
-         // с данными можем работать только через стратегию
-         return this._strategy.value(this._raw, field);
+         if (this._fieldsCache.hasOwnProperty(field)) {
+            return this._fieldsCache[field];
+         }
+         
+         var dataValue = this._strategy.value(this._raw, field),
+            data = this._strategy.getFullFieldData(this._raw, field),
+            value = Factory.cast(
+               dataValue,
+               data.type,
+               this._strategy,
+               data.meta
+            );
+         this._fieldsCache[field] = value;
+         return value;
       },
 
       /**
@@ -99,6 +120,7 @@ define('js!SBIS3.CONTROLS.Record', [], function () {
          }
          // с данными можем работать только через стратегию
          this._raw = this._strategy.setValue(this._raw, field, value);
+         delete this._fieldsCache[field];
          this._isChanged = true;
          if (this._isChanged) {
             this._notify('onChange', field);

@@ -47,6 +47,8 @@ define('js!SBIS3.CONTROLS.StaticSource', [
       },
 
       $constructor: function (cfg) {
+         Record = Record || require('js!SBIS3.CONTROLS.Record');
+         DataSet = DataSet || require('js!SBIS3.CONTROLS.DataSet');
          this._options.strategy = cfg.strategy || new ArrayStrategy();
       },
 
