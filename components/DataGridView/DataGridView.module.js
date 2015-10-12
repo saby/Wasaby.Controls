@@ -245,6 +245,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   }
                   value = MarkupTransformer((cellTpl)({
                      item: item,
+                     isNode: item.get(rowData.hierField) ? true : false,
                      field: column.field,
                      highlight: column.highlight
                   }));
