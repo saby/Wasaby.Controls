@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
     * </pre>
     */
 
-   return Base.extend(/** @lends SBIS3.CONTROLS.Data.Source.SbisService.prototype */{
+   var SbisService = Base.extend(/** @lends SBIS3.CONTROLS.Data.Source.SbisService.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Source.SbisService',
       $protected: {
          _options: {
@@ -341,4 +341,10 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       //endregion Protected methods
    });
+
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Source.SbisService', function(config) {
+      return new SbisService(config);
+   });
+
+   return SbisService;
 });

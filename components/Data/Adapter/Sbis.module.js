@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
    'js!SBIS3.CONTROLS.Data.Adapter.ITable',
    'js!SBIS3.CONTROLS.Data.Adapter.IRecord',
    'js!SBIS3.CONTROLS.Data.Factory'
-], function (IAdapter, ITable, IRecord, Factory) {
+], function (IAdapter, ITable, IRecord) {
    'use strict';
    /**
     * Адаптер для данных в формате СБиС
@@ -34,6 +34,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
       }
 
    });
+
    Sbis.FIELD_TYPE = {
       DataSet: 'Выборка',
       Model: 'Запись',
@@ -57,6 +58,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
       RpcFile: 'Файл-rpc',
       TimeInterval: 'Временной интервал'
    };
+
    /**
     * Сериализует данные
     * @param {*} data
@@ -159,10 +161,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          return data;
       }
    };
+
    /**
     * Серелиализует датасет или рекордсет
     * @param data {SBIS3.CONTROLS.Data.Source.DataSet||$ws.proto.RecordSet}
     * @returns {*}
+    * @static
     */
    Sbis.serializeDataSet = function (data) {
       var DataSet;
@@ -178,10 +182,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          return Sbis.serialize(data);
       }
    };
+
    /**
     * Серелиализует модель или рекорд
     * @param data {SBIS3.CONTROLS.Data.Model||$ws.proto.Record}
     * @returns {*}
+    * @static
     */
    Sbis.serializeModel = function (data) {
       var Model;
@@ -197,10 +203,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          return Sbis.serialize(data);
       }
    };
+
    /**
     * Сериализует поле флагов
     * @param data - {$ws.proto.Record||}
     * @returns {*}
+    * @static
     */
    Sbis.serializeFlags = function (data) {
       var Model;
@@ -232,6 +240,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          return null;
       }
    };
+
    /**
     * Адаптер для таблицы данных в формате СБиС
     * @class SBIS3.CONTROLS.Data.Adapter.SbisTable
@@ -305,6 +314,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          }
       }
    });
+
    /**
     * Адаптер для записи таблицы данных в формате СБиС
     * @class SBIS3.CONTROLS.Data.Adapter.SbisRecord
@@ -389,7 +399,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          }
          var meta = data.s[index],
             type = this._getType(meta);
-         data.d[index] = Factory.serialize(value, type.name, Sbis, type.meta);
+         data.d[index] = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Factory').serialize(
+            value,
+            type.name,
+            Sbis,
+            type.meta
+         );
       },
       getEmpty: function (data) {
          return {
@@ -417,5 +432,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
       }
 
    });
+
    return Sbis;
 });

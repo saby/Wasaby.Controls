@@ -370,5 +370,9 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       resources: {}
    };
 
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Source.Memory', function(config) {
+      return new Memory(config);
+   });
+
    return Memory;
 });

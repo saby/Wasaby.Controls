@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
     * @author Мальцев Алексей
     */
 
-   return $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Data.Source.DataSet.prototype */{
+   var DataSet = $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Data.Source.DataSet.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Source.DataSet',
       $protected: {
          _options: {
@@ -251,4 +251,10 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
       //endregion Protected methods
 
    });
+
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Source.DataSet', function(config) {
+      return new DataSet(config);
+   });
+
+   return DataSet;
 });
