@@ -195,7 +195,10 @@ define(
             });
             it('should cast flags', function () {
                var val = sbisModel.get('flags');
-               assert.equal(true,val.get('one'));
+               assert.strictEqual(true, val.get('one'));
+               assert.strictEqual(false, val.get('two'));
+               assert.strictEqual(false, val.get('three'));
+               assert.strictEqual(undefined, val.get('four'));
             });
          });
          describe('.serialize()', function () {
