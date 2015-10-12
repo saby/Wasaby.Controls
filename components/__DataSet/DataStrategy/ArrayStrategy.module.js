@@ -212,8 +212,11 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
       },
       setParentKey: function(record, hierField, parent) {
          record.set(hierField, parent);
-      }
+      },
 
+      getFullFieldData: function(data, name) {
+         return {};
+      }
    });
 
    return ArrayStrategy;
