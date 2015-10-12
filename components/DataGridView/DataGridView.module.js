@@ -71,6 +71,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {String} headTemplate Шаблон отображения шапки колонки
              * @property {String} headTooltip Всплывающая подсказка шапки колонки
              * @property {String} cellTemplate Шаблон отображения ячейки
+             * @property {<String,String>} option templateBinding соответствие опций шаблона полям в рекорде
              */
             /**
              * @cfg {Columns[]} Набор колонок
@@ -243,12 +244,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   else {
                      cellTpl = doT.template(column.cellTemplate);
                   }
-                  value = MarkupTransformer((cellTpl)({
+                  var tplOptions = {
                      item: item,
                      isNode: item.get(rowData.hierField) ? true : false,
                      field: column.field,
                      highlight: column.highlight
-                  }));
+                  };
+                  if (column.templateBinding) {
+                     tplOptions.templateBinding = column.templateBinding;
+                  }
+                  value = MarkupTransformer((cellTpl)(tplOptions));
                } else {
                   value = $ws.helpers.escapeHtml(item.get(column.field));
                   value = ((value != undefined) && (value != null)) ? value : '';
