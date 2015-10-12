@@ -64,64 +64,6 @@ define('js!SBIS3.CONTROLS.ListControl', [
       $protected: {
          _options: {
             /**
-             * @typedef {Array} ItemsActions
-             * @property {String} name Имя кнопки.
-             * @property {String} icon Путь до иконки.
-             * @property {String} caption Текст на кнопке.
-             * @property {String} tooltip Всплывающая подсказка.
-             * @property {Boolean} isMainAction Отображать ли кнопку на строке или только выпадающем в меню.
-             * На строке кнопки отображаются в том же порядке, в каком они перечислены.
-             * На строке может быть только три кнопки, полный список будет в меню.
-             * @property {Function} onActivated Действие кнопки.
-             * @editor icon ImageEditor
-             * @translatable caption
-             */
-            /**
-             * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок
-             * @remark
-             * Можно использовать для массовых операций.
-             * @example
-             * <pre>
-             *     <options name="itemsActions" type="array">
-             *        <options>
-             *           <option name="name">btn1</option>
-             *           <option name="icon">sprite:icon-16 icon-Delete icon-primary</option>
-             *           <option name="isMainAction">false</option>
-             *           <option name="tooltip">Удалить</option>
-             *           <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyListView:prototype.myOnActivatedHandler</option>
-             *        </options>
-             *        <options>
-             *            <option name="name">btn2</option>
-             *            <option name="icon">sprite:icon-16 icon-Trade icon-primary</option>
-             *            <option name="tooltip">Изменить</option>
-             *            <option name="isMainAction">true</option>
-             *            <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyListView:prototype.myOnActivatedHandler</option>
-             *         </options>
-             *     </options>
-             * </pre>
-             * @see setItemsActions
-             */
-            itemsActions: [{
-               name: 'delete',
-               icon: 'sprite:icon-16 icon-Erase icon-error',
-               tooltip: 'Удалить',
-               title: 'Удалить',
-               isMainAction: true,
-               onActivated: function (item) {
-                  this.deleteRecords(item.data('hash'));
-               }
-            },{
-               name: 'move',
-               icon: 'sprite:icon-16 icon-Move icon-primary action-hover',
-               tooltip: 'Перенести',
-               title: 'Перенести',
-               isMainAction: false,
-               onActivated: function (item) {
-                  this.selectedMoveTo(item.data('hash'));
-               }
-            }],
-            
-            /**
              * @cfg {Function} Обработчик клика на элемент
              * @example
              * <pre>
@@ -131,7 +73,7 @@ define('js!SBIS3.CONTROLS.ListControl', [
              */
             elemClickHandler: null
          },
-         
+
          _itemHoveredData: {
             target: null,
             key: null,

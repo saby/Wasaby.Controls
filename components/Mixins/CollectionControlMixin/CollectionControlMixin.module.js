@@ -108,6 +108,15 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
             emptyHTML: ''
          },
 
+         _keysWeHandle: [
+            $ws._const.key.up,
+            $ws._const.key.down,
+            $ws._const.key.space,
+            $ws._const.key.enter,
+            $ws._const.key.right,
+            $ws._const.key.left
+         ],
+
          /**
           * @var {Object} Коллекция, отображаемая контролом (приведенная к внутреннему представлению)
           */
