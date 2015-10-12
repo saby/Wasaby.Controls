@@ -174,11 +174,11 @@ define(['js!SBIS3.CONTROLS.Data.Model',
                });
             });
          });
-         describe('.delete()',function(){
-            it('sould delete data to source',function(done){
+         describe('.remove()',function(){
+            it('sould delete data from source',function(done){
                source.read(3).addCallback(function(sourceModel){
                   try {
-                     sourceModel.delete().addCallback(function(sourceModel){
+                     sourceModel.remove().addCallback(function(sourceModel){
                         try{
                            assert.isTrue(sourceModel.isDeleted())
                         } catch(err){
@@ -193,7 +193,7 @@ define(['js!SBIS3.CONTROLS.Data.Model',
             });
             it('should throw exception model without source',function(){
                assert.throw(function(){
-                  model.delete();
+                  model.remove();
                });
             });
          });

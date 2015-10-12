@@ -12,18 +12,22 @@ define('js!SBIS3.CONTROLS.ListControl.IListView', [], function () {
        * @event onItemHovered Cобытие о наведении указателя мыши на контейнер элемента
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} hash Хэш элемента
+       * @param {Boolean} isHover Указатель наведен или ушел за пределы конейнера элемента
+       * @param {Element} item DOM элемент
        */
 
       /**
        * @event onItemClicked Cобытие о клике по контейнеру элемента
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} hash Хэш элемента
+       * @param {Element} item DOM элемент
        */
 
       /**
        * @event onItemDblClicked Cобытие двойном клике по контейнеру элемента
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} hash Хэш элемента
+       * @param {Element} item DOM элемент
        */
 
       /**

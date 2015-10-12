@@ -85,6 +85,14 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
          return this.getChildren().isQueryChanged();
       },
 
+      getQueryTotal: function () {
+         return this.getChildren().getQueryTotal();
+      },
+
+      hasMore: function () {
+         return this.getChildren().hasMore();
+      },
+
       load: function (mode) {
          if (!this._onBeforeChildrenLoad) {
             this._onBeforeChildrenLoad = onBeforeChildrenLoad.bind(this);
@@ -168,6 +176,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
     * @private
     */
    var onBeforeChildrenLoad = function(event, mode, target) {
+      if (!this.isRoot()) {
+         this._notify('onBeforeCollectionLoad', mode, target);
+      }
       this._bubbleUp(function() {
          this._notify('onBeforeCollectionLoad', mode, target);
       });
@@ -177,6 +188,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
     * @private
     */
    onAfterChildrenLoad = function (event, mode, dataSet, target) {
+      if (!this.isRoot()) {
+         this._notify('onAfterCollectionLoad', mode, dataSet, target);
+      }
       this._bubbleUp(function() {
          this._notify('onAfterCollectionLoad', mode, dataSet, target);
       });
@@ -186,6 +200,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
     * @private
     */
    onBeforeChildrenLoadedApply = function (event, mode, collection, target) {
+      if (!this.isRoot()) {
+         this._notify('onBeforeLoadedApply', mode, collection, target);
+      }
       this._bubbleUp(function() {
          this._notify('onBeforeLoadedApply', mode, collection, target);
       });
@@ -195,6 +212,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
     * @private
     */
    onAfterChildrenLoadedApply = function (event, mode, collection, target) {
+      if (!this.isRoot()) {
+         this._notify('onAfterLoadedApply', mode, collection, target);
+      }
       this._bubbleUp(function() {
          this._notify('onAfterLoadedApply', mode, collection, target);
       });

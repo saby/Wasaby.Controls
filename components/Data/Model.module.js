@@ -163,7 +163,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * Удаляет модель в источника данных
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет обновленный инстанс модели.
        */
-      delete: function() {
+      remove: function() {
          this._checkSource();
 
          return this._options.source.destroy(this.getId()).addCallback((function() {

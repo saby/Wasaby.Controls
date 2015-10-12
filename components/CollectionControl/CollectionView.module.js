@@ -26,11 +26,6 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
          _rootNodeСssClass: '',
 
          /**
-          * @var {jQuery} Узел, содержащий элементы коллекции
-          */
-         _itemsNode: undefined,
-
-         /**
           * @var {String} CSS-класс узла, содержащего элементы коллекции
           */
          _itemsNodeCssClass: 'itemsContainer',
@@ -71,6 +66,11 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
          _loadingNodeCssClass: 'loading',
 
          /**
+          * @var {Boolean} Индикатор загрузки отображется
+          */
+         _isLoadingVisible: false,
+
+         /**
           * @var {String} CSS-класс узла, содержащего компонент пейджинга
           */
          _pagerClass: 'pager'
@@ -91,7 +91,6 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
       clear: function () {
          this._removeСomponents(this.getRootNode());
          this.getRootNode().empty();
-         this._itemsNode = undefined;
       },
 
       render: function (items) {
@@ -106,7 +105,7 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
 
       checkEmpty: function (parent) {
          if (!parent) {
-            parent = this.getRootNode().find('> .' + this._сssPrefix + this._itemsNodeCssClass);
+            parent = this._getItemsNode();
          }
 
          parent.find('> .' + this._сssPrefix + this._itemsEmptyCssClass).toggleClass(
@@ -116,13 +115,19 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
       },
 
       showLoadingIndicator: function (target) {
-         this._getLoadingNode(target).show();
+         this._isLoadingVisible = true;
+         setTimeout((function() {
+            if (this._isLoadingVisible) {
+               this._getLoadingNode(target).show();
+            }
+         }).bind(this), 750);
       },
 
       /**
        * Скрывает индикатор загрузки
        */
       hideLoadingIndicator: function (target) {
+         this._isLoadingVisible = false;
          this._getLoadingNode(target).hide();
       },
 
@@ -213,19 +218,35 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
        * @private
        */
       _attachEventHandlers: function (node) {
-         node = node||this.getRootNode();
+         node = node || this.getRootNode();
+         var itemsSelector = '.' + this._сssPrefix + this._itemsNodeCssClass + ' .' + this._сssPrefix + this._itemContainerCssClass;
          node
-            .on('mouseenter mouseleave', '.' + this._сssPrefix + this._itemContainerCssClass, this._onItemMouseEnterOrLeave.bind(this))
-            .on('mouseup', '.' + this._сssPrefix + this._itemContainerCssClass, this._onItemClick.bind(this))
-            .on('dblclick', '.' + this._сssPrefix + this._itemContainerCssClass, this._onItemDblClick.bind(this))
-            .on('keyup', this._onKeyPress.bind(this));
+            .on(
+               'mouseenter mouseleave',
+               itemsSelector,
+               this._onItemMouseEnterOrLeave.bind(this)
+            )
+            .on(
+               'mouseup',
+               itemsSelector,
+               this._onItemClick.bind(this)
+            )
+            .on(
+               'dblclick',
+               itemsSelector,
+               this._onItemDblClick.bind(this)
+            )
+            .on(
+               'keyup',
+               this._onKeyPress.bind(this)
+            );
       },
 
       /**
        * Обрабатывает событие о наведении указателя мыши на контейнер элемента
        * @private
        */
-      _onItemMouseEnterOrLeave: function (event) {
+      _onItemMouseEnterOrLeave: function () {
          throw new Error('Method must be implemented');
       },
 
@@ -233,7 +254,7 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
        * Обрабатывает событие о клике по контейнеру элемента
        * @private
        */
-      _onItemClick: function (event) {
+      _onItemClick: function () {
          throw new Error('Method must be implemented');
       },
 
@@ -241,7 +262,7 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
        * Обрабатывает событие о двойном клике по контейнеру элемента
        * @private
        */
-      _onItemDblClick: function (event) {
+      _onItemDblClick: function () {
          throw new Error('Method must be implemented');
       },
 
@@ -380,11 +401,7 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
        * @private
        */
       _getTargetNode: function (item) {
-         if (this._itemsNode === undefined) {
-            this._itemsNode = this.getRootNode().find('.' + this._сssPrefix + this._itemsNodeCssClass);
-         }
-
-         return this._itemsNode;
+         return this._getItemsNode();
       },
 
       /**
@@ -403,6 +420,16 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
          ));
       },
 
+      /**
+       * Возвращает контейнер со списком элементов
+       * @returns {jQuery}
+       * @private
+       */
+      _getItemsNode: function() {
+         return this.getRootNode().find('.' + this._сssPrefix + this._itemsNodeCssClass);
+      },
+
+      
       /**
        * Возвращает все контейнеры элементов для указанного родителя
        * @param {jQuery} parent Контейнер родителя
@@ -434,7 +461,6 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
          if (!node.length) {
             node = $('<div/>')
                .addClass(this._сssPrefix + this._loadingNodeCssClass)
-               .text('Loading...')
                .appendTo(parent);
          }
          return node;

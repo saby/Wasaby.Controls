@@ -59,26 +59,7 @@ define('js!SBIS3.CONTROLS.DataGridControl', [
              *     <option name="showHead">false</option>
              * </pre>
              */
-            showHead: true,
-
-            /**
-             * @typedef {Object} PagingEnum
-             * @variant no Не используется
-             * @variant part Частичная
-             * @variant full Полная
-             */
-            /**
-             * @cfg {PagingEnum} Режим постраничной навигации
-             * @remark
-             * При частичной постраничной навигации заранее неизвестно общее количество страниц.
-             * @example
-             * <pre>
-             *     <option name="paging">full</option>
-             * </pre>
-             * @see setPage
-             * @see getPage
-             */
-            paging: 'no'
+            showHead: true
          },
 
          _viewConstructor: DataGridView,
@@ -120,7 +101,7 @@ define('js!SBIS3.CONTROLS.DataGridControl', [
        * @param columns Новый набор колонок.
        * @example
        * <pre>
-       *    var columns = DataGridView.getColumns(),
+       *    var columns = dataGrid.getColumns(),
        *        newColumns = [];
        *    for(var i = 0, l = columns.length; i < l; i++){
        *       if(columns[i].title !== "Примечание")
@@ -130,7 +111,7 @@ define('js!SBIS3.CONTROLS.DataGridControl', [
        *       title:'ABJ'?
        *       field: 'РП.ФИО'
        *    });
-       *    DataGridView.setColumns(newColumns);
+       *    dataGrid.setColumns(newColumns);
        * </pre>
        */
       setColumns: function (columns) {

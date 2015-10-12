@@ -57,13 +57,14 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDSNew', [
                      this
                   )
                );
-            },
-            presenter = this._getPresenter();
+            };
 
          $ws.helpers.forEach(this._getView().getComponents(),function(component){
             component.subscribe('onActivated', onItemActivated);
          });
-         presenter.onAddComponents(function(components) {
+         
+         //FIXME: допилить механизм отслеживания изменений в DOM
+         /*presenter.onAddComponents(function(components) {
                for (var i = 0; i < components.length; i ++) {
                   components[i].subscribe('onActivated', onItemActivated);
                }
@@ -72,10 +73,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDSNew', [
                for (var i = 0; i < components.length; i ++) {
                   components[i].unsubscribe('onActivated', onItemActivated);
                }
-            }, this);
-         /*$ws.helpers.forEach(this._getView().getComponents(), function(control) {
-          control.subscribe('onActivated', onItemActivated);
-          });*/
+            }, this);*/
       },
 
       setEnabled: function (enabled) {

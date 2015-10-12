@@ -116,13 +116,14 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          items = this._applyJoin(items, query.getJoin());
          items = this._applyWhere(items, query.getWhere());
          items = this._applyOrderBy(items, query.getOrderBy());
+         var total = adapter.getCount(items);
          items = this._applyPaging(items, query.getOffset(), query.getLimit());
 
          return $ws.proto.Deferred.success(new DataSet({
             source: this,
             data: {
                items: items,
-               total: adapter.getCount(this._options.data)
+               total: total
             },
             itemsProperty: 'items',
             totalProperty: 'total'

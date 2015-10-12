@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       //region SBIS3.CONTROLS.Data.Projection.ITree
 
-      getTree: function () {
+      getCollection: function () {
          return this._options.tree;
       },
 

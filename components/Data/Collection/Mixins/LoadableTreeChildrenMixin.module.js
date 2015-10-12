@@ -26,10 +26,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeChildrenMixin', [
       },
 
       $constructor: function () {
-         //Наследуем query от родителя, если родитель не корень
+         //Наследуем параметры query от родителя, если родитель не корень
          var parent = this.getOwner().getParent();
          if (parent) {
-            this._query = parent.getQuery();
+            this._query = parent.getQuery().clone();
          }
       },
 

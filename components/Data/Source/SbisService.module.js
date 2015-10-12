@@ -91,7 +91,13 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       },
 
       $constructor: function (cfg) {
+         cfg = cfg || {};
+         
          this._options.adapter = cfg.adapter || new SbisAdapter();
+         
+         if ('service' in cfg && !cfg.resource) {
+            cfg.resource = cfg.service;
+         }
          this._provider = new SbisServiceBLO(typeof this._options.resource === 'string' ? {
             name: this._options.resource
          } : this._options.resource);

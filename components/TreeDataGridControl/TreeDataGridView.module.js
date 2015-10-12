@@ -16,6 +16,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
    var TreeDataGridView = TreeView.extend([DataGridViewMixin], /** @lends SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView.prototype */{
       _moduleName: 'SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView',
       $protected: {
+         _options: {
+            /**
+             * @cfg {Number} Число колонок
+             */
+            columnsCount: 0
+         },
          _rowTemplate: RowTemplate,
          _rootNode: undefined
       },
@@ -24,13 +30,24 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
 
       addItem: function (item, at) {
          var target = this._getTargetNode(item),
-            nextSibling = at > -1 ? item.getParent().getChildren().at(at + 1) : undefined,
-            nextSiblingContainer = this._getItemContainer(target, nextSibling),
+            siblings = this._getTreeChildrenContainers(item.getParent()),
+            nextSibling = at > -1 ? siblings.get(at) : undefined,
             template = this._getItemTemplate(item);
-         if (nextSibling && nextSibling.length) {
+         if (nextSibling) {
             this._buildItemContainer(item, template).insertBefore(nextSibling);
          } else {
-            this._buildItemContainer(item, template).appendTo(target);
+            this._buildItemContainer(item, template).insertAfter(siblings.last());
+         }
+      },
+
+      moveItem: function (item, to) {
+         var targetNode = this._getTargetNode(item),
+            fromContainer = this._getItemContainer(targetNode, item),
+            toContainer = this._getTreeChildrenContainers(item.getParent()).get(to);
+         if (fromContainer.length && toContainer) {
+            fromContainer.insertBefore(toContainer);
+         } else {
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.CollectionControl.CollectionView::removeItem()', 'Positions are not found');
          }
       },
 
@@ -39,15 +56,20 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
             return TreeDataGridView.superclass.getPagerContainer.call(this, items);
          }
 
-         var nodeContainer = this._getItemContainer(this._getTargetNode(items), items);
-
-         var container = nodeContainer.next('.' + this._сssPrefix + this._pagerClass);
-         if (container.length === 0) {
-            container = $('<tr><td colspan="4"><div></div></td></tr>')
+         var targetNode = this._getTargetNode(items),
+             pagerContaner = targetNode.find('.' + this._сssPrefix + this._pagerClass + '[data-parent-hash="' + items.getHash() + '"]');
+         if (pagerContaner.length === 0) {
+            var itemContainer = this._getItemContainer(targetNode, items);
+            pagerContaner = $('<tr><td colspan="' + this._options.columnsCount + '"><div></div></td></tr>')
                .addClass(this._сssPrefix + this._pagerClass)
-               .insertAfter(nodeContainer);
+               .attr('data-parent-hash', items.getHash());
+            if (itemContainer.length) {
+               pagerContaner.insertAfter(itemContainer);
+            } else {
+               pagerContaner.appendTo(targetNode);
+            }
          }
-         return container.find('div:first');
+         return pagerContaner.find('div').first();
       },
 
       //endregion SBIS3.CONTROLS.CollectionControl.ICollectionView
@@ -101,11 +123,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
       },
 
       _getTreeChildrenContainers: function(node) {
-         return this._getTreeChildrenContainer().find('> tr[data-parent-hash="' + node.getHash() + '"]');
+         return this._getTreeChildrenContainer().find('> tr.' + this._сssPrefix + this._itemContainerCssClass + '[data-parent-hash="' + node.getHash() + '"]');
       },
 
       _checkTreeChildrenVisibility: function(node, expanded) {
          this._getTreeChildrenContainers(node).toggleClass('ws-hidden', !expanded);
+         this.getPagerContainer(node).closest('tr').toggleClass('ws-hidden', !expanded);
+         
          node.getChildren().each(function(child) {
             if (child.isNode()) {
                this._checkTreeChildrenVisibility(child, expanded && child.isExpanded());

@@ -80,9 +80,12 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
       },
 
       hoverItem: function (item) {
-         this.getRootNode().find('.' + this._сssPrefix + this._itemContainerHoverCssClass).removeClass(this._сssPrefix + this._itemContainerHoverCssClass);
+         this.getRootNode()
+            .find('.' + this._сssPrefix + this._itemContainerHoverCssClass)
+            .removeClass(this._сssPrefix + this._itemContainerHoverCssClass);
          if (item) {
-            this._getItemContainer(this._getTargetNode(item), item).addClass(this._сssPrefix + this._itemContainerHoverCssClass);
+            this._getItemContainer(this._getTargetNode(item), item)
+               .addClass(this._сssPrefix + this._itemContainerHoverCssClass);
          }
       },
 
@@ -108,23 +111,28 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
          this._notify(
             'onItemHovered',
             $(event.currentTarget).data('hash'),
-            event.type === 'mouseenter' ? true : false
+            event.type === 'mouseenter' ? true : false,
+            event.currentTarget
          );
       },
 
       _onItemClick: function (event) {
          if (event.which === 1) {
+            event.stopPropagation();
             this._notify(
                'onItemClicked',
-               $(event.currentTarget).data('hash')
+               $(event.currentTarget).data('hash'),
+               event.currentTarget
             );
          }
       },
 
       _onItemDblClick: function (event) {
+         event.stopPropagation();
          this._notify(
             'onItemDblClicked',
-            $(event.currentTarget).data('hash')
+            $(event.currentTarget).data('hash'),
+            event.currentTarget
          );
       },
 

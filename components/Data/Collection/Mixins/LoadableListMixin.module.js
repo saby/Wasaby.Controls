@@ -19,7 +19,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableListMixin', [
          /**
           * @var {$ws.proto.Deferred} Текущий загрузчик
           */
-         _loader: undefined
+         _loader: undefined,
+         
+         /**
+          * @var {Number|Boolean} Общее кол-во записей выборки
+          */
+         _queryTotal: true
       },
 
       $constructor: function () {
@@ -45,6 +50,18 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableListMixin', [
          return this._queryChanged;
       },
 
+      getQueryTotal: function() {
+         return this._queryTotal;
+      },
+
+      hasMore: function() {
+         var hasMore = this._queryTotal;
+         if (typeof hasMore !== 'boolean') {
+            hasMore = hasMore > this.getQuery().getOffset() + this.getQuery().getLimit();
+         }
+         return hasMore;
+      },
+
       load: function (mode) {
          mode = mode || ISourceLoadable.MODE_REPLACE;
          this._queryChanged = false;
@@ -64,6 +81,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableListMixin', [
                dataSet,
                this
             );
+            
+            this._queryTotal = dataSet.getTotal();
 
             var list = dataSet.getAll();
             this._notify(
@@ -102,7 +121,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableListMixin', [
             this._notify(
                'onAfterCollectionLoad',
                mode,
-                undefined,
+               undefined,
                this
             );
 

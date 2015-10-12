@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
    'use strict';
 
    /**
-    * Контрол, добавляющий записи в коллекцию по одной странице
+    * Контрол, загружающий записи в коллекцию c реализацией интерфейса SBIS3.CONTROLS.Data.Collection.ISourceLoadable постранично
     * @class SBIS3.CONTROLS.PagerMore
     * @extends SBIS3.CORE.CompoundControl
     * @public
@@ -21,8 +21,8 @@ define('js!SBIS3.CONTROLS.PagerMore', [
          _options: {
             /**
              * @cfg {SBIS3.CONTROLS.Data.Collection.ISourceLoadable} Коллекция, в которую загружаются записи
+             * @name items
              */
-            items: undefined,
 
             /**
              * @cfg {Number} Номер текущей страницы
@@ -32,19 +32,27 @@ define('js!SBIS3.CONTROLS.PagerMore', [
             /**
              * @cfg {Number} Размер страницы
              */
-            pageSize: undefined
+            pageSize: 0,
+            
+            /**
+             * @cfg {PageType} Вид постраничной навигации
+             */
+            pageType: 'scroll'
          },
-
+         
          /**
-          * @var {SBIS3.CONTROLS.CollectionControl.ListPresenter} Презентер списка
+          * @var {SBIS3.CONTROLS.Data.Collection.ISourceLoadable} Коллекция, в которую загружаются записи
           */
-         _presenter: undefined
+         _items: undefined
       },
 
       //region Public methods
 
-      $constructor: function() {
-         this._applySettings();
+      $constructor: function(cfg) {
+         cfg = cfg || {};
+         if ('items' in cfg) {
+            this.setItems(cfg.items);
+         }
       },
 
       init: function() {
@@ -58,12 +66,12 @@ define('js!SBIS3.CONTROLS.PagerMore', [
 
       /**
        * Возвращает коллекцию, в которую загружаются записи
-       * @returns {Number}
+       * @returns {SBIS3.CONTROLS.Data.Collection.ISourceLoadable}
        * @see items
        * @see setItems
        */
       getItems: function() {
-         return this._options.items;
+         return this._items;
       },
 
       /**
@@ -73,11 +81,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
        * @see getItems
        */
       setItems: function(items) {
-         if (this._options.items === items) {
-            return;
-         }
-         this._options.items = items;
-
+         this._items = items;
          this._applySettings();
       },
 
@@ -93,11 +97,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
 
       /**
        * Устанавливает номер текущей страницы
-       * @param {Number} pageSize Количество записей.
-       * @example
-       * <pre>
-       *     myListView.setPageSize(20);
-       * </pre>
+       * @param {Number} pageNum
        * @see pageNum
        * @see getPageNum
        */
@@ -122,11 +122,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
 
       /**
        * Устанавливает количество записей, выводимое на одной странице.
-       * @param {Number} pageSize Количество записей.
-       * @example
-       * <pre>
-       *     myListView.setPageSize(20);
-       * </pre>
+       * @param {Number} pageSize
        * @see pageSize
        * @see getPageSize
        */
@@ -140,22 +136,40 @@ define('js!SBIS3.CONTROLS.PagerMore', [
       },
 
       /**
+       * Возвращает признак, что есть еще записи для загрузки
+       * @returns {Boolean}
+       */
+      hasMore: function() {
+         return this._items && this._items.hasMore();
+      },
+
+      /**
        * Применяет настройки постраничной навигации
        * @private
        */
       _applySettings: function() {
-         if (!this._options.items) {
+         if (!this._items) {
             return;
          }
-         if ($ws.helpers.instanceOfMixin(this._options.items, 'SBIS3.CONTROLS.Data.Query.IQueryable')) {
-            this._options.items.getQuery()
-               .offset(this._options.pageNum * this._options.pageSize)
+         
+         if ($ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Query.IQueryable')) {
+            this._items.getQuery()
+               .offset(this._getOffset())
                .limit(this._options.pageSize);
          }
       },
 
       /**
+       * Возвращает индекс начального элемента выборки
+       * @returns {Number}
+       */
+      _getOffset: function() {
+         return this._options.pageNum * this._options.pageSize;
+      },
+
+      /**
        * Загружает следующую страницу
+       * @private
        */
       _loadNext: function() {
          this._options.pageNum++;
@@ -164,6 +178,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
 
       /**
        * Загружает предыдущую страницу
+       * @private
        */
       _loadPrevious: function() {
          this._options.pageNum--;
@@ -173,6 +188,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
       /**
        * Загружает указанную в настройках страницу
        * @param {String} mode Режим загрузки
+       * @private
        */
       _load: function(mode) {
          if (!this._options.items) {
@@ -180,9 +196,9 @@ define('js!SBIS3.CONTROLS.PagerMore', [
          }
 
          this._applySettings();
-
-         if ($ws.helpers.instanceOfMixin(this._options.items, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
-            this._options.items.load(mode);
+         
+         if ($ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
+            this._items.load(mode);
          }
       }
    });

@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
       //region SBIS3.CONTROLS.CollectionControl.ICollectionView
 
       getPagerContainer: function (items) {
-         if (items.getTree().isRoot()) {
+         if (items.getCollection().isRoot()) {
             return TreeView.superclass.getPagerContainer.call(this, items);
          }
 

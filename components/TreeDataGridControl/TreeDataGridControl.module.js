@@ -39,6 +39,16 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl', [
        */
       _getViewTemplate: function () {
          return DataGridViewTemplate;
+      },
+      
+      /**
+       * @see SBIS3.CONTROLS.CollectionControlMixin#_getViewOptions
+       * @private
+       */
+      _getViewOptions: function () {
+         var options = TreeDataGridControl.superclass._getViewOptions.call(this);
+         options.columnsCount = this._options.columns ? this._options.columns.length : 0;
+         return options;
       }
    });
 

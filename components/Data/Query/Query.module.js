@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
     * @author Мальцев Алексей
     */
 
-   return $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Data.Query.Query.prototype */{
+   var Query = $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Data.Query.Query.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Query.Query',
       $protected: {
          /**
@@ -82,8 +82,31 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
          this._orderBy = [];
          this._offset = 0;
          this._limit = undefined;
+         this._meta = {};
 
          return this;
+      },
+      
+      /**
+       * Возвращет клон запроса
+
+       * @returns {SBIS3.CONTROLS.Data.Query.Query}
+       */
+      clone: function () {
+         //TODO: deeper clone?
+         var clone = new Query();
+         clone._select = $ws.core.clone(this._select);
+         clone._from = this._from;
+         clone._as = this._as;
+         clone._join = this._join.slice();
+         clone._where = $ws.core.clone(this._where);
+         clone._groupBy = $ws.core.clone(this._groupBy);
+         clone._orderBy = this._orderBy.slice();
+         clone._offset = this._offset;
+         clone._limit = this._limit;
+         clone._meta = $ws.core.clone(this._meta);
+         
+         return clone;
       },
 
       /**
@@ -479,4 +502,6 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
 
       //endregion Protected methods
    });
+   
+   return Query;
 });

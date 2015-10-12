@@ -1,3 +1,5 @@
-<div class="controls-PagerMore-contaner">
-    <a href="#">Загрузить еще</a>
+<div class="controls-PagerMore__container controls-PagerMore__container-{{=it.pageType}}">
+   {{?it.pageType == 'more'}}
+      <a href="#">Загрузить еще</a>
+   {{?}}
 </div>

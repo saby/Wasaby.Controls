@@ -106,6 +106,22 @@ define('js!SBIS3.CONTROLS.Data.Collection.ISourceLoadable', [
       isQueryChanged: function () {
          throw new Error('Method must be implemented');
       },
+      
+      /**
+       * Возвращает общее кол-во записей выборки или признак, что еще есть записи (если общее кол-во записей неопределено)
+       * @returns {Number|Boolean}
+       */
+      getQueryTotal: function() {
+         throw new Error('Method must be implemented');
+      },
+      
+      /**
+       * Возвращает признак, что еще не все записи загружены
+       * @returns {Boolean}
+       */
+      hasMore: function() {
+         throw new Error('Method must be implemented');
+      },
 
       /**
        * Загружает данные из источника в коллекцию

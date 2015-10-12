@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
        * Возвращает исходное дерево, для которого построена проекция
        * @returns {SBIS3.CONTROLS.Data.Collection.ITreeItem}
        */
-      getTree: function () {
+      getCollection: function () {
          throw new Error('Method must be implemented');
       },
 
