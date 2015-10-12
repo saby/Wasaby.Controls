@@ -1,5 +1,5 @@
 /* global define */
-define('js!SBIS3.CONTROLS.ListControl.CommonHandlers',[], function() {
+define('js!SBIS3.CONTROLS.ListControl.CommonHandlers', [], function() {
    'use strict';
    
    var CommonHandlers = {
@@ -32,5 +32,6 @@ define('js!SBIS3.CONTROLS.ListControl.CommonHandlers',[], function() {
          })
       }
    };
+
    return CommonHandlers;
 });
