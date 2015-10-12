@@ -34,5 +34,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
       //endregion SBIS3.CONTROLS.Data.Collection.ICollectionItem
    });
 
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Collection.CollectionItem', function(config) {
+      return new CollectionItem(config);
+   });
+
    return CollectionItem;
 });

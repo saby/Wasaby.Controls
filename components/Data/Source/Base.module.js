@@ -2,7 +2,7 @@
 define('js!SBIS3.CONTROLS.Data.Source.Base', [
    'js!SBIS3.CONTROLS.Data.Source.ISource',
    'js!SBIS3.CONTROLS.Data.Model'
-], function (ISource, Model) {
+], function (ISource) {
    'use strict';
 
    /**
@@ -16,11 +16,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
    return $ws.core.extend({}, [ISource], /** @lends SBIS3.CONTROLS.Data.Source.Base.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Base',
       $constructor: function (cfg) {
-         this._options.model = 'model' in cfg ? cfg.model : Model;
+         this._options.model = 'model' in cfg ? cfg.model : $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor');
       },
 
       after: {
-         $constructor: function (cfg) {
+         $constructor: function () {
             if (!this._options.adapter) {
                throw new Error('Data adapter is undefined');
             }

@@ -3,6 +3,8 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
    'js!SBIS3.CONTROLS.Data.Adapter.IAdapter',
    'js!SBIS3.CONTROLS.Data.Adapter.ITable',
    'js!SBIS3.CONTROLS.Data.Adapter.IRecord',
+   'js!SBIS3.CONTROLS.Data.Model',
+   'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Factory'
 ], function (IAdapter, ITable, IRecord) {
    'use strict';
@@ -169,12 +171,8 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
     * @static
     */
    Sbis.serializeDataSet = function (data) {
-      var DataSet;
-      try {
-         DataSet = require('js!SBIS3.CONTROLS.Data.Source.DataSet');
-      } catch (e) {
-      }
-      if (DataSet && data instanceof DataSet) {
+      var DataSet = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Source.DataSetConstructor');
+      if (data instanceof DataSet) {
          return $ws.core.clone(data.getRawData());
       } else if (data instanceof $ws.proto.RecordSet || data instanceof $ws.proto.RecordSetStatic) {
          return data.toJSON();
@@ -190,11 +188,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
     * @static
     */
    Sbis.serializeModel = function (data) {
-      var Model;
-      try {
-         Model = require('js!SBIS3.CONTROLS.Data.Model');
-      } catch (e) {
-      }
+      var Model = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor');
       if (data instanceof Model) {
          return $ws.core.clone(data.getData());
       } else if (data instanceof $ws.proto.Record) {
@@ -211,12 +205,8 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
     * @static
     */
    Sbis.serializeFlags = function (data) {
-      var Model;
-      try {
-         Model = require('js!SBIS3.CONTROLS.Data.Model');
-      } catch (e) {
-      }
-      var dt = [];
+      var Model = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor'),
+         dt = [];
       if (data instanceof $ws.proto.Record) {
          var s = {},
             t = data.getColumns();

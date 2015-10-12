@@ -255,6 +255,9 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
    $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Source.DataSet', function(config) {
       return new DataSet(config);
    });
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Source.DataSetConstructor', function() {
+      return DataSet;
+   });
 
    return DataSet;
 });

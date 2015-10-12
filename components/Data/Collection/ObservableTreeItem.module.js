@@ -24,5 +24,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableTreeItem', [
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.ObservableTreeItem'
    });
 
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Collection.ObservableTreeItem', function(config) {
+      return new ObservableTreeItem(config);
+   });
+
    return ObservableTreeItem;
 });

@@ -2,9 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Collection.TreeChildren', [
    'js!SBIS3.CONTROLS.Data.Collection.ITreeChildren',
    'js!SBIS3.CONTROLS.Data.Collection.List',
-   'js!SBIS3.CONTROLS.Data.Collection.TreeItem',
-   'js!SBIS3.CONTROLS.Data.Utils'
-], function (ITreeChildren, List, TreeItem, Utils) {
+   'js!SBIS3.CONTROLS.Data.Utils',
+   'js!SBIS3.CONTROLS.Data.Collection.TreeItem'
+], function (ITreeChildren, List, Utils) {
    'use strict';
 
    /**
@@ -31,8 +31,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeChildren', [
           */
          _items: [],
 
-         _itemConstructor: TreeItem,
          _itemModule: 'SBIS3.CONTROLS.Data.Collection.TreeItem',
+
          _unwrapOnRead: false
       },
 
@@ -145,7 +145,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeChildren', [
             }
          }
 
-         return new this._itemConstructor({
+         return $ws.single.ioc.resolve(this._itemModule, {
             contents: item,
             parent: this._options.owner,
             node: node,
@@ -156,6 +156,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeChildren', [
 
       //endregion Protected methods
 
+   });
+
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Collection.TreeChildren', function(config) {
+      return new TreeChildren(config);
    });
 
    return TreeChildren;

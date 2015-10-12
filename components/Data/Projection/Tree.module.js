@@ -338,5 +338,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       );
    };
 
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.Tree', function(config) {
+      return new TreeProjection(config);
+   });
+
    return TreeProjection;
 });
