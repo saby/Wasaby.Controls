@@ -14,16 +14,17 @@ define('js!SBIS3.CONTROLS.ListControl.CommonHandlers',[], function() {
                return;
             }
             
-            var hashes = isArray ? hashArray : [hashArray];
+            var hashes = isArray ? hashArray : [hashArray],
+                items = self.getItems();
             for (var i = 0; i < hashes.length; i++) {
-               var item = self.getItems().getByHash(hashes[i]),
+               var item = items.getByHash(hashes[i]),
                    contents = item.getContents();
-               self.getItems().remove(item);
-               
+
                try {
                   if ($ws.helpers.instanceOfModule(contents, 'SBIS3.CONTROLS.Data.Model')) {
                      contents.remove();
                   }
+                  items.remove(item);
                } catch (e) {
                   console.error(e);
                }
