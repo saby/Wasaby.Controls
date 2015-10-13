@@ -57,15 +57,22 @@ define('js!SBIS3.CONTROLS.RegistryBase', [
 
 
          this._searchForm = this._getSearchForm();
-         if (this._hierMode && this._backButton && this._breadCrumbs) {
+         if (this._hierMode) {
             this._backButton = this._getBackButton();
             this._breadCrumbs = this._getBreadCrumbs();
-            this._componentBinder = new ComponentBinder({
-               backButton : this._backButton,
-               breadCrumbs : this._breadCrumbs,
-               view: this._view
-            });
-            this._componentBinder.bindBreadCrumbs();
+               if (this._backButton && this._breadCrumbs) {
+                  this._componentBinder = new ComponentBinder({
+                     backButton : this._backButton,
+                     breadCrumbs : this._breadCrumbs,
+                     view: this._view
+                  });
+                  this._componentBinder.bindBreadCrumbs();
+               }
+               else {
+                  this._componentBinder = new ComponentBinder({
+                     view: this._view
+                  });
+               }
          }
          else {
             this._componentBinder = new ComponentBinder({
