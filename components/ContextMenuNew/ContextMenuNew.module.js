@@ -1,5 +1,5 @@
 /*global define*/
-define('js!SBIS3.CONTROLS.ContextMenuNew', ['js!SBIS3.CONTROLS.MenuNew', 'js!SBIS3.CONTROLS.PopupMixin', 'html!SBIS3.CONTROLS.ContextMenu'], function(Menu, PopupMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.ContextMenuNew', ['js!SBIS3.CONTROLS.MenuNew', 'js!SBIS3.CONTROLS.PopupMixin', 'html!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.ContextMenuView'], function(Menu, PopupMixin, dotTplFn, MenuView) {
 
    'use strict';
 
@@ -16,16 +16,16 @@ define('js!SBIS3.CONTROLS.ContextMenuNew', ['js!SBIS3.CONTROLS.MenuNew', 'js!SBI
     */
 
    var ContextMenu = Menu.extend([PopupMixin], /** @lends SBIS3.CONTROLS.ContextMenu.prototype */ {
-      _dotTplFn : dotTplFn,
-
-      _onMenuConfig: function(config) {
-         return config;
+      _dotTplFn: dotTplFn,
+      _moduleName: 'SBIS3.CONTROLS.ContextMenu',
+      $protected: {
+         _viewConstructor: MenuView
       },
-
-      _itemActivatedHandler: function(id) {
-         var item = this.getItemByComponentsId(id);
-         if(!item.isNode())
+      _itemClickedHandler: function(e,hash) {
+         var item = this.getItems().getChildByHash(hash, true);
+         if(!item.isNode()){
             this.hide();
+         }
          this._notify('onMenuItemActivate',item.getContents());
       }
 

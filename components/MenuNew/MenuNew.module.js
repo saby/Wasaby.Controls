@@ -103,24 +103,13 @@ define('js!SBIS3.CONTROLS.MenuNew', [
          this._publish('onMenuItemActivate');
       },
 
-      _createPresenter: function() {
-         var presenter = new this._presenterConstructor({
-            view: this._getView(),
-            expandEvent: 'hover',
-            changeRootOnClick:false
-         });
-         return presenter;
-      },
-      //region public methods
-      getItemByComponentsId: function(id) {
-         var view =  this._getView(),
-            menuItem =  view.getComponents()[id];
-         if(menuItem) {
-            var treeItem = menuItem.getContainer().closest('.' + view.getItemContainerClass()),
-               hash = treeItem.data('hash');
-            return this.getItems().getChildByHash(hash, true);
-         }
-         return null;
+
+
+      _initView: function(){
+         Menu.superclass._initView.call(this);
+         var self = this;
+         this._view.subscribe('onItemHovered',this._itemHoverHadler.bind(this));
+         this._view.subscribe('onItemClicked',this._itemClickedHandler.bind(this));
       },
 
       reviveComponents: function() {
@@ -143,22 +132,24 @@ define('js!SBIS3.CONTROLS.MenuNew', [
             var
                caption = Utils.getItemPropertyValue(itemData, this._options.displayField),
                icon = Utils.getItemPropertyValue(itemData, 'icon'),
-               className = Utils.getItemPropertyValue(itemData, 'className')||'';
+               className = Utils.getItemPropertyValue(itemData, 'className')||'',
+               containerClass = item.containerClass;
 
-            return '<component data-component="SBIS3.CONTROLS.MenuItem">' +
+            return '<component class="'+containerClass+'" data-hash="'+item.hash+'" data-component="SBIS3.CONTROLS.MenuItem">' +
                '<option name="caption">' + caption + '</option>' +
                (icon ? '<option name="icon">' + icon + '</option>' : '') +
                (className ? '<option name="className">' + className + '</option>' : '') +
                '</component>';
          }).bind(this);
       },
-
-
-
-      _itemActivatedHandler: function(id) {
-         var item = this.getItemByComponentsId(id);
-         if(!item.isNode())
+      _itemHoverHadler:function(e,hash,expand){
+         this.getItems().getChildByHash(hash, true).setExpanded(expand);
+      },
+      _itemClickedHandler: function(e,hash) {
+         var item = this.getItems().getChildByHash(hash, true);
+         if(!item.isNode()){
             this._getView().hideSubMenus();
+         }
          this._notify('onMenuItemActivate',item.getContents());
       },
 

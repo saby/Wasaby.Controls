@@ -14,22 +14,29 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
    var MenuView = TreeView.extend(/** @lends SBIS3.CONTROLS.MenuView.prototype */{
       _moduleName: 'SBIS3.CONTROLS.MenuView',
       $protected: {
-         _rootNodeСssClass: 'controls-MenuNew',
-         _subMenuСssClass: 'controls-MenuNew__Popup controls-MenuNew__SubMenuPopup',
-         _itemHasChildClass: ' controls-MenuNew__hasChild',
-         _сssPrefix: 'controls-MenuNew__',
+         _rootNodeСssClass: 'controls-Menu',
+         _subMenuСssClass: 'controls-Menu__Popup controls-Menu__SubMenuPopup',
+         _itemHasChildClass: ' controls-Menu__hasChild',
+         _сssPrefix: 'controls-Menu__',
          _subContainers: {},
          _subMenus: {},
-         _itemContainerTag: 'div'
+         _itemContainerTag: 'div',
+         /**
+          * @var {defaultDirectionFirstLevel} в какую сторону окрывать всплывающее меню при наведении на элемент
+          * меню первого уровня. Допустимые значения: down, up, rigth, left.
+          */
+         defaultDirectionFirstLevel: 'down'
+
       },
-      $constructor: function() {
-         this._publish('onSubMenuLoaded');
-      },
+
       destroy: function() {
          MenuView.superclass.destroy.call(this);
          this.destroySubObjects();
       },
       // region public
+      /**
+      * вызывает деструктор у дочерних меню
+      */
       destroySubObjects: function() {
          $ws.helpers.forEach(this._subMenus, function(subMenu) {
             subMenu.destroy();
@@ -37,6 +44,7 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
          this._subMenus = {};
          this._subContainers = {};
       },
+
       setNodeExpanded: function(node, expanded) {
          if(expanded && node.getChildren().getCount()) {
             var hash = node.getHash();
@@ -48,23 +56,31 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
             }
          }
       },
+
       renderNode: function(node) {
          var targetContainer = this._getContainerByHash(node.getHash()),
             hash = node.getHash(),
+            area;
+         if(!this._subMenus.hasOwnProperty(hash)) {
             area = this._createSubMenu(targetContainer, node);
-         area.getContainer().html(this._execTemplate(
-            this._options.template,
-            this._getRenderData(node)
-         ));
-         this._attachEventHandlers(area.getContainer());
-         area.show();
-         this._subMenus[hash] = area;
+            area.getContainer().html(this._execTemplate(
+               this._options.template,
+               this._getRenderData(node)
+            ));
+            this._attachEventHandlers(area.getContainer());
+            area.show();
+            this._subMenus[hash] = area;
+         } else {
+            this._subMenus[hash].show();
+         }
       },
+
       getComponents: function(node) {
          var components = [];
          if(node) {
             node.find('[data-component]').each(function(i, item) {
-               components.push($(item).wsControl());
+               if(typeof item.wsControl === 'function')
+                  components.push(item.wsControl());
             });
          }
          else {
@@ -114,6 +130,7 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
          }
          return itemData;
       },
+
       _createSubMenu: function(target, item) {
          target = $(target);
          var config,
@@ -123,7 +140,6 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
          if(this._subMenus.hasOwnProperty(parentHash)) {
             parent = this._subMenus[parentHash];
             isFirstLevel = false;
-            target = target.find('.controls-MenuItem');
          }
          else {
             parent = this.getRootNode().wsControl();
@@ -135,6 +151,7 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
          config.target = target;
          return new FloatArea(config);
       },
+
       _getSubMenuConfig: function(isFirstLevel, item) {
          var config = {
             corner: 'tr',
@@ -154,7 +171,7 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
       _onMenuConfig: function(config, isFirstLevel, item) {
          var direction = DataUtils.getItemPropertyValue(item.getContents(), 'direction');
          if(!direction && isFirstLevel) {
-            direction = 'down';
+            direction = this._defaultDirectionFirstLevel;
          }
          if(direction) {
             switch(direction) {
@@ -180,7 +197,7 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
          return config;
       },
       /*
-      * ищет контейнер по хещу в основном контейнере и подменю
+      * ищет контейнер по хешу в основном контейнере и подменю
       * @params hash - хеш элемента
       * @return {JQuery}
       * */
@@ -193,8 +210,8 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
          for(var h in subMenus){
             if(subMenus.hasOwnProperty(h)) {
                var menu = subMenus[h];
-               elem = $("[data-hash="+h+"]", menu.getContainer());
-               if(elem)
+               elem = $("[data-hash="+hash+"]", menu.getContainer());
+               if(elem.length > 0)
                   return elem;
             }
          }
@@ -204,7 +221,7 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
       _getTreeChildrenContainer: function(item) {
          var hash = item.getHash(),
             subMenus = this.getSubMenus();
-         if(subMenus.hasOwnProperty(hash)){
+         if(subMenus.hasOwnProperty(hash)) {
             return subMenus[hash].getContainer();
          }
          return $();
