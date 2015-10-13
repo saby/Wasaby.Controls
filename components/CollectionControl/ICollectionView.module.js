@@ -8,12 +8,6 @@ define('js!SBIS3.CONTROLS.CollectionControl.ICollectionView', [], function () {
     * @author Крайнов Дмитрий Олегович
     */
    return /** @lends SBIS3.CONTROLS.CollectionControl.ICollectionView.prototype */{
-      /**
-       * @event onKeyPressed Cобытие о нажатии клавиши
-       * @param {$ws.proto.EventObject} event Дескриптор события.
-       * @param {Number} code Код клавиши
-       */
-
       $protected: {
          _options: {
             /**

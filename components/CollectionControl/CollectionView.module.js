@@ -77,8 +77,6 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
       },
 
       $constructor: function () {
-         this._publish('onKeyPressed');
-
          if (this._rootNodeСssClass) {
             this._options.rootNode.addClass(this._rootNodeСssClass);
          }
@@ -235,10 +233,6 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
                'dblclick',
                itemsSelector,
                this._onItemDblClick.bind(this)
-            )
-            .on(
-               'keyup',
-               this._onKeyPress.bind(this)
             );
       },
 
@@ -264,17 +258,6 @@ define('js!SBIS3.CONTROLS.CollectionControl.CollectionView', [
        */
       _onItemDblClick: function () {
          throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Обрабатывает событие о нажатии клавиши
-       * @private
-       */
-      _onKeyPress: function (event) {
-         this._notify(
-            'onKeyPressed',
-            event.which
-         );
       },
 
       //endregion Events

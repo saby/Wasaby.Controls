@@ -227,14 +227,16 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
          }
       },
 
-      _onKeyPressed: function (event, code) {
+      _keyboardHover: function (e) {
          if (this._moveCurrentByKeyPress) {
-            if (code === $ws._const.key.up) {
+            if (e.which === $ws._const.key.up) {
                this._itemsProjection.moveToPrevious();
-            } else if (code === $ws._const.key.down) {
+            } else if (e.which === $ws._const.key.down) {
                this._itemsProjection.moveToNext();
             }
          }
+
+         return false;
       }
 
       //endregion Behavior

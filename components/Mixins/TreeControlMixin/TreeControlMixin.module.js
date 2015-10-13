@@ -109,22 +109,20 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
       //endregion View
 
       //region Behavior
- 
-      _onKeyPressed: function (event, code) {
+
+      _keyboardHover: function (e) {
          if (this._moveCurrentByKeyPress) {
-            if (code === $ws._const.key.left) {
+            if (e.which === $ws._const.key.left) {
                if (this._itemsProjection.getCurrent().isExpanded()) {
                   this._itemsProjection.getCurrent().setExpanded(false);
                }
                //this._itemsProjection.moveToAbove();
-               return;
-            } else if (code === $ws._const.key.right) {
+            } else if (e.which === $ws._const.key.right) {
                if (!this._itemsProjection.getCurrent().isExpanded()) {
                   this._itemsProjection.getCurrent().setExpanded(true);
                }
                //this._projection.moveToBelow();
-               return;
-            } else if (code === $ws._const.key.up) {
+            } else if (e.which === $ws._const.key.up) {
                if (this._itemsProjection.moveToPrevious()) {
                   if (this._itemsProjection.getCurrent().isNode() &&
                      this._itemsProjection.getCurrent().isExpanded()
@@ -136,8 +134,7 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
                } else {
                   this._itemsProjection.moveToAbove();
                }
-               return;
-            } else if (code === $ws._const.key.down) {
+            } else if (e.which === $ws._const.key.down) {
                if (this._itemsProjection.getCurrent().isNode() &&
                   this._itemsProjection.getCurrent().isExpanded() &&
                   this._itemsProjection.getCurrent().getChildren().getCount() > 0
@@ -149,11 +146,10 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
                      this._itemsProjection.moveToNext();
                   }
                }
-               return;
             }
          }
       },
-     
+
       /**
        * Сворачивает/разворачивает узел дерева
        * @param {String} hash Хэш элемента дерева

@@ -26,6 +26,15 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
              */
          },
 
+         _keysWeHandle: [
+            $ws._const.key.up,
+            $ws._const.key.down,
+            $ws._const.key.space,
+            $ws._const.key.enter,
+            $ws._const.key.right,
+            $ws._const.key.left
+         ],
+
          /**
           * @var {SBIS3.CONTROLS.Data.IList} Список, отображаемый контролом
           */
@@ -161,22 +170,24 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
          }
       },
 
-      _onKeyPressed: function (event, code) {
+      _keyboardHover: function (e) {
          if (this._moveCurrentByKeyPress) {
             if (this._view.isHorizontal()) {
-               if (code === $ws._const.key.left) {
+               if (e.which === $ws._const.key.left) {
                   this._itemsProjection.moveToPrevious();
-               } else if (code === $ws._const.key.right) {
+               } else if (e.which === $ws._const.key.right) {
                   this._itemsProjection.moveToNext();
                }
             } else {
-               if (code === $ws._const.key.up) {
+               if (e.which === $ws._const.key.up) {
                   this._itemsProjection.moveToPrevious();
-               } else if (code === $ws._const.key.down) {
+               } else if (e.which === $ws._const.key.down) {
                   this._itemsProjection.moveToNext();
                }
             }
          }
+
+         return false;
       },
 
       /**

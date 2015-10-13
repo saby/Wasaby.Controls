@@ -108,15 +108,6 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
             emptyHTML: ''
          },
 
-         _keysWeHandle: [
-            $ws._const.key.up,
-            $ws._const.key.down,
-            $ws._const.key.space,
-            $ws._const.key.enter,
-            $ws._const.key.right,
-            $ws._const.key.left
-         ],
-
          /**
           * @var {Object} Коллекция, отображаемая контролом (приведенная к внутреннему представлению)
           */
@@ -198,14 +189,6 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
       //region After- injections
 
       after: {
-         init: function () {
-            if ($ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable') &&
-               (!this._items.isLoaded() || this._items.isQueryChanged())
-            ) {
-               this._items.load();
-            }
-         },
-
          destroy: function () {
             this._unsetItemsEventHandlers();
             if (this._view) {
@@ -499,10 +482,14 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
          if (!$ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.CollectionControl.ICollectionView')) {
             throw new Error('View should implement SBIS3.CONTROLS.CollectionControl.ICollectionView');
          }
-         
-         this.subscribeTo(view, 'onKeyPressed', this._onKeyPressed.bind(this));
-         
+
          this.redraw();
+
+         if ($ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable') &&
+            (!this._items.isLoaded() || this._items.isQueryChanged())
+         ) {
+            this._items.load();
+         }
       },
 
       /**
@@ -622,15 +609,6 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
       _dataLoadedCallback: function () {
       },
 
-      /**
-       * Обрабатывает событие о нажатии клавиши
-       * @param {$ws.proto.EventObject} event Дескриптор события.
-       * @param {Number} code Код нажатой клавиши
-       */
-      _onKeyPressed: function (event, code) {
-         throw new Error('Method must be implemented');
-      }
-      
       //endregion Behavior
 
       //endregion Protected methods
