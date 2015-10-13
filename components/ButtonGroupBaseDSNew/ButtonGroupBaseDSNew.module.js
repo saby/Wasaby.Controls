@@ -29,19 +29,11 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDSNew', [
 
    var ButtonGroupBase = CompoundControl.extend([ListControlMixin, DisplayFieldMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBaseDSNew.prototype */ {
       $protected: {
-         _options: {
-            captionField: ''
-         },
          _viewConstructor: ButtonGroupBaseView
       },
 
       $constructor: function() {
          this._container.removeClass('ws-area');
-
-         if (this._options.captionField) {
-            this._options.displayField = this._options.captionField;
-            $ws.single.ioc.resolve('ILogger').log('ButtonGroupBase', 'Опция "captionField" устарела. Используйте опцию "displayField".');
-         }
       },
 
       init: function () {
