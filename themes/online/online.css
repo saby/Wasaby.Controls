@@ -985,75 +985,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-Menu__SubMenuPopup {
   margin: -6px 0 0 0;
 }
-.controls-MenuNew__Popup {
-  font: 15px 'TensorFont Regular', 'TensorFont', sans-serif;
-  padding: 4px 0;
-  margin: -1px 0 0;
-  border-width: 2px;
-  border-style: solid;
-  border-color: #e4e4e4;
-  background-color: #ffffff;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  -webkit-background-clip: padding-box;
-  -moz-background-clip: padding;
-  background-clip: padding-box;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-.controls-MenuNew__Popup .controls-MenuNew__hasChild .controls-MenuItem {
-  padding-right: 16px;
-}
-.controls-MenuNew__Popup .controls-MenuNew__hasChild .controls-MenuItem:after {
-  position: absolute;
-  top: 5px;
-  right: 1px;
-  width: 16px;
-  height: 16px;
-  content: " ";
-  border-width: 0;
-  border-style: solid;
-  border-color: transparent;
-  background: url('img/MenuExpand.png') 0 0 no-repeat;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-.controls-MenuNew__Popup .controls-MenuNew__hasChild .controls-MenuItem:hover:after {
-  border-width: 0;
-  border-style: solid;
-  border-color: transparent;
-  background: url('img/MenuExpand.png') 0 0 no-repeat;
-}
-.controls-MenuNew__Popup .controls-MenuNew__submenu {
-  display: block;
-}
-.controls-MenuNew__Popup .controls-MenuNew__header {
-  box-sizing: border-box;
-  padding: 6px;
-}
-.controls-MenuNew__Popup .controls-MenuNew__header .icon-16,
-.controls-MenuNew__Popup .controls-MenuNew__header .icon-24 {
-  padding-right: 4px;
-}
-.controls-MenuNew__Popup .controls-MenuItem {
-  height: 26px;
-  padding: 0 8px;
-}
-.controls-MenuNew__Popup .controls-MenuNew__item {
-  height: 26px;
-}
-.controls-MenuNew__submenu {
-  display: none;
-}
-.controls-MenuNew__SubMenuPopup {
-  margin: -6px 0 0 0;
-}
 .controls-MenuItem {
   position: relative;
   display: block;
@@ -2336,6 +2267,32 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/ajax-loader-indicator.gif') 0 0 no-repeat;
   padding-left: 32px;
   height: 32px;
+}
+.controls-ListView__loading {
+  background: none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1;
+}
+.controls-ListView__loading:before {
+  background: url('img/ajax-loader-indicator.gif') 0 0 no-repeat;
+  content: '';
+  display: block;
+  height: 36px;
+  left: 50%;
+  margin: -18px 0 0 -18px;
+  position: absolute;
+  top: 50%;
+  width: 36px;
+}
+.controls-ListView__loading-more {
+  bottom: auto;
+  height: 36px;
+  position: relative;
+  right: auto;
 }
 .controls-ListView > .controls-TreeView__childContainer {
   display: block;
