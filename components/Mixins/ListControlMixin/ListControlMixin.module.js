@@ -153,7 +153,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
       _onItemClicked: function (event, hash) {
          var item = this._items.getByHash(hash);
          this._itemsProjection.setCurrent(item);
-         if(this._itemAction && this._oneClickAction) {
+         if(this._oneClickAction) {
             this._itemAction(item);
          }
       },
@@ -164,27 +164,42 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
        * @param {String} hash Хэш элемента, на котором произошел двойной клик
        * @private
        */
-      _onItemDblClicked: function (event, hash) {
-         if (this._itemAction && !this._oneClickAction) {
+      _onItemDblClicked: function () {
+         if (!this._oneClickAction) {
             this._itemAction(this._itemsProjection.getCurrent());
          }
       },
 
       _keyboardHover: function (e) {
-         if (this._moveCurrentByKeyPress) {
-            if (this._view.isHorizontal()) {
-               if (e.which === $ws._const.key.left) {
-                  this._itemsProjection.moveToPrevious();
-               } else if (e.which === $ws._const.key.right) {
+         switch (e.which) {
+            case $ws._const.key.enter:
+               this._itemAction(this._itemsProjection.getCurrent());
+               break;
+            case $ws._const.key.space:
+               if (this._moveCurrentByKeyPress) {
                   this._itemsProjection.moveToNext();
                }
-            } else {
-               if (e.which === $ws._const.key.up) {
+               break;
+            case $ws._const.key.left:
+               if (this._moveCurrentByKeyPress && this._view.isHorizontal()) {
                   this._itemsProjection.moveToPrevious();
-               } else if (e.which === $ws._const.key.down) {
+               }
+               break;
+            case $ws._const.key.right:
+               if (this._moveCurrentByKeyPress && this._view.isHorizontal()) {
                   this._itemsProjection.moveToNext();
                }
-            }
+               break;
+            case $ws._const.key.up:
+               if (this._moveCurrentByKeyPress && !this._view.isHorizontal()) {
+                  this._itemsProjection.moveToPrevious();
+               }
+               break;
+            case $ws._const.key.down:
+               if (this._moveCurrentByKeyPress && !this._view.isHorizontal()) {
+                  this._itemsProjection.moveToNext();
+               }
+               break;
          }
 
          return false;

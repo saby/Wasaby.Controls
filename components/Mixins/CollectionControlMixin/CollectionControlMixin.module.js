@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
        * @event onItemAction Уведомляет о необходимости выполнить действие по умолчанию для выбранного элемента
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {*} item Выбранный элемент
-       * @param {Number} at Индекс выбранного элемента
+       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem} collectionItem Обертка выбранного элемента
        */
 
       $protected: {
@@ -137,11 +137,6 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
           * @var {Boolean} Выполнять действие по умолчанию по одинарному клику
           */
          _oneClickAction: true,
-
-         /**
-          * @var {Function} Действие по умолчанию для выбранного элемента
-          */
-         _itemAction: undefined,
 
          /**
           * @var {Boolean} Изменять позицию при нажатии клавиш со стрелками
@@ -586,16 +581,28 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
       //endregion View
 
       //region Behavior
-      
+
       /**
-       * Вызывает действие по умолчанию для выбранного элемента
+       * Производит действие по умолчанию для выбранного элемента
+       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem} item Выбранный элемент
        * @private
        */
-      _callItemAction: function(item, at) {
+      _itemAction: function(item) {
+         this._callItemAction(
+            item
+         );
+      },
+
+      /**
+       * Вызывает действие по умолчанию для выбранного элемента
+       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem} item Выбранный элемент
+       * @private
+       */
+      _callItemAction: function(item) {
          this._notify(
             'onItemAction',
-            item,
-            at
+            item.getContents(),
+            item
          );
       },
 
@@ -607,7 +614,7 @@ define('js!SBIS3.CONTROLS.CollectionControlMixin', [
        * @private
        */
       _dataLoadedCallback: function () {
-      },
+      }
 
       //endregion Behavior
 

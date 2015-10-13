@@ -212,7 +212,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
       _onItemClicked: function (event, hash) {
          this._setItemSelected(hash);
 
-         if (this._itemAction && this._oneClickAction) {
+         if (this._oneClickAction) {
             this._itemAction(this._itemsProjection.getChildByHash(hash, true));
          }
 
@@ -222,21 +222,9 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
       },
 
       _onItemDblClicked: function (event, hash) {
-         if (this._itemAction && !this._oneClickAction) {
+         if (!this._oneClickAction) {
             this._itemAction(this._itemsProjection.getChildByHash(hash, true));
          }
-      },
-
-      _keyboardHover: function (e) {
-         if (this._moveCurrentByKeyPress) {
-            if (e.which === $ws._const.key.up) {
-               this._itemsProjection.moveToPrevious();
-            } else if (e.which === $ws._const.key.down) {
-               this._itemsProjection.moveToNext();
-            }
-         }
-
-         return false;
       }
 
       //endregion Behavior

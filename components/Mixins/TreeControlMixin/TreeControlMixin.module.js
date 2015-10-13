@@ -1,10 +1,11 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.TreeControlMixin', [
    'js!SBIS3.CONTROLS.TreeControl.TreeView',
+   'js!SBIS3.CONTROLS.ListControlMixin',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
    'html!SBIS3.CONTROLS.TreeControl.TreeView',
    'js!SBIS3.CONTROLS.PagerMore'
-], function (TreeView, IBindCollection, TreeViewTemplate, PagerMore) {
+], function (TreeView, ListControlMixin, IBindCollection, TreeViewTemplate, PagerMore) {
    'use strict';
 
    /**
@@ -117,11 +118,13 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
                   this._itemsProjection.getCurrent().setExpanded(false);
                }
                //this._itemsProjection.moveToAbove();
+               return false;
             } else if (e.which === $ws._const.key.right) {
                if (!this._itemsProjection.getCurrent().isExpanded()) {
                   this._itemsProjection.getCurrent().setExpanded(true);
                }
                //this._projection.moveToBelow();
+               return false;
             } else if (e.which === $ws._const.key.up) {
                if (this._itemsProjection.moveToPrevious()) {
                   if (this._itemsProjection.getCurrent().isNode() &&
@@ -134,6 +137,7 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
                } else {
                   this._itemsProjection.moveToAbove();
                }
+               return false;
             } else if (e.which === $ws._const.key.down) {
                if (this._itemsProjection.getCurrent().isNode() &&
                   this._itemsProjection.getCurrent().isExpanded() &&
@@ -146,8 +150,11 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
                      this._itemsProjection.moveToNext();
                   }
                }
+               return false;
             }
          }
+
+         return ListControlMixin._keyboardHover.call(this, e);
       },
 
       /**

@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.ListControl', [
              * </pre>
              * @see setElemClickHandler
              */
-            elemClickHandler: null
+            elemClickHandler: undefined
          },
 
          _itemHoveredData: {
@@ -85,6 +85,9 @@ define('js!SBIS3.CONTROLS.ListControl', [
       
       $constructor: function() {
          this._publish('onChangeHoveredItem', 'onItemClick');
+         if (this._options.elemClickHandler) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.ListControl', 'c 3.8.0 свойство elemClickHandler перестанет работать. Используйте событие onItemAction');
+         }
       },
 
       init: function() {
@@ -93,7 +96,7 @@ define('js!SBIS3.CONTROLS.ListControl', [
       },
 
       //region SBIS3.CONTROLS.ListControlMixin
-      
+
       _onItemHovered: function (event, hash, isHover, item) {
          ListControl.superclass._onItemHovered.call(this, event, hash, isHover, item);
          this._setHoveredItem(this._hoveredItem, item);
@@ -112,7 +115,20 @@ define('js!SBIS3.CONTROLS.ListControl', [
             }.bind(this), 0);
          }
       },
-      
+
+      _itemAction: function(item) {
+         ListControl.superclass._itemAction.call(this, item);
+
+         if (this._options.elemClickHandler) {
+            var contents = item.getContents();
+            this._options.elemClickHandler.call(
+               this,
+               contents && $ws.helpers.instanceOfModule(contents, 'SBIS3.CONTROLS.Data.Model') ? contents.getId() : undefined,
+               item
+            );
+         }
+      },
+
       //endregion SBIS3.CONTROLS.ListControlMixin
       
       //region Hovered item
