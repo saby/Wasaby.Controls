@@ -1,4 +1,4 @@
-/* global define, console, doT, $ws, $ */
+/* global define, $ws, $ */
 define('js!SBIS3.CONTROLS.HierarchyControl.HierarchyView', [
    'js!SBIS3.CONTROLS.ListControl.ListView',
    'html!SBIS3.CONTROLS.HierarchyControl.HierarchyView/resources/HierarchyViewItem'
@@ -47,18 +47,18 @@ define('js!SBIS3.CONTROLS.HierarchyControl.HierarchyView', [
          _levelOffset: 0
       },
 
-      //region SBIS3.CONTROLS.HierarchyControl.IHierarchyView
-
-      //endregion SBIS3.CONTROLS.HierarchyControl.IHierarchyView
-
-      //region SBIS3.CONTROLS.CollectionControl.ICollectionView
+      //region SBIS3.CONTROLS.ListControl.IListView
 
       render: function (items) {
          this._levelOffset = items.getLevel();
          HierarchyView.superclass.render.call(this, items);
       },
 
-      //endregion SBIS3.CONTROLS.CollectionControl.ICollectionView
+      //endregion SBIS3.CONTROLS.ListControl.IListView
+
+      //region SBIS3.CONTROLS.HierarchyControl.IHierarchyView
+
+      //endregion SBIS3.CONTROLS.HierarchyControl.IHierarchyView
 
       //region Public methods
 

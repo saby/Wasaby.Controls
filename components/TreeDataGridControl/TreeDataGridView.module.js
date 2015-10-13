@@ -1,4 +1,4 @@
-/* global define, console, doT, $ws, $ */
+/* global define, $ws, $ */
 define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
    'js!SBIS3.CONTROLS.TreeControl.TreeView',
    'js!SBIS3.CONTROLS.DataGridControl.DataGridViewMixin',
@@ -26,11 +26,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
          _rootNode: undefined
       },
 
-      //region SBIS3.CONTROLS.CollectionControl.ICollectionView
+      //region SBIS3.CONTROLS.ListControl.IListView
 
       addItem: function (item, at) {
-         var target = this._getTargetNode(item),
-            siblings = this._getTreeChildrenContainers(item.getParent()),
+         var siblings = this._getTreeChildrenContainers(item.getParent()),
             nextSibling = at > -1 ? siblings.get(at) : undefined,
             template = this._getItemTemplate(item);
          if (nextSibling) {
@@ -47,7 +46,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
          if (fromContainer.length && toContainer) {
             fromContainer.insertBefore(toContainer);
          } else {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.CollectionControl.CollectionView::removeItem()', 'Positions are not found');
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView::moveItem()', 'Positions are not found');
          }
       },
 
@@ -72,7 +71,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
          return pagerContaner.find('div').first();
       },
 
-      //endregion SBIS3.CONTROLS.CollectionControl.ICollectionView
+      //endregion SBIS3.CONTROLS.ListControl.IListView
 
       //region SBIS3.CONTROLS.TreeControl.ITreeView
 

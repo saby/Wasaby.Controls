@@ -1,4 +1,3 @@
-/* global define, $ws */
 define('js!SBIS3.CONTROLS.ListControl.IListView', [], function () {
    'use strict';
 
@@ -9,7 +8,7 @@ define('js!SBIS3.CONTROLS.ListControl.IListView', [], function () {
     */
    return /** @lends SBIS3.CONTROLS.ListControl.IListView.prototype */{
       /**
-       * @event onItemHovered Cобытие о наведении указателя мыши на контейнер элемента
+       * @event onItemHovered При наведении указателя мыши на контейнер элемента
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} hash Хэш элемента
        * @param {Boolean} isHover Указатель наведен или ушел за пределы конейнера элемента
@@ -17,19 +16,62 @@ define('js!SBIS3.CONTROLS.ListControl.IListView', [], function () {
        */
 
       /**
-       * @event onItemClicked Cобытие о клике по контейнеру элемента
+       * @event onItemClicked При клике по контейнеру элемента
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} hash Хэш элемента
        * @param {Element} item DOM элемент
        */
 
       /**
-       * @event onItemDblClicked Cобытие двойном клике по контейнеру элемента
+       * @event onItemDblClicked При двойном клике по контейнеру элемента
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} hash Хэш элемента
        * @param {Element} item DOM элемент
        */
 
+      $protected: {
+         _options: {
+            /**
+             * @cfg {jQuery} Узел DOM, в котором отображается контрол
+             */
+            rootNode: '',
+
+            /**
+             * @cfg {String|Function} Шаблон отображения контрола
+             */
+            template: '',
+
+            /**
+             * @cfg {String|Function} Шаблон разметки каждого элемента коллекции
+             */
+            itemTemplate: '',
+
+            /**
+             * @cfg {Function} Селектор шаблона разметки для каждого элемента коллекции. Если указан, то {@link itemTemplate} не действует.
+             */
+            itemTemplateSelector: undefined,
+
+            /**
+             * @cfg {String|HTMLElement} Что отображается при отсутствии данных
+             */
+            emptyHTML: ''
+         }
+      },
+
+      /**
+       * Отрисовывает представление
+       * @param {SBIS3.CONTROLS.Data.Projection.Collection} items Проекция коллекции
+       */
+      render: function (items) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Очищает представление
+       */
+      clear: function () {
+         throw new Error('Method must be implemented');
+      },
       /**
        * Добавляет элемент в представление
        * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Элемент
@@ -93,6 +135,38 @@ define('js!SBIS3.CONTROLS.ListControl.IListView', [], function () {
        * @returns {Boolean}
        */
       isHorizontal: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Проверяет, что в узле не отображается ни один элемент, и отображает соответствующее сообщение
+       * @param {jQuery} [parent] Родительский узел
+       */
+      checkEmpty: function (parent) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Отображает индикатор загрузки
+       * @param {Number} target Коллекция, содержимое которой загружается
+       */
+      showLoadingIndicator: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Скрывает индикатор загрузки
+       * @param {Number} target Коллекция, содержимое которой загрузилось
+       */
+      hideLoadingIndicator: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает узел под pager
+       * @param {SBIS3.CONTROLS.Data.Projection} items Проекция коллекции
+       */
+      getPagerContainer: function (items) {
          throw new Error('Method must be implemented');
       }
    };

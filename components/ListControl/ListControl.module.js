@@ -83,6 +83,7 @@ define('js!SBIS3.CONTROLS.ListControl', [
       
       $constructor: function() {
          this._publish('onChangeHoveredItem', 'onItemClick');
+
          if (this._options.elemClickHandler) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.ListControl', 'c 3.8.0 свойство elemClickHandler перестанет работать. Используйте событие onItemAction');
          }

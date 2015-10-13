@@ -1,4 +1,4 @@
-/* global define, console, doT, $ws, $ */
+/* global define, $ws, $ */
 define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
    'js!SBIS3.CONTROLS.TreeControl.ITreeView',
    'js!SBIS3.CONTROLS.HierarchyControl.HierarchyView',
@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
          this._publish('onLeverageClicked');
       },
 
-      //region SBIS3.CONTROLS.CollectionControl.ICollectionView
+      //region SBIS3.CONTROLS.ListControl.IListView
 
       getPagerContainer: function (items) {
          if (items.getCollection().isRoot()) {
@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
 
          var container = this._getTreeChildrenContainer(items);
 
-         var container = container.find('.' + this._сssPrefix + this._pagerClass);
+         container = container.find('.' + this._сssPrefix + this._pagerClass);
          if (container.length === 0) {
             container = $('<div/>')
                .addClass(this._сssPrefix + this._pagerClass)
@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
          return container;
       },
 
-      //endregion SBIS3.CONTROLS.CollectionControl.ICollectionView
+      //endregion SBIS3.CONTROLS.ListControl.IListView
 
       //region SBIS3.CONTROLS.TreeControl.ITreeView
 
@@ -133,9 +133,9 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
          var data = TreeView.superclass._getRenderData.call(this, items),
             level = items.getLevel() - this._levelOffset;
 
-         data.class += ' ' + this._сssPrefix + this._treeChildrenСssPrefix;
-         data.class += ' ' + this._сssPrefix + this._treeLevelСssPrefix;
-         data.class += ' ' + this._сssPrefix + this._treeLevelСssPrefix + '-' + level;
+         data['class'] += ' ' + this._сssPrefix + this._treeChildrenСssPrefix;
+         data['class'] += ' ' + this._сssPrefix + this._treeLevelСssPrefix;
+         data['class'] += ' ' + this._сssPrefix + this._treeLevelСssPrefix + '-' + level;
 
          data.hash = items.getHash();
          data.level = level;
