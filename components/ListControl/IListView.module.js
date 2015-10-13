@@ -52,6 +52,11 @@ define('js!SBIS3.CONTROLS.ListControl.IListView', [], function () {
             itemTemplateSelector: undefined,
 
             /**
+             * @cfg {SBIS3.CONTROLS.PagerMore#PagerType} Вид контроллера постраничной навигации. По умолчанию - scroll
+             */
+            pagerType: 'scroll',
+
+            /**
              * @cfg {String|HTMLElement} Что отображается при отсутствии данных
              */
             emptyHTML: ''

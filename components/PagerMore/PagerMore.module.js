@@ -38,10 +38,15 @@ define('js!SBIS3.CONTROLS.PagerMore', [
              * @typedef {String} PagerType
              * @variant scroll Загрузка по скроллу
              * @variant more Загрузка по нажатии на кнопку "Показать еще"
+             * @variant single Навигация с выбором страницы
              */
 
             /**
              * @cfg {pagerType} Вид постраничной навигации
+             * @example
+             * <pre class="brush:xml">
+             *     <option name="pagerType">scroll</option>
+             * </pre>
              */
             pagerType: 'scroll'
          },
@@ -50,6 +55,11 @@ define('js!SBIS3.CONTROLS.PagerMore', [
           * @var {SBIS3.CONTROLS.Data.Collection.ISourceLoadable} Коллекция, в которую загружаются записи
           */
          _items: undefined,
+
+         /**
+          * @var {Boolean} Признак, что коллекция загружается
+          */
+         _isItemsLoading: false,
 
          /**
           * @var {jQuery} Контейнер, в котором отслеживаем позицию скролла
@@ -66,6 +76,10 @@ define('js!SBIS3.CONTROLS.PagerMore', [
 
       $constructor: function(cfg) {
          cfg = cfg || {};
+
+         this._onBeforeItemsLoad = this._onBeforeItemsLoad.bind(this);
+         this._onAfterItemsLoad = this._onAfterItemsLoad.bind(this);
+
          if ('items' in cfg) {
             this.setItems(cfg.items);
          }
@@ -83,7 +97,6 @@ define('js!SBIS3.CONTROLS.PagerMore', [
             //TODO: стек панель
             this._scrollContainer = $(window);
             this._scrollContainer.on('scroll', this._checkScroll.bind(this));
-            this._checkScroll.debounce(50, false).call(this);
          }
       },
 
@@ -104,7 +117,14 @@ define('js!SBIS3.CONTROLS.PagerMore', [
        * @see getItems
        */
       setItems: function(items) {
+         if (this._items) {
+            this._items.unsubscribe('onBeforeCollectionLoad', this._onBeforeItemsLoad);
+            this._items.unsubscribe('onAfterCollectionLoad', this._onAfterItemsLoad);
+         }
          this._items = items;
+         this._items.subscribe('onBeforeCollectionLoad', this._onBeforeItemsLoad);
+         this._items.subscribe('onAfterCollectionLoad', this._onAfterItemsLoad);
+
          this._applySettings();
       },
 
@@ -195,7 +215,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
        * @private
        */
       _loadNext: function() {
-         if (this.hasMore()) {
+         if (!this._isItemsLoading && this.hasMore()) {
             this._options.pageNum++;
             this._load(ISourceLoadable.MODE_APPEND);
          }
@@ -206,8 +226,10 @@ define('js!SBIS3.CONTROLS.PagerMore', [
        * @private
        */
       _loadPrevious: function() {
-         this._options.pageNum--;
-         this._load(ISourceLoadable.MODE_PREPEND);
+         if (!this._isItemsLoading) {
+            this._options.pageNum--;
+            this._load(ISourceLoadable.MODE_PREPEND);
+         }
       },
 
       /**
@@ -220,10 +242,27 @@ define('js!SBIS3.CONTROLS.PagerMore', [
             return;
          }
 
+         this._isItemsLoading = true;
          this._applySettings();
          
          if ($ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
             this._items.load(mode);
+         }
+      },
+
+      _onBeforeItemsLoad: function() {
+         this._isItemsLoading = true;
+      },
+
+      _onAfterItemsLoad: function() {
+         this._isItemsLoading = false;
+
+         if (this._options.pagerType === 'scroll') {
+            //Перед проверкой надо подождать, пока отработает рендер
+            //FIXME: лучше подписаться на onAfterLoadedApply
+            (function(){
+               this._checkScroll();
+            }).debounce(500).call(this);
          }
       },
 
@@ -236,15 +275,13 @@ define('js!SBIS3.CONTROLS.PagerMore', [
       },
 
       _isBottomOfContainer: function () {
-         if (!this._container.is(':visible')) {
+         if (!this._scrollContainer || !this._container.is(':visible')) {
             return false;
          }
 
-         var container = this._scrollContainer;
-
          var height = this._container.offset().top || container.height(),
-            scrollTop = container.scrollTop(),
-            clientHeight = container[0].clientHeight || document.documentElement.clientHeight,
+            scrollTop = this._scrollContainer.scrollTop(),
+            clientHeight = this._scrollContainer[0].clientHeight || document.documentElement.clientHeight,
             offsetBottom = height - clientHeight - scrollTop - this._scrollPreloadOffset;
          return offsetBottom <= 0;
       }

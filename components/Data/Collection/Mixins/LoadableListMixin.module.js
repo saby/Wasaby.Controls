@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableListMixin', [
                dataSet,
                this
             );
-            
+
             this._queryTotal = dataSet.getTotal();
 
             var list = dataSet.getAll();

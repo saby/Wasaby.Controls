@@ -78,10 +78,6 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
             /**
              * @cfg {SBIS3.CONTROLS.PagerMore#PagerType} Вид контроллера постраничной навигации. По умолчанию - scroll
-             * @example
-             * <pre class="brush:xml">
-             *     <option name="pagerType">scroll</option>
-             * </pre>
              */
             pagerType: 'scroll',
 
@@ -544,6 +540,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
             template: this._getViewTemplate(),
             itemTemplate: this._getItemTemplate(),
             itemTemplateSelector: this._getItemTemplateSelector(),
+            pagerType: this._options.pagerType,
             emptyHTML: this._options.emptyHTML
          };
 
