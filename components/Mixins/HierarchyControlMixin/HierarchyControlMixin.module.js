@@ -104,8 +104,16 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
           */
          _onAfterNodeLoad: undefined
       },
-      
+
       after: {
+         _bindHandlers: function () {
+            this._onCollectionChange = onCollectionChange.bind(this);
+            this._onTreeItemContentsChange = onTreeItemContentsChange.bind(this);
+            this._onTreeItemParentChange = onTreeItemParentChange.bind(this);
+            this._onBeforeNodeLoad = onBeforeNodeLoad.bind(this);
+            this._onAfterNodeLoad = onAfterNodeLoad.bind(this);
+         },
+
          _setItems: function () {
             this._setCurrentRoot(this._items);
          },
@@ -118,12 +126,6 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
          _unsetItemsEventHandlers: function () {
             this.unsubscribeFrom(this._itemsProjection, 'onTreeItemContentsChange', this._onTreeItemContentsChange);
             this.unsubscribeFrom(this._itemsProjection, 'onTreeItemParentChange', this._onTreeItemParentChange);
-            
-            this._onCollectionChange = onCollectionChange.bind(this);
-            this._onTreeItemContentsChange = onTreeItemContentsChange.bind(this);
-            this._onTreeItemParentChange = onTreeItemParentChange.bind(this);
-            this._onBeforeNodeLoad = onBeforeNodeLoad.bind(this);
-            this._onAfterNodeLoad = onAfterNodeLoad.bind(this);
          }
       },
 

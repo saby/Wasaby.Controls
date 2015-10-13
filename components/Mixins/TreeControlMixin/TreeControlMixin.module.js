@@ -68,8 +68,13 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
           */
          _pagers: {}
       },
-      
+
       after: {
+         _bindHandlers: function () {
+            this._onCollectionChange = this._onCollectionChange.callAround(onCollectionChange.bind(this));
+            this._onTreeNodeToggle = onTreeNodeToggle.bind(this);
+         },
+
          _initView: function() {
             this._changeRootOnClick = this._options.allowEnterToFolder;
             
@@ -93,9 +98,6 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
          
          _unsetItemsEventHandlers: function () {
             this.unsubscribeFrom(this._itemsProjection, 'onTreeNodeToggle', this._onTreeItemContentsChange);
-            
-            this._onCollectionChange = this._onCollectionChange.callAround(onCollectionChange.bind(this));
-            this._onTreeNodeToggle = onTreeNodeToggle.bind(this);
          }
       },
 

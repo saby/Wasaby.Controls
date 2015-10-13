@@ -21,6 +21,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
          _hashPrefix: 'collection-item-'
       },
 
+      $constructor: function () {
+         this._publish('onSelectedChange');
+      },
+
       //region SBIS3.CONTROLS.Data.Collection.ICollectionItem
 
       getContents: function () {
@@ -29,6 +33,26 @@ define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
 
       setContents: function (contents) {
          this._options.contents = contents;
+      },
+
+      /**
+       * Возвращает признак, что элемент выбран
+       * @returns {*}
+       */
+      isSelected: function () {
+         return this._options.selected;
+      },
+
+      /**
+       * Устанавливает признак, что элемент выбран
+       * @param {Boolean} selected Элемент выбран
+       */
+      setSelected: function (selected) {
+         if (this._options.selected === selected) {
+            return;
+         }
+         this._options.selected = selected;
+         this._notify('onSelectedChange', selected);
       }
 
       //endregion SBIS3.CONTROLS.Data.Collection.ICollectionItem

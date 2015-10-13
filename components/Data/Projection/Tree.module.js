@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    'js!SBIS3.CONTROLS.Data.Bind.ITree',
    'js!SBIS3.CONTROLS.Data.Projection',
    'js!SBIS3.CONTROLS.Data.Projection.Collection'
-], function (ITreeProjection, IHashable, IBindCollection, IBindTree, Projection, CollectionProjection) {
+], function (ITreeProjection, IHashable, IBindCollection, IBindTree, Projection) {
    'use strict';
 
    /**
@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
             this.subscribeTo(this._options.tree, 'onTreeNodeToggle', this._onSourceTreeNodeToggle);
          }
 
-         this._childrenProjection = new CollectionProjection({
+         this._childrenProjection = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Projection.Collection', {
             collection: this._options.tree.getChildren()
          });
          //TODO: filtering, ordering

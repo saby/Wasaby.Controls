@@ -4,10 +4,11 @@ define('js!SBIS3.CONTROLS.ListControl', [
    'js!SBIS3.CORE.CompoundActiveFixMixin',
    'js!SBIS3.CONTROLS.ListControlMixin',
    'js!SBIS3.CONTROLS.SelectableNew',
+   'js!SBIS3.CONTROLS.MultiSelectableNew',
    'js!SBIS3.CONTROLS.ListControl.ItemActions',
    'js!SBIS3.CONTROLS.ListControl.CommonHandlers',
    'js!SBIS3.CONTROLS.MoveHandlers'
-], function(CompoundControl, CompoundActiveFixMixin, ListControlMixin, Selectable, ItemActions, CommonHandlers, MoveHandlers) {
+], function(CompoundControl, CompoundActiveFixMixin, ListControlMixin, Selectable, MultiSelectable, ItemActions, CommonHandlers, MoveHandlers) {
    'use strict';
 
    /**
@@ -18,12 +19,13 @@ define('js!SBIS3.CONTROLS.ListControl', [
     * @mixes SBIS3.CORE.CompoundActiveFixMixin
     * @mixes SBIS3.CONTROLS.ListControlMixin
     * @mixes SBIS3.CONTROLS.SelectableNew
+    * @mixes SBIS3.CONTROLS.MultiSelectableNew
     * @mixes SBIS3.CONTROLS.ListControl.ItemActions
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var ListControl = CompoundControl.extend([CompoundActiveFixMixin, ListControlMixin, Selectable, ItemActions, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListControl.prototype */{
+   var ListControl = CompoundControl.extend([CompoundActiveFixMixin, ListControlMixin, Selectable, /*MultiSelectable,*/ ItemActions, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListControl.prototype */{
       /**
        * @event onChangeHoveredItem При переводе курсора мыши на другую запись
        * @remark

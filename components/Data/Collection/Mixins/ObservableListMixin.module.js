@@ -21,7 +21,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
 
       $constructor: function () {
          this._publish('onCollectionChange');
-         this._onChangeItemHandler = onChangeItemHandler.bind(this);
+         this._onItemSelectedChangeHandler = onItemSelectedChangeHandler.bind(this);
+         this._onItemModelChangeHandler = onItemModelChangeHandler.bind(this);
          $ws.helpers.forEach(this._items, this._watchForChanges, this);
       },
 
@@ -169,11 +170,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
        * @private
        */
       _watchForChanges: function(item) {
+         this.subscribeTo(item, 'onSelectedChange', this._onItemSelectedChangeHandler);
+
          var contents = item.getContents();
          if (this._needWatchForChanges(contents)) {
             var handlers = contents.getEventHandlers('onChange');
-            if (Array.indexOf(handlers, this._onChangeItemHandler) === -1) {
-               this.subscribeTo(contents, 'onChange', this._onChangeItemHandler);
+            if (Array.indexOf(handlers, this._onItemModelChangeHandler) === -1) {
+               this.subscribeTo(contents, 'onChange', this._onItemModelChangeHandler);
             }
          }
       },
@@ -184,9 +187,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
        * @private
        */
       _cancelWatchForChanges: function(item) {
+         this.unsubscribeFrom(item, 'onSelectedChange', this._onItemSelectedChangeHandler);
+
          var contents = item.getContents();
          if (this._needWatchForChanges(contents)) {
-            this.unsubscribeFrom(contents, 'onChange', this._onChangeItemHandler);
+            this.unsubscribeFrom(contents, 'onChange', this._onItemModelChangeHandler);
          }
       },
 
@@ -207,12 +212,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
    };
 
    /**
-    * обработчки события onChange на элементе коллекции
-    * @param e
-    * @param elem
+    * Обработчки события изменения признака выбранности элемента коллекции
+    * @param {$ws.proto.EventObject} event Дескриптор события.
+    * @param {Boolean} selected Элемент выбран
+    * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem} element Элемент
     */
-   function onChangeItemHandler (e, elem){
-      var index = this.getIndex(elem);
+   var onItemSelectedChangeHandler = function (event, selected, element) {
+      var index = this.getIndex(element);
       this._notifyCollectionChange(
          IBindCollection.ACTION_UPDATE,
          [this._items[index]],
@@ -220,6 +226,25 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          [this._items[index]],
          index
       );
-   }
+   },
+
+   /**
+    * Обработчк события изменения модели
+    * @param {$ws.proto.EventObject} event Дескриптор события.
+    * @param {String} name Название свойства
+    * @param {*} value Значение свойства
+    * @param {SBIS3.CONTROLS.Data.Model} model Инстанс модели
+    */
+   onItemModelChangeHandler = function (event, name, value, model) {
+      var index = this.getIndex(model);
+      this._notifyCollectionChange(
+         IBindCollection.ACTION_UPDATE,
+         [this._items[index]],
+         index,
+         [this._items[index]],
+         index
+      );
+   };
+
    return ObservableListMixin;
 });

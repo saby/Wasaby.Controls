@@ -1,13 +1,14 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.ListControlMixin', [
    'js!SBIS3.CONTROLS.ListControl.ListView',
-   'js!SBIS3.CONTROLS.Data.Projection',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.Collection.LoadableList',
    'js!SBIS3.CONTROLS.PagerMore',
-   'html!SBIS3.CONTROLS.ListControl.ListView'
-], function (ListView, Projection, IBindCollection, ObservableList, LoadableList, PagerMore, ListViewTemplate) {
+   'html!SBIS3.CONTROLS.ListControl.ListView',
+   'js!SBIS3.CONTROLS.Data.Projection',
+   'js!SBIS3.CONTROLS.Data.Projection.Collection'
+], function (ListView, IBindCollection, ObservableList, LoadableList, PagerMore, ListViewTemplate, Projection) {
    'use strict';
 
    /**
@@ -189,12 +190,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
       $constructor: function (cfg) {
          this._publish('onItemAction');
 
-         this._onBeforeItemsLoad = onBeforeItemsLoad.bind(this);
-         this._onAfterItemsLoad = onAfterItemsLoad.bind(this);
-         this._dataLoadedCallback = this._dataLoadedCallback.bind(this);
-         this._onCollectionChange = onCollectionChange.bind(this);
-         this._onCurrentChange = onCurrentChange.bind(this);
-
+         this._bindHandlers();
          this._normalizeConfig(cfg);
       },
 
@@ -368,6 +364,18 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
       //endregion Public methods
 
       //region Protected methods
+
+      /**
+       * Настраивает контекст обработчиков
+       * @private
+       */
+      _bindHandlers: function () {
+         this._onBeforeItemsLoad = onBeforeItemsLoad.bind(this);
+         this._onAfterItemsLoad = onAfterItemsLoad.bind(this);
+         this._dataLoadedCallback = this._dataLoadedCallback.bind(this);
+         this._onCollectionChange = onCollectionChange.bind(this);
+         this._onCurrentChange = onCurrentChange.bind(this);
+      },
 
       //region Collection
 
