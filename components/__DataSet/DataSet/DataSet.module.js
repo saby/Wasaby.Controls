@@ -63,6 +63,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
       $constructor: function () {
          Record = Record || require('js!SBIS3.CONTROLS.Record');
+
+         this._publish('onRecordChange');
          
          this._prepareData(this._options.data);
 

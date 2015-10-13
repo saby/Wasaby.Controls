@@ -16,10 +16,12 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.CommonHandlers',
       'js!SBIS3.CONTROLS.MoveHandlers',
       'js!SBIS3.CONTROLS.Pager',
+      'js!SBIS3.CONTROLS.EditInPlaceHoverController',
+      'js!SBIS3.CONTROLS.EditInPlaceClickController',
       'is!browser?html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'is!browser?html!SBIS3.CONTROLS.ListView/resources/emptyData'
    ],
-   function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, MoveHandlers, Pager, groupByTpl, emptyDataTpl) {
+   function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, groupByTpl, emptyDataTpl) {
 
       'use strict';
 
@@ -92,6 +94,7 @@ define('js!SBIS3.CONTROLS.ListView',
                size: null
             },
             _loadingIndicator: undefined,
+            _editInPlace: null,
             _hasScrollMore: true,
             _infiniteScrollOffset: null,
             _allowInfiniteScroll: true,
@@ -109,6 +112,7 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws._const.key.right,
                $ws._const.key.left
             ],
+            _addInPlaceButton: null,
             _itemActionsGroup: null,
             _emptyData: undefined,
             _options: {
@@ -257,7 +261,17 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see setPage
                 * @see getPage
                 */
-               showPaging: false
+               showPaging: false,
+               /**
+                * @cfg {Object} Редактирование по месту
+                */
+               editInPlace: {
+                  enabled: false,
+                  addInPlace: false,
+                  hoverMode: false,
+                  template: undefined,
+                  onFieldChange: undefined
+               }
             }
          },
 
@@ -286,6 +300,10 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this.setGroupBy(this._options.groupBy, false);
             this._drawEmptyData();
+            //TODO: пока добавили !this._options.editInPlace.template от греха подальше чтобы для сложного не создавалось добавление по месту
+            if (this._options.editInPlace.enabled && this._options.editInPlace.addInPlace && !this._editInPlace && !this._options.editInPlace.template) {
+               this._initAddInPlace();
+            }
             ListView.superclass.init.call(this);
             this.reload();
          },
@@ -315,7 +333,8 @@ define('js!SBIS3.CONTROLS.ListView',
             return false;
          },
          _checkTargetContainer: function (target) {
-            return this._options.showPaging && this._pager && $.contains(this._pager.getContainer()[0], target[0]);
+            return this._options.showPaging && this._pager && $.contains(this._pager.getContainer()[0], target[0]) ||
+                this._addInPlaceButton && $.contains(this._addInPlaceButton.getContainer().parent()[0], target[0]);
          },
          _isViewElement: function (elem) {
             return $.contains(this._getItemsContainer()[0], elem[0]);
@@ -391,7 +410,8 @@ define('js!SBIS3.CONTROLS.ListView',
             return itemActionsContainer &&
                ( itemActionsContainer[0] === $target[0] ||
                   $.contains(itemActionsContainer[0], $target[0]) ||
-                  this._itemActionsGroup.isItemActionsMenuVisible() );
+                  this._itemActionsGroup.isItemActionsMenuVisible() ) ||
+                  this._editInPlace && $.contains(this._editInPlace.getContainer()[0], $target[0]);
          },
          /**
           * Обрабатывает уведение мышки с элемента представления
@@ -416,9 +436,16 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
+            if(!this.isNowScrollingPartScroll() || this._options.editInPlace.template) {
+               this._updateEditInPlaceDisplay(target);
+            }
             if (this._options.itemsActions.length) {
                target.container ? this._showItemActions(target) : this._hideItemActions();
             }
+         },
+
+         isNowScrollingPartScroll: function() {
+            return false;
          },
 
          /**
@@ -477,9 +504,13 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _elemClickHandlerInternal: function (data, id, target) {
-
+            if (this._options.editInPlace.enabled && !this._options.editInPlace.hoverMode) {
+               this._initEditInPlace();
+               if (this._editInPlace) {
+                  this._editInPlace.showEditing($(target).closest('.controls-ListView__item'), data);
+               }
+            }
          },
-
          _drawSelectedItems: function (idArray) {
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__multiSelected');
             for (var i = 0; i < idArray.length; i++) {
@@ -507,6 +538,18 @@ define('js!SBIS3.CONTROLS.ListView',
          reload: function () {
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
+            // Если используется редактирование по месту, то уничтожаем его
+            if (this._editInPlace) {
+               if (this._editInPlace.isEditing()) {
+                  this._editInPlace.finishEditing();
+               }
+               this._editInPlace.destroy();
+               this._editInPlace = null;
+               // Пересоздаем EditInPlace
+               this.once('onDataLoaded', function() {
+                  this._initEditInPlace();
+               }.bind(this));
+            }
             return ListView.superclass.reload.apply(this, arguments);
          },
          _reloadInfiniteScrollParams : function(){
@@ -532,6 +575,76 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setElemClickHandler: function (method) {
             this._options.elemClickHandler = method;
+         },
+
+         //********************************//
+         //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
+         //*******************************//
+
+         _updateEditInPlaceDisplay: function(hoveredItem) {
+            if (this._options.editInPlace.enabled && this._options.editInPlace.hoverMode) {
+               this._initEditInPlace();
+               this._editInPlace.updateHoveredArea(hoveredItem);
+            }
+         },
+
+         _initAddInPlace: function() {
+            var
+                self = this,
+                itemsContainer = this._getItemsContainer(),
+                tr = '';
+            this._addInPlaceButton = new Link({
+               name: 'controls-ListView__addInPlace-button',
+               icon: 'sprite:icon-16 icon-NewCategory',
+               caption: 'Новая запись',
+               element: $('<div>').appendTo(this._container.find('.controls-DataGridView__addInPlace-container'))
+            });
+            if (this._options.multiselect) {
+               tr += '<td class="controls-DataGridView__td"></td>';
+            }
+            for (var i = 0; i < this._options.columns.length; i++) {
+               tr += '<td class="controls-DataGridView__td"></td>';
+            }
+            tr += '</tr>';
+            this._addInPlaceButton.subscribe('onActivated', function() {
+               self._initEditInPlace();
+               self._editInPlace.showEditing(
+                   $('<tr class="controls-DataGridView__tr controls-ListView__item">' + tr)
+                       .appendTo(itemsContainer));
+            });
+         },
+
+         _initEditInPlace: function() {
+            if (!this._editInPlace) {
+               this._createEditInPlace();
+               this._dataSet.subscribe('onRecordChange', function(event, record) {
+                  var item = this._getItemsContainer().find('.controls-ListView__item[data-id="' + record.getKey() + '"]');
+                  if (item.length) {
+                     item.empty().append(this._drawItem(record).children());
+                  }
+               }.bind(this));
+            }
+         },
+
+         _createEditInPlace: function() {
+            var
+               controller = this._options.editInPlace.hoverMode ? EditInPlaceHoverController : EditInPlaceClickController,
+               options = {
+                  addInPlaceButton: this._addInPlaceButton,
+                  dataSet: this._dataSet,
+                  ignoreFirstColumn: this._options.multiselect,
+                  columns: this._options.columns,
+                  dataSource: this._dataSource,
+                  template: this._options.editInPlace.template,
+                  element: $('<div>'),
+                  handlers: {
+                     onFieldChange: this._options.editInPlace.onFieldChange
+                  }
+               };
+            //todo Для hover-режима надо передать в опции метод
+            //options.editFieldFocusHandler = this._editFieldFocusHandler.bind(this)
+            //подумать, как это сделать
+            this._editInPlace = new controller(options);
          },
 
          //********************************//
@@ -990,6 +1103,10 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._pager) {
                this._pager.destroy();
                this._pager = undefined;
+            }
+            if (this._options.editInPlace.enabled && this._editInPlace) {
+               this._editInPlace.destroy();
+               this._editInPlace = null;
             }
             ListView.superclass.setDataSource.apply(this, arguments);
          },

@@ -132,6 +132,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
          }
          this.saveToContext('Checked', this._options.checked);
          this._notify('onCheckedChange', this._options.checked);
+         this._notifyOnPropertyChanged('checked');
       },
 
       _clickHandler: function() {
