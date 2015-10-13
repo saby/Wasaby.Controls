@@ -31,7 +31,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
             /**
              * @cfg {Number[]} Результат применения сортировки
              */
-            sortMap: []
+            sortMap: [],
+            /**
+             * @cfg {Boolean} Отдавать оригинальные элементы в методах на чтение
+             */
+            unwrapOnRead: false
          },
 
          /**
@@ -48,6 +52,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
           * @cfg {Number[]} Соответствие позиций проекции и исходной коллекции
           */
          _internalMap: undefined
+
       },
 
       $constructor: function () {
@@ -70,15 +75,15 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * @returns {*}
        * @state mutable
        */
-      at: function (index) {
+      at: function (index, unwrap) {
          return index === undefined ?
             undefined :
-            this._options.sourceMap[this.getSourceByInternal(index)];
+            this._getItemContent(this._options.sourceMap[this.getSourceByInternal(index)], unwrap)
       },
 
-      getCurrent: function () {
+      getCurrent: function (unwrap) {
          this._storeSourceCurrent();
-         return this._sourceCurrent;
+         return this._getItemContent(this._sourceCurrent, unwrap);
       },
 
       setCurrent: function(item) {
@@ -86,7 +91,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          this._storeSourceCurrent();
       },
 
-      getNext: function () {
+      getNext: function (unwrap) {
          var internalPosition = this.getInternalBySource(this._sourcePosition);
          internalPosition++;
          var newPosition = this.getSourceByInternal(internalPosition);
@@ -97,7 +102,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
 
          this._sourcePosition = newPosition;
          this._storeSourceCurrent();
-         return this._sourceCurrent;
+         return this._getItemContent(this._sourceCurrent, unwrap);
       },
 
       //region SBIS3.CONTROLS.Data.Collection.IEnumerator
@@ -137,7 +142,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * Возвращает предыдущий элемент
        * @returns {*}
        */
-      getPrevious: function () {
+      getPrevious: function (unwrap) {
          var internalPosition = this.getInternalBySource(this._sourcePosition);
          internalPosition--;
          var newPosition = this.getSourceByInternal(internalPosition);
@@ -148,7 +153,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
 
          this._sourcePosition = newPosition;
          this._storeSourceCurrent();
-         return this._sourceCurrent;
+         return this._getItemContent(this._sourceCurrent, unwrap);
       },
 
       /**
@@ -244,8 +249,19 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        */
       _isValidPosition: function (position) {
          return position >= -1 && position < this._options.sourceMap.length;
+      },
+      /**
+       * возвращает содержимое элемента, если стоит флаг _unwrapOnRead
+       * @param item
+       * @returns {*}
+       * @private
+       */
+      _getItemContent:function(item, unwrap){
+         if(typeof item === 'undefined')
+            return item;
+         unwrap = (typeof unwrap === 'undefined') ? this._options.unwrapOnRead : unwrap;
+         return unwrap ? item.getContents() : item;
       }
-
       //endregion Protected methods
    });
 });
