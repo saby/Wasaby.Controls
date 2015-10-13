@@ -3,7 +3,6 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
    'js!SBIS3.CONTROLS.TextBox',
    'html!SBIS3.CONTROLS.ComboBox',
    'js!SBIS3.CONTROLS.PickerMixin',
-   'js!SBIS3.CONTROLS.CollectionControlMixin',
    'js!SBIS3.CONTROLS.ListControlMixin',
    'js!SBIS3.CONTROLS.SelectableNew',
    'js!SBIS3.CONTROLS.DataBindMixin',
@@ -12,7 +11,7 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
    'js!SBIS3.CONTROLS.ComboBoxListView',
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown'
-], function (TextBox, dotTplFn, PickerMixin, CollectionControlMixin, ListControlMixin, Selectable, DataBindMixin, Utils, ComboBoxView, ComboBoxListView, CollectionProjection, arrowTpl) {
+], function (TextBox, dotTplFn, PickerMixin, ListControlMixin, Selectable, DataBindMixin, Utils, ComboBoxView, ComboBoxListView, CollectionProjection, arrowTpl) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора.
@@ -22,8 +21,11 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
     * отображать данные в выпадающий блок - {@link displayField}.
     * При отсутствии данных на бизнес-логике будет выведен текст опции {@link emptyHTML}.
     * Контрол по умолчанию позволяет {@link editable вручную вводить значение}.
-    * @class SBIS3.CONTROLS.ComboBox
+    * @class SBIS3.CONTROLS.ComboBoxNew
     * @extends SBIS3.CONTROLS.TextBox
+    * @mixes SBIS3.CONTROLS.PickerMixin
+    * @mixes SBIS3.CONTROLS.ListControlMixin
+    * @mixes SBIS3.CONTROLS.SelectableNew
     * @control
     * @author Крайнов Дмитрий Олегович
     * @public
@@ -45,14 +47,9 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
     * @category Inputs
     * @demo SBIS3.CONTROLS.Demo.MyComboBox
     * @demo SBIS3.CONTROLS.Demo.MyComboBoxDS Выпадающий список с dataSource
-    * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.FormWidgetMixin
-    * @mixes SBIS3.CONTROLS.CollectionControlMixin
-    * @mixes SBIS3.CONTROLS.ListControlMixin
-    * @mixes SBIS3.CONTROLS.SelectableNew
     */
 
-   var ComboBox = TextBox.extend([PickerMixin, CollectionControlMixin, ListControlMixin, Selectable, DataBindMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
+   var ComboBox = TextBox.extend([PickerMixin, ListControlMixin, Selectable, DataBindMixin], /** @lends SBIS3.CONTROLS.ComboBoxNew.prototype */{
       /**
        * @typedef {Object} ItemsComboBox
        * @property {String} title Текст пункта меню.

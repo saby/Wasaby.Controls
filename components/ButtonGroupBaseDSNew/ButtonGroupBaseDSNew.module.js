@@ -7,11 +7,10 @@
 define('js!SBIS3.CONTROLS.ButtonGroupBaseDSNew', [
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.ButtonGroupBaseDSView',
-   'js!SBIS3.CONTROLS.CollectionControlMixin',
    'js!SBIS3.CONTROLS.ListControlMixin',
    'js!SBIS3.CONTROLS.DisplayFieldMixin',
    'js!SBIS3.CONTROLS.DataBindMixin'
-], function(CompoundControl, ButtonGroupBaseView, CollectionControlMixin, ListControlMixin, DisplayFieldMixin, DataBindMixin) {
+], function(CompoundControl, ButtonGroupBaseView, ListControlMixin, DisplayFieldMixin, DataBindMixin) {
 
    'use strict';
 
@@ -21,7 +20,6 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDSNew', [
     * @class SBIS3.CONTROLS.ButtonGroupBaseDSNew
     * @public
     * @state mutable
-    * @mixes SBIS3.CONTROLS.CollectionControlMixin
     * @mixes SBIS3.CONTROLS.ListControlMixin
     * @mixes SBIS3.CONTROLS.DisplayFieldMixin
     * @mixes SBIS3.CONTROLS.DataBindMixin
@@ -29,7 +27,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDSNew', [
     * @author Крайнов Дмитрий Олегович
     */
 
-   var ButtonGroupBase = CompoundControl.extend([CollectionControlMixin, ListControlMixin, DisplayFieldMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBase.prototype */ {
+   var ButtonGroupBase = CompoundControl.extend([ListControlMixin, DisplayFieldMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBaseDSNew.prototype */ {
       $protected: {
          _options: {
             captionField: ''

@@ -6,20 +6,20 @@
 define('js!SBIS3.CONTROLS.MenuNew', [
    'js!SBIS3.CONTROLS.MenuNewView',
    'js!SBIS3.CONTROLS.ButtonGroupBaseDSNew',
-   'js!SBIS3.CONTROLS.CollectionControlMixin',
+   'js!SBIS3.CONTROLS.ListControlMixin',
    'js!SBIS3.CONTROLS.HierarchyControlMixin',
    'js!SBIS3.CONTROLS.TreeControlMixin',
    'js!SBIS3.CONTROLS.FloatArea',
    'js!SBIS3.CONTROLS.Data.Utils',
    'html!SBIS3.CONTROLS.MenuNew'
-], function(MenuView, ButtonGroupBase, CollectionControlMixin, HierarchyControlMixin, TreeControlMixin, FloatArea, Utils, MenuViewTemplate) {
+], function(MenuView, ButtonGroupBase, ListControlMixin, HierarchyControlMixin, TreeControlMixin, FloatArea, Utils, MenuViewTemplate) {
 
    'use strict';
 
    /**
     * Контрол, отображающий меню, всплывающее в определенном месте страницы
     * *Это экспериментальный модуль, API будет меняться!*
-    * @class SBIS3.CONTROLS.Menu
+    * @class SBIS3.CONTROLS.MenuNew
     * @public
     * @state mutable
     * @author Крайнов Дмитрий Олегович
@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.MenuNew', [
     * @mixes SBIS3.CONTROLS.TreeControlMixin
     */
 
-   var Menu = ButtonGroupBase.extend([CollectionControlMixin, HierarchyControlMixin, TreeControlMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
+   var Menu = ButtonGroupBase.extend([ListControlMixin, HierarchyControlMixin, TreeControlMixin], /** @lends SBIS3.CONTROLS.MenuNew.prototype */ {
       /**
        * @event onMenuItemActivate При активации пункта меню
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.

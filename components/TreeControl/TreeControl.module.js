@@ -1,11 +1,10 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.TreeControl', [
    'js!SBIS3.CORE.CompoundControl',
-   'js!SBIS3.CONTROLS.CollectionControlMixin',
    'js!SBIS3.CONTROLS.ListControlMixin',
    'js!SBIS3.CONTROLS.HierarchyControlMixin',
    'js!SBIS3.CONTROLS.TreeControlMixin'
-], function(CompoundControl, CollectionControlMixin, ListControlMixin, HierarchyControlMixin, TreeControlMixin) {
+], function(CompoundControl, ListControlMixin, HierarchyControlMixin, TreeControlMixin) {
    'use strict';
 
    /**
@@ -13,7 +12,6 @@ define('js!SBIS3.CONTROLS.TreeControl', [
     * *Это экспериментальный модуль, API будет меняться!*
     * @class SBIS3.CONTROLS.TreeControl
     * @extends SBIS3.CORE.CompoundControl
-    * @mixes SBIS3.CONTROLS.CollectionControlMixin
     * @mixes SBIS3.CONTROLS.ListControlMixin
     * @mixes SBIS3.CONTROLS.HierarchyControlMixin
     * @mixes SBIS3.CONTROLS.TreeControlMixin
@@ -22,7 +20,7 @@ define('js!SBIS3.CONTROLS.TreeControl', [
     * @author Крайнов Дмитрий Олегович
     */
 
-   var TreeControl = CompoundControl.extend([CollectionControlMixin, ListControlMixin, HierarchyControlMixin, TreeControlMixin], /** @lends SBIS3.CONTROLS.TreeControl.prototype */{
+   var TreeControl = CompoundControl.extend([ListControlMixin, HierarchyControlMixin, TreeControlMixin], /** @lends SBIS3.CONTROLS.TreeControl.prototype */{
       _moduleName: 'SBIS3.CONTROLS.TreeControl',
 
       $constructor: function() {

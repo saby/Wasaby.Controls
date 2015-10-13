@@ -1,14 +1,14 @@
 /*global define, $, $ws*/
 define('js!SBIS3.CONTROLS.MenuButtonNew', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.ContextMenuNew', 'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.ListControlMixin', 'js!SBIS3.CONTROLS.MenuButtonNewMixin', 'html!SBIS3.CONTROLS.MenuButton',
-      'js!SBIS3.CONTROLS.CollectionControlMixin', 'js!SBIS3.CONTROLS.HierarchyControlMixin', 'js!SBIS3.CONTROLS.Data.Utils','js!SBIS3.CONTROLS.MenuButtonNewView'],
-   function(Button, ContextMenu, PickerMixin, ListControlMixin, MenuButtonMixin, MenuButtonViewTemplate, CollectionControlMixin, HierarchyControlMixin, DataUtils, MenuButtonView) {
+      'js!SBIS3.CONTROLS.HierarchyControlMixin', 'js!SBIS3.CONTROLS.Data.Utils','js!SBIS3.CONTROLS.MenuButtonNewView'],
+   function(Button, ContextMenu, PickerMixin, ListControlMixin, MenuButtonMixin, MenuButtonViewTemplate, HierarchyControlMixin, DataUtils, MenuButtonView) {
 
    'use strict';
 
    /**
     * Кнопка с выпадающим меню
-    * @class SBIS3.CONTROLS.MenuButton
+    * @class SBIS3.CONTROLS.MenuButtonNew
     * @extends SBIS3.CONTROLS.Button
     * @demo SBIS3.CONTROLS.Demo.MyMenuButton Пример кнопки с выпадающим меню
     * @control
@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.MenuButtonNew', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3
     * @ignoreEvents onFocusIn onFocusOut onReady onDragIn onDragStart onDragStop onDragMove onDragOut
     */
 
-   var MenuButton = Button.extend( [PickerMixin, ListControlMixin, MenuButtonMixin, CollectionControlMixin, HierarchyControlMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
+   var MenuButton = Button.extend( [PickerMixin, ListControlMixin, MenuButtonMixin, HierarchyControlMixin], /** @lends SBIS3.CONTROLS.MenuButtonNew.prototype */ {
       $protected: {
          _header: null,
 

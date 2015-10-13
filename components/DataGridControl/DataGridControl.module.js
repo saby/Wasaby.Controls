@@ -132,7 +132,7 @@ define('js!SBIS3.CONTROLS.DataGridControl', [
       },
 
       /**
-       * @see SBIS3.CONTROLS.CollectionControlMixin#_getViewTemplate
+       * @see SBIS3.CONTROLS.ListControlMixin#_getViewTemplate
        * @private
        */
       _getViewTemplate: function () {

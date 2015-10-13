@@ -1,15 +1,15 @@
 /*global define, $ws, $*/
 define('js!SBIS3.CONTROLS.MenuLinkNew', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONTROLS.MenuLink', 'js!SBIS3.CONTROLS.ListControlMixin',
       'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.MenuButtonNewMixin',
-      'js!SBIS3.CONTROLS.ContextMenuNew','js!SBIS3.CONTROLS.CollectionControlMixin',
+      'js!SBIS3.CONTROLS.ContextMenuNew',
       'js!SBIS3.CONTROLS.HierarchyControlMixin', 'js!SBIS3.CONTROLS.MenuLinkNewView'],
-   function(Link, MenuLinkViewTemplate, ListControlMixin, PickerMixin, MenuButtonMixin, ContextMenu, CollectionControlMixin, HierarchyControlMixin, MenuLinkView) {
+   function(Link, MenuLinkViewTemplate, ListControlMixin, PickerMixin, MenuButtonMixin, ContextMenu, HierarchyControlMixin, MenuLinkView) {
 
    'use strict';
 
    /**
     * Контрол, отображающий кнопку в виде ссылки и выпадающее из нее меню
-    * @class SBIS3.CONTROLS.MenuLink
+    * @class SBIS3.CONTROLS.MenuLinkNew
     * @demo SBIS3.CONTROLS.Demo.MyMenuLink
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.MenuLinkNew', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.C
     * @ignoreEvents onFocusIn onFocusOut onReady onDragIn onDragStart onDragStop onDragMove onDragOut
     */
 
-   var MenuLink = Link.extend( [PickerMixin, ListControlMixin, MenuButtonMixin, CollectionControlMixin, HierarchyControlMixin], /** @lends SBIS3.CONTROLS.MenuLink.prototype */ {
+   var MenuLink = Link.extend( [PickerMixin, ListControlMixin, MenuButtonMixin, HierarchyControlMixin], /** @lends SBIS3.CONTROLS.MenuLinkNew.prototype */ {
       $protected: {
          _zIndex: '',
          _options: {
