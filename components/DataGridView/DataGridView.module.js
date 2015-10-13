@@ -177,10 +177,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       setDataSource: function(ds) {
          DataGridView.superclass.setDataSource.apply(this, arguments);
-         if (this._options.editInPlace.enabled && this._editInPlace) {
-            this._editInPlace.destroy();
-            this._editInPlace = null;
-         }
       },
       _createEditInPlace: function() {
          this._editInPlace = new EditInPlaceController({
@@ -687,16 +683,22 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
 
+      _dataLoadedCallback: function() {
+         // Пересоздаем EditInPlace, если оно используется
+         if (this._options.editInPlace.enabled) {
+            this._initEditInPlace();
+         }
+         DataGridView.superclass._dataLoadedCallback.apply(this, arguments);
+      },
+
       reload: function() {
+         // Если используется редактирование по месту, то уничтожаем его
          if (this._editInPlace) {
             if (this._editInPlace.isEditing()) {
                this._editInPlace.finishEditing();
             }
-            //todo избавиться от этого кода, добавлено как решение для выпуска 3.7.2.200
-            //Если используется редактирование по месту, то пересоздаем его
             this._editInPlace.destroy();
             this._editInPlace = null;
-            this._initEditInPlace();
          }
          return DataGridView.superclass.reload.apply(this, arguments);
       },
