@@ -33,17 +33,33 @@ define('js!SBIS3.CONTROLS.PagerMore', [
              * @cfg {Number} Размер страницы
              */
             pageSize: 0,
-            
+
             /**
-             * @cfg {PageType} Вид постраничной навигации
+             * @typedef {String} PagerType
+             * @variant scroll Загрузка по скроллу
+             * @variant more Загрузка по нажатии на кнопку "Показать еще"
              */
-            pageType: 'scroll'
+
+            /**
+             * @cfg {pagerType} Вид постраничной навигации
+             */
+            pagerType: 'scroll'
          },
          
          /**
           * @var {SBIS3.CONTROLS.Data.Collection.ISourceLoadable} Коллекция, в которую загружаются записи
           */
-         _items: undefined
+         _items: undefined,
+
+         /**
+          * @var {jQuery} Контейнер, в котором отслеживаем позицию скролла
+          */
+         _scrollContainer: undefined,
+
+         /**
+          * @var {jQuery} Отступ от контейнера, при котором заранее начинается загрузка
+          */
+         _scrollPreloadOffset: 100
       },
 
       //region Public methods
@@ -62,6 +78,13 @@ define('js!SBIS3.CONTROLS.PagerMore', [
             this._loadNext();
             return false;
          }).bind(this));
+
+         if (this._options.pagerType === 'scroll') {
+            //TODO: стек панель
+            this._scrollContainer = $(window);
+            this._scrollContainer.on('scroll', this._checkScroll.bind(this));
+            this._checkScroll.debounce(50, false).call(this);
+         }
       },
 
       /**
@@ -172,8 +195,10 @@ define('js!SBIS3.CONTROLS.PagerMore', [
        * @private
        */
       _loadNext: function() {
-         this._options.pageNum++;
-         this._load(ISourceLoadable.MODE_APPEND);
+         if (this.hasMore()) {
+            this._options.pageNum++;
+            this._load(ISourceLoadable.MODE_APPEND);
+         }
       },
 
       /**
@@ -200,7 +225,31 @@ define('js!SBIS3.CONTROLS.PagerMore', [
          if ($ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
             this._items.load(mode);
          }
+      },
+
+      //region pagerType = scroll
+
+      _checkScroll: function () {
+         if (this._isBottomOfContainer()) {
+            this._loadNext();
+         }
+      },
+
+      _isBottomOfContainer: function () {
+         if (!this._container.is(':visible')) {
+            return false;
+         }
+
+         var container = this._scrollContainer;
+
+         var height = this._container.offset().top || container.height(),
+            scrollTop = container.scrollTop(),
+            clientHeight = container[0].clientHeight || document.documentElement.clientHeight,
+            offsetBottom = height - clientHeight - scrollTop - this._scrollPreloadOffset;
+         return offsetBottom <= 0;
       }
+
+      //endregion pagerType = scroll
    });
 
    return PagerMore;

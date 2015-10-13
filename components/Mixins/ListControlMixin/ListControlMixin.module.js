@@ -77,19 +77,13 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
             pageSize: undefined,
 
             /**
-             * @typedef {String} PageType
-             * @variant scroll Загрузка по скроллу
-             * @variant more Загрузка по нажатии на кнопку "Показать еще"
-             */
-
-            /**
-             * @cfg {PageType} Вид контроллера постраничной навигации
+             * @cfg {SBIS3.CONTROLS.PagerMore#PagerType} Вид контроллера постраничной навигации. По умолчанию - scroll
              * @example
              * <pre class="brush:xml">
-             *     <option name="pageType">scroll</option>
+             *     <option name="pagerType">scroll</option>
              * </pre>
              */
-            pageType: 'more',
+            pagerType: 'scroll',
 
             /**
              * @cfg {SBIS3.CONTROLS.ListControl.IListItems|Array} Список, отображаемый контролом
@@ -342,7 +336,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
                   element: this._view.getPagerContainer(collection),
                   items: collection,
                   pageSize: this._options.pageSize,
-                  pageType: this._options.pageType
+                  pagerType: this._options.pagerType
                });
             }
          }

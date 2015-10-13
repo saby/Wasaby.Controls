@@ -219,7 +219,7 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
                      element: this._view.getPagerContainer(newItemsNode),
                      items: newItemsNode,
                      pageSize: this._options.pageSize,
-                     pageType: 'more'
+                     pagerType: 'more'
                   });
                }
                
