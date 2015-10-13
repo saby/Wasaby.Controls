@@ -148,10 +148,9 @@ define('js!SBIS3.CONTROLS.MenuNew', [
       _itemClickedHandler: function(e,hash) {
          var item = this.getItems().getChildByHash(hash, true);
          if(!item.isNode()){
-            this._notify('onMenuItemActivate',item.getContents());
             this._getView().hideSubMenus();
          }
-
+         this._notify('onMenuItemActivate',item.getContents());
       },
 
       _getViewTemplate: function() {

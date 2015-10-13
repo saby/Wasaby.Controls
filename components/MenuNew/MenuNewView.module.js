@@ -20,7 +20,13 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
          _сssPrefix: 'controls-Menu__',
          _subContainers: {},
          _subMenus: {},
-         _itemContainerTag: 'div'
+         _itemContainerTag: 'div',
+         /**
+          * @var {defaultDirectionFirstLevel} в какую сторону окрывать всплывающее меню при наведении на элемент
+          * меню первого уровня. Допустимые значения: down, up, rigth, left.
+          */
+         defaultDirectionFirstLevel: 'down'
+
       },
 
       destroy: function() {
@@ -165,7 +171,7 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
       _onMenuConfig: function(config, isFirstLevel, item) {
          var direction = DataUtils.getItemPropertyValue(item.getContents(), 'direction');
          if(!direction && isFirstLevel) {
-            direction = 'down';
+            direction = this._defaultDirectionFirstLevel;
          }
          if(direction) {
             switch(direction) {
@@ -191,7 +197,7 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
          return config;
       },
       /*
-      * ищет контейнер по хещу в основном контейнере и подменю
+      * ищет контейнер по хешу в основном контейнере и подменю
       * @params hash - хеш элемента
       * @return {JQuery}
       * */
