@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
             dataSource: undefined,
 
             /**
-             * @cfg {Number} Количество записей на одну страницу, запрашиваемых с источника данных
+             * @cfg {Number} Количество записей на одну страницу, запрашиваемое с источника данных
              * @remark
              * Опция определяет количество запрашиваемых записей с источника данных при использовании постраничной навигации.
              * @example
@@ -121,7 +121,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
          ],
 
          /**
-          * @var {SBIS3.CONTROLS.Data.IList} Список, отображаемый контролом
+          * @var {SBIS3.CONTROLS.Data.Collection.IList} Список, отображаемый контролом
           */
          _items: undefined,
 
@@ -141,7 +141,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
          _view: undefined,
 
          /**
-          * @var {SBIS3.CONTROLS.Collection.IListItem} Элемент, надо которым находится указатель
+          * @var {SBIS3.CONTROLS.Collection.IListItem} Элемент, над которым находится указатель
           */
          _hoveredItem: undefined,
 
@@ -149,6 +149,11 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
           * @var {Object} Контрол постраничной навигации
           */
          _pager: undefined,
+
+         /**
+          * @var {Object} Дочерние визуальные компоненты
+          */
+         _childInstances: undefined,
 
          /**
           * @var {Boolean} Выполнять действие по умолчанию по одинарному клику
@@ -159,11 +164,6 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
           * @var {Boolean} Изменять позицию при нажатии клавиш со стрелками
           */
          _moveCurrentByKeyPress: true,
-
-         /**
-          * @var {Object} Дочерние визуальные компоненты
-          */
-         _childInstances: undefined,
 
          /**
           * @var {Function} Обработчик перед загрузкой элементов
@@ -271,7 +271,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Возвращает список, отображаемый контролом
-       * @returns {Object}
+       * @returns {SBIS3.CONTROLS.Data.Collection.IList}
        */
       getItems: function () {
          return this._items;
@@ -279,7 +279,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Возвращает проекцию списка, отображаемого контролом
-       * @returns {SBIS3.CONTROLS.Data.Projection}
+       * @returns {SBIS3.CONTROLS.Data.Projection.Collection}
        */
       getItemsProjection: function () {
          return this._itemsProjection;
@@ -405,6 +405,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
       /**
        * Возвращает отображаемую контролом коллекцию, сделанную на основе источника данных
        * @param {SBIS3.CONTROLS.Data.Source.ISource} source
+       * @returns {SBIS3.CONTROLS.Data.Collection.IList}
        * @private
        */
       _convertDataSourceToItems: function (source) {
@@ -416,6 +417,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
       /**
        * Конвертирует список, отображаемый контролом, во внутреннее представление
        * @param {Object} items
+       * @returns {SBIS3.CONTROLS.Data.Collection.IList}
        * @private
        */
       _convertItems: function (items) {
@@ -425,8 +427,8 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
             });
          }
 
-         if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            throw new Error('Items should be an instance of SBIS3.CONTROLS.Data.Collection.IEnumerable');
+         if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IList')) {
+            throw new Error('Items should implement SBIS3.CONTROLS.Data.Collection.IList');
          }
 
          return items;
@@ -484,14 +486,6 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
          }
       },
 
-      /**
-       * Возвращает коллекцию для отрисовки в представлении
-       * @returns {*}
-       */
-      _getItemsForRedraw: function () {
-         return this._itemsProjection;
-      },
-
       //endregion Collection
 
       //region View
@@ -521,7 +515,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Возвращает представление
-       * @returns {SBIS3.CONTROLS.CollectionControl.CollectionView}
+       * @returns {SBIS3.CONTROLS.ListControl.ListView}
        * @private
        */
       _getView: function () {
@@ -530,7 +524,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Создает инстанс представления
-       * @returns {SBIS3.CONTROLS.CollectionControl.CollectionView}
+       * @returns {SBIS3.CONTROLS.ListControl.ListView}
        * @private
        */
       _createView: function () {
@@ -556,7 +550,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Возвращает DOM элемент, в котором размещается представление. По умолчанию - контейнер контрола.
-       * @returns {jQuery|String}
+       * @returns {jQuery}
        * @private
        */
       _getViewNode: function () {
@@ -570,6 +564,15 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
        */
       _getViewTemplate: function() {
          return ListViewTemplate;
+      },
+
+      /**
+       * Возвращает коллекцию для отрисовки в представлении
+       * @returns {*}
+       * @private
+       */
+      _getItemsForRedraw: function () {
+         return this._itemsProjection;
       },
 
       /**
@@ -592,16 +595,18 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Устанавливает коллекцию для контрола постраничной навигации
+       * @param {SBIS3.CONTROLS.Data.Projection.Collection} items
        * @private
        */
       _setPagerItems: function(items) {
-         if (this._options.pageSize > 0 && this._pager) {
+         if (this._pager) {
             this._pager.setItems(items.getCollection());
          }
       },
 
       /**
        * Проверяет состояние контрола постраничной навигации
+       * @param {SBIS3.CONTROLS.PagerMore} pager
        * @private
        */
       _checkPagerState: function(pager) {
@@ -761,7 +766,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
     * @param {Number} oldPosition Старая позиция
     * @private
     */
-   var onCurrentChange = function (event, newCurrent, oldCurrent, newPosition, oldPosition) {
+   var onCurrentChange = function (event, newCurrent) {
          this._view.selectItem(
             newCurrent
          );
@@ -777,7 +782,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
     * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
     * @private
     */
-   onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+   onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems) {
       var i;
 
       switch (action) {
