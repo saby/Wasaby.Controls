@@ -216,7 +216,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
        * </ol>
        */
       setPanelState: function(isSelection) {
-         this._currentMode = isSelection;
+         this._currentMode = isSelection = !!isSelection;
          this._blocks.wrapper.toggleClass('controls-operationsPanel__massMode', !isSelection).toggleClass('controls-operationsPanel__selectionMode',  isSelection);
       },
       destroy: function() {

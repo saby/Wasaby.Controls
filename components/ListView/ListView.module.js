@@ -460,7 +460,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options.multiselect) {
                //TODO: оставить только js класс
                if ($target.hasClass('js-controls-ListView__itemCheckBox') || $target.hasClass('controls-ListView__itemCheckBox')) {
-                  this.toggleItemsSelection([$target.closest('.controls-ListView__item').data('id')]);
+                  this.toggleItemsSelection([$target.closest('.controls-ListView__item').attr('data-id')]);
                }
                else {
                   this._notify('onItemClick', id, data, target);
