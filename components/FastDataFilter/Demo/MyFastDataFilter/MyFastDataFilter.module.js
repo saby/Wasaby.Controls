@@ -75,6 +75,30 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilter',
                         user : 'Бродский'
                      }
                   ]
+               },
+               {
+                  keyField : 'key',
+                  displayField: 'title',
+                  name: 'selling',
+                  multiselect : false,
+                  values:[
+                     {
+                        key : 0,
+                        title : 'Не выбрано'
+                     },
+                     {
+                        key : 1,
+                        title : 'Все (для продажи и нет)'
+                     },
+                     {
+                        key : 2,
+                        title : 'Не для продажи'
+                     },
+                     {
+                        key : 3,
+                        title : 'Для продажи'
+                     }
+                  ]
                }]
             }
          },
