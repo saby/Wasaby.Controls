@@ -246,7 +246,7 @@ define([
                   'd': [[0]],
                   's': [{n: 'id', t: 'Число целое'}]
                },
-               adapter = (new AdapterSbis),
+               adapter = (new AdapterSbis()),
                dataSet = Factory.makeDataSet(data, adapter);
             sbisModelSet.set('recordSet', dataSet);
             assert.deepEqual(getData(4), dataSet.getRawData());
