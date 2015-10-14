@@ -318,17 +318,16 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          return index >= 0 ? data.d[index] : undefined;
       },
 
-      getFullFieldData: function (data,name) {
+      getFullFieldData: function (data, name) {
          var index = this._getFieldIndex(data, name),
             meta = index >= 0 ? data.s[index] : undefined,
-            value = index >= 0 ? data.d[index] : undefined,
-            data = {meta: undefined, type: undefined};
+            fieldData = {meta: undefined, type: undefined};
          if (meta) {
             var type = this._getType(meta);
-            data.meta = type.meta;
-            data.type = type.name;
+            fieldData.meta = type.meta;
+            fieldData.type = type.name;
          }
-         return data;
+         return fieldData;
       },
       _getType: function (meta, key) {
          key = key || 't';
