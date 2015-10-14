@@ -17,16 +17,20 @@ define('js!SBIS3.CONTROLS.MenuIconView', [
       init: function(){
          this._options.rootNode.addClass('controls-MenuIcon');
       },
-      getPickerClassName: function(){
-         var container = this._options.rootNode;
+      /**
+       * возвращает дополнительные css классы для пикера в зависимости от контейнера
+       * */
+      getAdditionalClasses: function(){
+         var container = this._options.rootNode,
+            pickerClass = '';
          if (container.hasClass('controls-Menu__hide-menu-header')){
-            this._options.pickerClassName += ' controls-Menu__hide-menu-header';
+            pickerClass += ' controls-Menu__hide-menu-header';
          }
          if (container.hasClass('controls-IconButton__round-border')){
-            this._options.pickerClassName += ' controls-IconButton__round-border';
+            pickerClass += ' controls-IconButton__round-border';
          }
          if (container.hasClass('icon-24')){
-            this._options.pickerClassName += ' controls-Menu__big-header';
+            pickerClass += ' controls-Menu__big-header';
          }
       }
 

@@ -66,8 +66,8 @@ define('js!SBIS3.CONTROLS.MenuIconNew', [
       },
 
       init: function(){
+         this._options._pickerClassName += this._getView().getAdditionalClasses();
          MenuIcon.superclass.init.call(this);
-         this._options._pickerClassName = this._getView().getPickerClassName();
       },
 
       _clickHandler: function() {

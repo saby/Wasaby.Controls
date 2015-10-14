@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.MenuButtonNew', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3
        */
       togglePicker: function(){
          var view = this._getView();
-         view.setWidth();
+         view.recalcWidth();
          MenuButton.superclass.togglePicker.call(this);
          view.tooglePickerHandler();
       },
@@ -123,7 +123,7 @@ define('js!SBIS3.CONTROLS.MenuButtonNew', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3
       _dataLoadedCallback : function() {
          var count = this.getItems().getChildren().getCount(),
             withData = (count > 1);
-         this._getView().initView(withData);
+         this._getView().setViewWithData(withData);
          if (this._picker){
             this.hidePicker();
          }

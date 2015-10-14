@@ -1,9 +1,10 @@
 /* global define, console, doT, $ws, $, require */
 define('js!SBIS3.CONTROLS.MenuNewView', [
+   'js!SBIS3.CONTROLS.IMenuNewView',
    'js!SBIS3.CONTROLS.TreeControl.TreeView',
    'js!SBIS3.CONTROLS.FloatArea',
    'js!SBIS3.CONTROLS.Data.Utils'
-], function(TreeView, FloatArea, DataUtils) {
+], function(IMenuNewView,TreeView, FloatArea, DataUtils) {
    'use strict';
    /**
     * Представление для меню
@@ -11,7 +12,7 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
     * @extends SBIS3.CONTROLS.TreeControl.TreeView
     * @author Крайнов Дмитрий Олегович
     */
-   var MenuView = TreeView.extend(/** @lends SBIS3.CONTROLS.MenuView.prototype */{
+   var MenuView = TreeView.extend([IMenuNewView],/** @lends SBIS3.CONTROLS.MenuView.prototype */{
       _moduleName: 'SBIS3.CONTROLS.MenuView',
       $protected: {
          _rootNodeСssClass: 'controls-Menu',
@@ -92,10 +93,7 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
          }
          return components;
       },
-      /**
-       * Возвращает список всех построеных всплывающих меню
-       * @returns {Object}
-       */
+
       getSubMenus: function() {
          return this._subMenus;
       },
@@ -106,9 +104,7 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
       getItemContainerClass: function() {
          return this._сssPrefix + this._itemContainerCssClass;
       },
-      /**
-       * скрывает все всплывающие меню
-       */
+
       hideSubMenus: function() {
          var menus = this.getSubMenus();
          $ws.helpers.forEach(menus, function(subMenu) {
@@ -171,7 +167,7 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
       _onMenuConfig: function(config, isFirstLevel, item) {
          var direction = DataUtils.getItemPropertyValue(item.getContents(), 'direction');
          if(!direction && isFirstLevel) {
-            direction = this._defaultDirectionFirstLevel;
+            direction = 'down';
          }
          if(direction) {
             switch(direction) {
