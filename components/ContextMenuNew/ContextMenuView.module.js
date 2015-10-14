@@ -1,17 +1,15 @@
-/* global define, console, doT, $ws, $, require */
+/* global define */
 define('js!SBIS3.CONTROLS.ContextMenuView', [
-   'js!SBIS3.CONTROLS.MenuNewView',
-   'js!SBIS3.CONTROLS.FloatArea',
-   'js!SBIS3.CONTROLS.Data.Utils'
-], function(TreeView, FloatArea, DataUtils) {
+   'js!SBIS3.CONTROLS.MenuNewView'
+], function(MenuNewView) {
    'use strict';
    /**
-    * Представление для меню
-    * @class SBIS3.CONTROLS.MenuView
-    * @extends SBIS3.CONTROLS.TreeControl.TreeView
-    * @author Крайнов Дмитрий Олегович
+    * Представление для контектсного меню
+    * @class SBIS3.CONTROLS.ContextMenuView
+    * @extends SBIS3.CONTROLS.MenuNewView
+    * @author Ганшин Ярослав Олегович
     */
-   var MenuView = TreeView.extend(/** @lends SBIS3.CONTROLS.MenuView.prototype */{
+   var MenuView = MenuNewView.extend(/** @lends SBIS3.CONTROLS.ContextMenuView.prototype */{
       _moduleName: 'SBIS3.CONTROLS.ContextMenuView',
       $protected: {
       },
