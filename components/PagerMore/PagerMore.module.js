@@ -153,6 +153,10 @@ define('js!SBIS3.CONTROLS.PagerMore', [
        */
       setItems: function(items) {
          this._unsubscribeItems();
+
+         if (items && $ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.ITreeItem')) {
+            items = items.getChildren();
+         }
          this._items = items;
          this._items.subscribe('onBeforeCollectionLoad', this._onBeforeItemsLoad);
          this._items.subscribe('onAfterCollectionLoad', this._onAfterItemsLoad);
@@ -300,10 +304,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
        * Обработчик события начала загрузки
        * @private
        */
-      _onBeforeItemsLoad: function(event, mode, target) {
-         if (this._items.getChildren() !== target) {
-            return;
-         }
+      _onBeforeItemsLoad: function() {
          this._isItemsLoading = true;
       },
 
@@ -311,10 +312,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
        * Обработчик события окончания загрузки
        * @private
        */
-      _onAfterItemsLoad: function(event, mode, dataSet, target) {
-         if (this._items.getChildren() !== target) {
-            return;
-         }
+      _onAfterItemsLoad: function() {
          this._isItemsLoading = false;
 
          this._checkState();
