@@ -92,10 +92,6 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
          this._attachEventHandlers();
       },
 
-      getPagerContainerSelector: function() {
-         return '.' + this._сssPrefix + this._pagerClass;
-      },
-
       //region SBIS3.CONTROLS.ListControl.IListView
 
       render: function (items) {
@@ -206,15 +202,16 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
          }).bind(this), this._loadingIndicatorShowDelay);
       },
 
-      /**
-       * Скрывает индикатор загрузки
-       */
       hideLoadingIndicator: function (target) {
          if (!this._isLoadingVisible) {
             return;
          }
          this._isLoadingVisible = false;
          this._getLoadingNode(target).hide();
+      },
+
+      getPagerContainerSelector: function() {
+         return '.' + this._сssPrefix + this._pagerClass;
       },
 
       getPagerContainer: function () {
@@ -569,7 +566,7 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
       _getComponents: function(node) {
          node = node || this.getRootNode();
          var components = [];
-         node.find('[data-component]').each(function (i, item) {
+         node.find('.ws-component').each(function (i, item) {
             components.push($(item).wsControl());
          });
          return components;

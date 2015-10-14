@@ -210,22 +210,28 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
             if (newItemsNode &&
                !(newItemsNode.isRoot() || newItemsNode === this._currentRoot)
             ) {
+               var pagerContainer;
                if (this._options.pageSize > 0 &&
                   $ws.helpers.instanceOfMixin(newItemsNode, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable') &&
                   newItemsNode.hasMore()
                ) {
-                  //TODO: перенести в шаблон в новом шаблонизаторе
+                  pagerContainer = this._view.getPagerContainer(newItemsNode);
+               }
+               
+               this._view.renderNode(newItemsNode);
+               this.reviveComponents();
+
+               //TODO: перенести в шаблон в новом шаблонизаторе
+               if (pagerContainer) {
                   this._pagers[newItemsNode.getHash()] = new PagerMore({
-                     element: this._view.getPagerContainer(newItemsNode),
+                     element: pagerContainer,
+                     parent: this,
                      items: newItemsNode,
                      pageSize: this._options.pageSize,
                      pagerType: 'more',
                      visibleParentSelector: this._view.getPagerContainerSelector()
                   });
                }
-               
-               this._view.renderNode(newItemsNode);
-               this.reviveComponents();
                return;
             }
             break;

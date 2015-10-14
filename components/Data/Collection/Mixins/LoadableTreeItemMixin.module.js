@@ -191,7 +191,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
       if (!this.isRoot()) {
          this._notify('onAfterCollectionLoad', mode, dataSet, target);
       }
-      this._bubbleUp(function() {
+      this._bubbleUp(function () {
          this._notify('onAfterCollectionLoad', mode, dataSet, target);
       });
    },

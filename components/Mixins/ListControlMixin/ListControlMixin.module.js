@@ -339,6 +339,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
                //TODO: перенести в шаблон в новом шаблонизаторе
                this._pager = new PagerMore({
                   element: this._view.getPagerContainer(collection),
+                  parent: this,
                   items: collection,
                   pageSize: this._options.pageSize,
                   pagerType: this._options.pagerType,
@@ -348,10 +349,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
          }
 
          if (this._isInitialized) {
-            console.log('_isInitialized');
             this.reviveComponents();
-         } else {
-            console.log('not _isInitialized');
          }
       },
 
