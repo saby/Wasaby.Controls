@@ -92,6 +92,10 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
          this._attachEventHandlers();
       },
 
+      getPagerContainerSelector: function() {
+         return '.' + this._сssPrefix + this._pagerClass;
+      },
+
       //region SBIS3.CONTROLS.ListControl.IListView
 
       render: function (items) {
@@ -241,20 +245,6 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
        */
       getTemplate: function () {
          return this._options.template;
-      },
-
-      /**
-       * Возвращает инстансы компонентов из указанного узла
-       * @param {jQuery} [node] Узел DOM. Если не указан - берется корневой.
-       * @returns {Array}
-       */
-      getComponents: function(node) {
-         node = node || this.getRootNode();
-         var components = [];
-         node.find('[data-component]').each(function (i, item) {
-            components.push($(item).wsControl());
-         });
-         return components;
       },
 
       /**
@@ -563,9 +553,26 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
        * @private
        */
       _removeСomponents: function(node) {
-         $ws.helpers.forEach(this.getComponents(node), function (item) {
-            item.destroy();
+         $ws.helpers.forEach(this._getComponents(node), function (item) {
+            if (item && !item.isDestroyed()) {
+               item.destroy();
+            }
          });
+      },
+
+      /**
+       * Возвращает инстансы компонентов из указанного узла
+       * @param {jQuery} [node] Узел DOM. Если не указан - берется корневой.
+       * @returns {Array}
+       * @private
+       */
+      _getComponents: function(node) {
+         node = node || this.getRootNode();
+         var components = [];
+         node.find('[data-component]').each(function (i, item) {
+            components.push($(item).wsControl());
+         });
+         return components;
       },
 
       /**

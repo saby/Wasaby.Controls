@@ -219,7 +219,8 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
                      element: this._view.getPagerContainer(newItemsNode),
                      items: newItemsNode,
                      pageSize: this._options.pageSize,
-                     pagerType: 'more'
+                     pagerType: 'more',
+                     visibleParentSelector: this._view.getPagerContainerSelector()
                   });
                }
                
@@ -231,10 +232,6 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
       }
 
       prevFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
-      
-      if (newItemsNode) {
-         this._checkPagerState(this._pagers[newItemsNode.getHash()]);
-      }
    },
 
    /**

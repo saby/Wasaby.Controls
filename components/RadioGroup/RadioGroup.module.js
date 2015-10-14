@@ -74,9 +74,6 @@ define('js!SBIS3.CONTROLS.RadioGroup', [
         *      </options>
         * </pre>
         */
-       init: function() {
-          this._initView();
-       },
 
       _getItemTemplate: function () {
           return (function (data) {

@@ -37,19 +37,21 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDSNew', [
       },
 
       init: function () {
+         ButtonGroupBase.superclass.init.call(this);
+
          this._initView();
 
          var self = this,
             onItemActivated = function() {
                self._itemActivatedHandler(
                   Array.indexOf(
-                     self._getView().getComponents(),
+                     self.getGroupControls(),
                      this
                   )
                );
             };
 
-         $ws.helpers.forEach(this._getView().getComponents(),function(component){
+         $ws.helpers.forEach(this.getGroupControls(), function(component){
             component.subscribe('onActivated', onItemActivated);
          });
          
@@ -66,15 +68,16 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDSNew', [
             }, this);*/
       },
 
+      getGroupControls: function() {
+         return ButtonGroupBase.superclass.getChildControls.call(this);
+      },
+
       setEnabled: function (enabled) {
          ButtonGroupBase.superclass.setEnabled.call(this, enabled);
-         var itemsInstances = this.getItemsInstances();
-         for (var i in itemsInstances) {
-            if (itemsInstances.hasOwnProperty(i)) {
-               itemsInstances[i].setEnabled(enabled);
-            }
-         }
-      },      
+         $ws.helpers.forEach(this.getGroupControls(), function(component){
+            component.setEnabled(enabled);
+         });
+      },
 
 
       _itemActivatedHandler : function(index) {

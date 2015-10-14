@@ -112,6 +112,11 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
          ],
 
          /**
+          * @var {Boolean} Инициализация контрола завершена
+          */
+         _isInitialized: false,
+
+         /**
           * @var {SBIS3.CONTROLS.Data.Collection.IList} Список, отображаемый контролом
           */
          _items: undefined,
@@ -187,6 +192,10 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
       //region After- injections
 
       after: {
+         init: function() {
+            this._isInitialized = true;
+         },
+
          destroy: function () {
             this._unsetItemsEventHandlers();
             if (this._view) {
@@ -332,12 +341,18 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
                   element: this._view.getPagerContainer(collection),
                   items: collection,
                   pageSize: this._options.pageSize,
-                  pagerType: this._options.pagerType
+                  pagerType: this._options.pagerType,
+                  visibleParentSelector: this._view.getPagerContainerSelector()
                });
             }
          }
 
-         this.reviveComponents();
+         if (this._isInitialized) {
+            console.log('_isInitialized');
+            this.reviveComponents();
+         } else {
+            console.log('not _isInitialized');
+         }
       },
 
       /**
@@ -603,17 +618,6 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
          }
       },
 
-      /**
-       * Проверяет состояние контрола постраничной навигации
-       * @param {SBIS3.CONTROLS.PagerMore} pager
-       * @private
-       */
-      _checkPagerState: function(pager) {
-         if (pager && !pager.hasMore()) {
-            pager.getContainer().hide();
-         }
-      },
-
       //endregion View
 
       //region Behavior
@@ -799,7 +803,6 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
                );
             }
             this._view.checkEmpty();
-            this._checkPagerState(this._pager);
             this.reviveComponents();
             break;
 
