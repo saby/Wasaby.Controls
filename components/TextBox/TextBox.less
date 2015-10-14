@@ -67,39 +67,12 @@
     }
   }
 
-  .controls-TextBox__beforeFieldWrapper {
-    position: relative;
-    float: left;
-    //width: @text-box-after-width;
-    min-height: @text-box-after-min-height;
-    height: 100%;
-
-    & + .controls-TextBox__afterFieldWrapper {
-      & + .controls-TextBox__fieldWrapper {
-        // margin-left: @text-box-field-before-margin;
-      }
-    }
-
-    & + .controls-TextBox__fieldWrapper {
-      // margin-left: @text-box-field-before-margin;
-    }
-  }
-
-  .controls-TextBox__fieldWrapper {
-    position: relative;
-    padding: @text-box-wrapper-padding;
-    height: 100%;
-
-    .controls-TextBox__field {
-      .box-sizing(border-box);
-      width: 100%;
+   .controls-TextBox__beforeFieldWrapper {
+      position: relative;
+      float: left;
       height: 100%;
-      min-height: @text-box-after-min-height;
-      margin: @text-box-after-margin;
-      & + .controls-TextBox__fieldWrapper {
-         margin: @text-box-field-after-margin;
-      }
    }
+
    .controls-TextBox__fieldWrapper {
       position: relative;
       height: 100%;
@@ -129,6 +102,15 @@
          &.controls-TextBox__field-lowercase {
             text-transform: lowercase;
          }
+      }
+      .controls-TextBox__placeholder {
+         position: absolute;
+         top: 0;
+         .text-overflow();
+         color: @text-box-placeholder-color;
+         font: @text-box-compat-placeholder-font;
+         padding: @text-box-compat-placeholder-padding;
+         text-align: @text-box-compat-placeholder-alignment;
       }
    }
 }

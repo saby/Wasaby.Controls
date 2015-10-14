@@ -1,30 +1,17 @@
 <div class="controls-FieldLink">
     <ws-if data="linkCaption">
-        <component data-component="SBIS3.CONTROLS.Link" class="controls-FieldLink__Link" name="{{name}}_link">
-            <option name="caption">{{linkCaption}}</option>
-        </component>
-    </ws-if>
-    <ws-if data="showTextBox">
-        <component data-component="SBIS3.CONTROLS.TextBox" class="controls-FieldLink__TextBox" name="{{name}}_textBox">
-            <ws-if data="textBoxSettings.selectOnClick"><option name="selectOnClick" type="boolean">{{textBoxSettings.selectOnClick}}</option></ws-if>
-            <ws-if data="textBoxSettings.placeholder"><option name="placeholder">{{textBoxSettings.placeholder}}</option></ws-if>
-            <ws-if data="textBoxSettings.inputRegExp"><option name="inputRegExp">{{textBoxSettings.inputRegExp}}</option></ws-if>
-            <ws-if data="textBoxSettings.trim"><option name="trim" type="boolean">{{textBoxSettings.trim}}</option></ws-if>
-            <ws-if data="textBoxSettings.textTransform"><option name="textTransform">{{textBoxSettings.textTransform}}</option></ws-if>
-            <ws-if data="textBoxSettings.maxLength"><option name="maxLength">{{textBoxSettings.maxLength}}</option></ws-if>
-            <ws-if data="textBoxSettings.focusOnActivatedOnMobiles"><option name="focusOnActivatedOnMobiles" type="boolean">{{textBoxSettings.focusOnActivatedOnMobiles}}</option></ws-if>
-            <ws-if data="textBoxSettings.afterFieldWrapper"><option name="afterFieldWrapper" type="function">{{textBoxSettings.afterFieldWrapper}}</option></ws-if>
-            <option name="beforeFieldWrapper" type="function">js!SBIS3.Engine.FieldLink:prototype._beforeFieldWrapper</option>
-        </component>
-        <ws-if data="multiSelect || !showTextBox">
-            <component data-component="SBIS3.CONTROLS.IconButton" name="dropAllButton" class="controls-FieldLink__cross controls-FieldLink__dropAllLink">
-                <option name="icon">controls-FieldLink__cross</option>
-                <option name="visible" type="boolean">false</option>
-                <option name="tooltip">Очистить выбор</option>
-                <options name="handlers">
-                    <option name="onActivated" type="function">js!SBIS3.Engine.FieldLink:prototype.dropAllLinks</option>
-                </options>
-            </component>
-        </ws-if>
-    </ws-if>
+        <ws-include template="SBIS3.Engine.FieldLink/resources/link" name="link"/>
+        <ws-partial template="link" data="linkCaption"/>
+    </ws-if><ws-else>
+    <component data-component="SBIS3.CONTROLS.FieldLinkTextBox" class="controls-FieldLink__TextBox" name="{{name}}_textBox">
+        <ws-if data="textBoxSettings.selectOnClick"><option name="selectOnClick" type="boolean">{{textBoxSettings.selectOnClick}}</option></ws-if>
+        <ws-if data="textBoxSettings.placeholder"><option name="placeholder">{{textBoxSettings.placeholder}}</option></ws-if>
+        <ws-if data="textBoxSettings.inputRegExp"><option name="inputRegExp">{{textBoxSettings.inputRegExp}}</option></ws-if>
+        <ws-if data="textBoxSettings.trim"><option name="trim" type="boolean">{{textBoxSettings.trim}}</option></ws-if>
+        <ws-if data="textBoxSettings.textTransform"><option name="textTransform">{{textBoxSettings.textTransform}}</option></ws-if>
+        <ws-if data="textBoxSettings.maxLength"><option name="maxLength">{{textBoxSettings.maxLength}}</option></ws-if>
+        <ws-if data="textBoxSettings.focusOnActivatedOnMobiles"><option name="focusOnActivatedOnMobiles" type="boolean">{{textBoxSettings.focusOnActivatedOnMobiles}}</option></ws-if>
+        <option name="fieldLinkWithMultiSelect" type="boolean">{{multiSelect}}</option>
+    </component>
+    </ws-else>
 </div>

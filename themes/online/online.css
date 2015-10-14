@@ -1397,12 +1397,11 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper,
 .controls-DatePicker .controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
-  margin-right: 19px;
+  margin: 0 19px 0 0;
 }
 .controls-TextBox .controls-TextBox__beforeFieldWrapper {
   position: relative;
   float: left;
-  min-height: 19px;
   height: 100%;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper {
@@ -1447,6 +1446,18 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-TextBox__field-lowercase {
   text-transform: lowercase;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__placeholder {
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #e4e4e4 !important;
+  font: inherit;
+  padding: 3px 0 0;
+  text-align: inherit;
 }
 .controls-FormattedTextBox {
   display: inline-block;
@@ -3346,6 +3357,7 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   position: relative;
   top: 2px;
+  cursor: pointer;
   background: url('img/cancelIcon-sprite.png') 0 -32px no-repeat;
 }
 .controls-FieldLink__cross:hover {
@@ -3354,15 +3366,10 @@ input[type="reset"]::-moz-focus-inner {
 .controls-FieldLink__picker {
   max-height: 500px;
   min-height: 16px;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  height: auto;
-  overflow: auto;
-  border: 1px solid #999;
+  padding: 4px 0;
+  border: 1px solid #eaeaea;
+  border-top: none;
   background: #fff;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
 }
 .controls-FieldLink__picker .controls-FieldLink__inputLink,
 .controls-FieldLink .controls-FieldLink__inputLink {
@@ -3373,9 +3380,17 @@ input[type="reset"]::-moz-focus-inner {
 .controls-FieldLink {
   display: inline-block;
 }
-.controls-FieldLink .controls-FieldLink__Link {
-  padding: 2px 8px 0 0;
-  float: left;
+.controls-FieldLink.controls-Picker__show .controls-FieldLink__TextBox {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #eaeaea #eaeaea #e4e4e4;
+  background: #ffffff;
+}
+.controls-FieldLink .controls-FieldLink__Link,
+.controls-FieldLink .controls-FieldLink__Link .controls-FieldLink__inputLink {
+  color: #999999;
+  text-decoration: underline;
+  cursor: pointer;
 }
 .controls-FieldLink .controls-TextBox__fieldWrapper {
   float: left;
@@ -3385,13 +3400,49 @@ input[type="reset"]::-moz-focus-inner {
   overflow: hidden;
   float: left;
 }
-.controls-FieldLink .controls-FieldLink__TextBox .controls-TextBox__beforeFieldWrapper .controls-FieldLink__showAllLink {
+.controls-FieldLink .controls-FieldLink__TextBox .controls-TextBox__fieldWrapper {
+  margin-right: 0;
+}
+.controls-FieldLink .controls-FieldLink__TextBox .controls-TextBox__beforeFieldWrapper .controls-FieldLink__showAllLinks,
+.controls-FieldLink .controls-FieldLink__TextBox .controls-TextBox__beforeFieldWrapper .controls-FieldLink__dropAllLinks {
   position: relative;
   float: left;
-  padding-right: 3px;
+  top: 2px;
+  padding: 0 4px;
 }
 .controls-FieldLink .controls-FieldLink__TextBox .controls-TextBox__beforeFieldWrapper .controls-FieldLink__linksWrapper {
+  height: 100%;
   display: inline-block;
+}
+.controls-FieldLink .controls-FieldLink__TextBox .controls-TextBox__afterFieldWrapper {
+  padding: 0 4px;
+}
+.controls-FieldLink .controls-FieldLink__TextBox .controls-TextBox__afterFieldWrapper > * {
+  vertical-align: middle;
+}
+.controls-SimpleItemsCollection__item {
+  display: inline-block;
+  position: relative;
+  padding-left: 4px;
+  float: left;
+}
+.controls-SimpleItemsCollection__item:after {
+  content: ',';
+}
+.controls-SimpleItemsCollection__item:last-child:after {
+  content: '';
+}
+.controls-SimpleItemsCollection__cross {
+  height: 16px;
+  width: 16px;
+  display: inline-block;
+  position: relative;
+  top: 2px;
+  cursor: pointer;
+  background: url('img/cancelIcon-sprite.png') 0 -32px no-repeat;
+}
+.controls-SimpleItemsCollection__cross:hover {
+  background: url('img/cancelIcon-sprite.png') 0 -16px no-repeat;
 }
 .controls-HtmlDecorators-highlight {
   background-color: #fffece;

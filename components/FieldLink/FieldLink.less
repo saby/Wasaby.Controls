@@ -4,6 +4,7 @@
    display: inline-block;
    position: relative;
    top: 2px;
+   cursor: @link-cursor;
    background: @edit-at-place-cancel-button-bg;
 
    &:hover {
@@ -14,15 +15,10 @@
 .controls-FieldLink__picker {
    max-height: 500px;
    min-height: 16px;
-   padding-top: 4px;
-   padding-bottom: 4px;
-   height: auto;
-   overflow: auto;
-   border: 1px solid #999;
+   padding: 4px 0;
+   border: 1px solid #eaeaea;
+   border-top: none;;
    background: #fff;
-   -moz-border-radius: 2px;
-   -webkit-border-radius: 2px;
-   border-radius: 2px;
 }
 
 .controls-FieldLink__picker,
@@ -37,10 +33,22 @@
 .controls-FieldLink {
    display: inline-block;
 
-   .controls-FieldLink__Link {
-      padding: 2px 8px 0 0;
-      float: left;
+   &.controls-Picker__show {
+      .controls-FieldLink__TextBox {
+         border-width: 1px;
+         border-style: solid;
+         border-color: #eaeaea #eaeaea #e4e4e4;
+         background: #ffffff;
+      }
    }
+
+   .controls-FieldLink__Link,
+   .controls-FieldLink__Link .controls-FieldLink__inputLink {
+      color: @gray-color;
+      text-decoration: @link-hover-text-decoration;
+      cursor: @link-cursor;
+   }
+
 
    .controls-TextBox__fieldWrapper {
       float: left;
@@ -51,16 +59,30 @@
       overflow: hidden;
       float: left;
 
+      .controls-TextBox__fieldWrapper {
+         margin-right: 0;
+      }
+
       .controls-TextBox__beforeFieldWrapper {
 
-         .controls-FieldLink__showAllLink {
+         .controls-FieldLink__showAllLinks,
+         .controls-FieldLink__dropAllLinks {
             position: relative;
             float: left;
-            padding-right: 3px;
+            top: 2px;
+            padding: 0 4px;
          }
 
          .controls-FieldLink__linksWrapper {
+            height: 100%;
             display: inline-block;
+         }
+      }
+
+      .controls-TextBox__afterFieldWrapper {
+         padding: 0 4px;
+         > *{
+            vertical-align: middle;
          }
       }
    }

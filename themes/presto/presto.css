@@ -1275,12 +1275,11 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper,
 .controls-DatePicker .controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
-  margin-right: 21px;
+  margin: 21px;
 }
 .controls-TextBox .controls-TextBox__beforeFieldWrapper {
   position: relative;
   float: left;
-  min-height: 38px;
   height: 100%;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper {
@@ -1325,6 +1324,18 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-TextBox__field-lowercase {
   text-transform: lowercase;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__placeholder {
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #eeeeee !important;
+  font: inherit;
+  padding: 3px 0 0;
+  text-align: inherit;
 }
 .controls-FormattedTextBox {
   display: inline-block;
@@ -3001,6 +3012,99 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls__filterButton .controls__filterButton-button:active {
   background-position: -24px 0;
+}
+.controls-FieldLink__cross {
+  height: 16px;
+  width: 16px;
+  display: inline-block;
+  position: relative;
+  top: 2px;
+  cursor: pointer;
+  background: url('img/cancelIcon-sprite.png') 0 -32px no-repeat;
+}
+.controls-FieldLink__cross:hover {
+  background: url('img/cancelIcon-sprite.png') 0 -16px no-repeat;
+}
+.controls-FieldLink__picker {
+  max-height: 500px;
+  min-height: 16px;
+  padding: 4px 0;
+  border: 1px solid #eaeaea;
+  border-top: none;
+  background: #fff;
+}
+.controls-FieldLink__picker .controls-FieldLink__inputLink,
+.controls-FieldLink .controls-FieldLink__inputLink {
+  display: inline-block;
+  position: relative;
+  padding-left: 4px;
+}
+.controls-FieldLink {
+  display: inline-block;
+}
+.controls-FieldLink.controls-Picker__show .controls-FieldLink__TextBox {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #eaeaea #eaeaea #e4e4e4;
+  background: #ffffff;
+}
+.controls-FieldLink .controls-FieldLink__Link,
+.controls-FieldLink .controls-FieldLink__Link .controls-FieldLink__inputLink {
+  color: #aaaaaa;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.controls-FieldLink .controls-TextBox__fieldWrapper {
+  float: left;
+}
+.controls-FieldLink .controls-FieldLink__TextBox {
+  display: block;
+  overflow: hidden;
+  float: left;
+}
+.controls-FieldLink .controls-FieldLink__TextBox .controls-TextBox__fieldWrapper {
+  margin-right: 0;
+}
+.controls-FieldLink .controls-FieldLink__TextBox .controls-TextBox__beforeFieldWrapper .controls-FieldLink__showAllLinks,
+.controls-FieldLink .controls-FieldLink__TextBox .controls-TextBox__beforeFieldWrapper .controls-FieldLink__dropAllLinks {
+  position: relative;
+  float: left;
+  top: 2px;
+  padding: 0 4px;
+}
+.controls-FieldLink .controls-FieldLink__TextBox .controls-TextBox__beforeFieldWrapper .controls-FieldLink__linksWrapper {
+  height: 100%;
+  display: inline-block;
+}
+.controls-FieldLink .controls-FieldLink__TextBox .controls-TextBox__afterFieldWrapper {
+  padding: 0 4px;
+}
+.controls-FieldLink .controls-FieldLink__TextBox .controls-TextBox__afterFieldWrapper > * {
+  vertical-align: middle;
+}
+.controls-SimpleItemsCollection__item {
+  display: inline-block;
+  position: relative;
+  padding-left: 4px;
+  float: left;
+}
+.controls-SimpleItemsCollection__item:after {
+  content: ',';
+}
+.controls-SimpleItemsCollection__item:last-child:after {
+  content: '';
+}
+.controls-SimpleItemsCollection__cross {
+  height: 16px;
+  width: 16px;
+  display: inline-block;
+  position: relative;
+  top: 2px;
+  cursor: pointer;
+  background: url('img/cancelIcon-sprite.png') 0 -32px no-repeat;
+}
+.controls-SimpleItemsCollection__cross:hover {
+  background: url('img/cancelIcon-sprite.png') 0 -16px no-repeat;
 }
 .controls-ComboBox.controls-Picker__show {
   border-width: 1px;
