@@ -20,14 +20,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
     */
 
    var Model = $ws.proto.Abstract.extend([IPropertyAccess, IHashable, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Model.prototype */{
-      /**
-       * @event onChange После изменения модели
-       * @param {$ws.proto.EventObject} event Дескриптор события.
-       * @param {String} name Название свойства
-       * @param {*} value Значение свойства
-       * @param {SBIS3.CONTROLS.Data.Model} model Инстанс модели
-       */
-
       _moduleName: 'SBIS3.CONTROLS.Data.Model',
       $protected: {
          _options: {
@@ -82,7 +74,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          this.setData(this._options.data);
          this._options.idField = this._options.idField || '';
          this._initAdapter();
-         this._publish('onChange');
+         this._publish('onPropertyChange');
       },
 
       // region public
@@ -362,7 +354,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             this.getAdapter().set(this._options.data, name, value);
             this._setChanged(true);
             delete this._fieldsCache[name];
-            this._notify('onChange', name, value, this);
+            this._notify('onPropertyChange', name, value);
          }
       }
       // endregion SBIS3.CONTROLS.Data.IPropertyAccess

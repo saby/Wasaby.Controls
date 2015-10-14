@@ -128,6 +128,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeChildren', [
        */
       _convertToItem: function (item) {
          if ($ws.helpers.instanceOfModule(item, this._itemModule)) {
+            item.setOwner(this);
             item.setParent(this._options.owner);
             return item;
          }
@@ -146,6 +147,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeChildren', [
          }
 
          return $ws.single.ioc.resolve(this._itemModule, {
+            owner: this,
             contents: item,
             parent: this._options.owner,
             node: node,

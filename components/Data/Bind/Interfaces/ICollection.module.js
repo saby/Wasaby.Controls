@@ -27,6 +27,22 @@ define('js!SBIS3.CONTROLS.Data.Bind.ICollection', [], function () {
        *    });
        * </pre>
        */
+
+      /**
+       * @event onCollectionItemChange После изменения элемента коллекции
+       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem} item Измененный элемент коллеции.
+       * @param {Integer} index Индекс измененного элемента.
+       * @param {String} [property] Измененное свойство элемента
+       * @example
+       * <pre>
+       *    list.subscribe('onCollectionItemChange', function(eventObject, item, index, property){
+       *       if (property === 'selected'){
+       *          //Do something
+       *       }
+       *    });
+       * </pre>
+       */
    };
 
    /**
@@ -54,9 +70,5 @@ define('js!SBIS3.CONTROLS.Data.Bind.ICollection', [], function () {
     */
    ICollection.ACTION_RESET = 'rs';
 
-   /**
-    * @const {String} Изменение коллекции: обновлены элементы
-    */
-   ICollection.ACTION_UPDATE = 'up';
    return ICollection;
 });

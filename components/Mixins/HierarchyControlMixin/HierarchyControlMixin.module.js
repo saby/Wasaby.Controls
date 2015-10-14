@@ -299,7 +299,6 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
             break;
 
          case IBindCollection.ACTION_REPLACE:
-         case IBindCollection.ACTION_UPDATE:
             for (i = 0; i < newItems.length; i++) {
                this._view.updateItem(
                   newItems[i]

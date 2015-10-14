@@ -11,13 +11,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.ICollectionItem', [
     * @author Мальцев Алексей
     */
    return /** @lends SBIS3.CONTROLS.Data.Collection.ICollectionItem.prototype */{
-      /**
-       * @event onSelectedChange После изменения свойства {@link selected} элемента коллекции
-       * @param {$ws.proto.EventObject} event Дескриптор события.
-       * @param {Boolean} selected Элемент выбран
-       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem} element Элемент коллекции
-       */
-
       $protected: {
          _options: {
             /**

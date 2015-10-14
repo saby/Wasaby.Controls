@@ -177,6 +177,11 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
          _onCollectionChange: undefined,
 
          /**
+          * @var {Function} Обработчик события изменения элемента коллекции
+          */
+         _onCollectionItemChange: undefined,
+
+         /**
           * @var {Function} Обработчик события изменения текущего элемента коллекции
           */
          _onCurrentChange: undefined
@@ -377,6 +382,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
          this._onAfterItemsLoad = onAfterItemsLoad.bind(this);
          this._dataLoadedCallback = this._dataLoadedCallback.bind(this);
          this._onCollectionChange = onCollectionChange.bind(this);
+         this._onCollectionItemChange = onCollectionItemChange.bind(this);
          this._onCurrentChange = onCurrentChange.bind(this);
       },
 
@@ -473,6 +479,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
        */
       _setItemsEventHandlers: function () {
          this.subscribeTo(this._itemsProjection, 'onCollectionChange', this._onCollectionChange);
+         this.subscribeTo(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
          this.subscribeTo(this._itemsProjection, 'onCurrentChange', this._onCurrentChange);
 
          if (this._items && $ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
@@ -488,6 +495,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
        */
       _unsetItemsEventHandlers: function () {
          this.unsubscribeFrom(this._itemsProjection, 'onCollectionChange', this._onCollectionChange);
+         this.unsubscribeFrom(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
          this.unsubscribeFrom(this._itemsProjection, 'onCurrentChange', this._onCurrentChange);
 
          if (this._items && $ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
@@ -774,7 +782,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
       },
 
    /**
-    * Обрабатывает событие об изменении позиции текущего элемента коллекции
+    * Обрабатывает событие об изменении коллекции
     * @param {$ws.proto.EventObject} event Дескриптор события.
     * @param {String} action Действие, приведшее к изменению.
     * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem[]} newItems Новые элементы коллеции.
@@ -815,7 +823,6 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
             break;
 
          case IBindCollection.ACTION_REPLACE:
-         case IBindCollection.ACTION_UPDATE:
             for (i = 0; i < newItems.length; i++) {
                this._view.updateItem(
                   newItems[i]
@@ -832,6 +839,25 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
             this.redraw();
             break;
       }
+   },
+
+   /**
+    * Обрабатывает событие об изменении элемента коллекции
+    * @param {$ws.proto.EventObject} event Дескриптор события.
+    * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem} item Измененный элемент коллеции.
+    * @param {Integer} index Индекс измененного элемента.
+    * @param {String} [property] Измененное свойство элемента
+    * @private
+    */
+   onCollectionItemChange = function (event, item) {
+      this._view.updateItem(
+         item
+      );
+      this._view.selectItem(
+         this._itemsProjection.getCurrent(),
+         this._itemsProjection.getCurrentPosition()
+      );
+      this.reviveComponents();
    },
 
    /**

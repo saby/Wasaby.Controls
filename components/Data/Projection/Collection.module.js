@@ -69,8 +69,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          /**
           * @var {Function} Обработчик события об изменении исходной коллекции
           */
-         _onSourceCollectionChange: undefined
+         _onSourceCollectionChange: undefined,
 
+         /**
+          * @var {Function} Обработчик события об изменении элемента исходной коллекции
+          */
+         _onSourceCollectionItemChange: undefined
       },
 
       $constructor: function () {
@@ -88,14 +92,17 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          this._init();
 
          this._onSourceCollectionChange = onSourceCollectionChange.bind(this);
+         this._onSourceCollectionItemChange = onSourceCollectionItemChange.bind(this);
          if ($ws.helpers.instanceOfMixin(this._options.collection, 'SBIS3.CONTROLS.Data.Bind.ICollection')) {
             this.subscribeTo(this._options.collection, 'onCollectionChange', this._onSourceCollectionChange);
+            this.subscribeTo(this._options.collection, 'onCollectionItemChange', this._onSourceCollectionItemChange);
          }
       },
 
       destroy: function () {
          if ($ws.helpers.instanceOfMixin(this._options.collection, 'SBIS3.CONTROLS.Data.Bind.ICollection')) {
             this.unsubscribeFrom(this._options.collection, 'onCollectionChange', this._onSourceCollectionChange);
+            this.unsubscribeFrom(this._options.collection, 'onCollectionItemChange', this._onSourceCollectionItemChange);
          }
 
          this._enumerator = undefined;
@@ -658,19 +665,26 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                oldItemsIndex
             );
             break;
-
-         case IBindCollection.ACTION_UPDATE:
-            this._notifyCollectionChange(
-               action,
-               newItems,
-               newItemsIndex,
-               oldItems,
-               oldItemsIndex
-            );
-            this._reFilter(newItemsIndex, newItems.length);
-            this._reSort(true);
-            break;
       }
+   },
+
+   /**
+    * Обрабатывает событие об изменении исходной коллекции
+    * @param {$ws.proto.EventObject} event Дескриптор события.
+    * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem} item Измененный элемент коллеции.
+    * @param {Integer} index Индекс измененного элемента.
+    * @param {String} [property] Измененное свойство элемента
+    * @private
+    */
+   onSourceCollectionItemChange = function (event, item, index, property) {
+      this._notify(
+         'onCollectionItemChange',
+         item,
+         this._enumerator.getInternalBySource(index),
+         property
+      );
+      this._reFilter(index, 1);
+      this._reSort(true);
    };
 
    $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.Collection', function(config) {

@@ -18,11 +18,22 @@ define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
    var CollectionItem = $ws.proto.Abstract.extend([ICollectionItem, IHashable, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.CollectionItem.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.CollectionItem',
       $protected: {
+         _options: {
+
+            /**
+             * @cfg {SBIS3.CONTROLS.Data.Collection.List} Владелец
+             */
+            owner: undefined
+         },
          _hashPrefix: 'collection-item-'
       },
 
-      $constructor: function () {
-         this._publish('onSelectedChange');
+      getOwner: function () {
+         return this._options.owner;
+      },
+
+      setOwner: function (owner) {
+         this._options.owner = owner;
       },
 
       //region SBIS3.CONTROLS.Data.Collection.ICollectionItem
@@ -32,7 +43,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
       },
 
       setContents: function (contents) {
+         if (this._options.contents === contents) {
+            return;
+         }
          this._options.contents = contents;
+         this._notifyToOwner('contents');
       },
 
       /**
@@ -52,10 +67,22 @@ define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
             return;
          }
          this._options.selected = selected;
-         this._notify('onSelectedChange', selected);
-      }
+         this._notifyToOwner('selected');
+      },
 
       //endregion SBIS3.CONTROLS.Data.Collection.ICollectionItem
+
+      /**
+       * Генерирует событие у владельца об изменении элемента
+       * @param {String} property Измененное свойство
+       * @private
+       */
+      _notifyToOwner: function(property) {
+         if (!this._options.owner) {
+            return;
+         }
+         this._options.owner.notifyItemChange(this, property);
+      }
    });
 
    $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Collection.CollectionItem', function(config) {

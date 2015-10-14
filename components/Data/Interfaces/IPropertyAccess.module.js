@@ -11,6 +11,21 @@ define('js!SBIS3.CONTROLS.Data.IPropertyAccess', [], function () {
 
    return /** @lends SBIS3.CONTROLS.Data.IPropertyAccess.prototype */{
       /**
+       * @event onPropertyChange После изменения свойства
+       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {String} property Измененное свойство
+       * @param {*} value Значение свойства
+       * @example
+       * <pre>
+       *    user.subscribe('onPropertyChange', function(event, property){
+       *       if (property === 'sex'){
+       *          fsb.service.alert('Transgender detected! :)', event.getTarget());
+       *       }
+       *    });
+       * </pre>
+       */
+
+      /**
        * Возвращает значение свойства
        * @param {String} name Название свойства
        * @returns {*}

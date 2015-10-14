@@ -65,6 +65,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeChildrenMixin', [
                var nodeField = this._options.owner.getNodeField(),
                   isNode = nodeField && Utils.getItemPropertyValue(item, nodeField) || false;
                item = $ws.single.ioc.resolve(this._itemModule, {
+                  owner: this,
                   contents: item,
                   parent: this._options.owner,
                   node: isNode,

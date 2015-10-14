@@ -4,7 +4,7 @@ define([
    'js!SBIS3.CONTROLS.Data.Collection.List',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
    'js!SBIS3.CONTROLS.Data.Model',
-   'js!SBIS3.CONTROLS.Data.Adapter.Json',
+   'js!SBIS3.CONTROLS.Data.Adapter.Json'
 ], function (ObservableList, List, IBindCollection,Model,JsonAdapter) {
       'use strict';
 

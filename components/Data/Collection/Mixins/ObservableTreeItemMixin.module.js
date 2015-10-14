@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableTreeItemMixin', [
          _childrenModule: 'SBIS3.CONTROLS.Data.Collection.ObservableTreeChildren'
       },
 
-      $constructor: function (cfg) {
+      $constructor: function () {
          this._publish('onCollectionChange', 'onTreeItemContentsChange', 'onTreeItemParentChange', 'onTreeNodeToggle');
       },
 

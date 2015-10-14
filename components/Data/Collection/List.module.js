@@ -20,11 +20,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.List',
       $protected: {
          _options: {
-
             /**
              * @cfg {Array} Элементы списка
+             * @name SBIS3.CONTROLS.Data.Collection.List#items
              */
-            items: []
          },
 
          /**
@@ -64,6 +63,14 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        */
       getByHash: function (hash) {
          return this.getEnumerator(false).getItemByPropertyValue('hash', hash);
+      },
+
+      /**
+       * Генерирует событие об изменении элемента
+       * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Элемент
+       * @param {String} property Измененное свойство
+       */
+      notifyItemChange: function () {
       },
 
       //region SBIS3.CONTROLS.Data.Collection.IEnumerable
@@ -169,6 +176,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          if (!this._isValidIndex(index)) {
             throw new Error('Index is out of bounds');
          }
+         this._items[index].setOwner(undefined);
          this._items.splice(index, 1);
       },
 
@@ -222,10 +230,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        */
       _convertToItem: function (item) {
          if ($ws.helpers.instanceOfModule(item, this._itemModule)) {
+            item.setOwner(this);
             return item;
          }
 
          return $ws.single.ioc.resolve(this._itemModule, {
+            owner: this,
             contents: item
          });
       },

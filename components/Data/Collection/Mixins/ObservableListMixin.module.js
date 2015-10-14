@@ -20,8 +20,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
       },
 
       $constructor: function () {
-         this._publish('onCollectionChange');
-         this._onItemSelectedChangeHandler = onItemSelectedChangeHandler.bind(this);
+         this._publish('onCollectionChange', 'onCollectionItemChange');
          this._onItemModelChangeHandler = onItemModelChangeHandler.bind(this);
          $ws.helpers.forEach(this._items, this._watchForChanges, this);
       },
@@ -105,6 +104,16 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
 
       },
 
+      notifyItemChange: function (item, property) {
+         var index = this.getIndex(item);
+         this._notify(
+            'onCollectionItemChange',
+            this._items[index],
+            index,
+            property
+         );
+      },
+
       //region Protected methods
 
       /**
@@ -165,33 +174,29 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
       },
 
       /**
-       * Подписывается на событие onChange на содержимом элемента коллекции
+       * Подписывается на событие onPropertyChange на содержимом элемента коллекции
        * @param item {SBIS3.CONTROLS.Data.Collection.ICollectionItem} Элемент коллекции
        * @private
        */
       _watchForChanges: function(item) {
-         this.subscribeTo(item, 'onSelectedChange', this._onItemSelectedChangeHandler);
-
          var contents = item.getContents();
          if (this._needWatchForChanges(contents)) {
-            var handlers = contents.getEventHandlers('onChange');
+            var handlers = contents.getEventHandlers('onPropertyChange');
             if (Array.indexOf(handlers, this._onItemModelChangeHandler) === -1) {
-               this.subscribeTo(contents, 'onChange', this._onItemModelChangeHandler);
+               this.subscribeTo(contents, 'onPropertyChange', this._onItemModelChangeHandler);
             }
          }
       },
 
       /**
-       * Отписываетсят события onChange
+       * Отписываетсят события onPropertyChange
        * @param item {SBIS3.CONTROLS.Data.Collection.ICollectionItem} Элемент коллекции
        * @private
        */
       _cancelWatchForChanges: function(item) {
-         this.unsubscribeFrom(item, 'onSelectedChange', this._onItemSelectedChangeHandler);
-
          var contents = item.getContents();
          if (this._needWatchForChanges(contents)) {
-            this.unsubscribeFrom(contents, 'onChange', this._onItemModelChangeHandler);
+            this.unsubscribeFrom(contents, 'onPropertyChange', this._onItemModelChangeHandler);
          }
       },
 
@@ -212,37 +217,15 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
    };
 
    /**
-    * Обработчки события изменения признака выбранности элемента коллекции
-    * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {Boolean} selected Элемент выбран
-    * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem} element Элемент
-    */
-   var onItemSelectedChangeHandler = function (event, selected, element) {
-      var index = this.getIndex(element);
-      this._notifyCollectionChange(
-         IBindCollection.ACTION_UPDATE,
-         [this._items[index]],
-         index,
-         [this._items[index]],
-         index
-      );
-   },
-
-   /**
     * Обработчк события изменения модели
     * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {String} name Название свойства
+    * @param {String} property Измененное свойство
     * @param {*} value Значение свойства
-    * @param {SBIS3.CONTROLS.Data.Model} model Инстанс модели
     */
-   onItemModelChangeHandler = function (event, name, value, model) {
-      var index = this.getIndex(model);
-      this._notifyCollectionChange(
-         IBindCollection.ACTION_UPDATE,
-         [this._items[index]],
-         index,
-         [this._items[index]],
-         index
+   var onItemModelChangeHandler = function (event, property) {
+      this.notifyItemChange(
+         event.getTarget(),
+         property
       );
    };
 
