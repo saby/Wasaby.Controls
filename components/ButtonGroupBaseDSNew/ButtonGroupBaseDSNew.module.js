@@ -29,35 +29,29 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDSNew', [
 
    var ButtonGroupBase = CompoundControl.extend([ListControlMixin, DisplayFieldMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBaseDSNew.prototype */ {
       $protected: {
-         _options: {
-            captionField: ''
-         },
          _viewConstructor: ButtonGroupBaseView
       },
 
       $constructor: function() {
          this._container.removeClass('ws-area');
-
-         if (this._options.captionField) {
-            this._options.displayField = this._options.captionField;
-            $ws.single.ioc.resolve('ILogger').log('ButtonGroupBase', 'Опция "captionField" устарела. Используйте опцию "displayField".');
-         }
       },
 
       init: function () {
+         ButtonGroupBase.superclass.init.call(this);
+
          this._initView();
 
          var self = this,
             onItemActivated = function() {
                self._itemActivatedHandler(
                   Array.indexOf(
-                     self._getView().getComponents(),
+                     self.getGroupControls(),
                      this
                   )
                );
             };
 
-         $ws.helpers.forEach(this._getView().getComponents(),function(component){
+         $ws.helpers.forEach(this.getGroupControls(), function(component){
             component.subscribe('onActivated', onItemActivated);
          });
          
@@ -74,15 +68,16 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDSNew', [
             }, this);*/
       },
 
+      getGroupControls: function() {
+         return ButtonGroupBase.superclass.getChildControls.call(this);
+      },
+
       setEnabled: function (enabled) {
          ButtonGroupBase.superclass.setEnabled.call(this, enabled);
-         var itemsInstances = this.getItemsInstances();
-         for (var i in itemsInstances) {
-            if (itemsInstances.hasOwnProperty(i)) {
-               itemsInstances[i].setEnabled(enabled);
-            }
-         }
-      },      
+         $ws.helpers.forEach(this.getGroupControls(), function(component){
+            component.setEnabled(enabled);
+         });
+      },
 
 
       _itemActivatedHandler : function(index) {

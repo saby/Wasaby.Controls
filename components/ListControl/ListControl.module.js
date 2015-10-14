@@ -89,10 +89,6 @@ define('js!SBIS3.CONTROLS.ListControl', [
          if (this._options.elemClickHandler) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.ListControl', 'c 3.8.0 свойство elemClickHandler перестанет работать. Используйте событие onItemAction');
          }
-      },
-
-      init: function() {
-         ListControl.superclass.init.call(this);
          this._initView();
       },
 

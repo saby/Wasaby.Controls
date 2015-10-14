@@ -285,7 +285,6 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
             }
             this._view.checkEmpty();
             this.reviveComponents();
-            this._checkPagerState(this._pager);
             break;
 
          case IBindCollection.ACTION_MOVE:

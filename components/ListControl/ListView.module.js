@@ -72,6 +72,11 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
          _isLoadingVisible: false,
 
          /**
+          * @var {Boolean} Задержка появления индикатора загрузки
+          */
+         _loadingIndicatorShowDelay: 750,
+
+         /**
           * @var {String} CSS-класс узла, содержащего компонент пейджинга
           */
          _pagerClass: 'pager'
@@ -85,6 +90,10 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
          }
 
          this._attachEventHandlers();
+      },
+
+      getPagerContainerSelector: function() {
+         return '.' + this._сssPrefix + this._pagerClass;
       },
 
       //region SBIS3.CONTROLS.ListControl.IListView
@@ -186,18 +195,24 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
       },
 
       showLoadingIndicator: function (target) {
+         if (this._isLoadingVisible) {
+            return;
+         }
          this._isLoadingVisible = true;
          setTimeout((function() {
             if (this._isLoadingVisible) {
                this._getLoadingNode(target).show();
             }
-         }).bind(this), 750);
+         }).bind(this), this._loadingIndicatorShowDelay);
       },
 
       /**
        * Скрывает индикатор загрузки
        */
       hideLoadingIndicator: function (target) {
+         if (!this._isLoadingVisible) {
+            return;
+         }
          this._isLoadingVisible = false;
          this._getLoadingNode(target).hide();
       },
@@ -230,20 +245,6 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
        */
       getTemplate: function () {
          return this._options.template;
-      },
-
-      /**
-       * Возвращает инстансы компонентов из указанного узла
-       * @param {jQuery} [node] Узел DOM. Если не указан - берется корневой.
-       * @returns {Array}
-       */
-      getComponents: function(node) {
-         node = node || this.getRootNode();
-         var components = [];
-         node.find('[data-component]').each(function (i, item) {
-            components.push($(item).wsControl());
-         });
-         return components;
       },
 
       /**
@@ -538,6 +539,10 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
             node = $('<div/>')
                .addClass(this._сssPrefix + this._loadingNodeCssClass)
                .appendTo(parent);
+
+            if (this._options.pagerType === 'scroll' || this._options.pagerType === 'more') {
+               node.addClass(this._сssPrefix + this._loadingNodeCssClass + '-more');
+            }
          }
          return node;
       },
@@ -548,9 +553,26 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
        * @private
        */
       _removeСomponents: function(node) {
-         $ws.helpers.forEach(this.getComponents(node), function (item) {
-            item.destroy();
+         $ws.helpers.forEach(this._getComponents(node), function (item) {
+            if (item && !item.isDestroyed()) {
+               item.destroy();
+            }
          });
+      },
+
+      /**
+       * Возвращает инстансы компонентов из указанного узла
+       * @param {jQuery} [node] Узел DOM. Если не указан - берется корневой.
+       * @returns {Array}
+       * @private
+       */
+      _getComponents: function(node) {
+         node = node || this.getRootNode();
+         var components = [];
+         node.find('[data-component]').each(function (i, item) {
+            components.push($(item).wsControl());
+         });
+         return components;
       },
 
       /**

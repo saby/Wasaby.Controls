@@ -22,13 +22,19 @@ define('js!SBIS3.CONTROLS.RadioGroupBaseNew', ['js!SBIS3.CONTROLS.ButtonGroupBas
    var RadioGroupBaseNew = ButtonGroupBase.extend([Selectable], /** @lends SBIS3.CONTROLS.RadioGroupBaseNew.prototype */ {
       _moduleName: 'SBIS3.CONTROLS.RadioGroupBaseNew',
 
+      getGroupControls: function() {
+         return RadioGroupBaseNew.superclass.getGroupControls.call(this).filter(function(control) {
+            return $ws.helpers.instanceOfModule(control, 'SBIS3.CONTROLS.RadioButton');
+         });
+      },
+
       _itemActivatedHandler: function(index) {
          this.getItemsProjection().setCurrentPosition(index);
       },
 
       _drawSelectedItem : function() {
          var index = this.getItemsProjection().getCurrentPosition();
-         $ws.helpers.forEach(this._getView().getComponents(), function(control, controlIndex) {
+         $ws.helpers.forEach(this.getGroupControls(), function(control, controlIndex) {
             if (controlIndex === index) {
                control.setChecked(true);
             } else {

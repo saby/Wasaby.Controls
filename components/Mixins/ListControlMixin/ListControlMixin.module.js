@@ -77,19 +77,9 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
             pageSize: undefined,
 
             /**
-             * @typedef {String} PageType
-             * @variant scroll Загрузка по скроллу
-             * @variant more Загрузка по нажатии на кнопку "Показать еще"
+             * @cfg {SBIS3.CONTROLS.PagerMore#PagerType} Вид контроллера постраничной навигации. По умолчанию - scroll
              */
-
-            /**
-             * @cfg {PageType} Вид контроллера постраничной навигации
-             * @example
-             * <pre class="brush:xml">
-             *     <option name="pageType">scroll</option>
-             * </pre>
-             */
-            pageType: 'more',
+            pagerType: 'scroll',
 
             /**
              * @cfg {SBIS3.CONTROLS.ListControl.IListItems|Array} Список, отображаемый контролом
@@ -120,6 +110,11 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
             $ws._const.key.right,
             $ws._const.key.left
          ],
+
+         /**
+          * @var {Boolean} Инициализация контрола завершена
+          */
+         _isInitialized: false,
 
          /**
           * @var {SBIS3.CONTROLS.Data.Collection.IList} Список, отображаемый контролом
@@ -197,6 +192,10 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
       //region After- injections
 
       after: {
+         init: function() {
+            this._isInitialized = true;
+         },
+
          destroy: function () {
             this._unsetItemsEventHandlers();
             if (this._view) {
@@ -342,12 +341,18 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
                   element: this._view.getPagerContainer(collection),
                   items: collection,
                   pageSize: this._options.pageSize,
-                  pageType: this._options.pageType
+                  pagerType: this._options.pagerType,
+                  visibleParentSelector: this._view.getPagerContainerSelector()
                });
             }
          }
 
-         this.reviveComponents();
+         if (this._isInitialized) {
+            console.log('_isInitialized');
+            this.reviveComponents();
+         } else {
+            console.log('not _isInitialized');
+         }
       },
 
       /**
@@ -550,6 +555,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
             template: this._getViewTemplate(),
             itemTemplate: this._getItemTemplate(),
             itemTemplateSelector: this._getItemTemplateSelector(),
+            pagerType: this._options.pagerType,
             emptyHTML: this._options.emptyHTML
          };
 
@@ -609,17 +615,6 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
       _setPagerItems: function(items) {
          if (this._pager) {
             this._pager.setItems(items.getCollection());
-         }
-      },
-
-      /**
-       * Проверяет состояние контрола постраничной навигации
-       * @param {SBIS3.CONTROLS.PagerMore} pager
-       * @private
-       */
-      _checkPagerState: function(pager) {
-         if (pager && !pager.hasMore()) {
-            pager.getContainer().hide();
          }
       },
 
@@ -808,7 +803,6 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
                );
             }
             this._view.checkEmpty();
-            this._checkPagerState(this._pager);
             this.reviveComponents();
             break;
 

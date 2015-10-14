@@ -49,17 +49,24 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBaseNew', [
       $constructor: function() {
       },
 
+      getGroupControls: function() {
+         return CheckBoxGroupBaseNew.superclass.getGroupControls.call(this).filter(function(control) {
+            return $ws.helpers.instanceOfModule(control, 'SBIS3.CONTROLS.CheckBox');
+         });
+      },
+
       _itemActivatedHandler : function(index) {
          var item = this.getItems().at(index);
          this.toggleItemsSelection([Utils.getItemPropertyValue(item,this._options.keyField)]);
       },
+
       _drawSelectedItems : function() {
          var selectedKeys = this.getSelectedKeys(),
-            components = this._getView().getComponents(),
+            components = this.getGroupControls(),
             items = this.getItems(),
             self = this;
-         items.each(function(item,index){
-            var key = Utils.getItemPropertyValue(item,self._options.keyField),
+         items.each(function(item, index){
+            var key = Utils.getItemPropertyValue(item ,self._options.keyField),
                control = components[index];
             if(Array.indexOf(selectedKeys,key) !== -1){
                control.setChecked(true);

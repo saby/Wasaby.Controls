@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
    'use strict';
 
    /**
-    * Контрол, загружающий записи в коллекцию c реализацией интерфейса SBIS3.CONTROLS.Data.Collection.ISourceLoadable постранично
+    * Пейдер - загружает записи в коллекцию c реализацией интерфейса SBIS3.CONTROLS.Data.Collection.ISourceLoadable постранично
     * @class SBIS3.CONTROLS.PagerMore
     * @extends SBIS3.CORE.CompoundControl
     * @public
@@ -33,23 +33,73 @@ define('js!SBIS3.CONTROLS.PagerMore', [
              * @cfg {Number} Размер страницы
              */
             pageSize: 0,
-            
+
             /**
-             * @cfg {PageType} Вид постраничной навигации
+             * @typedef {String} PagerType
+             * @variant scroll Загрузка по скроллу
+             * @variant more Загрузка по нажатии на кнопку "Показать еще"
+             * @variant single Навигация с выбором страницы
              */
-            pageType: 'scroll'
+
+            /**
+             * @cfg {PagerType} Вид постраничной навигации. По умолчанию - по скроллу.
+             * @example
+             * <pre class="brush:xml">
+             *     <option name="pagerType">scroll</option>
+             * </pre>
+             */
+            pagerType: 'scroll',
+
+            /**
+             * @typedef {String} Direction
+             * @variant down Загрузка вниз
+             * @variant up Загрузка вверх
+             */
+
+            /**
+             * @cfg {Direction} Направление загрузки. По умолчанию - вниз.
+             * @example
+             * <pre class="brush:xml">
+             *     <option name="Direction">down</option>
+             * </pre>
+             */
+            direction: 'down',
+
+            /**
+             * @cfg {String} Селектор родительского контейнера, который нужно скрыть, если больше нет записей для загрузки
+             */
+            visibleParentSelector: ''
          },
          
          /**
           * @var {SBIS3.CONTROLS.Data.Collection.ISourceLoadable} Коллекция, в которую загружаются записи
           */
-         _items: undefined
+         _items: undefined,
+
+         /**
+          * @var {Boolean} Признак, что коллекция загружается
+          */
+         _isItemsLoading: false,
+
+         /**
+          * @var {jQuery} Контейнер, в котором отслеживаем позицию скролла
+          */
+         _scrollContainer: undefined,
+
+         /**
+          * @var {Number} Отступ от видимых границ, при котором заранее начинается загрузка
+          */
+         _scrollPreloadOffset: 200
       },
 
       //region Public methods
 
       $constructor: function(cfg) {
          cfg = cfg || {};
+
+         this._onBeforeItemsLoad = this._onBeforeItemsLoad.bind(this);
+         this._onAfterItemsLoad = this._onAfterItemsLoad.bind(this);
+
          if ('items' in cfg) {
             this.setItems(cfg.items);
          }
@@ -59,9 +109,15 @@ define('js!SBIS3.CONTROLS.PagerMore', [
          PagerMore.superclass.init.call(this);
 
          this.getContainer().on('click', 'a', (function() {
-            this._loadNext();
+            this._loadAttempt();
             return false;
          }).bind(this));
+
+         if (this._options.pagerType === 'scroll') {
+            //TODO: стек панель в качестве скролл контейнера
+            this._scrollContainer = $(window);
+            this._scrollContainer.on('scroll', this._checkScroll.bind(this));
+         }
       },
 
       /**
@@ -81,7 +137,14 @@ define('js!SBIS3.CONTROLS.PagerMore', [
        * @see getItems
        */
       setItems: function(items) {
+         if (this._items) {
+            this._items.unsubscribe('onBeforeCollectionLoad', this._onBeforeItemsLoad);
+            this._items.unsubscribe('onAfterCollectionLoad', this._onAfterItemsLoad);
+         }
          this._items = items;
+         this._items.subscribe('onBeforeCollectionLoad', this._onBeforeItemsLoad);
+         this._items.subscribe('onAfterCollectionLoad', this._onAfterItemsLoad);
+
          this._applySettings();
       },
 
@@ -168,39 +231,108 @@ define('js!SBIS3.CONTROLS.PagerMore', [
       },
 
       /**
-       * Загружает следующую страницу
+       * Пытается загрузить очередную страницу
        * @private
        */
-      _loadNext: function() {
-         this._options.pageNum++;
-         this._load(ISourceLoadable.MODE_APPEND);
-      },
-
-      /**
-       * Загружает предыдущую страницу
-       * @private
-       */
-      _loadPrevious: function() {
-         this._options.pageNum--;
-         this._load(ISourceLoadable.MODE_PREPEND);
-      },
-
-      /**
-       * Загружает указанную в настройках страницу
-       * @param {String} mode Режим загрузки
-       * @private
-       */
-      _load: function(mode) {
-         if (!this._options.items) {
+      _loadAttempt: function() {
+         if (!this._options.items ||
+            !$ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable') ||
+            this._isItemsLoading
+         ) {
             return;
          }
 
-         this._applySettings();
-         
-         if ($ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
-            this._items.load(mode);
+         var mode = this._options.direction === 'up' ? ISourceLoadable.MODE_PREPEND : ISourceLoadable.MODE_APPEND;
+         switch (mode) {
+            case ISourceLoadable.MODE_PREPEND:
+               if (this._options.pageNum < 1) {
+                  return;
+               }
+               this._options.pageNum--;
+               break;
+            case ISourceLoadable.MODE_APPEND:
+               if (!this.hasMore()) {
+                  return;
+               }
+               this._options.pageNum++;
+               break;
          }
+
+         this._applySettings();
+         this._isItemsLoading = true;
+         this._items.load(mode);
+      },
+
+      /**
+       * Проверяет, нужно ли еще отображать контрол
+       * @private
+       */
+      _checkState: function() {
+         var hasMore = this._options.direction === 'up' ? this._options.pageNum > 0 : this.hasMore();
+         if (!hasMore) {
+            this.hide();
+            if (this._options.visibleParentSelector) {
+               this.getContainer().closest(this._options.visibleParentSelector).addClass('ws-hidden');
+            }
+         }
+      },
+
+      /**
+       * Обработчик события начала загрузки
+       * @private
+       */
+      _onBeforeItemsLoad: function() {
+         this._isItemsLoading = true;
+      },
+
+      /**
+       * Обработчик события окончания загрузки
+       * @private
+       */
+      _onAfterItemsLoad: function() {
+         this._isItemsLoading = false;
+
+         //FIXME: для проверки состояния лучше подписаться на onAfterLoadedApply
+         //Перед проверкой надо подождать, пока отработает рендер
+         (function(){
+            this._checkState();
+            if (this._options.pagerType === 'scroll') {
+               this._checkScroll();
+            }
+         }).debounce(500).call(this);
+      },
+
+      //region pagerType = scroll
+
+      /**
+       * Проверяет, надо ли загрузить еще одну страницу при скролле
+       * @private
+       */
+      _checkScroll: function () {
+         if (this._isPagerInViewport()) {
+            this._loadAttempt();
+         }
+      },
+
+      /**
+       * Возвращает признак, что контейнер контрола отображается в видимой части окна
+       * @private
+       */
+      _isPagerInViewport: function () {
+         if (!this._scrollContainer || !this.isVisible()) {
+            return false;
+         }
+
+         var height = this._container.offset().top || this._scrollContainer.height(),
+            scrollTop = this._scrollContainer.scrollTop(),
+            viewportHeight = this._scrollContainer[0].clientHeight || document.documentElement.clientHeight || document.body.clientHeight,
+            offsetTop = scrollTop - height +  - this._scrollPreloadOffset,
+            offsetBottom = height - viewportHeight - scrollTop - this._scrollPreloadOffset;
+
+         return offsetBottom <= 0 && offsetTop <= 0;
       }
+
+      //endregion pagerType = scroll
    });
 
    return PagerMore;
