@@ -39,6 +39,9 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.DataBindMixin
        * @control
        * @public
+       * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
+       * @cssModifier controls-ListView__showCheckBoxes Чекбоксы показываются не по ховеру, а сразу все.
+       * @cssModifier controls-ListView__hideCheckBoxes Скрыть все чекбоксы.
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
