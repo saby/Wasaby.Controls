@@ -3264,27 +3264,27 @@ input[type="reset"]::-moz-focus-inner {
   display: inline-block;
   border: 0;
 }
-.controls-CustomFilterMenu {
+.controls-DropdownList {
   display: inline-block;
   min-height: 24px;
   box-sizing: border-box;
 }
-.controls-CustomFilterMenu > * {
+.controls-DropdownList > * {
   display: inline-block;
 }
-.controls-CustomFilterMenu .controls-CustomFilterMenu__beforeCaptionWrapper {
+.controls-DropdownList .controls-DropdownList__beforeCaptionWrapper {
   display: inline-block;
 }
-.controls-CustomFilterMenu .controls-CustomFilterMenu__beforeCaptionWrapper .controls-CustomFilterMenu__arrowIcon {
+.controls-DropdownList .controls-DropdownList__beforeCaptionWrapper .controls-DropdownList__arrowIcon {
   display: inline-block;
   width: 16px;
   height: 16px;
   background: url('img/select-arrow.png') 0 -52px no-repeat;
 }
-.controls-CustomFilterMenu .controls-CustomFilterMenu__afterCaptionWrapper {
+.controls-DropdownList .controls-DropdownList__afterCaptionWrapper {
   display: inline-block;
 }
-.controls-CustomFilterMenu .controls-CustomFilterMenu__afterCaptionWrapper .controls-CustomFilterMenu__crossIcon {
+.controls-DropdownList .controls-DropdownList__afterCaptionWrapper .controls-DropdownList__crossIcon {
   display: inline-block;
   position: relative;
   bottom: -5px;
@@ -3292,16 +3292,16 @@ input[type="reset"]::-moz-focus-inner {
   height: 16px;
   background: url('img/cancelIcon-sprite.png') 0 -35px no-repeat;
 }
-.controls-CustomFilterMenu .controls-CustomFilterMenu__afterCaptionWrapper .controls-CustomFilterMenu__crossIcon:hover {
+.controls-DropdownList .controls-DropdownList__afterCaptionWrapper .controls-DropdownList__crossIcon:hover {
   background: url('img/cancelIcon-sprite.png') 0 -19px no-repeat;
 }
-.controls-CustomFilterMenu__picker {
+.controls-DropdownList__picker {
   cursor: pointer;
 }
-.controls-CustomFilterMenu__picker .controls-CustomFilterMenu__equalsWidth .controls-CustomFilterMenu__list {
+.controls-DropdownList__picker .controls-DropdownList__equalsWidth .controls-DropdownList__list {
   border-radius: 0 0 5px 5px;
 }
-.controls-CustomFilterMenu__picker .controls-CustomFilterMenu__header {
+.controls-DropdownList__picker .controls-DropdownList__header {
   display: inline-block;
   background: #ffffff;
   border: 2px solid #e4e4e4;
@@ -3309,30 +3309,69 @@ input[type="reset"]::-moz-focus-inner {
   border-bottom: 0;
   z-index: 2;
 }
-.controls-CustomFilterMenu__picker .controls-CustomFilterMenu__header .controls-CustomFilterMenu__arrowIcon {
+.controls-DropdownList__picker .controls-DropdownList__header .controls-DropdownList__arrowIcon {
   background: url('img/select-arrow.png') 0 -26px no-repeat;
 }
-.controls-CustomFilterMenu__picker .controls-CustomFilterMenu__list {
+.controls-DropdownList__picker .controls-DropdownList__list {
   z-index: 1;
   border: 2px solid #e4e4e4;
-  border-radius: 0 5px 5px 5px;
+  border-radius: 0 0 5px 5px;
   background: #ffffff;
   margin-top: -2px;
   padding: 8px 0;
 }
-.controls-CustomFilterMenu__picker.controls-FloatArea {
+.controls-DropdownList__picker.controls-FloatArea {
   background: transparent;
 }
-.controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item {
+.controls-DropdownList__picker .controls-DropdownList__item {
   padding: 4px 8px;
   background: #ffffff;
   margin: 0;
 }
-.controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item:hover {
+.controls-DropdownList__picker .controls-DropdownList__item:hover {
   background: #e9fafe;
 }
-.controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item.controls-CustomFilterMenu__item__selected {
+.controls-DropdownList__picker .controls-DropdownList__item:hover .controls-DropdownList__itemCheckBox {
+  visibility: visible;
+}
+.controls-DropdownList__picker .controls-DropdownList__item.controls-DropdownList__item__selected {
   display: none;
+}
+.controls-DropdownList__picker .controls-DropdownList__footer {
+  line-height: 24px;
+  padding-left: 8px;
+}
+.controls-DropdownList__picker .controls-DropdownList__footer .controls-DropdownListFooter_hasMore {
+  float: right;
+  padding-right: 8px;
+  padding-top: 3px;
+}
+.controls-DropdownList__picker .controls-DropdownList__multiselect {
+  padding-left: 16px;
+}
+.controls-DropdownList__picker .controls-DropdownList__multiselect.controls-DropdownList__item__selected {
+  display: block;
+}
+.controls-DropdownList__picker .controls-DropdownList__multiselect.controls-DropdownList__item__selected .controls-DropdownList__itemCheckBox {
+  background: url('img/CheckBox.png') 0 50px;
+  visibility: visible;
+}
+.controls-DropdownList__picker .controls-DropdownList__multiselect.controls-ListView__defaultItem.controls-DropdownList__item__selected,
+.controls-DropdownList__picker .controls-DropdownList__multiselect.controls-ListView__defaultItem {
+  font-weight: bold;
+}
+.controls-DropdownList__picker .controls-DropdownList__multiselect.controls-ListView__defaultItem.controls-DropdownList__item__selected .controls-DropdownList__itemCheckBox,
+.controls-DropdownList__picker .controls-DropdownList__multiselect.controls-ListView__defaultItem .controls-DropdownList__itemCheckBox {
+  visibility: hidden;
+}
+.controls-DropdownList__picker .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
+  width: 16px;
+  height: 16px;
+  background: none;
+  cursor: pointer;
+  display: inline-block;
+  background: url('img/CheckBox.png') 0 2px;
+  visibility: hidden;
 }
 .controls-HtmlDecorators-highlight {
   background-color: #fffece;
