@@ -168,10 +168,19 @@ define('js!SBIS3.CONTROLS.ListControl.IListView', [], function () {
       },
 
       /**
-       * Возвращает узел под pager
+       * Возвращает узел DOM под pager
        * @param {SBIS3.CONTROLS.Data.Projection} items Проекция коллекции
+       * @returns {jQuery}
        */
       getPagerContainer: function (items) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает селектор родительского узла pager-а, который надо скрыть, когда закончатся записи
+       * @returns {String}
+       */
+      getPagerContainerSelector: function() {
          throw new Error('Method must be implemented');
       }
    };

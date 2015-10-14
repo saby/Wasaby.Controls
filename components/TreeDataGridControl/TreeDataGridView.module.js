@@ -16,12 +16,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
    var TreeDataGridView = TreeView.extend([DataGridViewMixin], /** @lends SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView.prototype */{
       _moduleName: 'SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView',
       $protected: {
-         _options: {
-            /**
-             * @cfg {Number} Число колонок
-             */
-            columnsCount: 0
-         },
          _rowTemplate: RowTemplate,
          _rootNode: undefined
       },
@@ -59,7 +53,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
              pagerContaner = targetNode.find('.' + this._сssPrefix + this._pagerClass + '[data-parent-hash="' + items.getHash() + '"]');
          if (pagerContaner.length === 0) {
             var itemContainer = this._getItemContainer(targetNode, items);
-            pagerContaner = $('<tr><td colspan="' + this._options.columnsCount + '"><div></div></td></tr>')
+            pagerContaner = $('<tr><td colspan="' + ((this._options.multiselect ? 1 : 0) + this._options.columns.length) + '"><div></div></td></tr>')
                .addClass(this._сssPrefix + this._pagerClass)
                .attr('data-parent-hash', items.getHash());
             if (itemContainer.length) {
