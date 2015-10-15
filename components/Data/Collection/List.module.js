@@ -48,11 +48,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             if (!(cfg.items instanceof Array)) {
                throw new Error('Invalid argument');
             }
-            this._items = cfg.items.slice();
-         }
-
-         for (var i = 0, count = this._items.length; i < count; i++) {
-            this._items[i] = this._convertToItem(this._items[i]);
+            for (var i = 0, count = cfg.items.length; i < count; i++) {
+               this._items[i] = this._convertToItem(cfg.items[i]);
+            }
          }
       },
 
@@ -98,9 +96,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          if (!isArray && !$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
             throw new Error('Invalid argument');
          }
-         if (isArray) {
-            items = items.slice();
-         } else {
+         if (!isArray) {
             items = items.toArray();
          }
 
@@ -116,7 +112,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       toArray: function () {
-         return this._items.slice();
+         return this._items;
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
