@@ -48,6 +48,10 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          return this._options.hierField;
       },
 
+      setRoot: function(root){
+         this._options.root = root;
+      },
+
       // обход происходит в том порядке что и пришли
       hierIterate: function (DataSet, iterateCallback, status) {
          if (Object.isEmpty(DataSet._indexTree)) {
