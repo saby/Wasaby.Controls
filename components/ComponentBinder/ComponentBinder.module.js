@@ -143,23 +143,23 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          _path: [],
          _options: {
             /**
-             * @cfg объект представления данных
+             * @cfg {SBIS3.CONROLS.DataGridView} объект представления данных
              */
             view: undefined,
             /**
-             * @cfg объект хлебных крошек
+             * @cfg {SBIS3.CONROLS.BreadCrumbs} объект хлебных крошек
              */
             breadCrumbs: undefined,
             /**
-             * @cfg объект кнопки назад
+             * @cfg {SBIS3.CONROLS.BackButton} объект кнопки назад
              */
             backButton: undefined,
             /**
-             * @cfg объект строки поиска
+             * @cfg {SBIS3.CONROLS.SearchForm} объект строки поиска
              */
             searchForm: undefined,
             /**
-             * @cfg объект панели массовых операций
+             * @cfg {SBIS3.CONROLS.OperationsPanel} объект панели массовых операций
              */
             operationPanel: undefined
          }
@@ -168,9 +168,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       /**
        * Метод для связывания формы строки поиска с представлением данных.
        * для работы необходимо задать опциию view
-       * @param searchParamName параметр фильтрации для поиска
-       * @param searchCrumbsTpl шаблон отрисовки элемента пути в поиске
-       * @param [searchForm] объект формы поиска
+       * @param {String} searchParamName параметр фильтрации для поиска
+       * @param {String} searchCrumbsTpl шаблон отрисовки элемента пути в поиске
+       * @param {SBIS3.CONROLS.SearchForm} [searchForm] объект формы поиска, если не передан используется тот, что задан в опциях
        * @example
        * <pre>
        *     myBinder = new ComponentBinder();
@@ -240,8 +240,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       /**
        * Метод для связывания хлебных крошек с представлением данных
        * для работы необходимо задать опциию view
-       * @param [breadCrumbs] объект хлебных крошек
-       * @param [backButton] объект книпоки назад
+       * @param {SBIS3.CONROLS.BreadCrumbs} [breadCrumbs] объект хлебных крошек, если не передан используется тот, что задан в опциях
+       * @param {SBIS3.CONROLS.BackButton} [backButton] объект книпоки назад, если не передан используется тот, что задан в опциях
        * @example
        * <pre>
        *     myBinder = new ComponentBinder({
@@ -343,8 +343,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       /**
        * Метод для связывания панели массовых оперций с представлением данных
        * для работы необходимо задать опциию view
-       * @param hideCheckBoxes {Boolean} флаг, показывающий, скрывать checkBox'ы для отметки записей
-       * @param [operationPanel] объект панели массовых операций
+       * @param {Boolean} hideCheckBoxes флаг, показывающий, скрывать checkBox'ы для отметки записей
+       * @param {SBIS3.CONROLS.OperationsPanel} [operationPanel] объект панели массовых операций, если не передан используется тот, что задан в опциях
        * в представлении данных вместе с панелью или нет.
        * @example
        * <pre>
