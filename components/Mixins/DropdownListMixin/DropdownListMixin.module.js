@@ -42,11 +42,10 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
             },
 
             _bindItemSelect: function () {
-                var self = this;
-                //TODO придумать что то нормальное и выпилить
+                /* Стопить событие mousedown нельзя, иначе multiselectablePicker может не закрыться при клике на соседний пикер.
                 this._picker.getContainer().mousedown(function (e) {
                     e.stopPropagation();
-                });
+                });*/
                 this._picker.getContainer().bind('mouseup', this._clickItemHandler.bind(this));
                 this._picker.getContainer().bind('dblclick', this._dblClickItemHandler.bind(this));
             },

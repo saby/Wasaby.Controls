@@ -14,10 +14,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
       'js!SBIS3.CORE.MarkupTransformer',
       'html!SBIS3.CONTROLS.DropdownList',
       'html!SBIS3.CONTROLS.DropdownList/DropdownListItem',
-      'html!SBIS3.CONTROLS.DropdownList/DropdownListFooter'
+      'html!SBIS3.CONTROLS.DropdownList/DropdownListPicker'
    ],
 
-   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, Link, MarkupTransformer, dotTplFn, dotTplFnForItem, dotTplFnFooter) {
+   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, Link, MarkupTransformer, dotTplFn, dotTplFnForItem, dotTplFnPicker) {
 
       'use strict';
 
@@ -30,9 +30,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
                defaultText : '',
                caption : '',
                /**
-                *
+                * Опция для пробрасывания имени фильтра обратно в FastDataFilter
                 */
-               filterName : ''
+               filterName : '',
+               pickerClassName: 'controls-DropdownList__picker',
+               allowEmptySelection: false
             },
             _dotTplFn: dotTplFn,
             _caption: null,
@@ -40,6 +42,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             _pickerListContainer: null,
             _pickerHeadContainer: null,
             _pickerFooterContainer: null,
+            _pickerBodyContainer: null,
             _resetButton: null,
             _pickerResetButton: null,
             _defaultId: null,
@@ -58,14 +61,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _setPickerContent : function () {
             var self = this,
-                header = $('<div class="controls-DropdownList__header"/>'),
-                list = $('<div class="controls-DropdownList__list"/>'),
-                footer,
-                pickerContainer = this._getPickerContainer();
-
+                pickerContainer = this._getPickerContainer(),
+                header = pickerContainer.find('.controls-DropdownList__header');
             header.append(this._container.clone().removeAttr('style'));
-            pickerContainer.append(header, list);
-
             this._setVariables();
             this.reload();
             this._bindItemSelect();
@@ -74,42 +72,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
                self.hidePicker();
             });
             if(this._options.mode === 'hover') {
-               header.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, true));
-               list.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
-            }
-            if (this._options.multiselect) {
-               footer = $('<div class="controls-DropdownList__footer"/>');
-               footer.append($(MarkupTransformer(dotTplFnFooter)({})));
-               this._buttonChoose = new Button({
-                  caption: 'Отобрать',
-                  primary: true,
-                  element: footer.find('#CustomFilter_buttonChoose'),
-                  className: 'ws-invisible',
-                  handlers: {
-                     onActivated : function(){
-                        var currSelection = self._getCurrentSelection();
-                        self._hideAllowed = true;
-                        if (!self._isSimilarArrays(self.getSelectedKeys(), currSelection)) {
-                           self.setSelectedKeys(currSelection);
-                        }
-                        self.hidePicker();
-                     }
-                  }
-
-               });
-               this._buttonHasMore = new Link({
-                  caption: 'Еще...',
-                  element: footer.find('#CustomFilter_buttonHasMore'),
-                  handlers: {
-                     onActivated : function(){
-                        self._notify('onClickMore');
-                        self.hidePicker();
-                     }
-                  }
-
-               });
-               //footer пришлось положить внутрь list, потому что иначе усложняются css правила на случаи multiselect : false
-               list.append(footer);
+               this._pickerHeadContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, true));
+               this._pickerBodyContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
             }
          },
          _buildTplArgs: function(item) {
@@ -222,27 +186,56 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return this._picker.getContainer();
          },
          _pickerMouseLeaveHandler: function(fromHeader, e) {
-            if(this._hideAllowed && !$(e.toElement).closest('.controls-DropdownList__' + (fromHeader ? 'list' : 'header')).length) {
+            if(this._hideAllowed && !$(e.toElement).closest('.controls-DropdownList__' + (fromHeader ? 'body' : 'header')).length) {
                this.hidePicker();
             }
          },
          _drawItemsCallback: function() {
+
             //Надо вызвать просто для того, чтобы отрисовалось выбранное значение/значения
-            this.setSelectedKeys(this._options.selectedKeys);
+            if (this._dataSet.getRawData().length) {
+               this.setSelectedKeys(this._options.selectedKeys);
+            }
+
          },
          _dataLoadedCallback: function() {
-            this._defaultId = this._dataSet.at(0).getKey();
+            var item =  this._dataSet.at(0);
+            if (item) {
+               this._defaultId = item.getKey();
+               /* Пока закомментирую, не уверена, что DataSet  сможет правильно  работать с more и так же не уверена, должно ли оно вообще зависеть от more
+               if (this._buttonHasMore) {
+                  this._buttonHasMore[this._hasNextPage(this._dataSet.getMetaData().more, 0) ? 'show' : 'hide']();
+               }*/
+            }
          },
          _setVariables: function() {
-            var pickerContainer = this._getPickerContainer();
+            var pickerContainer = this._getPickerContainer(),
+                  self = this;
 
             this._caption = this._container.find('.controls-DropdownList__caption');
             this._resetButton = this._container.find('.controls-DropdownList__crossIcon');
             this._pickerCaption  = pickerContainer.find('.controls-DropdownList__caption');
             this._pickerResetButton = pickerContainer.find('.controls-DropdownList__crossIcon');
             this._pickerListContainer = pickerContainer.find('.controls-DropdownList__list');
+            this._pickerBodyContainer = pickerContainer.find('.controls-DropdownList__body');
             this._pickerHeadContainer = pickerContainer.find('.controls-DropdownList__header');
             this._pickerFooterContainer = pickerContainer.find('.controls-DropdownList__footer');
+            if (this._options.multiselect) {
+               this._buttonChoose = this._picker.getChildControlByName('DropdownList_buttonChoose');
+               this._buttonChoose.subscribe('onActivated', function(){
+                  var currSelection = self._getCurrentSelection();
+                  self._hideAllowed = true;
+                  if (!self._isSimilarArrays(self.getSelectedKeys(), currSelection)) {
+                     self.setSelectedKeys(currSelection);
+                  }
+                  self.hidePicker();
+               });
+               this._buttonHasMore = this._picker.getChildControlByName('DropdownList_buttonHasMore');
+               this._buttonHasMore.subscribe('onActivated', function(){
+                  self._notify('onClickMore');
+                  self.hidePicker();
+               });
+            }
          },
          _addItemAttributes: function (container, item) {
             /*implemented from DSMixin*/
@@ -293,6 +286,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._options.caption = text;
                this._caption.text(text);
                this._pickerCaption.text(text);
+               this._notifyOnPropertyChanged('caption');
             }
          },
          getCaption: function() {
@@ -321,7 +315,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
                },
                closeByExternalOver: !this._options.multiselect,
                closeByExternalClick : true,
-               targetPart: true
+               targetPart: true,
+               template : MarkupTransformer(dotTplFnPicker)({'multiselect' : this._options.multiselect})
             };
          },
          //Переопределяю, чтобы элементы чистились в пикере

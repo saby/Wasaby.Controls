@@ -35,9 +35,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                mode: this._options.mode,
                multiselect : !!item.get('multiselect'),
                filterName : item.get(this._options.keyField),
-               displayField: item.get('displayField'),
-               pickerClassName: 'controls-DropdownList__picker',
-               allowEmptySelection: false
+               displayField: item.get('displayField')
             };
             return '<component data-component="SBIS3.CONTROLS.DropdownList" config="' + $ws.helpers.encodeCfgAttr(cfg) + '">' +
                         //'<opts name="selectedKeys" type="array" bind="'+ cfg.keyField +'"></opts>' +
@@ -62,11 +60,12 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             });
             item.subscribe('onSelectedItemsChange', function(event, idArray){
                var idx = self._getFilterSctructureItemIndex(this._options.filterName),
-                  //Если выбрали дефолтное значение, то нужно взять из resetValue
+               //Если выбрали дефолтное значение, то нужно взять из resetValue
+               //TODO может быть всегда отдавать массивом?
                    filterValue =  idArray.length === 1 && idArray[0] === this.getDefaultId() ? self._filterStructure[idx].resetValue :
                          (this._options.multiselect ?  idArray : idArray[0]);
 
-               //TODO Непонятно как это сделать в обратную сторону
+               //TODO Непонятно как это сделать в обратную сторону (когда из контеста кришло значение его нужно поставить в dropdownList)
                //В контексте текуший DropdownList, у него задавали поле с фильтром
                //Если не нашли, значит искать мне это надо как-то по-другому....
                if (idx >= 0) {
