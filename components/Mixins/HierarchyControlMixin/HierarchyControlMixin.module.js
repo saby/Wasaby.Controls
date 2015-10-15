@@ -97,7 +97,8 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
 
       after: {
          _bindHandlers: function () {
-            this._onCollectionChange = onCollectionChange.bind(this);
+            this._onCollectionChange = this._onCollectionChange.callAround(onCollectionChange.bind(this));
+            //this._onCollectionChange = onCollectionChange.bind(this);
             this._onBeforeNodeLoad = onBeforeNodeLoad.bind(this);
             this._onAfterNodeLoad = onAfterNodeLoad.bind(this);
          },
@@ -214,58 +215,17 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
    
    /**
     * Обрабатывает событие об изменении потомков узла дерева исходного дерева
+    * @param {Function} prevFn Оборачиваемый метод
     * @param {$ws.proto.EventObject} event Дескриптор события.
     * @param {String} action Действие, приведшее к изменению.
-    * @param {SBIS3.CONTROLS.Data.Collection.TreeItem[]} [newItems] Новые элементы коллеции.
+    * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem[]} [newItems] Новые элементы коллеции.
     * @param {Integer} [newItemsIndex] Индекс, в котором появились новые элементы.
-    * @param {SBIS3.CONTROLS.Data.Collection.TreeItem[]} [oldItems] Удаленные элементы коллекции.
+    * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem[]} [oldItems] Удаленные элементы коллекции.
     * @param {Integer} [oldItemsIndex] Индекс, в котором удалены элементы.
     * @private
     */
-   var onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-      var i;
-
+   var onCollectionChange = function (prevFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
       switch (action) {
-         case IBindCollection.ACTION_ADD:
-         case IBindCollection.ACTION_REMOVE:
-            for (i = 0; i < oldItems.length; i++) {
-               this._view.removeItem(
-                  oldItems[i]
-               );
-            }
-            for (i = 0; i < newItems.length; i++) {
-               this._view.addItem(
-                  newItems[i],
-                  newItemsIndex + i
-               );
-            }
-            this._view.checkEmpty();
-            this.reviveComponents();
-            break;
-
-         case IBindCollection.ACTION_MOVE:
-            for (i = 0; i < newItems.length; i++) {
-               this._view.moveItem(
-                  newItems[i],
-                  oldItemsIndex + i,
-                  newItemsIndex + i
-               );
-            }
-            this.reviveComponents();
-            break;
-
-         case IBindCollection.ACTION_REPLACE:
-            for (i = 0; i < newItems.length; i++) {
-               this._view.updateItem(
-                  newItems[i]
-               );
-            }
-            this._view.selectItem(
-               this.getItems().getCurrent()
-            );
-            this.reviveComponents();
-            break;
-
          case IBindCollection.ACTION_RESET:
             var newItemsNode = newItems.length ? newItems[0].getParent() : (oldItems.length ? oldItems[0].getParent() : undefined);
             if (newItemsNode) {
@@ -276,9 +236,12 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
                } else {
                   this.redraw();
                }
+               return;
             }
             break;
       }
+
+      prevFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
    },
    
    /**

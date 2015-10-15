@@ -183,9 +183,9 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
     * @param {Function} prevFn Оборачиваемый метод
     * @param {$ws.proto.EventObject} event Дескриптор события.
     * @param {String} action Действие, приведшее к изменению.
-    * @param {SBIS3.CONTROLS.Data.Collection.TreeItem[]} [newItems] Новые элементы коллеции.
+    * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem[]} [newItems] Новые элементы коллеции.
     * @param {Integer} [newItemsIndex] Индекс, в котором появились новые элементы.
-    * @param {SBIS3.CONTROLS.Data.Collection.TreeItem[]} [oldItems] Удаленные элементы коллекции.
+    * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem[]} [oldItems] Удаленные элементы коллекции.
     * @param {Integer} [oldItemsIndex] Индекс, в котором удалены элементы.
     * @private
     */

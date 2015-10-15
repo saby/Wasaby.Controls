@@ -25,28 +25,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          $ws.helpers.forEach(this._items, this._watchForChanges, this);
       },
 
-      notifyCollectionChange: function (action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-         if (!this._eventsEnabled) {
-            return;
-         }
-
-         this._notify(
-            'onCollectionChange',
-            action,
-            newItems,
-            newItemsIndex,
-            oldItems,
-            oldItemsIndex
-         );
-         this._checkWatchableOnCollectionChange(
-            action,
-            newItems,
-            newItemsIndex,
-            oldItems,
-            oldItemsIndex
-         );
-      },
-
       around: {
 
          //region SBIS3.CONTROLS.Data.Collection.IEnumerable
@@ -126,6 +104,42 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
 
       },
 
+      /**
+       * Генерирует событие об изменении коллеции
+       * @param {String} action Действие, приведшее к изменению.
+       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem[]} newItems Новые элементы коллеции.
+       * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
+       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem[]} oldItems Удаленные элементы коллекции.
+       * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
+       * @private
+       */
+      notifyCollectionChange: function (action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+         if (!this._eventsEnabled) {
+            return;
+         }
+
+         this._notify(
+            'onCollectionChange',
+            action,
+            newItems,
+            newItemsIndex,
+            oldItems,
+            oldItemsIndex
+         );
+         this._checkWatchableOnCollectionChange(
+            action,
+            newItems,
+            newItemsIndex,
+            oldItems,
+            oldItemsIndex
+         );
+      },
+
+      /**
+       * Генерирует событие об изменении элемента
+       * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Элемент
+       * @param {String} property Измененное свойство
+       */
       notifyItemChange: function (item, property) {
          var index = this.getIndex(item);
          this._notify(
