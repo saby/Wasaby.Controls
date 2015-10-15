@@ -849,15 +849,19 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
     * @param {String} [property] Измененное свойство элемента
     * @private
     */
-   onCollectionItemChange = function (event, item) {
-      this._view.updateItem(
-         item
-      );
-      this._view.selectItem(
-         this._itemsProjection.getCurrent(),
-         this._itemsProjection.getCurrentPosition()
-      );
-      this.reviveComponents();
+   onCollectionItemChange = function (event, item, index, property) {
+      switch (property) {
+         case 'contents':
+            this._view.updateItem(
+               item
+            );
+            this._view.selectItem(
+               this._itemsProjection.getCurrent(),
+               this._itemsProjection.getCurrentPosition()
+            );
+            this.reviveComponents();
+            break;
+      }
    },
 
    /**

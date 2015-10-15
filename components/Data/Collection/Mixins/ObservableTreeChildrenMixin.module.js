@@ -1,6 +1,6 @@
 /* global define, require, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.ObservableTreeChildrenMixin', [
-   'js!SBIS3.CONTROLS.Data.Collection.ObservableTreeItem'
+   'js!SBIS3.CONTROLS.Data.Collection.TreeItem'
 ], function () {
    'use strict';
 
@@ -15,29 +15,36 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableTreeChildrenMixin', [
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.ObservableTreeItem} Узел-владелец
-             * @name owner
+             * @cfg {SBIS3.CONTROLS.Data.Collection.TreeItem} Узел-владелец
+             * @name SBIS3.CONTROLS.Data.Collection.TreeChildren#owner
              */
          },
 
-         _itemModule: 'SBIS3.CONTROLS.Data.Collection.ObservableTreeItem'
+         _itemModule: 'SBIS3.CONTROLS.Data.Collection.TreeItem'
       },
 
-      //region Protected methods
+      after: {
+         /**
+          * Для дерева обеспечиваем всплытие собития об изменении коллекции до корня
+          * @see SBIS3.CONTROLS.Data.Collection.ObservableListMixin#notifyCollectionChange
+          * @private
+          */
+         notifyCollectionChange: function (action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+            if (!this._eventsEnabled) {
+               return;
+            }
 
-      _notifyCollectionChange: function (action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-         if (!this._eventsEnabled) {
-            return;
+            this._options.owner.notifyChildrenChangeToRoot(
+               action,
+               newItems,
+               newItemsIndex,
+               oldItems,
+               oldItemsIndex
+            );
          }
-
-         this._options.owner.setChildrenChanged(
-            action,
-            newItems,
-            newItemsIndex,
-            oldItems,
-            oldItemsIndex
-         );
       }
+
+      //region Protected methods
 
       //endregion Protected methods
    };

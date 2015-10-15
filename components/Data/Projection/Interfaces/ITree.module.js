@@ -6,7 +6,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
    /**
     * Интерфейс проекции дерева - предоставляет методы навигации, фильтрации и сортировки, не меняя при этом исходное дерево.
     * @mixin SBIS3.CONTROLS.Data.Projection.ITree
-    * @implements SBIS3.CONTROLS.Data.Bind.ITree
     * @public
     * @author Мальцев Алексей
     */

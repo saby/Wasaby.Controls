@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
    'use strict';
 
    /**
-    * Элемент дерева
+    * Элемент коллекции
     * @class SBIS3.CONTROLS.Data.Collection.CollectionItem
     * @mixes SBIS3.CONTROLS.Data.Collection.ICollectionItem
     * @mixes SBIS3.CONTROLS.Data.IHashable
@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
          _options: {
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.List} Владелец
+             * @cfg {SBIS3.CONTROLS.Data.Collection.List} Коллекция, которой принадлежит элемент
              */
             owner: undefined
          },
@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
             return;
          }
          this._options.contents = contents;
-         this._notifyToOwner('contents');
+         this._notifyItemChangeToOwner('contents');
       },
 
       /**
@@ -67,17 +67,17 @@ define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
             return;
          }
          this._options.selected = selected;
-         this._notifyToOwner('selected');
+         this._notifyItemChangeToOwner('selected');
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.ICollectionItem
 
       /**
-       * Генерирует событие у владельца об изменении элемента
+       * Генерирует событие у владельца об изменении свойства элемента
        * @param {String} property Измененное свойство
        * @private
        */
-      _notifyToOwner: function(property) {
+      _notifyItemChangeToOwner: function(property) {
          if (!this._options.owner) {
             return;
          }

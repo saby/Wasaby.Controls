@@ -2,9 +2,9 @@
 define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
    'js!SBIS3.CONTROLS.HierarchyControl.HierarchyView',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
-   'js!SBIS3.CONTROLS.Data.Collection.ObservableTree',
+   'js!SBIS3.CONTROLS.Data.Collection.Tree',
    'js!SBIS3.CONTROLS.Data.Collection.LoadableTree'
-], function (HierarchyView, IBindCollection, ObservableTree, LoadableTree) {
+], function (HierarchyView, IBindCollection, Tree, LoadableTree) {
    'use strict';
 
    /**
@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
 
             /**
              * @cfg {String} Название поля, содержащее дочерние элементы узла. Используется только в случае, если {@link items} является массивом, для поиска в каждом элементе-узле дочерних элементов.
-             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Collection.ObservableTree}
+             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Collection.Tree}
              *
              */
             childrenField: '',
@@ -85,16 +85,6 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
          _currentRoot: undefined,
 
          /**
-          * @var {Function} Обрабатывает событие об изменении содержимого узла проекции дерева
-          */
-         _onTreeItemContentsChange: undefined,
-
-         /**
-          * @var {Function} Обрабатывает событие об изменении родителя узла проекции дерева
-          */
-         _onTreeItemParentChange: undefined,
-
-         /**
           * @var {Function} Обрабатывает событие о начале загрузки узла
           */
          _onBeforeNodeLoad: undefined,
@@ -108,24 +98,12 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
       after: {
          _bindHandlers: function () {
             this._onCollectionChange = onCollectionChange.bind(this);
-            this._onTreeItemContentsChange = onTreeItemContentsChange.bind(this);
-            this._onTreeItemParentChange = onTreeItemParentChange.bind(this);
             this._onBeforeNodeLoad = onBeforeNodeLoad.bind(this);
             this._onAfterNodeLoad = onAfterNodeLoad.bind(this);
          },
 
          _setItems: function () {
             this._setCurrentRoot(this._items);
-         },
-         
-         _setItemsEventHandlers: function () {
-            this.subscribeTo(this._itemsProjection, 'onTreeItemContentsChange', this._onTreeItemContentsChange);
-            this.subscribeTo(this._itemsProjection, 'onTreeItemParentChange', this._onTreeItemParentChange);
-         },
-         
-         _unsetItemsEventHandlers: function () {
-            this.unsubscribeFrom(this._itemsProjection, 'onTreeItemContentsChange', this._onTreeItemContentsChange);
-            this.unsubscribeFrom(this._itemsProjection, 'onTreeItemParentChange', this._onTreeItemParentChange);
          }
       },
 
@@ -178,7 +156,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
 
       _convertItems: function (items) {
          if (items instanceof Array) {
-            items = new ObservableTree({
+            items = new Tree({
                children: items,
                childrenField: this._options.childrenField
             });
@@ -235,38 +213,16 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
    };
    
    /**
-    * Обрабатывает событие об изменении содержимого узла дерева
-    * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem} item Элемент дерева
-    * @param {*} newContents Новое содержимое
-    * @param {*}  Старое содержимое
-    * @private
-    */
-   var onTreeItemContentsChange = function (event, item, newContents, oldContents) {
-   },
-
-   /**
-    * Обрабатывает событие об изменении родителя узла дерева
-    * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem} item Элемент дерева
-    * @param {*} newParent Новый родитель
-    * @param {*} oldParent Старый родитель
-    * @private
-    */
-   onTreeItemParentChange = function (event, item, newParent, oldParent) {
-   },
-
-   /**
     * Обрабатывает событие об изменении потомков узла дерева исходного дерева
     * @param {$ws.proto.EventObject} event Дескриптор события.
     * @param {String} action Действие, приведшее к изменению.
-    * @param {SBIS3.CONTROLS.Data.Collection.ObservableTreeItem[]} [newItems] Новые элементы коллеции.
+    * @param {SBIS3.CONTROLS.Data.Collection.TreeItem[]} [newItems] Новые элементы коллеции.
     * @param {Integer} [newItemsIndex] Индекс, в котором появились новые элементы.
-    * @param {SBIS3.CONTROLS.Data.Collection.ObservableTreeItem[]} [oldItems] Удаленные элементы коллекции.
+    * @param {SBIS3.CONTROLS.Data.Collection.TreeItem[]} [oldItems] Удаленные элементы коллекции.
     * @param {Integer} [oldItemsIndex] Индекс, в котором удалены элементы.
     * @private
     */
-   onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+   var onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
       var i;
 
       switch (action) {

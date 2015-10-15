@@ -3,10 +3,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    'js!SBIS3.CONTROLS.Data.Projection.ITree',
    'js!SBIS3.CONTROLS.Data.IHashable',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
-   'js!SBIS3.CONTROLS.Data.Bind.ITree',
    'js!SBIS3.CONTROLS.Data.Projection',
    'js!SBIS3.CONTROLS.Data.Projection.Collection'
-], function (ITreeProjection, IHashable, IBindCollection, IBindTree, Projection) {
+], function (ITreeProjection, IHashable, IBindCollection, Projection) {
    'use strict';
 
    /**
@@ -15,13 +14,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
     * @extends SBIS3.CONTROLS.Data.Projection
     * @mixes SBIS3.CONTROLS.Data.IHashable
     * @mixes SBIS3.CONTROLS.Data.Bind.ICollection
-    * @mixes SBIS3.CONTROLS.Data.Bind.ITree
     * @mixes SBIS3.CONTROLS.Data.Projection.ITree
     * @public
     * @author Мальцев Алексей
     */
 
-   var TreeProjection = Projection.extend([IHashable, ITreeProjection, IBindCollection, IBindTree], /** @lends SBIS3.CONTROLS.Data.Projection.Tree.prototype */{
+   var TreeProjection = Projection.extend([IHashable, ITreeProjection, IBindCollection], /** @lends SBIS3.CONTROLS.Data.Projection.Tree.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Tree',
       $protected: {
          /**
@@ -40,37 +38,24 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          _onSourceCollectionChange: undefined,
 
          /**
-          * @var {Function} Обработчик события об изменении содержимого узла исходного дерева
+          * @var {Function} Обработчик события об изменении элемента исходной коллекции
           */
-         _onSourceTreeItemContentsChange: undefined,
-
-         /**
-          * @var {Function} Обработчик события об изменении родителя узла исходного дерева
-          */
-         _onSourceTreeItemParentChange: undefined,
-
-         /**
-          * @var {Function} Обработчик события об разворачивании/сворачивании узла исходного дерева
-          */
-         _onSourceTreeNodeToggle: undefined
+         _onSourceCollectionItemChange: undefined
       },
 
       $constructor: function () {
-         this._publish('onCollectionChange', 'onCurrentChange', 'onTreeItemContentsChange', 'onTreeItemParentChange', 'onTreeNodeToggle');
+         this._publish('onCollectionChange', 'onCollectionItemChange', 'onCurrentChange');
 
          if (!this._options.tree) {
             throw new Error('Source tree is undefined');
          }
 
-         this._onSourceTreeItemContentsChange = onSourceTreeItemContentsChange.bind(this);
-         this._onSourceTreeItemParentChange = onSourceTreeItemParentChange.bind(this);
          this._onSourceCollectionChange = onSourceCollectionChange.bind(this);
-         this._onSourceTreeNodeToggle = onSourceTreeNodeToggle.bind(this);
-         if ($ws.helpers.instanceOfMixin(this._options.tree, 'SBIS3.CONTROLS.Data.Bind.ITree')) {
-            this.subscribeTo(this._options.tree, 'onTreeItemContentsChange', this._onSourceTreeItemContentsChange);
-            this.subscribeTo(this._options.tree, 'onTreeItemParentChange', this._onSourceTreeItemParentChange);
+         this._onSourceCollectionItemChange = onSourceCollectionItemChange.bind(this);
+
+         if ($ws.helpers.instanceOfMixin(this._options.tree, 'SBIS3.CONTROLS.Data.Bind.ICollection')) {
             this.subscribeTo(this._options.tree, 'onCollectionChange', this._onSourceCollectionChange);
-            this.subscribeTo(this._options.tree, 'onTreeNodeToggle', this._onSourceTreeNodeToggle);
+            this.subscribeTo(this._options.tree, 'onCollectionItemChange', this._onSourceCollectionItemChange);
          }
 
          this._childrenProjection = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Projection.Collection', {
@@ -80,11 +65,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       },
 
       destroy: function () {
-         if ($ws.helpers.instanceOfMixin(this._options.tree, 'SBIS3.CONTROLS.Data.Bind.ITree')) {
-            this.unsubscribeFrom(this._options.tree, 'onTreeItemContentsChange', this._onSourceTreeItemContentsChange);
-            this.unsubscribeFrom(this._options.tree, 'onTreeItemParentChange', this._onSourceTreeItemParentChange);
+         if ($ws.helpers.instanceOfMixin(this._options.tree, 'SBIS3.CONTROLS.Data.Bind.ICollection')) {
             this.unsubscribeFrom(this._options.tree, 'onCollectionChange', this._onSourceCollectionChange);
-            this.unsubscribeFrom(this._options.tree, 'onTreeNodeToggle', this._onSourceTreeNodeToggle);
+            this.unsubscribeFrom(this._options.tree, 'onCollectionItemChange', this._onSourceCollectionItemChange);
          }
 
          TreeProjection.superclass.destroy.call(this);
@@ -269,40 +252,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    });
 
    /**
-    * Обрабатывает событие об изменении содержимого узла дерева
-    * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem} item Элемент дерева
-    * @param {*} newContents Новое содержимое
-    * @param {*}  Старое содержимое
-    * @private
-    */
-   var onSourceTreeItemContentsChange = function (event, item, newContents, oldContents) {
-         this._notify(
-            'onTreeItemContentsChange',
-            item,
-            newContents,
-            oldContents
-         );
-   },
-
-   /**
-    * Обрабатывает событие об изменении родителя узла дерева
-    * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem} item Элемент дерева
-    * @param {*} newParent Новый родитель
-    * @param {*} oldParent Старый родитель
-    * @private
-    */
-   onSourceTreeItemParentChange = function (event, item, newParent, oldParent) {
-      this._notify(
-         'onTreeItemParentChange',
-         item,
-         newParent,
-         oldParent
-      );
-   },
-
-   /**
     * Обрабатывает событие об изменении потомков узла дерева исходного дерева
     * @param {$ws.proto.EventObject} event Дескриптор события.
     * @param {String} action Действие, приведшее к изменению.
@@ -312,7 +261,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
     * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
     * @private
     */
-   onSourceCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+   var onSourceCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
       this._notify(
          'onCollectionChange',
          action,
@@ -324,17 +273,19 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    },
 
    /**
-    * Обрабатывает событие о разворачивании/сворачивании узла
+    * Обрабатывает событие об изменении исходной коллекции
     * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem} node Узел
-    * @param {Boolean} expanded Развернут или свернут узел.
+    * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem} item Измененный элемент коллеции.
+    * @param {Integer} index Индекс измененного элемента.
+    * @param {String} [property] Измененное свойство элемента
     * @private
     */
-   onSourceTreeNodeToggle = function (event, node, expanded) {
+   onSourceCollectionItemChange = function (event, item, index, property) {
       this._notify(
-         'onTreeNodeToggle',
-         node,
-         expanded
+         'onCollectionItemChange',
+         item,
+         index,
+         property
       );
    };
 

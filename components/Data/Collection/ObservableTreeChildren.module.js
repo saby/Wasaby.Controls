@@ -1,10 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.ObservableTreeChildren', [
    'js!SBIS3.CONTROLS.Data.Collection.TreeChildren',
-   'js!SBIS3.CONTROLS.Data.Collection.ObservableTreeItem',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableTreeChildrenMixin'
-], function (TreeChildren, ObservableTreeItem, ObservableListMixin, ObservableTreeChildrenMixin) {
+], function (TreeChildren, ObservableListMixin, ObservableTreeChildrenMixin) {
    'use strict';
 
    /**

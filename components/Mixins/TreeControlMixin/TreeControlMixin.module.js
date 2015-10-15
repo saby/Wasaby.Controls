@@ -59,11 +59,6 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
          _expandEvent: EXPAND_EVENT.dblclick,
 
          /**
-          * @var {Function} Обрабатывает событие об разворачивании/сворачивании узла проекции дерева
-          */
-         _onTreeNodeToggle: undefined,
-
-         /**
           * @var {Object} Инстансы контролов постраничной навигации для каждого узла
           */
          _pagers: {}
@@ -72,7 +67,7 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
       after: {
          _bindHandlers: function () {
             this._onCollectionChange = this._onCollectionChange.callAround(onCollectionChange.bind(this));
-            this._onTreeNodeToggle = onTreeNodeToggle.bind(this);
+            this._onCollectionItemChange = this._onCollectionItemChange.callAround(onCollectionItemChange.bind(this));
          },
 
          _initView: function() {
@@ -90,14 +85,6 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
                   break;
             }
             this.subscribeTo(this._view, event, expandHandler.bind(this));
-         },
-         
-         _setItemsEventHandlers: function () {
-            this.subscribeTo(this._itemsProjection, 'onTreeNodeToggle', this._onTreeNodeToggle);
-         },
-         
-         _unsetItemsEventHandlers: function () {
-            this.unsubscribeFrom(this._itemsProjection, 'onTreeNodeToggle', this._onTreeItemContentsChange);
          }
       },
 
@@ -196,9 +183,9 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
     * @param {Function} prevFn Оборачиваемый метод
     * @param {$ws.proto.EventObject} event Дескриптор события.
     * @param {String} action Действие, приведшее к изменению.
-    * @param {SBIS3.CONTROLS.Data.Collection.ObservableTreeItem[]} [newItems] Новые элементы коллеции.
+    * @param {SBIS3.CONTROLS.Data.Collection.TreeItem[]} [newItems] Новые элементы коллеции.
     * @param {Integer} [newItemsIndex] Индекс, в котором появились новые элементы.
-    * @param {SBIS3.CONTROLS.Data.Collection.ObservableTreeItem[]} [oldItems] Удаленные элементы коллекции.
+    * @param {SBIS3.CONTROLS.Data.Collection.TreeItem[]} [oldItems] Удаленные элементы коллекции.
     * @param {Integer} [oldItemsIndex] Индекс, в котором удалены элементы.
     * @private
     */
@@ -241,26 +228,34 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
    },
 
    /**
-    * Обрабатывает событие о разворачивании/сворачивании узла
+    * Обрабатывает событие об изменении элемента коллекции
+    * @param {Function} prevFn Оборачиваемый метод
     * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem} node Узел
-    * @param {Boolean} expanded Развернут или свернут узел.
+    * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem} item Измененный элемент коллеции.
+    * @param {Integer} index Индекс измененного элемента.
+    * @param {String} [property] Измененное свойство элемента
     * @private
     */
-   onTreeNodeToggle = function (event, node, expanded) {
-      if (expanded &&
-         $ws.helpers.instanceOfMixin(node, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable') &&
-         (!node.isLoaded() || node.isQueryChanged())
-      ) {
-         node.load();
+   onCollectionItemChange = function (prevFn, event, item, index, property) {
+      switch (property) {
+         case 'expanded':
+            if (item.isExpanded() &&
+               $ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable') &&
+               (!item.isLoaded() || item.isQueryChanged())
+            ) {
+               item.load();
+            }
+
+            this._view.setNodeExpanded(
+               item,
+               item.isExpanded()
+            );
+            break;
       }
 
-      this._view.setNodeExpanded(
-         node,
-         expanded
-      );
+      prevFn.call(this, event, item, index, property);
    },
-   
+
    /**
     * Разворачивает узел, этот обработчик вешается на событие click, dblclick или hover,
     * согласно выбранному способу разворота.

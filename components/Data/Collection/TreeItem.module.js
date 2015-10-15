@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeItem', [
    'js!SBIS3.CONTROLS.Data.Collection.ITreeItem',
    'js!SBIS3.CONTROLS.Data.IHashable',
    'js!SBIS3.CONTROLS.Data.HashableMixin',
-   'js!SBIS3.CONTROLS.Data.Collection.TreeChildren',
+   'js!SBIS3.CONTROLS.Data.Collection.ObservableTreeChildren',
    'js!SBIS3.CONTROLS.Data.Projection.Tree'
 ], function (CollectionItem, ITreeItem, IHashable, HashableMixin) {
    'use strict';
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeItem', [
          /**
           * @var {String} Модуль коллекции дочерних элементов
           */
-         _childrenModule: 'SBIS3.CONTROLS.Data.Collection.TreeChildren',
+         _childrenModule: 'SBIS3.CONTROLS.Data.Collection.ObservableTreeChildren',
 
          _hashPrefix: 'tree-item-'
       },
@@ -66,7 +66,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeItem', [
       },
 
       setParent: function (parent) {
+         if (this._options.parent === parent) {
+            return;
+         }
          this._options.parent = parent;
+         this._notifyItemChangeToOwner('parent');
       },
 
       getLevel: function () {
@@ -117,7 +121,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeItem', [
       },
 
       setExpanded: function (expanded) {
+         if (this._options.expanded === expanded) {
+            return;
+         }
          this._options.expanded = expanded;
+         this._notifyItemChangeToOwner('expanded');
       },
 
       toggleExpanded: function () {
@@ -136,9 +144,51 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeItem', [
          return this._options.childrenField;
       },
 
+      /**
+       * Генерирует в корневом узле об изменении коллекции дочерних узлов дерева.
+       * @param {String} action Действие, приведшее к изменению.
+       * @param {SBIS3.CONTROLS.Data.Collection.TreeItem[]} newItems Новые элементы коллеции.
+       * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
+       * @param {SBIS3.CONTROLS.Data.Collection.TreeItem[]} oldItems Удаленные элементы коллекции.
+       * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
+       * @private
+       */
+      notifyChildrenChangeToRoot: function (action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+         this._bubbleUp(function() {
+            this._notify(
+               'onCollectionChange',
+               action,
+               newItems,
+               newItemsIndex,
+               oldItems,
+               oldItemsIndex
+            );
+         });
+      },
+
       //endregion Public methods
 
       //region Protected methods
+
+      /**
+       * Генерирует событие у владельца об изменении свойства элемента.
+       * Помимо родительской коллекции уведомляет также и корневой узел дерева.
+       * @param {String} property Измененное свойство
+       * @private
+       */
+      _notifyItemChangeToOwner: function(property) {
+         TreeItem.superclass._notifyItemChangeToOwner.call(this, property);
+
+         var node = this,
+            index = this._options.owner.getIndex(this);
+         this._bubbleUp(function() {
+            this.notifyItemChange(
+               node,
+               index,
+               property
+            );
+         });
+      },
 
       /**
        * Обеспечивает всплытие метода до корневого узла и вызов его там

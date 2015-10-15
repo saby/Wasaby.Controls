@@ -66,6 +66,18 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       /**
+       * Генерирует событие об изменении коллеции
+       * @param {String} action Действие, приведшее к изменению.
+       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem[]} newItems Новые элементы коллеции.
+       * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
+       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem[]} oldItems Удаленные элементы коллекции.
+       * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
+       * @private
+       */
+      notifyCollectionChange: function () {
+      },
+
+      /**
        * Генерирует событие об изменении элемента
        * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Элемент
        * @param {String} property Измененное свойство

@@ -25,6 +25,28 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          $ws.helpers.forEach(this._items, this._watchForChanges, this);
       },
 
+      notifyCollectionChange: function (action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+         if (!this._eventsEnabled) {
+            return;
+         }
+
+         this._notify(
+            'onCollectionChange',
+            action,
+            newItems,
+            newItemsIndex,
+            oldItems,
+            oldItemsIndex
+         );
+         this._checkWatchableOnCollectionChange(
+            action,
+            newItems,
+            newItemsIndex,
+            oldItems,
+            oldItemsIndex
+         );
+      },
+
       around: {
 
          //region SBIS3.CONTROLS.Data.Collection.IEnumerable
@@ -34,7 +56,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
             this._eventsEnabled = false;
             parentFnc.call(this, items, prepend);
             this._eventsEnabled = true;
-            this._notifyCollectionChange(
+            this.notifyCollectionChange(
                IBindCollection.ACTION_ADD,
                prepend ? this._items.slice(0, this.getCount() - newItemsIndex) : this._items.slice(newItemsIndex),
                prepend ? 0 : newItemsIndex,
@@ -52,7 +74,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
             this._eventsEnabled = false;
             parentFnc.call(this, instead);
             this._eventsEnabled = true;
-            this._notifyCollectionChange(
+            this.notifyCollectionChange(
                IBindCollection.ACTION_RESET,
                this._items.slice(),
                0,
@@ -64,7 +86,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          add: function (parentFnc, item, at) {
             parentFnc.call(this, item, at);
             at = this._isValidIndex(at) ? at : this.getCount() - 1;
-            this._notifyCollectionChange(
+            this.notifyCollectionChange(
                IBindCollection.ACTION_ADD,
                [this._items[at]],
                at,
@@ -74,7 +96,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          },
 
          removeAt: function (parentFnc, index) {
-            this._notifyCollectionChange(
+            this.notifyCollectionChange(
                IBindCollection.ACTION_REMOVE,
                [],
                0,
@@ -87,7 +109,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          replace: function (parentFnc, item, at) {
             var oldItem = this._items[at];
             parentFnc.call(this, item, at);
-            this._notifyCollectionChange(
+            this.notifyCollectionChange(
                IBindCollection.ACTION_REPLACE,
                [this._items[at]],
                at,
@@ -115,37 +137,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
       },
 
       //region Protected methods
-
-      /**
-       * Генерирует событие об изменении коллеции
-       * @param {String} action Действие, приведшее к изменению.
-       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem[]} newItems Новые элементы коллеции.
-       * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
-       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem[]} oldItems Удаленные элементы коллекции.
-       * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
-       * @private
-       */
-      _notifyCollectionChange: function (action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-         if (!this._eventsEnabled) {
-            return;
-         }
-
-         this._notify(
-            'onCollectionChange',
-            action,
-            newItems,
-            newItemsIndex,
-            oldItems,
-            oldItemsIndex
-         );
-         this._checkWatchableOnCollectionChange(
-            action,
-            newItems,
-            newItemsIndex,
-            oldItems,
-            oldItemsIndex
-         );
-      },
 
       /**
        * При изменениях коллекции синхронизирует подписки на элементы
@@ -222,10 +213,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
     * @param {String} property Измененное свойство
     * @param {*} value Значение свойства
     */
-   var onItemModelChangeHandler = function (event, property) {
+   var onItemModelChangeHandler = function (event) {
       this.notifyItemChange(
          event.getTarget(),
-         property
+         'contents'
       );
    };
 
