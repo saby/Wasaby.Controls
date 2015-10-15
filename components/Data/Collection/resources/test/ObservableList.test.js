@@ -306,12 +306,17 @@ define([
                      items: []
                   }),
                   addItem,
-                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                  handler = function(event, item, index, property) {
                      try {
-                        checkEvent(
-                           action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                           IBindCollection.ACTION_UPDATE, [addItem], 0, [addItem], oldItemsIndex
-                        );
+                        if (addItem !== item.getContents()) {
+                           throw new Error('Invalid changed item');
+                        }
+                        if (index !== 0) {
+                           throw new Error('Invalid changed item index');
+                        }
+                        if (property !== 'contents') {
+                           throw new Error('Invalid changed item property');
+                        }
                         done();
                      } catch (err) {
                         done(err);
@@ -322,9 +327,9 @@ define([
                   adapter: new JsonAdapter()
                });
                list.add(addItem);
-               list.subscribe('onCollectionChange', handler);
+               list.subscribe('onCollectionItemChange', handler);
                addItem.set('test', 'ok');
-               list.unsubscribe('onCollectionChange', handler);
+               list.unsubscribe('onCollectionItemChange', handler);
             });
 
 
