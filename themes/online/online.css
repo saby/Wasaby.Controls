@@ -2234,6 +2234,15 @@ input[type="reset"]::-moz-focus-inner {
   height: 32px;
   width: 32px;
 }
+.controls-ListView.controls-ListView__showCheckBoxes .controls-ListView__itemCheckBox {
+  background: url('img/CheckBox.png') 0 1px;
+}
+.controls-ListView.controls-ListView__hideCheckBoxes.controls-ListView__multiselect .controls-DataGridView__colgroup col:first-child {
+  width: 4px;
+}
+.controls-ListView.controls-ListView__hideCheckBoxes.controls-ListView__multiselect .controls-ListView__itemCheckBox {
+  display: none;
+}
 .controls-AjaxLoader {
   background: none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
   position: absolute;
@@ -2548,15 +2557,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-DataGridView .controls-DataGridView__td__checkBox .controls-ListView__itemCheckBox {
   margin: 1px 0 0 5px;
-}
-.controls-DataGridView.controls-DataGridView__showCheckBoxes .controls-ListView__itemCheckBox {
-  background: url('img/CheckBox.png') 0 1px;
-}
-.controls-DataGridView.controls-DataGridView__hideCheckBoxes.controls-ListView__multiselect .controls-DataGridView__colgroup col:first-child {
-  width: 4px;
-}
-.controls-DataGridView.controls-DataGridView__hideCheckBoxes.controls-ListView__multiselect .controls-ListView__itemCheckBox {
-  display: none;
 }
 .controls-DataGridView__addInPlace-container {
   padding-left: 8px;
@@ -3414,6 +3414,12 @@ input[type="reset"]::-moz-focus-inner {
   background-image: url('img/rowSelect.png');
   background-position: left top;
   background-repeat: repeat-y;
+}
+.controls-ListView__withoutMarker .controls-ListView__item__selected .controls-DataGridView__td:first-child,
+.controls-ListView__withoutMarker .controls-ListView__item__selected .controls-CompositeView__tileTitle,
+.controls-ListView__withoutMarker .controls-ListView__item__selected .controls-ListView__item-title,
+.controls-ListView__withoutMarker .controls-ListView__item__selected:not(.controls-ListView__folder) {
+  background-image: none !important;
 }
 .controls-TreePager-container {
   float: right;
