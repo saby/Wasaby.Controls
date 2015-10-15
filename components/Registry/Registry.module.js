@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.Registry', [
    'js!SBIS3.CONTROLS.BackButton',
    'js!SBIS3.CONTROLS.OperationsPanel',
    'js!SBIS3.CONTROLS.FilterButton'
-], function(CompoundControl, dotTplFn, ComponentBinder){
+], function(RegistryBase, dotTplFn, ComponentBinder){
    'use strict';
 
    /**
@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.Registry', [
 
 
 
-   var Registry = CompoundControl.extend( /** @lends SBIS3.CONTROLS.RegistryBase.prototype */{
+   var Registry = RegistryBase.extend( /** @lends SBIS3.CONTROLS.RegistryBase.prototype */{
       _dotTplFn : dotTplFn,
       $protected: {
          _options : {
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.Registry', [
             /**
              * @cfg {String} Опции для панели операция в виде XML разметки
              */
-            filterButtonConfig : '',
+            filterButtonConfig : ''
          }
       },
 
