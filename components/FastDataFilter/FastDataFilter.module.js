@@ -20,6 +20,11 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             _options: {
                mode: 'hover',
                displayField: '',
+               /**
+                * @cfg {String} Поле в контексте, где будет храниться внутренний фильтр компонента
+                * @remark
+                * !Важно: Если на одной форме, в одном контексте лежит несколько хлебных фильтров, то только в этом случае стоит менять стандартное имя
+                */
                internalContextFilterName : 'sbis3-controls-fast-filter'
             }
          },

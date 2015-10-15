@@ -43,6 +43,11 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
              * при установке структуры меняется значение св-ва filter (строится по полям value у структуры)
              */
             filterStructure: [ /*filterStructureElementDef*/ ],
+            /**
+             * @cfg {String} Поле в контексте, где будет храниться внутренний фильтр компонента
+             * @remark
+             * !Важно: Если на одной форме, в одном контексте лежит несколько хлебных фильтров, то только в этом случае стоит менять стандартное имя
+             */
             internalContextFilterName : 'sbis3-controls-filter-button'
          }
       },

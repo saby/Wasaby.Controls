@@ -20,16 +20,39 @@ define('js!SBIS3.CONTROLS.DropdownList',
    function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, Link, MarkupTransformer, dotTplFn, dotTplFnForItem, dotTplFnPicker) {
 
       'use strict';
-
+      /**
+       * Контрол, отображающий по клику или ховеру список однотипных сущностей.
+       * Выпадающий список с разными вариантами отображения и возможностью задать для сущностей шаблон отображения.
+       * @class SBIS3.CONTROLS.DropdownList
+       * @extends $ws.proto.Control
+       * @author Крайнов Дмитрий Олегович
+       * @mixes SBIS3.CONTROLS.DSMixin
+       * @mixes SBIS3.CONTROLS.MultiSelectable
+       * @mixes SBIS3.CONTROLS.Selectable
+       * @mixes SBIS3.CONTROLS.DropdownListMixin
+       * @mixes SBIS3.CONTROLS.PickerMixin
+       * @control
+       * @public
+       * @cssModifier controls-DropdownList__withoutArrow Убрать стрелочку слева от выбранного текста.
+       * @cssModifier controls-DropdownList__withoutCross Убрать крестик справа от выбранного текста.
+       * @cssModifier controls-DropdownList__linkStyle Отобразить текст в шапке в виде ссылки.
+       */
       var DropdownList = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin], {
          $protected: {
             _options: {
                itemTemplate: dotTplFnForItem,
+               /**
+                * @cfg {String} Режим работы выпадающего списка
+                * @remark
+                * По умолчанию - 'hover'
+                * Если задать 'click', то работа будет по клику
+                */
                mode: 'hover',
                defaultValue : 0,
                defaultText : '',
                caption : '',
                /**
+                * @cfg {String} Имя фильтра, который отображает данный контрол
                 * Опция для пробрасывания имени фильтра обратно в FastDataFilter
                 */
                filterName : '',
@@ -313,7 +336,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   side: 'left',
                   offset: -2
                },
-               closeByExternalOver: !this._options.multiselect,
+               //Если мы не в ховер-моде, нужно отключить эту опцию, чтобы попап после клика сразу не схлапывался
+               closeByExternalOver: this._options.mode === 'hover' && !this._options.multiselect,
                closeByExternalClick : true,
                targetPart: true,
                template : MarkupTransformer(dotTplFnPicker)({'multiselect' : this._options.multiselect})

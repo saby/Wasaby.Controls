@@ -28,6 +28,28 @@
          }
       }
    }
+   &.controls-DropdownList__withoutArrow{
+      & .controls-DropdownList__beforeCaptionWrapper{
+         display: none;
+      }
+   }
+   &.controls-DropdownList__withoutCross{
+      & .controls-DropdownList__afterCaptionWrapper{
+         display: none;
+      }
+   }
+   &.controls-DropdownList__withoutArrow.controls-DropdownList__withoutCross{
+      .controls-DropdownList__captionWrapper {
+         padding: 0 4px;
+      }
+   }
+   &.controls-DropdownList__linkStyle{
+      color: @DropdownList-linkStyleColor;
+      cursor: pointer;
+      &:hover{
+         color: @DropdownList-linkStyleHoverColor;
+      }
+   }
 }
 
 .controls-DropdownList__picker {
