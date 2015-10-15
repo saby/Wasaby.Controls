@@ -2,6 +2,7 @@ import os
 import os.path
 import subprocess
 import platform
+import sys
 
 def process_file(name):
    css_name = name[:-4] + "css"
@@ -22,3 +23,5 @@ def main():
             process_file(fname)
 if __name__ == "__main__":
    main()
+   sys.stdin.readlines()
+   
