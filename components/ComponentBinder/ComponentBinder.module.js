@@ -120,8 +120,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
    function toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes) {
       if (gridView._options.multiselect && hideCheckBoxes) {
-         gridView._container.toggleClass('controls-DataGridView__showCheckBoxes', operationPanel.isOpen())
-            .toggleClass('controls-DataGridView__hideCheckBoxes', !operationPanel.isOpen());
+         gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isOpen())
+            .toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isOpen());
       }
    }
    /**

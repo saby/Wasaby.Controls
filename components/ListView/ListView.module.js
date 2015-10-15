@@ -39,6 +39,9 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.DataBindMixin
        * @control
        * @public
+       * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
+       * @cssModifier controls-ListView__showCheckBoxes Чекбоксы показываются не по ховеру, а сразу все.
+       * @cssModifier controls-ListView__hideCheckBoxes Скрыть все чекбоксы.
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
@@ -457,7 +460,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options.multiselect) {
                //TODO: оставить только js класс
                if ($target.hasClass('js-controls-ListView__itemCheckBox') || $target.hasClass('controls-ListView__itemCheckBox')) {
-                  this.toggleItemsSelection([$target.closest('.controls-ListView__item').data('id')]);
+                  this.toggleItemsSelection([$target.closest('.controls-ListView__item').attr('data-id')]);
                }
                else {
                   this._notify('onItemClick', id, data, target);
