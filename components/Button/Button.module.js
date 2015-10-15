@@ -145,7 +145,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
       setIcon: function(icon) {
          Button.superclass.setIcon.call(this, icon);
          var content,
-             caption = $(".js-controls-Button__text", this._container.get(0)).html();
+             caption = $('.js-controls-Button__text', this._container.get(0)).html();
          if (!icon) {
              content = $('<span class="controls-Button__text js-controls-Button__text">' + caption + '</span>');
          } else {
@@ -153,6 +153,13 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
          }
          $('.controls-Button__text', content).toggleClass('controls-Button__emptyCaption', !caption);
          this._container.html(content);
+      },
+
+      setEnabled: function(enabled){
+         Button.superclass.setEnabled.call(this, enabled);
+         if ($ws._const.browser.IEVersion){
+            this._container.attr('disabled', !enabled);
+         }
       },
 
       /*TODO методы для поддержки defaultButton*/
