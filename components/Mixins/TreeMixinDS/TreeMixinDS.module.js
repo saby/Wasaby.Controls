@@ -67,8 +67,20 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       collapseNode: function (key) {
          var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.js-controls-TreeView__expand', itemCont).removeClass('controls-TreeView__expand__open');
+         this._collapseChilds(key);
          delete(this._options.openedPath[key]);
          this._nodeClosed(key);
+      },
+
+      //Рекурсивно удаляем из индекса открытых узлов все дочерние узлы закрываемого узла
+      _collapseChilds: function(key){
+         var tree = this._dataSet._indexTree;
+         if (tree[key]){
+            for (var i = 0; i < tree[key].length; i++){
+               this._collapseChilds(tree[key][i]);
+               delete(this._options.openedPath[tree[key][i]]);
+            }
+         }
       },
 
       /**
