@@ -4,11 +4,11 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.Collection.LoadableList',
-   'js!SBIS3.CONTROLS.PagerMore',
    'html!SBIS3.CONTROLS.ListControl.ListView',
+   'js!SBIS3.CONTROLS.PagerMore',
    'js!SBIS3.CONTROLS.Data.Projection',
    'js!SBIS3.CONTROLS.Data.Projection.Collection'
-], function (ListView, IBindCollection, ObservableList, LoadableList, PagerMore, ListViewTemplate, Projection) {
+], function (ListView, IBindCollection, ObservableList, LoadableList, ListViewTemplate, PagerMore, Projection) {
    'use strict';
 
    /**

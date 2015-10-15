@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl', [
    'js!SBIS3.CONTROLS.HierarchyControlMixin',
    'js!SBIS3.CONTROLS.TreeControlMixin',
    'js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView',
-   'html!SBIS3.CONTROLS.DataGridControl/DataGridView'
+   'html!SBIS3.CONTROLS.DataGridControl.DataGridView'
 ], function(DataGridControl, HierarchyControlMixin, TreeControlMixin, TreeDataGridView, DataGridViewTemplate) {
    'use strict';
 

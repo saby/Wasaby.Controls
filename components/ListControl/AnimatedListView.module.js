@@ -1,5 +1,5 @@
 /* global define, console, doT, $ws, $ */
-define('js!SBIS3.CONTROLS.ListControl.AnimatedListView', [
+define('js!SBIS3.CONTROLS.ListControlMixin.AnimatedListView', [
    'js!SBIS3.CONTROLS.ListControl.ListView',
    'css!SBIS3.CONTROLS.ListControl.AnimatedListView'
 ], function (ListView) {

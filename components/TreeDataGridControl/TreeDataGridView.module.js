@@ -2,7 +2,7 @@
 define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
    'js!SBIS3.CONTROLS.TreeControl.TreeView',
    'js!SBIS3.CONTROLS.DataGridControl.DataGridViewMixin',
-   'html!SBIS3.CONTROLS.TreeDataGridControl/resources/Row'
+   'html!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView/resources/Row'
 ], function (TreeView, DataGridViewMixin, RowTemplate) {
    'use strict';
 

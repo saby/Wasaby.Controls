@@ -2,7 +2,7 @@
 define('js!SBIS3.CONTROLS.DataGridControl', [
    'js!SBIS3.CONTROLS.ListControl',
    'js!SBIS3.CONTROLS.DataGridControl.DataGridView',
-   'html!SBIS3.CONTROLS.DataGridControl/DataGridView'
+   'html!SBIS3.CONTROLS.DataGridControl.DataGridView'
 ], function (ListControl, DataGridView, DataGridViewTemplate) {
    'use strict';
 

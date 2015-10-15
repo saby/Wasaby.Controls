@@ -1,8 +1,8 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.DataGridControl.DataGridViewMixin', [
    'js!SBIS3.CONTROLS.Data.Utils',
-   'html!SBIS3.CONTROLS.DataGridControl/resources/DataGridViewItem',
-   'html!SBIS3.CONTROLS.DataGridControl/resources/DataGridViewRow'
+   'html!SBIS3.CONTROLS.DataGridControl.DataGridViewMixin/resources/DataGridViewItem',
+   'html!SBIS3.CONTROLS.DataGridControl.DataGridViewMixin/resources/DataGridViewRow'
 ], function (Utils, DataGridViewItemTemplate, DataGridViewRowTemplate) {
    'use strict';
 
