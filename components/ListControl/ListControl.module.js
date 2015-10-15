@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.ListControl', [
    'js!SBIS3.CONTROLS.ListControl.ItemActions',
    'js!SBIS3.CONTROLS.ListControl.CommonHandlers',
    'js!SBIS3.CONTROLS.MoveHandlers'
-], function(CompoundControl, CompoundActiveFixMixin, ListControlMixin, Selectable, MultiSelectable, ItemActions, CommonHandlers, MoveHandlers) {
+], function (CompoundControl, CompoundActiveFixMixin, ListControlMixin, Selectable, MultiSelectable, ItemActions, CommonHandlers, MoveHandlers) {
    'use strict';
 
    /**
