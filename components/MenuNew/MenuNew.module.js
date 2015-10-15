@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.MenuNew', [
     * @public
     * @state mutable
     * @author Крайнов Дмитрий Олегович
-    * @extends SBIS3.CONTROLS.ButtonGroupBase
+    * @extends SBIS3.CONTROLS.ButtonGroupBaseNew
     * @mixes SBIS3.CONTROLS.HierarchyControlMixin
     * @mixes SBIS3.CONTROLS.TreeControlMixin
     */

@@ -13,7 +13,8 @@ define('js!SBIS3.CONTROLS.MenuButtonNewView', [
             vertical: 'top'
          }
       },
-      _initView:function(){
+
+      init:function(){
          var rootNode = this._options.rootNode,
             self = this;
          $ws.helpers.trackElement(rootNode, true).subscribe('onMove', function () {
@@ -25,6 +26,7 @@ define('js!SBIS3.CONTROLS.MenuButtonNewView', [
             }
          });
       },
+
       _createHeader: function(){
          var rootNode = this._options.rootNode;
          this._header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
@@ -39,8 +41,10 @@ define('js!SBIS3.CONTROLS.MenuButtonNewView', [
          });
          $('body').append(this._header);
       },
-
-      setWidth: function(){
+      /**
+      * Выравнивает ширину у пикера и шапки, по основному контейнеру
+      **/
+      recalcWidth: function(){
          var self = this;
          var rootNode = this._options.rootNode;
          this._picker && this._picker.getContainer().css({
@@ -50,12 +54,18 @@ define('js!SBIS3.CONTROLS.MenuButtonNewView', [
             $('.controls-MenuButton__headerCenter', this._header).width(rootNode.outerWidth() - 26);
          }
       },
+      /**
+      * Обработчик на закрытие меню
+      */
       closeHandler: function(){
          this._options.rootNode.removeClass('controls-Checked__checked');
          if (this._header) {
             this._header.addClass('controls-MenuButton__header-hidden');
          }
       },
+      /**
+       * Обработчки на скрытие/показ пикера
+       */
       tooglePickerHandler: function(){
          var rootNode = this._options.rootNode;
          if (!this._header) {
@@ -71,7 +81,11 @@ define('js!SBIS3.CONTROLS.MenuButtonNewView', [
          });
 
       },
-      initView: function(withData){
+      /**
+       * Изменяет внешний вид контрола, в зависимости от того есть элементы в меню или нет.
+       * @param withData {Boolean} - есть ли данные в контроле
+       */
+      setViewWithData: function(withData){
          var rootNode = this._options.rootNode;
          if (withData) {
             $('.js-controls-MenuButton__arrowDown', rootNode).show();
@@ -83,6 +97,10 @@ define('js!SBIS3.CONTROLS.MenuButtonNewView', [
             $('.controls-MenuButton__header', rootNode).remove();
          }
       },
+      /**
+       * Меняет выравнивание контрола
+       * @param alignment {Object}
+       */
       changeAligment: function(alignment){
          var right = alignment.horizontalAlign.side === 'right',
             bottom = alignment.verticalAlign.side === 'bottom';
@@ -102,6 +120,7 @@ define('js!SBIS3.CONTROLS.MenuButtonNewView', [
             this._headerAlignment.vertical = 'top';
          }
       },
+
       destroy: function(){
          View.superclass.destroy();
          if(this._header)

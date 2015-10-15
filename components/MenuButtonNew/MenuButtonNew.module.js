@@ -1,8 +1,10 @@
 /*global define, $, $ws*/
 define('js!SBIS3.CONTROLS.MenuButtonNew', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.ContextMenuNew', 'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.ListControlMixin', 'js!SBIS3.CONTROLS.MenuButtonNewMixin', 'html!SBIS3.CONTROLS.MenuButton',
-      'js!SBIS3.CONTROLS.HierarchyControlMixin', 'js!SBIS3.CONTROLS.Data.Utils','js!SBIS3.CONTROLS.MenuButtonNewView'],
-   function(Button, ContextMenu, PickerMixin, ListControlMixin, MenuButtonMixin, MenuButtonViewTemplate, HierarchyControlMixin, DataUtils, MenuButtonView) {
+      'js!SBIS3.CONTROLS.HierarchyControlMixin','js!SBIS3.CONTROLS.TreeControlMixin', 'js!SBIS3.CONTROLS.Data.Utils','js!SBIS3.CONTROLS.MenuButtonNewView'],
+   function(Button, ContextMenu, PickerMixin,
+      ListControlMixin, MenuButtonMixin, dotTplFn,
+      HierarchyControlMixin, TreeControlMixin, DataUtils, MenuButtonView) {
 
    'use strict';
 
@@ -27,10 +29,10 @@ define('js!SBIS3.CONTROLS.MenuButtonNew', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3
     *      </options>
     * </component>
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Ганшин Ярослав Олегович
     * @category Buttons
     * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.DSMixin
+    * @mixes SBIS3.CONTROLS.ListControlMixin
     * @mixes SBIS3.CONTROLS.MenuButtonMixin
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
@@ -49,7 +51,8 @@ define('js!SBIS3.CONTROLS.MenuButtonNew', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3
     * @ignoreEvents onFocusIn onFocusOut onReady onDragIn onDragStart onDragStop onDragMove onDragOut
     */
 
-   var MenuButton = Button.extend( [PickerMixin, ListControlMixin, MenuButtonMixin, HierarchyControlMixin], /** @lends SBIS3.CONTROLS.MenuButtonNew.prototype */ {
+   var MenuButton = Button.extend( [PickerMixin, ListControlMixin, MenuButtonMixin, HierarchyControlMixin, TreeControlMixin], /** @lends SBIS3.CONTROLS.MenuButtonNew.prototype */ {
+      _dotTplFn: dotTplFn,
       $protected: {
          _header: null,
 
@@ -71,7 +74,7 @@ define('js!SBIS3.CONTROLS.MenuButtonNew', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3
       },
 
       _onAlignmentChangeHandler: function(alignment){
-         this.getView().changeAligment(alignment);
+         this._getView().changeAligment(alignment);
       },
 
 
@@ -92,7 +95,7 @@ define('js!SBIS3.CONTROLS.MenuButtonNew', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3
        */
       togglePicker: function(){
          var view = this._getView();
-         view.setWidth();
+         view.recalcWidth();
          MenuButton.superclass.togglePicker.call(this);
          view.tooglePickerHandler();
       },
@@ -120,15 +123,12 @@ define('js!SBIS3.CONTROLS.MenuButtonNew', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3
       _dataLoadedCallback : function() {
          var count = this.getItems().getChildren().getCount(),
             withData = (count > 1);
-         this._getView().initView(withData);
+         this._getView().setViewWithData(withData);
          if (this._picker){
             this.hidePicker();
          }
-      },
-
-      _getViewTemplate: function() {
-         return MenuButtonViewTemplate;
       }
+
    });
 
    return MenuButton;

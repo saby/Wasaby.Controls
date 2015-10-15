@@ -3,8 +3,14 @@ define('js!SBIS3.CONTROLS.MenuLinkNewView', [
    ],
    function() {
       'use strict';
+      /**
+       * Представление для MenuLink
+       * @class SBIS3.CONTROLS.MenuIconNew
+       * @extends $ws.proto.Abstract
+       * @author Ганшин Ярослав Олегович
+       */
       var View = $ws.proto.Abstract.extend([],/** @lends SBIS3.CONTROLS.MenuLinkNewView.prototype */ {
-         _moduleName: 'SBIS3.CONTROLS.MenuView',
+         _moduleName: 'SBIS3.CONTROLS.MenuLinkNewView',
          $protected: {
             _picker: null,
             width_arrow: 10
@@ -26,7 +32,6 @@ define('js!SBIS3.CONTROLS.MenuLinkNewView', [
                'min-width':  this._options.rootNode.outerWidth() + this._width_arrow // + ширина стрелки
             });
          }
-
       });
       return View;
    }

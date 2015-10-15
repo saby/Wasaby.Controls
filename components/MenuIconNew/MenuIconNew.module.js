@@ -1,22 +1,24 @@
-/*global define, $ws, $*/
-define('js!SBIS3.CONTROLS.MenuLinkNew', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONTROLS.MenuLink', 'js!SBIS3.CONTROLS.ListControlMixin',
-      'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.MenuButtonNewMixin',
-      'js!SBIS3.CONTROLS.ContextMenuNew',
-      'js!SBIS3.CONTROLS.HierarchyControlMixin', 'js!SBIS3.CONTROLS.MenuLinkNewView'],
-   function(Link, MenuLinkViewTemplate, ListControlMixin, PickerMixin, MenuButtonMixin, ContextMenu, HierarchyControlMixin, MenuLinkView) {
+/*global define, $*/
+define('js!SBIS3.CONTROLS.MenuIconNew', [
+   'js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.CONTROLS.ContextMenuNew', 'js!SBIS3.CONTROLS.PickerMixin',
+   'js!SBIS3.CONTROLS.ListControlMixin',  'js!SBIS3.CONTROLS.MenuButtonNewMixin', 'html!SBIS3.CONTROLS.MenuIcon',
+   'js!SBIS3.CONTROLS.MenuIconView', 'js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS3.CONTROLS.HierarchyControlMixin',
+   'js!SBIS3.CONTROLS.TreeControlMixin'
+], function(IconButton, ContextMenu, PickerMixin,
+      ListControlMixin, MenuButtonMixin, dotTplFn,
+      MenuIconView, DataUtils, HierarchyControlMixin,
+      TreeControlMixin ) {
 
    'use strict';
 
    /**
-    * Контрол, отображающий кнопку в виде ссылки и выпадающее из нее меню
-    * @class SBIS3.CONTROLS.MenuLinkNew
-    * @demo SBIS3.CONTROLS.Demo.MyMenuLink
-    * @extends SBIS3.CONTROLS.ButtonBase
+    * Кнопка с выпадающим меню
+    * @class SBIS3.CONTROLS.MenuIcon
+	 * @demo SBIS3.CONTROLS.Demo.MyMenuIconNew
     * @control
-    * @author Ганшин Ярослав Олегович
     * @initial
-    * <component data-component='SBIS3.CONTROLS.MenuLink'>
-    *    <option name='caption' value='Ссылка с меню'></option>
+    * <component data-component='SBIS3.CONTROLS.MenuIcon'>
+    *    <option name="icon">sprite:icon-24 icon-AddButton icon-primary</option>
     *    <options name="items" type="array">
     *        <options>
     *            <option name="id">1</option>
@@ -28,10 +30,9 @@ define('js!SBIS3.CONTROLS.MenuLinkNew', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.C
     *         </options>
     *      </options>
     * </component>
-    * @mixes SBIS3.CONTROLS.ListControlMixin
-    * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.MenuButtonMixin
+    * @extends SBIS3.CONTROLS.ToggleButton
     * @public
+    * @author Ганшин Ярослав Олегович
     * @category Buttons
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
@@ -48,57 +49,50 @@ define('js!SBIS3.CONTROLS.MenuLinkNew', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.C
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
     * @ignoreEvents onBeforeShow onAfterShow onBeforeLoad onAfterLoad onBeforeControlsLoad onKeyPressed onResize
     * @ignoreEvents onFocusIn onFocusOut onReady onDragIn onDragStart onDragStop onDragMove onDragOut
+    *
+    * @mixes SBIS3.CONTROLS.PickerMixin
+    * @mixes SBIS3.CONTROLS.ListControlMixin
+    * @mixes SBIS3.CONTROLS.MenuButtonNewMixin
     */
 
-   var MenuLink = Link.extend( [PickerMixin, ListControlMixin, MenuButtonMixin, HierarchyControlMixin], /** @lends SBIS3.CONTROLS.MenuLinkNew.prototype */ {
+   var MenuIcon = IconButton.extend( [PickerMixin, ListControlMixin, MenuButtonMixin, HierarchyControlMixin, TreeControlMixin], /** @lends SBIS3.CONTROLS.MenuIcon.prototype */ {
+      _dotTplFn: dotTplFn,
+      _hasHeader: false,
       $protected: {
-         _zIndex: '',
          _options: {
-            pickerClassName: 'controls-MenuLink__Menu'
+            pickerClassName: 'controls-MenuIcon__Menu'
          },
-         _viewConstructor: MenuLinkView
+         _viewConstructor: MenuIconView
       },
 
-      $constructor: function() {
-
+      init: function(){
+         this._options._pickerClassName += this._getView().getAdditionalClasses();
+         MenuIcon.superclass.init.call(this);
       },
 
-      setCaption: function(caption){
-         Link.superclass.setCaption.call(this, caption);
-         this._getView().setCaption(caption);
-      },
-
-      _initializePicker: function(){
-         MenuLink.superclass._initializePicker.call(this);
-         this._getView().setPicker(this._picker);
-         this._setWidth();
-      },
-
-      _setWidth: function(){
-         this._getView().setWidth();
-      },
-
-      _clickHandler: function(){
+      _clickHandler: function() {
          var items = this.getItems(),
             children  = items.getChildren(),
             count = children.getCount();
          if (count > 1) {
             this.togglePicker();
-         } else if (count == 1) {
-            var id = DataUtils.getItemPropertyValue(children.at(0).getContents(),  this._options.keyField);
+
+         } else if (count === 1) {
+            var id = (DataUtils.getItemPropertyValue(children.at(0).getContents(),  this._options.keyField));
             this._notify('onMenuItemActivate', id);
          }
       },
 
-      _dataLoadedCallback: function(){
+      _dataLoadedCallback: function() {
          if (this._picker) this.hidePicker();
       },
 
-      _getViewTemplate: function() {
-         return MenuLinkViewTemplate;
+      _initializePicker: function(){
+         MenuIcon.superclass._initializePicker.call(this);
+         this._getView().setPicker(this._picker);
       }
    });
 
-   return MenuLink;
+   return MenuIcon;
 
 });
