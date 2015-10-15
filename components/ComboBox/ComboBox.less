@@ -1,145 +1,133 @@
 .controls-ComboBox {
-  cursor: @combo-box-cursor;
-  line-height: normal;
-
-  .controls-TextBox__fieldWrapper {
-    position: relative;
-
-    .controls-TextBox__field {
-      &.controls-ComboBox__field {
-        font: @combo-box-field-font;
-        color: @combo-box-field-text-color;
-      }
-
-      &.controls-ComboBox__fieldNotEditable {
-        display: none;
-      }
-      &.controls-ComboBox__fieldNotEditable__placeholder {
-         color: @text-box-placeholder-color;
-      }
-    }
-  }
-
-  .controls-TextBox__afterFieldWrapper {
-    .controls-ComboBox__arrowDown {
-      position: absolute;
-      text-decoration: none;
-      display: inline-block;
-      width: @combo-box-arrow-width;
-      height: @combo-box-arrow-height;
-      top: @combo-box-arrow-top-offset;
-      right: @combo-box-arrow-right-offset;
-      margin: @combo-box-arrow-margin;
-      .box-sizing(border-box);
-      border-width: @combo-box-arrow-border-width;
-      border-style: @combo-box-arrow-border-style;
-      border-color: @combo-box-arrow-border-color;
-      background: @combo-box-arrow-bg;
-
-      &:hover {
-        text-decoration: none;
-        border-width: @combo-box-arrow-hover-border-width;
-        border-style: @combo-box-arrow-hover-border-style;
-        border-color: @combo-box-arrow-hover-border-color;
-        background: @combo-box-arrow-hover-bg;
-      }
-    }
-  }
-
-  &.controls-ComboBox__editable-false {
-    .controls-TextBox__fieldWrapper {
+   line-height: normal;
+   cursor: @combo-box-cursor;
+   .controls-TextBox__fieldWrapper {
+      position: relative;
       .controls-TextBox__field {
-        &.controls-ComboBox__field {
-          visibility: hidden;
-          position: absolute;
-          left: 0;
-          top: 0;
-        }
-
-        &.controls-ComboBox__fieldNotEditable {
-          display: inline-block;
-          font: @combo-box-field-font;
-          color: @combo-box-field-text-color;
-        }
+         &.controls-ComboBox__field {
+            font: @combo-box-field-font;
+            color: @combo-box-field-text-color;
+         }
+         &.controls-ComboBox__fieldNotEditable {
+            display: none;
+            .text-overflow();
+         }
+         &.controls-ComboBox__fieldNotEditable__placeholder {
+            color: @text-box-placeholder-color;
+         }
       }
-    }
-
-    &:hover {
-      .controls-TextBox__afterFieldWrapper {
-        .controls-ComboBox__arrowDown {
-          text-decoration: none;
-          border-width: @combo-box-arrow-hover-border-width;
-          border-style: @combo-box-arrow-hover-border-style;
-          border-color: @combo-box-arrow-hover-border-color;
-          background: @combo-box-arrow-hover-bg;
-        }
-      }
-    }
-  }
-
-  &.controls-Picker__show {
-    .controls-TextBox__afterFieldWrapper {
+   }
+   .controls-TextBox__afterFieldWrapper {
       .controls-ComboBox__arrowDown {
-        border-width: @combo-box-arrow-active-border-width;
-        border-style: @combo-box-arrow-active-border-style;
-        border-color: @combo-box-arrow-active-border-color;
-        background: @combo-box-arrow-active-bg;
-      }
-    }
+         position: absolute;
+         top: @combo-box-arrow-top-offset;
+         right: @combo-box-arrow-right-offset;
+         display: inline-block;
+         width: @combo-box-arrow-width;
+         height: @combo-box-arrow-height;
+         margin: @combo-box-arrow-margin;
+         text-decoration: none;
+         border-width: @combo-box-arrow-border-width;
+         border-style: @combo-box-arrow-border-style;
+         border-color: @combo-box-arrow-border-color;
+         background: @combo-box-arrow-bg;
 
-    &:hover {
+         .box-sizing(border-box);
+         &:hover {
+            text-decoration: none;
+            border-width: @combo-box-arrow-hover-border-width;
+            border-style: @combo-box-arrow-hover-border-style;
+            border-color: @combo-box-arrow-hover-border-color;
+            background: @combo-box-arrow-hover-bg;
+         }
+      }
+   }
+   &.controls-ComboBox__editable-false {
+      .controls-TextBox__fieldWrapper {
+         .controls-TextBox__field {
+            &.controls-ComboBox__field {
+               position: absolute;
+               top: 0;
+               left: 0;
+               visibility: hidden;
+            }
+            &.controls-ComboBox__fieldNotEditable {
+               font: @combo-box-field-font;
+               display: inline-block;
+               color: @combo-box-field-text-color;
+            }
+         }
+      }
+      &:hover {
+         .controls-TextBox__afterFieldWrapper {
+            .controls-ComboBox__arrowDown {
+               text-decoration: none;
+               border-width: @combo-box-arrow-hover-border-width;
+               border-style: @combo-box-arrow-hover-border-style;
+               border-color: @combo-box-arrow-hover-border-color;
+               background: @combo-box-arrow-hover-bg;
+            }
+         }
+      }
+   }
+   &.controls-Picker__show {
       .controls-TextBox__afterFieldWrapper {
-        .controls-ComboBox__arrowDown {
-          border-width: @combo-box-arrow-active-hover-border-width;
-          border-style: @combo-box-arrow-active-hover-border-style;
-          border-color: @combo-box-arrow-active-hover-border-color;
-          background: @combo-box-arrow-active-hover-bg;
-        }
+         .controls-ComboBox__arrowDown {
+            border-width: @combo-box-arrow-active-border-width;
+            border-style: @combo-box-arrow-active-border-style;
+            border-color: @combo-box-arrow-active-border-color;
+            background: @combo-box-arrow-active-bg;
+         }
       }
-    }
-  }
-
-  &.ws-disabled,
-  &.ws-disabled:hover {
-    cursor: @combo-box-disabled-cursor;
-
-    .controls-TextBox__afterFieldWrapper {
-      .controls-ComboBox__arrowDown {
-        border-width: @combo-box-arrow-disabled-border-width;
-        border-style: @combo-box-arrow-disabled-border-style;
-        border-color: @combo-box-arrow-disabled-border-color;
-        background: @combo-box-arrow-disabled-bg;
+      &:hover {
+         .controls-TextBox__afterFieldWrapper {
+            .controls-ComboBox__arrowDown {
+               border-width: @combo-box-arrow-active-hover-border-width;
+               border-style: @combo-box-arrow-active-hover-border-style;
+               border-color: @combo-box-arrow-active-hover-border-color;
+               background: @combo-box-arrow-active-hover-bg;
+            }
+         }
       }
-    }
-  }
+   }
+   &.ws-disabled,
+   &.ws-disabled:hover {
+      cursor: @combo-box-disabled-cursor;
+      .controls-TextBox__afterFieldWrapper {
+         .controls-ComboBox__arrowDown {
+            border-width: @combo-box-arrow-disabled-border-width;
+            border-style: @combo-box-arrow-disabled-border-style;
+            border-color: @combo-box-arrow-disabled-border-color;
+            background: @combo-box-arrow-disabled-bg;
+         }
+      }
+   }
 }
 
 .controls-ComboBox__picker {
-  border: @combo-box-picker-border;
-  .border-radius(@combo-box-picker-border-radius);
-  margin: @combo-box-picker-margin;
+   margin: @combo-box-picker-margin;
+   border: @combo-box-picker-border;
 
-  .controls-ComboBox__itemRow {
-    cursor: @combo-box-cursor;
-    padding: @combo-box-picker-item-padding;
-    font: @combo-box-picker-item-font;
-    color: @combo-box-picker-item-text-color;
-    background: @combo-box-picker-item-bg;
-
-    &.controls-ComboBox__itemRow__selected {
-      color: @combo-box-picker-item-selected-text-color;
-      background: @combo-box-picker-item-selected-bg;
-    }
-
-    &:hover {
-      color: @combo-box-picker-item-hover-text-color;
-      background: @combo-box-picker-item-hover-bg;
-    }
-  }
+   .border-radius(@combo-box-picker-border-radius);
+   .controls-ComboBox__itemRow {
+      font: @combo-box-picker-item-font;
+      padding: @combo-box-picker-item-padding;
+      cursor: @combo-box-cursor;
+      color: @combo-box-picker-item-text-color;
+      background: @combo-box-picker-item-bg;
+      &.controls-ComboBox__itemRow__selected {
+         color: @combo-box-picker-item-selected-text-color;
+         background: @combo-box-picker-item-selected-bg;
+      }
+      &:hover {
+         color: @combo-box-picker-item-hover-text-color;
+         background: @combo-box-picker-item-hover-bg;
+      }
+   }
 }
 
 // TODO: what is it - modifier?
 .controls-ComboBox__inputWrapper {
-  height: 100%;
-  margin-right: @combo-box-input-wrapper-right-offset;
+   height: 100%;
+   margin-right: @combo-box-input-wrapper-right-offset;
 }

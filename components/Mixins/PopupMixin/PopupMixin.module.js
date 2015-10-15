@@ -210,12 +210,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                offset.top = this._calculateOverflow(offset, 'vertical');
                offset.left = this._calculateOverflow(offset, 'horizontal');
 
-               if ( ! this._isMovedV) {
-                  offset.top += this._margins.top - this._margins.bottom + (this._options.verticalAlign.offset || 0);
-               }
-               if ( ! this._isMovedH) {
-                  offset.left += this._margins.left - this._margins.right + (this._options.horizontalAlign.offset || 0);
-               }
+               //Если никаких перемещений не было то прибавим оффсеты, если были то вычтем их
+               //Если было уменьшение размеров контейнера (появились скроллы) то оффсеты уже учтены и ничего прибавлять не нужно
+               var sign;
+               sign = (!this._isMovedV) ? 1 : (!this._overflowedV) ? -1 : 0;
+               offset.top += sign * (this._margins.top - this._margins.bottom + (this._options.verticalAlign.offset || 0));
+               sign = (!this._isMovedH) ? 1 : (!this._overflowedH) ? -1 : 0;
+               offset.left += sign * (this._margins.left - this._margins.right + (this._options.horizontalAlign.offset || 0));
 
                this._notifyOnAlignmentChange();
 
@@ -378,9 +379,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          if (this._options.target && this._options.closeByExternalClick) {
             var winHeight = $(window).height(),
                top = this._options.target.offset().top - $(window).scrollTop() - winHeight - WINDOW_OFFSET;
-            if (this.isVisible() && (top > 0 || -top > winHeight)) {
-               self.hide();
-            }
+            /*TODO временный фикс для решения проблемы на айпаде: открывается клавиаутра и при этом из за сдвига экрана пропадает панелька*/
+            /*if (this.isVisible() && (top > 0 || -top > winHeight)) {
+             self.hide();
+             }*/
          }
       },
 
@@ -441,8 +443,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
       //Вычисляем сдвиг в зависимости от угла
       _getOffsetByCorner: function (corner, notSave) {
-         var border = this._targetSizes.border,
-            height = this._targetSizes.height,
+         var height = this._targetSizes.height,
             width = this._targetSizes.width,
             offset = {
                top: 0,
@@ -451,18 +452,15 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
          switch (corner) {
             case 'tr':
-               offset.left += width - border;
-               offset.top -= border;
+               offset.left += width;
+               offset.top;
                break;
             case 'bl':
                offset.top += height;
                break;
             case 'br':
                offset.top += height;
-               offset.left += width - border;
-               break;
-            case 'tl':
-               offset.top -= border;
+               offset.left += width;
                break;
          }
          if (this._options.target && !this._options.corner) {
@@ -480,10 +478,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             left: 0
          };
          if (vert == 'bottom') {
-            offset.top -= this._containerSizes.originHeight - this._targetSizes.border;
+            offset.top -= this._containerSizes.originHeight;
          }
          if (horiz == 'right') {
-            offset.left -= this._containerSizes.originWidth - this._targetSizes.border;
+            offset.left -= this._containerSizes.originWidth;
          }
          if (!notSave) {
             this._options.horizontalAlign.side = horiz;
@@ -552,7 +550,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             },
             tl: {
                horizontal: {
-                  top: 'tl',
+                  top: 'tr',
                   bottom: 'tr'
                },
                vertical: {
@@ -609,6 +607,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          spaces = this._getSpaces(this._options.corner);
          if (orientation == 'vertical') {
             if (offset.top < 0) {
+               this._overflowedV = true;
                this._container.css('overflow-y', 'auto');
                if (spaces.top < spaces.bottom) {
                   oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
@@ -624,11 +623,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             if (this._containerSizes.originHeight + vOffset + this._margins.top - this._margins.bottom < spaces.bottom) {
                this._container.css('overflow-y', 'visible');
                this._container.css('height', '');
+               this._overflowedV = false;
             }
             return offset.top;
          }
          else {
             if (offset.left < 0) {
+               this._overflowedH = true;
                this._container.css('overflow-x', 'auto');
                spaces = this._getSpaces(this._options.corner);
                if (spaces.left < spaces.right) {
@@ -645,6 +646,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             if (this._containerSizes.originWidth + hOffset + this._margins.left - this._margins.right < spaces.right) {
                this._container.css('overflow-x', 'visible');
                this._container.css('width', '');
+               this._overflowedH = false;
             }
             return offset.left;
          }
@@ -669,7 +671,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          switch (corner) {
             case 'br':
                spaces.left = offset.left + width;
-               spaces.top = offset.top;
+               spaces.top = offset.top + height;
                break;
             case 'tr':
                spaces.left = offset.left + width;
@@ -681,23 +683,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                break;
             case 'bl':
                spaces.left = offset.left;
-               spaces.top = offset.top;
+               spaces.top = offset.top + height;
                break;
             default:
                return spaces;
          }
 
-         if (corner == 'tl' || corner == 'tr') {
-            spaces.bottom = windowHeight - spaces.top;
-         } else {
-            spaces.bottom = windowHeight - spaces.top - height;
-         }
-
-         if (corner == 'tr' || corner == 'br') {
-            spaces.right = windowWidth - spaces.left;
-         } else {
-            spaces.right = windowWidth - spaces.left;
-         }
+         spaces.bottom = windowHeight - spaces.top;
+         spaces.right = windowWidth - spaces.left;
 
          return spaces;
       },

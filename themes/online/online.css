@@ -1002,7 +1002,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuItem:hover {
   color: #000000;
-  background: #e9fafe;
+  background: #f0f5fb;
 }
 .controls-MenuItem:hover .controls-MenuItem__icon {
   color: #ff7033 !important;
@@ -1182,7 +1182,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MenuButton__Menu {
   padding: 4px 0;
-  margin-top: 31px;
+  margin-top: 29px;
   margin-left: 0;
   border-width: 2px;
   border-style: solid;
@@ -1334,21 +1334,21 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox {
   display: inline-block;
+  height: 24px;
+  color: #000000;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent transparent #eaeaea transparent;
+  background: #ffffff;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  height: 24px;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
-  border-width: 1px;
-  border-style: solid;
-  border-color: transparent transparent #eaeaea transparent;
-  background: #ffffff;
-  color: #000000;
 }
 .controls-TextBox.ws-validation-error {
   border-width: 1px;
@@ -1391,9 +1391,9 @@ input[type="reset"]::-moz-focus-inner {
   position: relative;
   float: right;
   width: 16px;
+  height: 100%;
   min-height: 19px;
   margin: 0;
-  height: 100%;
 }
 .controls-TextBox .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper,
 .controls-DatePicker .controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
@@ -1401,25 +1401,25 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox .controls-TextBox__fieldWrapper {
   position: relative;
-  padding: 0 4px;
   height: 100%;
+  padding: 0 4px;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+  font: inherit;
+  line-height: 20px !important;
   width: 100%;
   height: 100%;
-  font: inherit;
-  color: inherit;
-  text-align: left;
   min-height: 19px;
-  line-height: 20px !important;
   margin: 0;
   padding: 1px 0;
+  text-align: left;
+  color: inherit;
   border: none;
   outline: none;
   background: transparent;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field::-webkit-input-placeholder {
   color: #e4e4e4 !important;
@@ -1441,18 +1441,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-TextBox__field-lowercase {
   text-transform: lowercase;
-}
-.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__placeholder {
-  position: absolute;
-  top: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -ms-text-overflow: ellipsis;
-  white-space: nowrap;
-  color: #e4e4e4 !important;
-  font: inherit;
-  padding: 3px 0 0;
-  text-align: inherit;
 }
 .controls-FormattedTextBox {
   display: inline-block;
@@ -1486,9 +1474,6 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-NumberTextBox .controls-TextBox__fieldWrapper {
   height: 100%;
-}
-.controls-NumberTextBox .controls-TextBox__fieldWrapper.controls-NumberTextBox__enable-arrow {
-  margin: 0 14px 0 0;
 }
 .controls-NumberTextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
   text-align: left;
@@ -1557,8 +1542,8 @@ input[type="reset"]::-moz-focus-inner {
   font-size: 12px;
 }
 .controls-ComboBox {
-  cursor: pointer;
   line-height: normal;
+  cursor: pointer;
 }
 .controls-ComboBox .controls-TextBox__fieldWrapper {
   position: relative;
@@ -1569,26 +1554,30 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
   display: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .controls-ComboBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable__placeholder {
   color: #e4e4e4 !important;
 }
 .controls-ComboBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
   position: absolute;
-  text-decoration: none;
+  top: 50%;
+  right: 0;
   display: inline-block;
   width: 16px;
   height: 16px;
-  top: 50%;
-  right: 0;
   margin: -8px 0 0;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+  text-decoration: none;
   border-width: 0;
   border-style: solid;
   border-color: transparent;
   background: #ffffff url('img/ComboBox.png') -3px -4px no-repeat;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 .controls-ComboBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown:hover {
   text-decoration: none;
@@ -1598,14 +1587,14 @@ input[type="reset"]::-moz-focus-inner {
   background: #ffffff url('img/ComboBox.png') -3px -28px no-repeat;
 }
 .controls-ComboBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__field {
-  visibility: hidden;
   position: absolute;
-  left: 0;
   top: 0;
+  left: 0;
+  visibility: hidden;
 }
 .controls-ComboBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
-  display: inline-block;
   font: inherit;
+  display: inline-block;
   color: inherit;
 }
 .controls-ComboBox.controls-ComboBox__editable-false:hover .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
@@ -1639,6 +1628,7 @@ input[type="reset"]::-moz-focus-inner {
   background: #ffffff url('img/ComboBox.png') -3px -4px no-repeat;
 }
 .controls-ComboBox__picker {
+  margin: -1px 0 0;
   border: 1px solid #e4e4e4;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -1646,22 +1636,21 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
-  margin: -1px 0 0;
 }
 .controls-ComboBox__picker .controls-ComboBox__itemRow {
-  cursor: pointer;
-  padding: 4px;
   font: inherit;
+  padding: 4px;
+  cursor: pointer;
   color: inherit;
   background: #ffffff;
 }
 .controls-ComboBox__picker .controls-ComboBox__itemRow.controls-ComboBox__itemRow__selected {
   color: inherit;
-  background: #d3e3f4;
+  background: #f3f3f3;
 }
 .controls-ComboBox__picker .controls-ComboBox__itemRow:hover {
   color: inherit;
-  background: #e7f0f9;
+  background: #f0f5fb;
 }
 .controls-ComboBox__inputWrapper {
   height: 100%;
@@ -1839,11 +1828,11 @@ input[type="reset"]::-moz-focus-inner {
   border-width: 0;
 }
 .controls-SuggestList__item:hover {
-  background: #f3f3f3;
+  background: #f0f5fb;
   color: inherit;
 }
 .controls-SuggestList__item__selected {
-  background: #e6e6e6;
+  background: #f3f3f3;
   color: inherit;
 }
 .controls-SuggestList__empty {
@@ -2245,6 +2234,15 @@ input[type="reset"]::-moz-focus-inner {
   height: 32px;
   width: 32px;
 }
+.controls-ListView.controls-ListView__showCheckBoxes .controls-ListView__itemCheckBox {
+  background: url('img/CheckBox.png') 0 1px;
+}
+.controls-ListView.controls-ListView__hideCheckBoxes.controls-ListView__multiselect .controls-DataGridView__colgroup col:first-child {
+  width: 4px;
+}
+.controls-ListView.controls-ListView__hideCheckBoxes.controls-ListView__multiselect .controls-ListView__itemCheckBox {
+  display: none;
+}
 .controls-AjaxLoader {
   background: none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
   position: absolute;
@@ -2372,21 +2370,21 @@ input[type="reset"]::-moz-focus-inner {
   background: transparent;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__item__multiSelected {
-  background-color: transparent;
+  background-color: #f3f3f3;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__item__multiSelected .controls-DataGridView__td {
   color: inherit;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__hoveredItem {
-  background: #e9fafe;
+  background: #f0f5fb;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__hoveredItem .controls-DataGridView__th {
   color: inherit;
-  background-color: #e9fafe;
+  background-color: #f0f5fb;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-ListView__hoveredItem .controls-DataGridView__td {
   color: inherit;
-  background-color: #e9fafe;
+  background-color: #f0f5fb;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__PartScroll__container {
   position: absolute;
@@ -2492,15 +2490,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DataGridView .controls-DataGridView__td__checkBox .controls-ListView__itemCheckBox {
   margin: 1px 0 0 5px;
 }
-.controls-DataGridView.controls-DataGridView__showCheckBoxes .controls-ListView__itemCheckBox {
-  background: url('img/CheckBox.png') 0 1px;
-}
-.controls-DataGridView.controls-DataGridView__hideCheckBoxes.controls-ListView__multiselect .controls-DataGridView__colgroup col:first-child {
-  width: 4px;
-}
-.controls-DataGridView.controls-DataGridView__hideCheckBoxes.controls-ListView__multiselect .controls-ListView__itemCheckBox {
-  display: none;
-}
 .controls-DataGridView__addInPlace-container {
   padding-left: 8px;
 }
@@ -2525,14 +2514,17 @@ input[type="reset"]::-moz-focus-inner {
   height: 14px;
 }
 .controls-ListView__folder.controls-ListView__hoveredItem .controls-DataGridView__td .controls-TreeView__ellipsis-copyArrow {
-  background-color: #e9fafe;
-  -webkit-box-shadow: -6px 2px 8px -2px #e9fafe;
-  -moz-box-shadow: -6px 2px 8px -2px #e9fafe;
-  box-shadow: -6px 2px 8px -2px #e9fafe;
+  background-color: #f0f5fb;
+  -webkit-box-shadow: -6px 2px 8px -2px #f0f5fb;
+  -moz-box-shadow: -6px 2px 8px -2px #f0f5fb;
+  box-shadow: -6px 2px 8px -2px #f0f5fb;
 }
 .controls-ListView__folder .controls-TreeView__ellipsis-wrapper {
   overflow: hidden;
   height: 19px;
+}
+.controls-ListView__folder .controls-TreeView__ellipsis-wrapper .controls-TreeView__ellipsis-container {
+  float: left;
 }
 .controls-ListView__folder .controls-TreeView__ellipsis-wrapper .controls-TreeView__ellipsis-copyArrow {
   float: right;
@@ -2597,7 +2589,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
 }
 .controls-CompositeView .controls-CompositeView__listItem.controls-ListView__hoveredItem {
-  background: #e9fafe;
+  background: #f0f5fb;
 }
 .controls-CompositeView .controls-CompositeView__listItem.controls-ListView__folder {
   padding: 0;
@@ -2688,7 +2680,7 @@ input[type="reset"]::-moz-focus-inner {
   margin: -1px 0 0 -1px;
 }
 .controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__hoveredItem {
-  background: #e9fafe;
+  background: #f0f5fb;
 }
 .controls-CompositeView .controls-CompositeView__tileItem.controls-ListView__hoveredItem .controls-CompositeView__tileImg {
   box-shadow: 1px 2px 4px #aaaaaa;
@@ -3096,15 +3088,15 @@ input[type="reset"]::-moz-focus-inner {
   background-color: transparent;
   box-shadow: none;
 }
-.controls-ListView.controls-DataGrid .controls-ItemActions {
-  background-color: #e9fafe;
-  box-shadow: -2px -2px 5px #e9fafe;
+.controls-ListView.controls-DataGridView .controls-ItemActions {
+  background-color: #f0f5fb;
+  box-shadow: -2px -2px 5px #f0f5fb;
 }
-.controls-ListView.controls-DataGrid .controls-ItemActions__activeItem {
-  background-color: #e9fafe !important;
+.controls-ListView.controls-DataGridView .controls-ItemActions__activeItem {
+  background-color: #f0f5fb !important;
 }
-.controls-ListView.controls-DataGrid .controls-ItemActions__activeItem .controls-DataGrid__notScrolledCell {
-  background-color: #e9fafe !important;
+.controls-ListView.controls-DataGridView .controls-ItemActions__activeItem .controls-DataGrid__notScrolledCell {
+  background-color: #f0f5fb !important;
 }
 .controls-ItemActions {
   position: absolute;
@@ -3152,10 +3144,10 @@ input[type="reset"]::-moz-focus-inner {
   background: url('img/ItemActions-menu.png') no-repeat 0 -60px;
 }
 .controls-ItemActions__activeItem {
-  background-color: #e9fafe !important;
+  background-color: #f0f5fb !important;
 }
 .controls-ItemActions__activeItem .controls-DataGridView__notScrolledCell {
-  background-color: #e9fafe !important;
+  background-color: #f0f5fb !important;
 }
 .controls-EditInPlaceController {
   position: absolute;
@@ -3166,15 +3158,15 @@ input[type="reset"]::-moz-focus-inner {
   overflow: visible;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-editInPlace__editing {
-  background: #e9fafe;
+  background: #f3f3f3;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-editInPlace__editing .controls-DataGridView__th {
   color: inherit;
-  background-color: #e9fafe;
+  background-color: #f0f5fb;
 }
 .controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr.controls-editInPlace__editing .controls-DataGridView__td {
   color: inherit;
-  background-color: #e9fafe;
+  background-color: #f0f5fb;
 }
 .controls-editInPlace {
   position: absolute;
@@ -3199,6 +3191,54 @@ input[type="reset"]::-moz-focus-inner {
 .controls-editInPlace .controls-editInPlace__withEditor {
   background-color: white;
   cursor: text;
+}
+.controls-image {
+  display: inline-block;
+  height: auto;
+  width: auto;
+  position: relative;
+}
+.controls-image__file-loader {
+  display: none;
+}
+.controls-image__wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  white-space: nowrap;
+  text-align: center;
+}
+.controls-image__image-bar {
+  position: absolute;
+  background-color: #E7F0F9;
+  margin: -12px 0 0 -12px;
+  padding: 12px 12px 32px 12px;
+}
+.controls-image__helper {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+.controls-image__image {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+}
+.controls-image__button-crop,
+.controls-image__button-upload,
+.controls-image__button-delete {
+  position: absolute;
+  bottom: 8px;
+  color: #0055BB;
+}
+.controls-image__button-crop {
+  right: 40px;
+}
+.controls-image__button-upload {
+  left: 12px;
+}
+.controls-image__button-delete {
+  right: 12px;
 }
 .controls-FastDataFilter {
   display: inline-block;
@@ -3296,6 +3336,12 @@ input[type="reset"]::-moz-focus-inner {
   background-image: url('img/rowSelect.png');
   background-position: left top;
   background-repeat: repeat-y;
+}
+.controls-ListView__withoutMarker .controls-ListView__item__selected .controls-DataGridView__td:first-child,
+.controls-ListView__withoutMarker .controls-ListView__item__selected .controls-CompositeView__tileTitle,
+.controls-ListView__withoutMarker .controls-ListView__item__selected .controls-ListView__item-title,
+.controls-ListView__withoutMarker .controls-ListView__item__selected:not(.controls-ListView__folder) {
+  background-image: none !important;
 }
 .controls-TreePager-container {
   float: right;

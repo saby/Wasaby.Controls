@@ -93,8 +93,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
    function toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes) {
       if (gridView._options.multiselect && hideCheckBoxes) {
-         gridView._container.toggleClass('controls-DataGridView__showCheckBoxes', operationPanel.isOpen())
-            .toggleClass('controls-DataGridView__hideCheckBoxes', !operationPanel.isOpen());
+         gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isOpen())
+            .toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isOpen());
       }
    }
    /**
@@ -180,7 +180,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        * @example
        * <pre>
        *     myBinder = new ComponentBinder();
-       *     myBinder.bindSearchGrid(searchForm, gridView, BreadCrumbs, searchParamName);
+       *     myBinder.bindBreadCrumbs(breadCrumbs, backButton, hierarchyGridView);
        * </pre>
        */
       bindBreadCrumbs: function(breadCrumbs, backButton, hierarchyGridView){
@@ -266,6 +266,18 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             setPreviousRoot();
          });
       },
+      /**
+       * Метод для связывания панели массовых оперций с представлением данных
+       * @param operationPanel объект панели массовых операций
+       * @param gridView объект представления данных
+       * @param hideCheckBoxes {Boolean} флаг, показывающий, скрывать checkBox'ы для отметки записей 
+       * в представлении данных вместе с панелью или нет.
+       * @example
+       * <pre>
+       *     myBinder = new ComponentBinder();
+       *     myBinder.bindOperationPanel(operationPanel, gridView, true);
+       * </pre>
+       */
       bindOperationPanel: function(operationPanel, gridView, hideCheckBoxes) {
          operationPanel._addItemOptions = function(options) {
             options.linkedView = gridView;

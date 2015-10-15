@@ -1,0 +1,26 @@
+.controls-CropDialog__applyButton {
+  width: 90px;
+  position: absolute;
+  right: 32px;
+  top: 8px;
+}
+.controls-CropDialog__title.ws-window-title {
+  margin-right: 122px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: absolute;
+}
+.controls-CropDialog__image {
+  max-height: 100%;
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
+}
+.controls-CropDialog__image-wrapper {
+  left: 8px;
+  top: 8px;
+  bottom: 8px;
+  right: 8px;
+  overflow: hidden;
+  position: absolute;
+}

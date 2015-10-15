@@ -18,6 +18,9 @@
 @font-popup-size:                         15px;
 @font-basic-line-height:                  20px;
 
+@default-itemHover-color:                 #F0F5FB;
+@default-itemSelected-color:              #F3F3F3;
+
 
 // ---- //
 // Link //
@@ -579,7 +582,7 @@
 @menu-item-bg:                            @white-color;
 
 @menu-item-hover-text-color:              @menu-item-text-color;
-@menu-item-hover-bg:                      #E9FAFE;
+@menu-item-hover-bg:                      @default-itemHover-color;
 @menu-item-hover-icon-color:              @primary-color!important;
 
 @menu-item-icon-top-offset:               0px;
@@ -660,9 +663,9 @@
 @menu-button-arrow-disabled-bg:                         transparent url(@menu-button-arrow-spritesheet) 0 0;
 
 // Menu
-@menu-button-menu-top-margin:                           31px;
+@menu-button-menu-top-margin:                           29px;
 @menu-button-menu-left-margin:                          0;
-@menu-button-menu-padding:                              4px 0;   
+@menu-button-menu-padding:                              4px 0;
 @menu-button-menu-border-width:                         2px;
 @menu-button-menu-border-style:                         @menu-border-style;
 @menu-button-menu-border-color:                         @menu-border-color;
@@ -950,10 +953,10 @@
 @combo-box-picker-item-bg:                      @white-color;
 
 @combo-box-picker-item-hover-text-color:        @combo-box-picker-item-text-color;
-@combo-box-picker-item-hover-bg:                #e7f0f9;
+@combo-box-picker-item-hover-bg:                @default-itemHover-color;
 
 @combo-box-picker-item-selected-text-color:     @combo-box-picker-item-text-color;
-@combo-box-picker-item-selected-bg:             darken(@combo-box-picker-item-hover-bg, 5%);
+@combo-box-picker-item-selected-bg:             @default-itemSelected-color;
 
 // TODO: check whether it's required
 @combo-box-input-wrapper-right-offset:          18px;
@@ -1037,9 +1040,9 @@
 @suggest-list-item-cursor:                      @suggest-cursor;
 @suggest-list-item-font:                        @suggest-picker-item-font;
 @suggest-list-item-padding:                     4px;
-@suggest-list-item-hover-bg:                    #f3f3f3;
+@suggest-list-item-hover-bg:                    @default-itemHover-color;
 @suggest-list-item-hover-text-color:            @suggest-field-text-color;
-@suggest-list-item-selected-bg:                 darken(@suggest-list-item-hover-bg, 5%);
+@suggest-list-item-selected-bg:                 @default-itemSelected-color;
 @suggest-list-item-selected-text-color:         @suggest-picker-item-text-color;
 
 @suggest-list-empty-bg:                         @suggest-list-item-bg;
@@ -1335,8 +1338,8 @@
 @data-grid-border-color:                        transparent;
 
 @data-grid-row-bg:                              transparent;
-@data-grid-row-hover-bg:                        #E9FAFE;
-@data-grid-row-selected-bg:                     @data-grid-row-bg;
+@data-grid-row-hover-bg:                        @default-itemHover-color;
+@data-grid-row-selected-bg:                     @default-itemSelected-color;
 
 @data-grid-row-hover-header-cell-text-color:    inherit;
 @data-grid-row-hover-header-cell-bg:            @data-grid-row-hover-bg;

@@ -11,7 +11,31 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    'js!SBIS3.CONTROLS.OperationMove'
 ], function(Control, dotTplFn, CollectionMixin) {
    /**
-    * SBIS3.CONTROLS.OperationsPanel
+    * Компонент "Панель действий" используют совместно с представлениями данных ({@link SBIS3.CONTROLS.ListView} или любой его контрол-наследник),
+    * с записями которых требуется производить манипуляции. Он состоит из всплывающей панели, скрытой по умолчанию, и
+    * кнопки управления её отображением - {@link SBIS3.CONTROLS.OperationsPanelButton}.
+    *
+    * <ul>
+    *    <li>Связывание панели и представления данных производится при помощи {@link SBIS3.CONTROLS.ComponentBinder}.</li>
+    *    <li>Кнопка управления должна быть связана с всплывающей панелью методом {@link SBIS3.CONTROLS.OperationsPanelButton#setLinkedPanel}. Одной кнопкой можно управлять несколькими панелями.</li>
+    *    <li>Набор действий, отображаемых на панели, настраивают в опции {@link items}.</li>
+    * </ul>
+    *
+    * Существуют следующие категории действий:
+    * <ol>
+    *    <li>Действия над отмеченными записями: Распечатать, Выгрузить, Переместить и Удалить.</li>
+    *    <li>Действия над всем реестром. Они сгруппированы в кнопке-меню "Отметить", рядом с которой отображается
+    *    счетчик выделенных записей. В меню доступны следующие действия: <br/>
+    *       <ul>
+    *          <li><i>Всю страницу</i>. Выделяет все записи в связанном представлении данных, которые отображены на данной
+    *          веб-странице.</li>
+    *          <li><i>Снять</i>. Сбрасывает выделенные записи.</li>
+    *          <li><i>Инвертировать</i>. Сбрасывает выделенные записи, и выделяет те, что не были выделены ранее.</li>
+    *       </ul>
+    *    </li>
+    * </ol>
+    *
+    * Также допустимо создание новых действий, для которых настраивается иконка и поведение при клике.
     * @class SBIS3.CONTROLS.OperationsPanel
     * @extends $ws.proto.CompoundControl
     * @control
@@ -192,7 +216,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
        * </ol>
        */
       setPanelState: function(isSelection) {
-         this._currentMode = isSelection;
+         this._currentMode = isSelection = !!isSelection;
          this._blocks.wrapper.toggleClass('controls-operationsPanel__massMode', !isSelection).toggleClass('controls-operationsPanel__selectionMode',  isSelection);
       },
       destroy: function() {

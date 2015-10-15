@@ -39,6 +39,9 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.DataBindMixin
        * @control
        * @public
+       * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
+       * @cssModifier controls-ListView__showCheckBoxes Чекбоксы показываются не по ховеру, а сразу все.
+       * @cssModifier controls-ListView__hideCheckBoxes Скрыть все чекбоксы.
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
@@ -153,7 +156,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Можно использовать для массовых операций.
                 * @example
                 * <pre>
-                *     <option name="itemsActions">
+                *     <options name="itemsActions" type="array">
                 *        <options>
                 *           <option name="name">btn1</option>
                 *           <option name="icon">sprite:icon-16 icon-Delete icon-primary</option>
@@ -168,7 +171,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 *            <option name="isMainAction">true</option>
                 *            <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyListView:prototype.myOnActivatedHandler</option>
                 *         </options>
-                *     </option>
+                *     </options>
                 * </pre>
                 * @see setItemsActions
                 */
@@ -227,7 +230,34 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see setInfiniteScroll
                 */
                infiniteScroll: false,
-               ignoreLocalPageSize: false
+               /**
+                * @cfg {Boolean} Игнорировать значение в localStorage (т.е. смотреть на опцию pageSize)
+                * @remark Важно! На страницах нашего приложения есть функционал сохранения выбранного количества записей на всех реестрах.
+                * Это значит, что если на одном реестре пользователь выбрал “отображать по 50 записей”, то по умолчанию в других реестрах тоже
+                * будет отображаться 50 записей. Чтобы отключить функционал “следования выбору пользователя” на
+                * конкретном табличном представлении есть опция ignoreLocalPageSize
+                * (аналог css-класса ws-browser-ignore-local-page-size в старых табличных представления),
+                * которую нужно поставить в true (по умолчанию она = false)
+                * @example
+                * <pre>
+                *    <option name="ignoreLocalPageSize">true</option>
+                * </pre>
+                * @see pageSize
+                */
+               ignoreLocalPageSize: false,
+               /**
+                * @cfg {Boolean} Режим постраничной навигации
+                * @remark
+                * При частичной постраничной навигации заранее неизвестно общее количество страниц, режим пейджинга будет определн по параметру n из dataSource
+                * Если пришел boolean, значит частичная постраничная навигация
+                * @example
+                * <pre>
+                *     <option name="showPaging">true</option>
+                * </pre>
+                * @see setPage
+                * @see getPage
+                */
+               showPaging: false
             }
          },
 
@@ -430,7 +460,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options.multiselect) {
                //TODO: оставить только js класс
                if ($target.hasClass('js-controls-ListView__itemCheckBox') || $target.hasClass('controls-ListView__itemCheckBox')) {
-                  this.toggleItemsSelection([$target.closest('.controls-ListView__item').data('id')]);
+                  this.toggleItemsSelection([$target.closest('.controls-ListView__item').attr('data-id')]);
                }
                else {
                   this._notify('onItemClick', id, data, target);
@@ -448,11 +478,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _elemClickHandlerInternal: function (data, id, target) {
 
-         },
-
-
-         _getItemActionsContainer: function (id) {
-            return $(".controls-ListView__item[data-id='" + id + "']", this._container.get(0));
          },
 
          _drawSelectedItems: function (idArray) {
@@ -543,12 +568,23 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _drawItemActions: function () {
+            var actionsContainer = this._container.find('> .controls-ListView__itemActions-container');
             return new ItemActionsGroup({
                items: this._options.itemsActions,
-               element: this._container.find('> .controls-ListView__itemActions-container'),
+               element: this._getItemActionsContainer(),
                keyField: 'name',
                parent: this
             });
+         },
+         /**
+          * Возвращает контейнер для операций над записью
+          * @returns {*}
+          * @private
+          */
+         _getItemActionsContainer: function() {
+            var actionsContainer = this._container.find('> .controls-ListView__itemActions-container');
+
+            return actionsContainer.length ? actionsContainer : $('<div class="controls-ListView__itemActions-container"/>').appendTo(this._container);
          },
          /**
           * Инициализирует операции над записью
@@ -591,7 +627,9 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {String} items.name Имя кнопки операции над записью.
           * @param {String} items.icon Иконка кнопки.
           * @param {String} items.caption Текст на кнопке.
-          * @param {String} items.onActivated Имя функции, задабщей действие кнопки.
+          * @param {String} items.onActivated Обработчик клика по кнопке.
+          * @param {String} items.tooltip Всплывающая подсказка.
+          * @param {String} items.title Текст кнопки в выпадающем меню.
           * @param {String} items.isMainOption На строке ли кнопка (или в меню).
           * @example
           * <pre>
@@ -838,13 +876,14 @@ define('js!SBIS3.CONTROLS.ListView',
                      onlyLeftSide: typeof more === 'boolean', // (this._options.display.usePaging === 'parts')
                      rightArrow: hasNextPage
                   },
+                  pagerContainer = this.getContainer().find('.controls-Pager-container').append('<div/>'),
                   self = this;
 
                this._pager = new Pager({
                   pageSize: this._options.pageSize,
                   opener: this,
                   ignoreLocalPageSize: this._options.ignoreLocalPageSize,
-                  element: this.getContainer().find('.controls-Pager-container'),
+                  element: pagerContainer.find('div'),
                   allowChangeEnable: false, //Запрещаем менять состояние, т.к. он нужен активный всегда
                   pagingOptions: pagingOptions,
                   handlers: {
@@ -946,6 +985,13 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _groupByDefaultRender: function (item, container) {
             return container;
+         },
+         setDataSource: function () {
+            if (this._pager) {
+               this._pager.destroy();
+               this._pager = undefined;
+            }
+            ListView.superclass.setDataSource.apply(this, arguments);
          },
          destroy: function () {
             if (this.isInfiniteScroll()) {

@@ -1,7 +1,10 @@
 /**
  * Created by as.manuylov on 10.11.14.
  */
-define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], function (IDataStrategy) {
+define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
+   'js!SBIS3.CONTROLS.IDataStrategy',
+   'js!SBIS3.CONTROLS.DataFactory'
+], function (IDataStrategy, Factory) {
    'use strict';
     /**
      *
@@ -15,6 +18,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
    var SbisJSONStrategy = IDataStrategy.extend(/** @lends SBIS3.CONTROLS.SbisJSONStrategy.prototype */{
       $protected: {},
       $constructor: function () {
+         Factory = Factory || require('js!SBIS3.CONTROLS.DataFactory');
       },
       /**
        * Найти название поля, которое является идентификатором.
@@ -103,6 +107,11 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
       addRecord: function (data, record, at) {
          var rawData = record.getRaw();
          var d = data['d'];
+
+         if (!data.s.length && rawData.s.length) {
+            data.s = rawData.s;
+         }
+
          if (at !== undefined && at >= 0) {
             d.splice(at, 0, rawData['d']);
          } else {
@@ -126,16 +135,11 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
        * @returns {Object} новый объект "сырых" данных
        */
       setValue: function (data, field, value) {
-         var d = data.d,
-            s = data.s,
-            index;
-         for (var i = 0, l = s.length; i < l; i++) {
-            if (s[i]['n'] == field) {
-               index = i;
-               break;
-            }
-         }
-         d[index] = value;
+         var index = this._getFieldIndex(data, field),
+            meta = data.s[index],
+            type = this._getType(meta);
+         data.d[index] = Factory.serialize(value, type.name, SbisJSONStrategy, type.meta);
+
          return data;
       },
 
@@ -148,14 +152,8 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
       value: function (data, field) {
          var d = data.d,
             s = data.s,
-            index;
-         for (var i = 0, l = s.length; i < l; i++) {
-            if (s[i]['n'] == field) {
-               index = i;
-               break;
-            }
-         }
-         return index === undefined ? undefined : d[index];
+            index = this._getFieldIndex(data, field);
+         return index === -1 ? undefined : d[index];
       },
       /**
        * Получить тип поля
@@ -212,8 +210,12 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
                      n: index,
                      t: 'Логическое'
                   });
-               }
-               else {
+               } else if (value instanceof Array) {
+                  filterParam.s.push({
+                     n: index,
+                     t: {n: 'Массив', t: 'Строка'}
+                  });
+               } else {
                   filterParam.s.push({
                      n: index,
                      t: 'Строка'
@@ -321,11 +323,282 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', ['js!SBIS3.CONTROLS.IDataStrategy']
           }
           return params;
        },
+       
        setParentKey: function(record, hierField, parent) {
           record.set(hierField, [parent]);
-       }
+       },
 
+       getFullFieldData: function (data, name) {
+          var index = this._getFieldIndex(data, name),
+             meta = index >= 0 ? data.s[index] : undefined,
+             value = index >= 0 ? data.d[index] : undefined,
+             data = {meta: undefined, type: undefined};
+          if (meta) {
+             var type = this._getType(meta);
+             data.meta = type.meta;
+             data.type = type.name;
+          }
+          return data;
+       },
+       
+       _getType: function (meta, key) {
+          key = key || 't';
+          var typeSbis = meta[key],
+             type;
+          if (typeof typeSbis === 'object') {
+             return this._getType(typeSbis, 'n');
+          }
+          for (var fieldType in SbisJSONStrategy.FIELD_TYPE) {
+             if (typeSbis === SbisJSONStrategy.FIELD_TYPE[fieldType]) {
+                type = fieldType;
+                break;
+             }
+          }
+          var prepareMeta = this._prepareMetaInfo(type, $ws.core.clone(meta));
+          return {'name': type, 'meta': prepareMeta};
+       },
+       
+       _prepareMetaInfo: function (type, meta) {
+          switch (type) {
+             case 'Enum':
+                meta.source = meta.s;
+                break;
+             case 'Money':
+                meta.precision = meta.p;
+                break;
+             case 'Flags':
+                meta.makeData = function (value) {
+                   var st = [],
+                      pairs = Object.sortedPairs(meta.s),
+                      fData = [];
+                   for (var pI = 0, pL = pairs.keys.length; pI < pL; pI++) {
+                      st[pI] = [];
+                      st[pI].type = SbisJSONStrategy.FIELD_TYPE.Boolean;
+                      st[pI].n = pairs.values[pI];
+                      st[pI].index = pairs.keys[pI]
+                      fData[pI] = value[pI];
+                   }
+                   return {
+                      d: fData,
+                      s: st
+                   };
+                };
+                meta.strategy = new SbisJSONStrategy();
+                break;
+          }
+          return meta;
+       },
+       _getFieldIndex: function (data, name) {
+          if (data && data.s) {
+             for (var i = 0, count = data.s.length; i < count; i++) {
+                if (data.s[i].n === name) {
+                   return i;
+                }
+             }
+          }
+          return -1;
+       }
    });
+   
+   SbisJSONStrategy.FIELD_TYPE = {
+      DataSet: 'Выборка',
+      Record: 'Запись',
+      Integer: 'Число целое',
+      String: 'Строка',
+      Text: 'Текст',
+      Double: 'Число вещественное',
+      Money: 'Деньги',
+      Date: 'Дата',
+      DateTime: 'Дата и время',
+      Time: 'Время',
+      Array: 'Массив',
+      Boolean: 'Логическое',
+      Hierarchy: 'Иерархия',
+      Identity: 'Идентификатор',
+      Enum: 'Перечисляемое',
+      Flags: 'Флаги',
+      Link: 'Связь',
+      Binary: 'Двоичное',
+      UUID: 'UUID',
+      RpcFile: 'Файл-rpc',
+      TimeInterval: 'Временной интервал'
+   };
+   
+   /**
+    * Сериализует данные
+    * @param {*} data
+    * @returns {Object}
+    * @static
+    */
+   SbisJSONStrategy.serialize = function (data) {
+      var getType = function (val) {
+            var type = typeof val;
+            switch (type) {
+               case 'boolean':
+                  return SbisJSONStrategy.FIELD_TYPE.Boolean;
+               case 'number':
+                  if (val % 1 === 0) {
+                     return SbisJSONStrategy.FIELD_TYPE.Integer;
+                  }
+                  return SbisJSONStrategy.FIELD_TYPE.Double;
+               case 'string':
+                  return SbisJSONStrategy.FIELD_TYPE.String;
+               case 'object':
+                  if (val instanceof Date) {
+                     return SbisJSONStrategy.FIELD_TYPE.DateTime;
+                  }
+                  break;
+            }
+            return type;
+         },
+         serializeValue = function (value, type) {
+            switch (type) {
+               case SbisJSONStrategy.FIELD_TYPE.Time:
+                  return value.toSQL();
+            }
+            return value;
+         },
+         makeS = function (obj) {
+            var s = [];
+            for (var key in obj) {
+               if (!obj.hasOwnProperty(key)) {
+                  continue;
+               }
+               s.push({
+                  n: key,
+                  t: getType(obj[key])
+               });
+            }
+            return s;
+         },
+         makeD = function (obj, s) {
+            var d = [];
+            for (var i = 0, count = s.length; i < count; i++) {
+               d.push(serializeValue(obj[s[i].n], s[i].t));
+            }
+            return d;
+         },
+         result,
+         key;
+      if (data instanceof Array) {
+         var i,
+            count;
+         result = {
+            s: [],
+            d: []
+         };
+         for (i = 0, count = data.length; i < count; i++) {
+            if (i === 0) {
+               result.s = makeS(data[i]);
+            }
+            result.d.push(makeD(data[i], result.s));
+         }
+         return result;
+      }
+      else if (typeof data === 'object' && data !== null) {
+         var allScalars = true;
+         for (key in data) {
+            if (!data.hasOwnProperty(key)) {
+               continue;
+            }
+            var val = data[key];
+            if (typeof val === 'object' && !(val instanceof Date)) {
+               allScalars = false;
+               break;
+            }
+         }
+         result = {};
+         if (allScalars) {
+            result.s = makeS(data);
+            result.d = makeD(data, result.s);
+         }
+         else {
+            for (key in data) {
+               if (!data.hasOwnProperty(key)) {
+                  continue;
+               }
+               result[key] = SbisJSONStrategy.serialize(data[key]);
+            }
+         }
+         return result;
+      }
+      else {
+         return data;
+      }
+   };
+   /**
+    * Серелиализует датасет или рекордсет
+    * @param data {SBIS3.CONTROLS.Data.Source.DataSet||$ws.proto.RecordSet}
+    * @returns {*}
+    */
+   SbisJSONStrategy.serializeDataSet = function (data) {
+      var DataSet;
+      try {
+         DataSet = require('js!SBIS3.CONTROLS.DataSet');
+      } catch (e) {
+      }
+      if (DataSet && data instanceof DataSet) {
+         return $ws.core.clone(data.getRawData());
+      } else if (data instanceof $ws.proto.RecordSet || data instanceof $ws.proto.RecordSetStatic) {
+         return data.toJSON();
+      } else {
+         return SbisJSONStrategy.serialize(data);
+      }
+   };
+   /**
+    * Серелиализует модель или рекорд
+    * @param data {SBIS3.CONTROLS.Record||$ws.proto.Record}
+    * @returns {*}
+    */
+   SbisJSONStrategy.serializeRecord = function (data) {
+      var Record;
+      try {
+         Record = require('js!SBIS3.CONTROLS.Record');
+      } catch (e) {
+      }
+      if (data instanceof Record) {
+         return $ws.core.clone(data.getRaw());
+      } else if (data instanceof $ws.proto.Record) {
+         return data.toJSON();
+      } else {
+         return SbisJSONStrategy.serialize(data);
+      }
+   };
+   /**
+    * Сериализует поле флагов
+    * @param data - {$ws.proto.Record||}
+    * @returns {*}
+    */
+   SbisJSONStrategy.serializeFlags = function (data) {
+      var Record;
+      try {
+         Record = require('js!SBIS3.CONTROLS.Record');
+      } catch (e) {
+      }
+      var dt = [];
+      if (data instanceof $ws.proto.Record) {
+         var s = {},
+            t = data.getColumns();
+         for (var x = 0, l = t.length; x < l; x++) {
+            s[data.getColumnIdx(t[x])] = t[x];
+         }
+         var sorted = Object.sortedPairs(s),
+            rO = data.toObject();
+         for (var y = 0, ly = sorted.keys.length; y < ly; y++) {
+            dt.push(rO[sorted.values[y]]);
+         }
+         return dt;
+      } else if (data instanceof Record) {
+         data.each(function (value) {
+            dt.push(value);
+         });
+         return dt;
+      } else if (data instanceof Array) {
+         return data;
+      } else {
+         return null;
+      }
+   };
 
    return SbisJSONStrategy;
 });

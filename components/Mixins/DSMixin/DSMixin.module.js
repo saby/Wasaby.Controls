@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        /**
         * @event onDataLoad При загрузке данных
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-        * @param {Array} dataSet Набор данных.
+        * @param {SBIS3.CONTROLS.DataSet} dataSet Набор данных.
         * @example
         * <pre>
         *     myComboBox.subscribe('onDataLoad', function(eventObject) {
@@ -372,7 +372,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       setFilter: function(filter){
          this._filter = filter;
          this._dropPageSave();
-         this.reload(this._filter, this._sorting, 0, this.getProperty('pageSize'));
+         if (this._dataSource) {
+            this.reload(this._filter, this._sorting, 0, this.getProperty('pageSize'));
+         }
       },
 
       //переопределяется в HierarchyMixin
@@ -396,6 +398,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._loader.cancel();
          }
          this._loader = null;
+      },
+      //TODO поддержка старого - обратная совместимость
+      getItems : function() {
+         if (this._dataSet) {
+            return this._dataSet.getRawData();
+         }
+         else {
+            return this._options.items;
+         }
       },
        /**
         * Метод установки либо замены коллекции элементов, заданных опцией {@link items}.
@@ -482,7 +493,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   curAt.at++;
                }
             }
-            this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this));
+            this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
+               throw e;
+            });
          } else {
             this._notifyOnDrawItems();
          }
@@ -507,16 +520,19 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             }
          }
          this._itemsInstances = {};
+         if (container.length){
+            var itemsContainers = $('.controls-ListView__item', container.get(0));
+            /*Удаляем вложенные компоненты*/
+            $('[data-component]', itemsContainers).each(function (i, item) {
+               var inst = $(item).wsControl();
+               if (inst) {
+                  inst.destroy();
+               }
+            });
 
-         var itemsContainers = $(".controls-ListView__item", container.get(0));
-         /*Удаляем вложенные компоненты*/
-         $('[data-component]', itemsContainers).each(function (i, item) {
-            var inst = $(item).wsControl();
-            inst.destroy();
-         });
-
-         /*Удаляем сами items*/
-         itemsContainers.remove();
+            /*Удаляем сами items*/
+            itemsContainers.remove();
+         }
       },
 
       //метод определяющий в какой контейнер разместить определенный элемент
