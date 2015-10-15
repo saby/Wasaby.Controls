@@ -3298,7 +3298,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DropdownList__picker {
   cursor: pointer;
 }
-.controls-DropdownList__picker .controls-DropdownList__equalsWidth .controls-DropdownList__list {
+.controls-DropdownList__picker .controls-DropdownList__equalsWidth .controls-DropdownList__body {
   border-radius: 0 0 5px 5px;
 }
 .controls-DropdownList__picker .controls-DropdownList__header {
@@ -3312,7 +3312,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DropdownList__picker .controls-DropdownList__header .controls-DropdownList__arrowIcon {
   background: url('img/select-arrow.png') 0 -26px no-repeat;
 }
-.controls-DropdownList__picker .controls-DropdownList__list {
+.controls-DropdownList__picker .controls-DropdownList__body {
   z-index: 1;
   border: 2px solid #e4e4e4;
   border-radius: 0 0 5px 5px;
