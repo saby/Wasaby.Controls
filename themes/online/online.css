@@ -2523,6 +2523,9 @@ input[type="reset"]::-moz-focus-inner {
   overflow: hidden;
   height: 19px;
 }
+.controls-ListView__folder .controls-TreeView__ellipsis-wrapper .controls-TreeView__ellipsis-container {
+  float: left;
+}
 .controls-ListView__folder .controls-TreeView__ellipsis-wrapper .controls-TreeView__ellipsis-copyArrow {
   float: right;
   position: relative;
@@ -3355,4 +3358,15 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TreePager:hover {
   text-decoration: underline;
   color: #ff7033;
+}
+.controls-Popup-border {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #e4e4e4;
 }
