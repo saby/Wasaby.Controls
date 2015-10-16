@@ -14,6 +14,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.ICollectionItem', [
       $protected: {
          _options: {
             /**
+             * @cfg {SBIS3.CONTROLS.Data.Collection.IList} Коллекция, которой принадлежит элемент
+             */
+            owner: undefined,
+
+            /**
              * @cfg {*} Содержимое элемента коллекции
              */
             contents: undefined,
@@ -23,6 +28,22 @@ define('js!SBIS3.CONTROLS.Data.Collection.ICollectionItem', [
              */
             selected: false
          }
+      },
+
+      /**
+       * Возвращает коллекцию, которой принадлежит элемент
+       * @returns {SBIS3.CONTROLS.Data.Collection.IList}
+       */
+      getOwner: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Устанавливает коллекцию, которой принадлежит элемент
+       * @param {SBIS3.CONTROLS.Data.Collection.IList} owner Коллекция, которой принадлежит элемент
+       */
+      setOwner: function (owner) {
+         throw new Error('Method must be implemented');
       },
 
       /**

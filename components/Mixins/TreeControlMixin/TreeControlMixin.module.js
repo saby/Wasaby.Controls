@@ -213,7 +213,7 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
                   this._pagers[newItemsNode.getHash()] = new PagerMore({
                      element: pagerContainer,
                      parent: this,
-                     items: newItemsNode,
+                     items: newItemsNode.getChildren(),
                      pageSize: this._options.pageSize,
                      pagerType: 'more',
                      visibleParentSelector: this._view.getPagerContainerSelector()

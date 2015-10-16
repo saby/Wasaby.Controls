@@ -96,19 +96,19 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
       load: function (mode) {
          if (!this._onBeforeChildrenLoad) {
             this._onBeforeChildrenLoad = onBeforeChildrenLoad.bind(this);
-            this.subscribeTo(this.getChildren(), 'onBeforeCollectionLoad', this._onBeforeChildrenLoad);
-
             this._onAfterChildrenLoad = onAfterChildrenLoad.bind(this);
-            this.subscribeTo(this.getChildren(), 'onAfterCollectionLoad', this._onAfterChildrenLoad);
-
             this._onBeforeChildrenLoadedApply = onBeforeChildrenLoadedApply.bind(this);
-            this.subscribeTo(this.getChildren(), 'onBeforeLoadedApply', this._onBeforeChildrenLoadedApply);
-
             this._onAfterChildrenLoadedApply = onAfterChildrenLoadedApply.bind(this);
-            this.subscribeTo(this.getChildren(), 'onAfterLoadedApply', this._onAfterChildrenLoadedApply);
          }
 
-         return this.getChildren().load(mode);
+         var children = this.getChildren();
+
+         children.once('onBeforeCollectionLoad', this._onBeforeChildrenLoad);
+         children.once('onAfterCollectionLoad', this._onAfterChildrenLoad);
+         children.once('onBeforeLoadedApply', this._onBeforeChildrenLoadedApply);
+         children.once('onAfterLoadedApply', this._onAfterChildrenLoadedApply);
+
+         return children.load(mode);
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.ISourceLoadable
@@ -176,9 +176,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
     * @private
     */
    var onBeforeChildrenLoad = function(event, mode, target) {
-      if (!this.isRoot()) {
-         this._notify('onBeforeCollectionLoad', mode, target);
-      }
       this._bubbleUp(function() {
          this._notify('onBeforeCollectionLoad', mode, target);
       });
@@ -188,9 +185,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
     * @private
     */
    onAfterChildrenLoad = function (event, mode, dataSet, target) {
-      if (!this.isRoot()) {
-         this._notify('onAfterCollectionLoad', mode, dataSet, target);
-      }
       this._bubbleUp(function () {
          this._notify('onAfterCollectionLoad', mode, dataSet, target);
       });
@@ -200,9 +194,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
     * @private
     */
    onBeforeChildrenLoadedApply = function (event, mode, collection, target) {
-      if (!this.isRoot()) {
-         this._notify('onBeforeLoadedApply', mode, collection, target);
-      }
       this._bubbleUp(function() {
          this._notify('onBeforeLoadedApply', mode, collection, target);
       });
@@ -212,9 +203,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
     * @private
     */
    onAfterChildrenLoadedApply = function (event, mode, collection, target) {
-      if (!this.isRoot()) {
-         this._notify('onAfterLoadedApply', mode, collection, target);
-      }
       this._bubbleUp(function() {
          this._notify('onAfterLoadedApply', mode, collection, target);
       });

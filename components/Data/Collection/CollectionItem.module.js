@@ -9,24 +9,19 @@ define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
    /**
     * Элемент коллекции
     * @class SBIS3.CONTROLS.Data.Collection.CollectionItem
-    * @mixes SBIS3.CONTROLS.Data.Collection.ICollectionItem
     * @mixes SBIS3.CONTROLS.Data.IHashable
+    * @mixes SBIS3.CONTROLS.Data.Collection.ICollectionItem
     * @mixes SBIS3.CONTROLS.Data.HashableMixin
     * @public
     * @author Мальцев Алексей
     */
-   var CollectionItem = $ws.proto.Abstract.extend([ICollectionItem, IHashable, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.CollectionItem.prototype */{
+   var CollectionItem = $ws.core.extend({}, [IHashable, ICollectionItem, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.CollectionItem.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.CollectionItem',
       $protected: {
-         _options: {
-
-            /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.List} Коллекция, которой принадлежит элемент
-             */
-            owner: undefined
-         },
          _hashPrefix: 'collection-item-'
       },
+
+      //region SBIS3.CONTROLS.Data.Collection.ICollectionItem
 
       getOwner: function () {
          return this._options.owner;
@@ -35,8 +30,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
       setOwner: function (owner) {
          this._options.owner = owner;
       },
-
-      //region SBIS3.CONTROLS.Data.Collection.ICollectionItem
 
       getContents: function () {
          return this._options.contents;
@@ -50,18 +43,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
          this._notifyItemChangeToOwner('contents');
       },
 
-      /**
-       * Возвращает признак, что элемент выбран
-       * @returns {*}
-       */
       isSelected: function () {
          return this._options.selected;
       },
 
-      /**
-       * Устанавливает признак, что элемент выбран
-       * @param {Boolean} selected Элемент выбран
-       */
       setSelected: function (selected) {
          if (this._options.selected === selected) {
             return;

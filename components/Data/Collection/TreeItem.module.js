@@ -2,11 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Collection.TreeItem', [
    'js!SBIS3.CONTROLS.Data.Collection.CollectionItem',
    'js!SBIS3.CONTROLS.Data.Collection.ITreeItem',
-   'js!SBIS3.CONTROLS.Data.IHashable',
-   'js!SBIS3.CONTROLS.Data.HashableMixin',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableTreeChildren',
    'js!SBIS3.CONTROLS.Data.Projection.Tree'
-], function (CollectionItem, ITreeItem, IHashable, HashableMixin) {
+], function (CollectionItem, ITreeItem) {
    'use strict';
 
    /**
@@ -14,25 +12,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeItem', [
     * @class SBIS3.CONTROLS.Data.Collection.TreeItem
     * @extends SBIS3.CONTROLS.Data.Collection.CollectionItem
     * @mixes SBIS3.CONTROLS.Data.Collection.ITreeItem
-    * @mixes SBIS3.CONTROLS.Data.IHashable
-    * @mixes SBIS3.CONTROLS.Data.HashableMixin
     * @public
     * @author Мальцев Алексей
     */
-   var TreeItem = CollectionItem.extend([ITreeItem, IHashable, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.TreeItem.prototype */{
+   var TreeItem = CollectionItem.extend([ITreeItem], /** @lends SBIS3.CONTROLS.Data.Collection.TreeItem.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.TreeItem',
       $protected: {
          _options: {
-            /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.TreeItem} Родительский узел
-             */
-            parent: undefined,
-
-            /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.TreeChildren|Array} Коллекция дочерних элементов
-             */
-            children: undefined,
-
             /**
              * @cfg {String} Название поля, содержащее дочерние элементы узла. Используется для анализа элементов {@link children} на предемет наличия дочерних элементов.
              */
