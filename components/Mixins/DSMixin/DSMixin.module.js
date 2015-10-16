@@ -1,8 +1,12 @@
 define('js!SBIS3.CONTROLS.DSMixin', [
    'js!SBIS3.CONTROLS.StaticSource',
    'js!SBIS3.CONTROLS.ArrayStrategy',
+   'js!SBIS3.CONTROLS.SbisJSONStrategy',
+   'js!SBIS3.CONTROLS.DataFactory',
+   'js!SBIS3.CONTROLS.DataSet',
+   'js!SBIS3.CONTROLS.Data.Query.Query',
    'js!SBIS3.CORE.MarkupTransformer'
-], function (StaticSource, ArrayStrategy, MarkupTransformer) {
+], function (StaticSource, ArrayStrategy, SbisJSONStrategy, DataFactory, DataSet, Query, MarkupTransformer) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -312,7 +316,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._limit = limitChanged ? limit : this._limit;
 
          this._toggleIndicator(true);
-         this._loader = this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
+         this._loader = this._callQuery(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
             self._toggleIndicator(false);
             self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
             if (self._dataSet) {
@@ -335,6 +339,30 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          return def;
       }),
+
+      _callQuery: function (filter, sorting, offset, limit) {
+         if (!this._dataSource) {
+            return;
+         }
+
+         if ($ws.helpers.instanceOfMixin(this._dataSource, 'SBIS3.CONTROLS.Data.Source.ISource')) {
+            var query = new Query();
+            query.where(filter)
+               .offset(offset)
+               .limit(limit)
+               .orderBy(sorting);
+
+            return this._dataSource.query(query).addCallback(function(newDataSet) {
+               return new DataSet({
+                  strategy: new SbisJSONStrategy(),
+                  data: newDataSet.getRawData(),
+                  meta: newDataSet.getProperty('p')
+               });
+            });
+         } else {
+            return this._dataSource.query(filter, sorting, offset, limit);
+         }
+      },
 
       _toggleIndicator:function(){
          /*Method must be implemented*/
