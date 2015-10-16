@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
             /**
              * @cfg {String} Поле модели, содержащее первичный ключ
              */
-            modelIdField: '',
+            idField: '',
 
             /**
              * @cfg {String} Свойство данных, в которых находится выборка
@@ -62,8 +62,8 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          if (!this._options.model) {
             this._options.model = this._options.source.getModel();
          }
-         if (!this._options.modelIdField) {
-            this._options.modelIdField = this._options.source.getModelIdField();
+         if (!this._options.idField) {
+            this._options.idField = this._options.source.getIdField();
          }
       },
 
@@ -105,16 +105,16 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        * Возвращает поле модели, содержащее первичный ключ
        * @returns {String}
        */
-      getModelIdField: function () {
-         return this._options.modelIdField;
+      getIdField: function () {
+         return this._options.idField;
       },
 
       /**
        * Устанавливает поле модели, содержащее первичный ключ
        * @param {String} name
        */
-      setModelIdField: function (name) {
-         this._options.modelIdField = name;
+      setIdField: function (name) {
+         this._options.idField = name;
       },
 
       /**

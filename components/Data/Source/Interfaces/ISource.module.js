@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
             /**
              * @cfg {String} Поле модели, содержащее первичный ключ
              */
-            modelIdField: ''
+            idField: ''
          }
       },
 
@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * Возвращает поле модели, содержащее первичный ключ
        * @returns {String}
        */
-      getModelIdField: function () {
+      getIdField: function () {
          throw new Error('Method must be implemented');
       },
 
@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * Устанавливает поле модели, содержащее первичный ключ
        * @param {String} name
        */
-      setModelIdField: function (name) {
+      setIdField: function (name) {
          throw new Error('Method must be implemented');
       },
 

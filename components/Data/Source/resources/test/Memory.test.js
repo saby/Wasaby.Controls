@@ -59,7 +59,7 @@ define([
 
          service = new MemorySource({
             data: data,
-            modelIdField: 'Ид'
+            idField: 'Ид'
          });
       });
 

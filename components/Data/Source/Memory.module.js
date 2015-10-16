@@ -67,15 +67,15 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       },
 
       update: function (model) {
-         if (!model.isStored() && !model.get(this._options.modelIdField)) {
+         if (!model.isStored() && !model.get(this._options.idField)) {
             model.set(
-               this._options.modelIdField,
+               this._options.idField,
                $ws.helpers.randomId('k')
             );
          }
 
          var adapter = this._options.adapter.forTable(),
-             key = model.get(this._options.modelIdField),
+             key = model.get(this._options.idField),
              index = this._getIndexByKey(key);
          if (index === -1) {
             adapter.add(
@@ -326,7 +326,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          this._each(this._options.data, function(item, index) {
             key = recordAdapter.get(
                item,
-               this._options.modelIdField
+               this._options.idField
             );
             this._index[key] = index;
          }, this);

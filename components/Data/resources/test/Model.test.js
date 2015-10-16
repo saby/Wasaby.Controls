@@ -19,7 +19,7 @@ define(['js!SBIS3.CONTROLS.Data.Model',
                adapter:adapter
             }),
             source = new MemorySource({
-               modelIdField: 'id',
+               idField: 'id',
                data: [
                   {'id':1,value: 'save'},
                   {'id':2,value: 'load'},

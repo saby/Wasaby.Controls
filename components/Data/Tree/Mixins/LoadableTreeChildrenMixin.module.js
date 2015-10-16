@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.Data.Tree.LoadableTreeChildrenMixin', [
             //FIXME: загрузка нескольких узлов сразу
             var parentField = this._options.owner.getParentField();
             if (parentField) {
-               var idField = this._options.source.getModelIdField(),
+               var idField = this._options.source.getIdField(),
                    idValue = idField && Utils.getItemPropertyValue(this._options.owner.getContents(), idField),
                    where = this.getQuery().getWhere();
                if (idValue === undefined && this._options.owner.isRoot()) {

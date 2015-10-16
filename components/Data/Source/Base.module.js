@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
             if (!this._options.adapter) {
                throw new Error('Data adapter is undefined');
             }
-            if (!this._options.modelIdField) {
+            if (!this._options.idField) {
                throw new Error('Model id field is undefined');
             }
          }
@@ -48,12 +48,12 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          this._options.model = model;
       },
 
-      getModelIdField: function () {
-         return this._options.modelIdField;
+      getIdField: function () {
+         return this._options.idField;
       },
 
-      setModelIdField: function (name) {
-         this._options.modelIdField = name;
+      setIdField: function (name) {
+         this._options.idField = name;
       },
 
       //endregion SBIS3.CONTROLS.Data.Source.ISource
@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          return new this._options.model({
             data: data,
             source: this,
-            idField: this._options.modelIdField
+            idField: this._options.idField
          });
       },
 
