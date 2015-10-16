@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
       },
 
       getPagerContainer: function (items) {
-          if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.ITreeItem')) {
+          if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Tree.ITreeItem')) {
             return TreeDataGridView.superclass.getPagerContainer.call(this, items);
          }
 
@@ -94,7 +94,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
       _getItemRenderData: function(item) {
          var itemData = TreeDataGridView.superclass._getItemRenderData.call(this, item);
 
-         if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Collection.ITreeItem')) {
+         if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Tree.ITreeItem')) {
             itemData.containerClass += this._isTreeItemVisible(item) ? '' : ' ws-hidden';
             itemData.parentHash = item.getParent().getHash();
 

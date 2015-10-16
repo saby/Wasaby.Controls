@@ -213,7 +213,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       /**
        * Превращает объект в элемент дерева
        * @param {*} item Объект
-       * @returns {SBIS3.CONTROLS.Data.Collection.TreeItem}
+       * @returns {SBIS3.CONTROLS.Data.Tree.TreeItem}
        * @private
        */
       _convertToItem: function (item) {

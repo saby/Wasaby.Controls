@@ -1,27 +1,27 @@
 /* global define, require, $ws */
-define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeChildrenMixin', [
+define('js!SBIS3.CONTROLS.Data.Tree.LoadableTreeChildrenMixin', [
    'js!SBIS3.CONTROLS.Data.Utils',
-   'js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItem'
+   'js!SBIS3.CONTROLS.Data.Tree.LoadableTreeItem'
 ], function (Utils) {
    'use strict';
 
    /**
     * Коллекция дочерних элементов узла дерева, в которой можно отслеживать изменения.
-    * @mixin SBIS3.CONTROLS.Data.Collection.LoadableTreeChildrenMixin
+    * @mixin SBIS3.CONTROLS.Data.Tree.LoadableTreeChildrenMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var LoadableTreeChildrenMixin = /** @lends SBIS3.CONTROLS.Data.Collection.LoadableTreeChildrenMixin.prototype */{
+   var LoadableTreeChildrenMixin = /** @lends SBIS3.CONTROLS.Data.Tree.LoadableTreeChildrenMixin.prototype */{
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.LoadableTreeItem} Узел-владелец
+             * @cfg {SBIS3.CONTROLS.Data.Tree.LoadableTreeItem} Узел-владелец
              * @name owner
              */
          },
 
-         _itemModule: 'SBIS3.CONTROLS.Data.Collection.LoadableTreeItem'
+         _itemModule: 'SBIS3.CONTROLS.Data.Tree.LoadableTreeItem'
       },
 
       $constructor: function () {
@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeChildrenMixin', [
 
       around: {
          _convertToItem: function (parentFnc, item) {
-            if (!$ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Collection.ITreeItem')) {
+            if (!$ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Tree.ITreeItem')) {
                if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Collection.ICollectionItem')) {
                   item =  item.getContents();
                }

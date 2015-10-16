@@ -148,7 +148,7 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
 
          itemData.contentsClass = this._сssPrefix + this._treeItemContentsСssClass;
 
-         if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Collection.ITreeItem')) {
+         if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Tree.ITreeItem')) {
             itemData.level = item.getLevel() - this._levelOffset;
             if (item.isNode()) {
                itemData.containerClass += ' ' + this._сssPrefix + (item.isExpanded() ? this._treeExpandedСssClass : this._treeCollapsedСssClass);
@@ -179,7 +179,7 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
 
       /**
        * Возвращает узел c индикатором загрузки
-       * @param {SBIS3.CONTROLS.Data.Collection.TreeItem} target Узел, который загружается
+       * @param {SBIS3.CONTROLS.Data.Tree.TreeItem} target Узел, который загружается
        * @returns {jQuery}
        * @private
        */

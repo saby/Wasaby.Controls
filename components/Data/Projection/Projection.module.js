@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.Data.Projection', [
       var index = Array.indexOf(_static.projectionsToCollections, object);
       if (index === -1) {
          var instance;
-         if ($ws.helpers.instanceOfMixin(object, 'SBIS3.CONTROLS.Data.Collection.ITreeItem')) {
+         if ($ws.helpers.instanceOfMixin(object, 'SBIS3.CONTROLS.Data.Tree.ITreeItem')) {
             instance = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Projection.Tree', {
                tree: object
             });

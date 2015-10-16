@@ -1,20 +1,20 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
-   'js!SBIS3.CONTROLS.Data.Collection.LoadableTreeChildren'
+define('js!SBIS3.CONTROLS.Data.Tree.LoadableTreeItemMixin', [
+   'js!SBIS3.CONTROLS.Data.Tree.LoadableTreeChildren'
 ], function () {
    'use strict';
 
    /**
     * Миксин, реализующий элемент дерева, в который можно загружать данные через источник
-    * @mixin SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin
+    * @mixin SBIS3.CONTROLS.Data.Tree.LoadableTreeItemMixin
     * @public
     * @author Мальцев Алексей
     */
-   var LoadableTreeItemMixin = /** @lends SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin.prototype */{
+   var LoadableTreeItemMixin = /** @lends SBIS3.CONTROLS.Data.Tree.LoadableTreeItemMixin.prototype */{
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.LoadableTreeChildren|Array} Коллекция дочерних элементов
+             * @cfg {SBIS3.CONTROLS.Data.Tree.LoadableTreeChildren|Array} Коллекция дочерних элементов
              * @name children
              */
 
@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
             nodeField: ''
          },
 
-         _childrenModule: 'SBIS3.CONTROLS.Data.Collection.LoadableTreeChildren',
+         _childrenModule: 'SBIS3.CONTROLS.Data.Tree.LoadableTreeChildren',
 
          /**
           * @var {Function} Обрабатывает событие о начале загрузки узла
@@ -52,11 +52,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
          _onAfterChildrenLoadedApply: undefined
       },
 
-      //region SBIS3.CONTROLS.Data.Collection.ITreeItem
+      //region SBIS3.CONTROLS.Data.Tree.ITreeItem
 
       /**
        * Возвращает коллекцию потомков узла
-       * @returns {SBIS3.CONTROLS.Data.Collection.LoadableTreeChildren}
+       * @returns {SBIS3.CONTROLS.Data.Tree.LoadableTreeChildren}
        */
       getChildren: function () {
          return this._options.children || (this._options.children = $ws.single.ioc.resolve(this._childrenModule, {
@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin', [
          }));
       },
 
-      //endregion SBIS3.CONTROLS.Data.Collection.ITreeItem
+      //endregion SBIS3.CONTROLS.Data.Tree.ITreeItem
 
       //region SBIS3.CONTROLS.Data.Collection.ISourceLoadable
 

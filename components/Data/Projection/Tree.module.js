@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          _childrenProjection: undefined,
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Collection.ITreeItem} Текущий элемент
+          * @var {SBIS3.CONTROLS.Data.Tree.ITreeItem} Текущий элемент
           */
          _current: undefined,
 
@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
        * Возвращает потомка узла по его хэшу
        * @param {String} hash Хэш потомка
        * @param {Boolean} [deep=false] Искать по всем уровням вложенности
-       * @returns {SBIS3.CONTROLS.Data.Collection.ITreeItem}
+       * @returns {SBIS3.CONTROLS.Data.Tree.ITreeItem}
        * @state mutable
        */
       getChildByHash: function (hash, deep) {
@@ -231,8 +231,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       /**
        * Генерирует событие об изменении текущего элемента проекции дерева
-       * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem} newCurrent Новый текущий элемент
-       * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem} oldCurrent Старый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} newCurrent Новый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} oldCurrent Старый текущий элемент
        * @param {Number} newPosition Новая позиция
        * @param {Number} oldPosition Старая позиция
        * @private
@@ -255,9 +255,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
     * Обрабатывает событие об изменении потомков узла дерева исходного дерева
     * @param {$ws.proto.EventObject} event Дескриптор события.
     * @param {String} action Действие, приведшее к изменению.
-    * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem[]} newItems Новые элементы коллеции.
+    * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem[]} newItems Новые элементы коллеции.
     * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
-    * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem[]} oldItems Удаленные элементы коллекции.
+    * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem[]} oldItems Удаленные элементы коллекции.
     * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
     * @private
     */
@@ -275,7 +275,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    /**
     * Обрабатывает событие об изменении исходной коллекции
     * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem} item Измененный элемент коллеции.
+    * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} item Измененный элемент коллеции.
     * @param {Integer} index Индекс измененного элемента.
     * @param {String} [property] Измененное свойство элемента
     * @private

@@ -1,21 +1,21 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Collection.Tree', [
-   'js!SBIS3.CONTROLS.Data.Collection.TreeItem',
+define('js!SBIS3.CONTROLS.Data.Tree.Tree', [
+   'js!SBIS3.CONTROLS.Data.Tree.TreeItem',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection'
 ], function (TreeItem, IBindCollection) {
    'use strict';
 
    /**
     * Дерево.
-    * @class SBIS3.CONTROLS.Data.Collection.Tree
-    * @extends SBIS3.CONTROLS.Data.Collection.TreeItem
+    * @class SBIS3.CONTROLS.Data.Tree.Tree
+    * @extends SBIS3.CONTROLS.Data.Tree.TreeItem
     * @mixes SBIS3.CONTROLS.Data.Bind.ICollection
     * @public
     * @author Мальцев Алексей
     */
 
-   return TreeItem.extend([IBindCollection], /** @lends SBIS3.CONTROLS.Data.Collection.Tree.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Collection.Tree',
+   return TreeItem.extend([IBindCollection], /** @lends SBIS3.CONTROLS.Data.Tree.Tree.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.Data.Tree.Tree',
 
       $protected: {
          /**
@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.Tree', [
       },
 
       describe: function () {
-         return 'SBIS3.CONTROLS.Data.Collection.Tree';
+         return 'SBIS3.CONTROLS.Data.Tree.Tree';
       },
 
       subscribeTo: function () {
@@ -119,7 +119,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.Tree', [
 
       //endregion SBIS3.CONTROLS.Data.Collection.ICollectionItem
 
-      //region SBIS3.CONTROLS.Data.Collection.ITreeItem
+      //region SBIS3.CONTROLS.Data.Tree.ITreeItem
 
       setParent: function () {
          throw new Error('Tree root can\'t have a parent');
@@ -129,7 +129,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.Tree', [
          return true;
       },
 
-      //endregion SBIS3.CONTROLS.Data.Collection.ITreeItem
+      //endregion SBIS3.CONTROLS.Data.Tree.ITreeItem
 
       //region Public methods
 

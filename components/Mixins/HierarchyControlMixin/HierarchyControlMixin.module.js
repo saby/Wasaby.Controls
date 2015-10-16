@@ -2,8 +2,8 @@
 define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
    'js!SBIS3.CONTROLS.HierarchyControl.HierarchyView',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
-   'js!SBIS3.CONTROLS.Data.Collection.Tree',
-   'js!SBIS3.CONTROLS.Data.Collection.LoadableTree'
+   'js!SBIS3.CONTROLS.Data.Tree.Tree',
+   'js!SBIS3.CONTROLS.Data.Tree.LoadableTree'
 ], function (HierarchyView, IBindCollection, Tree, LoadableTree) {
    'use strict';
 
@@ -26,26 +26,26 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
 
             /**
              * @cfg {String} Название поля, содержащее идентификатор родительского узла. Используется только в случае, если указан {@link dataSource}.
-             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Collection.LoadableTree}
+             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Tree.LoadableTree}
              *
              */
             parentField: '',
 
             /**
              * @cfg {String} Название свойства, содержащее признак узла. Используется только в случае, если указан {@link dataSource}.
-             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Collection.LoadableTree}
+             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Tree.LoadableTree}
              */
             nodeField: '',
 
             /**
              * @cfg {*} Идентификатор корневого узла, который будет отправлен в запросе на получение корневых записей
-             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Collection.LoadableTree}
+             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Tree.LoadableTree}
              */
             rootNodeId: undefined,
 
             /**
              * @cfg {String} Название поля, содержащее дочерние элементы узла. Используется только в случае, если {@link items} является массивом, для поиска в каждом элементе-узле дочерних элементов.
-             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Collection.Tree}
+             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Tree.Tree}
              *
              */
             childrenField: '',
@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
          _changeRootOnClick: true,
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Collection.ITreeItem} Текущий узел дерева
+          * @var {SBIS3.CONTROLS.Data.Tree.ITreeItem} Текущий узел дерева
           */
          _currentRoot: undefined,
 
@@ -139,7 +139,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
       
       /**
        * Устанавливает текущий отображаемый узел
-       * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem} node Узел
+       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} node Узел
        * @private
        */
       _setCurrentRoot: function (node) {
@@ -163,8 +163,8 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
             });
          }
 
-         if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.ITreeItem')) {
-            throw new Error('Items should be an instance of SBIS3.CONTROLS.Data.Collection.ITreeItem');
+         if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Tree.ITreeItem')) {
+            throw new Error('Items should be an instance of SBIS3.CONTROLS.Data.Tree.ITreeItem');
          }
 
          return items;
@@ -218,9 +218,9 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
     * @param {Function} prevFn Оборачиваемый метод
     * @param {$ws.proto.EventObject} event Дескриптор события.
     * @param {String} action Действие, приведшее к изменению.
-    * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem[]} [newItems] Новые элементы коллеции.
+    * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem[]} [newItems] Новые элементы коллеции.
     * @param {Integer} [newItemsIndex] Индекс, в котором появились новые элементы.
-    * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem[]} [oldItems] Удаленные элементы коллекции.
+    * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem[]} [oldItems] Удаленные элементы коллекции.
     * @param {Integer} [oldItemsIndex] Индекс, в котором удалены элементы.
     * @private
     */

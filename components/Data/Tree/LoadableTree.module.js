@@ -1,26 +1,26 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Collection.LoadableTree', [
-   'js!SBIS3.CONTROLS.Data.Collection.Tree',
-   'js!SBIS3.CONTROLS.Data.Collection.LoadableTreeChildren',
+define('js!SBIS3.CONTROLS.Data.Tree.LoadableTree', [
+   'js!SBIS3.CONTROLS.Data.Tree.Tree',
+   'js!SBIS3.CONTROLS.Data.Tree.LoadableTreeChildren',
    'js!SBIS3.CONTROLS.Data.Query.IQueryable',
    'js!SBIS3.CONTROLS.Data.Collection.ISourceLoadable',
-   'js!SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin'
+   'js!SBIS3.CONTROLS.Data.Tree.LoadableTreeItemMixin'
 ], function (Tree, LoadableTreeChildren, IQueryable, ISourceLoadable, LoadableTreeItemMixin) {
    'use strict';
 
    /**
     * Дерево, загружаемое через источник данных
-    * @class SBIS3.CONTROLS.Data.Collection.LoadableTree
-    * @extends SBIS3.CONTROLS.Data.Collection.Tree
+    * @class SBIS3.CONTROLS.Data.Tree.LoadableTree
+    * @extends SBIS3.CONTROLS.Data.Tree.Tree
     * @mixes SBIS3.CONTROLS.Data.Query.IQueryable
     * @mixes SBIS3.CONTROLS.Data.Collection.ISourceLoadable
-    * @mixes SBIS3.CONTROLS.Data.Collection.LoadableTreeItemMixin
+    * @mixes SBIS3.CONTROLS.Data.Tree.LoadableTreeItemMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var LoadableTree = Tree.extend([IQueryable, ISourceLoadable, LoadableTreeItemMixin], /** @lends SBIS3.CONTROLS.Data.Collection.LoadableTree.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Collection.LoadableTree',
+   var LoadableTree = Tree.extend([IQueryable, ISourceLoadable, LoadableTreeItemMixin], /** @lends SBIS3.CONTROLS.Data.Tree.LoadableTree.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.Data.Tree.LoadableTree',
        $protected: {
           _options: {
              /**

@@ -1,26 +1,26 @@
 /* global define, require, $ws */
-define('js!SBIS3.CONTROLS.Data.Collection.ObservableTreeChildrenMixin', [
-   'js!SBIS3.CONTROLS.Data.Collection.TreeItem'
+define('js!SBIS3.CONTROLS.Data.Tree.ObservableTreeChildrenMixin', [
+   'js!SBIS3.CONTROLS.Data.Tree.TreeItem'
 ], function () {
    'use strict';
 
    /**
     * Миксин, поддерживающий отcлеживание изменений в дочерних элементах узла дерева.
-    * @mixin SBIS3.CONTROLS.Data.Collection.ObservableTreeChildrenMixin
+    * @mixin SBIS3.CONTROLS.Data.Tree.ObservableTreeChildrenMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var ObservableTreeChildrenMixin = /** @lends SBIS3.CONTROLS.Data.Collection.ObservableTreeChildrenMixin.prototype */{
+   var ObservableTreeChildrenMixin = /** @lends SBIS3.CONTROLS.Data.Tree.ObservableTreeChildrenMixin.prototype */{
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.TreeItem} Узел-владелец
-             * @name SBIS3.CONTROLS.Data.Collection.TreeChildren#owner
+             * @cfg {SBIS3.CONTROLS.Data.Tree.TreeItem} Узел-владелец
+             * @name SBIS3.CONTROLS.Data.Tree.TreeChildren#owner
              */
          },
 
-         _itemModule: 'SBIS3.CONTROLS.Data.Collection.TreeItem'
+         _itemModule: 'SBIS3.CONTROLS.Data.Tree.TreeItem'
       },
 
       after: {

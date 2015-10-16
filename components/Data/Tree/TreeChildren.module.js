@@ -1,37 +1,37 @@
 /* global define, require, $ws */
-define('js!SBIS3.CONTROLS.Data.Collection.TreeChildren', [
-   'js!SBIS3.CONTROLS.Data.Collection.ITreeChildren',
+define('js!SBIS3.CONTROLS.Data.Tree.TreeChildren', [
+   'js!SBIS3.CONTROLS.Data.Tree.ITreeChildren',
    'js!SBIS3.CONTROLS.Data.Collection.List',
    'js!SBIS3.CONTROLS.Data.Utils',
-   'js!SBIS3.CONTROLS.Data.Collection.TreeItem'
+   'js!SBIS3.CONTROLS.Data.Tree.TreeItem'
 ], function (ITreeChildren, List, Utils) {
    'use strict';
 
    /**
     * Список дочерних элементов узла дерева.
-    * @class SBIS3.CONTROLS.Data.Collection.TreeChildren
+    * @class SBIS3.CONTROLS.Data.Tree.TreeChildren
     * @extends SBIS3.CONTROLS.Data.Collection.List
-    * @mixes SBIS3.CONTROLS.Data.Collection.ITreeChildren
+    * @mixes SBIS3.CONTROLS.Data.Tree.ITreeChildren
     * @public
     * @author Мальцев Алексей
     */
 
-   var TreeChildren = List.extend([ITreeChildren], /** @lends SBIS3.CONTROLS.Data.Collection.TreeChildren.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Collection.TreeChildren',
+   var TreeChildren = List.extend([ITreeChildren], /** @lends SBIS3.CONTROLS.Data.Tree.TreeChildren.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.Data.Tree.TreeChildren',
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.TreeItem} Узел-владелец
+             * @cfg {SBIS3.CONTROLS.Data.Tree.TreeItem} Узел-владелец
              */
             owner: undefined
          },
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Collection.TreeItem[]} Элементы списка
+          * @var {SBIS3.CONTROLS.Data.Tree.TreeItem[]} Элементы списка
           */
          _items: [],
 
-         _itemModule: 'SBIS3.CONTROLS.Data.Collection.TreeItem',
+         _itemModule: 'SBIS3.CONTROLS.Data.Tree.TreeItem',
 
          _unwrapOnRead: false
       },
@@ -42,8 +42,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeChildren', [
          if (typeof cfg.owner !== 'object') {
             throw new Error('Tree children owner should be an object');
          }
-         if (!$ws.helpers.instanceOfModule(cfg.owner, 'SBIS3.CONTROLS.Data.Collection.TreeItem')) {
-            throw new Error('Tree children owner should be an instance of SBIS3.CONTROLS.Data.Collection.TreeItem');
+         if (!$ws.helpers.instanceOfModule(cfg.owner, 'SBIS3.CONTROLS.Data.Tree.TreeItem')) {
+            throw new Error('Tree children owner should be an instance of SBIS3.CONTROLS.Data.Tree.TreeItem');
          }
       },
 
@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeChildren', [
 
       /**
        * Добавляет элемент
-       * @param {SBIS3.CONTROLS.Data.Collection.TreeItem|*} item Элемент
+       * @param {SBIS3.CONTROLS.Data.Tree.TreeItem|*} item Элемент
        * @param {Number} [at] Позиция, в которую добавляется элемент (по умолчанию - в конец)
        */
       add: function (item, at) {
@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeChildren', [
       /**
        * Возвращает элемент по позиции
        * @param {Number} index Позиция
-       * @returns {SBIS3.CONTROLS.Data.Collection.TreeItem} Элемент списка
+       * @returns {SBIS3.CONTROLS.Data.Tree.TreeItem} Элемент списка
        */
       at: function (index) {
          return TreeChildren.superclass.at.call(this, index);
@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeChildren', [
 
       /**
        * Удаляет элемент
-       * @param {SBIS3.CONTROLS.Data.Collection.TreeItem|*} item Удаляемый элемент
+       * @param {SBIS3.CONTROLS.Data.Tree.TreeItem|*} item Удаляемый элемент
        */
       remove: function (item) {
          TreeChildren.superclass.remove.call(this, item);
@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeChildren', [
 
       /**
        * Заменяет элемент
-       * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem|*} item Заменяющий элемент
+       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem|*} item Заменяющий элемент
        * @param {Number} at Позиция, в которой будет произведена замена
        */
       replace: function (item, at) {
@@ -97,7 +97,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeChildren', [
 
       /**
        * Возвращает индекс дочернего элемента
-       * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem|*} item Искомый элемент
+       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem|*} item Искомый элемент
        * @returns {Number} Индекс элемента или -1, если не найден
        */
       getIndex: function (item) {
@@ -106,24 +106,24 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeChildren', [
 
       //endregion SBIS3.CONTROLS.Data.Collection.IList
 
-      //region SBIS3.CONTROLS.Data.Collection.ITreeChildren
+      //region SBIS3.CONTROLS.Data.Tree.ITreeChildren
 
       /**
        * Возвращает узел-владелец
-       * @returns {SBIS3.CONTROLS.Data.Collection.TreeItem}
+       * @returns {SBIS3.CONTROLS.Data.Tree.TreeItem}
        */
       getOwner: function () {
          return this._options.owner;
       },
 
-      //endregion SBIS3.CONTROLS.Data.Collection.ITreeChildren
+      //endregion SBIS3.CONTROLS.Data.Tree.ITreeChildren
 
       //region Protected methods
 
       /**
        * Превращает объект в элемент дерева
        * @param {*} item Объект
-       * @returns {SBIS3.CONTROLS.Data.Collection.TreeItem}
+       * @returns {SBIS3.CONTROLS.Data.Tree.TreeItem}
        * @private
        */
       _convertToItem: function (item) {
@@ -160,7 +160,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.TreeChildren', [
 
    });
 
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Collection.TreeChildren', function(config) {
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Tree.TreeChildren', function(config) {
       return new TreeChildren(config);
    });
 

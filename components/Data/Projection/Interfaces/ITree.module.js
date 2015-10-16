@@ -14,8 +14,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
       /**
        * @event onCurrentChange При изменении текущего элемента
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem} newCurrent Новый текущий элемент
-       * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem} oldCurrent Старый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} newCurrent Новый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} oldCurrent Старый текущий элемент
        * @param {Number} newPosition Новая позиция
        * @param {Number} oldPosition Старая позиция
        */
@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.ITreeItem} Дерево
+             * @cfg {SBIS3.CONTROLS.Data.Tree.ITreeItem} Дерево
              */
             tree: undefined
          }
@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
 
       /**
        * Возвращает исходное дерево, для которого построена проекция
-       * @returns {SBIS3.CONTROLS.Data.Collection.ITreeItem}
+       * @returns {SBIS3.CONTROLS.Data.Tree.ITreeItem}
        */
       getCollection: function () {
          throw new Error('Method must be implemented');
@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
 
       /**
        * Возвращает текущий элемент дерева
-       * @returns {SBIS3.CONTROLS.Data.Collection.ITreeItem}
+       * @returns {SBIS3.CONTROLS.Data.Tree.ITreeItem}
        */
       getCurrent: function () {
          throw new Error('Method must be implemented');
@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
 
       /**
        * Устанавливает текущий элемент дерева
-       * @param {SBIS3.CONTROLS.Data.Collection.ITreeItem} item Новый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} item Новый текущий элемент
        * @param {Boolean} [silent=false] Не генерировать событие onCurrentChange
        */
       setCurrent: function (item, silent) {
