@@ -134,7 +134,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (this._options.multiselect) {
             tr += '<td class="controls-DataGridView__td"></td>';
          }
-         for (var i in this._options.columns) {
+         for (var i = 0; i < this._options.columns.length; i++) {
             tr += '<td class="controls-DataGridView__td"></td>';
          }
          tr += '</tr>';
