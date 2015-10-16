@@ -32,7 +32,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          this._firstSearch = false;
          this._searchReload = true;
          // TODO нафиг это надо
-         this._options.breadCrumbs.setItems([]);
+         if (this._options.breadCrumbs) {
+            this._options.breadCrumbs.setItems([]);
+         }
          //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
          if (this._options.backButton) {
             this._options.backButton.getContainer().css({'visibility': 'hidden'});
