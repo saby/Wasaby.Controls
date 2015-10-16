@@ -36,7 +36,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
          _options: {
             afterFieldWrapper: afterFieldWrapper,
             beforeFieldWrapper: beforeFieldWrapper,
-            displayField: 'title',
             list: {
                className: 'js!SBIS3.CONTROLS.DataGridView',
                options: {

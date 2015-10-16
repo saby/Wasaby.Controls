@@ -24,10 +24,6 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                 * Шаблон отображения элемента
                 */
                itemTemplate: itemTpl,
-               /**
-                * Отображаемое поле для записи
-                */
-               displayField: 'title'
             }
          },
 
