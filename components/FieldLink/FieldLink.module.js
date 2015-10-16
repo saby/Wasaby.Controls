@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
       var INPUT_WRAPPER_PADDING = 11;
       var SHOW_ALL_LINK_WIDTH = 11;
-      var INPUT_MIN_WIDTH = 50;
+      var INPUT_MIN_WIDTH = 100;
 
    /**
     * Поле связи. Можно выбирать значение из списка, можно из автодополнения
@@ -65,10 +65,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
          /* Проиницализируем переменные и event'ы */
          this._setVariables();
          this._initEvents();
+
+         /* Создём контрол, который рисует элементы в ввиде текста с крестиком удаления */
          this._linkCollection = this._drawFieldLinkItemsCollection();
       },
 
-      /* Создём контрол, который рисует элементы в ввиде текста с крестиком удаления */
       _drawFieldLinkItemsCollection: function() {
          var self = this;
 
@@ -76,7 +77,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
             element: this._linksWrapper.find('.controls-FieldLink__linksContainer'),
             displayField: this._options.displayField,
             keyField: this._options.keyField,
-            maxWidth: this._container[0].offsetWidth - (this._getWrappersWidth() + SHOW_ALL_LINK_WIDTH + INPUT_MIN_WIDTH),
             handlers: {
                onDrawItems: function() {
                   self._updateInputWidth();
@@ -117,13 +117,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
          var self = this;
 
          if(this._options.multiselect) {
-            /* Когда показываем пикер со всеми выбранными записями, скроем автодополнение */
-            this._showAllLink.mouseenter(function(e) {
-               self._toggleListContainer(false);
+            /* Когда показываем пикер со всеми выбранными записями, скроем автодополнение и покажем выбранные записи*/
+            this._showAllLink.mouseenter(function() {
                self.showPicker();
-               self._moveLinkCollection(true);
-               self._toggleDropAllLink(true);
-               self._linkCollection.reload();
+               self._pickerStateHandler(true);
             });
             this._dropAllLink.click(this.removeItemsSelectionAll.bind(this));
          }
@@ -143,10 +140,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
          this._linkCollection.getContainer().detach().appendTo(toPicker ? this._pickerLinkList : this._linksWrapper);
       },
 
-      _onPickerClose: function() {
-         this._toggleDropAllLink(false);
-         this._moveLinkCollection(false);
-         this._toggleListContainer(true);
+      _pickerStateHandler: function(open) {
+         this._toggleListContainer(!open);
+         this._moveLinkCollection(open);
+         this._toggleDropAllLink(open);
          this._linkCollection.reload();
       },
 
@@ -273,7 +270,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             },
             handlers: {
                onClose: function() {
-                  setTimeout(self._onPickerClose.bind(self), 0);
+                  setTimeout(self._pickerStateHandler.bind(self, false), 0);
                }
             }
          };
@@ -340,9 +337,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
        * @private
        */
       _updateInputWidth: function() {
-         this._setInputWidth(Math.ceil(this._container[0].offsetWidth - this._getWrappersWidth() - INPUT_WRAPPER_PADDING));
+         this._setInputWidth(this._container[0].offsetWidth - this._getWrappersWidth() - INPUT_WRAPPER_PADDING);
       },
 
+      /* Заглушка, так как самое поле связи не занимается отрисовкой */
       _redraw: nop,
 
 

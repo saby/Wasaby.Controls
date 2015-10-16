@@ -439,7 +439,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _reloadList: function () {
-         if (this._filterChanged) {
+         if (!this._filterChanged) {
             return;
          }
 
