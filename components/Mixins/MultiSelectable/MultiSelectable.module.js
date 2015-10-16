@@ -163,8 +163,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
                this._setFirstItemAsSelected();
             }
-            this._drawSelectedItems(this._options.selectedKeys);
             this._notifySelectedItems(this._options.selectedKeys);
+            this._drawSelectedItems(this._options.selectedKeys);
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -248,8 +248,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
                this._setFirstItemAsSelected();
             }
-            this._drawSelectedItems(this._options.selectedKeys);
             this._notifySelectedItems(this._options.selectedKeys);
+            this._drawSelectedItems(this._options.selectedKeys);
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -281,8 +281,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
                this._setFirstItemAsSelected();
             }
-            this._drawSelectedItems(this._options.selectedKeys);
             this._notifySelectedItems(this._options.selectedKeys);
+            this._drawSelectedItems(this._options.selectedKeys);
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -344,8 +344,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                   if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
                      this._setFirstItemAsSelected();
                   }
-                  this._drawSelectedItems(this._options.selectedKeys);
                   this._notifySelectedItems(this._options.selectedKeys);
+                  this._drawSelectedItems(this._options.selectedKeys);
                }
             }
          }
