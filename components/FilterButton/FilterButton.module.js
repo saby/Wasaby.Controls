@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.Button',
-   'js!SBIS3.CONTROLS.FilterButton.FilterLine',
+   'js!SBIS3.CONTROLS.FilterButton.FilterLine'
    ],
    function(CompoundControl, dotTplFn, dotTplForPicker, PickerMixin, FieldLink, ControlHierarchyManager) {
 
@@ -280,13 +280,12 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
          return {
             corner: this._options.filterAlign === 'right' ? 'tr' : 'tl',
-            target: this.getContainer(),
             parent: this,
             horizontalAlign: {
                side: this._options.filterAlign
             },
             verticalAlign: {
-               side: 'bottom'
+               side: 'top'
             },
             closeButton: true,
             closeByExternalClick: true,
