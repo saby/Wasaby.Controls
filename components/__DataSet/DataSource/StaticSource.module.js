@@ -3,10 +3,11 @@
  */
 define('js!SBIS3.CONTROLS.StaticSource', [
    'js!SBIS3.CONTROLS.BaseSource',
+   'js!SBIS3.CONTROLS.DataFactory',
    'js!SBIS3.CONTROLS.Record',
    'js!SBIS3.CONTROLS.DataSet',
    'js!SBIS3.CONTROLS.ArrayStrategy'
-], function (BaseSource, Record, DataSet, ArrayStrategy) {
+], function (BaseSource, DataFactory, Record, DataSet, ArrayStrategy) {
    'use strict';
 
    /**
@@ -47,8 +48,6 @@ define('js!SBIS3.CONTROLS.StaticSource', [
       },
 
       $constructor: function (cfg) {
-         Record = Record || require('js!SBIS3.CONTROLS.Record');
-         DataSet = DataSet || require('js!SBIS3.CONTROLS.DataSet');
          this._options.strategy = cfg.strategy || new ArrayStrategy();
       },
 

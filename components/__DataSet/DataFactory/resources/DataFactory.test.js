@@ -1,10 +1,10 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
    'js!SBIS3.CONTROLS.SbisJSONStrategy',
+   'js!SBIS3.CONTROLS.DataFactory',
    'js!SBIS3.CONTROLS.Record',
-   'js!SBIS3.CONTROLS.DataSet',
-   'js!SBIS3.CONTROLS.DataFactory'
-], function (SbisJSONStrategy, Record, DataSet, Factory) {
+   'js!SBIS3.CONTROLS.DataSet'
+], function (SbisJSONStrategy, Factory, Record, DataSet) {
       'use strict';
       var sbisRecord,sbisRecordSet;
       beforeEach(function(){

@@ -121,8 +121,8 @@ define(
 );
 
 define(
-    ['js!SBIS3.CONTROLS.SbisServiceSource', 'js!SBIS3.CONTROLS.DataSet', 'js!SBIS3.CONTROLS.Record', 'js!SBIS3.CONTROLS.SbisJSONStrategy', 'js!SBIS3.CONTROLS.ArrayStrategy'],
-    function (SbisServiceSource, DataSet, Record, SbisJSONStrategy, ArrayStrategy) {
+    ['js!SBIS3.CONTROLS.SbisServiceSource', 'js!SBIS3.CONTROLS.DataFactory', 'js!SBIS3.CONTROLS.DataSet', 'js!SBIS3.CONTROLS.Record', 'js!SBIS3.CONTROLS.SbisJSONStrategy', 'js!SBIS3.CONTROLS.ArrayStrategy'],
+    function (SbisServiceSource, DataFactory, DataSet, Record, SbisJSONStrategy, ArrayStrategy) {
         describe('SBIS3.CONTROLS.SbisServiceSource', function() {
             describe('.create()', function() {
                 context('when the service is exists', function() {

@@ -3,11 +3,12 @@
  */
 define('js!SBIS3.CONTROLS.SbisServiceSource', [
    'js!SBIS3.CONTROLS.BaseSource',
+   'js!SBIS3.CONTROLS.DataFactory',
    'js!SBIS3.CONTROLS.Record',
    'js!SBIS3.CONTROLS.DataSet',
    'js!SBIS3.CONTROLS.SbisServiceSource/resources/SbisServiceBLO',
    'js!SBIS3.CONTROLS.SbisJSONStrategy'
-], function (BaseSource, Record, DataSet, SbisServiceBLO, SbisJSONStrategy) {
+], function (BaseSource, DataFactory, Record, DataSet, SbisServiceBLO, SbisJSONStrategy) {
    'use strict';
 
    /**

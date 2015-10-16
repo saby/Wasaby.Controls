@@ -1,7 +1,7 @@
 /* global beforeEach, afterEach, describe, context, it */
 define(
-    ['js!SBIS3.CONTROLS.StaticSource', 'js!SBIS3.CONTROLS.DataSet', 'js!SBIS3.CONTROLS.Record', 'js!SBIS3.CONTROLS.ArrayStrategy'],
-    function (StaticSource, DataSet, Record, ArrayStrategy) {
+    ['js!SBIS3.CONTROLS.StaticSource', 'js!SBIS3.CONTROLS.DataFactory', 'js!SBIS3.CONTROLS.DataSet', 'js!SBIS3.CONTROLS.Record', 'js!SBIS3.CONTROLS.ArrayStrategy'],
+    function (StaticSource, DataFactory, DataSet, Record, ArrayStrategy) {
         var existsId = 5,
             notExistsId = 33,
             data,

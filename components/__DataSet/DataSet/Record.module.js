@@ -2,8 +2,7 @@
  * Created by as.manuylov on 10.11.14.
  */
 define('js!SBIS3.CONTROLS.Record', [
-   'js!SBIS3.CONTROLS.DataFactory'
-], function (Factory) {
+], function () {
    'use strict';
 
    /**
@@ -11,6 +10,11 @@ define('js!SBIS3.CONTROLS.Record', [
     * @class SBIS3.CONTROLS.Record
     * @public
     * @author Крайнов Дмитрий Олегович
+    */
+
+   /**
+    * @faq Почему я вижу ошибки от $ws.single.ioc?
+    * Для корректной работы с зависимости снала надо загрузить {@link SBIS3.CONTROLS.DataFactory}, а уже потом {@link SBIS3.CONTROLS.Record}
     */
 
    var Record =  $ws.proto.Abstract.extend( /** @lends SBIS3.CONTROLS.Record.prototype */{
@@ -57,8 +61,6 @@ define('js!SBIS3.CONTROLS.Record', [
       },
 
       $constructor: function (cfg) {
-         Factory = Factory || require('js!SBIS3.CONTROLS.DataFactory');
-
          this._publish('onChange');
          this._strategy = cfg.strategy;
          this._raw = cfg.raw || {};
@@ -99,7 +101,7 @@ define('js!SBIS3.CONTROLS.Record', [
          
          var dataValue = this._strategy.value(this._raw, field),
             data = this._strategy.getFullFieldData(this._raw, field),
-            value = Factory.cast(
+            value = $ws.single.ioc.resolve('SBIS3.CONTROLS.DataFactory').cast(
                dataValue,
                data.type,
                this._strategy,

@@ -532,11 +532,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
     * @returns {*}
     */
    SbisJSONStrategy.serializeDataSet = function (data) {
-      var DataSet;
-      try {
-         DataSet = require('js!SBIS3.CONTROLS.DataSet');
-      } catch (e) {
-      }
+      var DataSet = require('js!SBIS3.CONTROLS.DataSet');
       if (DataSet && data instanceof DataSet) {
          return $ws.core.clone(data.getRawData());
       } else if (data instanceof $ws.proto.RecordSet || data instanceof $ws.proto.RecordSetStatic) {
@@ -551,11 +547,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
     * @returns {*}
     */
    SbisJSONStrategy.serializeRecord = function (data) {
-      var Record;
-      try {
-         Record = require('js!SBIS3.CONTROLS.Record');
-      } catch (e) {
-      }
+      var Record = require('js!SBIS3.CONTROLS.Record');
       if (data instanceof Record) {
          return $ws.core.clone(data.getRaw());
       } else if (data instanceof $ws.proto.Record) {
@@ -570,11 +562,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
     * @returns {*}
     */
    SbisJSONStrategy.serializeFlags = function (data) {
-      var Record;
-      try {
-         Record = require('js!SBIS3.CONTROLS.Record');
-      } catch (e) {
-      }
+      var Record = require('js!SBIS3.CONTROLS.Record');
       var dt = [];
       if (data instanceof $ws.proto.Record) {
          var s = {},
