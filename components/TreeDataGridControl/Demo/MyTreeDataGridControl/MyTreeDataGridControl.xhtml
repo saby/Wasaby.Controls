@@ -1,0 +1,223 @@
+<div class="MyTreeDataGridControl">
+   <h2>TreeDataGridControl + Memory Source</h2>
+   <component data-component="SBIS3.CONTROLS.TreeDataGridControl" name="MyTreeDataGridControl">
+      <options name="dataSource">
+         <option name="module">js!SBIS3.CONTROLS.Data.Source.Memory</option>
+         <options name="options">
+            <option name="modelIdField">id</option>
+            <options name="data" type="array">
+               <options>
+                  <option name="id">1</option>
+                  <option name="parent">0</option>
+                  <option name="parent@">true</option>
+                  <option name="title">Смартфоны</option>
+               </options>
+               <options>
+                  <option name="id">2</option>
+                  <option name="parent">0</option>
+                  <option name="parent@">true</option>
+                  <option name="title">Компьютеры</option>
+               </options>
+               <options>
+                  <option name="id">3</option>
+                  <option name="parent">0</option>
+                  <option name="parent@">true</option>
+                  <option name="title">Аксессуары</option>
+               </options>
+               <options>
+                  <option name="id">4</option>
+                  <option name="parent">0</option>
+                  <option name="parent@">false</option>
+                  <option name="title">Бумага А4</option>
+                  <option name="price">200</option>
+               </options>
+               <options>
+                  <option name="id">5</option>
+                  <option name="parent">0</option>
+                  <option name="parent@">false</option>
+                  <option name="title">Бумага А5</option>
+                  <option name="price">140</option>
+               </options>
+               <options>
+                  <option name="id">6</option>
+                  <option name="parent">1</option>
+                  <option name="parent@">true</option>
+                  <option name="title">Apple</option>
+               </options>
+               <options>
+                  <option name="id">7</option>
+                  <option name="parent">1</option>
+                  <option name="parent@">true</option>
+                  <option name="title">Samsung</option>
+               </options>
+               <options>
+                  <option name="id">8</option>
+                  <option name="parent">1</option>
+                  <option name="parent@">false</option>
+                  <option name="title">Смартфон HTC One M9+</option>
+                  <option name="price">34999</option>
+               </options>
+               <options>
+                  <option name="id">9</option>
+                  <option name="parent">1</option>
+                  <option name="parent@">false</option>
+                  <option name="title">Смартфон Meizu MX5</option>
+                  <option name="price">22999</option>
+               </options>
+               <options>
+                  <option name="id">10</option>
+                  <option name="parent">6</option>
+                  <option name="parent@">false</option>
+                  <option name="title">Смартфон Apple iPhone 6S</option>
+                  <option name="price">51999</option>
+               </options>
+               <options>
+                  <option name="id">11</option>
+                  <option name="parent">6</option>
+                  <option name="parent@">false</option>
+                  <option name="title">Смартфон Apple iPhone 6S+</option>
+                  <option name="price">57999</option>
+               </options>
+               <options>
+                  <option name="id">12</option>
+                  <option name="parent">6</option>
+                  <option name="parent@">false</option>
+                  <option name="title">Смартфон Apple iPhone 6</option>
+                  <option name="price">39999</option>
+               </options>
+               <options>
+                  <option name="id">13</option>
+                  <option name="parent">6</option>
+                  <option name="parent@">false</option>
+                  <option name="title">Смартфон Apple iPhone 6+</option>
+                  <option name="price">42578</option>
+               </options>
+               <options>
+                  <option name="id">12</option>
+                  <option name="parent">7</option>
+                  <option name="parent@">false</option>
+                  <option name="title">Смартфон Samsung Galaxy S6</option>
+                  <option name="price">35000</option>
+               </options>
+            </options>
+         </options>
+      </options>
+      <option name="parentField">parent</option>
+      <option name="nodeField">parent@</option>
+      <option name="rootNodeId">0</option>
+      <options name="columns" type="array">
+         <options>
+            <option name="title">Название</option>
+            <option name="field">title</option>
+            <option name="cellTemplate">html!SBIS3.CONTROLS.Demo.MyTreeDataGridControl/resources/CellTemplate</option>
+         </options>
+         <options>
+            <option name="title">Цена</option>
+            <option name="width" type="string">100</option>
+            <option name="field">price</option>
+         </options>
+      </options>
+      <option name="emptyHTML">Нет записей</option>
+      <option name="multiselect">true</option>
+   </component>
+
+   <h2>TreeDataGridControl + сырые данные</h2>
+   <component data-component="SBIS3.CONTROLS.TreeDataGridControl" name="MyTreeDataGridControl">
+      <options name="items" type="array">
+         <options>
+            <option name="id">1</option>
+            <option name="title">Смартфоны</option>
+            <options name="children" type="array">
+               <options>
+                  <option name="id">6</option>
+                  <option name="title">Apple</option>
+                  <options name="children" type="array">
+                     <options>
+                        <option name="id">10</option>
+                        <option name="title">Смартфон Apple iPhone 6S</option>
+                        <option name="price">51999</option>
+                     </options>
+                     <options>
+                        <option name="id">11</option>
+                        <option name="title">Смартфон Apple iPhone 6S+</option>
+                        <option name="price">57999</option>
+                     </options>
+                     <options>
+                        <option name="id">12</option>
+                        <option name="title">Смартфон Apple iPhone 6</option>
+                        <option name="price">39999</option>
+                     </options>
+                     <options>
+                        <option name="id">13</option>
+                        <option name="title">Смартфон Apple iPhone 6+</option>
+                        <option name="price">42578</option>
+                     </options>
+                  </options>
+               </options>
+               <options>
+                  <option name="id">7</option>
+                  <option name="title">Samsung</option>
+                  <options name="children" type="array">
+                     <options>
+                        <option name="id">12</option>
+                        <option name="title">Смартфон Samsung Galaxy S6</option>
+                        <option name="price">35000</option>
+                     </options>
+                  </options>
+               </options>
+               <options>
+                  <option name="id">8</option>
+                  <option name="title">Смартфон HTC One M9+</option>
+                  <option name="price">34999</option>
+               </options>
+               <options>
+                  <option name="id">9</option>
+                  <option name="title">Смартфон Meizu MX5</option>
+                  <option name="price">22999</option>
+               </options>
+            </options>
+         </options>
+         <options>
+            <option name="id">2</option>
+            <option name="title">Компьютеры</option>
+            <options name="children" type="array">
+            </options>
+         </options>
+         <options>
+            <option name="id">3</option>
+            <option name="title">Аксессуары</option>
+            <options name="children" type="array">
+            </options>
+         </options>
+         <options>
+            <option name="id">4</option>
+            <option name="parent">0</option>
+            <option name="parent@">false</option>
+            <option name="title">Бумага А4</option>
+            <option name="price">200</option>
+         </options>
+         <options>
+            <option name="id">5</option>
+            <option name="parent">0</option>
+            <option name="parent@">false</option>
+            <option name="title">Бумага А5</option>
+            <option name="price">140</option>
+         </options>
+      </options>
+      <option name="childrenField">children</option>
+      <options name="columns" type="array">
+         <options>
+            <option name="title">Название</option>
+            <option name="field">title</option>
+            <option name="cellTemplate">html!SBIS3.CONTROLS.Demo.MyTreeDataGridControl/resources/CellTemplate</option>
+         </options>
+         <options>
+            <option name="title">Цена</option>
+            <option name="width" type="string">100</option>
+            <option name="field">price</option>
+         </options>
+      </options>
+      <option name="emptyHTML">Нет записей</option>
+      <option name="multiselect">true</option>
+   </component>
+</div>

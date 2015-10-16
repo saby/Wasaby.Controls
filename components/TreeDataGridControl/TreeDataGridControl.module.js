@@ -18,6 +18,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl', [
     * @public
     * @state mutable
     * @author Крайнов Дмитрий Олегович
+    * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridControl
     */
 
    var TreeDataGridControl = DataGridControl.extend([HierarchyControlMixin, TreeControlMixin], /** @lends SBIS3.CONTROLS.TreeDataGridControl.prototype */{
