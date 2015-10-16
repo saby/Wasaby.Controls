@@ -71,7 +71,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {String} headTemplate Шаблон отображения шапки колонки
              * @property {String} headTooltip Всплывающая подсказка шапки колонки
              * @property {String} cellTemplate Шаблон отображения ячейки
-             * @property {<String,String>} option templateBinding соответствие опций шаблона полям в рекорде
+             * @property {<String,String>} templateBinding соответствие опций шаблона полям в рекорде
+             * @property {<String,String>} includedTemplates подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне ячейки
              */
             /**
              * @cfg {Columns[]} Набор колонок
@@ -252,6 +253,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   };
                   if (column.templateBinding) {
                      tplOptions.templateBinding = column.templateBinding;
+                  }
+                  if (column.includedTemplates) {
+                     var tpls = column.includedTemplates;
+                     tplOptions.included = {};
+                     for (var j in tpls) {
+                        if (tpls.hasOwnProperty(j)) {
+                           tplOptions.included[j] = require(tpls[j]);
+                        }
+                     }
                   }
                   value = MarkupTransformer((cellTpl)(tplOptions));
                } else {
