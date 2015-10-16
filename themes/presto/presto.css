@@ -2849,6 +2849,22 @@ input[type="reset"]::-moz-focus-inner {
 .controls-DropdownList .controls-DropdownList__afterCaptionWrapper .controls-DropdownList__crossIcon:hover {
   background: url('img/cancelIcon-sprite.png') 0 -19px no-repeat;
 }
+.controls-DropdownList.controls-DropdownList__withoutArrow .controls-DropdownList__beforeCaptionWrapper {
+  display: none;
+}
+.controls-DropdownList.controls-DropdownList__withoutCross .controls-DropdownList__afterCaptionWrapper {
+  display: none;
+}
+.controls-DropdownList.controls-DropdownList__withoutArrow.controls-DropdownList__withoutCross .controls-DropdownList__captionWrapper {
+  padding: 0 4px;
+}
+.controls-DropdownList.controls-DropdownList__linkStyle {
+  color: #0055bb;
+  cursor: pointer;
+}
+.controls-DropdownList.controls-DropdownList__linkStyle:hover {
+  color: #ff7033;
+}
 .controls-DropdownList__picker {
   cursor: pointer;
 }
