@@ -204,7 +204,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
           */
          _dataSourceFilter: function (filterField, dataValue, filterValue) {
             //Выбираем все строки, содержащие введенную пользователем подстроку без учета регистра
-            return new RegExp('^.*' + filterValue + '.*$', 'i').test(dataValue);
+            dataValue += '';
+            filterValue += '';
+            return (dataValue.toLowerCase()).indexOf(filterValue.toLowerCase()) !== -1;
          }
       },
 
