@@ -111,7 +111,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       after : {
          init: function () {
-            this._drawSelectedItems(this._options.selectedKeys);
+            this._drawSelectedItems(this._options.selectedKeys, this._selectedRecords);
          }
       },
       /**
@@ -354,6 +354,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
          }
       },
 
+      getSelectedRecords: function() {
+         return this._selectedRecords;
+      },
+
       /**
        * Меняет состояние выбранности всех элементов на противоположное.
        * @example
@@ -391,7 +395,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       _notifySelectedItems : function(idArray) {
-         this._setSelectedRecords();
          this._notify('onSelectedItemsChange', idArray);
       },
 

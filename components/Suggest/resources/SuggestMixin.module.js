@@ -212,9 +212,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          if (!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.PickerMixin')) {
             throw new Error('Mixin SBIS3.CONTROLS.PickerMixin is required.');
          }
-         if (!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.DataBindMixin')) {
-            throw new Error('Mixin SBIS3.CONTROLS.DataBindMixin is required.');
-         }
 
          this._publish('onFilterBuild', 'onListReady', 'onListItemSelect');
 
@@ -442,7 +439,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _reloadList: function () {
-         if (!this._filterChanged) {
+         if (this._filterChanged) {
             return;
          }
 

@@ -1,4 +1,4 @@
-.controls-FieldLink__cross {
+.controls-FieldLink__linkItem-cross {
    height: 16px;
    width: 16px;
    display: inline-block;
@@ -23,7 +23,7 @@
 
 .controls-FieldLink__picker,
 .controls-FieldLink {
-   .controls-FieldLink__inputLink {
+   .controls-FieldLink__linkItem {
       display: inline-block;
       position: relative;
       padding-left: 4px;
@@ -34,56 +34,37 @@
    display: inline-block;
 
    &.controls-Picker__show {
-      .controls-FieldLink__TextBox {
-         border-width: 1px;
-         border-style: solid;
-         border-color: #eaeaea #eaeaea #e4e4e4;
-         background: #ffffff;
-      }
+      border-width: 1px;
+      border-style: solid;
+      border-color: #eaeaea #eaeaea #e4e4e4;
+      background: #ffffff;
    }
-
-   .controls-FieldLink__Link,
-   .controls-FieldLink__Link .controls-FieldLink__inputLink {
-      color: @gray-color;
-      text-decoration: @link-hover-text-decoration;
-      cursor: @link-cursor;
-   }
-
 
    .controls-TextBox__fieldWrapper {
       float: left;
+      margin: 0 !important;
    }
 
-   .controls-FieldLink__TextBox {
-      display: block;
-      overflow: hidden;
-      float: left;
+   .controls-TextBox__beforeFieldWrapper {
 
-      .controls-TextBox__fieldWrapper {
-         margin-right: 0;
-      }
-
-      .controls-TextBox__beforeFieldWrapper {
-
-         .controls-FieldLink__showAllLinks,
-         .controls-FieldLink__dropAllLinks {
-            position: relative;
-            float: left;
-            top: 2px;
-            padding: 0 4px;
-         }
-
-         .controls-FieldLink__linksWrapper {
-            height: 100%;
-            display: inline-block;
-         }
-      }
-
-      .controls-TextBox__afterFieldWrapper {
+      .controls-FieldLink__showAllLinks,
+      .controls-FieldLink__dropAllLinks {
+         position: relative;
+         float: left;
+         top: 2px;
          padding: 0 4px;
-         > *{
-            vertical-align: middle;
-         }
+      }
+
+      .controls-FieldLink__linksWrapper {
+         height: 100%;
+         display: inline-block;
+      }
+   }
+
+   .controls-TextBox__afterFieldWrapper {
+      padding: 0 4px;
+      > *{
+         vertical-align: middle;
       }
    }
 }

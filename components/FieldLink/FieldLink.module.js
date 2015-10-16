@@ -1,23 +1,23 @@
-define('js!SBIS3.Engine.FieldLink',
+define('js!SBIS3.CONTROLS.FieldLink',
    [
-      'js!SBIS3.CORE.CompoundControl',
-      'tmpl!SBIS3.Engine.FieldLink',
+      'js!SBIS3.CONTROLS.SuggestTextBox',
+      'js!SBIS3.CONTROLS.DSMixin',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
-      'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
-      'js!SBIS3.CONTROLS.Suggest',
-      'js!SBIS3.CONTROLS.SelectedItemsCollection',
-      'js!SBIS3.CONTROLS.Link',
-      'js!SBIS3.CONTROLS.FieldLinkTextBox',
-      'js!SBIS3.CONTROLS.IconButton'
+      'js!SBIS3.CONTROLS.FieldLinkItemsCollection',
+      'html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper',
+      'html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper',
+      'html!SBIS3.CONTROLS.FieldLink/linkTpl',
+      'js!SBIS3.CONTROLS.MenuIcon'
+
    ],
-   function(CompoundControl, dotTplFn, FormWidgetMixin, PickerMixin, MultiSelectable, Suggest, SimpleItemsCollection) {
+   function(SuggestTextBox, DSMixin, FormWidgetMixin, MultiSelectable, FieldLinkItemsCollection, afterFieldWrapper, beforeFieldWrapper, linkTpl) {
 
-   'use strict';
+      'use strict';
 
-    var INPUT_WRAPPER_PADDING = 10;
-    var SHOW_ALL_LINK_WIDTH = 11;
-    var INPUT_MIN_WIDTH = 50;
+      var INPUT_WRAPPER_PADDING = 11;
+      var SHOW_ALL_LINK_WIDTH = 11;
+      var INPUT_MIN_WIDTH = 50;
 
    /**
     * Поле связи. Можно выбирать значение из списка, можно из автодополнения
@@ -31,46 +31,73 @@ define('js!SBIS3.Engine.FieldLink',
     * @author Крайнов Дмитрий Олегович
     */
 
-   var FieldLink = CompoundControl.extend([FormWidgetMixin, PickerMixin, MultiSelectable, SimpleItemsCollection],/** @lends SBIS3.Engine.FieldLink.prototype */{
+   var FieldLink = SuggestTextBox.extend([FormWidgetMixin, MultiSelectable, DSMixin],/** @lends SBIS3.Engine.FieldLink.prototype */{
       $protected: {
-         _dotTplFn: dotTplFn,
          _options: {
-            /**
-             * @cfg {Object} Конфигурация поля ввода
-             */
-            textBoxSettings: {},
-            /**
-             * @cfg {Object} Конфигурация автодополнения
-             */
-            suggestSettings: {},
-            /**
-             * @cfg {String} Текст ссылки поля связи
-             */
-            linkCaption: ''
+            afterFieldWrapper: afterFieldWrapper,
+            beforeFieldWrapper: beforeFieldWrapper,
+            displayField: 'title',
+            list: {
+               className: 'js!SBIS3.CONTROLS.DataGridView',
+               options: {
+                  showHead: false,
+                  columns: []
+               }
+            }
          },
-         _suggest: undefined,
-         _textBox: undefined,
          _inputWrapper: undefined,
          _linksWrapper: undefined,
          _dropAllButton: undefined,
          _showAllLink: undefined,
-         _itemTpl: undefined,
-         _drawPicker: false
+         _pickerLinkList: undefined,
+         _linkCollection: undefined
       },
 
       $constructor: function() {
-         this._container.removeClass('ws-area');
-      },
+         this.getContainer().addClass('controls-FieldLink');
 
-      init: function() {
-         FieldLink.superclass.init.apply(this, arguments);
+         /* Особый placeholder для поля связи, чтобы можно было отображать ссылку */
+         if(this._options.placeholder && !this._compatPlaceholder) {
+            this._inputField[0].removeAttribute('placeholder');
+            this._createCompatPlaceholder();
+         }
+
+         /* Проиницализируем переменные и event'ы */
          this._setVariables();
          this._initEvents();
+         this._linkCollection = this._drawFieldLinkItemsCollection();
+      },
 
-         /* Если передали конфигурацию suggest'а то создадим его */
-         if(Object.keys(this._options.suggestSettings).length && this._options.showTextBox) {
-            this._createSuggest();
-         }
+      /* Создём контрол, который рисует элементы в ввиде текста с крестиком удаления */
+      _drawFieldLinkItemsCollection: function() {
+         var self = this;
+
+         return new FieldLinkItemsCollection({
+            element: this._linksWrapper.find('.controls-FieldLink__linksContainer'),
+            displayField: this._options.displayField,
+            keyField: this._options.keyField,
+            maxWidth: this._container[0].offsetWidth - (this._getWrappersWidth() + SHOW_ALL_LINK_WIDTH + INPUT_MIN_WIDTH),
+            handlers: {
+               onDrawItems: function() {
+                  self._updateInputWidth();
+               },
+               onDrawItem: function(e, item) {
+                  var needDrawItem;
+
+                  /* Если элементы рисуются в пикере то ничего считать не надо */
+                  if(self._isPickerVisible()) {
+                     return;
+                  }
+
+                  needDrawItem = self._needDrawItem(item);
+                  self._toggleShowAllLink(!needDrawItem);
+                  e.setResult(needDrawItem);
+               },
+               onCrossClick: function(e, id) {
+                  self.removeItemsSelection([id]);
+               }
+            }
+         });
       },
       /**
        * Устанавливает переменные, для дальнейшей работы с ними
@@ -78,53 +105,49 @@ define('js!SBIS3.Engine.FieldLink',
        */
       _setVariables: function() {
          this._linksWrapper = this._container.find('.controls-FieldLink__linksWrapper');
+         this._inputWrapper = this._container.find('.controls-TextBox__fieldWrapper');
 
          if(this._options.multiselect) {
             this._dropAllLink = this._container.find('.controls-FieldLink__dropAllLinks');
             this._showAllLink = this._container.find('.controls-FieldLink__showAllLinks')
          }
-
-         if(!this._options.linkCaption) {
-            this._textBox = this.getChildControlByName(this.getName() + '_textBox');
-            this._inputWrapper = this._textBox.getContainer().find('.controls-TextBox__fieldWrapper');
-         }
       },
 
       _initEvents: function() {
-         if(!this._options.linkCaption) {
-            if(this._options.multiselect) {
-               this._showAllLink.mouseenter(this.showPicker.bind(this));
-               this._dropAllLink.click(this.removeItemsSelectionAll.bind(this));
-            }
+         var self = this;
+
+         if(this._options.multiselect) {
+            /* Когда показываем пикер со всеми выбранными записями, скроем автодополнение */
+            this._showAllLink.mouseenter(function(e) {
+               self._toggleListContainer(false);
+               self.showPicker();
+               self._moveLinkCollection(true);
+               self._toggleDropAllLink(true);
+               self._linkCollection.reload();
+            });
+            this._dropAllLink.click(this.removeItemsSelectionAll.bind(this));
          }
       },
 
-      /**
-       * Возвращает suggest
-       */
-      getSuggest: function() {
-         return this._suggest;
-      },
-      /**
-       * Возвращает textBox
-       */
-      getTextBox: function() {
-         return this._textBox;
+      _onListItemSelect: function(id) {
+         this.addItemsSelection([id]);
+         FieldLink.superclass._onListItemSelect.apply(this, arguments);
       },
 
-      showPicker: function() {
-         /* При отображении пикера, очистим элементы в инпуте и покажем кнопку очистить всё */
-         this.clearItems();
-         this._toggleDropAllLink(true);
-         this._updateInputWidth();
-
-         FieldLink.superclass.showPicker.call(this);
-         this.redraw();
+      /**
+       * Занимается перемещением контрола из пикера в поле и обратно.
+       * @param toPicker
+       * @private
+       */
+      _moveLinkCollection: function(toPicker) {
+         this._linkCollection.getContainer().detach().appendTo(toPicker ? this._pickerLinkList : this._linksWrapper);
       },
 
       _onPickerClose: function() {
          this._toggleDropAllLink(false);
-         this.redraw();
+         this._moveLinkCollection(false);
+         this._toggleListContainer(true);
+         this._linkCollection.reload();
       },
 
       /**
@@ -132,37 +155,102 @@ define('js!SBIS3.Engine.FieldLink',
        * то отрисовываться он не будет и покажется троеточие
        * @private
        */
-      _drawItem: function(item) {
-         var parentResult = FieldLink.superclass._drawItem.apply(this, arguments),
-             needDrawItem;
-
-         /* Если элементы рисуются в пикере или одиночный выбор или поля ввода вообще нет, то ничего считать не надо */
-         if(this._options.linkCaption || !this._options.multiselect || this._isPickerVisible()) {
-            return parentResult;
-         }
-
-         needDrawItem = $ws.helpers.getTextWidth(parentResult) < this._container[0].offsetWidth - (this._getWrappersWidth() + SHOW_ALL_LINK_WIDTH + INPUT_MIN_WIDTH);
-         this._toggleShowAllLink(!needDrawItem);
-         return needDrawItem ? parentResult : '';
+      _needDrawItem: function(item) {
+         return $ws.helpers.getTextWidth(item) < this._container[0].offsetWidth - (this._getWrappersWidth() + SHOW_ALL_LINK_WIDTH + INPUT_MIN_WIDTH);
       },
 
-      _drawSelectedItems: function(keys) {
-         var isEmpty = !keys.length;
+      _setInputWidth: function(width) {
+         this._inputField[0].style.width = width + 'px';
+         if(this._compatPlaceholder) {
+            this._compatPlaceholder[0].style.width = width + 'px';
+         }
+      },
 
-         if (this._isPickerVisible() && isEmpty) {
+      setDataSource: function(ds) {
+         if(this._list) {
+            this._list.setDataSource(ds)
+         }
+
+         FieldLink.superclass.setDataSource.apply(this, arguments);
+      },
+
+      _drawSelectedItems: function(keysArr, recordsArr) {
+         var len  = keysArr.length,
+             result = new $ws.proto.Deferred(),
+             self = this,
+             dMultiResult, recordsForDraw;
+
+
+         if (this._isPickerVisible() && !len) {
             this.hidePicker();
             this._toggleShowAllLink(false);
          }
 
-         if (this._options.linkCaption) {
-            this._container.find('.controls-FieldLink__Link-defaultLink').toggleClass('ws-hidden', !isEmpty);
-         }
-
          if(!this._options.multiselect) {
-            this._toggleInputWrapper(isEmpty);
+            this._toggleInputWrapper(!len);
          }
 
-         FieldLink.superclass._drawSelectedItems.apply(this, arguments);
+         /* Создадим массив записей для отрисовки */
+         if(!recordsArr.length) {
+            /* Если есть выделенные записи */
+            if (len) {
+               /* Если выделенных записей больше чем одна, то запросим записи через ParallelDeferred */
+               if (len > 1) {
+                  dMultiResult = new $ws.proto.ParallelDeferred({stopOnFirstError: false});
+                  recordsForDraw = [];
+
+                  for (var i = 0; len > i; i++) {
+                     dMultiResult.push(this._dataSource.read(keysArr[i]).addCallback(function (record) {
+                        recordsForDraw.push(record);
+                     }));
+                  }
+
+                  dMultiResult.done().getResult().addCallback(function() {
+                     result.callback(recordsForDraw);
+                  });
+               } else {
+                  /* Если выделенная запись одна, то просто прочитаем с бл */
+                  this._dataSource.read(keysArr[0]).addCallback(function(record) {
+                     result.callback([record]);
+                  })
+               }
+
+               result.addCallback(function(records) {
+                  self._setLinkCollectionData(records);
+               })
+            } else {
+               this._setLinkCollectionData([]);
+            }
+         } else {
+            /* Если нам пришли готовые record'ы то просто отрисуем их */
+            this._setLinkCollectionData(recordsArr);
+         }
+      },
+
+      /**
+       * Устанавливает данные к контрол
+       * @param records
+       * @private
+       */
+      _setLinkCollectionData: function(records) {
+         var self = this;
+
+         //FIXMe это костыль, надо выпилить, нужно научить DSMixin работать с датасетом без датасорса
+         function convertToItemObject(records) {
+            var items = [];
+
+            $ws.helpers.forEach(records, function(record) {
+               var itemObject = {};
+
+               itemObject[self._options.keyField] = record.getKey();
+               itemObject[self._options.displayField] = record.get(self._options.displayField);
+               items.push(itemObject);
+            });
+
+            return items;
+         }
+
+         records.length ? this._linkCollection.setItems(convertToItemObject(records)) : this._linkCollection.setItems([]);
       },
 
       /**
@@ -173,10 +261,16 @@ define('js!SBIS3.Engine.FieldLink',
 
          return {
             corner: 'bl',
-            target: this.getTextBox().getContainer(),
+            target: this._container,
             closeByExternalOver: true,
             targetPart: true,
             className: 'controls-FieldLink__picker',
+            verticalAlign: {
+               side: 'top'
+            },
+            horizontalAlign: {
+               side: 'left'
+            },
             handlers: {
                onClose: function() {
                   setTimeout(self._onPickerClose.bind(self), 0);
@@ -186,10 +280,9 @@ define('js!SBIS3.Engine.FieldLink',
       },
 
       _setPickerContent: function () {
-         var pickerContainer = this._picker.getContainer();
+         FieldLink.superclass._setPickerContent.apply(this, arguments);
 
-         pickerContainer.css('max-width', this.getTextBox().getContainer()[0].clientWidth)
-                        .mouseup(this.crossClickHandler.bind(this));
+         this._pickerLinkList = $('<div class="controls-FieldLink__picker-list"/>').appendTo(this._picker.getContainer().css('maxWidth', this._container[0].offsetWidth));
       },
 
       /**
@@ -198,35 +291,7 @@ define('js!SBIS3.Engine.FieldLink',
        * @private
        */
       _getWrappersWidth: function() {
-         var textBoxContainer = this.getTextBox().getContainer();
-         return textBoxContainer.find('.controls-TextBox__afterFieldWrapper')[0].offsetWidth + textBoxContainer.find('.controls-TextBox__beforeFieldWrapper')[0].offsetWidth;
-      },
-
-      _createSuggest: function() {
-         var self = this,
-             textBox = this.getTextBox(),
-             suggestConfig = {
-                element: textBox.getContainer(),
-                observableControls: [textBox],
-                loadingContainer: this._inputWrapper,
-                handlers: {
-                   onListItemSelect: function(event, item) {
-                      self.addItemsSelection([item.get(self._options.keyField)]);
-                  }
-               }
-            };
-
-         this._suggest = new Suggest($ws.core.merge(this._options.suggestSettings, suggestConfig));
-      },
-
-      _drawItemsCallback: function() {
-         /* Если рисовались элементы в пикере, то ничего делать не будем */
-         if(this._isPickerVisible()) return;
-
-         if(this._textBox) {
-            this._updateInputWidth();
-         }
-
+         return this._container.find('.controls-TextBox__afterFieldWrapper')[0].offsetWidth + this._container.find('.controls-TextBox__beforeFieldWrapper')[0].offsetWidth;
       },
 
       /**
@@ -238,8 +303,14 @@ define('js!SBIS3.Engine.FieldLink',
          return this._picker && this._picker.isVisible();
       },
 
-      _getItemsContainer: function() {
-         return this._isPickerVisible() ? this._picker.getContainer() : this._linksWrapper;
+      /**
+       * Скрывает/показывает контейнер автодополнения
+       * @param show
+       * @private
+       */
+      _toggleListContainer: function(show) {
+         this._pickerLinkList && this._pickerLinkList.toggleClass('ws-hidden', show);
+         this._listContainer && this._listContainer.toggleClass('ws-hidden', !show)
       },
 
       /**
@@ -254,7 +325,7 @@ define('js!SBIS3.Engine.FieldLink',
        * Скрывает/показывает кнопку показа всех записей
        */
       _toggleShowAllLink: function(show) {
-         this._showAllLink.length && this._showAllLink.toggleClass('ws-hidden', !show);
+         this._showAllLink && this._showAllLink.toggleClass('ws-hidden', !show);
       },
 
       /**
@@ -269,11 +340,13 @@ define('js!SBIS3.Engine.FieldLink',
        * @private
        */
       _updateInputWidth: function() {
-         this.getTextBox().setInputWidth(this._container[0].offsetWidth - this._getWrappersWidth() - INPUT_WRAPPER_PADDING);
+         this._setInputWidth(Math.ceil(this._container[0].offsetWidth - this._getWrappersWidth() - INPUT_WRAPPER_PADDING));
       },
 
+      _redraw: nop,
+
+
       destroy: function() {
-         this._textBox =  undefined;
          this._linksWrapper = undefined;
 
          if(this._options.multiselect) {

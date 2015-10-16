@@ -1,4 +1,10 @@
-define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS.FormWidgetMixin','js!SBIS3.CONTROLS.DataBindMixin'], function(Control, FormWidgetMixin, DataBindMixin) {
+define('js!SBIS3.CONTROLS.TextBoxBase',
+   [
+      'js!SBIS3.CORE.CompoundControl',
+      'js!SBIS3.CONTROLS.FormWidgetMixin',
+      'js!SBIS3.CONTROLS.DataBindMixin',
+      'js!SBIS3.CORE.CompoundActiveFixMixin'
+   ], function(CompoundControl, FormWidgetMixin, DataBindMixin, CompoundActiveFixMixin) {
 
    'use strict';
 
@@ -23,7 +29,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
     * @ignoreEvents onTooltipContentRequest
     */
 
-   var TextBoxBase = Control.Control.extend([FormWidgetMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.TextBoxBase.prototype*/ {
+   var TextBoxBase = CompoundControl.extend([FormWidgetMixin, DataBindMixin, CompoundActiveFixMixin], /** @lends SBIS3.CONTROLS.TextBoxBase.prototype*/ {
 
        /**
         * @event onTextChange Срабатывает при изменении текста в поле ввода.
