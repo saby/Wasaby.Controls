@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
                3. это не исключает ситуации, когда БЛ не возвращает иерархию до корня, либо пользователь самостоятельно пытается что-то переместить с помощью интерфейса IDataSource.move. В таком случае мы считаем, что БЛ вне зависимости от возможности проверки на клиенте, всегда должна проверять входные значения при перемещении. В противном случае это приводит к зависанию запроса.
             */
             toMap = Array.clone(dataSet.getMetaData().path.getChildItems());
-         while (record = dataSet.getRecordByKey(parentKey)) {
+         while ((record = dataSet.getRecordByKey(parentKey))) {
             parentKey = record.getKey();
             if (toMap.indexOf(parentKey) < 0) {
                toMap.push(parentKey);
