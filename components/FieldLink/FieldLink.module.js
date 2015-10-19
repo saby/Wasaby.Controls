@@ -261,7 +261,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
       },
 
       _pickerStateHandler: function(open) {
-         this._listContainer && this._listContainer.toggleClass('ws-hidden', show);
+         this._listContainer && this._listContainer.toggleClass('ws-hidden', open);
          this._pickerLinkList.toggleClass('ws-hidden', !open);
          this._dropAllLink.toggleClass('ws-hidden', !open);
          this._moveLinkCollection(open);
