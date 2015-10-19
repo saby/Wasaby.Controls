@@ -687,9 +687,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
             right: 0
          };
       },
-      _showItemActions: function() {
+      _showItemActions: function(item) {
          if(!this.isNowScrollingPartScroll()) {
-            DataGridView.superclass._showItemActions.call(this);
+            DataGridView.superclass._showItemActions.call(this, item);
          }
       },
 

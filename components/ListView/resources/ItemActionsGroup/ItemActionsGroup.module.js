@@ -132,13 +132,13 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          /**
           * Показывает операции над записью
           */
-         showItemActions: function(hoveredItem, position) {
+        	showItemActions: function(hoveredItem, position) {
             this._activeItem = hoveredItem.container;
             this._container[0].style.top = position.top + 'px';
             this._container[0].style.right = position.right + 'px';
             this._container[0].style.display = 'block';
-         },
-         /**
+        	},
+         /***
           * Задаёт новые операции над записью
           * Как в меню, так и на строке
           * @param items Массив новых items

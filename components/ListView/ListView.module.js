@@ -13,6 +13,10 @@ if (typeof window !== 'undefined') {
    $(document).bind('touchend', function (e) {
       eventsChannel.notify('onTouchend', e);
    });
+
+   $('body').bind('swipe', function(e){
+   	console.log('swipe');
+   });
 }
 
 define('js!SBIS3.CONTROLS.ListView',
@@ -301,7 +305,11 @@ define('js!SBIS3.CONTROLS.ListView',
             this._drawEmptyData();
             ListView.superclass.init.call(this);
             this.reload();
-            this._initSwipeEvent();
+            this._touchSupport = 'ontouchstart' in document;
+            if (this._touchSupport){
+            	this._getItemActionsContainer().addClass('controls-ItemsActions__touch-actions');
+            	this._initSwipeEvent();
+         	}
          },
          _keyboardHover: function (e) {
             var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
@@ -374,18 +382,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   containerCords = this._container[0].getBoundingClientRect();
                   targetCords = target[0].getBoundingClientRect();
                   this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
-                  this._hoveredItem = {
-                     key: targetKey,
-                     container: target.addClass('controls-ListView__hoveredItem'),
-                     position: {
-                        top: targetCords.top - containerCords.top,
-                        left: targetCords.left - containerCords.left
-                     },
-                     size: {
-                        height: target[0].offsetHeight,
-                        width: target[0].offsetWidth
-                     }
-                  };
+                  target.addClass('controls-ListView__hoveredItem');
+                  this._hoveredItem = this._getElementData(target);
                   this._notify('onChangeHoveredItem', this._hoveredItem);
                   this._onChangeHoveredItem(this._hoveredItem);
                }
@@ -393,6 +391,26 @@ define('js!SBIS3.CONTROLS.ListView',
                this._mouseLeaveHandler();
             }
          },
+
+         _getElementData: function(target) {
+				target = target.hasClass('controls-ListView__item') ? target : target.closest('.controls-ListView__item');
+        		var containerCords = this._container[0].getBoundingClientRect(),
+               targetCords = target[0].getBoundingClientRect();
+
+            return {
+                key: target.data('id'),
+                container: target,
+                position: {
+                    top: targetCords.top - containerCords.top,
+                    left: targetCords.left - containerCords.left
+                },
+                size: {
+                    height: target[0].offsetHeight,
+                    width: target[0].offsetWidth
+                }
+            }
+         },
+
          /**
           * Проверяет, относится ли переданный элемент,
           * к контролам которые отображаются по ховеру.
@@ -430,8 +448,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
-            if (this._options.itemsActions.length) {
-               target.container ? this._showItemActions(target) : this._hideItemActions();
+            if (this._options.itemsActions.length && !this._touchSupport) {
+         		target.container ? this._showItemActions(target) : this._hideItemActions();
             }
          },
 
@@ -577,10 +595,11 @@ define('js!SBIS3.CONTROLS.ListView',
                if (touched || !checkTarget(e)){
                   return;
                }
-               touched = true;
                if (!xDown || !yDown) {
                   return;
                }
+
+               touched = true;
 
                var xUp = e.touches[0].clientX;
                var yUp = e.touches[0].clientY;
@@ -588,10 +607,9 @@ define('js!SBIS3.CONTROLS.ListView',
                var xDiff = xDown - xUp;
                var yDiff = yDown - yUp;
 
-               if (Math.abs(xDiff) > Math.abs(yDiff)) { /*most significant*/
-                  if (xDiff > 10) {
-                     console.log('swipe!');
-                  }
+               if (xDiff >= 6 && Math.abs(yDiff) <= 5) {
+                  self._swipeHandler($(e.target));
+                  e.preventDefault();
                }
 
                xDown = null;
@@ -602,11 +620,16 @@ define('js!SBIS3.CONTROLS.ListView',
                return !!self._container.find(e.target).length;
             }
          },
+
+         _swipeHandler: function(target){
+         	target = target.hasClass('controls-ListView__item') ? target : target.closest('.controls-ListView__item');
+         	this._showItemActions(this._getElementData(target));
+         },
          /**
           * Показывает оперцаии над записью для элемента
           * @private
           */
-         _showItemActions: function () {
+         _showItemActions: function (item) {
             //Создадим операции над записью, если их нет
             this.getItemsActions();
 
@@ -615,7 +638,7 @@ define('js!SBIS3.CONTROLS.ListView',
                return;
             }
             this._itemActionsGroup.applyItemActions();
-            this._itemActionsGroup.showItemActions(this._hoveredItem, this._getItemActionsPosition(this._hoveredItem));
+            this._itemActionsGroup.showItemActions(item, this._getItemActionsPosition(item));
          },
          _hideItemActions: function () {
             if (this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
@@ -623,10 +646,14 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _getItemActionsPosition: function (item) {
-            return {
-               top: item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
-               right: this._container[0].offsetWidth - (item.position.left + item.size.width)
-            };
+         	var cfg = {};
+         	if (this._touchSupport){
+         		cfg.top = item.position.top;
+         	} else {
+               cfg.top = item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 );
+            }
+            cfg.right = this._container[0].offsetWidth - (item.position.left + item.size.width)
+            return cfg;
          },
          /**
           * Создаёт операции над записью
