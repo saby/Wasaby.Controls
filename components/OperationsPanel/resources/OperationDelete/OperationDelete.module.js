@@ -4,7 +4,20 @@
 define('js!SBIS3.CONTROLS.OperationDelete', [
       'js!SBIS3.CONTROLS.Link'
 ], function(Link) {
-
+   /**
+    * Операция удаления.
+    *
+    * SBIS3.CONTROLS.OperationDelete
+    * @class SBIS3.CONTROLS.OperationDelete
+    * @extends SBIS3.CONTROLS.Link
+    * @control
+    * @public
+    * @author Крайнов Дмитрий Олегович
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.OperationDelete'>
+    *
+    * </component>
+    */
    var OperationDelete = Link.extend({
 
       $protected: {

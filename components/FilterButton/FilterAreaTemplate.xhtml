@@ -1,19 +1,23 @@
-<div class="controls__filterButton__header">
-    <component data-component="SBIS3.CONTROLS.Button" class="controls__filter-button__apply-filter">
-        <option name="caption">Отобрать</option>
-        <option name="command">apply-filter</option>
-    </component>
-    <component data-component="SBIS3.CONTROLS.Link" class="controls__filter-button__clear-filter">
-        <option name="caption">Очистить фильтр</option>
-        <option name="command">reset-filter-internal</option>
-        <option name="enabled" bind="sbis3-controls-filter-button/filterChanged"></option>
-    </component>
-</div>
-<div class="controls__filterButton__content">
-    <div class="controls__filterButton__templatedArea">
-        {{?it.template}}{{=it.template}}{{?}}
+<div class="controls__filterButton__area">
+    <div class="controls__filterButton__area-header">
+        <span class="controls__filterButton__area-text">Отбираются</span>
+        <component data-component="SBIS3.CONTROLS.Button" class="controls__filter-button__apply-filter">
+            <option name="caption">Отобрать</option>
+            <option name="primary" type="boolean">Отобрать</option>
+            <option name="command">apply-filter</option>
+        </component>
+        <component data-component="SBIS3.CONTROLS.Link" class="controls__filter-button__clear-filter">
+            <option name="caption">Сбросить</option>
+            <option name="command">reset-filter-internal</option>
+            <option name="enabled" bind="sbis3-controls-filter-button/filterChanged"></option>
+        </component>
     </div>
-    <div class="controls__filterButton_bottomShadow">
-        <div class="controls__filterButton_bottomShadow-stretch"></div>
+    <div class="controls__filterButton__area-content">
+        <div class="controls__filterButton__templatedArea">
+            {{?it.template}}{{=it.template}}{{?}}
+        </div>
+    </div>
+    <div class="controls__filterButton__area-footer">
+        <!-- Заглушка, тут будет история выбора -->
     </div>
 </div>

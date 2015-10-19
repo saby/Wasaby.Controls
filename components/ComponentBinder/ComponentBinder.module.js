@@ -214,7 +214,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                }
             }
          });
-
+         
          searchForm.subscribe('onSearchStart', function(event, text) {
             var checkedText = isSearchValid(text, 1);
             if (checkedText[1]) {
