@@ -211,7 +211,7 @@ define([
       });
       describe('.serialize()', function () {
          var getData = function (index) {
-            return sbisModelSet.getData().d[index];
+            return sbisModelSet.getRawData().d[index];
          };
          it('should serialize integer value', function () {
             sbisModelSet.set('id', 1);
@@ -232,7 +232,7 @@ define([
                data: {d: [1], s: [{n: 'id', t: 'Число целое'}]}
             });
             sbisModelSet.set('record', record);
-            assert.deepEqual(getData(3), record.getData());
+            assert.deepEqual(getData(3), record.getRawData());
          });
          it('should serialize record', function () {
             var record = new $ws.proto.Record();

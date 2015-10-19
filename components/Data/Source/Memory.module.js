@@ -80,13 +80,13 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          if (index === -1) {
             adapter.add(
                this._options.data,
-               model.getData()
+               model.getRawData()
             );
             this._index[key] = adapter.getCount(this._options.data) - 1;
          } else {
             adapter.replace(
                this._options.data,
-               model.getData(),
+               model.getRawData(),
                index
             );
          }

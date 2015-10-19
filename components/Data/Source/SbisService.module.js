@@ -149,7 +149,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             this._options.updateMethodName, {
                'Запись': $ws.core.merge({
                   _type: 'record'
-               }, model.getData())
+               }, model.getRawData())
             }
          ).addCallbacks((function (key) {
             if (!model.isStored()) {

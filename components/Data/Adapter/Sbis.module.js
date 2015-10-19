@@ -165,7 +165,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
       serializeModel: function (data) {
          var Model = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor');
          if (data instanceof Model) {
-            return $ws.core.clone(data.getData());
+            return $ws.core.clone(data.getRawData());
          } else if (data instanceof $ws.proto.Record) {
             return data.toJSON();
          } else {
