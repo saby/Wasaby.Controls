@@ -356,7 +356,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                return new DataSet({
                   strategy: new SbisJSONStrategy(),
                   data: newDataSet.getRawData(),
-                  meta: newDataSet.getProperty('p')
+                  meta: {
+                     results: newDataSet.getProperty('r'),
+                     more: newDataSet.getProperty('n'),
+                     path: newDataSet.getProperty('p')
+                  }
                });
             });
          } else {
