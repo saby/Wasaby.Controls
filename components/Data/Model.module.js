@@ -64,6 +64,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
           * @var {Boolean} Признак, что модель изменения модели не синхронизированы с харнилищем данных
           */
          _isChanged: false,
+
          /**
          * @var {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с записью
          */
@@ -75,7 +76,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       $constructor: function () {
-         this.setData(this._options.data);
+         this.setRawData(this._options.data);
          this._options.idProperty = this._options.idProperty || '';
          this._initAdapter();
          this._publish('onPropertyChange');
@@ -203,7 +204,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          this._checkSource();
          var self = this;
          return this._options.source.read(this.getId()).addCallback((function(instance) {
-            self.setData(instance.getData());
+            self.setRawData(instance.getRawData());
             self._setChanged(false);
             return self;
          }).bind(this));
@@ -289,7 +290,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * Возвращает данные модели в "сыром" виде
        * @returns {Object}
        */
-      getData: function () {
+      getRawData: function () {
          return this._options.data;
       },
 
@@ -297,7 +298,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * Устанавливает данные модели в "сыром" виде
        * @param {Object} data Данные модели
        */
-      setData: function (data) {
+      setRawData: function (data) {
          this._options.data = data || {};
          this._fieldsCache = {};
       },

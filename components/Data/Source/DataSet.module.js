@@ -205,6 +205,15 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          return this._getDataProperty(property) !== undefined;
       },
 
+      /**
+       * Возвращает значение свойства в данных
+       * @param {String} property Свойство
+       * @returns {Boolean}
+       */
+      getProperty: function (property) {
+         return this._getDataProperty(property);
+      },
+
       //endregion Public methods
 
       //region Protected methods

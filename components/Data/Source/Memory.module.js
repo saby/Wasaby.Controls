@@ -80,13 +80,13 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          if (index === -1) {
             adapter.add(
                this._options.data,
-               model.getData()
+               model.getRawData()
             );
             this._index[key] = adapter.getCount(this._options.data) - 1;
          } else {
             adapter.replace(
                this._options.data,
-               model.getData(),
+               model.getRawData(),
                index
             );
          }
@@ -193,6 +193,10 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             //TODO: разбор выражений в filterField, вида 'date>'
             for (var filterField in where) {
                if (!where.hasOwnProperty(filterField)) {
+                  continue;
+               }
+               //FIXME: избавиться от этого sbis-specified
+               if (filterField == 'Разворот' || filterField == 'ВидДерева') {
                   continue;
                }
                filterMatch = recordAdapter.get(item, filterField) == where[filterField];

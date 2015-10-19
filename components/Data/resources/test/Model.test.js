@@ -39,9 +39,9 @@ define([
                assert.strictEqual(model.get('max'),modelData['max']);
             });
          });
-         describe('.getData()',function(){
+         describe('.getRawData()',function(){
             it('should return a model data',function(){
-               assert.deepEqual(modelData,model.getData());
+               assert.deepEqual(modelData, model.getRawData());
             });
          });
          describe('.set()',function(){
@@ -110,13 +110,13 @@ define([
                assert.strictEqual(newModel.getId(),modelData['id']);
             });
          });
-         describe('.setData()',function(){
+         describe('.setRawData()',function(){
             it('should set data',function(){
                var newModel = new Model({
                   idProperty: 'id',
                   data: {}
                });
-               newModel.setData(modelData);
+               newModel.setRawData(modelData);
                assert.strictEqual(newModel.getId(),modelData['id']);
             });
          });
