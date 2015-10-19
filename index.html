@@ -121,6 +121,9 @@
                <li>
                   <div id="Suggest"></div>
                </li>
+               <li>
+                  <div id="Browser"></div>
+               </li>
             </ul>
          </td>
          <td>
@@ -340,6 +343,14 @@
                element: "Suggest",
                caption: 'Suggest',
                href: '/pages/Suggest.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "Browser",
+               caption: 'Browser',
+               href: '/pages/browser.html'
             })
          });
       })
