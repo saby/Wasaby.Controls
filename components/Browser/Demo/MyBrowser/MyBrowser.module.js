@@ -1,7 +1,7 @@
-define('js!SBIS3.CONTROLS.Demo.MyRegistryBase', [
-   'html!SBIS3.CONTROLS.Demo.MyRegistryBase',
+define('js!SBIS3.CONTROLS.Demo.MyBrowser', [
+   'html!SBIS3.CONTROLS.Demo.MyBrowser',
    'js!SBIS3.CORE.CompoundControl',
-   'js!SBIS3.CONTROLS.RegistryBase',
+   'js!SBIS3.CONTROLS.Browser',
    'js!SBIS3.CONTROLS.TreeDataGridView',
    'js!SBIS3.CONTROLS.SearchForm',
    'js!SBIS3.CONTROLS.BreadCrumbs',
@@ -12,12 +12,12 @@ define('js!SBIS3.CONTROLS.Demo.MyRegistryBase', [
    /**
     * Базовый класс для реестра
     *
-    * @class SBIS3.CONTROLS.RegistryBase
+    * @class SBIS3.CONTROLS.MyBrowser
     * @extends $ws.proto.CompoundControl
     * @public
     */
 
-   var RegistryBase = CompoundControl.extend( /** @lends SBIS3.CONTROLS.RegistryBase.prototype */{
+   var MyBrowser = CompoundControl.extend( /** @lends SBIS3.CONTROLS.MyBrowser.prototype */{
       _dotTplFn : dot,
       $protected: {
          _options: {
@@ -31,5 +31,5 @@ define('js!SBIS3.CONTROLS.Demo.MyRegistryBase', [
 
    });
 
-   return RegistryBase;
+   return MyBrowser;
 });

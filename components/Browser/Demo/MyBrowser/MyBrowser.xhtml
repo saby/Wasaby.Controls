@@ -1,11 +1,11 @@
 <div>
-   <component data-component="SBIS3.CONTROLS.Registry">
+   <component data-component="SBIS3.CONTROLS.Browser">
       <option name="searchParam" value="title"></option>
-      <option name="searchConfig">
-         <option name="placeholder">Текст для поиска</option>
-      </option>
       <option name="content">
-         <component data-component="SBIS3.CONTROLS.TreeDataGridView" name="registryView" class="controls-Registry__view">
+         <component data-component="SBIS3.CONTROLS.SearchForm" name="browserSearch"></component>
+         <component data-component="SBIS3.CONTROLS.BreadCrumbs" name="browserBreadCrumbs"></component>
+         <component data-component="SBIS3.CONTROLS.BackButton" name="browserBackButton"></component>
+         <component data-component="SBIS3.CONTROLS.TreeDataGridView" name="browserView">
             <option name="keyField" value="id"></option>
             <option name="hierField" value="parent"></option>
             <option name="displayField" value="title"></option>
@@ -47,10 +47,11 @@
                   <option name="parent" value="3"></option>
                   <option name="parent@" value="null" type="null"></option>
                </options>
+
             </options>
             <options name="columns" type="Array">
                <options>
-                  <option name="title" value=""></option>
+                  <option name="title" value="fg"></option>
                   <option name="field" value="id"></option>
                </options>
                <options>

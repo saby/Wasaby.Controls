@@ -1,6 +1,6 @@
-define('js!SBIS3.CONTROLS.RegistryBase', [
+define('js!SBIS3.CONTROLS.Browser', [
    'js!SBIS3.CORE.CompoundControl',
-   'html!SBIS3.CONTROLS.RegistryBase',
+   'html!SBIS3.CONTROLS.Browser',
    'js!SBIS3.CONTROLS.ComponentBinder'
 ], function(CompoundControl, dotTplFn, ComponentBinder){
    'use strict';
@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.RegistryBase', [
    /**
     * Базовый класс для реестра
     *
-    * @class SBIS3.CONTROLS.RegistryBase
+    * @class SBIS3.CONTROLS.Browser
     * @extends $ws.proto.CompoundControl
     * @public
     */
@@ -18,11 +18,11 @@ define('js!SBIS3.CONTROLS.RegistryBase', [
          return $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixinDS');
       }
       else {
-         throw new Error('Registry: Can\'t define linkedView');
+         throw new Error('Browser: Can\'t define linkedView');
       }
    };
 
-   var RegistryBase = CompoundControl.extend( /** @lends SBIS3.CONTROLS.RegistryBase.prototype */{
+   var Browser = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Browser.prototype */{
       _dotTplFn : dotTplFn,
       $protected: {
          _view: null,
@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.RegistryBase', [
             /**
              * @cfg {Content} Содержимое реестра
              */
-            content: "",
+            content: '',
             /**
              * @cfg {String} Имя параметр фильтрации для поиска
              */
@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.RegistryBase', [
       },
 
       init: function() {
-         RegistryBase.superclass.init.apply(this, arguments);
+         Browser.superclass.init.apply(this, arguments);
          this._view = this._getView();
          this._hierMode = checkViewType(this._view);
 
@@ -104,25 +104,25 @@ define('js!SBIS3.CONTROLS.RegistryBase', [
       },
 
       _getView: function() {
-         return this._getLinkedControl('registryView');
+         return this._getLinkedControl('browserView');
       },
 
       _getSearchForm: function() {
-         return this._getLinkedControl('registrySearch');
+         return this._getLinkedControl('browserSearch');
       },
       _getBackButton: function() {
-         return this._getLinkedControl('registryBackButton');
+         return this._getLinkedControl('browserBackButton');
       },
       _getBreadCrumbs: function() {
-         return this._getLinkedControl('registryBreadCrumbs');
+         return this._getLinkedControl('browserBreadCrumbs');
       },
       _getOperationsPanel: function() {
-         return this._getLinkedControl('registryOperationsPanel');
+         return this._getLinkedControl('browserOperationsPanel');
       }
 
 
 
    });
 
-   return RegistryBase;
+   return Browser;
 });
