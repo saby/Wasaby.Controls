@@ -76,8 +76,6 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
          },
 
          setLinkedView: function (linkedView) {
-            var self = this;
-
             this._linkedView = linkedView;
             if (linkedView) {
                this._linkedView.setProperty('multiselect', this._options.multiselect);

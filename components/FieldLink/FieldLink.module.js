@@ -112,17 +112,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
       _drawSelectedItems: function(keysArr) {
          var result = new $ws.proto.Deferred(),
              self = this,
-             recordsKeysArr = $ws.helpers.map(this._selectedRecords, function(rec) {
-                                 return rec.getKey();
-                              }),
-             /* Если записи нет, то сформируем массив для вычитки нужных записей */
-             loadArr =  $ws.helpers.filter(keysArr, function(key) {
-                           if(Array.indexOf(recordsKeysArr, key) === -1) {
-                              return true
-                           }
-                        }),
-             len = loadArr.length,
-             dMultiResult;
+             loadArr, len, dMultiResult;
+
+         function createLoadArray(records) {
+            var recordsKeysArray = $ws.helpers.map(records, function(rec) {
+                                       return rec.getKey();
+                                   });
+
+            return $ws.helpers.filter(keysArr, function(key) {
+                     if(Array.indexOf(recordsKeysArray, key) === -1) {
+                        return true;
+                     }
+                  });
+         }
 
          if (this._isPickerVisible() && !keysArr.length) {
             this.hidePicker();
@@ -133,6 +135,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
             /* Нужно поле делать невидимым, а не скрывать, чтобы можно было посчитать размеры */
             this._inputWrapper.toggleClass('ws-invisible', !keysArr.length)
          }
+
+
+         loadArr = createLoadArray(this._selectedRecords);
+         len = loadArr.length;
 
          if(keysArr.length) {
            /* Если есть записи, которые нужно вычитать - вычитываем */
