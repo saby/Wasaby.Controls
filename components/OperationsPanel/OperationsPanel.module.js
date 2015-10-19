@@ -116,12 +116,27 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       _drawItemsCallback: function() {
          this._itemsDrawn = true;
       },
+      /**
+       * Открыть панель массовых операций.
+       */
       open: function() {
          this._toggle(true);
       },
+      /**
+       * Закрыть панель массовых операций.
+       */
       close: function() {
          this._toggle(false);
       },
+      /**
+       * Получить состояние панели.
+       * @returns {Boolean} Состояние панели массовых операций.
+       * Возможные значения:
+       * <ol>
+       *    <li>true - панель открыта,</li>
+       *    <li>false - панель закрыта.</li>
+       * </ol>
+       */
       isOpen: function() {
          return !this._container.hasClass('ws-hidden');
       },
@@ -130,6 +145,9 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             this.toggle();
          }
       },
+      /**
+       * Поменять состояние панели на противоположное.
+       */
       toggle: function() {
          var self = this,
             isOpen = this.isOpen();
@@ -147,6 +165,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                }
             });
       },
+      /**
+       * Установить видимость блока с операциями отметки.
+       * @param visible
+       */
       setVisibleMarkBlock: function(visible) {
          this._blocks.markOperations.toggleClass('ws-hidden', !visible);
       },
@@ -182,10 +204,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          OperationsPanel.superclass.setEnabled.apply(this, arguments);
          this._notify('onChangeEnabled');
       },
-       /**
-        *
-        * @returns {*}
-        */
+      /**
+       * Получить инстансы всех элементов панели массовых операций.
+       * @returns {Array}
+       */
       getItemInstance: function() {
          if (!this._itemsDrawn) {
             this._drawItems();
@@ -193,9 +215,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          return OperationsPanel.superclass.getItemInstance.apply(this, arguments);
       },
        /**
-        * Получить состояние панели.
-        * Состояние панели информирует о режиме работы с записями связанного представления данных.
-        * @returns {Boolean} Состояние панели массовых операций.
+        * Получить режим работы панели.
+        * Режим работы панели информирует о том над какими записями
+        * связанного представления данных будут выполняться операции.
+        * @returns {Boolean} Режим работы панели массовых операций.
         * Возможные значения:
         * <ol>
         *    <li>true - управление отмеченными записями,</li>

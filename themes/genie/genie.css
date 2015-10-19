@@ -2691,7 +2691,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   display: inline-block;
   font-size: 18px;
-  line-height: 26px;
+  line-height: 24px;
   font-weight: 700;
 }
 .controls-BackButton .controls-BackButton__caption {
@@ -2699,6 +2699,7 @@ input[type="reset"]::-moz-focus-inner {
   color: #313e78;
   overflow: hidden;
   vertical-align: top;
+  padding-left: 8px;
 }
 .controls-BackButton::before {
   width: 10px;
@@ -2706,7 +2707,7 @@ input[type="reset"]::-moz-focus-inner {
   font-family: 'TensorFont Regular', TensorFont;
   content: '\e003';
   float: left;
-  margin-left: 8px;
+  margin-left: 6px;
 }
 .controls-BackButton:hover .controls-BackButton__caption {
   text-decoration: none;
@@ -3152,38 +3153,58 @@ input[type="reset"]::-moz-focus-inner {
   display: none;
 }
 .controls-FloatArea.controls__filterButton__picker {
-  background: #f7f3f0;
-  border: 2px solid #e4e4e4;
-}
-.controls-FloatArea.controls__filterButton__picker .controls__filterButton__templatedArea {
-  margin: 0 16px 16px 16px;
-}
-.controls-FloatArea.controls__filterButton__picker .controls__filter-button__apply-filter,
-.controls-FloatArea.controls__filterButton__picker .controls__filter-button__clear-filter {
-  float: right;
-}
-.controls-FloatArea.controls__filterButton__picker .controls__filter-button__apply-filter {
-  margin-right: 8px;
-}
-.controls-FloatArea.controls__filterButton__picker .controls__filter-button__clear-filter {
-  padding: 2px 8px 0 0;
+  background: #f9f9f9;
+  border-color: #d1d1d1;
+  border-style: solid;
+  border-width: 1px 3px 3px 3px;
+  -webkit-border-radius: 0 0 4px 4px;
+  -moz-border-radius: 0 0 4px 4px;
+  border-radius: 0 0 4px 4px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
 }
 .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton {
-  background: transparent url('img/filterButton.png') no-repeat -30px 0;
-  margin-top: 8px;
-  width: 30px;
+  background: url('img/areaCloseButton.png') -30px 0;
+  top: 12px;
+  width: 36px;
   height: 24px;
+  position: absolute;
+  right: 0;
   cursor: pointer;
 }
 .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton:hover {
-  background-position: -30px -24px;
+  background: url('img/areaCloseButton.png') -30px -24px;
 }
 .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton:active {
-  background-position: -30px -48px;
+  background: url('img/areaCloseButton.png') -30px -24px;
 }
-.controls-FloatArea.controls__filterButton__picker .controls__filterButton__header {
-  margin: 8px 30px 0 0;
-  height: 40px;
+.controls-FloatArea.controls__filterButton__picker .controls__filterButton__area-header {
+  padding: 12px 44px 12px 12px;
+  height: 24px;
+  min-width: 270px;
+  border-bottom: 1px solid #d1d1d1;
+}
+.controls-FloatArea.controls__filterButton__picker .controls__filterButton__area-header .controls__filterButton__area-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #313e78;
+  line-height: 20px;
+  overflow: hidden;
+  margin: 0 12px 0 0;
+}
+.controls-FloatArea.controls__filterButton__picker .controls__filterButton__area-header .controls__filterButton__area-text,
+.controls-FloatArea.controls__filterButton__picker .controls__filterButton__area-header .controls__filter-button__clear-filter {
+  float: left;
+}
+.controls-FloatArea.controls__filterButton__picker .controls__filterButton__area-header .controls__filter-button__apply-filter {
+  float: right;
+}
+.controls-FloatArea.controls__filterButton__picker .controls__filterButton__area-header .controls__filter-button__clear-filter {
+  margin: 3px 0 0 0;
+}
+.controls-FloatArea .controls__filterButton__area-content {
+  padding: 12px 12px 10px 12px;
 }
 .controls__filterButton {
   height: 40px;
@@ -3226,18 +3247,18 @@ input[type="reset"]::-moz-focus-inner {
   vertical-align: sub;
 }
 .controls__filterButton .controls__filterButton-button {
-  width: 30px;
+  width: 24px;
   height: 24px;
-  margin: 8px 0;
-  background: transparent url('img/filterButton.png') no-repeat;
+  margin: 8px 8px 8px 0;
+  background: transparent url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAAAYCAMAAAEZunsUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAUdQTFRFAAAA////WHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3Az/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3Az/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzMWHqwzMzM/3AzWHqw/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3Az/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzMWHqwzMzM/3AzWHqwzMzM/3Az+dKQlQAAAGp0Uk5TAAABAQEDAwMGBgYKCgoPEBAQEREREhISGRkZHyQkJC4uLjY2Njw8PEhMTExaWlppaWlwcHB9fX2NjY2goKKioqysr6+vsLCwwcHBzc3N2dnZ3d/f3+Li4uTs7Ozy8vL5+fn6+vr8/P39/UNA/EMAAAIYSURBVDjLxZNZTxQBEIS/UpFTdxE5PQAVEOT0ADxRkftUBOQWb7r7/z/7MLPMYNa4JiZ25qFT+boyU5VBZoqQOyJ9UAGBimBmEeHuGE+DKecFGSgzM1NERMjd3RGmI0ToGOH6CKJwDQSXQRSbSA+liAjJ3V1lpU7Yl7rhUOqCA6EeJpH6eILUy2OEMEMiAgn330gVDJKlq0mKdA9Jnu4upGarB5ZWkdQalxAr60hq8QZgeQ0hwaOvMkASTJwoSvv4DzmkUMEyiMigoucgblkG3YlTiNueQlYaJREmlSRBuru7Ko2gIqc/xyT0fB+ATpM0dQhAd0h6dgBAl0uI1SWg3polsb6CuBStklhbBhq8RUJwNCmsJ/nq4yci+pL942PhvSQQpu+PsixPJkq769s4GWSFXOCNGeTFv4Re5qBXOWg6B/Eug3ifQWyUIGWZ58PP558vIt9FrpTK+q3wN/h3b2TWT276M6N7ef1uZjSQ1wdOjWrmbbOtJLdt2nxNclC3GNsdJb1jOxbrEr12wbfaS3r7li/UpkZwfcdmqpComrGd66TBwc29mKtGonou9m5m+o1dn72IxMVZ372RFJiWOGg2Io2YDUJ2AMMRY9JYxPBZfch9VBp1H0r1khEFM8mswNkDLkRIEY2/6kV3yb1IpUb8N6Nz9z/Zh3JGD7/E2zJG5x989o1yRsCV1+WM4OqbMkZA03TO6CfSsMjJweTlCwAAAABJRU5ErkJggg==") no-repeat;
   display: inline-block;
   cursor: pointer;
 }
 .controls__filterButton .controls__filterButton-button:hover {
-  background-position: 0 -24px;
+  background-position: -24px 0;
 }
 .controls__filterButton .controls__filterButton-button:active {
-  background-position: 0 -48px;
+  background-position: -24px 0;
 }
 .controls-HtmlDecorators-highlight {
   background-color: #fffece;

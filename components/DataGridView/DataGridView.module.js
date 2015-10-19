@@ -71,7 +71,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {String} headTemplate Шаблон отображения шапки колонки
              * @property {String} headTooltip Всплывающая подсказка шапки колонки
              * @property {String} cellTemplate Шаблон отображения ячейки
-             * @property {<String,String>} option templateBinding соответствие опций шаблона полям в рекорде
+             * @property {<String,String>} templateBinding соответствие опций шаблона полям в рекорде
+             * @property {<String,String>} includedTemplates подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне ячейки
              */
             /**
              * @cfg {Columns[]} Набор колонок
@@ -134,7 +135,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (this._options.multiselect) {
             tr += '<td class="controls-DataGridView__td"></td>';
          }
-         for (var i in this._options.columns) {
+         for (var i = 0; i < this._options.columns.length; i++) {
             tr += '<td class="controls-DataGridView__td"></td>';
          }
          tr += '</tr>';
@@ -177,10 +178,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       setDataSource: function(ds) {
          DataGridView.superclass.setDataSource.apply(this, arguments);
-         if (this._options.editInPlace.enabled && this._editInPlace) {
-            this._editInPlace.destroy();
-            this._editInPlace = null;
-         }
       },
       _createEditInPlace: function() {
          this._editInPlace = new EditInPlaceController({
@@ -251,6 +248,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   };
                   if (column.templateBinding) {
                      tplOptions.templateBinding = column.templateBinding;
+                  }
+                  if (column.includedTemplates) {
+                     var tpls = column.includedTemplates;
+                     tplOptions.included = {};
+                     for (var j in tpls) {
+                        if (tpls.hasOwnProperty(j)) {
+                           tplOptions.included[j] = require(tpls[j]);
+                        }
+                     }
                   }
                   value = MarkupTransformer((cellTpl)(tplOptions));
                } else {
@@ -651,16 +657,22 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
 
+      _dataLoadedCallback: function() {
+         // Пересоздаем EditInPlace, если оно используется
+         if (this._options.editInPlace.enabled) {
+            this._initEditInPlace();
+         }
+         DataGridView.superclass._dataLoadedCallback.apply(this, arguments);
+      },
+
       reload: function() {
+         // Если используется редактирование по месту, то уничтожаем его
          if (this._editInPlace) {
             if (this._editInPlace.isEditing()) {
                this._editInPlace.finishEditing();
             }
-            //todo избавиться от этого кода, добавлено как решение для выпуска 3.7.2.200
-            //Если используется редактирование по месту, то пересоздаем его
             this._editInPlace.destroy();
             this._editInPlace = null;
-            this._initEditInPlace();
          }
          return DataGridView.superclass.reload.apply(this, arguments);
       },

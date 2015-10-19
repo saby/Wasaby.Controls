@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
              item, extraText, itemId;
          //view.deleteRecords(records);
          extraText =  this._isSelectedState() ? ' отмеченных ' : ' ';
-         while (item = items.getNextItem(itemId)) {
+         while ((item = items.getNextItem(itemId))) {
             itemId = item.id;
             //Меняем текст только у платформенных пунктов меню
             if (this._controlsId[itemId]) {
