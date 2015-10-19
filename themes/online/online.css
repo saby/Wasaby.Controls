@@ -3334,23 +3334,6 @@ input[type="reset"]::-moz-focus-inner {
 .controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item.controls-CustomFilterMenu__item__selected {
   display: none;
 }
-.controls-Registry__search {
-  margin: 8px 0 0 8px;
-  width: 335px;
-}
-.controls-Registry__filterButton {
-  float: right;
-}
-.controls-Registry__breadCrumbs {
-  margin: 8px 0 0 8px;
-}
-.controls-Registry__backButton {
-  position: relative;
-  z-index: 2;
-}
-.controls-Registry__view {
-  margin-top: -25px;
-}
 .controls-HtmlDecorators-highlight {
   background-color: #fffece;
 }
