@@ -36,6 +36,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          _options: {
             afterFieldWrapper: afterFieldWrapper,
             beforeFieldWrapper: beforeFieldWrapper,
+            selectMode: 'Dialog',
             list: {
                className: 'js!SBIS3.CONTROLS.DataGridView',
                options: {
@@ -171,11 +172,20 @@ define('js!SBIS3.CONTROLS.FieldLink',
       },
 
       _drawSelectedItems: function(keysArr, recordsArr) {
-         var len  = keysArr.length,
-             result = new $ws.proto.Deferred(),
+         var result = new $ws.proto.Deferred(),
              self = this,
-             dMultiResult, recordsForDraw;
-
+             /* Преобразую массив записей в массив ключей */
+             recordsKeysArr = $ws.helpers.map(recordsArr, function(rec) {
+                return rec.getKey();
+             }),
+             /* Если записи нет, то сформируем массив для вычитки нужных записей */
+             loadArr =  $ws.helpers.filter(keysArr, function(key) {
+                if(Array.indexOf(recordsKeysArr, key) === -1) {
+                   return true
+                }
+             }),
+             len = loadArr.length,
+             dMultiResult;
 
          if (this._isPickerVisible() && !len) {
             this.hidePicker();
@@ -186,41 +196,50 @@ define('js!SBIS3.CONTROLS.FieldLink',
             this._toggleInputWrapper(!len);
          }
 
-         /* Создадим массив записей для отрисовки */
-         if(!recordsArr.length) {
-            /* Если есть выделенные записи */
-            if (len) {
-               /* Если выделенных записей больше чем одна, то запросим записи через ParallelDeferred */
+         if(keysArr.length) {
+           /* Если есть записи, которые нужно вычитать - вычитываем */
+            if(len) {
+               /* Если больше одной, то вычитаем используя ParallelDeferred */
                if (len > 1) {
                   dMultiResult = new $ws.proto.ParallelDeferred({stopOnFirstError: false});
-                  recordsForDraw = [];
 
                   for (var i = 0; len > i; i++) {
-                     dMultiResult.push(this._dataSource.read(keysArr[i]).addCallback(function (record) {
-                        recordsForDraw.push(record);
+                     dMultiResult.push(this._dataSource.read(loadArr[i]).addCallback(function (record) {
+                        self._selectedRecords.push(record);
                      }));
                   }
 
                   dMultiResult.done().getResult().addCallback(function() {
-                     result.callback(recordsForDraw);
+                     result.callback();
                   });
                } else {
-                  /* Если выделенная запись одна, то просто прочитаем с бл */
-                  this._dataSource.read(keysArr[0]).addCallback(function(record) {
-                     result.callback([record]);
+                  /* Если выделенная запись одна, то просто вычитаем её */
+                  this._dataSource.read(loadArr[0]).addCallback(function(record) {
+                     self._selectedRecords.push(record);
+                     result.callback();
                   })
                }
 
-               result.addCallback(function(records) {
-                  self._setLinkCollectionData(records);
+               result.addCallback(function() {
+                  self._setLinkCollectionData(self._selectedRecords);
                })
             } else {
-               this._setLinkCollectionData([]);
+               /* Если пришли рекорды и ничего вычитывать не надо, то просто отрисуем их */
+               this._setLinkCollectionData(recordsArr);
             }
          } else {
-            /* Если нам пришли готовые record'ы то просто отрисуем их */
-            this._setLinkCollectionData(recordsArr);
+            this._setLinkCollectionData([]);
          }
+      },
+
+      _setSelectedRecords: function() {
+         var self = this;
+
+         $ws.helpers.forEach(this._selectedRecords, function(rec, index) {
+            if(Array.indexOf(self._options.selectedKeys, rec.getKey()) === -1) {
+               self._selectedRecords.splice(index, 1);
+            }
+         });
       },
 
       /**
@@ -276,9 +295,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
       },
 
       _setPickerContent: function () {
-         FieldLink.superclass._setPickerContent.apply(this, arguments);
-
          this._pickerLinkList = $('<div class="controls-FieldLink__picker-list"/>').appendTo(this._picker.getContainer().css('maxWidth', this._container[0].offsetWidth));
+         FieldLink.superclass._setPickerContent.apply(this, arguments);
       },
 
       /**
@@ -339,7 +357,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          this._setInputWidth(this._container[0].offsetWidth - this._getWrappersWidth() - INPUT_WRAPPER_PADDING);
       },
 
-      /* Заглушка, так как самое поле связи не занимается отрисовкой */
+      /* Заглушка, само поле связи не занимается отрисовкой */
       _redraw: nop,
 
 
