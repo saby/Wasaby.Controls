@@ -9,6 +9,7 @@ define([
       'use strict';
 
       var existsId = 5,
+         existsId2 = 6,
          notExistsId = 33,
          data,
          service;
@@ -296,9 +297,61 @@ define([
             });
          });
 
+         describe('.merge()', function () {
+            context('when the model isn\'t exists', function () {
+               it('should return an error', function (done) {
+                  service.merge(notExistsId, existsId).addBoth(function (err) {
+                     if (err instanceof Error) {
+                        done();
+                     } else {
+                        done(new Error('That\'s no Error'));
+                     }
+                  });
+               });
+
+               it('should return an error', function (done) {
+                  service.merge(existsId, notExistsId).addBoth(function (err) {
+                     if (err instanceof Error) {
+                        done();
+                     } else {
+                        done(new Error('That\'s no Error'));
+                     }
+                  });
+               });
+            });
+
+            it('should merge models', function (done) {
+               service.merge(existsId, existsId2).addCallbacks(function () {
+                  service.read(existsId).addCallbacks(function () {
+                     service.read(existsId2).addCallbacks(function(){
+                        done(new Error('Exists extention model.'));
+                     },function(){
+                        done();
+                     });
+                  }, function (err) {
+                     done(err);
+                  });
+               }, function(err){
+                  done(err);
+               });
+            });
+         });
+         describe('.copy()', function () {
+            it('should copy model', function (done) {
+               var oldLength = data.length;
+               service.copy(existsId).addCallbacks(function () {
+                  if(data.length !== oldLength) {
+                     done();
+                  } else {
+                     done(new Error("Model dosn't copied"));
+                  }
+               }, function(err){
+                  done(err);
+               });
+            });
+         });
          describe('.query()', function () {
             it('should return a valid dataset', function (done) {
-
                service.query(new Query()).addCallbacks(function (ds) {
                   try {
                      if (!(ds instanceof DataSet)) {

@@ -277,6 +277,26 @@ define(
             });
          });
 
+         describe('.merge()', function () {
+            it('should merge two records', function () {
+               adapterInstance.merge(data, 0, 1, 'Ид');
+               assert.strictEqual(
+                  'Петров',
+                  data.d[0][1]
+               );
+            });
+         });
+
+         describe('.copy()', function () {
+            it('should merge two records', function () {
+               adapterInstance.copy(data, 0);
+               assert.strictEqual(
+                  'Иванов',
+                  data.d[1][1]
+               );
+            });
+         });
+
          describe('.replace()', function () {
             it('should replace the record', function () {
                adapterInstance.replace(data, {d: [11]}, 0);

@@ -266,6 +266,17 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
             s: data.s
          } : undefined;
       },
+      merge: function(data, one, two){
+         $ws.core.merge(data.d[one], data.d[two]);
+         this.remove(data, two);
+      },
+
+      copy: function(data, index){
+         this._checkPosition(data, index);
+         var source = data.d[index],
+            clone = $ws.core.clone(source);
+         data.d.splice(index, 0, clone);
+      },
       remove: function (data, at) {
          this._checkData(data);
          this._checkPosition(data, at);

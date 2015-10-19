@@ -74,6 +74,26 @@ define('js!SBIS3.CONTROLS.Data.Adapter.ITable', [], function () {
        */
       getProperty: function (data, property) {
          throw new Error('Method must be implemented');
+      },
+      /**
+       * Объединяет две записи
+       * @param {*} data Сырые данные
+       * @param {Number} one Позиция записи в которую будет идти объединение
+       * @param {Number} two Позиция второй записи
+       * @param {String} idProperty  Название поля содержащего первичный ключ
+       * @returns {*}
+       */
+      merge: function(data, one, two, idProperty){
+         throw new Error('Method must be implemented');
+      },
+      /**
+       * Копирует запись по позиции
+       * @param {*} data Сырые данные
+       * @param {Number} index Позиция, которая будет скопирована
+       * @returns {*}
+       */
+      copy: function(data, index){
+         throw new Error('Method must be implemented');
       }
    };
 });
