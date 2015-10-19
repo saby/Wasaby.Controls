@@ -14,12 +14,12 @@ define(['js!SBIS3.CONTROLS.Data.Model',
                id:1
             },
             model = new Model({
-               idField:'id',
+               idProperty: 'id',
                data: modelData,
                adapter:adapter
             }),
             source = new MemorySource({
-               idField: 'id',
+               idProperty: 'id',
                data: [
                   {'id':1,value: 'save'},
                   {'id':2,value: 'load'},
@@ -52,7 +52,7 @@ define(['js!SBIS3.CONTROLS.Data.Model',
          describe('.setAdapter()',function(){
             it('should set adapter',function(){
                var myModel = new Model({
-                  idField:'id',
+                  idProperty: 'id',
                   data: modelData
                });
                myModel.setAdapter(adapter);
@@ -64,7 +64,7 @@ define(['js!SBIS3.CONTROLS.Data.Model',
                assert.strictEqual(model.getId(),modelData['id']);
             });
 
-            it('should throw error for empty key field',function(){
+            it('should throw error for empty key property',function(){
                var newModel = new Model({
                   data: modelData
                });
@@ -82,9 +82,9 @@ define(['js!SBIS3.CONTROLS.Data.Model',
             });
 
          });
-         describe('.getIdField()',function(){
-            it('should return id field',function(){
-               assert.strictEqual(model.getIdField(),'id');
+         describe('.getIdProperty()',function(){
+            it('should return id property',function(){
+               assert.strictEqual(model.getIdProperty(),'id');
             });
          });
          describe('.getSource()',function(){
@@ -99,19 +99,19 @@ define(['js!SBIS3.CONTROLS.Data.Model',
                });
             });
          });
-         describe('.setIdField()',function(){
-            it('should set id field',function(){
+         describe('.setIdProperty()',function(){
+            it('should set id property',function(){
                var newModel = new Model({
                   data: modelData
                });
-               newModel.setIdField('id');
+               newModel.setIdProperty('id');
                assert.strictEqual(newModel.getId(),modelData['id']);
             });
          });
          describe('.setData()',function(){
             it('should set data',function(){
                var newModel = new Model({
-                  idField:'id',
+                  idProperty: 'id',
                   data: {}
                });
                newModel.setData(modelData);
@@ -121,7 +121,7 @@ define(['js!SBIS3.CONTROLS.Data.Model',
          describe('.merge()',function(){
             it('should merging models',function(){
                var newModel = new Model({
-                  idField:'id',
+                  idProperty: 'id',
                   data: {
                      'title':'new',
                      'link':'123'
@@ -133,7 +133,7 @@ define(['js!SBIS3.CONTROLS.Data.Model',
          });
          describe('.load()',function(){
             it('sould load data in source',function(done){
-               var modelSource = new Model({idField:'id',data:{'id':2}});
+               var modelSource = new Model({idProperty: 'id', data: {'id': 2}});
                modelSource.setSource(source);
                modelSource.load().addCallback(function(){
                   try {

@@ -18,8 +18,8 @@ define('js!SBIS3.CONTROLS.Data.IPropertyAccess', [], function () {
        * @example
        * <pre>
        *    user.subscribe('onPropertyChange', function(event, property){
-       *       if (property === 'sex'){
-       *          fsb.service.alert('Transgender detected! :)', event.getTarget());
+       *       if (property === 'gender'){
+       *          $ws.single.ioc.resolve('iFSB').alert('Transgender detected! :)', event.getTarget());
        *       }
        *    });
        * </pre>

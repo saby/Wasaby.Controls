@@ -37,17 +37,17 @@ define('js!SBIS3.CONTROLS.Data.Tree.LoadableTreeChildrenMixin', [
 
          load: function () {
             //FIXME: загрузка нескольких узлов сразу
-            var parentField = this._options.owner.getParentField();
-            if (parentField) {
-               var idField = this._options.source.getIdField(),
-                   idValue = idField && Utils.getItemPropertyValue(this._options.owner.getContents(), idField),
+            var parentProperty = this._options.owner.getParentProperty();
+            if (parentProperty) {
+               var idProperty = this._options.source.getIdProperty(),
+                   idValue = idProperty && Utils.getItemPropertyValue(this._options.owner.getContents(), idProperty),
                    where = this.getQuery().getWhere();
                if (idValue === undefined && this._options.owner.isRoot()) {
                    idValue = this._options.owner.getRootNodeId();
                }
 
                if (idValue !== undefined) {
-                   where[parentField] = idValue;
+                   where[parentProperty] = idValue;
                    this.getQuery().where(where);
                }
             }
@@ -62,16 +62,16 @@ define('js!SBIS3.CONTROLS.Data.Tree.LoadableTreeChildrenMixin', [
                if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Collection.ICollectionItem')) {
                   item =  item.getContents();
                }
-               var nodeField = this._options.owner.getNodeField(),
-                  isNode = nodeField && Utils.getItemPropertyValue(item, nodeField) || false;
+               var nodeProperty = this._options.owner.getNodeProperty(),
+                  isNode = nodeProperty && Utils.getItemPropertyValue(item, nodeProperty) || false;
                item = $ws.single.ioc.resolve(this._itemModule, {
                   owner: this,
                   contents: item,
                   parent: this._options.owner,
                   node: isNode,
                   source: this._options.source,
-                  parentField: this._options.owner.getParentField(),
-                  nodeField: nodeField
+                  parentProperty: this._options.owner.getParentProperty(),
+                  nodeProperty: nodeProperty
                });
             }
             return parentFnc.call(this, item);

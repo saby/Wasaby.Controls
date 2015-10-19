@@ -59,7 +59,7 @@ define([
 
          service = new MemorySource({
             data: data,
-            idField: 'Ид'
+            idProperty: 'Ид'
          });
       });
 
@@ -221,7 +221,7 @@ define([
                it('should create the model by 2nd way', function (done) {
                   var oldLength = data.length,
                      model = new Model({
-                        idField: 'Ид'
+                        idProperty: 'Ид'
                      });
 
                   model.set('Фамилия', 'Овечкин');

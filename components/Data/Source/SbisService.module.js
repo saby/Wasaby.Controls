@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
     * <pre>
     *     var dataSource = new SbisService({
     *         resource: 'СообщениеОтКлиента',
-    *         idField: '@СообщениеОтКлиента',
+    *         idProperty: '@СообщениеОтКлиента',
     *         queryMethodName: 'СписокОбщий',
     *         formatForRead: 'СообщениеОтКлиента.Список'
     *         readMethodName: 'Прочитать'
@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             /**
              * @cfg {String} Поле модели, содержащее первичный ключ
              */
-            idField: 'Ид',
+            idProperty: 'Ид',
 
             /**
              * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию SBIS3.CONTROLS.Data.Adapter.Sbis
@@ -153,7 +153,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             }
          ).addCallbacks((function (key) {
             if (!model.isStored()) {
-               model.set(this._options.idField, key);
+               model.set(this._options.idProperty, key);
             }
             model.setStored(true);
             return key;

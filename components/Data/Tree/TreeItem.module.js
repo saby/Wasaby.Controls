@@ -20,9 +20,9 @@ define('js!SBIS3.CONTROLS.Data.Tree.TreeItem', [
       $protected: {
          _options: {
             /**
-             * @cfg {String} Название поля, содержащее дочерние элементы узла. Используется для анализа элементов {@link children} на предемет наличия дочерних элементов.
+             * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется для анализа элементов {@link children} на предемет наличия дочерних элементов.
              */
-            childrenField: ''
+            childrenProperty: ''
          },
 
          /**
@@ -123,11 +123,11 @@ define('js!SBIS3.CONTROLS.Data.Tree.TreeItem', [
       //region Public methods
 
       /**
-       * Возвращает название поля, содержащее дочерние элементы узла
+       * Возвращает название свойства, содержащего дочерние элементы узла
        * @returns {String}
        */
-      getChildrenField: function () {
-         return this._options.childrenField;
+      getChildrenProperty: function () {
+         return this._options.childrenProperty;
       },
 
       /**

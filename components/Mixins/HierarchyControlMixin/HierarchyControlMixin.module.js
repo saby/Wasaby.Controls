@@ -25,17 +25,17 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
              */
 
             /**
-             * @cfg {String} Название поля, содержащее идентификатор родительского узла. Используется только в случае, если указан {@link dataSource}.
+             * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Используется только в случае, если указан {@link dataSource}.
              * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Tree.LoadableTree}
              *
              */
-            parentField: '',
+            parentProperty: '',
 
             /**
-             * @cfg {String} Название свойства, содержащее признак узла. Используется только в случае, если указан {@link dataSource}.
+             * @cfg {String} Название свойства, содержащего признак узла. Используется только в случае, если указан {@link dataSource}.
              * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Tree.LoadableTree}
              */
-            nodeField: '',
+            nodeProperty: '',
 
             /**
              * @cfg {*} Идентификатор корневого узла, который будет отправлен в запросе на получение корневых записей
@@ -44,11 +44,10 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
             rootNodeId: undefined,
 
             /**
-             * @cfg {String} Название поля, содержащее дочерние элементы узла. Используется только в случае, если {@link items} является массивом, для поиска в каждом элементе-узле дочерних элементов.
+             * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется только в случае, если {@link items} является массивом, для поиска в каждом элементе-узле дочерних элементов.
              * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Tree.Tree}
-             *
              */
-            childrenField: '',
+            childrenProperty: '',
 
             /**
              * @cfg {String} Какие типы узлов выводим 'all'|'folders'|'records'. По умолчанию 'all'
@@ -149,8 +148,8 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
       _convertDataSourceToItems: function (source) {
          return new LoadableTree({
             source: source,
-            parentField: this._options.parentField,
-            nodeField: this._options.nodeField,
+            parentProperty: this._options.parentProperty,
+            nodeProperty: this._options.nodeProperty,
             rootNodeId: this._options.rootNodeId
          });
       },
@@ -159,7 +158,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
          if (items instanceof Array) {
             items = new Tree({
                children: items,
-               childrenField: this._options.childrenField
+               childrenProperty: this._options.childrenProperty
             });
          }
 

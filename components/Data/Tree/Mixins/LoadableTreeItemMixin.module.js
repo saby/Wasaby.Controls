@@ -19,14 +19,14 @@ define('js!SBIS3.CONTROLS.Data.Tree.LoadableTreeItemMixin', [
              */
 
             /**
-             * @cfg {String} Название поля, содержащее идентификатор родительского узла
+             * @cfg {String} Название свойства, содержащего идентификатор родительского узла
              */
-            parentField: '',
+            parentProperty: '',
 
             /**
-             * @cfg {String} Название поля, содержащее признак узла
+             * @cfg {String} Название свойства, содержащего признак узла
              */
-            nodeField: ''
+            nodeProperty: ''
          },
 
          _childrenModule: 'SBIS3.CONTROLS.Data.Tree.LoadableTreeChildren',
@@ -132,35 +132,35 @@ define('js!SBIS3.CONTROLS.Data.Tree.LoadableTreeItemMixin', [
       //region Public methods
 
       /**
-       * Возвращает название поля, содержащее идентификатор родительского узла
+       * Возвращает название свойства, содержащего идентификатор родительского узла
        * @returns {String}
        */
-      getParentField: function () {
-         return this._options.parentField;
+      getParentProperty: function () {
+         return this._options.parentProperty;
       },
 
       /**
-       * Устанавливает название поля, содержащее идентификатор родительского узла
-       * @param {String} name Название поля
+       * Устанавливает название свойства, содержащего идентификатор родительского узла
+       * @param {String} name Название свойства
        */
-      setParentField: function (name) {
-         this._options.parentField = name;
+      setParentProperty: function (name) {
+         this._options.parentProperty = name;
       },
 
       /**
-       * Возвращает название поля, содержащее признак узла
+       * Возвращает название свойства, содержащего признак узла
        * @returns {String}
        */
-      getNodeField: function () {
-         return this._options.nodeField;
+      getNodeProperty: function () {
+         return this._options.nodeProperty;
       },
 
       /**
-       * Устанавливает название поля, содержащее признак узла
-       * @param {String} name Название поля
+       * Устанавливает название свойства, содержащего признак узла
+       * @param {String} name Название свойства
        */
-      setNodeField: function (name) {
-         this._options.nodeField = name;
+      setNodeProperty: function (name) {
+         this._options.nodeProperty = name;
       }
 
       //endregion Public methods

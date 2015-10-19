@@ -137,10 +137,10 @@ define('js!SBIS3.CONTROLS.Data.Tree.TreeChildren', [
             item =  item.getContents();
          }
          var children,
-            childrenField = this._options.owner.getChildrenField(),
+            childrenProperty = this._options.owner.getChildrenProperty(),
             node = false;
-         if (childrenField) {
-            children = Utils.getItemPropertyValue(item, childrenField);
+         if (childrenProperty) {
+            children = Utils.getItemPropertyValue(item, childrenProperty);
             if (children) {
                node = true;
             }
@@ -152,7 +152,7 @@ define('js!SBIS3.CONTROLS.Data.Tree.TreeChildren', [
             parent: this._options.owner,
             node: node,
             children: children,
-            childrenField: childrenField
+            childrenProperty: childrenProperty
          });
       }
 

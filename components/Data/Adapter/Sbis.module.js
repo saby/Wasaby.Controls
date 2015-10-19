@@ -384,7 +384,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          this._checkData(data);
          var index = this._getFieldIndex(data, name);
          if (index < 0) {
-            throw new Error('Field is not defined');
+            throw new Error('Property is not defined');
          }
          var meta = data.s[index],
             type = this._getType(meta);

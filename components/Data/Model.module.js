@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             /**
              * @cfg {String} Поле, содержащее первичный ключ
              */
-            idField: ''
+            idProperty: ''
          },
 
          _hashPrefix: 'model-',
@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
       $constructor: function () {
          this.setData(this._options.data);
-         this._options.idField = this._options.idField || '';
+         this._options.idProperty = this._options.idProperty || '';
          this._initAdapter();
          this._publish('onPropertyChange');
       },
@@ -202,25 +202,25 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @returns {*}
        */
       getId: function () {
-         if (!this._options.idField) {
-            throw new Error('Key field is not defined');
+         if (!this._options.idProperty) {
+            throw new Error('Key property is not defined');
          }
-         return this.get(this._options.idField);
+         return this.get(this._options.idProperty);
       },
 
       /**
-       * Возвращает поле, в котором хранится первичный ключ модели
+       * Возвращает свойство, в котором хранится первичный ключ модели
        * @returns {String}
        */
-      getIdField: function () {
-         return this._options.idField;
+      getIdProperty: function () {
+         return this._options.idProperty;
       },
       /**
-       * Устанавливает поле, в котором хранится первичный ключ модели
-       * @param {String} idField Первичный ключ модели.
+       * Устанавливает свойство, в котором хранится первичный ключ модели
+       * @param {String} idProperty Первичный ключ модели.
        */
-      setIdField: function (idField) {
-         this._options.idField = idField;
+      setIdProperty: function (idProperty) {
+         this._options.idProperty = idProperty;
       },
       /**
        * Возвращает данные модели в "сыром" виде
@@ -348,7 +348,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       set: function (name, value) {
          if (!name) {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Model::set()', 'Field name is empty');
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Model::set()', 'Property name is empty');
          }
          if (this.get(name) !== value) {
             this.getAdapter().set(this._options.data, name, value);

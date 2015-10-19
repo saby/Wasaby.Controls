@@ -327,7 +327,7 @@ define(
          });
 
          describe('.get()', function () {
-            it('should return the field value', function () {
+            it('should return the property value', function () {
                assert.strictEqual(
                   1,
                   adapterInstance.get(data, 'Ид')
@@ -358,7 +358,7 @@ define(
          });
 
          describe('.set()', function () {
-            it('should set the field value', function () {
+            it('should set the property value', function () {
                adapterInstance.set(data, 'Ид', 20);
                assert.strictEqual(
                   20,

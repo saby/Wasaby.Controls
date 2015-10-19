@@ -333,7 +333,7 @@ define([
                                  {'n': 'Фамилия', 't': 'Строка'}
                               ]
                            },
-                           idField: 'Ид'
+                           idProperty: 'Ид'
                         });
 
                      service.update(model).addCallbacks(function (success) {
