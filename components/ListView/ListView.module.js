@@ -2,6 +2,19 @@
  * Created by iv.cheremushkin on 14.08.2014.
  */
 
+if (typeof window !== 'undefined') {
+   var eventsChannel = $ws.single.EventBus.channel('TouchesChannel');
+   $(document).bind('touchstart', function (e) {
+      eventsChannel.notify('onTouchstart', e);
+   });
+   $(document).bind('touchmove', function (e) {
+      eventsChannel.notify('onTouchmove', e);
+   });
+   $(document).bind('touchend', function (e) {
+      eventsChannel.notify('onTouchend', e);
+   });
+}
+
 define('js!SBIS3.CONTROLS.ListView',
    [
       'js!SBIS3.CORE.CompoundControl',
@@ -288,6 +301,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._drawEmptyData();
             ListView.superclass.init.call(this);
             this.reload();
+            this._initSwipeEvent();
          },
          _keyboardHover: function (e) {
             var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
@@ -537,6 +551,57 @@ define('js!SBIS3.CONTROLS.ListView',
          //********************************//
          //   БЛОК ОПЕРАЦИЙ НАД ЗАПИСЬЮ    //
          //*******************************//
+         _initSwipeEvent: function() {
+            var channel = $ws.single.EventBus.channel('TouchesChannel');
+            var self = this;
+            channel.subscribe('onTouchstart', handleTouchStart);
+            channel.subscribe('onTouchmove', handleTouchMove);
+            channel.subscribe('onTouchend', handleTouchEnd);
+
+            var xDown = null;
+            var yDown = null;
+            var touched = false;
+
+            function handleTouchStart(event, e) {
+               e = e.originalEvent;
+               xDown = e.touches[0].clientX;
+               yDown = e.touches[0].clientY;
+            }
+
+            function handleTouchEnd() {
+               touched = false;
+            }
+
+            function handleTouchMove(event, e) {
+               e = e.originalEvent;
+               if (touched || !checkTarget(e)){
+                  return;
+               }
+               touched = true;
+               if (!xDown || !yDown) {
+                  return;
+               }
+
+               var xUp = e.touches[0].clientX;
+               var yUp = e.touches[0].clientY;
+
+               var xDiff = xDown - xUp;
+               var yDiff = yDown - yUp;
+
+               if (Math.abs(xDiff) > Math.abs(yDiff)) { /*most significant*/
+                  if (xDiff > 10) {
+                     console.log('swipe!');
+                  }
+               }
+
+               xDown = null;
+               yDown = null;
+            }
+
+            function checkTarget(e){
+               return !!self._container.find(e.target).length;
+            }
+         },
          /**
           * Показывает оперцаии над записью для элемента
           * @private
