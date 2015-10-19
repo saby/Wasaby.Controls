@@ -2,7 +2,6 @@ import os
 import os.path
 import subprocess
 import platform
-import sys
 
 def process_file(name):
    css_name = name[:-4] + "css"
@@ -15,7 +14,7 @@ def process_file(name):
       util = "lessc"
    subprocess.call([util, name, css_name])
 
-def main(): 
+def main():
    for root, dirs, files in os.walk(r'themes'):
       for dirname in dirs:
          fname = os.path.join(root, dirname, os.path.basename(dirname) + ".less")
@@ -23,5 +22,3 @@ def main():
             process_file(fname)
 if __name__ == "__main__":
    main()
-   sys.stdin.readlines()
-   
