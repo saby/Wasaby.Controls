@@ -195,6 +195,10 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
                if (!where.hasOwnProperty(filterField)) {
                   continue;
                }
+               //FIXME: избавиться от этого sbis-specified
+               if (filterField == 'Разворот' || filterField == 'ВидДерева') {
+                  continue;
+               }
                filterMatch = recordAdapter.get(item, filterField) == where[filterField];
                if (!filterMatch) {
                   break;

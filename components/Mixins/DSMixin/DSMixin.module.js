@@ -352,17 +352,19 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                .limit(limit)
                .orderBy(sorting);
 
-            return this._dataSource.query(query).addCallback(function(newDataSet) {
+            return this._dataSource.query(query).addCallback((function(newDataSet) {
+               var rawData = newDataSet.getRawData();
                return new DataSet({
-                  strategy: new SbisJSONStrategy(),
-                  data: newDataSet.getRawData(),
+                  strategy: $ws.helpers.instanceOfMixin(this._dataSource.getAdapter(), 'SBIS3.CONTROLS.Data.Adapter.Sbis') ? new SbisJSONStrategy() : new ArrayStrategy(),
+                  data: rawData && 'items' in rawData ? rawData.items : rawData,
                   meta: {
                      results: newDataSet.getProperty('r'),
-                     more: newDataSet.getProperty('n'),
+                     more: newDataSet.getTotal(),
                      path: newDataSet.getProperty('p')
-                  }
+                  },
+                  keyField: this._options.keyField
                });
-            });
+            }).bind(this));
          } else {
             return this._dataSource.query(filter, sorting, offset, limit);
          }
@@ -485,6 +487,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          else {
             items = [];
          }
+
          this._dataSource = new StaticSource({
             data: items,
             strategy: new ArrayStrategy(),
