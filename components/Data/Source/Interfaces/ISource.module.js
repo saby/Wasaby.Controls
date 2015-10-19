@@ -128,6 +128,24 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       },
 
       /**
+       * Удаляет модель из источника данных
+       * @param {String} key Первичный ключ модели
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
+       */
+      merge: function (from, to) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Удаляет модель из источника данных
+       * @param {String} key Первичный ключ модели
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
+       */
+      copy: function (key) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
        * Выполняет запрос на выборку
        * @param {SBIS3.CONTROLS.Data.Query.Query} query Запрос
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет SBIS3.CONTROLS.Data.Source.DataSet.

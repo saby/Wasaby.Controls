@@ -80,6 +80,14 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              */
             destroyMethodName: 'Удалить',
             /**
+             * @cfg {String} Имя метода, который будет вызываться для копирования записей. По умолчанию 'Копировать'.
+             */
+            copyMethodName: 'Копировать',
+            /**
+             * @cfg {String} Имя метода, который будет вызываться для объединения записей. По умолчанию 'Объединить'.
+             */
+            mergeMethodName: 'Объединить',
+            /**
              * @cfg {String} Имя метода, который будет использоваться для получения формата записи в методе прочитать. Метод должен быть декларативным.
              * @example
              * <pre>
@@ -118,7 +126,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                'Фильтр': {
                   'ВызовИзБраузера': true
                },
-               'ИмяМетода': null
+               'ИмяМетода': this._options.formatForRead
             })
          ).addCallbacks((function (data) {
             return this._getModelInstance(data);
@@ -174,6 +182,34 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::destroy()', error);
             return new Error('Cannot invoke destroy method');
          });
+      },
+
+      merge: function (first, second) {
+         return this._provider.callMethod(
+            this._options.mergeMethodName, {
+               'ИдО' : first,
+               'ИдОУд': second
+            }
+         ).addCallbacks(function (res) {
+               return res;
+            }, function (error) {
+               $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::merge()', error);
+               return new Error('Cannot invoke merge method');
+            });
+      },
+
+      copy: function (key) {
+         return this._provider.callMethod(
+            this._options.copyMethodName, {
+               'ИдО': key,
+               'ИмяМетода': this._options.formatForRead
+            }
+         ).addCallbacks(function (res) {
+               return res;
+            }, function (error) {
+               $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::copy()', error);
+               return new Error('Cannot invoke copy method');
+            });
       },
 
       query: function (query) {
@@ -297,6 +333,37 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          this._options.destroyMethodName = method;
       },
 
+      /**
+       * Возвращает имя метода, который используется для копирования записи
+       * @returns {String}
+       */
+      getCopyMethodName: function () {
+         return this._options.destroyMethodName;
+      },
+
+      /**
+       * Устанавливает имя метода, который используется для копирования записи
+       * @param {String} method
+       */
+      setCopyMethodName: function (method) {
+         this._options.destroyMethodName = method;
+      },
+
+      /**
+       * Возвращает имя метода, который используется для объединения записей
+       * @returns {String}
+       */
+      getMergeMethodName: function () {
+         return this._options.destroyMethodName;
+      },
+
+      /**
+       * Устанавливает имя метода, который используется для объединения записей
+       * @param {String} method
+       */
+      setMergeMethodName: function (method) {
+         this._options.destroyMethodName = method;
+      },
       //endregion Public methods
 
       //region Protected methods
