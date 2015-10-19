@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
       'js!SBIS3.CONTROLS.MenuIcon'
 
    ],
-   function(SuggestTextBox, DSMixin, FormWidgetMixin, MultiSelectable, FieldLinkItemsCollection, afterFieldWrapper) {
+   function(SuggestTextBox, DSMixin, FormWidgetMixin, MultiSelectable, FieldLinkItemsCollection, afterFieldWrapper, beforeFieldWrapper) {
 
       'use strict';
 
@@ -109,10 +109,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
          FieldLink.superclass.setDataSource.apply(this, arguments);
       },
 
-      _drawSelectedItems: function(keysArr, recordsArr) {
+      _drawSelectedItems: function(keysArr) {
          var result = new $ws.proto.Deferred(),
              self = this,
-             recordsKeysArr = $ws.helpers.map(recordsArr, function(rec) {
+             recordsKeysArr = $ws.helpers.map(this._selectedRecords, function(rec) {
                                  return rec.getKey();
                               }),
              /* Если записи нет, то сформируем массив для вычитки нужных записей */
@@ -130,7 +130,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
          }
 
          if(!this._options.multiselect) {
-            this._toggleInputWrapper(!keysArr.length);
+            /* Нужно поле делать невидимым, а не скрывать, чтобы можно было посчитать размеры */
+            this._inputWrapper.toggleClass('ws-invisible', !keysArr.length)
          }
 
          if(keysArr.length) {
@@ -161,8 +162,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                   self._setLinkCollectionData(self._selectedRecords);
                })
             } else {
-               /* Если пришли рекорды и ничего вычитывать не надо, то просто отрисуем их */
-               this._setLinkCollectionData(recordsArr);
+               /* Если ничего вычитывать не надо, то просто отрисуем записи */
+               this._setLinkCollectionData(this._selectedRecords);
             }
          } else {
             this._setLinkCollectionData([]);
@@ -186,8 +187,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
          });
       },
 
-      // <editor-fold desc="LinkCollectionBlock">
-
       /**
        * Занимается перемещением контрола из пикера в поле и обратно.
        * @param toPicker
@@ -206,7 +205,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             keyField: this._options.keyField,
             handlers: {
                onDrawItems: function() {
-                  self._updateInputWidth();
+                  self._setInputWidth(self._container[0].offsetWidth - self._getWrappersWidth() - INPUT_WRAPPER_PADDING);
                },
                onDrawItem: function(e, item) {
                   var needDrawItem;
@@ -216,7 +215,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
                      return;
                   }
 
-                  needDrawItem = self._needDrawItem(item);
+                  /* Тут считается ширина добавляемого элемента, и если он не влезает,
+                     то отрисовываться он не будет и покажется троеточие */
+                  needDrawItem = $ws.helpers.getTextWidth(item) < self._container[0].offsetWidth - (self._getWrappersWidth() + SHOW_ALL_LINK_WIDTH + INPUT_MIN_WIDTH);
                   self._toggleShowAllLink(!needDrawItem);
                   e.setResult(needDrawItem);
                },
@@ -253,14 +254,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
          records.length ? this._linkCollection.setItems(convertToItemObject(records)) : this._linkCollection.setItems([]);
       },
 
-      // </editor-fold>
-
-      // <editor-fold desc="pickerMethods">
-
       _pickerStateHandler: function(open) {
-         this._toggleListContainer(!open);
+         this._listContainer && this._listContainer.toggleClass('ws-hidden', show);
+         this._pickerLinkList.toggleClass('ws-hidden', !open);
+         this._dropAllLink.toggleClass('ws-hidden', !open);
          this._moveLinkCollection(open);
-         this._toggleDropAllLink(open);
          this._linkCollection.reload();
       },
 
@@ -305,52 +303,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
          return this._picker && this._picker.isVisible();
       },
 
-      // </editor-fold>
-
-      // <editor-fold desc="containersState">
-
-      /**
-       * Скрывает/показывает контейнер автодополнения
-       * @param show
-       * @private
-       */
-      _toggleListContainer: function(show) {
-         this._pickerLinkList && this._pickerLinkList.toggleClass('ws-hidden', show);
-         this._listContainer && this._listContainer.toggleClass('ws-hidden', !show)
-      },
-
-      /**
-       * Скрывает/показывает поле ввода
-       */
-      _toggleInputWrapper: function(show) {
-         /* Нужно поле делать невидимым, а не скрывать, чтобы можно было посчитать размеры */
-         this._inputWrapper && this._inputWrapper.toggleClass('ws-invisible', !show)
-      },
-
       /**
        * Скрывает/показывает кнопку показа всех записей
        */
       _toggleShowAllLink: function(show) {
          this._showAllLink && this._showAllLink.toggleClass('ws-hidden', !show);
-      },
-
-      /**
-       * Скрывает/показывает кнопку очистки всех записей
-       */
-      _toggleDropAllLink: function(show) {
-         this._dropAllLink && this._dropAllLink.toggleClass('ws-hidden', !show);
-      },
-
-      // </editor-fold>
-
-      // <editor-fold desc="widthManipulation">
-      /**
-       * Тут считается ширина добавляемого элемента, и если он не влезает,
-       * то отрисовываться он не будет и покажется троеточие
-       * @private
-       */
-      _needDrawItem: function(item) {
-         return $ws.helpers.getTextWidth(item) < this._container[0].offsetWidth - (this._getWrappersWidth() + SHOW_ALL_LINK_WIDTH + INPUT_MIN_WIDTH);
       },
 
       /**
@@ -360,14 +317,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
        */
       _getWrappersWidth: function() {
          return this._container.find('.controls-TextBox__afterFieldWrapper')[0].offsetWidth + this._container.find('.controls-TextBox__beforeFieldWrapper')[0].offsetWidth;
-      },
-
-      /**
-       * Расчитывает ширину поля ввода
-       * @private
-       */
-      _updateInputWidth: function() {
-         this._setInputWidth(this._container[0].offsetWidth - this._getWrappersWidth() - INPUT_WRAPPER_PADDING);
       },
 
       /**
@@ -381,7 +330,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
             this._compatPlaceholder[0].style.width = width + 'px';
          }
       },
-      // </editor-fold
 
       /* Заглушка, само поле связи не занимается отрисовкой */
       _redraw: nop,
