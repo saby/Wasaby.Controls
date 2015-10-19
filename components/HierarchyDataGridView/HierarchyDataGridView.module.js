@@ -107,7 +107,13 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
          }
          key = record.getKey();
          curRecRoot = record.get(this._options.hierField);
-         if (curRecRoot[0] === this._lastParent){
+         //TODO для SBISServiceSource в ключе находится массив
+         var curRecRootValue = curRecRoot;
+         if (curRecRoot instanceof Array) {
+            curRecRootValue = curRecRoot[0];
+         }
+
+         if (curRecRootValue === this._lastParent){
             //Лист
             if (record.get(this._options.hierField + '@') !== true){
                //Нарисуем путь до листа, если пришли из папки
@@ -132,7 +138,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
             //Если текущий раздел у записи есть в lastPath, то возьмем все элементы до этого ключа
             kInd = -1;
             for (var k = 0; k < this._lastPath.length; k++) {
-               if (this._lastPath[k].getKey() === curRecRoot[0]){
+               if (this._lastPath[k].getKey() === curRecRootValue){
                   kInd = k;
                   break;
                }
@@ -151,7 +157,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
                drawItem = true;
                //this._drawItem(record);//delete
                this._lastDrawn = 'leaf';
-               this._lastParent = curRecRoot[0];
+               this._lastParent = curRecRootValue;
             } else {//папка
                this._lastDrawn = undefined;
                this._lastPath.push(record);
@@ -226,10 +232,14 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
       _createPathItemsDS: function(pathRecords){
          var dsItems = [];
          for (var i = 0; i < pathRecords.length; i++){
+            //TODO для SBISServiceSource в ключе находится массив
+            var
+               parentId = pathRecords[i].get(this._options.hierField),
+               parentIdValue = (parentId instanceof Array) ? parentId[0] : parentId;
             dsItems.push({
                id: pathRecords[i].getKey(),
                title: pathRecords[i].get(this._options.displayField),
-               parentId: pathRecords[i].get(this._options.hierField)[0],
+               parentId: parentIdValue,
                data: pathRecords[i]
             });
          }
