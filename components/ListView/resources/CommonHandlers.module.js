@@ -22,16 +22,9 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
                   self._dataSet.removeRecord(idArray);
                   self.removeItemsSelection(isArray ? idArray : [idArray]);
 
-                  //TODO: remove switch after migration to SBIS3.CONTROLS.Data.Source.ISource
-                  if ($ws.helpers.instanceOfMixin(self._dataSource, 'SBIS3.CONTROLS.Data.Source.ISource')) {
-                     return self._dataSet.saveChanges().addCallback(function () {
-                        reloadChanges();
-                     });
-                  } else {
-                     return self._dataSource.sync(self._dataSet).addCallback(function () {
-                        reloadChanges();
-                     });
-                  }
+                  return self._dataSet.saveChanges(self._dataSource).addCallback(function () {
+                     reloadChanges();
+                  });
                }
             });
          }

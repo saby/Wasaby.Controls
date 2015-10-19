@@ -529,23 +529,38 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return filterDataSet;
       },
 
-      saveChanges: function(added, changed, deleted) {
+      saveChanges: function(dataSource, added, changed, deleted) {
          //TODO: refactor after migration to SBIS3.CONTROLS.Data.Source.ISource
+         if (!$ws.helpers.instanceOfMixin(dataSource, 'SBIS3.CONTROLS.Data.Source.ISource')) {
+            return dataSource.sync(this);
+         }
+
          added = added === undefined ? true : added;
          changed = changed === undefined ? true : changed;
          deleted = deleted === undefined ? true : deleted;
 
          var syncCompleteDef = new $ws.proto.ParallelDeferred();
-         this._dataSet.each(function(model) {
-            if (added && !model.isStored() ||
+         this.each(function(model) {
+            var isModel = $ws.helpers.instanceOfModule(model, 'SBIS3.CONTROLS.Data.Model'),
+               isStored = isModel ? model.isStored() : model.isCreated();
+            if (added && !isStored ||
                changed && model.isChanged()
             ) {
-               syncCompleteDef.push(model.save());
+               if (isModel) {
+                  syncCompleteDef.push(model.save());
+               } else {
+                  syncCompleteDef.push(dataSource.update(model));
+               }
             }
             if (deleted && model.isDeleted()) {
-               syncCompleteDef.push(model.remove());
+               if (isModel) {
+                  syncCompleteDef.push(model.remove());
+               } else {
+                  syncCompleteDef.push(dataSource.destroy(model.getKey()));
+                  model.setDeleted(true);
+               }
             }
-         });
+         }, 'all');
 
          syncCompleteDef.done(true);
          return syncCompleteDef.getResult();
