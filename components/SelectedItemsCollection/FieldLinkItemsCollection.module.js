@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                /**
                 * Шаблон отображения элемента
                 */
-               itemTemplate: itemTpl,
+               itemTemplate: itemTpl
             }
          },
 
