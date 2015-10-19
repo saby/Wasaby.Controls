@@ -345,6 +345,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             return;
          }
 
+         //TODO: remove switch after migration to SBIS3.CONTROLS.Data.Source.ISource
          if ($ws.helpers.instanceOfMixin(this._dataSource, 'SBIS3.CONTROLS.Data.Source.ISource')) {
             var query = new Query();
             query.where(filter)

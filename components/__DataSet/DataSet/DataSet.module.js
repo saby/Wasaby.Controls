@@ -527,6 +527,28 @@ define('js!SBIS3.CONTROLS.DataSet', [
          });
 
          return filterDataSet;
+      },
+
+      saveChanges: function(added, changed, deleted) {
+         //TODO: refactor after migration to SBIS3.CONTROLS.Data.Source.ISource
+         added = added === undefined ? true : added;
+         changed = changed === undefined ? true : changed;
+         deleted = deleted === undefined ? true : deleted;
+
+         var syncCompleteDef = new $ws.proto.ParallelDeferred();
+         this._dataSet.each(function(model) {
+            if (added && !model.isStored() ||
+               changed && model.isChanged()
+            ) {
+               syncCompleteDef.push(model.save());
+            }
+            if (deleted && model.isDeleted()) {
+               syncCompleteDef.push(model.remove());
+            }
+         });
+
+         syncCompleteDef.done(true);
+         return syncCompleteDef.getResult();
       }
    });
 

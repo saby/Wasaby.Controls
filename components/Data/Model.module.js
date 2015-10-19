@@ -64,6 +64,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
           * @var {Boolean} Признак, что модель изменения модели не синхронизированы с харнилищем данных
           */
          _isChanged: false,
+
          /**
          * @var {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с записью
          */

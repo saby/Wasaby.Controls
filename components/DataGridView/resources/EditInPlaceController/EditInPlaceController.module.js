@@ -176,7 +176,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                            self._options.addInPlaceButton.show();
                         }.bind(self));
                      }
-                     self._options.dataSource.sync(self._options.dataSet);
+
+                     //TODO: remove switch after migration to SBIS3.CONTROLS.Data.Source.ISource
+                     if ($ws.helpers.instanceOfMixin(self._options.dataSource, 'SBIS3.CONTROLS.Data.Source.ISource')) {
+                        self._options.dataSet.saveChanges();
+                     } else {
+                        self._options.dataSource.sync(self._options.dataSet);
+                     }
                   },
                   removeAddInPlace = function() {
                      if (editingArea.addInPlace) {
