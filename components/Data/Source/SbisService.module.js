@@ -102,7 +102,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          this._options.adapter = cfg.adapter || new SbisAdapter();
          
          if ('service' in cfg && !cfg.resource) {
-            cfg.resource = cfg.service;
+            this._options.resource = cfg.resource = cfg.service;
          }
          this._provider = new SbisServiceBLO(typeof this._options.resource === 'string' ? {
             name: this._options.resource
@@ -178,7 +178,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       query: function (query) {
          var args = this._options.adapter.serialize({
-            'Фильтр': query.getWhere(),
+            'Фильтр': query.getWhere() ? query.getWhere() : null,
             'Сортировка': this._getSortingParams(query),
             'Навигация': this._getPagingParams(query)
          });

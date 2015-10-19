@@ -332,7 +332,7 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
             } else {
                processObject.call(this, selector);
             }
-         } else {
+         } else if (selector) {
             this._orderBy.push(new Order({
                selector: selector,
                order: order

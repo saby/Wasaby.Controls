@@ -356,7 +356,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             return this._dataSource.query(query).addCallback((function(newDataSet) {
                var rawData = newDataSet.getRawData();
                return new DataSet({
-                  strategy: $ws.helpers.instanceOfMixin(this._dataSource.getAdapter(), 'SBIS3.CONTROLS.Data.Adapter.Sbis') ? new SbisJSONStrategy() : new ArrayStrategy(),
+                  strategy: $ws.helpers.instanceOfModule(this._dataSource.getAdapter(), 'SBIS3.CONTROLS.Data.Adapter.Sbis') ?
+                     new SbisJSONStrategy() :
+                     new ArrayStrategy(),
                   data: rawData && 'items' in rawData ? rawData.items : rawData,
                   meta: {
                      results: newDataSet.getProperty('r'),
