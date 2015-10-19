@@ -1,7 +1,8 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.HierarchyModel', [
+   'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.Model'
-], function (Model) {
+], function (Factory, Model) {
    'use strict';
 
    /**

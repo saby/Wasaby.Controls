@@ -1,15 +1,15 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
+   'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    'js!SBIS3.CONTROLS.Data.Model',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Source.Memory',
    'js!SBIS3.CONTROLS.Data.Factory'
-], function (AdapterSbis, Model, DataSet) {
+], function (Factory, AdapterSbis, Model, DataSet) {
    'use strict';
 
-   var Factory = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Factory'),
-      sbisModel,
+   var sbisModel,
       sbisModelSet;
 
    beforeEach(function () {

@@ -34,8 +34,9 @@ define(
                   };
 
                assert.doesNotThrow(function() {
+                  var adapter = new SbisAdapter();
                   checkStruct(
-                     SbisAdapter.serialize({
+                     adapter.serialize({
                         'Фильтр': {
                            'ВызовИзБраузера': true,
                            'Количество': 1,

@@ -11,6 +11,11 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
     * @author Мальцев Алексей
     */
 
+   /**
+    * @faq Почему я вижу ошибки от $ws.single.ioc?
+    * Для корректной работы с зависимости снала надо загрузить {@link SBIS3.CONTROLS.Data.Factory}, а уже потом {@link SBIS3.CONTROLS.Data.Source.DataSet}
+    */
+
    var DataSet = $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Data.Source.DataSet.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Source.DataSet',
       $protected: {
@@ -53,16 +58,13 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
       },
 
       $constructor: function () {
-         if (!this._options.source) {
-            throw new Error('Data source is undefined');
-         }
-         if (!this._options.adapter) {
+         if (!this._options.adapter && this._options.source) {
             this._options.adapter = this._options.source.getAdapter();
          }
-         if (!this._options.model) {
+         if (!this._options.model && this._options.source) {
             this._options.model = this._options.source.getModel();
          }
-         if (!this._options.idProperty) {
+         if (!this._options.idProperty && this._options.source) {
             this._options.idProperty = this._options.source.getIdProperty();
          }
       },

@@ -1,7 +1,7 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Source.Base', [
    'js!SBIS3.CONTROLS.Data.Source.ISource',
-   'js!SBIS3.CONTROLS.Data.Model'
+   'js!SBIS3.CONTROLS.Data.Factory'
 ], function (ISource) {
    'use strict';
 

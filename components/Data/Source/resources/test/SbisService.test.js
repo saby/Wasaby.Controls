@@ -125,13 +125,14 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
 );
 
 define([
+      'js!SBIS3.CONTROLS.Data.Factory',
       'js!SBIS3.CONTROLS.Data.Source.SbisService',
       'js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO',
       'js!SBIS3.CONTROLS.Data.Source.DataSet',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
       'js!SBIS3.CONTROLS.Data.Query.Query'
-   ], function (SbisService, SbisServiceBLO, DataSet, Model, SbisAdapter, Query) {
+   ], function (Factory, SbisService, SbisServiceBLO, DataSet, Model, SbisAdapter, Query) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Source.SbisService', function () {

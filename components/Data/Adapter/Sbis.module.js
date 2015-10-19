@@ -1,11 +1,10 @@
-/* global define, $ws, require */
+/* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
    'js!SBIS3.CONTROLS.Data.Adapter.IAdapter',
    'js!SBIS3.CONTROLS.Data.Adapter.ITable',
    'js!SBIS3.CONTROLS.Data.Adapter.IRecord',
-   'js!SBIS3.CONTROLS.Data.Model',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
-   'js!SBIS3.CONTROLS.Data.Factory'
+   'js!SBIS3.CONTROLS.Data.Model'
 ], function (IAdapter, ITable, IRecord) {
    'use strict';
    /**
@@ -28,47 +27,23 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
           */
          _record: undefined
       },
+
       forTable: function () {
          return this._table || (this._table = new SbisTable());
       },
+
       forRecord: function () {
          return this._record || (this._record = new SbisRecord());
-      }
+      },
 
-   });
-
-   Sbis.FIELD_TYPE = {
-      DataSet: 'Выборка',
-      Model: 'Запись',
-      Integer: 'Число целое',
-      String: 'Строка',
-      Text: 'Текст',
-      Double: 'Число вещественное',
-      Money: 'Деньги',
-      Date: 'Дата',
-      DateTime: 'Дата и время',
-      Time: 'Время',
-      Array: 'Массив',
-      Boolean: 'Логическое',
-      Hierarchy: 'Иерархия',
-      Identity: 'Идентификатор',
-      Enum: 'Перечисляемое',
-      Flags: 'Флаги',
-      Link: 'Связь',
-      Binary: 'Двоичное',
-      UUID: 'UUID',
-      RpcFile: 'Файл-rpc',
-      TimeInterval: 'Временной интервал'
-   };
-
-   /**
-    * Сериализует данные
-    * @param {*} data
-    * @returns {Object}
-    * @static
-    */
-   Sbis.serialize = function (data) {
-      var getType = function (val) {
+      /**
+       * Сериализует данные
+       * @param {*} data
+       * @returns {Object}
+       * @static
+       */
+      serialize: function (data) {
+         var getType = function (val) {
             var type = typeof val;
             switch (type) {
                case 'boolean':
@@ -117,118 +92,143 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          },
          result,
          key;
-      if (data instanceof Array) {
-         var i,
-            count;
-         result = {
-            s: [],
-            d: []
-         };
-         for (i = 0, count = data.length; i < count; i++) {
-            if (i === 0) {
-               result.s = makeS(data[i]);
+         if (data instanceof Array) {
+            var i,
+               count;
+            result = {
+               s: [],
+               d: []
+            };
+            for (i = 0, count = data.length; i < count; i++) {
+               if (i === 0) {
+                  result.s = makeS(data[i]);
+               }
+               result.d.push(makeD(data[i], result.s));
             }
-            result.d.push(makeD(data[i], result.s));
+            return result;
          }
-         return result;
-      }
-      else if (typeof data === 'object' && data !== null) {
-         var allScalars = true;
-         for (key in data) {
-            if (!data.hasOwnProperty(key)) {
-               continue;
-            }
-            var val = data[key];
-            if (typeof val === 'object' && !(val instanceof Date)) {
-               allScalars = false;
-               break;
-            }
-         }
-         result = {};
-         if (allScalars) {
-            result.s = makeS(data);
-            result.d = makeD(data, result.s);
-         }
-         else {
+         else if (typeof data === 'object' && data !== null) {
+            var allScalars = true;
             for (key in data) {
                if (!data.hasOwnProperty(key)) {
                   continue;
                }
-               result[key] = Sbis.serialize(data[key]);
+               var val = data[key];
+               if (typeof val === 'object' && !(val instanceof Date)) {
+                  allScalars = false;
+                  break;
+               }
             }
+            result = {};
+            if (allScalars) {
+               result.s = makeS(data);
+               result.d = makeD(data, result.s);
+            }
+            else {
+               for (key in data) {
+                  if (!data.hasOwnProperty(key)) {
+                     continue;
+                  }
+                  result[key] = this.serialize(data[key]);
+               }
+            }
+            return result;
          }
-         return result;
-      }
-      else {
-         return data;
-      }
-   };
-
-   /**
-    * Серелиализует датасет или рекордсет
-    * @param data {SBIS3.CONTROLS.Data.Source.DataSet||$ws.proto.RecordSet}
-    * @returns {*}
-    * @static
-    */
-   Sbis.serializeDataSet = function (data) {
-      var DataSet = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Source.DataSetConstructor');
-      if (data instanceof DataSet) {
-         return $ws.core.clone(data.getRawData());
-      } else if (data instanceof $ws.proto.RecordSet || data instanceof $ws.proto.RecordSetStatic) {
-         return data.toJSON();
-      } else {
-         return Sbis.serialize(data);
-      }
-   };
-
-   /**
-    * Серелиализует модель или рекорд
-    * @param data {SBIS3.CONTROLS.Data.Model||$ws.proto.Record}
-    * @returns {*}
-    * @static
-    */
-   Sbis.serializeModel = function (data) {
-      var Model = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor');
-      if (data instanceof Model) {
-         return $ws.core.clone(data.getData());
-      } else if (data instanceof $ws.proto.Record) {
-         return data.toJSON();
-      } else {
-         return Sbis.serialize(data);
-      }
-   };
-
-   /**
-    * Сериализует поле флагов
-    * @param data - {$ws.proto.Record||}
-    * @returns {*}
-    * @static
-    */
-   Sbis.serializeFlags = function (data) {
-      var Model = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor'),
-         dt = [];
-      if (data instanceof $ws.proto.Record) {
-         var s = {},
-            t = data.getColumns();
-         for (var x = 0, l = t.length; x < l; x++) {
-            s[data.getColumnIdx(t[x])] = t[x];
+         else {
+            return data;
          }
-         var sorted = Object.sortedPairs(s),
-            rO = data.toObject();
-         for (var y = 0, ly = sorted.keys.length; y < ly; y++) {
-            dt.push(rO[sorted.values[y]]);
+      },
+
+      /**
+       * Серелиализует датасет или рекордсет
+       * @param data {SBIS3.CONTROLS.Data.Source.DataSet||$ws.proto.RecordSet}
+       * @returns {*}
+       * @static
+       */
+      serializeDataSet: function (data) {
+         var DataSet = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Source.DataSetConstructor');
+         if (data instanceof DataSet) {
+            return $ws.core.clone(data.getRawData());
+         } else if (data instanceof $ws.proto.RecordSet || data instanceof $ws.proto.RecordSetStatic) {
+            return data.toJSON();
+         } else {
+            return this.serialize(data);
          }
-         return dt;
-      } else if (data instanceof Model) {
-         data.each(function (value) {
-            dt.push(value);
-         });
-         return dt;
-      } else if (data instanceof Array) {
-         return data;
-      } else {
-         return null;
+      },
+
+      /**
+       * Серелиализует модель или рекорд
+       * @param data {SBIS3.CONTROLS.Data.Model||$ws.proto.Record}
+       * @returns {*}
+       * @static
+       */
+      serializeModel: function (data) {
+         var Model = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor');
+         if (data instanceof Model) {
+            return $ws.core.clone(data.getData());
+         } else if (data instanceof $ws.proto.Record) {
+            return data.toJSON();
+         } else {
+            return this.serialize(data);
+         }
+      },
+
+      /**
+       * Сериализует поле флагов
+       * @param data - {$ws.proto.Record||}
+       * @returns {*}
+       * @static
+       */
+      serializeFlags: function (data) {
+         var Model = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor'),
+            dt = [];
+         if (data instanceof $ws.proto.Record) {
+            var s = {},
+               t = data.getColumns();
+            for (var x = 0, l = t.length; x < l; x++) {
+               s[data.getColumnIdx(t[x])] = t[x];
+            }
+            var sorted = Object.sortedPairs(s),
+               rO = data.toObject();
+            for (var y = 0, ly = sorted.keys.length; y < ly; y++) {
+               dt.push(rO[sorted.values[y]]);
+            }
+            return dt;
+         } else if (data instanceof Model) {
+            data.each(function (value) {
+               dt.push(value);
+            });
+            return dt;
+         } else if (data instanceof Array) {
+            return data;
+         } else {
+            return null;
+         }
       }
+   });
+
+   Sbis.FIELD_TYPE = {
+      DataSet: 'Выборка',
+      Model: 'Запись',
+      Integer: 'Число целое',
+      String: 'Строка',
+      Text: 'Текст',
+      Double: 'Число вещественное',
+      Money: 'Деньги',
+      Date: 'Дата',
+      DateTime: 'Дата и время',
+      Time: 'Время',
+      Array: 'Массив',
+      Boolean: 'Логическое',
+      Hierarchy: 'Иерархия',
+      Identity: 'Идентификатор',
+      Enum: 'Перечисляемое',
+      Flags: 'Флаги',
+      Link: 'Связь',
+      Binary: 'Двоичное',
+      UUID: 'UUID',
+      RpcFile: 'Файл-rpc',
+      TimeInterval: 'Временной интервал'
    };
 
    /**
@@ -313,9 +313,26 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
     */
    var SbisRecord = $ws.core.extend({}, [IRecord], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisRecord.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.SbisRecord',
+
       get: function (data, name) {
          var index = this._getFieldIndex(data, name);
          return index >= 0 ? data.d[index] : undefined;
+      },
+
+      set: function (data, name, value) {
+         this._checkData(data);
+         var index = this._getFieldIndex(data, name);
+         if (index < 0) {
+            throw new Error('Property is not defined');
+         }
+         data.d[index] = value;
+      },
+
+      getEmpty: function (data) {
+         return {
+            d: [],
+            s: data ? $ws.core.clone(data.s) : []
+         };
       },
 
       getFullFieldData: function (data, name) {
@@ -329,6 +346,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          }
          return fieldData;
       },
+
       _getType: function (meta, key) {
          key = key || 't';
          var typeSbis = meta[key],
@@ -343,22 +361,20 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
             }
          }
          var prepareMeta = this._prepareMetaInfo(type, $ws.core.clone(meta));
-         return {'name': type, 'meta': prepareMeta};
+         return {
+            name: type,
+            meta: prepareMeta
+         };
       },
       _prepareMetaInfo: function (type, meta) {
          switch (type) {
             case 'Enum':
-            {
                meta.source = meta.s;
                break;
-            }
             case 'Money':
-            {
                meta.precision = meta.p;
                break;
-            }
             case 'Flags':
-            {
                meta.makeData = function (value) {
                   var st = [],
                      pairs = Object.sortedPairs(meta.s),
@@ -376,30 +392,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                   };
                };
                meta.adapter = new Sbis();
-            }
+               break;
          }
          return meta;
-      },
-      set: function (data, name, value) {
-         this._checkData(data);
-         var index = this._getFieldIndex(data, name);
-         if (index < 0) {
-            throw new Error('Property is not defined');
-         }
-         var meta = data.s[index],
-            type = this._getType(meta);
-         data.d[index] = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Factory').serialize(
-            value,
-            type.name,
-            Sbis,
-            type.meta
-         );
-      },
-      getEmpty: function (data) {
-         return {
-            d: [],
-            s: data ? $ws.core.clone(data.s) : []
-         };
       },
       _getFieldIndex: function (data, name) {
          if (data && data.s) {

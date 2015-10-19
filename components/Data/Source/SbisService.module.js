@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       create: function () {
          return this._provider.callMethod(
             this._options.createMethodName,
-            SbisAdapter.serialize({
+            this._options.adapter.serialize({
                'Фильтр': {
                   'ВызовИзБраузера': true
                },
@@ -177,7 +177,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       },
 
       query: function (query) {
-         var args = SbisAdapter.serialize({
+         var args = this._options.adapter.serialize({
             'Фильтр': query.getWhere(),
             'Сортировка': this._getSortingParams(query),
             'Навигация': this._getPagingParams(query)
@@ -201,7 +201,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       call: function (command, data, condition) {
          return this._provider.callMethod(
             command,
-            SbisAdapter.serialize(data)
+            this._options.adapter.serialize(data)
          ).addCallbacks((function (res) {
             return new DataSet({
                source: this,

@@ -1,10 +1,11 @@
 /* global beforeEach, afterEach, describe, context, it */
 define([
+      'js!SBIS3.CONTROLS.Data.Factory',
       'js!SBIS3.CONTROLS.Data.Source.Memory',
       'js!SBIS3.CONTROLS.Data.Source.DataSet',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Query.Query'
-   ], function (MemorySource, DataSet, Model, Query) {
+   ], function (Factory, MemorySource, DataSet, Model, Query) {
       'use strict';
 
       var existsId = 5,

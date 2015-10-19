@@ -3,8 +3,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
    'js!SBIS3.CONTROLS.Data.IPropertyAccess',
    'js!SBIS3.CONTROLS.Data.IHashable',
    'js!SBIS3.CONTROLS.Data.HashableMixin',
-   'js!SBIS3.CONTROLS.Data.Adapter.Json',
-   'js!SBIS3.CONTROLS.Data.Factory'
+   'js!SBIS3.CONTROLS.Data.Adapter.Json'
 ], function (IPropertyAccess, IHashable, HashableMixin, JsonAdapter) {
    'use strict';
 
@@ -17,6 +16,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
     * @mixes SBIS3.CONTROLS.Data.HashableMixin
     * @public
     * @author Мальцев Алексей
+    */
+
+   /**
+    * @faq Почему я вижу ошибки от $ws.single.ioc?
+    * Для корректной работы с зависимости снала надо загрузить {@link SBIS3.CONTROLS.Data.Factory}, а уже потом {@link SBIS3.CONTROLS.Data.Model}
     */
 
    var Model = $ws.proto.Abstract.extend([IPropertyAccess, IHashable, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Model.prototype */{
@@ -77,7 +81,66 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          this._publish('onPropertyChange');
       },
 
-      // region public
+      // region SBIS3.CONTROLS.Data.IPropertyAccess
+
+      /**
+       * Возвращает значение свойства
+       * @param {String} name Название свойства
+       * @returns {*}
+       */
+      get: function (name) {
+         if (this._fieldsCache.hasOwnProperty(name)) {
+            return this._fieldsCache[name];
+         }
+
+         var adapter = this.getAdapter(),
+            rawValue = adapter.get(this._options.data, name),
+            fieldData = adapter.getFullFieldData(this._options.data, name),
+            value = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Factory').cast(
+               rawValue,
+               fieldData.type,
+               this._options.adapter,//в фабрику нужно передавать полный адаптер
+               fieldData.meta
+            );
+         this._fieldsCache[name] =  value;
+         return value;
+      },
+
+      /**
+       * Устанавливает значение свойства
+       * @param {String} name Название свойства
+       * @param {*} value Значение свойства
+       */
+      set: function (name, value) {
+         if (!name) {
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Model::set()', 'Property name is empty');
+         }
+         if (this.get(name) !== value) {
+            var adapter = this.getAdapter(),
+               fieldData = adapter.getFullFieldData(this._options.data, name);
+
+            adapter.set(
+               this._options.data,
+               name,
+               $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Factory').serialize(
+                  value,
+                  fieldData.type,
+                  this._options.adapter,
+                  fieldData.meta
+               )
+            );
+
+            //this.getAdapter().set(this._options.data, name, value);
+            this._setChanged(true);
+            delete this._fieldsCache[name];
+            this._notify('onPropertyChange', name, value);
+         }
+      },
+
+      // endregion SBIS3.CONTROLS.Data.IPropertyAccess
+
+      // region Public methods
+
       /**
        * Возвращает источник данных
        * @returns {SBIS3.CONTROLS.Data.Source.BaseSource}
@@ -263,9 +326,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          return JSON.stringify(this._options.data);
       },
 
-      // endregion public
+      // endregion Public methods
 
-      //region protected
+      //region Protected methods
 
       /**
        * проверяет наличие источника данных
@@ -313,51 +376,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       _setChanged: function (changed) {
          this._isChanged = changed;
-      },
-
-      //endregion protected
-
-      // region SBIS3.CONTROLS.Data.IPropertyAccess
-      /**
-       * Возвращает значение свойства
-       * @param {String} name Название свойства
-       * @returns {*}
-       */
-      get: function (name) {
-         if (this._fieldsCache.hasOwnProperty(name)) {
-            return this._fieldsCache[name];
-         }
-
-         var adapter = this.getAdapter(),
-            dataValue = adapter.get(this._options.data, name),
-            data = adapter.getFullFieldData(this._options.data, name),
-            value = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Factory').cast(
-               dataValue,
-               data.type,
-               this._options.adapter,//в фабрику нужно передавать полный адаптер
-               data.meta
-            );
-         this._fieldsCache[name] =  value;
-         return value;
-      },
-
-      /**
-       * Устанавливает значение свойства
-       * @param {String} name Название свойства
-       * @param {*} value Значение свойства
-       */
-      set: function (name, value) {
-         if (!name) {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Model::set()', 'Property name is empty');
-         }
-         if (this.get(name) !== value) {
-            this.getAdapter().set(this._options.data, name, value);
-            this._setChanged(true);
-            delete this._fieldsCache[name];
-            this._notify('onPropertyChange', name, value);
-         }
       }
-      // endregion SBIS3.CONTROLS.Data.IPropertyAccess
+
+      //endregion Protected methods
    });
 
    $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Model', function(config) {

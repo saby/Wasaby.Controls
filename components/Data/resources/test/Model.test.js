@@ -1,29 +1,31 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['js!SBIS3.CONTROLS.Data.Model',
-      'js!SBIS3.CONTROLS.Data.Adapter.Json',
-      'js!SBIS3.CONTROLS.Data.Source.Memory'
-   ], function (Model, JsonAdapter,MemorySource) {
+define([
+   'js!SBIS3.CONTROLS.Data.Factory',
+   'js!SBIS3.CONTROLS.Data.Model',
+   'js!SBIS3.CONTROLS.Data.Adapter.Json',
+   'js!SBIS3.CONTROLS.Data.Source.Memory'
+   ], function (Factory, Model, JsonAdapter, MemorySource) {
       'use strict';
       describe('SBIS3.CONTROLS.Data.Model', function() {
          var adapter,model,modelData,source;
          beforeEach(function(){
             adapter = new JsonAdapter();
             modelData =  {
-               max:10,
-               title:'',
-               id:1
+               max: 10,
+               title: '',
+               id: 1
             },
             model = new Model({
                idProperty: 'id',
                data: modelData,
-               adapter:adapter
+               adapter: adapter
             }),
             source = new MemorySource({
                idProperty: 'id',
                data: [
-                  {'id':1,value: 'save'},
-                  {'id':2,value: 'load'},
-                  {'id':3,value: 'delete'}
+                  {id: 1, value: 'save'},
+                  {id: 2, value: 'load'},
+                  {id: 3, value: 'delete'}
                ]
             });
          });

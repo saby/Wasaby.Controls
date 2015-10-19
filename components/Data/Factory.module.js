@@ -1,6 +1,5 @@
 /*global $ws, define*/
 define('js!SBIS3.CONTROLS.Data.Factory', [
-   'js!SBIS3.CONTROLS.Data.Source.Memory',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Model'
 ], function () {
@@ -78,7 +77,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
 
                case 'Text':
                case 'String':
-                  return value + "";
+                  return value + '';
                case 'Boolean':
                   return !!value;
                default:
@@ -102,13 +101,15 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          }
          switch (type) {
             case 'DataSet':
-               if (adapter && adapter.serializeDataSet)
+               if (adapter && adapter.serializeDataSet) {
                   return adapter.serializeDataSet(value);
+               }
                throw 'Adapter is not defined or doesn\'t have method serializeDataSet';
 
             case 'Model':
-               if (adapter && adapter.serializeModel)
+               if (adapter && adapter.serializeModel) {
                   return adapter.serializeModel(value);
+               }
                throw 'Adapter is not defined or doesn\'t have method serializeModel';
 
             case 'Date':
@@ -126,15 +127,16 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return value instanceof Date ? value.toSQL(serializeMode) : null;
 
             case 'Flags':
-               if (adapter && adapter.serializeFlags)
+               if (adapter && adapter.serializeFlags) {
                   return adapter.serializeFlags(value);
+               }
                throw 'Adapter is not defined or doesn\'t have method serializeFlags';
 
             case 'Integer':
                return (typeof(value) === 'number') ? value : (isNaN(parseInt(value, 10)) ? null : parseInt(value, 10));
 
             case 'String':
-               return value === null ? null : value + "";
+               return value === null ? null : value + '';
 
             case 'Link':
                return value === null ? null : parseInt(value, 10);
@@ -183,11 +185,8 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        */
       makeDataSet: function (data, adapter) {
          return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Source.DataSet', {
-            source: $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Source.Memory', {
-               model: $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor'),
-               data: data,
-               adapter: adapter
-            }),
+            model: $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor'),
+            adapter: adapter,
             data: {
                items: data,
                total: adapter.forTable().getCount(data)
