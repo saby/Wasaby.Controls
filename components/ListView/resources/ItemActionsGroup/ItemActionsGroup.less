@@ -7,19 +7,8 @@
   &.controls-DataGridView {
 
     .controls-ItemActions {
-      font: 'TensorFont Regular', 'TensorFont';
       background-color: @list-view-actions-bg;
       box-shadow: @list-view-actions-box-shadow;
-      &.controls-ItemsActions__touch-actions{
-      	box-shadow: none;
-      	.controls-ListView__item{
-      		vertical-align: middle;
-      		top: 4px;
-      	}
-      	.controls-Link{
-      		font-size: 16px;
-      	}
-      }
     }
     .controls-ItemActions__activeItem {
       background-color: @list-view-actions-active-bg;
@@ -36,6 +25,26 @@
   height: @list-view-actions-height;
   z-index: @list-view-actions-zindex;
   display: none;
+
+   &.controls-ItemsActions__touch-actions {
+      background: @list-view-actions-bg;
+      .controls-ListView__item{
+         vertical-align: middle;
+         top: 4px;
+      }
+      .controls-Link{
+         font-size: 16px;
+      }
+      .controls-ItemActions__menu-button, .controls-ItemActions__menu-button:hover{
+         background: url('img/items-actions-touch-menu.png') no-repeat;
+         height: 19px;
+         background-size: 4px 18px;
+         vertical-align: middle;
+         width: 44px;
+         margin-top: 4px;
+         background-position: center;
+      }
+   }
 
   > * {
     display: inline-block;
@@ -68,14 +77,31 @@
 .controls-ItemActions__menu-container {
   display: none;
 
-  &.controls-ItemsActions__touch-actions {
-  	background: @list-view-actions-bg;
-  	.controls-MenuItem{
-		height: 46px;
-		background: @list-view-actions-bg;
-  	}
-  }
+   &.controls-ItemsActions__touch-actions{
+      background: #F3F8FC;
+      border-radius: 0;
+      border-width: 1px;
+      padding: 0;
+      border-top: none;
+      .controls-MenuItem {
+         line-height: 44px;
+         border-top: 1px solid #e4e4e4;
+         height: 44px;
+         background: #F3F8FC;
+      }
+      .controls-PopupMixin__closeButton {
+         background: @closeButtonImage;
+         top: @controls-filterButton-picker-closeButton-top;
+         width: @controls-filterButton-picker-closeButton-width;
+         height: @controls-filterButton-button-height;
+         position: absolute;
+         right: @controls-filterButton-picker-closeButton-right;
+         cursor: pointer;
 
+         &:hover { background: @closeButtonImageHover; }
+         &:active { background: @closeButtonImageHover; }
+         }
+   }
   .controls-MenuItem {
     padding-right: 24px;
   }
