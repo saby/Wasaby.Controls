@@ -29,16 +29,43 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          _options: {
             /**
              * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными
+             * @example
+             * <pre>
+             *    var user = new Model({
+             *       adapter: new SbisAdapter()
+             *    });
+             * </pre>
+             * @see getAdapter
+             * @see setAdapter
              */
             adapter: undefined,
 
             /**
-             * @cfg {SBIS3.CONTROLS.Source.BaseSource} Источник данных
+             * @cfg {SBIS3.CONTROLS.Source.BaseSource} Источник данных модели. Требутся для методов {@link load}, {@link save} и {@link remove}
+             * @see getSource
+             * @see setSource
+             * @see load
+             * @see save
+             * @see remove
              */
             source: undefined,
 
             /**
              * @cfg {Object} Данные в "сыром" виде
+             * @example
+             * <pre>
+             *    var user = new Model({
+             *       data: {
+             *          id: 1,
+             *          firstName: 'John',
+             *          lastName: 'Smith'
+             *       }
+             *    });
+             *    user.get('id');//5
+             *    user.get('firstName');//John
+             * </pre>
+             * @see getRawData
+             * @see setRawData
              */
             data: {},
 
@@ -69,13 +96,14 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              *       }, {
              *          name: 'displayName',
              *          readConverter: function() {
-             *             return this.get('firstName') + ' a.k.a "' + this.get('login') + '" ' + this.get('lastName')
+             *             return this.get('firstName') + ' a.k.a "' + this.get('login') + '" ' + this.get('lastName');
              *          }
              *       }]
              *    });
              *    user.get('id');//№5
              *    user.get('displayName');//John a.k.a "mnemonic" Smith
              *    user.get('job');//Memory stick
+             *    user.get('uptime');//undefined
              * </pre>
              * @see getProperties
              * @see setProperties
@@ -84,6 +112,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
             /**
              * @cfg {String} Поле, содержащее первичный ключ
+             * @see getIdProperty
+             * @see setIdProperty
              */
             idProperty: ''
          },
@@ -192,6 +222,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          return this._properties.hasOwnProperty(name);
       },
 
+      // endregion SBIS3.CONTROLS.Data.IPropertyAccess
+
       //TODO: поддержать данный интерфейс явно
       // region SBIS3.CONTROLS.Data.Collection.IEnumerable
 
@@ -214,13 +246,13 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
       // endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
-      // endregion SBIS3.CONTROLS.Data.IPropertyAccess
-
       // region Public methods
 
       /**
        * Возвращает источник данных
        * @returns {SBIS3.CONTROLS.Data.Source.BaseSource}
+       * @see source
+       * @see setSource
        */
       getSource: function () {
          return this._options.source;
@@ -229,6 +261,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * Устанавливает источник данных
        * @param {SBIS3.CONTROLS.Data.Source.BaseSource} source
+       * @see source
+       * @see getSource
        */
       setSource: function (source) {
          this._options.source = source;
@@ -238,6 +272,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * Возвращает адаптер для работы с данными
        * @returns {SBIS3.CONTROLS.Data.Adapter.IAdapter}
+       * @see adapter
+       * @see setAdapter
        */
       getAdapter: function () {
          return this._options.adapter;
@@ -246,6 +282,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * Устанавливает адаптер для работы с данными
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter
+       * @see adapter
+       * @see getAdapter
        */
       setAdapter: function (adapter) {
          this._options.adapter = adapter;
@@ -255,6 +293,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * Возвращает cвойства модели
        * @returns {Property[]}
+       * @see properties
+       * @see setProperties
        */
       getProperties: function () {
          var properties = [];
@@ -269,6 +309,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * Устанавливает cвойства модели
        * @param {Property[]} properties Cвойства модели
+       * @see properties
+       * @see getProperties
        */
       setProperties: function (properties) {
          var property,
@@ -307,6 +349,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * Загружает модель из источника данных
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет обновленный инстанс модели.
+       * @see save
+       * @see remove
+       * @see source
+       * @see getSource
+       * @see setSource
        */
       load: function() {
          this._checkSource();
@@ -321,6 +368,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * Сохраняет модель в источник данных
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет обновленный инстанс модели.
+       * @see load
+       * @see remove
+       * @see source
+       * @see getSource
+       * @see setSource
        */
       save: function() {
          this.validate();
@@ -335,6 +387,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * Удаляет модель в источника данных
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет обновленный инстанс модели.
+       * @see load
+       * @see save
+       * @see source
+       * @see getSource
+       * @see setSource
        */
       remove: function() {
          this._checkSource();
@@ -429,7 +486,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       /**
-      * возвращает строку с данными в формате json
+      * Возвращает строку с данными в формате json
       * @returns {String}
       */
       toString: function() {
