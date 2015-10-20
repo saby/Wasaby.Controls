@@ -158,10 +158,9 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * Выполняет команду
        * @param {String} command Команда
        * @param {Object} data Данные
-       * @param {Object} condition Условие
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет SBIS3.CONTROLS.Data.Source.DataSet.
        */
-      call: function (command, data, condition) {
+      call: function (command, data) {
          throw new Error('Method must be implemented');
       }
    };

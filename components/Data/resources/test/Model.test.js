@@ -31,7 +31,7 @@ define([
          });
          describe('.getAdapter()', function() {
             it('should return an adapter', function() {
-               assert.deepEqual(model.getAdapter(),adapter.forRecord());
+               assert.deepEqual(model.getAdapter(), adapter);
             });
          });
          describe('.get()',function(){
@@ -58,7 +58,7 @@ define([
                   data: modelData
                });
                myModel.setAdapter(adapter);
-               assert.deepEqual(myModel.getAdapter(),adapter.forRecord());
+               assert.deepEqual(myModel.getAdapter(), adapter);
             });
          });
          describe('.getId()',function(){

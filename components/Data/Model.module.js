@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
    /**
     * @faq Почему я вижу ошибки от $ws.single.ioc?
-    * Для корректной работы с зависимости снала надо загрузить {@link SBIS3.CONTROLS.Data.Factory}, а уже потом {@link SBIS3.CONTROLS.Data.Model}
+    * Для корректной работы с зависимости сначала надо загрузить {@link SBIS3.CONTROLS.Data.Factory}, а уже потом {@link SBIS3.CONTROLS.Data.Model}
     */
 
    var Model = $ws.proto.Abstract.extend([IPropertyAccess, IHashable, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Model.prototype */{
@@ -66,10 +66,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          _isChanged: false,
 
          /**
-         * @var {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с записью
-         */
-         _adapterForRecord: undefined,
-         /**
           * @var {Object} Объект содержащий приведенные значения модели
           */
          _fieldsCache: {}
@@ -94,7 +90,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             return this._fieldsCache[name];
          }
 
-         var adapter = this.getAdapter(),
+         var adapter = this._options.adapter.forRecord(),
             rawValue = adapter.get(this._options.data, name),
             fieldData = adapter.getFullFieldData(this._options.data, name),
             value = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Factory').cast(
@@ -117,7 +113,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Model::set()', 'Property name is empty');
          }
          if (this.get(name) !== value) {
-            var adapter = this.getAdapter(),
+            var adapter = this._options.adapter.forRecord(),
                fieldData = adapter.getFullFieldData(this._options.data, name);
 
             adapter.set(
@@ -131,7 +127,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
                )
             );
 
-            //this.getAdapter().set(this._options.data, name, value);
             this._setChanged(true);
             delete this._fieldsCache[name];
             this._notify('onPropertyChange', name, value);
@@ -164,7 +159,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @returns {SBIS3.CONTROLS.Data.Adapter.IAdapter}
        */
       getAdapter: function () {
-         return this._adapterForRecord;
+         return this._options.adapter;
       },
 
       /**
@@ -347,18 +342,12 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @private
        */
       _initAdapter: function() {
-         if (this._options.adapter) {
-            this._adapterForRecord = this._options.adapter.forRecord();
-            return;
+         if (!this._options.adapter && this._options.source) {
+            this._options.adapter = this._options.source.getAdapter();
          }
-         if (this._options.source && this._options.source.getAdapter()) {
-            var adapter = this._options.source.getAdapter();
-            this._options.adapter = adapter;
-            this._adapterForRecord = adapter.forRecord();
-            return;
+         if (!this._options.adapter) {
+            this._options.adapter = new JsonAdapter();
          }
-         this._options.adapter = new JsonAdapter();
-         this._adapterForRecord = new JsonAdapter().forRecord();
       },
 
       /**

@@ -234,7 +234,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          });
       },
 
-      call: function (command, data, condition) {
+      call: function (command, data) {
          return this._provider.callMethod(
             command,
             this._options.adapter.serialize(data)
