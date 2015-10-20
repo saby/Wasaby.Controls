@@ -98,14 +98,45 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       destroy: function (key) {
          var index = this._getIndexByKey(key);
          if (index === -1) {
-            return $ws.proto.Deferred.fail('Model instance is not exists');
+            return $ws.proto.Deferred.fail("Model key \""+key+"\" isn't found");
          } else {
             this._options.adapter.forTable().remove(
                this._options.data,
                index
             );
-            delete this._index[key];
+            this._reIndex();
 
+            return $ws.proto.Deferred.success(true);
+         }
+      },
+
+      copy: function(key) {
+         var index = this._getIndexByKey(key);
+         if (index === -1) {
+            return $ws.proto.Deferred.fail("Model key \""+key+"\" isn't found");
+         } else {
+            this._options.adapter.forTable().copy(
+               this._options.data,
+               index
+            );
+            this._reIndex();
+            return $ws.proto.Deferred.success(true);
+         }
+      },
+
+      merge: function(one, two) {
+         var indexOne = this._getIndexByKey(one),
+            indexTwo = this._getIndexByKey(two);
+         if (indexOne === -1 || indexTwo === -1) {
+            return $ws.proto.Deferred.fail("Model key a one \""+one+"\" or a two \""+two+"\" isn't exists");
+         } else {
+            this._options.adapter.forTable().merge(
+               this._options.data,
+               indexOne,
+               indexTwo,
+               this.getIdProperty()
+            );
+            this._reIndex();
             return $ws.proto.Deferred.success(true);
          }
       },

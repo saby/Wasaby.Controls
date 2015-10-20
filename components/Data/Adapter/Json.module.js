@@ -83,6 +83,22 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Json', [
          data.splice(at, 1);
       },
 
+      merge: function(data, one, two, idProperty) {
+         var first = this.at(data, one),
+             extention = this.at(data, two),
+             record = new JsonRecord(),
+             id = record.get(first,idProperty);
+         $ws.core.merge(first, extention);
+         record.set(first,idProperty,id);
+         this.remove(data, two);
+      },
+
+      copy: function(data, index) {
+         var source = this.at(data, index),
+            clone = $ws.core.clone(source);
+         this.add(data, clone, index);
+      },
+
       replace: function (data, record, at) {
          if (!(data instanceof Array)) {
             throw new Error('Invalid argument');
