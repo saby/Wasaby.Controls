@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             _itemActionsMenuVisible: false,
             _itemActionsHiddenButton: [],
             _activeItem: undefined,
+            _touchActions: false,
             _options: {
 
             }
@@ -37,6 +38,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                .click(function() {
                   self.showItemActionsMenu();
                });
+
+            this._touchActions = this._container.hasClass('controls-ItemsActions__touch-actions');
          },
          /**
           * Изменяет операции над строкой до нужного состояния - скрывает / показывает кнопки
@@ -67,9 +70,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          _createItemActionMenu: function() {
             var self = this;
-
+            var menuCont = $('> .controls-ItemActions__menu-container', this._container[0]);
+            if (this._touchActions) menuCont.addClass('controls-ItemsActions__touch-actions');
             this._itemActionsMenu = new ContextMenu({
-               element: $('> .controls-ItemActions__menu-container', this._container[0]),
+               element: menuCont.show(),
                items: this._options.items,
                keyField: this._options.keyField,
                parent: this,
@@ -137,6 +141,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._container[0].style.top = position.top + 'px';
             this._container[0].style.right = position.right + 'px';
             this._container[0].style.display = 'block';
+            if (this._touchActions){
+            	this._container.height($(hoveredItem.container).height());
+            	//this._container.animate({width: 0}, 1000);
+            }
         	},
          /***
           * Задаёт новые операции над записью

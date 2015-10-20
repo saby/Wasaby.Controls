@@ -682,11 +682,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
 
       _getItemActionsPosition: function(item) {
-         return {
-            top: item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
-            right: 0
-         };
+         var cfg = {
+            top: item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0)
+         }
+         if (this._touchSupport) {
+            cfg.top = item.position.top;
+         }
+         cfg.right = 0;
+         return cfg;
       },
+
       _showItemActions: function(item) {
          if(!this.isNowScrollingPartScroll()) {
             DataGridView.superclass._showItemActions.call(this, item);

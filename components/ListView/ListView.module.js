@@ -607,7 +607,7 @@ define('js!SBIS3.CONTROLS.ListView',
                var xDiff = xDown - xUp;
                var yDiff = yDown - yUp;
 
-               if (xDiff >= 6 && Math.abs(yDiff) <= 5) {
+               if (xDiff >= 7 && Math.abs(yDiff) <= 5) {
                   self._swipeHandler($(e.target));
                   e.preventDefault();
                }
@@ -646,11 +646,11 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _getItemActionsPosition: function (item) {
-         	var cfg = {};
+         	var cfg = {
+         		top : item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 )
+         	}
          	if (this._touchSupport){
-         		cfg.top = item.position.top;
-         	} else {
-               cfg.top = item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 );
+               cfg.top = item.position.top;
             }
             cfg.right = this._container[0].offsetWidth - (item.position.left + item.size.width)
             return cfg;
