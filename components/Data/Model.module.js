@@ -3,8 +3,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
    'js!SBIS3.CONTROLS.Data.IPropertyAccess',
    'js!SBIS3.CONTROLS.Data.IHashable',
    'js!SBIS3.CONTROLS.Data.HashableMixin',
+   'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (IPropertyAccess, IHashable, HashableMixin, JsonAdapter) {
+], function (IPropertyAccess, IHashable, HashableMixin, Factory, JsonAdapter) {
    'use strict';
 
    /**
@@ -16,11 +17,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
     * @mixes SBIS3.CONTROLS.Data.HashableMixin
     * @public
     * @author Мальцев Алексей
-    */
-
-   /**
-    * @faq Почему я вижу ошибки от $ws.single.ioc?
-    * Для корректной работы с зависимости сначала надо загрузить {@link SBIS3.CONTROLS.Data.Factory}, а уже потом {@link SBIS3.CONTROLS.Data.Model}
     */
 
    var Model = $ws.proto.Abstract.extend([IPropertyAccess, IHashable, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Model.prototype */{
@@ -204,7 +200,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             adapter.set(
                this._options.data,
                name,
-               $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Factory').serialize(
+               Factory.serialize(
                   value,
                   fieldData.type,
                   this._options.adapter,
@@ -562,7 +558,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             rawValue = adapter.get(this._options.data, name),
             fieldData = adapter.getFullFieldData(this._options.data, name);
 
-         return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Factory').cast(
+         return Factory.cast(
             rawValue,
             fieldData.type,
             this._options.adapter,//в фабрику нужно передавать полный адаптер

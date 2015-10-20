@@ -11,11 +11,6 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
     * @author Мальцев Алексей
     */
 
-   /**
-    * @faq Почему я вижу ошибки от $ws.single.ioc?
-    * Для корректной работы с зависимости сначала надо загрузить {@link SBIS3.CONTROLS.Data.Factory}, а уже потом {@link SBIS3.CONTROLS.Data.Source.DataSet}
-    */
-
    var DataSet = $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Data.Source.DataSet.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Source.DataSet',
       $protected: {

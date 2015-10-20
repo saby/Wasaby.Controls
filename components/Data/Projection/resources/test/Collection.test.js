@@ -5,10 +5,9 @@ define([
       'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
       'js!SBIS3.CONTROLS.Data.Collection.List',
       'js!SBIS3.CONTROLS.Data.Bind.ICollection',
-      'js!SBIS3.CONTROLS.Data.Factory',
       'js!SBIS3.CONTROLS.Data.Adapter.Json',
       'js!SBIS3.CONTROLS.Data.Model'
-   ], function (Projection, CollectionProjection, ObservableList, List, IBindCollection, Factory, JsonAdapter, Model) {
+   ], function (Projection, CollectionProjection, ObservableList, List, IBindCollection, JsonAdapter, Model) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Projection.Collection', function() {

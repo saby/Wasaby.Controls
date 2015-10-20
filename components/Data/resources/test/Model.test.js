@@ -1,10 +1,9 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
-      'js!SBIS3.CONTROLS.Data.Factory',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Adapter.Json',
       'js!SBIS3.CONTROLS.Data.Source.Memory'
-   ], function (Factory, Model, JsonAdapter, MemorySource) {
+   ], function (Model, JsonAdapter, MemorySource) {
       'use strict';
       describe('SBIS3.CONTROLS.Data.Model', function () {
          var adapter, model, modelData, source;

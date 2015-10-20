@@ -1,9 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Source.Memory', [
    'js!SBIS3.CONTROLS.Data.Source.Base',
-   'js!SBIS3.CONTROLS.Data.Adapter.Json',
-   'js!SBIS3.CONTROLS.Data.Source.DataSet'
-], function (Base, JsonAdapter) {
+   'js!SBIS3.CONTROLS.Data.Source.DataSet',
+   'js!SBIS3.CONTROLS.Data.Adapter.Json'
+], function (Base, DataSet, JsonAdapter) {
    'use strict';
 
    /**
@@ -151,7 +151,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          items = this._applyPaging(items, query.getOffset(), query.getLimit());
 
          this._options.adapter.setProperty(items, 'total', total);
-         return $ws.proto.Deferred.success($ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Source.DataSet', {
+         return $ws.proto.Deferred.success(new DataSet({
             source: this,
             data: items,
             totalProperty: 'total'

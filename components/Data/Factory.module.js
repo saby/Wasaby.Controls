@@ -1,7 +1,5 @@
 /*global $ws, define*/
 define('js!SBIS3.CONTROLS.Data.Factory', [
-   'js!SBIS3.CONTROLS.Data.Source.DataSet',
-   'js!SBIS3.CONTROLS.Data.Model'
 ], function () {
    'use strict';
 
@@ -11,6 +9,12 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
     * @public
     * @author Ярослав Ганшин
     */
+
+   /**
+    * @faq Почему я вижу ошибки от $ws.single.ioc?
+    * Для корректной работы с зависимости сначала надо загрузить {@link SBIS3.CONTROLS.Data.Model} и {@link SBIS3.CONTROLS.Data.Source.DataSet}, а уже потом {@link SBIS3.CONTROLS.Data.Factory}
+    */
+
    var Factory = /** @lends SBIS3.CONTROLS.Data.Factory.prototype */{
       /***
        * Приводит сырые данныые к переданному типу.

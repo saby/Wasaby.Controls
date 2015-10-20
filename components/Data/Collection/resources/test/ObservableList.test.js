@@ -3,10 +3,9 @@ define([
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.Collection.List',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
-   'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.Model',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (ObservableList, List, IBindCollection, Factory, Model, JsonAdapter) {
+], function (ObservableList, List, IBindCollection, Model, JsonAdapter) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Collection.ObservableList', function() {
