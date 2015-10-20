@@ -111,7 +111,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       after : {
          init: function () {
-            this._drawSelectedItems(this._options.selectedKeys, this._selectedRecords);
+            this._drawSelectedItems(this._options.selectedKeys);
          }
       },
       /**
@@ -422,13 +422,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                self._selectedRecords.push(record);
             }
          });
-      },
-
-      before: {
-         destroy: function() {
-            this._options.selectedKeys = [];
-            this._selectedRecords = [];
-         }
       }
    };
 
