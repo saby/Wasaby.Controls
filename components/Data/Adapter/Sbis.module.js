@@ -148,7 +148,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
       serializeDataSet: function (data) {
          var DataSet = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Source.DataSetConstructor');
          if (data instanceof DataSet) {
-            return $ws.core.clone(data.getRawData());
+            return data.getRawData();
          } else if (data instanceof $ws.proto.RecordSet || data instanceof $ws.proto.RecordSetStatic) {
             return data.toJSON();
          } else {
@@ -165,7 +165,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
       serializeModel: function (data) {
          var Model = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor');
          if (data instanceof Model) {
-            return $ws.core.clone(data.getRawData());
+            return data.getRawData();
          } else if (data instanceof $ws.proto.Record) {
             return data.toJSON();
          } else {
