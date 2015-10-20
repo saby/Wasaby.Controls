@@ -6,15 +6,15 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
    'use strict';
 
    /**
-    * Фабрика типов - на основе сырых данных модели создает объекты переданного типа
+    * Фабрика типов - на основе сырых данных создает объекты переданного типа
     * @class SBIS3.CONTROLS.Data.Factory
     * @public
     * @author Ярослав Ганшин
     */
    var Factory = /** @lends SBIS3.CONTROLS.Data.Factory.prototype */{
       /***
-       * Приводит значение к переданному типу
-       * возможные типы:
+       * Приводит сырые данныые к переданному типу.
+       * Возможные типы:
        * DataSet - набор записей
        * Model - одна запись из выборки
        * Time  - время
@@ -32,11 +32,11 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * String - строка
        * Boolean - логическое
        * Если передать тип не из списка, то значение не изменится.
-       * @param value - значение
-       * @param type - тип
-       * @param adapter - адаптер, нужен для создания модели или датасета
-       * @param meta - дополнительные параметры конфигурации типа данных
-       * @returns {*} - приведенные
+       * @param {*} value Значение
+       * @param {String} type Тип значения
+       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
+       * @param {Object} meta Мета данные типа
+       * @returns {*} Приведенные к нужному типу сырые данные
        */
       cast: function (value, type, adapter, meta) {
          if ((value !== null && typeof value !== 'undefined') || type === 'Enum') {
@@ -88,11 +88,11 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       },
 
       /**
-       * сериализует значение перед вставкой в данные
-       * @param value - значение
-       * @param type - тип
-       * @param adapter - адаптер, нужен для создания модели или датасета
-       * @param meta - дополнительные параметры конфигурации типа данных
+       * Переводит типизированное значение в сырые данные
+       * @param {*} value Типизированное значение
+       * @param {String} type Тип значения
+       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
+       * @param {Object} meta Мета данные типа
        * @returns {*}
        */
       serialize: function (value, type, adapter, meta) {
@@ -101,16 +101,10 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          }
          switch (type) {
             case 'DataSet':
-               if (adapter && adapter.serializeDataSet) {
-                  return adapter.serializeDataSet(value);
-               }
-               throw 'Adapter is not defined or doesn\'t have method serializeDataSet';
+               return this._serializeDataSet(value, adapter);
 
             case 'Model':
-               if (adapter && adapter.serializeModel) {
-                  return adapter.serializeModel(value);
-               }
-               throw 'Adapter is not defined or doesn\'t have method serializeModel';
+               return this._serializeModel(value, adapter);
 
             case 'Date':
             case 'DateTime':
@@ -127,10 +121,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return value instanceof Date ? value.toSQL(serializeMode) : null;
 
             case 'Flags':
-               if (adapter && adapter.serializeFlags) {
-                  return adapter.serializeFlags(value);
-               }
-               throw 'Adapter is not defined or doesn\'t have method serializeFlags';
+               return this._serializeFlags(value);
 
             case 'Integer':
                return (typeof(value) === 'number') ? value : (isNaN(parseInt(value, 10)) ? null : parseInt(value, 10));
@@ -165,10 +156,10 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       },
 
       /***
-       * создает модель
-       * @param data - данные из поля с типом Модель
-       * @param adapter - адаптер модели
-       * @returns {*}
+       * Создает модель по сырым данным
+       * @param {*} data Сырые данные
+       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
+       * @returns {SBIS3.CONTROLS.Data.Model}
        */
       makeModel: function (data, adapter) {
          return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
@@ -178,32 +169,99 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       },
 
       /***
-       * создает DataSet
-       * @param data - данные из поля с типом DataSet
-       * @param adapter - адаптер Датасета
-       * @returns {*}
+       * Создает DataSet по сырым данным
+       * @param {*} data Сырые данные
+       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
+       * @returns {SBIS3.CONTROLS.Data.Source.DataSet}
        */
       makeDataSet: function (data, adapter) {
+         adapter.setProperty(data, 'total', adapter.forTable().getCount(data));
+
          return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Source.DataSet', {
             model: $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor'),
             adapter: adapter,
-            data: {
-               items: data,
-               total: adapter.forTable().getCount(data)
-            },
-            itemsProperty: 'items',
+            data: data,
             totalProperty: 'total'
          });
       },
 
       /***
-       * Создает модель, по метаданным
-       * @param value - массив флагов
-       * @param meta - параметры поля
-       * @returns {*}
+       * Создает поле флагов по сырым данным
+       * @param {Array} value Массив флагов
+       * @param {Object} meta Мета данные флагов
+       * @returns {SBIS3.CONTROLS.Data.Model}
        */
       makeFlags: function (value, meta) {
-         return this.makeModel(meta.makeData(value), meta.adapter);
+         return this.makeModel(
+            meta.makeData(value),
+            meta.adapter
+         );
+      },
+
+      /**
+       * Сериализует DataSet
+       * @param {*} data Датасет
+       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
+       * @returns {*}
+       */
+      _serializeDataSet: function (data) {
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet')) {
+            return data.getRawData();
+         } else if (data instanceof $ws.proto.RecordSet || data instanceof $ws.proto.RecordSetStatic) {
+            return data.toJSON();
+         } else {
+            if (adapter && adapter.serialize) {
+               return adapter.serialize(data);
+            }
+         }
+         throw new Error('Adapter is not defined or doesn\'t have method serialize()');
+      },
+
+      /**
+       * Сериализует модель
+       * @param {*} data Модель
+       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
+       * @returns {*}
+       */
+      _serializeModel: function (data) {
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
+            return data.getRawData();
+         } else if (data instanceof $ws.proto.Record) {
+            return data.toJSON();
+         } else {
+            if (adapter && adapter.serialize) {
+               return adapter.serialize(data);
+            }
+         }
+         throw 'Adapter is not defined or doesn\'t have method serialize()';
+      },
+
+      /**
+       * Сериализует поле флагов
+       * @param {*} data
+       * @returns {*}
+       */
+      _serializeFlags: function (data) {
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
+            return data.getRawData();
+         } else if (data instanceof $ws.proto.Record) {
+            var dt = [],
+               s = {},
+               t = data.getColumns();
+            for (var x = 0, l = t.length; x < l; x++) {
+               s[data.getColumnIdx(t[x])] = t[x];
+            }
+            var sorted = Object.sortedPairs(s),
+               rO = data.toObject();
+            for (var y = 0, ly = sorted.keys.length; y < ly; y++) {
+               dt.push(rO[sorted.values[y]]);
+            }
+            return dt;
+         } else if (data instanceof Array) {
+            return data;
+         } else {
+            return null;
+         }
       }
    };
 

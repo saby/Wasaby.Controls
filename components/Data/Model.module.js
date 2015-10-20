@@ -267,7 +267,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       getId: function () {
          if (!this._options.idProperty) {
-            throw new Error('Key property is not defined');
+            throw new Error('Id property is not defined');
          }
          return this.get(this._options.idProperty);
       },
