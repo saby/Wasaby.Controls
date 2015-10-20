@@ -41,6 +41,15 @@ define('js!SBIS3.CONTROLS.Data.IPropertyAccess', [], function () {
        */
       set: function (name, value) {
          throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Проверяет наличие свойства у объекта
+       * @param {String} name Название свойства
+       * @returns {Boolean}
+       */
+      has: function (name) {
+         throw new Error('Method must be implemented');
       }
    };
 });

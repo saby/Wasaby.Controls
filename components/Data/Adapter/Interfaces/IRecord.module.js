@@ -31,12 +31,22 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IRecord', [], function () {
       },
 
       /**
+       * Возвращает массив названий полей
+       * @param {*} data Сырые данные
+       * @returns {String[]} Названия полей
+       */
+      getFields: function (data) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
        * Возвращает пустую запись
        * @returns {*}
        */
       getEmpty: function () {
          throw new Error('Method must be implemented');
       },
+
       /**
        * Возвращает объект содержащий название типа и мета данные
        * @param {*} data Сырые данные

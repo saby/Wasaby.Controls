@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IEnumerable', [], function () {
       /**
        * Перебирает все элементы коллекции, начиная с первого
        * @param {Function(*, Number)} callback Ф-я обратного вызова для каждого элемента коллекции
-       * @param {Object} context Конекст
+       * @param {Object} [context] Конекст
        */
       each: function (callback, context) {
          throw new Error('Method must be implemented');

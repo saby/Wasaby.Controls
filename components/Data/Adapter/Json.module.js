@@ -126,10 +126,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Json', [
          return data ? data[name] : undefined;
       },
 
-      getFullFieldData: function(data, name) {
-         return {};
-      },
-
       set: function (data, name, value) {
          if (!(data instanceof Object)) {
             throw new Error('Invalid argument');
@@ -137,15 +133,24 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Json', [
          data[name] = value;
       },
 
-      getType: function(data, name) {
-         return 'AsIs';
-      },
-      getConfig: function(data, name) {
-         return {};
+      getFields: function (data) {
+         return Object.keys(data);
       },
 
       getEmpty: function () {
          return [];
+      },
+
+      getFullFieldData: function(data, name) {
+         return {};
+      },
+
+      getType: function(data, name) {
+         return 'AsIs';
+      },
+
+      getConfig: function(data, name) {
+         return {};
       }
    });
 

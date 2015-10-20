@@ -262,6 +262,16 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          data.d[index] = value;
       },
 
+      getFields: function (data) {
+         var fields = [];
+         if (data && data.s) {
+            for (var i = 0, count = data.s.length; i < count; i++) {
+               fields.push(data.s[i].n);
+            }
+         }
+         return fields;
+      },
+
       getEmpty: function (data) {
          return {
             d: [],
@@ -300,6 +310,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
             meta: prepareMeta
          };
       },
+
       _prepareMetaInfo: function (type, meta) {
          switch (type) {
             case 'Enum':
@@ -330,6 +341,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          }
          return meta;
       },
+
       _getFieldIndex: function (data, name) {
          if (data && data.s) {
             for (var i = 0, count = data.s.length; i < count; i++) {
@@ -340,6 +352,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          }
          return -1;
       },
+
       _checkData: function (data) {
          if (!(data instanceof Object)) {
             throw new Error('Invalid argument');
