@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.Record', [
    'js!SBIS3.CONTROLS.DataFactory'
-], function () {
+], function (DataFactory) {
    'use strict';
 
    /**
@@ -97,7 +97,7 @@ define('js!SBIS3.CONTROLS.Record', [
          
          var dataValue = this._strategy.value(this._raw, field),
             data = this._strategy.getFullFieldData(this._raw, field),
-            value = $ws.single.ioc.resolve('SBIS3.CONTROLS.DataFactory').cast(
+            value = DataFactory.cast(
                dataValue,
                data.type,
                this._strategy,
