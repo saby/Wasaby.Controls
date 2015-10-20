@@ -1,20 +1,20 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.Json', [
-   'js!SBIS3.CONTROLS.Data.Adapter.IAdapter',
+   'js!SBIS3.CONTROLS.Data.Adapter.Abstract',
    'js!SBIS3.CONTROLS.Data.Adapter.ITable',
    'js!SBIS3.CONTROLS.Data.Adapter.IRecord'
-], function (IAdapter, ITable, IRecord) {
+], function (Abstract, ITable, IRecord) {
    'use strict';
 
    /**
     * Адаптер для данных в формате JSON
     * @class SBIS3.CONTROLS.Data.Adapter.Json
-    * @mixes SBIS3.CONTROLS.Data.Adapter.IAdapter
+    * @extends SBIS3.CONTROLS.Data.Adapter.Abstract
     * @public
     * @author Мальцев Алексей
     */
 
-   var Json = $ws.core.extend({}, [IAdapter], /** @lends SBIS3.CONTROLS.Data.Adapter.Json.prototype */{
+   var Json = Abstract.extend(/** @lends SBIS3.CONTROLS.Data.Adapter.Json.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.Json',
       $protected: {
          /**
@@ -89,18 +89,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Json', [
          }
          this._checkPosition(data, at);
          data[at] = record;
-      },
-
-      getProperty: function (data, property) {
-         property = property || '';
-         var parts = property.split('.'),
-             result;
-         for (var i = 0; i < parts.length; i++) {
-            result = i ?
-               (result ? result[parts[i]] : undefined) :
-               (data ? data[parts[i]] : undefined);
-         }
-         return result;
       },
 
       _checkPosition: function (data, at) {

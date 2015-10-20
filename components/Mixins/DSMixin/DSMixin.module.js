@@ -354,12 +354,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                .orderBy(sorting);
 
             return this._dataSource.query(query).addCallback((function(newDataSet) {
-               var rawData = newDataSet.getRawData();
                return new DataSet({
                   strategy: $ws.helpers.instanceOfModule(this._dataSource.getAdapter(), 'SBIS3.CONTROLS.Data.Adapter.Sbis') ?
                      new SbisJSONStrategy() :
                      new ArrayStrategy(),
-                  data: rawData && 'items' in rawData ? rawData.items : rawData,
+                  data: newDataSet.getRawData(),
                   meta: {
                      results: newDataSet.getProperty('r'),
                      more: newDataSet.getTotal(),

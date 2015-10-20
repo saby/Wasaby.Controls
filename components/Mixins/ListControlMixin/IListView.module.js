@@ -153,7 +153,7 @@ define('js!SBIS3.CONTROLS.ListControl.IListView', [], function () {
 
       /**
        * Отображает индикатор загрузки
-       * @param {Number} target Коллекция, содержимое которой загружается
+       * @param {SBIS3.CONTROLS.Data.Projection} target Коллекция, содержимое которой загружается
        */
       showLoadingIndicator: function () {
          throw new Error('Method must be implemented');
@@ -161,7 +161,7 @@ define('js!SBIS3.CONTROLS.ListControl.IListView', [], function () {
 
       /**
        * Скрывает индикатор загрузки
-       * @param {Number} target Коллекция, содержимое которой загрузилось
+       * @param {SBIS3.CONTROLS.Data.Projection} target Коллекция, содержимое которой загрузилось
        */
       hideLoadingIndicator: function () {
          throw new Error('Method must be implemented');

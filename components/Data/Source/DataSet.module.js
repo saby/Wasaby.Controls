@@ -226,7 +226,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        */
       _getDataProperty: function (property) {
          return property ?
-            this.getAdapter().forTable().getProperty(this._options.data, property) :
+            this.getAdapter().getProperty(this._options.data, property) :
             this._options.data;
       },
 

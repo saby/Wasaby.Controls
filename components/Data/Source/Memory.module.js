@@ -119,13 +119,10 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          var total = adapter.getCount(items);
          items = this._applyPaging(items, query.getOffset(), query.getLimit());
 
+         this._options.adapter.setProperty(items, 'total', total);
          return $ws.proto.Deferred.success($ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Source.DataSet', {
             source: this,
-            data: {
-               items: items,
-               total: total
-            },
-            itemsProperty: 'items',
+            data: items,
             totalProperty: 'total'
          }));
       },

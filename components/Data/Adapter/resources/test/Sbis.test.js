@@ -20,6 +20,150 @@ define(
       };
 
       describe('SBIS3.CONTROLS.Data.Adapter.Sbis', function () {
+         var data,
+            adapterInstance;
+
+         beforeEach(function () {
+            data = {
+               d: [
+                  [1, 'Иванов'],
+                  [2, 'Петров'],
+                  [3, 'Сидоров'],
+                  [4, 'Пухов'],
+                  [5, 'Молодцов'],
+                  [6, 'Годолцов'],
+                  [7, 'Арбузнов']
+               ],
+               s: [
+                  {'n': 'Ид', 't': 'Число целое'},
+                  {'n': 'Фамилия', 't': 'Строка'}
+               ]
+            };
+
+            adapterInstance = new SbisAdapter();
+         });
+
+         afterEach(function () {
+            data = undefined;
+            adapterInstance = undefined;
+         });
+
+         describe('.getProperty()', function () {
+            it('should return the property value', function () {
+               assert.strictEqual(
+                  123,
+                  adapterInstance.getProperty({
+                     items: data,
+                     total: 123
+                  }, 'total')
+               );
+               assert.strictEqual(
+                  456,
+                  adapterInstance.getProperty({
+                     d: data.d,
+                     s: data.s,
+                     n: 456
+                  }, 'n')
+               );
+               assert.strictEqual(
+                  789,
+                  adapterInstance.getProperty({
+                     employees: {
+                        d: data.d,
+                        s: data.s,
+                        n: 789
+                     }
+                  }, 'employees.n')
+               );
+               assert.isUndefined(
+                  adapterInstance.getProperty(data, 'total')
+               );
+               assert.isUndefined(
+                  adapterInstance.getProperty(data)
+               );
+            });
+
+            it('should return undefined on invalid data', function () {
+               assert.isUndefined(
+                  adapterInstance.getProperty({})
+               );
+               assert.isUndefined(
+                  adapterInstance.getProperty('')
+               );
+               assert.isUndefined(
+                  adapterInstance.getProperty(0)
+               );
+               assert.isUndefined(
+                  adapterInstance.getProperty()
+               );
+            });
+         });
+
+
+         describe('.setProperty()', function () {
+            it('should set the property value', function () {
+               adapterInstance.setProperty(data, 'n', 456);
+               assert.strictEqual(
+                  456,
+                  data.n
+               );
+               assert.strictEqual(
+                  1,
+                  data.d[0][0]
+               );
+               assert.strictEqual(
+                  5,
+                  data.d[4][0]
+               );
+               assert.strictEqual(
+                  'Годолцов',
+                  data.d[5][1]
+               );
+
+               var moreData = {
+                  employees: {
+                     items: data,
+                     total: 789
+                  }
+               };
+               adapterInstance.setProperty(moreData, 'employees.total', 987);
+               assert.strictEqual(
+                  987,
+                  moreData.employees.total
+               );
+               assert.strictEqual(
+                  1,
+                  moreData.employees.items.d[0][0]
+               );
+               assert.strictEqual(
+                  5,
+                  moreData.employees.items.d[4][0]
+               );
+               assert.strictEqual(
+                  'Годолцов',
+                  moreData.employees.items.d[5][1]
+               );
+
+               adapterInstance.setProperty(data, 'c.d.e.f', 'g');
+               assert.strictEqual(
+                  'g',
+                  data.c.d.e.f
+               );
+               assert.strictEqual(
+                  1,
+                  moreData.employees.items.d[0][0]
+               );
+               assert.strictEqual(
+                  5,
+                  moreData.employees.items.d[4][0]
+               );
+               assert.strictEqual(
+                  'Годолцов',
+                  moreData.employees.items.d[5][1]
+               );
+            });
+         });
+
          describe('.serialize()', function () {
             it('should create identical structure', function () {
                var checkStruct = function(given, expect) {
@@ -304,57 +448,6 @@ define(
 
             it('should throw an error on invalid data', function () {
                checkInvalid(adapterInstance, 'replace');
-            });
-         });
-
-         describe('.getProperty()', function () {
-            it('should return the property value', function () {
-               assert.strictEqual(
-                  123,
-                  adapterInstance.getProperty({
-                     items: data,
-                     total: 123
-                  }, 'total')
-               );
-               assert.strictEqual(
-                  456,
-                  adapterInstance.getProperty({
-                     d: data.d,
-                     s: data.s,
-                     n: 456
-                  }, 'n')
-               );
-               assert.strictEqual(
-                  789,
-                  adapterInstance.getProperty({
-                     employees: {
-                        d: data.d,
-                        s: data.s,
-                        n: 789
-                     }
-                  }, 'employees.n')
-               );
-               assert.isUndefined(
-                  adapterInstance.getProperty(data, 'total')
-               );
-               assert.isUndefined(
-                  adapterInstance.getProperty(data)
-               );
-            });
-
-            it('should return undefined on invalid data', function () {
-               assert.isUndefined(
-                  adapterInstance.getProperty({})
-               );
-               assert.isUndefined(
-                  adapterInstance.getProperty('')
-               );
-               assert.isUndefined(
-                  adapterInstance.getProperty(0)
-               );
-               assert.isUndefined(
-                  adapterInstance.getProperty()
-               );
             });
          });
       });

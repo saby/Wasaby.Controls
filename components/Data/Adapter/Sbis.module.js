@@ -1,21 +1,21 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
-   'js!SBIS3.CONTROLS.Data.Adapter.IAdapter',
+   'js!SBIS3.CONTROLS.Data.Adapter.Abstract',
    'js!SBIS3.CONTROLS.Data.Adapter.ITable',
    'js!SBIS3.CONTROLS.Data.Adapter.IRecord',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Model'
-], function (IAdapter, ITable, IRecord) {
+], function (Abstract, ITable, IRecord) {
    'use strict';
    /**
     * Адаптер для данных в формате СБиС
     * @class SBIS3.CONTROLS.Data.Adapter.Sbis
-    * @mixes SBIS3.CONTROLS.Data.Adapter.IAdapter
+    * @extends SBIS3.CONTROLS.Data.Adapter.Abstract
     * @public
     * @author Мальцев Алексей
     */
 
-   var Sbis = $ws.core.extend({}, [IAdapter], /** @lends SBIS3.CONTROLS.Data.Adapter.Sbis.prototype */{
+   var Sbis = Abstract.extend(/** @lends SBIS3.CONTROLS.Data.Adapter.Sbis.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.Sbis',
       $protected: {
          /**
@@ -279,17 +279,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          }
          data.d[at] = record.d;
       },
-      getProperty: function (data, property) {
-         property = property || '';
-         var parts = property.split('.'),
-            result;
-         for (var i = 0; i < parts.length; i++) {
-            result = i ?
-               (result ? result[parts[i]] : undefined) :
-               (data ? data[parts[i]] : undefined);
-         }
-         return result;
-      },
+
       _checkData: function (data) {
          if (!(data instanceof Object)) {
             throw new Error('Invalid argument');

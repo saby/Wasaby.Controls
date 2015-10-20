@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ICollectionItem', [
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.IList} Коллекция, которой принадлежит элемент
+             * @cfg {SBIS3.CONTROLS.Data.Collection.IEnumerable} Коллекция, которой принадлежит элемент
              */
             owner: undefined,
 

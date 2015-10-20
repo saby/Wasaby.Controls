@@ -64,16 +64,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.ITable', [], function () {
        */
       replace: function (data, record, at) {
          throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Возвращает значение свойства таблицы
-       * @param {*} data Сырые данные
-       * @param {String} property Название свойства
-       * @returns {*}
-       */
-      getProperty: function (data, property) {
-         throw new Error('Method must be implemented');
       }
    };
 });
