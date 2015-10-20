@@ -155,6 +155,13 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       },
 
       /**
+       * Метод смены порядковых номеров
+       * @param {Object} orderDetails - детали смены порядковых номеров. Объект со свойствами after и before: после или перед какой записью нужно вставить перемещаемую.
+       */
+      move: function (query) {
+         throw new Error('Method must be implemented');
+      },
+      /**
        * Выполняет команду
        * @param {String} command Команда
        * @param {Object} data Данные

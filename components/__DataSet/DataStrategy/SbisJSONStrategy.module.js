@@ -309,7 +309,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
          return {d: [], s: []};
       },
 
-       preprareOrderParams: function(object, record, hierField, orderDetails){
+       prepareOrderParams: function(object, record, hierField, orderDetails){
           var params = {
              'Объект': object,
              'ИдО': record.getKey(),

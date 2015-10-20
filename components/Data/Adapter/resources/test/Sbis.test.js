@@ -431,6 +431,23 @@ define(
             });
          });
 
+         describe('.move()', function () {
+            it('should move record', function () {
+               adapterInstance.move(data, 0, 2, {before:2});
+               assert.strictEqual(
+                  'Иванов',
+                  data.d[1][1]
+               );
+            });
+            it('should move record', function () {
+               adapterInstance.move(data, 0, 2, {after:2});
+               assert.strictEqual(
+                  'Иванов',
+                  data.d[2][1]
+               );
+            });
+         });
+
          describe('.copy()', function () {
             it('should merge two records', function () {
                adapterInstance.copy(data, 0);
