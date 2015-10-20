@@ -5,7 +5,8 @@ define('js!SBIS3.CONTROLS.Demo.MyBrowser', [
    'js!SBIS3.CONTROLS.TreeDataGridView',
    'js!SBIS3.CONTROLS.SearchForm',
    'js!SBIS3.CONTROLS.BreadCrumbs',
-   'js!SBIS3.CONTROLS.BackButton'
+   'js!SBIS3.CONTROLS.BackButton',
+   'js!SBIS3.CONTROLS.CommonHandlers'
 ], function(dot, CompoundControl){
    'use strict';
 

@@ -42,7 +42,15 @@ define('js!SBIS3.CONTROLS.Browser', [
             /**
              * @cfg {String} Имя параметр фильтрации для поиска
              */
-            searchParam : 'СтрокаПоиска'
+            searchParam : 'СтрокаПоиска',
+            /**
+             * @cfg {String} Компонент, который будет использоваться для диалога редактирования записи-листа
+             */
+            itemDialog: null,
+            /**
+             * @cfg {String} Компонент, который будет использоваться для диалога редактирования записи-узла
+             */
+            folderDialog: null
          }
       },
 
@@ -52,7 +60,16 @@ define('js!SBIS3.CONTROLS.Browser', [
 
       init: function() {
          Browser.superclass.init.apply(this, arguments);
+         $ws.single.CommandDispatcher.declareCommand(this, 'editItem', this._editDialog);
          this._view = this._getView();
+         var self = this;
+         this._view.subscribe('onItemClick', function(e, id, data, target){
+            //TODO нет метода для получения поля иерархии
+            var hier = data.get(self._view._options.hierField + '@');
+            if (!hier) {
+               self._view.sendCommand('editItem', data, id);
+            }
+         });
          this._hierMode = checkViewType(this._view);
 
 
@@ -118,9 +135,42 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
       _getOperationsPanel: function() {
          return this._getLinkedControl('browserOperationsPanel');
+      },
+
+      _editDialog: function(id, data, hier) {
+         var
+            result,
+            dialogComponent;
+         if (hier) {
+            result = this._notify('onEditFolder', id, data);
+         }
+         else {
+            result = this._notify('onEditItem', id, data);
+         }
+      },
+
+      openDialog: function(dialogComponent) {
+         if (dialogComponent) {
+            var
+               attachOptions = {
+                  opener: this,
+                  template: dialogComponent,
+                  record: new $ws.proto.Record()
+                  //context: context,
+                  //readOnly: self._options.display.readOnly,
+                  //isNewRecord: recordId === undefined,
+                  //handlers: hdl
+               };
+            /*if (attachComponent === 'RecordFloatArea') {
+             this._showRecordFloatArea(attachOptions, editTemplate, record, editFullScreenTemplate);
+             }
+             else {*/
+            $ws.core.attachInstance('SBIS3.CORE.DialogRecord', attachOptions);
+            /*}*/
+         }
+
+         return;
       }
-
-
 
    });
 

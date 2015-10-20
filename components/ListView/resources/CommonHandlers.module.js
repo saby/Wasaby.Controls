@@ -23,6 +23,12 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
                   });
                }
             })
+         },
+         editItems: function(tr, id) {
+            var
+               data = this._dataSet.getRecordByKey(id),
+               hier = data.get(this._options.hierField + '@');
+            this.sendCommand('editItem', id, data, !!hier);
          }
       };
       return CommonHandlers;
