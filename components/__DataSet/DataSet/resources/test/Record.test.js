@@ -1,7 +1,7 @@
 /* global requirejs, beforeEach, afterEach, describe, context, it, assert */
 define(
-    ['js!SBIS3.CONTROLS.DataFactory', 'js!SBIS3.CONTROLS.Record', 'js!SBIS3.CONTROLS.ArrayStrategy'],
-    function (DataFactory, Record, ArrayStrategy) {
+    ['js!SBIS3.CONTROLS.Record', 'js!SBIS3.CONTROLS.ArrayStrategy'],
+    function (Record, ArrayStrategy) {
         describe('SBIS3.CONTROLS.Record', function() {
             var data,
                 recordInstance;

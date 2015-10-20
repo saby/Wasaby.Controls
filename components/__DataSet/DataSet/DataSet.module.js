@@ -1,4 +1,5 @@
 define('js!SBIS3.CONTROLS.DataSet', [
+   'js!SBIS3.CONTROLS.DataFactory'
 ], function () {
    'use strict';
 
@@ -8,11 +9,6 @@ define('js!SBIS3.CONTROLS.DataSet', [
     * @extends $ws.proto.Abstract
     * @public
     * @author Крайнов Дмитрий Олегович
-    */
-
-   /**
-    * @faq Почему я вижу ошибки от $ws.single.ioc?
-    * Для корректной работы с зависимости снала надо загрузить {@link SBIS3.CONTROLS.DataFactory}, а уже потом {@link SBIS3.CONTROLS.DataSet}
     */
 
    /**
@@ -531,6 +527,11 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return filterDataSet;
       }
    });
+
+   $ws.single.ioc.bind('SBIS3.CONTROLS.DataSet', function(config) {
+      return new DataSet(config);
+   });
+
 
    return DataSet;
 });

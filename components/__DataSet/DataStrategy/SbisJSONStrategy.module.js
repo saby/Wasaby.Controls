@@ -3,8 +3,10 @@
  */
 define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
    'js!SBIS3.CONTROLS.IDataStrategy',
+   'js!SBIS3.CONTROLS.DataSet',
+   'js!SBIS3.CONTROLS.Record',
    'js!SBIS3.CONTROLS.DataFactory'
-], function (IDataStrategy, Factory) {
+], function (IDataStrategy, DataSet, Record, Factory) {
    'use strict';
     /**
      *
@@ -17,9 +19,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
 
    var SbisJSONStrategy = IDataStrategy.extend(/** @lends SBIS3.CONTROLS.SbisJSONStrategy.prototype */{
       $protected: {},
-      $constructor: function () {
-         Factory = Factory || require('js!SBIS3.CONTROLS.DataFactory');
-      },
+
       /**
        * Найти название поля, которое является идентификатором.
        * @param data ответ БЛ

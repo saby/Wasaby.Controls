@@ -2,6 +2,7 @@
  * Created by as.manuylov on 10.11.14.
  */
 define('js!SBIS3.CONTROLS.Record', [
+   'js!SBIS3.CONTROLS.DataFactory'
 ], function () {
    'use strict';
 
@@ -10,11 +11,6 @@ define('js!SBIS3.CONTROLS.Record', [
     * @class SBIS3.CONTROLS.Record
     * @public
     * @author Крайнов Дмитрий Олегович
-    */
-
-   /**
-    * @faq Почему я вижу ошибки от $ws.single.ioc?
-    * Для корректной работы с зависимости снала надо загрузить {@link SBIS3.CONTROLS.DataFactory}, а уже потом {@link SBIS3.CONTROLS.Record}
     */
 
    var Record =  $ws.proto.Abstract.extend( /** @lends SBIS3.CONTROLS.Record.prototype */{
@@ -219,6 +215,10 @@ define('js!SBIS3.CONTROLS.Record', [
          return this._raw;
       }
 
+   });
+
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Record', function(config) {
+      return new Record(config);
    });
 
    return Record;

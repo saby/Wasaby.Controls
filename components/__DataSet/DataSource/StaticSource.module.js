@@ -3,11 +3,10 @@
  */
 define('js!SBIS3.CONTROLS.StaticSource', [
    'js!SBIS3.CONTROLS.BaseSource',
-   'js!SBIS3.CONTROLS.DataFactory',
    'js!SBIS3.CONTROLS.Record',
    'js!SBIS3.CONTROLS.DataSet',
    'js!SBIS3.CONTROLS.ArrayStrategy'
-], function (BaseSource, DataFactory, Record, DataSet, ArrayStrategy) {
+], function (BaseSource, Record, DataSet, ArrayStrategy) {
    'use strict';
 
    /**

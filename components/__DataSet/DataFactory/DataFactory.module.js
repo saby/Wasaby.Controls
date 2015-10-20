@@ -1,8 +1,6 @@
 /*global $ws, define, require*/
 define('js!SBIS3.CONTROLS.DataFactory', [
-   'js!SBIS3.CONTROLS.Record',
-   'js!SBIS3.CONTROLS.DataSet'
-], function (Record, DataSet) {
+], function () {
    'use strict';
 
    /**
@@ -161,7 +159,7 @@ define('js!SBIS3.CONTROLS.DataFactory', [
        * @returns {*}
        */
       makeRecord: function(data, strategy) {
-         return new Record({
+         return $ws.single.ioc.resolve('SBIS3.CONTROLS.Record', {
             raw: data,
             strategy: strategy
          });
@@ -173,7 +171,7 @@ define('js!SBIS3.CONTROLS.DataFactory', [
        * @returns {*}
        */
       makeDataSet: function(data, strategy) {
-         return new DataSet({
+         return $ws.single.ioc.resolve('SBIS3.CONTROLS.DataSet', {
             strategy: strategy,
             data: data,
             meta: strategy.getMetaData(data)
@@ -189,14 +187,6 @@ define('js!SBIS3.CONTROLS.DataFactory', [
          return this.makeRecord(meta.makeData(value), meta.strategy);
       }
    };
-
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Record', function(config) {
-      return new Record(config);
-   });
-
-   $ws.single.ioc.bind('SBIS3.CONTROLS.DataSet', function(config) {
-      return new DataSet(config);
-   });
 
    $ws.single.ioc.bind('SBIS3.CONTROLS.DataFactory', function() {
       return DataFactory;
