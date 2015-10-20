@@ -23,7 +23,11 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                /**
                 * Шаблон отображения элемента
                 */
-               itemTemplate: itemTpl
+               itemTemplate: itemTpl,
+               /**
+                * Метод, который проверяет, нужно ли отрисовывать элемент коллекции
+                */
+               itemCheckFunc: undefined
             }
          },
 
@@ -56,10 +60,14 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          _appendItemTemplate:function(item, targetContainer, itemInstance) {
-            var res = this._notify('onDrawItem', itemInstance);
+            var parentFunc = FieldLinkItemsCollection.superclass._appendItemTemplate;;
 
-            if(res !== false) {
-               FieldLinkItemsCollection.superclass._appendItemTemplate.apply(this, arguments);
+            if(typeof this._options.itemCheckFunc === 'function') {
+               if(this._options.itemCheckFunc(itemInstance)) {
+                  parentFunc.apply(this, arguments);
+               }
+            } else {
+               parentFunc.apply(this, arguments)
             }
          },
          /**

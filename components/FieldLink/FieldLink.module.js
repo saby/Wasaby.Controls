@@ -112,20 +112,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
       _drawSelectedItems: function(keysArr) {
          var result = new $ws.proto.Deferred(),
              self = this,
-             loadArr, len, dMultiResult;
+             loadArr, loadArrLen;
 
-         function createLoadArray(records) {
-            var recordsKeysArray = $ws.helpers.map(records, function(rec) {
-                                       return rec.getKey();
-                                   });
+         /* Сформируем массив ключей записей, которые нужно вычитать с бл */
+         loadArr = $ws.helpers.filter(keysArr, function(key) {
+                        return $ws.helpers.find(self._selectedRecords, function(rec) {
+                           return key === rec.getKey();
+                        }) ? false : true;
+                     });
+         loadArrLen = loadArr.length;
 
-            return $ws.helpers.filter(keysArr, function(key) {
-                     if(Array.indexOf(recordsKeysArray, key) === -1) {
-                        return true;
-                     }
-                  });
-         }
-
+         /* Если удалили в пикере все записи, и он был открыт, то скроем его */
          if (this._isPickerVisible() && !keysArr.length) {
             this.hidePicker();
             this._toggleShowAllLink(false);
@@ -133,21 +130,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
          if(!this._options.multiselect) {
             /* Нужно поле делать невидимым, а не скрывать, чтобы можно было посчитать размеры */
-            this._inputWrapper.toggleClass('ws-invisible', !keysArr.length)
+            this._inputWrapper.toggleClass('ws-invisible', !!keysArr.length)
          }
-
-
-         loadArr = createLoadArray(this._selectedRecords);
-         len = loadArr.length;
 
          if(keysArr.length) {
            /* Если есть записи, которые нужно вычитать - вычитываем */
-            if(len) {
+            if(loadArrLen) {
                /* Если больше одной, то вычитаем используя ParallelDeferred */
-               if (len > 1) {
-                  dMultiResult = new $ws.proto.ParallelDeferred({stopOnFirstError: false});
+               if (loadArrLen > 1) {
+                  var dMultiResult = new $ws.proto.ParallelDeferred({stopOnFirstError: false});
 
-                  for (var i = 0; len > i; i++) {
+                  for (var i = 0; loadArrLen > i; i++) {
                      dMultiResult.push(this._dataSource.read(loadArr[i]).addCallback(function (record) {
                         self._selectedRecords.push(record);
                      }));
@@ -209,23 +202,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
             element: this._linksWrapper.find('.controls-FieldLink__linksContainer'),
             displayField: this._options.displayField,
             keyField: this._options.keyField,
+            itemCheckFunc: this._checkItemBeforeDraw.bind(this),
             handlers: {
                onDrawItems: function() {
                   self._setInputWidth(self._container[0].offsetWidth - self._getWrappersWidth() - INPUT_WRAPPER_PADDING);
-               },
-               onDrawItem: function(e, item) {
-                  var needDrawItem;
-
-                  /* Если элементы рисуются в пикере то ничего считать не надо */
-                  if(self._isPickerVisible()) {
-                     return;
-                  }
-
-                  /* Тут считается ширина добавляемого элемента, и если он не влезает,
-                     то отрисовываться он не будет и покажется троеточие */
-                  needDrawItem = $ws.helpers.getTextWidth(item) < self._container[0].offsetWidth - (self._getWrappersWidth() + SHOW_ALL_LINK_WIDTH + INPUT_MIN_WIDTH);
-                  self._toggleShowAllLink(!needDrawItem);
-                  e.setResult(needDrawItem);
                },
                onCrossClick: function(e, id) {
                   self.removeItemsSelection([id]);
@@ -234,6 +214,21 @@ define('js!SBIS3.CONTROLS.FieldLink',
          });
       },
 
+      /* Проверяет, нужно ли отрисовывать элемент или надо показать троеточие */
+      _checkItemBeforeDraw: function(item) {
+         var needDrawItem;
+
+         /* Если элементы рисуются в пикере то ничего считать не надо */
+         if(this._isPickerVisible()) {
+            return true;
+         }
+
+         /* Тут считается ширина добавляемого элемента, и если он не влезает,
+            то отрисовываться он не будет и покажется троеточие */
+         needDrawItem = $ws.helpers.getTextWidth(item) < this._container[0].offsetWidth - (this._getWrappersWidth() + SHOW_ALL_LINK_WIDTH + INPUT_MIN_WIDTH);
+         this._toggleShowAllLink(!needDrawItem);
+         return needDrawItem
+      },
       /**
        * Устанавливает данные к контрол
        * @param records
