@@ -32,6 +32,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
    var FieldLink = SuggestTextBox.extend([FormWidgetMixin, MultiSelectable, DSMixin],/** @lends SBIS3.Engine.FieldLink.prototype */{
       $protected: {
+         _keysWeHandle: [
+            $ws._const.key.del,
+            $ws._const.key.backspace,
+            $ws._const.key.esc,
+            $ws._const.key.down,
+            $ws._const.key.up
+         ],
+         _inputWrapper: undefined,
+         _linksWrapper: undefined,
+         _dropAllButton: undefined,
+         _showAllLink: undefined,
+         _pickerLinkList: undefined,
+         _linkCollection: undefined,
          _options: {
             afterFieldWrapper: afterFieldWrapper,
             beforeFieldWrapper: beforeFieldWrapper,
@@ -42,13 +55,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                   columns: []
                }
             }
-         },
-         _inputWrapper: undefined,
-         _linksWrapper: undefined,
-         _dropAllButton: undefined,
-         _showAllLink: undefined,
-         _pickerLinkList: undefined,
-         _linkCollection: undefined
+         }
       },
 
       $constructor: function() {
@@ -294,6 +301,29 @@ define('js!SBIS3.CONTROLS.FieldLink',
          FieldLink.superclass._setPickerContent.apply(this, arguments);
       },
 
+      _keyboardHover: function (e) {
+         FieldLink.superclass._keyboardHover.apply(this, arguments);
+
+         switch (e.which) {
+            case $ws._const.key.del:
+               this.removeItemsSelectionAll();
+               break;
+            case $ws._const.key.esc:
+               this.hidePicker();
+               break;
+            case $ws._const.key.backspace:
+               if(!this.getText()) {
+                  this.removeItemsSelection([this._options.selectedKeys.pop()]);
+               }
+               break;
+            case $ws._const.key.down:
+            case $ws._const.key.up:
+               this._list && this._list._keyboardHover(e);
+               break;
+         }
+
+         return true;
+      },
 
       /**
        * Возвращает, отображается ли сейчас пикер
