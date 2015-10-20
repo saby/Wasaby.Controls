@@ -422,6 +422,13 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                self._selectedRecords.push(record);
             }
          });
+      },
+
+      before: {
+         destroy: function() {
+            this._options.selectedKeys = [];
+            this._selectedRecords = [];
+         }
       }
    };
 

@@ -1,3 +1,8 @@
-<component data-component="SBIS3.CONTROLS.MenuIcon">
+<component data-component="SBIS3.CONTROLS.MenuIcon" name="fieldLinkMenu">
     <option name="icon">sprite:icon-16 icon-ListView icon-primary action-hover</option>
+    <option name="displayField">caption</option>
+    <option name="keyField">caption</option>
+    <options name="handlers">
+        <option name="onMenuItemActivate" type="function">js!SBIS3.CONTROLS.FieldLink:prototype._menuItemActivatedHandler</option>
+    </options>
 </component>

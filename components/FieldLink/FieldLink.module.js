@@ -32,6 +32,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
    var FieldLink = SuggestTextBox.extend([FormWidgetMixin, MultiSelectable, DSMixin],/** @lends SBIS3.Engine.FieldLink.prototype */{
       $protected: {
+         /* КЛАВИШИ ОБРАБАТЫВАЕМЫЕ FieldLink'ом */
          _keysWeHandle: [
             $ws._const.key.del,
             $ws._const.key.backspace,
@@ -39,6 +40,21 @@ define('js!SBIS3.CONTROLS.FieldLink',
             $ws._const.key.down,
             $ws._const.key.up
          ],
+         /* КОНФИГУРАЦИЯ SELECTOR'а */
+         _selector: {
+            config: {
+               isStack: true,
+               autoHide: true,
+               autoCloseOnHide: true,
+               overlay: true,
+               parent: null,
+               showDelay: 300
+            },
+            type: {
+               newDialog: 'js!SBIS3.CONTROLS.DialogSelector',
+               newFloatArea: 'js!SBIS3.CONTROLS.FloatAreaSelector'
+            }
+         },
          _inputWrapper: undefined,
          _linksWrapper: undefined,
          _dropAllButton: undefined,
@@ -48,13 +64,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
          _options: {
             afterFieldWrapper: afterFieldWrapper,
             beforeFieldWrapper: beforeFieldWrapper,
+            selectRecordsMode: 'newDialog',
             list: {
                className: 'js!SBIS3.CONTROLS.DataGridView',
                options: {
                   showHead: false,
                   columns: []
                }
-            }
+            },
+            dictionaries: []
          }
       },
 
@@ -73,6 +91,36 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
          /* Создём контрол, который рисует элементы в ввиде текста с крестиком удаления */
          this._linkCollection = this._drawFieldLinkItemsCollection();
+      },
+
+      init: function() {
+         FieldLink.superclass.init.apply(this, arguments);
+         this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
+      },
+
+      _menuItemActivatedHandler: function(e, item) {
+         this.getParent().showSelector(this.getDataSet().getRecordByKey(item).get('template'));
+      },
+
+      /**
+       * Показывает диалог выбора, в качестве аргумента принимает имя шаблона в виде 'js!SBIS3.CONTROLS.MyTemplate'
+       * @param template
+       */
+      showSelector: function(template) {
+         var self = this;
+
+         requirejs([this._selector.type[this._options.selectRecordsMode]], function(ctrl) {
+            new ctrl($ws.core.merge($ws.core.clone(self._selector.config), {
+                  template: template,
+                  currentSelectedKeys: self.getSelectedKeys(),
+                  target: self.getContainer(),
+                  multiselect: self._options.multiselect,
+                  closeCallback: function (result) {
+                     result && self.setSelectedKeys(result);
+                  }
+               })
+            );
+         });
       },
 
       /**
@@ -117,11 +165,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
       },
 
       _drawSelectedItems: function(keysArr) {
-         var result = new $ws.proto.Deferred(),
-             self = this,
-             loadArr, loadArrLen;
+         var self = this,
+             loadArr, loadArrLen, result, dMultiResult;
 
-         /* Сформируем массив ключей записей, которые нужно вычитать с бл */
+         /* Сформируем массив ключей записей, которые необходимо вычитать с бл */
          loadArr = $ws.helpers.filter(keysArr, function(key) {
                         return $ws.helpers.find(self._selectedRecords, function(rec) {
                            return key === rec.getKey();
@@ -143,9 +190,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
          if(keysArr.length) {
            /* Если есть записи, которые нужно вычитать - вычитываем */
             if(loadArrLen) {
+               result = new $ws.proto.Deferred();
                /* Если больше одной, то вычитаем используя ParallelDeferred */
                if (loadArrLen > 1) {
-                  var dMultiResult = new $ws.proto.ParallelDeferred({stopOnFirstError: false});
+                  dMultiResult = new $ws.proto.ParallelDeferred({stopOnFirstError: false});
 
                   for (var i = 0; loadArrLen > i; i++) {
                      dMultiResult.push(this._dataSource.read(loadArr[i]).addCallback(function (record) {
@@ -237,7 +285,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          return needDrawItem
       },
       /**
-       * Устанавливает данные к контрол
+       * Устанавливает данные в контрол
        * @param records
        * @private
        */
@@ -264,8 +312,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
       _pickerStateHandler: function(open) {
          this._listContainer && this._listContainer.toggleClass('ws-hidden', open);
+         this._dropAllLink && this._dropAllLink.toggleClass('ws-hidden', !open);
          this._pickerLinkList.toggleClass('ws-hidden', !open);
-         this._dropAllLink.toggleClass('ws-hidden', !open);
          this._moveLinkCollection(open);
          this._linkCollection.reload();
       },

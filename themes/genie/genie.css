@@ -3203,10 +3203,12 @@ input[type="reset"]::-moz-focus-inner {
 .controls-FieldLink__picker {
   max-height: 500px;
   min-height: 16px;
-  padding: 4px 0;
   border: 1px solid #eaeaea;
   border-top: none;
   background: #fff;
+}
+.controls-FieldLink__picker .controls-FieldLink__linksContainer {
+  padding: 4px 0;
 }
 .controls-FieldLink__picker .controls-FieldLink__linkItem,
 .controls-FieldLink .controls-FieldLink__linkItem {
