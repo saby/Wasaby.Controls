@@ -42,9 +42,9 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          if ((value !== null && typeof value !== 'undefined') || type === 'Enum') {
             switch (type) {
                case 'DataSet':
-                  return this.makeDataSet(value, adapter);
+                  return this._makeDataSet(value, adapter);
                case 'Model':
-                  return this.makeModel(value, adapter);
+                  return this._makeModel(value, adapter);
                case 'Time':
                case 'Date':
                case 'DateTime':
@@ -66,7 +66,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                      currentValue: value //число
                   });
                case 'Flags':
-                  return this.makeFlags(value, meta);
+                  return this._makeFlags(value, meta);
                case 'Identity':
                   return $ws.helpers.parseIdentity(value);
                case 'TimeInterval':
@@ -160,8 +160,9 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @param {*} data Сырые данные
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {SBIS3.CONTROLS.Data.Model}
+       * @private
        */
-      makeModel: function (data, adapter) {
+      _makeModel: function (data, adapter) {
          return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
             data: data,
             adapter: adapter
@@ -173,8 +174,9 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @param {*} data Сырые данные
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {SBIS3.CONTROLS.Data.Source.DataSet}
+       * @private
        */
-      makeDataSet: function (data, adapter) {
+      _makeDataSet: function (data, adapter) {
          adapter.setProperty(data, 'total', adapter.forTable().getCount(data));
 
          return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Source.DataSet', {
@@ -190,9 +192,10 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @param {Array} value Массив флагов
        * @param {Object} meta Мета данные флагов
        * @returns {SBIS3.CONTROLS.Data.Model}
+       * @private
        */
-      makeFlags: function (value, meta) {
-         return this.makeModel(
+      _makeFlags: function (value, meta) {
+         return this._makeModel(
             meta.makeData(value),
             meta.adapter
          );
@@ -203,6 +206,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @param {*} data Датасет
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*}
+       * @private
        */
       _serializeDataSet: function (data) {
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet')) {
@@ -222,6 +226,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @param {*} data Модель
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*}
+       * @private
        */
       _serializeModel: function (data) {
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
@@ -240,6 +245,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * Сериализует поле флагов
        * @param {*} data
        * @returns {*}
+       * @private
        */
       _serializeFlags: function (data) {
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
