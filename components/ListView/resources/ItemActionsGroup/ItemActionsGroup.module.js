@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   self.showItemActionsMenu();
                });
 
-            this._touchActions = this._container.hasClass('controls-ItemsActions__touch-actions');
+            this._touchActions = 'ontouchstart' in document;
          },
          /**
           * Изменяет операции над строкой до нужного состояния - скрывает / показывает кнопки
@@ -158,7 +158,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          /**
           * Показывает операции над записью
           */
-        	showItemActions: function(hoveredItem, position) {
+         showItemActions: function(hoveredItem, position) {
             this._activeItem = hoveredItem.container;
             this._container[0].style.top = position.top + 'px';
             this._container[0].style.right = position.right + 'px';

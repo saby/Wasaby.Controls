@@ -293,7 +293,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._touchSupport){
             	this._getItemActionsContainer().addClass('controls-ItemsActions__touch-actions');
             	$ws.single.EventBus.channel('TouchesChannel').subscribe('onSwipe', this._swipeHandler, this);
-         	}
+            }
          },
          _keyboardHover: function (e) {
             var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
@@ -586,11 +586,11 @@ define('js!SBIS3.CONTROLS.ListView',
          _getItemActionsPosition: function (item) {
          	var cfg = {
          		top : item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 )
-         	}
+         	};
          	if (this._touchSupport){
                cfg.top = item.position.top;
             }
-            cfg.right = this._container[0].offsetWidth - (item.position.left + item.size.width)
+            cfg.right = this._container[0].offsetWidth - (item.position.left + item.size.width);
             return cfg;
          },
          /**
