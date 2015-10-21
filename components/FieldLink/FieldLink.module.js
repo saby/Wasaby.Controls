@@ -98,6 +98,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
          this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
       },
 
+      /**
+       * Обработчик нажатия на меню(элементы меню), открывает диалог выбора с соответствующим шаблоном
+       * @private
+       */
       _menuItemActivatedHandler: function(e, item) {
          this.getParent().showSelector(this.getDataSet().getRecordByKey(item).get('template'));
       },
@@ -110,7 +114,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          var self = this;
 
          requirejs([this._selector.type[this._options.selectRecordsMode]], function(ctrl) {
-            new ctrl($ws.core.merge($ws.core.clone(self._selector.config), {
+            new ctrl($ws.core.merge(self._selector.config, {
                   template: template,
                   currentSelectedKeys: self.getSelectedKeys(),
                   target: self.getContainer(),
@@ -118,7 +122,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                   closeCallback: function (result) {
                      result && self.setSelectedKeys(result);
                   }
-               })
+               }, {clone: true})
             );
          });
       },
@@ -152,20 +156,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
       _onListItemSelect: function(id) {
          this.addItemsSelection([id]);
-         FieldLink.superclass._onListItemSelect.apply(this, arguments);
       },
 
 
       setDataSource: function(ds) {
-         if(this._list) {
-            this._list.setDataSource(ds)
-         }
-
+         this.getList().addCallback(function(list) {
+            list.setDataSource(ds)
+         });
          FieldLink.superclass.setDataSource.apply(this, arguments);
       },
 
       _drawSelectedItems: function(keysArr) {
          var self = this,
+             keysArrLen = keysArr.length,
              loadArr, loadArrLen, result, dMultiResult;
 
          /* Сформируем массив ключей записей, которые необходимо вычитать с бл */
@@ -177,17 +180,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
          loadArrLen = loadArr.length;
 
          /* Если удалили в пикере все записи, и он был открыт, то скроем его */
-         if (this._isPickerVisible() && !keysArr.length) {
+         if (this._isPickerVisible() && !keysArrLen) {
             this.hidePicker();
             this._toggleShowAllLink(false);
          }
 
          if(!this._options.multiselect) {
             /* Нужно поле делать невидимым, а не скрывать, чтобы можно было посчитать размеры */
-            this._inputWrapper.toggleClass('ws-invisible', !!keysArr.length)
+            this._inputWrapper.toggleClass('ws-invisible', !!keysArrLen)
          }
 
-         if(keysArr.length) {
+         if(keysArrLen) {
            /* Если есть записи, которые нужно вычитать - вычитываем */
             if(loadArrLen) {
                result = new $ws.proto.Deferred();
@@ -327,7 +330,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          return {
             corner: 'bl',
             target: this._container,
-            closeByExternalOver: true,
+            closeByExternalClick: true,
             targetPart: true,
             className: 'controls-FieldLink__picker',
             verticalAlign: {

@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
                }
             };
 
-            this._dRender.addCallback(function(result){
+            this._dRender.addCallback(function(){
                var childControls = self.getChildControls();
 
                for(var i = 0, l = childControls.length; i < l; i++){
@@ -75,18 +75,27 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
             });
          },
 
+         _toggleLinkedViewEvents: function(sub) {
+            this._options.multiselect ?
+               this[sub ? 'subscribeOnceTo' : 'unsubscribeFrom'](this._linkedView, 'onDrawItems', this._linkedView.setSelectedKeys.bind(this._linkedView, this._options.currentSelectedKeys)) :
+               this[sub ? 'subscribeTo' : 'unsubscribeFrom'](this._linkedView, 'onSelectedItemsChange', this._changeSelectionHandler);
+         },
+
          setLinkedView: function (linkedView) {
+            this._linkedView && this._toggleLinkedViewEvents(false);
             this._linkedView = linkedView;
+
             if (linkedView) {
                this._linkedView.setProperty('multiselect', this._options.multiselect);
-               this._options.multiselect ?
-                  this.subscribeOnceTo(this._linkedView, 'onDrawItems', this._linkedView.setSelectedKeys.bind(this._linkedView, this._options.currentSelectedKeys)) :
-                  this.subscribeTo(this._linkedView, 'onSelectedItemsChange', this._changeSelectionHandler);
-
+               this._toggleLinkedViewEvents(true);
                this._linkedView.reload();
             }
          },
 
+         /**
+          * Получить связное представление данных для этого диалога выбора
+          * @returns {SBIS3.CONTROLS.ListView}
+          */
          getLinkedView: function () {
             return this._linkedView;
          },
