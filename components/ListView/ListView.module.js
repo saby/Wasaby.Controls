@@ -582,6 +582,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             function handleTouchStart(event, e) {
                e = e.originalEvent;
+               self._touchStart = new Date().getTime();
                xDown = e.touches[0].clientX;
                yDown = e.touches[0].clientY;
             }
@@ -591,8 +592,12 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             function handleTouchMove(event, e) {
+            	var xTreshold = 50;
+            	var yTreshold = 15;
+            	var durTreshold = 130; //вычислено опытным путем
                e = e.originalEvent;
-               if (touched || !checkTarget(e)){
+
+               if (!checkTarget(e)){
                   return;
                }
                if (!xDown || !yDown) {
@@ -606,14 +611,22 @@ define('js!SBIS3.CONTROLS.ListView',
 
                var xDiff = xDown - xUp;
                var yDiff = yDown - yUp;
+               var time = new Date().getTime();
 
-               if (xDiff >= 7 && Math.abs(yDiff) <= 5) {
-                  self._swipeHandler($(e.target));
-                  e.preventDefault();
+
+               console.log('1. x: ' + xDiff + ' y: ' + yDiff + ' t: ' + (time - self._touchStart));
+               if (time - self._touchStart >= durTreshold){
+               	if (yDiff < yTreshold){
+               		e.preventDefault();
+               	}
+               	if (xDiff >= xTreshold && Math.abs(yDiff) <= yTreshold) {
+	                  self._swipeHandler($(e.target));
+	                  e.preventDefault();
+	                  console.log('2. x: ' + xDiff + ' y: ' + yDiff + ' t: ' + (time - self._touchStart));
+                		xDown = null;
+	             		yDown = null;
+               	}
                }
-
-               xDown = null;
-               yDown = null;
             }
 
             function checkTarget(e){
@@ -624,6 +637,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _swipeHandler: function(target){
          	target = target.hasClass('controls-ListView__item') ? target : target.closest('.controls-ListView__item');
          	this._showItemActions(this._getElementData(target));
+         	this._hoveredItem = this._getElementData(target);
          },
          /**
           * Показывает оперцаии над записью для элемента

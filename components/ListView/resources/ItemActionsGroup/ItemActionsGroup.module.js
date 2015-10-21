@@ -39,8 +39,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   self.showItemActionsMenu();
                });
 
-            this._touchActions = true;//
-            this._container.addClass('controls-ItemsActions__touch-actions');
+            this._touchActions = this._container.hasClass('controls-ItemsActions__touch-actions');
          },
          /**
           * Изменяет операции над строкой до нужного состояния - скрывает / показывает кнопки
