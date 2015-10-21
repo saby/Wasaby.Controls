@@ -64,7 +64,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
          _options: {
             afterFieldWrapper: afterFieldWrapper,
             beforeFieldWrapper: beforeFieldWrapper,
-            selectRecordsMode: 'newDialog',
             list: {
                className: 'js!SBIS3.CONTROLS.DataGridView',
                options: {
@@ -72,6 +71,23 @@ define('js!SBIS3.CONTROLS.FieldLink',
                   columns: []
                }
             },
+            /**
+             * @cfg {String} Режим выбора записей. В новом диалоге или во всплывающей панели
+             * <wiTag group="Управление">
+             * @variant newDialog в новом диалоге
+             * @variant newFloatArea во всплывающей панели
+             */
+            selectRecordsMode: 'newDialog',
+            /**
+             * @typedef {Array} dictionaries
+             * @property {String} caption Текст в меню.
+             * @property {String} template Шаблон, который отобразится в диалоге выбора.
+             */
+            /**
+             * @cfg {dictionaries[]} Набор диалогов выбора для поля связи
+             * @remark
+             * Если передать всего один элемент, то дилог выбора откроется при клике на иконку меню.
+             */
             dictionaries: []
          }
       },
@@ -114,7 +130,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
          var self = this;
 
          requirejs([this._selector.type[this._options.selectRecordsMode]], function(ctrl) {
-            new ctrl($ws.core.merge(self._selector.config, {
+            /* Необходимо клонировать конфигурацию селектора, иначе кто-то может её испортить, если передавать по ссылке */
+            new ctrl($ws.core.merge($ws.core.clone(self._selector.config), {
                   template: template,
                   currentSelectedKeys: self.getSelectedKeys(),
                   target: self.getContainer(),
@@ -122,7 +139,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                   closeCallback: function (result) {
                      result && self.setSelectedKeys(result);
                   }
-               }, {clone: true})
+               })
             );
          });
       },
@@ -146,15 +163,22 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
          if(this._options.multiselect) {
             /* Когда показываем пикер со всеми выбранными записями, скроем автодополнение и покажем выбранные записи*/
-            this._showAllLink.mouseenter(function() {
+            this._showAllLink.click(function() {
                self.showPicker();
-               self._pickerStateHandler(true);
+               self._pickerChangeStateHandler(true);
+               return false;
             });
             this._dropAllLink.click(this.removeItemsSelectionAll.bind(this));
          }
       },
 
+      /**
+       * Обработчик на выбор записи в автодополнении
+       * @private
+       */
       _onListItemSelect: function(id) {
+         this.hidePicker();
+         this.setText('');
          this.addItemsSelection([id]);
       },
 
@@ -313,7 +337,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          records.length ? this._linkCollection.setItems(convertToItemObject(records)) : this._linkCollection.setItems([]);
       },
 
-      _pickerStateHandler: function(open) {
+      _pickerChangeStateHandler: function(open) {
          this._listContainer && this._listContainer.toggleClass('ws-hidden', open);
          this._dropAllLink && this._dropAllLink.toggleClass('ws-hidden', !open);
          this._pickerLinkList.toggleClass('ws-hidden', !open);
@@ -341,7 +365,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             },
             handlers: {
                onClose: function() {
-                  setTimeout(self._pickerStateHandler.bind(self, false), 0);
+                  setTimeout(self._pickerChangeStateHandler.bind(self, false), 0);
                }
             }
          };
@@ -363,8 +387,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
                this.hidePicker();
                break;
             case $ws._const.key.backspace:
+               var selectedKeys = this.getSelectedKeys();
                if(!this.getText()) {
-                  this.removeItemsSelection([this._options.selectedKeys.pop()]);
+                  this.removeItemsSelection([selectedKeys[selectedKeys.length - 1]]);
                }
                break;
             case $ws._const.key.down:
