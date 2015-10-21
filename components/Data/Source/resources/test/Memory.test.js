@@ -335,6 +335,7 @@ define([
                });
             });
          });
+
          describe('.copy()', function () {
             it('should copy model', function (done) {
                var oldLength = data.length;
@@ -349,6 +350,27 @@ define([
                });
             });
          });
+
+         describe('.move()', function () {
+            it('should move model', function (done) {
+               service.read(existsId).addCallback(function (model) {
+                  service.move(model,{after:existsId2});
+                  if(data[1]['Ид'] === existsId) {
+                     done();
+                  }
+               });
+            });
+
+            it('should move model', function (done) {
+               service.read(existsId).addCallback(function (model) {
+                  service.move(model,{before:existsId2});
+                  if(data[0]['Ид'] === existsId) {
+                     done();
+                  }
+               });
+            });
+         });
+
          describe('.query()', function () {
             it('should return a valid dataset', function (done) {
                service.query(new Query()).addCallbacks(function (ds) {

@@ -158,6 +158,34 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          }));
       },
 
+      move: function(model, orderDetails) {
+         var sourceKey =  model.get(this._options.idProperty),
+            sourcePosition = this._getIndexByKey(sourceKey),
+            targetPosition;
+         if(orderDetails) {
+            var targetKey = orderDetails.after||orderDetails.before;
+            if(orderDetails.column && orderDetails.column !== this._options.idProperty) {
+               var column = orderDetails.column,
+                  recordAdapter = this._options.adapter.forRecord();
+               this._each(this._options.data, function(item, index) {
+                  var currentKey = recordAdapter.get(item, column);
+                  if(targetKey === currentKey){
+                     targetPosition = index;
+                  }
+               }, this);
+            } else {
+               targetPosition = this._getIndexByKey(targetKey);
+            }
+            if(typeof targetPosition === 'undefined') {
+               return $ws.proto.Deferred().fail("Can't find target position");
+            }
+            this._options.adapter.forTable().move(this._options.data, sourcePosition, targetPosition, orderDetails);
+            this._reIndex();
+
+         }
+         return new $ws.proto.Deferred().callback(true);
+      },
+
       call: function () {
          throw new Error('Not supported');
       },

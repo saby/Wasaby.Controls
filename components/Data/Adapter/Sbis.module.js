@@ -223,7 +223,30 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          }
          data.d[at] = record.d;
       },
-
+      getProperty: function (data, property) {
+         property = property || '';
+         var parts = property.split('.'),
+            result;
+         for (var i = 0; i < parts.length; i++) {
+            result = i ?
+               (result ? result[parts[i]] : undefined) :
+               (data ? data[parts[i]] : undefined);
+         }
+         return result;
+      },
+      move: function(data, source, target, orderDetails) {
+         var sourceData = data.d[source];
+         if(orderDetails.before){
+            target = (target===0 ? target : target--);
+         } else {
+            target++;
+         }
+         data.d.splice(target,0,sourceData);
+         if(source > target){
+            source++;//при перемещении элемента назад индекс увеличится после вставки
+         }
+         data.d.splice(source,1);
+      },
       _checkData: function (data) {
          if (!(data instanceof Object)) {
             throw new Error('Invalid argument');

@@ -99,12 +99,16 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          },
 
          /**
-          * @cfg {SBIS3.CONTROLS.SbisServiceSource/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику
+          * @var {SBIS3.CONTROLS.SbisServiceSource/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику
           */
-         _provider: undefined
+         _provider: undefined,
+         /**
+          * @var {SBIS3.CONTROLS.SbisServiceSource/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику, для смены порядковых номеров
+          */
+         _orderBL: undefined
       },
 
-      $constructor: function (cfg) {
+      $constructor: function(cfg) {
          cfg = cfg || {};
          
          this._options.adapter = cfg.adapter || new SbisAdapter();
@@ -119,7 +123,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       //region SBIS3.CONTROLS.Data.Source.ISource
 
-      create: function () {
+      create: function() {
          return this._provider.callMethod(
             this._options.createMethodName,
             this._options.adapter.serialize({
@@ -136,7 +140,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          });
       },
 
-      read: function (key) {
+      read: function(key) {
          return this._provider.callMethod(
             this._options.readMethodName, {
                'ИдО': key,
@@ -152,7 +156,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          });
       },
 
-      update: function (model) {
+      update: function(model) {
          return this._provider.callMethod(
             this._options.updateMethodName, {
                'Запись': $ws.core.merge({
@@ -171,7 +175,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          });
       },
 
-      destroy: function (key) {
+      destroy: function(key) {
          return this._provider.callMethod(
             this._options.destroyMethodName, {
                'ИдО': key
@@ -184,7 +188,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          });
       },
 
-      merge: function (first, second) {
+      merge: function(first, second) {
          return this._provider.callMethod(
             this._options.mergeMethodName, {
                'ИдО' : first,
@@ -198,7 +202,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             });
       },
 
-      copy: function (key) {
+      copy: function(key) {
          return this._provider.callMethod(
             this._options.copyMethodName, {
                'ИдО': key,
@@ -212,7 +216,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             });
       },
 
-      query: function (query) {
+      query: function(query) {
          var args = this._options.adapter.serialize({
             'Фильтр': query.getWhere() ? query.getWhere() : null,
             'Сортировка': this._getSortingParams(query),
@@ -232,6 +236,38 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::query()', error);
             return new Error('Cannot invoke query method');
          });
+      },
+
+      move: function(record, orderDetails) {
+         var self = this,
+            strategy = this.getStrategy(),
+            def = new $ws.proto.Deferred(),
+            params = strategy.prepareOrderParams(this._options.resource,record, orderDetails),
+            suffix = orderDetails.after ? 'После' : 'До';
+         if(!this._orderBL){
+            this._orderBL = new $ws.proto.BLObject('ПорядковыйНомер');
+         }
+         self._orderBL.call('Вставить' + suffix, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
+            def.callback(true);
+         }, function (error) {
+            $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
+            def.errback('Method move was failed');
+         });
+         return def;
+      },
+
+      _prepareOrderParams: function(object, record, orderDetails) {
+         var params = {
+            'Объект': object,
+            'ИдО': record.get(this._options.idProperty),
+            'ПорядковыйНомер': orderDetails.column || 'ПорНомер'
+         };
+         if(orderDetails.after){
+            params['ИдОПосле'] = orderDetails.after;
+         } else {
+            params['ИдОДо'] = orderDetails.before;
+         }
+         return params;
       },
 
       call: function (command, data) {
