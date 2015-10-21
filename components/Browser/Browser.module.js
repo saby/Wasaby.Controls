@@ -138,38 +138,15 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
 
       _editDialog: function(id, data, hier) {
-         var
-            result,
-            dialogComponent;
-         if (hier) {
-            result = this._notify('onEditFolder', id, data);
-         }
-         else {
-            result = this._notify('onEditItem', id, data);
-         }
+         //onFolderEdit onItemEdit
+         this._notify('on' + (hier ? 'Folder' : 'Item') + 'Edit', id, data);
       },
 
-      openDialog: function(dialogComponent) {
+      openCompatibleDialog: function(dialogComponent) {
          if (dialogComponent) {
             var
-               attachOptions = {
-                  opener: this,
-                  template: dialogComponent,
-                  record: new $ws.proto.Record()
-                  //context: context,
-                  //readOnly: self._options.display.readOnly,
-                  //isNewRecord: recordId === undefined,
-                  //handlers: hdl
-               };
-            /*if (attachComponent === 'RecordFloatArea') {
-             this._showRecordFloatArea(attachOptions, editTemplate, record, editFullScreenTemplate);
-             }
-             else {*/
-            $ws.core.attachInstance('SBIS3.CORE.DialogRecord', attachOptions);
-            /*}*/
+               sourceOptions = this._view._dataSource._options;
          }
-
-         return;
       }
 
    });

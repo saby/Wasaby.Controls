@@ -28,6 +28,14 @@ define('js!SBIS3.CONTROLS.Demo.MyBrowser', [
 
       $constructor: function () {
 
+      },
+
+      init: function() {
+
+         MyBrowser.superclass.init.call(this);
+         this.getChildControlByName('brows').subscribe('onItemEdit', function(e){
+            this.openDialog('js!SBIS3.CONTROLS.SearchString');
+         })
       }
 
    });
