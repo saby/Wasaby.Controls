@@ -1,0 +1,45 @@
+<div style="width:800px;height:600px;">
+
+    <!--HighCharts Spline-->
+    <component data-component="SBIS3.CONTROLS.HighCharts" name="HighCharts Spline 1">
+        <options name="sourceData">
+            <option name="getDataType">standartBL</option>
+            <option name="methodBL">График.Список</option>
+        </options>
+        <options name="highChartOptions">
+            <options name="title">
+                <option name="text">HighChartsSpline</option>
+            </options>
+            <options name="chart">
+                <option name="type">spline</option>
+            </options>
+            <options name="colors" type="array">
+                <option>#E91E63</option>
+            </options>
+        </options>
+        <options name="wsAxis" type="array">
+            <options>
+                <option name="type">xAxis</option>
+                <option name="title">Года</option>
+                <option name="sourceField">Года</option>
+                <option name="min">2000</option>
+                <option name="max">2020</option>
+                <option name="step">4</option>
+            </options>
+            <options>
+                <option name="type">yAxis</option>
+                <option name="title">Доход</option>
+                <option name="min">0</option>
+                <option name="max">100</option>
+            </options>
+        </options>
+        <options name="wsSeries" type="array">
+            <options>
+                <option name="name">spline</option>
+                <option name="sourceFieldX">Года</option>
+                <option name="sourceFieldY">Доход</option>
+            </options>
+        </options>
+    </component>
+
+</div>

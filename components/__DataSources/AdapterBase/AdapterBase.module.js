@@ -1,6 +1,13 @@
 define('js!SBIS3.CONTROLS.AdapterBase', [], function(){
    'use strict';
-   return $ws.core.extend({},{
+
+   /**
+    * Базовый адаптер данных
+    * @class SBIS3.CONTROLS.AdapterBase
+    * @author Крайнов Дмитрий Олегович
+    */
+
+   return $ws.core.extend({}, /** @lends SBIS3.CONTROLS.AdapterBase.prototype */{
       $constructor : function() {
 
       },

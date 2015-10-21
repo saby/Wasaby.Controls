@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<cloud id="2c50112e-f364-4f4b-be04-746ca80f2f02" name="SBIS3.CONTROLS" platform="По умолчанию">
+
+  <description/>
+
+  <items>
+    <application id="81a5acd8-7d3f-4dff-a9f8-714ea6a4dd22" name="SBIS3.CONTROLS" url="./SBIS3.CONTROLS.s3app"/>
+  </items>
+
+</cloud>

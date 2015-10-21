@@ -1,10 +1,22 @@
 define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
-   // только работа с иерархией + методы для отображения
-
+   /**
+    * только работа с иерархией + методы для отображения
+    * @mixin SBIS3.CONTROLS.hierarchyMixin
+    * @public
+    */
    var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
       $protected: {
+         //TODO FixMe этот флаг был введен для синхронизации иерархического представления и хлебных крошек
+         //вместо того, чтобы рассылать событие о смене корня при проваливании в папку
+         //нам приходиться ждать загрузки данных, потом понимать причину загрузки данных(этот флаг)
+         //и после загрузки уже рассылать информацию о хлебных кношках, которые пришли в запросе с данными
+         //по хорошему мы должны выносить запрос данных в некий контроллер, который разложит состояние
+         //в представление данных и в хлебные кношки.
+         //В таком случае этот флаг будет не нужен
+         _rootChanged: false,
          _curRoot: null,
+         _hier: [],
          _options: {
             /**
              * @cfg {String} Идентификатор узла, относительно которого надо отображать данные
@@ -16,9 +28,6 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
              * @cfg {String} Поле иерархии
              */
             hierField: null,
-            /**
-             * folders/all
-             * */
             displayType : 'all'
 
          }
@@ -31,6 +40,12 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
       setHierField: function (hierField) {
          this._options.hierField = hierField;
+      },
+      /**
+       * Получить название поля иерархии
+       */
+      getHierField : function(){
+         return this._options.hierField;
       },
 
       // обход происходит в том порядке что и пришли
@@ -46,14 +61,14 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
          var hierIterate = function(root) {
             var
-               childKeys = indexTree[root];
+               childKeys = indexTree[root] || [];
             for (var i = 0; i < childKeys.length; i++) {
                var record = self._dataSet.getRecordByKey(childKeys[i]);
                iterateCallback.call(this, record, root, curLvl);
                if (indexTree[childKeys[i]]) {
                   curLvl++;
                   hierIterate(childKeys[i]);
-                  curLvl--
+                  curLvl--;
                }
             }
          };
@@ -62,7 +77,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
 
       _getRecordsForRedraw: function() {
-         return this._getRecordsForRedrawCurFolder()
+         return this._getRecordsForRedrawCurFolder();
       },
 
       _getRecordsForRedrawCurFolder: function() {
@@ -90,7 +105,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       },
 
       getParentKey: function (DataSet, record) {
-         return this._dataSet.getParentKey(record, this._options.hierField)
+         return this._dataSet.getParentKey(record, this._options.hierField);
       },
 
       /* отображение */
@@ -102,31 +117,69 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       setRoot: function (root) {
 
       },
-
       /**
+       * Получить текущий корень иерархии
+       * @returns {*}
+       */
+      getCurrentRoot : function(){
+         return this._curRoot;
+      },
+
+		/**
        * Раскрыть определенный узел
        * @param {String} key Идентификатор раскрываемого узла
        */
-      openNode: function (key) {
-         var self = this;
-         this._loadNode(key).addCallback(function (dataSet) {
-            self._nodeDataLoaded(key, dataSet);
-         });
-      },
-
-      _loadNode : function(key) {
-         /*TODO проверка на что уже загружали*/
+      setCurrentRoot: function(key) {
          var filter = this._filter || {};
          filter[this._options.hierField] = key;
          this._filter = filter;
+         this._hier = this._getHierarchy(this._dataSet, key);
          //узел грузим с 0-ой страницы
          this._offset = 0;
-         return this._dataSource.query(filter, undefined, this._offset, this._limit);
+         //TODO: нужно избавиться от флага когда будут готовы биндинги
+         this._rootChanged = this._curRoot !== key;
+         this._curRoot = key;
+         this.setSelectedKey(null);
       },
 
-      toggleNode: function(key) {
-         this.openNode(key);
+      //TODO:После каждого релоада проверяется флаг _rootChanged и если флаг взведен, 
+      //то запускается перерисовка хлебных крошек. Это сделано для того, что изначально 
+      //грид может открыться на какой то внутренней папке, где надо рисовать хлебные крошки 
+      //Избавиться от всего этого когда будут готовы биндинги
+      _dataLoadedCallback: function(){
+         var path = this._dataSet.getMetaData().path,
+            hierarchy = this._hier;
+         if (!hierarchy.length && path){
+            hierarchy = this._getHierarchy(path, this._curRoot);
+         }
+         if (this._rootChanged) {
+            this._notify('onSetRoot', this._curRoot, hierarchy);
+            this._rootChanged = false;
+         }
       },
+
+      _getHierarchy: function(dataSet, key){
+         var record, parentKey,
+            hierarchy = [];
+         if (dataSet){
+            do {
+               record = dataSet.getRecordByKey(key);
+               parentKey = record ? dataSet.getParentKey(record, this._options.hierField) : null;
+               if (record) {
+                  hierarchy.push({
+                     'id': key || null,
+                     'parent' : parentKey,
+                     'title' : record.get(this._options.displayField),
+                     'color' : this._options.colorField ? record.get(this._options.colorField) : '',
+                     'data' : record
+                  });
+               }
+               key = parentKey;
+            } while (key);
+         }
+         return hierarchy;
+      },
+
       _dropPageSave: function(){
          var root = this._options.root;
          this._pageSaver = {};

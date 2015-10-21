@@ -91,7 +91,7 @@
                <li>
                   <div id="ButtonGroups"></div>
                </li>
-					<li>
+               <li>
                   <div id="FieldFormat"></div>
                </li>
                <li>
@@ -103,6 +103,9 @@
                 <li>
                     <div id="ViewsGroup"></div>
                 </li>
+               <li>
+                  <div id="ViewsEditInPlace"></div>
+               </li>
                <li>
                   <div id="Popup"></div>
                </li>
@@ -117,6 +120,12 @@
                </li>
                <li>
                   <div id="MultiView"></div>
+               </li>
+               <li>
+                  <div id="Suggest"></div>
+               </li>
+               <li>
+                  <div id="Browser"></div>
                </li>
             </ul>
          </td>
@@ -139,7 +148,10 @@
          </td>
       </tr>
       <tr>
-         <td></td>
+         <td>
+            <h3><a href="/tests/unit/via-webdriver.html">Unit тесты</a></h3>
+            <h3><a href="/tests/unit/artifacts/jscoverage-report/jscoverage.html" title="Для генерации запустить 'grunt tests-run-coverage'">Отчет о покрытии</a></h3>
+         </td>
          <td>
             <h3>Темы - демонстрация</h3>
             <ul>
@@ -287,7 +299,13 @@
                   href: '/pages/ViewsGroup.html'
               })
           });
-
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "ViewsEditInPlace",
+               caption: 'Views Edit In Place',
+               href: '/pages/ViewsEditInPlace.html'
+            })
+         });
 
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
@@ -320,11 +338,28 @@
                href: '/pages/editAtPlace.html'
             })
          });
+
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
                element: "MultiView",
                caption: 'MultiView',
                href: '/pages/MultiView.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "Suggest",
+               caption: 'Suggest',
+               href: '/pages/Suggest.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "Browser",
+               caption: 'Browser',
+               href: '/pages/browser.html'
             })
          });
       })

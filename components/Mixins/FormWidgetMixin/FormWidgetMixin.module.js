@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
     * или заполнении контролов значениями из БЛ. В каждом контроле методы должны быть определены
     * @mixin SBIS3.CONTROLS.FormWidgetMixin
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
    var FormWidgetMixin = /** @lends SBIS3.CONTROLS.FormWidgetMixin.prototype */{
        /**

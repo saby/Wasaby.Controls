@@ -3,14 +3,14 @@
  */
 
 define('js!SBIS3.CONTROLS.Menu', [
-   'js!SBIS3.CONTROLS.ButtonGroupBase',
+   'js!SBIS3.CONTROLS.ButtonGroupBaseDS',
    'html!SBIS3.CONTROLS.Menu',
-   'js!SBIS3.CONTROLS.TreeMixin',
+   'js!SBIS3.CONTROLS.hierarchyMixin',
+   'js!SBIS3.CONTROLS.TreeMixinDS',
    'js!SBIS3.CONTROLS.FloatArea',
-   'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'js!SBIS3.CONTROLS.MenuItem'
 
-], function(ButtonGroupBase, dot, TreeMixin, FloatArea, ControlHierarchyManager) {
+], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixinDS, FloatArea) {
 
    'use strict';
 
@@ -18,11 +18,13 @@ define('js!SBIS3.CONTROLS.Menu', [
     * Контрол, отображающий меню, всплывающее в определенном месте страницы
     * @class SBIS3.CONTROLS.Menu
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @extends SBIS3.CONTROLS.ButtonGroupBase
-    * @mixes SBIS3.CONTROLS.TreeMixin
+    * @mixes SBIS3.CONTROLS.hierarchyMixin
+    * @mixes SBIS3.CONTROLS.TreeMixinDS
     */
 
-   var Menu = ButtonGroupBase.extend([TreeMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
+   var Menu = ButtonGroupBase.extend([hierarchyMixin, TreeMixinDS], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
       /**
        * @event onMenuItemActivate При активации пункта меню
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -47,7 +49,7 @@ define('js!SBIS3.CONTROLS.Menu', [
        /**
         * @cfg {ItemsMenu[]} Набор исходных данных, по которому строится отображение
         * @name SBIS3.CONTROLS.Menu#items
-        * @description
+        * @description Набор исходных данных, по которому строится отображение
         * @example
         * <pre>
         *     <options name="items" type="array">
@@ -86,29 +88,29 @@ define('js!SBIS3.CONTROLS.Menu', [
              * @cfg {Number} Задержка перед закрытием
              * @noShow
              */
-            hideDelay: null
+            hideDelay: null,
+            displayField : 'title',
+            expand: true
          }
       },
 
       $constructor: function() {
-         if (this._items.getItemsCount()) {
-            this._drawItems();
-         }
          this._publish('onMenuItemActivate');
       },
 
-      _getItemClass : function() {
-         return 'js!SBIS3.CONTROLS.MenuItem';
+      _getItemTemplate: function(item) {
+         var
+            caption = item.get(this._options.displayField),
+            icon = item.get('icon') ? '<option name="icon">' + item.get('icon') + '</option>' : '',
+            className = item.get('className') ? '<option name="className">' + item.get('className') + '</option>' : '';
+
+         return '<component data-component="SBIS3.CONTROLS.MenuItem">' +
+            '<option name="caption">'+caption+'</option>' + icon + className+
+            '</component>';
       },
 
-      _getAddOptions : function(item) {
-         return {
-            caption : item.title,
-            icon : item.icon
-         }
-      },
-
-      _itemActivatedHandler : function(menuItem) {
+      _itemActivatedHandler : function(id){
+         var menuItem = this.getItemInstance(id);
          if (!(menuItem.getContainer().hasClass('controls-Menu__hasChild'))) {
             for (var j in this._subMenus) {
                if (this._subMenus.hasOwnProperty(j)) {
@@ -116,40 +118,38 @@ define('js!SBIS3.CONTROLS.Menu', [
                }
             }
          }
-
-
+         this._notify('onMenuItemActivate', menuItem.getContainer().attr('data-id'));
       },
 
-      _getTargetContainer : function(item, key, parItem, lvl) {
-         if (!parItem) {
+      _getTargetContainer : function(item) {
+         if (!this._options.hierField) {
             return this._container;
          }
          else {
-            var parId = this._items.getKey(parItem);
-            if (!this._subContainers[parId]) {
-               this._subContainers[parId] = $('<div class="controls-Menu__submenu" data-parId="' + parId + '"></div>');
-               this._subContainers[parId].parentCtrl = this;
+            var parId = this.getParentKey(this._dataSet, item);
+            if (parId === null || parId === undefined) {
+               return this._container;
             }
+            else {
+               if (!this._subContainers[parId]) {
+                  this._subContainers[parId] = $('<div class="controls-Menu__submenu" data-parId="' + parId + '"></div>').hide();
+                  this._subContainers[parId].parentCtrl = this;
+                  this._subContainers[parId].appendTo(this._container);
+               }
 
-            return this._subContainers[parId];
+               return this._subContainers[parId];
+            }
          }
       },
       _drawItems : function() {
          this.destroySubObjects();
-         Menu.superclass._drawItems.call(this);
+         Menu.superclass._drawItems.apply(this, arguments);
       },
       _drawItemsCallback : function() {
          var
             menuItems = this.getItemsInstances(),
             self = this;
-         for (var i in menuItems) {
-            if (menuItems.hasOwnProperty(i)){
-               menuItems[i].subscribe('onActivated', function () {
-                  self._notify('onMenuItemActivate', this.getContainer().attr('data-id'));
-               });
-            }
-         }
-         for (i in this._subContainers) {
+         for (var i in this._subContainers) {
             if (this._subContainers.hasOwnProperty(i)) {
 
                var
@@ -169,9 +169,12 @@ define('js!SBIS3.CONTROLS.Menu', [
                   var
                      isFirstLevel = false,
                      id = $(this).attr('data-id'),
-                     item = self._items.getItem(id),
-                     parId = self._items.getParent(item),
+                     item = self._dataSet.getRecordByKey(id),
+                     parId = null,
                      parent;
+                  if (self._options.hierField) {
+                     parId = self.getParentKey(self._dataSet, item);
+                  }
                   if (parId) {
                      parent = self._subMenus[parId];
                   }
@@ -184,8 +187,8 @@ define('js!SBIS3.CONTROLS.Menu', [
                   var mySubmenu;
                   if (self._subContainers[id]) {
                      if (!self._subMenus[id]) {
-                        self._subContainers[id].appendTo('body');
                         self._subMenus[id] = self._createSubMenu(this, parent, isFirstLevel, item);
+                        self._subContainers[id].show();
                         self._subMenus[id].getContainer().append(self._subContainers[id]);
                      }
                      mySubmenu = self._subMenus[id];
@@ -194,19 +197,17 @@ define('js!SBIS3.CONTROLS.Menu', [
                })
             }
          }
-
+         Menu.superclass._drawItemsCallback.apply(this, arguments);
       },
       _createSubMenu : function(target, parent, isFirstLevel, item) {
          target = $(target);
          var config = this._getSubMenuConfig(isFirstLevel, item);
 
-         config.element = $('<div class="controls-Menu__Popup"></div>');
-         if (this._container.hasClass('controls-Menu__32px')) {
-            config.element.addClass('controls-Menu__32px')
-         }
+         config.element = $('<div class="controls-Menu__Popup controls-Menu__SubMenuPopup"></div>');
          config.parent = parent;
+         config.opener = typeof parent.getOpener == 'function' ? parent.getOpener() : parent;
          config.target = target;
-         return new FloatArea(config)
+         return new FloatArea(config);
       },
 
       _getSubMenuConfig : function(isFirstLevel, item) {
@@ -230,8 +231,8 @@ define('js!SBIS3.CONTROLS.Menu', [
          if (isFirstLevel) {
             direction = 'down';
          }
-         if (item.direction) {
-            direction = item.direction;
+         if (item.get('direction')) {
+            direction = item.get('direction');
          }
          if (direction) {
             switch (direction) {
@@ -267,71 +268,6 @@ define('js!SBIS3.CONTROLS.Menu', [
                this._subMenus[j].destroy();
             }
          }
-      },
-      /*TODO Методы для Зуева, посмотреть в будущем нужны ли они*/
-       /**
-        * Метод добавления подменю.
-        * @param {Array} pointsArr Описание подменю.
-        * @param {String} id Идентификатор пункта меню.
-        * @example
-        * <pre>
-        *    menu.addSubMenu(id, [
-        *       {
-        *          title: 'save',
-        *          icon: "sprite:icon-16 icon-Save icon-primary",
-        *          id: "save",
-        *          parent: 1
-        *       },
-        *       {
-        *          title: 'print',
-        *          icon: "sprite:icon-16 icon-Print icon-primary",
-        *          id: "print",
-        *          parent: 1
-        *       }
-        *    ]);
-        * </pre>
-        * @see items
-        * @see hierField
-        * @see keyField
-        * @see destroySubMenu
-        * @see hasSubMenu
-        */
-      addSubMenu : function(pointsArr, id) {
-         for (var i = 0; i < pointsArr.length; i++) {
-            pointsArr[i][this._options.hierField] = id;
-            this._items.addItem(pointsArr[i]);
-         }
-         this._drawItems();
-      },
-       /**
-        * Метод разрушению подменю по идентификатору.
-        * @param {String|Number} id
-        */
-      destroySubMenu : function(id) {
-         var childItems = this._items.getChildItems(id);
-         for (var i = 0; i < childItems.length; i++) {
-            this._items.destroyItem(this._items.getKey(childItems[i]));
-         }
-         this._drawItems();
-      },
-       /**
-        * Метод получения признака существования подменю
-        * @param id
-        * @returns {*}
-        */
-      hasSubMenu : function(id) {
-         return this._items.hasChild(id)
-      },
-       /**
-        * Метод замены текста пункта меню
-        * @param {String|Number} id Идентификатор пункта меню.
-        * @param {String} title Новый текст пункта меню.
-        * @see items
-        */
-      setItemTitle : function(id, title) {
-         var item = this._items.getItem(id);
-         item.title = title;
-         this._drawItems();
       }
    });
 

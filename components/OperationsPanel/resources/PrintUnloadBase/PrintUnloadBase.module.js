@@ -7,6 +7,31 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
 ], function(MenuLink, Dialog) {
 
    var PrintUnloadBase = MenuLink.extend({
+      /**
+       * @event onApplyOperation Перед обработкой операции
+       * Событие происходит при непосредственном выборе выгрузки или печати. Данные уже выбраны, но можно поменять колонки для выборки
+       * @param {$ws.proto.EventObject} Дескриптор события.
+       * @param {String} type Имя операции. print или unload (Печать или выгрузка)
+       * @return Результат обработчика события.
+       * Если вернуть новый набор колонок, то напечатаны будут они
+       * @example
+       * Структура массива с описанием строк:
+       * <pre>
+       *    //Мы получим кнопку только после того, как она будет нарисована, раньше нам не надо
+       * massOperation.subscribe('onDrawItems', function(){
+       *     this.getItemInstance('print').subscribe('onApplyOperation', function(event, type, columns){
+       *        var resultColumns = [];
+       *        //Есть колонки, которые не должны попасть в печать и выгрузку;
+       *        for (var i = 0 , len = columns.length; i < len; i++){
+       *           if (columns[i].field !== 'Опубликовано') {
+       *              resultColumns.push(columns[i]);
+       *           }
+       *        }
+       *        event.setResult(resultColumns);
+       *     });
+       *  });
+       * </pre>
+       */
 
       $protected: {
          _options: {
@@ -16,6 +41,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       },
 
       $constructor: function() {
+         this._publish('onApplyOperation');
       },
       /**
        * Can be implemented
@@ -53,7 +79,6 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
                opener : this,
                template: 'js!SBIS3.CONTROLS.MassAmountSelector',
                caption : title,
-               resizable: false,
                handlers: {
                   onBeforeShow: function(){
                      //this.getLinkedContext().setValue('NumOfRecords', self._getView()._dataSet.getCount()); Хочется, чтобы было так
@@ -89,10 +114,31 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          }
 
       },
+      /**
+       * Must be implemented
+       * @param columns
+       * @private
+       */
+      _notifyOnApply : function(columns){
+
+      },
       _applyOperation : function(dataSet){
+         var columns = this._getView().getColumns(),
+               cfg, result;
+         result = this._notifyOnApply(columns);
+         if (result instanceof Array) {
+            columns = result;
+         }
+         cfg = {
+            dataSet : dataSet || this._getView()._dataSet,
+            columns: columns
+         };
+         if ( this._options.xsl ){
+            cfg.xsl = this._options.xsl;
+         }
          //Снимем выделение
          this._getView().removeItemsSelectionAll();
-         this.applyOperation(dataSet);
+         this.applyOperation(dataSet, cfg);
       },
       /**
        * Must be implemented

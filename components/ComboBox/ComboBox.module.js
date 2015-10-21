@@ -10,10 +10,15 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора.
-    * По умолчанию позволяет {@link editable вручную вводить значение}.
+    * Для работы контрола необходим источник данных, его можно задать либо в опции {@link items}, либо методом {@link setDataSource}.
+    * Среди полей источника данных необходимо указать какое является ключевым - {@link keyField}, и из какого поля будем
+    * отображать данные в выпадающий блок - {@link displayField}.
+    * При отсутствии данных на бизнес-логике будет выведен текст опции {@link emptyHTML}.
+    * Контрол по умолчанию позволяет {@link editable вручную вводить значение}.
     * @class SBIS3.CONTROLS.ComboBox
     * @extends SBIS3.CONTROLS.TextBox
     * @control
+    * @author Крайнов Дмитрий Олегович
     * @public
     * @initial
     * <component data-component='SBIS3.CONTROLS.ComboBox'>
@@ -69,16 +74,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        * @see keyField
        * @see displayField
        * @see setDataSource
-       * @see getDataSource
+       * @see getDataSet
        */
 
       $protected: {
-         _keysWeHandle: [$ws._const.key.up, $ws._const.key.down],
+         _keysWeHandle: [$ws._const.key.up, $ws._const.key.down, $ws._const.key.enter],
          _options: {
             /**
              * @cfg {String} Шаблон отображения каждого элемента коллекции
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="itemTemplate">
              *         <div data-key="{{=it.item.getKey()}}" class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow">
              *             <div class="genie-colorComboBox__itemTitle">
@@ -87,7 +92,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              *         </div>
              *     </option>
              * </pre>
-             * @items
              */
             itemTemplate: '',
             afterFieldWrapper: arrowTpl,
@@ -97,7 +101,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              * При включённой опции в случае отсутствия среди пунктов выпадающего списка нужного контрол позволяет
              * задать своё значение вводом с клавиатуры.
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="editable">false</option>
              * </pre>
              * @see items
@@ -133,8 +137,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             e.stopPropagation();
             return false;
          });
-         if (this._options.selectedKey) {
-            this._drawSelectedItem(this._options.selectedKey); } else {
+         //Для инициализации dataSet
+         this.reload();
+         var key = this._options.selectedKey;
+         if (key !== undefined && key !== null) {
+            this._drawSelectedItem(this._options.selectedKey);
+         } else {
             /*TODO следующая строчка должна быть в Selector*/
             this._options.selectedKey = null;
             if (this._options.text) {
@@ -144,29 +152,79 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
          /*обрабочики кликов TODO mouseup!!*/
          this._container.mouseup(function (e) {
-            if ($(e.target).hasClass('js-controls-ComboBox__arrowDown')) {
+            if ($(e.target).hasClass('js-controls-ComboBox__arrowDown') ||
+                  $(e.target).hasClass('controls-TextBox__afterFieldWrapper')) {
                if (self.isEnabled()) {
                   self.togglePicker();
                }
             }
-         })
+         });
       },
 
-      _keyboardHover: function(e) {
-        var items = $('.controls-ListView__item', this._container),
+      _keyboardHover: function (e) {
+         var
             selectedKey = this.getSelectedKey(),
-            selectedItem = $('.controls-ComboBox__itemRow__selected', this._picker._c),
-            nextItem = (selectedKey) ? selectedItem.next('.controls-ListView__item') : items.eq(0),
-            previousItem = (selectedKey) ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
-            
-            //навигация по стрелкам
-           if (e.which === $ws._const.key.up) {
-             previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
-           } else if (e.which === $ws._const.key.down) {
-             nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
-           }
+            selectedItem, nextItem, previousItem;
+         if (this._picker) {
+            var
+               items = $('.controls-ListView__item', this._picker.getContainer().get(0));
 
-           return false;
+            selectedItem = $('.controls-ComboBox__itemRow__selected', this._picker.getContainer());
+            nextItem = (selectedKey) ? selectedItem.next('.controls-ListView__item') : items.eq(0);
+            previousItem = (selectedKey) ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
+            //навигация по стрелкам
+            if (e.which === $ws._const.key.up) {
+               previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
+            } else if (e.which === $ws._const.key.down) {
+               nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+            }
+         }
+         else {
+            if (this._dataSet) {
+               var num = null, i = 0, nextRec, prevRec;
+               if (this._dataSet.getCount()) {
+                  if (selectedKey) {
+                     this._dataSet.each(function (rec) {
+                        if (rec.getKey() == selectedKey) {
+                           num = i;
+                        }
+                        i++;
+                     });
+                     if (num !== null) {
+                        if (num == 0) {
+                           nextRec = this._dataSet.at(num + 1);
+                           prevRec = this._dataSet.at(0)
+                        }
+                        else if (num == this._dataSet.getCount() - 1) {
+                           nextRec = this._dataSet.at(this._dataSet.getCount() - 1);
+                           prevRec = this._dataSet.at(num - 1)
+                        }
+                        else {
+                           nextRec = this._dataSet.at(num + 1);
+                           prevRec = this._dataSet.at(num - 1)
+                        }
+                     }
+                  }
+                  else {
+                     prevRec = this._dataSet.at(0);
+                     nextRec = this._dataSet.at(0);
+                  }
+                  if (e.which === $ws._const.key.up) {
+                     this.setSelectedKey(prevRec.getKey());
+                  } else if (e.which === $ws._const.key.down) {
+                     this.setSelectedKey(nextRec.getKey());
+                  }
+               }
+            }
+         }
+
+
+         if (e.which === $ws._const.key.enter) {
+            this.hidePicker()
+         }
+
+
+         return false;
       },
 
       setText: function (text) {
@@ -238,6 +296,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _notifySelectedItem: function (key) {
          var text = this.getText();
          this._notify('onSelectedItemChange', key, text);
+         this._notifyOnPropertyChanged('selectedItem');
       },
 
       _setPickerContent: function () {
@@ -350,11 +409,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             if (noItems) {
                self._options.selectedKey = null;
                self._notifySelectedItem(null);
-               self._drawSelectedItem(null);            }
-
+               self._drawSelectedItem(null);
+            }
          });
-
-
       },
 
       _clearItems : function() {
@@ -393,7 +450,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._container.toggleClass('controls-ComboBox__editable-false', editable === false);
       },
       /**
-       * Признак возможности ручного ввода.@remark
+       * Признак возможности ручного ввода.
+       * @remark
        * Возможные значения:
        * <ul>
        *    <li>true - в случае отсутствия среди имеющихся пунктов нужного можнно ввести значение с клавиатуры;</li>

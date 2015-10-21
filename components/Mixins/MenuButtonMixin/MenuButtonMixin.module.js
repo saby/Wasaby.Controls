@@ -6,6 +6,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
     * @mixin SBIS3.CONTROLS.MenuButtonMixin
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
    'use strict';
 
@@ -23,6 +24,10 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
         */
       $protected: {
          _options: {
+            /**
+             * @cfg {String} Поле иерархии
+             */
+            hierField : null
          }
       },
 
@@ -31,16 +36,19 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
       },
 
       _createPicker: function(targetElement){
-         return new ContextMenu({
+         var menuconfig = {
             parent: this.getParent(),
+            opener: this,
             context: this.getParent() ? this.getParent().getLinkedContext() : {},
             element: targetElement,
             target : this.getContainer(),
-            items: this._items,
-            corner : 'bl',
+            items: this._options.items,
+            corner : 'tl',
             enabled: this.isEnabled(),
             hierField: this._options.hierField,
             keyField: this._options.keyField,
+            //title задано для совместимости со старыми контролами, когда люди не указывали displayField
+            displayField: this._options.displayField || 'title',
             verticalAlign: {
                side: 'top'
             },
@@ -49,28 +57,67 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             },
             closeByExternalClick: true,
             targetPart: true
+         };
+         if (this._dataSource) {
+            menuconfig.dataSource = this._dataSource;
+         }
+         else {
+            menuconfig.items = this._options.items;
+         }
+         return new ContextMenu(menuconfig);
+      },
+
+      _setPickerContent: function(){
+         var self = this,
+            header = this._getHeader();
+         header.bind('click', function(){
+            self._onHeaderClick();
          });
+         this._picker.getContainer().prepend(header);
+      },
+
+      _getHeader: function(){
+         var header = $('<div class="controls-Menu__header">');
+         if (this._options.icon) {
+            header.append('<i class="' + this._options.iconTemplate(this._options) + '"></i>');
+         }
+         header.append('<span class="controls-Menu__header-caption">' + (this._options.caption || '')  + '</span>');
+         return header;
+      },
+
+      _onHeaderClick: function(){
+         this.togglePicker();
       },
 
       after : {
          _initializePicker : function() {
             var self = this;
             this._picker.subscribe('onMenuItemActivate', function(e, id) {
-               self._notify('onMenuItemActivate', id)
-            })
+               self._notify('onMenuItemActivate', id);
+            });
+         },
+
+         //TODO в 3.7.3 ждать починки от Вити
+         setEnabled: function (enabled) {
+            if (this._picker) {
+               this._picker.setEnabled(enabled);
+            }
          }
       },
 
-      _drawItems : function() {
-         var self = this;
+      _redraw  : function() {
          if (this._picker) {
             this._picker.destroy();
+            this._initializePicker();
          }
-         this._initializePicker();
-         this._initMenu();
+      },
+      /*TODO придротный метод для совместимости, надо выпилить*/
+      addItem : function(item) {
+         var items = this.getItems() || [];
+         items.push(item);
+         this.setItems(items);
       }
    };
 
    return MenuButtonMixin;
 });
-

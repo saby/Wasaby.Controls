@@ -5,12 +5,15 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
    'use strict';
 
    /**
-    * Реализация интерфеса IDataStrategy для работы с массивами.
+    * Реализация интерфейса SBIS3.CONTROLS.IDataStrategy для работы с массивами.
     * Позволяет работать с массивом объектов на статике.
+    * @class SBIS3.CONTROLS.ArrayStrategy
+    * @extends SBIS3.CONTROLS.IDataStrategy
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
-   var ArrayStrategy = IDataStrategy.extend({
+   var ArrayStrategy = IDataStrategy.extend(/** @lends SBIS3.CONTROLS.ArrayStrategy.prototype */{
       $protected: {},
       $constructor: function () {
       },
@@ -104,17 +107,17 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
        * @returns {*}
        */
       type: function (data, field) {
-         return 'Текст';
+         return field in data ? 'Текст' : undefined;
       },
        /**
-        * Метод добавления записи.
-        * @param {Array} data
-        * @param record
-        * @param at
+        * Добавляет запись
+        * @param {Array} data Массив "сырых" данных
+        * @param {SBIS3.CONTROLS.Record} record Добавляемая запись
+        * @param {Integer} [at] Позиция вставки (по умолчанию в конец)
         */
       addRecord: function (data, record, at) {
          var rawData = record.getRaw();
-         if (at) {
+         if (at !== undefined && at >= 0) {
             data.splice(at, 0, rawData);
          } else {
             data.push(rawData);
@@ -158,7 +161,9 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
       //TODO пустышка
       getMetaData: function (data) {
          return {
-            more: data.length
+            more: data ? data.length : 0,
+            path : [],
+            results : {}
          };
       },
 
@@ -204,8 +209,14 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
                row[orderColumn] = data[i + shiftSize][orderColumn];
             }
          }
-      }
+      },
+      setParentKey: function(record, hierField, parent) {
+         record.set(hierField, parent);
+      },
 
+      getFullFieldData: function(data, name) {
+         return {};
+      }
    });
 
    return ArrayStrategy;

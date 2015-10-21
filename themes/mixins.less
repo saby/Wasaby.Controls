@@ -14,21 +14,27 @@
   user-select: @select;
 }
 
-.placeholder(@rules) {
+.closedHandCursor() {
+   cursor: -moz-grabbing !important;
+   cursor: -webkit-grabbing !important;
+   cursor: grabbing !important;
+}
+
+.placeholder() {
   &::-webkit-input-placeholder {
-    @rules();
+    color: @text-box-placeholder-color;
   }
 
   &:-moz-placeholder {
-    @rules();
+     color: darken(@text-box-placeholder-color, 17%);
   }
 
   &::-moz-placeholder {
-    @rules();
+     color: darken(@text-box-placeholder-color, 17%);
   }
 
   &:-ms-input-placeholder {
-    @rules();
+     color: @text-box-placeholder-color;
   }
 }
 
@@ -166,4 +172,9 @@
   -moz-transform-origin: @x @y;
   -ms-transform-origin: @x @y;
   -o-transform-origin: @x @y;
+}
+.vertical-center-mixin(@padding-top, @height){
+   position: absolute;
+   top: 50%;
+   margin-top: -(@height / 2 - @padding-top);
 }

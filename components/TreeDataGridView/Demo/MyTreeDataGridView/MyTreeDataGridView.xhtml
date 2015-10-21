@@ -1,0 +1,22 @@
+<div class="MyTreeDataGridView">
+   <component data-component="SBIS3.CONTROLS.BreadCrumbs" name="MyBreadCrumbs" class="MyBreadCrumbs"></component>
+   <component data-component="SBIS3.CONTROLS.BackButton" name="MyBackButton" class="MyBackButton"></component>
+   <component data-component="SBIS3.CONTROLS.TreeDataGridView" name="MyTreeDataGridView">
+      <options name="columns" type="array">
+         <options>
+            <option name="title">Заголовок</option>
+            <option name="field">title</option>
+         </options>
+         <options>
+            <option name="title">№</option>
+            <option name="width" type="string">100</option>
+            <option name="field">id</option>
+         </options>
+      </options>
+      <option name="displayField">title</option>
+      <option name="ignoreLocalPageSize">true</option>
+      <option name="hierField">parent</option>
+      <option name="emptyHTML">Нет записей</option>
+      <option name="multiselect">true</option>
+   </component>
+</div>

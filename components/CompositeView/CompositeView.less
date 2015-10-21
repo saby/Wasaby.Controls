@@ -4,7 +4,7 @@
     line-height: @data-grid-cell-height;
     padding: @data-grid-cell-padding;
     cursor: @data-grid-cell-cursor;
-    &:hover {
+    &.controls-ListView__hoveredItem {
       background: @data-grid-row-hover-bg;
     }
     &.controls-ListView__folder {
@@ -13,11 +13,14 @@
       width: 229px;
       height: 190px;
       border: none;
-      .controls-CompositeView__tileImg {
+      .controls-CompositeView__tileImg-container {
         display: block;
         width: 120px;
         height: 120px;
         margin: @multiView-tile-item-image-margin;
+        .controls-CompositeView__tileImg {
+           width: 120px;
+         }
       }
       .controls-CompositeView__tileTitle {
         font-weight: 600;
@@ -25,15 +28,21 @@
         color: #313e78;
         text-align: center;
         margin-top: @multiView-tile-item-text-margin;
+        line-height: @data-grid-cell-height;
       }
       &:hover {
         .controls-CompositeView__tileTitle {
           text-decoration: underline;
         }
+        .controls-CompositeView__tileImg-container{
+          box-shadow: 1px 2px 4px #aaa;
+        }
       }
     }
   }
-
+  &.controls-CompositeView-table .controls-Pager-container {
+     display : none
+  }
   .controls-CompositeView__listItem-defaultFolderImage {
     background: @multiView-default-folder-bg;
   }
@@ -45,6 +54,8 @@
   &.controls-CompositeView-tile {
     .controls-CompositeView__itemsContainer {
       padding: @multiView-tile-itemsContainer-padding;
+      //Скорее всего не нужно 14.09.2015
+      /* min-height: 40px; */
     }
   }
   &.controls-CompositeView-tile, &.controls-CompositeView-list {
@@ -61,8 +72,41 @@
       }
     }
   }
+
+   .controls-CompositeView__listItem{
+      &.controls-ListView__item__selected{
+         &:not(.controls-ListView__folder), &.controls-ListView__folder .controls-CompositeView__tileTitle{
+            background-image: url('img/rowSelect.png');
+            background-position: left top;
+            background-repeat: repeat-y;
+         }
+      }
+   }
+
+   .controls-CompositeView__tileItem{
+      &.controls-ListView__item__selected{
+         .controls-CompositeView__tileTitle{
+            background-image: url('img/rowSelect.png');
+            background-position: left top;
+            background-repeat: repeat-y;
+         }
+      }
+   }
+
+   .controls-ListView__item__selected{
+      .controls-ListView__item-title{
+         background-image: url('img/rowSelect.png');
+         background-position: left top;
+         background-repeat: repeat-y;
+      }
+   }
+   .controls-ListView__item-title{
+      height: 27px;
+      line-height: 27px;
+   }
   .controls-CompositeView__tileItem {
     display: inline-block;
+    vertical-align: top;
     cursor: pointer;
     text-align: left;
     border: @multiView-tile-item-border;
@@ -79,13 +123,17 @@
       width: 229px;
       height: 190px;
       border: none;
-      .controls-CompositeView__tileImg {
+      .controls-CompositeView__tileImg-container {
         display: block;
         width: 120px;
         height: 120px;
         margin: @multiView-tile-item-image-margin;
+        .controls-CompositeView__tileImg {
+           width: 120px;
+         }
       }
       .controls-CompositeView__tileTitle {
+        line-height: @data-grid-cell-height;
         font-weight: 600;
         font-size: 15px;
         color: #313e78;
@@ -93,6 +141,9 @@
       &:hover {
         .controls-CompositeView__tileTitle {
           text-decoration: underline;
+        }
+        .controls-CompositeView__tileImg-container{
+          box-shadow: 1px 2px 4px #aaa;
         }
       }
     }
@@ -104,11 +155,10 @@
       margin: @multiView-tile-item-image-margin;
     }
     .controls-CompositeView__tileTitle {
-      font-family: Tahoma;
+      font-family: @font-basic-name;
       margin-top: @multiView-tile-item-text-margin;
       font-size: 15px;
       text-align: center;
     }
   }
-
 }

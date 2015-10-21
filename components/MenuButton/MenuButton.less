@@ -2,12 +2,6 @@
   // Normal button
   &.controls-MenuButton {
     position: relative;
-    padding: 0; //FF ignore padding in button, therefore we use SPAN with margin
-
-    &.controls-MenuButton__withoutMenu {
-      padding: @menu-button-no-arrow-padding;
-    }
-
     .controls-MenuButton__arrowDown {
       position: absolute;
       display: inline-block;
@@ -115,6 +109,16 @@
     }
   }
 }
+.controls-MenuButton {
+   &.controls-MenuButton__withoutMenu {
+      .controls-Button__text {
+         margin: @button-text-margin;
+      }
+      .controls-Button__icon + .controls-Button__text {
+         margin: @button-icon-text-margin; //this margin reserve space for arrow-down icon
+      }
+   }
+}
 
 // Header
 .controls-MenuButton__header {
@@ -201,18 +205,13 @@
 }
 
 .controls-MenuButton__Menu {
+  padding: @menu-button-menu-padding;
   margin-top: @menu-button-menu-top-margin;
   margin-left: @menu-button-menu-left-margin;
   border-width: @menu-button-menu-border-width;
   border-style: @menu-button-menu-border-style;
   border-color: @menu-button-menu-border-color;
   background: @menu-button-menu-bg;
-}
-
-@-moz-document url-prefix() {
-  .controls-Button.controls-MenuButton {
-    padding-bottom: 3px;
-  }
 }
 
 //Правка смещения для стрелки в ie8. ! В режиме эмуляции ie8 проблемы не видно, только в настоящем ie8
@@ -223,4 +222,7 @@
       top: @menu-button-arrow-top-offset - 4px;
     }
   }
+   .controls-MenuButton__header {
+      display: none;
+   }
 }

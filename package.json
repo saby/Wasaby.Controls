@@ -17,6 +17,10 @@
     "grunt-contrib-less": "1.0.0",
     "grunt-contrib-watch": "0.6.1",
     "grunt-express-server": "0.4.19",
-    "load-grunt-config": "0.16.0"
+    "load-grunt-config": "0.16.0",
+    "requirejs": "2.1.18",
+    "squirejs": "0.2.1",
+    "mocha": "2.2.5",
+    "chai": "2.3.0"
   }
 }

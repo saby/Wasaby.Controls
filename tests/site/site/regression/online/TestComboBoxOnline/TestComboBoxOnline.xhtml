@@ -1,0 +1,85 @@
+<div style="width:800px;height:600px;">
+
+    <!--ComboBox 1-->
+    <span data-lmchild="label-title" class="ws-Label-title">Выпадающий список</span>
+
+    <div id="ComboBox1" class="ws-hbox" style="height:120px;margin-top:10px;">
+        <component data-component="SBIS3.CONTROLS.ComboBox" name="ComboBox 1">
+            <options name="items" type="array">
+                <options>
+                    <option name="key">1</option>
+                    <option name="title">Пункт1</option>
+                </options>
+                <options>
+                    <option name="key">2</option>
+                    <option name="title">Пункт2</option>
+                </options>
+            </options>
+            <option name="keyField">key</option>
+        </component>
+        <span>baseline</span>
+    </div>
+
+    <!--ComboBox 2-->
+    <span data-lmchild="label-title" class="ws-Label-title">Выпадающий список c заполнителем</span>
+
+    <div id="ComboBox2" class="ws-hbox" style="height:120px;margin-top:10px;">
+        <component data-component="SBIS3.CONTROLS.ComboBox" name="ComboBox 2">
+            <options name="items" type="array">
+                <options>
+                    <option name="key">1</option>
+                    <option name="title">Пункт3</option>
+                </options>
+                <options>
+                    <option name="key">2</option>
+                    <option name="title">Пункт4</option>
+                </options>
+            </options>
+            <option name="keyField">key</option>
+            <option name="placeholder">placeholder</option>
+        </component>
+        <span>baseline</span>
+    </div>
+
+    <!--ComboBox 3-->
+    <span data-lmchild="label-title" class="ws-Label-title">Выпадающий список в текстом</span>
+
+    <div id="ComboBox3" class="ws-hbox" style="height:120px;margin-top:10px;">
+        <component data-component="SBIS3.CONTROLS.ComboBox" name="ComboBox 3">
+            <options name="items" type="array">
+                <options>
+                    <option name="key">1</option>
+                    <option name="title">Пункт5</option>
+                </options>
+                <options>
+                    <option name="key">2</option>
+                    <option name="title">Пункт6</option>
+                </options>
+            </options>
+            <option name="keyField">key</option>
+            <option name="text">text</option>
+        </component>
+        <span>baseline</span>
+    </div>
+
+    <!--ComboBox 4-->
+    <span data-lmchild="label-title" class="ws-Label-title">Выпадающий список с транс. текста - нижний регистр</span>
+
+    <div id="ComboBox4" class="ws-hbox" style="height:120px;margin-top:10px;">
+        <component data-component="SBIS3.CONTROLS.ComboBox" name="ComboBox 4">
+            <options name="items" type="array">
+                <options>
+                    <option name="key">1</option>
+                    <option name="title">Пункт7</option>
+                </options>
+                <options>
+                    <option name="key">2</option>
+                    <option name="title">Пункт8</option>
+                </options>
+            </options>
+            <option name="keyField">key</option>
+            <option name="textTransform">lowercase</option>
+        </component>
+        <span>baseline</span>
+    </div>
+</div>

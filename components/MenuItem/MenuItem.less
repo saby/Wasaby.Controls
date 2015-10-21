@@ -7,13 +7,16 @@
   width: @menu-item-width;
   height: @menu-item-height;
   line-height: @menu-item-line-height;
-  padding: @menu-item-padding;
+  padding: @menu-item-default-padding;
   color: @menu-item-text-color;
   background: @menu-item-bg;
 
   &:hover {
     color: @menu-item-hover-text-color;
     background: @menu-item-hover-bg;
+    .controls-MenuItem__icon{
+      color: @menu-item-hover-icon-color;
+    }
   }
 
   .controls-MenuItem__content {

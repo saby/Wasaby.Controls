@@ -1,0 +1,79 @@
+/* Цветовая схема для опций записи */
+.controls-ListView {
+  .controls-ItemActions {
+    background-color: transparent;
+    box-shadow: none;
+  }
+  &.controls-DataGridView {
+
+    .controls-ItemActions {
+      background-color: @list-view-actions-bg;
+      box-shadow: @list-view-actions-box-shadow;
+    }
+    .controls-ItemActions__activeItem {
+      background-color: @list-view-actions-active-bg;
+
+      .controls-DataGrid__notScrolledCell {
+        background-color: @list-view-actions-active-bg !important;
+      }
+    }
+  }
+}
+
+.controls-ItemActions {
+  position: absolute;
+  height: @list-view-actions-height;
+  z-index: @list-view-actions-zindex;
+  display: none;
+
+  > * {
+    display: inline-block;
+    cursor: @list-view-actions-cursor;
+    margin: @list-view-actions-margin;
+    width: 16px;
+    height: 16px;
+    padding: 0 !important;
+
+    &.controls-ItemActions__hiddenAction {
+      display: none !important;
+    }
+
+    &.controls-ItemActions__menu-button {
+      display: inline-block;
+      z-index: 11;
+      background: @list-view-actions-menu-icon;
+      float: right;
+
+      &:hover {
+        background: @list-view-actions-menu-icon-hover;
+      }
+    }
+  }
+  > .controls-Link {
+    display: inline;
+  }
+}
+.controls-ItemActions__menu-container {
+  .controls-MenuItem {
+    padding-right: 24px;
+  }
+  .controls-PopupMixin__closeButton {
+    height: 16px;
+    width: 16px;
+    z-index: 1;
+    right: 4px;
+    top: 4px;
+    position: absolute;
+    cursor: @list-view-actions-cursor;
+    background: @list-view-actions-menu-icon-close;
+    &:hover {
+      background: @list-view-actions-menu-icon 0 -60px;
+    }
+  }
+}
+.controls-ItemActions__activeItem {
+  background-color: @list-view-actions-active-bg;
+  .controls-DataGridView__notScrolledCell {
+     background-color: @list-view-actions-active-bg !important;
+  }
+}

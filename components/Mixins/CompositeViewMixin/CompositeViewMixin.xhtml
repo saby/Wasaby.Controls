@@ -1,45 +1,23 @@
-<div class="controls-CompositeView controls-DataGrid controls-ListView{{?it.multiselect !== false}} controls-ListView__multiselect{{?}}">
+<div class="controls-CompositeView controls-DataGridView controls-ListView{{?it.multiselect !== false}} controls-ListView__multiselect{{?}}">
+   <div class="controls-AjaxLoader ws-hidden">
+      <div class="controls-AjaxLoader__outer">
+         <div class="controls-AjaxLoader__block">
+            <div class="controls-AjaxLoader__LoadingIndicator"></div>
+         </div>
+      </div>
+   </div>
    <div class="controls-CompositeView__itemsContainer ws-hidden">
       <div class="controls-CompositeView__foldersContainer"></div>
    </div>
-   <table class="controls-DataGrid__table">
-      <colgroup class="controls-DataGrid__colgroup">
-         {{?it.multiselect}}
-         <col/>
-         {{?}}
-         {{~it.columns :column:index}}
-         <col{{?column.width}} width="{{=column.width}}" {{?}}/>
-         {{~}}
-      </colgroup>
-      <thead class="controls-DataGrid__thead{{?it.showHead === false}} ws-hidden{{?}}">
+   <table class="controls-DataGridView__table">
+      <tbody class="controls-DataGridView__tbody"></tbody>
+      <tfoot class="controls-DataGridView__tfoot ws-hidden">
       <tr>
          {{?it.multiselect}}
-         <th class="controls-DataGrid__th controls-DataGrid__td__checkBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}"><span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox controls-DataGrid__th__checkBox"></span></th>
+         <td class="controls-DataGridView__td__checkBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}"></td>
          {{?}}
          {{~it.columns :column:index}}
-         <th class="controls-DataGrid__th{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}">{{=column.title}}</th>
-         {{~}}
-      </tr>
-      {{? it.startScrollColumn !== undefined }}
-      <tr>
-          <th class="controls-DataGrid__PartScroll__row" colspan="{{=it.columns.length}}">
-              <div class="controls-DataGrid__PartScroll__container ws-hidden">
-                  <i class="controls-DataGrid__PartScroll__arrowLeft icon-24 icon-DayBackward  icon-disabled"/>
-                  <div class="controls-DataGrid__PartScroll__thumb"/>
-                  <i class="controls-DataGrid__PartScroll__arrowRight icon-24 icon-DayForward icon-primary action-hover"/>
-              </div>
-          </th>
-      </tr>
-      {{?}}
-      </thead>
-      <tbody class="controls-DataGrid__tbody"></tbody>
-      <tfoot class="controls-DataGrid__tfoot ws-hidden">
-      <tr>
-         {{?it.multiselect}}
-         <td class="controls-DataGrid__td__checkBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}"></td>
-         {{?}}
-         {{~it.columns :column:index}}
-         <td class="controls-DataGrid__td{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGrid__scrolledCell{{??}} controls-DataGrid__notScrolledCell{{?}}{{?}}"></td>
+         <td class="controls-DataGridView__td{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}"></td>
          {{~}}
       </tr>
       </tfoot>
@@ -52,5 +30,6 @@
    {{?}}
    {{? it.showPaging}}
       <div class="controls-Pager-container"></div>
+      <div class="controls-TreePager-container"></div>
    {{?}}
 </div>

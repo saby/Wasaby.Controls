@@ -1,88 +1,62 @@
 .controls-MenuLink {
-  position: relative;
-  color: @menu-link-text-color;
-  text-decoration: @menu-link-text-decoration;
-  padding: @menu-link-arrow-padding;
-  line-height: @menu-link-line-height;
-
-  &.controls-MenuLink__32px{
-    line-height: 32px;
-    .controls-MenuLink__arrowDown{
-     top: @menu-link-arrow-top-offset-big;
-    }
-  }
-
-  &.controls-MenuLink__withoutMenu {
-    padding: @menu-link-no-arrow-padding;
-  }
-
-  &.ws-enabled{
-    &:hover {
-      color: @menu-link-hover-text-color;
-      text-decoration: @menu-link-hover-text-decoration;
-
-      .controls-MenuLink__arrowDown {
-        background: @menu-link-hover-arrow-bg;
+   line-height: @menu-link-line-height;
+   position: relative;
+   padding: @menu-link-arrow-padding;
+   text-decoration: @menu-link-text-decoration;
+   color: @menu-link-text-color;
+   &.controls-MenuLink__withoutMenu {
+      padding: @menu-link-no-arrow-padding;
+   }
+   &.ws-enabled {
+      &:hover {
+         text-decoration: @menu-link-hover-text-decoration;
+         color: @menu-link-hover-text-color;
       }
-    }
-  }
-
-  .controls-MenuLink__arrowDown {
-    position: absolute;
-    display: inline-block;
-    width: @menu-link-arrow-width;
-    height: @menu-link-arrow-height;
-    right: @menu-link-arrow-right-offset;
-    top: @menu-link-arrow-top-offset;
-    background: @menu-link-arrow-bg;
-    border-width: @menu-link-border-width;
-    border-style: @menu-link-border-style;
-    border-color: @menu-link-border-color
-  }
+   }
+   .controls-MenuButton__arrowDown {
+      font-size: 10px!important;
+      position: absolute;
+      top: @menu-link-arrow-top-offset;
+      right: @menu-link-arrow-right-offset;
+      display: inline-block;
+      width: @menu-link-arrow-width;
+      height: @menu-link-arrow-height;
+      border-width: @menu-link-border-width;
+      border-style: @menu-link-border-style;
+      border-color: @menu-link-border-color;
+   }
 }
 
 // Menu
-.controls-MenuLink__Menu {
-  margin-left: @menu-link-menu-left-margin;
-  margin-bottom: @menu-link-menu-margin-bottom;//TODO margin-top игнорирует, поэтому задаю bottom (считается для top)
-  background: @menu-link-menu-bg;
-
-  .controls-MenuLink__header {
-    height: @menu-link-header-height;
-  }
-  .controls-MenuItem{
-    height: @menu-link-header-height;
-  }
-
-  &.controls-Menu__32px {
-    .controls-MenuLink__header {
-      height: @menu-link-header-height-big;
-    }
-    .controls-MenuItem{
-      height: @menu-link-header-height-big;
-    }
-  }
-
-  .controls-MenuLink__header {
-    display: inline-block;
-    .box-sizing(border-box);
-    width: @menu-link-header-width;
-    padding: @menu-link-header-padding;
-    border-bottom: @menu-link-header-bottom-border;
-    background: @menu-link-header-bg;
-
-    .controls-Link {
-      color: @menu-link-checked-text-color;
-      text-decoration: @menu-link-checked-text-decoration;
-
-      &:hover {
-        color: @menu-link-checked-hover-text-color;
-        text-decoration: @menu-link-checked-hover-text-decoration;
+.controls-Menu.controls-MenuLink__Menu {
+   margin: @menu-link-menu-margin;
+   padding: @menu-link-menu-padding;
+   background: @menu-link-menu-bg;
+   .controls-Menu__header {
+      .icon-16 {
+         margin-top: 1px;
       }
-    }
+      .icon-24{
+         position: relative;
+         top: -3px;
+      }
+   }
+   .controls-MenuItem {
+      padding-left: @menu-item-small-padding-left;
+   }
+   .controls-MenuLink__Menu {
+      .controls-MenuLink__arrowDown {
+         display: none;
+      }
+   }
+}
 
-    .controls-MenuLink__arrowDown {
-      display: none;
-    }
-  }
+@-moz-document url-prefix() {
+   .controls-Menu.controls-MenuLink__Menu {
+      .controls-Menu__header {
+         .icon-16 {
+            margin-top: 2px;
+         }
+      }
+   }
 }

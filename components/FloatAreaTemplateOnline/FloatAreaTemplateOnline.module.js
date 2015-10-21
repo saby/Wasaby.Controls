@@ -12,7 +12,7 @@ define('js!SBIS3.Engine.FloatAreaTemplateOnline', ['js!SBIS3.CONTROLS.DialogTemp
     * @class SBIS3.Engine.FloatAreaTemplateOnline
     * @extends SBIS3.CONTROLS.DialogTemplate
     * @control
-    * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var FloatAreaTemplateOnline = DialogTemplate.extend( /** @lends SBIS3.Engine.FloatAreaTemplateOnline.prototype*/ {

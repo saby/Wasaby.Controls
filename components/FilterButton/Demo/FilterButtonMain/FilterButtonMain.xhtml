@@ -1,0 +1,152 @@
+<div>
+    <component data-component="SBIS3.CONTROLS.FilterButton">
+        <opt name="name" value="filterButton" />
+
+        <!--
+            это свойство "на выход" - для удобного получения фильтра.
+            снаружи его ставить не надо, чтобы не было противоречия с filterStructure.
+            снаружи фильтр надо ставить через filterStructure  / или всё же ставить, но тогда он изменит и filterStructure ???
+            так лучше, наверное. а filterStructure изменит его при установке - то есть они оба меняют внутр. переменную filter
+        -->
+        <opt name="filter"></opt>
+
+        <opt name="resetLinkText">Нужно отобрать?</opt>
+
+        <opts name="filterStructure" type="array">
+            <opts>
+                <!-- По умолчанию будет NDS, если не указано - тоже NDS -->
+                <opt name="internalValueField">NDS</opt>
+
+                <!-- По умолчанию будет NDS -->
+                <opt name="internalCaptionField">NDSText</opt>
+
+                <!-- По умолчанию будет "ничего" - если по привязке нет, и тут нет -->
+                <opt name="caption" bind="filterDescr/NDS"></opt>
+
+                <opt name="value" bind="filter/NDS"></opt>
+
+                <opt name="resetValue" type="string">1</opt>
+                <opt name="resetCaption">Без НДС</opt>
+            </opts>
+            <opts>
+                <opt name="internalValueField">clientName</opt>
+
+                <opt name="caption" bind="filterDescr/clientName"></opt>
+
+                <opt name="value" bind="filter/clientName"></opt>
+
+                <opt name="resetValue"></opt>
+            </opts>
+            <opts>
+                <opt name="internalValueField">selling</opt>
+
+                <opt name="internalCaptionField">sellingText</opt>
+
+                <opt name="caption" bind="filterDescr/selling"></opt>
+
+                <opt name="value" bind="filter/selling"></opt>
+
+                <opt name="resetValue"></opt>
+            </opts>
+            <opts>
+                <opt name="internalValueField">using</opt>
+
+                <opt name="internalCaptionField">usingText</opt>
+
+                <opt name="caption" bind="filterDescr/using"></opt>
+
+                <opt name="value" bind="filter/using"></opt>
+
+                <opt name="resetValue"></opt>
+            </opts>
+        </opts>
+
+        <opt name="template">
+            <component data-component="SBIS3.CONTROLS.Demo.FilterButtonFilterContent"></component>
+        </opt>
+    </component>
+
+    <div data-bind="{html: 'filterJSON'}"></div>
+    <div data-bind="{html: 'filterDescrJSON'}"></div>
+
+    <component data-component="SBIS3.CONTROLS.DataGrid" style="width: 600px; position: relative;">
+        <opt name="filter" bind="filter"></opt>
+        <options name="columns" type="array">
+            <options>
+                <option name="title">Заголовок</option>
+                <option name="width" type="string">100</option>
+                <option name="field">title</option>
+            </options>
+            <options>
+                <option name="title">NDS</option>
+                <option name="width" type="string">100</option>
+                <option name="field">NDSText</option>
+            </options>
+            <options>
+                <option name="title">selling</option>
+                <option name="width" type="string">250</option>
+                <option name="field">sellingText</option>
+            </options>
+            <options>
+                <option name="title">using</option>
+                <option name="width" type="string">150</option>
+                <option name="field">usingText</option>
+            </options>
+        </options>
+        <option name="emptyHTML">Нет записей</option>
+        <options name="items" type="array">
+
+            <options>
+                <option name="title" type="string">Один</option>
+
+                <option name="NDSText" type="string">Без НДС</option>
+                <option name="sellingText">Все (для продажи и нет)</option>
+                <option name="usingText">Используемые</option>
+
+                <option name="NDS" type="string">1</option>
+                <option name="selling">1</option>
+                <option name="using">1</option>
+            </options>
+
+            <options>
+                <option name="title" type="string">Два</option>
+                <option name="NDSText" type="string">Без НДС</option>
+                <option name="sellingText">Все (для продажи и нет)</option>
+                <option name="usingText">Используемые</option>
+
+                <option name="NDS" type="string">1</option>
+                <option name="selling">1</option>
+                <option name="using">1</option>
+            </options>
+
+            <options>
+                <option name="title" type="string">Три</option>
+
+                <option name="NDSText" type="string">Без НДС</option>
+                <option name="sellingText">Все (для продажи и нет)</option>
+                <option name="usingText">Используемые</option>
+
+                <option name="NDS" type="string">1</option>
+                <option name="selling">1</option>
+                <option name="using">1</option>
+            </options>
+           <options>
+              <option name="title" type="string">Четыре</option>
+
+              <option name="NDSText" type="string">С НДС</option>
+              <option name="sellingText">Все (для продажи и нет)</option>
+              <option name="usingText">Используемые</option>
+
+              <option name="NDS" type="string">2</option>
+              <option name="selling">2</option>
+              <option name="using">1</option>
+           </options>
+        </options>
+        <options name="selectedKeys" type="array">
+            <option type="string">1</option>
+            <option type="string">2</option>
+            <option type="string">5</option>
+        </options>
+        <option name="multiselect">true</option>
+    </component>
+</div>

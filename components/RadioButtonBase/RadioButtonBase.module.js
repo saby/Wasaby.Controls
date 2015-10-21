@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.RadioButtonBase', ['js!SBIS3.CONTROLS.ButtonBase', 'js
     * @class SBIS3.CONTROLS.RadioButtonBase
     * @extends SBIS3.CONTROLS.ButtonBase
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var RadioButtonBase = ButtonBase.extend([Checkable], /** @lends SBIS3.CONTROLS.RadioButtonBase.prototype */ {

@@ -12,10 +12,10 @@ define('js!SBIS3.CONTROLS.TagSelector', ['js!SBIS3.CONTROLS.TextBox'], function(
     * если не задать источник данных - коллекцию, то можно добавлять любые значения. Иначе только из списка
     * @class SBIS3.CONTROLS.TagSelector
     * @extends SBIS3.CONTROLS.TextBox
-    * @public
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @mixes SBIS3.CONTROLS.MultiSelectable
+    * @author Крайнов Дмитрий Олегович
     */
 
    var TagSelector = TextBox.extend(/** @lends SBIS3.CONTROLS.TagSelector.prototype */{

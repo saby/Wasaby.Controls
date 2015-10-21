@@ -1,18 +1,23 @@
 define('js!SBIS3.CONTROLS.TreeViewDS', [
-   'js!SBIS3.CONTROLS.ListViewDS',
+   'js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'js!SBIS3.CONTROLS.TreeMixinDS',
    'js!SBIS3.CORE.MarkupTransformer'
-], function (ListViewDS, hierarchyMixin, TreeMixinDS, MarkupTransformer) {
+], function (ListView, hierarchyMixin, TreeMixinDS, MarkupTransformer) {
    'use strict';
    /**
     * Контрол, отображающий данные имеющие иерархическую структуру. Позволяет отобразить данные в произвольном виде с возможностью открыть или закрыть отдельные узлы
     * @class SBIS3.CONTROLS.TreeViewDS
-    * @extends SBIS3.CONTROLS.ListViewDS
+    * @control
+    * @public
+    * @extends SBIS3.CONTROLS.ListView
+    * @mixes SBIS3.CONTROLS.hierarchyMixin
     * @mixes SBIS3.CONTROLS.TreeMixinDS
+    * @demo SBIS3.CONTROLS.Demo.MyTreeView
+    * @author Крайнов Дмитрий Олегович
     */
 
-   var TreeViewDS = ListViewDS.extend([hierarchyMixin, TreeMixinDS], /** @lends SBIS3.CONTROLS.TreeViewDS.prototype*/ {
+   var TreeViewDS = ListView.extend([hierarchyMixin, TreeMixinDS], /** @lends SBIS3.CONTROLS.TreeViewDS.prototype*/ {
       $protected: {
          _options: {
             //FixME: так как приходит набор от листвью. пока он не нужен
@@ -25,7 +30,7 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
             parentKey = this._dataSet.getParentKey(record, this._options.hierField),
             curList;
 
-         if (parentKey) {
+         if (parentKey && (parentKey !== this._curRoot)) {
             var parentItem = $('.controls-ListView__item[data-id="' + parentKey + '"]', this.getContainer().get(0));
             curList = $('.controls-TreeView__childContainer', parentItem.get(0)).first();
             if (!curList.length) {

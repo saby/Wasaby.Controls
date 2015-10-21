@@ -36,6 +36,7 @@ function(BaseControl, dotTpl){
     * @extends $ws.proto.Control
     * @control
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @category Table
     * @designTime actions /design/design
     * @initial
@@ -984,7 +985,9 @@ function(BaseControl, dotTpl){
                   resultDef.callback();
                }
             }
-            resultDef.errback('Пользовательский обработчик получения данных не является функцией')
+            else {
+               resultDef.errback('Пользовательский обработчик получения данных не является функцией')
+            }
          }
          return resultDef;
       },

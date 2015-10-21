@@ -10,9 +10,9 @@ define('js!SBIS3.CONTROLS.Dialog', ['js!SBIS3.CORE.Control'], function(Control) 
     * Отображает вложенные компоненты в виде диалогового окна, может отображаться модально или не модально.
     * Сам компонент не имеет визуального отображения, не рисует крестик или заголовок, эта логика переносится на компоненты, лежащие внутри.
     * @class SBIS3.CONTROLS.Dialog
-    * @public
     * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS.PopupMixin
+    * @author Крайнов Дмитрий Олегович
     */
 
    var Dialog = Control.Control.extend( /** @lends SBIS3.CONTROLS.Dialog.prototype*/ {

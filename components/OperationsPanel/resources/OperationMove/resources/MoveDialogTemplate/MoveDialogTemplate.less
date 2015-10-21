@@ -1,10 +1,19 @@
 .controls-MoveDialogTemplate {
-   .controls-MoveDialogTemplate-TreeDataGrid {
+   .controls-MoveDialogTemplate-TreeDataGridView {
       padding: 0 0 5px 0;
+      min-height: 50px;
       width: 100%;
-      /*TODO как скрыть PathSelector?*/
-      .controls-HierarchyDataGrid__PathSelector {
+      /*TODO скрываем подгрузку (ещё null)*/
+      .controls-TreeDataGridView__folderToolbar {
          display: none;
+      }
+      .controls-DataGridView__table {
+         .controls-DataGridView__td {
+            padding-left: 22px;
+         }
+         .controls-MoveDialog__root {
+            padding-left: 6px;
+         }
       }
    }
 }

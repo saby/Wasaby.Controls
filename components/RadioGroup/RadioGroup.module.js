@@ -13,6 +13,7 @@ function(RadioGroupBase, dotTpl) {
     * @extends SBIS3.CONTROLS.RadioGroupBase
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @control
+    * @author Крайнов Дмитрий Олегович
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyRadioGroup
     * @initial
@@ -32,6 +33,7 @@ function(RadioGroupBase, dotTpl) {
     * </component>
     *
     * @cssModifier controls-ButtonGroup__vertical Для вертикального расположения элементов в группе.
+    * @cssModifier controls-Radio__primary акцентные кнопки
     *
     * @ignoreOptions className extendedTooltip handlers linkedContext
     *
@@ -48,7 +50,7 @@ function(RadioGroupBase, dotTpl) {
         * @cfg {SBIS3.CONTROLS.CheckBoxGroup/GroupItems.typedef[]} Набор исходных данных, по которому строится отображение
         * @name SBIS3.CONTROLS.RadioGroup#items
         * @example
-        * <pre>
+        * <pre class="brush:xml">
         *     <options name="items" type="array">
         *        <options>
         *            <option name="id">1</option>
@@ -73,8 +75,11 @@ function(RadioGroupBase, dotTpl) {
       },
 
       _getItemTemplate : function(item) {
-         var caption = item.get(this._options.displayField);
-         return '<component data-component="SBIS3.CONTROLS.RadioButton">' +
+         var
+            caption = item.get(this._options.displayField),
+            className = this._container.hasClass('controls-Radio__primary') ? ' class="controls-Radio__primary"' : '';
+
+         return '<component data-component="SBIS3.CONTROLS.RadioButton"'+className+'>' +
                '<option name="caption">'+caption+'</option>'+
             '</component>';
       }

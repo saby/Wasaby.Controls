@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SB
     * @extends SBIS3.CONTROLS.SwitcherBase
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @control
+    * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MySwitcher
     * @public
     * @initial

@@ -1,0 +1,24 @@
+.controls-Suggest {
+  &__loadingContainer {
+    position: relative;
+  }
+
+  &__loadingIndicator {
+    background: @suggest-loading-bg;
+    background-size: contain;
+    height: @suggest-loading-height;
+    position: absolute;
+    right: @suggest-loading-right;
+    top: @suggest-loading-top;
+    width: @suggest-loading-width;
+  }
+
+  &__picker {
+    border: @suggest-picker-border;
+    .border-radius(@suggest-picker-border-radius);
+    .box-shadow(@suggest-picker-box-shadow);
+    margin: @suggest-picker-margin;
+  }
+}
+
+@import 'resources/SuggestList';

@@ -1,0 +1,46 @@
+<div style="width:800px;height:600px;">
+
+    <!--RadioGroup 1-->
+    <div class="ws-hbox" style="height:64px;">
+        <label data-lmtype="Label" class="ws-Label ws-Label-titleLeft ws-float-left">
+            <span data-lmchild="label-title" class="ws-Label-title">Default</span>
+        </label>
+        <component data-component="SBIS3.CONTROLS.RadioGroup" class="ws-float-left" name="RadioGroup 1">
+            <options name="items" type="array">
+                <options>
+                    <option name="id" type="string">1</option>
+                    <option name="title">RadioButton 1</option>
+                </options>
+                <options>
+                    <option name="id" type="string">2</option>
+                    <option name="title">RadioButton 2</option>
+                </options>
+            </options>
+            <option name="keyField">id</option>
+            <option name="captionField">title</option>
+        </component>
+    </div>
+
+    <!--RadioGroup 2-->
+    <div class="ws-hbox" style="height:64px;">
+        <label data-lmtype="Label" class="ws-Label ws-Label-titleLeft ws-float-left">
+            <span data-lmchild="label-title" class="ws-Label-title">Default vertical</span>
+        </label>
+        <component data-component="SBIS3.CONTROLS.RadioGroup" class="ws-float-left controls-ButtonGroup__vertical"
+                   name="RadioGroup 2">
+            <options name="items" type="array">
+                <options>
+                    <option name="id" type="string">3</option>
+                    <option name="title">RadioButton 3</option>
+                </options>
+                <options>
+                    <option name="id" type="string">4</option>
+                    <option name="title">RadioButton 4</option>
+                </options>
+            </options>
+            <option name="keyField">id</option>
+            <option name="captionField">title</option>
+        </component>
+    </div>
+
+</div>

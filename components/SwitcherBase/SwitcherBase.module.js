@@ -17,6 +17,7 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CON
     * @class SBIS3.CONTROLS.SwitcherBase
     * @extends $ws.proto.Control
     * @public
+    * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner stateKey

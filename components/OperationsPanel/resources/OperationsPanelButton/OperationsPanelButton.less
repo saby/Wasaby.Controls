@@ -1,0 +1,22 @@
+.controls-OperationsPanelButton {
+   border-radius: @controls-OperationsPanelButton-border-radius;
+   width: @controls-OperationsPanelButton-height;
+   height: @controls-OperationsPanelButton-width;
+
+   &.ws-enabled {
+      cursor: @controls-OperationsPanelButton-cursor;
+      &:hover {
+         background-color: @controls-OperationsPanelButton-hover-bg;
+      }
+   }
+   .controls-OperationsPanelButton__icon {
+      position: relative;
+      left: @controls-OperationsPanelButton-icon-top;
+      top: @controls-OperationsPanelButton-icon-left;
+   }
+   &.controls-Checked__checked {
+      .controls-OperationsPanelButton__icon:before {
+         content: "\e67b";
+      }
+   }
+}

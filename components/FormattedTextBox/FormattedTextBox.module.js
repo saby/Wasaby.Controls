@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.FormattedTextBox', ['js!SBIS3.CONTROLS.FormattedTextBo
     * <component data-component='SBIS3.CONTROLS.FormattedTextBox' style="width:150px;">
     * </component>
     * @category Inputs
+    * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment

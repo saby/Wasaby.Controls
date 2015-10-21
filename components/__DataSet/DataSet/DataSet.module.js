@@ -1,49 +1,59 @@
-/**
- * Created by as.manuylov on 10.11.14.
- */
 define('js!SBIS3.CONTROLS.DataSet', [
    'js!SBIS3.CONTROLS.Record'
 ], function (Record) {
    'use strict';
 
    /**
-    * Класс "Набор данных"
+    * Класс для работы с набором записей.
+    * @class SBIS3.CONTROLS.DataSet
+    * @extends $ws.proto.Abstract
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    /**
-    * Дефолтный набор опций при установке рекордов в датасет
-    * add - нужно ли добавлять новые рекорды
-    * remove - нужно ли удалять рекорды, которые были в датасете, но не входят в новый список рекордов
-    * merge - если рекорд уже находится в датасете, необходимо ли перезаписывать его свойства
+    * @typedef {Object} setOptions Дефолтный набор опций при установке рекордов в датасет
+    * @property {Boolean} add  нужно ли добавлять новые рекорды
+    * @property {Boolean} remove нужно ли удалять рекорды, которые были в датасете, но не входят в новый список рекордов
+    * @property {Boolean} merge если рекорд уже находится в датасете, необходимо ли перезаписывать его свойства
     */
    var setOptions = {add: true, remove: true, merge: true};
-   // Дефолтный набор опций при добавлении рекордов в датасет
+
+   /**
+    * @typedef {Object} addOptions Дефолтный набор опций при добавлении рекордов в датасет
+    * @property {Boolean} add  нужно ли добавлять новые рекорды
+    * @property {Boolean} remove нужно ли удалять рекорды, которые были в датасете, но не входят в новый список рекордов
+    */
    var addOptions = {add: true, remove: false};
 
-   var DataSet = $ws.proto.Abstract.extend({
+   var DataSet = $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.DataSet.prototype */{
       $protected: {
          _indexTree: {},
          _isLoaded: false,
          _byId: {},
          _indexId: [],
-         /**
-          * @cfg {Object} исходные данные для посторения
-          */
          _rawData: undefined,
-         /**
-          * @cfg {String} название поля-идентификатора записи
-          */
          _keyField: undefined,
          _options: {
              /**
-              * @cfg {String}
+              * @cfg {SBIS3.CONTROLS.IDataStrategy} Стратегия для разбора формата
+              * @example
+              * <pre>
+              *     <option name="strategy">ArrayStrategy</option>
+              * </pre>
+              * @variant ArrayStrategy
+              * @variant SbisJSONStrategy
+              * @see getStrategy
               */
             strategy: null,
              /**
-              * @cfg {Object}
+              * @cfg {Object} Исходные данные
               */
             data: undefined,
+            /**
+             * @cfg {Object} Метаданные
+             */
+            meta: {},
             /**
              * @cfg {String} Название поля-идентификатора записи
              * При работе с БЛ значение данной опции проставляется автоматически.
@@ -52,7 +62,10 @@ define('js!SBIS3.CONTROLS.DataSet', [
          }
       },
       $constructor: function () {
+         Record = Record || require('js!SBIS3.CONTROLS.Record');
 
+         this._publish('onRecordChange');
+         
          this._prepareData(this._options.data);
 
          if (this._options.keyField) {
@@ -61,6 +74,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
             this._keyField = this.getStrategy().getKey(this._rawData);
          }
 
+         this.setMetaData(this._options.meta);
       },
 
       /**
@@ -71,7 +85,9 @@ define('js!SBIS3.CONTROLS.DataSet', [
          var self = this;
          var mark = function (key) {
             var record = self.getRecordByKey(key);
-            record.setDeleted(true);
+            if (record) {
+               record.setDeleted(true);
+            }
          };
 
          if (key instanceof Array) {
@@ -97,7 +113,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          }
       },
        /**
-        *
+        * Количество записей в Датасете
         * @returns {*|exports.length|Function|length|.__defineGetter__.length|Number}
         */
       getCount: function () {
@@ -105,12 +121,13 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       _loadFromRaw: function () {
+         var
+            self = this,
+            length,
+            data;
          this._indexId = this.getStrategy().rebuild(this._rawData, this._keyField);
          this._isLoaded = true;
-
-         var length = this.getCount();
-         var data;
-
+         length = this.getCount();
          this._byId = {};
          for (var i = 0; i < length; i++) {
             data = this.getStrategy().at(this._rawData, i);
@@ -119,16 +136,19 @@ define('js!SBIS3.CONTROLS.DataSet', [
                raw: data,
                isCreated: true,//считаем, что сырые данные пришли из реального источника
                keyField: this._keyField,
-               onChangeHandler: this._onRecordChange.bind(this)
+               handlers: {
+                  onChange: function() {
+                     self._notify('onRecordChange', this);
+                  }
+               }
             });
          }
 
       },
 
       /**
-       * Метод получения записи по её идентификатору
-       * @returns {js!SBIS3.CONTROLS.Record} Возвращает рекорд.
-       * @see getRecordKeyByIndex
+       * Возвращает запись по ключу
+       * @returns {SBIS3.CONTROLS.Record}
        */
       getRecordByKey: function (key) {
          //TODO: убрал проверку (key == null), так как с БЛ ключ приходит как null для записи из метода "Создать"
@@ -138,9 +158,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return this._byId[key];
       },
        /**
-        *
+        * Возвращает запись по порядковому номеру в списке
         * @param index
-        * @returns {*}
         */
       at: function (index) {
          return this.getRecordByKey(this.getRecordKeyByIndex(index));
@@ -179,7 +198,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
             /*TODO какая то лажа с клонами*/
             var newRec = [];
             for (var j = 0; j < records.length; j++) {
-               newRec.push($ws.core.clone(records[j]));
+               newRec.push((records[j].clone && typeof records[j].clone == 'function') ? records[j].clone() : $ws.core.clone(records[j]));
             }
          }
          var i, l, key, record, existing;
@@ -194,7 +213,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
             // если уже есть такой элемент, предотвратит его добавление и
             // если проставлена опция, то смержит свойства в текущий рекорд
 
-            if (existing = this.getRecordByKey(key)) {
+            existing = this.getRecordByKey(key);
+            if (existing) {
                if (remove) {
                   recordMap[key] = true;
                }
@@ -300,31 +320,39 @@ define('js!SBIS3.CONTROLS.DataSet', [
       insert: function (record, at) {
          this._addRecords(record, {at: at});
       },
-
+      /**
+       * Устанавливает данные в DataSet.
+       * @param data {Object} Объект содержащий набор записе, формат объекта
+       * должен соответсвовать текущей стратегии работы с данными.
+       * @see strategy
+       */
       setRawData: function(data) {
          this._rawData = data;
          this._loadFromRaw();
       },
-
+      /**
+       * Возвращает данные "как есть", в том виде в каком они были установлены например.
+       * @returns {Object}
+       */
       getRawData: function() {
          return this._rawData;
       },
 
       _prepareRecordForAdd: function (record) {
+         var
+            self = this,
+            key;
          //FixME: потому что метод создать не возвращает тип поля "идентификатор"
          record._keyField = this._keyField;
-
-         var key = record.getKey();
+         key = record.getKey();
          // не менять условие if! с БЛ идентификатор приходит как null
          if (key === undefined) {
             record.set(this._keyField, key = record._cid);
          }
-         record._onChangeHandler = this._onRecordChange.bind(this);
+         record.subscribe('onChange', function() {
+            self._notify('onRecordChange', this);
+         });
          return record;
-      },
-
-      _onRecordChange: function(record) {
-         this._notify('onRecordChange', record);
       },
 
       _addReference: function (record, options) {
@@ -343,7 +371,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
 
       /**
-       *
+       * Итератор для обхода всех записей DataSet
        * @param iterateCallback
        * @param status {'all'|'created'|'deleted'|'changed'} по умолчанию все, кроме удаленных
        */
@@ -384,14 +412,35 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
       },
 
+      /**
+       * Возвращает метаданные
+       * @returns {Array}
+       */
       getMetaData: function () {
-         var meta = this.getStrategy().getMetaData(this._rawData);
-         meta.results = new Record({
-            strategy: this.getStrategy(),
-            raw: meta.results,
-            keyField: this._keyField
-         });
-         return meta;
+         return this._options.meta;
+      },
+
+      /**
+       * Устанавливает метаданные
+       * @param {Object} meta Мета-данные
+       */
+      setMetaData: function (meta) {
+         this._options.meta = meta;
+         if (this._options.meta.results) {
+            this._options.meta.results = new Record({
+               strategy: this.getStrategy(),
+               raw: $ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Record') ? this._options.meta.results.getRaw() : this._options.meta.results,
+               keyField: this._keyField
+            });
+         }
+
+         if (this._options.meta.path) {
+            this._options.meta.path = new DataSet({
+               strategy: this._options.strategy,
+               keyField: this._keyField,
+               data: $ws.helpers.instanceOfModule(this._options.meta.path, 'SBIS3.CONTROLS.DataSet') ? this._options.meta.path.getRawData() : this._options.meta.path
+            });
+         }
       },
 
       /**
@@ -454,15 +503,17 @@ define('js!SBIS3.CONTROLS.DataSet', [
             parents = [],
             curLvl = 0;
          this._indexTree = {};
-            this.each(function (record) {
-               var parentKey = self.getParentKey(record, field);
+         this.each(function (record) {
+            var parentKey = null;
+            if (field) {
+               parentKey = self.getParentKey(record, field);
                parentKey = (typeof parentKey != 'undefined') ? parentKey : null;
-                  if (!this._indexTree.hasOwnProperty(parentKey)) {
-                     this._indexTree[parentKey] = [];
-                  }
-
-                  this._indexTree[parentKey].push(record.getKey());
-            }, 'all');
+            }
+            if (!this._indexTree.hasOwnProperty(parentKey)) {
+               this._indexTree[parentKey] = [];
+            }
+            this._indexTree[parentKey].push(record.getKey());
+         }, 'all');
       },
 
       filter: function (filterCallback) {

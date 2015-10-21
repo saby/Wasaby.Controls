@@ -47,7 +47,6 @@
   }
 
   .controls-Button__text {
-
     &.controls-Button__emptyCaption {
       margin: @button-empty-text-margin;
     }
@@ -65,11 +64,13 @@
 
   // Normal primary button
   &.controls-Button__primary {
+    .controls-Button__icon{
+       color: #393939!important;
+    }
     color: @button-primary-text-color;
     border: @button-primary-border;
     .box-shadow(@button-primary-shadow);
     background: @button-primary-bg;
-
     &:hover {
       color: @button-primary-hover-text-color;
       border: @button-primary-hover-border;
@@ -198,6 +199,7 @@
 // Normal offsets' override for Firefox
 @-moz-document url-prefix() {
   .controls-Button {
+     padding-bottom: 2px; // FF only
     .controls-Button__icon {
       top: @button-icon-top-offset - @button-border-width;
 

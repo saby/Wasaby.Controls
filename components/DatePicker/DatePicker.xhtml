@@ -1,10 +1,8 @@
 <div class="controls-DatePicker controls-FormattedTextBox">
-    <div class="controls-TextBox__afterFieldWrapper">
-       {{? it.isCalendarIconShown }}
+    <div class="controls-TextBox__afterFieldWrapper{{?!it.isCalendarIconShown }} ws-hidden{{?}}">
          <a class="js-controls-DatePicker__calendarIcon controls-DatePicker__calendarIcon {{? !it.enabled }}calendar-disabled{{?}}" href="javascript: void(0)">&nbsp;</a>
-       {{?}}
     </div>
-    <div class="controls-DatePicker__fieldWrapper controls-FormattedTextBox__fieldWrapper">
+    <div class="controls-DatePicker__fieldWrapper controls-FormattedTextBox__fieldWrapper{{?!it.isCalendarIconShown}} controls-DatePicker__fieldWrapper__calendar-false{{?}}">
         <div contenteditable="{{=it.enabled}}"  class="controls-FormattedTextBox__field js-controls-FormattedTextBox__field">{{=it.maskTemplateFn(it.modelForMaskTpl)}}</div>
     </div>
 </div>

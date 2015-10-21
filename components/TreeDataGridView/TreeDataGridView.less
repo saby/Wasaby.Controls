@@ -1,0 +1,109 @@
+.controls-DataGridView__td {
+   .controls-TreeView__expand--inside {
+      display: none;
+      line-height: 13px !important;
+   }
+
+   .controls-TreeView__hierWrapper {
+      height: @tree-view-hier-wrapper-height;
+      width: @tree-view-hier-wrapper-width;
+      display: inline-block;
+      float: left;
+   }
+
+  .controls-TreeView__editArrow{
+    display: none;
+    visibility: hidden;
+    position: relative;
+    top: 2px;
+  }
+  &:hover {
+    .controls-TreeView__expand--inside {
+      display: inline-block;
+      height: 14px;
+    }
+  }
+}
+
+.controls-ListView__folder {
+
+   &.controls-ListView__hoveredItem {
+
+      .controls-DataGridView__td {
+
+         .controls-TreeView__ellipsis-copyArrow {
+            background-color: @data-grid-row-hover-bg;
+            .box-shadow(@tree-view-ellipsis-copyArrow-shadow @data-grid-row-hover-bg);
+         }
+      }
+   }
+
+   .controls-TreeView__ellipsis-wrapper {
+      overflow: hidden;
+      height: @tree-view-ellipsis-wrapper-height;
+
+      .controls-TreeView__ellipsis-container {
+         float: left;
+      }
+
+      .controls-TreeView__ellipsis-copyArrow {
+         float: right;
+         position: relative;
+         top: -@tree-view-ellipsis-wrapper-height;
+         padding: @tree-view-ellipsis-copyArrow-padding;
+         background-color: @white-color;
+         .box-shadow(@tree-view-ellipsis-copyArrow-shadow @white-color);
+
+         .controls-TreeView__editArrow {
+            display: inline-block;
+         }
+      }
+   }
+}
+.controls-GridView__searchMode{
+   .controls-TreeView__hierWrapper{
+    width: 0;
+  }
+}
+
+.controls-TreeDataGridView__folderToolbarContainer {
+   overflow: hidden;
+}
+
+.controls-ListView__hoveredItem{
+   .controls-TreeView__editArrow {
+      display: inline-block;
+      visibility: visible;
+   }
+}
+.controls-DragNDrop__draggedItem {
+   position: absolute;
+   width: @drag-and-drop-object-width;
+   height: @drag-and-drop-object-height;
+   background: @drag-and-drop-object-bg;
+   text-align: center;
+}
+
+.controls-DragNDrop__draggedCount {
+   display: inline-block;
+   width: @drag-and-drop-count-width;
+   height: @drag-and-drop-count-height;
+   line-height: @drag-and-drop-count-height;
+   margin: @drag-and-drop-count-margin;
+   color: @white-color;
+   font-family: @font-basic-name;
+   font-size: 10px;
+}
+
+.dragdropBody {
+   .controls-ListView__folder {
+      &.controls-ListView__hoveredItem {
+         &:not(.controls-ListView__item__selected) {
+            background: @drag-and-drop-hover-bg;
+            > td {
+               background: @drag-and-drop-hover-bg;
+            }
+         }
+      }
+   }
+}

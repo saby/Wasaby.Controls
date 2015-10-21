@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного
     * @mixin SBIS3.CONTROLS.Clickable
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var Clickable = /**@lends SBIS3.CONTROLS.Clickable.prototype  */{
@@ -44,8 +45,8 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
 
       },
 
-      _notifyOnActivated : function() {
-         this._notify('onActivated');
+      _notifyOnActivated : function(originalEvent) {
+         this._notify('onActivated', originalEvent);
       },
 
       instead : {
@@ -55,7 +56,7 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
             if (this.isEnabled()) {
                this._container.removeClass('controls-Click__active');
                this._clickHandler(e);
-               this._notifyOnActivated();
+               this._notifyOnActivated(e);
             }
          }
       }

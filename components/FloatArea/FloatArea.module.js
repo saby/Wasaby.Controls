@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS
     * @public
     * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS.PopupMixin
+    * @author Крайнов Дмитрий Олегович
     */
 
    var FloatArea = CompoundControl.extend([PopupMixin], /** @lends SBIS3.CONTROLS.FloatArea.prototype*/ {

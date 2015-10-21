@@ -2,5 +2,108 @@
   .controls-ListView__item {
     overflow: hidden;
     position: relative;
+
+     &.controls-ListView__hoveredItem {
+        .controls-ListView__itemCheckBox {
+           	background: @check-box-icon-bg;
+           	&:hover{
+      			background: @check-box-icon-hover-bg;
+      		}
+        }
+     }
   }
+   .controls-ListView__EmptyData{
+      color: @gray-color;
+      .box-sizing(border-box);
+      margin-left: 8px;
+      min-height: 33px;
+      position: relative;
+      top: 0;
+      left: 0;
+   }
+   .controls-ListView__itemCheckBox {
+      width: 16px;
+      height: 16px;
+      background: none;
+      cursor: pointer;
+      display: none;
+      position: absolute;
+      left: @listView-check-box-left;
+      top: @listView-check-box-top;
+      &:hover{
+      	background: @check-box-icon-hover-bg;
+      }
+   }
+   &.controls-ListView__multiselect {
+      .controls-ListView__itemCheckBox {
+         display: inline-block;
+      }
+      .controls-ListView__item__multiSelected{
+         .controls-ListView__itemCheckBox {
+            background: @check-box-icon-checked-bg;
+            &:hover{
+      			background: @check-box-icon-checked-bg;
+      		}
+         }
+      }
+   }
+   .controls-ListView-scrollIndicator{
+      display: block;
+      background: @list-view-scroll-bg;
+      margin: 0 auto !important;
+      top: 50%!important;
+      height: @list-view-scroll-height;
+      width: @list-view-scroll-width;
+   }
+   &.controls-ListView__showCheckBoxes {
+      .controls-ListView__itemCheckBox {
+         background: @check-box-icon-bg;
+      }
+   }
+   &.controls-ListView__hideCheckBoxes {
+      &.controls-ListView__multiselect {
+         .controls-DataGridView__colgroup {
+            col:first-child {
+               width: 4px;
+            }
+         }
+         .controls-ListView__itemCheckBox {
+            display: none;
+         }
+      }
+   }
+}
+.controls-AjaxLoader{
+   background: none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
+   position: absolute;
+   top: 0;
+   bottom: 0;
+   left: 0;
+   right: 0;
+   width: 100%;
+   height: 100%;
+   z-index: 1;
+   .controls-AjaxLoader__outer{
+      height: 36px;
+      position: relative;
+      top: 50%;
+      line-height: 30px;
+      .controls-AjaxLoader__block{
+         width: 32px;
+         border: none;
+         box-shadow: none;
+         background: none repeat scroll 0 0 transparent !important;
+         margin-left: auto;
+         margin-right: auto;
+         position: relative;
+         top: -50%;
+         padding: 2px;
+         .controls-AjaxLoader__LoadingIndicator{
+            position: absolute;
+            background: @list-view-scroll-bg;
+            padding-left: 32px;
+            height: 32px;
+         }
+      }
+   }
 }

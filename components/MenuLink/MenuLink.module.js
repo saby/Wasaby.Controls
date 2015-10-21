@@ -1,13 +1,14 @@
-define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONTROLS.MenuLink', 'js!SBIS3.CONTROLS.CollectionMixin', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'js!SBIS3.CONTROLS.ContextMenu'], function(Link, dotTplFn, CollectionMixin, PickerMixin, MenuButtonMixin, ContextMenu) {
+define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONTROLS.MenuLink', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'js!SBIS3.CONTROLS.ContextMenu'], function(Link, dotTplFn, DSMixin, PickerMixin, MenuButtonMixin, ContextMenu) {
 
    'use strict';
 
    /**
     * Контрол, отображающий кнопку в виде ссылки и выпадающее из нее меню
-    * @class SBIS3.Engine.MenuLink
+    * @class SBIS3.CONTROLS.MenuLink
 	* @demo SBIS3.CONTROLS.Demo.MyMenuLink
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
+    * @author Крайнов Дмитрий Олегович
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuLink'>
     *    <option name='caption' value='Ссылка с меню'></option>
@@ -22,8 +23,9 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
     *         </options>
     *      </options>
     * </component>
-    * @mixes SBIS3.CONTROLS.CollectionMixin
+    * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
+    * @mixes SBIS3.CONTROLS.MenuButtonMixin
     * @public
     * @category Buttons
     *
@@ -43,63 +45,57 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
     * @ignoreEvents onFocusIn onFocusOut onReady onDragIn onDragStart onDragStop onDragMove onDragOut
     */
 
-   var MenuLink = Link.extend( [PickerMixin, CollectionMixin, MenuButtonMixin], /** @lends SBIS3.Engine.Link.prototype */ {
+   var MenuLink = Link.extend( [PickerMixin, DSMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuLink.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _zIndex: '',
          _options: {
+            pickerClassName: 'controls-MenuLink__Menu'
          }
       },
 
       $constructor: function() {
-         this._initMenu();
+         
       },
 
+      init : function(){
+         this.reload();
+         MenuLink.superclass.init.call(this);
+      },
 
       setCaption: function(caption){
          Link.superclass.setCaption.call(this, caption);
          $('.controls-Link__field', this._container).html(caption);
          if (this._picker){
-            $('.controls-Link__field', this._picker._container).html(caption);
+            $('.controls-Menu__header-caption', this._picker._container).html(caption);
          }
       },
 
-      _initMenu: function(){
-         if (this.getItems().getItemsCount() > 1) {
-            $('.js-controls-MenuLink__arrowDown', this._container).show();
-            this._container.removeClass('controls-MenuLink__withoutMenu');
-         } else {
-            $('.js-controls-MenuLink__arrowDown', this._container).hide();
-            this._container.addClass('controls-MenuLink__withoutMenu');
-         }
+      _initializePicker: function(){
+         MenuLink.superclass._initializePicker.call(this);
+         this._setWidth();
+      },
+
+      _setWidth: function(){
+         var self = this;
+         this._picker.getContainer().css({
+            'min-width': self._container.outerWidth() + 10 // + ширина стрелки
+         });
       },
 
       _clickHandler: function(){
-         if (this.getItems().getItemsCount() > 1) {
-            this._container.addClass('controls-Checked__checked');
+         if (this._dataSet.getCount() > 1) {
             this.togglePicker();
          } else {
-            if (this.getItems().getItemsCount() == 1) {
-               var id = this.getItems().getKey(this.getItems().getNextItem());
+            if (this._dataSet.getCount() == 1) {
+               var id = this._dataSet.at(0).getKey();
                this._notify('onMenuItemActivate', id);
             }
          }
       },
 
-      _setPickerContent: function(){
-         var self = this;
-         this._picker._container.css('margin-top', -parseInt(this._container.css('height'), 10) - 1);
-         this._picker._container.addClass('controls-MenuLink__Menu');
-         if (this._container.hasClass('controls-MenuLink__32px')){
-            this._picker._container.addClass('controls-Menu__32px');
-         }
-         var header= $('<span class="controls-MenuLink__header"></span>');
-         header.append(this._container.clone().removeAttr('style'));
-         this._picker.getContainer().prepend(header);
-         $(".controls-Link__icon", header.get(0)).addClass('icon-hover');
-         $('.controls-MenuLink__header', this._picker._container).bind('click', function(){
-            self.hidePicker();
-         });
+      _dataLoadedCallback : function() {
+         if (this._picker) this.hidePicker();
       }
    });
 

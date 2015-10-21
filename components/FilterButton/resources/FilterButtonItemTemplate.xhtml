@@ -1,7 +1,0 @@
-<div class="controls__filter-button-item">
-   {{var it = it.getRaw();
-    it.cfg.visible = it.cfg.visible === true;
-    it.cfg.name = it.name;
-    it.componentType = it.componentType ? it.componentType : "SBIS3.CONTROLS.FilterButtonCustomItem"; }}
-   <component data-component="{{=it.componentType}}" config="{{=$ws.helpers.encodeCfgAttr(it.cfg)}}"></component>
-</div>

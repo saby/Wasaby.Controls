@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @mixes SBIS3.CONTROLS.MultiSelectable
     * @extends SBIS3.CONTROLS.ButtonGroupBase
+    * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions contextRestriction independentContext
     *
@@ -25,8 +26,10 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
     * @ignoreMethods registerDefaultButton sendCommand setActive setChildActive setClassName setExtendedTooltip setOpener
     * @ignoreMethods setOwner setSize setStateKey storeActiveChild subscribe subscribeOnceTo unbind unregisterChildControl
     * @ignoreMethods unregisterDefaultButton unsubscribe waitAllPendingOperations waitChildControlById moveToTop
+    * @ignoreMethods setProperties setProperty getProperty
     *
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onDestroy onDragIn
+    * @ignoreEvents onDragStop onPropertyChanged
     * @ignoreEvents onDragMove onDragOut onDragStart onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     */
 

@@ -16,25 +16,33 @@ define(
       'use strict';
 
       /**
-       * Календарь имеет соответствубщее названию контрола визуальное отображение.
+       * Календарь имеет соответствующее названию контрола визуальное отображение.
        * Предназначен для задания даты путём выбора.
        * @class SBIS3.CONTROLS.Calendar
        * @extends $ws.proto.CompoundControl
        * @control
        * @public
+       * @author Крайнов Дмитрий Олегович
        * @demo SBIS3.CONTROLS.Demo.MyCalendar
        *
        * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className
        * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
        * @ignoreOptions extendedTooltip
        *
+       * @ignoreMethods activate activateFirstControl activateLastControl addPendingOperation changeControlTabIndex
+       * @ignoreMethods destroyChild detectNextActiveChildControl disableActiveCtrl focusCatch getActiveChildControl
+       * @ignoreMethods getChildControlById getChildControlByName getChildControls getContext getEventBusOf moveFocus
+       * @ignoreMethods getImmediateChildControls getNearestChildControlByName getOpener getReadyDeferred isAllReady
        * @ignoreMethods applyEmptyState applyState getClassName getEventHandlers getEvents getExtendedTooltip getOwnerId
        * @ignoreMethods getLinkedContext getOwner getStateKey getUserData hasEvent hasEventHandlers makeOwnerName once
        * @ignoreMethods sendCommand setClassName setExtendedTooltip setOpener setStateKey setUserData subscribe unsubscribe
-       * @ignoreMethods subscribeOnceTo unbind
+       * @ignoreMethods subscribeOnceTo unbind setProperties setProperty getProperty moveToTop registerChildControl
+       * @ignoreMethods registerDefaultButton setChildActive setSize storeActiveChild unregisterChildControl
+       * @ignoreMethods unregisterDefaultButton waitAllPendingOperations waitChildControlById waitChildControlByName
        *
        * @ignoreEvents onChange onClick onDragIn onDragMove onDragOut onDragStart onDragStop onKeyPressed onStateChange
-       * @ignoreEvents onTooltipContentRequest
+       * @ignoreEvents onTooltipContentRequest onPropertyChanged onActivate onBeforeControlsLoad onResize onAfterLoad
+       * @ignoreOptions onAfterShow onBeforeLoad onBeforeShow onReady onStateChanged
        */
 
       var Calendar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Calendar.prototype */{
@@ -47,7 +55,7 @@ define(
            *    calendar.subscribe('onDateChange', function(event, selectedDate){
            *       // если выбрали 23е февраля, то сообщим об этом
            *       if(selectedDate.getDay() === 23 && selectedDate.getMonth() === 1){
-           *          $ws.core.alert("Вы выбрали праздничный день!");
+           *          $ws.core.alert("Вы выбрали праздничный день - «День защитника Отечества»");
            *       }
            *    });
            * </pre>
@@ -70,7 +78,7 @@ define(
                  * @remark
                  * Строка должна быть формата ISO 8601.
                  * @example
-                 * <pre>
+                 * <pre class="brush:xml">
                  *     <option name="date">2015-03-07T21:00:00.000Z</option>
                  * </pre>
                  * @see setDate
@@ -201,10 +209,9 @@ define(
           * @see getDate
           * @see onDateChange
           */
-         setDate: function(date){
-            date = date ? date : new Date();
+         setDate: function(date) {
             this._setDate(date);
-            this._notify('onDateChange', date);
+            this._notify('onDateChange', this._options.date);
          },
 
          /**

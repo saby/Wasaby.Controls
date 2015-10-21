@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.ToolbarBase', ['js!SBIS3.CORE.Control'], function(Cont
     * @class SBIS3.CONTROLS.ToolbarBase
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @extends $ws.proto.Control
-    * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var ToolbarBase = Control.Control.extend( /** @lends SBIS3.CONTROLS.ToolbarBase.prototype */ {

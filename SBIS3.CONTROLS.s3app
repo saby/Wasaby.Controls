@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<application global_parameters="1" id="81a5acd8-7d3f-4dff-a9f8-714ea6a4dd22" name="SBIS3.CONTROLS" user_parameters="0">
+
+  <description/>
+
+  <items>
+    <ui_module id="3735da8d-a287-4fc1-a22d-7d00a7732ce8" name="SBIS3.CONTROLS" url="./SBIS3.CONTROLS/SBIS3.CONTROLS.s3mod"/>
+  </items>
+
+  <directoryes/>
+
+  <templates/>
+
+</application>

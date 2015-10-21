@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
     *    <option name='caption' value='Ссылка'></option>
     * </component>
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @category Buttons
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
@@ -42,7 +43,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
     * @css controls-Link__icon Класс для изменения отображения иконки кнопки.
     */
 
-   var Link = ButtonBase.extend( /** @lends SBIS3.Engine.Link.prototype */ {
+   var Link = ButtonBase.extend( /** @lends SBIS3.CONTROLS.Link.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

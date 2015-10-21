@@ -1,0 +1,40 @@
+<div>
+   <component data-component="SBIS3.CONTROLS.ListView" name="ListView" style="width:300px;" class="control-MyListView__ListView__position">
+      <option name="keyField">id</option>
+      <options name="items" type="array">
+         <options>
+            <option name="id">1</option>
+            <option name="title">Title 1</option>
+         </options>
+         <options>
+            <option name="id">2</option>
+            <option name="title">Title 2</option>
+         </options>
+         <options>
+            <option name="id">3</option>
+            <option name="title">Title 3</option>
+         </options>
+         <options>
+            <option name="id">4</option>
+            <option name="title">Title 4</option>
+         </options>
+      </options>
+      <options name="itemsActions" type="array">
+         <options>
+            <option name="name">btn1</option>
+            <option name="icon">sprite:icon-16 icon-Delete icon-primary</option>
+            <option name="isMainAction">true</option>
+            <option name="tooltip">Удалить</option>
+            <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyListView:prototype.myOnActivatedHandlerD</option>
+         </options>
+         <options>
+            <option name="name">btn2</option>
+            <option name="icon">sprite:icon-16 icon-Trade icon-primary</option>
+            <option name="tooltip">Изменить</option>
+            <option name="isMainAction">true</option>
+            <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyListView:prototype.myOnActivatedHandlerE</option>
+         </options>
+      </options>
+      <option name="multiselect">true</option>
+   </component>
+</div>

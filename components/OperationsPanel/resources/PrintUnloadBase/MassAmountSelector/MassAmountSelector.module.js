@@ -15,7 +15,9 @@ define('js!SBIS3.CONTROLS.MassAmountSelector', [
          _options: {
             name: 'controls-MassAmountSelector',
             verticalAlignment: 'Top',
-            height: 'auto'
+            width: '325px',
+            height: 'auto',
+            resizable: false
          },
          _radioButtons : undefined,
          _numberTextBox: undefined,
@@ -42,6 +44,8 @@ define('js!SBIS3.CONTROLS.MassAmountSelector', [
          });
       },
       onChangeRadioButton: function(event, item){
+         //TODO hotfix значения в контекст перестало проставляться, убрать когда биндинг начнёт нормально работать
+         this.getContext().setValue('controls-RadioButtons', item);
          this._numberTextBoxValue = this._numberTextBoxValue || this._numberTextBox.getNumericValue();
          this._numberTextBox.setText(item === 'all' ? 2000 : this._numberTextBoxValue);
          //TODO может стоит заменить на onFieldChange у контекста? Ибо радио-кнопки теперь с data-bind'ом

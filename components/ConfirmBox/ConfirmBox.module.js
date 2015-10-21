@@ -11,7 +11,7 @@ define('js!SBIS3.Engine.ConfirmBox', ['js!SBIS3.Engine.DialogTemplateOnline'], f
     * @class SBIS3.Engine.ConfirmBox
     * @extends SBIS3.Engine.DialogTemplateOnline
     * @control
-    * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var ConfirmBox = DialogTemplateOnline.extend( /** @lends SBIS3.Engine.ConfirmBox.prototype*/ {

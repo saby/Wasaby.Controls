@@ -1,2 +1,0 @@
-{{var tabIndex=0;}}<div class="controls-editInPlace">{{~ it.columns :column:index }}{{?column.editor}}<div class="controls-editInPlace__withEditor">
-   {{? column.editor }}<component data-component="{{= column.editor}}" name="{{=column.field}}">{{? column.editor==='SBIS3.CONTROLS.ComboBox'}}<option name="editable" type="boolean" value="false"/><option name="keyField" type="string" value="id"/>{{?}}<option name="tabindex" value="{{=tabIndex=tabIndex+1}}"/></component>{{?}}</div>{{?}}{{~}}</div>

@@ -18,6 +18,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTR
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.DataBindMixin
     * @mixes SBIS3.CONTROLS.IconMixin
+    * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     *
@@ -45,13 +46,18 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTR
              * @cfg {String}  Текст на кнопке
              * Данный текст должен отображать смысл действия клика по кнопке или побуждать к действию.
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="caption">Сохранить</option>
              * </pre>
              * @see setCaption
              * @see getCaption
              */
-            caption: ''
+            caption: undefined,
+
+            /**
+             * @cfg {String}  Команда
+             */
+            command: ''
          }
       },
 
@@ -65,6 +71,12 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTR
          $('[data-component]', this._container.get(0)).mousedown(function(e){
             e.stopPropagation();
          });
+      },
+
+      _clickHandler : function() {
+         if (!!this._options.command) {
+            this.sendCommand(this._options.command);
+         }
       },
 
       /**

@@ -1,0 +1,85 @@
+<div style="width:800px;height:600px;">
+
+    <!--ComboBox 5-->
+    <span data-lmchild="label-title" class="ws-Label-title">Выпадающий список с трансф. текста - верхний регистр</span>
+
+    <div id="ComboBox5" class="ws-hbox" style="height:120px;margin-top:10px;">
+        <component data-component="SBIS3.CONTROLS.ComboBox" name="ComboBox 5">
+            <options name="items" type="array">
+                <options>
+                    <option name="key">1</option>
+                    <option name="title">Пункт9</option>
+                </options>
+                <options>
+                    <option name="key">2</option>
+                    <option name="title">Пункт10</option>
+                </options>
+            </options>
+            <option name="keyField">key</option>
+            <option name="textTransform">uppercase</option>
+        </component>
+        <span>baseline</span>
+    </div>
+
+    <!--ComboBox 6-->
+    <span data-lmchild="label-title" class="ws-Label-title">Выпадающий список - не редактируемый</span>
+
+    <div id="ComboBox6" class="ws-hbox" style="height:120px;margin-top:10px;">
+        <component data-component="SBIS3.CONTROLS.ComboBox" name="ComboBox 6" style="width:100px;">
+            <options name="items" type="array">
+                <options>
+                    <option name="key">1</option>
+                    <option name="title">Пункт11</option>
+                </options>
+                <options>
+                    <option name="key">2</option>
+                    <option name="title">Пункт12</option>
+                </options>
+            </options>
+            <option name="keyField">key</option>
+            <option name="editable">false</option>
+        </component>
+        <span>baseline</span>
+    </div>
+
+    <!--ComboBox 7-->
+    <span data-lmchild="label-title" class="ws-Label-title">Выпадающий список с длинными именами внутри</span>
+
+    <div id="ComboBox7" class="ws-hbox" style="height:120px;margin-top:10px;">
+        <component data-component="SBIS3.CONTROLS.ComboBox" name="ComboBox 7" style="width:100px;">
+            <options name="items" type="array">
+                <options>
+                    <option name="key">1</option>
+                    <option name="title">Пункт14Пункт14Пункт14Пункт14</option>
+                </options>
+                <options>
+                    <option name="key">2</option>
+                    <option name="title">Пункт15Пункт15Пункт15Пункт15</option>
+                </options>
+            </options>
+            <option name="keyField">key</option>
+        </component>
+        <span>baseline</span>
+    </div>
+
+    <!--ComboBox 8-->
+    <span data-lmchild="label-title" class="ws-Label-title">Выпадающий список - не редактируемый. 100% ширины</span>
+
+    <div id="ComboBox8" class="ws-hbox" style="height:120px;margin-top:10px;">
+        <component data-component="SBIS3.CONTROLS.ComboBox" name="ComboBox 8" style="width:100%;">
+            <options name="items" type="array">
+                <options>
+                    <option name="key">1</option>
+                    <option name="title">Пункт1</option>
+                </options>
+                <options>
+                    <option name="key">2</option>
+                    <option name="title">Пункт2</option>
+                </options>
+            </options>
+            <option name="keyField">key</option>
+            <option name="editable">false</option>
+        </component>
+        <span>baseline</span>
+    </div>
+</div>

@@ -1,0 +1,114 @@
+<div style="width:800px;height:600px;">
+
+    <!--CheckBoxGroup 1-->
+    <div class="ws-hbox" style="height:64px;">
+        <label data-lmtype="Label" class="ws-Label ws-Label-titleLeft ws-float-left">
+            <span data-lmchild="label-title" class="ws-Label-title">Default</span>
+        </label>
+        <component data-component="SBIS3.CONTROLS.CheckBoxGroup" class="ws-float-left" name="CheckBoxGroup 1">
+            <options name="items" type="array">
+                <options>
+                    <option name="id" type="string">1</option>
+                    <option name="title">CheckBox 1</option>
+                </options>
+                <options>
+                    <option name="id" type="string">2</option>
+                    <option name="title">CheckBox 2</option>
+                </options>
+            </options>
+            <option name="keyField">id</option>
+            <option name="captionField">title</option>
+            <option name="multiselect">false</option>
+        </component>
+    </div>
+
+    <!--CheckBoxGroup 2-->
+    <div class="ws-hbox" style="height:64px;">
+        <label data-lmtype="Label" class="ws-Label ws-Label-titleLeft ws-float-left">
+            <span data-lmchild="label-title" class="ws-Label-title">Multiselect</span>
+        </label>
+        <component data-component="SBIS3.CONTROLS.CheckBoxGroup" class="ws-float-left" name="CheckBoxGroup 2">
+            <options name="items" type="array">
+                <options>
+                    <option name="id" type="string">3</option>
+                    <option name="title">CheckBox 3</option>
+                </options>
+                <options>
+                    <option name="id" type="string">4</option>
+                    <option name="title">CheckBox 4</option>
+                </options>
+            </options>
+            <option name="keyField">id</option>
+            <option name="captionField">title</option>
+        </component>
+    </div>
+
+    <!--CheckBoxGroup 3-->
+    <div class="ws-hbox" style="height:64px;">
+        <label data-lmtype="Label" class="ws-Label ws-Label-titleLeft ws-float-left">
+            <span data-lmchild="label-title" class="ws-Label-title">Vertical</span>
+        </label>
+        <component data-component="SBIS3.CONTROLS.CheckBoxGroup" class="ws-float-left controls-ButtonGroup__vertical"
+                   name="CheckBoxGroup 3">
+            <options name="items" type="array">
+                <options>
+                    <option name="id" type="string">5</option>
+                    <option name="title">CheckBox 5</option>
+                    <option name="icon"></option>
+                </options>
+                <options>
+                    <option name="id" type="string">6</option>
+                    <option name="title">CheckBox 6</option>
+                    <option name="icon"></option>
+                </options>
+            </options>
+            <option name="keyField">id</option>
+            <option name="captionField">title</option>
+            <option name="multiselect">false</option>
+        </component>
+    </div>
+
+    <!--CheckBoxGroup 4-->
+    <div class="ws-hbox" style="height:64px;">
+        <label data-lmtype="Label" class="ws-Label ws-Label-titleLeft ws-float-left">
+            <span data-lmchild="label-title" class="ws-Label-title">Vertical miltiselect</span>
+        </label>
+        <component data-component="SBIS3.CONTROLS.CheckBoxGroup" class="ws-float-left controls-ButtonGroup__vertical"
+                   name="CheckBoxGroup 4">
+            <options name="items" type="array">
+                <options>
+                    <option name="id" type="string">7</option>
+                    <option name="title">CheckBox 7</option>
+                </options>
+                <options>
+                    <option name="id" type="string">8</option>
+                    <option name="title">CheckBox 8</option>
+                </options>
+            </options>
+            <option name="keyField">id</option>
+            <option name="captionField">title</option>
+        </component>
+    </div>
+
+    <!--CheckBox 1-->
+    <div class="ws-hbox" style="height:64px;">
+        <label data-lmtype="Label" class="ws-Label ws-Label-titleLeft ws-float-left">
+            <span data-lmchild="label-title" class="ws-Label-title ws-Label-content">Default no checked</span>
+        </label>
+        <component data-component="SBIS3.CONTROLS.CheckBox" class="ws-float-left" name="CheckBox 1">
+            <option name="caption">CheckBox 1</option>
+        </component>
+    </div>
+
+    <!--CheckBox 3-->
+    <div class="ws-hbox" style="height:64px;">
+        <label data-lmtype="Label" class="ws-Label ws-Label-titleLeft ws-float-left">
+            <span data-lmchild="label-title" class="ws-Label-title ws-Label-content">Default three state</span>
+        </label>
+        <component data-component="SBIS3.CONTROLS.CheckBox" class="ws-float-left" name="CheckBox 3">
+            <option name="caption">CheckBox 3</option>
+            <option name="threeState">true</option>
+        </component>
+    </div>
+
+</div>

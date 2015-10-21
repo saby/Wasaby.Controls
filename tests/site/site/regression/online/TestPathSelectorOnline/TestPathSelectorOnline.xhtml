@@ -1,0 +1,87 @@
+<div class="sbis3-TestPathSelector____test" style="width:800px;height:600px;">
+
+    <!--PathSelector-->
+    <div id="path" style="height:30px;"></div>
+
+    <!--TreeDataGrid 1-->
+    <component data-component="SBIS3.CONTROLS.TreeDataGrid" name="TreeDataGrid 1">
+        <options name="columns" type="array">
+            <options>
+                <option name="title">Перевод</option>
+                <option name="field">translate</option>
+            </options>
+        </options>
+        <option name="hierField">parent</option>
+        <option name="displayField">translate</option>
+        <options name="items" type="array">
+            <options>
+                <option name="id">1</option>
+                <option name="translate">Привет</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id">2</option>
+                <option name="translate">Ну очень большая таблица поэтому название не помещается</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id">3</option>
+                <option name="translate">Запись в короткой папке</option>
+                <option name="parent">1</option>
+            </options>
+            <options>
+                <option name="id">4</option>
+                <option name="translate">Запись в длинной папке</option>
+                <option name="parent">2</option>
+            </options>
+            <options>
+                <option name="id">5</option>
+                <option name="translate">Записи с многоточием посередине</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id">6</option>
+                <option name="translate">Очень очень длинный текст</option>
+                <option name="parent">5</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id">7</option>
+                <option name="translate">Ну очень очень длинный текст</option>
+                <option name="parent">6</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id">8</option>
+                <option name="translate">Ну уж куда длиннее Я не знаю и так очень длинно</option>
+                <option name="parent">7</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id">9</option>
+                <option name="translate">Бугагашенька</option>
+                <option name="parent">8</option>
+            </options>
+        </options>
+        <options name="itemsActions" type="array">
+            <options>
+                <option name="name">moveTranslate</option>
+                <option name="icon">sprite:icon-16 icon-Move icon-primary</option>
+                <option name="isMainAction">true</option>
+                <option name="tooltip">Переместить</option>
+            </options>
+            <options>
+                <option name="name">editTranslate</option>
+                <option name="icon">sprite:icon-16 icon-Edit icon-primary</option>
+                <option name="isMainAction">true</option>
+                <option name="tooltip">Изменить</option>
+            </options>
+            <options>
+                <option name="name">deleteTranslate</option>
+                <option name="icon">sprite:icon-16 icon-Erase icon-error</option>
+                <option name="isMainAction">true</option>
+                <option name="tooltip">Удалить</option>
+            </options>
+        </options>
+    </component>
+</div>

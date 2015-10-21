@@ -15,57 +15,55 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
             template: 'js!SBIS3.CONTROLS.MoveDialogTemplate',
             cssClassName: 'controls-MoveDialog'
          },
-         _treeView: undefined
+         _treeView: undefined,
+         _rootBlock: undefined
       },
       $constructor: function() {
          this.subscribe('onReady', this._onReady.bind(this));
       },
       _onReady: function() {
          var
+            self = this,
             linkedView = this._options.linkedView,
             selectedCount = linkedView.getSelectedKeys().length;
          this.setTitle('Перенести ' + selectedCount + ' запис' + $ws.helpers.wordCaseByNumber(selectedCount, 'ей', 'ь', 'и') + ' в');
          this.getChildControlByName('MoveDialogTemplate-moveButton')
-            .subscribe('onActivated', this._moveRecords.bind(this));
-         this._treeView = this.getChildControlByName('MoveDialogTemplate-TreeDataGrid')
+            .subscribe('onActivated', this._onMoveButtonActivated.bind(this));
+         this._treeView = this.getChildControlByName('MoveDialogTemplate-TreeDataGridView')
             .subscribe('onDataLoad', this._onDataLoadHandler.bind(this));
          this._treeView.setHierField(linkedView._options.hierField);
          this._treeView.setColumns([{ field: linkedView._options.displayField }]);
+         this._treeView.subscribe('onDrawItems', function() {
+            self._createRoot();
+         });
+         if ($ws.helpers.instanceOfModule(linkedView._dataSource, 'SBIS3.CONTROLS.SbisServiceSource')) {
+            this._treeView._filter['ВидДерева'] = "Только узлы";
+            //TODO: костыль написан специально для нуменклатуры, чтобы не возвращалась выборка всех элементов при заходе в пустую папку
+            this._treeView._filter['folderChanged'] = true;
+         }
          this._treeView.setDataSource(linkedView._dataSource);
-         /*TODO cуперкостыль для того, чтобы если папка пустая БЛ не возвращала выборку из её предка*/
-         this._treeView._filter['folderChanged'] = true;
+      },
+      _onMoveButtonActivated: function() {
+         var
+            moveTo = this._treeView.getSelectedKey();
+         this._options.linkedView.selectedMoveTo(moveTo);
+         this.close();
       },
       /*TODO тут добавить корень в дерево*/
       _onDataLoadHandler: function(event, dataSet) {
          event.setResult(dataSet);
       },
-      _moveRecords: function() {
-         var
-            records,
-            linkedView = this._options.linkedView,
-            moveTo = this._treeView.getSelectedKeys()[0];
-         if (moveTo !== undefined) {
-            records = linkedView.getSelectedKeys();
-            this._move(records, moveTo).getResult().addCallback(function() {
-               linkedView.removeItemsSelectionAll();
-               linkedView.openNode(moveTo);
-            });
-         }
-         this.close();
+      _createRoot: function() {
+         this._rootBlock = $('<tr class="controls-DataGridView__tr controls-ListView__item controls-ListView__folder" style="" data-id="null"><td class="controls-DataGridView__td controls-MoveDialog__root"><div class="controls-TreeView__expand js-controls-TreeView__expand has-child controls-TreeView__expand__open"></div>Корень</td></tr>');
+         this._rootBlock.bind('click', this._onRootClick.bind(this));
+         this._rootBlock.prependTo(this._treeView._container.find('tbody'));
+         this._treeView.setSelectedKey(null);
       },
-      _move: function(records, moveTo) {
-         var
-            record,
-            deferred = new $ws.proto.ParallelDeferred(),
-            linkedView = this._options.linkedView,
-            hierField = linkedView._options.hierField;
-         for (var i = 0; i < records.length; i++) {
-            record = linkedView._dataSet.getRecordByKey(records[i]);
-            if (record.get(linkedView._dataSet._keyField)[0] !== moveTo) {
-               deferred.push(linkedView._dataSource.move(record, hierField, [moveTo]));
-            }
-         }
-         return deferred.done();
+      _onRootClick: function(event) {
+         this._treeView._container.find('.controls-ListView__folder').toggleClass('ws-hidden');
+         this._rootBlock.toggleClass('ws-hidden').find('.controls-TreeView__expand').toggleClass('controls-TreeView__expand__open');
+         this._treeView.setSelectedKey(null);
+         event.stopPropagation();
       }
    });
 

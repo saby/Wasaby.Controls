@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного
     * @mixin SBIS3.CONTROLS.Checkable
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var Checkable = /**@lends SBIS3.CONTROLS.Checkable.prototype  */{
@@ -72,7 +73,6 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
       setChecked: function(flag) {
          this._options.checked = !!flag;
          this._container.toggleClass('controls-Checked__checked', this._options.checked);
-         this.saveToContext('Checked', this._options.checked);
          this._notify('onCheckedChange', this._options.checked);
       },
 
@@ -102,39 +102,6 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
        */
       isChecked: function() {
          return this._options.checked;
-      },
-
-      /**
-       * Изменить текущее состояние кнопки.
-       * @param {Boolean} value Новое состояние.
-       * @example
-       * <pre>
-       *     var btn = this.getChildControlByName("myButton");
-       *        btn.setValue(true)
-       * </pre>
-       * @see setChecked
-       * @see getValue
-       * @see isChecked
-       */
-      setValue: function(value){
-         this.setChecked(value);
-      },
-
-      /**
-       * Возвращает текущее состояние кнопки.
-       * @returns {Boolean} Признак текущего состояния кнопки: true/false.
-       * @example
-       * <pre>
-       *     var btn = this.getChildControlByName("myButton");
-       *        btn.getValue();
-       * </pre>
-       * @see isChecked
-       * @see checked
-       * @see setChecked
-       * @see setValue
-       */
-      getValue: function(){
-         return this.isChecked();
       },
 
       _clickHandler : function() {

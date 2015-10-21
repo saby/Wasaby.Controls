@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.ProgressBar', ['html!SBIS3.CONTROLS.ProgressBar', 'js!
     * @class SBIS3.CONTROLS.ProgressBar
     * @extends $ws.proto.Control
     * @control
+    * @author Крайнов Дмитрий Олегович
     * @initial
     * <component data-component='SBIS3.CONTROLS.ProgressBar'>
     * </component>

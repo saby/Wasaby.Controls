@@ -23,12 +23,12 @@ define(
     *    <li>только времени,</li>
     *    <li>даты и времени.</li>
     * </ol>
-    * Осуществить ввод информации можно как с клавиатуры, так и выбором на календаре, который открывается кликом по
-    * соответствующей иконке.
+    * Осуществить ввод информации можно как с клавиатуры, так и выбором на календаре, который открывается кликом по соответствующей иконке.
     * Можно вводить только значения особого формата даты.
     * @class SBIS3.CONTROLS.DatePicker
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
     * @control
+    * @author Крайнов Дмитрий Олегович
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyDatePicker
     */
@@ -133,30 +133,30 @@ define(
              * <pre>
              *     <option name="mask">HH:II:SS.UUU</option>
              * </pre>
-             * @variant 'DD.MM.YYYY',
-             * @variant 'DD.MM.YY',
-             * @variant 'DD.MM',
-             * @variant 'YYYY-MM-DD',
-             * @variant 'YY-MM-DD',
-             * @variant 'HH:II:SS.UUU',
-             * @variant 'HH:II:SS',
-             * @variant 'HH:II',
-             * @variant 'DD.MM.YYYY HH:II:SS.UUU',
-             * @variant 'DD.MM.YYYY HH:II:SS',
-             * @variant 'DD.MM.YYYY HH:II',
-             * @variant 'DD.MM.YY HH:II:SS.UUU',
-             * @variant 'DD.MM.YY HH:II:SS',
-             * @variant 'DD.MM.YY HH:II',
-             * @variant 'DD.MM HH:II:SS.UUU',
-             * @variant 'DD.MM HH:II:SS',
-             * @variant 'DD.MM HH:II',
-             * @variant 'YYYY-MM-DD HH:II:SS.UUU',
-             * @variant 'YYYY-MM-DD HH:II:SS',
-             * @variant 'YYYY-MM-DD HH:II',
-             * @variant 'YY-MM-DD HH:II:SS.UUU',
-             * @variant 'YY-MM-DD HH:II:SS',
-             * @variant 'YY-MM-DD HH:II',
-             * @variant 'YYYY',
+             * @variant 'DD.MM.YYYY'
+             * @variant 'DD.MM.YY'
+             * @variant 'DD.MM'
+             * @variant 'YYYY-MM-DD'
+             * @variant 'YY-MM-DD'
+             * @variant 'HH:II:SS.UUU'
+             * @variant 'HH:II:SS'
+             * @variant 'HH:II'
+             * @variant 'DD.MM.YYYY HH:II:SS.UUU'
+             * @variant 'DD.MM.YYYY HH:II:SS'
+             * @variant 'DD.MM.YYYY HH:II'
+             * @variant 'DD.MM.YY HH:II:SS.UUU'
+             * @variant 'DD.MM.YY HH:II:SS'
+             * @variant 'DD.MM.YY HH:II'
+             * @variant 'DD.MM HH:II:SS.UUU'
+             * @variant 'DD.MM HH:II:SS'
+             * @variant 'DD.MM HH:II'
+             * @variant 'YYYY-MM-DD HH:II:SS.UUU'
+             * @variant 'YYYY-MM-DD HH:II:SS'
+             * @variant 'YYYY-MM-DD HH:II'
+             * @variant 'YY-MM-DD HH:II:SS.UUU'
+             * @variant 'YY-MM-DD HH:II:SS'
+             * @variant 'YY-MM-DD HH:II'
+             * @variant 'YYYY'
              * @variant 'MM/YYYY'
              * @see date
              * @see isCalendarIconShow
@@ -197,7 +197,7 @@ define(
          this._publish('onDateChange');
 
          // Проверить тип маски -- дата, время или и дата, и время. В случае времени -- сделать isCalendarIconShown = false
-         this._checkTypeOfMask();
+         this._checkTypeOfMask(this._options);
 
          // Первоначальная установка даты, если передана опция
          if ( this._options.date ) {
@@ -208,6 +208,11 @@ define(
 
       },
 
+
+      _modifyOptions : function(options) {
+         this._checkTypeOfMask(options);
+         return DatePicker.superclass._modifyOptions.apply(this, arguments);
+      },
       /**
        * Инициализация календарика
        */
@@ -282,10 +287,10 @@ define(
        *    2. Присутствует день и месяц, но отсутствует год
        * @private
        */
-      _checkTypeOfMask: function () {
-         if ( !/[DMY]/.test(this._options.mask) || ( /[DMY]/.test(this._options.mask) && !/Y/.test(this._options.mask) ) ||
-            ( /[DMY]/.test(this._options.mask) && !/D/.test(this._options.mask) ) ){
-            this._options.isCalendarIconShown = false;
+      _checkTypeOfMask: function (options) {
+         if ( !/[DMY]/.test(options.mask) || ( /[DMY]/.test(options.mask) && !/Y/.test(options.mask) ) ||
+            ( /[DMY]/.test(options.mask) && !/D/.test(options.mask) ) ){
+            options.isCalendarIconShown = false;
          }
       },
 

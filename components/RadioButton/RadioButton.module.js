@@ -11,7 +11,9 @@ define('js!SBIS3.CONTROLS.RadioButton', ['js!SBIS3.CONTROLS.RadioButtonBase', 'h
     * Контрол, отображающий стандартную радиокнопку. Работает только в составе группы. В WebGenie не вытаскивается.
     * @class SBIS3.CONTROLS.RadioButton
     * @extends SBIS3.CONTROLS.RadioButtonBase
+    * @cssModifier controls-Radio__primary акцентные кнопки
     * @public
+    * @author Крайнов Дмитрий Олегович
     *
     * @css controls-RadioButton__caption Класс для изменения отображения текста подписи у радиокнопки.
     */

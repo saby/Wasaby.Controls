@@ -28,16 +28,20 @@
       }
     }
   }
-  &.controls-Picker__show {
-    box-shadow: @customFilterMenu-shadow-hover;
-  }
 }
 .controls-CustomFilterMenu__picker {
+
   cursor: @customFilterMenu-cursor;
+  .controls-CustomFilterMenu__equalsWidth {
+    .controls-CustomFilterMenu__list {
+      border-radius: @customFilterMenu-picker-list-border-radius;
+    }
+  }
   .controls-CustomFilterMenu__header {
     display: inline-block;
     background: @customFilterMenu-picker-bg;
     border: @customFilterMenu-picker-border;
+    border-radius: @customFilterMenu-picker-head-border-radius;
     border-bottom: 0;
     z-index: 2;
     .controls-CustomFilterMenu__arrowIcon {
@@ -47,14 +51,14 @@
   .controls-CustomFilterMenu__list {
     z-index: 1;
     border: @customFilterMenu-picker-border;
+    border-radius: @customFilterMenu-picker-list-right-border-radius;
     background: @customFilterMenu-picker-bg;
-    margin-top: -1px;
+    margin-top: -2px;
     padding: @customFilterMenu-picker-list-padding;
   }
   &.controls-FloatArea {
     background: transparent;
   }
-  .border-radius(@customFilterMenu-picker-border-radius);
   .controls-CustomFilterMenu__item {
     padding: @customFilterMenu-picker-menu-item-padding;
     background: @customFilterMenu-picker-menu-item-color;

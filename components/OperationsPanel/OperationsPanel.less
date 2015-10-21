@@ -1,94 +1,43 @@
-.controls-operations-panel {
-   /*TODO придрот (2 important), чтобы перебить высоту ws-area*/
-   height: @controls-OperationsPanel-height !important;
-   width: @controls-OperationsPanel-width;
-   overflow: visible !important;
+.controls-operationsPanel {
+   overflow: hidden;
+   line-height: @controls-OperationsPanel-height;
 
-   .controls__operations-panel__closed {
-      background: @controls-OperationsPanel-closed;
+   .controls-operationsPanel__wrapper {
+      background-color: @controls-OperationsPanel-bg;
+      height: @controls-OperationsPanel-height;
+      margin-top: -@controls-OperationsPanel-height;
 
-      &:hover {
-         background: @controls-OperationsPanel-closed-hovered;
-      }
-      &:active {
-         background: @controls-OperationsPanel-closed-activated;
-      }
-   }
-   &.ws-disabled {
-      .controls__operations-panel__closed {
-         background: @controls-OperationsPanel-closed-disabled;
-      }
-   }
-
-}
-
-.controls__operations-panel__opened, .controls__operations-panel__closed {
-   display: inline-block;
-   position: absolute;
-   top: @controls-OperationsPanel-opened-closed-top;
-   left: @controls-OperationsPanel-opened-closed-left;
-   width: @controls-OperationsPanel-opened-closed-width;
-   height: @controls-OperationsPanel-opened-closed-height;
-   cursor: @controls-OperationsPanel-cursor;
-}
-
-.controls__operations-panel__wrapper {
-   line-height: @controls-OperationsPanel-line-height;
-   width: auto;
-   white-space: nowrap;
-   background-color: @controls-OperationsPanel-bg;
-   padding-left: @controls-OperationsPanel-padding-left;
-
-   &:after {
-      background: @controls-OperationsPanel-triangle;
-      content: '\00a0';
-      position: absolute;
-      width: @controls-OperationsPanel-triangle-width;
-      height: @controls-OperationsPanel-triangle-height;
-      top: 0;
-   }
-
-   .controls__operations-panel__opened {
-      background: @controls-OperationsPanel-opened;
-
-      &:hover {
-         background: @controls-OperationsPanel-opened-hovered;
-      }
-      &:active {
-         background: @controls-OperationsPanel-opened-activated;
-      }
-   }
-
-   .controls__operations-panel__actions-mark, .controls__operations-panel__actions {
-      display: inline-block;
-   }
-   .controls__operations-panel__actions-mark {
-      &:after {
-         margin-left: @controls-OperationsPanel-separator-margin-left;
-         margin-right: @controls-OperationsPanel-separator-margin-right;
-         background: @controls-OperationsPanel-separator-bg;
-         width: @controls-OperationsPanel-separator-width;
-         height: @controls-OperationsPanel-separator-height;
-         content: '\00a0';
-         font-size: 1px;
+      .controls-operationsPanel__actionMark, .controls-operationsPanel__actions {
          display: inline-block;
-         line-height: @controls-OperationsPanel-separator-line-height;
       }
-   }
+      .controls-operationsPanel__actionMark {
+         &:after {
+            margin-left: @controls-OperationsPanel-separator-margin-left;
+            margin-right: @controls-OperationsPanel-separator-margin-right;
+            background: @controls-OperationsPanel-separator-bg;
+            width: @controls-OperationsPanel-separator-width;
+            height: @controls-OperationsPanel-separator-height;
+            content: '\00a0';
+            font-size: 1px;
+            display: inline-block;
+            line-height: @controls-OperationsPanel-separator-line-height;
+         }
+      }
 
-   &.controls__operations-panel__mass-mode {
-      .controls__operations-panel__action-type-selection {
-         display: none;
+      &.controls-operationsPanel__massMode {
+         .controls-operationsPanel__actionType-selection {
+            display: none;
+         }
       }
-   }
-   &.controls__operations-panel__selection-mode {
-      .controls__operations-panel__action-type-mass {
-         display: none;
+      &.controls-operationsPanel__selectionMode {
+         .controls-operationsPanel__actionType-mass {
+            display: none;
+         }
       }
-   }
-   .controls__operations-panel__action-type-mass,
-   .controls__operations-panel__action-type-selection,
-   .controls__operations-panel__action-type-all {
-      margin: @controls-OperationsPanel-actions-margin;
+      .controls-operationsPanel__actionType-mass,
+      .controls-operationsPanel__actionType-selection,
+      .controls-operationsPanel__actionType-all {
+         margin: @controls-OperationsPanel-actions-margin;
+      }
    }
 }

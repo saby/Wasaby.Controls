@@ -1,5 +1,5 @@
-<a class="controls-Link ws-hover-target" href="{{?it.href}}{{=it.href}}{{??}}javascript:void(0);{{?}}"{{?it.inNewTab}}target="_blank"{{?}}>
-      {{?it.icon}}<i class="controls-Link__icon {{=it.iconTemplate(it)}}" ></i>{{?it.caption}}<span class="controls-Link__field" {{?it.title}}title="{{=it.title}}"{{?}}>{{=it.caption}}</span>{{?}}
+<a class="controls-Link {{?it.enabled}}ws-hover-target{{?}}" href="{{?it.href}}{{=it.href}}{{??}}javascript:void(0);{{?}}"{{?it.inNewTab}}target="_blank"{{?}}{{?it.tooltip}} title="{{=it.tooltip}}"{{?}}>
+      {{?it.icon}}<i class="controls-Link__icon {{=it.iconTemplate(it)}}" ></i>{{?it.caption}}<span class="controls-Link__field">{{=it.caption}}</span>{{?}}
       {{??}}
          {{?it.caption}}{{=it.caption}}{{?}}
       {{?}}

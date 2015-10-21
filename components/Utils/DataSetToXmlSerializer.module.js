@@ -6,34 +6,38 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
       ], function() {
    return $ws.core.extend({}, {
 
-      $protected: {
-         _options: {
-            columns: [],
-            report: undefined
-         },
-         _complexFields: {
-            "Связь" : true,
-            "Иерархия" : true,
-            "Перечисляемое" : true,
-            "Флаги" : true,
-            "Массив" : true,
-            "Запись" : true,
-            "Выборка" : true
-         },
-         _colNameToTag: {
-            "Число целое" : "ЧислоЦелое",
-            "Число вещественное" : "ЧислоВещественное",
-            "Дата и время" : "ДатаИВремя"
-         },
-         _branchTypes: {
-            "true": "Узел",
-            "false": "Лист",
-            "null": "СкрытыйУзел"
-         },
-         _reportPrinter : null,
-         _loadIndicator: undefined
+      _complexFields: {
+         "Связь" : true,
+         "Иерархия" : true,
+         "Перечисляемое" : true,
+         "Флаги" : true,
+         "Массив" : true,
+         "Запись" : true,
+         "Выборка" : true
       },
-
+      _wordsToTranslate: {
+         "Дата" : "Date",
+         "Время" : "Time",
+         "Строка" : "String",
+         "Текст" : "Text",
+         "Логическое" : "Boolean",
+         "Деньги" : "Money",
+         "Двоичное" : "Binary",
+         'Файл-rpc': 'RPCFile',
+         'Временной интервал':'TimeInterval',
+         'Идентификатор': 'ID'
+      },
+      _colNameToTag: {
+         "Число целое" : "Integer",
+         "Число вещественное" : "Double",
+         "Дата и время" : "DateTime"
+      },
+      _branchTypes: {
+         "true": "Node",
+         "false": "Leaf",
+         "null": "HiddenNode"
+      },
+      //TODO Перенести обратно в Source.js, потому что получилась копипаста, хотя хотели как лучше
       $constructor: function() {
          this._reportPrinter = new $ws.proto.ReportPrinter({
             columns: this._options.columns
@@ -75,11 +79,11 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
       _serializeColumns : function(columns, object, doc){
          var cols, column;
          if(columns && columns instanceof Array && columns.length > 0) {
-            doc.documentElement.appendChild(cols = doc.createElement('Колонки'));
+            doc.documentElement.appendChild(cols = doc.createElement('Columns'));
             for(var i = 0, l = columns.length; i < l; i++){
-               cols.appendChild(column = doc.createElement('Колонка'));
-               column.setAttribute('Имя', columns[i].title);
-               column.setAttribute('Поле', columns[i].field);
+               cols.appendChild(column = doc.createElement('Column'));
+               column.setAttribute('Name', columns[i].title);
+               column.setAttribute('Field', columns[i].field);
             }
          }
          //TODO здесь будет настройка для иерархии
@@ -91,7 +95,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                pkColumnName;
          if ($ws.helpers.instanceOfModule( object , 'SBIS3.CONTROLS.DataSet')){
             var self = this;
-            parentElement.appendChild(currentElement = document.createElement('Выборка'));
+            parentElement.appendChild(currentElement = document.createElement('RecordSet'));
             object.each(function(record){
                self._serializeObject(record, currentElement, document, columns);
             });
@@ -99,11 +103,14 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
          }
          else if (object && object.getRaw()){
             var key = object.getKey();
+            if(key === null){
+               key = 'null';
+            }
             pkColumnName = object._keyField;//TODO record.getKeyField()
-            parentElement.appendChild(recordElement = document.createElement('Запись'));
+            parentElement.appendChild(recordElement = document.createElement('Record'));
 
-            recordElement.setAttribute('КлючЗаписи', key);
-            recordElement.setAttribute('ПолеКлюча', pkColumnName);
+            recordElement.setAttribute('RecordKey', key);
+            recordElement.setAttribute('KeyField', pkColumnName);
             for(var k = 0, cnt = columns.length; k < cnt; k++) {
                this._serializeField(columns[k], object, recordElement, document);
             }
@@ -112,17 +119,23 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
       _serializeField: function(column, record, recordElement, document){
          var fieldElement,
                tagName,
-               element;
+               element,
+               cyrillicTest = /[а-я]+/gi;
          if (!column.hasOwnProperty('field')){
             return;
          }
-         recordElement.appendChild(fieldElement = document.createElement('Поле'));
-         fieldElement.setAttribute('Имя', column.field);
+         recordElement.appendChild(fieldElement = document.createElement('Field'));
+         fieldElement.setAttribute('Name', column.field);
          var fieldValue = record.get(column.field) === null ? "" : record.get(column.field);
-         column.type = record.getRaw ?  record.getType(column.field) : column.type || 'Текст';
+         column.type = record.getRaw ?  record.getType(column.field) : column.type || 'Text';
          var typeName =  typeof(column.type) == 'object' ? column.type.n : column.type;
          if(!this._complexFields[typeName] && !column.s && !this._complexFields[column.s]){
             tagName = this._colNameToTag[column.type] ? this._colNameToTag[column.type] : column.type;
+            tagName = this._wordsToTranslate[tagName] ? this._wordsToTranslate[tagName] : tagName;
+            var resultTest = cyrillicTest.test(tagName);
+            if(resultTest) {
+               $ws.single.ioc.resolve('ILogger').error('XSLT', 'Внимание! Кирилический тэг без замены: ' + tagName);
+            }
             element = document.createElement(tagName);
             if(fieldValue instanceof Date){
                if(column.type == "Дата и время")
@@ -136,22 +149,22 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             element.appendChild(document.createTextNode(fieldValue));
             fieldElement.appendChild(element);
          } else if(typeName == 'Связь'){
-            element = document.createElement('Связь');
-            element.setAttribute('Таблица', typeof(column.type) == 'object' ? column.type.t : column.table);
+            element = document.createElement('Link');
+            element.setAttribute('Table', typeof(column.type) == 'object' ? column.type.t : column.table);
             element.appendChild(document.createTextNode(fieldValue));
             fieldElement.appendChild(element);
          } else if(typeName == 'Иерархия' || (column.s && column.s == 'Иерархия')){
-            fieldElement.appendChild(element = document.createElement('Иерархия'));
+            fieldElement.appendChild(element = document.createElement('Hierarchy'));
             var pID, flBranch;
-            element.appendChild(pID = document.createElement('Родитель'));
-            element.appendChild(flBranch = document.createElement('ТипУзла'));
+            element.appendChild(pID = document.createElement('Parent'));
+            element.appendChild(flBranch = document.createElement('NodeType'));
             if(typeof(column.type) == 'object'){
-               element.setAttribute('ИмяИерархии', column.type.f + "");
+               element.setAttribute('HierarchyName', column.type.f + "");
                pID.appendChild(document.createTextNode(fieldValue[1] + ""));
                flBranch.appendChild(document.createTextNode(this._branchTypes[fieldValue[0] + ""]));
             } else {
                if(typeName == "Идентификатор"){
-                  element.setAttribute('ИмяИерархии', column.titleColumn + "");
+                  element.setAttribute('HierarchyName', column.titleColumn + "");
                   pID.appendChild(document.createTextNode(fieldValue + ""));
                   fieldValue = this._branchTypes[record.get(column.title + "@") + ""];
                   flBranch.appendChild(document.createTextNode(fieldValue));
@@ -160,39 +173,39 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                }
             }
          } else if(typeName == 'Перечисляемое'){
-            fieldElement.appendChild(element = document.createElement('Перечисляемое'));
+            fieldElement.appendChild(element = document.createElement('Enumerable'));
             var option;
             fieldValue = fieldValue.toObject();
             for(var key in fieldValue.availableValues){
                if(fieldValue.availableValues.hasOwnProperty(key)) {
-                  element.appendChild(option = document.createElement('Вариант'));
-                  option.setAttribute('Значение', key);
+                  element.appendChild(option = document.createElement('Variant'));
+                  option.setAttribute('Value', key);
                   var value = fieldValue.availableValues[key];
                   if(value === null){
                      value = '';
                   }
-                  option.setAttribute('Название', value);
+                  option.setAttribute('Title', value);
                   if(key == fieldValue.currentValue)
-                     option.setAttribute('Выбран', 'true');
+                     option.setAttribute('Checked', 'true');
                }
             }
          } else if(typeName == 'Флаги'){
-            fieldElement.appendChild(element = document.createElement('Флаги'));
+            fieldElement.appendChild(element = document.createElement('Flags'));
             var flag;
             fieldValue = fieldValue.toObject();
             for(var number in fieldValue){
                if(fieldValue.hasOwnProperty(number)) {
-                  element.appendChild(flag = document.createElement('Флаг'));
-                  flag.setAttribute('Название', number);
-                  flag.setAttribute('Состояние', fieldValue[number] + "");
+                  element.appendChild(flag = document.createElement('Flag'));
+                  flag.setAttribute('Title', number);
+                  flag.setAttribute('Condition', fieldValue[number] + "");
                }
             }
          } else if(typeName == 'Массив'){
-            fieldElement.appendChild(element = document.createElement('Массив'));
-            element.setAttribute('ТипДанных', typeof(column.type) == 'object' ? column.type.t : column.arrayType);
+            fieldElement.appendChild(element = document.createElement('Array'));
+            element.setAttribute('DataType', typeof(column.type) == 'object' ? column.type.t : column.arrayType);
             var elem;
             for(var i = 0, l = fieldValue.length; i < l; i++){
-               element.appendChild(elem = document.createElement('Значение'));
+               element.appendChild(elem = document.createElement('Value'));
                //для элементов массива всегда добавляем их значение как текст, ведь там может быть null
                elem.appendChild(document.createTextNode(fieldValue[i] + ''));
             }

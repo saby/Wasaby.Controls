@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
     * @control
     * @demo SBIS3.CONTROLS.Demo.MyCheckBoxGroup
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @initial
     * <component data-component='SBIS3.CONTROLS.CheckBoxGroup'>
     *    <options name="items" type="array">
@@ -35,15 +36,15 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
    var CheckBoxGroup = CheckBoxGroupBase.extend( /** @lends SBIS3.CONTROLS.CheckBoxGroup.prototype */ {
       _dotTplFn : dotTplFn,
        /**
-        * @typedef {Object} CheckBoxGroupItems
+        * @typedef {Object} GroupItems
         * @property {String} id Идентификатор элемента группы.
         * @property {String} caption Заголовок элемента группы.
         */
        /**
-        * @cfg {CheckBoxGroupItems[]} Набор исходных данных, по которому строится отображение группы
+        * @cfg {GroupItems[]} Набор исходных данных, по которому строится отображение группы
         * @name SBIS3.CONTROLS.CheckBoxGroup#items
         * @example
-        * <pre>
+        * <pre class="brush:xml">
         *     <options name="items" type="array">
         *        <options>
         *            <option name="id">1</option>

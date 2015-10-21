@@ -323,12 +323,14 @@
 
          new CheckBoxGroup({
             element: 'checkBoxGroup1',
-            items: items
+            items: items,
+            displayField: 'title'
          });
 
          new CheckBoxGroup({
             element: 'checkBoxGroup2',
-            items: items
+            items: items,
+            displayField: 'title'
          });
 
          new RadioButton({
@@ -352,13 +354,15 @@
          new RadioGroup({
             element: 'radioGroup1',
             items: items,
-            selectedItem: 1
+            selectedItem: 1,
+            displayField: 'title'
          });
 
          new RadioGroup({
             element: 'radioGroup2',
             items: items,
-            selectedItem: 1
+            selectedItem: 1,
+            displayField: 'title'
          });
 
          new Switcher({
@@ -660,12 +664,7 @@
       ) {
          new TextBox({
             element: 'textBox1',
-            placeholder: 'This is textbox',
-            handlers: {
-               'onTextChange': function(e, val) {
-                  console.log(val)
-               }
-            }
+            placeholder: 'This is textbox'
          });
 
          new TextBox({
@@ -687,10 +686,10 @@
             enabled: false
          });
 
-         new FormattedTextBox({
+         new DatePicker({
             element: 'formattedTextBox1',
             text: '15:00:00',
-            mask: 'dd:dd:dd'
+            mask: 'HH:II:SS'
          });
 
          new FormattedTextBox({
@@ -898,15 +897,15 @@
       require([
          'js!SBIS3.CONTROLS.Collection',
          'js!SBIS3.CONTROLS.AdapterJSON',
-         'js!SBIS3.CONTROLS.ListView',
+         'js!SBIS3.CONTROLS.ListViewOld',
          'js!SBIS3.CONTROLS.TreeView',
-         'js!SBIS3.CONTROLS.DataGrid'
+         'js!SBIS3.CONTROLS.DataGridView'
       ], function (
          Collection,
          AdapterJSON,
          ListView,
          TreeView,
-         DataGrid
+         DataGridView
       ) {
 
          var items = [{
@@ -943,10 +942,7 @@
             items: items,
             itemTemplate: listItemTemplate,
             itemsActions: [{
-               icon: 'sprite:icon-16 icon-AddButton icon-primary',
-               handler: function(id, item) {
-                  console.log(id +' '+ item);
-               }
+               icon: 'sprite:icon-16 icon-AddButton icon-primary'
             }]
          });
 
@@ -956,15 +952,12 @@
             items: items,
             itemTemplate: listItemTemplate,
             itemsActions: [{
-               icon: 'sprite:icon-16 icon-AddButton icon-primary',
-               handler: function(id, item) {
-                  console.log(id +' '+ item);
-               }
+               icon: 'sprite:icon-16 icon-AddButton icon-primary'
             }]
          });
 
-         new DataGrid({
-            element: 'dataGrid',
+         new DataGridView({
+            element: 'DataGridView',
             items: items,
             itemSelect: true,
             columns: [{
@@ -980,10 +973,7 @@
                width : 70
             }],
             itemsActions: [{
-               icon: 'sprite:icon-16 icon-AddButton icon-primary',
-               handler: function(id, item) {
-                  console.log(id +' '+ item);
-               }
+               icon: 'sprite:icon-16 icon-AddButton icon-primary'
             }]
          });
       });

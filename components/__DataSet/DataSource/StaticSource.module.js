@@ -4,20 +4,26 @@
 define('js!SBIS3.CONTROLS.StaticSource', [
    'js!SBIS3.CONTROLS.BaseSource',
    'js!SBIS3.CONTROLS.Record',
-   'js!SBIS3.CONTROLS.DataSet'
-], function (BaseSource, Record, DataSet) {
+   'js!SBIS3.CONTROLS.DataSet',
+   'js!SBIS3.CONTROLS.ArrayStrategy'
+], function (BaseSource, Record, DataSet, ArrayStrategy) {
    'use strict';
 
    /**
     * Класс для работы с массивами, как с источником данных.
-    * @public
     * @class SBIS3.CONTROLS.StaticSource
     * @extends SBIS3.CONTROLS.BaseSource
+    * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
-   return BaseSource.extend({
+   return BaseSource.extend(/** @lends SBIS3.CONTROLS.StaticSource.prototype */{
       $protected: {
-         _initialDataSet: undefined,
+         /**
+          * @var {Array|undefined} Карта данных для быстрого поиска элемента по ключу
+          */
+         _map: undefined,
+
          _options: {
             /**
              * @cfg {Array} Исходный массив данных, с которым работает StaticSource
@@ -41,51 +47,111 @@ define('js!SBIS3.CONTROLS.StaticSource', [
       },
 
       $constructor: function (cfg) {
-         // неявно создадим начальный датасет, с которым будем работать дальше
-         this._initialDataSet = new DataSet({
-            strategy: this.getStrategy(),
-            data: cfg.data,
-            keyField: this._options.keyField
-         });
+         Record = Record || require('js!SBIS3.CONTROLS.Record');
+         DataSet = DataSet || require('js!SBIS3.CONTROLS.DataSet');
+         this._options.strategy = cfg.strategy || new ArrayStrategy();
       },
 
       create: function () {
-         var def = new $ws.proto.Deferred(),
-            record = new Record({
-               strategy: this.getStrategy(),
-               raw: {},
-               keyField: this._options.keyField
-            });
-         def.callback(record);
-         return def;
+         return $ws.proto.Deferred.success(new Record({
+            strategy: this.getStrategy(),
+            keyField: this._options.keyField
+         }));
       },
 
       read: function (id) {
-         var def = new $ws.proto.Deferred();
-         def.callback(this._initialDataSet.getRecordByKey(id));
-         return def;
+         var data = this._getDataByKey(id);
+         if (data) {
+            return $ws.proto.Deferred.success(new Record({
+               strategy: this.getStrategy(),
+               raw: data,
+               keyField: this._options.keyField,
+               isCreated: true
+            }));
+         } else {
+            return $ws.proto.Deferred.fail('Record is not found');
+         }
       },
 
       update: function (record) {
+         if (!record.isCreated() && !record.getKey()) {
+            record.set(
+               record.getKeyField(),
+               $ws.helpers.randomId('k')
+            );
+         }
+
+         var index = this._getIndexByKey(record.getKey());
+         if (index >= 0) {
+            this.getStrategy().replaceAt(
+               this._options.data,
+               index,
+               record.getRaw()
+            );
+         } else {
+            this.getStrategy().addRecord(
+               this._options.data,
+               record
+            );
+         }
+         this._map = undefined;
+
          if (!record.isCreated()) {
-            var key = record.getKey();
-            if (!key) {
-               record.set(record.getKeyField(), $ws.helpers.randomId('k'));
-            }
             record.setCreated(true);
          }
          record.setChanged(false);
-         var def = new $ws.proto.Deferred();
-         def.callback(true);
-         return def;
+
+         return $ws.proto.Deferred.success(true);
       },
 
       destroy: function (id) {
-         var def = new $ws.proto.Deferred(),
-            strategy = this.getStrategy();
-         strategy.destroy(this._options.data, this._options.keyField, id);
-         def.callback(true);
-         return def;
+         if (this._getIndexByKey(id) == -1) {
+            return $ws.proto.Deferred.fail('Record is not found');
+         } else {
+            this.getStrategy().destroy(
+               this._options.data,
+               this._options.keyField,
+               id
+            );
+            this._map = undefined;
+
+            return $ws.proto.Deferred.success(true);
+         }
+      },
+
+      /**
+       * Возвращает элемент с указанным ключом
+       * @param {String} key Значение ключа
+       * @returns {Array|undefined}
+       */
+      _getDataByKey: function (key) {
+         return this.getStrategy().at(
+            this._options.data,
+            this._getIndexByKey(key)
+         );
+      },
+
+      /**
+       * Возвращает индекс элемента с указанным ключом
+       * @param {String} key Значение ключа
+       * @returns {Integer} -1 - не найден, >=0 - индекс
+       */
+      _getIndexByKey: function (key) {
+         if (this._map === undefined) {
+            this._reindex();
+         }
+         
+         return Array.indexOf(this._map, key);
+      },
+
+      /**
+       * Переиндексирует карту данных
+       */
+      _reindex: function () {
+         this._map = this.getStrategy().rebuild(
+            this._options.data,
+            this._options.keyField
+         );
       },
 
       /**
@@ -93,30 +159,27 @@ define('js!SBIS3.CONTROLS.StaticSource', [
        * Возможно применение фильтрации, сортировки и выбора определённого количества записей с заданной позиции.
        * @param {Object} filter Параметры фильтрации вида - {property1: value, property2: value}.
        * @param {Array} sorting Параметры сортировки вида - [{property1: 'ASC'}, {property2: 'DESC'}].
-       * @param {Number} offset Смещение начала выборки.
-       * @param {Number} limit Количество возвращаемых записей.
+       * @param {Number} [offset] Смещение начала выборки.
+       * @param {Number} [limit] Количество возвращаемых записей.
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
        * В колбэке придёт js!SBIS3.CONTROLS.DataSet - набор отобранных элементов.
        */
       query: function (filter, sorting, offset, limit) {
-         var data = this._options.data;
+         var data = $ws.core.clone(this._options.data);
          data = this._applyFilter(data, filter);
          data = this._applySorting(data, sorting);
          data = this._applyPaging(data, offset, limit);
 
-         var DS = new DataSet({
+         return $ws.proto.Deferred.success(new DataSet({
             strategy: this.getStrategy(),
             data: data,
+            meta: this.getStrategy().getMetaData(this._options.data),
             keyField: this._options.keyField
-         });
-
-         var def = new $ws.proto.Deferred();
-         def.callback(DS);
-         return def;
+         }));
       },
 
       /**
-       * Установить callback для фильтра массива данных в методе query()
+       * Устанвливает callback для фильтра массива данных в методе query()
        * @param {Function} handler Callback для фильтра массива данных в методе query()
        */
       setDataFilterCallback: function (handler) {
@@ -142,17 +205,18 @@ define('js!SBIS3.CONTROLS.StaticSource', [
             var filterMatch = true;
 
             for (var filterField in filter) {
+               //TODO: пока параметры иерархии передаются в фильтрах делаем так
+
                if (filter.hasOwnProperty(filterField)) {
-                  var filterValue = filter[filterField],
-                      dataValue = strategy.value(dataItem, filterField);
+                  var filterValue = filter[filterField];
+                  if (filterValue == 'С разворотом' || filterValue == 'Узлы и листья' || filterField == 'usePages') {
+                     continue;
+                  }
+                  var dataValue = strategy.value(dataItem, filterField);
 
                   //Если установлен фильтр-callback - используем его результат, иначе - проверяем полное совпадение значений
                   var callbackResult = this._options.dataFilterCallback ? this._options.dataFilterCallback(filterField, dataValue, filterValue) : undefined;
-                  if (callbackResult === undefined) {
-                     filterMatch = ((typeof dataValue == 'undefined') || ((typeof dataValue != 'undefined') && dataValue == filterValue));
-                  } else {
-                     filterMatch = callbackResult;
-                  }
+                  filterMatch = callbackResult === undefined ? dataValue == filterValue : callbackResult;
                }
 
                if (!filterMatch) {
@@ -181,9 +245,8 @@ define('js!SBIS3.CONTROLS.StaticSource', [
             return data;
          }
 
-         //TODO: сортировка по нескольким полям одновременно
-
          //Создаем карту сортировки
+         sorting.reverse();
          var sortMap = [],
             sortIndex = 0;
          $ws.helpers.forEach(sorting, function (sortItem) {
@@ -242,17 +305,21 @@ define('js!SBIS3.CONTROLS.StaticSource', [
       /**
        * Применяет срез к массиву данных
        * @param {Array} data Массив данных
-       * @param {Number} offset Смещение начала выборки
-       * @param {Number} limit Количество записей выборки
+       * @param {Number} [offset] Смещение начала выборки
+       * @param {Number} [limit] Количество записей выборки
        * @returns {Array}
        */
       _applyPaging: function (data, offset, limit) {
-         if (offset === undefined ||
-             offset === null ||
-             limit === undefined ||
-             limit === null
-         ) {
+         offset = offset || 0;
+
+         if (offset === 0 && limit === undefined) {
             return data;
+         }
+
+         if (limit === undefined) {
+            limit = this.getStrategy().getCount(data);
+         } else {
+            limit = limit || 0;
          }
 
          var strategy = this.getStrategy(),
@@ -260,8 +327,8 @@ define('js!SBIS3.CONTROLS.StaticSource', [
             newIndex = 0,
             beginIndex = offset,
             endIndex = Math.min(
-                strategy.getCount(data),
-                beginIndex + limit
+               strategy.getCount(data),
+               beginIndex + limit
             );
          for (var index = beginIndex; index < endIndex; index++, newIndex++) {
             strategy.replaceAt(newData, newIndex, strategy.at(data, index));
@@ -277,11 +344,11 @@ define('js!SBIS3.CONTROLS.StaticSource', [
        * @param {Object} orderDetails - детали смены порядковых номеров. Объект со свойствами after и before: после или перед какой записью нужно вставить перемещаемую. В after и before должны находиться записи
        */
       move: function (record, hierField, parentKey, orderDetails) {
-         if(parentKey || parentKey === null){
-            record.set(hierField, parentKey);
+         var strategy = this.getStrategy();
+         if (parentKey || parentKey === null) {
+            strategy.setParentKey(record, hierField, parentKey);
          }
          if(orderDetails){
-            var strategy = this.getStrategy();
             strategy.changeOrder(this._options.data, record, orderDetails);
          } else if(!parentKey && parentKey !== null){
             throw new Error('Не передано достаточно информации для перемещения');

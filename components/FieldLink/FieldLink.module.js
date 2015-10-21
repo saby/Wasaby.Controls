@@ -11,6 +11,7 @@ define('js!SBIS3.Engine.FieldLink', ['js!SBIS3.CORE.Control'], function(Control)
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @control
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var FieldLink = Control.Control.extend(/** @lends SBIS3.Engine.FieldLink.prototype */{

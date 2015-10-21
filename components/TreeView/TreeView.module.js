@@ -1,12 +1,13 @@
-define('js!SBIS3.CONTROLS.TreeView', ['js!SBIS3.CONTROLS.ListView', 'js!SBIS3.CONTROLS.TreeMixin'], function(ListView, TreeMixin) {
+define('js!SBIS3.CONTROLS.TreeView', ['js!SBIS3.CONTROLS.ListViewOld', 'js!SBIS3.CONTROLS.TreeMixin'], function(ListView, TreeMixin) {
    'use strict';
    /**
     * Контрол, отображающий данные имеющие иерархическую структуру.
     * Позволяет отобразить данные в произвольном виде с возможностью открыть или закрыть отдельные узлы.
     * @class SBIS3.CONTROLS.TreeView
-    * @extends SBIS3.CONTROLS.ListView
+    * @extends SBIS3.CONTROLS.ListViewOld
     * @mixes SBIS3.CONTROLS.TreeMixin
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @control
     *
     */
@@ -64,10 +65,6 @@ define('js!SBIS3.CONTROLS.TreeView', ['js!SBIS3.CONTROLS.ListView', 'js!SBIS3.CO
             curList = this._getItemsContainer();
          }
          return curList;
-      },
-
-      _getItemActionsContainer : function(id) {
-         return $('.controls-TreeView__item:first', $(".controls-ListView__item[data-id='" + id + "']", this._container.get(0)));
       },
 
       /**

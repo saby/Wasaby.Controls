@@ -1,0 +1,7 @@
+{
+  "url": {
+    "host": "localhost",
+    "port": 666,
+    "path": "/tests/unit/via-webdriver.html?reporter=XUnit"
+  }
+}

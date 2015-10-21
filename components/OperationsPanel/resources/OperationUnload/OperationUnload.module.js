@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
              item, extraText, itemId;
          //view.deleteRecords(records);
          extraText =  this._isSelectedState() ? ' отмеченных ' : ' ';
-         while (item = items.getNextItem(itemId)) {
+         while ((item = items.getNextItem(itemId))) {
             itemId = item.id;
             //Меняем текст только у платформенных пунктов меню
             if (this._controlsId[itemId]) {
@@ -64,14 +64,14 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       _isSelectedState: function(){
          return this._getView().getSelectedKeys().length > 0;
       },
-      applyOperation: function(dataSet){
-         var cfg = {
-            dataSet : dataSet || this._getView()._dataSet,
-            columns: this._getView().getColumns()
-         };
-         if ( this._options.xsl ){
-            cfg.xsl = this._options.xsl;
-         }
+      /**
+       * @param columns
+       * @private
+       */
+      _notifyOnApply : function(columns){
+         return this._notify('onApplyOperation', 'unload', columns);
+      },
+      applyOperation: function(dataSet, cfg){
          var p = new Unloader(cfg);
          //TODO Если не задали имя файла в опции, то возьмем из 1ой колонки, а в 1ой пусто, Вставим текст
          p.unload(this._currentItem, this._controlsId[this._currentItem], this._options.fileName || this._getView().getColumns()[0].title || 'Как на экране');

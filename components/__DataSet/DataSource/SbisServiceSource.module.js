@@ -5,25 +5,32 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
    'js!SBIS3.CONTROLS.BaseSource',
    'js!SBIS3.CONTROLS.Record',
    'js!SBIS3.CONTROLS.DataSet',
+   'js!SBIS3.CONTROLS.SbisServiceSource/resources/SbisServiceBLO',
    'js!SBIS3.CONTROLS.SbisJSONStrategy'
-], function (BaseSource, Record, DataSet, SbisJSONStrategy) {
+], function (BaseSource, Record, DataSet, SbisServiceBLO, SbisJSONStrategy) {
    'use strict';
 
    /**
     * Класс для работы с бизнес-логикой СБИС, как с источником данных.
-    * @public
+    * @author Мануйлов Андрей
     * @class SBIS3.CONTROLS.SbisServiceSource
     * @extends SBIS3.CONTROLS.BaseSource
+    * @public
+    * @author Крайнов Дмитрий Олегович
+    * @example
     * <pre>
-    *     var dataSource = new SbisServiceSource({
-    *         service: {
-    *             name: 'Товар'
-    *         }
+    *     var dataSource = new SbisService({
+    *        resource: 'СообщениеОтКлиента',
+    *        modelIdField: '@СообщениеОтКлиента',
+    *        queryMethodName: 'СписокОбщий',
+    *        readMethodName: 'ПрочитатьПоКлиенту',
+    *        updateMethodName: 'ЗаписатьСПроверкой',
+    *        destroyMethodName:'Удалить'
     *     });
     * </pre>
     */
 
-   return BaseSource.extend({
+   return BaseSource.extend(/** @lends SBIS3.CONTROLS.SbisServiceSource.prototype */{
       $protected: {
          _options: {
              /**
@@ -88,7 +95,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       },
 
       $constructor: function (cfg) {
-         this._BL = new $ws.proto.ClientBLObject(cfg.service);
+         this._BL = new SbisServiceBLO(cfg.service);
          this._object = cfg.service;
          this._options.strategy = cfg.strategy || new SbisJSONStrategy();
       },
@@ -140,7 +147,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(record);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            throw new Error('Не удалось выполнить метод create');
+            def.errback('Не удалось выполнить метод create');
          });
          return def;
       },
@@ -179,7 +186,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(record);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            throw new Error('Не удалось выполнить метод read');
+            def.errback('Не удалось выполнить метод read');
          });
          return def;
       },
@@ -221,7 +228,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(true);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            throw new Error('Не удалось выполнить метод update');
+            def.errback('Не удалось выполнить метод update');
          });
 
          return def;
@@ -240,10 +247,8 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
          self._BL.call(self._options.destroyMethodName, {'ИдО': id}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             def.callback(true);
          }, function (error) {
-            if (typeof(window) != 'undefined') {
-               console['log'](error);
-            }
-            throw new Error('Не удалось выполнить метод destroy');
+            $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
+            def.errback('Не удалось выполнить метод destroy');
          });
 
          return def;
@@ -292,12 +297,13 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
 
             var DS = new DataSet({
                strategy: strategy,
-               data: res
+               data: res,
+               meta: strategy.getMetaData(res)
             });
             def.callback(DS);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            throw new Error('Не удалось выполнить метод query');
+            def.errback('Не удалось выполнить метод query');
          });
 
          return def;
@@ -311,11 +317,13 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
        * @param {Object} orderDetails - детали смены порядковых номеров. Объект со свойствами after и before: после или перед какой записью нужно вставить перемещаемую.
        */
       move: function (record, hierField, parentKey, orderDetails) {
+         var strategy;
          if(orderDetails){
             return this._changeOrder(record, hierField, parentKey, orderDetails);
-         } else if(parentKey){
+         } else if(parentKey || parentKey === null){
+            strategy = this.getStrategy();
             //сменить родителя
-            record.set(hierField, parentKey);
+            strategy.setParentKey(record, hierField, parentKey);
             return this.update(record);
          } else {
             throw new Error('Не передано достаточно информации для перемещения');
@@ -333,10 +341,8 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
          self._orderBL.call('Вставить' + suffix, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             def.callback(true);
          }, function (error) {
-            if (typeof(window) != 'undefined') {
-               console['log'](error);
-            }
-            throw new Error('Не удалось выполнить метод update');
+            $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
+            def.errback('Не удалось выполнить метод _changeOrder');
          });
          return def;
       }

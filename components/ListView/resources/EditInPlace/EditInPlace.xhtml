@@ -1,0 +1,27 @@
+{{?it.columns}}
+   <tr class="controls-editInPlace controls-ListView__item">
+   {{?it.template}}
+      <td colspan="{{=it.columns.length}}">
+         {{=it.template}}
+      </td>
+   {{??}}
+      <!--TODO: вытащить логику ignoreFirstColumn в контроллер-->
+      {{?it.ignoreFirstColumn}}<td class="controls-DataGridView__td"></td>{{?}}
+      {{~it.columns :column:index }}
+         {{?column.editor}}
+            <td class="controls-DataGridView__td controls-editInPlace__withEditor">
+            {{=column.editor}}
+         {{??}}
+            <td class="controls-DataGridView__td">
+         {{?}}
+         </td>
+      {{~}}
+   {{?}}
+   </tr>
+{{??}}
+   <div class="controls-editInPlace controls-ListView__item">
+   {{?it.template}}
+      {{=it.template}}
+   {{?}}
+   </div>
+{{?}}

@@ -21,6 +21,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
     * @extends SBIS3.CONTROLS.TextBox
     * @control
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyNumberTextBox
     * @initial
     * <component data-component='SBIS3.CONTROLS.NumberTextBox'>
@@ -186,6 +187,23 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
         return (isNaN(val)) ? null : val;
       },
 
+      /**
+       * Установить количество знаков после запятой
+       * @param decimals Количество знаков после запятой
+       */
+      setDecimals: function(decimals) {
+         if (typeof decimals === 'number') {
+            this._options.decimals = decimals;
+         }
+      },
+
+      /**
+       * Получить количество знаков после запятой
+       */
+      getDecimals: function(decimals) {
+         return this._options.decimals;
+      },
+
       _formatText: function(value, fromFocusOut){
          var decimals;
          if (this._options.onlyInteger){
@@ -298,7 +316,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             newCaretPosition++;
          } else { // точка в выделении
             currentVal = currentVal.substr(0, b) + symbol + '.' + ((this._options.decimals > 0) ? this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
-            newCaretPosition = currentVal.indexOf('.') - 1;
+            newCaretPosition = currentVal.indexOf('.');
          }
          currentVal = currentVal.replace(/\s/g, '');
          this._setText(currentVal);

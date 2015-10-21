@@ -22,6 +22,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
     *     <option name="caption">CheckBox</option>
     * </component>
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @category Inputs
     *
     * @ignoreOptions icon extendedTooltip independentContext contextRestriction isContainerInsideParent stateKey subcontrol
@@ -53,7 +54,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
              *    <li>false - нет неопределённого состояния.</li>
              * </ul>
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *    <option name="threeState">true</option>
              * </pre>
              */
@@ -131,6 +132,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
          }
          this.saveToContext('Checked', this._options.checked);
          this._notify('onCheckedChange', this._options.checked);
+         this._notifyOnPropertyChanged('checked');
       },
 
       _clickHandler: function() {

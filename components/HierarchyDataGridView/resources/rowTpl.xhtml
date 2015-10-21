@@ -1,0 +1,20 @@
+<tr class="controls-DataGridView__tr" style="{{=it.decorators.apply(it.color, 'color')}}">
+   {{?it.multiselect}}
+    <td class="controls-DataGridView__td js-controls-ListView__itemCheckBox controls-DataGridView__td__checkBox
+    {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
+        <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"/>
+    </td>
+   {{?}}
+    {{~it.columns :column:index}}
+    <td class="controls-DataGridView__td
+      {{?column.className}} {{=column.className}}{{?}}
+      {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
+        {{?index == 0}}
+        <div class="controls-HierarchyDataGridView__expand js-controls-TreeView__expand icon-24 {{?column.item.get(it.hierField)}}icon-Folder action-hover icon-disabled has-child{{?}}"></div>
+        {{=it.decorators.applyIf(column.value, column.highlight)}}
+        {{??}}
+        {{=it.decorators.applyIf(column.value, column.highlight)}}
+        {{?}}
+    </td>
+    {{~}}
+</tr>

@@ -1,0 +1,52 @@
+<div class="MyTreeCompositeView">
+   <component data-component="SBIS3.CONTROLS.RadioGroup" name="RadioGroup" class="MyRadioGroup">
+      <option name="displayField">title</option>
+      <options name="items" type="array">
+         <options>
+            <option name="id" type="string">1</option>
+            <option name="title">Таблица</option>
+         </options>
+         <options>
+            <option name="id" type="string">2</option>
+            <option name="title">Плитка</option>
+         </options> 
+         <options>
+            <option name="id" type="string">3</option>
+            <option name="title">Список</option>
+         </options>
+      </options>
+      <option name="keyField">id</option>
+      <option name="selectedKey" type="string">2</option>
+   </component>
+   <component data-component="SBIS3.CONTROLS.BreadCrumbs" name="MyBreadCrumbs" class="MyBreadCrumbs"></component>
+   <component data-component="SBIS3.CONTROLS.BackButton" name="MyBackButton" class="MyBackButton"></component>
+   <component data-component="SBIS3.CONTROLS.TreeCompositeView" name="MyTreeCompositeView">
+      <options name="columns" type="array">
+         <options>
+            <option name="title">Заголовок</option>
+            <option name="field">title</option>
+         </options>
+         <options>
+            <option name="title">№</option>
+            <option name="width" type="string">100</option>
+            <option name="field">id</option>
+         </options>
+      </options>
+      <options name="itemsActions" type="array">
+         <options>
+            <option name="name">delete</option>
+            <option name="icon">sprite:icon-16 icon-Erase icon-error</option>
+            <option name="isMainAction">true</option>
+            <option name="tooltip">Удалить</option>
+            <option name="title">Удалить</option>
+            <option name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.MyTreeCompositeView:prototype.deleteHandler</option>
+         </options>
+      </options>
+      <option name="viewMode">tile</option>
+      <option name="displayField">title</option>
+      <option name="hierField">parent</option>
+      <option name="ignoreLocalPageSize">true</option>
+      <option name="emptyHTML">Нет записей</option>
+      <option name="multiselect">true</option>
+   </component>
+</div>

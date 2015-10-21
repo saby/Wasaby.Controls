@@ -1,14 +1,16 @@
 .controls-NumberTextBox {
-  .controls-TextBox__fieldWrapper {
-    &.controls-NumberTextBox__enable-arrow{
-      margin: @number-text-box-wrapper-margin;
-    }
-    height: 100%;
+   .controls-TextBox__fieldWrapper {
+      height: 100%;
+      .controls-TextBox__field {
+         text-align: @number-text-box-field-text-alignment;
+      }
+   }
 
-    .controls-TextBox__field {
-      text-align: @number-text-box-field-text-alignment;
-    }
-  }
+   &.controls-NumberTextBox__text-align-right{
+      .controls-TextBox__field {
+         text-align: right;
+      } 
+   }
 
   .controls-TextBox__afterFieldWrapper {
     .controls-NumberTextBox__arrow {

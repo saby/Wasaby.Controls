@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.Toolbar', ['js!SBIS3.CONTROLS.ToolbarBase'], function(
     * Контрол, отображающий панель с иконками.
     * @class SBIS3.CONTROLS.Toolbar
     * @extends SBIS3.CONTROLS.ToolbarBase
-    * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var Toolbar = ToolbarBase.extend( /** @lends SBIS3.CONTROLS.Toolbar.prototype */ {

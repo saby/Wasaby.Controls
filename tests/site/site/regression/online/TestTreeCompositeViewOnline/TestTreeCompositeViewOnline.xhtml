@@ -1,0 +1,85 @@
+<div class="sbis3-TestTreeCompositeView____test" style="width:800px;height:600px;">
+
+    <component data-component="SBIS3.CONTROLS.TreeCompositeView" name="TreeCompositeView 1">
+        <options name="columns" type="array">
+            <options>
+                <option name="title">Перевод</option>
+                <option name="field">translate</option>
+            </options>
+        </options>
+        <option name="hierField">parent</option>
+        <option name="displayField">translate</option>
+        <options name="items" type="array">
+            <options>
+                <option name="id">1</option>
+                <option name="translate">Привет</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id">2</option>
+                <option name="translate">Пока</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id">3</option>
+                <option name="translate">Игра</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id">4</option>
+                <option name="translate">Как дела</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id">5</option>
+                <option name="translate">Тест</option>
+            </options>
+            <options>
+                <option name="id">6</option>
+                <option name="translate">Hello</option>
+                <option name="parent">1</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id">7</option>
+                <option name="translate">Darova</option>
+                <option name="parent">6</option>
+            </options>
+            <options>
+                <option name="id">8</option>
+                <option name="translate">Helga</option>
+                <option name="parent">1</option>
+            </options>
+            <options>
+                <option name="id">9</option>
+                <option name="translate">Bonjour</option>
+                <option name="parent">1</option>
+            </options>
+            <options>
+                <option name="id">10</option>
+                <option name="translate">Hola</option>
+                <option name="parent">1</option>
+            </options>
+        </options>
+        <options name="itemsActions" type="array">
+            <options>
+                <option name="name">moveTranslate</option>
+                <option name="icon">sprite:icon-16 icon-Move icon-primary action-hover</option>
+                <option name="isMainAction">true</option>
+                <option name="tooltip">Переместить</option>
+            </options>
+            <options>
+                <option name="name">editTranslate</option>
+                <option name="icon">sprite:icon-16 icon-Edit icon-primary action-hover</option>
+                <option name="isMainAction">true</option>
+                <option name="tooltip">Изменить</option>
+            </options>
+            <options>
+                <option name="name">deleteTranslate</option>
+                <option name="icon">sprite:icon-16 icon-Erase icon-error action-hover</option>
+                <option name="isMainAction">true</option>
+                <option name="tooltip">Удалить</option>
+            </options>
+        </options>
+    </component>
+</div>

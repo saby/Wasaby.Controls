@@ -1,0 +1,27 @@
+.MyTreeDataGridView .MyBreadCrumbs{
+   height: 27px;
+}
+
+.MyTreeDataGridView .MyBackButton{
+   height: 32px;
+}
+.MyTreeView__list {
+   min-height: 36px;
+   cursor: pointer;
+   line-height: 36px;
+   padding-left: 16px;
+}
+.MyTreeView__list__folder {
+   padding-left: 0;
+}
+.MyTreeView__list .controls-TreeView__expand {
+   margin-top: 8px;
+}
+.MyTreeView__list.controls-ListView__hoveredItem > .MyTreeView__list__content:hover {
+   background-color: #e9fafe;
+}
+.MyTreeView__list__img {
+   width: 24px;
+   float: left;
+   margin: 4px;
+}

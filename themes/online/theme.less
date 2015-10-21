@@ -1,3 +1,8 @@
+.body {
+  font-family: @font-basic-name;
+  font-size: @font-basic-size;
+}
+
 .controls-PopupMixin__closeButton {
   position: absolute;
   top: 0;
@@ -11,13 +16,37 @@
 }
 
 .controls-ListView__item__selected {
-   .controls-DataGrid__td:first-child {
+   .controls-DataGridView__td:first-child {
       background-image: url('img/rowSelect.png');
       background-position: left top;
       background-repeat: repeat-y;
    }
 }
 
-.controls-Menu__Popup {
-  padding: 4px 0;
+&.controls-ListView__withoutMarker {
+   .controls-ListView__item__selected {
+      .controls-DataGridView__td:first-child,
+      .controls-CompositeView__tileTitle,
+      .controls-ListView__item-title,
+      &:not(.controls-ListView__folder) {
+         background-image: none !important;
+      }
+   }
+}
+
+.controls-TreePager-container {
+   float: right;
+   margin-right: 2px;
+}
+.controls-CompositeView.controls-CompositeView-tile .controls-TreePager-container, .controls-CompositeView.controls-CompositeView-list  .controls-TreePager-container{
+   display: none;
+}
+.controls-TreePager {
+   font-size: 12px;
+   color: @link-text-color;
+   cursor: pointer;
+}
+.controls-TreePager:hover {
+   text-decoration: underline;
+   color: @link-hover-text-color;
 }

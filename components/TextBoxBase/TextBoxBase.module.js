@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
     * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @public
+    * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
@@ -45,7 +46,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
             /**
              * @cfg {String} Текст в поле ввода
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="text">Какой-то текст, с которым построится поле ввода</option>
              * </pre>
              * @see trim
@@ -66,7 +67,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
              *    <li>false - не обрезать.</li>
              * </ul>
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="trim">true</option>
              * </pre>
              * @see text
@@ -74,17 +75,27 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
              */
             trim: false,
             /**
-             * @cfg {Number} Максимальное количество символов, которое возможно ввести
+             * @cfg {Number} Максимальное количество символов, которое может содержать значение
              * @example
-             * <pre>
+             * <pre class="brush:xml">
              *     <option name="maxLength">40</option>
              * </pre>
+             * @remark
+             * В случае превышения количества символов ввод не будет осуществлён.
              * @see setMaxLength
              * @see trim
              * @see text
              */
-            maxLength: null
-
+            maxLength: null,
+            /**
+             * @cfg {Boolean} Устанавливать фокус по активации контрола в мобильных устройствах.
+             * Обычное поведение для полей ввода на мобильных устройствах - не устанавливать фокус при вызове
+             * setActive(true), поскольку это вызовет появление клавиатуры, что неудобно - она нужна тогда, когда пользователь
+             * сам тыкнул в поле ввода, или в исключительных случаях - когда есть какой-то модальный диалог с полем ввода, и
+             * ему точно ничего другого, как писать в это поле ввода, не остаётся.
+             * <wiTag group="Управление">
+             */
+            focusOnActivatedOnMobiles: false
          }
       },
 
@@ -117,8 +128,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
          if (newText !== this._options.text) {
             this._options.text = newText;
             this._drawText(newText);
-            this.saveToContext('Text', newText);
             this._notify('onTextChange', newText);
+            this._notifyOnPropertyChanged('text');
          }
       },
 

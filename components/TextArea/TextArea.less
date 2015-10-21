@@ -1,81 +1,76 @@
 .controls-TextArea {
-  display: inline-block;
-  vertical-align: top;
-  .border-radius(@text-area-border-radius);
-  border-width: @text-area-border-width;
-  border-style: @text-area-border-style;
-  border-color: @text-area-border-color;
-  background: @text-area-bg;
-  padding: @text-area-field-padding;
+   display: inline-block;
+   vertical-align: top;
+   .border-radius(@text-area-border-radius);
+   border-width: @text-area-border-width;
+   border-style: @text-area-border-style;
+   border-color: @text-area-border-color;
+   background: @text-area-bg;
+   padding: @text-area-field-padding;
+   .box-sizing(border-box);
 
-  .controls-TextArea__inputField {
-    font: @text-area-field-font;
-    color: @text-area-field-text-color;
-    display: block;
-    width: 100%;
-    height: 100%;
-    line-height: @text-area-field-line-height;
-    //padding отсюда перенесен выше, чтобы autosize рассчитывался корректно
-    resize: none;
-    border: none;
-    background: transparent;
-    .box-sizing(border-box);
-    // Internet Explorer 10+ placeholder
-    &:-ms-input-placeholder {
-       color: @gray-color;
-    }
-  }
-
-  &.ws-has-focus {
-    border-width: @text-area-focus-border-width;
-    border-style: @text-area-focus-border-style;
-    border-color: @text-area-focus-border-color;
-    background: @text-area-focus-bg;
-
-    .controls-TextArea__inputField {
-      color: @text-area-field-focus-text-color;
-    }
-  }
-
-  &.ws-validation-error {
-    border-width: @text-area-error-border-width;
-    border-style: @text-area-error-border-style;
-    border-color: @text-area-error-border-color;
-    background: @text-area-error-bg;
-
-    .controls-TextArea__inputField {
-      color: @text-area-field-error-text-color;
-    }
-  }
-
-  &:hover {
-    border-width: @text-area-hover-border-width;
-    border-style: @text-area-hover-border-style;
-    border-color: @text-area-hover-border-color;
-    background: @text-area-hover-bg;
-
-    .controls-TextArea__inputField {
-      color: @text-area-field-hover-text-color;
+   .controls-TextArea__inputField {
+      overflow: auto;
+      font: @text-area-field-font;
+      color: @text-area-field-text-color;
+      display: block;
+      width: 100%;
+      height: 100%;
+      line-height: @text-area-field-line-height;
+      //padding отсюда перенесен выше, чтобы autosize рассчитывался корректно
+      resize: none;
+      border: none;
+      background: transparent;
+      .box-sizing(border-box);
       // Internet Explorer 10+ placeholder
-      &:-ms-input-placeholder {
-        color: @gray-color;
+      .placeholder();
+   }
+   &.ws-has-focus {
+      border-width: @text-area-focus-border-width;
+      border-style: @text-area-focus-border-style;
+      border-color: @text-area-focus-border-color;
+      background: @text-area-focus-bg;
+
+      .controls-TextArea__inputField {
+         color: @text-area-field-focus-text-color;
       }
-    }
-  }
+   }
 
-  &.ws-disabled {
-    border-width: @text-area-disabled-border-width;
-    border-style: @text-area-disabled-border-style;
-    border-color: @text-area-disabled-border-color;
-    background: @text-area-disabled-bg;
+   &.ws-validation-error {
+      border-width: @text-area-error-border-width;
+      border-style: @text-area-error-border-style;
+      border-color: @text-area-error-border-color;
+      background: @text-area-error-bg;
 
-    .controls-TextArea__inputField {
-      color: @text-area-field-disabled-text-color;
-      overflow-y: hidden;
-    }
-  }
+      .controls-TextArea__inputField {
+         color: @text-area-field-error-text-color;
+      }
+   }
 
-  &.controls-TextArea__autoheight {
-    height: auto !important;
-  }
+   &:hover {
+      border-width: @text-area-hover-border-width;
+      border-style: @text-area-hover-border-style;
+      border-color: @text-area-hover-border-color;
+      background: @text-area-hover-bg;
+
+      .controls-TextArea__inputField {
+         color: @text-area-field-hover-text-color;
+      }
+   }
+
+   &.ws-disabled {
+      border-width: @text-area-disabled-border-width;
+      border-style: @text-area-disabled-border-style;
+      border-color: @text-area-disabled-border-color;
+      background: @text-area-disabled-bg;
+
+      .controls-TextArea__inputField {
+         color: @text-area-field-disabled-text-color;
+         overflow-y: hidden;
+      }
+   }
+
+   &.controls-TextArea__autoheight {
+      height: auto !important;
+   }
 }

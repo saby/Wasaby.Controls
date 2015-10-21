@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
     * Задаётся контент и методы, позволяющие открывать, закрывать блок.
     * @mixin SBIS3.CONTROLS.PickerMixin
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
    var PickerMixin = /** @lends SBIS3.CONTROLS.PickerMixin.prototype */{
       $protected: {
@@ -13,12 +14,12 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
              /**
               * @cfg {String} Имя css-класса, который будет применён к контейнеру выпадающего блока.
               * @example
-              * <pre>
+              * <pre class="brush:xml">
               *     <option name="pickerClassName">control-MyComboBox__ComboBox__position</option>
               * </pre>
               * @remark
-              * Класс необходимо создать в файле компонента с расширением .css.
-              * Стили из этого класса применятся к выпадающему блоку.
+              * !Важно: при написании css-селекторов необходимо учитывать, что выпадающий блок располагается в body,
+              * а не в конейнере контрола.
               */
             pickerClassName : ''
          }
@@ -58,8 +59,11 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
 
       _createPicker: function(pickerContainer){
          var pickerConfig = this._setPickerConfig();
-         pickerConfig.parent = this.getParent();
-         pickerConfig.context = this.getParent() ? this.getParent().getLinkedContext() : {};
+         pickerConfig.parent = pickerConfig.parent || this.getParent();
+         pickerConfig.opener = this;
+         if (!pickerConfig.context) {
+            pickerConfig.context = this.getParent() ? this.getParent().getLinkedContext() : {};
+         }
          pickerConfig.target = pickerConfig.target || this._container;
          pickerConfig.element = pickerContainer;
          return new FloatArea(pickerConfig);

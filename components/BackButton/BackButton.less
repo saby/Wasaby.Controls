@@ -1,0 +1,38 @@
+.controls-BackButton {
+   cursor: pointer;
+   display: inline-block;
+   font-size: 18px;
+   line-height: 24px;
+   font-weight: 700;
+   .controls-BackButton__caption {
+      font-style: normal;
+      color: #313e78;
+      overflow: hidden;
+      vertical-align: top;
+      padding-left: 8px;
+   }
+   &::before {
+      width: 10px;
+      color: #FF7033;
+      font-family: 'TensorFont Regular',TensorFont;
+      content: '\e003';
+      float: left;
+      margin-left: 6px;
+   }
+
+
+   &:hover {
+      .controls-BackButton__caption {
+         text-decoration: none;
+         color: #ff7033;
+      }
+   }
+   &.controls-BackButton__empty {
+      &::before {
+         content: '';
+         width: 0;
+         margin: 0;
+      }
+   }
+
+}

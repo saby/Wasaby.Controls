@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS.Clickable', 'js!SBIS3.CONTROLS.IconMixin', 'html!SBIS3.CONTROLS.IconButton'], function(Control, Clickable, IconMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.Clickable', 'js!SBIS3.CONTROLS.IconMixin', 'html!SBIS3.CONTROLS.IconButton'], function(ButtonBase, Clickable, IconMixin, dotTplFn) {
 
    'use strict';
 
@@ -18,6 +18,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTR
     *    <option name="icon">sprite:icon-16 icon-AddButton icon-primary</option>
     * </component>
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @category Buttons
     * @mixes SBIS3.CONTROLS.IconMixin
     * @mixes SBIS3.CONTROLS.Clickable
@@ -43,7 +44,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTR
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     */
 
-   var IconButton = Control.Control.extend([Clickable, IconMixin], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
+   var IconButton = ButtonBase.extend([Clickable, IconMixin], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {
@@ -53,6 +54,10 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTR
       setIcon: function(icon){
          IconButton.superclass.setIcon.call(this, icon);
          this._container.removeClass().addClass('controls-IconButton ' + this._iconClass);
+      },
+
+      setCaption: function(caption) {
+         this._container.attr('title', caption);       
       }
    });
 

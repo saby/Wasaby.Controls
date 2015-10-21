@@ -12,12 +12,14 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
    function (CompoundControl, IconButton, PickerMixin, EditAtPlace, Dialog, ControlHierarchyManager, dotTplFn) {
       'use strict';
       /**
+       * @noShow
        * @class SBIS3.CONTROLS.EditAtPlaceGroup
        * @extends SBIS3.CORE.CompoundControl
        * @control
        * @public
        * @category Inputs
-       * @mixes SBIS3.CONTROLS._PickerMixin
+       * @mixes SBIS3.CONTROLS.PickerMixin
+       * @author Крайнов Дмитрий Олегович
        */
 
       var EditAtPlaceGroup = CompoundControl.extend([PickerMixin], /** @lends SBIS3.CONTROLS.EditAtPlaceGroup.prototype */{

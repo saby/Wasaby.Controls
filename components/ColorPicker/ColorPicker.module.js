@@ -16,6 +16,7 @@ define('js!SBIS3.CONTROLS.ColorPicker',
     * Можно задать как шестадцатеричный код в виде текста, так и выбрать из выпадающего блока.
     * @class SBIS3.CONTROLS.ColorPicker
     * @public
+    * @author Крайнов Дмитрий Олегович
     * @control
     * @extends SBIS3.CONTROLS.TextBox
     * @mixes SBIS3.CONTROLS.PickerMixin

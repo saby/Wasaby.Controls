@@ -1,0 +1,20 @@
+.controls-Menu {
+   .controls-Menu__header {
+      position: relative;
+      cursor: pointer;
+      font-size: @font-basic-size;
+      .controls-Menu__header-caption {
+         color: @primary-color;
+         vertical-align: top;
+      }
+   }
+   .controls-Menu__header {
+      height: @menu-header-height;
+   }
+   &.controls-Menu__hide-menu-header {
+      padding: @menu-button-menu-padding;
+      .controls-Menu__header {
+         display: none;
+      }
+   }
+}

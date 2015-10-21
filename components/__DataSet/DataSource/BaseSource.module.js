@@ -6,10 +6,13 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
 
    /**
     * Базовый источник данных
+    * @class SBIS3.CONTROLS.BaseSource
+    * @extends $ws.proto.Abstract
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
-   return $ws.proto.Abstract.extend({
+   return $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.BaseSource.prototype */{
        /**
         * @event onCreate При создании записи в источнике данных
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -50,7 +53,7 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
       $protected: {
          _options: {
              /**
-              * @cfg {Object} Объект стратегии работы с данными
+              * @cfg {SBIS3.CONTROLS.IDataStrategy} Стратегия для разбора формата
               * @example
               * <pre>
               *     <option name="strategy">ArrayStrategy</option>
@@ -86,9 +89,12 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
              def;
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Record')) {
             def = this._syncRecord(data);
-         } else {
+         } else if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.DataSet')) {
             def = this._syncDataSet(data);
+         } else {
+            throw new Error('Invalid argument');
          }
+
          def = def || $ws.proto.Deferred.success(false);
 
          def.addCallback(function() {
@@ -112,7 +118,7 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
                syncCompleteDef.push(syncResult);
             }
          }, 'all');
-         syncCompleteDef.done();
+         syncCompleteDef.done(true);
 
          return syncCompleteDef.getResult();
       },
@@ -127,7 +133,13 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
          if (record.isDeleted()) {
             //Удаляем запись, если она уже есть в источнике.
             if (record.isCreated()) {
-               syncResult = this.destroy(record.getKey());
+               syncResult = this.destroy(record.getKey()).addCallback(function(res) {
+                  record.setCreated(false);
+                  return res;
+               }).addErrback(function(err){
+                  record.setDeleted(false);
+                  return err;
+               });
             }
          } else if (!record.isCreated() || record.isChanged()) {
             //Обновление, в т.ч. записи, полученной не из источника
@@ -181,8 +193,8 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
        * Возможно применение фильтрации, сортировки и выбора определённого количества записей с заданной позиции.
        * @param {Object} filter Параметры фильтрации вида - {property1: value, property2: value}.
        * @param {Array} sorting Параметры сортировки вида - [{property1: 'ASC'}, {property2: 'DESC'}].
-       * @param {Number} offset Смещение начала выборки.
-       * @param {Number} limit Количество возвращаемых записей.
+       * @param {Number} [offset] Смещение начала выборки.
+       * @param {Number} [limit] Количество возвращаемых записей.
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт SBIS3.CONTROLS.DataSet - набор выбранных записей.
        * @see onQuery
        */

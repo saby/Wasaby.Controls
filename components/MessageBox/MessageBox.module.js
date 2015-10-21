@@ -11,7 +11,7 @@ define('js!SBIS3.Engine.MessageBox', ['js!SBIS3.Engine.DialogTemplateOnline'], f
     * @class SBIS3.Engine.MessageBox
     * @extends SBIS3.Engine.DialogTemplateOnline
     * @control
-    * @public
+    * @author Крайнов Дмитрий Олегович
     */
 
    var MessageBox = DialogTemplateOnline.extend( /** @lends SBIS3.Engine.MessageBox.prototype*/ {

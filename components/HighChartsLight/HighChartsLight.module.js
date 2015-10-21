@@ -12,6 +12,7 @@ function(BaseControl, dotTpl){
     * @class HighChartsLight
     * @extends $ws.proto.Control
     * @control
+    * @author Крайнов Дмитрий Олегович
     * @public
     * @category Table
     * @designTime actions /design/design
@@ -26,6 +27,11 @@ function(BaseControl, dotTpl){
          _defaultOptions : {
             credits : {
                enabled : false
+            },
+            chart: {
+               events: {
+                  redraw: function() {}/*чтобы hightcharts нормально понимал как функцию*/
+               }
             }
          },
          _options: {
@@ -578,6 +584,14 @@ function(BaseControl, dotTpl){
       },
 
       _drawHighChart : function() {
+         var self = this;
+         this._options.highChartOptions.chart.events = this._options.highChartOptions.chart.events || {};
+         this._options.highChartOptions.chart.events.redraw = function () {
+            window.setTimeout(function(){
+               self.staggerDataLabels(self._chartObj.series);
+            }, 435);
+         };
+
          this.getContainer().highcharts(this._options.highChartOptions);
          this._chartObj = this.getContainer().highcharts();
          this.staggerDataLabels(this._chartObj.series);
@@ -597,6 +611,7 @@ function(BaseControl, dotTpl){
          return this._options.highChartOptions;
       },
 
+      //TODO в Highcharts JS v4.1.6 есть проверка на пересечение, возможно, этот метод можно будет убрать после обновления
       staggerDataLabels: function (series) {
          //compares two datalabels and returns true if they overlap
          function isLabelOnLabel(a, b) {
@@ -616,17 +631,17 @@ function(BaseControl, dotTpl){
             if (bt > ab || bb < at) {
                return false;
             } //overlap not possible
-            if (bl > al && bl < ar) {
+            if (bl >= al && bl <= ar) {
                return true;
             }
-            if (br > al && br < ar) {
+            if (br >= al && br <= ar) {
                return true;
             }
 
-            if (bt > at && bt < ab) {
+            if (bt >= at && bt <= ab) {
                return true;
             }
-            if (bb > at && bb < ab) {
+            if (bb >= at && bb <= ab) {
                return true;
             }
 
@@ -645,7 +660,7 @@ function(BaseControl, dotTpl){
                diff, h;
 
             for (var i = 0; i < l; i++) {
-               if (s1[i].dataLabel && s2[i].dataLabel) {
+               if (s1[i].dataLabel && s2[i] && s2[i].dataLabel) {
                   diff = s1[i].dataLabel.y - s2[i].dataLabel.y;
                   h = s1[i].dataLabel.height + 2;
 

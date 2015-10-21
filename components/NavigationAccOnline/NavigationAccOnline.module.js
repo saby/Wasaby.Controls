@@ -11,6 +11,7 @@ define('js!SBIS3.Engine.NavigationAccOnline', ['js!SBIS3.CORE.Control'], functio
     * @class SBIS3.Engine.NavigationAccOnline
     * @extends $ws.proto.Control
     * @control
+    * @author Крайнов Дмитрий Олегович
     * @public
     */
 

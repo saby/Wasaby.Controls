@@ -1,127 +1,98 @@
 .controls-TextBox {
-  display: inline-block;
-  .box-sizing(border-box);
-  height: @text-box-height;
-  .border-radius(@text-box-border-radius);
+   display: inline-block;
+   height: @text-box-height;
+   color: @text-color;
+   border-width: @text-box-border-width;
+   border-style: @text-box-border-style;
+   border-color: @text-box-border-color;
+   background: @text-box-bg;
 
-  border-width: @text-box-border-width;
-  border-style: @text-box-border-style;
-  border-color: @text-box-border-color;
-  background: @text-box-bg;
-  color: @text-color;
-
-  &.ws-validation-error {
-    border-width: @text-box-error-border-width;
-    border-style: @text-box-error-border-style;
-    border-color: @text-box-error-border-color;
-    background: @text-box-error-bg;
-
-    .controls-TextBox__fieldWrapper {
-      .controls-TextBox__field {
-        color: @text-box-field-error-text-color;
+   .box-sizing(border-box);
+   .border-radius(@text-box-border-radius);
+   &.ws-validation-error {
+      border-width: @text-box-error-border-width;
+      border-style: @text-box-error-border-style;
+      border-color: @text-box-error-border-color;
+      background: @text-box-error-bg;
+      .controls-TextBox__fieldWrapper {
+         .controls-TextBox__field {
+            color: @text-box-field-error-text-color;
+         }
       }
-    }
-  }
-
-  &.ws-has-focus {
-     border-width: @text-box-focus-border-width;
-     border-style: @text-box-focus-border-style;
-     border-color: @text-box-focus-border-color;
-     background: @text-box-focus-bg;
-
-     .controls-TextBox__fieldWrapper {
-        .controls-TextBox__field {
-           color: @text-box-field-focus-text-color;
-        }
-     }
-  }
-
-  &:hover {
-    border-width: @text-box-hover-border-width;
-    border-style: @text-box-hover-border-style;
-    border-color: @text-box-hover-border-color;
-    background: @text-box-hover-bg;
-
-    .controls-TextBox__fieldWrapper {
-      .controls-TextBox__field {
-        color: @text-box-field-hover-text-color;
+   }
+   &.ws-has-focus {
+      border-width: @text-box-focus-border-width;
+      border-style: @text-box-focus-border-style;
+      border-color: @text-box-focus-border-color;
+      background: @text-box-focus-bg;
+      .controls-TextBox__fieldWrapper {
+         .controls-TextBox__field {
+            color: @text-box-field-focus-text-color;
+         }
       }
-    }
-  }
-
-
-
-  &.ws-disabled {
-    border-width: @text-box-disabled-border-width;
-    border-style: @text-box-disabled-border-style;
-    border-color: @text-box-disabled-border-color;
-    background: @text-box-disabled-bg;
-
-    .controls-TextBox__fieldWrapper {
-      .controls-TextBox__field {
-        color: @text-box-field-disabled-text-color;
+   }
+   &:hover {
+      border-width: @text-box-hover-border-width;
+      border-style: @text-box-hover-border-style;
+      border-color: @text-box-hover-border-color;
+      background: @text-box-hover-bg;
+      .controls-TextBox__fieldWrapper {
+         .controls-TextBox__field {
+            color: @text-box-field-hover-text-color;
+         }
       }
-    }
-  }
-
-  .controls-TextBox__afterFieldWrapper {
-    position: relative;
-    float: right;
-    width: @text-box-after-width;
-    min-height: @text-box-after-min-height;
-    margin: @text-box-after-margin;
-    height: 100%;
-
-    & + .controls-TextBox__fieldWrapper {
-      margin: @text-box-field-after-margin;
-    }
-  }
-
-  .controls-TextBox__fieldWrapper {
-    position: relative;
-    padding: @text-box-wrapper-padding;
-    height: 100%;
-
-    .controls-TextBox__field {
-      .box-sizing(border-box);
-      width: 100%;
+   }
+   &.ws-disabled {
+      border-width: @text-box-disabled-border-width;
+      border-style: @text-box-disabled-border-style;
+      border-color: @text-box-disabled-border-color;
+      background: @text-box-disabled-bg;
+      .controls-TextBox__fieldWrapper {
+         .controls-TextBox__field {
+            color: @text-box-field-disabled-text-color;
+         }
+      }
+   }
+   .controls-TextBox__afterFieldWrapper {
+      position: relative;
+      float: right;
+      width: @text-box-after-width;
       height: 100%;
-      font: @text-box-field-font;
-      color: @text-box-field-text-color;
-      text-align: @text-box-field-text-alignment;
-      min-height: @text-box-field-min-height;
-      line-height: @text-box-field-line-height;
-      margin: @text-box-field-margin;
-      padding: @text-box-field-padding;
-      border: @text-box-field-border;
-      outline: @text-box-field-outline;
-      background: @text-box-field-bg;
-
-      .placeholder({
-        color: @text-box-placeholder-color;
-      });
-
-      &::-ms-clear {
-        display: none;
+      min-height: @text-box-after-min-height;
+      margin: @text-box-after-margin;
+      & + .controls-TextBox__fieldWrapper {
+         margin: @text-box-field-after-margin;
       }
+   }
+   .controls-TextBox__fieldWrapper {
+      position: relative;
+      height: 100%;
+      padding: @text-box-wrapper-padding;
+      .controls-TextBox__field {
+         font: @text-box-field-font;
+         line-height: @text-box-field-line-height;
+         width: 100%;
+         height: 100%;
+         min-height: @text-box-field-min-height;
+         margin: @text-box-field-margin;
+         padding: @text-box-field-padding;
+         text-align: @text-box-field-text-alignment;
+         color: @text-box-field-text-color;
+         border: @text-box-field-border;
+         outline: @text-box-field-outline;
+         background: @text-box-field-bg;
 
-      &.controls-TextBox__field-uppercase {
-        text-transform: uppercase;
+         .box-sizing(border-box);
+         .placeholder();
+         &::-ms-clear {
+            display: none;
+         }
+         &.controls-TextBox__field-uppercase {
+            text-transform: uppercase;
+         }
+         &.controls-TextBox__field-lowercase {
+            text-transform: lowercase;
+         }
       }
-
-      &.controls-TextBox__field-lowercase {
-        text-transform: lowercase;
-      }
-    }
-
-    .controls-TextBox__placeholder {
-      position: absolute;
-      top: 0;
-      .text-overflow();
-      color: @text-box-placeholder-color;
-      font: @text-box-compat-placeholder-font;
-      padding: @text-box-compat-placeholder-padding;
-      text-align: @text-box-compat-placeholder-alignment;
-    }
-  }
+   }
 }

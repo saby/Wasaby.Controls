@@ -1,0 +1,34 @@
+<div class="controls-DataGridView controls-ListView{{?it.multiselect !== false}} controls-ListView__multiselect{{?}}{{? it.editInPlace.enabled}} controls-DataGridView__with-editInPlace{{?}}">
+   <div class="controls-AjaxLoader ws-hidden">
+      <div class="controls-AjaxLoader__outer">
+         <div class="controls-AjaxLoader__block">
+            <div class="controls-AjaxLoader__LoadingIndicator"></div>
+         </div>
+      </div>
+   </div>
+   <table class="controls-DataGridView__table">
+      <tbody class="controls-DataGridView__tbody"></tbody>
+      <tfoot class="controls-DataGridView__tfoot ws-hidden">
+         <tr>
+            {{?it.multiselect}}
+                <td class="controls-DataGridView__td__checkBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}"></td>
+            {{?}}
+            {{~it.columns :column:index}}
+                <td class="controls-DataGridView__td {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}"></td>
+            {{~}}
+         </tr>
+      </tfoot>
+   </table>
+   {{?it.infiniteScroll}}
+      <div class="controls-ListView-scrollIndicator ws-hidden"></div>
+   {{?}}
+   {{? it.itemsActions.length}}
+      <div class="controls-ListView__itemActions-container"></div>
+   {{?}}
+   {{? it.editInPlace.enabled && it.editInPlace.addInPlace}}
+      <div class="controls-DataGridView__addInPlace-container"></div>
+   {{?}}
+   {{? it.showPaging}}
+      <div class="controls-Pager-container"></div>
+   {{?}}
+</div>

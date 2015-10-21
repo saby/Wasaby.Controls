@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.LoadingIndicator', ['js!SBIS3.CORE.Control'], function
    /**
     * Контрол, представляющий из себя диалоговое окно с рисунком или анимацией, визуально отображающей процесс прохождения какой-либо длительной операции
     * @class SBIS3.CONTROLS.LoadingIndicator
-    * @public
+    * @author Крайнов Дмитрий Олегович
     * @extends $ws.proto.Control
     * @mixes SBIS3.CONTROLS.PopupMixin
     */

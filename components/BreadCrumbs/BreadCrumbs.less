@@ -1,0 +1,76 @@
+.controls-BreadCrumbs {
+	min-height: 24px;
+	&__crumb{
+		cursor: pointer;
+      display: inline-block;
+		position: relative;
+      line-height: 16px;
+      margin-left: -1px;
+		&:hover{
+			.controls-BreadCrumbs__title{
+				color: #FF7033;
+			}
+			.icon-16{
+				color: #FF7033!important;
+			}
+         .controls-BreadCrumbs__title{
+            color: #FF7033;
+         }
+		}
+	}
+
+   .controls-BreadCrumbs__crumb-home {
+      margin-right: 4px;
+      margin-left: 0;
+   }
+
+	.controls-BreadCrumbs__title{
+		text-decoration: none;
+		color: #0055BB;
+		padding-right: 1px;
+		display: inline-block;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+      margin-left: -4px;
+      vertical-align: top;
+	}
+
+	.controls-BreadCrumbs__arrow{
+		position: relative;
+	}
+
+	.controls-BreadCrumbs__itemsContainer{
+		display: inline-block;
+      height: 16px;
+	}
+
+	.controls-BreadCrumbs__dots{
+		margin-left: -3px;
+		.controls-BreadCrumbs__title{
+			margin-left: -3px;
+		}
+	}
+
+   &.controls-BreadCrumbs__smallItems{
+      .controls-BreadCrumbs__title{
+         &:hover{
+            color: #FF7033;
+         }
+         font-size: 13px;
+         color: #0055BB;
+         font-weight: normal;
+      }
+   }  
+
+	.controls-BreadCrumbs__hierWrapper{
+		height: 13px;
+		width: 14px;
+		display: inline-block;
+		&:last-of-type{
+			background: url('img/BreadCrumbs_hierWrapper.png') no-repeat;
+			position: relative;
+  			top: -3px;
+		}
+	}
+}

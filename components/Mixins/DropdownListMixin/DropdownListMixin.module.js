@@ -6,10 +6,11 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [],
         /**
          * @mixin SBIS3.CONTROLS.DropdownListMixin
          * @public
+         * @author Крайнов Дмитрий Олегович
          */
         'use strict';
 
-        var DropdownListMixin = /**@lends SBIS3.CONTROLS.MenuButtonMixin.prototype  */{
+        var DropdownListMixin = /**@lends SBIS3.CONTROLS.DropdownListMixin.prototype  */{
             $protected: {
                 _options: {
                    /**
