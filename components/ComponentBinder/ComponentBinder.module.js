@@ -11,11 +11,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
    function startHierSearch(text, searchParamName, searchCrumbsTpl) {
       if (text) {
          var filter = $ws.core.merge(this._options.view._filter, {
-            'Разворот': 'С разворотом',
-            'usePages': 'full'
-         }),
-         view = this._options.view,
-         groupBy = view.getSearchGroupBy();
+               'Разворот': 'С разворотом',
+               'usePages': 'full'
+            }),
+            view = this._options.view,
+            groupBy = view.getSearchGroupBy();
          if (searchCrumbsTpl) {
             groupBy.breadCrumbsTpl = searchCrumbsTpl;
          }
@@ -32,7 +32,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          this._firstSearch = false;
          this._searchReload = true;
          // TODO нафиг это надо
-         this._options.breadCrumbs.setItems([]);
+         if (this._options.breadCrumbs) {
+            this._options.breadCrumbs.setItems([]);
+         }
          //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
          if (this._options.backButton) {
             this._options.backButton.getContainer().css({'visibility': 'hidden'});
@@ -47,9 +49,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
    function startSearch(text, searchParamName){
       if (text){
          var view = this._options.view,
-         filter = $ws.core.merge(view._filter, {
-            'usePages': 'full'
-         });
+            filter = $ws.core.merge(view._filter, {
+               'usePages': 'full'
+            });
          filter[searchParamName] = text;
          view.setHighlightText(text, false);
          view.setInfiniteScroll(true, true);
@@ -70,9 +72,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          return;
       }
       var view = this._options.view,
-      filter = $ws.core.merge(view._filter, {
-         'Разворот' : 'Без разворота'
-      });
+         filter = $ws.core.merge(view._filter, {
+            'Разворот' : 'Без разворота'
+         });
       delete (filter[searchParamName]);
 
       view.setInfiniteScroll(false, true);
@@ -148,26 +150,26 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             view: undefined,
             /**
              * @cfg {SBIS3.CONROLS.BreadCrumbs} объект хлебных крошек
-             */            
+             */
             breadCrumbs: undefined,
             /**
              * @cfg {SBIS3.CONROLS.BackButton} объект кнопки назад
-             */                
+             */
             backButton: undefined,
             /**
              * @cfg {SBIS3.CONROLS.SearchForm} объект строки поиска
-             */                
+             */
             searchForm: undefined,
             /**
              * @cfg {SBIS3.CONROLS.OperationsPanel} объект панели массовых операций
-             */                
+             */
             operationPanel: undefined
          }
       },
 
       /**
        * Метод для связывания формы строки поиска с представлением данных.
-       * для работы необходимо задать опциию view  
+       * для работы необходимо задать опциию view
        * @param {String} searchParamName параметр фильтрации для поиска
        * @param {String} searchCrumbsTpl шаблон отрисовки элемента пути в поиске
        * @param {SBIS3.CONROLS.SearchForm} [searchForm] объект формы поиска, если не передан используется тот, что задан в опциях
@@ -179,8 +181,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        */
       bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm) {
          var self = this,
-         view = this._options.view,
-         hierarchy = $ws.helpers.instanceOfModule(view, 'SBIS3.CONTROLS.HierarchyDataGridView');
+            view = this._options.view,
+            hierarchy = $ws.helpers.instanceOfModule(view, 'SBIS3.CONTROLS.HierarchyDataGridView');
          searchForm = searchForm || this._options.searchForm;
          if (hierarchy){
             this._lastRoot = view.getCurrentRoot();
@@ -193,7 +195,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                breakSearch(searchForm);
             });
          }
-      
+
          searchForm.subscribe('onTextChange', function(event, text){
             var checkedText = isSearchValid(text, 3);
             if (checkedText[1]) {
@@ -222,24 +224,24 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                   startSearch.call(self, text, searchParamName);
                }
             }
-         });         
+         });
       },
       bindSearchComposite: function(searchParamName, searchCrumbsTpl, searchForm) {
          this.bindSearchGrid.apply(this, arguments);
          /*var self = this;
-         compositeView.subscribe('onDataLoad', function(){
-            if (searchForm.getText().length > 2) {
-               self._lastViewMode = this.getViewMode();
-               this.setViewMode('table');
-            } else if (self._lastViewMode) {
-               this.setViewMode(self._lastViewMode);
-            }
-         });*/
+          compositeView.subscribe('onDataLoad', function(){
+          if (searchForm.getText().length > 2) {
+          self._lastViewMode = this.getViewMode();
+          this.setViewMode('table');
+          } else if (self._lastViewMode) {
+          this.setViewMode(self._lastViewMode);
+          }
+          });*/
       },
 
       /**
        * Метод для связывания хлебных крошек с представлением данных
-       * для работы необходимо задать опциию view  
+       * для работы необходимо задать опциию view
        * @param {SBIS3.CONROLS.BreadCrumbs} [breadCrumbs] объект хлебных крошек, если не передан используется тот, что задан в опциях
        * @param {SBIS3.CONROLS.BackButton} [backButton] объект книпоки назад, если не передан используется тот, что задан в опциях
        * @example
@@ -254,7 +256,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        */
       bindBreadCrumbs: function(breadCrumbs, backButton){
          var self = this,
-         view = this._options.view;
+            view = this._options.view;
 
          backButton = backButton || this._options.backButton;
          breadCrumbs = breadCrumbs || this._options.breadCrumbs;
@@ -282,11 +284,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          view.subscribe('onSetRoot', function(event, id, hier){
             var i;
             /* 
-               TODO: Хак для того перерисовки хлебных крошек при переносе из папки в папку
-               Проверить совпадение родительского id и текущего единственный способ понять,
-               что в папку не провалились, а попали через перенос. 
-               От этого нужно избавиться как только будут новые датасорсы и не нужно будет считать пути для крошек
-            */
+             TODO: Хак для того перерисовки хлебных крошек при переносе из папки в папку
+             Проверить совпадение родительского id и текущего единственный способ понять,
+             что в папку не провалились, а попали через перенос.
+             От этого нужно избавиться как только будут новые датасорсы и не нужно будет считать пути для крошек
+             */
             if (self._currentRoot && hier.length && hier[hier.length - 1].parent != self._currentRoot.id){
                self._currentRoot = hier[0];
                self._path = hier.reverse();
@@ -325,8 +327,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          });
 
          breadCrumbs.subscribe('onItemClick', function(event, id){
-               self._currentRoot = this._dataSet.getRecordByKey(id);
-               self._currentRoot = self._currentRoot ? self._currentRoot.getRaw() : null;
+            self._currentRoot = this._dataSet.getRecordByKey(id);
+            self._currentRoot = self._currentRoot ? self._currentRoot.getRaw() : null;
             if (id === null){
                self._path = [];
             }
