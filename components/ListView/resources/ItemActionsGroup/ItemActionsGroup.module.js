@@ -81,6 +81,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                },
                target = this._itemActionsMenuButton,
                corner = 'tr';
+
             if (this._touchActions) {
                var hoveredItem = self.getParent().getHoveredItem().container;
                menuCont.addClass('controls-ItemsActions__touch-actions');
@@ -163,8 +164,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._container[0].style.right = position.right + 'px';
             this._container[0].style.display = 'block';
             if (this._touchActions){
+               var width = this._container.width();
+               this._container.width(0);
             	this._container.height($(hoveredItem.container).height());
-            	//this._container.animate({width: 0}, 1000);
+            	this._container.animate({width : width}, 350);
             }
         	},
          /***

@@ -2,23 +2,6 @@
  * Created by iv.cheremushkin on 14.08.2014.
  */
 
-if (typeof window !== 'undefined') {
-   var eventsChannel = $ws.single.EventBus.channel('TouchesChannel');
-   $(document).bind('touchstart', function (e) {
-      eventsChannel.notify('onTouchstart', e);
-   });
-   $(document).bind('touchmove', function (e) {
-      eventsChannel.notify('onTouchmove', e);
-   });
-   $(document).bind('touchend', function (e) {
-      eventsChannel.notify('onTouchend', e);
-   });
-
-   $('body').bind('swipe', function(e){
-   	console.log('swipe');
-   });
-}
-
 define('js!SBIS3.CONTROLS.ListView',
    [
       'js!SBIS3.CORE.CompoundControl',
@@ -33,6 +16,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.CommonHandlers',
       'js!SBIS3.CONTROLS.MoveHandlers',
       'js!SBIS3.CONTROLS.Pager',
+      'is!browser?js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
       'is!browser?html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'is!browser?html!SBIS3.CONTROLS.ListView/resources/emptyData'
    ],
@@ -308,7 +292,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._touchSupport = 'ontouchstart' in document;
             if (this._touchSupport){
             	this._getItemActionsContainer().addClass('controls-ItemsActions__touch-actions');
-            	this._initSwipeEvent();
+            	$ws.single.EventBus.channel('TouchesChannel').subscribe('onSwipe', this._swipeHandler, this);
          	}
          },
          _keyboardHover: function (e) {
@@ -569,75 +553,15 @@ define('js!SBIS3.CONTROLS.ListView',
          //********************************//
          //   БЛОК ОПЕРАЦИЙ НАД ЗАПИСЬЮ    //
          //*******************************//
-         _initSwipeEvent: function() {
-            var channel = $ws.single.EventBus.channel('TouchesChannel');
-            var self = this;
-            channel.subscribe('onTouchstart', handleTouchStart);
-            channel.subscribe('onTouchmove', handleTouchMove);
-            channel.subscribe('onTouchend', handleTouchEnd);
 
-            var xDown = null;
-            var yDown = null;
-            var touched = false;
-
-            function handleTouchStart(event, e) {
-               e = e.originalEvent;
-               self._touchStart = new Date().getTime();
-               xDown = e.touches[0].clientX;
-               yDown = e.touches[0].clientY;
+         _swipeHandler: function(event, target){
+            var checkTarget = this._container.find(target).length;
+            if (checkTarget){
+               target = $(target);
+               target = target.hasClass('controls-ListView__item') ? target : target.closest('.controls-ListView__item');
+            	this._showItemActions(this._getElementData(target));
+            	this._hoveredItem = this._getElementData(target);
             }
-
-            function handleTouchEnd() {
-               touched = false;
-            }
-
-            function handleTouchMove(event, e) {
-            	var xTreshold = 50;
-            	var yTreshold = 15;
-            	var durTreshold = 130; //вычислено опытным путем
-               e = e.originalEvent;
-
-               if (!checkTarget(e)){
-                  return;
-               }
-               if (!xDown || !yDown) {
-                  return;
-               }
-
-               touched = true;
-
-               var xUp = e.touches[0].clientX;
-               var yUp = e.touches[0].clientY;
-
-               var xDiff = xDown - xUp;
-               var yDiff = yDown - yUp;
-               var time = new Date().getTime();
-
-
-               console.log('1. x: ' + xDiff + ' y: ' + yDiff + ' t: ' + (time - self._touchStart));
-               if (time - self._touchStart >= durTreshold){
-               	if (yDiff < yTreshold){
-               		e.preventDefault();
-               	}
-               	if (xDiff >= xTreshold && Math.abs(yDiff) <= yTreshold) {
-	                  self._swipeHandler($(e.target));
-	                  e.preventDefault();
-	                  console.log('2. x: ' + xDiff + ' y: ' + yDiff + ' t: ' + (time - self._touchStart));
-                		xDown = null;
-	             		yDown = null;
-               	}
-               }
-            }
-
-            function checkTarget(e){
-               return !!self._container.find(e.target).length;
-            }
-         },
-
-         _swipeHandler: function(target){
-         	target = target.hasClass('controls-ListView__item') ? target : target.closest('.controls-ListView__item');
-         	this._showItemActions(this._getElementData(target));
-         	this._hoveredItem = this._getElementData(target);
          },
          /**
           * Показывает оперцаии над записью для элемента
