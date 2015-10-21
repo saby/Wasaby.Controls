@@ -26,14 +26,33 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
       //region Public methods
 
       /**
+       * Переиндексирует энумератор
+       */
+      reIndex: function () {
+         this._enumeratorIndexes = {};
+      },
+
+      /**
        * Возвращает первый элемент с указанным значением свойства. Если такого элемента нет - вернет undefined.
        * @param {String} property Название свойства элемента.
        * @param {*} value Значение свойства элемента.
        * @returns {*}
        */
       getItemByPropertyValue: function (property, value) {
-         var item = this._getIndexValue(property, value);
-         return item === undefined ? undefined : item[1];
+         var index = this._getIndexForPropertyValue(property, value);
+         return index.length ? index[0][1] : undefined;
+      },
+
+      /**
+       * Возвращает все элементы с указанным значением свойства.
+       * @param {String} property Название свойства элемента.
+       * @param {*} value Значение свойства элемента.
+       * @returns {Array}
+       */
+      getItemsByPropertyValue: function (property, value) {
+         return this._getIndexForPropertyValue(property, value).map(function(item) {
+            return item[1];
+         });
       },
 
       /**
@@ -43,8 +62,20 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
        * @returns {Number}
        */
       getItemIndexByPropertyValue: function (property, value) {
-         var item = this._getIndexValue(property, value);
-         return item === undefined ? undefined : item[0];
+         var index = this._getIndexForPropertyValue(property, value);
+         return index.length ? index[0][0] : -1;
+      },
+
+      /**
+       * Возвращает индексы всех элементов с указанным значением свойства.
+       * @param {String} property Название свойства элемента.
+       * @param {*} value Значение свойства элемента.
+       * @returns {Array}
+       */
+      getItemsIndexByPropertyValue: function (property, value) {
+         return this._getIndexForPropertyValue(property, value).map(function(item) {
+            return item[0];
+         });
       },
 
       /**
@@ -71,32 +102,48 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
        * Возвращает индекс для указанного значения свойства.
        * @param {String} property Название свойства элемента.
        * @param {*} value Значение свойства элемента.
-       * @returns {Array|undefined}
+       * @returns {Array}
        * @private
        */
-      _getIndexValue: function (property, value) {
+      _getIndexForPropertyValue: function (property, value) {
          var index = this._enumeratorIndexes[property];
          if (index === undefined) {
             index = this._createIndex(property);
          }
-         return index[value];
+         return index[value] || [];
       },
 
       /**
        * Создает индекс для указанного свойства.
        * @param {String} property Название свойства.
-       * @returns {Array}
+       * @returns {Object}
        * @private
        */
       _createIndex: function (property) {
-         var index = this._enumeratorIndexes[property] = [],
+         var index = this._enumeratorIndexes[property] = {},
             position = 0,
             item,
             value;
          this.reset();
-         while ((item = this.getNext(true))) {
+         while ((item = this.getNext())) {
             value = Utils.getItemPropertyValue(item, property);
-            index[value] = [position, item];
+            if (index[value] === undefined) {
+               index[value] = [];
+            }
+            index[value].push([position, item]);
+
+            if (typeof item === 'object' &&
+               $ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Collection.ICollectionItem')
+            ) {
+               var insideValue = Utils.getItemPropertyValue(item.getContents(), property);
+               if (insideValue !== value) {
+                  if (index[insideValue] === undefined) {
+                     index[insideValue] = [];
+                  }
+                  index[insideValue].push([position, item]);
+               }
+            }
+
             position++;
          }
 
@@ -117,7 +164,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
        * @private
        */
       _onCollectionChange: function () {
-         this._enumeratorIndexes = {};
+         this.reIndex();
       }
 
 

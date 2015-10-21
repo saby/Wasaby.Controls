@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
    'use strict';
 
    /**
-    * Модель - обеспечивает доступ к данным
+    * Модель - обеспечивает доступ к данным субъекта предметной области
     * @class SBIS3.CONTROLS.Data.Model
     * @extends $ws.proto.Abstract
     * @mixes SBIS3.CONTROLS.Data.IPropertyAccess
@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             adapter: undefined,
 
             /**
-             * @cfg {SBIS3.CONTROLS.Source.BaseSource} Источник данных модели. Требутся для методов {@link load}, {@link save} и {@link remove}
+             * @cfg {SBIS3.CONTROLS.Source.ISource} Источник данных модели. Требутся для методов {@link load}, {@link save} и {@link remove}
              * @see getSource
              * @see setSource
              * @see load
@@ -68,12 +68,12 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             /**
              * @typedef {Object} Property
              * @property {String} name Имя свойства
-             * @property {Function} readConverter Метод, конвертирующий значение свойства при чтении. Первым аргументом придет текущее значение свойства. Должен веруть сконвертированное значение свойства.
-             * @property {Function} writeConverter Метод, конвертирующий значение свойства при записи. Первым аргументом придет текущее значение свойства. Должен веруть сконвертированное значение свойства.
+             * @property {Function} [readConverter] Метод, конвертирующий значение свойства при чтении. Первым аргументом придет текущее значение свойства. Должен веруть сконвертированное значение свойства.
+             * @property {Function} [writeConverter] Метод, конвертирующий значение свойства при записи. Первым аргументом придет текущее значение свойства. Должен веруть сконвертированное значение свойства.
              */
 
             /**
-             * @cfg {Property[]} Свойства модели. Дополняют свойства, уже существующие в сырых данных.
+             * @cfg {Property[]} Свойства модели. Дополняют/уточняют свойства, уже существующие в сырых данных.
              * @example
              * <pre>
              *    var user = new Model({

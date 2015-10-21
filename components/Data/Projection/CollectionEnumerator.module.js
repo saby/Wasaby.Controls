@@ -32,6 +32,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
              * @cfg {Number[]} Результат применения сортировки
              */
             sortMap: [],
+
             /**
              * @cfg {Boolean} Отдавать оригинальные элементы в методах на чтение
              */
@@ -78,7 +79,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       at: function (index, unwrap) {
          return index === undefined ?
             undefined :
-            this._getItemContent(this._options.sourceMap[this.getSourceByInternal(index)], unwrap)
+            this._getItemContent(this._options.sourceMap[this.getSourceByInternal(index)], unwrap);
       },
 
       getCurrent: function (unwrap) {

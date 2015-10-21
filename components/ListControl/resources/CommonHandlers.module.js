@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.ListControl.CommonHandlers', [], function() {
             var hashes = isArray ? hashArray : [hashArray],
                 items = self.getItems();
             for (var i = 0; i < hashes.length; i++) {
-               var item = items.getByHash(hashes[i]),
+               var item = items.getItemByHash(hashes[i]),
                    contents = item.getContents();
 
                try {

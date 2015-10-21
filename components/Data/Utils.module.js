@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
 
    return /** @lends SBIS3.CONTROLS.Data.Utils.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Utils',
+
       /**
        * Возвращает значение свойства элемента
        * @param {*} item Элемент.
@@ -28,7 +29,7 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
             return item[property];
          }
 
-         if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IPropertyAccess')) {
+         if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IPropertyAccess') && item.has(property)) {
             return item.get(property);
          }
 

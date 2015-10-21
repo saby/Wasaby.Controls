@@ -22,6 +22,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator', [
              * @var {Array} Список
              */
             items: [],
+
             /**
              * @var {String} Модуль, реализующий SBIS3.CONTROLS.Data.Collection.ICollectionItem
              */

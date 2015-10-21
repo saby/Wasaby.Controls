@@ -675,7 +675,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
        */
       _onItemHovered: function (event, hash, isHover, item) {
          if (this._canChangeHoveredItem(hash, isHover, item)) {
-            this._hoveredItem = isHover ? this._items.getByHash(hash) : undefined;
+            this._hoveredItem = isHover ? this._items.getItemByHash(hash) : undefined;
             this._view.hoverItem(this._hoveredItem);
          }
       },
@@ -687,7 +687,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
        * @private
        */
       _onItemClicked: function (event, hash) {
-         var item = this._items.getByHash(hash);
+         var item = this._items.getItemByHash(hash);
          this._itemsProjection.setCurrent(item);
          if(this._oneClickAction) {
             this._itemAction(item);
