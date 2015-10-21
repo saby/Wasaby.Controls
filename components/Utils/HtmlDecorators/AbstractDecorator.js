@@ -28,6 +28,12 @@ define([], function () {
       destroy: function () {
       },
 
+      setConditions: function(){
+      },
+
+      checkCondition: function(){
+      },
+
       /**
        * Обновляет настройки декоратора
        * @param {Object} control Экземпляр контрола

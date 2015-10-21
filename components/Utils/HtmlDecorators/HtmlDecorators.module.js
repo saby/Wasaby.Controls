@@ -83,6 +83,21 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', ['js!SBIS3.CONTROLS.Utils.HtmlD
             return this.apply(value, area);
          }
       },
+      /**
+       * Передаем декораторам данные, по значению которых они организуют свою работу
+       * @param {Object} obj Объект с данными для декораторов
+       * key - название декоратора
+       * value - значение, которое хотим передать
+       */
+      setConditions: function(obj) {
+         for (var area in this._decorators) {
+            if (this._decorators.hasOwnProperty(area)) {
+               for (var i = 0; i < this._decorators[area].length; i++) {
+                  this._decorators[area][i].checkCondition(obj);
+               }
+            }
+         }
+      },
 
       /**
        * Применяет декораторы

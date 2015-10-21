@@ -8,9 +8,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'js!SBIS3.CONTROLS.EditInPlaceController',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
-      'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy'
+      'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
+      'js!SBIS3.CONTROLS.Utils.HtmlDecorators/LadderDecorator'
    ],
-   function(ListView, dotTplFn, rowTpl, headTpl, MarkupTransformer, EditInPlaceController, Link, DragAndDropMixin, groupByTpl) {
+   function(ListView, dotTplFn, rowTpl, headTpl, MarkupTransformer, EditInPlaceController, Link, DragAndDropMixin, groupByTpl, LadderDecorator) {
    'use strict';
       /* TODO: Надо считать высоту один раз, а не делать константой */
       var
@@ -99,13 +100,25 @@ define('js!SBIS3.CONTROLS.DataGridView',
             /**
              * @cfg {Number} Частичный скролл
              */
-            startScrollColumn: undefined
+            startScrollColumn: undefined,
+            /**
+             * @cfg {Array} Лесенка
+             * Массив имен столбцов, по которым строится лесенка
+             */
+            ladder: undefined,
+            /**
+             * @cfg {Number} Сколько слов в "лесенке" по словам
+             * Лесенка по словам позволяет скрыть повторяющиеся в столбце первые wordsLadderCount слов.
+             */
+            wordsLadderCount: 0
          }
       },
 
       $constructor: function() {
          this._publish('onDrawHead');
          this._checkColumns();
+         this._decorators.add(new LadderDecorator({
+         }));
       },
 
       init: function() {

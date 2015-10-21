@@ -41,12 +41,22 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
          }
       },
 
+      checkCondition: function(obj) {
+         if (obj.hasOwnProperty('highlightDecorator')) {
+            this._options.enabled = obj['highlightDecorator'];
+         }
+      },
+
       /**
        * Применяет декоратор
        * @param {*} value Текст для декорирования
        * @returns {*}
        */
       apply: function (value) {
+         if (!this._options.enabled) {
+            return value;
+         }
+
          return this.getHighlighted(
             value,
             this._text,
