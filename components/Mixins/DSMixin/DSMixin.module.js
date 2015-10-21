@@ -4,9 +4,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    'js!SBIS3.CONTROLS.SbisJSONStrategy',
    'js!SBIS3.CONTROLS.DataFactory',
    'js!SBIS3.CONTROLS.DataSet',
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Query.Query',
    'js!SBIS3.CORE.MarkupTransformer'
-], function (StaticSource, ArrayStrategy, SbisJSONStrategy, DataFactory, DataSet, Query, MarkupTransformer) {
+], function (StaticSource, ArrayStrategy, SbisJSONStrategy, DataFactory, DataSet, RecordSet, Query, MarkupTransformer) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -354,10 +355,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                .orderBy(sorting);
 
             return this._dataSource.query(query).addCallback((function(newDataSet) {
-               return new DataSet({
-                  strategy: $ws.helpers.instanceOfModule(this._dataSource.getAdapter(), 'SBIS3.CONTROLS.Data.Adapter.Sbis') ?
-                     new SbisJSONStrategy() :
-                     new ArrayStrategy(),
+               return new RecordSet({
+                  compatibleMode: true,
+                  strategy: this._dataSource.getAdapter(),
                   data: newDataSet.getRawData(),
                   meta: {
                      results: newDataSet.getProperty('r'),

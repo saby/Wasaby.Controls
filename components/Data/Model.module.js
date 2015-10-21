@@ -605,9 +605,54 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          this._nowConvertingProperties[property.name] = false;
 
          return value;
-      }
+      },
 
       //endregion Protected methods
+
+      //TODO: совместимость с SBIS3.CONTROLS.Record - выплить после перехода на ISource
+      //region SBIS3.CONTROLS.Record
+
+      getType: function (field) {
+         $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Model', 'method getType() is deprecated. It will be removed in 3.8.0.');
+         return field ? 'Текст' : undefined;
+      },
+
+      setCreated: function (created) {
+         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method setCreated() is deprecated, use setStored() instead. It will be removed in 3.8.0.');
+         this.setStored(created);
+      },
+
+      isCreated: function () {
+         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method isCreated() is deprecated, use isStored() instead. It will be removed in 3.8.0.');
+         return this.isStored();
+      },
+
+      setDeleted: function (deleted) {
+         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method setDeleted() is deprecated. It will be removed in 3.8.0.');
+         this._setDeleted(deleted);
+      },
+
+      setChanged: function (changed) {
+         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method setChanged() is deprecated. It will be removed in 3.8.0.');
+         this._setChanged(changed);
+      },
+
+      getKey: function () {
+         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getKey() is deprecated, use getId() instead. It will be removed in 3.8.0.');
+         return this.getId();
+      },
+
+      getKeyField: function () {
+         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getKeyField() is deprecated, use getIdProperty() instead. It will be removed in 3.8.0.');
+         return this.getIdProperty();
+      },
+
+      getRaw: function () {
+         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getRaw() is deprecated, use getRawData() instead. It will be removed in 3.8.0.');
+         return this.getRawData();
+      }
+
+      //endregion SBIS3.CONTROLS.Record
    });
 
    $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Model', function(config) {
