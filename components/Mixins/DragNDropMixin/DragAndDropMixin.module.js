@@ -46,9 +46,9 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
        * Навешивает обработчики движения необходимые для обработки переноса
        */
       _bindDragEvents: function() {
-	      for(var i in this._eventHandlers) {
-		      $ws._const.$doc.bind(i + '.dragNDrop', this[this._eventHandlers[i]].bind(this));
-	      }
+         for (var i = 0; i < this._eventHandlers.length; i++) {
+            $ws._const.$doc.bind(i + '.dragNDrop', this[this._eventHandlers[i]].bind(this));
+         }
       },
       /**
        * Обновляет drag-N-Drop, заного ищет элементы, навешивает обработчики

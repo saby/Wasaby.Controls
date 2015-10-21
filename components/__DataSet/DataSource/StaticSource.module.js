@@ -207,7 +207,7 @@ define('js!SBIS3.CONTROLS.StaticSource', [
 
                if (filter.hasOwnProperty(filterField)) {
                   var filterValue = filter[filterField];
-                  if (filterValue == 'С разворотом' || filterValue == 'Узлы и листья') {
+                  if (filterValue == 'С разворотом' || filterValue == 'Узлы и листья' || filterField == 'usePages') {
                      continue;
                   }
                   var dataValue = strategy.value(dataItem, filterField);

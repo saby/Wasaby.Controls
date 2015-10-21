@@ -107,7 +107,9 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
          }
          key = record.getKey();
          curRecRoot = record.get(this._options.hierField);
-         if (curRecRoot[0] === this._lastParent){
+         //TODO для SBISServiceSource в ключе находится массив
+         curRecRoot = curRecRoot instanceof Array ? curRecRoot[0] : curRecRoot;
+         if (curRecRoot === this._lastParent){
             //Лист
             if (record.get(this._options.hierField + '@') !== true){
                //Нарисуем путь до листа, если пришли из папки
@@ -116,7 +118,6 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
                }
                this._lastDrawn = 'leaf';
                drawItem = true;
-               //this._drawItem(record);//delete
             } else { //папка
                this._lastDrawn = undefined;
                this._lastPath.push(record);
@@ -132,7 +133,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
             //Если текущий раздел у записи есть в lastPath, то возьмем все элементы до этого ключа
             kInd = -1;
             for (var k = 0; k < this._lastPath.length; k++) {
-               if (this._lastPath[k].getKey() === curRecRoot[0]){
+               if (this._lastPath[k].getKey() === curRecRoot){
                   kInd = k;
                   break;
                }
@@ -149,9 +150,8 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
                   this._drawGroup(record, at);
                }
                drawItem = true;
-               //this._drawItem(record);//delete
                this._lastDrawn = 'leaf';
-               this._lastParent = curRecRoot[0];
+               this._lastParent = curRecRoot;
             } else {//папка
                this._lastDrawn = undefined;
                this._lastPath.push(record);
@@ -224,12 +224,15 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
                 && !(elem.wsControl() instanceof BreadCrumbs);
       },
       _createPathItemsDS: function(pathRecords){
-         var dsItems = [];
+         var dsItems = [],
+               parentID;
          for (var i = 0; i < pathRecords.length; i++){
+            //TODO для SBISServiceSource в ключе находится массив
+            parentID = pathRecords[i].get(this._options.hierField);
             dsItems.push({
                id: pathRecords[i].getKey(),
                title: pathRecords[i].get(this._options.displayField),
-               parentId: pathRecords[i].get(this._options.hierField)[0],
+               parentId: parentID instanceof Array ? parentID[0] : parentID,
                data: pathRecords[i]
             });
          }
