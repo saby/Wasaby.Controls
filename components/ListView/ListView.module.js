@@ -523,6 +523,7 @@ define('js!SBIS3.CONTROLS.ListView',
          reload: function () {
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
+            this._hideItemActions();
             return ListView.superclass.reload.apply(this, arguments);
          },
          _reloadInfiniteScrollParams : function(){

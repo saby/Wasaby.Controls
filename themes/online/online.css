@@ -3112,6 +3112,9 @@ input[type="reset"]::-moz-focus-inner {
   background-color: #f0f5fb;
   box-shadow: -2px -2px 5px #f0f5fb;
 }
+.controls-ListView.controls-DataGridView .controls-ItemActions.controls-ItemsActions__touch-actions {
+  box-shadow: none;
+}
 .controls-ListView.controls-DataGridView .controls-ItemActions__activeItem {
   background-color: #f0f5fb !important;
 }
@@ -3126,10 +3129,10 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ItemActions.controls-ItemsActions__touch-actions {
   background: #f0f5fb;
+  padding-left: 6px;
 }
-.controls-ItemActions.controls-ItemsActions__touch-actions .controls-ListView__item {
-  vertical-align: middle;
-  top: 4px;
+.controls-ItemActions.controls-ItemsActions__touch-actions .controls-ListView__item.icon-16 {
+  margin-top: -1px;
 }
 .controls-ItemActions.controls-ItemsActions__touch-actions .controls-Link {
   font-size: 16px;
@@ -3141,7 +3144,6 @@ input[type="reset"]::-moz-focus-inner {
   background-size: 4px 18px;
   vertical-align: middle;
   width: 44px;
-  margin-top: 4px;
   background-position: center;
 }
 .controls-ItemActions > * {

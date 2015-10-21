@@ -32,9 +32,7 @@
          xDiff = xDown - xUp,
          yDiff = yDown - yUp,
          time = new Date().getTime();
-      
-      console.log('x: ' + xDiff + ' y: ' + yDiff + ' t: ' + (time - touchTime));
-
+         
       if (time - touchTime <= durTreshold) {
          if (yDiff > yTreshold) {
             e.preventDefault();

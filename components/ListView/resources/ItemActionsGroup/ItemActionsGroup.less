@@ -9,6 +9,9 @@
     .controls-ItemActions {
       background-color: @list-view-actions-bg;
       box-shadow: @list-view-actions-box-shadow;
+      &.controls-ItemsActions__touch-actions{
+         box-shadow: none;
+      }
     }
     .controls-ItemActions__activeItem {
       background-color: @list-view-actions-active-bg;
@@ -28,9 +31,11 @@
 
    &.controls-ItemsActions__touch-actions {
       background: @list-view-actions-bg;
+      padding-left: 6px;
       .controls-ListView__item{
-         vertical-align: middle;
-         top: 4px;
+         &.icon-16{
+            margin-top: -1px;
+         }
       }
       .controls-Link{
          font-size: 16px;
@@ -41,7 +46,6 @@
          background-size: 4px 18px;
          vertical-align: middle;
          width: 44px;
-         margin-top: 4px;
          background-position: center;
       }
    }

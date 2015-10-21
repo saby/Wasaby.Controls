@@ -164,9 +164,12 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._container[0].style.right = position.right + 'px';
             this._container[0].style.display = 'block';
             if (this._touchActions){
-               var width = this._container.width();
+               var width = this._container.width(),
+                  height = $(hoveredItem.container).height(),
+                  padding = height / 2 - 10;//line-height;
                this._container.width(0);
-            	this._container.height($(hoveredItem.container).height());
+            	this._container.height(height / 2 + 10);
+               this._container.css('padding-top', padding);
             	this._container.animate({width : width}, 350);
             }
         	},
