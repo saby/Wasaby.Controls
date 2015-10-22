@@ -292,7 +292,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this._touchSupport = 'ontouchstart' in document;
             if (this._touchSupport){
             	this._getItemActionsContainer().addClass('controls-ItemsActions__touch-actions');
-            	$ws.single.EventBus.channel('TouchesChannel').subscribe('onSwipe', this._swipeHandler, this);
+               var channel = $ws.single.EventBus.channel('TouchesChannel');
+            	channel.subscribe('onSwipe', this._swipeHandler, this);
+               channel.subscribe('onLongTap', this._longTapHandler, this);
+               channel.subscribe('onTap', this._tapHandler, this);
             }
          },
          _keyboardHover: function (e) {
@@ -329,7 +332,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _onClickHandler: function(e) {
             ListView.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
-               target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item'),
+               target = this._findClosestItem($target),
                id;
 
             if (target.length && this._isViewElement(target)) {
@@ -359,7 +362,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._mouseLeaveHandler();
                return;
             }
-            target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
+            target = this._findClosestItem($target);
             if (target.length && this._isViewElement(target)) {
                targetKey = target.data('id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
@@ -377,7 +380,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getElementData: function(target) {
-				target = target.hasClass('controls-ListView__item') ? target : target.closest('.controls-ListView__item');
+				target = this._findClosestItem(target);
         		var containerCords = this._container[0].getBoundingClientRect(),
                targetCords = target[0].getBoundingClientRect();
 
@@ -558,11 +561,26 @@ define('js!SBIS3.CONTROLS.ListView',
          _swipeHandler: function(event, target){
             var checkTarget = this._container.find(target).length;
             if (checkTarget){
-               target = $(target);
-               target = target.hasClass('controls-ListView__item') ? target : target.closest('.controls-ListView__item');
-            	this._showItemActions(this._getElementData(target));
-            	this._hoveredItem = this._getElementData(target);
+               target = this._findClosestItem($(target));
+               var item = this._getElementData(target);
+            	this._showItemActions(item);
+            	this._hoveredItem = item;
             }
+         },
+
+         _longTapHandler: function(event, target){
+            target = this._findClosestItem($(target));
+            var id = target.data('id');
+            this.toggleItemsSelection([id]);
+         },
+
+         _tapHandler: function(event, target){
+            target = this._findClosestItem($(target));
+            this.setSelectedKey(target.data('id'));
+         },
+
+         _findClosestItem: function(target){
+            return target.hasClass('controls-ListView__item') ? target : target.closest('.controls-ListView__item');
          },
          /**
           * Показывает оперцаии над записью для элемента

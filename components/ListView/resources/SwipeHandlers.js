@@ -5,15 +5,24 @@
    
    $(document).bind('touchmove', handleTouchMove);
 
+   $(document).bind('touchend', handleTouchEnd);
+
    var xDown = null,
       yDown = null,
-      touchTime = null;
+      touchTime = null,
+      longTapInterval = null;
 
    function handleTouchStart(e) {
       e = e.originalEvent;
       touchTime = new Date().getTime();
       xDown = e.touches[0].clientX;
       yDown = e.touches[0].clientY;
+      longTapInterval = setInterval(function(){
+         eventsChannel.notify('onLongTap', e.target);
+         e.preventDefault();
+         clearInterval(longTapInterval);  
+      }, 700);
+      eventsChannel.notify('onTap', e.target);
    }
 
    function handleTouchMove(e) {
@@ -32,7 +41,7 @@
          xDiff = xDown - xUp,
          yDiff = yDown - yUp,
          time = new Date().getTime();
-         
+      
       if (time - touchTime <= durTreshold) {
          if (yDiff > yTreshold) {
             e.preventDefault();
@@ -44,6 +53,10 @@
             yDown = null;
          }
       }
+   }
+
+   function handleTouchEnd(){
+      clearInterval(longTapInterval);      
    }
 
 })();

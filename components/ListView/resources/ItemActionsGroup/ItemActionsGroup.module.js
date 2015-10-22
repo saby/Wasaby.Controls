@@ -83,11 +83,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                corner = 'br';
 
             if (this._touchActions) {
-               var hoveredItem = self.getParent().getHoveredItem().container;
                menuCont.addClass('controls-ItemsActions__touch-actions');
                verticalAlign.offset = 0;
                horizontalAlign.offset = 0;
-               target = hoveredItem;
+               target = this._container;
                corner = 'tr';
             }
 
@@ -141,9 +140,9 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                 itemActionsInstances = this.getItemsInstances();
             if (this._touchActions){
                //Нельзя сделать hide так как display:none ломает позиционирование меню 
-               var cont = this._container[0];
+               var cont = this._container[0],
+                  self = this;
                cont.style.visibility = 'hidden';
-               var self = this;
                this._itemActionsMenu.subscribe('onClose', function(){
                   cont.style.visibility = 'visible';
                   self.hideItemActions();
@@ -164,6 +163,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._container[0].style.right = position.right + 'px';
             this._container[0].style.display = 'block';
             if (this._touchActions){
+               this._container.width('auto');
                var width = this._container.width(),
                   height = $(hoveredItem.container).height(),
                   padding = height / 2 - 10;// получено опытным путем для шрифта 16px;
