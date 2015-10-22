@@ -18,6 +18,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
       var SHOW_ALL_LINK_WIDTH = 11;
       var INPUT_MIN_WIDTH = 100;
 
+      function propertyUpdateWrapper(func) {
+         return function() {
+            return this.runInPropertiesUpdate(func, arguments);
+         };
+      }
+
    /**
     * Поле связи. Можно выбирать значение из списка, можно из автодополнения
     * @class SBIS3.Engine.FieldLink
@@ -177,11 +183,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
        * Обработчик на выбор записи в автодополнении
        * @private
        */
-      _onListItemSelect: function(id) {
+      _onListItemSelect: propertyUpdateWrapper(function(id) {
          this.hidePicker();
          this.setText('');
          this.addItemsSelection([id]);
-      },
+      }),
 
 
       setDataSource: function(ds) {
@@ -236,6 +242,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                dMultiResult.done().getResult().addCallback(function() {
                   self._selectedRecords = self._selectedRecords.concat(dataSetRec);
                   self._setLinkCollectionData(self._selectedRecords);
+                  self._notifyOnPropertyChanged('selectedRecords');
                });
 
             } else {
