@@ -193,16 +193,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
       _drawSelectedItems: function(keysArr) {
          var self = this,
-             keysArrLen = keysArr.length,
-             loadArr, loadArrLen, result, dMultiResult;
-
-         /* Сформируем массив ключей записей, которые необходимо вычитать с бл */
-         loadArr = $ws.helpers.filter(keysArr, function(key) {
-                        return $ws.helpers.find(self._selectedRecords, function(rec) {
-                           return key === rec.getKey();
-                        }) ? false : true;
-                     });
-         loadArrLen = loadArr.length;
+            keysArrLen = keysArr.length,
+         /* Сформируем массив ключей записей, которые необходимо вычитать с бл или достать из датасета */
+            loadArr = $ws.helpers.filter(keysArr, function(key) {
+               return $ws.helpers.find(self._selectedRecords, function(rec) {
+                  return key === rec.getKey();
+               }) ? false : true;
+            }),
+            dMultiResult, rec, dataSetRec;
 
          /* Если удалили в пикере все записи, и он был открыт, то скроем его */
          if (this._isPickerVisible() && !keysArrLen) {
@@ -216,33 +214,30 @@ define('js!SBIS3.CONTROLS.FieldLink',
          }
 
          if(keysArrLen) {
-           /* Если есть записи, которые нужно вычитать - вычитываем */
-            if(loadArrLen) {
-               result = new $ws.proto.Deferred();
-               /* Если больше одной, то вычитаем используя ParallelDeferred */
-               if (loadArrLen > 1) {
-                  dMultiResult = new $ws.proto.ParallelDeferred({stopOnFirstError: false});
+            /* Если есть записи, которые нужно вычитать - вычитываем */
+            if(loadArr.length) {
+               dMultiResult = new $ws.proto.ParallelDeferred({stopOnFirstError: false});
+               dataSetRec = [];
 
-                  for (var i = 0; loadArrLen > i; i++) {
-                     dMultiResult.push(this._dataSource.read(loadArr[i]).addCallback(function (record) {
-                        self._selectedRecords.push(record);
-                     }));
+               /* если запись есть в датасете, то ничего не будем вычитывать */
+               for (var i = 0; loadArr.length > i; i++) {
+                  rec = this._dataSet && this._dataSet.getRecordByKey(loadArr[i]);
+
+                  if(rec) {
+                     dataSetRec.push(rec);
+                     continue;
                   }
 
-                  dMultiResult.done().getResult().addCallback(function() {
-                     result.callback();
-                  });
-               } else {
-                  /* Если выделенная запись одна, то просто вычитаем её */
-                  this._dataSource.read(loadArr[0]).addCallback(function(record) {
-                     self._selectedRecords.push(record);
-                     result.callback();
-                  })
+                  dMultiResult.push(this._dataSource.read(loadArr[i]).addCallback(function (record) {
+                        self._selectedRecords.push(record);
+                     }));
                }
 
-               result.addCallback(function() {
+               dMultiResult.done().getResult().addCallback(function() {
+                  self._selectedRecords = self._selectedRecords.concat(dataSetRec);
                   self._setLinkCollectionData(self._selectedRecords);
-               })
+               });
+
             } else {
                /* Если ничего вычитывать не надо, то просто отрисуем записи */
                this._setLinkCollectionData(this._selectedRecords);
@@ -255,18 +250,21 @@ define('js!SBIS3.CONTROLS.FieldLink',
       /* Переопределённый метод из MultiSelectable
          удаляет из массива выбранных записей те записи, ключей которых нет в selectedKeys*/
       _setSelectedRecords: function() {
-         var self = this;
+         var count = 0,
+             index;
 
          if(!this.getSelectedKeys().length) {
             this._selectedRecords = [];
             return;
          }
 
-         $ws.helpers.forEach(this._selectedRecords, function(rec, index) {
-            if(Array.indexOf(self._options.selectedKeys, rec.getKey()) === -1) {
-               self._selectedRecords.splice(index, 1);
+         for(var i = 0, len = this._selectedRecords.length; i < len; i ++) {
+            index = i - count;
+            if(this._selectedRecords[index] && Array.indexOf(this._options.selectedKeys, this._selectedRecords[index].getKey()) === -1) {
+               this._selectedRecords.splice(index, 1);
+               count++;
             }
-         });
+         }
       },
 
       /**
