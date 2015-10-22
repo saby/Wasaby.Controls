@@ -9,7 +9,7 @@
       {{isBranch = column.item.get(it.hierField);}}
       {{=it.decorators.setConditions({
                 'highlightDecorator': column.highlight,
-                'ladderDecorator': column
+                'ladderDecorator': column.field
             })
       }}
       <td class="controls-DataGridView__td{{?column.className}} {{=column.className}}{{?}}{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">

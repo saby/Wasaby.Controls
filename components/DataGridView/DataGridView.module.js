@@ -105,12 +105,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @cfg {Array} Лесенка
              * Массив имен столбцов, по которым строится лесенка
              */
-            ladder: undefined,
-            /**
-             * @cfg {Number} Сколько слов в "лесенке" по словам
-             * Лесенка по словам позволяет скрыть повторяющиеся в столбце первые wordsLadderCount слов.
-             */
-            wordsLadderCount: 0
+            ladder: undefined
          }
       },
 
