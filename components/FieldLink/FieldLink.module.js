@@ -135,6 +135,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                   template: template,
                   currentSelectedKeys: self.getSelectedKeys(),
                   target: self.getContainer(),
+                  parent: this,
                   multiselect: self._options.multiselect,
                   closeCallback: function (result) {
                      result && self.setSelectedKeys(result);
@@ -354,6 +355,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          return {
             corner: 'bl',
             target: this._container,
+            opener: this,
             closeByExternalClick: true,
             targetPart: true,
             className: 'controls-FieldLink__picker',
