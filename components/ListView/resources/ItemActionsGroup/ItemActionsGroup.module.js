@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   offset: 5
                },
                target = this._itemActionsMenuButton,
-               corner = 'tr';
+               corner = 'br';
 
             if (this._touchActions) {
                var hoveredItem = self.getParent().getHoveredItem().container;
@@ -166,7 +166,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             if (this._touchActions){
                var width = this._container.width(),
                   height = $(hoveredItem.container).height(),
-                  padding = height / 2 - 10;//line-height;
+                  padding = height / 2 - 10;// получено опытным путем для шрифта 16px;
                this._container.width(0);
             	this._container.height(height / 2 + 10);
                this._container.css('padding-top', padding);
