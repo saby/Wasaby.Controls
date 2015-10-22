@@ -176,8 +176,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                            self._options.addInPlaceButton.show();
                         }.bind(self));
                      }
-
-                     self._options.dataSet.saveChanges(self._options.dataSource);
+                     self._options.dataSource.sync(self._options.dataSet);
                   },
                   removeAddInPlace = function() {
                      if (editingArea.addInPlace) {

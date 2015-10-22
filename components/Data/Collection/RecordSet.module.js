@@ -22,16 +22,43 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             meta: {},
             keyField: ''
          },
-         _rawData: undefined
+         _rawData: undefined,
+         _indexTree: {}
       },
 
       $constructor: function (cfg) {
          if (!('compatibleMode' in cfg)) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.RecordSet', 'module SBIS3.CONTROLS.Data.Collection.RecordSet is deprecated, use SBIS3.CONTROLS.Data.Collection.LoadableList instead. It will be removed in 3.8.0.');
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.RecordSet', 'module SBIS3.CONTROLS.Data.Collection.RecordSet is deprecated and will be removed in 3.8.0. Use SBIS3.CONTROLS.Data.Collection.LoadableList instead.');
          }
          if ('data' in cfg) {
             this.setRawData(cfg.data);
          }
+      },
+
+      saveChanges: function(dataSource, added, changed, deleted) {
+         //TODO: refactor after migration to SBIS3.CONTROLS.Data.Source.ISource
+         added = added === undefined ? true : added;
+         changed = changed === undefined ? true : changed;
+         deleted = deleted === undefined ? true : deleted;
+
+         var syncCompleteDef = new $ws.proto.ParallelDeferred();
+         this.each(function(model) {
+            if (model.isDeleted()) {
+               syncCompleteDef.push(dataSource.destroy(model.getId()).addCallback(function() {
+                  model.setStored(false);
+                  return model;
+               }));
+            } else if (model.isChanged() || !model.isStored()) {
+               syncCompleteDef.push(dataSource.update(model).addCallback(function() {
+                  model.setChanged(false);
+                  model.setStored(true);
+                  return model;
+               }));
+            }
+         }, 'all');
+
+         syncCompleteDef.done(true);
+         return syncCompleteDef.getResult();
       },
 
       //region SBIS3.CONTROLS.DataSet
@@ -64,15 +91,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       merge: function (dataSetMergeFrom, options) {
-         var self = this,
-            record;
-         dataSetMergeFrom.each(function(outerRecord) {
-            if ((record = self.getRecordByKey(record.getKey()))) {
-               record.merge(outerRecord);
-            } else {
-               this.add(outerRecord);
-            }
-         });
+         if ((!this._keyField) && (dataSetMergeFrom._keyField)) {
+            this._keyField = dataSetMergeFrom._keyField;
+         }
+         this._setRecords(dataSetMergeFrom._getRecords(), options);
       },
 
       push: function (record) {
@@ -150,6 +172,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       getChildItems: function (parentId, getFullBranch, field) {
+         if(Object.isEmpty(this._indexTree)) {
+            this._reindexTree(field);
+         }
          var items = this.getItemsByPropertyValue(field, parentId);
          if (getFullBranch) {
             items.map((function(item) {
@@ -162,6 +187,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       hasChild: function (parentKey, field) {
+         if(Object.isEmpty(this._indexTree)) {
+            this._reindexTree(field);
+         }
          return this.getItemByPropertyValue(field, parentKey) !== undefined;
       },
 
@@ -187,8 +215,67 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          return filterDataSet;
       },
 
-      _reindexTree: function () {
+      _getRecords: function() {
+         return this.toArray().map(function(item) {
+            return item.getContents();
+         });
+      },
+
+      _setRecords: function (records, options) {
+         options = options || {};
+         options = $ws.core.merge(options, {add: true, remove: true, merge: true}, {preferSource: true});
+
+         var self = this,
+            recordsMap = {},
+            record,
+            key;
+         for (var i = 0, length = records.length; i < length; i++) {
+            key = records[i].getKey();
+            recordsMap[key] = true;
+
+            if ((record = self.getRecordByKey(key))) {
+               if (options.merge) {
+                  record.merge(records[i]);
+               }
+            } else if (options.add) {
+               this.add(records[i]);
+            }
+         }
+
+         if (options.remove) {
+            var toRemove = [];
+            this.each(function (record) {
+               var key = record.getKey();
+               if (!recordsMap[key]) {
+                  toRemove.push(key);
+               }
+            }, 'all');
+
+            if (toRemove.length) {
+               this.removeRecord(toRemove);
+            }
+         }
+      },
+
+      _reindexTree: function (field) {
          this._getServiceEnumerator().reIndex();
+
+         this._indexTree = {};
+         var self = this,
+            parentKey;
+         this.each(function (record) {
+            parentKey = null;
+            if (field) {
+               parentKey = self.getParentKey(record, field);
+               if (parentKey === undefined) {
+                  parentKey = null;
+               }
+            }
+            if (!this._indexTree.hasOwnProperty(parentKey)) {
+               this._indexTree[parentKey] = [];
+            }
+            this._indexTree[parentKey].push(record.getKey());
+         }, 'all');
       }
 
       //endregion SBIS3.CONTROLS.DataSet

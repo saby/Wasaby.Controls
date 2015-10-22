@@ -8,14 +8,23 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
    /**
     * Базовый источник данных
     * @class SBIS3.CONTROLS.Data.Source.Base
+    * @extends $ws.proto.Abstract
     * @mixes SBIS3.CONTROLS.Data.Source.ISource
     * @public
     * @author Мальцев Алексей
     */
 
-   return $ws.core.extend({}, [ISource], /** @lends SBIS3.CONTROLS.Data.Source.Base.prototype */{
+   return $ws.proto.Abstract.extend([ISource], /** @lends SBIS3.CONTROLS.Data.Source.Base.prototype */{
+      /**
+       * @event onDataSync При изменении синхронизации данных с источником
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param (SBIS3.CONTROLS.Data.Model[]) records Измененные записи
+       */
+
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Base',
+
       $constructor: function (cfg) {
+         this._publish('onDataSync');
          this._options.model = 'model' in cfg ? cfg.model : Model;
       },
 
@@ -89,9 +98,33 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          for (index = 0, count = tableAdapter.getCount(data); index < count; index++) {
             callback.call(context || this, tableAdapter.at(data, index), index);
          }
-      }
+      },
 
       //endregion Protected methods
+
+      //TODO: совместимость с SBIS3.CONTROLS.BaseSource - выплить после перехода на ISource
+      //region SBIS3.CONTROLS.BaseSource
+
+      sync: function (data) {
+         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.Base', 'method sync() is deprecated and will be removed in 3.8.0. Use SBIS3.CONTROLS.Data.Model::sync() instead.');
+
+         var result;
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
+            result = data.sync();
+         } else if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            result = data.saveChanges(this);
+         } else {
+            throw new Error('Invalid argument');
+         }
+
+         result.addCallback((function() {
+            this._notify('onDataSync');
+         }).bind(this));
+
+         return result;
+      }
+
+      //endregion SBIS3.CONTROLS.BaseSource
 
    });
 });
