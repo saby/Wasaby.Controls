@@ -2,9 +2,10 @@
 define([
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    'js!SBIS3.CONTROLS.Data.Model',
+   'js!SBIS3.CONTROLS.Data.Collection.List',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Factory'
-], function (AdapterSbis, Model, DataSet, Factory) {
+], function (AdapterSbis, Model, List, DataSet, Factory) {
    'use strict';
 
    var sbisModel,
@@ -160,7 +161,7 @@ define([
             assert.instanceOf(val, Model);
 
          });
-         it('should cast value to dataSet', function () {
+         it('should cast value to DataSet', function () {
             var val = sbisModel.get('recordSet');
             if (!(val instanceof DataSet)) {
                assert.fail();
@@ -241,8 +242,8 @@ define([
          });
          it('should serialize dataSet', function () {
             var data = {
-                  'd': [[0]],
-                  's': [{n: 'id', t: 'Число целое'}]
+                  d: [[0]],
+                  s: [{n: 'id', t: 'Число целое'}]
                },
                adapter = (new AdapterSbis()),
                dataSet = Factory._makeDataSet(data, adapter);

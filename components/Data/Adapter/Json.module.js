@@ -39,6 +39,18 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Json', [
 
       forRecord: function () {
          return this._record || (this._record = new JsonRecord());
+      },
+
+      getKeyField: function (data) {
+         /*if (typeof data === 'object') {
+            for (var key in data) {
+               if (data.hasOwnProperty(key)) {
+                  return key;
+               }
+            }
+         }*/
+
+         return undefined;
       }
    });
 

@@ -27,6 +27,15 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IAdapter', [], function () {
       },
 
       /**
+       * Возвращает название поля, которое является первичным ключем
+       * @param {*} data Сырые данные
+       * @returns {String}
+       */
+      getKeyField: function (data) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
        * Возвращает значение свойства
        * @param {*} data Сырые данные
        * @param {String} property Название свойства

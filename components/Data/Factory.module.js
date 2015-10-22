@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
     */
 
    var Factory = /** @lends SBIS3.CONTROLS.Data.Factory.prototype */{
-      /***
+      /**
        * Приводит сырые данныые к переданному типу.
        * Возможные типы:
        * DataSet - набор записей
@@ -47,6 +47,8 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             switch (type) {
                case 'DataSet':
                   return this._makeDataSet(value, adapter);
+               case 'List':
+                  return this._makeList(value, adapter);
                case 'Model':
                   return this._makeModel(value, adapter);
                case 'Time':
@@ -106,7 +108,8 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          switch (type) {
             case 'DataSet':
                return this._serializeDataSet(value, adapter);
-
+            case 'List':
+               return this._serializeList(value, adapter);
             case 'Model':
                return this._serializeModel(value, adapter);
 
@@ -159,7 +162,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          }
       },
 
-      /***
+      /**
        * Создает модель по сырым данным
        * @param {*} data Сырые данные
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
@@ -173,11 +176,22 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          });
       },
 
-      /***
+      /**
+       * Создает List по сырым данным
+       * @param {*} data Сырые данные
+       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
+       * @returns {SBIS3.CONTROLS.Data.Collection.List}
+       * @private
+       */
+      _makeList: function (data, adapter) {
+         return this._makeDataSet(data, adapter).getAll();
+      },
+
+      /**
        * Создает DataSet по сырым данным
        * @param {*} data Сырые данные
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
-       * @returns {SBIS3.CONTROLS.Data.Source.DataSet}
+       * @returns {SBIS3.CONTROLS.Data.Collection.List}
        * @private
        */
       _makeDataSet: function (data, adapter) {
@@ -191,7 +205,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          });
       },
 
-      /***
+      /**
        * Создает поле флагов по сырым данным
        * @param {Array} value Массив флагов
        * @param {Object} meta Мета данные флагов
@@ -212,7 +226,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @returns {*}
        * @private
        */
-      _serializeDataSet: function (data) {
+      _serializeDataSet: function (data, adapter) {
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet')) {
             return data.getRawData();
          } else if (data instanceof $ws.proto.RecordSet || data instanceof $ws.proto.RecordSetStatic) {
@@ -224,6 +238,24 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          }
          throw new Error('Adapter is not defined or doesn\'t have method serialize()');
       },
+      /**
+       * Сериализует список
+       * @param {SBIS3.CONTROLS.Data.Collection.List} list Список
+       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
+       * @returns {Array}
+       * @private
+       */
+      _serializeList: function (list, adapter) {
+         if (adapter && adapter.serialize) {
+            return adapter.serialize(list.toArray().map(function (item) {
+               if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
+                  return item.getRawData();
+               }
+               return item;
+            }));
+         }
+         throw new Error('Adapter is not defined or doesn\'t have method serialize()');
+      },
 
       /**
        * Сериализует модель
@@ -232,7 +264,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @returns {*}
        * @private
        */
-      _serializeModel: function (data) {
+      _serializeModel: function (data, adapter) {
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
             return data.getRawData();
          } else if (data instanceof $ws.proto.Record) {
@@ -242,7 +274,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return adapter.serialize(data);
             }
          }
-         throw 'Adapter is not defined or doesn\'t have method serialize()';
+         throw new Error('Adapter is not defined or doesn\'t have method serialize()');
       },
 
       /**

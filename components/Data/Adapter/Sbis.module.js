@@ -22,6 +22,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
           * @var {SBIS3.CONTROLS.Data.Adapter.SbisTable} Адаптер для таблицы
           */
          _table: undefined,
+
          /**
           * @var {SBIS3.CONTROLS.Data.Adapter.SbisRecord} Адаптер для записи
           */
@@ -34,6 +35,24 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
 
       forRecord: function () {
          return this._record || (this._record = new SbisRecord());
+      },
+
+      getKeyField: function (data) {
+         var s = data.s,
+            index;
+         if (s) {
+            for (var i = 0, l = s.length; i < l; i++) {
+               if (s[i].n[0] === '@') {
+                  index = i;
+                  break;
+               }
+            }
+         }
+         if (index === undefined) {
+            index = 0;
+         }
+
+         return s[index].n;
       },
 
       /**
@@ -56,6 +75,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                case 'string':
                   return Sbis.FIELD_TYPE.String;
                case 'object':
+                  if (val === null) {
+                     return Sbis.FIELD_TYPE.String;
+                  }
                   if (val instanceof Date) {
                      return Sbis.FIELD_TYPE.DateTime;
                   }
@@ -114,7 +136,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                   continue;
                }
                var val = data[key];
-               if (typeof val === 'object' && !(val instanceof Date)) {
+               if (val && typeof val === 'object' && !(val instanceof Date)) {
                   allScalars = false;
                   break;
                }
@@ -142,6 +164,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
 
    Sbis.FIELD_TYPE = {
       DataSet: 'Выборка',
+      List: 'Список',
       Model: 'Запись',
       Integer: 'Число целое',
       String: 'Строка',
@@ -271,6 +294,13 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
    var SbisRecord = $ws.core.extend({}, [IRecord], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisRecord.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.SbisRecord',
 
+      $protected: {
+         /**
+          * @var {Boolean} Выдавать датасет как список. Требуется для совместимости API у Бочагова, чтобы вложенные рекордсеты возвращались сразу
+          */
+         _dataSetAsList: false
+      },
+
       get: function (data, name) {
          var index = this._getFieldIndex(data, name);
          return index >= 0 ? data.d[index] : undefined;
@@ -326,6 +356,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                type = fieldType;
                break;
             }
+         }
+         if (this._dataSetAsList && type === 'DataSet') {
+            type = 'List';
          }
          var prepareMeta = this._prepareMetaInfo(type, $ws.core.clone(meta));
          return {

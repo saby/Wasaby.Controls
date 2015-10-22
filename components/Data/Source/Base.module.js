@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          return new this._options.model({
             data: data,
             source: this,
-            idProperty: this._options.idProperty
+            idProperty: this._options.idProperty || this.getAdapter().getKeyField(data)
          });
       },
 
@@ -102,7 +102,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
 
       //endregion Protected methods
 
-      //TODO: совместимость с SBIS3.CONTROLS.BaseSource - выплить после перехода на ISource
+      //TODO: совместимость с API SBIS3.CONTROLS.BaseSource - выпилить после перехода на ISource
       //region SBIS3.CONTROLS.BaseSource
 
       sync: function (data) {

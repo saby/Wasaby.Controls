@@ -575,7 +575,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       _getOriginalPropertyValue: function(name) {
          var adapter = this._options.adapter.forRecord(),
-            property = this._properties[name],
             rawValue = adapter.get(this._options.data, name),
             fieldData = adapter.getFullFieldData(this._options.data, name);
 

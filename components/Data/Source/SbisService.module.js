@@ -79,14 +79,17 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              * @see destroy
              */
             destroyMethodName: 'Удалить',
+
             /**
              * @cfg {String} Имя метода, который будет вызываться для копирования записей. По умолчанию 'Копировать'.
              */
             copyMethodName: 'Копировать',
+
             /**
              * @cfg {String} Имя метода, который будет вызываться для объединения записей. По умолчанию 'Объединить'.
              */
             mergeMethodName: 'Объединить',
+
             /**
              * @cfg {String} Имя метода, который будет использоваться для получения формата записи в методе прочитать. Метод должен быть декларативным.
              * @example
@@ -113,9 +116,14 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          
          this._options.adapter = cfg.adapter || new SbisAdapter();
          
+         if ('compatibleMode' in cfg) {
+            this._options.adapter.forRecord()._dataSetAsList = true;
+         }
+
          if ('service' in cfg && !cfg.resource) {
             this._options.resource = cfg.resource = cfg.service;
          }
+
          this._provider = new SbisServiceBLO(typeof this._options.resource === 'string' ? {
             name: this._options.resource
          } : this._options.resource);
@@ -254,20 +262,6 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             def.errback('Method move was failed');
          });
          return def;
-      },
-
-      _prepareOrderParams: function(object, record, orderDetails) {
-         var params = {
-            'Объект': object,
-            'ИдО': record.get(this._options.idProperty),
-            'ПорядковыйНомер': orderDetails.column || 'ПорНомер'
-         };
-         if(orderDetails.after){
-            params['ИдОПосле'] = orderDetails.after;
-         } else {
-            params['ИдОДо'] = orderDetails.before;
-         }
-         return params;
       },
 
       call: function (command, data) {
@@ -446,6 +440,20 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'РазмерСтраницы': limit,
             'ЕстьЕще': offset >= 0
          };
+      },
+
+      _prepareOrderParams: function(object, record, orderDetails) {
+         var params = {
+            'Объект': object,
+            'ИдО': record.get(this._options.idProperty),
+            'ПорядковыйНомер': orderDetails.column || 'ПорНомер'
+         };
+         if(orderDetails.after){
+            params['ИдОПосле'] = orderDetails.after;
+         } else {
+            params['ИдОДо'] = orderDetails.before;
+         }
+         return params;
       }
 
       //endregion Protected methods

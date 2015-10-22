@@ -113,7 +113,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       toArray: function () {
-         return this._items;
+         return this._items.map(function (item) {
+            return item.getContents();
+         });
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
@@ -230,11 +232,14 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       getItemByPropertyValue: function (property, value) {
-         return this._getServiceEnumerator().getItemByPropertyValue(property, value);
+         var item = this._getServiceEnumerator().getItemByPropertyValue(property, value);
+         return item ? item.getContents() : undefined;
       },
 
       getItemsByPropertyValue: function (property, value) {
-         return this._getServiceEnumerator().getItemsByPropertyValue(property, value);
+         return this._getServiceEnumerator().getItemsByPropertyValue(property, value).map(function(item) {
+            return item.getContents();
+         });
       },
 
       getItemIndexByPropertyValue: function (property, value) {

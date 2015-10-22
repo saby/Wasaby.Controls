@@ -1,7 +1,8 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
-   'js!SBIS3.CONTROLS.Data.Collection.List'
-], function (List) {
+   'js!SBIS3.CONTROLS.Data.Collection.List',
+   'js!SBIS3.CONTROLS.DataSet'
+], function (List, DataSet) {
    'use strict';
 
    /**
@@ -64,15 +65,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //region SBIS3.CONTROLS.DataSet
 
       removeRecord: function (key) {
-         if (!(key instanceof Array)) {
-            key = [key];
-         }
-         for (var i = 0; i < key.length; i++) {
-            var record = this.getRecordByKey(key);
-            if (record) {
-               record.setDeleted(true);
-            }
-         }
+         return DataSet.prototype.removeRecord.call(this, key);
       },
 
       getRecordByKey: function (key) {
@@ -91,18 +84,15 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       merge: function (dataSetMergeFrom, options) {
-         if ((!this._keyField) && (dataSetMergeFrom._keyField)) {
-            this._keyField = dataSetMergeFrom._keyField;
-         }
-         this._setRecords(dataSetMergeFrom._getRecords(), options);
+         return DataSet.prototype.merge.call(this, dataSetMergeFrom, options);
       },
 
       push: function (record) {
-         if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Record')) {
+         if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Model')) {
             record = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
                adapter: this.getStrategy(),
-               raw: record,
-               keyField: this._options.keyField
+               data: record,
+               idProperty: this._options.keyField
             });
          }
          this.add(record);
@@ -172,25 +162,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       getChildItems: function (parentId, getFullBranch, field) {
-         if(Object.isEmpty(this._indexTree)) {
-            this._reindexTree(field);
-         }
-         var items = this.getItemsByPropertyValue(field, parentId);
-         if (getFullBranch) {
-            items.map((function(item) {
-               Array.prototype.push.apply(items, this.getChildItems(
-                  item.getId(), getFullBranch, field
-               ));
-            }).bind(this));
-         }
-         return items;
+         return DataSet.prototype.getChildItems.call(this, parentId, getFullBranch, field);
       },
 
       hasChild: function (parentKey, field) {
-         if(Object.isEmpty(this._indexTree)) {
-            this._reindexTree(field);
-         }
-         return this.getItemByPropertyValue(field, parentKey) !== undefined;
+         return DataSet.prototype.hasChild.call(this, parentKey, field);
       },
 
       getParent: function () {
@@ -216,9 +192,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       _getRecords: function() {
-         return this.toArray().map(function(item) {
-            return item.getContents();
-         });
+         return this.toArray();
       },
 
       _setRecords: function (records, options) {
