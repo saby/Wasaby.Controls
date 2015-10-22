@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.Record', [
    'js!SBIS3.CONTROLS.DataFactory'
-], function (Factory) {
+], function (DataFactory) {
    'use strict';
 
    /**
@@ -57,8 +57,6 @@ define('js!SBIS3.CONTROLS.Record', [
       },
 
       $constructor: function (cfg) {
-         Factory = Factory || require('js!SBIS3.CONTROLS.DataFactory');
-
          this._publish('onChange');
          this._strategy = cfg.strategy;
          this._raw = cfg.raw || {};
@@ -99,7 +97,7 @@ define('js!SBIS3.CONTROLS.Record', [
          
          var dataValue = this._strategy.value(this._raw, field),
             data = this._strategy.getFullFieldData(this._raw, field),
-            value = Factory.cast(
+            value = DataFactory.cast(
                dataValue,
                data.type,
                this._strategy,
@@ -310,6 +308,10 @@ define('js!SBIS3.CONTROLS.Record', [
        }
     };
    $ws.proto.Context.registerFieldType(ControlsFieldTypeRecord);
+
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Record', function(config) {
+      return new Record(config);
+   });
 
    return Record;
 });
