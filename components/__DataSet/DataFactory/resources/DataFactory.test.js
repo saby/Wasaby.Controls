@@ -2,9 +2,8 @@
 define([
    'js!SBIS3.CONTROLS.SbisJSONStrategy',
    'js!SBIS3.CONTROLS.Record',
-   'js!SBIS3.CONTROLS.DataSet',
    'js!SBIS3.CONTROLS.DataFactory'
-], function (SbisJSONStrategy, Record, DataSet, Factory) {
+], function (SbisJSONStrategy, Record, DataFactory) {
       'use strict';
       var sbisRecord,sbisRecordSet;
       beforeEach(function(){
@@ -153,15 +152,16 @@ define([
                assert.instanceOf(val,$ws.proto.Enum);
             });
             it('should cast value to Record', function () {
-               var val = sbisRecord.get('record');
-               assert.instanceOf(val,Record);
-
+               assert.isTrue($ws.helpers.instanceOfModule(
+                  sbisRecord.get('record'),
+                  'SBIS3.CONTROLS.Record'
+               ));
             });
             it('should cast value to dataSet', function () {
-               var val = sbisRecord.get('recordSet');
-               if(!(val instanceof DataSet)){
-                  assert.fail();
-               }
+               assert.isTrue($ws.helpers.instanceOfModule(
+                  sbisRecord.get('recordSet'),
+                  'SBIS3.CONTROLS.DataSet'
+               ));
             });
             it('should cast value to flags', function () {
                var val = sbisRecord.get('flags');
@@ -238,7 +238,7 @@ define([
                      's':[{n: 'id',t: 'Число целое'}]
                   },
                   strategy = new SbisJSONStrategy(),
-                  dataSet = Factory.makeDataSet(data, strategy);
+                  dataSet = DataFactory.makeDataSet(data, strategy);
                sbisRecordSet.set('recordSet',dataSet);
                assert.deepEqual(getData(4),dataSet.getRawData());
             });
