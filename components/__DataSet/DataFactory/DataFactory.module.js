@@ -1,9 +1,8 @@
 /*global $ws, define, require*/
 define('js!SBIS3.CONTROLS.DataFactory', [
-   'js!SBIS3.CONTROLS.Record',
-   'js!SBIS3.CONTROLS.DataSet'
-], function (Record, DataSet) {
-   "use strict";
+], function () {
+   'use strict';
+
    /**
     * Фабрика типов - на основе сырых данных модели, создает объекты
     * переданного типа
@@ -11,7 +10,7 @@ define('js!SBIS3.CONTROLS.DataFactory', [
     * @public
     * @author Ярослав Ганшин
     */
-   return /** @lends SBIS3.CONTROLS.DataFactory.prototype */{
+   var DataFactory = /** @lends SBIS3.CONTROLS.DataFactory.prototype */{
       /***
        * Приводит значение к переданному типу
        * возможные типы:
@@ -38,7 +37,7 @@ define('js!SBIS3.CONTROLS.DataFactory', [
        * @param meta - дополнительные параметры конфигурации типа данных
        * @returns {*} - приведенные
        */
-      cast: function(value, type, strategy, meta) {
+      cast: function (value, type, strategy, meta) {
          if((value !== null && typeof value !== 'undefined') || type === 'Enum' ) {
             switch(type) {
                case 'DataSet':
@@ -85,19 +84,21 @@ define('js!SBIS3.CONTROLS.DataFactory', [
        * @param meta - дополнительные параметры конфигурации типа данных
        * @returns {*}
        */
-      serialize: function(value, type, strategy, meta) {
+      serialize: function (value, type, strategy, meta) {
          if((value === null || typeof value === 'undefined') && type !== ''){
             return value;
          }
          switch(type) {
             case 'DataSet':
-               if (strategy && strategy.serializeDataSet)
+               if (strategy && strategy.serializeDataSet) {
                   return strategy.serializeDataSet(value);
+               }
                throw 'strategy is not defined or doesn\'t have method serializeDataSet';
 
             case 'Record':
-               if (strategy && strategy.serializeRecord)
+               if (strategy && strategy.serializeRecord) {
                   return strategy.serializeRecord(value);
+               }
                throw 'strategy is not defined or doesn\'t have method serializeRecord';
 
             case 'Date':
@@ -115,15 +116,16 @@ define('js!SBIS3.CONTROLS.DataFactory', [
                return value instanceof Date ? value.toSQL(serializeMode) : null;
 
             case 'Flags':
-               if (strategy && strategy.serializeFlags)
+               if (strategy && strategy.serializeFlags) {
                   return strategy.serializeFlags(value);
+               }
                throw 'strategy is not defined or doesn\'t have method serializeFlags';
 
             case 'Integer':
                return (typeof(value) === 'number') ? value : (isNaN(parseInt(value, 10)) ? null : parseInt(value, 10));
 
             case 'String':
-               return value === null ? null : value + "";
+               return value === null ? null : value + '';
 
             case 'Link':
                return value === null ? null : parseInt(value, 10);
@@ -157,8 +159,7 @@ define('js!SBIS3.CONTROLS.DataFactory', [
        * @returns {*}
        */
       makeRecord: function(data, strategy) {
-         Record = Record || require('js!SBIS3.CONTROLS.Record');
-         return new Record({
+         return $ws.single.ioc.resolve('SBIS3.CONTROLS.Record', {
             raw: data,
             strategy: strategy
          });
@@ -170,8 +171,7 @@ define('js!SBIS3.CONTROLS.DataFactory', [
        * @returns {*}
        */
       makeDataSet: function(data, strategy) {
-         DataSet = DataSet || require('js!SBIS3.CONTROLS.DataSet');
-         return new DataSet({
+         return $ws.single.ioc.resolve('SBIS3.CONTROLS.DataSet', {
             strategy: strategy,
             data: data,
             meta: strategy.getMetaData(data)
@@ -187,4 +187,10 @@ define('js!SBIS3.CONTROLS.DataFactory', [
          return this.makeRecord(meta.makeData(value), meta.strategy);
       }
    };
+
+   $ws.single.ioc.bind('SBIS3.CONTROLS.DataFactory', function() {
+      return DataFactory;
+   });
+
+   return DataFactory;
 });
