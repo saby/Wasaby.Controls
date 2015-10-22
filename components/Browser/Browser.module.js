@@ -1,8 +1,9 @@
 define('js!SBIS3.CONTROLS.Browser', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Browser',
-   'js!SBIS3.CONTROLS.ComponentBinder'
-], function(CompoundControl, dotTplFn, ComponentBinder){
+   'js!SBIS3.CONTROLS.ComponentBinder',
+   'js!SBIS3.CORE.DialogRecord'
+], function(CompoundControl, dotTplFn, ComponentBinder, DialogRecord){
    'use strict';
 
    /**
@@ -13,14 +14,34 @@ define('js!SBIS3.CONTROLS.Browser', [
     * @public
     */
 
-   var checkViewType = function(view) {
-      if (view && $ws.helpers.instanceOfModule(view, 'SBIS3.CONTROLS.ListView')) {
-         return $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixinDS');
-      }
-      else {
-         throw new Error('Browser: Can\'t define linkedView');
-      }
-   };
+   var
+      checkViewType = function(view) {
+         if (view && $ws.helpers.instanceOfModule(view, 'SBIS3.CONTROLS.ListView')) {
+            return $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixinDS');
+         }
+         else {
+            throw new Error('Browser: Can\'t define linkedView');
+         }
+      },
+      convertRecord = function(record) {
+         var rec;
+         if (record._raw.s && record._raw.d) {
+            //TODO очень нужный метод
+            var
+               parser = new $ws.proto.ParserSBIS(),
+               cfg = parser.readRecord(record._raw),
+               pkValue;
+            if (record._raw.d[0]) {
+               pkValue = record._raw.d[0] instanceof Array ? record._raw.d[0][0] : record._raw.d[0];
+            }
+            rec = new $ws.proto.Record({
+               colDef : cfg.columns,
+               row : cfg.row,
+               pkValue : pkValue
+            })
+         }
+         return rec;
+      };
 
    var Browser = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Browser.prototype */{
       _dotTplFn : dotTplFn,
@@ -142,12 +163,15 @@ define('js!SBIS3.CONTROLS.Browser', [
          this._notify('on' + (hier ? 'Folder' : 'Item') + 'Edit', id, data);
       },
 
-      openCompatibleDialog: function(dialogComponent) {
-         if (dialogComponent) {
-            var
-               sourceOptions = this._view._dataSource._options;
-         }
+      openCompatibleDialog: function(dialogComponent, record, handlers) {
+         var oldRecord = convertRecord(record);
+         new DialogRecord({
+            template : dialogComponent,
+            record : oldRecord,
+            handlers : handlers
+         })
       }
+
 
    });
 
