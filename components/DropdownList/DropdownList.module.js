@@ -48,8 +48,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * Если задать 'click', то работа будет по клику
                 */
                mode: 'hover',
-               defaultValue : 0,
-               defaultText : '',
+               /**
+                * @cfg {String} Текст заголовка
+                */
                caption : '',
                /**
                 * @cfg {String} Имя фильтра, который отображает данный контрол
@@ -302,9 +303,17 @@ define('js!SBIS3.CONTROLS.DropdownList',
                self._setResetButtonVisibility(id[0] === this._defaultId);
             }
          },
+         /**
+          * Получить ключ элемента для выбора "по умолчанию"
+          * @returns {*|String|Number}
+          */
          getDefaultId: function() {
             return this._defaultId;
          },
+         /**
+          * Установить текст в заголовок
+          * @param text
+          */
          setCaption: function(text) {
             if(typeof text === 'string') {
                this._options.caption = text;
@@ -313,11 +322,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._notifyOnPropertyChanged('caption');
             }
          },
+         /**
+          * Получить значение переменной caption
+          * @returns {String}
+          */
          getCaption: function() {
             return this._options.caption;
-         },
-         getText: function() {
-            return this._caption.text();
          },
          _setResetButtonVisibility: function(show) {
             this._resetButton.toggleClass('ws-hidden', show);
