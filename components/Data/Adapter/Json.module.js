@@ -133,18 +133,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Json', [
          data.splice(source,1);
       },
 
-      getProperty: function (data, property) {
-         property = property || '';
-         var parts = property.split('.'),
-             result;
-         for (var i = 0; i < parts.length; i++) {
-            result = i ?
-               (result ? result[parts[i]] : undefined) :
-               (data ? data[parts[i]] : undefined);
-         }
-         return result;
-      },
-
       _checkPosition: function (data, at) {
          if (at < 0 || at > data.length) {
             throw new Error('Out of bounds');

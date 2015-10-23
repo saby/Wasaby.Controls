@@ -105,6 +105,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
           * @var {SBIS3.CONTROLS.SbisServiceSource/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику
           */
          _provider: undefined,
+
          /**
           * @var {SBIS3.CONTROLS.SbisServiceSource/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику, для смены порядковых номеров
           */
@@ -116,10 +117,6 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          
          this._options.adapter = cfg.adapter || new SbisAdapter();
          
-         if ('compatibleMode' in cfg) {
-            this._options.adapter.forRecord()._dataSetAsList = true;
-         }
-
          if ('service' in cfg && !cfg.resource) {
             this._options.resource = cfg.resource = cfg.service;
          }

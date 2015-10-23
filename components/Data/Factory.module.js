@@ -47,8 +47,6 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             switch (type) {
                case 'DataSet':
                   return this._makeDataSet(value, adapter);
-               case 'List':
-                  return this._makeList(value, adapter);
                case 'Model':
                   return this._makeModel(value, adapter);
                case 'Time':
@@ -108,8 +106,6 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          switch (type) {
             case 'DataSet':
                return this._serializeDataSet(value, adapter);
-            case 'List':
-               return this._serializeList(value, adapter);
             case 'Model':
                return this._serializeModel(value, adapter);
 
@@ -177,21 +173,10 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       },
 
       /**
-       * Создает List по сырым данным
-       * @param {*} data Сырые данные
-       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
-       * @returns {SBIS3.CONTROLS.Data.Collection.List}
-       * @private
-       */
-      _makeList: function (data, adapter) {
-         return this._makeDataSet(data, adapter).getAll();
-      },
-
-      /**
        * Создает DataSet по сырым данным
        * @param {*} data Сырые данные
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
-       * @returns {SBIS3.CONTROLS.Data.Collection.List}
+       * @returns {SBIS3.CONTROLS.Data.Source.DataSet}
        * @private
        */
       _makeDataSet: function (data, adapter) {
@@ -229,6 +214,8 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       _serializeDataSet: function (data, adapter) {
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet')) {
             return data.getRawData();
+         } else if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.List')) {
+            return this._serializeList(data, adapter);
          } else if (data instanceof $ws.proto.RecordSet || data instanceof $ws.proto.RecordSetStatic) {
             return data.toJSON();
          } else {
@@ -238,23 +225,40 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          }
          throw new Error('Adapter is not defined or doesn\'t have method serialize()');
       },
+
       /**
-       * Сериализует список
-       * @param {SBIS3.CONTROLS.Data.Collection.List} list Список
+       * Сериализует List
+       * @param {SBIS3.CONTROLS.Data.Collection.List} data Список
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
-       * @returns {Array}
+       * @returns {*}
        * @private
        */
-      _serializeList: function (list, adapter) {
-         if (adapter && adapter.serialize) {
-            return adapter.serialize(list.toArray().map(function (item) {
-               if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
-                  return item.getRawData();
+      _serializeList: function (data, adapter) {
+         var items = data.toArray(),
+            tableAdapter = adapter.forTable(),
+            otherData = [],
+            rawData,
+            item,
+            i,
+            length;
+
+         for (i = 0, length = items.length; i < length; i++) {
+            item = items[i];
+            if (typeof items === 'object' && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')) {
+               if (rawData === undefined) {
+                  rawData = tableAdapter.getEmpty(item.getRawData());
                }
-               return item;
-            }));
+               tableAdapter.add(rawData, item.getRawData());
+            } else {
+               otherData.push(item);
+            }
          }
-         throw new Error('Adapter is not defined or doesn\'t have method serialize()');
+
+         if (otherData.length) {
+            adapter.setProperty(rawData, 'other', otherData);
+         }
+
+         return rawData;
       },
 
       /**

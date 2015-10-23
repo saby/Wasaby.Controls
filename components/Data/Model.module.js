@@ -111,7 +111,12 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              * @see getIdProperty
              * @see setIdProperty
              */
-            idProperty: ''
+            idProperty: '',
+
+            /**
+             * @cfg {Boolean} Использовать вложенные рекордсеты как List, а не как DataSet. По умолчанию - true
+             */
+            usingDataSetAsList: true
          },
 
          _hashPrefix: 'model-',
@@ -144,10 +149,19 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          /**
           * @var {Object} Объект содержащий названия свойств, для которых сейчас выполняется конвертация значения
           */
-         _nowConvertingProperties: {}
+         _nowConvertingProperties: {},
+
+         /**
+          * @var {Object} Работа в режиме совместимости API
+          */
+         _compatibleMode: false
       },
 
-      $constructor: function () {
+      $constructor: function (cfg) {
+         cfg = cfg || {};
+         //TODO: убрать после перехода на ISource
+         this._compatibleMode = cfg.compatibleMode;
+
          this._options.idProperty = this._options.idProperty || '';
          this._initAdapter();
          this.setRawData(this._options.data);
@@ -320,6 +334,27 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             }
          }
       },
+
+      /**
+       * Возвращает признак, что вложенные рекордсеты используются как List, а не как DataSet
+       * @returns {Boolean}
+       * @see usingDataSetAsList
+       * @see setUsingDataSetAsList
+       */
+      isUsingDataSetAsList: function () {
+         return this._options.usingDataSetAsList;
+      },
+
+      /**
+       * Устанавливает признак, что вложенные рекордсеты используются как List, а не как DataSet
+       * @param {Boolean} usingDataSetAsList Вложенные рекордсеты использовать как List, а не как DataSet
+       * @see usingDataSetAsList
+       * @see isUsingDataSetAsList
+       */
+      setUsingDataSetAsList: function (usingDataSetAsList) {
+         this._options.usingDataSetAsList = usingDataSetAsList;
+      },
+
 
       /**
        * Клонирует модель
@@ -576,14 +611,17 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       _getOriginalPropertyValue: function(name) {
          var adapter = this._options.adapter.forRecord(),
             rawValue = adapter.get(this._options.data, name),
-            fieldData = adapter.getFullFieldData(this._options.data, name);
-
-         return Factory.cast(
-            rawValue,
-            fieldData.type,
-            this._options.adapter,//в фабрику нужно передавать полный адаптер
-            fieldData.meta
-         );
+            fieldData = adapter.getFullFieldData(this._options.data, name),
+            value = Factory.cast(
+               rawValue,
+               fieldData.type,
+               this._options.adapter,
+               fieldData.meta
+            );
+         if (value && this._options.usingDataSetAsList && fieldData.type === 'DataSet') {
+            value = value.getAll();
+         }
+         return value;
       },
 
       /**
@@ -633,42 +671,58 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       //region SBIS3.CONTROLS.Record
 
       getType: function (field) {
-         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getType() is deprecated and will be removed in 3.8.0.');
+         if (!this._compatibleMode) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getType() is deprecated and will be removed in 3.8.0.');
+         }
          return field ? 'Текст' : undefined;
       },
 
       setCreated: function (created) {
-         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method setCreated() is deprecated and will be removed in 3.8.0. Use setStored() instead.');
+         if (!this._compatibleMode) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method setCreated() is deprecated and will be removed in 3.8.0. Use setStored() instead.');
+         }
          this.setStored(created);
       },
 
       isCreated: function () {
-         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method isCreated() is deprecated and will be removed in 3.8.0. Use isStored() instead.');
+         if (!this._compatibleMode) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method isCreated() is deprecated and will be removed in 3.8.0. Use isStored() instead.');
+         }
          return this.isStored();
       },
 
       setDeleted: function (deleted) {
-         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method setDeleted() is deprecated and will be removed in 3.8.0.');
+         if (!this._compatibleMode) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method setDeleted() is deprecated and will be removed in 3.8.0.');
+         }
          this._setDeleted(deleted);
       },
 
       setChanged: function (changed) {
-         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method setChanged() is deprecated and will be removed in 3.8.0.');
+         if (!this._compatibleMode) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method setChanged() is deprecated and will be removed in 3.8.0.');
+         }
          this._setChanged(changed);
       },
 
       getKey: function () {
-         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getKey() is deprecated and will be removed in 3.8.0. Use getId() instead.');
+         if (!this._compatibleMode) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getKey() is deprecated and will be removed in 3.8.0. Use getId() instead.');
+         }
          return this.getId();
       },
 
       getKeyField: function () {
-         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getKeyField() is deprecated and will be removed in 3.8.0. Use getIdProperty() instead.');
+         if (!this._compatibleMode) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getKeyField() is deprecated and will be removed in 3.8.0. Use getIdProperty() instead.');
+         }
          return this.getIdProperty();
       },
 
       getRaw: function () {
-         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getRaw() is deprecated and will be removed in 3.8.0. Use getRawData() instead.');
+         if (!this._compatibleMode) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getRaw() is deprecated and will be removed in 3.8.0. Use getRawData() instead.');
+         }
          return this.getRawData();
       }
 

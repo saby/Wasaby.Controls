@@ -164,7 +164,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
 
    Sbis.FIELD_TYPE = {
       DataSet: 'Выборка',
-      List: 'Список',
       Model: 'Запись',
       Integer: 'Число целое',
       String: 'Строка',
@@ -246,17 +245,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          }
          data.d[at] = record.d;
       },
-      getProperty: function (data, property) {
-         property = property || '';
-         var parts = property.split('.'),
-            result;
-         for (var i = 0; i < parts.length; i++) {
-            result = i ?
-               (result ? result[parts[i]] : undefined) :
-               (data ? data[parts[i]] : undefined);
-         }
-         return result;
-      },
       move: function(data, source, target, orderDetails) {
          var sourceData = data.d[source];
          if(orderDetails.before){
@@ -293,13 +281,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
     */
    var SbisRecord = $ws.core.extend({}, [IRecord], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisRecord.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.SbisRecord',
-
-      $protected: {
-         /**
-          * @var {Boolean} Выдавать датасет как список. Требуется для совместимости API у Бочагова, чтобы вложенные рекордсеты возвращались сразу
-          */
-         _dataSetAsList: false
-      },
 
       get: function (data, name) {
          var index = this._getFieldIndex(data, name);
@@ -356,9 +337,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                type = fieldType;
                break;
             }
-         }
-         if (this._dataSetAsList && type === 'DataSet') {
-            type = 'List';
          }
          var prepareMeta = this._prepareMetaInfo(type, $ws.core.clone(meta));
          return {
