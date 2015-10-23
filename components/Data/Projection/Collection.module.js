@@ -288,7 +288,13 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
 
          this._reSort(true);
       },
-
+      /**
+       * Возвращает элемент по хешу
+       * @param hash
+       */
+      getByHash: function(hash) {
+         return this.getEnumerator().getItemByPropertyValue('hash',hash);
+      },
       //endregion SBIS3.CONTROLS.Data.Projection.ICollection
 
       //region Protected methods

@@ -444,8 +444,8 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
             });
          }
 
-         if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IList')) {
-            throw new Error('Items should implement SBIS3.CONTROLS.Data.Collection.IList');
+         if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
+            throw new Error('Items should implement SBIS3.CONTROLS.Data.Collection.IEnumerable');
          }
 
          return items;
@@ -675,7 +675,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
        */
       _onItemHovered: function (event, hash, isHover, item) {
          if (this._canChangeHoveredItem(hash, isHover, item)) {
-            this._hoveredItem = isHover ? this._items.getItemByHash(hash) : undefined;
+            this._hoveredItem = isHover ? this._itemsProjection.getByHash(hash) : undefined;
             this._view.hoverItem(this._hoveredItem);
          }
       },
@@ -687,7 +687,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
        * @private
        */
       _onItemClicked: function (event, hash) {
-         var item = this._items.getItemByHash(hash);
+         var item = this._itemsProjection.getByHash(hash);
          this._itemsProjection.setCurrent(item);
          if(this._oneClickAction) {
             this._itemAction(item);
@@ -837,6 +837,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
          case IBindCollection.ACTION_RESET:
             this.redraw();
+            this.reviveComponents();
             break;
       }
    },
