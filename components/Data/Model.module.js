@@ -525,6 +525,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          this._options.data = data || {};
          this._propertiesCache = {};
          this._initProperties();
+         this._notify('onPropertyChange');
       },
 
       /**
