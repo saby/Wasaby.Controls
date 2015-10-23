@@ -327,52 +327,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return this._pickerListContainer;
          },
          _setPickerConfig: function () {
-            //this.getParent()._context
-            var ctx = new $ws.proto.Context({restriction: 'set'}),
-               rootName = 'sbis3-controls-fast-filter'/*,
-               updatePickerContext = function () {
-                  ctx.setValue(rootName, {
-                     filterChanged: btnCtx.getValue('filterChanged'),
-                     filter: this.getFilter(),
-                     caption: this._mapFilterStructureByProp('caption')
-                  });
-               }.bind(this)*/;
-            //this._pickerContext = ctx;
-
-            //updatePickerContext();
-            ctx.setPrevious(this.getParent()._context);
-            //ctx.subscribe('onFieldNameResolution', function(event, fieldName) {
-            //   var
-            //         byFilter = this._findFilterStructureElement(function(element) {
-            //            return element.internalValueField === fieldName;
-            //         }),
-            //         byCaption = !byFilter && this._findFilterStructureElement(function(element) {
-            //                  return element.internalCaptionField === fieldName;
-            //               });
-            //
-            //   if (byFilter) {
-            //      event.setResult(rootName + '/filter/' + byFilter.internalValueField);
-            //   }
-            //
-            //   if (byCaption) {
-            //      event.setResult(rootName + '/caption/' + byCaption.internalValueField);
-            //   }
-            //}.bind(this));
-
-            ctx.subscribe('onFieldsChanged', function() {
-               var
-                     filter = ctx.getValue(rootName + '/filter'),
-                     changed = $ws.helpers.reduce(this._filterStructure, function(result, element) {
-                        return result || !isFieldResetValue(element, element.internalValueField, filter);
-                     }, false, this);
-               ctx.setValueSelf(rootName + '/filterChanged', changed);
-            }.bind(this));
-            //ctx.subscribe('onFieldChange', function(){
-            //   debugger;
-            //});
             return {
                corner: 'tl',
-               //context: ctx,
                verticalAlign: {
                   side: 'top',
                   offset: -2
