@@ -1,5 +1,11 @@
 define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
+   function propertyUpdateWrapper(func) {
+      return function() {
+         return this.runInPropertiesUpdate(func, arguments);
+      };
+   }
+
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
     * @mixin SBIS3.CONTROLS.MultiSelectable
@@ -65,8 +71,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
              */
             selectedKeys : [],
             /**
-             * TODO Выбранные элементы
-             * @deprecated Будет удалено с 3.7.3. Используйте {@link selectedKeys}.
+             * @cfg {String[]} Массив выбранных записей
              */
             selectedItems : [],
              /**
@@ -89,11 +94,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       $constructor: function() {
          this._publish('onSelectedItemsChange');
          if (this._options.selectedItems && this._options.selectedItems.length) {
-            $ws.single.ioc.resolve('ILogger').log('selectedItems', 'c 3.7.3 метод selectedItems перестанет работать. Используйте метод selectedKeys');
-            this._options.selectedKeys = this._options.selectedItems;
+            if(Array.isArray(this._options.selectedItems)) {
+               if (!this._options.multiselect) {
+                  this._options.selectedItems = this._options.selectedItems.slice(0, 1);
+               }
+            }
          }
-         if (this._options.selectedKeys) {
-            if (Object.prototype.toString.call(this._options.selectedKeys) == '[object Array]' ) {
+         if (this._options.selectedKeys && this._options.selectedKeys.length) {
+            if (Array.isArray(this._options.selectedKeys)) {
                if (!this._options.multiselect) {
                   this._options.selectedKeys = this._options.selectedKeys.slice(0, 1);
                }
@@ -115,23 +123,81 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
          }
       },
       /**
-       * Метод-заглушка. Будет переделан на установку самих элементов, а не их id
-       * @deprecated Будет удалено с 3.7.3. Используйте {@link setSelectedKeys}.
+       * Устанавливает массив выбранных записей, по переданному датасету
        */
-      setSelectedItems: function(idArray) {
-         //TODO изменить логику на установку выбранных элементов
-         $ws.single.ioc.resolve('ILogger').log('setSelectedItems', 'c 3.7.3 метод setSelectedItems перестанет работать. Используйте метод setSelectedKeys');
-         this.setSelectedKeys(idArray);
-      },
+      setSelectedItems: propertyUpdateWrapper(function(dataSet) {
+         var self = this;
+
+         this._options.selectedKeys = [];
+         this._options.selectedItems = [];
+
+         dataSet.each(function(rec) {
+            self._options.selectedItems.push(rec);
+            self._options.selectedKeys.push(rec.getKey());
+         });
+
+         if (this._checkEmptySelection()) {
+            this._setFirstItemAsSelected();
+         }
+
+         this._notifySelectedItems(this._options.selectedKeys);
+         this._notifyOnPropertyChanged('selectedItems');
+         this._drawSelectedItems(this._options.selectedKeys);
+      }),
 
       /**
-       * Метод-заглушка. Будет переделан на получение самих элементов, а не их id
-       * @deprecated Будет удалено с 3.7.3. Используйте {@link getSelectedKeys}.
+       * Возвращает deffered, рузельтатом которого будут выделенные элементы
        */
       getSelectedItems: function() {
-         //TODO изменить логику на получение выбранных элементов
-         $ws.single.ioc.resolve('ILogger').log('getSelectedItems', 'c 3.7.3 метод getSelectedItems перестанет работать. Используйте метод setSelectedKeys');
-         return this.getSelectedKeys();
+         var self = this,
+             selKeys = this._options.selectedKeys,
+             loadKeysArr = [],
+             itemKeysArr = [],
+             dResult = new $ws.proto.Deferred(),
+             dMultiResult, item, dataSetItems;
+
+         this._syncSelectedItems();
+
+         /* Сфоримруем из массива выбранных записей, массив ключей этих записей */
+         for(var i = 0, items = this._options.selectedItems.length; i < items; i++) {
+            itemKeysArr.push(this._options.selectedItems[i].getKey);
+         }
+
+         /* Сфоримруем массив ключей записей, которые требуется вычитать с бл или взять из dataSet'a*/
+         for(var j = 0, keys = selKeys.length; i < keys; i++) {
+            if(Array.indexOf(itemKeysArr, selKeys[i]) === -1) {
+               loadKeysArr.push(selKeys[i]);
+            }
+         }
+
+         if(loadKeysArr.length) {
+            dMultiResult = new $ws.proto.ParallelDeferred({stopOnFirstError: false});
+            dataSetItems = [];
+
+            for (var g = 0; loadKeysArr.length > g; g++) {
+               item = this._dataSet && this._dataSet.getRecordByKey(loadKeysArr[g]);
+
+               /* если запись есть в датасете, то ничего не будем вычитывать */
+               if(item) {
+                  dataSetItems.push(item);
+                  continue;
+               }
+
+               dMultiResult.push(this._dataSource.read(loadKeysArr[g]).addCallback(function (record) {
+                  self._options.selectedItems.push(record);
+               }));
+            }
+
+            dMultiResult.done().getResult().addCallback(function() {
+               self._options.selectedItems = self._options.selectedItems.concat(dataSetItems);
+               dResult.callback(self._options.selectedItems);
+            });
+
+         } else {
+            dResult.callback(this._options.selectedItems);
+         }
+
+         return dResult;
       },
 
       /**
@@ -148,7 +214,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @see addItemsSelection
        */
       setSelectedKeys : function(idArray) {
-         if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
+         if (Array.isArray(idArray)) {
             if (idArray.length) {
                if (this._options.multiselect) {
                   this._options.selectedKeys = idArray;
@@ -160,7 +226,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             else {
                this._options.selectedKeys = [];
             }
-            if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
+            if (this._checkEmptySelection()) {
                this._setFirstItemAsSelected();
             }
             this._notifySelectedItems(this._options.selectedKeys);
@@ -232,7 +298,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @see multiselect
        */
       addItemsSelection : function(idArray) {
-         if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
+         if (Array.isArray(idArray)) {
             if (idArray.length) {
                if (this._options.multiselect) {
                   for (var i = 0; i < idArray.length; i++) {
@@ -245,7 +311,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                   this._options.selectedKeys = idArray.slice(0, 1);
                }
             }
-            if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
+            if (this._checkEmptySelection()) {
                this._setFirstItemAsSelected();
             }
             this._notifySelectedItems(this._options.selectedKeys);
@@ -271,14 +337,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @see allowEmptySelection
        */
       removeItemsSelection : function(idArray) {
-         if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
+         if (Array.isArray(idArray)) {
             for (var i = idArray.length - 1; i >= 0; i--) {
                var index = this._isItemSelected(idArray[i]);
                if (index >= 0) {
                   Array.remove(this._options.selectedKeys, index);
                }
             }
-            if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
+            if (this._checkEmptySelection()) {
                this._setFirstItemAsSelected();
             }
             this._notifySelectedItems(this._options.selectedKeys);
@@ -322,7 +388,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @see multiselect
        */
       toggleItemsSelection : function(idArray) {
-         if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
+         if (Array.isArray(idArray)) {
             if (idArray.length) {
                if (this._options.multiselect) {
                   for (var i = 0; i < idArray.length; i++) {
@@ -341,7 +407,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                   else {
                      this._options.selectedKeys = idArray.slice(0, 1);
                   }
-                  if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
+                  if (this._checkEmptySelection()) {
                      this._setFirstItemAsSelected();
                   }
                   this._notifySelectedItems(this._options.selectedKeys);
@@ -352,10 +418,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
          else {
             throw new Error('Argument must be instance of Array');
          }
-      },
-
-      getSelectedRecords: function() {
-         return this._selectedRecords;
       },
 
       /**
@@ -381,6 +443,26 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
          }
       },
 
+      /* Синхронизирует выбранные ключи и выбранные записи */
+      _syncSelectedItems: function() {
+         var count = 0,
+             selItems = this._options.selectedItems,
+             index;
+
+         if(!this.getSelectedKeys().length) {
+            selItems = [];
+            return;
+         }
+
+         for(var i = 0, len = selItems.length; i < len; i ++) {
+            index = i - count;
+            if(selItems[index] && Array.indexOf(this._options.selectedKeys, selItems[index].getKey()) === -1) {
+               selItems.splice(index, 1);
+               count++;
+            }
+         }
+      },
+
       _isItemSelected : function(id) {
          //TODO пока нет определенности ключ - строка или число - надо избавиться
          var index = this._options.selectedKeys.indexOf(id);
@@ -396,11 +478,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       _notifySelectedItems : function(idArray) {
          this._notify('onSelectedItemsChange', idArray);
-         this._notifyOnPropertyChanged('selectedKeys');
       },
 
       _dataLoadedCallback : function(){
-         if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
+         if (this._checkEmptySelection()) {
             this._setFirstItemAsSelected();
          }
       },
@@ -410,6 +491,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             var firstKey = this._dataSet.at(0).getKey();
             this._options.selectedKeys = [firstKey];
          }
+      },
+
+      _checkEmptySelection: function() {
+         return !this._options.selectedKeys.length && this._options.allowEmptySelection == false;
       },
 
       _setSelectedRecords: function() {
