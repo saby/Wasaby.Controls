@@ -477,7 +477,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _elemClickHandlerInternal: function (data, id, target) {
-
+            this._notify('onItemEdit', id, item);
          },
 
          _drawSelectedItems: function (idArray) {
@@ -993,6 +993,13 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             ListView.superclass.setDataSource.apply(this, arguments);
          },
+
+         editItem : function(id) {
+            var
+               item = this._dataSet.getRecordByKey(id);
+            this._notify('onItemEdit', id, item);
+         },
+
          destroy: function () {
             if (this.isInfiniteScroll()) {
                if (this._infiniteScrollContainer.length) {

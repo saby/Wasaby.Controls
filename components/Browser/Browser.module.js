@@ -1,8 +1,7 @@
 define('js!SBIS3.CONTROLS.Browser', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Browser',
-   'js!SBIS3.CONTROLS.ComponentBinder',
-   'js!SBIS3.CORE.DialogRecord'
+   'js!SBIS3.CONTROLS.ComponentBinder'
 ], function(CompoundControl, dotTplFn, ComponentBinder, DialogRecord){
    'use strict';
 
@@ -22,25 +21,6 @@ define('js!SBIS3.CONTROLS.Browser', [
          else {
             throw new Error('Browser: Can\'t define linkedView');
          }
-      },
-      convertRecord = function(record) {
-         var rec;
-         if (record._raw.s && record._raw.d) {
-            //TODO очень нужный метод
-            var
-               parser = new $ws.proto.ParserSBIS(),
-               cfg = parser.readRecord(record._raw),
-               pkValue;
-            if (record._raw.d[0]) {
-               pkValue = record._raw.d[0] instanceof Array ? record._raw.d[0][0] : record._raw.d[0];
-            }
-            rec = new $ws.proto.Record({
-               colDef : cfg.columns,
-               row : cfg.row,
-               pkValue : pkValue
-            })
-         }
-         return rec;
       };
 
    var Browser = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Browser.prototype */{
@@ -81,16 +61,9 @@ define('js!SBIS3.CONTROLS.Browser', [
 
       init: function() {
          Browser.superclass.init.apply(this, arguments);
-         $ws.single.CommandDispatcher.declareCommand(this, 'editItem', this._editDialog);
+
          this._view = this._getView();
-         var self = this;
-         this._view.subscribe('onItemClick', function(e, id, data, target){
-            //TODO нет метода для получения поля иерархии
-            var hier = data.get(self._view._options.hierField + '@');
-            if (!hier) {
-               self._view.sendCommand('editItem', data, id);
-            }
-         });
+
          this._hierMode = checkViewType(this._view);
 
 
@@ -156,22 +129,7 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
       _getOperationsPanel: function() {
          return this._getLinkedControl('browserOperationsPanel');
-      },
-
-      _editDialog: function(id, data, hier) {
-         //onFolderEdit onItemEdit
-         this._notify('on' + (hier ? 'Folder' : 'Item') + 'Edit', id, data);
-      },
-
-      openCompatibleDialog: function(dialogComponent, record, handlers) {
-         var oldRecord = convertRecord(record);
-         new DialogRecord({
-            template : dialogComponent,
-            record : oldRecord,
-            handlers : handlers
-         })
       }
-
 
    });
 
