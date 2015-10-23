@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
             */
             path = dataSet.getMetaData().path,
             toMap = path ? Array.clone(path.getChildItems()) : [];
-         while ((record = dataSet.getRecordByKey(parentKey))) {
+         while (record = dataSet.getRecordByKey(parentKey)) {
             parentKey = record.getKey();
             if (toMap.indexOf(parentKey) < 0) {
                toMap.push(parentKey);
