@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                displayField: item.get('displayField')
             };
             return '<component data-component="SBIS3.CONTROLS.DropdownList" config="' + $ws.helpers.encodeCfgAttr(cfg) + '">' +
-                        //'<opts name="selectedKeys" type="array" bind="'+ cfg.keyField +'"></opts>' +
+                        //'<opts name="selectedKeys" type="array" bind="' + cfg.filterName +'" ></opts>' + //direction="fromProperty" oneWay="true"
                         //'<opt name="caption" type="array" bind="'+ cfg.displayField +'" direction="fromProperty" oneWay="true"></opt>' +
                    '</component>';
          },
@@ -90,6 +90,30 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                filterChanged: changed,
                filterStructure: this._filterStructure
             });
+            //TODO Во-первых этого здесь бюыть не должно, но привязки не завелись из-за того, что dropDown не смог связаться по контексту и выставить свое значение
+            //TODO во-вторых возможнны проблемы с value array||number. Пока обратим внимание на instances.second._options.multiselect
+            var instances = this.getItemsInstances();
+            for (var i in instances) {
+               if (instances.hasOwnProperty(i)){
+                  var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(i)],
+                        value = (fsObject.hasOwnProperty('value') && fsObject.value !== undefined) ?  instances[i]._options.multiselect ?  fsObject.value : [fsObject.value]: [instances[i].getDefaultId()];
+                  if (!this._isSimilarArrays(instances[i].getSelectedKeys(), value)) {
+                     instances[i].setSelectedKeys(value);
+                  }
+               }
+            }
+         },
+         //TODO это дублЬ! нужно вынести в хелпер!!!
+         _isSimilarArrays : function(arr1, arr2){
+            if (arr1.length === arr2.length) {
+               for (var i = 0; i < arr1.length; i ++) {
+                  if (arr1[i] != arr2[i]) {
+                     return false;
+                  }
+               }
+               return true;
+            }
+            return false;
          }
       });
       return FastDataFilter;
