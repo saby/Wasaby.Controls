@@ -160,13 +160,13 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
          /* Сфоримруем из массива выбранных записей, массив ключей этих записей */
          for(var i = 0, items = this._options.selectedItems.length; i < items; i++) {
-            itemKeysArr.push(this._options.selectedItems[i].getKey);
+            itemKeysArr.push(this._options.selectedItems[i].getKey());
          }
 
          /* Сфоримруем массив ключей записей, которые требуется вычитать с бл или взять из dataSet'a*/
-         for(var j = 0, keys = selKeys.length; i < keys; i++) {
-            if(Array.indexOf(itemKeysArr, selKeys[i]) === -1) {
-               loadKeysArr.push(selKeys[i]);
+         for(var j = 0, keys = selKeys.length; j < keys; j++) {
+            if(Array.indexOf(itemKeysArr, selKeys[j]) === -1) {
+               loadKeysArr.push(selKeys[j]);
             }
          }
 
