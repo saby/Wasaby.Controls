@@ -355,17 +355,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                .orderBy(sorting);
 
             return this._dataSource.query(query).addCallback((function(newDataSet) {
-               var keyField =  this._options.keyField || this._dataSource.getAdapter().getKeyField(newDataSet.getRawData()),
-                   path = newDataSet.getProperty('p');
-               if (path) {
-                  path = new RecordSet({
-                     compatibleMode: true,
-                     strategy: this._dataSource.getAdapter(),
-                     data: path,
-                     keyField: keyField
-                  });
-               }
-
                return new RecordSet({
                   compatibleMode: true,
                   strategy: this._dataSource.getAdapter(),
@@ -373,9 +362,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   meta: {
                      results: newDataSet.getProperty('r'),
                      more: newDataSet.getTotal(),
-                     path: path
+                     path: newDataSet.getProperty('p')
                   },
-                  keyField: keyField
+                  keyField: this._options.keyField || this._dataSource.getAdapter().getKeyField(newDataSet.getRawData())
                });
             }).bind(this));
          } else {

@@ -90,6 +90,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       push: function (record) {
          if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Model')) {
             record = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
+               compatibleMode: true,
                adapter: this.getStrategy(),
                data: record,
                idProperty: this._options.keyField
@@ -111,6 +112,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             count = adapter.getCount(data);
          for (var i = 0; i < count; i++) {
             this.add($ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
+               compatibleMode: true,
                adapter: this.getStrategy(),
                data: adapter.at(data, i),
                idProperty: this._options.keyField
@@ -154,6 +156,30 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       getMetaData: function () {
+         if (this._options.meta &&
+            this._options.meta.path &&
+            !$ws.helpers.instanceOfModule(this._options.meta.path, 'SBIS3.CONTROLS.Data.Collection.RecordSet')
+         ) {
+            this._options.meta.path = new RecordSet({
+               compatibleMode: true,
+               strategy: this.getStrategy(),
+               data: this._options.meta.path,
+               keyField: this._options.keyField
+            });
+         }
+
+         if (this._options.meta &&
+            this._options.meta.results &&
+            !$ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Data.Model')
+         ) {
+            this._options.meta.results = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
+               compatibleMode: true,
+               adapter: this.getStrategy(),
+               data: this._options.meta.results,
+               idProperty: this._options.keyField
+            });
+         }
+
          return this._options.meta;
       },
 

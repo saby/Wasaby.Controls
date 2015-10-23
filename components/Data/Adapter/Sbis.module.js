@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                   }
                   break;
             }
-            return type;
+            return Sbis.FIELD_TYPE.String;
          },
          serializeValue = function (value, type) {
             switch (type) {
