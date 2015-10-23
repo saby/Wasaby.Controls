@@ -111,6 +111,10 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
             subMenu.hide();
          });
       },
+      clear: function(){
+         this.destroySubObjects();
+         MenuView.superclass.clear.call(this);
+      },
       // endregion public
       //region protected
       _getItemRenderData: function(item, index, level) {
