@@ -2496,9 +2496,11 @@ input[type="reset"]::-moz-focus-inner {
   width: 10px;
   color: #FF7033;
   font-family: 'TensorFont Regular', TensorFont;
+  font-weight: normal;
   content: '\e003';
   float: left;
   margin-left: 6px;
+  padding-top: 1px;
 }
 .controls-BackButton:hover .controls-BackButton__caption {
   text-decoration: none;
