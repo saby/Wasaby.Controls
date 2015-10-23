@@ -79,9 +79,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              *    var user = new Model({
              *       data: {
              *          id: 5,
-             *          login: 'mnemonic',
-             *          firstName: 'John',
-             *          lastName: 'Smith',
+             *          login: 'Keanu',
+             *          firstName: 'Johnny',
+             *          lastName: 'Mnemonic',
              *          job: 'Memory stick'
              *       },
              *       properties: [{
@@ -97,7 +97,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              *       }]
              *    });
              *    user.get('id');//№5
-             *    user.get('displayName');//John a.k.a "mnemonic" Smith
+             *    user.get('displayName');//Johnny a.k.a "Keanu" Mnemonic
              *    user.get('job');//Memory stick
              *    user.get('uptime');//undefined
              * </pre>
