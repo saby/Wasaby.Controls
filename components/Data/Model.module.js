@@ -3,9 +3,10 @@ define('js!SBIS3.CONTROLS.Data.Model', [
    'js!SBIS3.CONTROLS.Data.IPropertyAccess',
    'js!SBIS3.CONTROLS.Data.IHashable',
    'js!SBIS3.CONTROLS.Data.HashableMixin',
+   'js!SBIS3.CONTROLS.Data.ContextField',
    'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (IPropertyAccess, IHashable, HashableMixin, Factory, JsonAdapter) {
+], function (IPropertyAccess, IHashable, HashableMixin, ContextField, Factory, JsonAdapter) {
    'use strict';
 
    /**
@@ -361,7 +362,12 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @returns {SBIS3.CONTROLS.Data.Model}
        */
       clone: function() {
-         return new Model(this._options);
+         var clone = new Model($ws.core.clone(this._options));
+         clone._isStored = this._isStored;
+         clone._isChanged = this._isChanged;
+         clone._isDeleted = this._isDeleted;
+         clone._initProperties();
+         return clone;
       },
 
       /**
@@ -735,6 +741,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
    $ws.single.ioc.bind('SBIS3.CONTROLS.Data.ModelConstructor', function() {
       return Model;
    });
+
+   ContextField.register('ControlsFieldTypeModel', Model, 'onPropertyChange');
 
    return Model;
 });
