@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.Image',
           * <component data-component='SBIS3.CONTROLS.Image' style='width: 100px; height: 100px'>
           * </component>
           */
-         Image = CompoundControl.extend({
+         Image = CompoundControl.extend({/** @lends SBIS3.CONTROLS.Image.prototype */
             _dotTplFn : dotTplFn,
             $protected: {
                _options: {
@@ -211,7 +211,8 @@ define('js!SBIS3.CONTROLS.Image',
                   onImageMouseEnter: this._onImageMouseEnter.bind(this),
                   onImageMouseLeave: this._onImageMouseLeave.bind(this),
                   onImageBarMouseLeave: this._onImageBarMouseLeave.bind(this),
-                  onImageLoad: this._onImageLoad.bind(this)
+                  onImageLoad: this._onImageLoad.bind(this),
+                  onImageLoadError: this._onImageLoadError.bind(this)
                };
                this._image.mouseenter(this._boundEvents.onImageMouseEnter);
                this._image.mouseleave(this._boundEvents.onImageMouseLeave);
@@ -231,9 +232,7 @@ define('js!SBIS3.CONTROLS.Image',
                var imageInstance = this.getParent();
                if (response.hasOwnProperty('error')) {
                   $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
-                  if (typeof imageInstance._options.onError === 'function') {
-                     imageInstance._options.onError(response.error);
-                  }
+                  this._boundEvents.onImageLoadError(response.error);
                } else {
                   if (imageInstance._options.cropOptions.enabled) {
                      $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
@@ -260,6 +259,15 @@ define('js!SBIS3.CONTROLS.Image',
                }
             },
 
+            _onImageLoadError: function(error) {
+               if (typeof this._options.onError === 'function') {
+                  this._options.onError(error);
+               }
+               if (this.getImage() !== this._options.defaultImage) {
+                  this.setImage(this._options.defaultImage);
+               }
+            },
+
             _onImageMouseEnter: function() {
                if (this._canDisplayImageBar()) {
                   this._imageBar.fadeIn(ANIMATION_DURATION);
@@ -283,6 +291,14 @@ define('js!SBIS3.CONTROLS.Image',
             },
 
             /**
+             * Метод возвращает текущее изображение
+             * @returns {String} Текущее изображение
+             */
+            getImage: function() {
+               return this._options.image;
+            },
+
+            /**
              * Метод устанавливает текущее изображение
              * @param url {String} Путь до устанавливаемого изображения
              */
@@ -298,7 +314,7 @@ define('js!SBIS3.CONTROLS.Image',
                }
                this._options.image = url;
                //Из-за проблем, связанных с кэшированием - перезагружаем картинку специальным хелпером
-               $ws.helpers.reloadImage(this._image, url);
+               $ws.helpers.reloadImage(this._image, url, this._boundEvents.onImageLoadError);
             },
 
             _recalculateImageBar: function(){
@@ -316,7 +332,7 @@ define('js!SBIS3.CONTROLS.Image',
                var
                   imagePath = image || this._options.image,
                   cropOptions = {
-                     image: imagePath,
+                     imageUrl: imagePath,
                      cropMethodName: this._options.cropOptions.cropMethodName,
                      linkedObjectName: this._options.cropOptions.linkedObjectName,
                      cropAspectRatio: this._options.cropOptions.cropAspectRatio,
