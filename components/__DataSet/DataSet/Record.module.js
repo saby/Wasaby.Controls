@@ -277,7 +277,13 @@ define('js!SBIS3.CONTROLS.Record', [
              subValue = oldValue.get(key);
              if (subValue !== undefined) {
                 if (keyPath.length === 1) {
-                   oldValue.set(key, value);
+                   if(value instanceof $ws.proto.Deferred) {
+                      value.addCallback(function(val) {
+                         oldValue.set(key, val);
+                      })
+                   } else {
+                      oldValue.set(key, value);
+                   }
                 }
                 else {
                    subType = Context.getValueType(subValue);
