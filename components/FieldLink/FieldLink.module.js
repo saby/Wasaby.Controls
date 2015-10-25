@@ -31,6 +31,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
     * @mixes SBIS3.CONTROLS.MultiSelectable
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    * @demo SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace
     * @control
     * @public
     * @author Крайнов Дмитрий Олегович
