@@ -214,6 +214,7 @@ define('js!SBIS3.CONTROLS.Record', [
       getRaw: function () {
          return this._raw;
       }
+
    });
 
    $ws.single.ioc.bind('SBIS3.CONTROLS.Record', function(config) {
