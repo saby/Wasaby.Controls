@@ -2811,9 +2811,11 @@ input[type="reset"]::-moz-focus-inner {
   width: 10px;
   color: #FF7033;
   font-family: 'TensorFont Regular', TensorFont;
+  font-weight: normal;
   content: '\e003';
   float: left;
   margin-left: 6px;
+  padding-top: 1px;
 }
 .controls-BackButton:hover .controls-BackButton__caption {
   text-decoration: none;
@@ -2907,6 +2909,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGridView {
   padding: 0 0 5px 0;
+  overflow-x: hidden;
   min-height: 50px;
   width: 100%;
   /*TODO скрываем подгрузку (ещё null)*/

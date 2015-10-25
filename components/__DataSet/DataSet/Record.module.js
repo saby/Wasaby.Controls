@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.Record', [
           * @var {SBIS3.CONTROLS.IDataStrategy} Стратегия, обеспечивающая интерфейс доступа к "сырым" данным
           */
          _strategy: null,
-         
+
          /**
           * @var {Object} Объект содержащий приведенные значения модели
           */
@@ -94,7 +94,7 @@ define('js!SBIS3.CONTROLS.Record', [
          if (this._fieldsCache.hasOwnProperty(field)) {
             return this._fieldsCache[field];
          }
-         
+
          var dataValue = this._strategy.value(this._raw, field),
             data = this._strategy.getFullFieldData(this._raw, field),
             value = DataFactory.cast(
@@ -215,6 +215,102 @@ define('js!SBIS3.CONTROLS.Record', [
          return this._raw;
       }
 
+   }),
+    ControlsFieldTypeRecord = {
+       name: 'ControlsFieldTypeRecord',
+
+       is: function(value) {
+          return value instanceof Record;
+       },
+
+       get: function(value, keyPath) {
+          var
+              Context = $ws.proto.Context,
+              NonExistentValue = Context.NonExistentValue,
+
+              key, result, subValue, subType;
+
+          if (keyPath.length !== 0) {
+             key = keyPath[0];
+             subValue = value.get(key);
+             if (subValue !== undefined) {
+                subType = Context.getValueType(subValue);
+                result = subType.get(subValue, keyPath.slice(1));
+             } else {
+                result = NonExistentValue;
+             }
+          } else {
+             result = value;
+          }
+
+          return result;
+       },
+
+       setWillChange: function(oldValue, keyPath, value) {
+          var
+              Context = $ws.proto.Context,
+              result, subValue, key, subType;
+
+          if (keyPath.length !== 0) {
+             key = keyPath[0];
+             subValue = oldValue.get(key);
+             result = subValue !== undefined;
+             if (result) {
+                subType = Context.getValueType(subValue);
+                result = subType.setWillChange(subValue, keyPath.slice(1), value);
+             }
+          } else {
+             //TODO: неточная вторая проверка
+             result = !ControlsFieldTypeRecord.is(value) || !$ws.helpers.isEqualObject(oldValue, value);
+          }
+
+          return result;
+       },
+
+       set: function(oldValue, keyPath, value) {
+          var
+              Context = $ws.proto.Context,
+              result, subValue, key, subType;
+
+          if (keyPath.length !== 0) {
+             key = keyPath[0];
+             subValue = oldValue.get(key);
+             if (subValue !== undefined) {
+                if (keyPath.length === 1) {
+                   oldValue.set(key, value);
+                }
+                else {
+                   subType = Context.getValueType(subValue);
+                   subType.set(subValue, keyPath.slice(1), value);
+                }
+             }
+             result = oldValue;
+          } else {
+             result = value;
+          }
+
+          return result;
+       },
+
+       remove: function(oldValue, keyPath) {
+
+       },
+
+       toJSON: function(value, deep) {
+          return deep ? value.toObject() : value;
+       },
+
+       subscribe: function(value, fn) {
+          value.subscribe('onChange', fn);
+          return function() {
+             value.unsubscribe('onChange', fn);
+          };
+       }
+    };
+   $ws.proto.Context.registerFieldType(ControlsFieldTypeRecord);
+
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Record', function(config) {
+      return new Record(config);
    });
 
    $ws.single.ioc.bind('SBIS3.CONTROLS.Record', function(config) {

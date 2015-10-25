@@ -101,12 +101,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
       $constructor: function() {
          this.getContainer().addClass('controls-FieldLink');
 
-         /* Особый placeholder для поля связи, чтобы можно было отображать ссылку */
-         if(this._options.placeholder && !this._compatPlaceholder) {
-            this._inputField[0].removeAttribute('placeholder');
-            this._createCompatPlaceholder();
-         }
-
          /* Проиницализируем переменные и event'ы */
          this._setVariables();
          this._initEvents();
@@ -213,8 +207,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
          }
 
          if(keysArrLen) {
-            this.getSelectedItems().addCallback(function(items){
-               self._setLinkCollectionData(items);
+            this.getSelectedItems().addCallback(function(dataSet){
+               self._setLinkCollectionData(dataSet._getRecords());
             });
          } else {
             this._setLinkCollectionData([]);
@@ -240,7 +234,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             itemCheckFunc: this._checkItemBeforeDraw.bind(this),
             handlers: {
                onDrawItems: function() {
-                  self._setInputWidth(self._container[0].offsetWidth - self._getWrappersWidth() - INPUT_WRAPPER_PADDING);
+                  self._inputField[0].style.width = (self._container[0].offsetWidth - self._getWrappersWidth() - INPUT_WRAPPER_PADDING) + 'px';
                },
                onCrossClick: function(e, id) {
                   self.removeItemsSelection([id]);
@@ -378,18 +372,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
        */
       _getWrappersWidth: function() {
          return this._container.find('.controls-TextBox__afterFieldWrapper')[0].offsetWidth + this._container.find('.controls-TextBox__beforeFieldWrapper')[0].offsetWidth;
-      },
-
-      /**
-       * Устанавливает ширину input'а и placeholder'а
-       * @param width
-       * @private
-       */
-      _setInputWidth: function(width) {
-         this._inputField[0].style.width = width + 'px';
-         if(this._compatPlaceholder) {
-            this._compatPlaceholder[0].style.width = width + 'px';
-         }
       },
 
       /* Заглушка, само поле связи не занимается отрисовкой */

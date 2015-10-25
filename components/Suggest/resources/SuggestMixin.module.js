@@ -387,12 +387,11 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                //Набор "Сделай сам"
                var self = this;
                require([this._options.list.className], function (ListControl) {
-                  var options = $ws.core.merge({
-                     parent: self._picker
-                  }, self._options.list.options);
+                  var options = $ws.core.clone(self._options.list.options);
                   if (!options.element) {
                      options.element = self._getListContainer();
                   }
+                  options.parent = self._picker;
                   self._list = new ListControl(options);
 
                   self._initList();

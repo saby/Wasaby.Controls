@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
+define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.DataSet', 'js!SBIS3.CONTROLS.SbisJSONStrategy'], function(DataSet, SbisJSONStrategy) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -126,27 +126,30 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * Устанавливает массив выбранных записей, по переданному датасету
        */
       setSelectedItems: propertyUpdateWrapper(function(dataSet) {
-         var self = this;
+         var self = this,
+             isDataSet = $ws.helpers.instanceOfModule(dataSet, 'SBIS3.CONTROLS.DataSet'),
+             iterator = isDataSet ? dataSet.each : $ws.helpers.forEach;
+
+         function iteratorCallback(rec) {
+            self._options.selectedItems.push(rec);
+            self._options.selectedKeys.push(rec.getKey());
+         }
 
          this._options.selectedKeys = [];
          this._options.selectedItems = [];
 
-         dataSet.each(function(rec) {
-            self._options.selectedItems.push(rec);
-            self._options.selectedKeys.push(rec.getKey());
-         });
+         iterator.apply(dataSet, (isDataSet ? [iteratorCallback] : [dataSet, iteratorCallback]));
 
          if (this._checkEmptySelection()) {
             this._setFirstItemAsSelected();
          }
 
          this._notifySelectedItems(this._options.selectedKeys);
-         this._notifyOnPropertyChanged('selectedItems');
          this._drawSelectedItems(this._options.selectedKeys);
       }),
 
       /**
-       * Возвращает deffered, рузельтатом которого будут выделенные элементы
+       * Возвращает deferred, рузельтатом которого будут выделенные элементы
        */
       getSelectedItems: function() {
          var self = this,
@@ -154,6 +157,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
              loadKeysArr = [],
              itemKeysArr = [],
              dResult = new $ws.proto.Deferred(),
+             newDsOptions = {
+                keyField: self._options.keyField,
+                strategy: new SbisJSONStrategy()
+             },
              dMultiResult, item, dataSetItems;
 
          this._syncSelectedItems();
@@ -189,14 +196,17 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             }
 
             dMultiResult.done().getResult().addCallback(function() {
+               var dataSet = new DataSet(newDsOptions);
                self._options.selectedItems = self._options.selectedItems.concat(dataSetItems);
-               dResult.callback(self._options.selectedItems);
+               dataSet.insert(self._options.selectedItems);
+               dResult.callback(dataSet);
             });
 
          } else {
-            dResult.callback(this._options.selectedItems);
+            var dataSet = new DataSet(newDsOptions);
+            dataSet.insert(self._options.selectedItems);
+            dResult.callback(dataSet);
          }
-
          return dResult;
       },
 
@@ -316,6 +326,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             }
             this._notifySelectedItems(this._options.selectedKeys);
             this._drawSelectedItems(this._options.selectedKeys);
+            this._notifyOnPropertyChanged('selectedKeys');
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -349,6 +360,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             }
             this._notifySelectedItems(this._options.selectedKeys);
             this._drawSelectedItems(this._options.selectedKeys);
+            this._notifyOnPropertyChanged('selectedKeys');
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -450,7 +462,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
              index;
 
          if(!this.getSelectedKeys().length) {
-            selItems = [];
+            this._options.selectedItems = [];
             return;
          }
 
@@ -477,6 +489,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       _notifySelectedItems : function(idArray) {
+         this._setSelectedRecords();
+         this._syncSelectedItems();
          this._notify('onSelectedItemsChange', idArray);
       },
 
