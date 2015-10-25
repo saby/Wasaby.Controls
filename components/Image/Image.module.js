@@ -113,6 +113,15 @@ define('js!SBIS3.CONTROLS.Image',
                       */
                      onBeforeShowCrop: undefined,
                      /**
+                      * @cfg {Function} Функция, выполняемая после завершения закрытия диалога обрезки изображения и выполнения самой обрезки.
+                      * Позволяет динамически определять адрес, по которому будет хранится обрезанное (итоговое) изображение
+                      * @example
+                      * onAfterPerformCrop: function(imageUrl) {
+                      *    return /service/?id=0&method=DraftCompanyLogo.Read&protocol=3&params=eyLQmNC00J4iOjF9;
+                      * }
+                      */
+                     onAfterPerformCrop: undefined,
+                     /**
                       * @cfg {Function} Функция, вызываемая перед началом обрезки изображения.
                       * Позволяет динамически формировать объект, передаваемый в метод бизнес-логики для обрезки изображения
                       * @example
@@ -218,6 +227,7 @@ define('js!SBIS3.CONTROLS.Image',
                this._image.mouseleave(this._boundEvents.onImageMouseLeave);
                this._imageBar.mouseleave(this._boundEvents.onImageBarMouseLeave);
                this._image.load(this._boundEvents.onImageLoad);
+               this._image.error(this._boundEvents.onImageLoadError);
             },
 
             _onChangeFile: function(event, fileName) {
@@ -255,7 +265,7 @@ define('js!SBIS3.CONTROLS.Image',
                if (!this._firstLoaded) {
                   this._firstLoaded = true;
                } else if (typeof this._options.onImageUpdated === 'function') {
-                  this._options.onImageUpdated(this._options.image);
+                  this._options.onImageUpdated.call(this, this._options.image);
                }
             },
 
@@ -330,9 +340,8 @@ define('js!SBIS3.CONTROLS.Image',
 
             _showCropDialog: function(image) {
                var
-                  imagePath = image || this._options.image,
                   cropOptions = {
-                     imageUrl: imagePath,
+                     imageUrl: image,
                      cropMethodName: this._options.cropOptions.cropMethodName,
                      linkedObjectName: this._options.cropOptions.linkedObjectName,
                      cropAspectRatio: this._options.cropOptions.cropAspectRatio,
@@ -355,7 +364,11 @@ define('js!SBIS3.CONTROLS.Image',
                            sendObject;
                      }.bind(this),
                      onCropFinished: function (result) {
-                        this.setImage(imagePath);
+                        var imageUrl = cropOptions.imageUrl;
+                        if (typeof this._options.cropOptions.onAfterPerformCrop === 'function') {
+                           imageUrl = this._options.cropOptions.onAfterPerformCrop(imageUrl);
+                        }
+                        this.setImage(imageUrl);
                         if (typeof this._options.cropOptions.onCropFinished === 'function') {
                            this._options.cropOptions.onCropFinished(result);
                         }
@@ -365,7 +378,7 @@ define('js!SBIS3.CONTROLS.Image',
             },
 
             _cropButtonClick: function() {
-               this.getParent()._showCropDialog();
+               this.getParent()._showCropDialog(this._options.image);
             },
 
             _uploadButtonClick: function(event, originalEvent) {
