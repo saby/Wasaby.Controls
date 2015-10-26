@@ -244,11 +244,21 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _inputRegExp: function (e, regexp) {
-         var code = e.which;
-         if (code < 32 || e.ctrlKey || e.altKey) {
-            return true;
+         if (e.shiftKey) return true;
+         var keyCode = (e.which >= 96 && e.which <= 105) ? e.which - 48 : e.which;
+         if (keyCode < 32
+            || e.ctrlKey
+            || e.altKey
+            || e.which == $ws._const.key.left
+            || e.which == $ws._const.key.right
+            || e.which == $ws._const.key.end
+            || e.which == $ws._const.key.home
+            || e.which == $ws._const.key.del
+
+            ) {
+            return false;
          }
-         return (!regexp.test(String.fromCharCode(code)));
+         return (!regexp.test(String.fromCharCode(keyCode)));
       },
 
       _createCompatPlaceholder : function() {
