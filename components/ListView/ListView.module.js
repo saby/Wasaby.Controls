@@ -411,6 +411,7 @@ define('js!SBIS3.CONTROLS.ListView',
                ( itemActionsContainer[0] === $target[0] ||
                   $.contains(itemActionsContainer[0], $target[0]) ||
                   this._itemActionsGroup.isItemActionsMenuVisible() ) ||
+                  //todo Сухоручкин: this._editInPlace._container в DOM больше не существует! Проверка неправильная! Hover-режим однажды сломается!
                   this._editInPlace && $.contains(this._editInPlace.getContainer()[0], $target[0]);
          },
          /**
@@ -436,16 +437,10 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
-            if(!this.isNowScrollingPartScroll() && this._options.editInPlace.hoverMode) {
-               this._updateEditInPlaceDisplay(target);
-            }
+            this._updateEditInPlaceDisplay(target);
             if (this._options.itemsActions.length) {
                target.container ? this._showItemActions(target) : this._hideItemActions();
             }
-         },
-
-         isNowScrollingPartScroll: function() {
-            return false;
          },
 
          /**
@@ -540,9 +535,6 @@ define('js!SBIS3.CONTROLS.ListView',
             this._previousGroupBy = undefined;
             // Если используется редактирование по месту, то уничтожаем его
             if (this._editInPlace) {
-               if (this._editInPlace.isEditing()) {
-                  this._editInPlace.finishEditing();
-               }
                this._editInPlace.destroy();
                this._editInPlace = null;
                // Пересоздаем EditInPlace

@@ -130,7 +130,6 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
                this._options.checked = null;
             }
          }
-         this.saveToContext('Checked', this._options.checked);
          this._notify('onCheckedChange', this._options.checked);
          this._notifyOnPropertyChanged('checked');
       },

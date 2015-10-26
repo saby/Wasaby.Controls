@@ -182,6 +182,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                }
             },
             destroy: function() {
+               EditInPlaceHoverController.superclass.destroy.apply(this, arguments);
                if (this._editing) {
                   this._getEditingArea().editInPlace.getContainer().unbind('keyup', this._areaHandlers.onKeyDown);
                   this._editing = null;
@@ -192,7 +193,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                }
                this._areas.first.editInPlace.destroy();
                this._areas.first = null;
-               EditInPlaceHoverController.superclass.destroy.apply(this, arguments);
             }
          });
 

@@ -24,14 +24,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceClickController',
                _options: {
                   template: undefined
                },
-               _area: undefined,
                _editing: false
             },
             $constructor: function() {
                this._area = this._initArea();
-            },
-            _getEditingArea: function() {
-               return this._editing ? this._area : null;
             },
             _initArea: function() {
                var self = this;
@@ -73,13 +69,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceClickController',
                }
             },
             destroy: function() {
+               EditInPlaceClickController.superclass.destroy.apply(this, arguments);
                if (this._editing) {
                   this._area.editInPlace.getContainer().unbind('keyup', this._areaHandlers.onKeyDown);
                   this._editing = null;
                }
                this._area.editInPlace.destroy();
                this._area = null;
-               EditInPlaceClickController.superclass.destroy.apply(this, arguments);
             }
          });
 

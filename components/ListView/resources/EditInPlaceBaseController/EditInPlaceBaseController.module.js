@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   dataSet: undefined,
                   addInPlaceButton: undefined
                },
+               _area: undefined,
                _areaHandlers: null
             },
             $constructor: function () {
@@ -159,6 +160,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                self._options.dataSource.sync(self._options.dataSet);
             },
             /**
+             * todo Переписать этот метод. Надо переделать объект _areas на две отдельные переменные: _area и _secondArea
+             * @returns {SBIS3.CONTROLS.EditInPlaceClickController.$protected._area|*|SBIS3.CONTROLS.EditInPlaceClickController._area}
+             * @private
+             */
+            _getEditingArea: function() {
+               return this._editing ? this._area : null;
+            },
+            /**
              * Функция позволяет узнать, выполняется ли сейчас редактирование по месту
              * @returns {boolean} Выполняется редактирование по месту, или нет
              */
@@ -177,6 +186,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _onChildFocusOut: function () {
                this.finishEditing(true);
+            },
+            destroy: function() {
+               if (this._editInPlace.isEditing()) {
+                  this._editInPlace.finishEditing();
+               }
+               EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
             }
          });
 

@@ -212,19 +212,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
       //********************************//
       //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
       //*******************************//
+      _updateEditInPlaceDisplay: function() {
+         if (!this.isNowScrollingPartScroll()) {
+            DataGridView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
+         }
+      },
       _getElementForAddInPlaceButton: function() {
          return this._container.find('.controls-DataGridView__addInPlace-container');
       },
       _getAddInPlaceItem: function() {
-         var tr = '<tr class="controls-DataGridView__tr controls-ListView__item">';
-         if (this._options.multiselect) {
-            tr += '<td class="controls-DataGridView__td"></td>';
-         }
-         for (var i = 0; i < this._options.columns.length; i++) {
-            tr += '<td class="controls-DataGridView__td"></td>';
-         }
-         tr += '</tr>';
-         return tr;
+         return '<tr class="controls-DataGridView__tr controls-ListView__item">';
       },
       //********************************//
       // <editor-fold desc="PartScrollBlock">
@@ -536,6 +533,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
           }
        },
 
+      /**
+       * todo Герасимов: проверить, нужен ли сейчас вызов обновления колонок при перерендере записи. Если нужен - описать зачем
+       * @private
+       */
       _dataLoadedCallback: function() {
          DataGridView.superclass._dataLoadedCallback.apply(this, arguments);
          this._dataSet.subscribe('onRecordChange', function() {
