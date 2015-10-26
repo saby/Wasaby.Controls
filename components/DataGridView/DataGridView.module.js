@@ -197,11 +197,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._scrollToEditControl(focusedCtrl)
          }
       },
-      _getAdditionalEditInPlaceOptions: function() {
-         return this._options.editInPlace.template ? DataGridView.superclass._getAdditionalEditInPlaceOptions.apply(this, arguments) : {
-            editFieldFocusHandler: this._editFieldFocusHandler.bind(this)
-         };
-      },
       _onResizeHandler: function() {
          DataGridView.superclass._onResizeHandler.apply(this, arguments);
 
@@ -217,9 +212,19 @@ define('js!SBIS3.CONTROLS.DataGridView',
             DataGridView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
          }
       },
+      /**
+       * todo EIP Сухоручкин: отказаться от метода и вообще создания кнопки добавления по месту В ПОЛЬЗУ КОМАНДЫ
+       * @returns {*}
+       * @private
+       */
       _getElementForAddInPlaceButton: function() {
          return this._container.find('.controls-DataGridView__addInPlace-container');
       },
+      /**todo EIP Сухоручкин: отказаться от метода в сторону EditInPlaceController.getEditInPlaceContainer().appendTo(tableContainer)
+       *
+       * @returns {string}
+       * @private
+       */
       _getAddInPlaceItem: function() {
          return '<tr class="controls-DataGridView__tr controls-ListView__item">';
       },
@@ -532,20 +537,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
              this.once('onDataLoad', this._buildHead.bind(this));
           }
        },
-
-      /**
-       * todo Герасимов: проверить, нужен ли сейчас вызов обновления колонок при перерендере записи. Если нужен - описать зачем
-       * @private
-       */
-      _dataLoadedCallback: function() {
-         DataGridView.superclass._dataLoadedCallback.apply(this, arguments);
-         this._dataSet.subscribe('onRecordChange', function() {
-            if (this._isPartScrollVisible) {
-               this.updateScrollAndColumns();
-            }
-         }.bind(this));
-      },
-
       /**
        * Проверяет настройки колонок, заданных опцией {@link columns}.
        */

@@ -264,12 +264,20 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                showPaging: false,
                /**
-                * @cfg {Object} Редактирование по месту
+                * @typedef {Object} editInPlaceConfig
+                * @property {Boolean} enabled Включить редактирование по месту
+                * @property {Boolean} addInPlace Включить добавление по месту
+                * @property {Boolean} hoverMode Включить режим редактирования по наведению мыши
+                * @property {String} template Шаблон строки редактирования по месту
+                * @property {Function} onFieldChange Метод, вызываемый при смене значения в одном из полей редактирования по месту и потере фокуса этим полем
+                */
+               /**
+                * @cfg {Object.<editInPlaceConfig>} Конфигурация редактирования по месту
                 */
                editInPlace: {
                   enabled: false,
                   addInPlace: false,
-                  hoverMode: false,
+                  hoverMode: false, //todo EIP Сухоручкин: Переделать на mode: String, т.к. могут быть и другие виды
                   template: undefined,
                   onFieldChange: undefined
                }
@@ -332,6 +340,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             return false;
          },
+         //todo Герасимов: спилить этот метод, переведя на подписку через $.on(...)
          _checkTargetContainer: function (target) {
             return this._options.showPaging && this._pager && $.contains(this._pager.getContainer()[0], target[0]) ||
                 this._addInPlaceButton && $.contains(this._addInPlaceButton.getContainer().parent()[0], target[0]);
@@ -538,6 +547,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._editInPlace.destroy();
                this._editInPlace = null;
                // Пересоздаем EditInPlace
+               // todo EIP Сухоручкин: уберется когда выполним "этот метод надо завернуть в get'тер"
                this.once('onDataLoaded', function() {
                   this._initEditInPlace();
                }.bind(this));
@@ -601,6 +611,10 @@ define('js!SBIS3.CONTROLS.ListView',
          _getAddInPlaceItem: function() {
             return '<div class="controls-ListView__item"></div>'
          },
+         /**
+          * todo EIP Сухоручкин: этот метод надо завернуть в get'тер
+          * @private
+          */
          _initEditInPlace: function() {
             if (!this._editInPlace) {
                this._createEditInPlace();
