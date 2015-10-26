@@ -157,9 +157,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
 
       setEnabled: function(enabled){
          Button.superclass.setEnabled.call(this, enabled);
-         if ($ws._const.browser.IEVersion){
-            this._container.attr('disabled', !enabled);
-         }
+         this._container.attr('disabled', !enabled);
       },
 
       /*TODO методы для поддержки defaultButton*/
