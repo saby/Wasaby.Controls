@@ -5,15 +5,13 @@
     </td>
    {{?}}
    {{~it.columns :column:index}}
-    {{=it.decorators.setConditions({
-            'highlightDecorator': column.highlight,
-            'ladderDecorator': column.field
-        })
-    }}
     <td class="controls-DataGridView__td
                  {{? !!column.editor}} controls-DataGridView__edited-td{{?}}
                  {{?column.className}} {{=column.className}}{{?}}
                  {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}"
-            >{{=it.decorators.apply(column.value)}}</td>
+            >{{=it.decorators.applyIf(column.value, {
+                'highlight': column.highlight,
+                'ladder': column.field})
+             }}</td>
     {{~}}
 </tr>

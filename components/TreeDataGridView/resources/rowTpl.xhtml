@@ -7,18 +7,16 @@
    {{?}}
    {{~it.columns :column:index}}
       {{isBranch = column.item.get(it.hierField);}}
-      {{=it.decorators.setConditions({
-                'highlightDecorator': column.highlight,
-                'ladderDecorator': column.field
-            })
-      }}
       <td class="controls-DataGridView__td{{?column.className}} {{=column.className}}{{?}}{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
          {{?index == 0}}
             <div class="controls-TreeView__expand js-controls-TreeView__expand{{?!isBranch}} controls-TreeView__expand__leaf{{??}} has-child{{?}}"></div>
             {{?isBranch}}
                <div class="controls-TreeView__ellipsis-wrapper">
                   <div class="controls-TreeView__ellipsis-container">
-                     <span>{{=it.decorators.apply(column.value)}}</span>
+                     <span>{{=it.decorators.applyIf(column.value, {
+                        'highlight': column.highlight,
+                        'ladder': column.field})
+                     }}</span>
                      {{?it.arrowActivatedHandler}}
                         <div class="js-controls-TreeView__editArrow controls-TreeView__editArrow icon-16 icon-View icon-primary action-hover"></div>
                      {{?}}
@@ -33,10 +31,16 @@
                   {{?}}
                </div>
             {{??}}
-               <span>{{=it.decorators.apply(column.value)}}</span>
+               <span>{{=it.decorators.applyIf(column.value, {
+                        'highlight': column.highlight,
+                        'ladder': column.field})
+                     }}</span>
             {{?}}
          {{??}}
-            <span>{{=it.decorators.apply(column.value)}}</span>
+            <span>{{=it.decorators.applyIf(column.value, {
+                        'highlight': column.highlight,
+                        'ladder': column.field})
+                  }}</span>
          {{?}}
       </td>
    {{~}}

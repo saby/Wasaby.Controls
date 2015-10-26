@@ -79,6 +79,9 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', ['js!SBIS3.CONTROLS.Utils.HtmlD
        * @returns {String}
        */
       applyIf: function (value, condition, area) {
+         if (typeof condition === 'object'){
+            this.setConditions(condition);
+         }
          if (typeof condition === 'function' ? condition(value) : condition) {
             return this.apply(value, area);
          }

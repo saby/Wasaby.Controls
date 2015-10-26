@@ -20,8 +20,8 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
       },
 
       checkCondition: function(obj) {
-         if (obj.hasOwnProperty('ladderDecorator')) {
-            this._columnName = obj['ladderDecorator'];
+         if (obj.hasOwnProperty('ladder')) {
+            this._columnName = obj['ladder'];
          }
       },
       /**

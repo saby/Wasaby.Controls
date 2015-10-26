@@ -42,8 +42,8 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
       },
 
       checkCondition: function(obj) {
-         if (obj.hasOwnProperty('highlightDecorator')) {
-            this._options.enabled = obj['highlightDecorator'];
+         if (obj.hasOwnProperty('highlight')) {
+            this._options.enabled = obj['highlight'];
          }
       },
 
