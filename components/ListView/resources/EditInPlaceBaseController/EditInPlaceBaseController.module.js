@@ -85,10 +85,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   result = this.finishEditing(true, true);
                   if (result instanceof $ws.proto.Deferred) {
                      result.addCallback(function () {
-                        self.showEditing(newTarget, true);
+                        self.showEditing(newTarget);
                      });
                   } else {
-                     this.showEditing(newTarget, true);
+                     this.showEditing(newTarget);
                   }
                } else if (closeIfLast) {
                   this.finishEditing(true);
