@@ -4,13 +4,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
       'js!SBIS3.CONTROLS.DSMixin',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
+      'js!SBIS3.CONTROLS.ActiveMultiSelectable',
       'js!SBIS3.CONTROLS.FieldLinkItemsCollection',
       'html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper',
       'html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper',
       'js!SBIS3.CONTROLS.MenuIcon'
 
    ],
-   function(SuggestTextBox, DSMixin, FormWidgetMixin, MultiSelectable, FieldLinkItemsCollection, afterFieldWrapper, beforeFieldWrapper) {
+   function(SuggestTextBox, DSMixin, FormWidgetMixin, MultiSelectable, ActiveMultiSelectable, FieldLinkItemsCollection, afterFieldWrapper, beforeFieldWrapper) {
 
       'use strict';
 
@@ -37,7 +38,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
     * @author Крайнов Дмитрий Олегович
     */
 
-   var FieldLink = SuggestTextBox.extend([FormWidgetMixin, MultiSelectable, DSMixin],/** @lends SBIS3.Engine.FieldLink.prototype */{
+   var FieldLink = SuggestTextBox.extend([FormWidgetMixin, MultiSelectable, DSMixin, ActiveMultiSelectable],/** @lends SBIS3.Engine.FieldLink.prototype */{
       $protected: {
          /* КЛАВИШИ ОБРАБАТЫВАЕМЫЕ FieldLink'ом */
          _keysWeHandle: [

@@ -1,10 +1,4 @@
-define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.DataSet', 'js!SBIS3.CONTROLS.SbisJSONStrategy'], function(DataSet, SbisJSONStrategy) {
-
-   function propertyUpdateWrapper(func) {
-      return function() {
-         return this.runInPropertiesUpdate(func, arguments);
-      };
-   }
+define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
@@ -70,10 +64,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.DataSet', 'js!SB
              * @see toggleItemsSelectionAll
              */
             selectedKeys : [],
-            /**
-             * @cfg {String[]} Массив выбранных записей
-             */
-            selectedItems : [],
              /**
               * @cfg {Boolean} Разрешить отсутствие выбранного элемента в группе
               * @example
@@ -93,13 +83,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.DataSet', 'js!SB
 
       $constructor: function() {
          this._publish('onSelectedItemsChange');
-         if (this._options.selectedItems && this._options.selectedItems.length) {
-            if(Array.isArray(this._options.selectedItems)) {
-               if (!this._options.multiselect) {
-                  this._options.selectedItems = this._options.selectedItems.slice(0, 1);
-               }
-            }
-         }
          if (this._options.selectedKeys && this._options.selectedKeys.length) {
             if (Array.isArray(this._options.selectedKeys)) {
                if (!this._options.multiselect) {
@@ -122,94 +105,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.DataSet', 'js!SB
             this._drawSelectedItems(this._options.selectedKeys);
          }
       },
-      /**
-       * Устанавливает массив выбранных записей, по переданному датасету
-       */
-      setSelectedItems: propertyUpdateWrapper(function(dataSet) {
-         var self = this,
-             isDataSet = $ws.helpers.instanceOfModule(dataSet, 'SBIS3.CONTROLS.DataSet'),
-             iterator = isDataSet ? dataSet.each : $ws.helpers.forEach;
-
-         function iteratorCallback(rec) {
-            self._options.selectedItems.push(rec);
-            self._options.selectedKeys.push(rec.getKey());
-         }
-
-         this._options.selectedKeys = [];
-         this._options.selectedItems = [];
-
-         iterator.apply(dataSet, (isDataSet ? [iteratorCallback] : [dataSet, iteratorCallback]));
-
-         if (this._checkEmptySelection()) {
-            this._setFirstItemAsSelected();
-         }
-
-         this._notifySelectedItems(this._options.selectedKeys);
-         this._drawSelectedItems(this._options.selectedKeys);
-      }),
-
-      /**
-       * Возвращает deferred, рузельтатом которого будут выделенные элементы
-       */
-      getSelectedItems: function() {
-         var self = this,
-             selKeys = this._options.selectedKeys,
-             loadKeysArr = [],
-             itemKeysArr = [],
-             dResult = new $ws.proto.Deferred(),
-             newDsOptions = {
-                keyField: self._options.keyField,
-                strategy: new SbisJSONStrategy()
-             },
-             dMultiResult, item, dataSetItems;
-
-         this._syncSelectedItems();
-
-         /* Сфоримруем из массива выбранных записей, массив ключей этих записей */
-         for(var i = 0, items = this._options.selectedItems.length; i < items; i++) {
-            itemKeysArr.push(this._options.selectedItems[i].getKey());
-         }
-
-         /* Сфоримруем массив ключей записей, которые требуется вычитать с бл или взять из dataSet'a*/
-         for(var j = 0, keys = selKeys.length; j < keys; j++) {
-            if(Array.indexOf(itemKeysArr, selKeys[j]) === -1) {
-               loadKeysArr.push(selKeys[j]);
-            }
-         }
-
-         if(loadKeysArr.length) {
-            dMultiResult = new $ws.proto.ParallelDeferred({stopOnFirstError: false});
-            dataSetItems = [];
-
-            for (var g = 0; loadKeysArr.length > g; g++) {
-               item = this._dataSet && this._dataSet.getRecordByKey(loadKeysArr[g]);
-
-               /* если запись есть в датасете, то ничего не будем вычитывать */
-               if(item) {
-                  dataSetItems.push(item);
-                  continue;
-               }
-
-               dMultiResult.push(this._dataSource.read(loadKeysArr[g]).addCallback(function (record) {
-                  self._options.selectedItems.push(record);
-               }));
-            }
-
-            dMultiResult.done().getResult().addCallback(function() {
-               var dataSet = new DataSet(newDsOptions);
-               self._options.selectedItems = self._options.selectedItems.concat(dataSetItems);
-               dataSet.insert(self._options.selectedItems);
-               dResult.callback(dataSet);
-            });
-
-         } else {
-            var dataSet = new DataSet(newDsOptions);
-            dataSet.insert(self._options.selectedItems);
-            dResult.callback(dataSet);
-         }
-         return dResult;
-      },
-
       /**
        * Устанавливает выбранные элементы по id.
        * @param {Array} idArray Массив идентификаторов выбранных элементов.
@@ -455,26 +350,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.DataSet', 'js!SB
          }
       },
 
-      /* Синхронизирует выбранные ключи и выбранные записи */
-      _syncSelectedItems: function() {
-         var count = 0,
-             selItems = this._options.selectedItems,
-             index;
-
-         if(!this.getSelectedKeys().length) {
-            this._options.selectedItems = [];
-            return;
-         }
-
-         for(var i = 0, len = selItems.length; i < len; i ++) {
-            index = i - count;
-            if(selItems[index] && Array.indexOf(this._options.selectedKeys, selItems[index].getKey()) === -1) {
-               selItems.splice(index, 1);
-               count++;
-            }
-         }
-      },
-
       _isItemSelected : function(id) {
          //TODO пока нет определенности ключ - строка или число - надо избавиться
          var index = this._options.selectedKeys.indexOf(id);
@@ -490,7 +365,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.DataSet', 'js!SB
 
       _notifySelectedItems : function(idArray) {
          this._setSelectedRecords();
-         this._syncSelectedItems();
          this._notify('onSelectedItemsChange', idArray);
       },
 
