@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.Record', [
           * @var {SBIS3.CONTROLS.IDataStrategy} Стратегия, обеспечивающая интерфейс доступа к "сырым" данным
           */
          _strategy: null,
-         
+
          /**
           * @var {Object} Объект содержащий приведенные значения модели
           */
@@ -94,7 +94,7 @@ define('js!SBIS3.CONTROLS.Record', [
          if (this._fieldsCache.hasOwnProperty(field)) {
             return this._fieldsCache[field];
          }
-         
+
          var dataValue = this._strategy.value(this._raw, field),
             data = this._strategy.getFullFieldData(this._raw, field),
             value = DataFactory.cast(

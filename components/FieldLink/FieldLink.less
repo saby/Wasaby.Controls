@@ -1,0 +1,73 @@
+.controls-FieldLink__linkItem-cross {
+   height: 16px;
+   width: 16px;
+   display: inline-block;
+   position: relative;
+   top: 2px;
+   cursor: @link-cursor;
+   background: @edit-at-place-cancel-button-bg;
+
+   &:hover {
+      background: @edit-at-place-cancel-button-hover-bg;
+   }
+}
+
+.controls-FieldLink__picker {
+   max-height: 500px;
+   min-height: 16px;
+   border: 1px solid #eaeaea;
+   border-top: none;;
+   background: #fff;
+
+   .controls-FieldLink__linksContainer {
+      padding: 4px 0;
+   }
+}
+
+.controls-FieldLink__picker,
+.controls-FieldLink {
+   .controls-FieldLink__linkItem {
+      display: inline-block;
+      position: relative;
+      padding-left: 4px;
+   }
+}
+
+.controls-FieldLink {
+   display: inline-block;
+
+   &.controls-Picker__show {
+      border-width: 1px;
+      border-style: solid;
+      border-color: #eaeaea #eaeaea #e4e4e4;
+      background: #ffffff;
+   }
+
+   .controls-TextBox__fieldWrapper {
+      float: left;
+      margin: 0 !important;
+   }
+
+   .controls-TextBox__beforeFieldWrapper {
+
+      .controls-FieldLink__showAllLinks,
+      .controls-FieldLink__dropAllLinks {
+         position: relative;
+         float: left;
+         top: 2px;
+         padding: 0 4px;
+      }
+
+      .controls-FieldLink__linksWrapper {
+         height: 100%;
+         display: inline-block;
+      }
+   }
+
+   .controls-TextBox__afterFieldWrapper {
+      padding: 0 4px;
+      > *{
+         vertical-align: middle;
+      }
+   }
+}
