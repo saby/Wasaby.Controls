@@ -359,6 +359,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       _windowChangeHandler: function () {
          clearTimeout(this._resizeTimeout);
          var self = this;
+         //Таймаут для того что бы не пересчитывать размеры пока меняется размер окна,
+         //а перестчитать только один раз, когда размер меняться перестанет.
          this._resizeTimeout = setTimeout(function() {
             if (this.isVisible()) {
                self.recalcPosition(false);
