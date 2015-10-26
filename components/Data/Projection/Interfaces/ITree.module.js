@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
    'use strict';
 
    /**
-    * Интерфейс проекции дерева - предоставляет методы навигации, фильтрации и сортировки, не меняя при этом исходное дерево.
+    * Интерфейс проекции дерева - предоставляет методы навигации, фильтрации и сортировки, не меняя при этом исходную коллекцию.
     * @mixin SBIS3.CONTROLS.Data.Projection.ITree
     * @public
     * @author Мальцев Алексей
@@ -20,92 +20,54 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
        * @param {Number} oldPosition Старая позиция
        */
 
-      $protected: {
-         _options: {
-            /**
-             * @cfg {SBIS3.CONTROLS.Data.Tree.ITreeItem} Дерево
-             */
-            tree: undefined
-         }
-      },
-
       /**
-       * Возвращает исходное дерево, для которого построена проекция
+       * Возвращает родительский узел для элемента коллеции
+       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} item Элемент коллекции
        * @returns {SBIS3.CONTROLS.Data.Tree.ITreeItem}
        */
-      getCollection: function () {
+      getParent: function (item) {
          throw new Error('Method must be implemented');
       },
 
       /**
-       * Возвращает текущий элемент дерева
-       * @returns {SBIS3.CONTROLS.Data.Tree.ITreeItem}
+       * Устанавливает родительский узел для элемента коллеции
+       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} item Элемент коллекции
+       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} [parent] Новый родительский узел. Если не передан, то элемент остается без родителя.
        */
-      getCurrent: function () {
+      setParent: function (item, parent) {
          throw new Error('Method must be implemented');
       },
 
       /**
-       * Устанавливает текущий элемент дерева
-       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} item Новый текущий элемент
-       * @param {Boolean} [silent=false] Не генерировать событие onCurrentChange
+       * Является ли элемент корнем дерева
+       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} item Элемент коллекции
+       * @returns {Boolean}
        */
-      setCurrent: function (item, silent) {
+      isRoot: function (item) {
          throw new Error('Method must be implemented');
       },
 
       /**
-       * Возвращает позицию текущего элемента
+       * Возвращает коллекцию потомков элемента коллеции
+       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} item Элемент коллекции
+       * @returns {SBIS3.CONTROLS.Data.Collection.IList}
+       */
+      getChildren: function (item) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает уровень вложенности относительно корня
+       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} item Элемент коллекции
        * @returns {Number}
        */
-      getCurrentPosition: function () {
+      /*getLevel: function (item) {
          throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Устанавливает позицию текущего элемента
-       * @param {Number} position Позиция текущего элемента. Значение -1 указывает, что текущий элемент не выбран.
-       * @param {Boolean} [silent=false] Не генерировать событие onCurrentChange
-       */
-      setCurrentPosition: function (position, silent) {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Устанавливает текущим следующий элемент среди непосредственных потомков одного узла
-       * @returns {Boolean} Есть ли следующий элемент
-       */
-      moveToNext: function () {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Устанавливает текущим предыдущий элемент среди непосредственных потомков одного узла
-       * @returns {Boolean} Есть ли предыдущий элемент
-       */
-      moveToPrevious: function () {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Устанавливает текущим первый элемент среди непосредственных потомков одного узла
-       * @returns {Boolean} Есть ли первый элемент
-       */
-      moveToFirst: function () {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Устанавливает текущим последний элемент среди непосредственных потомков одного узла
-       * @returns {Boolean} Есть ли последний элемент
-       */
-      moveToLast: function () {
-         throw new Error('Method must be implemented');
-      },
+      },*/
 
       /**
        * Устанавливает текущим родителя текущего элемента
-       * @returns {Boolean} Есть ли родительский элемент
+       * @returns {Boolean} Есть ли родитель
        */
       moveToAbove: function () {
          throw new Error('Method must be implemented');
@@ -113,7 +75,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
 
       /**
        * Устанавливает текущим первого непосредственного потомка текущего элемента
-       * @returns {Boolean} Есть ли первый дочерние элементы
+       * @returns {Boolean} Есть ли первый потомок
        */
       moveToBelow: function () {
          throw new Error('Method must be implemented');
