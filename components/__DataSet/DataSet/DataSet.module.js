@@ -63,7 +63,6 @@ define('js!SBIS3.CONTROLS.DataSet', [
       },
       $constructor: function () {
          this._publish('onRecordChange');
-         
          this._prepareData(this._options.data);
 
          if (this._options.keyField) {

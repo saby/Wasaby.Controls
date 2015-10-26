@@ -18,10 +18,11 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Pager',
       'js!SBIS3.CONTROLS.EditInPlaceHoverController',
       'js!SBIS3.CONTROLS.EditInPlaceClickController',
+      'js!SBIS3.CONTROLS.Link',
       'is!browser?html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'is!browser?html!SBIS3.CONTROLS.ListView/resources/emptyData'
    ],
-   function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, groupByTpl, emptyDataTpl) {
+   function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, Link, groupByTpl, emptyDataTpl) {
 
       'use strict';
 
@@ -263,12 +264,20 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                showPaging: false,
                /**
-                * @cfg {Object} Редактирование по месту
+                * @typedef {Object} editInPlaceConfig
+                * @property {Boolean} enabled Включить редактирование по месту
+                * @property {Boolean} addInPlace Включить добавление по месту
+                * @property {Boolean} hoverMode Включить режим редактирования по наведению мыши
+                * @property {String} template Шаблон строки редактирования по месту
+                * @property {Function} onFieldChange Метод, вызываемый при смене значения в одном из полей редактирования по месту и потере фокуса этим полем
+                */
+               /**
+                * @cfg {Object.<editInPlaceConfig>} Конфигурация редактирования по месту
                 */
                editInPlace: {
                   enabled: false,
                   addInPlace: false,
-                  hoverMode: false,
+                  hoverMode: false, //todo EIP Сухоручкин: Переделать на mode: String, т.к. могут быть и другие виды
                   template: undefined,
                   onFieldChange: undefined
                }
@@ -300,8 +309,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this.setGroupBy(this._options.groupBy, false);
             this._drawEmptyData();
-            //TODO: пока добавили !this._options.editInPlace.template от греха подальше чтобы для сложного не создавалось добавление по месту
-            if (this._options.editInPlace.enabled && this._options.editInPlace.addInPlace && !this._editInPlace && !this._options.editInPlace.template) {
+            if (this._options.editInPlace.enabled && this._options.editInPlace.addInPlace && !this._editInPlace) {
                this._initAddInPlace();
             }
             ListView.superclass.init.call(this);
@@ -332,6 +340,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             return false;
          },
+         //todo Герасимов: спилить этот метод, переведя на подписку через $.on(...)
          _checkTargetContainer: function (target) {
             return this._options.showPaging && this._pager && $.contains(this._pager.getContainer()[0], target[0]) ||
                 this._addInPlaceButton && $.contains(this._addInPlaceButton.getContainer().parent()[0], target[0]);
@@ -411,6 +420,7 @@ define('js!SBIS3.CONTROLS.ListView',
                ( itemActionsContainer[0] === $target[0] ||
                   $.contains(itemActionsContainer[0], $target[0]) ||
                   this._itemActionsGroup.isItemActionsMenuVisible() ) ||
+                  //todo Сухоручкин: this._editInPlace._container в DOM больше не существует! Проверка неправильная! Hover-режим однажды сломается!
                   this._editInPlace && $.contains(this._editInPlace.getContainer()[0], $target[0]);
          },
          /**
@@ -436,16 +446,10 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
-            if(!this.isNowScrollingPartScroll() || this._options.editInPlace.template) {
-               this._updateEditInPlaceDisplay(target);
-            }
+            this._updateEditInPlaceDisplay(target);
             if (this._options.itemsActions.length) {
                target.container ? this._showItemActions(target) : this._hideItemActions();
             }
-         },
-
-         isNowScrollingPartScroll: function() {
-            return false;
          },
 
          /**
@@ -540,12 +544,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this._previousGroupBy = undefined;
             // Если используется редактирование по месту, то уничтожаем его
             if (this._editInPlace) {
-               if (this._editInPlace.isEditing()) {
-                  this._editInPlace.finishEditing();
-               }
                this._editInPlace.destroy();
                this._editInPlace = null;
                // Пересоздаем EditInPlace
+               // todo EIP Сухоручкин: уберется когда выполним "этот метод надо завернуть в get'тер"
                this.once('onDataLoaded', function() {
                   this._initEditInPlace();
                }.bind(this));
@@ -591,29 +593,28 @@ define('js!SBIS3.CONTROLS.ListView',
          _initAddInPlace: function() {
             var
                 self = this,
-                itemsContainer = this._getItemsContainer(),
-                tr = '';
+                itemsContainer = this._getItemsContainer();
             this._addInPlaceButton = new Link({
                name: 'controls-ListView__addInPlace-button',
                icon: 'sprite:icon-16 icon-NewCategory',
                caption: 'Новая запись',
-               element: $('<div>').appendTo(this._container.find('.controls-DataGridView__addInPlace-container'))
+               element: $('<div>').appendTo(this._getElementForAddInPlaceButton())
             });
-            if (this._options.multiselect) {
-               tr += '<td class="controls-DataGridView__td"></td>';
-            }
-            for (var i = 0; i < this._options.columns.length; i++) {
-               tr += '<td class="controls-DataGridView__td"></td>';
-            }
-            tr += '</tr>';
             this._addInPlaceButton.subscribe('onActivated', function() {
                self._initEditInPlace();
-               self._editInPlace.showEditing(
-                   $('<tr class="controls-DataGridView__tr controls-ListView__item">' + tr)
-                       .appendTo(itemsContainer));
+               self._editInPlace.showAdd($(self._getAddInPlaceItem()).appendTo(itemsContainer));
             });
          },
-
+         _getElementForAddInPlaceButton: function() {
+            return this._container.find('.controls-ListView__addInPlace-container');
+         },
+         _getAddInPlaceItem: function() {
+            return '<div class="controls-ListView__item"></div>'
+         },
+         /**
+          * todo EIP Сухоручкин: этот метод надо завернуть в get'тер
+          * @private
+          */
          _initEditInPlace: function() {
             if (!this._editInPlace) {
                this._createEditInPlace();

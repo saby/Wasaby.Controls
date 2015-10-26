@@ -45,12 +45,19 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                if (difference.length) {
                   for (var idx = 0; idx < difference.length; idx++) {
                      result = this._notify('onFieldChange', difference[idx], this._editingRecord);
-                     this._onFieldChange(result);
+                     if (result instanceof $ws.proto.Deferred) {
+                        setTimeout(function () {
+                           $ws.helpers.toggleIndicator(true);
+                        }, 100);
+                        result.addCallback(function () {
+                           $ws.helpers.toggleIndicator(false);
+                        });
+                     }
                   }
                }
             },
             /**
-             * TODO Временное решение, функция используется для определения изменившихся полей
+             * TODO Функция используется для определения изменившихся полей, скорее всего она тут не нужна (это метод рекорда)
              * @private
              */
             _getRecordsDifference: function() {
@@ -66,18 +73,6 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   }
                }
                return result;
-            },
-            _onFieldChange: function(result) {
-               var self = this;
-               if (this._options.applyOnFieldChange) {
-                  if (result instanceof $ws.proto.Deferred) {
-                     result.addCallback(function () {
-                        self._applyChanges();
-                     });
-                  } else {
-                     this._applyChanges();
-                  }
-               }
             },
             _onKeyDown: function(e) {
                e.stopPropagation();
@@ -100,21 +95,17 @@ define('js!SBIS3.CONTROLS.EditInPlace',
              */
             applyChanges: function() {
                this._deactivateActiveChildControl();
-               this._applyChanges();
+               this._record.setRaw(this._editingRecord.getRaw());
             },
             hide: function() {
                EditInPlace.superclass.hide.apply(this, arguments);
                this._deactivateActiveChildControl();
+               //todo куда уходит фокус?
+               this.setActive(false);
             },
             _deactivateActiveChildControl: function() {
                var activeChild = this.getActiveChildControl();
                activeChild && activeChild.setActive(false);
-            },
-            _applyChanges: function() {
-               this._record.merge(this._editingRecord);
-               //TODO: пока что merge сырой (и вообще наверно лучше не merge), пока что выполним сами, потом пусть record сам это делает
-               this._record._fieldsCache = {};
-               this._record._notify('onChange');
             },
             focusCatch: function(event) {
                if (typeof this._options.focusCatch === 'function') {

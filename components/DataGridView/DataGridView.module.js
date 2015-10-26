@@ -5,11 +5,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'html!SBIS3.CONTROLS.DataGridView/resources/rowTpl',
       'html!SBIS3.CONTROLS.DataGridView/resources/headTpl',
       'js!SBIS3.CORE.MarkupTransformer',
-      'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
       'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy'
    ],
-   function(ListView, dotTplFn, rowTpl, headTpl, MarkupTransformer, Link, DragAndDropMixin, groupByTpl) {
+   function(ListView, dotTplFn, rowTpl, headTpl, MarkupTransformer, DragAndDropMixin, groupByTpl) {
    'use strict';
       /* TODO: Надо считать высоту один раз, а не делать константой */
       var
@@ -42,7 +41,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          _rowTpl : rowTpl,
          _headTpl : headTpl,
          _rowData : [],
-         _addInPlaceButton: null,
          _isPartScrollVisible: false,                 //Видимость скроллбара
          _movableElements: undefined,                 //Скролируемые элементы
          _arrowLeft: undefined,                       //Контейнер для левой стрелки
@@ -199,11 +197,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._scrollToEditControl(focusedCtrl)
          }
       },
-      _getAdditionalEditInPlaceOptions: function() {
-         return this._options.editInPlace.template ? DataGridView.superclass._getAdditionalEditInPlaceOptions.apply(this, arguments) : {
-            editFieldFocusHandler: this._editFieldFocusHandler.bind(this)
-         };
-      },
       _onResizeHandler: function() {
          DataGridView.superclass._onResizeHandler.apply(this, arguments);
 
@@ -211,6 +204,31 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._updatePartScrollWidth();
          }
       },
+      //********************************//
+      //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
+      //*******************************//
+      _updateEditInPlaceDisplay: function() {
+         if (!this.isNowScrollingPartScroll()) {
+            DataGridView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
+         }
+      },
+      /**
+       * todo EIP Сухоручкин: отказаться от метода и вообще создания кнопки добавления по месту В ПОЛЬЗУ КОМАНДЫ
+       * @returns {*}
+       * @private
+       */
+      _getElementForAddInPlaceButton: function() {
+         return this._container.find('.controls-DataGridView__addInPlace-container');
+      },
+      /**todo EIP Сухоручкин: отказаться от метода в сторону EditInPlaceController.getEditInPlaceContainer().appendTo(tableContainer)
+       *
+       * @returns {string}
+       * @private
+       */
+      _getAddInPlaceItem: function() {
+         return '<tr class="controls-DataGridView__tr controls-ListView__item">';
+      },
+      //********************************//
       // <editor-fold desc="PartScrollBlock">
 
       //TODO Нужно вынести в отдельный класс(контроллер?), чтобы не смешивать все drag-and-drop'ы в кучу
@@ -519,16 +537,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
              this.once('onDataLoad', this._buildHead.bind(this));
           }
        },
-
-      _dataLoadedCallback: function() {
-         DataGridView.superclass._dataLoadedCallback.apply(this, arguments);
-         this._dataSet.subscribe('onRecordChange', function() {
-            if (this._isPartScrollVisible) {
-               this.updateScrollAndColumns();
-            }
-         }.bind(this));
-      },
-
       /**
        * Проверяет настройки колонок, заданных опцией {@link columns}.
        */

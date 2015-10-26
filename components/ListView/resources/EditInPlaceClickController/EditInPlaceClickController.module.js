@@ -24,7 +24,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceClickController',
                _options: {
                   template: undefined
                },
-               _area: undefined,
                _editing: false
             },
             $constructor: function() {
@@ -52,55 +51,31 @@ define('js!SBIS3.CONTROLS.EditInPlaceClickController',
                   target: null
                };
             },
-            isEditing: function () {
-               return this._area && this._area.isVisible();
-            },
-            _onChildFocusOut: function () {
-               this.finishEditing(true);
-            },
-            showEditing: function (target, data) {
+            showEditing: function (target, record, isAdd) {
+               var area,
+                   validate;
                if (this._editing) {
-                  this.finishEditing(true);
+                  validate = this.finishEditing(true);
                }
-
-               this._area.target = target;
-               this._area.record = data;
-               this._area.editInPlace.getContainer().bind('keyup', this._areaHandlers.onKeyDown);
-               this._updateArea(this._area);
+               if (this._options.addInPlaceButton && isAdd) {
+                  this._options.addInPlaceButton.hide();
+               }
+               if (validate !== false) {
+                  this._editing = true;
+                  area = this._getEditingArea();
+                  area.addInPlace = isAdd;
+                  this._showArea(area, target, record, true);
+                  area.target.addClass('controls-editInPlace__editing');
+               }
             },
-            finishEditing: function (saveFields, notHide) {
-               var
-                  self = this,
-                  result,
-                  syncDataSource = function () {
-                     self._options.dataSource.sync(self._options.dataSet);
-                  };
-               this._area.target.show();
-               this._editing = false;
-               if (!notHide) {
-                  this._area.editInPlace.hide();
+            destroy: function() {
+               EditInPlaceClickController.superclass.destroy.apply(this, arguments);
+               if (this._editing) {
                   this._area.editInPlace.getContainer().unbind('keyup', this._areaHandlers.onKeyDown);
+                  this._editing = null;
                }
-               if (saveFields) {
-                  result = this._area.editInPlace.applyChanges();
-                  if (result instanceof $ws.proto.Deferred) {
-                     result.addCallback(function () {
-                        syncDataSource();
-                     });
-                     return result;
-                  }
-                  syncDataSource();
-               }
-            },
-            _updateArea: function (area) {
-               EditInPlaceClickController.superclass._updateArea.apply(this, arguments);
-               area.editInPlace.activateFirstControl();
-            },
-            _editAnotherRow: function (newTarget) {
-               this._area.target = newTarget;
-               newTarget.hide();
-               this._area.record = this._options.dataSet.getRecordByKey(newTarget.data('id'));
-               this._updateArea(this._area);
+               this._area.editInPlace.destroy();
+               this._area = null;
             }
          });
 

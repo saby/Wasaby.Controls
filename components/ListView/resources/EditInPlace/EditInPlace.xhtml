@@ -1,7 +1,9 @@
 {{?it.columns}}
    <tr class="controls-editInPlace controls-ListView__item">
    {{?it.template}}
-      <td colspan="{{=it.columns.length}}">
+      {{var colspan = it.columns.length;}}
+      {{if (it.ignoreFirstColumn) { colspan++; } }}
+      <td colspan="{{=colspan}}">
          {{=it.template}}
       </td>
    {{??}}
