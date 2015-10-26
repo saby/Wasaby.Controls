@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
       $protected: {
          _options: {
             linkedView: undefined,
+            records: undefined,
             template: 'js!SBIS3.CONTROLS.MoveDialogTemplate',
             cssClassName: 'controls-MoveDialog'
          },
@@ -25,7 +26,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          var
             self = this,
             linkedView = this._options.linkedView,
-            selectedCount = linkedView.getSelectedKeys().length;
+            selectedCount = this._options.records.length;
          this.setTitle('Перенести ' + selectedCount + ' запис' + $ws.helpers.wordCaseByNumber(selectedCount, 'ей', 'ь', 'и') + ' в');
          this.getChildControlByName('MoveDialogTemplate-moveButton')
             .subscribe('onActivated', this._onMoveButtonActivated.bind(this));
@@ -46,7 +47,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
       _onMoveButtonActivated: function() {
          var
             moveTo = this._treeView.getSelectedKey();
-         this._options.linkedView.selectedMoveTo(moveTo);
+         this._options.linkedView._move(this._options.records, moveTo);
          this.close();
       },
       /*TODO тут добавить корень в дерево*/
