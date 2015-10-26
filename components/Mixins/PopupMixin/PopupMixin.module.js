@@ -399,7 +399,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             //сравнение boundingClientRect и offset позволяет увидеть лежит ли таргет в фиксированном контейнере (может быть где-то выше)
             if (this._targetSizes.boundingClientRect.top != this._targetSizes.offset.top) { //таргет в фиксированном контейнере
                this._targetSizes.offset.top = this._targetSizes.boundingClientRect.top;
-               this._container.css('position', 'fixed'); //чтобы меню не уезжало
+               this._container.css('position', 'fixed'); //фиксируем выпадающую часть, если таргет был зафиксирован
             }
          }
          this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
