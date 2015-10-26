@@ -3,10 +3,21 @@
  */
 define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], function(MoveDialog) {
    var MoveHandlers = {
-      moveRecordsWithDialog: function() {
-         new MoveDialog({
-            linkedView: this
-         });
+      moveRecordsWithDialog: function(records) {
+         records = this._getRecordsForMove(records);
+         if (records.length) {
+            new MoveDialog({
+               linkedView: this,
+               records: records
+            });
+         }
+      },
+      _getRecordsForMove: function(records) {
+         if (!Array.isArray(records) || !records.length) {
+            records = this.getSelectedKeys().length ? this.getSelectedKeys() :
+               this.getSelectedKey() ? [this.getSelectedKey()] : [];
+         }
+         return records;
       },
       selectedMoveTo: function(moveTo) {
          this._move(this._selectedRecords, moveTo);
