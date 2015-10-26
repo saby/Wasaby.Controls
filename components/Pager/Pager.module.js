@@ -43,7 +43,6 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
          var localPageSize = $ws.helpers.getLocalStorageValue('ws-page-size');
          this._publish('onPageChange');
          this._options.pageSize = !this._options.ignoreLocalPageSize  && localPageSize ? localPageSize : this._options.pageSize;
-         this.getLinkedContext().setValue('controls-pageSize', this._options.pageSize);
          this._updateLocalStorageValue();
       },
       _updateLocalStorageValue: function(){
