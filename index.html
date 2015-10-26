@@ -124,6 +124,9 @@
                <li>
                   <div id="Browser"></div>
                </li>
+			   <li>
+                  <div id="FieldLink"></div>
+               </li>
             </ul>
          </td>
          <td>
@@ -351,6 +354,13 @@
                element: "Browser",
                caption: 'Browser',
                href: '/pages/browser.html'
+            })
+         });
+		 require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "FieldLink",
+               caption: 'FieldLink',
+               href: '/pages/FieldLink.html'
             })
          });
       })

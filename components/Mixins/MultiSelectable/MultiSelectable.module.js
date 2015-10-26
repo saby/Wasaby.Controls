@@ -64,11 +64,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
              * @see toggleItemsSelectionAll
              */
             selectedKeys : [],
-            /**
-             * TODO Выбранные элементы
-             * @deprecated Будет удалено с 3.7.3. Используйте {@link selectedKeys}.
-             */
-            selectedItems : [],
              /**
               * @cfg {Boolean} Разрешить отсутствие выбранного элемента в группе
               * @example
@@ -88,12 +83,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       $constructor: function() {
          this._publish('onSelectedItemsChange');
-         if (this._options.selectedItems && this._options.selectedItems.length) {
-            $ws.single.ioc.resolve('ILogger').log('selectedItems', 'c 3.7.3 метод selectedItems перестанет работать. Используйте метод selectedKeys');
-            this._options.selectedKeys = this._options.selectedItems;
-         }
-         if (this._options.selectedKeys) {
-            if (Object.prototype.toString.call(this._options.selectedKeys) == '[object Array]' ) {
+         if (this._options.selectedKeys && this._options.selectedKeys.length) {
+            if (Array.isArray(this._options.selectedKeys)) {
                if (!this._options.multiselect) {
                   this._options.selectedKeys = this._options.selectedKeys.slice(0, 1);
                }
@@ -115,26 +106,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
          }
       },
       /**
-       * Метод-заглушка. Будет переделан на установку самих элементов, а не их id
-       * @deprecated Будет удалено с 3.7.3. Используйте {@link setSelectedKeys}.
-       */
-      setSelectedItems: function(idArray) {
-         //TODO изменить логику на установку выбранных элементов
-         $ws.single.ioc.resolve('ILogger').log('setSelectedItems', 'c 3.7.3 метод setSelectedItems перестанет работать. Используйте метод setSelectedKeys');
-         this.setSelectedKeys(idArray);
-      },
-
-      /**
-       * Метод-заглушка. Будет переделан на получение самих элементов, а не их id
-       * @deprecated Будет удалено с 3.7.3. Используйте {@link getSelectedKeys}.
-       */
-      getSelectedItems: function() {
-         //TODO изменить логику на получение выбранных элементов
-         $ws.single.ioc.resolve('ILogger').log('getSelectedItems', 'c 3.7.3 метод getSelectedItems перестанет работать. Используйте метод setSelectedKeys');
-         return this.getSelectedKeys();
-      },
-
-      /**
        * Устанавливает выбранные элементы по id.
        * @param {Array} idArray Массив идентификаторов выбранных элементов.
        * @example
@@ -148,7 +119,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @see addItemsSelection
        */
       setSelectedKeys : function(idArray) {
-         if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
+         if (Array.isArray(idArray)) {
             if (idArray.length) {
                if (this._options.multiselect) {
                   this._options.selectedKeys = idArray;
@@ -160,7 +131,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             else {
                this._options.selectedKeys = [];
             }
-            if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
+            if (this._checkEmptySelection()) {
                this._setFirstItemAsSelected();
             }
             this._notifySelectedItems(this._options.selectedKeys);
@@ -232,7 +203,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @see multiselect
        */
       addItemsSelection : function(idArray) {
-         if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
+         if (Array.isArray(idArray)) {
             if (idArray.length) {
                if (this._options.multiselect) {
                   for (var i = 0; i < idArray.length; i++) {
@@ -245,11 +216,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                   this._options.selectedKeys = idArray.slice(0, 1);
                }
             }
-            if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
+            if (this._checkEmptySelection()) {
                this._setFirstItemAsSelected();
             }
             this._notifySelectedItems(this._options.selectedKeys);
             this._drawSelectedItems(this._options.selectedKeys);
+            this._notifyOnPropertyChanged('selectedKeys');
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -271,18 +243,19 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @see allowEmptySelection
        */
       removeItemsSelection : function(idArray) {
-         if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
+         if (Array.isArray(idArray)) {
             for (var i = idArray.length - 1; i >= 0; i--) {
                var index = this._isItemSelected(idArray[i]);
                if (index >= 0) {
                   Array.remove(this._options.selectedKeys, index);
                }
             }
-            if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
+            if (this._checkEmptySelection()) {
                this._setFirstItemAsSelected();
             }
             this._notifySelectedItems(this._options.selectedKeys);
             this._drawSelectedItems(this._options.selectedKeys);
+            this._notifyOnPropertyChanged('selectedKeys');
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -322,7 +295,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @see multiselect
        */
       toggleItemsSelection : function(idArray) {
-         if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
+         if (Array.isArray(idArray)) {
             if (idArray.length) {
                if (this._options.multiselect) {
                   for (var i = 0; i < idArray.length; i++) {
@@ -341,7 +314,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                   else {
                      this._options.selectedKeys = idArray.slice(0, 1);
                   }
-                  if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
+                  if (this._checkEmptySelection()) {
                      this._setFirstItemAsSelected();
                   }
                   this._notifySelectedItems(this._options.selectedKeys);
@@ -396,7 +369,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       _dataLoadedCallback : function(){
-         if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
+         if (this._checkEmptySelection()) {
             this._setFirstItemAsSelected();
          }
       },
@@ -406,6 +379,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             var firstKey = this._dataSet.at(0).getKey();
             this._options.selectedKeys = [firstKey];
          }
+      },
+
+      _checkEmptySelection: function() {
+         return !this._options.selectedKeys.length && this._options.allowEmptySelection == false;
       },
 
       _setSelectedRecords: function() {
