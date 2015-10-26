@@ -682,13 +682,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
 
       _getItemActionsPosition: function(item) {
-         var cfg = {
-            top: item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0)
-         }
+         var cfg = DataGridView.superclass._getItemActionsPosition.call(this, item);
+         cfg.right= 0;
          if (this._touchSupport) {
             cfg.top = item.position.top;
          }
-         cfg.right = 0;
          return cfg;
       },
 

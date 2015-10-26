@@ -141,21 +141,13 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
       },
       _getItemActionsPosition: function(hoveredItem) {
       	var isTableView = this.getViewMode() === 'table';
-         if (this._touchSupport){
-      		return {
-      			top: hoveredItem.position.top,
-      			right: isTableView ? 0 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
-      		};
-      	} else {
-	         var itemActions = this.getItemsActions().getContainer(),
-	             height = itemActions[0].offsetHeight || itemActions.height();
-
-	         return {
-	            top: hoveredItem.position.top + ((isTableView) ? (hoveredItem.size.height > height ? hoveredItem.size.height - height : 0) : 0),
-	            //TODO right = 5 hotFix для того чтобы меню разворачивалось в нужную сторону
-	            right: isTableView ? 5 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
-	         };
-      	}
+         if (isTableView){
+            return TreeCompositeView.superclass._getItemActionsPosition.call(this, hoveredItem);
+         }
+         return {
+            top: hoveredItem.position.top,
+            right: this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
+         };
       },
       _processPaging: function() {
          TreeCompositeView.superclass._processPaging.call(this);
