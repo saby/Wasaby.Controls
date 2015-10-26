@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.DataSet', 
       },
 
       $constructor: function() {
-         if($ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.MultiSelectable')) {
+         if(!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.MultiSelectable')) {
             throw new Error('MultiSelectable mixin is required');
          }
       },
