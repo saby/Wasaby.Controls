@@ -69,6 +69,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             /**
              * @typedef {Object} Property
              * @property {String} name Имя свойства
+             * @property {*|Function} def Значение по умолчанию
              * @property {Function} [readConverter] Метод, конвертирующий значение свойства при чтении. Первым аргументом придет текущее значение свойства. Должен веруть сконвертированное значение свойства.
              * @property {Function} [writeConverter] Метод, конвертирующий значение свойства при записи. Первым аргументом придет текущее значение свойства. Должен веруть сконвертированное значение свойства.
              */
@@ -182,7 +183,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
          var property = this._properties[name],
             value = this._getOriginalPropertyValue(name);
-         if (property && property.readConverter) {
+         if (value === undefined && 'def' in property) {
+            value = typeof property.def === 'function' ? property.def() : property.def;
+            this._setOriginalPropertyValue(name, value);
+         }
+         if (property.readConverter) {
             value = this._getConvertedValue(value, property, true);
          }
 
@@ -209,20 +214,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          }
 
          if (this._getOriginalPropertyValue(name) !== value) {
-            var adapter = this._options.adapter.forRecord(),
-               fieldData = adapter.getFullFieldData(this._options.data, name);
-
-            adapter.set(
-               this._options.data,
-               name,
-               Factory.serialize(
-                  value,
-                  fieldData.type,
-                  this._options.adapter,
-                  fieldData.meta
-               )
-            );
-
+            this._setOriginalPropertyValue(name, value);
             this._setChanged(true);
             delete this._propertiesCache[name];
             this._notify('onPropertyChange', name, value);
@@ -549,7 +541,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       * @returns {String}
       */
       toString: function() {
-         return JSON.stringify(this._options.data);
+         var data = {};
+         this.each(function(field, value) {
+            data[field] = value;
+         });
+         return JSON.stringify(data);
       },
 
       // endregion Public methods
@@ -611,7 +607,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       /**
-       * Возварщает оригинальное (не сконвертированное) значение свойства
+       * Возвращает оригинальное (не сконвертированное) значение свойства
        * @param {String} name Название свойства
        * @private
        */
@@ -629,6 +625,28 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             value = value.getAll();
          }
          return value;
+      },
+
+      /**
+       * Устанавливает оригинальное (не сконвертированное) значение свойства
+       * @param {String} name Название свойства
+       * @param {*} value Значение свойства
+       * @private
+       */
+      _setOriginalPropertyValue: function(name, value) {
+         var adapter = this._options.adapter.forRecord(),
+            fieldData = adapter.getFullFieldData(this._options.data, name);
+
+         adapter.set(
+            this._options.data,
+            name,
+            Factory.serialize(
+               value,
+               fieldData.type,
+               this._options.adapter,
+               fieldData.meta
+            )
+         );
       },
 
       /**

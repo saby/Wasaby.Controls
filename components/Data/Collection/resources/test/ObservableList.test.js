@@ -21,7 +21,7 @@ define([
                }
 
                for (i = 0; i < newItems.length; i++) {
-                  if (newItems[i].getContents() !== newItemsOriginal[i]) {
+                  if (newItems[i] !== newItemsOriginal[i]) {
                      throw new Error('Invalid newItems');
                   }
                }
@@ -30,7 +30,7 @@ define([
                }
 
                for (i = 0; i < oldItems.length; i++) {
-                  if (oldItems[i].getContents() !== oldItemsOriginal[i]) {
+                  if (oldItems[i] !== oldItemsOriginal[i]) {
                      throw new Error('Invalid oldItems');
                   }
                }
@@ -308,7 +308,7 @@ define([
                   addItem,
                   handler = function(event, item, index, property) {
                      try {
-                        if (addItem !== item.getContents()) {
+                        if (addItem !== item) {
                            throw new Error('Invalid changed item');
                         }
                         if (index !== 0) {

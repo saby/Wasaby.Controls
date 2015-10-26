@@ -11,24 +11,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection', [], function () {
 
    return /** @lends SBIS3.CONTROLS.Data.Collection.IIndexedCollection.prototype */{
       /**
-       * Возвращает элемент списка с указанным хэшем
-       * @param {String} hash Хеш элемента
-       * @returns {SBIS3.CONTROLS.Data.Collection.CollectionItem}
-       */
-      getItemByHash: function (hash) {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Возвращает индекс элемента списка с указанным хэшем
-       * @param {String} hash Хеш элемента
-       * @returns {Number}
-       */
-      getItemIndexByHash: function (hash) {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
        * Возвращает первый элемент с указанным значением свойства. Если такого элемента нет - вернет undefined.
        * @param {String} property Название свойства элемента.
        * @param {*} value Значение свойства элемента.

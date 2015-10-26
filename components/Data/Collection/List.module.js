@@ -3,8 +3,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
    'js!SBIS3.CONTROLS.Data.Collection.IList',
    'js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection',
-   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
-   'js!SBIS3.CONTROLS.Data.Collection.CollectionItem'
+   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator'
 ], function (IEnumerable, IList, IIndexedCollection, ArrayEnumerator) {
    'use strict';
 
@@ -35,16 +34,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          _items: [],
 
          /**
-          * @var {String} Модуль элемента дерева
-          */
-         _itemModule: 'SBIS3.CONTROLS.Data.Collection.CollectionItem',
-
-         /**
-          * @var {Boolean} Отдавать оригинальные элементы в методах на чтение
-          */
-         _unwrapOnRead: true,
-
-         /**
           * @var {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator} Служебный энумератор
           */
          _serviceEnumerator: undefined
@@ -56,9 +45,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             if (!(cfg.items instanceof Array)) {
                throw new Error('Invalid argument');
             }
-            for (var i = 0, count = cfg.items.length; i < count; i++) {
-               this._items[i] = this._convertToItem(cfg.items[i]);
-            }
+            this._items = cfg.items;
          }
       },
 
@@ -66,16 +53,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       /**
        * Возвращает энумератор для перебора элементов коллеции
-       * @param {Boolean} [unwrap] Отдавать оригинальные элементы
        * @returns {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator}
        */
-      getEnumerator: function (unwrap) {
-         if (unwrap === undefined) {
-            unwrap = this._unwrapOnRead;
-         }
+      getEnumerator: function () {
          return new ArrayEnumerator({
-            items: this._items,
-            unwrapModule: unwrap ? this._itemModule : ''
+            items: this._items
          });
       },
 
@@ -84,7 +66,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          for (var i = 0, count = this._items.length; i < count; i++) {
             callback.call(
                context || this,
-               this._unwrapOnRead ? this._items[i].getContents() : this._items[i],
+               this._items[i],
                i
             );
          }
@@ -99,10 +81,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             items = items.toArray();
          }
 
-         for (var i = 0, count = items.length; i < count; i++) {
-            items[i] = this._convertToItem(items[i]);
-         }
-
          if (prepend) {
             Array.prototype.splice.apply(this._items, [0, 0].concat(items));
          } else {
@@ -113,9 +91,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       toArray: function () {
-         return this._items.map(function (item) {
-            return item.getContents();
-         });
+         return this._items;
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
@@ -130,20 +106,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             if (!isArray && !$ws.helpers.instanceOfMixin(instead, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
                throw new Error('Invalid argument');
             }
-            var listInstead = instead.toArray();
-            for (var i = 0, count = listInstead.length; i < count; i++) {
-               listInstead[i] = this._convertToItem(listInstead[i]);
-            }
-
-            Array.prototype.splice.apply(this._items, [0, 0].concat(listInstead));
+            Array.prototype.splice.apply(this._items, [0, 0].concat(instead.toArray()));
          }
 
          this._getServiceEnumerator().reIndex();
       },
 
       add: function (item, at) {
-         item = this._convertToItem(item);
-
          if (at === undefined) {
             this._items.push(item);
          } else {
@@ -158,9 +127,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       at: function (index) {
-         return this._unwrapOnRead ?
-            (this._isValidIndex(index) ? this._items[index].getContents() : undefined) :
-            this._items[index];
+         return this._items[index];
       },
 
       remove: function (item) {
@@ -171,7 +138,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          if (!this._isValidIndex(index)) {
             throw new Error('Index is out of bounds');
          }
-         this._items[index].setOwner(undefined);
          this._items.splice(index, 1);
 
          this._getServiceEnumerator().reIndex();
@@ -181,38 +147,17 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          if (!this._isValidIndex(at)) {
             throw new Error('Index is out of bounds');
          }
-         this._items[at] = this._convertToItem(item);
+         this._items[at] = item;
 
          this._getServiceEnumerator().reIndex();
       },
 
       getIndex: function (item) {
          if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IHashable')) {
-            return this.getItemIndexByHash(item.getHash());
+            return this.getItemIndexByPropertyValue('hash', item.getHash());
          }
 
-         if ($ws.helpers.instanceOfModule(item, this._itemModule)) {
-            return Array.indexOf(this._items, item);
-         }
-
-         //TODO: search by index
-         var enumerator = this.getEnumerator(),
-            index = 0,
-            listItem;
-         while ((listItem = enumerator.getNext())) {
-            if (this._unwrapOnRead) {
-               if (listItem === item) {
-                  return index;
-               }
-            } else {
-               if (listItem.getContents() === item) {
-                  return index;
-               }
-            }
-            index++;
-         }
-
-         return -1;
+         return Array.indexOf(this._items, item);
       },
 
       getCount: function () {
@@ -222,14 +167,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       //endregion SBIS3.CONTROLS.Data.Collection.IList
 
       //region SBIS3.CONTROLS.Data.Collection.IIndexedCollection
-
-      getItemByHash: function (hash) {
-         return this._getServiceEnumerator().getItemByPropertyValue('hash', hash);
-      },
-
-      getItemIndexByHash: function (hash) {
-         return this._getServiceEnumerator().getItemIndexByPropertyValue('hash', hash);
-      },
 
       getItemByPropertyValue: function (property, value) {
          var item = this._getServiceEnumerator().getItemByPropertyValue(property, value);
@@ -262,24 +199,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          return this._serviceEnumerator || (this._serviceEnumerator = new ArrayEnumerator({
             items: this._items
          }));
-      },
-
-      /**
-       * Превращает объект в элемент дерева
-       * @param {*} item Объект
-       * @returns {SBIS3.CONTROLS.Data.Tree.TreeItem}
-       * @private
-       */
-      _convertToItem: function (item) {
-         if ($ws.helpers.instanceOfModule(item, this._itemModule)) {
-            item.setOwner(this);
-            return item;
-         }
-
-         return $ws.single.ioc.resolve(this._itemModule, {
-            owner: this,
-            contents: item
-         });
       },
 
       /**

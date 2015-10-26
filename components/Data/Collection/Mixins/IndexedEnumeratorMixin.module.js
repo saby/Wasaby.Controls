@@ -131,19 +131,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
                index[value] = [];
             }
             index[value].push([position, item]);
-
-            if (typeof item === 'object' &&
-               $ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Collection.ICollectionItem')
-            ) {
-               var insideValue = Utils.getItemPropertyValue(item.getContents(), property);
-               if (insideValue !== value) {
-                  if (index[insideValue] === undefined) {
-                     index[insideValue] = [];
-                  }
-                  index[insideValue].push([position, item]);
-               }
-            }
-
             position++;
          }
 

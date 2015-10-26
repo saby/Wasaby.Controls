@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       destroy: function (key) {
          var index = this._getIndexByKey(key);
          if (index === -1) {
-            return $ws.proto.Deferred.fail("Model key \""+key+"\" isn't found");
+            return $ws.proto.Deferred.fail('Model key "' + key + '" isn\'t found');
          } else {
             this._options.adapter.forTable().remove(
                this._options.data,

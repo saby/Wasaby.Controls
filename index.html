@@ -101,9 +101,6 @@
                   <div id="FieldFormat"></div>
                </li>
                <li>
-                  <div id="ListControl"></div>
-               </li>
-               <li>
                   <div id="Views"></div>
                </li>
                 <li>
@@ -138,6 +135,9 @@
                 </li>
                <li>
                   <div id="Suggest"></div>
+               </li>
+               <li>
+                  <div id="TodoMVC"></div>
                </li>
                <li>
                   <div id="Browser"></div>
@@ -312,14 +312,6 @@
 
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
-               element: "ListControl",
-               caption: 'ListControl',
-               href: '/pages/ListControl.html'
-            })
-         });
-
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
-            new r({
                element: "Views",
                caption: 'Views',
                href: '/pages/Views.html'
@@ -408,6 +400,14 @@
                element: "Suggest",
                caption: 'Suggest',
                href: '/pages/Suggest.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "TodoMVC",
+               caption: 'TodoMVC',
+               href: '/pages/TodoMvc.html'
             })
          });
 

@@ -21,12 +21,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator', [
             /**
              * @var {Array} Список
              */
-            items: [],
-
-            /**
-             * @var {String} Модуль, реализующий SBIS3.CONTROLS.Data.Collection.ICollectionItem
-             */
-            unwrapModule: ''
+            items: []
          },
 
          /**
@@ -50,10 +45,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator', [
          if (this._index < 0) {
             return undefined;
          }
-         var item = this._options.items[this._index];
-         return typeof item === 'object' && $ws.helpers.instanceOfModule(item, this._options.unwrapModule) ?
-            item.getContents() :
-            item;
+         return this._options.items[this._index];
       },
 
       getNext: function () {

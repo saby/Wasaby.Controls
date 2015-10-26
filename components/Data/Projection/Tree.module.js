@@ -1,25 +1,22 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    'js!SBIS3.CONTROLS.Data.Projection.ITree',
-   'js!SBIS3.CONTROLS.Data.IHashable',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
    'js!SBIS3.CONTROLS.Data.Projection',
    'js!SBIS3.CONTROLS.Data.Projection.Collection'
-], function (ITreeProjection, IHashable, IBindCollection, Projection) {
+], function (ITreeProjection, IBindCollection, Projection, CollectionProjection) {
    'use strict';
 
    /**
     * Проекция дерева - предоставляет методы навигации, фильтрации и сортировки, не меняя при этом исходное дерево
     * @class SBIS3.CONTROLS.Data.Projection.Tree
-    * @extends SBIS3.CONTROLS.Data.Projection
-    * @mixes SBIS3.CONTROLS.Data.IHashable
-    * @mixes SBIS3.CONTROLS.Data.Bind.ICollection
+    * @extends SBIS3.CONTROLS.Data.Projection.Collection
     * @mixes SBIS3.CONTROLS.Data.Projection.ITree
     * @public
     * @author Мальцев Алексей
     */
 
-   var TreeProjection = Projection.extend([IHashable, ITreeProjection, IBindCollection], /** @lends SBIS3.CONTROLS.Data.Projection.Tree.prototype */{
+   var TreeProjection = CollectionProjection.extend([ITreeProjection, IBindCollection], /** @lends SBIS3.CONTROLS.Data.Projection.Tree.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Tree',
       $protected: {
          /**

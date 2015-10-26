@@ -1,26 +1,28 @@
 /* global define */
-define('js!SBIS3.CONTROLS.Data.Bind.ICollection', [], function () {
+define('js!SBIS3.CONTROLS.Data.Bind.ICollectionProjection', [
+   'js!SBIS3.CONTROLS.Data.Bind.ICollection'
+], function (ICollection) {
    'use strict';
 
    /**
-    * Интерфейс привязки к коллекции
-    * @mixin SBIS3.CONTROLS.Data.Bind.ICollection
+    * Интерфейс привязки к проекции коллекции
+    * @mixin SBIS3.CONTROLS.Data.Bind.ICollectionProjection
     * @public
     * @author Мальцев Алексей
     */
 
-   var ICollection = /** @lends SBIS3.CONTROLS.Data.Bind.ICollection.prototype */{
+   var ICollectionProjection = /** @lends SBIS3.CONTROLS.Data.Bind.ICollectionProjection.prototype */{
       /**
        * @event onCollectionChange После изменения коллекции
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} action Действие, приведшее к изменению.
-       * @param {Array} newItems Новые элементы коллеции.
+       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem[]} newItems Новые элементы коллеции.
        * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
-       * @param {Array} oldItems Удаленные элементы коллекции.
+       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem[]} oldItems Удаленные элементы коллекции.
        * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
        * @example
        * <pre>
-       *    list.subscribe('onCollectionChange', function(eventObject, action){
+       *    projection.subscribe('onCollectionChange', function(eventObject, action){
        *       if (action == ICollection.ACTION_REMOVE){
        *          //Do something
        *       }
@@ -31,13 +33,13 @@ define('js!SBIS3.CONTROLS.Data.Bind.ICollection', [], function () {
       /**
        * @event onCollectionItemChange После изменения элемента коллекции
        * @param {$ws.proto.EventObject} event Дескриптор события.
-       * @param {*} item Измененный элемент коллеции.
+       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem} item Измененный элемент коллеции.
        * @param {Integer} index Индекс измененного элемента.
        * @param {String} [property] Измененное свойство элемента
        * @example
        * <pre>
-       *    list.subscribe('onCollectionItemChange', function(eventObject, item, index, property){
-       *       if (property === 'title'){
+       *    projection.subscribe('onCollectionItemChange', function(eventObject, item, index, property){
+       *       if (property === 'selected'){
        *          //Do something
        *       }
        *    });
@@ -48,27 +50,27 @@ define('js!SBIS3.CONTROLS.Data.Bind.ICollection', [], function () {
    /**
     * @const {String} Изменение коллекции: добавлены элементы
     */
-   ICollection.ACTION_ADD = 'a';
+   ICollectionProjection.ACTION_ADD = ICollection.ACTION_ADD;
 
    /**
     * @const {String} Изменение коллекции: удалены элементы
     */
-   ICollection.ACTION_REMOVE = 'rm';
+   ICollectionProjection.ACTION_REMOVE = ICollection.ACTION_REMOVE;
 
    /**
     * @const {String} Изменение коллекции: заменены элементы
     */
-   ICollection.ACTION_REPLACE = 'rp';
+   ICollectionProjection.ACTION_REPLACE = ICollection.ACTION_REPLACE;
 
    /**
     * @const {String} Изменение коллекции: перемещены элементы
     */
-   ICollection.ACTION_MOVE = 'm';
+   ICollectionProjection.ACTION_MOVE = ICollection.ACTION_MOVE;
 
    /**
     * @const {String} Изменение коллекции: значительное изменение
     */
-   ICollection.ACTION_RESET = 'rs';
+   ICollectionProjection.ACTION_RESET = ICollection.ACTION_RESET;
 
-   return ICollection;
+   return ICollectionProjection;
 });
