@@ -114,8 +114,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        * Установить корень выборки
        * @param {String} root Идентификатор корня
        */
-      setRoot: function (root) {
-
+      setRoot: function(root){
+         this._options.root = root;
       },
       /**
        * Получить текущий корень иерархии
