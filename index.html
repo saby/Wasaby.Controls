@@ -104,6 +104,9 @@
                     <div id="ViewsGroup"></div>
                 </li>
                <li>
+                  <div id="ViewsEditInPlace"></div>
+               </li>
+               <li>
                   <div id="Popup"></div>
                </li>
                <li>
@@ -299,7 +302,13 @@
                   href: '/pages/ViewsGroup.html'
               })
           });
-
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "ViewsEditInPlace",
+               caption: 'Views Edit In Place',
+               href: '/pages/ViewsEditInPlace.html'
+            })
+         });
 
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
