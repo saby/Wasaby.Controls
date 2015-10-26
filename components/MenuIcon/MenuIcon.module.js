@@ -44,6 +44,9 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.MenuButtonMixin
+    *
+    * @cssModifier controls-Menu__hide-menu-header скрыть заголовок у выпадающего меню
+    * @cssModifier controls-IconButton__round-border круглый бордер вокруг иконки
     */
 
    var MenuIcon = IconButton.extend( [PickerMixin, DSMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuIcon.prototype */ {
