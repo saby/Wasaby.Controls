@@ -272,7 +272,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @property {Function} onFieldChange Метод, вызываемый при смене значения в одном из полей редактирования по месту и потере фокуса этим полем
                 */
                /**
-                * @cfg {Object.<editInPlaceConfig>} Конфигурация редактирования по месту
+                * @cfg {editInPlaceConfig} Конфигурация редактирования по месту
                 */
                editInPlace: {
                   enabled: false,
