@@ -459,12 +459,11 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
       _setItems: function (items) {
          this._unsetItemsEventHandlers();
 
-         items = this._convertItems(items);
          if ($ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Projection')) {
             this._itemsProjection = items;
-            this._items = this._itemsProjection.getCollection();
+            this._items = this._convertItems(this._itemsProjection.getCollection());
          } else  {
-            this._items = items;
+            this._items = this._convertItems(items);
             this._itemsProjection = Projection.getDefaultProjection(this._items);
          }
 
@@ -723,7 +722,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
        */
       _setItemSelected: function (hash) {
          this._itemsProjection.setCurrent(
-            this._itemsProjection.getChildByHash(hash)
+            this._itemsProjection.getByHash(hash)
          );
       },
 

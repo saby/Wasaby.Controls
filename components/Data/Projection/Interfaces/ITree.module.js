@@ -19,51 +19,51 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
        * @param {Number} newPosition Новая позиция
        * @param {Number} oldPosition Старая позиция
        */
+      $protected: {
+         _options: {
+            /**
+             * @cfg {String} Название свойства, содержащего идентификатор узла.
+             */
+            idProperty: '',
+
+            /**
+             * @cfg {String} Название свойства, содержащего идентификатор родительского узла.
+             */
+            parentProperty: '',
+
+            /**
+             * @cfg {String} Название свойства, содержащего признак узла.
+             */
+            nodeProperty: '',
+
+            /**
+             * @cfg {String} Название свойства, содержащего дочерние элементы узла.
+             */
+            childrenProperty: '',
+
+            /**
+             * @cfg {SBIS3.CONTROLS.Data.Tree.ITreeItem|*} Корневой узел или его содержимое
+             */
+            root: undefined
+         }
+      },
 
       /**
-       * Возвращает родительский узел для элемента коллеции
-       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} item Элемент коллекции
+       * Возвращает корневой узел дерева
        * @returns {SBIS3.CONTROLS.Data.Tree.ITreeItem}
        */
-      getParent: function (item) {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Устанавливает родительский узел для элемента коллеции
-       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} item Элемент коллекции
-       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} [parent] Новый родительский узел. Если не передан, то элемент остается без родителя.
-       */
-      setParent: function (item, parent) {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Является ли элемент корнем дерева
-       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} item Элемент коллекции
-       * @returns {Boolean}
-       */
-      isRoot: function (item) {
+      getRoot: function () {
          throw new Error('Method must be implemented');
       },
 
       /**
        * Возвращает коллекцию потомков элемента коллеции
        * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} item Элемент коллекции
-       * @returns {SBIS3.CONTROLS.Data.Collection.IList}
+       * @returns {SBIS3.CONTROLS.Data.Tree.ITreeChildren}
        */
       getChildren: function (item) {
          throw new Error('Method must be implemented');
       },
-
-      /**
-       * Возвращает уровень вложенности относительно корня
-       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} item Элемент коллекции
-       * @returns {Number}
-       */
-      /*getLevel: function (item) {
-         throw new Error('Method must be implemented');
-      },*/
 
       /**
        * Устанавливает текущим родителя текущего элемента

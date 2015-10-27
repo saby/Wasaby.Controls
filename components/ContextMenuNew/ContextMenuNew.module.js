@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.ContextMenuNew', ['js!SBIS3.CONTROLS.MenuNew', 'js!SBI
          _viewConstructor: MenuView
       },
       _itemClickedHandler: function(e,hash) {
-         var item = this.getItems().getChildByHash(hash, true);
+         var item = this.getItemsProjection().getByHash(hash);
          if(!item.isNode()){
             this.hide();
          }

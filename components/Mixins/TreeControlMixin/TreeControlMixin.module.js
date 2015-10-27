@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
             } else if (e.which === $ws._const.key.down) {
                if (this._itemsProjection.getCurrent().isNode() &&
                   this._itemsProjection.getCurrent().isExpanded() &&
-                  this._itemsProjection.getCurrent().getChildren().getCount() > 0
+                  this._itemsProjection.getChildren(this._itemsProjection.getCurrent()).getCount() > 0
                ) {
                   this._itemsProjection.moveToBelow();
                } else {
@@ -152,7 +152,7 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
        * @param {Boolean} [expanded] Свернуть/развернуть. Если undefined, то переключить.
        */
       _setNodeExpanded: function (hash, expanded) {
-         var item = this._itemsProjection.getChildByHash(hash, true);
+         var item = this._itemsProjection.getByHash(hash);
          if (!item.isNode()) {
             return;
          }

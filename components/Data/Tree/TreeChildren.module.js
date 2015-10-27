@@ -1,10 +1,8 @@
 /* global define, require, $ws */
 define('js!SBIS3.CONTROLS.Data.Tree.TreeChildren', [
    'js!SBIS3.CONTROLS.Data.Tree.ITreeChildren',
-   'js!SBIS3.CONTROLS.Data.Collection.List',
-   'js!SBIS3.CONTROLS.Data.Utils',
-   'js!SBIS3.CONTROLS.Data.Tree.TreeItem'
-], function (ITreeChildren, List, Utils) {
+   'js!SBIS3.CONTROLS.Data.Collection.List'
+], function (ITreeChildren, List) {
    'use strict';
 
    /**
@@ -18,23 +16,6 @@ define('js!SBIS3.CONTROLS.Data.Tree.TreeChildren', [
 
    var TreeChildren = List.extend([ITreeChildren], /** @lends SBIS3.CONTROLS.Data.Tree.TreeChildren.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Tree.TreeChildren',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {SBIS3.CONTROLS.Data.Tree.TreeItem} Узел-владелец
-             */
-            owner: undefined
-         },
-
-         /**
-          * @var {SBIS3.CONTROLS.Data.Tree.TreeItem[]} Элементы списка
-          */
-         _items: [],
-
-         _itemModule: 'SBIS3.CONTROLS.Data.Tree.TreeItem',
-
-         _unwrapOnRead: false
-      },
 
       $constructor: function (cfg) {
          cfg = cfg || {};
@@ -53,108 +34,17 @@ define('js!SBIS3.CONTROLS.Data.Tree.TreeChildren', [
 
       //region SBIS3.CONTROLS.Data.Collection.IList
 
-      /**
-       * Добавляет элемент
-       * @param {SBIS3.CONTROLS.Data.Tree.TreeItem|*} item Элемент
-       * @param {Number} [at] Позиция, в которую добавляется элемент (по умолчанию - в конец)
-       */
-      add: function (item, at) {
-         TreeChildren.superclass.add.call(this, item, at);
-      },
-
-      /**
-       * Возвращает элемент по позиции
-       * @param {Number} index Позиция
-       * @returns {SBIS3.CONTROLS.Data.Tree.TreeItem} Элемент списка
-       */
-      at: function (index) {
-         return TreeChildren.superclass.at.call(this, index);
-      },
-
-      /**
-       * Удаляет элемент
-       * @param {SBIS3.CONTROLS.Data.Tree.TreeItem|*} item Удаляемый элемент
-       */
-      remove: function (item) {
-         TreeChildren.superclass.remove.call(this, item);
-      },
-
-      removeAt: function (index) {
-         if (this._isValidIndex(index)) {
-            this._items[index].setParent();
-         }
-         List.prototype.removeAt.call(this, index);
-      },
-
-      /**
-       * Заменяет элемент
-       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem|*} item Заменяющий элемент
-       * @param {Number} at Позиция, в которой будет произведена замена
-       */
-      replace: function (item, at) {
-         TreeChildren.superclass.replace.call(this, item, at);
-      },
-
-      /**
-       * Возвращает индекс дочернего элемента
-       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem|*} item Искомый элемент
-       * @returns {Number} Индекс элемента или -1, если не найден
-       */
-      getIndex: function (item) {
-         return TreeChildren.superclass.getIndex.call(this, item);
-      },
-
       //endregion SBIS3.CONTROLS.Data.Collection.IList
 
       //region SBIS3.CONTROLS.Data.Tree.ITreeChildren
 
-      /**
-       * Возвращает узел-владелец
-       * @returns {SBIS3.CONTROLS.Data.Tree.TreeItem}
-       */
       getOwner: function () {
          return this._options.owner;
-      },
+      }
 
       //endregion SBIS3.CONTROLS.Data.Tree.ITreeChildren
 
       //region Protected methods
-
-      /**
-       * Превращает объект в элемент дерева
-       * @param {*} item Объект
-       * @returns {SBIS3.CONTROLS.Data.Tree.TreeItem}
-       * @private
-       */
-      _convertToItem: function (item) {
-         if ($ws.helpers.instanceOfModule(item, this._itemModule)) {
-            item.setOwner(this);
-            item.setParent(this._options.owner);
-            return item;
-         }
-
-         if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Collection.ICollectionItem')) {
-            item =  item.getContents();
-         }
-         var children,
-            childrenProperty = this._options.owner.getChildrenProperty(),
-            node = false;
-         if (childrenProperty) {
-            children = Utils.getItemPropertyValue(item, childrenProperty);
-            if (children) {
-               node = true;
-            }
-         }
-
-         return $ws.single.ioc.resolve(this._itemModule, {
-            owner: this,
-            contents: item,
-            parent: this._options.owner,
-            node: node,
-            children: children,
-            childrenProperty: childrenProperty
-         });
-      }
 
       //endregion Protected methods
 

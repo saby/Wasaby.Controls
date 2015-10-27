@@ -63,12 +63,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
        * @private
        */
       _notifyItemChangeToOwner: function(property) {
-         if (!this._options.owner ||
-            !$ws.helpers.instanceOfMixin(this._options.owner, 'SBIS3.CONTROLS.Data.Collection.ObservableListMixin')
-         ) {
-            return;
+         if (this._options.owner) {
+            this._options.owner.notifyItemChange(
+               this,
+               property
+            );
          }
-         this._options.owner.notifyItemChange(this, property);
       }
    });
 

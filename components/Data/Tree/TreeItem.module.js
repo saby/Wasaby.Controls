@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.Data.Tree.TreeItem', [
       $protected: {
          _options: {
             /**
-             * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется для анализа элементов {@link children} на предемет наличия дочерних элементов.
+             * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется для анализа на наличие дочерних элементов.
              */
             childrenProperty: ''
          },
@@ -40,9 +40,9 @@ define('js!SBIS3.CONTROLS.Data.Tree.TreeItem', [
             this._options.node = !!cfg.node;
          }
 
-         if ('children' in cfg) {
+         /*if ('children' in cfg) {
             this._setChildren(cfg.children);
-         }
+         }*/
       },
 
       //region SBIS3.CONTROLS.Data.Tree.ITreeItem
@@ -59,47 +59,20 @@ define('js!SBIS3.CONTROLS.Data.Tree.TreeItem', [
          this._notifyItemChangeToOwner('parent');
       },
 
-      getLevel: function () {
-         return this.isRoot() ? 0 : 1 + this.getParent().getLevel();
-      },
-
-      isNode: function () {
-         return this._options.node;
+      getRoot: function () {
+         return this._options.parent ? this._options.parent.getRoot() : this;
       },
 
       isRoot: function () {
          return !this._options.parent;
       },
 
-      /**
-       * Возвращает коллекцию потомков узла
-       * @returns {SBIS3.CONTROLS.Data.Tree.TreeChildren}
-       */
-      getChildren: function () {
-         return this._options.children || (this._options.children = $ws.single.ioc.resolve(this._childrenModule, {
-            owner: this
-         }));
+      getLevel: function () {
+         return 1 + (this._options.parent ? this._options.parent.getLevel() : 0);
       },
 
-      getChildByHash: function (hash, deep) {
-         var enumerator = this.getChildren().getEnumerator(),
-            child = enumerator.getItemByPropertyValue('hash', hash),
-            subChild;
-         if (child !== undefined) {
-            return child;
-         }
-
-         if (deep) {
-            enumerator.reset();
-            while ((child = enumerator.getNext())) {
-               subChild = child.getChildByHash(hash, deep);
-               if (subChild !== undefined) {
-                  return subChild;
-               }
-            }
-         }
-
-         return subChild;
+      isNode: function () {
+         return this._options.node;
       },
 
       isExpanded: function () {
@@ -165,15 +138,10 @@ define('js!SBIS3.CONTROLS.Data.Tree.TreeItem', [
       _notifyItemChangeToOwner: function(property) {
          TreeItem.superclass._notifyItemChangeToOwner.call(this, property);
 
-         var node = this,
-            index = this._options.owner.getIndex(this);
-         this._bubbleUp(function() {
-            this.notifyItemChange(
-               node,
-               index,
-               property
-            );
-         });
+         var rootOwner = this.getRoot().getOwner();
+         if (rootOwner !== this._options.owner) {
+            rootOwner.notifyItemChange(this, property);
+         }
       },
 
       /**

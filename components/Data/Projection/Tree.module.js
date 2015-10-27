@@ -2,8 +2,12 @@
 define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    'js!SBIS3.CONTROLS.Data.Projection.ITree',
    'js!SBIS3.CONTROLS.Data.Projection',
-   'js!SBIS3.CONTROLS.Data.Projection.Collection'
-], function (ITreeProjection, Projection, CollectionProjection) {
+   'js!SBIS3.CONTROLS.Data.Projection.Collection',
+   'js!SBIS3.CONTROLS.Data.Tree.TreeChildren',
+   'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
+   'js!SBIS3.CONTROLS.Data.Utils',
+   'js!SBIS3.CONTROLS.Data.Tree.TreeItem'
+], function (ITreeProjection, Projection, CollectionProjection, TreeChildren, ObservableList, Utils) {
    'use strict';
 
    /**
@@ -18,9 +22,24 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    var TreeProjection = CollectionProjection.extend([ITreeProjection], /** @lends SBIS3.CONTROLS.Data.Projection.Tree.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Tree',
       $protected: {
+         _itemModule: 'SBIS3.CONTROLS.Data.Tree.TreeItem',
+
+         /**
+          * @var {SBIS3.CONTROLS.Data.Tree.TreeItem} Корневой элемент дерева
+          */
+         _root: undefined,
+
+         /**
+          * @var {Object} Соответствие элементов и их дочерних узлов
+          */
+         _childrenMap: {}
       },
 
       $constructor: function () {
+         if (!this._options.idProperty) {
+            throw new Error('Option "idProperty" is required.');
+         }
+
          //this._onSourceCollectionChange = onSourceCollectionChange.bind(this);
          //this._onSourceCollectionItemChange = onSourceCollectionItemChange.bind(this);
 
@@ -44,30 +63,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
          TreeProjection.superclass.destroy.call(this);
       },
-
-      getLevel: function () {
-         return this._options.tree.getLevel();
-      },
-
-      /**
-       * Возвращает коллекцию потомков дерева
-       * @returns {SBIS3.CONTROLS.Data.Collection.IList}
-       * @state mutable
-       */
-      getChildren: function () {
-         return this._options.tree.getChildren();
-      },
-
-      /**
-       * Возвращает потомка узла по его хэшу
-       * @param {String} hash Хэш потомка
-       * @param {Boolean} [deep=false] Искать по всем уровням вложенности
-       * @returns {SBIS3.CONTROLS.Data.Tree.ITreeItem}
-       * @state mutable
-       */
-      /*getChildByHash: function (hash, deep) {
-         return this._options.tree.getChildByHash(hash, deep);
-      },*/
 
       //region SBIS3.CONTROLS.Data.Projection.ICollection
 
@@ -101,89 +96,139 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          }
       },*/
 
-      /*moveToNext: function () {
-         var parent = this._current ? this._current.getParent() : this._options.tree,
-            siblings = parent.getChildren(),
-            index = (this._current === undefined ? -1 : siblings.getIndex(this._current));
+      moveToNext: function () {
+         var current = this.getCurrent(),
+            parent = current ? current.getParent() : this.getRoot(),
+            siblings = this.getChildren(parent),
+            index = current ? siblings.getIndex(current) : -1;
          if (index >= siblings.getCount() - 1) {
             return false;
          }
+
          this.setCurrent(siblings.at(index + 1));
          return true;
-      },*/
+      },
 
-      /*moveToPrevious: function () {
-         if (this._current === undefined) {
+      moveToPrevious: function () {
+         var current = this.getCurrent();
+         if (!current) {
             return false;
          }
-         var parent = this._current.getParent(),
-            siblings = parent.getChildren(),
-            index = siblings.getIndex(this._current);
+         var parent = current.getParent(),
+            siblings = this.getChildren(parent),
+            index = current ? siblings.getIndex(current) : -1;
          if (index <= 0) {
             return false;
          }
+
          this.setCurrent(siblings.at(index - 1));
          return true;
-      },*/
+      },
 
-      /*moveToFirst: function () {
-         var first = (this._current ? this._current.getParent() : this._options.tree).getChildren().at(0);
-         if (first === this._current) {
+      moveToFirst: function () {
+         var current = this.getCurrent(),
+            parent = current ? current.getParent() : this.getRoot(),
+            siblings = this.getChildren(parent),
+            first = siblings.at(0);
+         if (first === current) {
             return false;
          }
+
          this.setCurrent(first);
          return true;
-      },*/
+      },
 
-      /*moveToLast: function () {
-         var children = (this._current ? this._current.getParent() : this._options.tree).getChildren(),
-            last = children.at(children.getCount() - 1);
-         if (last === this._current) {
+      moveToLast: function () {
+         var current = this.getCurrent(),
+            parent = current ? current.getParent() : this.getRoot(),
+            siblings = this.getChildren(parent),
+            last = siblings.at(siblings.getCount() - 1);
+
+         if (last === current) {
             return false;
          }
+
          this.setCurrent(last);
          return true;
-      },*/
+      },
 
       //endregion SBIS3.CONTROLS.Data.Projection.ICollection
 
       //region SBIS3.CONTROLS.Data.Projection.ITree
 
-      getParent: function (item) {
-      },
+      getRoot: function () {
+         if (this._root === undefined) {
+            if (this._options.root && $ws.helpers.instanceOfModule(this._options.root, this._itemModule)) {
+               this._root = this._options.root;
+            } else {
+               this._root = $ws.single.ioc.resolve(this._itemModule, {
+                  owner: this,
+                  node: true,
+                  contents: this._options.root
+               });
+            }
+         }
 
-      setParent: function (item, parent) {
-      },
-
-      isRoot: function (item) {
+         return this._root;
       },
 
       getChildren: function (item) {
+         this._checkItem(item);
+         var hash = item.getHash();
+         if (!(hash in this._childrenMap)) {
+            var projection = this,
+               collection = this.getCollection(),
+               nodeProperty = this._options.nodeProperty;
+            this._childrenMap[hash] = new CollectionProjection({
+               collection: new TreeChildren({
+                  owner: item,
+                  items: this.getCollection().getItemsByPropertyValue(
+                     this._options.parentProperty,
+                     Utils.getItemPropertyValue(
+                        item.getContents(),
+                        this._options.idProperty
+                     )
+                  )
+               }),
+               itemModule: this._itemModule,
+               convertToItem: function (child) {
+                  //FIXME: переделать, так слишком накладно
+                  var index = collection.getIndex(child);
+                  return projection.at(index);
+               }
+            });
+         }
+
+         return this._childrenMap[hash];
       },
 
       moveToAbove: function () {
-         if (this._current === undefined) {
+         var current = this.getCurrent();
+         if (!current) {
             return false;
          }
-         var parent = this._current.getParent();
-         if (parent === undefined || parent.isRoot()) {
+         var parent = current.getParent();
+         if (!parent || parent.isRoot()) {
             return false;
          }
+
          this.setCurrent(parent);
          return true;
       },
 
       moveToBelow: function () {
-         if (this._current === undefined || !this._current.isNode()) {
+         var current = this.getCurrent();
+         if (!current || !current.isNode()) {
             return false;
          }
-         if (!this._current.isExpanded()) {
-            this._current.setExpanded(true);
+         if (!current.isExpanded()) {
+            current.setExpanded(true);
          }
-         var children = this._current.getChildren();
+         var children = this.getChildren(current);
          if (children.getCount() === 0) {
             return false;
          }
+
          this.setCurrent(children.at(0));
          return true;
       },
@@ -191,6 +236,39 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       //endregion SBIS3.CONTROLS.Data.Projection.ITree
 
       //region Protected methods
+
+      _convertToItem: function (item) {
+         var parentIndex = this.getCollection().getItemIndexByPropertyValue(
+               this._options.idProperty,
+               Utils.getItemPropertyValue(item, this._options.parentProperty)
+            ),
+            parent;
+         if (parentIndex > -1) {
+            //FIXME: оптимизировать переиндексацию
+            this._getServiceEnumerator().reIndex();
+            parent = this.at(parentIndex);
+         } else {
+            parent = this.getRoot();
+         }
+
+         return $ws.single.ioc.resolve(this._itemModule, {
+            contents: item,
+            owner: this,
+            parent: parent,
+            node: !!Utils.getItemPropertyValue(item, this._options.nodeProperty)
+         });
+      },
+
+      /**
+       * Проверяет валидность элемента коллекции
+       * @param {*} item Элемент коллекции
+       * @private
+       */
+      _checkItem: function (item) {
+         if (!item && !$ws.helpers.instanceOfModule(item, this._itemModule)) {
+            throw new Error('Item should be an instance of ' + this._itemModule);
+         }
+      },
 
       /**
        * Генерирует событие об изменении текущего элемента проекции дерева

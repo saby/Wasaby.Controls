@@ -2,9 +2,9 @@
 define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
    'js!SBIS3.CONTROLS.HierarchyControl.HierarchyView',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
-   'js!SBIS3.CONTROLS.Data.Tree.Tree',
-   'js!SBIS3.CONTROLS.Data.Tree.LoadableTree'
-], function (HierarchyView, IBindCollection, Tree, LoadableTree) {
+   'js!SBIS3.CONTROLS.Data.Projection.Tree',
+   'js!SBIS3.CONTROLS.Data.Collection.LoadableList'
+], function (HierarchyView, IBindCollection, TreeProjection, LoadableList) {
    'use strict';
 
    /**
@@ -47,19 +47,8 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
              * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется только в случае, если {@link items} является массивом, для поиска в каждом элементе-узле дочерних элементов.
              * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Tree.Tree}
              */
-            childrenProperty: '',
-
-            /**
-             * @cfg {String} Какие типы узлов выводим 'all'|'folders'|'records'. По умолчанию 'all'
-             * @noShow
-             */
-            displayType: 'all'
+            childrenProperty: ''
          },
-
-         /**
-          * @var {SBIS3.CONTROLS.Collection.ITreeItem} Узел дерева, отображаемый контролом
-          */
-         _items: undefined,
 
          /**
           * @var {SBIS3.CONTROLS.Data.Projection.Tree} Проекция дерева
@@ -103,7 +92,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
          },
 
          _setItems: function () {
-            this._setCurrentRoot(this._items);
+            this._setCurrentRoot(this._itemsProjection.getRoot());
          }
       },
 
@@ -114,7 +103,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
        * @param {String} hash Хэш элемента дерева
        */
       changeRoot: function (hash) {
-         var item = this._itemsProjection.getChildByHash(hash, true);
+         var item = this._itemsProjection.getByHash(hash);
          if (!item.isNode()) {
             return;
          }
@@ -146,7 +135,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
       },
 
       _convertDataSourceToItems: function (source) {
-         return new LoadableTree({
+         return new LoadableList({
             source: source,
             parentProperty: this._options.parentProperty,
             nodeProperty: this._options.nodeProperty,
@@ -154,42 +143,15 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
          });
       },
 
-      _convertItems: function (items) {
-         if (items instanceof Array) {
-            items = new Tree({
-               children: items,
-               childrenProperty: this._options.childrenProperty
-            });
-         }
-
-         if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Tree.ITreeItem')) {
-            throw new Error('Items should be an instance of SBIS3.CONTROLS.Data.Tree.ITreeItem');
-         }
-
-         return items;
-      },
-      
       _getItemsForRedraw: function () {
-         return this._currentRoot;
-      },
+         return this._itemsProjection.getChildren(this._currentRoot);
+      }
 
       //endregion Collection
 
       //region Behavior
       
-      _setItemSelected: function (hash) {
-         this._itemsProjection.setCurrent(
-            this._itemsProjection.getChildByHash(hash, true)
-         );
-      },
-
-      _onItemHovered: function (event, hash) {
-         this._view.hoverItem(
-            this._itemsProjection.getChildByHash(hash, true)
-         );
-      },
-
-      _onItemClicked: function (event, hash) {
+      /*_onItemClicked: function (event, hash) {
          this._setItemSelected(hash);
 
          if (this._oneClickAction) {
@@ -199,13 +161,13 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
          if (this._changeRootOnClick) {
             this.changeRoot(hash);
          }
-      },
+      },*/
 
-      _onItemDblClicked: function (event, hash) {
+      /*_onItemDblClicked: function (event, hash) {
          if (!this._oneClickAction) {
             this._itemAction(this._itemsProjection.getChildByHash(hash, true));
          }
-      }
+      }*/
 
       //endregion Behavior
 

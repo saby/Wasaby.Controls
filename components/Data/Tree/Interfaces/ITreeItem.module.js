@@ -14,6 +14,11 @@ define('js!SBIS3.CONTROLS.Data.Tree.ITreeItem', [
       $protected: {
          _options: {
             /**
+             * @cfg {SBIS3.CONTROLS.Data.Tree.ITreeItem} Родительский узел
+             */
+            parent: undefined,
+
+            /**
              * @cfg {Boolean} Является узлом
              */
             node: false,
@@ -23,6 +28,46 @@ define('js!SBIS3.CONTROLS.Data.Tree.ITreeItem', [
              */
             expanded: false
          }
+      },
+
+      /**
+       * Возвращает родительский узел
+       * @returns {SBIS3.CONTROLS.Data.Tree.ITreeItem}
+       */
+      getParent: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Устанавливает родительский узел
+       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} parent Родительский узел
+       */
+      setParent: function (parent) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает корневой элемент дерева
+       * @returns {SBIS3.CONTROLS.Data.Tree.ITreeItem}
+       */
+      getRoot: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Является ли корнем дерева
+       * @returns {Boolean}
+       */
+      isRoot: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает уровень вложенности относительно корня
+       * @returns {Number}
+       */
+      getLevel: function () {
+         throw new Error('Method must be implemented');
       },
 
       /**

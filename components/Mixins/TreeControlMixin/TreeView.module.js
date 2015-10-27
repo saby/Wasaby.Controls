@@ -106,7 +106,7 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
       //region Events
 
       _attachEventHandlers: function (node) {
-         node = node||this.getRootNode();
+         node = node || this.getRootNode();
          HierarchyView.superclass._attachEventHandlers.call(this,node);
          node.on('mouseup', '.' + this._сssPrefix + this._treeLeverageСssClass, this._onLeverageClick.bind(this));
       },
@@ -131,13 +131,13 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
 
       _getRenderData: function(items) {
          var data = TreeView.superclass._getRenderData.call(this, items),
-            level = items.getLevel() - this._levelOffset;
+            level = items.getCollection().getOwner().getLevel() - this._levelOffset;
 
          data['class'] += ' ' + this._сssPrefix + this._treeChildrenСssPrefix;
          data['class'] += ' ' + this._сssPrefix + this._treeLevelСssPrefix;
          data['class'] += ' ' + this._сssPrefix + this._treeLevelСssPrefix + '-' + level;
 
-         data.hash = items.getHash();
+         data.hash = items.getCollection().getOwner().getHash();
          data.level = level;
 
          return data;
@@ -153,9 +153,8 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
             if (item.isNode()) {
                itemData.containerClass += ' ' + this._сssPrefix + (item.isExpanded() ? this._treeExpandedСssClass : this._treeCollapsedСssClass);
                itemData.leverageClass = this._сssPrefix + this._treeLeverageСssClass;
-
                itemData.expanded = item.isExpanded();
-               itemData.children = this._getRenderData(item);
+               itemData.children = this._getRenderData(item.getOwner().getChildren(item));
                itemData.childrenTemplate = this.getTemplate();
             }
          }

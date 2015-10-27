@@ -143,12 +143,12 @@ define('js!SBIS3.CONTROLS.MenuNew', [
          }).bind(this);
       },
       _itemHoverHadler:function(e,hash,expand){
-         var item = this.getItems().getChildByHash(hash, true);
+         var item = this.getItemsProjection().getByHash(hash);
          if(item && item.isNode())
             item.setExpanded(expand);
       },
       _itemClickedHandler: function(e,hash) {
-         var item = this.getItems().getChildByHash(hash, true);
+         var item = this.getItemsProjection().getByHash(hash);
          if(!item.isNode()){
             this._getView().hideSubMenus();
          }

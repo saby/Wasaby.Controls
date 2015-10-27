@@ -169,14 +169,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       //region SBIS3.CONTROLS.Data.Collection.IIndexedCollection
 
       getItemByPropertyValue: function (property, value) {
-         var item = this._getServiceEnumerator().getItemByPropertyValue(property, value);
-         return item ? item.getContents() : undefined;
+         return this._getServiceEnumerator().getItemByPropertyValue(property, value);
       },
 
       getItemsByPropertyValue: function (property, value) {
-         return this._getServiceEnumerator().getItemsByPropertyValue(property, value).map(function(item) {
-            return item.getContents();
-         });
+         return this._getServiceEnumerator().getItemsByPropertyValue(property, value);
       },
 
       getItemIndexByPropertyValue: function (property, value) {
