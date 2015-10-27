@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
     * @author Крайнов Дмитрий Олегович
     */
 
-   var FieldLink = SuggestTextBox.extend([FormWidgetMixin, MultiSelectable, DSMixin, ActiveMultiSelectable],/** @lends SBIS3.Engine.FieldLink.prototype */{
+   var FieldLink = SuggestTextBox.extend([FormWidgetMixin, MultiSelectable, DSMixin, ActiveMultiSelectable],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
       $protected: {
          /* КЛАВИШИ ОБРАБАТЫВАЕМЫЕ FieldLink'ом */
          _keysWeHandle: [
