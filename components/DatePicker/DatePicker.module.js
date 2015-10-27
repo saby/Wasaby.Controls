@@ -204,6 +204,10 @@ define(
             this._setDate( this._options.date );
          }
 
+         if (this._options.text  &&  !this._options.date) {
+            this.setText(this._options.text);
+         }
+
          this._calendarInit();
 
       },
@@ -352,17 +356,7 @@ define(
       },
 
       setValue: function (value) {
-         value = value ? value : '';
-
-         if (value instanceof Date) {
-            this.setDate(value);
-         }
-         else if (typeof value == 'string') {
-            this.setText(value);
-         }
-         else {
-            throw new Error('Аргументом должна являться строка или дата');
-         }
+         $ws.single.ioc.resolve('ILogger').log('DatePicker', 'метод "setValue" устарел. Используйте "setDate" или "setText".');
       },
 
       /**
