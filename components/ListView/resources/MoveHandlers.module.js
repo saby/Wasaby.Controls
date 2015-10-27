@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
             deferred = new $ws.proto.ParallelDeferred();
          if (this._checkRecordsForMove(records, moveTo)) {
             for (var i = 0; i < records.length; i++) {
-               record = typeof records[i] === 'number' ? this._dataSet.getRecordByKey(records[i]) : records[i];
+               record = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i] : this._dataSet.getRecordByKey(records[i]);
                deferred.push(this._dataSource.move(record, this._options.hierField, moveTo));
             }
             deferred.done().getResult().addCallback(function() {
