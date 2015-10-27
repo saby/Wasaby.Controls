@@ -11,12 +11,12 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.DataSet', 
 
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
-    * @mixin SBIS3.CONTROLS.MultiSelectable
+    * @mixin SBIS3.CONTROLS.ActiveMultiSelectable
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var ActiveMultiSelectable = /**@lends SBIS3.CONTROLS.MultiSelectable.prototype  */{
+   var ActiveMultiSelectable = /**@lends SBIS3.CONTROLS.ActiveMultiSelectable.prototype  */{
       $protected: {
          _options: {
             /**
@@ -126,7 +126,8 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.DataSet', 
             index;
 
          if(!this.getSelectedKeys().length) {
-            selItems = [];
+           //FIXME Это сделано специально для демки, по делу если нет выбранных ключей, то и выбранных элементов быть не должно, обязательно это вернуть
+           // this._options.selectedItems = [];
             return;
          }
 

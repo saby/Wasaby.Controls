@@ -27,8 +27,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
    /**
     * Поле связи. Можно выбирать значение из списка, можно из автодополнения
-    * @class SBIS3.Engine.FieldLink
-    * @extends $ws.proto.Control
+    * @class SBIS3.CONTROLS.FieldLink
+    * @extends SBIS3.CONTROLS.SuggestTextBox
+    * @category Inputs
     * @mixes SBIS3.CONTROLS.MultiSelectable
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
@@ -38,7 +39,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
     * @author Крайнов Дмитрий Олегович
     */
 
-   var FieldLink = SuggestTextBox.extend([FormWidgetMixin, MultiSelectable, DSMixin, ActiveMultiSelectable],/** @lends SBIS3.Engine.FieldLink.prototype */{
+   var FieldLink = SuggestTextBox.extend([FormWidgetMixin, MultiSelectable, DSMixin, ActiveMultiSelectable],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
       $protected: {
          /* КЛАВИШИ ОБРАБАТЫВАЕМЫЕ FieldLink'ом */
          _keysWeHandle: [
