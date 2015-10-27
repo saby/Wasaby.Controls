@@ -356,7 +356,18 @@ define(
       },
 
       setValue: function (value) {
-         $ws.single.ioc.resolve('ILogger').log('DatePicker', 'метод "setValue" устарел. Используйте "setDate" или "setText".');
+         value = value ? value : '';
+
+         if (value instanceof Date) {
+            this.setDate(value);
+         }
+         else if (typeof value == 'string') {
+            this.setText(value);
+         }
+         else {
+            throw new Error('Аргументом должна являться строка или дата');
+         }
+         $ws.single.ioc.resolve('ILogger').log('DatePicker', 'метод "setValue" будет удален в 3.7.3.20. Используйте "setDate" или "setText".');
       },
 
       /**
