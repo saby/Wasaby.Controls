@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   self.showItemActionsMenu();
                });
 
-            this._touchActions = 'ontouchstart' in document;
+            this._touchActions = $ws._const.compatibility.touch;
          },
          /**
           * Изменяет операции над строкой до нужного состояния - скрывает / показывает кнопки

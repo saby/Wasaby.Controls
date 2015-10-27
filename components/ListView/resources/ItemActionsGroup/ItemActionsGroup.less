@@ -9,9 +9,6 @@
     .controls-ItemActions {
       background-color: @list-view-actions-bg;
       box-shadow: @list-view-actions-box-shadow;
-      &.controls-ItemsActions__touch-actions{
-         box-shadow: none;
-      }
     }
     .controls-ItemActions__activeItem {
       background-color: @list-view-actions-active-bg;
@@ -23,13 +20,13 @@
   }
 }
 
-.controls-ItemActions {
-  position: absolute;
-  height: @list-view-actions-height;
-  z-index: @list-view-actions-zindex;
-  display: none;
-
-   &.controls-ItemsActions__touch-actions {
+.ws-is-touch{
+   .controls-DataGridView{
+      .controls-ItemActions{
+         box-shadow: none;
+      }
+   }
+   .controls-ItemActions{
       background: @list-view-actions-bg;
       padding-left: 6px;
       .controls-ListView__item{
@@ -49,6 +46,38 @@
          background-position: center;
       }
    }
+   .controls-ItemActions__menu-container{
+      background: #F3F8FC;
+      border-radius: 0;
+      border-width: 1px;
+      padding: 0;
+      border-top: none;
+      .controls-MenuItem {
+         line-height: 44px;
+         border-top: 1px solid #e4e4e4;
+         height: 44px;
+         background: #F3F8FC;
+      }
+      .controls-PopupMixin__closeButton {
+         background: @closeButtonImage;
+         top: @controls-filterButton-picker-closeButton-top;
+         width: @controls-filterButton-picker-closeButton-width;
+         height: @controls-filterButton-button-height;
+         position: absolute;
+         right: @controls-filterButton-picker-closeButton-right;
+         cursor: pointer;
+
+         &:hover { background: @closeButtonImageHover; }
+         &:active { background: @closeButtonImageHover; }
+      }
+   }
+}
+
+.controls-ItemActions {
+  position: absolute;
+  height: @list-view-actions-height;
+  z-index: @list-view-actions-zindex;
+  display: none;
 
   > * {
     display: inline-block;
@@ -81,31 +110,6 @@
 .controls-ItemActions__menu-container {
   display: none;
 
-   &.controls-ItemsActions__touch-actions{
-      background: #F3F8FC;
-      border-radius: 0;
-      border-width: 1px;
-      padding: 0;
-      border-top: none;
-      .controls-MenuItem {
-         line-height: 44px;
-         border-top: 1px solid #e4e4e4;
-         height: 44px;
-         background: #F3F8FC;
-      }
-      .controls-PopupMixin__closeButton {
-         background: @closeButtonImage;
-         top: @controls-filterButton-picker-closeButton-top;
-         width: @controls-filterButton-picker-closeButton-width;
-         height: @controls-filterButton-button-height;
-         position: absolute;
-         right: @controls-filterButton-picker-closeButton-right;
-         cursor: pointer;
-
-         &:hover { background: @closeButtonImageHover; }
-         &:active { background: @closeButtonImageHover; }
-         }
-   }
   .controls-MenuItem {
     padding-right: 24px;
   }

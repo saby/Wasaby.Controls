@@ -289,7 +289,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._drawEmptyData();
             ListView.superclass.init.call(this);
             this.reload();
-            this._touchSupport = 'ontouchstart' in document;
+            this._touchSupport = $ws._const.compatibility.touch;
             if (this._touchSupport){
             	this._getItemActionsContainer().addClass('controls-ItemsActions__touch-actions');
             	this._container.bind('swipe', this._swipeHandler.bind(this));
