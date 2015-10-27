@@ -105,7 +105,8 @@ define('js!SBIS3.CONTROLS.Menu', [
             className = item.get('className') ? '<option name="className">' + item.get('className') + '</option>' : '';
 
          return '<component data-component="SBIS3.CONTROLS.MenuItem">' +
-            '<option name="caption">'+caption+'</option>' + icon + className+
+            '<option name="caption">'+caption+'</option>' +
+            '<option name="allowChangeEnable">' + this._options.allowChangeEnable + '</option>' + icon + className+
             '</component>';
       },
 
