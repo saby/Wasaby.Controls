@@ -128,6 +128,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             }
             return resultTpl;
       },
+      //TODO Авраменко:EIP редактирование по месту должно правильно работать во всех режимах отображения, а не только в таблице.
       _updateEditInPlaceDisplay: function() {
          if(this.getViewMode() === 'table') {
             TreeCompositeView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
@@ -200,7 +201,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                //Если запись найдена в обновленном DataSet, то перерисовываем её
                if (record) {
                   currentDataSet.getRecordByKey(row.key).merge(record);
-                  self.redrawRow(record);
+                  self.redrawItem(record);
                } else { //Иначе - удаляем запись
                   currentDataSet.removeRecord(row.key);
                   self.destroyFolderToolbar(row.key);

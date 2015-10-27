@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
              * @property {Number} maxLinesCount Максимальное количество строк.
              */
             /**
-             * @cfg {AutoResize[]} Автоматическое подстраивание по высоте, если текст не помещается
+             * @cfg {AutoResize} Автоматическое подстраивание по высоте, если текст не помещается
              * @example
              * <pre>
              *    <options name="autoResize">
