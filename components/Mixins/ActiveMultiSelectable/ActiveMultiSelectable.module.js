@@ -126,7 +126,8 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.DataSet', 
             index;
 
          if(!this.getSelectedKeys().length) {
-            this._options.selectedItems = [];
+           //FIXME Это сделано специально для демки, по делу если нет выбранных ключей, то и выбранных элементов быть не должно, обязательно это вернуть
+           // this._options.selectedItems = [];
             return;
          }
 
