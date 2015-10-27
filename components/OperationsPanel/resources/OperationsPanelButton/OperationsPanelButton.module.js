@@ -8,6 +8,20 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
    'html!SBIS3.CONTROLS.OperationsPanelButton'
 ], function(Control, Clickable, Checkable, dotTplFn) {
 
+   /**
+    * Кнопка управления панелью массовых операций.
+    *
+    * SBIS3.CONTROLS.OperationsPanelButton
+    * @class SBIS3.CONTROLS.OperationsPanelButton
+    * @extends $ws.proto.Control
+    * @control
+    * @public
+    * @author Крайнов Дмитрий Олегович
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.OperationsPanelButton'>
+    *
+    * </component>
+    */
    var OperationsPanelButton = Control.Control.extend([Clickable, Checkable], {
       _dotTplFn: dotTplFn,
       $protected: {
@@ -22,12 +36,10 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
              */
             linkedPanel: undefined
          },
-         _internalHandlers: undefined,
-         _icon: undefined
+         _internalHandlers: undefined
       },
 
       $constructor: function() {
-         this._icon = this._container.find('.controls-OperationsPanelButton__icon');
          this._initHandlers();
          this.setLinkedPanel(this._options.linkedPanel);
       },
@@ -38,8 +50,15 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
          }
       },
       _clickHandler: function() {
-         this._options.linkedPanel.toggle();
+         if (this._options.linkedPanel) {
+            this._options.linkedPanel.togglePanel();
+         }
       },
+      /**
+       * Метод установки или замены связанной панели массовых операций, установленной в опции {@link linkedPanel}.
+       * @param linkedPanel
+       * @see linkedPanel
+       */
       setLinkedPanel: function(linkedPanel) {
          if (linkedPanel && ($ws.helpers.instanceOfModule(linkedPanel, 'SBIS3.CORE.OperationsPanel') || $ws.helpers.instanceOfModule(linkedPanel, 'SBIS3.CONTROLS.OperationsPanel'))) {
             this._reassignPanel(linkedPanel);

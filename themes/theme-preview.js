@@ -664,12 +664,7 @@
       ) {
          new TextBox({
             element: 'textBox1',
-            placeholder: 'This is textbox',
-            handlers: {
-               'onTextChange': function(e, val) {
-                  console.log(val)
-               }
-            }
+            placeholder: 'This is textbox'
          });
 
          new TextBox({
@@ -947,10 +942,7 @@
             items: items,
             itemTemplate: listItemTemplate,
             itemsActions: [{
-               icon: 'sprite:icon-16 icon-AddButton icon-primary',
-               handler: function(id, item) {
-                  console.log(id +' '+ item);
-               }
+               icon: 'sprite:icon-16 icon-AddButton icon-primary'
             }]
          });
 
@@ -960,10 +952,7 @@
             items: items,
             itemTemplate: listItemTemplate,
             itemsActions: [{
-               icon: 'sprite:icon-16 icon-AddButton icon-primary',
-               handler: function(id, item) {
-                  console.log(id +' '+ item);
-               }
+               icon: 'sprite:icon-16 icon-AddButton icon-primary'
             }]
          });
 
@@ -984,10 +973,7 @@
                width : 70
             }],
             itemsActions: [{
-               icon: 'sprite:icon-16 icon-AddButton icon-primary',
-               handler: function(id, item) {
-                  console.log(id +' '+ item);
-               }
+               icon: 'sprite:icon-16 icon-AddButton icon-primary'
             }]
          });
       });

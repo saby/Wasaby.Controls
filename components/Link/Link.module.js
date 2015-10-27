@@ -85,8 +85,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
           this._container.toggleClass('ws-hover-target', enabled);
       },
 
-      setIcon: function(icon){
-         Link.superclass.setIcon.call(this, icon);
+      _drawIcon: function(icon) {
          var content;
          if (icon) {
             content = $('<i class="controls-Link__icon ' + this._iconClass + '" ></i><span class="controls-Link__field">' + this._options.caption + '</span>');

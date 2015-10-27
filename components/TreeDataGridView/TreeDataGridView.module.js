@@ -95,12 +95,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                   /**/
                   if (self._options.displayType == 'folders') {
                      if (record.get(self._options.hierField + '@')) {
-                        self._drawItem(record, {at : startRow});
+                        self._drawAndAppendItem(record, {at : startRow});
                      }
 
                   }
                   else {
-                     self._drawItem(record, {at : startRow});
+                     self._drawAndAppendItem(record, {at : startRow});
                   }
                }
             }
@@ -262,6 +262,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          return keys;
       },
       _onDragStart: function(e) {
+         if (this._isShifted) {
+            return;
+         }
          var
             target = $(e.target),
             id = target.closest('.controls-ListView__item').data('id');

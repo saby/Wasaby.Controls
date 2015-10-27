@@ -104,6 +104,9 @@
                     <div id="ViewsGroup"></div>
                 </li>
                <li>
+                  <div id="ViewsEditInPlace"></div>
+               </li>
+               <li>
                   <div id="Popup"></div>
                </li>
                <li>
@@ -120,6 +123,12 @@
                </li>
                <li>
                   <div id="Suggest"></div>
+               </li>
+               <li>
+                  <div id="Browser"></div>
+               </li>
+			   <li>
+                  <div id="FieldLink"></div>
                </li>
             </ul>
          </td>
@@ -293,7 +302,13 @@
                   href: '/pages/ViewsGroup.html'
               })
           });
-
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "ViewsEditInPlace",
+               caption: 'Views Edit In Place',
+               href: '/pages/ViewsEditInPlace.html'
+            })
+         });
 
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
@@ -340,6 +355,21 @@
                element: "Suggest",
                caption: 'Suggest',
                href: '/pages/Suggest.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "Browser",
+               caption: 'Browser',
+               href: '/pages/browser.html'
+            })
+         });
+		 require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "FieldLink",
+               caption: 'FieldLink',
+               href: '/pages/FieldLink.html'
             })
          });
       })

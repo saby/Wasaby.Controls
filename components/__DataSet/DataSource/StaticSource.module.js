@@ -47,8 +47,6 @@ define('js!SBIS3.CONTROLS.StaticSource', [
       },
 
       $constructor: function (cfg) {
-         Record = Record || require('js!SBIS3.CONTROLS.Record');
-         DataSet = DataSet || require('js!SBIS3.CONTROLS.DataSet');
          this._options.strategy = cfg.strategy || new ArrayStrategy();
       },
 
@@ -209,7 +207,7 @@ define('js!SBIS3.CONTROLS.StaticSource', [
 
                if (filter.hasOwnProperty(filterField)) {
                   var filterValue = filter[filterField];
-                  if (filterValue == 'С разворотом' || filterValue == 'Узлы и листья') {
+                  if (filterValue == 'С разворотом' || filterValue == 'Узлы и листья' || filterField == 'usePages') {
                      continue;
                   }
                   var dataValue = strategy.value(dataItem, filterField);
