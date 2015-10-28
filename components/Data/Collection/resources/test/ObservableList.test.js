@@ -314,7 +314,7 @@ define([
                         if (index !== 0) {
                            throw new Error('Invalid changed item index');
                         }
-                        if (property !== 'contents') {
+                        if (property !== 'test') {
                            throw new Error('Invalid changed item property');
                         }
                         done();
