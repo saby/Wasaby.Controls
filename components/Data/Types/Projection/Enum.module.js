@@ -1,7 +1,7 @@
 /* global define, require, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.Enum', [
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
-   'js!SBIS3.CONTROLS.Data.Collection.CollectionItem'
+   'js!SBIS3.CONTROLS.Data.Projection.CollectionItem'
 ], function (Projection) {
    'use strict';
 
@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Enum', [
    var EnumProjection = Projection.extend([], /** @lends SBIS3.CONTROLS.Data.Projection.Collection.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Enum',
       $protected: {
-         _itemModule: 'SBIS3.CONTROLS.Data.Collection.CollectionItem'
+         _itemModule: 'SBIS3.CONTROLS.Data.Projection.CollectionItem'
       },
 
       $constructor: function (cfg) {
