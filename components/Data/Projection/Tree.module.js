@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    'js!SBIS3.CONTROLS.Data.Tree.TreeChildren',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.Utils',
-   'js!SBIS3.CONTROLS.Data.Tree.TreeItem'
+   'js!SBIS3.CONTROLS.Data.Tree.LoadableTreeItem'
 ], function (ITreeProjection, Projection, CollectionProjection, TreeChildren, ObservableList, Utils) {
    'use strict';
 
@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    var TreeProjection = CollectionProjection.extend([ITreeProjection], /** @lends SBIS3.CONTROLS.Data.Projection.Tree.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Tree',
       $protected: {
-         _itemModule: 'SBIS3.CONTROLS.Data.Tree.TreeItem',
+         _itemModule: 'SBIS3.CONTROLS.Data.Tree.LoadableTreeItem',
 
          /**
           * @var {SBIS3.CONTROLS.Data.Tree.TreeItem} Корневой элемент дерева
@@ -65,36 +65,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       },
 
       //region SBIS3.CONTROLS.Data.Projection.ICollection
-
-      /*setCurrent: function (item, silent) {
-         if (this._current !== item) {
-            var oldCurrent = this._current,
-               oldPosition = this.getCurrentPosition();
-            this._current = item;
-            this._notifyCurrentChange(
-               this._current,
-               oldCurrent,
-               this.getCurrentPosition(),
-               oldPosition
-            );
-         }
-      },*/
-
-      /*getCurrentPosition: function () {
-         if (!this._current) {
-            return -1;
-         }
-         var siblings = this._current.getParent().getChildren();
-         return siblings.getIndex(this._current);
-      },*/
-
-      /*setCurrentPosition: function (position, silent) {
-         var oldPosition = this.getCurrentPosition();
-         if (position !== oldPosition) {
-            var siblings = this._current ? this._current.getParent().getChildren() : this._tree.getChildren();
-            this.setCurrent(siblings.at(position), silent);
-         }
-      },*/
 
       moveToNext: function () {
          var current = this.getCurrent(),

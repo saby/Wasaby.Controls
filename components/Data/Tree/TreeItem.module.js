@@ -2,9 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Tree.TreeItem', [
    'js!SBIS3.CONTROLS.Data.Collection.CollectionItem',
    'js!SBIS3.CONTROLS.Data.Tree.ITreeItem',
-   'js!SBIS3.CONTROLS.Data.Tree.ObservableTreeChildren',
+   'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Projection.Tree'
-], function (CollectionItem, ITreeItem) {
+], function (CollectionItem, ITreeItem, Utils) {
    'use strict';
 
    /**
@@ -24,11 +24,6 @@ define('js!SBIS3.CONTROLS.Data.Tree.TreeItem', [
              */
             childrenProperty: ''
          },
-
-         /**
-          * @var {String} Модуль коллекции дочерних элементов
-          */
-         _childrenModule: 'SBIS3.CONTROLS.Data.Tree.ObservableTreeChildren',
 
          _hashPrefix: 'tree-item-'
       },

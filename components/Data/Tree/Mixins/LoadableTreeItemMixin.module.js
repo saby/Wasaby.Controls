@@ -94,6 +94,24 @@ define('js!SBIS3.CONTROLS.Data.Tree.LoadableTreeItemMixin', [
       },
 
       load: function (mode) {
+         //FIXME: загрузка нескольких узлов сразу
+         var parentProperty = this._options.owner.getParentProperty();
+         if (parentProperty) {
+            var idProperty = this._options.source.getIdProperty(),
+               idValue = idProperty && Utils.getItemPropertyValue(this._options.owner.getContents(), idProperty),
+               where = this.getQuery().getWhere();
+            if (idValue === undefined && this._options.owner.isRoot()) {
+               idValue = this._options.owner.getRootNodeId();
+            }
+
+            if (idValue !== undefined) {
+               where[parentProperty] = idValue;
+               this.getQuery().where(where);
+            }
+         }
+      },
+
+      /*load: function (mode) {
          if (!this._onBeforeChildrenLoad) {
             this._onBeforeChildrenLoad = onBeforeChildrenLoad.bind(this);
             this._onAfterChildrenLoad = onAfterChildrenLoad.bind(this);
@@ -109,7 +127,7 @@ define('js!SBIS3.CONTROLS.Data.Tree.LoadableTreeItemMixin', [
          children.once('onAfterLoadedApply', this._onAfterChildrenLoadedApply);
 
          return children.load(mode);
-      },
+      },*/
 
       //endregion SBIS3.CONTROLS.Data.Collection.ISourceLoadable
 

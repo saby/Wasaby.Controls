@@ -14,7 +14,6 @@ define('js!SBIS3.CONTROLS.Data.Tree.LoadableTreeItem', [
     * @extends SBIS3.CONTROLS.Data.Tree.TreeItem
     * @mixes SBIS3.CONTROLS.Data.Query.IQueryable
     * @mixes SBIS3.CONTROLS.Data.Collection.ISourceLoadable
-    * @mixes SBIS3.CONTROLS.Data.Collection.ISourceLoadable
     * @mixes SBIS3.CONTROLS.Data.Tree.LoadableTreeItemMixin
     * @public
     * @author Мальцев Алексей
