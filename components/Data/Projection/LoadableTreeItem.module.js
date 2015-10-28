@@ -1,6 +1,6 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Tree.LoadableTreeItem', [
-   'js!SBIS3.CONTROLS.Data.Tree.TreeItem',
+define('js!SBIS3.CONTROLS.Data.Projection.LoadableTreeItem', [
+   'js!SBIS3.CONTROLS.Data.Projection.TreeItem',
    'js!SBIS3.CONTROLS.Data.Query.IQueryable',
    'js!SBIS3.CONTROLS.Data.Collection.ISourceLoadable',
    'js!SBIS3.CONTROLS.Data.Utils'
@@ -9,15 +9,15 @@ define('js!SBIS3.CONTROLS.Data.Tree.LoadableTreeItem', [
 
    /**
     * Элемент дерева, который можно загружать через источник
-    * @class SBIS3.CONTROLS.Data.Tree.LoadableTreeItem
-    * @extends SBIS3.CONTROLS.Data.Tree.TreeItem
+    * @class SBIS3.CONTROLS.Data.Projection.LoadableTreeItem
+    * @extends SBIS3.CONTROLS.Data.Projection.TreeItem
     * @mixes SBIS3.CONTROLS.Data.Query.IQueryable
     * @mixes SBIS3.CONTROLS.Data.Collection.ISourceLoadable
     * @public
     * @author Мальцев Алексей
     */
-   var LoadableTreeItem = TreeItem.extend([IQueryable, ISourceLoadable], /** @lends SBIS3.CONTROLS.Data.Tree.LoadableTreeItem.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Tree.LoadableTreeItem',
+   var LoadableTreeItem = TreeItem.extend([IQueryable, ISourceLoadable], /** @lends SBIS3.CONTROLS.Data.Projection.LoadableTreeItem.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.Data.Projection.LoadableTreeItem',
       $protected: {
 
          /**
@@ -112,7 +112,7 @@ define('js!SBIS3.CONTROLS.Data.Tree.LoadableTreeItem', [
 
    });
 
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Tree.LoadableTreeItem', function(config) {
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.LoadableTreeItem', function(config) {
       return new LoadableTreeItem(config);
    });
 

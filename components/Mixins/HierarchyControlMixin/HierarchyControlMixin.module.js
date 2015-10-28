@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
             nodeProperty: '',
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Tree.ITreeItem|*} Корневой узел или его содержимое
+             * @cfg {SBIS3.CONTROLS.Data.Projection.ITreeItem|*} Корневой узел или его содержимое
              * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
              */
             root: undefined,
@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
          _changeRootOnClick: true,
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Tree.ITreeItem} Текущий узел дерева
+          * @var {SBIS3.CONTROLS.Data.Projection.ITreeItem} Текущий узел дерева
           */
          _currentRoot: undefined,
 
@@ -147,7 +147,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
       
       /**
        * Устанавливает текущий отображаемый узел
-       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} node Узел
+       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} node Узел
        * @private
        */
       _setCurrentRoot: function (node) {
@@ -178,9 +178,9 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
     * @param {Function} prevFn Оборачиваемый метод
     * @param {$ws.proto.EventObject} event Дескриптор события.
     * @param {String} action Действие, приведшее к изменению.
-    * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem[]} [newItems] Новые элементы коллеции.
+    * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem[]} [newItems] Новые элементы коллеции.
     * @param {Integer} [newItemsIndex] Индекс, в котором появились новые элементы.
-    * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem[]} [oldItems] Удаленные элементы коллекции.
+    * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem[]} [oldItems] Удаленные элементы коллекции.
     * @param {Integer} [oldItemsIndex] Индекс, в котором удалены элементы.
     * @private
     */

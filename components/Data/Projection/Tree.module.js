@@ -3,10 +3,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    'js!SBIS3.CONTROLS.Data.Projection.ITree',
    'js!SBIS3.CONTROLS.Data.Projection',
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
-   'js!SBIS3.CONTROLS.Data.Tree.TreeChildren',
+   'js!SBIS3.CONTROLS.Data.Projection.TreeChildren',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.Utils',
-   'js!SBIS3.CONTROLS.Data.Tree.LoadableTreeItem'
+   'js!SBIS3.CONTROLS.Data.Projection.LoadableTreeItem'
 ], function (ITreeProjection, Projection, CollectionProjection, TreeChildren, ObservableList, Utils) {
    'use strict';
 
@@ -22,10 +22,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    var TreeProjection = CollectionProjection.extend([ITreeProjection], /** @lends SBIS3.CONTROLS.Data.Projection.Tree.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Tree',
       $protected: {
-         _itemModule: 'SBIS3.CONTROLS.Data.Tree.TreeItem',
+         _itemModule: 'SBIS3.CONTROLS.Data.Projection.TreeItem',
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Tree.TreeItem} Корневой элемент дерева
+          * @var {SBIS3.CONTROLS.Data.Projection.TreeItem} Корневой элемент дерева
           */
          _root: undefined,
 
@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          }
 
          if ($ws.helpers.instanceOfMixin(this._options.collection, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
-            this._itemModule = 'SBIS3.CONTROLS.Data.Tree.LoadableTreeItem';
+            this._itemModule = 'SBIS3.CONTROLS.Data.Projection.LoadableTreeItem';
          }
 
          //TODO: filtering, ordering
@@ -259,8 +259,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       /**
        * Генерирует событие об изменении текущего элемента проекции дерева
-       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} newCurrent Новый текущий элемент
-       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} oldCurrent Старый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} newCurrent Новый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} oldCurrent Старый текущий элемент
        * @param {Number} newPosition Новая позиция
        * @param {Number} oldPosition Старая позиция
        * @private

@@ -1,20 +1,20 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Tree.ITreeItem', [
+define('js!SBIS3.CONTROLS.Data.Projection.ITreeItem', [
 ], function () {
    'use strict';
 
    /**
     * Интерфейс элемента дерева
-    * @mixin SBIS3.CONTROLS.Data.Tree.ITreeItem
+    * @mixin SBIS3.CONTROLS.Data.Projection.ITreeItem
     * @implements SBIS3.CONTROLS.Data.Projection.ICollectionItem
     * @public
     * @author Мальцев Алексей
     */
-   return /** @lends SBIS3.CONTROLS.Data.Tree.ITreeItem.prototype */{
+   return /** @lends SBIS3.CONTROLS.Data.Projection.ITreeItem.prototype */{
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Tree.ITreeItem} Родительский узел
+             * @cfg {SBIS3.CONTROLS.Data.Projection.ITreeItem} Родительский узел
              */
             parent: undefined,
 
@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.Data.Tree.ITreeItem', [
 
       /**
        * Возвращает родительский узел
-       * @returns {SBIS3.CONTROLS.Data.Tree.ITreeItem}
+       * @returns {SBIS3.CONTROLS.Data.Projection.ITreeItem}
        */
       getParent: function () {
          throw new Error('Method must be implemented');
@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.Data.Tree.ITreeItem', [
 
       /**
        * Устанавливает родительский узел
-       * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} parent Родительский узел
+       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} parent Родительский узел
        */
       setParent: function (parent) {
          throw new Error('Method must be implemented');
@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.Data.Tree.ITreeItem', [
 
       /**
        * Возвращает корневой элемент дерева
-       * @returns {SBIS3.CONTROLS.Data.Tree.ITreeItem}
+       * @returns {SBIS3.CONTROLS.Data.Projection.ITreeItem}
        */
       getRoot: function () {
          throw new Error('Method must be implemented');

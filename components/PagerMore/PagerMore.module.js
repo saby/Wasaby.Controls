@@ -154,7 +154,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
       setItems: function(items) {
          this._unsubscribeItems();
 
-         if (items && $ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Tree.ITreeItem')) {
+         if (items && $ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Projection.ITreeItem')) {
             items = items.getChildren();
          }
          this._items = items;

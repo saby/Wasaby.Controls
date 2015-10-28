@@ -1,20 +1,20 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Tree.ITreeChildren', [
+define('js!SBIS3.CONTROLS.Data.Projection.ITreeChildren', [
 ], function () {
    'use strict';
 
    /**
     * Интерфейс дочерних элементов узла дерева
-    * @mixin SBIS3.CONTROLS.Data.Tree.ITreeChildren
+    * @mixin SBIS3.CONTROLS.Data.Projection.ITreeChildren
     * @implements SBIS3.CONTROLS.Data.Collection.IList
     * @public
     * @author Мальцев Алексей
     */
-   return /** @lends SBIS3.CONTROLS.Data.Tree.ITreeChildren.prototype */{
+   return /** @lends SBIS3.CONTROLS.Data.Projection.ITreeChildren.prototype */{
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Tree.ITreeItem} Узел-владелец
+             * @cfg {SBIS3.CONTROLS.Data.Projection.ITreeItem} Узел-владелец
              */
             owner: false
          }
@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.Data.Tree.ITreeChildren', [
 
       /**
        * Возвращает узел-владелец
-       * @returns {SBIS3.CONTROLS.Data.Tree.ITreeItem}
+       * @returns {SBIS3.CONTROLS.Data.Projection.ITreeItem}
        */
       getOwner: function () {
          throw new Error('Method must be implemented');

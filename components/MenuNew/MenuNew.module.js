@@ -125,7 +125,7 @@ define('js!SBIS3.CONTROLS.MenuNew', [
       _getItemTemplate: function() {
          return (function(item) {
             var itemData = item.item;
-            if ($ws.helpers.instanceOfMixin(itemData, 'SBIS3.CONTROLS.Data.Tree.ITreeItem')) {
+            if ($ws.helpers.instanceOfMixin(itemData, 'SBIS3.CONTROLS.Data.Projection.ITreeItem')) {
                itemData = itemData.getContents();
             }
 

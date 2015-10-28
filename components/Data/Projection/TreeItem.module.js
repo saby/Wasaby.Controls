@@ -1,21 +1,21 @@
 /* global define, require, $ws */
-define('js!SBIS3.CONTROLS.Data.Tree.TreeItem', [
+define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
    'js!SBIS3.CONTROLS.Data.Projection.CollectionItem',
-   'js!SBIS3.CONTROLS.Data.Tree.ITreeItem',
+   'js!SBIS3.CONTROLS.Data.Projection.ITreeItem',
    'js!SBIS3.CONTROLS.Data.Projection.Tree'
 ], function (CollectionItem, ITreeItem) {
    'use strict';
 
    /**
     * Элемент дерева
-    * @class SBIS3.CONTROLS.Data.Tree.TreeItem
+    * @class SBIS3.CONTROLS.Data.Projection.TreeItem
     * @extends SBIS3.CONTROLS.Data.Projection.CollectionItem
-    * @mixes SBIS3.CONTROLS.Data.Tree.ITreeItem
+    * @mixes SBIS3.CONTROLS.Data.Projection.ITreeItem
     * @public
     * @author Мальцев Алексей
     */
-   var TreeItem = CollectionItem.extend([ITreeItem], /** @lends SBIS3.CONTROLS.Data.Tree.TreeItem.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Tree.TreeItem',
+   var TreeItem = CollectionItem.extend([ITreeItem], /** @lends SBIS3.CONTROLS.Data.Projection.TreeItem.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.Data.Projection.TreeItem',
       $protected: {
          _options: {
             /**
@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.Data.Tree.TreeItem', [
          }*/
       },
 
-      //region SBIS3.CONTROLS.Data.Tree.ITreeItem
+      //region SBIS3.CONTROLS.Data.Projection.ITreeItem
 
       getParent: function () {
          return this._options.parent;
@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.Data.Tree.TreeItem', [
          this.setExpanded(!this.isExpanded());
       },
 
-      //endregion SBIS3.CONTROLS.Data.Tree.ITreeItem
+      //endregion SBIS3.CONTROLS.Data.Projection.ITreeItem
 
       //region Public methods
 
@@ -100,9 +100,9 @@ define('js!SBIS3.CONTROLS.Data.Tree.TreeItem', [
       /**
        * Генерирует в корневом узле об изменении коллекции дочерних узлов дерева.
        * @param {String} action Действие, приведшее к изменению.
-       * @param {SBIS3.CONTROLS.Data.Tree.TreeItem[]} newItems Новые элементы коллеции.
+       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem[]} newItems Новые элементы коллеции.
        * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
-       * @param {SBIS3.CONTROLS.Data.Tree.TreeItem[]} oldItems Удаленные элементы коллекции.
+       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem[]} oldItems Удаленные элементы коллекции.
        * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
        * @private
        */
@@ -154,7 +154,7 @@ define('js!SBIS3.CONTROLS.Data.Tree.TreeItem', [
 
       /**
        * Устанавливает коллекцию дочерних элементов узла
-       * @param {SBIS3.CONTROLS.Data.Tree.TreeChildren|Array} children Дочерние элементы
+       * @param {SBIS3.CONTROLS.Data.Projection.TreeChildren|Array} children Дочерние элементы
        * @private
        */
       _setChildren: function (children) {
@@ -180,7 +180,7 @@ define('js!SBIS3.CONTROLS.Data.Tree.TreeItem', [
 
    });
 
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Tree.TreeItem', function(config) {
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.TreeItem', function(config) {
       return new TreeItem(config);
    });
 
