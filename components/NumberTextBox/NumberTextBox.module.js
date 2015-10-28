@@ -130,7 +130,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
              * @see onlyInteger
              * @see decimals
              */
-            delimiters: false
+            delimiters: false,
+            numericValue: null
          }
       },
 
@@ -149,6 +150,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             }
          });
 
+         if (this._options.numericValue) {
+            this._options.text = this._options.numericValue + '';
+         }
          this._options.text = this._formatText(this._options.text);
          this._inputField.val(this._options.text);
       },
@@ -187,6 +191,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
         return (isNaN(val)) ? null : val;
       },
 
+      setNumericValue: function(value) {
+         this.setText(value + '')
+      },
       /**
        * Установить количество знаков после запятой
        * @param decimals Количество знаков после запятой

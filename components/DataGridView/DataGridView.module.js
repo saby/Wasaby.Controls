@@ -261,15 +261,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   value = MarkupTransformer((cellTpl)(tplOptions));
                } else {
                   value = $ws.helpers.escapeHtml(item.get(column.field));
-                  value = ((value != undefined) && (value != null)) ? value : '';
+                  value = ((value !== undefined) && (value !== null)) ? value : '';
                }
                column.value = value;
                column.item = item;
             }
-            return this._rowTpl(rowData)
+            return this._rowTpl(rowData);
          }
          else {
-            return this._options.itemTemplate(item)
+            return this._options.itemTemplate(item);
          }
 
       },
@@ -637,7 +637,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   column: column
                }));
             } else {
-               value = '<div class="controls-DataGridView__th-content">' + $ws.helpers.escapeHtml(column.title) + '</div>';
+               value = '<div class="controls-DataGridView__th-content">' + ($ws.helpers.escapeHtml(column.title) || '') + '</div>';
             }
             column.value = value;
          }
