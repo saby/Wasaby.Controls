@@ -335,7 +335,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
          this._view.render(items);
 
          if (this._options.pageSize > 0) {
-            var collection = $ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Projection') ?
+            var collection = $ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Projection') ?
                items.getCollection() :
                items;
             if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable') &&

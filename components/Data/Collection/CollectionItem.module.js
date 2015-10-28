@@ -58,6 +58,15 @@ define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
       //endregion SBIS3.CONTROLS.Data.Collection.ICollectionItem
 
       /**
+       * Возвращает исходную коллекцию проекции
+       * @returns {SBIS3.CONTROLS.Data.Collection.IEnumerable}
+       * @private
+       */
+      _getSourceCollection: function() {
+         return this.getOwner().getCollection();
+      },
+
+      /**
        * Генерирует событие у владельца об изменении свойства элемента
        * @param {String} property Измененное свойство
        * @private

@@ -168,6 +168,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * Переиндексирует энумератор
        */
       reIndex: function () {
+         IndexedEnumeratorMixin.reIndex.call(this);
          this._buildInternalMap();
       },
 

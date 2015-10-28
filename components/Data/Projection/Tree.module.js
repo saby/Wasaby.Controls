@@ -39,28 +39,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          if (!this._options.idProperty) {
             throw new Error('Option "idProperty" is required.');
          }
-
-         //this._onSourceCollectionChange = onSourceCollectionChange.bind(this);
-         //this._onSourceCollectionItemChange = onSourceCollectionItemChange.bind(this);
-
-         /*if ($ws.helpers.instanceOfMixin(this._options.tree, 'SBIS3.CONTROLS.Data.Bind.ICollection')) {
-            this.subscribeTo(this._options.tree, 'onCollectionChange', this._onSourceCollectionChange);
-            this.subscribeTo(this._options.tree, 'onCollectionItemChange', this._onSourceCollectionItemChange);
-         }
-
-         this._childrenProjection = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Projection.Collection', {
-            collection: this._options.tree.getChildren()
-         });*/
-
          //TODO: filtering, ordering
       },
 
       destroy: function () {
-         /*if ($ws.helpers.instanceOfMixin(this._options.tree, 'SBIS3.CONTROLS.Data.Bind.ICollection')) {
-            this.unsubscribeFrom(this._options.tree, 'onCollectionChange', this._onSourceCollectionChange);
-            this.unsubscribeFrom(this._options.tree, 'onCollectionItemChange', this._onSourceCollectionItemChange);
-         }*/
-
          TreeProjection.superclass.destroy.call(this);
       },
 
@@ -126,6 +108,30 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       //region SBIS3.CONTROLS.Data.Projection.ITree
 
+      getIdProperty: function () {
+         return this._options.idProperty;
+      },
+
+      setIdProperty: function (name) {
+         this._options.idProperty = name;
+      },
+
+      getParentProperty: function () {
+         return this._options.parentProperty;
+      },
+
+      setParentProperty: function (name) {
+         this._options.parentProperty = name;
+      },
+
+      getNodeProperty: function () {
+         return this._options.nodeProperty;
+      },
+
+      setNodeProperty: function (name) {
+         this._options.nodeProperty = name;
+      },
+
       getRoot: function () {
          if (this._root === undefined) {
             if (this._options.root && $ws.helpers.instanceOfModule(this._options.root, this._itemModule)) {
@@ -147,8 +153,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          var hash = item.getHash();
          if (!(hash in this._childrenMap)) {
             var projection = this,
-               collection = this.getCollection(),
-               nodeProperty = this._options.nodeProperty;
+               collection = this.getCollection();
             this._childrenMap[hash] = new CollectionProjection({
                collection: new TreeChildren({
                   owner: item,
@@ -207,6 +212,13 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       //region Protected methods
 
+      _bindHandlers: function() {
+         TreeProjection.superclass._bindHandlers.call(this);
+
+         this._onSourceCollectionChange = this._onSourceCollectionChange.callAround(onSourceCollectionChange.bind(this));
+         this._onSourceCollectionItemChange = this._onSourceCollectionItemChange.callAround(onSourceCollectionItemChange.bind(this));
+      },
+
       _convertToItem: function (item) {
          var parentIndex = this.getCollection().getItemIndexByPropertyValue(
                this._options.idProperty,
@@ -264,40 +276,34 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
    /**
     * Обрабатывает событие об изменении потомков узла дерева исходного дерева
+    * @param {Function} prevFn Оборачиваемый метод
     * @param {$ws.proto.EventObject} event Дескриптор события.
     * @param {String} action Действие, приведшее к изменению.
-    * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem[]} newItems Новые элементы коллеции.
-    * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
-    * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem[]} oldItems Удаленные элементы коллекции.
-    * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
+    * @param {*[]} newItems Новые элементы коллеции.
+    * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
+    * @param {*[]} oldItems Удаленные элементы коллекции.
+    * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
     * @private
     */
-   var onSourceCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-      this._notify(
-         'onCollectionChange',
-         action,
-         newItems,
-         newItemsIndex,
-         oldItems,
-         oldItemsIndex
-      );
+   var onSourceCollectionChange = function (prevFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+         this._childrenMap = {};
+
+         Array.prototype.shift.call(arguments);
+         prevFn.apply(this, arguments);
    },
 
    /**
-    * Обрабатывает событие об изменении исходной коллекции
+    * Обрабатывает событие об изменении элемента исходной коллекции
+    * @param {Function} prevFn Оборачиваемый метод
     * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {SBIS3.CONTROLS.Data.Tree.ITreeItem} item Измененный элемент коллеции.
+    * @param {*} item Измененный элемент коллеции.
     * @param {Integer} index Индекс измененного элемента.
     * @param {String} [property] Измененное свойство элемента
     * @private
     */
-   onSourceCollectionItemChange = function (event, item, index, property) {
-      this._notify(
-         'onCollectionItemChange',
-         item,
-         index,
-         property
-      );
+   onSourceCollectionItemChange = function (prevFn, event, item, index, property) {
+      Array.prototype.shift.call(arguments);
+      prevFn.apply(this, arguments);
    };
 
    $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.Tree', function(config) {

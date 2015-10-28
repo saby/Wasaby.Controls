@@ -62,17 +62,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ISourceLoadable', [
              * @cfg {SBIS3.CONTROLS.Data.Source.ISource} Источник данных
              */
             source: undefined
-         },
-
-         /**
-          * @var {Boolean} Загрузка была произведена
-          */
-         _loaded: false,
-
-         /**
-          * @var {Boolean} С момента последнего вызова load() были внесены изменения в query
-          */
-         _queryChanged: false
+         }
       },
 
       /**

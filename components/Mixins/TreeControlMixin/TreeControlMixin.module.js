@@ -224,7 +224,8 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
             break;
       }
 
-      prevFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
+      Array.prototype.shift.call(arguments);
+      prevFn.apply(this, arguments);
    },
 
    /**
@@ -253,7 +254,8 @@ define('js!SBIS3.CONTROLS.TreeControlMixin', [
             break;
       }
 
-      prevFn.call(this, event, item, index, property);
+      Array.prototype.shift.call(arguments);
+      prevFn.apply(this, arguments);
    },
 
    /**

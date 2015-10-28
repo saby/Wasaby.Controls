@@ -20,7 +20,22 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableListMixin', [
           * @var {$ws.proto.Deferred} Текущий загрузчик
           */
          _loader: undefined,
-         
+
+         /**
+          * @var {Boolean} Загрузка была произведена
+          */
+         _loaded: false,
+
+         /**
+          * @var {SBIS3.CONTROLS.Data.Query.Query} Сформированный запрос
+          */
+         _query: undefined,
+
+         /**
+          * @var {Boolean} С момента последнего вызова load() были внесены изменения в query
+          */
+         _queryChanged: false,
+
          /**
           * @var {Number|Boolean} Общее кол-во записей выборки
           */

@@ -183,6 +183,10 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
        * @private
        */
       _getLoadingNode: function(target) {
+         if (!target || !$ws.helpers.instanceOfModule(target, 'SBIS3.CONTROLS.Data.Tree.TreeItem')) {
+            return TreeView.superclass._getLoadingNode.call(this, target);
+         }
+
          var treeNode = target.getOwner();
          var parent = this._getItemContainer(this._getTargetNode(treeNode), treeNode);
          if (!parent.length) {

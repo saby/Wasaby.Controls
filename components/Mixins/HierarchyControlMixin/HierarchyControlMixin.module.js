@@ -202,7 +202,8 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
             break;
       }
 
-      prevFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
+      Array.prototype.shift.call(arguments);
+      prevFn.apply(this, arguments);
    },
    
    /**

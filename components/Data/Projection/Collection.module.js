@@ -98,9 +98,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          }
 
          this._init();
-
-         this._onSourceCollectionChange = onSourceCollectionChange.bind(this);
-         this._onSourceCollectionItemChange = onSourceCollectionItemChange.bind(this);
+         this._bindHandlers();
          if ($ws.helpers.instanceOfMixin(this._options.collection, 'SBIS3.CONTROLS.Data.Bind.ICollection')) {
             this.subscribeTo(this._options.collection, 'onCollectionChange', this._onSourceCollectionChange);
             this.subscribeTo(this._options.collection, 'onCollectionItemChange', this._onSourceCollectionItemChange);
@@ -364,6 +362,18 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        */
       _init: function () {
          this._reBuild();
+      },
+
+      /**
+       * Настраивает контекст обработчиков
+       * @private
+       */
+      _bindHandlers: function() {
+         this._onSourceCollectionChange = onSourceCollectionChange.bind(this);
+         this._onSourceCollectionItemChange = onSourceCollectionItemChange.bind(this);
+      },
+
+      _unbindHandlers: function() {
       },
 
       /**
@@ -757,12 +767,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             );
             break;
       }
+
+      this._getServiceEnumerator().reIndex();
    },
 
    /**
-    * Обрабатывает событие об изменении исходной коллекции
+    * Обрабатывает событие об изменении элемента исходной коллекции
     * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem} item Измененный элемент коллеции.
+    * @param {*} item Измененный элемент коллеции.
     * @param {Integer} index Индекс измененного элемента.
     * @param {String} [property] Измененное свойство элемента
     * @private
