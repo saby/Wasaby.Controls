@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.Image.CropDialog', [
                }));
             this._cropPlugin.startCrop();
          }.bind(this));
-         $ws.helpers.reloadImage(this._image, this._options.cropOptions.image);
+         $ws.helpers.reloadImage(this._image, this._options.cropOptions.imageUrl);
       },
 
       init: function() {
