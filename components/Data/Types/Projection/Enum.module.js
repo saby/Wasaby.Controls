@@ -23,24 +23,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Enum', [
          //console.log(cfg);
 
       },
-      _reBuild: function() {
-         this._sourceMap.length = 0;
-         this._filterMap.length = 0;
-         this._sortMap.length = 0;
 
-         var enumerator = this._options.collection.getEnumerator(false),
-            item;
-         while ((item = enumerator.getNext())) {
-            item = this._convertItem(item);
-            this._sourceMap.push(item);
-            this._filterMap.push(true);
-         }
-         this._enumerator.reIndex();
-         var currentIndex = this._options.collection.get();
-         this.setCurrent(this.at(currentIndex));
-      },
       _convertItem: function(item) {
-         if(! $ws.helpers.instanceOfModule(item, this._itemModule)){
+         if (!$ws.helpers.instanceOfModule(item, this._itemModule)) {
             item = $ws.single.ioc.resolve(this._itemModule, {
                owner: this,
                contents: item
@@ -49,15 +34,17 @@ define('js!SBIS3.CONTROLS.Data.Projection.Enum', [
          return item;
 
       },
+
       getByHash: function(hash) {
          var enumerator = this.getEnumerator(false),
             item;
          while ((item = enumerator.getNext())) {
-            if(item.getHash() === hash){
+            if (item.getHash() === hash) {
                return item;
             }
          }
       },
+
       _notifyCurrentChange: function(newCurrent, oldCurrent, newPosition, oldPosition) {
          this._options.collection.set(newPosition);
          EnumProjection.superclass._notifyCurrentChange.apply(this,arguments);

@@ -26,30 +26,16 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
          _enumerator: undefined
       },
       $constructor: function(cfg) {
-         if(!(cfg.data instanceof Array)){
+         if (!(cfg.data instanceof Array)) {
             throw new Error('data must be an array');
          }
-         if(cfg.hasOwnProperty('currentValue')){
+         if (cfg.hasOwnProperty('currentValue')) {
             this.set(cfg.currentValue);
          }
       },
 
-      each: function(callback, context, unwrapOnRead) {
-         var listItem,
-            enumerator = this.getEnumerator(),
-            index = 0;
-         enumerator.reset();
+      each: function(callback, context) {
          context = context||this;
-         if(typeof callback !== 'function'){
-            throw new Error("callback isn't a function");
-         }
-         while ((listItem = enumerator.getNext())) {
-            var item  = listItem;
-            if (unwrapOnRead) {
-               item = listItem.getContents();
-            }
-            callback.call(context, item, index++);
-         }
          $ws.helpers.forEach(this._options.data, callback, context);
       },
 
@@ -58,7 +44,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
       },
 
       getEnumerator: function() {
-         if(!this._enumerator) {
+         if (!this._enumerator) {
             this._enumerator =  new ArrayEnumerator({
                items: this._options.data
             });
@@ -71,7 +57,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
       },
 
       set: function(index) {
-         if(index in this._options.data) {
+         if (index in this._options.data) {
             this._currentValue = index;
          }
       },

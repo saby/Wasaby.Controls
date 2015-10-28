@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.Data.Types.IFlags', [], function () {
        * returns {Boolean}
        */
       equals: function(obj) {
-
+         throw new Error('Method must be implemented');
       },
       /**
        * Возвращает значение флага по индексу
@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.Data.Types.IFlags', [], function () {
        * returns {Boolean|Null}
        */
       getByIndex: function(index) {
-
+         throw new Error('Method must be implemented');
       },
       /**
        * Устанавливает значение флага по индексу
@@ -48,25 +48,25 @@ define('js!SBIS3.CONTROLS.Data.Types.IFlags', [], function () {
        * @param value {Boolean|Null} - значение флага
        */
       setByIndex: function(index, value) {
-
+         throw new Error('Method must be implemented');
       },
       /**
        * Установить всем флагам false
        */
       setFalseAll: function() {
-
+         throw new Error('Method must be implemented');
       },
       /**
        * Установить всем флагам true
        */
       setTrueAll: function() {
-
+         throw new Error('Method must be implemented');
       },
       /**
        * Установить всем флагам null
        */
       setNullAll: function() {
-
+         throw new Error('Method must be implemented');
       }
    };
 });
