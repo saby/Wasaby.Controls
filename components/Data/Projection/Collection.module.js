@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
    'js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.Projection',
-   'js!SBIS3.CONTROLS.Data.Collection.CollectionItem'
+   'js!SBIS3.CONTROLS.Data.Projection.CollectionItem'
 ], function (IEnumerable, IBindCollectionProjection, ICollectionProjection, CollectionProjectionEnumerator, ArrayEnumerator, Projection) {
    'use strict';
 
@@ -26,10 +26,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          /**
           * @var {String} Модуль элемента проекции
           */
-         _itemModule: 'SBIS3.CONTROLS.Data.Collection.CollectionItem',
+         _itemModule: 'SBIS3.CONTROLS.Data.Projection.CollectionItem',
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Collection.CollectionItem[]} Индекс проекции коллекции
+          * @var {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} Индекс проекции коллекции
           */
          _itemsMap: [],
 
@@ -119,7 +119,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       /**
        * Возвращает элемент проекции с указанным хэшем
        * @param {String} hash Хеш элемента
-       * @returns {SBIS3.CONTROLS.Data.Collection.CollectionItem}
+       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
        * @state mutable
        */
       getByHash: function(hash) {
@@ -139,7 +139,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       /**
        * Возвращает элемент по индексу
        * @param {Number} index Индекс
-       * @returns {SBIS3.CONTROLS.Data.Collection.CollectionItem}
+       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
        * @state mutable
        */
       at: function (index) {
@@ -148,7 +148,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
 
       /**
        * Возвращает индекс элемента
-       * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Индекс
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Элемент
        * @returns {Number}
        * @state mutable
        */
@@ -341,7 +341,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
 
       /**
        * Уведомляет подписчиков об изменении элемента коллекции
-       * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Элемент проекции
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Элемент проекции
        * @param {String} property Изменившееся свойство
        * @private
        */
@@ -388,7 +388,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       /**
        * Превращает объект в элемент коллекции
        * @param {*} item Объект
-       * @returns {SBIS3.CONTROLS.Data.Collection.CollectionItem}
+       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
        * @private
        */
       _convertToItem: function (item) {
@@ -607,7 +607,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       /**
        * Дробавляет срез элементов в индексы
        * @param {Number} start Начальный индекс (в исходной коллекци)
-       * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem[]} items Элементы
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} items Элементы
        * @private
        */
       _addItems: function (start, items) {
@@ -674,8 +674,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
 
       /**
        * Генерирует событие об изменении текущего элемента проекции коллекции
-       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem} newCurrent Новый текущий элемент
-       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem} oldCurrent Старый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} newCurrent Новый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} oldCurrent Старый текущий элемент
        * @param {Number} newPosition Новая позиция
        * @param {Number} oldPosition Старая позиция
        * @private

@@ -1,16 +1,15 @@
 /* global define, require, $ws */
 define('js!SBIS3.CONTROLS.Data.Tree.TreeItem', [
-   'js!SBIS3.CONTROLS.Data.Collection.CollectionItem',
+   'js!SBIS3.CONTROLS.Data.Projection.CollectionItem',
    'js!SBIS3.CONTROLS.Data.Tree.ITreeItem',
-   'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Projection.Tree'
-], function (CollectionItem, ITreeItem, Utils) {
+], function (CollectionItem, ITreeItem) {
    'use strict';
 
    /**
     * Элемент дерева
     * @class SBIS3.CONTROLS.Data.Tree.TreeItem
-    * @extends SBIS3.CONTROLS.Data.Collection.CollectionItem
+    * @extends SBIS3.CONTROLS.Data.Projection.CollectionItem
     * @mixes SBIS3.CONTROLS.Data.Tree.ITreeItem
     * @public
     * @author Мальцев Алексей

@@ -388,7 +388,7 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
 
       /**
        * Возвращает данные, необходимые для отображения элемента
-       * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Элемент
        * @returns {Object}
        * @private
        */
@@ -408,7 +408,7 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
 
       /**
        * Возвращает шаблон отображения элемента
-       * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Элемент
        * @returns {String|Function}
        * @private
        */
@@ -470,7 +470,7 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
 
       /**
        * Возвращает узел, содержащий в котором размещается указанный элемент
-       * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Элемент
        * @returns {jQuery}
        * @private
        */
@@ -480,7 +480,7 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
 
       /**
        * Строит узел контейнера элемента
-       * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Элемент
        * @param {String|Function} template Шаблон
        * @returns {jQuery}
        * @private
@@ -575,7 +575,7 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
       /**
        * Возвращает узел контейнера элемента среди siblings по его позиции
        * @param {jQuery} parent Родительский узел
-       * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Элемент
        * @returns {jQuery}
        * @private
        */

@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          },
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Collection.CollectionItem[]} Элементы списка
+          * @var {*[]} Элементы списка
           */
          _items: [],
 

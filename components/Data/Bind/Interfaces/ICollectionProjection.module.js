@@ -16,9 +16,9 @@ define('js!SBIS3.CONTROLS.Data.Bind.ICollectionProjection', [
        * @event onCollectionChange После изменения коллекции
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} action Действие, приведшее к изменению.
-       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem[]} newItems Новые элементы коллеции.
+       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} newItems Новые элементы коллеции.
        * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
-       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem[]} oldItems Удаленные элементы коллекции.
+       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} oldItems Удаленные элементы коллекции.
        * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
        * @example
        * <pre>
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.Data.Bind.ICollectionProjection', [
       /**
        * @event onCollectionItemChange После изменения элемента коллекции
        * @param {$ws.proto.EventObject} event Дескриптор события.
-       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem} item Измененный элемент коллеции.
+       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} item Измененный элемент коллеции.
        * @param {Integer} index Индекс измененного элемента.
        * @param {String} [property] Измененное свойство элемента
        * @example

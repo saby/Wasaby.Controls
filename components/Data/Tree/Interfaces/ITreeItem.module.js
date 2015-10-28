@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.Data.Tree.ITreeItem', [
    /**
     * Интерфейс элемента дерева
     * @mixin SBIS3.CONTROLS.Data.Tree.ITreeItem
-    * @implements SBIS3.CONTROLS.Data.Collection.ICollectionItem
+    * @implements SBIS3.CONTROLS.Data.Projection.ICollectionItem
     * @public
     * @author Мальцев Алексей
     */

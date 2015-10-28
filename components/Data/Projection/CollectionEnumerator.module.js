@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       $protected: {
          _options: {
             /**
-             * @var {SBIS3.CONTROLS.Data.Collection.CollectionItem[]} Индекс проекции коллекции
+             * @var {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} Индекс проекции коллекции
              */
             itemsMap: [],
 
@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          },
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Collection.CollectionItem} Текущий элемент
+          * @var {SBIS3.CONTROLS.Data.Projection.CollectionItem} Текущий элемент
           */
          _сurrent: undefined,
 
@@ -106,7 +106,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       /**
        * Возвращает элемент по индексу
        * @param {Number} index Индекс
-       * @returns {SBIS3.CONTROLS.Data.Collection.CollectionItem}
+       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
        * @state mutable
        */
       at: function (index) {
@@ -117,7 +117,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
 
       /**
        * Устанавливает текущий элемент
-       * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Текущий элемент
        */
       setCurrent: function(item) {
          this._currentPosition = Array.indexOf(this._options.itemsMap, item);

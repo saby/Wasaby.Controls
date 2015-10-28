@@ -16,8 +16,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.ICollection', [
       /**
        * @event onCurrentChange При изменении текущего элемента
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem} newCurrent Новый текущий элемент
-       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem} oldCurrent Старый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} newCurrent Новый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} oldCurrent Старый текущий элемент
        * @param {Number} newPosition Новая позиция
        * @param {Number} oldPosition Старая позиция
        */
@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ICollection', [
 
       /**
        * Возвращает текущий элемент
-       * @returns {SBIS3.CONTROLS.Data.Collection.ICollectionItem}
+       * @returns {SBIS3.CONTROLS.Data.Projection.ICollectionItem}
        */
       getCurrent: function () {
          throw new Error('Method must be implemented');
@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ICollection', [
 
       /**
        * Устанавливает текущий элемент
-       * @param {SBIS3.CONTROLS.Data.Collection.ICollectionItem} item Новый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} item Новый текущий элемент
        * @param {Boolean} [silent=false] Не генерировать событие onCurrentChange
        */
       setCurrent: function (item, silent) {

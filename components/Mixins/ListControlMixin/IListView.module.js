@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.ListControl.IListView', [], function () {
       },
       /**
        * Добавляет элемент в представление
-       * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Элемент
        * @param {Number} at Позиция, в которую добавляется элемент
        */
       addItem: function (item, at) {
@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.ListControl.IListView', [], function () {
 
       /**
        * Обновляет элемент в представлении
-       * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Элемент
        */
       updateItem: function (item) {
          throw new Error('Method must be implemented');
@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.ListControl.IListView', [], function () {
 
       /**
        * Удаляет элемент
-       * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Элемент
        */
       removeItem: function (item) {
          throw new Error('Method must be implemented');
@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.ListControl.IListView', [], function () {
 
       /**
        * Перемещает элемент
-       * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Элемент
        * @param {Number} to Позиция, на которую переместить
        */
       moveItem: function (item, to) {
@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.ListControl.IListView', [], function () {
 
       /**
        * Отображает элемент в выделенном состоянии
-       * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Элемент
        */
       selectItem: function (item) {
          throw new Error('Method must be implemented');
@@ -121,7 +121,7 @@ define('js!SBIS3.CONTROLS.ListControl.IListView', [], function () {
 
       /**
        * Отображает элемент в состоянии "под указателем"
-       * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Элемент
        */
       hoverItem: function (item) {
          throw new Error('Method must be implemented');
@@ -129,7 +129,7 @@ define('js!SBIS3.CONTROLS.ListControl.IListView', [], function () {
 
       /**
        * Прокручивает список к элементу
-       * @param {SBIS3.CONTROLS.Data.Collection.CollectionItem} item Элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Элемент
        */
       scrollToItem: function (item) {
          throw new Error('Method must be implemented');

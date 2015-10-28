@@ -1,6 +1,6 @@
 /* global define, require, $ws */
-define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
-   'js!SBIS3.CONTROLS.Data.Collection.ICollectionItem',
+define('js!SBIS3.CONTROLS.Data.Projection.CollectionItem', [
+   'js!SBIS3.CONTROLS.Data.Projection.ICollectionItem',
    'js!SBIS3.CONTROLS.Data.IHashable',
    'js!SBIS3.CONTROLS.Data.HashableMixin'
 ], function (ICollectionItem, IHashable, HashableMixin) {
@@ -8,20 +8,20 @@ define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
 
    /**
     * Элемент коллекции
-    * @class SBIS3.CONTROLS.Data.Collection.CollectionItem
+    * @class SBIS3.CONTROLS.Data.Projection.CollectionItem
     * @mixes SBIS3.CONTROLS.Data.IHashable
-    * @mixes SBIS3.CONTROLS.Data.Collection.ICollectionItem
+    * @mixes SBIS3.CONTROLS.Data.Projection.ICollectionItem
     * @mixes SBIS3.CONTROLS.Data.HashableMixin
     * @public
     * @author Мальцев Алексей
     */
-   var CollectionItem = $ws.core.extend({}, [IHashable, ICollectionItem, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.CollectionItem.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Collection.CollectionItem',
+   var CollectionItem = $ws.core.extend({}, [IHashable, ICollectionItem, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Projection.CollectionItem.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.Data.Projection.CollectionItem',
       $protected: {
          _hashPrefix: 'collection-item-'
       },
 
-      //region SBIS3.CONTROLS.Data.Collection.ICollectionItem
+      //region SBIS3.CONTROLS.Data.Projection.ICollectionItem
 
       getOwner: function () {
          return this._options.owner;
@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
          this._notifyItemChangeToOwner('selected');
       },
 
-      //endregion SBIS3.CONTROLS.Data.Collection.ICollectionItem
+      //endregion SBIS3.CONTROLS.Data.Projection.ICollectionItem
 
       /**
        * Возвращает исходную коллекцию проекции
@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.CollectionItem', [
       }
    });
 
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Collection.CollectionItem', function(config) {
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.CollectionItem', function(config) {
       return new CollectionItem(config);
    });
 

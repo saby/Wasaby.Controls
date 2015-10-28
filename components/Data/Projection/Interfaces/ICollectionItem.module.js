@@ -1,16 +1,16 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Collection.ICollectionItem', [
+define('js!SBIS3.CONTROLS.Data.Projection.ICollectionItem', [
 ], function () {
    'use strict';
 
    /**
     * Интерфейс элемента коллекции
-    * @mixin SBIS3.CONTROLS.Data.Collection.ICollectionItem
+    * @mixin SBIS3.CONTROLS.Data.Projection.ICollectionItem
     * @implements SBIS3.CONTROLS.Data.IHashable
     * @public
     * @author Мальцев Алексей
     */
-   return /** @lends SBIS3.CONTROLS.Data.Collection.ICollectionItem.prototype */{
+   return /** @lends SBIS3.CONTROLS.Data.Projection.ICollectionItem.prototype */{
       $protected: {
          _options: {
             /**
