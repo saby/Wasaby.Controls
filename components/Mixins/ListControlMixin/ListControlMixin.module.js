@@ -30,6 +30,11 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
       $protected: {
          _options: {
             /**
+             * @cfg {SBIS3.CONTROLS.ListControl.IListItems|Array} Список, отображаемый контролом
+             * @name SBIS3.CONTROLS.ListControlMixin#items
+             */
+
+            /**
              * @typedef {Object} DataSource
              * @property {DataSourceModule} module Модуль, реализующий ISource, например js!SBIS3.CONTROLS.Data.Source.SbisService
              * @property {Object} options Опции конструктора
@@ -80,11 +85,6 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
              * @cfg {SBIS3.CONTROLS.PagerMore#PagerType} Вид контроллера постраничной навигации. По умолчанию - scroll
              */
             pagerType: 'scroll',
-
-            /**
-             * @cfg {SBIS3.CONTROLS.ListControl.IListItems|Array} Список, отображаемый контролом
-             * @name SBIS3.CONTROLS.ListControlMixin#items
-             */
 
             /**
              * @cfg {String|Function} Шаблон разметки каждого элемента списка

@@ -26,26 +26,26 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
 
             /**
              * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Используется только в случае, если указан {@link dataSource}.
-             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Tree.LoadableTree}
+             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
              *
              */
             parentProperty: '',
 
             /**
              * @cfg {String} Название свойства, содержащего признак узла. Используется только в случае, если указан {@link dataSource}.
-             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Tree.LoadableTree}
+             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
              */
             nodeProperty: '',
 
             /**
-             * @cfg {*} Идентификатор корневого узла, который будет отправлен в запросе на получение корневых записей
-             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Tree.LoadableTree}
+             * @cfg {SBIS3.CONTROLS.Data.Tree.ITreeItem|*} Корневой узел или его содержимое
+             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
              */
-            rootNodeId: undefined,
+            root: undefined,
 
             /**
              * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется только в случае, если {@link items} является массивом, для поиска в каждом элементе-узле дочерних элементов.
-             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Tree.Tree}
+             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
              */
             childrenProperty: ''
          },
@@ -83,6 +83,24 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
          _onAfterNodeLoad: undefined
       },
 
+      around: {
+         _setItems: function (prevFn, items) {
+            if (!$ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Projection')) {
+               items = new TreeProjection({
+                  collection: this._convertItems(items),
+                  idProperty: 'id',
+                  parentProperty: this._options.parentProperty,
+                  nodeProperty: this._options.nodeProperty,
+                  root: this._options.root
+               });
+            }
+
+            prevFn.call(this, items);
+
+            this._setCurrentRoot(this._itemsProjection.getRoot());
+         }
+      },
+
       after: {
          _bindHandlers: function () {
             this._onCollectionChange = this._onCollectionChange.callAround(onCollectionChange.bind(this));
@@ -91,8 +109,10 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
             this._onAfterNodeLoad = onAfterNodeLoad.bind(this);
          },
 
-         _setItems: function () {
-            this._setCurrentRoot(this._itemsProjection.getRoot());
+         _onItemClicked: function (event, hash) {
+            if (this._changeRootOnClick) {
+               this.changeRoot(hash);
+            }
          }
       },
 
@@ -136,10 +156,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
 
       _convertDataSourceToItems: function (source) {
          return new LoadableList({
-            source: source,
-            parentProperty: this._options.parentProperty,
-            nodeProperty: this._options.nodeProperty,
-            rootNodeId: this._options.rootNodeId
+            source: source
          });
       },
 
@@ -150,24 +167,6 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
       //endregion Collection
 
       //region Behavior
-      
-      /*_onItemClicked: function (event, hash) {
-         this._setItemSelected(hash);
-
-         if (this._oneClickAction) {
-            this._itemAction(this._itemsProjection.getChildByHash(hash, true));
-         }
-
-         if (this._changeRootOnClick) {
-            this.changeRoot(hash);
-         }
-      },*/
-
-      /*_onItemDblClicked: function (event, hash) {
-         if (!this._oneClickAction) {
-            this._itemAction(this._itemsProjection.getChildByHash(hash, true));
-         }
-      }*/
 
       //endregion Behavior
 
