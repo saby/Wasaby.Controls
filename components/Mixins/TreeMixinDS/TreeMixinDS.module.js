@@ -28,6 +28,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       },
 
       $constructor : function() {
+         this._publish('onNodeExpand');
          this._filter = this._filter || {};
          delete (this._filter[this._options.hierField]);
          if (this._options.expand) {
@@ -102,6 +103,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          this._folderOffsets[key || 'null'] = 0;
          this._toggleIndicator(true);
          return this._dataSource.query(this._createTreeFilter(key), this._sorting, 0, this._limit).addCallback(function (dataSet) {
+            // TODO: Пользуется Янис для того что бы подосрать в рекорды перед их отрисовкой. Сделано так как тут нельзя нотифаить onDataLoad,
+            // так как на него много всего завязано.
+            self.notify('onNodeExpand', key, dataSet);
             self._toggleIndicator(false);
             self._nodeDataLoaded(key, dataSet);
          });
