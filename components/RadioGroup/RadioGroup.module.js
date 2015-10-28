@@ -77,7 +77,10 @@ define('js!SBIS3.CONTROLS.RadioGroup', [
 
       _getItemTemplate: function () {
           return (function (data) {
-             var caption = Utils.getItemPropertyValue(data.item, this._options.displayField);
+             var caption = data.item;
+             if(typeof caption === 'object') {
+                caption = Utils.getItemPropertyValue(caption, this._options.displayField);
+             }
              return '<component data-component="SBIS3.CONTROLS.RadioButton">' +
                 '<option name="caption">' + caption + '</option>' +
                 '</component>';

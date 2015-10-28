@@ -71,24 +71,26 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
       },
 
       after: {
-         init: function() {
-            if (this._options.selectedKey) {
-               this.setSelectedKey(this._options.selectedKey);
-            }
+         init: function(){
+            var projection = this.getItemsProjection(),
+               self = this;
+            this.subscribeTo(projection, 'onCurrentChange', (function(event, newCurrent, oldCurrent, newPosition) {
+               this._setSelectedIndex(
+                  newPosition,
+                  self._getItemValue(newCurrent.getContents(), this._options.keyField )
+               );
+            }).bind(this));
          },
 
          _initView: function() {
-            this.subscribeTo(this._itemsProjection, 'onCurrentChange', (function(event, newCurrent, oldCurrent, newPosition) {
+            var projection = this.getItemsProjection(),
+               selected = projection.getCurrentPosition();
+            if(selected) {
                this._setSelectedIndex(
-                  newPosition,
-                  Utils.getItemPropertyValue(
-                     newCurrent.getContents(),
-                     this._options.keyField
-                  )
+                  selected,
+                  this._getItemValue(projection.at(selected), this._options.keyField)
                );
-            }).bind(this));
-
-            if (this._options.selectedKey) {
+            } else if (this._options.selectedKey) {
                this.setSelectedKey(this._options.selectedKey);
             }
             if (this._isItemMustSelected()) {
@@ -124,8 +126,6 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
                $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Selectable::setSelectedKey()', "Selected key doesn't found.");
             }
          }
-
-
          return index;
       },
 
@@ -172,10 +172,7 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
          var enumerator = this._itemsProjection.getEnumerator();
          enumerator.setPosition(this._itemsProjection.getCurrentPosition());
          if (enumerator.getNext()) {
-            return Utils.getItemPropertyValue(
-               enumerator.getCurrent(),
-               this._options.keyField
-            );
+            return this._getItemValue(enumerator.getCurrent(), this._options.keyField);
          } else {
             return null;
          }
@@ -198,23 +195,27 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
          var enumerator = this._itemsProjection.getEnumerator();
          enumerator.setPosition(this._itemsProjection.getCurrentPosition());
          if (enumerator.getPrevious()) {
-            return Utils.getItemPropertyValue(
-               enumerator.getCurrent(),
-               this._options.keyField
-            );
+            return this._getItemValue(enumerator.getCurrent(), this._options.keyField);
          } else {
             return null;
          }
       },
 
       _getItemIndexByKey: function(id) {
-         if (!this._options.keyField) {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Selectable::_getItemIndexByKey', 'keyField is not defined');
+         if(this._options.keyField) {
+            return this._getUtilityEnumerator().getItemIndexByPropertyValue(
+               this._options.keyField,
+               id
+            );
+         } else {
+            var index;
+            this._itemsProjection.each(function(value, i){
+               if(value.getContents() === id){
+                  index = i;
+               }
+            });
+            return index;
          }
-         return this._getUtilityEnumerator().getItemIndexByPropertyValue(
-            this._options.keyField,
-            id
-         );
       },
 
       _getUtilityEnumerator: function() {
@@ -250,6 +251,12 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
          } catch (e) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Selectable::_setFirstItemAsSelected()', e);
          }
+      },
+      _getItemValue: function(value, keyField) {
+         if(typeof value === 'object') {
+            return Utils.getItemPropertyValue(value, keyField );
+         }
+         return value;
       }
    };
 

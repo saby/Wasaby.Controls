@@ -243,6 +243,11 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
          return false;
       },
 
+      init:function(){
+         this._drawSelectedItem();
+         ComboBox.superclass.init.call(this);
+      },
+
       _initView: function() {
          ComboBox.superclass._initView.call(this);
          this.subscribeTo(this._view, 'onItemClicked', this.hidePicker.bind(this));
@@ -250,7 +255,7 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
 
       _getItemTemplate: function() {
          return (function(item) {
-            var title= Utils.getItemPropertyValue(item.item, this._options.displayField);
+            var title= this._getItemValue(item.item, this._options.displayField);
             if(this._options.itemTemplate) {
                return doT.template(this._options.itemTemplate)({
                   item:item,
@@ -264,14 +269,15 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
       },
 
       _drawSelectedItem: function() {
-         var index = this._getItemIndexByKey(this._options.selectedKey),
-            item =  this.getItems().at(index);
-         if (item) {
-            var newText = Utils.getItemPropertyValue(item, this._options.displayField);
-            if (newText !== this._options.text) {
+         var item = this.getItemsProjection().getCurrent();
+         if(item) {
+            item = item.getContents();
+            var newText = this._getItemValue(item, this._options.displayField);
+            if(newText !== this._options.text) {
                this.setText(newText);
             }
-         } else  {
+         }
+         else {
             this.setText(this._options.text);
          }
          //this._getListView().selectItem(item);
@@ -358,15 +364,14 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
             selKey,
             displayField = this._options.displayField,
             keyField = this._options.keyField,
-            oldKey = this._options.selectedKey,
-            text = this._options.text;
-
-         var collection = this.getItemsProjection().getCollection(),
-            foundItem = null;
-         collection.each(function(item,index) {
-            var title = Utils.getItemPropertyValue(item,displayField) ;
-            if(title == text){
-               selKey = Utils.getItemPropertyValue(item,keyField);
+            text = this._options.text,
+            collection = this.getItems(),
+            foundItem = null,
+            self = this;
+         collection.each(function(item, index) {
+            var title = self._getItemValue(item, displayField) ;
+            if(title === text) {
+               selKey = self._getItemValue(item, keyField);
                foundItem = item;
             }
          });
