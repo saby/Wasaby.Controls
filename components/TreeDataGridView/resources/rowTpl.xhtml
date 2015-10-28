@@ -11,7 +11,9 @@
          {{?index == 0}}
             <div class="controls-TreeView__expand js-controls-TreeView__expand{{?!isBranch}} controls-TreeView__expand__leaf{{??}} has-child{{?}}"></div>
             {{?isBranch}}
+               {{?it.arrowActivatedHandler}}
                <div class="controls-TreeView__ellipsis-wrapper">
+               {{?}}
                   <div class="controls-TreeView__ellipsis-container">
                      <span>{{=it.decorators.applyIf(column.value, {
                         'highlight': column.highlight,
@@ -29,7 +31,9 @@
                         <div class="js-controls-TreeView__editArrow controls-TreeView__editArrow icon-16 icon-View icon-primary action-hover"></div>
                      </div>
                   {{?}}
+                {{?it.arrowActivatedHandler}}
                </div>
+               {{?}}
             {{??}}
                <span>{{=it.decorators.applyIf(column.value, {
                         'highlight': column.highlight,
