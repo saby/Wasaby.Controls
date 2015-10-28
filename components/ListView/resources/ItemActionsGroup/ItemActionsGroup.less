@@ -26,13 +26,28 @@
   z-index: @list-view-actions-zindex;
   display: none;
 
+  &.controls-ItemActions-verAlign {
+    height: auto;
+    width: 20px;
+    margin: @list-view-actions-verAlign-margin;
+
+    & > * {
+      margin: @list-view-actions-margin-action-multiView;
+    }
+    .controls-ItemActions__menu-button {
+      float: @list-view-actions-float-multiView;
+      margin-left: @list-view-actions-marginLeft-menu-multiView;
+    }
+  }
+
   > * {
     display: inline-block;
     cursor: @list-view-actions-cursor;
     margin: @list-view-actions-margin;
+    vertical-align: baseline;
     width: 16px;
     height: 16px;
-    padding: 0 !important;
+    padding: 0;
 
     &.controls-ItemActions__hiddenAction {
       display: none !important;
