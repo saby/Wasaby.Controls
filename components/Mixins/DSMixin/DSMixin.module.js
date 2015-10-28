@@ -520,12 +520,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _drawItems: function (records, at) {
          var
-            self = this,
             curAt = at;
          if (records && records.length > 0) {
             for (var i = 0; i < records.length; i++) {
-               this._drawItem(records[i], curAt, i === records.length - 1);
-
+               this._drawAndAppendItem(records[i], curAt, i === records.length - 1);
                if (curAt && curAt.at) {
                   curAt.at++;
                }
@@ -585,16 +583,23 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _drawItem: function (item, at, last) {
          var
-            targetContainer,
             itemInstance;
          //Запускаем группировку если она есть. Иногда результат попадает в группровку и тогда отрисовывать item не надо
          if (this._group(item, at, last) !== false) {
-            targetContainer = this._getTargetContainer(item);
-            itemInstance = this._createItemInstance(item, targetContainer, at);
+            itemInstance = this._createItemInstance(item, this._getTargetContainer(item), at);
             this._addItemAttributes(itemInstance, item);
-            this._appendItemTemplate(item, targetContainer, itemInstance, at);
+         }
+         return itemInstance;
+      },
+
+      _drawAndAppendItem: function(item, at, last) {
+         var
+            itemInstance = this._drawItem(item, at, last);
+         if (itemInstance) {
+            this._appendItemTemplate(item, this._getTargetContainer(item), itemInstance, at);
          }
       },
+
       /**
        *
        * Из метода группировки можно вернуть Boolean - рисовать ли группировку

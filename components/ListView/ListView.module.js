@@ -16,10 +16,13 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.CommonHandlers',
       'js!SBIS3.CONTROLS.MoveHandlers',
       'js!SBIS3.CONTROLS.Pager',
+      'js!SBIS3.CONTROLS.EditInPlaceHoverController',
+      'js!SBIS3.CONTROLS.EditInPlaceClickController',
+      'js!SBIS3.CONTROLS.Link',
       'is!browser?html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'is!browser?html!SBIS3.CONTROLS.ListView/resources/emptyData'
    ],
-   function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, MoveHandlers, Pager, groupByTpl, emptyDataTpl) {
+   function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, Link, groupByTpl, emptyDataTpl) {
 
       'use strict';
 
@@ -92,6 +95,7 @@ define('js!SBIS3.CONTROLS.ListView',
                size: null
             },
             _loadingIndicator: undefined,
+            _editInPlace: null,
             _hasScrollMore: true,
             _infiniteScrollOffset: null,
             _allowInfiniteScroll: true,
@@ -109,6 +113,7 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws._const.key.right,
                $ws._const.key.left
             ],
+            _addInPlaceButton: null,
             _itemActionsGroup: null,
             _emptyData: undefined,
             _options: {
@@ -257,7 +262,25 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see setPage
                 * @see getPage
                 */
-               showPaging: false
+               showPaging: false,
+               /**
+                * @typedef {Object} editInPlaceConfig
+                * @property {Boolean} enabled Включить редактирование по месту
+                * @property {Boolean} addInPlace Включить добавление по месту
+                * @property {Boolean} hoverMode Включить режим редактирования по наведению мыши
+                * @property {String} template Шаблон строки редактирования по месту
+                * @property {Function} onFieldChange Метод, вызываемый при смене значения в одном из полей редактирования по месту и потере фокуса этим полем
+                */
+               /**
+                * @cfg {editInPlaceConfig} Конфигурация редактирования по месту
+                */
+               editInPlace: {
+                  enabled: false,
+                  addInPlace: false,
+                  hoverMode: false, //todo EIP Сухоручкин: Переделать на mode: String, т.к. могут быть и другие виды
+                  template: undefined,
+                  onFieldChange: undefined
+               }
             }
          },
 
@@ -286,6 +309,9 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this.setGroupBy(this._options.groupBy, false);
             this._drawEmptyData();
+            if (this._options.editInPlace.enabled && this._options.editInPlace.addInPlace && !this._editInPlace) {
+               this._initAddInPlace();
+            }
             ListView.superclass.init.call(this);
             this.reload();
          },
@@ -314,8 +340,10 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             return false;
          },
+         //todo Герасимов: спилить этот метод, переведя на подписку через $.on(...)
          _checkTargetContainer: function (target) {
-            return this._options.showPaging && this._pager && $.contains(this._pager.getContainer()[0], target[0]);
+            return this._options.showPaging && this._pager && $.contains(this._pager.getContainer()[0], target[0]) ||
+                this._addInPlaceButton && $.contains(this._addInPlaceButton.getContainer().parent()[0], target[0]);
          },
          _isViewElement: function (elem) {
             return $.contains(this._getItemsContainer()[0], elem[0]);
@@ -391,7 +419,9 @@ define('js!SBIS3.CONTROLS.ListView',
             return itemActionsContainer &&
                ( itemActionsContainer[0] === $target[0] ||
                   $.contains(itemActionsContainer[0], $target[0]) ||
-                  this._itemActionsGroup.isItemActionsMenuVisible() );
+                  this._itemActionsGroup.isItemActionsMenuVisible() ) ||
+                  //todo Сухоручкин: this._editInPlace._container в DOM больше не существует! Проверка неправильная! Hover-режим однажды сломается!
+                  this._editInPlace && $.contains(this._editInPlace.getContainer()[0], $target[0]);
          },
          /**
           * Обрабатывает уведение мышки с элемента представления
@@ -416,6 +446,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
+            this._updateEditInPlaceDisplay(target);
             if (this._options.itemsActions.length) {
                target.container ? this._showItemActions(target) : this._hideItemActions();
             }
@@ -477,9 +508,13 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _elemClickHandlerInternal: function (data, id, target) {
-
+            if (this._options.editInPlace.enabled && !this._options.editInPlace.hoverMode) {
+               this._initEditInPlace();
+               if (this._editInPlace) {
+                  this._editInPlace.showEditing($(target).closest('.controls-ListView__item'), data);
+               }
+            }
          },
-
          _drawSelectedItems: function (idArray) {
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__multiSelected');
             for (var i = 0; i < idArray.length; i++) {
@@ -507,6 +542,16 @@ define('js!SBIS3.CONTROLS.ListView',
          reload: function () {
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
+            // Если используется редактирование по месту, то уничтожаем его
+            if (this._editInPlace) {
+               this._editInPlace.destroy();
+               this._editInPlace = null;
+               // Пересоздаем EditInPlace
+               // todo EIP Сухоручкин: уберется когда выполним "этот метод надо завернуть в get'тер"
+               this.once('onDataLoaded', function() {
+                  this._initEditInPlace();
+               }.bind(this));
+            }
             return ListView.superclass.reload.apply(this, arguments);
          },
          _reloadInfiniteScrollParams : function(){
@@ -532,6 +577,75 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setElemClickHandler: function (method) {
             this._options.elemClickHandler = method;
+         },
+
+         //********************************//
+         //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
+         //*******************************//
+
+         _updateEditInPlaceDisplay: function(hoveredItem) {
+            if (this._options.editInPlace.enabled && this._options.editInPlace.hoverMode) {
+               this._initEditInPlace();
+               this._editInPlace.updateHoveredArea(hoveredItem);
+            }
+         },
+
+         _initAddInPlace: function() {
+            var
+                self = this,
+                itemsContainer = this._getItemsContainer();
+            this._addInPlaceButton = new Link({
+               name: 'controls-ListView__addInPlace-button',
+               icon: 'sprite:icon-16 icon-NewCategory',
+               caption: 'Новая запись',
+               element: $('<div>').appendTo(this._getElementForAddInPlaceButton())
+            });
+            this._addInPlaceButton.subscribe('onActivated', function() {
+               self._initEditInPlace();
+               self._editInPlace.showAdd($(self._getAddInPlaceItem()).appendTo(itemsContainer));
+            });
+         },
+         _getElementForAddInPlaceButton: function() {
+            return this._container.find('.controls-ListView__addInPlace-container');
+         },
+         _getAddInPlaceItem: function() {
+            return '<div class="controls-ListView__item"></div>'
+         },
+         /**
+          * todo EIP Сухоручкин: этот метод надо завернуть в get'тер
+          * @private
+          */
+         _initEditInPlace: function() {
+            if (!this._editInPlace) {
+               this._createEditInPlace();
+               this._dataSet.subscribe('onRecordChange', function(event, record) {
+                  var item = this._getItemsContainer().find('.controls-ListView__item[data-id="' + record.getKey() + '"]');
+                  if (item.length) {
+                     item.empty().append(this._drawItem(record).children());
+                  }
+               }.bind(this));
+            }
+         },
+
+         _createEditInPlace: function() {
+            var
+               controller = this._options.editInPlace.hoverMode ? EditInPlaceHoverController : EditInPlaceClickController,
+               options = {
+                  addInPlaceButton: this._addInPlaceButton,
+                  dataSet: this._dataSet,
+                  ignoreFirstColumn: this._options.multiselect,
+                  columns: this._options.columns,
+                  dataSource: this._dataSource,
+                  template: this._options.editInPlace.template,
+                  element: $('<div>'),
+                  handlers: {
+                     onFieldChange: this._options.editInPlace.onFieldChange
+                  }
+               };
+            //todo Для hover-режима надо передать в опции метод
+            //options.editFieldFocusHandler = this._editFieldFocusHandler.bind(this)
+            //подумать, как это сделать
+            this._editInPlace = new controller(options);
          },
 
          //********************************//
@@ -990,6 +1104,10 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._pager) {
                this._pager.destroy();
                this._pager = undefined;
+            }
+            if (this._options.editInPlace.enabled && this._editInPlace) {
+               this._editInPlace.destroy();
+               this._editInPlace = null;
             }
             ListView.superclass.setDataSource.apply(this, arguments);
          },
