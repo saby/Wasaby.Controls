@@ -46,6 +46,10 @@ define('js!SBIS3.CONTROLS.Data.Projection', [
             instance = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Projection.Tree', {
                tree: object
             });
+         } else if($ws.helpers.instanceOfMixin(object, 'SBIS3.CONTROLS.Data.Types.IEnum')) {
+            instance = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Projection.Enum', {
+               collection: object
+            });
          } else if ($ws.helpers.instanceOfMixin(object, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
             instance = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Projection.Collection', {
                collection: object

@@ -836,7 +836,6 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
          case IBindCollection.ACTION_RESET:
             this.redraw();
-            this.reviveComponents();
             break;
       }
    },
