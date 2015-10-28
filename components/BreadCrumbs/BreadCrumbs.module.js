@@ -192,7 +192,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
             //Минимум остается первая и последняя хлебная крошка
             //20px - ширина блока с домиком
-            //60px - блок с домиком + стрелка + троеточие
+            //78px - блок с домиком + стрелка + троеточие
             if ((targetContainer.width() + 20 >= containerWidth)) {
                var halfWidth = (containerWidth - 78) / 2;
                if (points.length >= 2) {
