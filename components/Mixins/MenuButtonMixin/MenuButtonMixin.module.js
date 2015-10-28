@@ -90,6 +90,14 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          this.togglePicker();
       },
 
+      //Прокидываем вызов метода в меню
+      getItemsInstances: function() {
+         if (!this._picker) {
+            this._initializePicker();
+         }
+         return this._picker.getItemsInstances.apply(this._picker, arguments);
+      },
+
       after : {
          _initializePicker : function() {
             var self = this;
