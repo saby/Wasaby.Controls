@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       destroy: function (key) {
          var index = this._getIndexByKey(key);
          if (index === -1) {
-            return $ws.proto.Deferred.fail('Model key "' + key + '" isn\'t found');
+            return $ws.proto.Deferred.fail('Model with key "' + key + '" isn\'t found');
          } else {
             this._options.adapter.forTable().remove(
                this._options.data,
@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       copy: function(key) {
          var index = this._getIndexByKey(key);
          if (index === -1) {
-            return $ws.proto.Deferred.fail("Model key \""+key+"\" isn't found");
+            return $ws.proto.Deferred.fail('Model with key "' + key + '" isn\'t found');
          } else {
             this._options.adapter.forTable().copy(
                this._options.data,
@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          var indexOne = this._getIndexByKey(one),
             indexTwo = this._getIndexByKey(two);
          if (indexOne === -1 || indexTwo === -1) {
-            return $ws.proto.Deferred.fail("Model key a one \""+one+"\" or a two \""+two+"\" isn't exists");
+            return $ws.proto.Deferred.fail('Model with key "' + one + '" or "' + two + '" isn\'t exists');
          } else {
             this._options.adapter.forTable().merge(
                this._options.data,
@@ -177,7 +177,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
                targetPosition = this._getIndexByKey(targetKey);
             }
             if(typeof targetPosition === 'undefined') {
-               return $ws.proto.Deferred().fail("Can't find target position");
+               return $ws.proto.Deferred().fail('Can\'t find target position');
             }
             this._options.adapter.forTable().move(this._options.data, sourcePosition, targetPosition, orderDetails);
             this._reIndex();
