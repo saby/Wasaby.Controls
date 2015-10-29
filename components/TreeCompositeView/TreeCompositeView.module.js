@@ -24,9 +24,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
        * </component>
        *
        * @demo SBIS3.CONTROLS.Demo.MyTreeCompositeView
-       * 
+       *
        */
-      
+
       $protected: {
          _options: {
             /**
@@ -141,13 +141,20 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
          return this._getItemsContainer();
       },
       _getItemActionsPosition: function(hoveredItem) {
-      	var isTableView = this.getViewMode() === 'table';
-         if (isTableView){
-            return TreeCompositeView.superclass._getItemActionsPosition.call(this, hoveredItem);
-         }
+         var itemActions = this.getItemsActions().getContainer(),
+             viewMode = this.getViewMode(),
+             //FIXME в версии 3.7.3.20 будет приходить рекорд, надо это использовать
+             horAlign = viewMode === 'table' || (!this.getDataSet().getRecordByKey(hoveredItem.key).get(this._options.hierField + '@') && viewMode === 'list'),
+             height;
+
+         itemActions[horAlign ? 'removeClass' : 'addClass']('controls-ItemActions-verAlign');
+         height = itemActions[0].offsetHeight || itemActions.height();
+
          return {
-            top: hoveredItem.position.top,
-            right: this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
+            top: horAlign ?
+                   hoveredItem.position.top + ((hoveredItem.size.height > height) ? hoveredItem.size.height - height : 0 ) :
+                   hoveredItem.position.top,
+            right: viewMode === 'table' ? 5 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
          };
       },
       _processPaging: function() {
