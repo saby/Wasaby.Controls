@@ -13,10 +13,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
     * @extends $ws.proto.Abstract
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @mixes SBIS3.CONTROLS.Data.Collection.IList
-    * @mixes SBIS3.CONTROLS.Data.Collection.IIndexedCollection
     * @public
     * @author Мальцев Алексей
     */
+   //mixes SBIS3.CONTROLS.Data.Collection.IIndexedCollection - временно отключаем упоминание об этом интерфейсе, возможно его не будет в этом виде
 
    var List = $ws.proto.Abstract.extend([IEnumerable, IList, IIndexedCollection], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.List',
@@ -167,6 +167,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       //endregion SBIS3.CONTROLS.Data.Collection.IList
 
       //region SBIS3.CONTROLS.Data.Collection.IIndexedCollection
+
+      // Attention! Не используйте методы интерфейса SBIS3.CONTROLS.Data.Collection.IIndexedCollection - он будет изменен.
 
       getItemByPropertyValue: function (property, value) {
          return this._getServiceEnumerator().getItemByPropertyValue(property, value);

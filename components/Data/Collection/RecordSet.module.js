@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
     * @class SBIS3.CONTROLS.Data.Collection.RecordSet
     * @extends SBIS3.CONTROLS.Data.Collection.List
     * @author Мальцев Алексей
+    * @state mutable
     * @remark
     * Этот модуль временный. Обеспечивает совместимость c  SBIS3.CONTROLS.DataSet по API.
     */

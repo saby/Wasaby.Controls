@@ -272,9 +272,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       move: function(model, orderDetails) {
          var self = this,
-            strategy = this.getStrategy(),
             def = new $ws.proto.Deferred(),
-            params = strategy.prepareOrderParams(this._options.resource,model, orderDetails),
+            params = this._prepareOrderParams(this._options.resource, model, orderDetails),
             suffix = orderDetails.after ? 'После' : 'До';
          if (!this._orderBL) {
             this._orderBL = new $ws.proto.BLObject('ПорядковыйНомер');

@@ -7,6 +7,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection', [], function () {
     * @mixin SBIS3.CONTROLS.Data.Collection.IIndexedCollection
     * @public
     * @author Мальцев Алексей
+    * @state mutable
+    * @remark
+    * Этот интерфейс временный. Не используйте его - он будет изменен.
     */
 
    return /** @lends SBIS3.CONTROLS.Data.Collection.IIndexedCollection.prototype */{
