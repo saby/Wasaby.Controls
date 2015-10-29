@@ -233,8 +233,9 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        */
       _getModelInstance: function (data) {
          return new this._options.model({
-            source: this.getSource(),
             data: data,
+            adapter: this.getAdapter(),
+            source: this.getSource(),
             compatibleMode: true
          });
       },
