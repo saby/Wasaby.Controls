@@ -345,7 +345,6 @@ define('js!SBIS3.CONTROLS.StaticSource', [
          var strategy = this.getStrategy();
          if (parentKey || parentKey === null) {
             strategy.setParentKey(record, hierField, parentKey);
-            this.sync(record);
          }
          if(orderDetails){
             strategy.changeOrder(this._options.data, record, orderDetails);
