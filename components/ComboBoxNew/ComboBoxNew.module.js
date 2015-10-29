@@ -350,9 +350,9 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
       _keyUpBind: function (e) {
          /*по изменению текста делаем то же что и в текстбоксе*/
          /*не делаем смену значения при нажатии на стрелки вверх вниз. Иначе событие смены ключа срабатывает два раза*/
-         if(this.isEditable()){
+         if (this.isEditable()){
             var key=$ws._const.key;
-            if(Array.indexOf([key.up,key.down,key.enter],e.which)=== -1){
+            if (Array.indexOf([key.up,key.down,key.enter],e.which)=== -1) {
                ComboBox.superclass._keyUpBind.call(this);
             }
          }
@@ -370,15 +370,13 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
             self = this;
          collection.each(function(item, index) {
             var title = self._getItemValue(item, displayField) ;
-            if(title === text) {
+            if (title === text) {
                selKey = self._getItemValue(item, keyField);
                foundItem = item;
             }
          });
-         if(foundItem) {
+         if (foundItem) {
             this.setSelectedKey(selKey);
-         } else {
-            this.setSelectedKey();
          }
 
       },
@@ -427,7 +425,7 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
       },
 
       _getMainView: function(){
-         if(this._mainView)
+         if (this._mainView)
             return this._mainView;
 
          this._mainView = new this._mainViewConstructor({
@@ -438,7 +436,7 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
 
       _getListView: function(){
          /*линк на _getView, чтобы не путаться с двумя вьюхами внутри контрола*/
-         if(!this._view)
+         if (!this._view)
             this._initView();
 
          return this._getView();
