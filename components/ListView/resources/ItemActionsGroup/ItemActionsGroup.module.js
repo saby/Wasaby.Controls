@@ -15,6 +15,9 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
       'use strict';
 
+      var VERTICAL_OFFSET = -21;
+      var HORIZONTAL_OFFSET = 6;
+
       var ItemActionsGroup = ButtonGroupBaseDS.extend( /** @lends SBIS3.CONTROLS.ItemActionsGroup.prototype */ {
          $protected: {
             _dotTplFn: dotTplFn,
@@ -79,11 +82,11 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                closeButton: true,
                verticalAlign: {
                   side: 'top',
-                  offset: -18
+                  offset: VERTICAL_OFFSET
                },
                horizontalAlign: {
                   side: 'right',
-                  offset: 5
+                  offset: HORIZONTAL_OFFSET
                },
                closeByExternalClick: true,
                handlers: {
