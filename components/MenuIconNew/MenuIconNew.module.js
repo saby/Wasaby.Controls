@@ -71,8 +71,8 @@ define('js!SBIS3.CONTROLS.MenuIconNew', [
       },
 
       _clickHandler: function() {
-         var items = this.getItems(),
-            children  = items.getChildren(),
+         var items = this.getItemsProjection(),
+            children  = items.getChildren(items.getRoot()),
             count = children.getCount();
          if (count > 1) {
             this.togglePicker();

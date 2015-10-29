@@ -63,12 +63,6 @@ define('js!SBIS3.CONTROLS.MenuButtonNew', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3
 
       },
 
-      init: function(){
-         var self = this;
-         MenuButton.superclass.init.call(this);
-
-      },
-
       destroy: function(){
          MenuButton.superclass.destroy.call(this);
       },
@@ -79,8 +73,8 @@ define('js!SBIS3.CONTROLS.MenuButtonNew', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3
 
 
       _clickHandler: function(){
-         var items = this.getItems(),
-            children  = items.getChildren(),
+         var items = this.getItemsProjection(),
+            children  = items.getChildren(items.getRoot()),
             count = children.getCount();
          if (count > 1) {
             this.togglePicker();

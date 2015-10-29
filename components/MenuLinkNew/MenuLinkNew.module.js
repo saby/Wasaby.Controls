@@ -79,8 +79,8 @@ define('js!SBIS3.CONTROLS.MenuLinkNew', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.C
       },
 
       _clickHandler: function(){
-         var items = this.getItems(),
-            children  = items.getChildren(),
+         var items = this.getItemsProjection(),
+            children  = items.getChildren(items.getRoot()),
             count = children.getCount();
          if (count > 1) {
             this.togglePicker();
