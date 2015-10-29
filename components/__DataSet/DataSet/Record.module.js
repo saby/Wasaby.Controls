@@ -103,7 +103,9 @@ define('js!SBIS3.CONTROLS.Record', [
                this._strategy,
                data.meta
             );
-         this._fieldsCache[field] = value;
+         if (value && typeof value === 'object') {
+            this._fieldsCache[field] = value;
+         }
          return value;
       },
 
