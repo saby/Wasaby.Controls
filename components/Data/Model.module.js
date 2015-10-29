@@ -25,6 +25,25 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       $protected: {
          _options: {
             /**
+             * @cfg {Object} Данные в "сыром" виде
+             * @example
+             * <pre>
+             *    var user = new Model({
+             *       data: {
+             *          id: 1,
+             *          firstName: 'John',
+             *          lastName: 'Smith'
+             *       }
+             *    });
+             *    user.get('id');//5
+             *    user.get('firstName');//John
+             * </pre>
+             * @see getRawData
+             * @see setRawData
+             */
+            data: {},
+
+            /**
              * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными
              * @example
              * <pre>
@@ -46,25 +65,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              * @see remove
              */
             source: undefined,
-
-            /**
-             * @cfg {Object} Данные в "сыром" виде
-             * @example
-             * <pre>
-             *    var user = new Model({
-             *       data: {
-             *          id: 1,
-             *          firstName: 'John',
-             *          lastName: 'Smith'
-             *       }
-             *    });
-             *    user.get('id');//5
-             *    user.get('firstName');//John
-             * </pre>
-             * @see getRawData
-             * @see setRawData
-             */
-            data: {},
 
             /**
              * @typedef {Object} Property
