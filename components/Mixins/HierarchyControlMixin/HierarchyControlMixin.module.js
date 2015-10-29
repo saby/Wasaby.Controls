@@ -38,16 +38,16 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
             nodeProperty: '',
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Projection.ITreeItem|*} Корневой узел или его содержимое
-             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
-             */
-            root: undefined,
-
-            /**
              * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется только в случае, если {@link items} является массивом, для поиска в каждом элементе-узле дочерних элементов.
              * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
              */
-            childrenProperty: ''
+            childrenProperty: '',
+
+            /**
+             * @cfg {SBIS3.CONTROLS.Data.Projection.ITreeItem|*} Корневой узел или его содержимое
+             * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
+             */
+            root: undefined
          },
 
          /**
@@ -91,6 +91,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
                   idProperty: 'id',
                   parentProperty: this._options.parentProperty,
                   nodeProperty: this._options.nodeProperty,
+                  childrenProperty: this._options.childrenProperty,
                   root: this._options.root
                });
             }

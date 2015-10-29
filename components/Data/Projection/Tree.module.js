@@ -157,25 +157,46 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          this._checkItem(item);
          var hash = item.getHash();
          if (!(hash in this._childrenMap)) {
-            var projection = this,
-               collection = this.getCollection();
+            var sourceCollection = this.getCollection(),
+               children,
+               itemConverter = (function (child) {
+                  //FIXME: переделать, так слишком накладно
+                  var index = sourceCollection.getIndex(child);
+                  return this.at(index);
+               }).bind(this);
+            if (this._options.childrenProperty) {
+               children = item.isRoot() ?
+                  sourceCollection.toArray() :
+                  Utils.getItemPropertyValue(
+                     item.getContents(),
+                     this._options.childrenProperty
+                  );
+               if (!item.isRoot()) {
+                  itemConverter = (function (child) {
+                     return $ws.single.ioc.resolve(this._itemModule, {
+                        contents: child,
+                        owner: this,
+                        parent: item,
+                        node: !!Utils.getItemPropertyValue(child, this._options.nodeProperty)
+                     });
+                  }).bind(this);
+               }
+            } else {
+               children = sourceCollection.getItemsByPropertyValue(
+                  this._options.parentProperty,
+                  Utils.getItemPropertyValue(
+                     item.getContents(),
+                     this._options.idProperty
+                  )
+               );
+            }
             this._childrenMap[hash] = new CollectionProjection({
                collection: new TreeChildren({
                   owner: item,
-                  items: this.getCollection().getItemsByPropertyValue(
-                     this._options.parentProperty,
-                     Utils.getItemPropertyValue(
-                        item.getContents(),
-                        this._options.idProperty
-                     )
-                  )
+                  items: children || []
                }),
                itemModule: this._itemModule,
-               convertToItem: function (child) {
-                  //FIXME: переделать, так слишком накладно
-                  var index = collection.getIndex(child);
-                  return projection.at(index);
-               }
+               convertToItem: itemConverter
             });
          }
 

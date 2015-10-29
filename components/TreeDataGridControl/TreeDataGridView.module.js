@@ -123,7 +123,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
          this._getTreeChildrenContainers(node).toggleClass('ws-hidden', !expanded);
          this.getPagerContainer(node).closest('tr').toggleClass('ws-hidden', !expanded);
          
-         node.getChildren().each(function(child) {
+         node.getOwner().getChildren(node).each(function(child) {
             if (child.isNode()) {
                this._checkTreeChildrenVisibility(child, expanded && child.isExpanded());
             }
@@ -131,7 +131,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
       },
 
       _isTreeItemVisible: function(item) {
-         if (item.getParent().isRoot() || item.getParent() === this._rootNode) {
+         if (item.isRoot() || item.getParent() === this._rootNode) {
             return true;
          }
          return item.getParent().isExpanded() && this._isTreeItemVisible(item.getParent());
