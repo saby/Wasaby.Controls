@@ -142,13 +142,13 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
       _toggle: function(toggle) {
          if (this.isOpen() !== toggle) {
-            this.toggle();
+            this.togglePanel();
          }
       },
       /**
        * Поменять состояние панели на противоположное.
        */
-      toggle: function() {
+      togglePanel: function() {
          var self = this,
             isOpen = this.isOpen();
          if (!this._itemsDrawn) {

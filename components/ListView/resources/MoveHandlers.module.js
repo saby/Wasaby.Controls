@@ -3,10 +3,21 @@
  */
 define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], function(MoveDialog) {
    var MoveHandlers = {
-      moveRecordsWithDialog: function() {
-         new MoveDialog({
-            linkedView: this
-         });
+      moveRecordsWithDialog: function(records) {
+         records = this._getRecordsForMove(records);
+         if (records.length) {
+            new MoveDialog({
+               linkedView: this,
+               records: records
+            });
+         }
+      },
+      _getRecordsForMove: function(records) {
+         if (!Array.isArray(records) || !records.length) {
+            records = this.getSelectedKeys().length ? this.getSelectedKeys() :
+               this.getSelectedKey() ? [this.getSelectedKey()] : [];
+         }
+         return records;
       },
       selectedMoveTo: function(moveTo) {
          this._move(this._selectedRecords, moveTo);
@@ -19,7 +30,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
             deferred = new $ws.proto.ParallelDeferred();
          if (this._checkRecordsForMove(records, moveTo)) {
             for (var i = 0; i < records.length; i++) {
-               record = typeof records[i] === 'number' ? this._dataSet.getRecordByKey(records[i]) : records[i];
+               record = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i] : this._dataSet.getRecordByKey(records[i]);
                deferred.push(this._dataSource.move(record, this._options.hierField, moveTo));
             }
             deferred.done().getResult().addCallback(function() {
@@ -71,7 +82,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
             */
             path = dataSet.getMetaData().path,
             toMap = path ? Array.clone(path.getChildItems()) : [];
-         while ((record = dataSet.getRecordByKey(parentKey))) {
+         while (record = dataSet.getRecordByKey(parentKey)) {
             parentKey = record.getKey();
             if (toMap.indexOf(parentKey) < 0) {
                toMap.push(parentKey);

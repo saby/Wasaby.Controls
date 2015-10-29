@@ -267,6 +267,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          return keys;
       },
       _onDragStart: function(e) {
+         if (this._isShifted) {
+            return;
+         }
          var
             target = $(e.target),
             id = target.closest('.controls-ListView__item').data('id');

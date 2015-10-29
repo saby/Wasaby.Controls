@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.DataSet', [
-   'js!SBIS3.CONTROLS.Record'
-], function (Record) {
+   'js!SBIS3.CONTROLS.DataFactory'
+], function () {
    'use strict';
 
    /**
@@ -62,8 +62,6 @@ define('js!SBIS3.CONTROLS.DataSet', [
          }
       },
       $constructor: function () {
-         Record = Record || require('js!SBIS3.CONTROLS.Record');
-         
          this._prepareData(this._options.data);
 
          if (this._options.keyField) {
@@ -129,7 +127,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          this._byId = {};
          for (var i = 0; i < length; i++) {
             data = this.getStrategy().at(this._rawData, i);
-            this._byId[this.getRecordKeyByIndex(i)] = new Record({
+            this._byId[this.getRecordKeyByIndex(i)] = $ws.single.ioc.resolve('SBIS3.CONTROLS.Record', {
                strategy: this.getStrategy(),
                raw: data,
                isCreated: true,//считаем, что сырые данные пришли из реального источника
@@ -301,7 +299,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
        */
       push: function (record) {
         if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Record')){
-          record = new Record({
+          record = $ws.single.ioc.resolve('SBIS3.CONTROLS.Record', {
             strategy: this.getStrategy(),
             raw: record,
             keyField: this._options.keyField
@@ -425,7 +423,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
       setMetaData: function (meta) {
          this._options.meta = meta;
          if (this._options.meta.results) {
-            this._options.meta.results = new Record({
+            this._options.meta.results = $ws.single.ioc.resolve('SBIS3.CONTROLS.Record', {
                strategy: this.getStrategy(),
                raw: $ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Record') ? this._options.meta.results.getRaw() : this._options.meta.results,
                keyField: this._keyField
@@ -529,6 +527,11 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return filterDataSet;
       }
    });
+
+   $ws.single.ioc.bind('SBIS3.CONTROLS.DataSet', function(config) {
+      return new DataSet(config);
+   });
+
 
    return DataSet;
 });

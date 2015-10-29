@@ -8,9 +8,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'js!SBIS3.CONTROLS.EditInPlaceController',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
-      'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy'
+      'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
+      'js!SBIS3.CONTROLS.Utils.HtmlDecorators/LadderDecorator'
    ],
-   function(ListView, dotTplFn, rowTpl, headTpl, MarkupTransformer, EditInPlaceController, Link, DragAndDropMixin, groupByTpl) {
+   function(ListView, dotTplFn, rowTpl, headTpl, MarkupTransformer, EditInPlaceController, Link, DragAndDropMixin, groupByTpl, LadderDecorator) {
    'use strict';
       /* TODO: Надо считать высоту один раз, а не делать константой */
       var
@@ -99,13 +100,20 @@ define('js!SBIS3.CONTROLS.DataGridView',
             /**
              * @cfg {Number} Частичный скролл
              */
-            startScrollColumn: undefined
+            startScrollColumn: undefined,
+            /**
+             * @cfg {Array} Лесенка
+             * Массив имен столбцов, по которым строится лесенка
+             */
+            ladder: undefined
          }
       },
 
       $constructor: function() {
          this._publish('onDrawHead');
          this._checkColumns();
+         this._decorators.add(new LadderDecorator({
+         }));
       },
 
       init: function() {
@@ -262,15 +270,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   value = MarkupTransformer((cellTpl)(tplOptions));
                } else {
                   value = $ws.helpers.escapeHtml(item.get(column.field));
-                  value = ((value != undefined) && (value != null)) ? value : '';
+                  value = ((value !== undefined) && (value !== null)) ? value : '';
                }
                column.value = value;
                column.item = item;
             }
-            return this._rowTpl(rowData)
+            return this._rowTpl(rowData);
          }
          else {
-            return this._options.itemTemplate(item)
+            return this._options.itemTemplate(item);
          }
 
       },
@@ -673,7 +681,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   column: column
                }));
             } else {
-               value = '<div class="controls-DataGridView__th-content">' + $ws.helpers.escapeHtml(column.title) + '</div>';
+               value = '<div class="controls-DataGridView__th-content">' + ($ws.helpers.escapeHtml(column.title) || '') + '</div>';
             }
             column.value = value;
          }
