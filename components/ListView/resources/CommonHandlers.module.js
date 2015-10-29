@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
             })
          },
          editItems: function(tr, id) {
-            this.editItem(id);
+            this.sendCommand('ActivateItem', id);
          }
       };
       return CommonHandlers;

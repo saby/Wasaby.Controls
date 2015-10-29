@@ -30,17 +30,15 @@ define('js!SBIS3.CONTROLS.Utils.DialogOpener',[
     */
    return {
       openCompatibleDialog: function(dialogComponent, record, handlers) {
-         var
-            defferred = new $ws.proto.Deferred(),
-            oldRecord = convertRecord(record);
-
-         new DialogRecord({
-            template : dialogComponent,
-            record : oldRecord,
-            handlers : handlers
-         });
-
-         return defferred;
+         if (record) {
+            var
+               oldRecord = convertRecord(record);
+            new DialogRecord({
+               template: dialogComponent,
+               record: oldRecord,
+               handlers: handlers
+            });
+         }
       }
    };
 });

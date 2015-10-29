@@ -31,11 +31,7 @@ define('js!SBIS3.CONTROLS.Demo.MyBrowser', [
       },
 
       init: function() {
-
          MyBrowser.superclass.init.call(this);
-         this.getChildControlByName('brows').subscribe('onItemEdit', function(e, rec){
-            this.openCompatibleDialog('js!SBIS3.CONTROLS.SearchString', rec);
-         })
       }
 
    });
