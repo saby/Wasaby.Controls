@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.Browser', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Browser',
    'js!SBIS3.CONTROLS.ComponentBinder'
-], function(CompoundControl, dotTplFn, ComponentBinder, DialogRecord){
+], function(CompoundControl, dotTplFn, ComponentBinder){
    'use strict';
 
    /**
