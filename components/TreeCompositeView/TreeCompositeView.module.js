@@ -207,7 +207,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                //Если запись найдена в обновленном DataSet, то перерисовываем её
                if (record) {
                   currentDataSet.getRecordByKey(row.key).merge(record);
-                  self.redrawRaw(record);
+                  self.redrawRow(record);
                } else { //Иначе - удаляем запись
                   currentDataSet.removeRecord(row.key);
                   self.destroyFolderToolbar(row.key);
