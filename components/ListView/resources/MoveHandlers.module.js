@@ -68,7 +68,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
       },
       _getParentsMap: function(parentKey) {
          var
-            record,
             dataSet = this.getDataSet(),
             hierField = this.getHierField(),
             /*
@@ -82,12 +81,14 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
             */
             path = dataSet.getMetaData().path,
             toMap = path ? Array.clone(path.getChildItems()) : [];
-         while ((record = dataSet.getRecordByKey(parentKey))) {
+         var record = dataSet.getRecordByKey(parentKey);
+         while (record) {
             parentKey = record.getKey();
             if (toMap.indexOf(parentKey) < 0) {
                toMap.push(parentKey);
             }
             parentKey = dataSet.getParentKey(record, hierField);
+            record = dataSet.getRecordByKey(parentKey);
          }
          return toMap;
       }
