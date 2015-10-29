@@ -3,8 +3,10 @@
  */
 define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
    'js!SBIS3.CONTROLS.IDataStrategy',
+   'js!SBIS3.CONTROLS.DataSet',
+   'js!SBIS3.CONTROLS.Record',
    'js!SBIS3.CONTROLS.DataFactory'
-], function (IDataStrategy, Factory) {
+], function (IDataStrategy, DataSet, Record, Factory) {
    'use strict';
     /**
      *
@@ -17,9 +19,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
 
    var SbisJSONStrategy = IDataStrategy.extend(/** @lends SBIS3.CONTROLS.SbisJSONStrategy.prototype */{
       $protected: {},
-      $constructor: function () {
-         Factory = Factory || require('js!SBIS3.CONTROLS.DataFactory');
-      },
+
       /**
        * Найти название поля, которое является идентификатором.
        * @param data ответ БЛ
@@ -532,13 +532,8 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
     * @returns {*}
     */
    SbisJSONStrategy.serializeDataSet = function (data) {
-      var DataSet;
-      try {
-         DataSet = require('js!SBIS3.CONTROLS.DataSet');
-      } catch (e) {
-      }
-      if (DataSet && data instanceof DataSet) {
-         return $ws.core.clone(data.getRawData());
+      if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.DataSet')) {
+            return $ws.core.clone(data.getRawData());
       } else if (data instanceof $ws.proto.RecordSet || data instanceof $ws.proto.RecordSetStatic) {
          return data.toJSON();
       } else {
@@ -551,12 +546,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
     * @returns {*}
     */
    SbisJSONStrategy.serializeRecord = function (data) {
-      var Record;
-      try {
-         Record = require('js!SBIS3.CONTROLS.Record');
-      } catch (e) {
-      }
-      if (data instanceof Record) {
+      if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Record')) {
          return $ws.core.clone(data.getRaw());
       } else if (data instanceof $ws.proto.Record) {
          return data.toJSON();
@@ -570,11 +560,6 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
     * @returns {*}
     */
    SbisJSONStrategy.serializeFlags = function (data) {
-      var Record;
-      try {
-         Record = require('js!SBIS3.CONTROLS.Record');
-      } catch (e) {
-      }
       var dt = [];
       if (data instanceof $ws.proto.Record) {
          var s = {},
@@ -588,7 +573,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
             dt.push(rO[sorted.values[y]]);
          }
          return dt;
-      } else if (data instanceof Record) {
+      } else if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Record')) {
          data.each(function (value) {
             dt.push(value);
          });

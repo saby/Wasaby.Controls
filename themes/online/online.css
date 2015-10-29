@@ -2297,7 +2297,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   width: 16px;
   height: 20px;
-  margin: 0 1px 0 -2px;
+  margin: 0 2px 0 -2px;
   border-width: 0;
   border-style: none;
   border-color: transparent;
@@ -2463,7 +2463,7 @@ input[type="reset"]::-moz-focus-inner {
   cursor: pointer;
   text-align: left;
   height: 30px;
-  padding: 0 6px 0 2px;
+  padding: 0 6px 0 3px;
   color: inherit;
   background-color: transparent;
   border-collapse: separate;
@@ -2585,7 +2585,7 @@ input[type="reset"]::-moz-focus-inner {
 .controls-CompositeView .controls-CompositeView__listItem {
   height: 30px;
   line-height: 30px;
-  padding: 0 6px 0 2px;
+  padding: 0 6px 0 3px;
   cursor: pointer;
 }
 .controls-CompositeView .controls-CompositeView__listItem.controls-ListView__hoveredItem {
@@ -2801,7 +2801,7 @@ input[type="reset"]::-moz-focus-inner {
   color: #313e78;
   overflow: hidden;
   vertical-align: top;
-  padding-left: 8px;
+  padding-left: 5px;
 }
 .controls-BackButton::before {
   width: 10px;
@@ -2809,7 +2809,7 @@ input[type="reset"]::-moz-focus-inner {
   font-family: 'TensorFont Regular', TensorFont;
   content: '\e003';
   float: left;
-  margin-left: 6px;
+  margin-left: 8px;
 }
 .controls-BackButton:hover .controls-BackButton__caption {
   text-decoration: none;
@@ -3432,4 +3432,15 @@ input[type="reset"]::-moz-focus-inner {
 .controls-TreePager:hover {
   text-decoration: underline;
   color: #ff7033;
+}
+.controls-Popup-border {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #e4e4e4;
 }

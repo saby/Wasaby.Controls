@@ -3,10 +3,21 @@
  */
 define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], function(MoveDialog) {
    var MoveHandlers = {
-      moveRecordsWithDialog: function() {
-         new MoveDialog({
-            linkedView: this
-         });
+      moveRecordsWithDialog: function(records) {
+         records = this._getRecordsForMove(records);
+         if (records.length) {
+            new MoveDialog({
+               linkedView: this,
+               records: records
+            });
+         }
+      },
+      _getRecordsForMove: function(records) {
+         if (!Array.isArray(records) || !records.length) {
+            records = this.getSelectedKeys().length ? this.getSelectedKeys() :
+               this.getSelectedKey() ? [this.getSelectedKey()] : [];
+         }
+         return records;
       },
       selectedMoveTo: function(moveTo) {
          this._move(this._selectedRecords, moveTo);
@@ -19,7 +30,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
             deferred = new $ws.proto.ParallelDeferred();
          if (this._checkRecordsForMove(records, moveTo)) {
             for (var i = 0; i < records.length; i++) {
-               record = typeof records[i] === 'number' ? this._dataSet.getRecordByKey(records[i]) : records[i];
+               record = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i] : this._dataSet.getRecordByKey(records[i]);
                deferred.push(this._dataSource.move(record, this._options.hierField, moveTo));
             }
             deferred.done().getResult().addCallback(function() {
@@ -34,14 +45,13 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
       _checkRecordsForMove: function(records, moveTo) {
          var
             record,
-            toMap = this._getParentsMap(moveTo),
-            keyField = this._dataSet._keyField;
+            toMap = this._getParentsMap(moveTo);
          if (moveTo === undefined) {
             return false;
          }
          for (var i = 0; i < records.length; i++) {
             if (typeof records[i] === 'number' && $.inArray(records[i], toMap) !== -1 ||
-                typeof records[i] === 'object' && $.inArray(records[i].get(keyField)[0], toMap) !== -1) {
+                typeof records[i] === 'object' && $.inArray(records[i].getKey(), toMap) !== -1) {
                $ws.helpers.alert("Вы не можете переместить запись саму в себя!", {}, this);
                return false;
             }
@@ -70,8 +80,9 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
                2. тем не менее это не отменяет сценария обычного Ctrl+C/Ctrl+V. В таком случае при операции Ctrl+C нам нужно запоминать в метаданные для перемещения текущую позицию иерархии от корня (если это возможно), чтобы в будущем при вставке произвести анализ на корректность операции
                3. это не исключает ситуации, когда БЛ не возвращает иерархию до корня, либо пользователь самостоятельно пытается что-то переместить с помощью интерфейса IDataSource.move. В таком случае мы считаем, что БЛ вне зависимости от возможности проверки на клиенте, всегда должна проверять входные значения при перемещении. В противном случае это приводит к зависанию запроса.
             */
-            toMap = Array.clone(dataSet.getMetaData().path.getChildItems());
-         while ((record = dataSet.getRecordByKey(parentKey))) {
+            path = dataSet.getMetaData().path,
+            toMap = path ? Array.clone(path.getChildItems()) : [];
+         while (record = dataSet.getRecordByKey(parentKey)) {
             parentKey = record.getKey();
             if (toMap.indexOf(parentKey) < 0) {
                toMap.push(parentKey);

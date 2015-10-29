@@ -66,7 +66,7 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SB
       setStateOn: function(text){
          var self = this;
          Switcher.superclass.setStateOn.call(self,text);
-         if (this._state == 'on'){
+         if (this._options.state == 'on'){
             this._position.html(self._options.stateOn);
          }
       },
@@ -74,7 +74,7 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SB
       setStateOff: function(text){
          var self = this;
          Switcher.superclass.setStateOff.call(self,text);
-         if (this._state == 'off'){
+         if (this._options.state == 'off'){
             this._position.html(self._options.stateOff);
          }
       }
