@@ -128,15 +128,20 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       //region SBIS3.CONTROLS.Data.Source.ISource
 
-      create: function() {
+      create: function(meta) {
+         var args = this._options.adapter.serialize({
+            'Фильтр': {
+               'ВызовИзБраузера': true
+            },
+            'ИмяМетода': this._options.formatForRead
+         });
+         if (!Object.isEmpty(meta)) {
+            args['ДопПоля'] = meta;
+         }
+
          return this._provider.callMethod(
             this._options.createMethodName,
-            this._options.adapter.serialize({
-               'Фильтр': {
-                  'ВызовИзБраузера': true
-               },
-               'ИмяМетода': this._options.formatForRead
-            })
+            args
          ).addCallbacks((function (data) {
             return this._getModelInstance(data);
          }).bind(this), function (error) {
@@ -145,12 +150,18 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          });
       },
 
-      read: function(key) {
+      read: function(key, meta) {
+         var args = {
+            'ИдО': key,
+            'ИмяМетода': this._options.formatForRead
+         };
+         if (!Object.isEmpty(meta)) {
+            args['ДопПоля'] = meta;
+         }
+
          return this._provider.callMethod(
-            this._options.readMethodName, {
-               'ИдО': key,
-               'ИмяМетода': this._options.formatForRead
-            }
+            this._options.readMethodName,
+            args
          ).addCallbacks((function (data) {
             var model = this._getModelInstance(data, true);
             model.setStored(true);
@@ -161,13 +172,19 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          });
       },
 
-      update: function(model) {
+      update: function(model, meta) {
+         var args = {
+            'Запись': $ws.core.merge({
+               _type: 'record'
+            }, model.getRawData())
+         };
+         if (!Object.isEmpty(meta)) {
+            args['ДопПоля'] = meta;
+         }
+
          return this._provider.callMethod(
-            this._options.updateMethodName, {
-               'Запись': $ws.core.merge({
-                  _type: 'record'
-               }, model.getRawData())
-            }
+            this._options.updateMethodName,
+            args
          ).addCallbacks((function (key) {
             if (!model.isStored()) {
                model.set(this._options.idProperty, key);
@@ -180,11 +197,17 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          });
       },
 
-      destroy: function(key) {
+      destroy: function(key, meta) {
+         var args = {
+            'ИдО': key
+         };
+         if (!Object.isEmpty(meta)) {
+            args['ДопПоля'] = meta;
+         }
+
          return this._provider.callMethod(
-            this._options.destroyMethodName, {
-               'ИдО': key
-            }
+            this._options.destroyMethodName,
+            args
          ).addCallbacks(function (res) {
             return res;
          }, function (error) {
@@ -207,12 +230,18 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             });
       },
 
-      copy: function(key) {
+      copy: function(key, meta) {
+         var args = {
+            'ИдО': key,
+            'ИмяМетода': this._options.formatForRead
+         };
+         if (!Object.isEmpty(meta)) {
+            args['ДопПоля'] = meta;
+         }
+
          return this._provider.callMethod(
-            this._options.copyMethodName, {
-               'ИдО': key,
-               'ИмяМетода': this._options.formatForRead
-            }
+            this._options.copyMethodName,
+            args
          ).addCallbacks(function (res) {
                return res;
             }, function (error) {
@@ -222,15 +251,13 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       },
 
       query: function(query) {
-         var args = this._options.adapter.serialize({
-            'Фильтр': query.getWhere() ? query.getWhere() : null,
-            'Сортировка': this._getSortingParams(query),
-            'Навигация': this._getPagingParams(query)
-         });
-         args['ДопПоля'] = [];
          return this._provider.callMethod(
-            this._options.queryMethodName,
-            args
+            this._options.queryMethodName, {
+               'Фильтр': Object.isEmpty(query.getWhere()) ? null : this._options.adapter.serialize(query.getWhere()),
+               'Сортировка': this._options.adapter.serialize(this._getSortingParams(query)),
+               'Навигация': this._options.adapter.serialize(this._getPagingParams(query)),
+               'ДопПоля': Object.isEmpty(query.getMeta()) ? [] : this._options.adapter.serialize(query.getMeta())
+            }
          ).addCallbacks((function (res) {
             return new DataSet({
                source: this,
@@ -243,19 +270,19 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          });
       },
 
-      move: function(record, orderDetails) {
+      move: function(model, orderDetails) {
          var self = this,
             strategy = this.getStrategy(),
             def = new $ws.proto.Deferred(),
-            params = strategy.prepareOrderParams(this._options.resource,record, orderDetails),
+            params = strategy.prepareOrderParams(this._options.resource,model, orderDetails),
             suffix = orderDetails.after ? 'После' : 'До';
-         if(!this._orderBL){
+         if (!this._orderBL) {
             this._orderBL = new $ws.proto.BLObject('ПорядковыйНомер');
          }
          self._orderBL.call('Вставить' + suffix, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             def.callback(true);
          }, function (error) {
-            $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::move()', error);
             def.errback('Method move was failed');
          });
          return def;
@@ -391,6 +418,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       setMergeMethodName: function (method) {
          this._options.destroyMethodName = method;
       },
+
       //endregion Public methods
 
       //region Protected methods
@@ -439,10 +467,10 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          };
       },
 
-      _prepareOrderParams: function(object, record, orderDetails) {
+      _prepareOrderParams: function(object, model, orderDetails) {
          var params = {
             'Объект': object,
-            'ИдО': record.get(this._options.idProperty),
+            'ИдО': model.get(this._options.idProperty),
             'ПорядковыйНомер': orderDetails.column || 'ПорНомер'
          };
          if(orderDetails.after){

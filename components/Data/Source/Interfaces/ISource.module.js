@@ -85,7 +85,8 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
 
       /**
        * Создает пустую модель через источник данных
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет инстанс модели.
+       * @param {Object} [meta] Дополнительные мета данные
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет SBIS3.CONTROLS.Data.Model.
        * @example
        * <pre>
        *     var dataSource = new SbisService({
@@ -96,40 +97,44 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        *     });
        * </pre>
        */
-      create: function () {
+      create: function (meta) {
          throw new Error('Method must be implemented');
       },
 
       /**
        * Читает модель из источника данных
        * @param {String} key Первичный ключ модели
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет инстанс модели.
+       * @param {Object} [meta] Дополнительные мета данные
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет SBIS3.CONTROLS.Data.Model.
        */
-      read: function (key) {
+      read: function (key, meta) {
          throw new Error('Method must be implemented');
       },
 
       /**
        * Обновляет модель в источнике данных
-       * @param {*} model Обновляемая модель
+       * @param {SBIS3.CONTROLS.Data.Model} model Обновляемая модель
+       * @param {Object} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
        */
-      update: function (model) {
+      update: function (model, meta) {
          throw new Error('Method must be implemented');
       },
 
       /**
        * Удаляет модель из источника данных
        * @param {String} key Первичный ключ модели
+       * @param {Object} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
        */
-      destroy: function (key) {
+      destroy: function (key, meta) {
          throw new Error('Method must be implemented');
       },
 
       /**
-       * Удаляет модель из источника данных
-       * @param {String} key Первичный ключ модели
+       * Объединяет одну модель с другой
+       * @param {String} from Первичный ключ модели-источника
+       * @param {String} to Первичный ключ модели-приёмника
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
        */
       merge: function (from, to) {
@@ -137,11 +142,12 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       },
 
       /**
-       * Удаляет модель из источника данных
+       * Создает копию модели
        * @param {String} key Первичный ключ модели
+       * @param {Object} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
        */
-      copy: function (key) {
+      copy: function (key, meta) {
          throw new Error('Method must be implemented');
       },
 
@@ -155,16 +161,18 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       },
 
       /**
-       * Метод смены порядковых номеров
-       * @param {Object} orderDetails - детали смены порядковых номеров. Объект со свойствами after и before: после или перед какой записью нужно вставить перемещаемую.
+       * Меняет порядковый номер модели
+       * @param {SBIS3.CONTROLS.Data.Model} model Перемещаемая модель
+       * @param {Object} orderDetails Детали смены порядковых номеров. Объект со свойствами after и before: после или перед какой записью нужно вставить перемещаемую.
        */
-      move: function (query) {
+      move: function (model, orderDetails) {
          throw new Error('Method must be implemented');
       },
+
       /**
        * Выполняет команду
        * @param {String} command Команда
-       * @param {Object} data Данные
+       * @param {Object} [data] Данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет SBIS3.CONTROLS.Data.Source.DataSet.
        */
       call: function (command, data) {
