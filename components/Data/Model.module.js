@@ -57,46 +57,42 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             adapter: undefined,
 
             /**
-             * @cfg {SBIS3.CONTROLS.Source.ISource} Источник данных модели. Требутся для методов {@link load}, {@link save} и {@link remove}
-             * @see getSource
-             * @see setSource
-             * @see load
-             * @see save
-             * @see remove
-             */
-            source: undefined,
-
-            /**
              * @typedef {Object} Property
-             * @property {String} name Имя свойства
              * @property {*|Function} def Значение по умолчанию
-             * @property {Function} [readConverter] Метод, конвертирующий значение свойства при чтении. Первым аргументом придет текущее значение свойства. Должен веруть сконвертированное значение свойства.
-             * @property {Function} [writeConverter] Метод, конвертирующий значение свойства при записи. Первым аргументом придет текущее значение свойства. Должен веруть сконвертированное значение свойства.
+             * @property {Function} [get] Метод, возвращающий значение свойства. Первым аргументом придет значение свойства в сырых данных.
+             * @property {Function} [set] Метод, устанавливающий значение свойства.
              */
 
             /**
-             * @cfg {Property[]} Свойства модели. Дополняют/уточняют свойства, уже существующие в сырых данных.
+             * @cfg {Object.<String, Property>} Свойства модели. Дополняют/уточняют свойства, уже существующие в сырых данных.
              * @example
              * <pre>
-             *    var user = new Model({
+             *    var User = Model.extend({
+             *       $protected: {
+             *          _options: {
+             *             properties: {
+             *                id: {
+             *                   get: function(value) {
+             *                      return '№' + value;
+             *                   }
+             *                },
+             *                displayName: {
+             *                   get: function() {
+             *                      return this.get('firstName') + ' a.k.a "' + this.get('login') + '" ' + this.get('lastName');
+             *                   }
+             *                }
+             *             }
+             *          }
+             *       }
+             *    });
+             *    var user = new User({
              *       data: {
              *          id: 5,
              *          login: 'Keanu',
              *          firstName: 'Johnny',
              *          lastName: 'Mnemonic',
              *          job: 'Memory stick'
-             *       },
-             *       properties: [{
-             *          name: 'id',
-             *          readConverter: function(value) {
-             *             return '№' + value;
-             *          }
-             *       }, {
-             *          name: 'displayName',
-             *          readConverter: function() {
-             *             return this.get('firstName') + ' a.k.a "' + this.get('login') + '" ' + this.get('lastName');
-             *          }
-             *       }]
+             *       }
              *    });
              *    user.get('id');//№5
              *    user.get('displayName');//Johnny a.k.a "Keanu" Mnemonic
@@ -104,9 +100,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              *    user.get('uptime');//undefined
              * </pre>
              * @see getProperties
-             * @see setProperties
              */
-            properties: [],
+            properties: {},
 
             /**
              * @cfg {String} Поле, содержащее первичный ключ
@@ -139,19 +134,14 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          _isChanged: false,
 
          /**
-          * @var {Object} Свойства модели
-          */
-         _properties: {},
-
-         /**
           * @var {Object} Объект содержащий закэшированные инстансы значений-объектов
           */
          _propertiesCache: {},
 
          /**
-          * @var {Object} Объект содержащий названия свойств, для которых сейчас выполняется конвертация значения
+          * @var {Object} Объект содержащий названия свойств, для которых сейчас выполняется вычисление значения
           */
-         _nowConvertingProperties: {},
+         _nowCalculatingProperties: {},
 
          /**
           * @var {Object} Работа в режиме совместимости API
@@ -181,14 +171,14 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             return undefined;
          }
 
-         var property = this._properties[name],
+         var property = this._options.properties[name],
             value = this._getOriginalPropertyValue(name);
          if (value === undefined && 'def' in property) {
             value = typeof property.def === 'function' ? property.def() : property.def;
             this._setOriginalPropertyValue(name, value);
          }
-         if (property.readConverter) {
-            value = this._getConvertedValue(value, property, true);
+         if (property.get) {
+            value = this._getCalculatedValue(value, property, true);
          }
 
          //Инстансы объектов кэшируем
@@ -208,9 +198,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             this._addProperty(name);
          }
 
-         var property = this._properties[name];
-         if (property && property.writeConverter) {
-            value = this._getConvertedValue(value, property, false);
+         var property = this._options.properties[name];
+         if (property && property.set) {
+            value = this._getCalculatedValue(value, property, false);
          }
 
          if (this._getOriginalPropertyValue(name) !== value) {
@@ -222,7 +212,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       has: function (name) {
-         return this._properties.hasOwnProperty(name);
+         return this._options.properties.hasOwnProperty(name);
       },
 
       // endregion SBIS3.CONTROLS.Data.IPropertyAccess
@@ -236,8 +226,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @param {Object} [context] Конекст вызова callback.
        */
       each: function (callback, context) {
-         for (var  name in this._properties) {
-            if (this._properties.hasOwnProperty(name)) {
+         for (var  name in this._options.properties) {
+            if (this._options.properties.hasOwnProperty(name)) {
                callback.call(
                   context || this,
                   name,
@@ -250,27 +240,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       // endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
       // region Public methods
-
-      /**
-       * Возвращает источник данных
-       * @returns {SBIS3.CONTROLS.Data.Source.BaseSource}
-       * @see source
-       * @see setSource
-       */
-      getSource: function () {
-         return this._options.source;
-      },
-
-      /**
-       * Устанавливает источник данных
-       * @param {SBIS3.CONTROLS.Data.Source.BaseSource} source
-       * @see source
-       * @see getSource
-       */
-      setSource: function (source) {
-         this._options.source = source;
-         this._propertiesCache = {};
-      },
 
       /**
        * Возвращает адаптер для работы с данными
@@ -295,37 +264,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
       /**
        * Возвращает cвойства модели
-       * @returns {Property[]}
+       * @returns {Object.<String, Property>}
        * @see properties
-       * @see setProperties
        */
       getProperties: function () {
-         var properties = [];
-         for (var key in this._properties) {
-            if (this._properties.hasOwnProperty(key)) {
-               properties.push(this._properties[key]);
-            }
-         }
-         return properties;
-      },
-
-      /**
-       * Устанавливает cвойства модели
-       * @param {Property[]} properties Cвойства модели
-       * @see properties
-       * @see getProperties
-       */
-      setProperties: function (properties) {
-         var property,
-            i,
-            length;
-         this._properties = {};
-         if (properties instanceof Array) {
-            for (i = 0, length = properties.length; i < length; i++) {
-               property = properties[i];
-               this._properties[property.name] = property;
-            }
-         }
+         return this._options.properties;
       },
 
       /**
@@ -373,91 +316,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          this._isChanged = model._isChanged;
          this._isDeleted = model._isDeleted;
          this._initProperties();
-      },
-
-      /**
-       * Синхронизирует изменения в модели с источником данных
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет обновленный инстанс модели.
-       * @see load
-       * @see save
-       * @see remove
-       * @see source
-       * @see getSource
-       * @see setSource
-       */
-      sync: function () {
-         if (this._isDeleted) {
-            return this.remove();
-         } else if (this._isChanged || !this._isStored) {
-            return this.save();
-         } else {
-            return $ws.proto.Deferred.success(this);
-         }
-      },
-
-      /**
-       * Загружает модель из источника данных
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет обновленный инстанс модели.
-       * @see save
-       * @see remove
-       * @see source
-       * @see getSource
-       * @see setSource
-       */
-      load: function() {
-         this._checkSource();
-         var self = this;
-         return this._options.source.read(this.getId()).addCallback((function(instance) {
-            self.setRawData(instance.getRawData());
-            self.setStored(true);
-            self._setChanged(false);
-            return self;
-         }).bind(this));
-      },
-
-      /**
-       * Сохраняет модель в источник данных
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет обновленный инстанс модели.
-       * @see load
-       * @see remove
-       * @see source
-       * @see getSource
-       * @see setSource
-       */
-      save: function() {
-         this.validate();
-         this._checkSource();
-         var self = this;
-         return this._options.source.update(this).addCallback((function() {
-            self._setChanged(false);
-            return self;
-         }).bind(this));
-      },
-
-      /**
-       * Удаляет модель в источника данных
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет обновленный инстанс модели.
-       * @see load
-       * @see save
-       * @see source
-       * @see getSource
-       * @see setSource
-       */
-      remove: function() {
-         this._checkSource();
-         var self = this;
-         return this._options.source.destroy(this.getId()).addCallback((function() {
-            self._propertiesCache = {};
-            self._setDeleted(true);
-            self.setStored(false);
-            return self;
-         }).bind(this));
-      },
-
-      /**
-       * Запускает валидацию модели
-       */
-      validate: function() {
       },
 
       /**
@@ -553,16 +411,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       //region Protected methods
 
       /**
-       * Проверяет наличие источника данных
-       * @private
-       */
-      _checkSource: function () {
-         if (!this._options.source) {
-            throw new Error('Source is not defined');
-         }
-      },
-
-      /**
        * Инициализирует адаптер
        * @private
        */
@@ -580,17 +428,13 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @private
        */
       _initProperties: function() {
-         this.setProperties(this._options.properties);
-
          var adapter = this._options.adapter.forRecord(),
             fields = adapter.getFields(this._options.data),
             i,
             length;
          for (i = 0, length = fields.length; i < length; i++) {
-            if (!this._properties.hasOwnProperty(fields[i])) {
-               this._properties[fields[i]] = {
-                  name: fields[i]
-               };
+            if (!this._options.properties.hasOwnProperty(fields[i])) {
+               this._options.properties[fields[i]] = {};
             }
          }
       },
@@ -600,14 +444,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @private
        */
       _addProperty: function(name) {
-         var property = {
-            name: name
-         };
-         this._properties[name] = property;
+         this._options.properties[name] = {};
       },
 
       /**
-       * Возвращает оригинальное (не сконвертированное) значение свойства
+       * Возвращает значение свойства из сырых данных
        * @param {String} name Название свойства
        * @private
        */
@@ -628,7 +469,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       /**
-       * Устанавливает оригинальное (не сконвертированное) значение свойства
+       * Устанавливает значение свойства в сырых данных
        * @param {String} name Название свойства
        * @param {*} value Значение свойства
        * @private
@@ -669,23 +510,23 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       /**
-       * Возвращает сконвертированное значение свойства
+       * Возвращает вычисленное значение свойства
        * @param {*} value Модель изменена
        * @param {Property} property Описание свойства
-       * @param {Boolean} isReading Конвертация при чтении
+       * @param {Boolean} isReading Вычисление при чтении
        * @returns {*}
        * @private
        */
-      _getConvertedValue: function (value, property, isReading) {
-         //TODO: отследить зависимости от других свойств (например, отлеживая вызов get() внутри _getConvertedValue), и сбрасывать кэш для зависимых полей при set()
-         if (this._nowConvertingProperties[property.name]) {
-            throw new Error('Recursive value converting detected for property ' + property.name);
+      _getCalculatedValue: function (value, property, isReading) {
+         //TODO: отследить зависимости от других свойств (например, отлеживая вызов get() внутри _getCalculatedValue), и сбрасывать кэш для зависимых полей при set()
+         if (this._nowCalculatingProperties[property.name]) {
+            throw new Error('Recursive value calculate detected for property ' + property.name);
          }
-         this._nowConvertingProperties[property.name] = true;
+         this._nowCalculatingProperties[property.name] = true;
          value = isReading ?
-            property.readConverter.call(this, value) :
-            property.writeConverter.call(this, value);
-         this._nowConvertingProperties[property.name] = false;
+            property.get.call(this, value) :
+            property.set.call(this, value);
+         this._nowCalculatingProperties[property.name] = false;
 
          return value;
       },
