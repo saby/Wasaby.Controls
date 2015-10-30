@@ -30,6 +30,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          _root: undefined,
 
          /**
+          * @var {Object} Стратегия получения дочерних элементов узла
+          */
+         _childrenStrategy: undefined,
+
+         /**
           * @var {Object} Соответствие элементов и их дочерних узлов
           */
          _childrenMap: {}
@@ -44,11 +49,59 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
             this._itemModule = 'SBIS3.CONTROLS.Data.Projection.LoadableTreeItem';
          }
 
+         this._initChildrenStrategy();
+
          //TODO: filtering, ordering
       },
 
       destroy: function () {
          TreeProjection.superclass.destroy.call(this);
+      },
+
+      /**
+       * Возвращает дочерний элемент проекции с указанным хэшем
+       * @param {String} hash Хеш элемента
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} [parent] Родительский элемент, в котором искать. Если не указан, ищется от корня
+       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
+       * @state mutable
+       */
+      getByHash: function(hash, parent) {
+         var children = this.getChildren(parent || this.getRoot()),
+            item = children.getByHash(hash);
+         if (item === undefined) {
+            var enumerator = children.getEnumerator(),
+               child;
+            while((child = enumerator.getNext())) {
+               item = this.getByHash(hash, child);
+               if (item !== undefined) {
+                  break;
+               }
+            }
+         }
+         return item;
+      },
+
+      /**
+       * Возвращает индекс дочернего элемента проекции с указанным хэшем
+       * @param {String} hash Хеш элемента
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} [parent] Родительский элемент, в котором искать. Если не указан, ищется от корня
+       * @returns {Number}
+       * @state mutable
+       */
+      getIndexByHash: function (hash) {
+         var children = this.getChildren(parent || this.getRoot()),
+            index = children.getIndexByHash(hash);
+         if (index === -1) {
+            var enumerator = children.getEnumerator(),
+               child;
+            while((child = enumerator.getNext())) {
+               index = this.getChildIndexByHash(hash, child);
+               if (index !== -1) {
+                  break;
+               }
+            }
+         }
+         return index;
       },
 
       //region SBIS3.CONTROLS.Data.Projection.ICollection
@@ -127,6 +180,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       setParentProperty: function (name) {
          this._options.parentProperty = name;
+         this._initChildrenStrategy();
       },
 
       getNodeProperty: function () {
@@ -137,15 +191,30 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          this._options.nodeProperty = name;
       },
 
+      getChildrenProperty: function () {
+         return this._options.childrenProperty;
+      },
+
+      setChildrenProperty: function (name) {
+         this._options.childrenProperty = name;
+         this._initChildrenStrategy();
+      },
+
       getRoot: function () {
          if (this._root === undefined) {
             if (this._options.root && $ws.helpers.instanceOfModule(this._options.root, this._itemModule)) {
                this._root = this._options.root;
             } else {
+               var contents = this._options.root;
+               if (typeof contents !== 'object') {
+                  contents = {};
+                  contents[this._options.idProperty] = this._options.root;
+               }
                this._root = $ws.single.ioc.resolve(this._itemModule, {
                   owner: this,
                   node: true,
-                  contents: this._options.root
+                  expanded: true,
+                  contents: contents
                });
             }
          }
@@ -153,50 +222,17 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          return this._root;
       },
 
-      getChildren: function (item) {
-         this._checkItem(item);
-         var hash = item.getHash();
+      getChildren: function (parent) {
+         this._checkItem(parent);
+         var hash = parent.getHash();
          if (!(hash in this._childrenMap)) {
-            var sourceCollection = this.getCollection(),
-               children,
-               itemConverter = (function (child) {
-                  //FIXME: переделать, так слишком накладно
-                  var index = sourceCollection.getIndex(child);
-                  return this.at(index);
-               }).bind(this);
-            if (this._options.childrenProperty) {
-               children = item.isRoot() ?
-                  sourceCollection.toArray() :
-                  Utils.getItemPropertyValue(
-                     item.getContents(),
-                     this._options.childrenProperty
-                  );
-               if (!item.isRoot()) {
-                  itemConverter = (function (child) {
-                     return $ws.single.ioc.resolve(this._itemModule, {
-                        contents: child,
-                        owner: this,
-                        parent: item,
-                        node: !!Utils.getItemPropertyValue(child, this._options.nodeProperty)
-                     });
-                  }).bind(this);
-               }
-            } else {
-               children = sourceCollection.getItemsByPropertyValue(
-                  this._options.parentProperty,
-                  Utils.getItemPropertyValue(
-                     item.getContents(),
-                     this._options.idProperty
-                  )
-               );
-            }
             this._childrenMap[hash] = new CollectionProjection({
                collection: new TreeChildren({
-                  owner: item,
-                  items: children || []
+                  owner: parent,
+                  items: this._childrenStrategy.getChildren(parent) || []
                }),
                itemModule: this._itemModule,
-               convertToItem: itemConverter
+               convertToItem: this._childrenStrategy.getItemConverter(parent).bind(this)
             });
          }
 
@@ -268,6 +304,23 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       },
 
       /**
+       * Инициализирует стратегию получения дочерних элементов узла
+       * @private
+       */
+      _initChildrenStrategy: function() {
+         var Strategy;
+         if (this._options.childrenProperty) {
+            Strategy = TreeChildrenByItemPropertyStrategy;
+         } else {
+            Strategy = TreeChildrenByParentIdStrategy;
+         }
+         this._childrenStrategy = new Strategy({
+            source: this.getCollection(),
+            settings: this._options
+         });
+      },
+
+      /**
        * Проверяет валидность элемента коллекции
        * @param {*} item Элемент коллекции
        * @private
@@ -334,6 +387,97 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
    $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.Tree', function(config) {
       return new TreeProjection(config);
+   });
+
+   /**
+    * Интерфейс стратегии получения дочерних элементов узла дерева
+    * @mixin SBIS3.CONTROLS.Data.Projection.Tree.ITreeChildrenStrategy
+    */
+   var ITreeChildrenStrategy = /** @lends SBIS3.CONTROLS.Data.Projection.Tree.ITreeChildrenStrategy.prototype */{
+      $protected: {
+         _options: {
+            /**
+             * @cfg {SBIS3.CONTROLS.Data.Collection.IEnumerable} Исходная коллекция
+             */
+            source: undefined,
+
+            /**
+             * @cfg {Object} Опции стратегии
+             */
+            settings: undefined
+         }
+      },
+
+      /**
+       * Возвращает коллекцию потомков для родителя
+       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} parent Родитель
+       * @returns {Array}
+       */
+      getChildren: function(parent) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает метод конвертации элемета коллеции в элемент проекции
+       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} parent Родитель
+       * @returns {Function}
+       */
+      getItemConverter: function(parent) {
+         throw new Error('Method must be implemented');
+      }
+   };
+
+   /**
+    * Стратегия получения дочерних элементов по идентификатору родителя
+    * @class SBIS3.CONTROLS.Data.Projection.Tree.TreeChildrenByParentIdStrategy
+    * @mixes SBIS3.CONTROLS.Data.Projection.Tree.ITreeChildrenStrategy
+    */
+   var TreeChildrenByParentIdStrategy = $ws.core.extend({}, [ITreeChildrenStrategy], /** @lends SBIS3.CONTROLS.Data.Projection.Tree.TreeChildrenByParentIdStrategy.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.Data.Projection.Tree.TreeChildrenByParentIdStrategy',
+      getChildren: function(parent) {
+         return this._options.source.getItemsByPropertyValue(
+            this._options.settings.parentProperty,
+            Utils.getItemPropertyValue(
+               parent.getContents(),
+               this._options.settings.idProperty
+            )
+         );
+      },
+      getItemConverter: function(parent) {
+         var source = this._options.source;
+         return function(item) {
+            //FIXME: переделать, так слишком накладно
+            var index = source.getIndex(item);
+            return this.at(index);
+         };
+      }
+   });
+
+   /**
+    * Стратегия получения дочерних элементов, находящихся в свойстве родительского
+    * @class SBIS3.CONTROLS.Data.Projection.Tree.TreeChildrenByItemPropertyStrategy
+    * @mixes SBIS3.CONTROLS.Data.Projection.Tree.ITreeChildrenStrategy
+    */
+   var TreeChildrenByItemPropertyStrategy = $ws.core.extend({}, [ITreeChildrenStrategy], /** @lends SBIS3.CONTROLS.Data.Projection.Tree.TreeChildrenByItemPropertyStrategy.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.Data.Projection.Tree.TreeChildrenByItemPropertyStrategy',
+      getChildren: function(parent) {
+         return parent.isRoot() ?
+            this._options.source.toArray() :
+            Utils.getItemPropertyValue(
+               parent.getContents(),
+               this._options.settings.childrenProperty
+            );
+      },
+      getItemConverter: function(parent) {
+         return function(item) {
+            return $ws.single.ioc.resolve(this._itemModule, {
+               contents: item,
+               owner: this,
+               parent: parent,
+               node: !!Utils.getItemPropertyValue(item, this._options.nodeProperty)
+            });
+         };
+      }
    });
 
    return TreeProjection;

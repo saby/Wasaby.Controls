@@ -77,7 +77,7 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
             this.subscribeTo(projection, 'onCurrentChange', (function(event, newCurrent, oldCurrent, newPosition) {
                this._setSelectedIndex(
                   newPosition,
-                  self._getItemValue(newCurrent.getContents(), this._options.keyField )
+                  self._getItemValue(newCurrent ? newCurrent.getContents() : undefined, this._options.keyField )
                );
             }).bind(this));
          },

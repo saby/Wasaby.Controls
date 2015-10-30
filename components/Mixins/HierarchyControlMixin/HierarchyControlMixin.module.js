@@ -25,26 +25,30 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
              */
 
             /**
-             * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Используется только в случае, если указан {@link dataSource}.
+             * @cfg {String} Название свойства, содержащего идентификатор узла.
+             */
+            idProperty: '',
+
+            /**
+             * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Используется только в случае, если {@link items} не реализует {@link SBIS3.CONTROLS.Data.Projection.ITree}.
              * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
-             *
              */
             parentProperty: '',
 
             /**
-             * @cfg {String} Название свойства, содержащего признак узла. Используется только в случае, если указан {@link dataSource}.
+             * @cfg {String} Название свойства, содержащего признак узла. Используется только в случае, если {@link items} не реализует {@link SBIS3.CONTROLS.Data.Projection.ITree}.
              * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
              */
             nodeProperty: '',
 
             /**
-             * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется только в случае, если {@link items} является массивом, для поиска в каждом элементе-узле дочерних элементов.
+             * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется только в случае, если {@link items} является массивом и не реализует {@link SBIS3.CONTROLS.Data.Projection.ITree}.
              * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
              */
             childrenProperty: '',
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Projection.ITreeItem|*} Корневой узел или его содержимое
+             * @cfg {SBIS3.CONTROLS.Data.Projection.ITreeItem|Object|String|Number} Корневой узел или его содержимое, или его идентификатор
              * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
              */
             root: undefined
@@ -88,7 +92,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
             if (!$ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Projection')) {
                items = new TreeProjection({
                   collection: this._convertItems(items),
-                  idProperty: 'id',
+                  idProperty: this._options.idProperty || (this._options.dataSource ? this._options.dataSource.getIdProperty() : ''),
                   parentProperty: this._options.parentProperty,
                   nodeProperty: this._options.nodeProperty,
                   childrenProperty: this._options.childrenProperty,

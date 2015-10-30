@@ -97,6 +97,22 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
       },
 
       /**
+       * Возвращает название свойства, содержащего дочерние элементы узла
+       * @returns {String}
+       */
+      getChildrenProperty: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Устанавливает название свойства, содержащего дочерние элементы узла
+       * @param {String} name Название свойства, содержащего дочерние элементы узла
+       */
+      setChildrenProperty: function (name) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
        * Возвращает корневой узел дерева
        * @returns {SBIS3.CONTROLS.Data.Projection.ITreeItem}
        */
@@ -106,10 +122,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
 
       /**
        * Возвращает коллекцию потомков элемента коллеции
-       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} item Элемент коллекции
+       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} parent Элемент коллекции
        * @returns {SBIS3.CONTROLS.Data.Projection.ITreeChildren}
        */
-      getChildren: function (item) {
+      getChildren: function (parent) {
          throw new Error('Method must be implemented');
       },
 

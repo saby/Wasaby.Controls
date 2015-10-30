@@ -131,7 +131,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
       },
 
       _isTreeItemVisible: function(item) {
-         if (item.isRoot() || item.getParent() === this._rootNode) {
+         if (item.isRoot() ||
+            item.getOwner().getChildren(item.getParent()) === this._rootNode) {
             return true;
          }
          return item.getParent().isExpanded() && this._isTreeItemVisible(item.getParent());

@@ -104,7 +104,7 @@
       </options>
       <option name="parentProperty">parent</option>
       <option name="nodeProperty">parent@</option>
-      <option name="rootNodeId">0</option>
+      <option name="root">0</option>
       <options name="columns" type="array">
          <options>
             <option name="title">Название</option>
@@ -127,10 +127,12 @@
          <options>
             <option name="id">1</option>
             <option name="title">Смартфоны</option>
+            <option name="parent@">true</option>
             <options name="children" type="array">
                <options>
                   <option name="id">6</option>
                   <option name="title">Apple</option>
+                  <option name="parent@">true</option>
                   <options name="children" type="array">
                      <options>
                         <option name="id">10</option>
@@ -157,6 +159,7 @@
                <options>
                   <option name="id">7</option>
                   <option name="title">Samsung</option>
+                  <option name="parent@">true</option>
                   <options name="children" type="array">
                      <options>
                         <option name="id">12</option>
@@ -180,12 +183,14 @@
          <options>
             <option name="id">2</option>
             <option name="title">Компьютеры</option>
+            <option name="parent@">true</option>
             <options name="children" type="array">
             </options>
          </options>
          <options>
             <option name="id">3</option>
             <option name="title">Аксессуары</option>
+            <option name="parent@">true</option>
             <options name="children" type="array">
             </options>
          </options>
@@ -204,6 +209,8 @@
             <option name="price">140</option>
          </options>
       </options>
+      <option name="idProperty">id</option>
+      <option name="nodeProperty">parent@</option>
       <option name="childrenProperty">children</option>
       <options name="columns" type="array">
          <options>
