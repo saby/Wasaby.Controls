@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       },
 
       /**
-       * Возвращает дочерний элемент проекции с указанным хэшем
+       * Возвращает дочерний элемент узла с указанным хэшем
        * @param {String} hash Хеш элемента
        * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} [parent] Родительский элемент, в котором искать. Если не указан, ищется от корня
        * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
@@ -82,20 +82,20 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       },
 
       /**
-       * Возвращает индекс дочернего элемента проекции с указанным хэшем
+       * Возвращает индекс дочернего элемента узла с указанным хэшем
        * @param {String} hash Хеш элемента
        * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} [parent] Родительский элемент, в котором искать. Если не указан, ищется от корня
        * @returns {Number}
        * @state mutable
        */
-      getIndexByHash: function (hash) {
+      getIndexByHash: function (hash, parent) {
          var children = this.getChildren(parent || this.getRoot()),
             index = children.getIndexByHash(hash);
          if (index === -1) {
             var enumerator = children.getEnumerator(),
                child;
             while((child = enumerator.getNext())) {
-               index = this.getChildIndexByHash(hash, child);
+               index = this.getIndexByHash(hash, child);
                if (index !== -1) {
                   break;
                }
@@ -329,24 +329,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          if (!item && !$ws.helpers.instanceOfModule(item, this._itemModule)) {
             throw new Error('Item should be an instance of ' + this._itemModule);
          }
-      },
-
-      /**
-       * Генерирует событие об изменении текущего элемента проекции дерева
-       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} newCurrent Новый текущий элемент
-       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} oldCurrent Старый текущий элемент
-       * @param {Number} newPosition Новая позиция
-       * @param {Number} oldPosition Старая позиция
-       * @private
-       */
-      _notifyCurrentChange: function (newCurrent, oldCurrent, newPosition, oldPosition) {
-         this._notify(
-            'onCurrentChange',
-            newCurrent,
-            oldCurrent,
-            newPosition,
-            oldPosition
-         );
       }
 
       //endregion Protected methods
@@ -443,12 +425,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
             )
          );
       },
-      getItemConverter: function(parent) {
+      getItemConverter: function() {
          var source = this._options.source;
          return function(item) {
-            //FIXME: переделать, так слишком накладно
-            var index = source.getIndex(item);
-            return this.at(index);
+            //FIXME: getIndex не оптимально, оптимизировать
+            return this.at(source.getIndex(item));
          };
       }
    });

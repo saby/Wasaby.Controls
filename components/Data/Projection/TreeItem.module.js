@@ -1,8 +1,7 @@
 /* global define, require, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
    'js!SBIS3.CONTROLS.Data.Projection.CollectionItem',
-   'js!SBIS3.CONTROLS.Data.Projection.ITreeItem',
-   'js!SBIS3.CONTROLS.Data.Projection.Tree'
+   'js!SBIS3.CONTROLS.Data.Projection.ITreeItem'
 ], function (CollectionItem, ITreeItem) {
    'use strict';
 
@@ -33,10 +32,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
          if ('node' in cfg) {
             this._options.node = !!cfg.node;
          }
-
-         /*if ('children' in cfg) {
-            this._setChildren(cfg.children);
-         }*/
       },
 
       //region SBIS3.CONTROLS.Data.Projection.ITreeItem
@@ -97,28 +92,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
          return this._options.childrenProperty;
       },
 
-      /**
-       * Генерирует в корневом узле об изменении коллекции дочерних узлов дерева.
-       * @param {String} action Действие, приведшее к изменению.
-       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem[]} newItems Новые элементы коллеции.
-       * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
-       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem[]} oldItems Удаленные элементы коллекции.
-       * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
-       * @private
-       */
-      notifyChildrenChangeToRoot: function (action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-         this._bubbleUp(function() {
-            this._notify(
-               'onCollectionChange',
-               action,
-               newItems,
-               newItemsIndex,
-               oldItems,
-               oldItemsIndex
-            );
-         });
-      },
-
       //endregion Public methods
 
       //region Protected methods
@@ -136,44 +109,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
          if (rootOwner !== this._options.owner) {
             rootOwner.notifyItemChange(this, property);
          }
-      },
-
-      /**
-       * Обеспечивает всплытие метода до корневого узла и вызов его там
-       * @param {Function} callback Метод, который должен быть выполнен на корневом узле
-       * @param {Object} [context] Контекст метода (если не задан, то корневой узел)
-       * @private
-       */
-      _bubbleUp: function (callback, context) {
-         if (this._options.parent) {
-            this._options.parent._bubbleUp(callback);
-         } else {
-            callback.call(context || this);
-         }
-      },
-
-      /**
-       * Устанавливает коллекцию дочерних элементов узла
-       * @param {SBIS3.CONTROLS.Data.Projection.TreeChildren|Array} children Дочерние элементы
-       * @private
-       */
-      _setChildren: function (children) {
-         if (children === undefined) {
-            return;
-         }
-
-         if (children instanceof Array) {
-            children = $ws.single.ioc.resolve(this._childrenModule, {
-               owner: this,
-               items: children
-            });
-         }
-
-         if (!$ws.helpers.instanceOfModule(children, this._childrenModule)) {
-            throw new Error('Tree node children should be an instance of ' + this._childrenModule);
-         }
-
-         this._options.children = children;
       }
 
       //endregion Protected methods

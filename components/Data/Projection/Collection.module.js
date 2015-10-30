@@ -388,6 +388,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       /**
        * Превращает объект в элемент коллекции
        * @param {*} item Объект
+       * @param {Number} index Индекс объекта
        * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
        * @private
        */
@@ -413,7 +414,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             item;
          while ((item = enumerator.getNext())) {
             index++;
-            this._itemsMap.push(this._convertToItem(item));
+            this._itemsMap.push(this._convertToItem(item, index));
             this._sourceMap.push(item);
             this._filterMap.push(true);
          }
@@ -612,8 +613,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        */
       _addItems: function (start, items) {
          Array.prototype.splice.apply(this._itemsMap, [start, 0].concat(
-            items.map((function(item) {
-               return this._convertToItem(item);
+            items.map((function(item, index) {
+               return this._convertToItem(item, start + index);
             }).bind(this)))
          );
          Array.prototype.splice.apply(this._sourceMap, [start, 0].concat(items));

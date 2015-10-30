@@ -43,8 +43,8 @@ define('js!SBIS3.CONTROLS.MenuButtonNewMixin', ['js!SBIS3.CONTROLS.ContextMenuNe
             items: this._options.items,
             corner : 'tl',
             enabled: this.isEnabled(),
-            hierField: this._options.hierField,
-            keyField: this._options.keyField,
+            idProperty: this._options.idProperty,
+            nodeProperty: this._options.nodeProperty,
             verticalAlign: {
                side: 'top'
             },
