@@ -87,6 +87,14 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
          }
       },
 
+      init : function() {
+         Button.superclass.init.call(this);
+         /*Хак чтобы в IE не прыгал тег button при зажатии мышки*/
+         this._container.click(function(e){
+            e.preventDefault();
+         });
+      },
+
       setCaption: function(caption){
          Button.superclass.setCaption.call(this, caption);
          var btnText = $('.js-controls-Button__text', this._container.get(0));
