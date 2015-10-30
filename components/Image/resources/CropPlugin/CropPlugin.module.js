@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
        * @public
        */
 
-      var CropPlugin = $ws.proto.Abstract.extend({
+      var CropPlugin = $ws.proto.Abstract.extend({/** @lends SBIS3.CONTROLS.Image.CropPlugin.prototype */
          $protected: {
             _options: {
                /**

@@ -1391,13 +1391,18 @@ input[type="reset"]::-moz-focus-inner {
   position: relative;
   float: right;
   width: 16px;
-  height: 100%;
   min-height: 19px;
   margin: 0;
+  height: 100%;
 }
 .controls-TextBox .controls-TextBox__afterFieldWrapper + .controls-TextBox__fieldWrapper,
 .controls-DatePicker .controls-TextBox__afterFieldWrapper + .controls-DatePicker__fieldWrapper {
-  margin: 0 19px 0 0;
+  margin-right: 0 19px 0 0;
+}
+.controls-TextBox .controls-TextBox__beforeFieldWrapper {
+  position: relative;
+  float: left;
+  height: 100%;
 }
 .controls-TextBox .controls-TextBox__fieldWrapper {
   position: relative;
@@ -1441,6 +1446,18 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-TextBox__field-lowercase {
   text-transform: lowercase;
+}
+.controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__placeholder {
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #e4e4e4 !important;
+  font: inherit;
+  padding: 3px 0 0;
+  text-align: inherit;
 }
 .controls-FormattedTextBox {
   display: inline-block;
@@ -1801,19 +1818,6 @@ input[type="reset"]::-moz-focus-inner {
   right: 3px;
   top: 3px;
   width: 16px;
-}
-.controls-Suggest__picker {
-  border: 1px solid #999999;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-  -webkit-background-clip: padding-box;
-  -moz-background-clip: padding;
-  background-clip: padding-box;
-  -webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  margin: -1px 0 0;
 }
 .controls-SuggestList__item {
   background: #ffffff;
@@ -2807,9 +2811,11 @@ input[type="reset"]::-moz-focus-inner {
   width: 10px;
   color: #FF7033;
   font-family: 'TensorFont Regular', TensorFont;
+  font-weight: normal;
   content: '\e003';
   float: left;
   margin-left: 8px;
+  padding-top: 1px;
 }
 .controls-BackButton:hover .controls-BackButton__caption {
   text-decoration: none;
@@ -2903,6 +2909,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-MoveDialogTemplate .controls-MoveDialogTemplate-TreeDataGridView {
   padding: 0 0 5px 0;
+  overflow-x: hidden;
   min-height: 50px;
   width: 100%;
   /*TODO скрываем подгрузку (ещё null)*/
@@ -3242,28 +3249,7 @@ input[type="reset"]::-moz-focus-inner {
   background-color: #f0f5fb;
 }
 .controls-editInPlace {
-  position: absolute;
-  white-space: nowrap;
-  overflow: visible;
-  z-index: 1;
-}
-.controls-editInPlace > div {
-  position: absolute;
-  display: inline-block;
-  padding: 1px;
-  vertical-align: top;
-  height: 100%;
-}
-.controls-editInPlace > div .ws-component {
-  height: 100%;
-  width: 100%;
-}
-.controls-editInPlace > div .ws-component.controls-CheckBox {
-  text-align: center;
-}
-.controls-editInPlace .controls-editInPlace__withEditor {
-  background-color: white;
-  cursor: text;
+  background-color: #F3F3F3;
 }
 .controls-image {
   display: inline-block;
@@ -3386,6 +3372,64 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-CustomFilterMenu__picker .controls-CustomFilterMenu__item.controls-CustomFilterMenu__item__selected {
   display: none;
+}
+.controls-FieldLink__linkItem-cross {
+  height: 16px;
+  width: 16px;
+  display: inline-block;
+  position: relative;
+  top: 2px;
+  cursor: pointer;
+  background: url('img/cancelIcon-sprite.png') 0 -32px no-repeat;
+}
+.controls-FieldLink__linkItem-cross:hover {
+  background: url('img/cancelIcon-sprite.png') 0 -16px no-repeat;
+}
+.controls-FieldLink__picker {
+  max-height: 500px;
+  min-height: 16px;
+  border: 1px solid #eaeaea;
+  border-top: none;
+  background: #fff;
+}
+.controls-FieldLink__picker .controls-FieldLink__linksContainer {
+  padding: 4px 0;
+}
+.controls-FieldLink__picker .controls-FieldLink__linkItem,
+.controls-FieldLink .controls-FieldLink__linkItem {
+  display: inline-block;
+  position: relative;
+  padding-left: 4px;
+}
+.controls-FieldLink {
+  display: inline-block;
+}
+.controls-FieldLink.controls-Picker__show {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #eaeaea #eaeaea #e4e4e4;
+  background: #ffffff;
+}
+.controls-FieldLink .controls-TextBox__fieldWrapper {
+  float: left;
+  margin: 0 !important;
+}
+.controls-FieldLink .controls-TextBox__beforeFieldWrapper .controls-FieldLink__showAllLinks,
+.controls-FieldLink .controls-TextBox__beforeFieldWrapper .controls-FieldLink__dropAllLinks {
+  position: relative;
+  float: left;
+  top: 2px;
+  padding: 0 4px;
+}
+.controls-FieldLink .controls-TextBox__beforeFieldWrapper .controls-FieldLink__linksWrapper {
+  height: 100%;
+  display: inline-block;
+}
+.controls-FieldLink .controls-TextBox__afterFieldWrapper {
+  padding: 0 4px;
+}
+.controls-FieldLink .controls-TextBox__afterFieldWrapper > * {
+  vertical-align: middle;
 }
 .controls-HtmlDecorators-highlight {
   background-color: #fffece;
