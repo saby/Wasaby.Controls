@@ -688,16 +688,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return this._headTpl(rowData);
       },
 
-
-      _getItemActionsPosition: function(item) {
-         return {
-            top: item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
-            right: 0
-         };
-      },
-      _showItemActions: function() {
+      _showItemActions: function(item) {
          if(!this.isNowScrollingPartScroll()) {
-            DataGridView.superclass._showItemActions.call(this);
+            DataGridView.superclass._showItemActions.call(this, item);
          }
       },
 

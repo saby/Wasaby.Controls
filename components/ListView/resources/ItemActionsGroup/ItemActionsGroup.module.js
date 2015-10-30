@@ -27,6 +27,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             _itemActionsMenuVisible: false,
             _itemActionsHiddenButton: [],
             _activeItem: undefined,
+            _touchActions: false,
             _options: {
 
             }
@@ -40,6 +41,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                .click(function() {
                   self.showItemActionsMenu();
                });
+
+            this._touchActions = $ws._const.compatibility.touch;
          },
          /**
           * Изменяет операции над строкой до нужного состояния - скрывает / показывает кнопки
@@ -70,28 +73,41 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          _createItemActionMenu: function() {
             var self = this;
+            var menuCont = $('> .controls-ItemActions__menu-container', this._container[0]);
+            var verticalAlign = {
+                  side: 'top',
+                  offset: VERTICAL_OFFSET
+               },
+               horizontalAlign = {
+                  side: 'right',
+                  offset: HORIZONTAL_OFFSET
+               },
+               target = this._itemActionsMenuButton,
+               corner = 'br';
+
+            if (this._touchActions) {
+               menuCont.addClass('controls-ItemsActions__touch-actions');
+               verticalAlign.offset = 0;
+               horizontalAlign.offset = 0;
+               target = this._container;
+               corner = 'tr';
+            }
 
             this._itemActionsMenu = new ContextMenu({
-               element: $('> .controls-ItemActions__menu-container', this._container[0]),
+               element: menuCont.show(),
                items: this._options.items,
                keyField: this._options.keyField,
                parent: this,
                opener: this,
-               target:  this._itemActionsMenuButton,
-               corner: 'br',
+               target:  target,
+               corner: corner,
                closeButton: true,
-               verticalAlign: {
-                  side: 'top',
-                  offset: VERTICAL_OFFSET
-               },
-               horizontalAlign: {
-                  side: 'right',
-                  offset: HORIZONTAL_OFFSET
-               },
+               verticalAlign: verticalAlign,
+               horizontalAlign: horizontalAlign,
                closeByExternalClick: true,
                handlers: {
                   onClose: function() {
-                     var hoveredItem = self.getParent().getHoveredItem().container;
+                     var hoveredItem = self.getParent().getHoveredItem().container;                     
                      self._itemActionsMenuVisible = false;
                      self._activeItem.removeClass('controls-ItemActions__activeItem');
                      self[hoveredItem ? 'showItemActions' : 'hideItemActions'](hoveredItem);
@@ -125,7 +141,16 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          _onBeforeMenuShowHandler: function() {
             var menuInstances = this._itemActionsMenu.getItemsInstances(),
                 itemActionsInstances = this.getItemsInstances();
-
+            if (this._touchActions){
+               //Нельзя сделать hide так как display:none ломает позиционирование меню 
+               var cont = this._container[0],
+                  self = this;
+               cont.style.visibility = 'hidden';
+               this._itemActionsMenu.subscribe('onClose', function(){
+                  cont.style.visibility = 'visible';
+                  self.hideItemActions();
+               });
+            }
             for(var i in menuInstances) {
                if(menuInstances.hasOwnProperty(i)) {
                   menuInstances[i].getContainer()[itemActionsInstances.hasOwnProperty(i) && itemActionsInstances[i].isVisible() ? 'show' : 'hide']();
@@ -140,8 +165,18 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._container[0].style.top = position.top + 'px';
             this._container[0].style.right = position.right + 'px';
             this._container[0].style.display = 'block';
-         },
-         /**
+            if (this._touchActions){
+               this._container.width('auto');
+               var width = this._container.width(),
+                  height = $(hoveredItem.container).height(),
+                  padding = height / 2 - 10;// получено опытным путем для шрифта 16px;
+               this._container.width(0);
+            	this._container.height(height / 2 + 10);
+               this._container.css('padding-top', padding);
+            	this._container.animate({width : width}, 350);
+            }
+        	},
+         /***
           * Задаёт новые операции над записью
           * Как в меню, так и на строке
           * @param items Массив новых items
