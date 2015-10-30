@@ -66,13 +66,11 @@ define([
             it('should return a data value', function () {
                assert.strictEqual(model.get('max'), modelData.max);
             });
-            it('should return a converted value', function () {
+            it('should return a calculated value', function () {
                assert.strictEqual(model.get('calc'), modelData.calc * 10);
                assert.strictEqual(model.get('calcRead'), modelData.calc * 10);
                assert.strictEqual(model.get('calcWrite'), modelData.calc);
                assert.strictEqual(model.get('title'), 'A B');
-            });
-            it('should return a calculated value', function () {
                assert.strictEqual(model.get('sqMax'), modelData.max * modelData.max);
             });
          });
@@ -80,7 +78,9 @@ define([
             it('should set value', function () {
                model.set('max', 13);
                assert.strictEqual(model.get('max'), 13);
+            });
 
+            it('should set a calculated value', function () {
                model.set('calc', 50);
                assert.strictEqual(model.get('calc'), 50);
 
@@ -103,9 +103,27 @@ define([
                assert.strictEqual(model.get('title'), 'test B');
             });
          });
+         describe('.has()', function () {
+            it('should return true for raw-defined property', function () {
+               for (var key in modelData) {
+                  if (modelData.hasOwnProperty(key)) {
+                     assert.isTrue(model.has(key));
+                  }
+               }
+            });
+            it('should return true for user-defined property', function () {
+               for (var key in modelProperties) {
+                  if (modelProperties.hasOwnProperty(key)) {
+                     assert.isTrue(model.has(key));
+                  }
+               }
+            });
+            it('should return false for undefined property', function () {
+               assert.isFalse(model.has('blah'));
+            });
+         });
          describe('.each()', function () {
-            it('should return all fields', function () {
-               var count = 0;
+            it('should return equivalent values', function () {
                model.each(function(name, value) {
                   switch (name) {
                      case 'calc':
@@ -117,8 +135,28 @@ define([
                      default:
                         assert.strictEqual(modelData[name], value);
                   }
+               });
+            });
+            it('should traverse all properties', function () {
+               var allProps = [],
+                  count = 0,
+                  key;
+               for (key in modelProperties) {
+                  if (modelProperties.hasOwnProperty(key)) {
+                     allProps.push(key);
+                  }
+               }
+               for (key in modelData) {
+                  if (modelData.hasOwnProperty(key) &&
+                        Array.indexOf(allProps, key) === -1
+                  ) {
+                     allProps.push(key);
+                  }
+               }
+               model.each(function() {
                   count++;
                });
+               assert.strictEqual(allProps.length, count);
             });
          });
          describe('.getProperties()', function () {

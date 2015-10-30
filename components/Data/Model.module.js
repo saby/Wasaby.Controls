@@ -182,7 +182,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          }
 
          //Инстансы объектов кэшируем
-         if (typeof value === 'object') {
+         if (value && typeof value === 'object') {
             this._propertiesCache[name] = value;
          }
 
@@ -206,7 +206,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          if (this._getOriginalPropertyValue(name) !== value) {
             this._setOriginalPropertyValue(name, value);
             this._setChanged(true);
-            delete this._propertiesCache[name];
+            if (value && typeof value === 'object') {
+               this._propertiesCache[name] = value;
+            }
             this._notify('onPropertyChange', name, value);
          }
       },
