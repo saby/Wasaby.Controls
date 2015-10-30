@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.Record', [
          _strategy: null,
          
          /**
-          * @var {Object} Объект содержащий приведенные значения модели
+          * @var {Object} Объект содержащий экземпляры значений-объектов
           */
          _fieldsCache: {}
       },
@@ -81,6 +81,7 @@ define('js!SBIS3.CONTROLS.Record', [
          this._isChanged = record._isChanged;
          this._isDeleted = record._isDeleted;
          //this._keyField = record._keyField;
+         this._fieldsCache = {};
 
          return this;
       },
@@ -120,7 +121,9 @@ define('js!SBIS3.CONTROLS.Record', [
          }
          // с данными можем работать только через стратегию
          this._raw = this._strategy.setValue(this._raw, field, value);
-         delete this._fieldsCache[field];
+         if (value && typeof value === 'object') {
+            this._fieldsCache[field] = value;
+         }
          this._isChanged = true;
          if (this._isChanged) {
             this._notify('onChange', field);
