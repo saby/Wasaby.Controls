@@ -303,8 +303,7 @@
 @radio-button-lineheight:                       @radio-button-height;
 
 @radio-button-text-color:                       @black-color;
-@radio-button-hover-text-color:                 @link-text-color;
-@radio-button-hover-text-color-primary:         @link-hover-text-color;
+@radio-button-hover-text-color:                 @primary-color;
 @radio-button-hover-text-decoration:            underline;
 @radio-button-hover-text-decoration-checked:    none;
 @radio-button-hover-text-decoration-disabled:   none;
@@ -334,16 +333,14 @@
 @radio-button-icon-margin:                      8px 6px 0 6px;
 @radio-button-icon-border-style:                solid;
 @radio-button-icon-border-color:                @gray-color;
-@radio-button-icon-border-color-checked:        @link-text-color;
+@radio-button-icon-border-color-checked:        @radio-button-hover-text-color;
 @radio-button-icon-border-color-disabled:       @gray-light-color;
-@radio-button-icon-border-color-primary:        @link-hover-text-color;
 @radio-button-icon-border-width:                1px;
 @radio-button-icon-border-radius:               5px;
 
 @radio-button-dot-size:                         4px;
 @radio-button-dot-radius:                       @radio-button-dot-size / 2;
 @radio-button-dot-color:                        @radio-button-icon-border-color-checked;
-@radio-button-dot-color-primary:                @radio-button-icon-border-color-primary;
 @radio-button-dot-color-disabled:               @radio-button-icon-border-color-disabled;
 @radio-button-dot-margin:                       (@radio-button-icon-width - @radio-button-dot-size) / 2  - @radio-button-icon-border-width;
 
@@ -525,14 +522,13 @@
 @switcher-do-horizontal-line-color:             @gray-color;
 @switcher-do-horizontal-disabled-line-color:    @gray-light-color;
 
-@switcher-do-horizontal-btn-color:              @link-text-color;
+@switcher-do-horizontal-btn-color:              @primary-color;
 @switcher-do-horizontal-btn-size:               12px;
 @switcher-do-horizontal-btn-border-width:       2px;
 @switcher-do-horizontal-btn-radius:             6px;
 @switcher-do-horizontal-btn-margin:             5px;
 @switcher-do-horizontal-btn-bg-color:           @white-color;
 @switcher-do-horizontal-btn-color-disabled:     @gray-light-color;
-@switcher-do-horizontal-btn-color-primary:      @primary-color;
 @switcher-do-horizontal-btn-border-width-hover: 4px;
 
 
@@ -1273,6 +1269,7 @@
 @list-view-actions-box-shadow:                  -2px -2px 5px @data-grid-row-hover-bg;
 @list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
 @list-view-actions-bg:                          @data-grid-row-hover-bg;
+@list-view-actions-verAlign-margin:             8px 3px 0 0;
 @list-view-actions-menu-icon:                   url('img/ItemActions-menu.png') no-repeat;
 @list-view-actions-menu-icon-hover:             @list-view-actions-menu-icon 0 -20px;
 @list-view-actions-menu-icon-close:             @list-view-actions-menu-icon 0 -40px;

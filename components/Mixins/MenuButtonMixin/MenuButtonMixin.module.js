@@ -47,6 +47,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             enabled: this.isEnabled(),
             hierField: this._options.hierField,
             keyField: this._options.keyField,
+            allowChangeEnable: this._options.allowChangeEnable,
             //title задано для совместимости со старыми контролами, когда люди не указывали displayField
             displayField: this._options.displayField || 'title',
             verticalAlign: {
@@ -87,6 +88,14 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
 
       _onHeaderClick: function(){
          this.togglePicker();
+      },
+
+      //Прокидываем вызов метода в меню
+      getItemsInstances: function() {
+         if (!this._picker) {
+            this._initializePicker();
+         }
+         return this._picker.getItemsInstances.apply(this._picker, arguments);
       },
 
       after : {

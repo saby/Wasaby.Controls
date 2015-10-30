@@ -9,6 +9,9 @@
                  {{? !!column.editor}} controls-DataGridView__edited-td{{?}}
                  {{?column.className}} {{=column.className}}{{?}}
                  {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}"
-            >{{=it.decorators.applyIf(column.value, column.highlight)}}</td>
+            >{{=it.decorators.applyIf(column.value, {
+                'highlight': column.highlight,
+                'ladder': column.field})
+             }}</td>
     {{~}}
 </tr>

@@ -24,9 +24,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
        * </component>
        *
        * @demo SBIS3.CONTROLS.Demo.MyTreeCompositeView
-       * 
+       *
        */
-      
+
       $protected: {
          _options: {
             /**
@@ -139,17 +139,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             return  $('.controls-CompositeView__foldersContainer',this._container);
          }
          return this._getItemsContainer();
-      },
-      _getItemActionsPosition: function(hoveredItem) {
-         var itemActions = this.getItemsActions().getContainer(),
-             height = itemActions[0].offsetHeight || itemActions.height(),
-             isTableView = this.getViewMode() === 'table';
-
-         return {
-            top: hoveredItem.position.top + ((isTableView) ? (hoveredItem.size.height > height ? hoveredItem.size.height - height : 0) : 0),
-            //TODO right = 5 hotFix для того чтобы меню разворачивалось в нужную сторону
-            right: isTableView ? 5 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
-         };
       },
       _processPaging: function() {
          TreeCompositeView.superclass._processPaging.call(this);
