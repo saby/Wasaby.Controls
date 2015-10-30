@@ -16,9 +16,9 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.CommonHandlers',
       'js!SBIS3.CONTROLS.MoveHandlers',
       'js!SBIS3.CONTROLS.Pager',
-      'is!browser?js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
       'is!browser?html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
-      'is!browser?html!SBIS3.CONTROLS.ListView/resources/emptyData'
+      'is!browser?html!SBIS3.CONTROLS.ListView/resources/emptyData',
+      'is!browser?js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, MoveHandlers, Pager, groupByTpl, emptyDataTpl) {
 
