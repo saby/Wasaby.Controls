@@ -20,19 +20,87 @@
   }
 }
 
+.ws-is-touch{
+   .controls-DataGridView{
+      .controls-ItemActions{
+         box-shadow: none;
+      }
+   }
+   .controls-ItemActions{
+      background: @list-view-actions-bg;
+      padding-left: 6px;
+      .controls-ListView__item{
+         &.icon-16{
+            margin-top: -1px;
+         }
+      }
+      .controls-Link{
+         font-size: 16px;
+      }
+      .controls-ItemActions__menu-button, .controls-ItemActions__menu-button:hover{
+         background: url('img/items-actions-touch-menu.png') no-repeat;
+         height: 19px;
+         background-size: 4px 18px;
+         vertical-align: middle;
+         width: 44px;
+         background-position: center;
+      }
+   }
+   .controls-ItemActions__menu-container{
+      background: #F3F8FC;
+      border-radius: 0;
+      border-width: 1px;
+      padding: 0;
+      border-top: none;
+      .controls-MenuItem {
+         line-height: 44px;
+         border-top: 1px solid #e4e4e4;
+         height: 44px;
+         background: #F3F8FC;
+      }
+      .controls-PopupMixin__closeButton {
+         background: @closeButtonImage;
+         top: @controls-filterButton-picker-closeButton-top;
+         width: @controls-filterButton-picker-closeButton-width;
+         height: @controls-filterButton-button-height;
+         position: absolute;
+         right: @controls-filterButton-picker-closeButton-right;
+         cursor: pointer;
+
+         &:hover { background: @closeButtonImageHover; }
+         &:active { background: @closeButtonImageHover; }
+      }
+   }
+}
+
 .controls-ItemActions {
   position: absolute;
   height: @list-view-actions-height;
   z-index: @list-view-actions-zindex;
   display: none;
 
+  &.controls-ItemActions-verAlign {
+    height: auto;
+    width: 20px;
+    margin: @list-view-actions-verAlign-margin;
+
+    & > * {
+      margin: @list-view-actions-margin-action-multiView;
+    }
+    .controls-ItemActions__menu-button {
+      float: @list-view-actions-float-multiView;
+      margin-left: @list-view-actions-marginLeft-menu-multiView;
+    }
+  }
+
   > * {
     display: inline-block;
     cursor: @list-view-actions-cursor;
     margin: @list-view-actions-margin;
+    vertical-align: baseline;
     width: 16px;
     height: 16px;
-    padding: 0 !important;
+    padding: 0;
 
     &.controls-ItemActions__hiddenAction {
       display: none !important;
@@ -53,7 +121,10 @@
     display: inline;
   }
 }
+
 .controls-ItemActions__menu-container {
+  display: none;
+
   .controls-MenuItem {
     padding-right: 24px;
   }
