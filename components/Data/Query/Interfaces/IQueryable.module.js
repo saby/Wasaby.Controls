@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.Data.Query.IQueryable', [], function () {
 
    /**
     * Интерфейс для создания выборки
-    * @mixin SBIS3.CONTROLS.Data.Collection.Query.IQueryable
+    * @mixin SBIS3.CONTROLS.Data.Query.IQueryable
     * @public
     * @author Мальцев Алексей
     */
