@@ -2875,6 +2875,9 @@ input[type="reset"]::-moz-focus-inner {
   background-color: #00c795;
   box-shadow: -2px -2px 5px #00c795;
 }
+.controls-ListView.controls-DataGridView .controls-ItemActions.controls-ItemsActions__touch-actions {
+  box-shadow: none;
+}
 .controls-ListView.controls-DataGridView .controls-ItemActions__activeItem {
   background-color: #00c795 !important;
 }
@@ -2886,6 +2889,25 @@ input[type="reset"]::-moz-focus-inner {
   height: 20px;
   z-index: 10;
   display: none;
+}
+.controls-ItemActions.controls-ItemsActions__touch-actions {
+  background: #00c795;
+  padding-left: 6px;
+}
+.controls-ItemActions.controls-ItemsActions__touch-actions .controls-ListView__item.icon-16 {
+  margin-top: -1px;
+}
+.controls-ItemActions.controls-ItemsActions__touch-actions .controls-Link {
+  font-size: 16px;
+}
+.controls-ItemActions.controls-ItemsActions__touch-actions .controls-ItemActions__menu-button,
+.controls-ItemActions.controls-ItemsActions__touch-actions .controls-ItemActions__menu-button:hover {
+  background: url('img/items-actions-touch-menu.png') no-repeat;
+  height: 19px;
+  background-size: 4px 18px;
+  vertical-align: middle;
+  width: 44px;
+  background-position: center;
 }
 .controls-ItemActions > * {
   display: inline-block;
@@ -2909,6 +2931,37 @@ input[type="reset"]::-moz-focus-inner {
 }
 .controls-ItemActions > .controls-Link {
   display: inline;
+}
+.controls-ItemActions__menu-container {
+  display: none;
+}
+.controls-ItemActions__menu-container.controls-ItemsActions__touch-actions {
+  background: #F3F8FC;
+  border-radius: 0;
+  border-width: 1px;
+  padding: 0;
+  border-top: none;
+}
+.controls-ItemActions__menu-container.controls-ItemsActions__touch-actions .controls-MenuItem {
+  line-height: 44px;
+  border-top: 1px solid #e4e4e4;
+  height: 44px;
+  background: #F3F8FC;
+}
+.controls-ItemActions__menu-container.controls-ItemsActions__touch-actions .controls-PopupMixin__closeButton {
+  background: url('img/areaCloseButton.png') -30px 0;
+  top: 12px;
+  width: 36px;
+  height: 24px;
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+}
+.controls-ItemActions__menu-container.controls-ItemsActions__touch-actions .controls-PopupMixin__closeButton:hover {
+  background: url('img/areaCloseButton.png') -30px -24px;
+}
+.controls-ItemActions__menu-container.controls-ItemsActions__touch-actions .controls-PopupMixin__closeButton:active {
+  background: url('img/areaCloseButton.png') -30px -24px;
 }
 .controls-ItemActions__menu-container .controls-MenuItem {
   padding-right: 24px;
