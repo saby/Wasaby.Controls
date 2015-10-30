@@ -24,9 +24,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
        * </component>
        *
        * @demo SBIS3.CONTROLS.Demo.MyTreeCompositeView
-       * 
+       *
        */
-      
+
       $protected: {
          _options: {
             /**
@@ -128,6 +128,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             }
             return resultTpl;
       },
+      //TODO Авраменко:EIP редактирование по месту должно правильно работать во всех режимах отображения, а не только в таблице.
       _updateEditInPlaceDisplay: function() {
          if(this.getViewMode() === 'table') {
             TreeCompositeView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
@@ -141,13 +142,19 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
       },
       _getItemActionsPosition: function(hoveredItem) {
          var itemActions = this.getItemsActions().getContainer(),
-             height = itemActions[0].offsetHeight || itemActions.height(),
-             isTableView = this.getViewMode() === 'table';
+             viewMode = this.getViewMode(),
+             //FIXME в версии 3.7.3.20 будет приходить рекорд, надо это использовать
+             horAlign = viewMode === 'table' || (!this.getDataSet().getRecordByKey(hoveredItem.key).get(this._options.hierField + '@') && viewMode === 'list'),
+             height;
+
+         itemActions[horAlign ? 'removeClass' : 'addClass']('controls-ItemActions-verAlign');
+         height = itemActions[0].offsetHeight || itemActions.height();
 
          return {
-            top: hoveredItem.position.top + ((isTableView) ? (hoveredItem.size.height > height ? hoveredItem.size.height - height : 0) : 0),
-            //TODO right = 5 hotFix для того чтобы меню разворачивалось в нужную сторону
-            right: isTableView ? 5 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
+            top: horAlign ?
+                   hoveredItem.position.top + ((hoveredItem.size.height > height) ? hoveredItem.size.height - height : 0 ) :
+                   hoveredItem.position.top,
+            right: viewMode === 'table' ? 5 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
          };
       },
       _processPaging: function() {
@@ -201,7 +208,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                //Если запись найдена в обновленном DataSet, то перерисовываем её
                if (record) {
                   currentDataSet.getRecordByKey(row.key).merge(record);
-                  self.redrawRow(record);
+                  self.redrawItem(record);
                } else { //Иначе - удаляем запись
                   currentDataSet.removeRecord(row.key);
                   self.destroyFolderToolbar(row.key);
