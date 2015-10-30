@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IAdapter', [], function () {
 
    /**
     * Интерфейс адаптера, осуществляющиего операции с "сырыми" данными
-    * @mixin SBIS3.CONTROLS.Data.Storage.IAdapter
+    * @mixin SBIS3.CONTROLS.Data.Adapter.IAdapter
     * @public
     * @author Мальцев Алексей
     */
