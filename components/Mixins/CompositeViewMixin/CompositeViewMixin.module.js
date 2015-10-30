@@ -180,7 +180,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
                viewMode = this.getViewMode(),
             //FIXME в версии 3.7.3.20 будет приходить рекорд, надо это использовать
                isTableView = viewMode === 'table',
-               horAlign = isTableView || (!this.getDataSet().getRecordByKey(hoveredItem.key).get(this._options.hierField + '@') && viewMode === 'list'),
+               horAlign = isTableView || (this.getHierField && !this.getDataSet().getRecordByKey(hoveredItem.key).get(this.getHierField() + '@') && viewMode === 'list'),
                height;
 
             /* В режиме список(list) для листьев нужно опции отображать горизонтально,
