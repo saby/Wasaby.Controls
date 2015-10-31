@@ -472,7 +472,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             e,
             l;
          if (document.selection){                        //IE
-            var range = document.selection.createRange();
+            var range = document.createRangeForIE();
             l = range.text.length;
             range.moveStart('textedit', -1);
             e = range.text.length;
