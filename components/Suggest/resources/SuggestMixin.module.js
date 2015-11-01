@@ -145,6 +145,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                className: 'js!SBIS3.CONTROLS.SuggestList',
                options: {}
             },
+	        listFilter: {},
 
             /**
              * @cfg {jQuery|Element|String} Контейнер, в который будет вставлен индикатор загрузки
@@ -256,6 +257,20 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          this._resultBindings = convertToObject(this._options.resultBindings);
       },
 
+	   setListFilter: function(filter) {
+		   var self = this,
+			    changedFields = $ws.helpers.filter(filter, function(value, key) { return value !== self._options.listFilter[key]; });
+
+		   if(changedFields.length) {
+			   this._options.listFilter = filter;
+				for(var i = 0, len = changedFields.length; i < len: i++) {
+					if(this._options.listFilter[changedFields[i]] >= this._options.startChar) {
+						this.
+					}
+				}
+			}
+	   },
+
       /**
        * Устанавливает связи между компонентами
        * @private
@@ -296,25 +311,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _buildFilter: function () {
-         var prevFilter = this._filter || {};
-         this._filter = {};
-         this._filterChanged = false;
-
-         var context = this._getBindingContext();
-         for (var field in this._filterBindings) {
-            if (this._filterBindings.hasOwnProperty(field)) {
-               var filterField = this._filterBindings[field],
-                  filterValue = context.getValue(field);
-               if (filterValue && String(filterValue).length >= this._options.startChar) {
-                  this._filter[filterField] = filterValue;
-               }
-
-               if (prevFilter[filterField] !== this._filter[filterField]) {
-                  this._filterChanged = true;
-               }
-            }
-         }
-
+			//TODO Надо ли??
          this._notify('onFilterBuild', this._filter, this._filterBindings);
       },
 
@@ -446,7 +443,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
          var self = this;
          this.getList().addCallback(function (list) {
-            list.reload(self._filter);
+            list.reload(self._options.listFilter);
          });
       },
 
