@@ -7,7 +7,9 @@
   &.controls-DataGridView {
 
     .controls-ItemActions {
-      background-color: @list-view-actions-bg;
+      .controls-ItemActions__itemsContainer {
+			background-color: @list-view-actions-bg;
+      }
       box-shadow: @list-view-actions-box-shadow;
     }
     .controls-ItemActions__activeItem {
@@ -27,9 +29,12 @@
       }
    }
    .controls-ItemActions{
-      background: @list-view-actions-bg;
       padding-left: 6px;
+      overflow: hidden;
       .controls-ItemActions__itemsContainer{
+      	height: 100%;
+      	background: @list-view-actions-bg;
+      	position: relative;
          .controls-ListView__item{
             &.icon-16{
                margin-top: -1px;
