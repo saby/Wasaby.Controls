@@ -130,7 +130,6 @@
    $.event.special.tap = {
       tapholdThreshold: 750,
       tapThreshold: 100,
-      mouseEvent: undefined,
       setup: function() {
          var $this = $(this),
             self = this,
@@ -155,11 +154,9 @@
 
             timer = setTimeout(function() {
                isTaphold = true;
-               event.preventDefault();
                $.event.trigger($.Event('taphold', {
                   target: target
                }), undefined, self);
-               event.preventDefault();
             }, $.event.special.tap.tapholdThreshold);
 
             $(document).one('touchend', function(event) {
@@ -173,7 +170,6 @@
             });
          };
          $this.bind('touchstart', context.start);
-
       },
 
       teardown: function() {
