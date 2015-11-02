@@ -24,9 +24,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
        * </component>
        *
        * @demo SBIS3.CONTROLS.Demo.MyTreeCompositeView
-       * 
+       *
        */
-      
+
       $protected: {
          _options: {
             /**
@@ -134,22 +134,19 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             TreeCompositeView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
          }
       },
+      _getItemActionsAlign: function(viewMode, hoveredItem) {
+         /* В режиме список(list) для листьев нужно опции отображать горизонтально,
+          как и для режима таблица(table) */
+         return viewMode === 'table' || (!this.getDataSet().getRecordByKey(hoveredItem.key).get(this.getHierField() + '@') && viewMode === 'list') ?
+               'horizontal' : 'vertical';
+
+      },
+
       _getTargetContainer: function (item) {
          if (this.getViewMode() != 'table' && item.get(this._options.hierField + '@')) {
             return  $('.controls-CompositeView__foldersContainer',this._container);
          }
          return this._getItemsContainer();
-      },
-      _getItemActionsPosition: function(hoveredItem) {
-         var itemActions = this.getItemsActions().getContainer(),
-             height = itemActions[0].offsetHeight || itemActions.height(),
-             isTableView = this.getViewMode() === 'table';
-
-         return {
-            top: hoveredItem.position.top + ((isTableView) ? (hoveredItem.size.height > height ? hoveredItem.size.height - height : 0) : 0),
-            //TODO right = 5 hotFix для того чтобы меню разворачивалось в нужную сторону
-            right: isTableView ? 5 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
-         };
       },
       _processPaging: function() {
          TreeCompositeView.superclass._processPaging.call(this);

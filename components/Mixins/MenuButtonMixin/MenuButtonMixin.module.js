@@ -90,6 +90,14 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          this.togglePicker();
       },
 
+      //Прокидываем вызов метода в меню
+      getItemsInstances: function() {
+         if (!this._picker) {
+            this._initializePicker();
+         }
+         return this._picker.getItemsInstances.apply(this._picker, arguments);
+      },
+      
       _clickHandler: function () {
          if (this._dataSet.getCount() > 1) {
             this.togglePicker();
@@ -108,7 +116,6 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
       _setWidth: function(){
          //Установить ширину меню
       },
-
       after : {
          _initializePicker : function() {
             var self = this;

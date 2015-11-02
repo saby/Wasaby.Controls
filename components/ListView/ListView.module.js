@@ -20,7 +20,8 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.EditInPlaceClickController',
       'js!SBIS3.CONTROLS.Link',
       'is!browser?html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
-      'is!browser?html!SBIS3.CONTROLS.ListView/resources/emptyData'
+      'is!browser?html!SBIS3.CONTROLS.ListView/resources/emptyData',
+      'is!browser?js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, Link, groupByTpl, emptyDataTpl) {
 
@@ -314,6 +315,13 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             ListView.superclass.init.call(this);
             this.reload();
+            this._touchSupport = $ws._const.compatibility.touch;
+            if (this._touchSupport){
+            	this._getItemActionsContainer().addClass('controls-ItemsActions__touch-actions');
+            	this._container.bind('swipe', this._swipeHandler.bind(this));
+               this._container.bind('taphold', this._longTapHandler.bind(this));
+               this._container.bind('tap', this._tapHandler.bind(this));
+            }
          },
          _keyboardHover: function (e) {
             var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
@@ -351,7 +359,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _onClickHandler: function(e) {
             ListView.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
-               target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item'),
+               target = this._findItemByElement($target),
                id;
 
             if (target.length && this._isViewElement(target)) {
@@ -381,25 +389,15 @@ define('js!SBIS3.CONTROLS.ListView',
                this._mouseLeaveHandler();
                return;
             }
-            target = $target.hasClass('controls-ListView__item') ? $target : $target.closest('.controls-ListView__item');
-            if (target.length && this._isViewElement(target)) {
+            target = this._findItemByElement($target);
+            if (target.length && this._isViewElement(target) && !this._touchSupport) {
                targetKey = target.data('id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
                   containerCords = this._container[0].getBoundingClientRect();
                   targetCords = target[0].getBoundingClientRect();
                   this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
-                  this._hoveredItem = {
-                     key: targetKey,
-                     container: target.addClass('controls-ListView__hoveredItem'),
-                     position: {
-                        top: targetCords.top - containerCords.top,
-                        left: targetCords.left - containerCords.left
-                     },
-                     size: {
-                        height: target[0].offsetHeight,
-                        width: target[0].offsetWidth
-                     }
-                  };
+                  target.addClass('controls-ListView__hoveredItem');
+                  this._hoveredItem = this._getElementData(target);
                   this._notify('onChangeHoveredItem', this._hoveredItem);
                   this._onChangeHoveredItem(this._hoveredItem);
                }
@@ -407,6 +405,28 @@ define('js!SBIS3.CONTROLS.ListView',
                this._mouseLeaveHandler();
             }
          },
+
+         _getElementData: function(target) {
+            if (target.length){
+   				target = this._findItemByElement(target);
+           		var containerCords = this._container[0].getBoundingClientRect(),
+                  targetCords = target[0].getBoundingClientRect();
+
+               return {
+                   key: target.data('id'),
+                   container: target,
+                   position: {
+                       top: targetCords.top - containerCords.top,
+                       left: targetCords.left - containerCords.left
+                   },
+                   size: {
+                       height: target[0].offsetHeight,
+                       width: target[0].offsetWidth
+                   }
+               }
+            }
+         },
+
          /**
           * Проверяет, относится ли переданный элемент,
           * к контролам которые отображаются по ховеру.
@@ -448,7 +468,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _onChangeHoveredItem: function (target) {
             this._updateEditInPlaceDisplay(target);
             if (this._options.itemsActions.length) {
-               target.container ? this._showItemActions(target) : this._hideItemActions();
+         		target.container ? this._showItemActions(target) : this._hideItemActions();
             }
          },
 
@@ -542,6 +562,7 @@ define('js!SBIS3.CONTROLS.ListView',
          reload: function () {
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
+            this._hideItemActions();
             // Если используется редактирование по месту, то уничтожаем его
             if (this._editInPlace) {
                this._editInPlace.destroy();
@@ -651,11 +672,35 @@ define('js!SBIS3.CONTROLS.ListView',
          //********************************//
          //   БЛОК ОПЕРАЦИЙ НАД ЗАПИСЬЮ    //
          //*******************************//
+
+         _swipeHandler: function(e){
+            if (e.direction == 'left'){
+               var target = this._findItemByElement($(e.target)),
+                  item = this._getElementData(target);
+               this._onChangeHoveredItem(item);
+               this._hoveredItem = item;
+            }
+         },
+
+         _longTapHandler: function(e){
+            var target = this._findItemByElement($(e.target));
+            var id = target.data('id');
+            this.toggleItemsSelection([id]);
+         },
+
+         _tapHandler: function(e){
+            var target = this._findItemByElement($(e.target));
+            this.setSelectedKey(target.data('id'));
+         },
+
+         _findItemByElement: function(target){
+            return target.hasClass('controls-ListView__item') ? target : target.closest('.controls-ListView__item');
+         },
          /**
           * Показывает оперцаии над записью для элемента
           * @private
           */
-         _showItemActions: function () {
+         _showItemActions: function (item) {
             //Создадим операции над записью, если их нет
             this.getItemsActions();
 
@@ -664,7 +709,7 @@ define('js!SBIS3.CONTROLS.ListView',
                return;
             }
             this._itemActionsGroup.applyItemActions();
-            this._itemActionsGroup.showItemActions(this._hoveredItem, this._getItemActionsPosition(this._hoveredItem));
+            this._itemActionsGroup.showItemActions(item, this._getItemActionsPosition(item));
          },
          _hideItemActions: function () {
             if (this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
@@ -672,10 +717,14 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _getItemActionsPosition: function (item) {
-            return {
-               top: item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
-               right: this._container[0].offsetWidth - (item.position.left + item.size.width)
-            };
+         	var cfg = {
+         		top : item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
+               right : this._container[0].offsetWidth - (item.position.left + item.size.width)
+         	};
+         	if (this._touchSupport){
+               cfg.top = item.position.top;
+            }
+            return cfg;
          },
          /**
           * Создаёт операции над записью
