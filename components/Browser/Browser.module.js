@@ -10,7 +10,9 @@ define('js!SBIS3.CONTROLS.Browser', [
     *
     * @class SBIS3.CONTROLS.Browser
     * @extends $ws.proto.CompoundControl
+    * @control
     * @public
+    * @demo SBIS3.CONTROLS.Demo.MyBrowser
     */
 
    var checkViewType = function(view) {
