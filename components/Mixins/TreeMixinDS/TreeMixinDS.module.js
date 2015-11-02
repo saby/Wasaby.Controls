@@ -127,11 +127,11 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             if (targetContainer) {
                if (self._options.displayType == 'folders') {
                   if (record.get(self._options.hierField + '@')) {
-                     self._drawItem(record, targetContainer);
+                     self._drawAndAppendItem(record, targetContainer);
                   }
                }
                else {
-                  self._drawItem(record, targetContainer);
+                  self._drawAndAppendItem(record, targetContainer);
                }
 
             }

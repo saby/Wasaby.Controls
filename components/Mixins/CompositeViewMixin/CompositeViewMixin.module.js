@@ -10,6 +10,10 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
       $protected: {
          _tileWidth: null,
          _folderWidth: null,
+         _itemActionsAlign:{
+            horizontal: function () { this.removeClass('controls-ItemActions-verAlign') },
+            vertical: function() { this.addClass('controls-ItemActions-verAlign') }
+         },
          _options: {
             /**
              * @cfg {Object} Режим отображения
@@ -174,6 +178,22 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
                parentFunc.call(this, key);
             }
          },
+         _getItemActionsAlign: function(viewMode) {
+            /* Для режима 'table' отображаем опции горизонтально, для других режимов вертикально */
+            return viewMode === 'table' ? 'horizontal' : 'vertical';
+         },
+
+         _getItemActionsPosition: function(parentFunc, hoveredItem) {
+            var itemActions = this.getItemsActions().getContainer(),
+                viewMode = this.getViewMode(),
+                actionsAlign = this._getItemActionsAlign(viewMode, hoveredItem),
+                isTableView = viewMode === 'table',
+                height;
+
+            this._itemActionsAlign[actionsAlign].call(itemActions);
+            if(isTableView) return parentFunc.call(this, hoveredItem);
+
+            height = itemActions[0].offsetHeight || itemActions.height();
 
          _getItemActionsPosition: function(parentFunc, hoveredItem) {
             var itemActions = this.getItemsActions().getContainer(),
