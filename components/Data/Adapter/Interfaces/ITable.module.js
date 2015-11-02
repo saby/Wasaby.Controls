@@ -65,6 +65,18 @@ define('js!SBIS3.CONTROLS.Data.Adapter.ITable', [], function () {
       replace: function (data, record, at) {
          throw new Error('Method must be implemented');
       },
+
+      /**
+       * Перемещает запись
+       * @param {*} data Сырые данные
+       * @param {Number} from Позиция, откуда перемещаем
+       * @param {Number} to Позиция, в позицию которую перемещаем
+       * @returns {*}
+       */
+      move: function(data, source, target) {
+         throw new Error('Method must be implemented');
+      },
+
       /**
        * Объединяет две записи
        * @param {*} data Сырые данные

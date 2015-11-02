@@ -119,18 +119,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Json', [
          data[at] = record;
       },
 
-      move: function(data, source, target, orderDetails) {
-         var sourceData = data[source];
-         if(orderDetails.before){
-            target = (target===0 ? target : target--);
-         } else {
-            target++;
+      move: function(data, source, target) {
+         if (target === source) {
+            return;
          }
-         data.splice(target,0,sourceData);
-         if(source > target){
-            source++;//при перемещении элемента назад индекс увеличится после вставки
-         }
-         data.splice(source,1);
+         var removed = data.splice(source, 1);
+         data.splice(target, 0, removed.shift());
       },
 
       _checkPosition: function (data, at) {

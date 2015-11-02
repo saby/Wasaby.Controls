@@ -200,9 +200,11 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
             s: data ? $ws.core.clone(data.s) : []
          };
       },
+
       getCount: function (data) {
          return data && data.d ? data.d.length || 0 : 0;
       },
+
       add: function (data, record, at) {
          this._checkData(data);
          if (!data.s || !data.s.length) {
@@ -215,12 +217,14 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
             data.d.splice(at, 0, record.d);
          }
       },
+
       at: function (data, index) {
          return data && data.d && data.d[index] ? {
             d: data.d[index],
             s: data.s
          } : undefined;
       },
+
       merge: function(data, one, two){
          $ws.core.merge(data.d[one], data.d[two]);
          this.remove(data, two);
@@ -232,11 +236,13 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
             clone = $ws.core.clone(source);
          data.d.splice(index, 0, clone);
       },
+
       remove: function (data, at) {
          this._checkData(data);
          this._checkPosition(data, at);
          data.d.splice(at, 1);
       },
+
       replace: function (data, record, at) {
          this._checkData(data);
          this._checkPosition(data, at);
@@ -245,19 +251,16 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          }
          data.d[at] = record.d;
       },
-      move: function(data, source, target, orderDetails) {
-         var sourceData = data.d[source];
-         if(orderDetails.before){
-            target = (target===0 ? target : target--);
-         } else {
-            target++;
+
+      move: function(data, source, target) {
+         this._checkData(data);
+         if (target === source) {
+            return;
          }
-         data.d.splice(target,0,sourceData);
-         if(source > target){
-            source++;//при перемещении элемента назад индекс увеличится после вставки
-         }
-         data.d.splice(source,1);
+         var removed = data.d.splice(source, 1);
+         data.d.splice(target, 0, removed.shift());
       },
+
       _checkData: function (data) {
          if (!(data instanceof Object)) {
             throw new Error('Invalid argument');
@@ -266,6 +269,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
             throw new Error('Invalid argument');
          }
       },
+
       _checkPosition: function (data, at) {
          if (at < 0 || at > data.d.length) {
             throw new Error('Out of bounds');

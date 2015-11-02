@@ -142,15 +142,17 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       },
 
       query: function (query) {
-         var adapter = this._options.adapter.forTable();
-         var items = this._applyFrom(query.getFrom());
-         items = this._applyJoin(items, query.getJoin());
-         items = this._applyWhere(items, query.getWhere());
-         items = this._applyOrderBy(items, query.getOrderBy());
-         var total = adapter.getCount(items);
-         items = this._applyPaging(items, query.getOffset(), query.getLimit());
+         var adapter = this._options.adapter.forTable(),
+            items = this._applyFrom(query ? query.getFrom() : undefined);
+         if (query) {
+            items = this._applyJoin(items, query.getJoin());
+            items = this._applyWhere(items, query.getWhere());
+            items = this._applyOrderBy(items, query.getOrderBy());
+            var total = adapter.getCount(items);
+            items = this._applyPaging(items, query.getOffset(), query.getLimit());
+            this._options.adapter.setProperty(items, 'total', total);
+         }
 
-         this._options.adapter.setProperty(items, 'total', total);
          return $ws.proto.Deferred.success(new DataSet({
             source: this,
             data: items,
@@ -158,28 +160,36 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          }));
       },
 
-      move: function(model, orderDetails) {
+      move: function (model, to, details) {
+         details = details || {};
          var sourceKey =  model.get(this._options.idProperty),
             sourcePosition = this._getIndexByKey(sourceKey),
-            targetPosition;
-         if (orderDetails) {
-            var targetKey = orderDetails.after || orderDetails.before;
-            if (orderDetails.column && orderDetails.column !== this._options.idProperty) {
-               var column = orderDetails.column,
+            targetPosition = -1;
+         if (to) {
+            if (details.column && details.column !== this._options.idProperty) {
+               var tableAdapter = this._options.adapter.forTable(),
                   recordAdapter = this._options.adapter.forRecord();
-               this._each(this._options.data, function(item, index) {
-                  var currentKey = recordAdapter.get(item, column);
-                  if (targetKey === currentKey) {
+               //TODO: indexed search
+               for (var index = 0, count = tableAdapter.getCount(this._options.data); index < count; index++) {
+                  if (to === recordAdapter.get(
+                        tableAdapter.at(this._options.data, index),
+                        details.column
+                  )) {
                      targetPosition = index;
+                     break;
                   }
-               }, this);
+
+               }
             } else {
-               targetPosition = this._getIndexByKey(targetKey);
+               targetPosition = this._getIndexByKey(to);
             }
-            if (typeof targetPosition === 'undefined') {
+            if (targetPosition === -1) {
                return $ws.proto.Deferred().fail('Can\'t find target position');
             }
-            this._options.adapter.forTable().move(this._options.data, sourcePosition, targetPosition, orderDetails);
+            if (details.after && sourcePosition > targetPosition) {
+               targetPosition++;
+            }
+            this._options.adapter.forTable().move(this._options.data, sourcePosition, targetPosition);
             this._reIndex();
 
          }

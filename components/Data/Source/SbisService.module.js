@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             /**
              * @cfg {String} Поле модели, содержащее первичный ключ
              */
-            idProperty: 'Ид',
+            idProperty: '',
 
             /**
              * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию SBIS3.CONTROLS.Data.Adapter.Sbis
@@ -91,6 +91,28 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             mergeMethodName: 'Объединить',
 
             /**
+             * @cfg {String|ResourceConfig} Имя объекта бизнес-логики, реализующиего перемещение записей. По умолчанию совпадает с {@link resource}
+             * @example
+             * <pre>
+             *    <option name="moveResource">ПорядковыйНомер</option>
+             * </pre>
+             * @see move
+             */
+            moveResource: '',
+
+            /**
+             * @cfg {String} Имя метода, который используется для перемещения записи. По умолчанию 'Вставить'.
+             * @see move
+             */
+            moveMethodName: 'Вставить',
+
+            /**
+             * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
+             * @see move
+             */
+            moveDefaultColumn: 'ПорНомер',
+
+            /**
              * @cfg {String} Имя метода, который будет использоваться для получения формата записи в методе прочитать. Метод должен быть декларативным.
              * @example
              * <pre>
@@ -109,7 +131,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          /**
           * @var {SBIS3.CONTROLS.SbisServiceSource/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику, для смены порядковых номеров
           */
-         _orderBL: undefined
+         _orderProvider: undefined
       },
 
       $constructor: function(cfg) {
@@ -121,10 +143,20 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             this._options.resource = cfg.resource = cfg.service;
          }
 
-         this._provider = new SbisServiceBLO(typeof this._options.resource === 'string' ? {
-            name: this._options.resource
-         } : this._options.resource);
+         if (this._options.resource && typeof this._options.resource !== 'object') {
+            this._options.resource = {
+               name: this._options.resource
+            };
+         }
+         this._provider = new SbisServiceBLO(this._options.resource);
+
+         if (this._options.moveResource && typeof this._options.moveResource !== 'object') {
+            this._options.moveResource = {
+               name: this._options.moveResource
+            };
+         }
       },
+
 
       //region SBIS3.CONTROLS.Data.Source.ISource
 
@@ -181,6 +213,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          if (!Object.isEmpty(meta)) {
             args['ДопПоля'] = meta;
          }
+         this._detectIdProperty(model.getRawData());
 
          return this._provider.callMethod(
             this._options.updateMethodName,
@@ -253,10 +286,10 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       query: function(query) {
          return this._provider.callMethod(
             this._options.queryMethodName, {
-               'Фильтр': Object.isEmpty(query.getWhere()) ? null : this._options.adapter.serialize(query.getWhere()),
+               'Фильтр': !query || Object.isEmpty(query.getWhere()) ? null : this._options.adapter.serialize(query.getWhere()),
                'Сортировка': this._options.adapter.serialize(this._getSortingParams(query)),
                'Навигация': this._options.adapter.serialize(this._getPagingParams(query)),
-               'ДопПоля': Object.isEmpty(query.getMeta()) ? [] : this._options.adapter.serialize(query.getMeta())
+               'ДопПоля': !query || Object.isEmpty(query.getMeta()) ? [] : this._options.adapter.serialize(query.getMeta())
             }
          ).addCallbacks((function (res) {
             return new DataSet({
@@ -270,16 +303,23 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          });
       },
 
-      move: function(model, orderDetails) {
+      move: function (model, to, details) {
+         details = details || {};
+         this._detectIdProperty(model.getRawData());
+
          var self = this,
             def = new $ws.proto.Deferred(),
-            params = this._prepareOrderParams(this._options.resource, model, orderDetails),
-            suffix = orderDetails.after ? 'После' : 'До';
-         if (!this._orderBL) {
-            this._orderBL = new $ws.proto.BLObject('ПорядковыйНомер');
+            params = this._getMoveParams(model, to, details);
+         if (this._options.moveResource) {
+            if (!this._orderProvider) {
+               this._orderProvider = new SbisServiceBLO(this._options.moveResource);
+            }
+         } else {
+            this._orderProvider = this._provider;
          }
-         self._orderBL.call('Вставить' + suffix, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
-            def.callback(true);
+
+         self._orderProvider.callMethod(this._options.moveMethodName, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
+            def.callback(res);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::move()', error);
             def.errback('Method move was failed');
@@ -429,6 +469,9 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @private
        */
       _getSortingParams: function (query) {
+         if (!query) {
+            return null;
+         }
          var orders = query.getOrderBy();
          if (orders.length === 0) {
             return null;
@@ -453,6 +496,9 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @private
        */
       _getPagingParams: function (query) {
+         if (!query) {
+            return null;
+         }
          var offset = query.getOffset(),
             limit = query.getLimit();
 
@@ -466,16 +512,28 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          };
       },
 
-      _prepareOrderParams: function(object, model, orderDetails) {
+      /**
+       * Возвращает параметры перемещения записей
+       * @param {SBIS3.CONTROLS.Data.Model} model Перемещаемая запись
+       * @param {String} to Значение поля, в позицию которого перемещаем (по умолчанию - значение первичного ключа)
+       * @param {OrderDetails} [details] Дополнительная информация о перемещении
+       * @returns {Object}
+       * @private
+       */
+      _getMoveParams: function(model, to, details) {
+         details = details || {};
          var params = {
-            'Объект': object,
             'ИдО': model.get(this._options.idProperty),
-            'ПорядковыйНомер': orderDetails.column || 'ПорНомер'
+            'ПорядковыйНомер': details.column || this._options.moveDefaultColumn
          };
-         if(orderDetails.after){
-            params['ИдОПосле'] = orderDetails.after;
+         if (this._options.moveResource.name && this._options.moveResource.name !== this._options.resource.name) {
+            params['Объект'] = this._options.resource.name;
+         }
+
+         if(details.after){
+            params['ИдОПосле'] = to;
          } else {
-            params['ИдОДо'] = orderDetails.before;
+            params['ИдОДо'] = to;
          }
          return params;
       }

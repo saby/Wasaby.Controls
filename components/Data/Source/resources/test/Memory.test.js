@@ -16,42 +16,49 @@ define([
       beforeEach(function () {
          data = [{
             'Ид': 6,
+            'ПорНом': 3,
             'Фамилия': 'Иванов',
             'Имя': 'Иван',
             'Отчество': 'Иванович',
             'Должность': 'Инженер'
          }, {
             'Ид': 4,
+            'ПорНом': 1,
             'Фамилия': 'Петров',
             'Имя': 'Федор',
             'Отчество': 'Иванович',
             'Должность': 'Директор'
          }, {
             'Ид': 7,
+            'ПорНом': 6,
             'Фамилия': 'Аксенова',
             'Имя': 'Федора',
             'Отчество': 'Сергеевна',
             'Должность': 'Инженер'
          }, {
             'Ид': 2,
+            'ПорНом': 0,
             'Фамилия': 'Афанасьев',
             'Имя': 'Иван',
             'Отчество': 'Андреевич',
             'Должность': 'Директор'
          }, {
             'Ид': 5,
+            'ПорНом': 4,
             'Фамилия': 'Баранов',
             'Имя': 'Иванко',
             'Отчество': 'Петрович',
             'Должность': 'Карапуз'
          }, {
             'Ид': 1,
+            'ПорНом': 5,
             'Фамилия': 'Годолцов',
             'Имя': 'Иван',
             'Отчество': 'Викторович',
             'Должность': 'Директор'
          }, {
             'Ид': 3,
+            'ПорНом': 3,
             'Фамилия': 'Иванов',
             'Имя': 'Ян',
             'Отчество': 'Яковлевич',
@@ -343,7 +350,7 @@ define([
                   if(data.length !== oldLength) {
                      done();
                   } else {
-                     done(new Error("Model dosn't copied"));
+                     done(new Error('Model dosn\'t copied'));
                   }
                }, function(err){
                   done(err);
@@ -351,29 +358,26 @@ define([
             });
          });
 
-         describe('.move()', function () {
-            it('should move model', function (done) {
-               service.read(existsId).addCallback(function (model) {
-                  service.move(model,{after:existsId2});
-                  if(data[1]['Ид'] === existsId) {
-                     done();
-                  }
-               });
-            });
-
-            it('should move model', function (done) {
-               service.read(existsId).addCallback(function (model) {
-                  service.move(model,{before:existsId2});
-                  if(data[0]['Ид'] === existsId) {
-                     done();
-                  }
-               });
-            });
-         });
-
          describe('.query()', function () {
             it('should return a valid dataset', function (done) {
                service.query(new Query()).addCallbacks(function (ds) {
+                  try {
+                     if (!(ds instanceof DataSet)) {
+                        throw new Error('That\'s no dataset');
+                     }
+                     if (ds.getAll().getCount() !== data.length) {
+                        throw new Error('Wrong models count');
+                     }
+                     done();
+                  } catch (err) {
+                     done(err);
+                  }
+               }, function (err) {
+                  done(err);
+               });
+            });
+            it('should work with no query', function (done) {
+               service.query().addCallbacks(function (ds) {
                   try {
                      if (!(ds instanceof DataSet)) {
                         throw new Error('That\'s no dataset');
@@ -612,6 +616,92 @@ define([
                      });
                   })(tests[i], 1 + i);
                }
+            });
+         });
+
+         describe('.move()', function () {
+            it('should move ' + existsId + ' instead ' + existsId2, function (done) {
+               service.read(existsId).addCallback(function (model) {
+                  service.move(model, existsId2).addCallbacks(function() {
+                     if (data[0]['Ид'] === existsId && data[1]['Ид'] === existsId2) {
+                        done();
+                     } else {
+                        done(new Error('Unexpected value'));
+                     }
+                  }, function(err){
+                     done(err);
+                  });
+               });
+            });
+
+            it('should move ' + existsId2 + ' instead ' + existsId, function (done) {
+               service.read(existsId2).addCallback(function (model) {
+                  service.move(model, existsId).addCallbacks(function() {
+                     if (data[3]['Ид'] === existsId && data[4]['Ид'] === existsId2) {
+                        done();
+                     } else {
+                        done(new Error('Unexpected value'));
+                     }
+                  }, function(err){
+                     done(err);
+                  });
+               });
+            });
+
+            it('should move ' + existsId + ' after ' + existsId2, function (done) {
+               service.read(existsId).addCallback(function (model) {
+                  service.move(model, existsId2, {after: true}).addCallbacks(function() {
+                     if(data[0]['Ид'] === existsId2 && data[1]['Ид'] === existsId) {
+                        done();
+                     } else {
+                        done(new Error('Unexpected value'));
+                     }
+                  }, function(err){
+                     done(err);
+                  });
+               });
+            });
+
+            it('should move ' + existsId2 + ' after ' + existsId, function (done) {
+               service.read(existsId2).addCallback(function (model) {
+                  service.move(model, existsId, {after: true}).addCallbacks(function() {
+                     if(data[3]['Ид'] === existsId && data[4]['Ид'] === existsId2) {
+                        done();
+                     } else {
+                        done(new Error('Unexpected value'));
+                     }
+                  }, function(err){
+                     done(err);
+                  });
+               });
+            });
+
+            it('should move before record with ПорНом=6', function (done) {
+               service.read(existsId).addCallback(function (model) {
+                  service.move(model, 6, {column: 'ПорНом'}).addCallbacks(function() {
+                     if(data[2]['Ид'] === existsId && data[3]['ПорНом'] === 6) {
+                        done();
+                     } else {
+                        done(new Error('Unexpected value'));
+                     }
+                  }, function(err){
+                     done(err);
+                  });
+               });
+            });
+
+            it('should move after record with ПорНом=6', function (done) {
+               service.read(existsId).addCallback(function (model) {
+                  service.move(model, 6, {after: true, column: 'ПорНом'}).addCallbacks(function() {
+                     if(data[3]['Ид'] === existsId && data[2]['ПорНом'] === 6) {
+                        done();
+                     } else {
+                        done(new Error('Unexpected value'));
+                     }
+                  }, function(err){
+                     done(err);
+                  });
+               });
             });
          });
       });

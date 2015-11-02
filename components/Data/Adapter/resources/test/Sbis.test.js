@@ -431,23 +431,6 @@ define(
             });
          });
 
-         describe('.move()', function () {
-            it('should move record', function () {
-               adapterInstance.move(data, 0, 2, {before:2});
-               assert.strictEqual(
-                  'Иванов',
-                  data.d[1][1]
-               );
-            });
-            it('should move record', function () {
-               adapterInstance.move(data, 0, 2, {after:2});
-               assert.strictEqual(
-                  'Иванов',
-                  data.d[2][1]
-               );
-            });
-         });
-
          describe('.copy()', function () {
             it('should merge two records', function () {
                adapterInstance.copy(data, 0);
@@ -485,6 +468,50 @@ define(
 
             it('should throw an error on invalid data', function () {
                checkInvalid(adapterInstance, 'replace');
+            });
+         });
+
+         describe('.move()', function () {
+            it('should move Иванов instead Сидоров', function () {
+               adapterInstance.move(data, 0, 2);
+               assert.strictEqual(
+                  'Петров',
+                  data.d[0][1]
+               );
+               assert.strictEqual(
+                  'Сидоров',
+                  data.d[1][1]
+               );
+               assert.strictEqual(
+                  'Иванов',
+                  data.d[2][1]
+               );
+            });
+            it('should move Сидоров instead Иванов', function () {
+               adapterInstance.move(data, 2, 0);
+               assert.strictEqual(
+                  'Сидоров',
+                  data.d[0][1]
+               );
+               assert.strictEqual(
+                  'Иванов',
+                  data.d[1][1]
+               );
+               assert.strictEqual(
+                  'Петров',
+                  data.d[2][1]
+               );
+            });
+            it('should move Петров to the end', function () {
+               adapterInstance.move(data, 1, 6);
+               assert.strictEqual(
+                  'Петров',
+                  data.d[6][1]
+               );
+               assert.strictEqual(
+                  'Арбузнов',
+                  data.d[5][1]
+               );
             });
          });
       });
