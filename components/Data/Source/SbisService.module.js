@@ -91,20 +91,26 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             mergeMethodName: 'Объединить',
 
             /**
-             * @cfg {String|ResourceConfig} Имя объекта бизнес-логики, реализующиего перемещение записей. По умолчанию совпадает с {@link resource}
+             * @cfg {String|ResourceConfig} Имя объекта бизнес-логики, реализующиего перемещение записей. По умолчанию 'ПорядковыйНомер'.
              * @example
              * <pre>
              *    <option name="moveResource">ПорядковыйНомер</option>
              * </pre>
              * @see move
              */
-            moveResource: '',
+            moveResource: 'ПорядковыйНомер',
 
             /**
-             * @cfg {String} Имя метода, который используется для перемещения записи. По умолчанию 'Вставить'.
+             * @cfg {String} Префикс имени метода, который используется для перемещения записи. По умолчанию 'Вставить'.
              * @see move
              */
-            moveMethodName: 'Вставить',
+            moveMethodPrefix: 'Вставить',
+
+            /**
+             * @cfg {String} Название поля с иерархией для перемещения записей
+             * @see move
+             */
+            moveHierField: '',
 
             /**
              * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
@@ -309,7 +315,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
          var self = this,
             def = new $ws.proto.Deferred(),
-            params = this._getMoveParams(model, to, details);
+            params = this._getMoveParams(model, to, details),
+            suffix = details.after ? 'После' : 'До';
          if (this._options.moveResource) {
             if (!this._orderProvider) {
                this._orderProvider = new SbisServiceBLO(this._options.moveResource);
@@ -318,7 +325,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             this._orderProvider = this._provider;
          }
 
-         self._orderProvider.callMethod(this._options.moveMethodName, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
+         self._orderProvider.callMethod(this._options.moveMethodPrefix + suffix, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             def.callback(res);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::move()', error);
@@ -526,6 +533,9 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'ИдО': model.get(this._options.idProperty),
             'ПорядковыйНомер': details.column || this._options.moveDefaultColumn
          };
+         if (this._options.moveHierField) {
+            params['Иерархия'] = this._options.moveHierField;
+         }
          if (this._options.moveResource.name && this._options.moveResource.name !== this._options.resource.name) {
             params['Объект'] = this._options.resource.name;
          }

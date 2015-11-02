@@ -99,7 +99,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
                         };
                         break;
 
-                     case 'Вставить':
+                     case 'ВставитьДо':
+                     case 'ВставитьПосле':
                         data = args;
                         break;
 
@@ -110,7 +111,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
 
                case 'ПорядковыйНомер':
                   switch (method) {
-                     case 'Вставить':
+                     case 'ВставитьДо':
+                     case 'ВставитьПосле':
                         data = args;
                         break;
                   }
