@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /**
              * @typedef {Object} ListControl
-             * @property {String} className Класс контрола, отображающего список сущностей
+             * @property {String} component Класс контрола, отображающего список сущностей
              * Должен иметь примеси {SBIS3.CONTROLS.DSMixin}{SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable}.
              * @property {Object} options Опции конструктора контрола
              */
@@ -122,7 +122,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @group Data
              */
             list: {
-               className: 'js!SBIS3.CONTROLS.SuggestList',
+               component: 'js!SBIS3.CONTROLS.SuggestList',
                options: {}
             },
 	        listFilter: {},
@@ -338,7 +338,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                def.callback(this._list);
             } else {
                //Набор "Сделай сам"
-               require([this._options.list.className], function (ListControl) {
+               require([this._options.list.component], function (ListControl) {
                   var options = $ws.core.clone(self._options.list.options);
                   if (!options.element) {
                      options.element = self._getListContainer();
